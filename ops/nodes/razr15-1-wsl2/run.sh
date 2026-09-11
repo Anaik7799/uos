@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# [C3I-SIL6] UOS Distributed Instance Launcher (Pure Erlang/OTP 29)
-# Node: razr15-1 (Razer Blade 15 Laptop GPU / Worker Node)
-# Usage: curl -fsSL http://192.168.1.220:8999/run | bash
-# Mandate: SC-NIX-DEVENV-001, SC-ZMOF-001, SC-TIME, Zero-Muda
+# [C3I-SIL6] UOS Autonomous Intelligent Holon Node Installer & Runner
+# Identity: holon-razr15-1 (Razer Blade 15 Laptop GPU / Worker Node)
+# Usage: curl -fsSL http://192.168.1.220:8999/holon | bash
+# Runtime: Pure Erlang/OTP 29 (ERTS 17.0.5) ONLY (SC-NIX-DEVENV-001)
 # ==============================================================================
 set -euo pipefail
 
 echo "=============================================================================="
-echo "   SAṀVID VAJRAVYŪHA: UOS DISTRIBUTED INSTANCE 2 (razr15-1 NODE)"
-echo "   RUNTIME: PURE ERLANG/OTP 29 (ERTS 17.0.5) ONLY"
+echo "   SAṀVID VAJRAVYŪHA: UOS AUTONOMOUS INTELLIGENT HOLON LAUNCHER"
+echo "   ENTITY: holon-razr15-1 (aṃśa-pūrṇa: autonomous whole, connected part)"
+echo "   RUNTIME: Pure Erlang/OTP 29 (ERTS 17.0.5) ONLY"
 echo "Timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 echo "=============================================================================="
 
@@ -17,7 +18,7 @@ UOS_DIR="${HOME}/uos"
 mkdir -p "${UOS_DIR}"
 cd "${UOS_DIR}"
 
-# 1. Discover active UOS Controller Host
+# 1. Discover UOS Controller Server
 SERVER_URL=""
 for host in "192.168.1.220:8999" "100.87.7.78:8999" "nas-1.tail55d152.ts.net:8999"; do
     if curl -s -m 2 -I "http://${host}/cmd.txt" 2>/dev/null | grep -q "200 OK"; then
@@ -65,56 +66,41 @@ fi
 
 # Verify OTP 29 release and ERTS version
 OTP_VER="$("${ERL_BIN}" -noshell -eval 'io:format("~s (ERTS ~s)", [erlang:system_info(otp_release), erlang:system_info(version)]), halt().')"
-echo "  [CONFIRMED] Active BEAM: Erlang/OTP ${OTP_VER}"
+echo "  [CONFIRMED] Active BEAM Engine: Erlang/OTP ${OTP_VER}"
 
-# 3. Fetch Instance 2 BEAM Application Bytecode
-echo "[3/5] Fetching compiled UOS Instance 2 bytecode..."
+# 3. Fetch Holon Bytecode & Support Files
+echo "[3/5] Fetching compiled UOS Holon bytecode and support modules..."
+curl -fsSL "${SERVER_URL}/uos_holon_node.beam" -o "${UOS_DIR}/uos_holon_node.beam"
+curl -fsSL "${SERVER_URL}/uos_holon_sensory.beam" -o "${UOS_DIR}/uos_holon_sensory.beam"
 curl -fsSL "${SERVER_URL}/uos_instance2.beam" -o "${UOS_DIR}/uos_instance2.beam"
-echo "  [PASS] Downloaded uos_instance2.beam to ${UOS_DIR}."
+curl -fsSL "${SERVER_URL}/run-holon.sh" -o "${UOS_DIR}/run-holon.sh"
+chmod +x "${UOS_DIR}/run-holon.sh"
+echo "  [PASS] Downloaded Holon modules into ${UOS_DIR}."
 
-# 4. Probe Hardware & Network Configuration
-echo "[4/5] Probing hardware accelerators and mesh network..."
-if [ -e "/dev/dxg" ] || command -v nvidia-smi &>/dev/null; then
-    echo "  [PASS] Hardware GPU acceleration detected (/dev/dxg)."
-    if command -v nvidia-smi &>/dev/null; then
-        nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader 2>/dev/null || true
-    fi
-else
-    echo "  [INFO] Running in CPU SIMD mode."
-fi
+# 4. Probe Substrate & Hardware
+echo "[4/5] Running Substrate Sensory Discovery..."
+"${ERL_BIN}" -pa "${UOS_DIR}" -noshell -eval '
+    Sensory = uos_holon_sensory:sense_all(),
+    Cpu = maps:get(cpu, Sensory, #{}),
+    Mem = maps:get(memory, Sensory, #{}),
+    Gpu = maps:get(gpu, Sensory, #{}),
+    io:format("  [SENSORY] CPU: ~s (~p logical cores, ~p schedulers)~n",
+        [maps:get(model, Cpu, <<"x86_64">>), maps:get(logical_cores, Cpu, 0), maps:get(beam_schedulers, Cpu, 0)]),
+    io:format("  [SENSORY] RAM: ~.1f MB host available, ~.2f MB BEAM active~n",
+        [maps:get(host_available_mb, Mem, 0.0), maps:get(beam_total_mb, Mem, 0.0)]),
+    io:format("  [SENSORY] GPU: ~s (~s)~n",
+        [maps:get(acceleration_mode, Gpu, <<"None">>), maps:get(device_name, Gpu, <<"None">>)]),
+    halt().
+'
 
-# Detect Local Node IP
-LOCAL_IP=""
-if command -v ip &>/dev/null; then
-    LOCAL_IP="$(ip -4 route get 192.168.1.1 2>/dev/null | grep -oP 'src \K\S+' || true)"
-fi
-if [ -z "${LOCAL_IP}" ]; then
-    LOCAL_IP="$(hostname -I 2>/dev/null | awk '{print $1}' || echo '127.0.0.1')"
-fi
-NODE_NAME="instance2@${LOCAL_IP}"
-echo "  [CONFIG] Node Name: ${NODE_NAME}"
-
-# 5. Boot Instance 2 on Pure OTP 29
-echo "[5/5] Launching UOS Distributed Instance 2 on port 8088..."
+# 5. Boot Autonomous Intelligent Holon Node
+echo "[5/5] Launching Autonomous Holon Node on port 8088..."
 echo "------------------------------------------------------------------------------"
-echo "  Web Health Endpoint: http://localhost:8088/health"
-echo "  Local Dashboard:     http://localhost:8088/"
+echo "  Holon Status API:    http://localhost:8088/health"
+echo "  Substrate Telemetry: http://localhost:8088/holon"
+echo "  Interactive Cockpit: http://localhost:8088/"
 echo "  Prometheus Metrics:  http://localhost:8088/metrics"
 echo "  Distributed Cookie:  uos_vajravyuh_cookie"
 echo "------------------------------------------------------------------------------"
 
-exec "${ERL_BIN}" \
-    -name "${NODE_NAME}" \
-    -setcookie uos_vajravyuh_cookie \
-    -pa "${UOS_DIR}" \
-    -noshell \
-    -eval '
-        case uos_instance2:start(8088) of
-            {ok, _} ->
-                io:format("[UOS-BOOT] Instance 2 node online and serving on port 8088.~n"),
-                io:format("[UOS-BOOT] Mesh coordination active. Press Ctrl+C to stop.~n");
-            {error, Reason} ->
-                io:format("[UOS-BOOT] [ERROR] Startup failed: ~p~n", [Reason]),
-                halt(1)
-        end.
-    '
+exec "${UOS_DIR}/run-holon.sh"

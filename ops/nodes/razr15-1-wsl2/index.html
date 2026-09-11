@@ -3,63 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UOS Distributed Operations — Instance 2 Deployment Portal (Pure OTP 29)</title>
+  <title>UOS Autonomous Holon Deployment Portal (Port 8999 &bull; Pure OTP 29)</title>
   <style>
     :root {
-      --bg: #0a0e14;
-      --card-bg: #121820;
-      --border: #232e3d;
+      --bg: #090d13;
+      --card-bg: #111822;
+      --border: #1f2b3b;
       --accent: #00d4aa;
-      --accent-glow: rgba(0, 212, 170, 0.25);
+      --accent-glow: rgba(0, 212, 170, 0.2);
       --text: #e6edf3;
       --text-muted: #8b949e;
       --code-bg: #05080c;
       --success: #3fb950;
-      --badge-bg: #1f6feb;
+      --gold: #e3b341;
+      --cyan: #388bfd;
     }
     body {
       background-color: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
-      padding: 2rem 1rem;
+      padding: 2.5rem 1rem;
       line-height: 1.6;
     }
     .container {
-      max-width: 960px;
+      max-width: 980px;
       margin: 0 auto;
     }
     .header {
       text-align: center;
       margin-bottom: 2.5rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 1.5rem;
+      padding-bottom: 2rem;
     }
     .header h1 {
-      font-size: 2.2rem;
+      font-size: 2.3rem;
       margin: 0 0 0.5rem 0;
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
     }
     .header p {
       color: var(--text-muted);
       margin: 0;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
     }
     .badge-bar {
       display: flex;
       justify-content: center;
       gap: 0.8rem;
-      margin-top: 1rem;
+      margin-top: 1.2rem;
       flex-wrap: wrap;
     }
     .badge {
       background: var(--border);
       color: var(--text);
-      padding: 0.25rem 0.75rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 999px;
       font-size: 0.85rem;
       font-weight: 600;
@@ -75,17 +76,22 @@
       color: var(--accent);
       border-color: var(--accent);
     }
+    .badge.gold {
+      background: rgba(227, 179, 65, 0.15);
+      color: var(--gold);
+      border-color: rgba(227, 179, 65, 0.3);
+    }
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.8rem;
+      padding: 2rem;
       margin-bottom: 2rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
     }
     .card h2 {
       margin-top: 0;
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       color: var(--accent);
       display: flex;
       align-items: center;
@@ -97,7 +103,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1.2rem 1.2rem 1.2rem 1.5rem;
-      margin: 1rem 0;
+      margin: 1.2rem 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -113,41 +119,48 @@
       color: #05080c;
       border: none;
       border-radius: 6px;
-      padding: 0.6rem 1.2rem;
+      padding: 0.65rem 1.4rem;
       font-weight: 700;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       transition: all 0.2s ease;
       flex-shrink: 0;
       margin-left: 1rem;
     }
     .copy-btn:hover {
       background: #33e2bb;
-      box-shadow: 0 0 12px var(--accent-glow);
+      box-shadow: 0 0 14px var(--accent-glow);
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
-      margin-top: 1rem;
+      margin-top: 1.2rem;
     }
     .grid-item {
       background: var(--code-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1rem;
+      padding: 1.1rem;
     }
     .grid-item strong {
       display: block;
       color: var(--text-muted);
       font-size: 0.85rem;
       text-transform: uppercase;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.35rem;
     }
     .grid-item span {
       font-size: 1.05rem;
       color: #fff;
       font-weight: 600;
+    }
+    .holon-principle {
+      background: rgba(0, 212, 170, 0.05);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      border-radius: 0 8px 8px 0;
     }
     ul.downloads {
       list-style: none;
@@ -155,7 +168,7 @@
       margin: 0;
     }
     ul.downloads li {
-      padding: 0.75rem 0;
+      padding: 0.85rem 0;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
@@ -169,7 +182,7 @@
       text-decoration: none;
       font-weight: 600;
       font-family: monospace;
-      font-size: 1rem;
+      font-size: 1.05rem;
     }
     ul.downloads a:hover {
       text-decoration: underline;
@@ -182,112 +195,153 @@
       text-align: center;
       color: var(--text-muted);
       font-size: 0.85rem;
-      margin-top: 3rem;
+      margin-top: 3.5rem;
       border-top: 1px solid var(--border);
-      padding-top: 1.5rem;
+      padding-top: 1.8rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>⚡ UOS Distributed Instance 2 Deployment Portal</h1>
-      <p>Unified Operational System &bull; Pure Erlang/OTP 29 Runtime Engine &bull; Port 8999 Service</p>
+      <h1>⚡ UOS Autonomous Holon Deployment Portal</h1>
+      <p>Cybernetic Holarchy (aṃśa-pūrṇa) &bull; Pure Erlang/OTP 29 Runtime Engine &bull; Port 8999 Service</p>
       <div class="badge-bar">
         <span class="badge green">&#10004; Pure OTP 29 (ERTS 17.0.5)</span>
-        <span class="badge green">&#10004; Zero-Muda Purity (0 ZigVM / 0 Bevy / 0 Graphite)</span>
-        <span class="badge cyan">&#9679; Target: razr15-1 (192.168.1.177)</span>
+        <span class="badge gold">&#9679; Autonomous Holon (aṃśa-pūrṇa)</span>
+        <span class="badge green">&#10004; Zero-Muda (0 ZigVM / 0 Bevy / 0 Graphite)</span>
+        <span class="badge cyan">&#9679; Node: razr15-1 (192.168.1.177)</span>
         <span class="badge">&#9729; Saṁvid Vajravyūha Mesh</span>
       </div>
     </div>
 
-    <!-- PRIMARY COMMAND -->
+    <!-- PRIMARY QUICK-LAUNCH COMMAND -->
     <div class="card">
-      <h2>🚀 One-Liner Quick Launch (Run in Laptop WSL2 / Bash)</h2>
+      <h2>🚀 One-Liner Quick Launch (Run in Laptop WSL2 / Terminal)</h2>
       <p style="margin: 0 0 0.8rem 0; color: var(--text-muted);">
-        Paste this command into your terminal on the Razer Blade 15 laptop to automatically fetch the pure OTP 29 engine, deploy <code>uos_instance2.beam</code>, and join the distributed operations mesh on port 8088:
+        Paste this command into your terminal on the Razer Blade 15 laptop. It automatically provisions the pure OTP 29 closure, triggers substrate sensory discovery (CPU, RAM, DirectX GPU <code>/dev/dxg</code>), connects to the UOS mesh, and activates autonomous work-stealing execution:
       </p>
 
       <div class="command-box">
-        <div class="command-text" id="cmd1">curl -fsSL http://192.168.1.220:8999/run | bash</div>
+        <div class="command-text" id="cmd1">curl -fsSL http://192.168.1.220:8999/holon | bash</div>
         <button class="copy-btn" onclick="copyText('cmd1')">Copy Command</button>
       </div>
 
       <div style="margin-top: 1.2rem;">
-        <span style="font-size:0.9rem; color:var(--text-muted);">Tailscale Alternative:</span>
+        <span style="font-size:0.9rem; color:var(--text-muted);">Alternative Endpoint / Tailscale URL:</span>
         <div class="command-box" style="padding: 0.8rem 1rem;">
-          <div class="command-text" id="cmd2" style="font-size: 1rem; color: #a5d6ff;">curl -fsSL http://100.87.7.78:8999/run | bash</div>
-          <button class="copy-btn" onclick="copyText('cmd2')" style="padding: 0.4rem 0.8rem;">Copy</button>
+          <div class="command-text" id="cmd2" style="font-size: 1rem; color: #a5d6ff;">curl -fsSL http://100.87.7.78:8999/holon | bash</div>
+          <button class="copy-btn" onclick="copyText('cmd2')" style="padding: 0.45rem 0.9rem;">Copy</button>
         </div>
       </div>
     </div>
 
-    <!-- SPECIFICATIONS -->
+    <!-- HOLON CYBERNETIC ARCHITECTURE -->
     <div class="card">
-      <h2>📋 Instance 2 Operational Parameters</h2>
+      <h2>🌀 Holonic Architecture: Autonomous Whole &amp; Connected Part</h2>
+      <div class="holon-principle">
+        <strong>aṃśa-pūrṇa (अंश-पूर्ण)</strong>: The Holon is simultaneously an autonomous, self-healing whole with its own internal OODA loop and substrate awareness, and an integrated part of the UOS hive mind (Saṁvid Vajravyūha) dedicated to distributed task acceleration.
+      </div>
       <div class="grid">
         <div class="grid-item">
-          <strong>Physical Machine</strong>
-          <span>Razer Blade 15 (razr15-1)</span>
+          <strong>1. Substrate Sensory Engine</strong>
+          <span>Probes CPU cores, memory ceilings, WSL2 boundaries, and DirectX GPU (/dev/dxg).</span>
         </div>
         <div class="grid-item">
-          <strong>IP / Network</strong>
-          <span>192.168.1.177 / Tailscale 100.114.9.28</span>
+          <strong>2. Autonomous OODA Loop</strong>
+          <span>Observes health, computes Lyapunov trend stability, and self-heals under stress.</span>
+        </div>
+        <div class="grid-item">
+          <strong>3. Hive Mesh Clustering</strong>
+          <span>BEAM native clustering with <code>nas-1</code> and <code>vm-1</code> via <code>uos_vajravyuh_cookie</code>.</span>
+        </div>
+        <div class="grid-item">
+          <strong>4. Work-Stealing Pull Queue</strong>
+          <span>Autonomously claims and executes distributed computing tasks from the hive.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARAMETERS -->
+    <div class="card">
+      <h2>📋 Operational Holon Parameters</h2>
+      <div class="grid">
+        <div class="grid-item">
+          <strong>Holon ID &amp; Svara</strong>
+          <span><code>holon-razr15-1</code> (Svara: Sa)</span>
+        </div>
+        <div class="grid-item">
+          <strong>Physical Substrate</strong>
+          <span>Razer Blade 15 (192.168.1.177 / 100.114.9.28)</span>
         </div>
         <div class="grid-item">
           <strong>Runtime Engine</strong>
           <span style="color:#7ee787;">Erlang/OTP 29.0.5 (ERTS 17.0.5)</span>
         </div>
         <div class="grid-item">
-          <strong>Distributed Role</strong>
-          <span>Instance 2 (Worker &amp; GPU Node)</span>
+          <strong>Holon Cockpit &amp; API</strong>
+          <span style="color:var(--accent);">http://localhost:8088/holon</span>
         </div>
         <div class="grid-item">
-          <strong>Node Health Port</strong>
-          <span style="color:var(--accent);">http://localhost:8088/health</span>
+          <strong>Mesh Network</strong>
+          <span>Saṁvid Vajravyūha (nas-1 + vm-1 + razr15-1)</span>
         </div>
         <div class="grid-item">
-          <strong>BEAM Cluster Cookie</strong>
+          <strong>Cluster Cookie</strong>
           <span><code>uos_vajravyuh_cookie</code></span>
         </div>
       </div>
     </div>
 
-    <!-- DOWNLOADABLE ARTIFACTS -->
+    <!-- DOWNLOADS -->
     <div class="card">
       <h2>📦 Downloadable Package Artifacts</h2>
       <ul class="downloads">
         <li>
           <div>
-            <a href="/run">run</a> / <a href="/run.sh">run.sh</a>
-            <div class="file-desc">Automated launcher script (handles extraction, configuration, and execution)</div>
+            <a href="/holon">holon</a> / <a href="/run">run</a>
+            <div class="file-desc">Automated installer &amp; launcher script for the Holon node</div>
+          </div>
+          <span class="badge green">One-Liner Script</span>
+        </li>
+        <li>
+          <div>
+            <a href="/uos_holon_node.beam">uos_holon_node.beam</a>
+            <div class="file-desc">Compiled Holon Node master GenServer bytecode (Port 8088 HTTP + OODA)</div>
+          </div>
+          <span class="badge">BEAM Bytecode</span>
+        </li>
+        <li>
+          <div>
+            <a href="/uos_holon_sensory.beam">uos_holon_sensory.beam</a>
+            <div class="file-desc">Substrate Sensory Engine bytecode (CPU, RAM, /dev/dxg, Network discovery)</div>
+          </div>
+          <span class="badge">BEAM Bytecode</span>
+        </li>
+        <li>
+          <div>
+            <a href="/run-holon.sh">run-holon.sh</a>
+            <div class="file-desc">Standalone BEAM runner for OTP 29 distributed execution</div>
           </div>
           <span class="badge">Script</span>
         </li>
         <li>
           <div>
-            <a href="/uos_instance2.beam">uos_instance2.beam</a>
-            <div class="file-desc">Compiled Erlang/OTP 29 distributed node bytecode (HTTP + RPC + Mesh)</div>
+            <a href="/uos-holon.service">uos-holon.service</a>
+            <div class="file-desc">Systemd unit file for background daemon auto-start on laptop boot</div>
           </div>
-          <span class="badge green">BEAM Bytecode</span>
-        </li>
-        <li>
-          <div>
-            <a href="/uos_instance2.erl">uos_instance2.erl</a>
-            <div class="file-desc">Pure Erlang source code (compiled with 0 warnings on OTP 29)</div>
-          </div>
-          <span class="badge">Source</span>
+          <span class="badge">Systemd</span>
         </li>
         <li>
           <div>
             <a href="/uos-otp29-runtime.tar.gz">uos-otp29-runtime.tar.gz</a> (78 MB)
             <div class="file-desc">Complete self-contained Erlang/OTP 29 Nix closure with all shared libraries</div>
           </div>
-          <span class="badge cyan">Archive</span>
+          <span class="badge cyan">Closure Archive</span>
         </li>
         <li>
           <div>
-            <a href="/cmd.txt">cmd.txt</a>
+            <a href="/cmd.txt">cmd.txt</a> / <a href="/holon.txt">holon.txt</a>
             <div class="file-desc">Plaintext curl command for terminal scraping</div>
           </div>
           <span class="badge">Plaintext</span>
@@ -296,8 +350,8 @@
     </div>
 
     <footer>
-      <p>Unified Operational System (UOS) &bull; Primary Controller: <code>nas-1 (192.168.1.220 / 100.87.7.78:4100)</code></p>
-      <p>Timestamp: 2026-09-11T11:30:00Z &bull; Operator Mandate: SC-NIX-DEVENV-001 &bull; Port 8999</p>
+      <p>Unified Operational System (UOS) &bull; Primary Hive Controller: <code>nas-1 (192.168.1.220 / 100.87.7.78:4100)</code></p>
+      <p>Timestamp: 2026-09-11T11:35:00Z &bull; Operator Mandates: SC-NIX-DEVENV-001, SC-HOLON-NAME-001 &bull; Port 8999</p>
     </footer>
   </div>
 
