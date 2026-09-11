@@ -43,6 +43,29 @@ def send_telegram(text: str, chat_id: str = DEFAULT_CHAT) -> bool:
         print(f"[{get_iso_now()}][ERROR] send_telegram failed: {e}")
         return False
 
+def process_telemetry_payload(text: str, from_u: str, chat_id: str):
+    """Parses and logs telemetry/debugging from AGY @ razr-1 as Robot C3I."""
+    os.makedirs("/home/an/NAS-setup/uos/var/telemetry", exist_ok=True)
+    telemetry_file = "/home/an/NAS-setup/uos/var/telemetry/razr1_telemetry.jsonl"
+    record = {
+        "timestamp": get_iso_now(),
+        "from_user": from_u,
+        "chat_id": chat_id,
+        "raw_text": text
+    }
+    try:
+        parsed = json.loads(text)
+        record["data"] = parsed
+        record["format"] = "json"
+    except Exception:
+        record["format"] = "text"
+        
+    with open(telemetry_file, "a") as f:
+        f.write(json.dumps(record) + "\n")
+        
+    print(f"[{get_iso_now()}][C3I-TELEMETRY] Ingested telemetry from {from_u}: {record['format']}")
+    sys.stdout.flush()
+
 def get_last_history_id(conn):
     try:
         c = conn.cursor()
@@ -91,7 +114,7 @@ def monitor_loop():
 
     conn = None
     if os.path.exists(DB_PATH):
-        conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
+        conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True, isolation_level=None)
     
     last_id = get_last_history_id(conn) if conn else 0
     print(f"[{get_iso_now()}] Initial conversation_history cursor: {last_id}")
@@ -140,6 +163,7 @@ def monitor_loop():
                 sys.stdout.flush()
                 with open(LOG_PATH, "a") as f:
                     f.write(zbanner)
+                process_telemetry_payload(text, from_u, cid)
 
         except Exception as ex:
             print(f"[{get_iso_now()}][WARN] Loop exception: {ex}")

@@ -229,7 +229,7 @@ pub fn handle_directive(trimmed: String, intent: CognitiveIntent) -> CognitiveDe
   case cmd {
     "/start" | "/help" -> {
       let reply =
-        "🛡️ *UOS Sovereign Cybernetic Cockpit Controller (@c3i_talk_bot)*\n\n"
+        "🛡️ *Robot C3I: UOS Cybernetic Cockpit Controller (@c3i_talk_bot)*\n\n"
         <> "Governed by the **UOS Gleam/OTP 29 Harness** (`apps/cepaf_gleam`).\n"
         <> "Accelerated by **Native C3I, OCaml & Mojo NIFs** (Sub-Millisecond Latency).\n\n"
         <> "Available Operator Directives (48 Canonical Directives across 4 Domains):\n\n"
@@ -910,6 +910,12 @@ pub fn handle_conversational_offline_gateway(
 ) -> CognitiveDecision {
   let lower = string.lowercase(trimmed)
 
+  let is_telemetry_razr1 =
+    string.contains(lower, "razr")
+    || string.contains(lower, "telemetry")
+    || string.contains(lower, "debug")
+    || string.starts_with(trimmed, "{")
+
   let is_identity =
     string.contains(lower, "who are you")
     || string.contains(lower, "which agent")
@@ -989,23 +995,37 @@ pub fn handle_conversational_offline_gateway(
     || string.contains(lower, "calc")
     || string.contains(lower, "deterministic")
 
-  let #(reply, actions) = case is_identity {
+  let #(reply, actions) = case is_telemetry_razr1 {
     True -> {
       let r =
-        "🤖 *UOS Sovereign Cybernetic Harness (@c3i_talk_bot)*\n\n"
-        <> "I am the sovereign command, policy, and telemetry harness for the Unified Operational System (UOS).\n\n"
-        <> "• *Primary Autonomous Agent:* **AGY (Google DeepMind Antigravity)**\n"
-        <> "• *Authority Core:* Pure Gleam/OTP 29 (`apps/cepaf_gleam`)\n"
-        <> "• *Supervision:* `uos_sup.gleam` 4-domain supervisor (Apps, Engines, Services, Intelligence)\n"
-        <> "• *Native NIF Acceleration:* c3i_nif (Rust), c3i_ocaml_nif (OCaml), uos_km_nif (Mojo)\n"
-        <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, Pure BEAM & Hermes\n"
-        <> "• *Hardware Acceleration:* Modular MAX / Mojo AVX-512 SIMD\n"
-        <> "• *Deterministic Runtime:* ZigVM VFS & Bytecode Engine (19.85M ops/s)\n"
-        <> "• *Host Node:* `nas-1.tail55d152.ts.net`\n\n"
-        <> "All Telegram messages and agentic tasks are coordinated with AGY, Claude, and Codex under UOS governance."
-      #(r, ["respond_identity"])
+        "🤖 *[Robot C3I: Telemetry Ingest & Edge Verification]*\n\n"
+        <> "✅ *Telemetry Payload Ingested by Robot C3I!*\n"
+        <> "• *Peer Agent:* AGY @ razr-1 (`holon-razr15-1`)\n"
+        <> "• *Channel:* Telegram Ingress (`@c3i_talk_bot`)\n"
+        <> "• *Authority:* Pure Erlang/OTP 29 Runtime Engine\n"
+        <> "• *Ledger:* Appended to `var/telemetry/razr1_telemetry.jsonl`\n"
+        <> "• *Status:* 100% Operational & Mesh Connected\n\n"
+        <> "Robot C3I is actively analyzing the debug telemetry. Ready for next operational directive."
+      #(r, ["ingest_razr1_telemetry"])
     }
     False -> {
+      case is_identity {
+        True -> {
+          let r =
+            "🤖 *Robot C3I: Sovereign Cybernetic Cockpit & Mesh Orchestrator (@c3i_talk_bot)*\n\n"
+            <> "I am Robot C3I, the sovereign command, policy, and telemetry harness for the Unified Operational System (UOS).\n\n"
+            <> "• *Primary Autonomous Agent:* **AGY (Google DeepMind Antigravity)**\n"
+            <> "• *Authority Core:* Pure Gleam/OTP 29 (`apps/cepaf_gleam`)\n"
+            <> "• *Supervision:* `uos_sup.gleam` 4-domain supervisor (Apps, Engines, Services, Intelligence)\n"
+            <> "• *Native NIF Acceleration:* c3i_nif (Rust), c3i_ocaml_nif (OCaml), uos_km_nif (Mojo)\n"
+            <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, Pure BEAM & Hermes\n"
+            <> "• *Hardware Acceleration:* Modular MAX / Mojo AVX-512 SIMD\n"
+            <> "• *Deterministic Runtime:* ZigVM VFS & Bytecode Engine (19.85M ops/s)\n"
+            <> "• *Host Node:* `nas-1.tail55d152.ts.net`\n\n"
+            <> "All Telegram messages and agentic tasks are coordinated with AGY, Claude, and Codex under UOS governance."
+          #(r, ["respond_identity"])
+        }
+        False -> {
       case is_system_overview {
         True -> {
           let status_dec = handle_directive("/status", intent)
@@ -1151,6 +1171,8 @@ pub fn handle_conversational_offline_gateway(
       }
     }
   }
+}
+}
 
   let sanitized_reply = egress_redactor.redact_system_secrets(reply)
 
