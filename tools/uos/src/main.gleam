@@ -61,6 +61,7 @@ pub type UosCommand {
   SelfcheckForecast
   SelfcheckInference
   SelfcheckCortex
+  SelfcheckSaPlanSimulators
   VerifyAll
   Help
 }
@@ -116,6 +117,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       SelfcheckInference
     ["cortex-check"] | ["cortex"] | ["selfcheck-cortex"] | ["--selfcheck-cortex"] ->
       SelfcheckCortex
+    ["saplan-sim-check"] | ["selfcheck-saplan-sim"] | ["--selfcheck-saplan-sim"] | ["simulators"] ->
+      SelfcheckSaPlanSimulators
     ["verify-all"] | ["verify"] -> VerifyAll
     _ -> Help
   }
@@ -2146,6 +2149,115 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println("")
       io.println(summary_line(
         "Cortex & Sa-Plan Cognitive Execution Checks",
+        checks,
+      ))
+      exit_for(checks)
+    }
+    SelfcheckSaPlanSimulators -> {
+      io.println(
+        "Evaluating Sa-Plan Simulators & Operational Usecases Selfcheck (--selfcheck-saplan-sim):",
+      )
+      let rows = [
+        #(
+          "SIM-01",
+          "Sa-Plan Simulator Engine present in apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+          file_exists(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "simulate_15_worker_claim",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "simulate_zombie_lease_reaper",
+          ),
+        ),
+        #(
+          "SIM-02",
+          "15-Worker Concurrent Claim race simulator logic present with zero double-claims",
+          file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "ClaimRejected",
+          ),
+        ),
+        #(
+          "SIM-03",
+          "Zombie Lease Expiration and Automatic Reclamation logic present",
+          file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "SimAvailable",
+          ),
+        ),
+        #(
+          "SIM-04",
+          "Temporal Event-Sourced Deterministic Replay simulator logic present",
+          file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "simulate_temporal_replay",
+          ),
+        ),
+        #(
+          "SIM-05",
+          "Oban Exponential Retry Backoff & Dead-Letter Queue simulator present",
+          file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "JobDead",
+          ),
+        ),
+        #(
+          "SIM-06",
+          "Real-Time Telemetry burst and OTel microsecond span generator present",
+          file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "simulate_realtime_telemetry_stream",
+          ),
+        ),
+        #(
+          "SIM-07",
+          "Hardware OS Drive 25503L801736 Attack Defense Simulator present with -32002 halt code",
+          file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "25503L801736",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+            "-32002",
+          ),
+        ),
+        #(
+          "SIM-08",
+          "Full Simulator Test Suite present in apps/cepaf_gleam/test/sa_plan_simulator_suite_test.gleam",
+          file_exists(
+            "apps/cepaf_gleam/test/sa_plan_simulator_suite_test.gleam",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/test/sa_plan_simulator_suite_test.gleam",
+            "sa_plan_sim_15_worker_race_test",
+          ),
+        ),
+        #(
+          "SIM-09",
+          "Sa-Plan canonical registration sa-plan/simulators completed under worker L0-fable",
+          file_contains("var/sa-plan/uos.sqlite3", "sa-plan/simulators")
+            && file_contains("var/sa-plan/uos.sqlite3", "sim/15-workers"),
+        ),
+        #(
+          "SIM-10",
+          "Full aspect master design plan ratified in docs/design/20260912-0022-full-sa-plan-integration-claude-fable-plan.md",
+          file_exists(
+            "docs/design/20260912-0022-full-sa-plan-integration-claude-fable-plan.md",
+          ),
+        ),
+      ]
+      list.each(rows, fn(row) {
+        let #(id, label, observed) = row
+        io.println("  " <> fail_tag(observed) <> " " <> id <> ": " <> label)
+      })
+      let checks = list.map(rows, fn(row) { row.2 })
+      io.println("")
+      io.println(summary_line(
+        "Sa-Plan Simulators & Operational Usecases Checks",
         checks,
       ))
       exit_for(checks)

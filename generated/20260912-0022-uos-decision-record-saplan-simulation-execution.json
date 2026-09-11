@@ -1,0 +1,76 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "completed",
+  "decision_id": "DR-20260912-0022-L0FABLE-SAPLAN-SIMULATION-EXECUTION",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (uos_swarm decision-record CLI)",
+    "actor_id": "L0-fable",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "plan_id": "uos/sa-plan-simulators/20260912-0025",
+    "tasks": [
+      "task-0",
+      "task-1",
+      "task-2",
+      "task-3",
+      "task-4",
+      "task-5",
+      "task-6"
+    ],
+    "authority": "sa-plan",
+    "worker": "L0-fable",
+    "ledger_path": "var/sa-plan/uos.sqlite3"
+  },
+  "policy_refs": [
+    "SC-SA-PLAN-001",
+    "SC-JIDOKA-001",
+    "SC-POODAVR-001",
+    "SC-FPRIME-001",
+    "CHK-07-DRIVE",
+    "SC-MUDA-001",
+    "SYNC-11",
+    "SC-CHECKLIST-001",
+    "SC-TAILSCALE-WEB-001"
+  ],
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "gleam_simulator_engine",
+        "value": "sa_plan_simulator.gleam implements 15-worker race, zombie reaper, temporal replay, oban retry/dead-letter, realtime telemetry, and hardware OS drive defense",
+        "grade": "Measured"
+      },
+      {
+        "source": "gleam_eunit_suite",
+        "value": "sa_plan_simulator_suite_test passed 6/6 tests in 0.032s with zero double-claims, deterministic replay parity, and -32002 hardware defense trap",
+        "grade": "Measured"
+      },
+      {
+        "source": "sa_plan_ledger",
+        "value": "plan uos/sa-plan-simulators/20260912-0025 registered in var/sa-plan/uos.sqlite3 with all 7 tasks completed under worker L0-fable",
+        "grade": "Measured"
+      },
+      {
+        "source": "uos_cli_gate",
+        "value": "./tools/uos-cli saplan-sim-check evaluated 10/10 checks (SIM-01 through SIM-10) all PASS",
+        "grade": "Measured"
+      },
+      {
+        "source": "hardware_safety",
+        "value": "Root OS NVMe serial HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736' verified locked in spec.rs and trapped fail-closed with 0 bytes written in simulator",
+        "grade": "Measured"
+      }
+    ],
+    "selected": "Full operational simulation engine with concurrent worker race, zombie lease reclamation, event-sourced temporal replay, Oban dead-letter handling, real-time OTel streaming, and fail-closed hardware defense executed under Claude Fable L0-fable authority."
+  },
+  "completed": {
+    "observed_at": "2026-09-12T00:25:00Z",
+    "outcome": "integrated: Sa-Plan Simulators & Operational Usecases fully operational; all 7 tasks completed by L0-fable; 6/6 simulator tests pass; 10/10 simulator CLI checks pass; 18/18 comprehensive checklist gates pass."
+  }
+}
