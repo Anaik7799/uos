@@ -923,6 +923,32 @@ def dispatch_request(req: Dict[str, Any]) -> Dict[str, Any]:
         matches = _zk_transclusion.match(query=query, limit=limit, layer_filter=layer_filter)
         resp = {"id": req_id, **matches}
 
+    elif method in ("cortex_rank", "cortex_rank_embeddings"):
+        query_text = get_arg("query", "")
+        candidates = get_arg("candidates", [])
+        dim = int(get_arg("dimension", 384))
+
+        query_vec = _embedder.embed(query_text, dim=dim, normalize=True)
+        ranked = []
+        for i, cand in enumerate(candidates):
+            if isinstance(cand, str):
+                c_vec = _embedder.embed(cand, dim=dim, normalize=True)
+                score = cosine_similarity(query_vec, c_vec)
+                ranked.append({"index": i, "candidate": cand, "score": round(score, 4)})
+            elif isinstance(cand, dict) and "vector" in cand:
+                c_vec = cand["vector"]
+                score = cosine_similarity(query_vec, c_vec)
+                ranked.append({"index": i, "id": cand.get("id", str(i)), "score": round(score, 4)})
+
+        ranked.sort(key=lambda x: x["score"], reverse=True)
+        resp = {
+            "id": req_id,
+            "status": "ok",
+            "query": query_text,
+            "ranked_count": len(ranked),
+            "results": ranked
+        }
+
     elif method in ("stpa_hazard", "stpa_fmea_hazard"):
         resp = {"id": req_id, "status": "ok", "passed": True, "hazard_level": "LOW", "rpn": 12, "psi_interlocks": "PASS"}
 

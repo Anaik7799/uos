@@ -16,6 +16,7 @@
 //// </uos-module>
 //// =============================================================================
 
+import cepaf_gleam/cortex/cortex_sup
 import cepaf_gleam/ecology/living_swarm_actor
 import cepaf_gleam/ha/homeostasis_evolution_engine
 import cepaf_gleam/ha/predictive_zenoh_stream
@@ -122,6 +123,7 @@ pub fn uos_root_spec() -> RootSupervisorSpec {
           "ha_lyapunov_proof",
           "homeostasis_evolution_engine",
           "zenoh_cognitive_worker",
+          "cortex_ooda_supervisor",
         ],
       ),
     ],
@@ -159,5 +161,6 @@ pub fn start_root_supervisor() -> Result(
   |> sup.add(homeostasis_evolution_engine.supervised(0))
   |> sup.add(living_swarm_actor.runtime_supervised(1000))
   |> sup.add(cognitive_worker.supervised("uos-gleam-cognitive-worker-1"))
+  |> sup.add(cortex_sup.supervised())
   |> sup.start
 }

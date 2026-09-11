@@ -1,0 +1,17 @@
+[package]
+name = "cortex_nif"
+version = "0.1.0"
+edition = "2021"
+authors = ["C3I Team <abhijit.naik@bountytek.com>"]
+description = "Cortex fast sensory DSP, PII scrubbing, and local model NIF for UOS"
+license = "Apache-2.0"
+
+[lib]
+name = "cortex_nif"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.37"
+regex = "1.10"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
