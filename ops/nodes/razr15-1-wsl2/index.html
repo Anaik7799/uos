@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UOS Distributed Node Setup (razr15-1)</title>
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --card-bg: #111927;
+      --card-border: #1e293b;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --cyan: #00d4aa;
+      --blue: #38bdf8;
+      --green: #22c55e;
+      --yellow: #f59e0b;
+      --code-bg: #05080f;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, monospace;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: 1.85rem;
+      color: var(--cyan);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      background: rgba(0, 212, 170, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      margin-bottom: 0.75rem;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .code-box {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.92rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .btn-copy {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--blue);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: rgba(56, 189, 248, 0.3);
+      color: #fff;
+    }
+    .btn-copy.copied {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .file-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .file-link:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .file-size {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">SAṀVID VAJRAVYŪHA · INSTANCE 2</div>
+      <h1>UOS Distributed Node Runner</h1>
+      <p class="subtitle">Target: Razer Blade 15 Laptop (Windows 11 + WSL2 Ubuntu 24.04 RTX GPU)</p>
+    </header>
+
+    <!-- Option 1: Run inside WSL2 -->
+    <div class="card" style="border-left: 4px solid var(--cyan);">
+      <h2>🚀 1. Run in WSL2 / Ubuntu Terminal (Recommended)</h2>
+      <p>Downloads the 12MB UOS bundle over Gigabit LAN, verifies GPU pass-through (/dev/dxg), runs ZigVM, and binds port 8088:</p>
+      <div class="code-box">
+        <button class="btn-copy" onclick="copyText('wsl-cmd', this)">Copy</button>
+        <code id="wsl-cmd">curl -fsSL http://192.168.1.220:8999/run | bash</code>
+      </div>
+    </div>
+
+    <!-- Option 2: Run from Windows PowerShell -->
+    <div class="card" style="border-left: 4px solid var(--blue);">
+      <h2>💻 2. Run from Windows PowerShell</h2>
+      <p>Launches the WSL2 instance directly from Windows PowerShell:</p>
+      <div class="code-box">
+        <button class="btn-copy" onclick="copyText('ps-cmd', this)">Copy</button>
+        <code id="ps-cmd">wsl bash -c "curl -fsSL http://192.168.1.220:8999/run | bash"</code>
+      </div>
+    </div>
+
+    <!-- Option 3: Full Cold-Boot & SSH Provisioning -->
+    <div class="card" style="border-left: 4px solid var(--yellow);">
+      <h2>⚡ 3. Windows OpenSSH & Cold-Boot Auto-Start (Admin PowerShell)</h2>
+      <p>Configures Windows OpenSSH keys with strict ACLs and registers the cold-boot SYSTEM scheduled task:</p>
+      <div class="code-box">
+        <button class="btn-copy" onclick="copyText('admin-cmd', this)">Copy</button>
+        <code id="admin-cmd">irm http://192.168.1.220:8999/deploy-and-reboot.ps1 | iex</code>
+      </div>
+    </div>
+
+    <!-- Direct Artifact Downloads -->
+    <div class="card">
+      <h2>📦 Direct Package & Script Downloads</h2>
+      <p>Static binaries and scripts hosted directly on nas-1:</p>
+      <div class="file-grid">
+        <a class="file-link" href="/uos-laptop-instance.tar.gz" download>
+          <span>uos-laptop-instance.tar.gz</span>
+          <span class="file-size">12 MB</span>
+        </a>
+        <a class="file-link" href="/zigvm" download>
+          <span>zigvm (Deterministic VM)</span>
+          <span class="file-size">49 MB</span>
+        </a>
+        <a class="file-link" href="/run">
+          <span>run (One-liner script)</span>
+          <span class="file-size">1 KB</span>
+        </a>
+        <a class="file-link" href="/deploy-and-reboot.ps1">
+          <span>deploy-and-reboot.ps1</span>
+          <span class="file-size">7 KB</span>
+        </a>
+        <a class="file-link" href="/run-uos-instance.sh">
+          <span>run-uos-instance.sh</span>
+          <span class="file-size">3 KB</span>
+        </a>
+        <a class="file-link" href="/start-instance2.sh">
+          <span>start-instance2.sh</span>
+          <span class="file-size">3 KB</span>
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      <p>Primary Controller: <a href="http://192.168.1.220:4100" style="color: var(--cyan); text-decoration: none;">nas-1 (192.168.1.220:4100)</a> · Peer: vm-1 (100.78.98.18:8088)</p>
+      <p style="margin-top: 0.25rem;">Unified Operational System (UOS) · Zero-Muda Purity</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyText(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.innerText = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerText = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
