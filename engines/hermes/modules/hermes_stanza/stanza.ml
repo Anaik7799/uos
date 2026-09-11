@@ -2,7 +2,7 @@
    Do not edit. A dune rule regenerates this and diffs it, so drift
    fails the build rather than rotting quietly.
 
-   195 libraries. A value of this type is a WITNESS that the library
+   201 libraries. A value of this type is a WITNESS that the library
    exists in the graph; there is no way to make one from a string, which
    is the whole point. *)
 
@@ -11,6 +11,8 @@ type t = int
 let names = [|
   "agent_dispatch_hook";
   "agent_time_hook";
+  "atlas_algebra";
+  "gospel_dispatch_contracts";
   "hermes_agent_loop_compress_units";
   "hermes_agent_loop_context_compression";
   "hermes_agent_loop_context_engine";
@@ -144,6 +146,7 @@ let names = [|
   "hermes_harness_turn_preflight";
   "hermes_harness_web_read_model";
   "hermes_jj_protocol";
+  "hermes_mirage";
   "hermes_nix";
   "hermes_ops";
   "hermes_ops_capability";
@@ -156,6 +159,7 @@ let names = [|
   "hermes_stanza";
   "hermes_sysml";
   "hermes_vcs";
+  "hermes_vfs_oracle";
   "hermes_vision";
   "hermes_wiki_address";
   "hermes_wiki_ast";
@@ -196,6 +200,8 @@ let names = [|
   "hermes_wiki_view";
   "hermes_wiki_visibility";
   "hermes_zellij";
+  "lease_health";
+  "preflight_algebra";
   "run_swarm_bridge_programme";
   "sa_plan";
   "toolchain_core";
@@ -208,6 +214,8 @@ let names = [|
 
 let dune_files = [|
   "modules/system_engg/dune";
+  "modules/system_engg/dune";
+  "modules/hermes_toolchain/dune";
   "modules/system_engg/dune";
   "modules/hermes_agent_loop/dune";
   "modules/hermes_agent_loop/dune";
@@ -342,6 +350,7 @@ let dune_files = [|
   "modules/hermes_harness/dune";
   "modules/hermes_harness/dune";
   "modules/hermes_vcs/dune";
+  "modules/hermes_mirage/dune";
   "modules/hermes_nix/dune";
   "modules/hermes_ops/dune";
   "modules/hermes_ops/dune";
@@ -354,6 +363,7 @@ let dune_files = [|
   "modules/hermes_stanza/dune";
   "modules/hermes_sysml/dune";
   "modules/hermes_vcs/dune";
+  "modules/hermes_vfs_oracle/dune";
   "modules/hermes_vision/dune";
   "modules/hermes_wiki/src/engine/dune";
   "modules/hermes_wiki/src/engine/dune";
@@ -394,6 +404,8 @@ let dune_files = [|
   "modules/hermes_wiki/src/engine/dune";
   "modules/hermes_wiki/src/engine/dune";
   "modules/hermes_zellij/dune";
+  "modules/hermes_toolchain/dune";
+  "modules/hermes_toolchain/dune";
   "modules/system_engg/dune";
   "modules/sa_plan/dune";
   "modules/hermes_toolchain/dune";
@@ -415,196 +427,202 @@ let all = List.init (Array.length names) (fun i -> i)
 let cone_table = [|
   [|  |];
   [|  |];
-  [| 103 |];
-  [| 67; 68; 69; 70; 103 |];
-  [| 67; 68; 69; 70; 103 |];
-  [| 103 |];
-  [| 103 |];
-  [| 67; 68; 69; 70; 103 |];
-  [| 103 |];
-  [| 103 |];
-  [|  |];
-  [| 12; 103 |];
-  [| 103 |];
-  [| 103 |];
-  [| 13; 20; 21; 103 |];
-  [| 3; 4; 7; 17; 23; 67; 68; 69; 70; 103 |];
-  [| 103 |];
-  [| 67; 68; 69; 70; 103 |];
-  [| 103 |];
-  [| 103 |];
-  [| 103 |];
-  [| 103 |];
-  [| 103 |];
-  [| 67; 68; 69; 70; 103 |];
-  [| 136; 141 |];
-  [| 26; 33; 46; 136; 141 |];
-  [| 46; 136; 141 |];
-  [| 26; 46; 136; 141 |];
-  [| 26; 30; 33; 40; 46; 136; 141 |];
-  [| 26; 28; 30; 32; 33; 34; 35; 37; 39; 40; 41; 42; 43; 44; 46; 136; 141 |];
-  [|  |];
-  [| 25; 26; 27; 28; 30; 32; 33; 34; 35; 36; 37; 38; 39; 40; 41; 42; 43; 44; 46; 136; 141 |];
-  [| 35 |];
-  [| 26; 46; 136; 141 |];
-  [| 26; 28; 30; 33; 40; 41; 42; 43; 44; 46; 136; 141 |];
-  [|  |];
-  [| 26; 28; 30; 33; 40; 46; 136; 141 |];
-  [| 39 |];
-  [| 37; 39; 136; 141 |];
   [|  |];
   [|  |];
+  [| 105 |];
+  [| 69; 70; 71; 72; 105 |];
+  [| 69; 70; 71; 72; 105 |];
+  [| 105 |];
+  [| 105 |];
+  [| 69; 70; 71; 72; 105 |];
+  [| 105 |];
+  [| 105 |];
   [|  |];
-  [| 26; 28; 30; 33; 40; 41; 44; 46; 136; 141 |];
-  [| 26; 28; 30; 33; 40; 41; 42; 44; 46; 136; 141 |];
+  [| 14; 105 |];
+  [| 105 |];
+  [| 105 |];
+  [| 15; 22; 23; 105 |];
+  [| 5; 6; 9; 19; 25; 69; 70; 71; 72; 105 |];
+  [| 105 |];
+  [| 69; 70; 71; 72; 105 |];
+  [| 105 |];
+  [| 105 |];
+  [| 105 |];
+  [| 105 |];
+  [| 105 |];
+  [| 69; 70; 71; 72; 105 |];
+  [| 139; 144 |];
+  [| 28; 35; 48; 139; 144 |];
+  [| 48; 139; 144 |];
+  [| 28; 48; 139; 144 |];
+  [| 28; 32; 35; 42; 48; 139; 144 |];
+  [| 28; 30; 32; 34; 35; 36; 37; 39; 41; 42; 43; 44; 45; 46; 48; 139; 144 |];
   [|  |];
+  [| 27; 28; 29; 30; 32; 34; 35; 36; 37; 38; 39; 40; 41; 42; 43; 44; 45; 46; 48; 139; 144 |];
+  [| 37 |];
+  [| 28; 48; 139; 144 |];
+  [| 28; 30; 32; 35; 42; 43; 44; 45; 46; 48; 139; 144 |];
   [|  |];
-  [| 136; 141 |];
-  [|  |];
-  [| 136; 141 |];
-  [| 77; 79; 84; 88; 127; 128; 133; 136; 137; 139; 141; 143; 168; 175; 182 |];
-  [|  |];
-  [| 103 |];
-  [| 103 |];
-  [| 65; 78; 87; 104; 105 |];
-  [| 56; 63; 78; 103; 115; 126 |];
-  [| 62; 80; 104; 105; 114 |];
-  [| 78; 103 |];
-  [| 103 |];
-  [| 104 |];
-  [| 77; 79; 84; 104; 127; 128; 133; 136; 141 |];
-  [|  |];
-  [| 54; 56; 63; 71; 73; 78; 80; 101; 103; 104; 113; 114; 115; 117; 126; 127; 133; 136; 141 |];
+  [| 28; 30; 32; 35; 42; 48; 139; 144 |];
+  [| 41 |];
+  [| 39; 41; 139; 144 |];
   [|  |];
   [|  |];
   [|  |];
+  [| 28; 30; 32; 35; 42; 43; 46; 48; 139; 144 |];
+  [| 28; 30; 32; 35; 42; 43; 44; 46; 48; 139; 144 |];
   [|  |];
-  [| 67; 68; 69; 70 |];
+  [|  |];
+  [| 139; 144 |];
+  [|  |];
+  [| 139; 144 |];
+  [| 79; 81; 86; 90; 129; 130; 135; 139; 140; 142; 144; 146; 172; 179; 186 |];
+  [|  |];
+  [| 105 |];
+  [| 105 |];
+  [| 67; 80; 89; 106; 107 |];
+  [| 58; 65; 80; 105; 117; 128 |];
+  [| 64; 82; 106; 107; 116 |];
+  [| 80; 105 |];
+  [| 105 |];
+  [| 106 |];
+  [| 79; 81; 86; 106; 129; 130; 135; 139; 144 |];
+  [|  |];
+  [| 56; 58; 65; 73; 75; 80; 82; 103; 105; 106; 115; 116; 117; 119; 128; 129; 135; 139; 144 |];
   [|  |];
   [|  |];
   [|  |];
   [|  |];
-  [| 73; 80; 101; 103; 104; 113; 114; 117; 127; 133; 136; 141 |];
-  [|  |];
-  [| 104; 113; 127; 133; 136; 141 |];
-  [|  |];
-  [| 111 |];
-  [| 80; 101; 117 |];
-  [| 84; 127; 128; 133; 136; 141 |];
-  [|  |];
-  [| 77; 84; 127; 128; 133; 136; 141 |];
-  [|  |];
-  [| 65; 104 |];
-  [| 77; 78; 79; 84; 87; 88; 104; 127; 128; 130; 133; 136; 141 |];
-  [|  |];
-  [| 127 |];
-  [| 103 |];
-  [|  |];
-  [| 78 |];
-  [| 77; 79; 84; 127; 128; 133; 136; 141 |];
-  [| 90; 104 |];
-  [|  |];
-  [| 65; 111; 136; 141 |];
-  [| 136; 147 |];
-  [| 59; 77; 79; 84; 104; 127; 128; 133; 136; 141 |];
-  [| 107 |];
-  [| 56; 63; 71; 73; 78; 80; 101; 103; 104; 113; 114; 115; 117; 126; 127; 133; 136; 141 |];
-  [| 132 |];
-  [|  |];
-  [| 99; 103; 116; 132 |];
-  [| 103; 116 |];
-  [| 136 |];
-  [| 117 |];
-  [| 53; 65; 73; 77; 78; 79; 84; 87; 103; 104; 105; 113; 127; 128; 133; 136; 141 |];
-  [|  |];
-  [|  |];
-  [| 104 |];
-  [|  |];
-  [|  |];
-  [| 56; 63; 78; 103; 115; 126 |];
-  [| 103 |];
+  [| 69; 70; 71; 72 |];
   [|  |];
   [|  |];
   [|  |];
-  [| 136; 141 |];
   [|  |];
-  [| 56; 63; 78; 103; 126 |];
-  [| 103 |];
+  [| 75; 82; 103; 105; 106; 115; 116; 119; 129; 135; 139; 144 |];
   [|  |];
-  [| 66; 67; 68; 69; 70; 78; 87; 136; 141; 186; 187 |];
-  [| 103 |];
+  [| 106; 115; 129; 135; 139; 144 |];
   [|  |];
-  [| 103 |];
-  [| 111; 136; 141 |];
+  [| 113 |];
+  [| 82; 103; 119 |];
+  [| 86; 129; 130; 135; 139; 144 |];
   [|  |];
+  [| 79; 86; 129; 130; 135; 139; 144 |];
   [|  |];
+  [| 67; 106 |];
+  [| 79; 80; 81; 86; 89; 90; 106; 129; 130; 132; 135; 139; 144 |];
   [|  |];
-  [| 103 |];
+  [| 129 |];
+  [| 105 |];
   [|  |];
-  [| 136; 141 |];
+  [| 80 |];
+  [| 79; 81; 86; 129; 130; 135; 139; 144 |];
+  [| 92; 106 |];
   [|  |];
-  [| 128; 136; 141 |];
-  [| 7; 10; 67; 68; 69; 70; 103; 132 |];
+  [| 67; 113; 139; 144 |];
+  [| 139; 151 |];
+  [| 61; 79; 81; 86; 106; 129; 130; 135; 139; 144 |];
+  [| 109 |];
+  [| 58; 65; 73; 75; 80; 82; 103; 105; 106; 115; 116; 117; 119; 128; 129; 135; 139; 144 |];
+  [| 134 |];
   [|  |];
-  [| 127 |];
-  [| 30; 37; 38; 39; 136; 141 |];
-  [|  |];
-  [|  |];
-  [| 136; 141 |];
-  [| 24; 25; 26; 27; 28; 30; 31; 32; 33; 34; 35; 36; 37; 38; 39; 40; 41; 42; 43; 44; 46; 48; 136; 137; 141; 142; 143 |];
-  [| 136; 141 |];
-  [| 136; 141 |];
-  [| 136 |];
-  [| 136; 141; 143 |];
-  [| 136; 141 |];
-  [| 129; 136; 137; 141; 194 |];
-  [| 50; 77; 78; 79; 82; 84; 87; 88; 104; 127; 128; 130; 133; 136; 141; 168 |];
-  [| 26; 30; 33; 37; 38; 39; 40; 46; 134; 136; 141 |];
-  [|  |];
-  [| 136; 168; 175 |];
-  [| 84; 127; 133; 136; 148; 150; 151; 154; 155; 157; 158; 159; 162; 166; 167; 168; 169; 170; 171; 172; 175; 176; 177; 178; 179; 181; 184; 185 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 84; 127; 133; 136; 148; 149; 150; 151; 154; 155; 157; 158; 159; 162; 166; 167; 168; 169; 170; 171; 172; 175; 176; 177; 178; 179; 181; 184; 185 |];
-  [| 136; 168; 175 |];
-  [| 84; 127; 133; 136; 148; 150; 151; 155; 157; 158; 159; 162; 166; 167; 168; 169; 170; 171; 172; 175; 176; 177; 178; 179; 181; 184; 185 |];
-  [| 136; 168; 175 |];
-  [| 45; 48; 49; 53; 56; 63; 65; 66; 67; 68; 69; 70; 73; 77; 78; 79; 81; 84; 87; 88; 102; 103; 104; 105; 113; 118; 127; 128; 130; 133; 136; 137; 139; 141; 143; 147; 153; 160; 161; 168; 175; 182; 186; 187 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 45; 48; 49; 77; 79; 84; 88; 127; 128; 130; 133; 136; 137; 139; 141; 143; 147; 161; 168; 175; 182 |];
-  [| 77; 79; 84; 127; 128; 133; 136; 141 |];
-  [| 136; 168; 169; 175; 178 |];
-  [|  |];
-  [| 136; 168; 175; 179 |];
-  [| 84; 127; 133; 136; 148; 149; 150; 151; 154; 155; 157; 158; 159; 162; 166; 167; 168; 169; 170; 171; 172; 175; 176; 177; 178; 179; 181; 184; 185 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136; 155; 168; 175; 184 |];
-  [| 136; 153; 168; 175 |];
-  [| 84; 127; 133; 136; 148; 150; 151; 154; 155; 157; 158; 159; 162; 166; 167; 168; 169; 170; 171; 172; 175; 176; 177; 178; 179; 181; 184; 185 |];
-  [| 136; 168 |];
-  [| 136; 168; 169; 175 |];
-  [| 136; 151; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 171; 175 |];
-  [| 136; 168; 169; 175 |];
-  [| 136; 141; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
-  [| 136; 168; 175 |];
+  [| 101; 105; 118; 134 |];
+  [| 105; 118 |];
+  [| 139 |];
+  [| 119 |];
+  [| 55; 67; 75; 79; 80; 81; 86; 89; 105; 106; 107; 115; 129; 130; 135; 139; 144 |];
   [|  |];
   [|  |];
-  [| 110; 187 |];
+  [| 106 |];
   [|  |];
   [|  |];
-  [| 136; 168; 169; 175; 176 |];
+  [| 58; 65; 80; 105; 117; 128 |];
+  [| 105 |];
+  [|  |];
+  [|  |];
+  [|  |];
+  [| 139; 144 |];
+  [|  |];
+  [| 58; 65; 80; 105; 128 |];
+  [| 105 |];
+  [|  |];
+  [| 68; 69; 70; 71; 72; 80; 89; 139; 144; 190; 193 |];
+  [| 105 |];
+  [|  |];
+  [| 105 |];
+  [| 113; 139; 144 |];
+  [|  |];
+  [|  |];
+  [|  |];
+  [| 105 |];
+  [|  |];
+  [| 139; 144 |];
+  [|  |];
+  [| 130; 139; 144 |];
+  [| 9; 12; 69; 70; 71; 72; 105; 134 |];
+  [|  |];
+  [| 129 |];
+  [| 32; 39; 40; 41; 139; 144 |];
+  [|  |];
+  [|  |];
+  [|  |];
+  [| 139; 144 |];
+  [| 26; 27; 28; 29; 30; 32; 33; 34; 35; 36; 37; 38; 39; 40; 41; 42; 43; 44; 45; 46; 48; 50; 139; 140; 144; 145; 146 |];
+  [| 139; 144 |];
+  [| 139; 144 |];
+  [| 139 |];
+  [| 139; 144; 146 |];
+  [| 139; 144 |];
+  [| 131; 139; 140; 144; 200 |];
+  [| 52; 79; 80; 81; 84; 86; 89; 90; 106; 129; 130; 132; 135; 139; 144; 172 |];
+  [| 28; 32; 35; 39; 40; 41; 42; 48; 136; 139; 144 |];
+  [|  |];
+  [|  |];
+  [| 139; 172; 179 |];
+  [| 86; 129; 135; 139; 152; 154; 155; 158; 159; 161; 162; 163; 166; 170; 171; 172; 173; 174; 175; 176; 179; 180; 181; 182; 183; 185; 188; 189 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 86; 129; 135; 139; 152; 153; 154; 155; 158; 159; 161; 162; 163; 166; 170; 171; 172; 173; 174; 175; 176; 179; 180; 181; 182; 183; 185; 188; 189 |];
+  [| 139; 172; 179 |];
+  [| 86; 129; 135; 139; 152; 154; 155; 159; 161; 162; 163; 166; 170; 171; 172; 173; 174; 175; 176; 179; 180; 181; 182; 183; 185; 188; 189 |];
+  [| 139; 172; 179 |];
+  [| 47; 50; 51; 55; 58; 65; 67; 68; 69; 70; 71; 72; 75; 79; 80; 81; 83; 86; 89; 90; 104; 105; 106; 107; 115; 120; 129; 130; 132; 135; 139; 140; 142; 144; 146; 151; 157; 164; 165; 172; 179; 186; 190; 193 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 47; 50; 51; 79; 81; 86; 90; 129; 130; 132; 135; 139; 140; 142; 144; 146; 151; 165; 172; 179; 186 |];
+  [| 79; 81; 86; 129; 130; 135; 139; 144 |];
+  [| 139; 172; 173; 179; 182 |];
+  [|  |];
+  [| 139; 172; 179; 183 |];
+  [| 86; 129; 135; 139; 152; 153; 154; 155; 158; 159; 161; 162; 163; 166; 170; 171; 172; 173; 174; 175; 176; 179; 180; 181; 182; 183; 185; 188; 189 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139; 159; 172; 179; 188 |];
+  [| 139; 157; 172; 179 |];
+  [| 86; 129; 135; 139; 152; 154; 155; 158; 159; 161; 162; 163; 166; 170; 171; 172; 173; 174; 175; 176; 179; 180; 181; 182; 183; 185; 188; 189 |];
+  [| 139; 172 |];
+  [| 139; 172; 173; 179 |];
+  [| 139; 155; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 175; 179 |];
+  [| 139; 172; 173; 179 |];
+  [| 139; 144; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [| 139; 172; 179 |];
+  [|  |];
+  [|  |];
+  [|  |];
+  [|  |];
+  [| 112; 193 |];
+  [|  |];
+  [|  |];
+  [| 139; 172; 173; 179; 180 |];
   [|  |];
   [|  |];
   [|  |];
@@ -627,196 +645,202 @@ let cone_of targets =
 
 let agent_dispatch_hook : t = 0
 let agent_time_hook : t = 1
-let hermes_agent_loop_compress_units : t = 2
-let hermes_agent_loop_context_compression : t = 3
-let hermes_agent_loop_context_engine : t = 4
-let hermes_agent_loop_context_file_units : t = 5
-let hermes_agent_loop_context_units : t = 6
-let hermes_agent_loop_conversation_loop : t = 7
-let hermes_agent_loop_finalize_units : t = 8
-let hermes_agent_loop_interactive_cli_units : t = 9
-let hermes_agent_loop_interrupt_control : t = 10
-let hermes_agent_loop_json_canonical : t = 11
-let hermes_agent_loop_loop_send_path : t = 12
-let hermes_agent_loop_mcp_units : t = 13
-let hermes_agent_loop_memory_units : t = 14
-let hermes_agent_loop_message_hygiene : t = 15
-let hermes_agent_loop_message_repairs : t = 16
-let hermes_agent_loop_prompt_assembly : t = 17
-let hermes_agent_loop_prompt_units : t = 18
-let hermes_agent_loop_redact_units : t = 19
-let hermes_agent_loop_skill_units : t = 20
-let hermes_agent_loop_subagent_units : t = 21
-let hermes_agent_loop_tool_units : t = 22
-let hermes_agent_loop_turn_finalization : t = 23
-let hermes_debugging : t = 24
-let hermes_dependability_abandonment_protocol : t = 25
-let hermes_dependability_approval : t = 26
-let hermes_dependability_approval_crypto : t = 27
-let hermes_dependability_authority_store : t = 28
-let hermes_dependability_clock : t = 29
-let hermes_dependability_completion_store : t = 30
-let hermes_dependability_core : t = 31
-let hermes_dependability_credential : t = 32
-let hermes_dependability_dispatch_store : t = 33
-let hermes_dependability_filesystem : t = 34
-let hermes_dependability_network : t = 35
-let hermes_dependability_owner_inventory : t = 36
-let hermes_dependability_process : t = 37
-let hermes_dependability_process_protocol : t = 38
-let hermes_dependability_process_test_support : t = 39
-let hermes_dependability_recovery_vault : t = 40
-let hermes_dependability_solver : t = 41
-let hermes_dependability_sqlite : t = 42
-let hermes_dependability_sqlite_location : t = 43
-let hermes_dependability_sqlite_test_support : t = 44
-let hermes_dependability_topology : t = 45
-let hermes_dependability_writer_lease : t = 46
-let hermes_dune_graph : t = 47
-let hermes_external_access : t = 48
-let hermes_fpp_window_authority : t = 49
-let hermes_harness_agent_model : t = 50
-let hermes_harness_anthropic_adapter : t = 51
-let hermes_harness_bedrock_converse : t = 52
-let hermes_harness_blueprint : t = 53
-let hermes_harness_bootstrap : t = 54
-let hermes_harness_capability_catalog : t = 55
-let hermes_harness_capture_diagnostic : t = 56
-let hermes_harness_codex_message_shapes : t = 57
-let hermes_harness_contract_catalog : t = 58
-let hermes_harness_control_plane : t = 59
-let hermes_harness_converge : t = 60
-let hermes_harness_core : t = 61
-let hermes_harness_dependency_smt : t = 62
-let hermes_harness_determinism_verifier : t = 63
-let hermes_harness_diff_triage : t = 64
-let hermes_harness_drift_rules : t = 65
-let hermes_harness_e2e_framework : t = 66
-let hermes_harness_e2e_tier1_tests : t = 67
-let hermes_harness_e2e_tier2_tests : t = 68
-let hermes_harness_e2e_tier3_tests : t = 69
-let hermes_harness_e2e_tier4_tests : t = 70
-let hermes_harness_evidence : t = 71
-let hermes_harness_evidence_import : t = 72
-let hermes_harness_evidence_rollup : t = 73
-let hermes_harness_evolution_model : t = 74
-let hermes_harness_expect_posterior : t = 75
-let hermes_harness_feature_catalog : t = 76
-let hermes_harness_formal_coverage : t = 77
-let hermes_harness_formal_specs : t = 78
-let hermes_harness_fpp_usecases : t = 79
-let hermes_harness_fractal_catalog : t = 80
-let hermes_harness_fractal_countermeasures : t = 81
-let hermes_harness_fractal_ontology : t = 82
-let hermes_harness_fractal_parity : t = 83
-let hermes_harness_gap_plan : t = 84
-let hermes_harness_gemini_schema : t = 85
-let hermes_harness_gospel_check : t = 86
-let hermes_harness_harness_config : t = 87
-let hermes_harness_harness_topology : t = 88
-let hermes_harness_hermes_analysis : t = 89
-let hermes_harness_hermes_imports : t = 90
-let hermes_harness_hermes_rete : t = 91
-let hermes_harness_hermes_zenoh : t = 92
-let hermes_harness_homeostasis : t = 93
-let hermes_harness_info_math : t = 94
-let hermes_harness_inventory : t = 95
-let hermes_harness_message_hygiene : t = 96
-let hermes_harness_ocaml_only_guard : t = 97
-let hermes_harness_openrouter_contract : t = 98
-let hermes_harness_openrouter_transport : t = 99
-let hermes_harness_orientation_history : t = 100
-let hermes_harness_parity : t = 101
-let hermes_harness_parity_algebra : t = 102
-let hermes_harness_parity_compare : t = 103
-let hermes_harness_parity_dashboard : t = 104
-let hermes_harness_parity_intent : t = 105
-let hermes_harness_parity_lattice_extracted : t = 106
-let hermes_harness_parity_ledger : t = 107
-let hermes_harness_parity_normalizer : t = 108
-let hermes_harness_path_safety : t = 109
-let hermes_harness_plan : t = 110
-let hermes_harness_posterior_assessment : t = 111
-let hermes_harness_qcheck_seed : t = 112
-let hermes_harness_receipt_reliability : t = 113
-let hermes_harness_reference_artifacts : t = 114
-let hermes_harness_reference_capture : t = 115
-let hermes_harness_replay_executor : t = 116
-let hermes_harness_report : t = 117
-let hermes_harness_resource_envelope : t = 118
-let hermes_harness_retry_utils : t = 119
-let hermes_harness_rocq_lattice : t = 120
-let hermes_harness_route_resolution : t = 121
-let hermes_harness_ruliad : t = 122
-let hermes_harness_ruliad_rules : t = 123
-let hermes_harness_runtime_coverage : t = 124
-let hermes_harness_rust_rules : t = 125
-let hermes_harness_session_fixture : t = 126
-let hermes_harness_site_build : t = 127
-let hermes_harness_sop_execution : t = 128
-let hermes_harness_suite_telemetry : t = 129
-let hermes_harness_swarm_algebra : t = 130
-let hermes_harness_turn_budget : t = 131
-let hermes_harness_turn_preflight : t = 132
-let hermes_harness_web_read_model : t = 133
-let hermes_jj_protocol : t = 134
-let hermes_nix : t = 135
-let hermes_ops : t = 136
-let hermes_ops_capability : t = 137
-let hermes_ops_capability_core : t = 138
-let hermes_ops_completion_topology : t = 139
-let hermes_ops_config_authority : t = 140
-let hermes_ops_dashboard : t = 141
-let hermes_ops_governance : t = 142
-let hermes_ops_topology : t = 143
-let hermes_stanza : t = 144
-let hermes_sysml : t = 145
-let hermes_vcs : t = 146
-let hermes_vision : t = 147
-let hermes_wiki_address : t = 148
-let hermes_wiki_ast : t = 149
-let hermes_wiki_blocks : t = 150
-let hermes_wiki_build : t = 151
-let hermes_wiki_callout : t = 152
-let hermes_wiki_control : t = 153
-let hermes_wiki_core : t = 154
-let hermes_wiki_datastore : t = 155
-let hermes_wiki_diag : t = 156
-let hermes_wiki_directive : t = 157
-let hermes_wiki_doctest : t = 158
-let hermes_wiki_export : t = 159
-let hermes_wiki_fpp : t = 160
-let hermes_wiki_fpp_interp : t = 161
-let hermes_wiki_graph : t = 162
-let hermes_wiki_httpd : t = 163
-let hermes_wiki_iface : t = 164
-let hermes_wiki_include : t = 165
-let hermes_wiki_km : t = 166
-let hermes_wiki_lifecycle : t = 167
-let hermes_wiki_mbse : t = 168
-let hermes_wiki_navsearch : t = 169
-let hermes_wiki_ordering : t = 170
-let hermes_wiki_present : t = 171
-let hermes_wiki_query : t = 172
-let hermes_wiki_reconcile : t = 173
-let hermes_wiki_ref : t = 174
-let hermes_wiki_register : t = 175
-let hermes_wiki_search : t = 176
-let hermes_wiki_sheaf : t = 177
-let hermes_wiki_similarity : t = 178
-let hermes_wiki_source_ext : t = 179
-let hermes_wiki_theme : t = 180
-let hermes_wiki_toc : t = 181
-let hermes_wiki_topology : t = 182
-let hermes_wiki_transclude : t = 183
-let hermes_wiki_view : t = 184
-let hermes_wiki_visibility : t = 185
-let hermes_zellij : t = 186
-let run_swarm_bridge_programme : t = 187
-let sa_plan : t = 188
-let toolchain_core : t = 189
-let wiki_baseline_triage : t = 190
-let wiki_core : t = 191
-let wiki_render : t = 192
-let wiki_server : t = 193
-let wiki_suite_telemetry : t = 194
+let atlas_algebra : t = 2
+let gospel_dispatch_contracts : t = 3
+let hermes_agent_loop_compress_units : t = 4
+let hermes_agent_loop_context_compression : t = 5
+let hermes_agent_loop_context_engine : t = 6
+let hermes_agent_loop_context_file_units : t = 7
+let hermes_agent_loop_context_units : t = 8
+let hermes_agent_loop_conversation_loop : t = 9
+let hermes_agent_loop_finalize_units : t = 10
+let hermes_agent_loop_interactive_cli_units : t = 11
+let hermes_agent_loop_interrupt_control : t = 12
+let hermes_agent_loop_json_canonical : t = 13
+let hermes_agent_loop_loop_send_path : t = 14
+let hermes_agent_loop_mcp_units : t = 15
+let hermes_agent_loop_memory_units : t = 16
+let hermes_agent_loop_message_hygiene : t = 17
+let hermes_agent_loop_message_repairs : t = 18
+let hermes_agent_loop_prompt_assembly : t = 19
+let hermes_agent_loop_prompt_units : t = 20
+let hermes_agent_loop_redact_units : t = 21
+let hermes_agent_loop_skill_units : t = 22
+let hermes_agent_loop_subagent_units : t = 23
+let hermes_agent_loop_tool_units : t = 24
+let hermes_agent_loop_turn_finalization : t = 25
+let hermes_debugging : t = 26
+let hermes_dependability_abandonment_protocol : t = 27
+let hermes_dependability_approval : t = 28
+let hermes_dependability_approval_crypto : t = 29
+let hermes_dependability_authority_store : t = 30
+let hermes_dependability_clock : t = 31
+let hermes_dependability_completion_store : t = 32
+let hermes_dependability_core : t = 33
+let hermes_dependability_credential : t = 34
+let hermes_dependability_dispatch_store : t = 35
+let hermes_dependability_filesystem : t = 36
+let hermes_dependability_network : t = 37
+let hermes_dependability_owner_inventory : t = 38
+let hermes_dependability_process : t = 39
+let hermes_dependability_process_protocol : t = 40
+let hermes_dependability_process_test_support : t = 41
+let hermes_dependability_recovery_vault : t = 42
+let hermes_dependability_solver : t = 43
+let hermes_dependability_sqlite : t = 44
+let hermes_dependability_sqlite_location : t = 45
+let hermes_dependability_sqlite_test_support : t = 46
+let hermes_dependability_topology : t = 47
+let hermes_dependability_writer_lease : t = 48
+let hermes_dune_graph : t = 49
+let hermes_external_access : t = 50
+let hermes_fpp_window_authority : t = 51
+let hermes_harness_agent_model : t = 52
+let hermes_harness_anthropic_adapter : t = 53
+let hermes_harness_bedrock_converse : t = 54
+let hermes_harness_blueprint : t = 55
+let hermes_harness_bootstrap : t = 56
+let hermes_harness_capability_catalog : t = 57
+let hermes_harness_capture_diagnostic : t = 58
+let hermes_harness_codex_message_shapes : t = 59
+let hermes_harness_contract_catalog : t = 60
+let hermes_harness_control_plane : t = 61
+let hermes_harness_converge : t = 62
+let hermes_harness_core : t = 63
+let hermes_harness_dependency_smt : t = 64
+let hermes_harness_determinism_verifier : t = 65
+let hermes_harness_diff_triage : t = 66
+let hermes_harness_drift_rules : t = 67
+let hermes_harness_e2e_framework : t = 68
+let hermes_harness_e2e_tier1_tests : t = 69
+let hermes_harness_e2e_tier2_tests : t = 70
+let hermes_harness_e2e_tier3_tests : t = 71
+let hermes_harness_e2e_tier4_tests : t = 72
+let hermes_harness_evidence : t = 73
+let hermes_harness_evidence_import : t = 74
+let hermes_harness_evidence_rollup : t = 75
+let hermes_harness_evolution_model : t = 76
+let hermes_harness_expect_posterior : t = 77
+let hermes_harness_feature_catalog : t = 78
+let hermes_harness_formal_coverage : t = 79
+let hermes_harness_formal_specs : t = 80
+let hermes_harness_fpp_usecases : t = 81
+let hermes_harness_fractal_catalog : t = 82
+let hermes_harness_fractal_countermeasures : t = 83
+let hermes_harness_fractal_ontology : t = 84
+let hermes_harness_fractal_parity : t = 85
+let hermes_harness_gap_plan : t = 86
+let hermes_harness_gemini_schema : t = 87
+let hermes_harness_gospel_check : t = 88
+let hermes_harness_harness_config : t = 89
+let hermes_harness_harness_topology : t = 90
+let hermes_harness_hermes_analysis : t = 91
+let hermes_harness_hermes_imports : t = 92
+let hermes_harness_hermes_rete : t = 93
+let hermes_harness_hermes_zenoh : t = 94
+let hermes_harness_homeostasis : t = 95
+let hermes_harness_info_math : t = 96
+let hermes_harness_inventory : t = 97
+let hermes_harness_message_hygiene : t = 98
+let hermes_harness_ocaml_only_guard : t = 99
+let hermes_harness_openrouter_contract : t = 100
+let hermes_harness_openrouter_transport : t = 101
+let hermes_harness_orientation_history : t = 102
+let hermes_harness_parity : t = 103
+let hermes_harness_parity_algebra : t = 104
+let hermes_harness_parity_compare : t = 105
+let hermes_harness_parity_dashboard : t = 106
+let hermes_harness_parity_intent : t = 107
+let hermes_harness_parity_lattice_extracted : t = 108
+let hermes_harness_parity_ledger : t = 109
+let hermes_harness_parity_normalizer : t = 110
+let hermes_harness_path_safety : t = 111
+let hermes_harness_plan : t = 112
+let hermes_harness_posterior_assessment : t = 113
+let hermes_harness_qcheck_seed : t = 114
+let hermes_harness_receipt_reliability : t = 115
+let hermes_harness_reference_artifacts : t = 116
+let hermes_harness_reference_capture : t = 117
+let hermes_harness_replay_executor : t = 118
+let hermes_harness_report : t = 119
+let hermes_harness_resource_envelope : t = 120
+let hermes_harness_retry_utils : t = 121
+let hermes_harness_rocq_lattice : t = 122
+let hermes_harness_route_resolution : t = 123
+let hermes_harness_ruliad : t = 124
+let hermes_harness_ruliad_rules : t = 125
+let hermes_harness_runtime_coverage : t = 126
+let hermes_harness_rust_rules : t = 127
+let hermes_harness_session_fixture : t = 128
+let hermes_harness_site_build : t = 129
+let hermes_harness_sop_execution : t = 130
+let hermes_harness_suite_telemetry : t = 131
+let hermes_harness_swarm_algebra : t = 132
+let hermes_harness_turn_budget : t = 133
+let hermes_harness_turn_preflight : t = 134
+let hermes_harness_web_read_model : t = 135
+let hermes_jj_protocol : t = 136
+let hermes_mirage : t = 137
+let hermes_nix : t = 138
+let hermes_ops : t = 139
+let hermes_ops_capability : t = 140
+let hermes_ops_capability_core : t = 141
+let hermes_ops_completion_topology : t = 142
+let hermes_ops_config_authority : t = 143
+let hermes_ops_dashboard : t = 144
+let hermes_ops_governance : t = 145
+let hermes_ops_topology : t = 146
+let hermes_stanza : t = 147
+let hermes_sysml : t = 148
+let hermes_vcs : t = 149
+let hermes_vfs_oracle : t = 150
+let hermes_vision : t = 151
+let hermes_wiki_address : t = 152
+let hermes_wiki_ast : t = 153
+let hermes_wiki_blocks : t = 154
+let hermes_wiki_build : t = 155
+let hermes_wiki_callout : t = 156
+let hermes_wiki_control : t = 157
+let hermes_wiki_core : t = 158
+let hermes_wiki_datastore : t = 159
+let hermes_wiki_diag : t = 160
+let hermes_wiki_directive : t = 161
+let hermes_wiki_doctest : t = 162
+let hermes_wiki_export : t = 163
+let hermes_wiki_fpp : t = 164
+let hermes_wiki_fpp_interp : t = 165
+let hermes_wiki_graph : t = 166
+let hermes_wiki_httpd : t = 167
+let hermes_wiki_iface : t = 168
+let hermes_wiki_include : t = 169
+let hermes_wiki_km : t = 170
+let hermes_wiki_lifecycle : t = 171
+let hermes_wiki_mbse : t = 172
+let hermes_wiki_navsearch : t = 173
+let hermes_wiki_ordering : t = 174
+let hermes_wiki_present : t = 175
+let hermes_wiki_query : t = 176
+let hermes_wiki_reconcile : t = 177
+let hermes_wiki_ref : t = 178
+let hermes_wiki_register : t = 179
+let hermes_wiki_search : t = 180
+let hermes_wiki_sheaf : t = 181
+let hermes_wiki_similarity : t = 182
+let hermes_wiki_source_ext : t = 183
+let hermes_wiki_theme : t = 184
+let hermes_wiki_toc : t = 185
+let hermes_wiki_topology : t = 186
+let hermes_wiki_transclude : t = 187
+let hermes_wiki_view : t = 188
+let hermes_wiki_visibility : t = 189
+let hermes_zellij : t = 190
+let lease_health : t = 191
+let preflight_algebra : t = 192
+let run_swarm_bridge_programme : t = 193
+let sa_plan : t = 194
+let toolchain_core : t = 195
+let wiki_baseline_triage : t = 196
+let wiki_core : t = 197
+let wiki_render : t = 198
+let wiki_server : t = 199
+let wiki_suite_telemetry : t = 200

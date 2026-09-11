@@ -202,7 +202,7 @@ let rec source_files directory =
     (fun entry ->
       let path = Filename.concat directory entry in
       if Sys.is_directory path then source_files path
-      else if Filename.extension path = ".ml" then [ path ]
+      else if Filename.extension path = ".ml" && not (Filename.check_suffix path ".pp.ml") then [ path ]
       else [])
     entries
 

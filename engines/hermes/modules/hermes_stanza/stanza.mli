@@ -2,7 +2,7 @@
    Do not edit. A dune rule regenerates this and diffs it, so drift
    fails the build rather than rotting quietly.
 
-   195 libraries. A value of this type is a WITNESS that the library
+   201 libraries. A value of this type is a WITNESS that the library
    exists in the graph; there is no way to make one from a string, which
    is the whole point. *)
 
@@ -28,6 +28,8 @@ val cone_of : t list -> t list
 
 val agent_dispatch_hook : t
 val agent_time_hook : t
+val atlas_algebra : t
+val gospel_dispatch_contracts : t
 val hermes_agent_loop_compress_units : t
 val hermes_agent_loop_context_compression : t
 val hermes_agent_loop_context_engine : t
@@ -161,6 +163,7 @@ val hermes_harness_turn_budget : t
 val hermes_harness_turn_preflight : t
 val hermes_harness_web_read_model : t
 val hermes_jj_protocol : t
+val hermes_mirage : t
 val hermes_nix : t
 val hermes_ops : t
 val hermes_ops_capability : t
@@ -173,6 +176,7 @@ val hermes_ops_topology : t
 val hermes_stanza : t
 val hermes_sysml : t
 val hermes_vcs : t
+val hermes_vfs_oracle : t
 val hermes_vision : t
 val hermes_wiki_address : t
 val hermes_wiki_ast : t
@@ -213,6 +217,8 @@ val hermes_wiki_transclude : t
 val hermes_wiki_view : t
 val hermes_wiki_visibility : t
 val hermes_zellij : t
+val lease_health : t
+val preflight_algebra : t
 val run_swarm_bridge_programme : t
 val sa_plan : t
 val toolchain_core : t

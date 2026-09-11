@@ -14,9 +14,9 @@ pub fn known_gate_returns_exit_code_0_test() {
   |> should.equal(0)
 }
 
-pub fn doctor_returns_exit_code_0_when_ratified_test() {
+pub fn doctor_returns_exit_code_1_when_unverifiable_cycles_exist_test() {
   execute(Doctor)
-  |> should.equal(0)
+  |> should.equal(1)
 }
 
 pub fn mirage_gates_return_exit_code_0_when_verified_test() {
