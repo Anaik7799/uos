@@ -1,0 +1,4 @@
+(library
+ (name gospel_poodavr)
+ (wrapped false)
+ (modules poodavr_contract))

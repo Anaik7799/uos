@@ -127,3 +127,11 @@ fn breaker_state_str(b: Breaker) -> String {
     circuit_breaker.BreakerHalfOpen -> "half_open"
   }
 }
+
+/// Returns True if all primary dynamic inference breakers are tripped/open.
+pub fn is_pool_tripped(pool: BreakerPool) -> Bool {
+  pool.breaker1_gemini.failure_count >= failure_threshold
+  && pool.breaker2_openrouter.failure_count >= failure_threshold
+  && pool.breaker3_mistral.failure_count >= failure_threshold
+  && pool.breaker4_ollama.failure_count >= failure_threshold
+}
