@@ -1,15 +1,16 @@
 %%%-------------------------------------------------------------------
 %%% @doc
 %%% [C3I-SIL6] UOS Holon Substrate Sensory Engine (aṃśa-pūrṇa sensory)
-%%% Discovers and measures compute, memory, GPU, network, and hive substrate.
+%%% Discovers and measures compute, memory, GPU, network, hive, and evolution toolchains.
+%%% Toolchains probed: Opam/OCaml, Modular MAX/Mojo, Lean 4, Quint, OTP 29, Gleam, Z3, JJ.
 %%% Pure Erlang/OTP 29 (0 external dependencies, 0 warnings).
-%%% Mandate: SC-NIX-DEVENV-001, SC-HOLON-NAME-001, SC-TIME
+%%% Mandates: SC-NIX-DEVENV-001, SC-HOLON-NAME-001, SC-TIME
 %%% @end
 %%%-------------------------------------------------------------------
 -module(uos_holon_sensory).
 
 %% API
--export([sense_all/0, sense_cpu/0, sense_memory/0, sense_gpu/0, sense_network/0, sense_hive/0]).
+-export([sense_all/0, sense_cpu/0, sense_memory/0, sense_gpu/0, sense_network/0, sense_hive/0, sense_toolchains/0]).
 
 %%====================================================================
 %% API Functions
@@ -19,16 +20,17 @@
 sense_all() ->
     #{
         holon_id => <<"holon-razr15-1">>,
-        holon_type => <<"Worker-Accelerator-Holon">>,
-        fractal_plane => <<"Runtime/Compute">>,
+        holon_type => <<"Autonomous-Evolution-Holon">>,
+        fractal_plane => <<"Runtime/Compute/Evolution">>,
         svara => <<"Sa">>,
-        svadharma => <<"autonomous-accelerator-and-mesh-worker">>,
+        svadharma => <<"autonomous-full-stack-evolution-and-mesh-acceleration">>,
         timestamp_utc => list_to_binary(iso8601_now()),
         cpu => sense_cpu(),
         memory => sense_memory(),
         gpu => sense_gpu(),
         network => sense_network(),
-        hive => sense_hive()
+        hive => sense_hive(),
+        toolchains => sense_toolchains()
     }.
 
 -spec sense_cpu() -> map().
@@ -106,9 +108,151 @@ sense_hive() ->
         peer_count => length(ConnectedPeers)
     }.
 
+-spec sense_toolchains() -> map().
+sense_toolchains() ->
+    UosRoot = get_uos_root(),
+    OtpRelease = erlang:system_info(otp_release),
+    ErtsVsn = erlang:system_info(version),
+
+    %% 1. Opam / OCaml & Dune
+    OcamlPath = filename:join([UosRoot, "toolchains", "opam-ocaml", "bin", "ocaml"]),
+    DunePath = filename:join([UosRoot, "toolchains", "opam-ocaml", "bin", "dune"]),
+    HasOpamOcaml = filelib:is_regular(OcamlPath) orelse filelib:is_regular(DunePath),
+    OcamlVsn = probe_tool_version(OcamlPath, "-version", "OCaml 5.5.0"),
+
+    %% 2. Modular MAX / Mojo
+    MojoPath = filename:join([UosRoot, "services", "inference", "max", ".pixi", "envs", "default", "bin", "mojo"]),
+     _PixiPath = filename:join([UosRoot, "toolchains", "pixi", "bin", "pixi"]),
+    HasMojo = filelib:is_regular(MojoPath) orelse check_cmd_exists("mojo"),
+    MojoVsn = probe_tool_version(MojoPath, "--version", "Mojo 1.0.0"),
+
+    %% 3. Lean 4 (Lean & Lake)
+    LeanPath = filename:join([UosRoot, "toolchains", "lean-4.33.0", "bin", "lean"]),
+     _LakePath = filename:join([UosRoot, "toolchains", "lean-4.33.0", "bin", "lake"]),
+    HasLean = filelib:is_regular(LeanPath),
+    LeanVsn = probe_tool_version(LeanPath, "--version", "Lean 4.33.0"),
+
+    %% 4. Quint Formal Simulator
+    QuintPath = filename:join([UosRoot, "toolchains", "nix-profile", "bin", "quint"]),
+    HasQuint = filelib:is_regular(QuintPath) orelse check_cmd_exists("quint"),
+    QuintVsn = probe_tool_version(QuintPath, "--version", "Quint 0.32.0"),
+
+    %% 5. Gleam
+    GleamPath = filename:join([UosRoot, "toolchains", "gleam-1.16.0", "bin", "gleam"]),
+    HasGleam = filelib:is_regular(GleamPath) orelse check_cmd_exists("gleam"),
+    GleamVsn = probe_tool_version(GleamPath, "--version", "Gleam 1.16.0"),
+
+    %% 6. Z3 Solver
+    Z3Path = filename:join([UosRoot, "toolchains", "nix-profile", "bin", "z3"]),
+    HasZ3 = filelib:is_regular(Z3Path) orelse check_cmd_exists("z3"),
+    Z3Vsn = probe_tool_version(Z3Path, "--version", "Z3 4.16.0"),
+
+    %% 7. Standalone Jujutsu (JJ)
+    JjPath = filename:join([UosRoot, "toolchains", "nix-profile", "bin", "jj"]),
+    HasJj = filelib:is_regular(JjPath) orelse check_cmd_exists("jj"),
+    JjVsn = probe_tool_version(JjPath, "--version", "jj 0.44.0"),
+
+    %% Calculate Evolution Readiness Score (out of 7 pillars)
+    Pillars = [true, HasOpamOcaml, HasMojo, HasLean, HasQuint, HasGleam, HasZ3, HasJj],
+    ActiveCount = length([P || P <- Pillars, P =:= true]),
+    ReadinessPct = (ActiveCount / float(length(Pillars))) * 100.0,
+
+    #{
+        otp29 => #{
+            name => <<"Erlang/OTP 29">>,
+            present => true,
+            version => list_to_binary(io_lib:format("OTP ~s (ERTS ~s)", [OtpRelease, ErtsVsn])),
+            role => <<"Distributed Runtime Kernel & Supervision Tree">>
+        },
+        opam_ocaml => #{
+            name => <<"Opam / OCaml 5.5.0 & Dune">>,
+            present => HasOpamOcaml,
+            version => list_to_binary(OcamlVsn),
+            path => list_to_binary(OcamlPath),
+            role => <<"Hermes Formal Evidence, Gospel Contracts & Parity Oracles">>
+        },
+        modular_max_mojo => #{
+            name => <<"Modular MAX / Mojo">>,
+            present => HasMojo,
+            version => list_to_binary(MojoVsn),
+            path => list_to_binary(MojoPath),
+            role => <<"GPU Gemma 4 Tensor Acceleration & SIMD Inference">>
+        },
+        lean4 => #{
+            name => <<"Lean 4.33.0 & Lake">>,
+            present => HasLean,
+            version => list_to_binary(LeanVsn),
+            path => list_to_binary(LeanPath),
+            role => <<"Mathematical Proofs (Traceability, Century Harmony) ">>
+        },
+        quint => #{
+            name => <<"Quint 0.32.0">>,
+            present => HasQuint,
+            version => list_to_binary(QuintVsn),
+            path => list_to_binary(QuintPath),
+            role => <<"Temporal Logic Specifications & Invariant Simulation">>
+        },
+        gleam => #{
+            name => <<"Gleam 1.16.0">>,
+            present => HasGleam,
+            version => list_to_binary(GleamVsn),
+            role => <<"Type-Safe Distributed Mesh, Swarm & AG-UI Bus">>
+        },
+        z3 => #{
+            name => <<"Z3 4.16.0 SMT Solver">>,
+            present => HasZ3,
+            version => list_to_binary(Z3Vsn),
+            role => <<"Bounded Constraint Solving & Automated Logic Verification">>
+        },
+        jj => #{
+            name => <<"Jujutsu Standalone VCS">>,
+            present => HasJj,
+            version => list_to_binary(JjVsn),
+            role => <<"Sovereign Monorepo Evolution & Atomic Revision Control">>
+        },
+        evolution_readiness_pct => ReadinessPct,
+        evolution_grade => if
+            ReadinessPct >= 85.0 -> <<"RATIFIED_FULL_EVOLUTION">>;
+            ReadinessPct >= 50.0 -> <<"PARTIAL_EVOLUTION">>;
+            true -> <<"BOOTSTRAP_RUNTIME_ONLY">>
+        end
+    }.
+
 %%====================================================================
 %% Internal Helpers
 %%====================================================================
+
+get_uos_root() ->
+    case os:getenv("UOS_ROOT") of
+        false ->
+            Home = os:getenv("HOME", "/home/an"),
+            filename:join(Home, "uos");
+        Val -> Val
+    end.
+
+probe_tool_version(Path, Arg, DefaultVsn) ->
+    case filelib:is_regular(Path) of
+        true ->
+            Out = os:cmd(Path ++ " " ++ Arg ++ " 2>&1"),
+            case string:tokens(Out, "\r\n") of
+                [FirstLine | _] -> string:trim(FirstLine);
+                [] -> DefaultVsn
+            end;
+        false ->
+            Basename = filename:basename(Path),
+            case check_cmd_exists(Basename) of
+                true ->
+                    Out = os:cmd(Basename ++ " " ++ Arg ++ " 2>&1"),
+                    case string:tokens(Out, "\r\n") of
+                        [FirstLine | _] -> string:trim(FirstLine);
+                        [] -> DefaultVsn
+                    end;
+                false -> "Not installed"
+            end
+    end.
+
+check_cmd_exists(Cmd) ->
+    os:cmd("command -v " ++ Cmd ++ " 2>/dev/null") =/= "".
 
 read_cpu_model() ->
     case file:read_file("/proc/cpuinfo") of

@@ -2,6 +2,7 @@
 %%% @doc
 %%% [C3I-SIL6] UOS Autonomous Intelligent Holon Node (aṃśa-pūrṇa)
 %%% Autonomous whole-part entity for distributed mesh execution and swarm expansion.
+%%% Full Development, Evolution & Operational Capability: Opam, Mojo, MAX, Lean, Quint.
 %%% Runtime: Pure Erlang/OTP 29 (ERTS 17.0.5) ONLY.
 %%% Mandates: SC-NIX-DEVENV-001, SC-ZMOF-001, SC-TIME, SC-MUDA-001
 %%% @end
@@ -10,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start/0, start/1, start_link/1, stop/0, health/0, sensory/0, capacity/0, execute/1]).
+-export([start/0, start/1, start_link/1, stop/0, health/0, sensory/0, capacity/0, evolution/0, execute/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
@@ -69,6 +70,10 @@ health() ->
 -spec sensory() -> map().
 sensory() ->
     uos_holon_sensory:sense_all().
+
+-spec evolution() -> map().
+evolution() ->
+    uos_holon_sensory:sense_toolchains().
 
 -spec capacity() -> float().
 capacity() ->
@@ -223,6 +228,18 @@ execute_internal_task({eval_math, Expr}) ->
     {ok, computed};
 execute_internal_task(ping) ->
     {ok, pong};
+execute_internal_task(run_preflight) ->
+    Out = os:cmd("bash tools/preflight 2>&1"),
+    {ok, list_to_binary(Out)};
+execute_internal_task(run_lean_proofs) ->
+    Out = os:cmd("tools/lean formal/lean/Traceability.lean 2>&1"),
+    {ok, list_to_binary(Out)};
+execute_internal_task(run_quint_sim) ->
+    Out = os:cmd("tools/quint run formal/quint/parity_frontier.qnt 2>&1"),
+    {ok, list_to_binary(Out)};
+execute_internal_task(run_mojo_gpu) ->
+    Out = os:cmd("tools/mojo run services/inference/max/gemma4_gpu_kernel.mojo 2>&1"),
+    {ok, list_to_binary(Out)};
 execute_internal_task(Task) ->
     log_info("Executing generic holon task: ~p", [Task]),
     {ok, completed}.
@@ -279,6 +296,10 @@ dispatch_http(Socket, "GET", Path, StartTime) ->
             Sensory = uos_holon_sensory:sense_all(),
             HolonJson = encode_holon_json(Sensory, StartTime),
             send_http(Socket, 200, "application/json", HolonJson);
+        P when P =:= "/evolution"; P =:= "/api/evolution" ->
+            Toolchains = uos_holon_sensory:sense_toolchains(),
+            EvoJson = encode_evolution_json(Toolchains),
+            send_http(Socket, 200, "application/json", EvoJson);
         "/metrics" ->
             Metrics = build_prometheus_metrics(StartTime),
             send_http(Socket, 200, "text/plain; version=0.0.4", Metrics);
@@ -288,6 +309,24 @@ dispatch_http(Socket, "GET", Path, StartTime) ->
             send_http(Socket, 200, "text/html", Html);
         _ ->
             send_http(Socket, 404, "application/json", "{\"error\":\"Not Found\"}\r\n")
+    end;
+
+dispatch_http(Socket, "POST", Path, _StartTime) ->
+    case Path of
+        "/evolution/preflight" ->
+            Out = os:cmd("bash tools/preflight 2>&1"),
+            send_http(Socket, 200, "text/plain", Out);
+        "/evolution/lean" ->
+            Out = os:cmd("tools/lean formal/lean/Traceability.lean 2>&1"),
+            send_http(Socket, 200, "text/plain", Out);
+        "/evolution/quint" ->
+            Out = os:cmd("tools/quint run formal/quint/parity_frontier.qnt 2>&1"),
+            send_http(Socket, 200, "text/plain", Out);
+        "/evolution/mojo" ->
+            Out = os:cmd("tools/mojo run services/inference/max/gemma4_gpu_kernel.mojo 2>&1"),
+            send_http(Socket, 200, "text/plain", Out);
+        _ ->
+            send_http(Socket, 404, "application/json", "{\"error\":\"Unknown Evolution Task\"}\r\n")
     end;
 
 dispatch_http(Socket, "OPTIONS", _Path, _StartTime) ->
@@ -350,24 +389,29 @@ build_health_json(Sensory, StartTime) ->
     Gpu = maps:get(gpu, Sensory, #{}),
     HasGpu = maps:get(has_dxg, Gpu, false),
     GpuMode = maps:get(acceleration_mode, Gpu, <<"CPU_SIMD">>),
+    Toolchains = maps:get(toolchains, Sensory, #{}),
+    EvoGrade = maps:get(evolution_grade, Toolchains, <<"UNKNOWN">>),
+    EvoPct = maps:get(evolution_readiness_pct, Toolchains, 0.0),
 
     io_lib:format(
         "{\n"
         "  \"status\": \"healthy\",\n"
         "  \"holon_id\": \"holon-razr15-1\",\n"
-        "  \"role\": \"Instance 2 (Autonomous Worker Holon)\",\n"
+        "  \"role\": \"Instance 2 (Autonomous Evolution Holon)\",\n"
         "  \"runtime_engine\": \"Erlang/OTP ~s (ERTS ~s)\",\n"
         "  \"beam_node\": \"~s\",\n"
         "  \"uptime_seconds\": ~p,\n"
         "  \"has_gpu\": ~s,\n"
         "  \"gpu_acceleration\": \"~s\",\n"
+        "  \"evolution_grade\": \"~s\",\n"
+        "  \"evolution_readiness_pct\": ~.1f,\n"
         "  \"mesh\": \"Samvid Vajravyuha\",\n"
         "  \"holon_lifecycle\": \"Active\",\n"
         "  \"timestamp_utc\": \"~s\"\n"
         "}\n",
         [OtpRel, ErtsVsn, NodeName, Uptime,
          if HasGpu -> "true"; true -> "false" end,
-         GpuMode, maps:get(timestamp_utc, Sensory, <<"">>)]
+         GpuMode, EvoGrade, EvoPct, maps:get(timestamp_utc, Sensory, <<"">>)]
     ).
 
 encode_holon_json(Sensory, StartTime) ->
@@ -377,17 +421,20 @@ encode_holon_json(Sensory, StartTime) ->
     Gpu = maps:get(gpu, Sensory, #{}),
     Net = maps:get(network, Sensory, #{}),
     Hive = maps:get(hive, Sensory, #{}),
+    Toolchains = maps:get(toolchains, Sensory, #{}),
 
     io_lib:format(
         "{\n"
         "  \"holon\": {\n"
         "    \"id\": \"holon-razr15-1\",\n"
-        "    \"type\": \"Worker-Accelerator-Holon\",\n"
-        "    \"plane\": \"Runtime/Compute\",\n"
+        "    \"type\": \"Autonomous-Evolution-Holon\",\n"
+        "    \"plane\": \"Runtime/Compute/Evolution\",\n"
         "    \"svara\": \"Sa\",\n"
-        "    \"svadharma\": \"autonomous-accelerator-and-mesh-worker\",\n"
+        "    \"svadharma\": \"autonomous-full-stack-evolution-and-mesh-acceleration\",\n"
         "    \"lifecycle\": \"Active\",\n"
-        "    \"uptime_seconds\": ~p\n"
+        "    \"uptime_seconds\": ~p,\n"
+        "    \"evolution_grade\": \"~s\",\n"
+        "    \"evolution_readiness_pct\": ~.1f\n"
         "  },\n"
         "  \"substrate\": {\n"
         "    \"cpu_model\": \"~s\",\n"
@@ -410,6 +457,8 @@ encode_holon_json(Sensory, StartTime) ->
         "}\n",
         [
             Uptime,
+            maps:get(evolution_grade, Toolchains, <<"BOOTSTRAP">>),
+            maps:get(evolution_readiness_pct, Toolchains, 0.0),
             maps:get(model, Cpu, <<"x86_64">>),
             maps:get(logical_cores, Cpu, 0),
             maps:get(beam_schedulers, Cpu, 0),
@@ -425,6 +474,54 @@ encode_holon_json(Sensory, StartTime) ->
             maps:get(peer_count, Hive, 0)
         ]
     ).
+
+encode_evolution_json(Toolchains) ->
+    Opam = maps:get(opam_ocaml, Toolchains, #{}),
+    Mojo = maps:get(modular_max_mojo, Toolchains, #{}),
+    Lean = maps:get(lean4, Toolchains, #{}),
+    Quint = maps:get(quint, Toolchains, #{}),
+    Otp = maps:get(otp29, Toolchains, #{}),
+    Gleam = maps:get(gleam, Toolchains, #{}),
+    Z3 = maps:get(z3, Toolchains, #{}),
+    Jj = maps:get(jj, Toolchains, #{}),
+
+    io_lib:format(
+        "{\n"
+        "  \"evolution_readiness_pct\": ~.1f,\n"
+        "  \"evolution_grade\": \"~s\",\n"
+        "  \"toolchains\": {\n"
+        "    \"opam_ocaml\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
+        "    \"modular_max_mojo\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
+        "    \"lean4\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
+        "    \"quint\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
+        "    \"otp29\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
+        "    \"gleam\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
+        "    \"z3\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
+        "    \"jj\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"}\n"
+        "  },\n"
+        "  \"evolution_endpoints\": [\n"
+        "    \"POST /evolution/preflight\",\n"
+        "    \"POST /evolution/lean\",\n"
+        "    \"POST /evolution/quint\",\n"
+        "    \"POST /evolution/mojo\"\n"
+        "  ]\n"
+        "}\n",
+        [
+            maps:get(evolution_readiness_pct, Toolchains, 0.0),
+            maps:get(evolution_grade, Toolchains, <<"UNKNOWN">>),
+            bool_str(maps:get(present, Opam, false)), maps:get(version, Opam, <<"">>), maps:get(role, Opam, <<"">>),
+            bool_str(maps:get(present, Mojo, false)), maps:get(version, Mojo, <<"">>), maps:get(role, Mojo, <<"">>),
+            bool_str(maps:get(present, Lean, false)), maps:get(version, Lean, <<"">>), maps:get(role, Lean, <<"">>),
+            bool_str(maps:get(present, Quint, false)), maps:get(version, Quint, <<"">>), maps:get(role, Quint, <<"">>),
+            bool_str(maps:get(present, Otp, false)), maps:get(version, Otp, <<"">>), maps:get(role, Otp, <<"">>),
+            bool_str(maps:get(present, Gleam, false)), maps:get(version, Gleam, <<"">>), maps:get(role, Gleam, <<"">>),
+            bool_str(maps:get(present, Z3, false)), maps:get(version, Z3, <<"">>), maps:get(role, Z3, <<"">>),
+            bool_str(maps:get(present, Jj, false)), maps:get(version, Jj, <<"">>), maps:get(role, Jj, <<"">>)
+        ]
+    ).
+
+bool_str(true) -> "true";
+bool_str(_) -> "false".
 
 build_prometheus_metrics(StartTime) ->
     Now = erlang:system_time(second),
@@ -455,35 +552,59 @@ render_holon_dashboard(Sensory, StartTime) ->
     Gpu = maps:get(gpu, Sensory, #{}),
     Net = maps:get(network, Sensory, #{}),
     Hive = maps:get(hive, Sensory, #{}),
+    Toolchains = maps:get(toolchains, Sensory, #{}),
 
     io_lib:format(
         "<!DOCTYPE html>\n"
         "<html lang=\"en\">\n"
         "<head>\n"
         "  <meta charset=\"UTF-8\">\n"
-        "  <title>UOS Holon Node — razor15-1 (Pure OTP 29)</title>\n"
+        "  <title>UOS Autonomous Holon — Full Evolution Stack</title>\n"
         "  <style>\n"
         "    body { background: #0a0e14; color: #c9d1d9; font-family: monospace; padding: 2rem; margin: 0; }\n"
         "    .card { background: #121820; border: 1px solid #232e3d; border-radius: 10px; padding: 1.8rem; max-width: 900px; margin: 0 auto 1.5rem auto; }\n"
         "    h1 { color: #00d4aa; margin-top: 0; }\n"
         "    h2 { color: #58a6ff; font-size: 1.2rem; margin-top: 1.5rem; border-bottom: 1px solid #21262d; padding-bottom: 0.4rem; }\n"
         "    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: bold; background: #238636; color: #fff; font-size: 0.85rem; }\n"
+        "    .badge.gold { background: #d29922; color: #000; }\n"
         "    .item { margin: 0.5rem 0; display: flex; justify-content: space-between; }\n"
         "    .label { color: #8b949e; }\n"
         "    .val { color: #f0f6fc; font-weight: bold; }\n"
         "    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }\n"
+        "    .evo-box { background: #05080c; border: 1px solid #1f2b3b; border-radius: 6px; padding: 0.8rem; margin-bottom: 0.5rem; }\n"
         "  </style>\n"
         "</head>\n"
         "<body>\n"
         "  <div class=\"card\">\n"
-        "    <h1>⚡ UOS Holon Node (aṃśa-pūrṇa)</h1>\n"
-        "    <div class=\"item\"><span class=\"label\">Identity:</span><span class=\"val\">holon-razr15-1 (Svara: Sa, Plane: Runtime/Compute)</span></div>\n"
+        "    <h1>⚡ UOS Autonomous Holon (aṃśa-pūrṇa)</h1>\n"
+        "    <div class=\"item\"><span class=\"label\">Identity:</span><span class=\"val\">holon-razr15-1 (Svara: Sa, Plane: Runtime/Compute/Evolution)</span></div>\n"
         "    <div class=\"item\"><span class=\"label\">Lifecycle:</span><span class=\"badge\">Active (Homeostatic)</span></div>\n"
+        "    <div class=\"item\"><span class=\"label\">Evolution Readiness:</span><span class=\"badge gold\">~.1f%% (~s)</span></div>\n"
         "    <div class=\"item\"><span class=\"label\">Runtime Engine:</span><span class=\"val\">Erlang/OTP ~s (ERTS ~s)</span></div>\n"
         "    <div class=\"item\"><span class=\"label\">Uptime:</span><span class=\"val\">~p seconds</span></div>\n"
         "    <div class=\"item\"><span class=\"label\">BEAM Node:</span><span class=\"val\">~s</span></div>\n"
         "\n"
-        "    <h2>💻 Substrate &amp; Resources</h2>\n"
+        "    <h2>🧬 Full Development &amp; Evolution Stack</h2>\n"
+        "    <div class=\"grid\">\n"
+        "      <div class=\"evo-box\">\n"
+        "        <strong>🐫 Opam / OCaml &amp; Dune</strong><br>\n"
+        "        <small style=\"color:#8b949e;\">Hermes Gospel contracts &amp; Z3 parity</small>\n"
+        "      </div>\n"
+        "      <div class=\"evo-box\">\n"
+        "        <strong>🔥 Modular MAX / Mojo</strong><br>\n"
+        "        <small style=\"color:#8b949e;\">GPU Gemma 4 inference &amp; SIMD scoring</small>\n"
+        "      </div>\n"
+        "      <div class=\"evo-box\">\n"
+        "        <strong>📐 Lean 4.33.0 &amp; Lake</strong><br>\n"
+        "        <small style=\"color:#8b949e;\">Mathematical proofs (Traceability, Century)</small>\n"
+        "      </div>\n"
+        "      <div class=\"evo-box\">\n"
+        "        <strong>⏱️ Quint 0.32.0</strong><br>\n"
+        "        <small style=\"color:#8b949e;\">Temporal logic &amp; invariant simulation</small>\n"
+        "      </div>\n"
+        "    </div>\n"
+        "\n"
+        "    <h2>💻 Substrate Sensory</h2>\n"
         "    <div class=\"grid\">\n"
         "      <div>\n"
         "        <div class=\"item\"><span class=\"label\">CPU:</span><span class=\"val\">~s</span></div>\n"
@@ -505,6 +626,7 @@ render_holon_dashboard(Sensory, StartTime) ->
         "\n"
         "    <p style=\"margin-top:1.5rem;\">\n"
         "      <a href=\"/health\" style=\"color:#00d4aa;\">[Health API]</a> &bull;\n"
+        "      <a href=\"/evolution\" style=\"color:#00d4aa;\">[Evolution Matrix]</a> &bull;\n"
         "      <a href=\"/holon\" style=\"color:#00d4aa;\">[Substrate Telemetry]</a> &bull;\n"
         "      <a href=\"/metrics\" style=\"color:#00d4aa;\">[Prometheus Metrics]</a>\n"
         "    </p>\n"
@@ -512,6 +634,8 @@ render_holon_dashboard(Sensory, StartTime) ->
         "</body>\n"
         "</html>\n",
         [
+            maps:get(evolution_readiness_pct, Toolchains, 0.0),
+            maps:get(evolution_grade, Toolchains, <<"BOOTSTRAP">>),
             erlang:system_info(otp_release),
             erlang:system_info(version),
             Uptime,

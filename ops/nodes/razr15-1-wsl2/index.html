@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UOS Autonomous Holon Deployment Portal (Port 8999 &bull; Pure OTP 29)</title>
+  <title>UOS Autonomous Holon — Full Evolution Stack (Port 8999 &bull; Pure OTP 29)</title>
   <style>
     :root {
-      --bg: #090d13;
-      --card-bg: #111822;
-      --border: #1f2b3b;
+      --bg: #080c12;
+      --card-bg: #101722;
+      --border: #1e293b;
       --accent: #00d4aa;
       --accent-glow: rgba(0, 212, 170, 0.2);
       --text: #e6edf3;
       --text-muted: #8b949e;
-      --code-bg: #05080c;
+      --code-bg: #04070b;
       --success: #3fb950;
       --gold: #e3b341;
-      --cyan: #388bfd;
+      --purple: #bc8cff;
+      --blue: #58a6ff;
     }
     body {
       background-color: var(--bg);
@@ -27,7 +28,7 @@
       line-height: 1.6;
     }
     .container {
-      max-width: 980px;
+      max-width: 1000px;
       margin: 0 auto;
     }
     .header {
@@ -37,7 +38,7 @@
       padding-bottom: 2rem;
     }
     .header h1 {
-      font-size: 2.3rem;
+      font-size: 2.4rem;
       margin: 0 0 0.5rem 0;
       color: #fff;
       display: flex;
@@ -48,7 +49,7 @@
     .header p {
       color: var(--text-muted);
       margin: 0;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
     }
     .badge-bar {
       display: flex;
@@ -60,27 +61,16 @@
     .badge {
       background: var(--border);
       color: var(--text);
-      padding: 0.3rem 0.8rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 999px;
       font-size: 0.85rem;
       font-weight: 600;
       border: 1px solid rgba(255,255,255,0.08);
     }
-    .badge.green {
-      background: rgba(63, 185, 80, 0.15);
-      color: var(--success);
-      border-color: rgba(63, 185, 80, 0.3);
-    }
-    .badge.cyan {
-      background: var(--accent-glow);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-    .badge.gold {
-      background: rgba(227, 179, 65, 0.15);
-      color: var(--gold);
-      border-color: rgba(227, 179, 65, 0.3);
-    }
+    .badge.green { background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3); }
+    .badge.cyan { background: var(--accent-glow); color: var(--accent); border-color: var(--accent); }
+    .badge.gold { background: rgba(227, 179, 65, 0.15); color: var(--gold); border-color: rgba(227, 179, 65, 0.3); }
+    .badge.purple { background: rgba(188, 140, 255, 0.15); color: var(--purple); border-color: rgba(188, 140, 255, 0.3); }
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -131,34 +121,37 @@
       background: #33e2bb;
       box-shadow: 0 0 14px var(--accent-glow);
     }
-    .grid {
+    .grid-4 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
       margin-top: 1.2rem;
     }
-    .grid-item {
+    .pillar-box {
       background: var(--code-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1.1rem;
+      padding: 1.2rem;
+      transition: border-color 0.2s ease;
     }
-    .grid-item strong {
+    .pillar-box:hover {
+      border-color: var(--accent);
+    }
+    .pillar-box strong {
       display: block;
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+      color: #fff;
+    }
+    .pillar-box .desc {
       color: var(--text-muted);
       font-size: 0.85rem;
-      text-transform: uppercase;
-      margin-bottom: 0.35rem;
+      line-height: 1.4;
     }
-    .grid-item span {
-      font-size: 1.05rem;
-      color: #fff;
-      font-weight: 600;
-    }
-    .holon-principle {
-      background: rgba(0, 212, 170, 0.05);
+    .holon-banner {
+      background: rgba(0, 212, 170, 0.06);
       border-left: 4px solid var(--accent);
-      padding: 1rem 1.2rem;
+      padding: 1.2rem 1.5rem;
       margin: 1.2rem 0;
       border-radius: 0 8px 8px 0;
     }
@@ -204,22 +197,22 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>⚡ UOS Autonomous Holon Deployment Portal</h1>
-      <p>Cybernetic Holarchy (aṃśa-pūrṇa) &bull; Pure Erlang/OTP 29 Runtime Engine &bull; Port 8999 Service</p>
+      <h1>⚡ UOS Autonomous Holon &bull; Full Evolution Stack</h1>
+      <p>Cybernetic Holarchy (aṃśa-pūrṇa) &bull; Opam &bull; Mojo/MAX &bull; Lean 4 &bull; Quint &bull; Pure OTP 29</p>
       <div class="badge-bar">
         <span class="badge green">&#10004; Pure OTP 29 (ERTS 17.0.5)</span>
-        <span class="badge gold">&#9679; Autonomous Holon (aṃśa-pūrṇa)</span>
+        <span class="badge gold">&#9679; Full Evolution Capability</span>
+        <span class="badge purple">&#9679; Lean 4 + Quint + Mojo + Opam</span>
         <span class="badge green">&#10004; Zero-Muda (0 ZigVM / 0 Bevy / 0 Graphite)</span>
         <span class="badge cyan">&#9679; Node: razr15-1 (192.168.1.177)</span>
-        <span class="badge">&#9729; Saṁvid Vajravyūha Mesh</span>
       </div>
     </div>
 
     <!-- PRIMARY QUICK-LAUNCH COMMAND -->
     <div class="card">
-      <h2>🚀 One-Liner Quick Launch (Run in Laptop WSL2 / Terminal)</h2>
+      <h2>🚀 Turnkey Holon Launch (Run in Laptop WSL2 / Terminal)</h2>
       <p style="margin: 0 0 0.8rem 0; color: var(--text-muted);">
-        Paste this command into your terminal on the Razer Blade 15 laptop. It automatically provisions the pure OTP 29 closure, triggers substrate sensory discovery (CPU, RAM, DirectX GPU <code>/dev/dxg</code>), connects to the UOS mesh, and activates autonomous work-stealing execution:
+        Run this command on the Razer Blade 15 laptop to activate the autonomous Holon node with full substrate sensory, OODA homeostasis, and hive connectivity on port 8088:
       </p>
 
       <div class="command-box">
@@ -228,7 +221,7 @@
       </div>
 
       <div style="margin-top: 1.2rem;">
-        <span style="font-size:0.9rem; color:var(--text-muted);">Alternative Endpoint / Tailscale URL:</span>
+        <span style="font-size:0.9rem; color:var(--text-muted);">Tailscale Alternative URL:</span>
         <div class="command-box" style="padding: 0.8rem 1rem;">
           <div class="command-text" id="cmd2" style="font-size: 1rem; color: #a5d6ff;">curl -fsSL http://100.87.7.78:8999/holon | bash</div>
           <button class="copy-btn" onclick="copyText('cmd2')" style="padding: 0.45rem 0.9rem;">Copy</button>
@@ -236,59 +229,29 @@
       </div>
     </div>
 
-    <!-- HOLON CYBERNETIC ARCHITECTURE -->
+    <!-- 5 EVOLUTION PILLARS -->
     <div class="card">
-      <h2>🌀 Holonic Architecture: Autonomous Whole &amp; Connected Part</h2>
-      <div class="holon-principle">
-        <strong>aṃśa-pūrṇa (अंश-पूर्ण)</strong>: The Holon is simultaneously an autonomous, self-healing whole with its own internal OODA loop and substrate awareness, and an integrated part of the UOS hive mind (Saṁvid Vajravyūha) dedicated to distributed task acceleration.
+      <h2>🧬 Full Development, Evolution &amp; Operational Stack</h2>
+      <div class="holon-banner">
+        Equipped with all formal, neural, mathematical, and temporal engines for independent autonomous evolution in the hive:
       </div>
-      <div class="grid">
-        <div class="grid-item">
-          <strong>1. Substrate Sensory Engine</strong>
-          <span>Probes CPU cores, memory ceilings, WSL2 boundaries, and DirectX GPU (/dev/dxg).</span>
-        </div>
-        <div class="grid-item">
-          <strong>2. Autonomous OODA Loop</strong>
-          <span>Observes health, computes Lyapunov trend stability, and self-heals under stress.</span>
-        </div>
-        <div class="grid-item">
-          <strong>3. Hive Mesh Clustering</strong>
-          <span>BEAM native clustering with <code>nas-1</code> and <code>vm-1</code> via <code>uos_vajravyuh_cookie</code>.</span>
-        </div>
-        <div class="grid-item">
-          <strong>4. Work-Stealing Pull Queue</strong>
-          <span>Autonomously claims and executes distributed computing tasks from the hive.</span>
-        </div>
-      </div>
-    </div>
 
-    <!-- PARAMETERS -->
-    <div class="card">
-      <h2>📋 Operational Holon Parameters</h2>
-      <div class="grid">
-        <div class="grid-item">
-          <strong>Holon ID &amp; Svara</strong>
-          <span><code>holon-razr15-1</code> (Svara: Sa)</span>
+      <div class="grid-4">
+        <div class="pillar-box">
+          <strong style="color:#f0883e;">🐪 Opam / OCaml 5.5.0 &amp; Dune</strong>
+          <div class="desc">Hermes formal evidence store, Gospel contracts, Z3 queries, Rete-UL forward chaining, and parity algebra oracles.</div>
         </div>
-        <div class="grid-item">
-          <strong>Physical Substrate</strong>
-          <span>Razer Blade 15 (192.168.1.177 / 100.114.9.28)</span>
+        <div class="pillar-box">
+          <strong style="color:#388bfd;">🔥 Modular MAX / Mojo</strong>
+          <div class="desc">Hardware GPU AI acceleration via WSL2 <code>/dev/dxg</code>, Gemma 4 inference kernel, and SIMD tensor scoring.</div>
         </div>
-        <div class="grid-item">
-          <strong>Runtime Engine</strong>
-          <span style="color:#7ee787;">Erlang/OTP 29.0.5 (ERTS 17.0.5)</span>
+        <div class="pillar-box">
+          <strong style="color:#bc8cff;">📐 Lean 4.33.0 &amp; Lake</strong>
+          <div class="desc">Machine-checked mathematical proofs: Traceability coordinate conservation, Century Harmony, and Chaos Containment.</div>
         </div>
-        <div class="grid-item">
-          <strong>Holon Cockpit &amp; API</strong>
-          <span style="color:var(--accent);">http://localhost:8088/holon</span>
-        </div>
-        <div class="grid-item">
-          <strong>Mesh Network</strong>
-          <span>Saṁvid Vajravyūha (nas-1 + vm-1 + razr15-1)</span>
-        </div>
-        <div class="grid-item">
-          <strong>Cluster Cookie</strong>
-          <span><code>uos_vajravyuh_cookie</code></span>
+        <div class="pillar-box">
+          <strong style="color:#e3b341;">⏱️ Quint 0.32.0</strong>
+          <div class="desc">Temporal logic specifications, state-machine invariants, and randomized symbolic simulation runs.</div>
         </div>
       </div>
     </div>
@@ -306,15 +269,22 @@
         </li>
         <li>
           <div>
+            <a href="/hydrate-evolution-stack.sh">hydrate-evolution-stack.sh</a>
+            <div class="file-desc">Hydrates full Opam, Mojo/MAX, Lean 4, and Quint toolchains locally</div>
+          </div>
+          <span class="badge purple">Toolchain Hydrator</span>
+        </li>
+        <li>
+          <div>
             <a href="/uos_holon_node.beam">uos_holon_node.beam</a>
-            <div class="file-desc">Compiled Holon Node master GenServer bytecode (Port 8088 HTTP + OODA)</div>
+            <div class="file-desc">Compiled Holon Master GenServer (Port 8088 HTTP + Evolution API)</div>
           </div>
           <span class="badge">BEAM Bytecode</span>
         </li>
         <li>
           <div>
             <a href="/uos_holon_sensory.beam">uos_holon_sensory.beam</a>
-            <div class="file-desc">Substrate Sensory Engine bytecode (CPU, RAM, /dev/dxg, Network discovery)</div>
+            <div class="file-desc">Substrate &amp; Toolchain Sensory Engine bytecode</div>
           </div>
           <span class="badge">BEAM Bytecode</span>
         </li>
@@ -328,7 +298,7 @@
         <li>
           <div>
             <a href="/uos-holon.service">uos-holon.service</a>
-            <div class="file-desc">Systemd unit file for background daemon auto-start on laptop boot</div>
+            <div class="file-desc">Systemd unit file for persistent background daemon</div>
           </div>
           <span class="badge">Systemd</span>
         </li>
@@ -339,19 +309,12 @@
           </div>
           <span class="badge cyan">Closure Archive</span>
         </li>
-        <li>
-          <div>
-            <a href="/cmd.txt">cmd.txt</a> / <a href="/holon.txt">holon.txt</a>
-            <div class="file-desc">Plaintext curl command for terminal scraping</div>
-          </div>
-          <span class="badge">Plaintext</span>
-        </li>
       </ul>
     </div>
 
     <footer>
       <p>Unified Operational System (UOS) &bull; Primary Hive Controller: <code>nas-1 (192.168.1.220 / 100.87.7.78:4100)</code></p>
-      <p>Timestamp: 2026-09-11T11:35:00Z &bull; Operator Mandates: SC-NIX-DEVENV-001, SC-HOLON-NAME-001 &bull; Port 8999</p>
+      <p>Timestamp: 2026-09-11T11:40:00Z &bull; Operator Mandates: SC-NIX-DEVENV-001, SC-HOLON-NAME-001 &bull; Port 8999</p>
     </footer>
   </div>
 
