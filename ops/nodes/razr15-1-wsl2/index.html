@@ -3,235 +3,311 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UOS Distributed Node Setup (razr15-1)</title>
+  <title>UOS Distributed Operations — Instance 2 Deployment Portal (Pure OTP 29)</title>
   <style>
     :root {
-      --bg: #0a0e17;
-      --card-bg: #111927;
-      --card-border: #1e293b;
-      --text: #e2e8f0;
-      --text-muted: #94a3b8;
-      --cyan: #00d4aa;
-      --blue: #38bdf8;
-      --green: #22c55e;
-      --yellow: #f59e0b;
-      --code-bg: #05080f;
+      --bg: #0a0e14;
+      --card-bg: #121820;
+      --border: #232e3d;
+      --accent: #00d4aa;
+      --accent-glow: rgba(0, 212, 170, 0.25);
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --code-bg: #05080c;
+      --success: #3fb950;
+      --badge-bg: #1f6feb;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, monospace;
       background-color: var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
       padding: 2rem 1rem;
+      line-height: 1.6;
     }
     .container {
-      max-width: 860px;
+      max-width: 960px;
       margin: 0 auto;
     }
-    header {
+    .header {
       text-align: center;
       margin-bottom: 2.5rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--border);
       padding-bottom: 1.5rem;
     }
-    h1 {
-      font-size: 1.85rem;
-      color: var(--cyan);
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.5px;
+    .header h1 {
+      font-size: 2.2rem;
+      margin: 0 0 0.5rem 0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .header p {
+      color: var(--text-muted);
+      margin: 0;
+      font-size: 1.05rem;
+    }
+    .badge-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
     .badge {
-      display: inline-block;
+      background: var(--border);
+      color: var(--text);
       padding: 0.25rem 0.75rem;
-      font-size: 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
       font-weight: 600;
-      border-radius: 9999px;
-      background: rgba(0, 212, 170, 0.15);
-      color: var(--cyan);
-      border: 1px solid rgba(0, 212, 170, 0.3);
-      margin-bottom: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.08);
     }
-    p.subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
+    .badge.green {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--success);
+      border-color: rgba(63, 185, 80, 0.3);
+    }
+    .badge.cyan {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border-color: var(--accent);
     }
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.75rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
     .card h2 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
+      margin-top: 0;
+      font-size: 1.35rem;
+      color: var(--accent);
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    .card p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-    }
-    .code-box {
+    .command-box {
       position: relative;
       background: var(--code-bg);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1rem 1.25rem;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.92rem;
-      color: #38bdf8;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-    .btn-copy {
-      position: absolute;
-      top: 0.65rem;
-      right: 0.65rem;
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      color: var(--blue);
-      padding: 0.35rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-copy:hover {
-      background: rgba(56, 189, 248, 0.3);
-      color: #fff;
-    }
-    .btn-copy.copied {
-      background: rgba(34, 197, 94, 0.2);
-      border-color: var(--green);
-      color: var(--green);
-    }
-    .file-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-    .file-link {
+      padding: 1.2rem 1.2rem 1.2rem 1.5rem;
+      margin: 1rem 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
+    .command-text {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 1.15rem;
+      color: #7ee787;
+      word-break: break-all;
+    }
+    .copy-btn {
+      background: var(--accent);
+      color: #05080c;
+      border: none;
+      border-radius: 6px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+    .copy-btn:hover {
+      background: #33e2bb;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .grid-item {
       background: var(--code-bg);
-      border: 1px solid var(--card-border);
-      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
       border-radius: 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.85rem;
-      transition: border-color 0.2s;
+      padding: 1rem;
     }
-    .file-link:hover {
-      border-color: var(--cyan);
-      color: var(--cyan);
-    }
-    .file-size {
+    .grid-item strong {
+      display: block;
       color: var(--text-muted);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .grid-item span {
+      font-size: 1.05rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    ul.downloads {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    ul.downloads li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    ul.downloads li:last-child {
+      border-bottom: none;
+    }
+    ul.downloads a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-family: monospace;
+      font-size: 1rem;
+    }
+    ul.downloads a:hover {
+      text-decoration: underline;
+    }
+    .file-desc {
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
     footer {
       text-align: center;
-      margin-top: 3rem;
-      font-size: 0.8rem;
       color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <div class="badge">SAṀVID VAJRAVYŪHA · INSTANCE 2</div>
-      <h1>UOS Distributed Node Runner</h1>
-      <p class="subtitle">Target: Razer Blade 15 Laptop (Windows 11 + WSL2 Ubuntu 24.04 RTX GPU)</p>
-    </header>
-
-    <!-- Option 1: Run inside WSL2 -->
-    <div class="card" style="border-left: 4px solid var(--cyan);">
-      <h2>🚀 1. Run in WSL2 / Ubuntu Terminal (Recommended)</h2>
-      <p>Downloads the 12MB UOS bundle over Gigabit LAN, verifies GPU pass-through (/dev/dxg), runs ZigVM, and binds port 8088:</p>
-      <div class="code-box">
-        <button class="btn-copy" onclick="copyText('wsl-cmd', this)">Copy</button>
-        <code id="wsl-cmd">curl -fsSL http://192.168.1.220:8999/run | bash</code>
+    <div class="header">
+      <h1>⚡ UOS Distributed Instance 2 Deployment Portal</h1>
+      <p>Unified Operational System &bull; Pure Erlang/OTP 29 Runtime Engine &bull; Port 8999 Service</p>
+      <div class="badge-bar">
+        <span class="badge green">&#10004; Pure OTP 29 (ERTS 17.0.5)</span>
+        <span class="badge green">&#10004; Zero-Muda Purity (0 ZigVM / 0 Bevy / 0 Graphite)</span>
+        <span class="badge cyan">&#9679; Target: razr15-1 (192.168.1.177)</span>
+        <span class="badge">&#9729; Saṁvid Vajravyūha Mesh</span>
       </div>
     </div>
 
-    <!-- Option 2: Run from Windows PowerShell -->
-    <div class="card" style="border-left: 4px solid var(--blue);">
-      <h2>💻 2. Run from Windows PowerShell</h2>
-      <p>Launches the WSL2 instance directly from Windows PowerShell:</p>
-      <div class="code-box">
-        <button class="btn-copy" onclick="copyText('ps-cmd', this)">Copy</button>
-        <code id="ps-cmd">wsl bash -c "curl -fsSL http://192.168.1.220:8999/run | bash"</code>
-      </div>
-    </div>
-
-    <!-- Option 3: Full Cold-Boot & SSH Provisioning -->
-    <div class="card" style="border-left: 4px solid var(--yellow);">
-      <h2>⚡ 3. Windows OpenSSH & Cold-Boot Auto-Start (Admin PowerShell)</h2>
-      <p>Configures Windows OpenSSH keys with strict ACLs and registers the cold-boot SYSTEM scheduled task:</p>
-      <div class="code-box">
-        <button class="btn-copy" onclick="copyText('admin-cmd', this)">Copy</button>
-        <code id="admin-cmd">irm http://192.168.1.220:8999/deploy-and-reboot.ps1 | iex</code>
-      </div>
-    </div>
-
-    <!-- Direct Artifact Downloads -->
+    <!-- PRIMARY COMMAND -->
     <div class="card">
-      <h2>📦 Direct Package & Script Downloads</h2>
-      <p>Static binaries and scripts hosted directly on nas-1:</p>
-      <div class="file-grid">
-        <a class="file-link" href="/uos-laptop-instance.tar.gz" download>
-          <span>uos-laptop-instance.tar.gz</span>
-          <span class="file-size">12 MB</span>
-        </a>
-        <a class="file-link" href="/zigvm" download>
-          <span>zigvm (Deterministic VM)</span>
-          <span class="file-size">49 MB</span>
-        </a>
-        <a class="file-link" href="/run">
-          <span>run (One-liner script)</span>
-          <span class="file-size">1 KB</span>
-        </a>
-        <a class="file-link" href="/deploy-and-reboot.ps1">
-          <span>deploy-and-reboot.ps1</span>
-          <span class="file-size">7 KB</span>
-        </a>
-        <a class="file-link" href="/run-uos-instance.sh">
-          <span>run-uos-instance.sh</span>
-          <span class="file-size">3 KB</span>
-        </a>
-        <a class="file-link" href="/start-instance2.sh">
-          <span>start-instance2.sh</span>
-          <span class="file-size">3 KB</span>
-        </a>
+      <h2>🚀 One-Liner Quick Launch (Run in Laptop WSL2 / Bash)</h2>
+      <p style="margin: 0 0 0.8rem 0; color: var(--text-muted);">
+        Paste this command into your terminal on the Razer Blade 15 laptop to automatically fetch the pure OTP 29 engine, deploy <code>uos_instance2.beam</code>, and join the distributed operations mesh on port 8088:
+      </p>
+
+      <div class="command-box">
+        <div class="command-text" id="cmd1">curl -fsSL http://192.168.1.220:8999/run | bash</div>
+        <button class="copy-btn" onclick="copyText('cmd1')">Copy Command</button>
       </div>
+
+      <div style="margin-top: 1.2rem;">
+        <span style="font-size:0.9rem; color:var(--text-muted);">Tailscale Alternative:</span>
+        <div class="command-box" style="padding: 0.8rem 1rem;">
+          <div class="command-text" id="cmd2" style="font-size: 1rem; color: #a5d6ff;">curl -fsSL http://100.87.7.78:8999/run | bash</div>
+          <button class="copy-btn" onclick="copyText('cmd2')" style="padding: 0.4rem 0.8rem;">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPECIFICATIONS -->
+    <div class="card">
+      <h2>📋 Instance 2 Operational Parameters</h2>
+      <div class="grid">
+        <div class="grid-item">
+          <strong>Physical Machine</strong>
+          <span>Razer Blade 15 (razr15-1)</span>
+        </div>
+        <div class="grid-item">
+          <strong>IP / Network</strong>
+          <span>192.168.1.177 / Tailscale 100.114.9.28</span>
+        </div>
+        <div class="grid-item">
+          <strong>Runtime Engine</strong>
+          <span style="color:#7ee787;">Erlang/OTP 29.0.5 (ERTS 17.0.5)</span>
+        </div>
+        <div class="grid-item">
+          <strong>Distributed Role</strong>
+          <span>Instance 2 (Worker &amp; GPU Node)</span>
+        </div>
+        <div class="grid-item">
+          <strong>Node Health Port</strong>
+          <span style="color:var(--accent);">http://localhost:8088/health</span>
+        </div>
+        <div class="grid-item">
+          <strong>BEAM Cluster Cookie</strong>
+          <span><code>uos_vajravyuh_cookie</code></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOWNLOADABLE ARTIFACTS -->
+    <div class="card">
+      <h2>📦 Downloadable Package Artifacts</h2>
+      <ul class="downloads">
+        <li>
+          <div>
+            <a href="/run">run</a> / <a href="/run.sh">run.sh</a>
+            <div class="file-desc">Automated launcher script (handles extraction, configuration, and execution)</div>
+          </div>
+          <span class="badge">Script</span>
+        </li>
+        <li>
+          <div>
+            <a href="/uos_instance2.beam">uos_instance2.beam</a>
+            <div class="file-desc">Compiled Erlang/OTP 29 distributed node bytecode (HTTP + RPC + Mesh)</div>
+          </div>
+          <span class="badge green">BEAM Bytecode</span>
+        </li>
+        <li>
+          <div>
+            <a href="/uos_instance2.erl">uos_instance2.erl</a>
+            <div class="file-desc">Pure Erlang source code (compiled with 0 warnings on OTP 29)</div>
+          </div>
+          <span class="badge">Source</span>
+        </li>
+        <li>
+          <div>
+            <a href="/uos-otp29-runtime.tar.gz">uos-otp29-runtime.tar.gz</a> (78 MB)
+            <div class="file-desc">Complete self-contained Erlang/OTP 29 Nix closure with all shared libraries</div>
+          </div>
+          <span class="badge cyan">Archive</span>
+        </li>
+        <li>
+          <div>
+            <a href="/cmd.txt">cmd.txt</a>
+            <div class="file-desc">Plaintext curl command for terminal scraping</div>
+          </div>
+          <span class="badge">Plaintext</span>
+        </li>
+      </ul>
     </div>
 
     <footer>
-      <p>Primary Controller: <a href="http://192.168.1.220:4100" style="color: var(--cyan); text-decoration: none;">nas-1 (192.168.1.220:4100)</a> · Peer: vm-1 (100.78.98.18:8088)</p>
-      <p style="margin-top: 0.25rem;">Unified Operational System (UOS) · Zero-Muda Purity</p>
+      <p>Unified Operational System (UOS) &bull; Primary Controller: <code>nas-1 (192.168.1.220 / 100.87.7.78:4100)</code></p>
+      <p>Timestamp: 2026-09-11T11:30:00Z &bull; Operator Mandate: SC-NIX-DEVENV-001 &bull; Port 8999</p>
     </footer>
   </div>
 
   <script>
-    function copyText(id, btn) {
-      const text = document.getElementById(id).innerText;
+    function copyText(elementId) {
+      const text = document.getElementById(elementId).innerText;
       navigator.clipboard.writeText(text).then(() => {
-        btn.innerText = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.innerText = 'Copy';
-          btn.classList.remove('copied');
-        }, 2000);
+        alert("Command copied to clipboard!\n\n" + text);
+      }).catch(err => {
+        prompt("Copy this command:", text);
       });
     }
   </script>

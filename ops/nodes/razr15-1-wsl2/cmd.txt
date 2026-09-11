@@ -1,8 +1,1 @@
-# Option 1: Run UOS Distributed Instance in WSL2 / Ubuntu terminal:
 curl -fsSL http://192.168.1.220:8999/run | bash
-
-# Option 2: Run UOS Distributed Instance from Windows PowerShell:
-wsl bash -c "curl -fsSL http://192.168.1.220:8999/run | bash"
-
-# Option 3: Full Windows OpenSSH & Cold-Boot Setup (PowerShell Run as Administrator):
-irm http://192.168.1.220:8999/deploy-and-reboot.ps1 | iex
