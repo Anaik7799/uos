@@ -1,4 +1,4 @@
 (library
  (name gospel_poodavr)
  (wrapped false)
- (modules poodavr_contract))
+ (modules poodavr_contract fifteen_cycles_contract))
