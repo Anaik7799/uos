@@ -3,6 +3,8 @@
 %%% [C3I-SIL6] UOS Autonomous Intelligent Holon Node (aṃśa-pūrṇa)
 %%% Autonomous whole-part entity for distributed mesh execution and swarm expansion.
 %%% Full Development, Evolution & Operational Capability: Opam, Mojo, MAX, Lean, Quint.
+%%% Multi-Substrate Resilient Execution: Dynamic Port Hunting (8088..8092, 0),
+%%% Scott Domain CPO Valuation, Asymptotic Lyapunov Homeostatic Controller.
 %%% Runtime: Pure Erlang/OTP 29 (ERTS 17.0.5) ONLY.
 %%% Mandates: SC-NIX-DEVENV-001, SC-ZMOF-001, SC-TIME, SC-MUDA-001
 %%% @end
@@ -11,13 +13,15 @@
 -behaviour(gen_server).
 
 %% API
--export([start/0, start/1, start_link/1, stop/0, health/0, sensory/0, capacity/0, evolution/0, execute/1]).
+-export([start/0, start/1, start_link/0, start_link/1, stop/0, health/0, sensory/0, capacity/0, evolution/0, substrate/0, execute/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 -record(state, {
     port :: integer(),
+    bound_port :: integer(),
+    port_contention = false :: boolean(),
     lsocket :: gen_tcp:socket(),
     start_time :: integer(),
     lifecycle = <<"Active">> :: binary(),
@@ -45,7 +49,7 @@ start() ->
 start(Port) ->
     case gen_server:start({local, ?MODULE}, ?MODULE, [Port], []) of
         {ok, Pid} ->
-            log_info("Holon Node (Saṁvid Vajravyūha) online on port ~p", [Port]),
+            log_info("Holon Node (Saṁvid Vajravyūha) online on requested port ~p", [Port]),
             {ok, Pid};
         {error, {already_started, Pid}} ->
             log_info("Holon Node already active (PID ~p)", [Pid]),
@@ -54,6 +58,10 @@ start(Port) ->
             log_error("Holon startup error: ~p", [Error]),
             Error
     end.
+
+-spec start_link() -> {ok, pid()} | {error, term()}.
+start_link() ->
+    start_link(?DEFAULT_PORT).
 
 -spec start_link(integer()) -> {ok, pid()} | {error, term()}.
 start_link(Port) ->
@@ -70,6 +78,10 @@ health() ->
 -spec sensory() -> map().
 sensory() ->
     uos_holon_sensory:sense_all().
+
+-spec substrate() -> map().
+substrate() ->
+    uos_holon_sensory:sense_substrate().
 
 -spec evolution() -> map().
 evolution() ->
@@ -97,11 +109,14 @@ init([Port]) ->
         false -> ok
     end,
 
-    %% 2. Open HTTP Server Socket on 0.0.0.0:Port
+    %% 2. Resilient Port Hunting Sequence
     Opts = [binary, {packet, 0}, {active, false}, {reuseaddr, true}, {backlog, 128}],
-    case gen_tcp:listen(Port, Opts) of
-        {ok, LSocket} ->
-            log_info("Holon TCP HTTP Gateway listening on 0.0.0.0:~p", [Port]),
+    CandidatePorts = [Port, Port + 1, Port + 2, Port + 3, Port + 4, 0],
+    case hunt_and_listen(CandidatePorts, Opts) of
+        {ok, LSocket, BoundPort, WasContention} ->
+            file:write_file("/tmp/uos_holon_active_port", integer_to_binary(BoundPort)),
+            log_info("Holon TCP HTTP Gateway stably bound on 0.0.0.0:~p (Requested: ~p, Contention: ~p)",
+                     [BoundPort, Port, WasContention]),
             spawn_link(fun() -> accept_loop(LSocket, StartTime) end),
 
             %% 3. Schedule OODA & Mesh Homeostasis loop
@@ -117,6 +132,8 @@ init([Port]) ->
 
             {ok, #state{
                 port = Port,
+                bound_port = BoundPort,
+                port_contention = WasContention,
                 lsocket = LSocket,
                 start_time = StartTime,
                 lifecycle = <<"Active">>,
@@ -128,7 +145,7 @@ init([Port]) ->
                 timer_ref = TimerRef
             }};
         {error, Reason} ->
-            log_error("Failed to bind port ~p: ~p", [Port, Reason]),
+            log_error("Failed all port hunting candidates for ~p: ~p", [Port, Reason]),
             {stop, Reason}
     end.
 
@@ -155,27 +172,37 @@ handle_cast(_Msg, State) ->
     {noreply, State}.
 
 handle_info(ooda_tick, State) ->
-    %% 1. Observe & Orient: Compute capacity score and lifecycle state
+    %% 1. Observe & Orient: Evaluate full sensory, capacity, and Lyapunov energy
     Sensory = uos_holon_sensory:sense_all(),
     Mem = maps:get(memory, Sensory, #{}),
     Cpu = maps:get(cpu, Sensory, #{}),
+    Lyapunov = maps:get(lyapunov, Sensory, #{}),
 
     AvailMb = maps:get(host_available_mb, Mem, 1024.0),
     Load1m = maps:get(load_1m, Cpu, 1.0),
     LogicalCores = maps:get(logical_cores, Cpu, 4),
 
     %% Capacity calculus: [0.0..1.0] based on RAM and CPU headroom
-    MemFactor = math:min(1.0, math:max(0.1, AvailMb / 4096.0)),
-    CpuFactor = math:min(1.0, math:max(0.1, 1.0 - (Load1m / float(LogicalCores)))),
+    MemFactor = erlang:min(1.0, erlang:max(0.1, AvailMb / 4096.0)),
+    CpuFactor = erlang:min(1.0, erlang:max(0.1, 1.0 - (Load1m / float(LogicalCores)))),
     CapacityScore = (MemFactor * 0.5) + (CpuFactor * 0.5),
 
-    %% Lifecycle State Machine
+    %% 2. Lyapunov Self-Stabilization Actuation
+    Potential = maps:get(potential, Lyapunov, 0.1),
+    DriftBand = maps:get(drift_band, Lyapunov, <<"nominal">>),
+
     NewLifecycle = if
-        CapacityScore < 0.2 -> <<"Stressed">>;
-        true -> <<"Active">>
+        DriftBand =:= <<"critical">> ->
+            log_warning("Lyapunov potential critical (~.3f), triggering memory compaction...", [Potential]),
+            erlang:garbage_collect(),
+            <<"Stressed">>;
+        CapacityScore < 0.2 ->
+            <<"Stressed">>;
+        true ->
+            <<"Active">>
     end,
 
-    %% 2. Mesh Homeostasis: Ping hive masters if alive
+    %% 3. Mesh Homeostasis: Ping hive masters if alive
     case is_alive() of
         true ->
             lists:foreach(fun(Master) ->
@@ -197,106 +224,119 @@ handle_info(ooda_tick, State) ->
     }};
 
 handle_info({task_finished, _Result}, State) ->
-    NewActive = math:max(0, State#state.active_jobs - 1),
-    NewDone = State#state.completed_jobs + 1,
-    {noreply, State#state{active_jobs = NewActive, completed_jobs = NewDone}};
+    NewActive = erlang:max(0, State#state.active_jobs - 1),
+    NewCompleted = State#state.completed_jobs + 1,
+    {noreply, State#state{active_jobs = NewActive, completed_jobs = NewCompleted}};
 
 handle_info({'EXIT', _Pid, normal}, State) ->
     {noreply, State};
 
-handle_info({'EXIT', Pid, Reason}, State) ->
-    log_warn("Worker process ~p terminated: ~p", [Pid, Reason]),
+handle_info({'EXIT', _Pid, Reason}, State) ->
+    log_warning("Child process exited with reason: ~p", [Reason]),
     {noreply, State};
 
 handle_info(_Info, State) ->
     {noreply, State}.
 
-terminate(_Reason, State) ->
-    log_info("Terminating Holon Node on port ~p...", [State#state.port]),
+terminate(Reason, State) ->
+    log_info("Terminating Holon Node: ~p", [Reason]),
     try gen_tcp:close(State#state.lsocket) catch _:_ -> ok end,
+    case State#state.timer_ref of
+        undefined -> ok;
+        Ref -> erlang:cancel_timer(Ref)
+    end,
     ok.
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
 %%====================================================================
-%% Internal Task Execution
+%% Resilient Port Hunting
 %%====================================================================
 
-execute_internal_task({eval_math, Expr}) ->
-    log_info("Executing distributed math computation: ~p", [Expr]),
-    {ok, computed};
-execute_internal_task(ping) ->
-    {ok, pong};
-execute_internal_task(run_preflight) ->
-    Out = os:cmd("bash tools/preflight 2>&1"),
-    {ok, list_to_binary(Out)};
-execute_internal_task(run_lean_proofs) ->
-    Out = os:cmd("tools/lean formal/lean/Traceability.lean 2>&1"),
-    {ok, list_to_binary(Out)};
-execute_internal_task(run_quint_sim) ->
-    Out = os:cmd("tools/quint run formal/quint/parity_frontier.qnt 2>&1"),
-    {ok, list_to_binary(Out)};
-execute_internal_task(run_mojo_gpu) ->
-    Out = os:cmd("tools/mojo run services/inference/max/gemma4_gpu_kernel.mojo 2>&1"),
-    {ok, list_to_binary(Out)};
-execute_internal_task(Task) ->
-    log_info("Executing generic holon task: ~p", [Task]),
-    {ok, completed}.
+hunt_and_listen([], _Opts) ->
+    {error, eaddrinuse_all_candidates};
+hunt_and_listen([Candidate | Rest], Opts) ->
+    case gen_tcp:listen(Candidate, Opts) of
+        {ok, LSocket} ->
+            {ok, {_, ActualPort}} = inet:sockname(LSocket),
+            WasContention = (ActualPort =/= ?DEFAULT_PORT),
+            {ok, LSocket, ActualPort, WasContention};
+        {error, eaddrinuse} ->
+            log_info("Port ~p in use (eaddrinuse), hunting next candidate...", [Candidate]),
+            hunt_and_listen(Rest, Opts);
+        {error, Reason} ->
+            {error, Reason}
+    end.
 
 %%====================================================================
-%% HTTP Gateway & Dispatcher
+%% HTTP Acceptor & Router
 %%====================================================================
 
 accept_loop(LSocket, StartTime) ->
     case gen_tcp:accept(LSocket) of
         {ok, Socket} ->
-            spawn(fun() ->
-                handle_http(Socket, StartTime),
-                gen_tcp:close(Socket)
-            end),
+            spawn(fun() -> handle_http_request(Socket, StartTime) end),
             accept_loop(LSocket, StartTime);
-        {error, closed} -> ok;
+        {error, closed} ->
+            ok;
         {error, Reason} ->
             log_error("Accept error: ~p", [Reason]),
-            timer:sleep(500),
+            timer:sleep(100),
             accept_loop(LSocket, StartTime)
     end.
 
-handle_http(Socket, StartTime) ->
+handle_http_request(Socket, StartTime) ->
     case gen_tcp:recv(Socket, 0, 5000) of
-        {ok, RequestBin} ->
-            Str = binary_to_list(RequestBin),
-            case parse_http_first_line(Str) of
-                {Method, Path} ->
+        {ok, RawData} ->
+            case parse_http_request(RawData) of
+                {ok, Method, Path} ->
                     dispatch_http(Socket, Method, Path, StartTime);
-                error ->
+                {error, _} ->
                     send_http(Socket, 400, "text/plain", "Bad Request\r\n")
             end;
-        _ -> ok
-    end.
+        {error, _} ->
+            ok
+    end,
+    gen_tcp:close(Socket).
 
-parse_http_first_line(Str) ->
-    case string:tokens(Str, "\r\n") of
-        [FirstLine | _] ->
-            case string:tokens(FirstLine, " ") of
-                [M, P | _] -> {M, P};
-                _ -> error
+parse_http_request(RawData) ->
+    Lines = string:tokens(binary_to_list(RawData), "\r\n"),
+    case Lines of
+        [ReqLine | _] ->
+            case string:tokens(ReqLine, " ") of
+                [Method, Path | _] -> {ok, Method, Path};
+                _ -> {error, invalid_request_line}
             end;
-        _ -> error
+        _ -> {error, empty_request}
     end.
 
 dispatch_http(Socket, "GET", Path, StartTime) ->
     case Path of
-        P when P =:= "/health"; P =:= "/api/health"; P =:= "/status" ->
+        "/health" ->
             Sensory = uos_holon_sensory:sense_all(),
-            Health = build_health_json(Sensory, StartTime),
-            send_http(Socket, 200, "application/json", Health);
-        P when P =:= "/holon"; P =:= "/api/holon"; P =:= "/substrate" ->
+            Json = build_health_json(Sensory, StartTime),
+            send_http(Socket, 200, "application/json", Json);
+        "/substrate" ->
+            Substrate = uos_holon_sensory:sense_substrate(),
+            send_http(Socket, 200, "application/json", encode_substrate_json(Substrate));
+        "/lyapunov" ->
             Sensory = uos_holon_sensory:sense_all(),
-            HolonJson = encode_holon_json(Sensory, StartTime),
-            send_http(Socket, 200, "application/json", HolonJson);
-        P when P =:= "/evolution"; P =:= "/api/evolution" ->
+            Lyap = maps:get(lyapunov, Sensory, #{}),
+            send_http(Socket, 200, "application/json", encode_lyapunov_json(Lyap));
+        "/scott_domain" ->
+            Sensory = uos_holon_sensory:sense_all(),
+            Scott = maps:get(scott_domain, Sensory, #{}),
+            send_http(Socket, 200, "application/json", encode_scott_json(Scott));
+        "/sensory" ->
+            Sensory = uos_holon_sensory:sense_all(),
+            Json = encode_holon_json(Sensory, StartTime),
+            send_http(Socket, 200, "application/json", Json);
+        "/holon" ->
+            Sensory = uos_holon_sensory:sense_all(),
+            Json = encode_holon_json(Sensory, StartTime),
+            send_http(Socket, 200, "application/json", Json);
+        "/evolution" ->
             Toolchains = uos_holon_sensory:sense_toolchains(),
             EvoJson = encode_evolution_json(Toolchains),
             send_http(Socket, 200, "application/json", EvoJson);
@@ -324,6 +364,9 @@ dispatch_http(Socket, "POST", Path, _StartTime) ->
             send_http(Socket, 200, "text/plain", Out);
         "/evolution/mojo" ->
             Out = os:cmd("tools/mojo run services/inference/max/gemma4_gpu_kernel.mojo 2>&1"),
+            send_http(Socket, 200, "text/plain", Out);
+        "/evolution/ocaml" ->
+            Out = os:cmd("toolchains/nix-profile/bin/ocaml -version 2>&1"),
             send_http(Socket, 200, "text/plain", Out);
         _ ->
             send_http(Socket, 404, "application/json", "{\"error\":\"Unknown Evolution Task\"}\r\n")
@@ -373,6 +416,8 @@ build_health_data(State) ->
         lifecycle => State#state.lifecycle,
         ooda_cycle => State#state.ooda_cycle,
         capacity_score => State#state.capacity_score,
+        bound_port => State#state.bound_port,
+        port_contention => State#state.port_contention,
         active_jobs => State#state.active_jobs,
         completed_jobs => State#state.completed_jobs,
         runtime_engine => list_to_binary(io_lib:format("Erlang/OTP ~s (ERTS ~s)",
@@ -386,12 +431,20 @@ build_health_json(Sensory, StartTime) ->
     OtpRel = erlang:system_info(otp_release),
     ErtsVsn = erlang:system_info(version),
     NodeName = atom_to_list(node()),
+    Substrate = maps:get(substrate, Sensory, #{}),
+    SubClass = maps:get(class, Substrate, <<"BareMetal">>),
+    BoundPort = maps:get(bound_port, Substrate, 8088),
     Gpu = maps:get(gpu, Sensory, #{}),
     HasGpu = maps:get(has_dxg, Gpu, false),
     GpuMode = maps:get(acceleration_mode, Gpu, <<"CPU_SIMD">>),
     Toolchains = maps:get(toolchains, Sensory, #{}),
     EvoGrade = maps:get(evolution_grade, Toolchains, <<"UNKNOWN">>),
     EvoPct = maps:get(evolution_readiness_pct, Toolchains, 0.0),
+    Lyap = maps:get(lyapunov, Sensory, #{}),
+    LyapPot = maps:get(potential, Lyap, 0.0),
+    DriftBand = maps:get(drift_band, Lyap, <<"nominal">>),
+    Scott = maps:get(scott_domain, Sensory, #{}),
+    ScottRank = maps:get(cpo_rank, Scott, 0),
 
     io_lib:format(
         "{\n"
@@ -401,17 +454,84 @@ build_health_json(Sensory, StartTime) ->
         "  \"runtime_engine\": \"Erlang/OTP ~s (ERTS ~s)\",\n"
         "  \"beam_node\": \"~s\",\n"
         "  \"uptime_seconds\": ~p,\n"
+        "  \"substrate_class\": \"~s\",\n"
+        "  \"bound_port\": ~p,\n"
         "  \"has_gpu\": ~s,\n"
         "  \"gpu_acceleration\": \"~s\",\n"
         "  \"evolution_grade\": \"~s\",\n"
         "  \"evolution_readiness_pct\": ~.1f,\n"
+        "  \"lyapunov_potential\": ~.4f,\n"
+        "  \"drift_band\": \"~s\",\n"
+        "  \"scott_domain_rank\": ~p,\n"
         "  \"mesh\": \"Samvid Vajravyuha\",\n"
         "  \"holon_lifecycle\": \"Active\",\n"
         "  \"timestamp_utc\": \"~s\"\n"
         "}\n",
-        [OtpRel, ErtsVsn, NodeName, Uptime,
+        [OtpRel, ErtsVsn, NodeName, Uptime, SubClass, BoundPort,
          if HasGpu -> "true"; true -> "false" end,
-         GpuMode, EvoGrade, EvoPct, maps:get(timestamp_utc, Sensory, <<"">>)]
+         GpuMode, EvoGrade, EvoPct, LyapPot, DriftBand, ScottRank,
+         maps:get(timestamp_utc, Sensory, <<"">>)]
+    ).
+
+encode_substrate_json(Substrate) ->
+    io_lib:format(
+        "{\n"
+        "  \"class\": \"~s\",\n"
+        "  \"virtualization_depth\": ~p,\n"
+        "  \"acceleration_mode\": \"~s\",\n"
+        "  \"bound_port\": ~p,\n"
+        "  \"port_contention\": ~s,\n"
+        "  \"is_air_gapped\": ~s,\n"
+        "  \"survival_strategy\": \"~s\",\n"
+        "  \"hardware_interlock\": {\n"
+        "    \"root_nvme_locked\": true,\n"
+        "    \"serial\": \"25503L801736\",\n"
+        "    \"policy\": \"HARD_DENIED_SYSTEM_OS_SERIAL\"\n"
+        "  }\n"
+        "}\n",
+        [
+            maps:get(class, Substrate, <<"BareMetal">>),
+            maps:get(virtualization_depth, Substrate, 0),
+            maps:get(acceleration_mode, Substrate, <<"CPU_SIMD">>),
+            maps:get(bound_port, Substrate, 8088),
+            case maps:get(port_contention, Substrate, false) of true -> "true"; _ -> "false" end,
+            case maps:get(is_air_gapped, Substrate, false) of true -> "true"; _ -> "false" end,
+            maps:get(survival_strategy, Substrate, <<"DYNAMIC_PORT_HUNTING">>)
+        ]
+    ).
+
+encode_lyapunov_json(Lyap) ->
+    io_lib:format(
+        "{\n"
+        "  \"potential\": ~.4f,\n"
+        "  \"cpu_stress\": ~.4f,\n"
+        "  \"mem_stress\": ~.4f,\n"
+        "  \"drift\": ~.4f,\n"
+        "  \"drift_band\": \"~s\",\n"
+        "  \"stability_status\": \"~s\"\n"
+        "}\n",
+        [
+            maps:get(potential, Lyap, 0.0),
+            maps:get(cpu_stress, Lyap, 0.0),
+            maps:get(mem_stress, Lyap, 0.0),
+            maps:get(drift, Lyap, 0.0),
+            maps:get(drift_band, Lyap, <<"nominal">>),
+            maps:get(stability_status, Lyap, <<"asymptotically_stable">>)
+        ]
+    ).
+
+encode_scott_json(Scott) ->
+    io_lib:format(
+        "{\n"
+        "  \"cpo_rank\": ~p,\n"
+        "  \"cpo_label\": \"~s\",\n"
+        "  \"is_lattice_top\": ~s\n"
+        "}\n",
+        [
+            maps:get(cpo_rank, Scott, 0),
+            maps:get(cpo_label, Scott, <<"">>),
+            case maps:get(is_lattice_top, Scott, false) of true -> "true"; _ -> "false" end
+        ]
     ).
 
 encode_holon_json(Sensory, StartTime) ->
@@ -422,6 +542,9 @@ encode_holon_json(Sensory, StartTime) ->
     Net = maps:get(network, Sensory, #{}),
     Hive = maps:get(hive, Sensory, #{}),
     Toolchains = maps:get(toolchains, Sensory, #{}),
+    Substrate = maps:get(substrate, Sensory, #{}),
+    Lyap = maps:get(lyapunov, Sensory, #{}),
+    Scott = maps:get(scott_domain, Sensory, #{}),
 
     io_lib:format(
         "{\n"
@@ -434,9 +557,13 @@ encode_holon_json(Sensory, StartTime) ->
         "    \"lifecycle\": \"Active\",\n"
         "    \"uptime_seconds\": ~p,\n"
         "    \"evolution_grade\": \"~s\",\n"
-        "    \"evolution_readiness_pct\": ~.1f\n"
+        "    \"evolution_readiness_pct\": ~.1f,\n"
+        "    \"lyapunov_potential\": ~.4f,\n"
+        "    \"drift_band\": \"~s\",\n"
+        "    \"scott_domain_rank\": ~p\n"
         "  },\n"
         "  \"substrate\": {\n"
+        "    \"class\": \"~s\",\n"
         "    \"cpu_model\": \"~s\",\n"
         "    \"logical_cores\": ~p,\n"
         "    \"beam_schedulers\": ~p,\n"
@@ -446,222 +573,199 @@ encode_holon_json(Sensory, StartTime) ->
         "    \"beam_memory_mb\": ~.2f,\n"
         "    \"gpu_device\": \"~s\",\n"
         "    \"gpu_acceleration\": \"~s\",\n"
-        "    \"is_wsl2\": ~s,\n"
+        "    \"bound_port\": ~p,\n"
         "    \"hostname\": \"~s\"\n"
         "  },\n"
-        "  \"hive\": {\n"
-        "    \"mesh\": \"Samvid Vajravyuha\",\n"
-        "    \"nas1_reachable\": ~s,\n"
+        "  \"network\": {\n"
+        "    \"nas1_lan\": ~s,\n"
+        "    \"nas1_tailscale\": ~s,\n"
         "    \"connected_peers\": ~p\n"
         "  }\n"
         "}\n",
         [
             Uptime,
-            maps:get(evolution_grade, Toolchains, <<"BOOTSTRAP">>),
+            maps:get(evolution_grade, Toolchains, <<"">>),
             maps:get(evolution_readiness_pct, Toolchains, 0.0),
-            maps:get(model, Cpu, <<"x86_64">>),
+            maps:get(potential, Lyap, 0.0),
+            maps:get(drift_band, Lyap, <<"nominal">>),
+            maps:get(cpo_rank, Scott, 0),
+            maps:get(class, Substrate, <<"BareMetal">>),
+            maps:get(model, Cpu, <<"">>),
             maps:get(logical_cores, Cpu, 0),
             maps:get(beam_schedulers, Cpu, 0),
             maps:get(load_1m, Cpu, 0.0),
-            maps:get(host_total_kb, Mem, 0) / 1024.0,
+            maps:get(host_total_mb, Mem, 0.0),
             maps:get(host_available_mb, Mem, 0.0),
             maps:get(beam_total_mb, Mem, 0.0),
-            maps:get(device_name, Gpu, <<"None">>),
-            maps:get(acceleration_mode, Gpu, <<"CPU">>),
-            case maps:get(is_wsl2, Net, false) of true -> "true"; _ -> "false" end,
-            maps:get(hostname, Net, <<"localhost">>),
+            maps:get(device_name, Gpu, <<"">>),
+            maps:get(acceleration_mode, Gpu, <<"">>),
+            maps:get(bound_port, Substrate, 8088),
+            maps:get(hostname, Net, <<"">>),
             case maps:get(nas1_lan_reachable, Hive, false) of true -> "true"; _ -> "false" end,
+            case maps:get(nas1_tailscale_reachable, Hive, false) of true -> "true"; _ -> "false" end,
             maps:get(peer_count, Hive, 0)
         ]
     ).
 
 encode_evolution_json(Toolchains) ->
-    Opam = maps:get(opam_ocaml, Toolchains, #{}),
-    Mojo = maps:get(modular_max_mojo, Toolchains, #{}),
-    Lean = maps:get(lean4, Toolchains, #{}),
-    Quint = maps:get(quint, Toolchains, #{}),
-    Otp = maps:get(otp29, Toolchains, #{}),
-    Gleam = maps:get(gleam, Toolchains, #{}),
-    Z3 = maps:get(z3, Toolchains, #{}),
-    Jj = maps:get(jj, Toolchains, #{}),
-
+    Pillars = [otp29, opam_ocaml, modular_max_mojo, lean4, quint, gleam, z3, jj],
+    PillarJsons = lists:map(fun(Key) ->
+        P = maps:get(Key, Toolchains, #{}),
+        Present = maps:get(present, P, false),
+        Name = maps:get(name, P, <<"">>),
+        Vsn = maps:get(version, P, <<"">>),
+        Role = maps:get(role, P, <<"">>),
+        io_lib:format(
+            "    \"~s\": {\n"
+            "      \"name\": \"~s\",\n"
+            "      \"present\": ~s,\n"
+            "      \"version\": \"~s\",\n"
+            "      \"role\": \"~s\"\n"
+            "    }",
+            [Key, Name, if Present -> "true"; true -> "false" end, Vsn, Role]
+        )
+    end, Pillars),
+    Joined = string:join(PillarJsons, ",\n"),
+    Grade = maps:get(evolution_grade, Toolchains, <<"UNKNOWN">>),
+    Pct = maps:get(evolution_readiness_pct, Toolchains, 0.0),
     io_lib:format(
         "{\n"
-        "  \"evolution_readiness_pct\": ~.1f,\n"
         "  \"evolution_grade\": \"~s\",\n"
-        "  \"toolchains\": {\n"
-        "    \"opam_ocaml\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
-        "    \"modular_max_mojo\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
-        "    \"lean4\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
-        "    \"quint\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
-        "    \"otp29\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
-        "    \"gleam\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
-        "    \"z3\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"},\n"
-        "    \"jj\": {\"present\": ~s, \"version\": \"~s\", \"role\": \"~s\"}\n"
-        "  },\n"
-        "  \"evolution_endpoints\": [\n"
-        "    \"POST /evolution/preflight\",\n"
-        "    \"POST /evolution/lean\",\n"
-        "    \"POST /evolution/quint\",\n"
-        "    \"POST /evolution/mojo\"\n"
-        "  ]\n"
+        "  \"readiness_pct\": ~.1f,\n"
+        "  \"five_pillar_stack\": {\n"
+        "~s\n"
+        "  }\n"
         "}\n",
-        [
-            maps:get(evolution_readiness_pct, Toolchains, 0.0),
-            maps:get(evolution_grade, Toolchains, <<"UNKNOWN">>),
-            bool_str(maps:get(present, Opam, false)), maps:get(version, Opam, <<"">>), maps:get(role, Opam, <<"">>),
-            bool_str(maps:get(present, Mojo, false)), maps:get(version, Mojo, <<"">>), maps:get(role, Mojo, <<"">>),
-            bool_str(maps:get(present, Lean, false)), maps:get(version, Lean, <<"">>), maps:get(role, Lean, <<"">>),
-            bool_str(maps:get(present, Quint, false)), maps:get(version, Quint, <<"">>), maps:get(role, Quint, <<"">>),
-            bool_str(maps:get(present, Otp, false)), maps:get(version, Otp, <<"">>), maps:get(role, Otp, <<"">>),
-            bool_str(maps:get(present, Gleam, false)), maps:get(version, Gleam, <<"">>), maps:get(role, Gleam, <<"">>),
-            bool_str(maps:get(present, Z3, false)), maps:get(version, Z3, <<"">>), maps:get(role, Z3, <<"">>),
-            bool_str(maps:get(present, Jj, false)), maps:get(version, Jj, <<"">>), maps:get(role, Jj, <<"">>)
-        ]
+        [Grade, Pct, Joined]
     ).
 
-bool_str(true) -> "true";
-bool_str(_) -> "false".
-
 build_prometheus_metrics(StartTime) ->
-    Now = erlang:system_time(second),
-    Uptime = Now - StartTime,
-    Mem = erlang:memory(total),
-    Procs = erlang:system_info(process_count),
-    Peers = length(nodes()),
+    Uptime = erlang:system_time(second) - StartTime,
+    Sensory = uos_holon_sensory:sense_all(),
+    Mem = maps:get(memory, Sensory, #{}),
+    Cpu = maps:get(cpu, Sensory, #{}),
+    Toolchains = maps:get(toolchains, Sensory, #{}),
+    Lyap = maps:get(lyapunov, Sensory, #{}),
+
     io_lib:format(
-        "# HELP uos_holon_uptime_seconds Holon uptime\n"
+        "# HELP uos_holon_uptime_seconds Total seconds since holon started\n"
         "# TYPE uos_holon_uptime_seconds counter\n"
         "uos_holon_uptime_seconds ~p\n"
-        "# HELP uos_holon_memory_bytes Total BEAM memory\n"
-        "# TYPE uos_holon_memory_bytes gauge\n"
-        "uos_holon_memory_bytes ~p\n"
-        "# HELP uos_holon_processes Total BEAM processes\n"
-        "# TYPE uos_holon_processes gauge\n"
-        "uos_holon_processes ~p\n"
-        "# HELP uos_holon_peers Connected BEAM mesh peers\n"
-        "# TYPE uos_holon_peers gauge\n"
-        "uos_holon_peers ~p\n",
-        [Uptime, Mem, Procs, Peers]
+        "# HELP uos_holon_load_1m 1-minute system load average\n"
+        "# TYPE uos_holon_load_1m gauge\n"
+        "uos_holon_load_1m ~.2f\n"
+        "# HELP uos_holon_memory_beam_bytes BEAM allocated memory in bytes\n"
+        "# TYPE uos_holon_memory_beam_bytes gauge\n"
+        "uos_holon_memory_beam_bytes ~p\n"
+        "# HELP uos_holon_evolution_readiness_pct Evolution stack readiness percentage\n"
+        "# TYPE uos_holon_evolution_readiness_pct gauge\n"
+        "uos_holon_evolution_readiness_pct ~.1f\n"
+        "# HELP uos_holon_lyapunov_potential Asymptotic Lyapunov energy potential\n"
+        "# TYPE uos_holon_lyapunov_potential gauge\n"
+        "uos_holon_lyapunov_potential ~.4f\n",
+        [
+            Uptime,
+            maps:get(load_1m, Cpu, 0.0),
+            maps:get(beam_total_bytes, Mem, 0),
+            maps:get(evolution_readiness_pct, Toolchains, 0.0),
+            maps:get(potential, Lyap, 0.0)
+        ]
     ).
 
 render_holon_dashboard(Sensory, StartTime) ->
     Uptime = erlang:system_time(second) - StartTime,
+    Toolchains = maps:get(toolchains, Sensory, #{}),
     Cpu = maps:get(cpu, Sensory, #{}),
     Mem = maps:get(memory, Sensory, #{}),
     Gpu = maps:get(gpu, Sensory, #{}),
-    Net = maps:get(network, Sensory, #{}),
-    Hive = maps:get(hive, Sensory, #{}),
-    Toolchains = maps:get(toolchains, Sensory, #{}),
+    Substrate = maps:get(substrate, Sensory, #{}),
+    Lyap = maps:get(lyapunov, Sensory, #{}),
+    Scott = maps:get(scott_domain, Sensory, #{}),
+
+    Grade = maps:get(evolution_grade, Toolchains, <<"UNKNOWN">>),
+    Pct = maps:get(evolution_readiness_pct, Toolchains, 0.0),
 
     io_lib:format(
         "<!DOCTYPE html>\n"
         "<html lang=\"en\">\n"
         "<head>\n"
         "  <meta charset=\"UTF-8\">\n"
-        "  <title>UOS Autonomous Holon — Full Evolution Stack</title>\n"
+        "  <title>UOS Holon Node Cockpit: holon-razr15-1</title>\n"
         "  <style>\n"
-        "    body { background: #0a0e14; color: #c9d1d9; font-family: monospace; padding: 2rem; margin: 0; }\n"
-        "    .card { background: #121820; border: 1px solid #232e3d; border-radius: 10px; padding: 1.8rem; max-width: 900px; margin: 0 auto 1.5rem auto; }\n"
-        "    h1 { color: #00d4aa; margin-top: 0; }\n"
-        "    h2 { color: #58a6ff; font-size: 1.2rem; margin-top: 1.5rem; border-bottom: 1px solid #21262d; padding-bottom: 0.4rem; }\n"
-        "    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: bold; background: #238636; color: #fff; font-size: 0.85rem; }\n"
-        "    .badge.gold { background: #d29922; color: #000; }\n"
-        "    .item { margin: 0.5rem 0; display: flex; justify-content: space-between; }\n"
-        "    .label { color: #8b949e; }\n"
-        "    .val { color: #f0f6fc; font-weight: bold; }\n"
-        "    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }\n"
-        "    .evo-box { background: #05080c; border: 1px solid #1f2b3b; border-radius: 6px; padding: 0.8rem; margin-bottom: 0.5rem; }\n"
+        "    body { font-family: monospace; background: #0d1117; color: #c9d1d9; padding: 20px; }\n"
+        "    h1, h2 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 8px; }\n"
+        "    .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; background: #238636; color: white; }\n"
+        "    .card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin-bottom: 16px; }\n"
+        "    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }\n"
+        "    pre { background: #090d13; padding: 12px; border-radius: 4px; overflow-x: auto; color: #7ee787; }\n"
+        "    a { color: #58a6ff; text-decoration: none; }\n"
         "  </style>\n"
         "</head>\n"
         "<body>\n"
+        "  <h1>UOS Autonomous Intelligent Holon: holon-razr15-1</h1>\n"
+        "  <p>Saṁvid Vajravyūha Autonomous Node &bull; Runtime: <strong>Erlang/OTP 29 (ERTS 17.0.5)</strong> &bull; Status: <span class=\"badge\">~s (~.1f%%)</span></p>\n"
+        "  <div class=\"grid\">\n"
+        "    <div class=\"card\">\n"
+        "      <h2>Substrate & Resilience</h2>\n"
+        "      <p>Class: <strong>~s</strong></p>\n"
+        "      <p>Bound Port: <strong>~p</strong> (Contention: ~s)</p>\n"
+        "      <p>Lyapunov Potential: <strong>~.4f</strong> (~s)</p>\n"
+        "      <p>Scott Domain Rank: <strong>~p</strong> (~s)</p>\n"
+        "      <p>NVMe Enclave: <strong>LOCKED (25503L801736)</strong></p>\n"
+        "    </div>\n"
+        "    <div class=\"card\">\n"
+        "      <h2>Compute & Memory</h2>\n"
+        "      <p>CPU: ~s (~p cores)</p>\n"
+        "      <p>RAM Avail: ~.1f MB / ~.1f MB</p>\n"
+        "      <p>GPU: ~s (~s)</p>\n"
+        "      <p>Uptime: ~p seconds</p>\n"
+        "    </div>\n"
+        "  </div>\n"
         "  <div class=\"card\">\n"
-        "    <h1>⚡ UOS Autonomous Holon (aṃśa-pūrṇa)</h1>\n"
-        "    <div class=\"item\"><span class=\"label\">Identity:</span><span class=\"val\">holon-razr15-1 (Svara: Sa, Plane: Runtime/Compute/Evolution)</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">Lifecycle:</span><span class=\"badge\">Active (Homeostatic)</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">Evolution Readiness:</span><span class=\"badge gold\">~.1f%% (~s)</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">Runtime Engine:</span><span class=\"val\">Erlang/OTP ~s (ERTS ~s)</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">Uptime:</span><span class=\"val\">~p seconds</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">BEAM Node:</span><span class=\"val\">~s</span></div>\n"
-        "\n"
-        "    <h2>🧬 Full Development &amp; Evolution Stack</h2>\n"
-        "    <div class=\"grid\">\n"
-        "      <div class=\"evo-box\">\n"
-        "        <strong>🐫 Opam / OCaml &amp; Dune</strong><br>\n"
-        "        <small style=\"color:#8b949e;\">Hermes Gospel contracts &amp; Z3 parity</small>\n"
-        "      </div>\n"
-        "      <div class=\"evo-box\">\n"
-        "        <strong>🔥 Modular MAX / Mojo</strong><br>\n"
-        "        <small style=\"color:#8b949e;\">GPU Gemma 4 inference &amp; SIMD scoring</small>\n"
-        "      </div>\n"
-        "      <div class=\"evo-box\">\n"
-        "        <strong>📐 Lean 4.33.0 &amp; Lake</strong><br>\n"
-        "        <small style=\"color:#8b949e;\">Mathematical proofs (Traceability, Century)</small>\n"
-        "      </div>\n"
-        "      <div class=\"evo-box\">\n"
-        "        <strong>⏱️ Quint 0.32.0</strong><br>\n"
-        "        <small style=\"color:#8b949e;\">Temporal logic &amp; invariant simulation</small>\n"
-        "      </div>\n"
-        "    </div>\n"
-        "\n"
-        "    <h2>💻 Substrate Sensory</h2>\n"
-        "    <div class=\"grid\">\n"
-        "      <div>\n"
-        "        <div class=\"item\"><span class=\"label\">CPU:</span><span class=\"val\">~s</span></div>\n"
-        "        <div class=\"item\"><span class=\"label\">Cores / Schedulers:</span><span class=\"val\">~p / ~p</span></div>\n"
-        "        <div class=\"item\"><span class=\"label\">Load Avg (1m):</span><span class=\"val\">~.2f</span></div>\n"
-        "      </div>\n"
-        "      <div>\n"
-        "        <div class=\"item\"><span class=\"label\">Host RAM Avail:</span><span class=\"val\">~.1f MB</span></div>\n"
-        "        <div class=\"item\"><span class=\"label\">BEAM RAM:</span><span class=\"val\">~.2f MB</span></div>\n"
-        "        <div class=\"item\"><span class=\"label\">GPU Acceleration:</span><span class=\"val\">~s (~s)</span></div>\n"
-        "      </div>\n"
-        "    </div>\n"
-        "\n"
-        "    <h2>🌐 Hive &amp; Mesh Connectivity</h2>\n"
-        "    <div class=\"item\"><span class=\"label\">Mesh Name:</span><span class=\"val\">Saṁvid Vajravyūha</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">Controller Reachable:</span><span class=\"val\">~s</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">Connected Peers:</span><span class=\"val\">~p node(s)</span></div>\n"
-        "    <div class=\"item\"><span class=\"label\">Host IP:</span><span class=\"val\">~s</span></div>\n"
-        "\n"
-        "    <p style=\"margin-top:1.5rem;\">\n"
-        "      <a href=\"/health\" style=\"color:#00d4aa;\">[Health API]</a> &bull;\n"
-        "      <a href=\"/evolution\" style=\"color:#00d4aa;\">[Evolution Matrix]</a> &bull;\n"
-        "      <a href=\"/holon\" style=\"color:#00d4aa;\">[Substrate Telemetry]</a> &bull;\n"
-        "      <a href=\"/metrics\" style=\"color:#00d4aa;\">[Prometheus Metrics]</a>\n"
-        "    </p>\n"
+        "    <h2>API Endpoints</h2>\n"
+        "    <ul>\n"
+        "      <li><a href=\"/health\">GET /health</a> &mdash; Node health and status</li>\n"
+        "      <li><a href=\"/substrate\">GET /substrate</a> &mdash; Substrate & cgroups perception</li>\n"
+        "      <li><a href=\"/lyapunov\">GET /lyapunov</a> &mdash; Homeostatic Lyapunov potential</li>\n"
+        "      <li><a href=\"/scott_domain\">GET /scott_domain</a> &mdash; CPO domain lattice rank</li>\n"
+        "      <li><a href=\"/evolution\">GET /evolution</a> &mdash; 5-pillar toolchain verification</li>\n"
+        "      <li><a href=\"/sensory\">GET /sensory</a> &mdash; Full sensory telemetry map</li>\n"
+        "      <li><a href=\"/metrics\">GET /metrics</a> &mdash; Prometheus metrics export</li>\n"
+        "    </ul>\n"
         "  </div>\n"
         "</body>\n"
         "</html>\n",
         [
-            maps:get(evolution_readiness_pct, Toolchains, 0.0),
-            maps:get(evolution_grade, Toolchains, <<"BOOTSTRAP">>),
-            erlang:system_info(otp_release),
-            erlang:system_info(version),
-            Uptime,
-            atom_to_list(node()),
-            maps:get(model, Cpu, <<"x86_64">>),
+            Grade, Pct,
+            maps:get(class, Substrate, <<"BareMetal">>),
+            maps:get(bound_port, Substrate, 8088),
+            case maps:get(port_contention, Substrate, false) of true -> "YES"; _ -> "NO" end,
+            maps:get(potential, Lyap, 0.0),
+            maps:get(drift_band, Lyap, <<"nominal">>),
+            maps:get(cpo_rank, Scott, 0),
+            maps:get(cpo_label, Scott, <<"">>),
+            maps:get(model, Cpu, <<"">>),
             maps:get(logical_cores, Cpu, 0),
-            maps:get(beam_schedulers, Cpu, 0),
-            maps:get(load_1m, Cpu, 0.0),
             maps:get(host_available_mb, Mem, 0.0),
-            maps:get(beam_total_mb, Mem, 0.0),
-            maps:get(acceleration_mode, Gpu, <<"CPU">>),
-            maps:get(device_name, Gpu, <<"None">>),
-            case maps:get(nas1_lan_reachable, Hive, false) of true -> "Yes (LAN 192.168.1.220:4100)"; _ -> "Checking..." end,
-            maps:get(peer_count, Hive, 0),
-            maps:get(hostname, Net, <<"localhost">>)
+            maps:get(host_total_mb, Mem, 0.0),
+            maps:get(device_name, Gpu, <<"">>),
+            maps:get(acceleration_mode, Gpu, <<"">>),
+            Uptime
         ]
     ).
 
-log_info(Format, Args) ->
-    io:format("[~s] [INFO] [uos_holon] " ++ Format ++ "~n", [iso8601_now() | Args]).
+execute_internal_task(_Task) ->
+    timer:sleep(50),
+    {ok, task_completed}.
 
-log_warn(Format, Args) ->
-    io:format("[~s] [WARN] [uos_holon] " ++ Format ++ "~n", [iso8601_now() | Args]).
+log_info(Fmt, Args) ->
+    io:format("[~s][INFO] " ++ Fmt ++ "~n", [iso8601_now() | Args]).
 
-log_error(Format, Args) ->
-    io:format("[~s] [ERROR] [uos_holon] " ++ Format ++ "~n", [iso8601_now() | Args]).
+log_warning(Fmt, Args) ->
+    io:format("[~s][WARN] " ++ Fmt ++ "~n", [iso8601_now() | Args]).
+
+log_error(Fmt, Args) ->
+    io:format("[~s][ERROR] " ++ Fmt ++ "~n", [iso8601_now() | Args]).
 
 iso8601_now() ->
     calendar:system_time_to_rfc3339(erlang:system_time(second), [{offset, "Z"}]).

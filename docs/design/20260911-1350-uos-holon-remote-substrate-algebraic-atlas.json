@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "status": "RATIFIED_AND_ADMITTED",
+  "atlas_id": "20260911-1350-uos-holon-remote-substrate-algebraic-atlas",
+  "specification_path": "docs/design/20260911-1350-uos-holon-remote-substrate-denotational-spec-and-design.md",
+  "authority": "sa-plan:uos/holon-denotational-atlas:task-2",
+  "created_utc": "2026-09-11T13:50:00Z",
+  "control_language": "erlang_otp_29",
+  "runtime": "otp_29",
+  "contracts": [
+    "SC-HOLON-SUBSTRATE-001",
+    "SC-DENOTATIONAL-001",
+    "SC-ALGEBRAIC-ATLAS-001",
+    "SC-NIX-DEVENV-001",
+    "SC-TOOLCHAIN-INPROJECT-001",
+    "SC-DIAGRAM-001",
+    "SC-CHECKLIST-001",
+    "SC-SA-PLAN-001",
+    "SC-JIDOKA-001",
+    "SC-TAILSCALE-WEB-001"
+  ],
+  "categorical_structure": {
+    "categories": [
+      {
+        "name": "Substrate",
+        "description": "Category of heterogeneous physical and virtualized computing substrates",
+        "objects": [
+          {
+            "id": "Obj_BareMetal",
+            "name": "Bare-Metal Linux Host",
+            "attributes": ["direct_dmi", "acpi_raw", "pcie_nvme", "physical_smp"]
+          },
+          {
+            "id": "Obj_WSL2",
+            "name": "Windows Subsystem for Linux 2",
+            "attributes": ["dev_dxg_gpu", "wsl_interop", "virtio_9p", "vhost_vsock"]
+          },
+          {
+            "id": "Obj_Container",
+            "name": "OCI Container / cgroups Sandbox",
+            "attributes": ["cgroups_v1_v2", "namespace_pid_net", "cpu_max_quota", "mem_max"]
+          },
+          {
+            "id": "Obj_HypervisorVM",
+            "name": "Type-1/Type-2 Hypervisor Virtual Machine",
+            "attributes": ["kvm_qemu_flags", "virtio_scsi", "virtualbox_vmware_dmi"]
+          },
+          {
+            "id": "Obj_AirGapped",
+            "name": "Isolated Network Partition",
+            "attributes": ["loopback_only", "ephemeral_mesh", "zero_external_ingress"]
+          }
+        ],
+        "morphisms": [
+          {
+            "id": "Morph_Virtualize",
+            "source": "Obj_BareMetal",
+            "target": "Obj_WSL2",
+            "description": "Hardware virtualization with GPU paravirtualization (/dev/dxg)"
+          },
+          {
+            "id": "Morph_Contain",
+            "source": "Obj_BareMetal",
+            "target": "Obj_Container",
+            "description": "Kernel cgroup and namespace resource isolation"
+          },
+          {
+            "id": "Morph_Partition",
+            "source": "Obj_WSL2",
+            "target": "Obj_AirGapped",
+            "description": "Network interface severance or firewall isolation"
+          }
+        ]
+      },
+      {
+        "name": "Holon",
+        "description": "Category of autonomous resilient holon states in Scott domain D_S",
+        "objects": [
+          {"id": "Obj_Bot", "name": "Bottom State", "level": 0, "symbol": "⊥"},
+          {"id": "Obj_Probed", "name": "Physical Probed State", "level": 1},
+          {"id": "Obj_Classified", "name": "Substrate Classified State", "level": 2},
+          {"id": "Obj_Bound", "name": "Network Bound State", "level": 3},
+          {"id": "Obj_Ratified", "name": "5-Pillar Evolution Ratified State", "level": 4, "symbol": "⊤"}
+        ],
+        "morphisms": [
+          {"id": "Morph_Perceive", "source": "Obj_Bot", "target": "Obj_Probed", "action": "probe_vfs"},
+          {"id": "Morph_Classify", "source": "Obj_Probed", "target": "Obj_Classified", "action": "classify_substrate"},
+          {"id": "Morph_Bind", "source": "Obj_Classified", "target": "Obj_Bound", "action": "port_hunting_bind"},
+          {"id": "Morph_Ratify", "source": "Obj_Bound", "target": "Obj_Ratified", "action": "verify_5_pillars"},
+          {"id": "Morph_OODA", "source": "Obj_Ratified", "target": "Obj_Ratified", "action": "homeostatic_ooda_step"}
+        ]
+      }
+    ],
+    "functors": [
+      {
+        "id": "Functor_Perception",
+        "name": "Perception Functor P",
+        "source_category": "Substrate",
+        "target_category": "Holon",
+        "object_mapping": "Maps raw host OS descriptors (/proc, /sys, /dev) to typed Scott domain elements",
+        "morphism_mapping": "Preserves resource constraints and virtualization boundaries into state bounds"
+      },
+      {
+        "id": "Functor_Actuation",
+        "name": "Actuation Functor A",
+        "source_category": "Holon",
+        "target_category": "Substrate",
+        "object_mapping": "Maps verified actions (compiler run, port bind, scheduler tune) to OS execution",
+        "morphism_mapping": "Guarantees fail-closed safety (hard NVMe drive interlock 25503L801736)"
+      },
+      {
+        "id": "Functor_Homeostasis",
+        "name": "Homeostatic Endofunctor H",
+        "source_category": "Holon",
+        "target_category": "Holon",
+        "object_mapping": "Contracts state space towards minimum Lyapunov energy V(s)",
+        "morphism_mapping": "Preserves asymptotic stability: Delta V(s) <= 0"
+      }
+    ],
+    "monads": [
+      {
+        "id": "Monad_ResilientHolon",
+        "name": "Holon Monad (M, eta, mu)",
+        "category": "Holon",
+        "unit_eta": "eta(A): A -> M(A), lifts pure computation into fail-safe, leased, monitored execution",
+        "multiplication_mu": "mu(M(M(A))): M(M(A)) -> M(A), flattens nested holon hives into unified mesh consensus",
+        "laws": [
+          "Left Unit: mu . M(eta) = id_M",
+          "Right Unit: mu . eta_M = id_M",
+          "Associativity: mu . M(mu) = mu . mu_M"
+        ]
+      }
+    ],
+    "operads": [
+      {
+        "id": "Operad_FractalControl",
+        "name": "Fractal Control Operad (L0..L9)",
+        "arity_colors": ["L0_Constitutional", "L1_Atomic", "L4_System", "L5_Cognitive", "L6_Swarm", "L8_Formal", "L9_SRE"],
+        "composition_rule": "Tree-structured algebraic composition of OODA directives with 2oo3 constitutional veto"
+      }
+    ]
+  },
+  "scott_domain_spec": {
+    "cpo_name": "SubstrateInformationDomain (D_S, <=)",
+    "bottom": "Bot (uninitialized)",
+    "top": "RatifiedFullEvolution",
+    "ordering_rules": [
+      "Bot <= s for all s in D_S",
+      "s <= Top for all s in D_S",
+      "s1 <= s2 iff s1.cores <= s2.cores and s1.mem <= s2.mem and s1.evo_score <= s2.evo_score"
+    ],
+    "join_semantics": "Supremum s1 U s2 computes the upper bound of environmental capabilities",
+    "kleene_fixed_point": "fix(Phi) = U_{n>=0} Phi^n(Bot) achieves stable homeostatic equilibrium"
+  },
+  "lyapunov_homeostasis": {
+    "potential_function": "V(s) = w_cpu * (Load/Cores)^2 + w_mem * (UsedMem/TotalMem)^2 + w_port * PortContention + w_drift * (1 - EvoScore)",
+    "weights": {
+      "w_cpu": 0.35,
+      "w_mem": 0.35,
+      "w_port": 0.15,
+      "w_drift": 0.15
+    },
+    "stability_criterion": "Delta V(s) = V(s_{t+1}) - V(s_t) <= 0",
+    "drift_bands": {
+      "nominal": "< 0.20",
+      "minor": "0.20 - 0.45",
+      "warning": "0.45 - 0.70",
+      "critical": "> 0.70 (Triggers Prajna Circuit Breaker)"
+    }
+  },
+  "five_pillar_evolution_stack": [
+    {
+      "pillar_id": "P01_Lean4",
+      "name": "Lean 4 Theorem Prover",
+      "version": "4.33.0",
+      "lake_version": "5.0.0",
+      "capabilities": ["formal_theorems", "13d_traceability_proofs", "invariant_checks"],
+      "binary_path": "toolchains/nix-profile/bin/lean",
+      "http_endpoint": "/evolution/lean"
+    },
+    {
+      "pillar_id": "P02_Quint",
+      "name": "Quint Protocol Simulator",
+      "version": "0.32.0",
+      "capabilities": ["temporal_logic", "distributed_consensus_fuzzing", "parity_frontiers"],
+      "binary_path": "tools/quint",
+      "http_endpoint": "/evolution/quint"
+    },
+    {
+      "pillar_id": "P03_Mojo",
+      "name": "Modular MAX / Mojo Accelerator",
+      "version": "1.0.0 (ed45d567)",
+      "capabilities": ["simd_tensor_eval", "heijunka_queue_scoring", "fast_ooda_convergence"],
+      "binary_path": "toolchains/nix-profile/bin/mojo",
+      "http_endpoint": "/evolution/mojo"
+    },
+    {
+      "pillar_id": "P04_OCaml",
+      "name": "Hermes OCaml & Z3 Solver",
+      "version": "OCaml 5.5.0 / Dune 3.23.1 / Z3 4.16.0",
+      "capabilities": ["gospel_contracts", "rete_ul_forward_chaining", "differential_parity_algebra"],
+      "binary_path": "toolchains/nix-profile/bin/ocaml",
+      "http_endpoint": "/evolution/ocaml"
+    },
+    {
+      "pillar_id": "P05_OTP29",
+      "name": "Pure Erlang / OTP 29 Runtime",
+      "version": "29.0.5 (ERTS 17.0.5)",
+      "capabilities": ["supervision_trees", "distributed_gossip", "resilient_port_hunter", "rest_gateway"],
+      "binary_path": "toolchains/nix-profile/bin/erl",
+      "http_endpoint": "/evolution/preflight"
+    }
+  ],
+  "multi_substrate_taxonomy": [
+    {
+      "class": "BareMetal",
+      "detection": "Absence of hypervisor flags in /sys/class/dmi/id",
+      "fallback_actions": ["Direct NUMA tuning", "Hardware PCIe probing"]
+    },
+    {
+      "class": "WSL2",
+      "detection": "/proc/version matches 'microsoft|wsl' AND /dev/dxg present",
+      "fallback_actions": ["DirectX D3D12 GPU compute", "VHost network translation"]
+    },
+    {
+      "class": "Container",
+      "detection": "/.dockerenv OR /run/.containerenv OR cgroup cpu.max/memory.max limits",
+      "fallback_actions": ["Throttle BEAM schedulers to cgroup quota", "Enforce memory limits"]
+    },
+    {
+      "class": "HypervisorVM",
+      "detection": "DMI matches 'KVM|QEMU|VMware|VirtualBox|Hyper-V|Xen'",
+      "fallback_actions": ["VirtIO optimizations", "Dynamic core adaptation"]
+    },
+    {
+      "class": "AirGapped",
+      "detection": "Absence of default routing gateway",
+      "fallback_actions": ["Loopback cluster gossip", "Internal SQLite WAL buffering"]
+    }
+  ],
+  "verification_checklist_mapping": {
+    "checklist_id": "SC-CHECKLIST-001",
+    "domains": 5,
+    "total_checks": 18,
+    "status": "18_OF_18_PASS",
+    "checks": [
+      "CHK-01-TIME", "CHK-02-TAIL", "CHK-03-FRACT", "CHK-04-KM",
+      "CHK-05-MUDA", "CHK-06-GRAPH", "CHK-07-DRIVE", "CHK-08-C1C8",
+      "CHK-09-MATH", "CHK-10-9MOD", "CHK-11-REGR", "CHK-12-GLEAM",
+      "CHK-13-HERMES", "CHK-14-ZIGVM", "CHK-15-MAX", "CHK-16-OTEL",
+      "CHK-17-SOV", "CHK-18-JJ"
+    ]
+  }
+}

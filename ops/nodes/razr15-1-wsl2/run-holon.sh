@@ -47,9 +47,9 @@ exec "${PINNED_ERL}" \
     -pa "${SCRIPT_DIR}" \
     -noshell \
     -eval '
-        case uos_holon_node:start(8088) of
+        case uos_holon_sup:start_link(8088) of
             {ok, _} ->
-                io:format("[HOLON-INIT] Holon aṃśa-pūrṇa active and autonomous.~n"),
+                io:format("[HOLON-INIT] Holon aṃśa-pūrṇa supervisor active and autonomous.~n"),
                 io:format("[HOLON-INIT] Svadharma loop running. Substrate sensory active.~n"),
                 io:format("[HOLON-INIT] Hive mesh connected. Listening for distributed jobs...~n");
             {error, Reason} ->
