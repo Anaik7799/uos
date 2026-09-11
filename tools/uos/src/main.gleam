@@ -60,6 +60,7 @@ pub type UosCommand {
   SelfcheckMirageTenders
   SelfcheckForecast
   SelfcheckInference
+  SelfcheckCortex
   VerifyAll
   Help
 }
@@ -113,6 +114,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       SelfcheckForecast
     ["selfcheck-inference"] | ["--selfcheck-inference"] | ["inference-check"] | ["inference"] ->
       SelfcheckInference
+    ["cortex-check"] | ["cortex"] | ["selfcheck-cortex"] | ["--selfcheck-cortex"] ->
+      SelfcheckCortex
     ["verify-all"] | ["verify"] -> VerifyAll
     _ -> Help
   }
@@ -2032,9 +2035,124 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println(summary_line("Modular MAX / Mojo Inference Checks", checks))
       exit_for(checks)
     }
+    SelfcheckCortex -> {
+      io.println(
+        "Evaluating Cortex & Sa-Plan Cognitive Execution Selfcheck (--selfcheck-cortex):",
+      )
+      let rows = [
+        #(
+          "CTX-01",
+          "Cortex & Sa-Plan Coordinator present in apps/cepaf_gleam/src/cepaf_gleam/ha/cortex_saplan_coordinator.gleam",
+          file_exists(
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/cortex_saplan_coordinator.gleam",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/cortex_saplan_coordinator.gleam",
+            "hard_denied_system_os_serial",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/cortex_saplan_coordinator.gleam",
+            "jidoka_andon_halt_code",
+          ),
+        ),
+        #(
+          "CTX-02",
+          "Gospel Formal Specification contract present in engines/hermes/modules/gospel_poodavr/cortex_saplan_contract.mli",
+          file_exists(
+            "engines/hermes/modules/gospel_poodavr/cortex_saplan_contract.mli",
+          )
+            && file_contains(
+            "engines/hermes/modules/gospel_poodavr/cortex_saplan_contract.mli",
+            "hard_denied_serial",
+          )
+            && file_contains(
+            "engines/hermes/modules/gospel_poodavr/cortex_saplan_contract.mli",
+            "jidoka_halt_code",
+          ),
+        ),
+        #(
+          "CTX-03",
+          "Rust Safe Bounded NIF crate present in native/nifs/rust/cortex_nif/src/lib.rs with HARD_DENIED_SYSTEM_OS_SERIAL",
+          file_exists("native/nifs/rust/cortex_nif/src/lib.rs")
+            && file_contains(
+            "native/nifs/rust/cortex_nif/src/lib.rs",
+            "25503L801736",
+          ),
+        ),
+        #(
+          "CTX-04",
+          "Modular MAX Python Scorer & Mojo SIMD ranker present with AVX-512 vector cosine similarity",
+          file_exists("services/inference/max/cortex_scorer.py")
+            && file_exists("services/inference/max/cortex_simd_ranker.mojo"),
+        ),
+        #(
+          "CTX-05",
+          "Lustre 5.6 Web Cockpit page present at /cortex with 18-checkpoint verification accordion",
+          file_exists(
+            "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/cortex_cockpit.gleam",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/cortex_cockpit.gleam",
+            "render_cortex_page",
+          ),
+        ),
+        #(
+          "CTX-06",
+          "Split-Screen ANSI TUI view present in apps/cepaf_gleam/src/cepaf_gleam/ui/tui/cortex_tui.gleam",
+          file_exists(
+            "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/cortex_tui.gleam",
+          )
+            && file_contains(
+            "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/cortex_tui.gleam",
+            "render_cortex_tui",
+          ),
+        ),
+        #(
+          "CTX-07",
+          "Comprehensive 8-modality testing suite present in apps/cepaf_gleam/test/cortex_saplan_multimodality_test.gleam",
+          file_exists(
+            "apps/cepaf_gleam/test/cortex_saplan_multimodality_test.gleam",
+          )
+            && file_exists(
+            "apps/cepaf_gleam/test/cortex_saplan_full_integration_test.gleam",
+          ),
+        ),
+        #(
+          "CTX-08",
+          "Sa-Plan canonical registration cortex/saplan completed under worker L0-fable",
+          file_contains("var/sa-plan/uos.sqlite3", "cortex/saplan")
+            && file_contains("var/sa-plan/uos.sqlite3", "L0-fable"),
+        ),
+        #(
+          "CTX-09",
+          "Sovereign Decision Record ratified in generated/20260911-2315-uos-decision-record-cortex-saplan-sovereign-execution.json",
+          file_exists(
+            "generated/20260911-2315-uos-decision-record-cortex-saplan-sovereign-execution.json",
+          ),
+        ),
+        #(
+          "CTX-10",
+          "Full aspect design plan ratified with mandatory timestamp prefix in docs/design/20260911-2315-cortex-and-sa-plan-claude-fable-denotational-plan.md",
+          file_exists(
+            "docs/design/20260911-2315-cortex-and-sa-plan-claude-fable-denotational-plan.md",
+          ),
+        ),
+      ]
+      list.each(rows, fn(row) {
+        let #(id, label, observed) = row
+        io.println("  " <> fail_tag(observed) <> " " <> id <> ": " <> label)
+      })
+      let checks = list.map(rows, fn(row) { row.2 })
+      io.println("")
+      io.println(summary_line(
+        "Cortex & Sa-Plan Cognitive Execution Checks",
+        checks,
+      ))
+      exit_for(checks)
+    }
     Help -> {
       io.println(
-        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check|web-links|checklist|rocha-check|selfcheck-vfs|selfcheck-sa-plan|selfcheck-hermes-bionic|selfcheck-omni-matrix|selfcheck-15-cycles|selfcheck-c3i-knowledge|selfcheck-wave3-cycles|selfcheck-wave4-cycles|selfcheck-vertical-slice|selfcheck-zigvm-add|selfcheck-raga|selfcheck-mirage|selfcheck-mirage-migration|selfcheck-mirage-prod|selfcheck-forecast|selfcheck-inference|verify-all>",
+        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check|web-links|checklist|rocha-check|selfcheck-vfs|selfcheck-sa-plan|selfcheck-hermes-bionic|selfcheck-omni-matrix|selfcheck-15-cycles|selfcheck-c3i-knowledge|selfcheck-wave3-cycles|selfcheck-wave4-cycles|selfcheck-vertical-slice|selfcheck-zigvm-add|selfcheck-raga|selfcheck-mirage|selfcheck-mirage-migration|selfcheck-mirage-prod|selfcheck-forecast|selfcheck-inference|cortex-check|verify-all>",
       )
       0
     }
