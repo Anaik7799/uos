@@ -1,0 +1,27 @@
+[Unit]
+Description=UOS Instance 2 GPU Node Daemon (razr15-1 WSL2 Modular MAX Gemma 4)
+After=network.target tailscaled.service ssh.service
+Wants=tailscaled.service ssh.service
+
+[Service]
+Type=simple
+User=an
+WorkingDirectory=/home/an/uos
+ExecStart=/bin/bash /home/an/uos/ops/nodes/razr15-1-wsl2/start-instance2.sh
+Restart=always
+RestartSec=5s
+Environment=MAX_DEVICE=gpu
+Environment=CUDA_VISIBLE_DEVICES=0
+Environment=UOS_INSTANCE_ID=razr15-1-wsl2
+Environment=UOS_INSTANCE_INDEX=2
+Environment=UOS_PRIMARY_HOST=http://nas-1.tail55d152.ts.net:4100
+Environment=UOS_PEER_HOST=http://vm-1.tail55d152.ts.net:8088
+Environment=UOS_LOCAL_PORT=8088
+
+# Resource and sandbox limits
+LimitNOFILE=65536
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

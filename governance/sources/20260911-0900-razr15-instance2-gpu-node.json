@@ -9,13 +9,20 @@
     "instance_id": "razr15-1-wsl2",
     "hostname": "razr15-1",
     "wsl_hostname": "razr15-2",
+    "wsl_tailscale_hostname": "razr15-wsl2",
     "platform": "WSL2 on Windows 11",
     "tailscale_fqdn": "http://razr15-1.tail55d152.ts.net:8088",
     "tailscale_ip_windows": "100.114.9.28",
     "tailscale_ip_wsl2": "100.117.25.70",
     "primary_port": 8088,
     "web_port": 4102,
-    "zenoh_port": 7447
+    "zenoh_port": 7447,
+    "ssh_port": 22,
+    "ssh_access_mode": "Option A (Dedicated Tailscale inside WSL2 + Tailscale SSH)",
+    "authorized_keys": [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMewbASbkM+twLcsqnapyPzDLI08UlHhZFiRN8QCp01 an@nas-1",
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANEVh3rGVj7FyOcgeKMjAptJzcEWceoCmkVzYLxrrIY an@vm-1"
+    ]
   },
   "hardware_acceleration": {
     "has_gpu": true,
