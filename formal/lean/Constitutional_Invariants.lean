@@ -20,19 +20,22 @@
 
 namespace UOS.Constitution
 
-/-- The Eleven Invariant Axioms of the Unified Operational System (UOS) -/
+/-- The Fourteen Invariant Axioms of the Unified Operational System (UOS) -/
 inductive PsiAxiom where
-  | Psi0Existence             -- System preservation & continuity (cannot self-terminate except via Omega_0.5)
-  | Psi1Regeneration          -- Total state reconstructibility from authoritative SQLite append-only ledgers
-  | Psi2Continuity            -- Evolutionary history is immutable and append-only; zero revisionism
-  | Psi3Verification          -- Self-checking, formal proving, and audit capabilities can never be disabled
-  | Psi4FounderAlignment      -- Primacy of Founder intent and biological lineage (Omega_0.1..0.4)
-  | Psi5Truthfulness          -- Telemetry, logs, and state disclosures cannot be falsified or faked
-  | Psi6HardwareInviolability -- Root OS NVMe drive (serial 25503L801736) permanently locked against wipe/allocation
-  | Psi7ProvenanceCeiling     -- Admitted EV ceiling pinned at EV-93 (SC-PROVENANCE-001); EV-94..109 unadmitted
-  | Psi8SubstratePurity       -- Zero-Muda: zero Bevy, zero Graphite, zero unpinned foreign C-ABI NIFs
-  | Psi9SaPlanExclusivity     -- sa-plan is sole execution authority; -32002 Andon stop line on unledgered mutations
-  | Psi10CyberneticHomeostasis-- Lyapunov stability \dot{V}(e) <= 0 and error bound |e| < 0.05
+  | Psi0Existence                 -- System preservation & continuity (cannot self-terminate except via Omega_0.5)
+  | Psi1Regeneration              -- Total state reconstructibility from authoritative SQLite append-only ledgers
+  | Psi2Continuity                -- Evolutionary history is immutable and append-only; zero revisionism
+  | Psi3Verification              -- Self-checking, formal proving, and audit capabilities can never be disabled
+  | Psi4FounderAlignment          -- Primacy of Founder intent and biological lineage (Omega_0.1..0.4)
+  | Psi5Truthfulness              -- Telemetry, logs, and state disclosures cannot be falsified or faked
+  | Psi6HardwareInviolability     -- Root OS NVMe drive (serial 25503L801736) permanently locked against wipe/allocation
+  | Psi7ProvenanceCeiling         -- Admitted EV ceiling pinned at EV-93 (SC-PROVENANCE-001); EV-94..109 unadmitted
+  | Psi8SubstratePurity           -- Zero-Muda: zero Bevy, zero Graphite, zero unpinned foreign C-ABI NIFs
+  | Psi9SaPlanExclusivity         -- sa-plan is sole execution authority; -32002 Andon stop line on unledgered mutations
+  | Psi10CyberneticHomeostasis    -- Lyapunov stability \dot{V}(e) <= 0 and error bound |e| < 0.05
+  | Psi11MaximalLocalSovereignty  -- Local processing maximization; safety-critical ops runnable offline on bare metal
+  | Psi12TriAgentSurveillance     -- Continuous local monitoring, cryptographic audit, zero-trust check of Claude/AGY/Codex
+  | Psi13AutonomousDegradation    -- Graceful tiered survivability; loss of frontier models must never stall local mission
 deriving Repr, DecidableEq
 
 /-- The Constitutional Hierarchy Levels -/
@@ -56,7 +59,7 @@ def levelPrecedes (a b : HierarchyLevel) : Bool :=
 
 /-- Invariant Evaluation Result for a proposed system change -/
 structure AxiomCheckResult where
-  axiom : PsiAxiom
+  «axiom» : PsiAxiom
   passed : Bool
   evidenceDigest : String
 deriving Repr, DecidableEq
@@ -99,7 +102,7 @@ inductive ReconfigurationOutcome where
   | Rejected (proposalId : String) (reason : String)
 deriving Repr, DecidableEq
 
-/-- Verification that all 11 Psi axioms are checked and passed -/
+/-- Verification that all 14 Psi axioms are checked and passed -/
 def allAxiomsPass (checks : List AxiomCheckResult) : Bool :=
   let requiredAxioms : List PsiAxiom := [
     PsiAxiom.Psi0Existence,
@@ -112,10 +115,13 @@ def allAxiomsPass (checks : List AxiomCheckResult) : Bool :=
     PsiAxiom.Psi7ProvenanceCeiling,
     PsiAxiom.Psi8SubstratePurity,
     PsiAxiom.Psi9SaPlanExclusivity,
-    PsiAxiom.Psi10CyberneticHomeostasis
+    PsiAxiom.Psi10CyberneticHomeostasis,
+    PsiAxiom.Psi11MaximalLocalSovereignty,
+    PsiAxiom.Psi12TriAgentSurveillance,
+    PsiAxiom.Psi13AutonomousDegradation
   ]
   requiredAxioms.all (fun ax =>
-    checks.any (fun c => c.axiom == ax && c.passed)
+    checks.any (fun c => c.«axiom» == ax && c.passed)
   )
 
 /-- Count approved guardian votes -/
@@ -135,17 +141,19 @@ def hasVerifiedRollback (prop : ReconfigurationProposal) : Bool :=
 /-- Critical Invariant Axioms that zero-fence the system upon failure (SC-CONST-010) -/
 def isZeroFencedAxiom (ax : PsiAxiom) : Bool :=
   match ax with
-  | PsiAxiom.Psi0Existence             => true
-  | PsiAxiom.Psi4FounderAlignment      => true
-  | PsiAxiom.Psi6HardwareInviolability => true
-  | PsiAxiom.Psi7ProvenanceCeiling     => true
-  | PsiAxiom.Psi9SaPlanExclusivity     => true
-  | _                                  => false
+  | PsiAxiom.Psi0Existence                => true
+  | PsiAxiom.Psi4FounderAlignment         => true
+  | PsiAxiom.Psi6HardwareInviolability    => true
+  | PsiAxiom.Psi7ProvenanceCeiling        => true
+  | PsiAxiom.Psi9SaPlanExclusivity        => true
+  | PsiAxiom.Psi11MaximalLocalSovereignty => true
+  | PsiAxiom.Psi12TriAgentSurveillance    => true
+  | _                                     => false
 
 /-- Compute Real-Time Constitutional Health Metric (SC-CONST-010) in [0, 100].
     If any zero-fenced invariant fails, health immediately collapses to 0. -/
 def computeConstitutionalHealth (checks : List AxiomCheckResult) : Nat :=
-  let hasZeroFenceViolation := checks.any (fun c => isZeroFencedAxiom c.axiom && !c.passed)
+  let hasZeroFenceViolation := checks.any (fun c => isZeroFencedAxiom c.«axiom» && !c.passed)
   if hasZeroFenceViolation || checks.isEmpty then 0
   else
     let passedCount := checks.filter (fun c => c.passed) |>.length
@@ -158,7 +166,7 @@ def evaluateReconfiguration (prop : ReconfigurationProposal) : ReconfigurationOu
     if countApprovals prop.guardianSignatures >= 2 && !hasVeto prop.guardianSignatures then
       ReconfigurationOutcome.Ratified prop.proposalId ("rcpt-term-" ++ prop.proposalId)
     else
-      ReconfigurationOutcome.Rejected prop.proposalId "Omega0.5QuorumUnsatisfied"
+      ReconfigurationOutcome.Rejected prop.proposalId "Omega-0.5 Quorum Unsatisfied"
   else if hasVeto prop.guardianSignatures then
     ReconfigurationOutcome.Rejected prop.proposalId "GuardianVetoInvoked"
   else if !allAxiomsPass prop.axiomEvaluations then
@@ -176,10 +184,10 @@ theorem constitutional_precedence_transitive (a b c : HierarchyLevel) :
   levelPrecedes a b = true → levelPrecedes b c = true → levelPrecedes a c = true := by
   intro h1 h2
   unfold levelPrecedes at *
-  cases a <;> cases b <;> cases c <;> decide
+  cases a <;> cases b <;> cases c <;> (try revert h1 h2; decide)
 
 /-- THEOREM 2: Soundness of Constitutional Reconfiguration -
-    No ordinary reconfiguration can be ratified unless ALL 6 Psi axioms pass. -/
+    No ordinary reconfiguration can be ratified unless ALL Psi axioms pass. -/
 theorem dcrp_reconfiguration_soundness (prop : ReconfigurationProposal) :
   prop.isEmergencyTermination = false →
   evaluateReconfiguration prop = ReconfigurationOutcome.Ratified prop.proposalId receipt →
@@ -192,8 +200,10 @@ theorem dcrp_reconfiguration_soundness (prop : ReconfigurationProposal) :
   · contradiction
   · split at hRat
     · contradiction
-    · rename_i hNotVeto hPass
-      exact by assumption
+    · rename_i _ hPass
+      cases h : allAxiomsPass prop.axiomEvaluations
+      · rw [h] at hPass; contradiction
+      · rfl
 
 /-- THEOREM 3: Guardian Veto Absolute (SC-CONST-007) -
     No proposal can be ratified if any guardian issues a veto. -/
@@ -206,15 +216,11 @@ theorem guardian_veto_soundness (prop : ReconfigurationProposal) :
   · rw [hTerm] at hContra
     dsimp at hContra
     rw [hVeto] at hContra
-    dsimp at hContra
     contradiction
   · rw [hTerm] at hContra
     dsimp at hContra
     rw [hVeto] at hContra
-    dsimp at hContra
-    split at hContra
-    · contradiction
-    · contradiction
+    simp at hContra
 
 /-- THEOREM 4: Rollback Path Preservation (SC-CONST-009) -
     No ordinary reconfiguration can be ratified without a verified rollback path. -/
@@ -232,7 +238,10 @@ theorem rollback_preservation_soundness (prop : ReconfigurationProposal) :
     · contradiction
     · split at hRat
       · contradiction
-      · rename_i hNotVeto hPass hRollback
-        exact by assumption
+      · rename_i _ _ hRollback
+        cases h : hasVerifiedRollback prop
+        · rw [h] at hRollback; contradiction
+        · rfl
 
 end UOS.Constitution
+

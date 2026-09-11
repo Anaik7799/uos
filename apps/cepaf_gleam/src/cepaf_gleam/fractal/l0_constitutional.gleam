@@ -64,6 +64,9 @@ pub type PsiInvariant {
   Psi8SubstratePurity
   Psi9SaPlanExclusivity
   Psi10CyberneticHomeostasis
+  Psi11MaximalLocalSovereignty
+  Psi12TriAgentSurveillance
+  Psi13AutonomousDegradation
 }
 
 pub type CheckStatus {
@@ -158,6 +161,9 @@ pub fn psi_invariant_to_string(inv: PsiInvariant) -> String {
     Psi8SubstratePurity -> "Psi-8 Substrate Purity"
     Psi9SaPlanExclusivity -> "Psi-9 Sa-Plan Exclusivity"
     Psi10CyberneticHomeostasis -> "Psi-10 Cybernetic Homeostasis"
+    Psi11MaximalLocalSovereignty -> "Psi-11 Maximal Local Sovereignty"
+    Psi12TriAgentSurveillance -> "Psi-12 Tri-Agent Surveillance"
+    Psi13AutonomousDegradation -> "Psi-13 Autonomous Degradation"
   }
 }
 
@@ -428,7 +434,9 @@ pub fn is_zero_fenced_axiom(inv: PsiInvariant) -> Bool {
     | Psi4HumanAlignment
     | Psi6HardwareInviolability
     | Psi7ProvenanceCeiling
-    | Psi9SaPlanExclusivity -> True
+    | Psi9SaPlanExclusivity
+    | Psi11MaximalLocalSovereignty
+    | Psi12TriAgentSurveillance -> True
     _ -> False
   }
 }

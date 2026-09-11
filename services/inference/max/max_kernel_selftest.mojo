@@ -11,6 +11,9 @@ from max_kernel import (
     rmsnorm_tensor, swiglu_activation,
     simd_rotary_position_embedding, simd_scaled_dot_product_attention,
     simd_temporal_convolution_1d,
+    matvec_mul, simd_dequantize_q8_0, simd_dot_product_q8_0,
+    simd_dequantize_q4_0, gemma_embedding_lookup,
+    gemma_swiglu_mlp, gemma_transformer_layer,
 )
 from std.math import sqrt
 
@@ -145,6 +148,58 @@ def main():
     failures += check("conv1d[1]", conv_out[1], 1.25, 1e-5)
     failures += check("conv1d[2]", conv_out[2], 2.0, 1e-5)
     failures += check("conv1d[3]", conv_out[3], 2.75, 1e-5)
+
+    # 14. Gemma Architecture Transformer Layer & SIMD Dequantization Tests
+    var q8_scales = List[Float32]()
+    q8_scales.append(0.5)
+    var q8_quants = List[Int8]()
+    for _ in range(32):
+        q8_quants.append(Int8(4))
+    var deq8 = simd_dequantize_q8_0(q8_scales, q8_quants)
+    failures += check("q8_0 dequant len", Float32(len(deq8)), 32.0, 0.0)
+    failures += check("q8_0 dequant[0]", deq8[0], 2.0, 1e-5)
+
+    var ones32 = List[Float32]()
+    for _ in range(32):
+        ones32.append(1.0)
+    # 32 * 4 * 1.0 * 0.5 = 64.0
+    failures += check("q8_0 dot product", simd_dot_product_q8_0(q8_scales, q8_quants, ones32), 64.0, 1e-4)
+
+    var q4_scales = List[Float32]()
+    q4_scales.append(0.25)
+    var q4_packed = List[UInt8]()
+    for _ in range(16):
+        q4_packed.append(UInt8(0xAA)) # 10 - 8 = 2, 10 - 8 = 2
+    var deq4 = simd_dequantize_q4_0(q4_scales, q4_packed)
+    failures += check("q4_0 dequant len", Float32(len(deq4)), 32.0, 0.0)
+    failures += check("q4_0 dequant[0]", deq4[0], 0.5, 1e-5)
+    failures += check("q4_0 dequant[1]", deq4[1], 0.5, 1e-5)
+
+    var vocab = List[List[Float32]]()
+    var tok0 = List[Float32]()
+    tok0.append(2.0); tok0.append(3.0)
+    vocab.append(tok0.copy())
+    # embed lookup token 0 with d_model=4 => scale = sqrt(4)=2 => [4.0, 6.0]
+    var emb = gemma_embedding_lookup(vocab, 0, 4.0)
+    failures += check("gemma embed len", Float32(len(emb)), 2.0, 0.0)
+    failures += check("gemma embed[0]", emb[0], 4.0, 1e-5)
+    failures += check("gemma embed[1]", emb[1], 6.0, 1e-5)
+
+    # Full Gemma Transformer block forward pass
+    var eye4 = List[List[Float32]]()
+    for i in range(4):
+        var row = List[Float32]()
+        for j in range(4):
+            if i == j:
+                row.append(1.0)
+            else:
+                row.append(0.0)
+        eye4.append(row.copy())
+    var gemma_out = gemma_transformer_layer(
+        v_const, g_ones, eye4, eye4, eye4, eye4, g_ones, eye4, eye4, eye4, 0, 4.0
+    )
+    failures += check("gemma layer out len", Float32(len(gemma_out)), 4.0, 0.0)
+    failures += check("gemma layer out[0]", gemma_out[0], 3.731058, 1e-3)
 
     print("")
     if failures == 0:

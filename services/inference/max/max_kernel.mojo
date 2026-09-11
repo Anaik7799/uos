@@ -471,3 +471,151 @@ def simd_temporal_convolution_1d(signal: List[Float32], kernel: List[Float32]) -
         result.append(acc)
     return result^
 
+# ------------------------------------------------------------------------------
+# 14. High-Utility Model 9: Gemma Architecture Transformer Layer & SIMD Dequantization
+# ------------------------------------------------------------------------------
+
+def matvec_mul(w: List[List[Float32]], v: List[Float32]) -> List[Float32]:
+    """Matrix-Vector multiplication: w * v using SIMD dot product."""
+    var out = List[Float32]()
+    var rows = len(w)
+    for r in range(rows):
+        out.append(simd_dot_product(w[r], v))
+    return out^
+
+def simd_dequantize_q8_0(scales: List[Float32], quants: List[Int8]) -> List[Float32]:
+    """GGUF Q8_0 SIMD dequantization: 32 int8 quants per block with float32 scale."""
+    var out = List[Float32]()
+    var n = len(quants)
+    for i in range(n):
+        var block_idx = i // 32
+        var scale: Float32 = 1.0
+        if block_idx < len(scales):
+            scale = scales[block_idx]
+        out.append(scale * Float32(quants[i]))
+    return out^
+
+def simd_dot_product_q8_0(scales: List[Float32], quants: List[Int8], x: List[Float32]) -> Float32:
+    """SIMD-accelerated dot product directly between Q8_0 weights and float32 vector."""
+    var total: Float32 = 0.0
+    var n = len(quants)
+    if len(x) < n:
+        n = len(x)
+    var num_blocks = (n + 31) // 32
+    for b in range(num_blocks):
+        var scale: Float32 = 1.0
+        if b < len(scales):
+            scale = scales[b]
+        var block_start = b * 32
+        var block_end = block_start + 32
+        if block_end > n:
+            block_end = n
+        var block_acc: Float32 = 0.0
+        for i in range(block_start, block_end):
+            block_acc += Float32(quants[i]) * x[i]
+        total += scale * block_acc
+    return total
+
+def simd_dequantize_q4_0(scales: List[Float32], packed: List[UInt8]) -> List[Float32]:
+    """GGUF Q4_0 SIMD dequantization: 16 bytes contain 32 4-bit quants offset by 8."""
+    var out = List[Float32]()
+    var num_bytes = len(packed)
+    for i in range(num_bytes):
+        var block_idx = (i * 2) // 32
+        var scale: Float32 = 1.0
+        if block_idx < len(scales):
+            scale = scales[block_idx]
+        var b = packed[i]
+        var q0 = Float32(Int(b & 0x0F) - 8)
+        var q1 = Float32(Int((b >> 4) & 0x0F) - 8)
+        out.append(scale * q0)
+        out.append(scale * q1)
+    return out^
+
+def gemma_embedding_lookup(table: List[List[Float32]], token_id: Int, d_model: Float32) -> List[Float32]:
+    """Token embedding lookup with Gemma sqrt(d_model) scaling invariant."""
+    var out = List[Float32]()
+    if token_id < 0 or token_id >= len(table):
+        return out^
+    var scale = sqrt(d_model)
+    for j in range(len(table[token_id])):
+        out.append(table[token_id][j] * scale)
+    return out^
+
+def gemma_swiglu_mlp(
+    x: List[Float32],
+    w_gate: List[List[Float32]],
+    w_up: List[List[Float32]],
+    w_down: List[List[Float32]]
+) -> List[Float32]:
+    """Gemma Feed-Forward Network: W_down * (SwiGLU(W_gate * x, W_up * x))."""
+    var gate_proj = matvec_mul(w_gate, x)
+    var up_proj = matvec_mul(w_up, x)
+    var intermediate = List[Float32]()
+    var hidden_dim = len(gate_proj)
+    if len(up_proj) < hidden_dim:
+        hidden_dim = len(up_proj)
+    for i in range(hidden_dim):
+        intermediate.append(swiglu_activation(gate_proj[i], up_proj[i]))
+    return matvec_mul(w_down, intermediate)
+
+def gemma_transformer_layer(
+    x: List[Float32],
+    gamma_attn: List[Float32],
+    w_q: List[List[Float32]],
+    w_k: List[List[Float32]],
+    w_v: List[List[Float32]],
+    w_o: List[List[Float32]],
+    gamma_ffn: List[Float32],
+    w_gate: List[List[Float32]],
+    w_up: List[List[Float32]],
+    w_down: List[List[Float32]],
+    pos: Int,
+    d_k: Float32
+) -> List[Float32]:
+    """Single full forward pass of Gemma 3/2 Transformer Block."""
+    var dim = len(x)
+    
+    # 1. Pre-attention RMSNorm
+    var x_norm_attn = rmsnorm_tensor(x, gamma_attn, 0.000001)
+    
+    # 2. Q, K, V projections
+    var q = matvec_mul(w_q, x_norm_attn)
+    var k = matvec_mul(w_k, x_norm_attn)
+    var v = matvec_mul(w_v, x_norm_attn)
+    
+    # 3. Rotary Position Embedding
+    var q_rope = simd_rotary_position_embedding(q, 10000.0, pos)
+    var k_rope = simd_rotary_position_embedding(k, 10000.0, pos)
+    
+    # 4. Attention
+    var keys = List[List[Float32]]()
+    keys.append(k_rope.copy())
+    var values = List[List[Float32]]()
+    values.append(v.copy())
+    var attn_out = simd_scaled_dot_product_attention(q_rope, keys, values, d_k)
+    
+    # 5. Output projection + Residual Add
+    var attn_proj = matvec_mul(w_o, attn_out)
+    var x_mid = List[Float32]()
+    for i in range(dim):
+        var p: Float32 = 0.0
+        if i < len(attn_proj):
+            p = attn_proj[i]
+        x_mid.append(x[i] + p)
+        
+    # 6. Pre-FFN RMSNorm
+    var x_norm_ffn = rmsnorm_tensor(x_mid, gamma_ffn, 0.000001)
+    
+    # 7. SwiGLU FFN + Residual Add
+    var ffn_out = gemma_swiglu_mlp(x_norm_ffn, w_gate, w_up, w_down)
+    var x_final = List[Float32]()
+    for i in range(dim):
+        var f: Float32 = 0.0
+        if i < len(ffn_out):
+            f = ffn_out[i]
+        x_final.append(x_mid[i] + f)
+        
+    return x_final^
+
+

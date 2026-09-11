@@ -16,6 +16,7 @@
 const std = @import("std");
 const cli = @import("cli.zig");
 const apoptosis = @import("apoptosis.zig");
+const max_fabric = @import("max_fabric.zig");
 
 const version_string = "zigvm 0.1.0";
 const usage_string =
@@ -101,6 +102,9 @@ const usage_string =
     \\  zigvm reds <workload> <N>              run a matched halting workload, print reds + result
     \\  zigvm eval "<Expr>"                    evaluate an Erlang -eval expression (erlang:display output)
     \\  zigvm dump-caps                        print the capability ledger
+    \\  zigvm max-status                       print bare-metal MAX inference fabric status
+    \\  zigvm max-selftest                     run bare-metal MAX/Mojo selftest supervised by ZigVM
+    \\  zigvm max-infer "<prompt>"             execute local inference on bare-metal MAX computational fabric
     \\  zigvm version                          print the version
     \\
 ;
@@ -133,6 +137,53 @@ pub fn main(init: std.process.Init) !u8 {
             var buf: [512]u8 = undefined;
             var ew = std.Io.File.stderr().writer(io, &buf);
             ew.interface.print("zigvm: dump-caps failed: {t}\n", .{err}) catch {};
+            ew.interface.flush() catch {};
+            return 1;
+        };
+        try writeStdout(io, out.items);
+        return 0;
+    }
+
+    if (std.mem.eql(u8, cmd, "max-status")) {
+        var fabric = max_fabric.MaxFabric.init(gpa);
+        defer fabric.deinit();
+        var out: std.ArrayList(u8) = .empty;
+        defer out.deinit(gpa);
+        fabric.statusJson(&out) catch |err| {
+            var buf: [512]u8 = undefined;
+            var ew = std.Io.File.stderr().writer(io, &buf);
+            ew.interface.print("zigvm: max-status failed: {t}\n", .{err}) catch {};
+            ew.interface.flush() catch {};
+            return 1;
+        };
+        try writeStdout(io, out.items);
+        return 0;
+    }
+
+    if (std.mem.eql(u8, cmd, "max-selftest")) {
+        var fabric = max_fabric.MaxFabric.init(gpa);
+        defer fabric.deinit();
+        var out: std.ArrayList(u8) = .empty;
+        defer out.deinit(gpa);
+        const ok = fabric.runSelftest(&out) catch false;
+        try writeStdout(io, out.items);
+        return if (ok) 0 else 1;
+    }
+
+    if (std.mem.eql(u8, cmd, "max-infer")) {
+        if (argv.len < 3) {
+            try writeStderr(io, "usage: zigvm max-infer \"<prompt>\"\n");
+            return 2;
+        }
+        const prompt = argv[2];
+        var fabric = max_fabric.MaxFabric.init(gpa);
+        defer fabric.deinit();
+        var out: std.ArrayList(u8) = .empty;
+        defer out.deinit(gpa);
+        fabric.infer(prompt, 64, &out) catch |err| {
+            var buf: [512]u8 = undefined;
+            var ew = std.Io.File.stderr().writer(io, &buf);
+            ew.interface.print("zigvm: max-infer failed: {t}\n", .{err}) catch {};
             ew.interface.flush() catch {};
             return 1;
         };
