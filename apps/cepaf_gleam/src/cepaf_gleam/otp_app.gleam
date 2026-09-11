@@ -187,9 +187,12 @@ pub fn start() -> AppState {
   let _ = beam_cache.set_config("ha:failure_pattern", "unknown")
   io.println("[C3I] Failure classifier ready (Poisson/Bursty/Periodic)")
 
-  // 8. Federation — initialise local node
-  let _fed = zenoh_federation.node_init("c3i-primary", "europe-north1")
-  io.println("[C3I] Zenoh federation initialised (europe-north1)")
+  // 8. Federation — initialise local node and Tailnet mesh
+  let _fed = zenoh_federation.init_tailnet_mesh()
+  let _ = beam_cache.set_config("ha:federation_mode", "full")
+  let _ = beam_cache.set_config("ha:peer_node", "vm-1")
+  let _ = beam_cache.set_config("ha:peer_endpoint", "tcp/100.78.98.18:7447")
+  io.println("[C3I] Zenoh federation initialised (Tailnet mesh: nas-1 <-> vm-1)")
 
   // 9. CRDT — initialise version vector for this node
   let _vv = crdt.vv_increment(crdt.vv_new(), "c3i-primary")

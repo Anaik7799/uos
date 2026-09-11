@@ -8,7 +8,7 @@ import cepaf_gleam/crdt/delta_mesh_engine.{
   record_local_health, record_worker_active, register_peer,
 }
 import cepaf_gleam/crdt/mesh_sync.{
-  SyncDelta, SyncDigest,
+  SyncDigest,
 }
 import gleeunit
 import gleeunit/should
@@ -95,6 +95,19 @@ pub fn engine_health_aggregation_test() {
 
   let score = compute_cluster_aggregate_health(engine)
   should.be_true(score >=. 0.89 && score <=. 0.91)
+}
+
+pub fn init_nas_vm_cluster_test() {
+  let engine = delta_mesh_engine.init_nas_vm_cluster(2000)
+  engine.local_node_id |> should.equal("nas-1")
+  should.equal(1, list_len(engine.peers))
+  case engine.peers {
+    [peer] -> {
+      peer.node_id |> should.equal("vm-1")
+      peer.tailscale_fqdn |> should.equal("http://vm-1.tail55d152.ts.net:4100")
+    }
+    _ -> should.fail()
+  }
 }
 
 fn list_len(l: List(a)) -> Int {

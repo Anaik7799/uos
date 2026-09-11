@@ -67,6 +67,12 @@ pub fn init_engine(node_id: NodeId, fqdn: String, now_us: Int) -> DeltaMeshEngin
   )
 }
 
+/// Initialize the live NAS-1 and VM-1 multi-host cluster.
+pub fn init_nas_vm_cluster(now_us: Int) -> DeltaMeshEngine {
+  init_engine("nas-1", "http://nas-1.tail55d152.ts.net:4100", now_us)
+  |> register_peer("vm-1", "http://vm-1.tail55d152.ts.net:4100")
+}
+
 /// Register a remote cluster peer into the engine.
 pub fn register_peer(
   engine: DeltaMeshEngine,

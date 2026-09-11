@@ -151,6 +151,24 @@ pub fn default_cluster_topology(now_us: Int) -> List(PeerSyncEndpoint) {
   ]
 }
 
+/// Live multi-host peer topology between nas-1 and vm-1 on active C3I port 4100.
+pub fn live_cluster_topology(now_us: Int) -> List(PeerSyncEndpoint) {
+  [
+    PeerSyncEndpoint(
+      node_id: "nas-1",
+      tailscale_fqdn: "http://nas-1.tail55d152.ts.net:4100",
+      last_sync_epoch_us: now_us,
+      status: Synchronized,
+    ),
+    PeerSyncEndpoint(
+      node_id: "vm-1",
+      tailscale_fqdn: "http://vm-1.tail55d152.ts.net:4100",
+      last_sync_epoch_us: now_us,
+      status: Synchronized,
+    ),
+  ]
+}
+
 /// Encodes a MeshSyncMessage to typed JSON string.
 pub fn sync_message_to_json(msg: MeshSyncMessage) -> String {
   case msg {
