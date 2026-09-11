@@ -2667,7 +2667,8 @@ fn render_planning_dashboard() -> String {
         'Erlang OTP 29 Root Supervisor',
         'Hermes Gospel Oracles (2,037 Targets)',
         'Standalone Jujutsu Monorepo (.jj)',
-        'Zero-Muda Guard (0 Bevy, 0 Graphite)'
+        'Zero-Muda Guard (0 Bevy, 0 Graphite)',
+        'Centralized Code on nas-1, Distributed Run on Triad (SC-CENTRAL-CODE-DISTRIBUTED-RUN-001)'
       ];
       checks.forEach(function(name) {
         var row = document.createElement('div');
@@ -2689,7 +2690,7 @@ fn render_planning_dashboard() -> String {
         safety: 'Safety Kernel & Apoptosis Interlocks',
         enforcer: 'Enforcer Shield & L0-L7 Rules',
         graph: 'Graph Verification & DFA State',
-        orch: 'Saṁvid Sarvasādhana-Vyūha Resource Fabric & Workload Placement',
+        orch: 'Saṁvid Sarvasādhana-Vyūha: Centralized Code & Distributed Run',
         chaya: 'Chaya Digital Twin Sync',
         startup: 'Startup Profiler & Benchmarks',
         detail: 'System Status',
@@ -2702,7 +2703,7 @@ fn render_planning_dashboard() -> String {
         safety: 'Apoptosis interlock armed. Protected NVMe serial 25503L801736 strictly barred from OSD wiping. Zero memory leakage.',
         enforcer: 'All 8 fractal enforcer layers active. Zero violations recorded across L0-L7.',
         graph: 'State machine verified acyclic. Formal topological order preserved. SCC count: 1.',
-        orch: 'Triadic Resource Fabric active. Placements: Deep Gemma 4 AI -> Instance 2 (razr15-1 WSL2 RTX GPU, Warp 32); Hermes Z3 Solvers & Zenoh Router -> Instance 1 (vm-1, 41GB RAM avail); Root OTP 29 Supervision, Cockpit UI, SQLite WAL Ledgers & NPU -> Instance 0 (nas-1, 24 vCPUs). 92.86% local sovereign processing.',
+        orch: 'Saṁvid Kendrīkṛta-Vyūha Active (SC-CENTRAL-CODE-DISTRIBUTED-RUN-001): Code is Centralized on nas-1 (.jj monorepo); Run is Distributed across Triad. Deep Gemma 4 AI -> Instance 2 (razr15-1 RTX GPU, Warp 32); Z3 Solvers & Zenoh Router -> Instance 1 (vm-1, 41GB RAM avail); Root OTP 29 Supervision & Storage -> Instance 0 (nas-1, 24 vCPUs). 92.86% local sovereign processing.',
         chaya: 'Digital twin telemetry synchronized with zero divergence.',
         startup: 'Boot phase duration: 8.2s (below 8.9s target). Zero compilation warnings.',
         chat: 'Agent event stream active. Connected to C3I backplane.'
