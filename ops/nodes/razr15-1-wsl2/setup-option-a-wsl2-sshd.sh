@@ -59,6 +59,7 @@ cat << 'EOF' > /etc/wsl.conf
 # ==============================================================================
 [boot]
 systemd=true
+command=/usr/local/bin/uos-boot-entrypoint.sh
 
 [automount]
 enabled=true
@@ -75,6 +76,84 @@ generateResolvConf=true
 enabled=true
 appendWindowsPath=false
 EOF
+
+# Install /usr/local/bin/uos-boot-entrypoint.sh
+echo "  [+] Installing /usr/local/bin/uos-boot-entrypoint.sh..."
+cat << 'EOF' > /usr/local/bin/uos-boot-entrypoint.sh
+#!/usr/bin/env bash
+set -u
+LOG_FILE="/var/log/uos-boot-entrypoint.log"
+exec >> "$LOG_FILE" 2>&1
+
+echo "=============================================================================="
+echo "[UOS-BOOT] AUTONOMOUS WSL2 BOOT ENTRYPOINT INITIALIZING"
+echo "Timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+echo "=============================================================================="
+
+# 1. TUN Device Creation for Tailscale WireGuard
+if [ ! -c /dev/net/tun ]; then
+    mkdir -p /dev/net
+    mknod /dev/net/tun c 10 200 2>/dev/null || true
+    chmod 666 /dev/net/tun 2>/dev/null || true
+fi
+
+# 2. NVIDIA WSL Library Linking
+if [ -d /usr/lib/wsl/lib ]; then
+    echo "/usr/lib/wsl/lib" > /etc/ld.so.conf.d/ld.wsl.conf
+    ldconfig 2>/dev/null || true
+fi
+
+# 3. Start OpenSSH Server (Dual-Port 22 + 2222)
+if command -v systemctl &>/dev/null && [ -d /run/systemd/system ]; then
+    systemctl restart ssh 2>/dev/null || service ssh restart 2>/dev/null || true
+else
+    service ssh restart 2>/dev/null || /usr/sbin/sshd 2>/dev/null || true
+fi
+
+# 4. Start Tailscale Daemon & Bring Node Online
+if command -v systemctl &>/dev/null && [ -d /run/systemd/system ]; then
+    systemctl restart tailscaled 2>/dev/null || service tailscaled restart 2>/dev/null || true
+else
+    if ! pgrep -x "tailscaled" >/dev/null; then
+        mkdir -p /var/lib/tailscale /var/log
+        tailscaled --state=/var/lib/tailscale/tailscaled.state >/var/log/tailscaled.log 2>&1 &
+        sleep 2
+    fi
+fi
+tailscale up --hostname=razr15-wsl2 --accept-routes --ssh 2>/dev/null || true
+
+# 5. Start UOS Instance 2 Daemon
+INSTANCE2_SCRIPT="/home/an/uos/ops/nodes/razr15-1-wsl2/start-instance2.sh"
+if [ -f "$INSTANCE2_SCRIPT" ] && ! pgrep -f "start-instance2.sh" >/dev/null; then
+    if id an &>/dev/null; then
+        su - an -c "bash $INSTANCE2_SCRIPT" >/var/log/uos-instance2.log 2>&1 &
+    else
+        bash "$INSTANCE2_SCRIPT" >/var/log/uos-instance2.log 2>&1 &
+    fi
+fi
+
+# 6. Fork Continuous Self-Healing Network Watchdog
+if ! pgrep -f "uos-network-watchdog" >/dev/null; then
+    (
+        exec -a "uos-network-watchdog" bash -c '
+            PRIMARY_NAS="100.87.7.78"
+            while true; do
+                sleep 30
+                if ! ping -c 1 -W 3 "$PRIMARY_NAS" &>/dev/null; then
+                    [ ! -c /dev/net/tun ] && mkdir -p /dev/net && mknod /dev/net/tun c 10 200 && chmod 666 /dev/net/tun
+                    service tailscaled status &>/dev/null || service tailscaled restart &>/dev/null || tailscaled &
+                    tailscale up --hostname=razr15-wsl2 --accept-routes --ssh &>/dev/null || true
+                    service ssh status &>/dev/null || service ssh restart &>/dev/null || /usr/sbin/sshd &>/dev/null || true
+                fi
+            done
+        ' &
+    )
+fi
+echo "[UOS-BOOT] Autonomous boot sequence completed successfully."
+exit 0
+EOF
+chmod 755 /usr/local/bin/uos-boot-entrypoint.sh
+
 
 # 4. Configure Dual-Port SSH Daemon (22 & 2222)
 echo "[4/8] Configuring OpenSSH daemon (/etc/ssh/sshd_config.d/60-uos-mesh.conf)..."
