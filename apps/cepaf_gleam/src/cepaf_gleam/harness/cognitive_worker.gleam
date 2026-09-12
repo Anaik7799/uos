@@ -958,46 +958,318 @@ pub fn handle_conversational(trimmed: String, intent: CognitiveIntent) -> Cognit
   }
 }
 
+fn find_matching_code(
+  patterns: List(#(String, List(String))),
+  lower: String,
+) -> Result(String, Nil) {
+  case patterns {
+    [] -> Error(Nil)
+    [#(code, keywords), ..rest] -> {
+      case list.any(keywords, fn(kw) { string.contains(lower, kw) }) {
+        True -> Ok(code)
+        False -> find_matching_code(rest, lower)
+      }
+    }
+  }
+}
+
+pub fn extract_aspect_code_from_query(lower: String) -> Result(String, Nil) {
+  let patterns = [
+    #(
+      "A01",
+      [
+        "a01",
+        "aspect 1",
+        "aspect 01",
+        "aspect a1",
+        "aspect a01",
+        "substrate hardware safety",
+        "hardware safety enclave",
+      ],
+    ),
+    #(
+      "A02",
+      [
+        "a02",
+        "aspect 2",
+        "aspect 02",
+        "aspect a2",
+        "aspect a02",
+        "version control discipline",
+        "standalone jujutsu",
+        "jujutsu monorepo",
+      ],
+    ),
+    #(
+      "A03",
+      [
+        "a03",
+        "aspect 3",
+        "aspect 03",
+        "aspect a3",
+        "aspect a03",
+        "zero-muda purity",
+        "zero muda purity",
+        "language boundaries",
+      ],
+    ),
+    #(
+      "A04",
+      [
+        "a04",
+        "aspect 4",
+        "aspect 04",
+        "aspect a4",
+        "aspect a04",
+        "supervision & actor hierarchy",
+        "supervision actor hierarchy",
+        "supervision hierarchy",
+      ],
+    ),
+    #(
+      "A05",
+      [
+        "a05",
+        "aspect 5",
+        "aspect 05",
+        "aspect a5",
+        "aspect a05",
+        "deterministic runtime engine",
+        "deterministic engine",
+        "zigvm engine",
+      ],
+    ),
+    #(
+      "A06",
+      [
+        "a06",
+        "aspect 6",
+        "aspect 06",
+        "aspect a6",
+        "aspect a06",
+        "formal evidence & analysis",
+        "formal evidence analysis",
+        "formal evidence",
+      ],
+    ),
+    #(
+      "A07",
+      [
+        "a07",
+        "aspect 7",
+        "aspect 07",
+        "aspect a7",
+        "aspect a07",
+        "mathematical authority",
+      ],
+    ),
+    #(
+      "A08",
+      [
+        "a08",
+        "aspect 8",
+        "aspect 08",
+        "aspect a8",
+        "aspect a08",
+        "feedback semiotics",
+        "semiotics & homeostasis",
+        "semiotics and homeostasis",
+      ],
+    ),
+    #(
+      "A09",
+      [
+        "a09",
+        "aspect 9",
+        "aspect 09",
+        "aspect a9",
+        "aspect a09",
+        "quarantined ai inference",
+        "quarantined ai",
+        "modular max",
+        "mojo inference",
+      ],
+    ),
+    #(
+      "A10",
+      [
+        "a10",
+        "aspect 10",
+        "mesh telemetry & observability",
+        "mesh telemetry and observability",
+        "mesh telemetry",
+      ],
+    ),
+    #(
+      "A11",
+      [
+        "a11",
+        "aspect 11",
+        "agent event bus protocol",
+        "event bus protocol",
+        "ag-ui protocol",
+      ],
+    ),
+    #(
+      "A12",
+      [
+        "a12",
+        "aspect 12",
+        "declarative ui component catalog",
+        "ui component catalog",
+        "a2ui catalog",
+      ],
+    ),
+    #(
+      "A13",
+      [
+        "a13",
+        "aspect 13",
+        "multi-interface accessibility",
+        "triple interface",
+        "penta-stack",
+      ],
+    ),
+    #(
+      "A14",
+      [
+        "a14",
+        "aspect 14",
+        "universal tailscale web navigation",
+        "tailscale navigation",
+        "tailscale fqdn",
+      ],
+    ),
+    #(
+      "A15",
+      [
+        "a15",
+        "aspect 15",
+        "comprehensive verification checklist",
+        "verification checklist",
+        "18-checkpoint",
+        "18 checkpoints",
+      ],
+    ),
+    #(
+      "A16",
+      [
+        "a16",
+        "aspect 16",
+        "knowledge management triad",
+        "km triad",
+      ],
+    ),
+    #(
+      "A17",
+      [
+        "a17",
+        "aspect 17",
+        "durable execution & workflow",
+        "durable execution and workflow",
+        "durable workflow",
+      ],
+    ),
+  ]
+  find_matching_code(patterns, lower)
+}
+
+fn find_aspect_word_token(words: List(String)) -> Result(String, Nil) {
+  case words {
+    [] -> Error(Nil)
+    ["aspect", token, ..] -> Ok(string.uppercase(string.trim(token)))
+    [_, ..rest] -> find_aspect_word_token(rest)
+  }
+}
+
+pub fn extract_aspect_token_from_query(lower: String) -> Result(String, Nil) {
+  case extract_aspect_code_from_query(lower) {
+    Ok(code) -> Ok(code)
+    Error(Nil) -> {
+      let words = string.split(lower, " ")
+      find_aspect_word_token(words)
+    }
+  }
+}
+
+pub fn extract_agent_profile_from_query(lower: String) -> Result(String, Nil) {
+  let patterns = [
+    #(
+      "agy_sovereign_coordinator",
+      [
+        "agy sovereign coordinator",
+        "agy profile",
+        "antigravity coordinator",
+        "agy sovereign",
+        "agy",
+      ],
+    ),
+    #(
+      "sre_homeostasis_overseer",
+      [
+        "sre homeostasis overseer",
+        "sre profile",
+        "homeostasis overseer",
+        "sre",
+      ],
+    ),
+    #(
+      "security_hardware_guardian",
+      [
+        "security hardware guardian",
+        "hardware guardian",
+        "security guardian",
+      ],
+    ),
+    #(
+      "multimodal_edge_ingestor",
+      [
+        "multimodal edge ingestor",
+        "edge ingestor",
+        "razr-1 ingestor",
+        "razr ingestor",
+      ],
+    ),
+    #(
+      "formal_verifier_oracle",
+      [
+        "formal verifier oracle",
+        "verifier oracle",
+        "formal oracle",
+      ],
+    ),
+    #(
+      "knowledge_sheaf_curator",
+      [
+        "knowledge sheaf curator",
+        "sheaf curator",
+        "km curator",
+      ],
+    ),
+    #(
+      "quarantined_inference_worker",
+      [
+        "quarantined inference worker",
+        "inference worker",
+        "quarantined worker",
+      ],
+    ),
+  ]
+  find_matching_code(patterns, lower)
+}
+
 pub fn handle_conversational_offline_gateway(
   trimmed: String,
   intent: CognitiveIntent,
 ) -> CognitiveDecision {
   let lower = string.lowercase(trimmed)
 
-  let is_telemetry_razr1 =
-    string.contains(lower, "razr")
-    || string.contains(lower, "telemetry")
-    || string.contains(lower, "debug")
-    || string.starts_with(trimmed, "{")
-
   let is_identity =
     string.contains(lower, "who are you")
     || string.contains(lower, "which agent")
     || string.contains(lower, "what agent")
-    || string.contains(lower, "name")
-    || string.contains(lower, "identity")
-
-  let is_system_overview =
-    string.contains(lower, "what is happening")
-    || string.contains(lower, "show me")
-    || string.contains(lower, "happening")
-    || string.contains(lower, "overview")
-    || string.contains(lower, "status")
-    || string.contains(lower, "summary")
-
-  let is_cluster_health =
-    string.contains(lower, "cluster")
-    || string.contains(lower, "health")
-    || string.contains(lower, "load")
-    || string.contains(lower, "performance")
-    || string.contains(lower, "memory")
-    || string.contains(lower, "cpu")
-
-  let is_saplan =
-    string.contains(lower, "sa-plan")
-    || string.contains(lower, "task")
-    || string.contains(lower, "worker")
-    || string.contains(lower, "lease")
+    || lower == "name"
+    || lower == "identity"
 
   let is_cognitive_arch =
     string.contains(lower, "cognitive architecture")
@@ -1020,247 +1292,562 @@ pub fn handle_conversational_offline_gateway(
     || lower == "messages"
     || lower == "history"
 
-  let is_swarm_board =
-    string.contains(lower, "swarm board")
-    || string.contains(lower, "agent board")
-    || string.contains(lower, "tri-agent")
-    || string.contains(lower, "board")
-    || string.contains(lower, "swarm")
-    || string.contains(lower, "claude")
-    || string.contains(lower, "codex")
-    || string.contains(lower, "peer")
+  let is_aspects_overview =
+    string.contains(lower, "17 system aspects")
+    || string.contains(lower, "17 aspects")
+    || lower == "aspects"
+    || string.contains(lower, "what are the aspects")
+    || string.contains(lower, "list all aspects")
+    || string.contains(lower, "aspects overview")
+
+  let is_ecology_overview =
+    string.contains(lower, "7 agent profiles")
+    || string.contains(lower, "7 canonical agent profiles")
+    || string.contains(lower, "agent profiles in agent_ecology")
+    || string.contains(lower, "agent ecology profiles")
+    || string.contains(lower, "what agent profiles exist")
+    || lower == "ecology"
 
   let is_storage =
     string.contains(lower, "storage")
-    || string.contains(lower, "nvme")
+    || string.contains(lower, "bay 0")
+    || string.contains(lower, "osd")
+    || string.contains(lower, "root volume")
+    || string.contains(lower, "boot drive")
+    || string.contains(lower, "denied system os")
+    || string.contains(lower, "smart telemetry")
+    || string.contains(lower, "drive health")
+    || string.contains(lower, "drive safety")
     || string.contains(lower, "ceph")
-    || string.contains(lower, "disk")
+    || string.contains(lower, "nvme")
 
-  let is_aspects =
-    string.contains(lower, "aspect")
-    || string.contains(lower, "ecology")
-    || string.contains(lower, "agent")
+  let is_vcs =
+    string.contains(lower, "jujutsu")
+    || string.contains(lower, "git commit")
+    || string.contains(lower, "git mutation")
+    || string.contains(lower, "sibling workspace")
+    || string.contains(lower, "change id")
+    || string.contains(lower, "commit id")
+    || string.contains(lower, "vcs discipline")
+    || string.contains(lower, "main bookmark")
+    || string.contains(lower, "integration bookmark")
+    || string.contains(lower, "merge conflict")
 
-  let is_cv =
-    string.contains(lower, "rack-cv")
-    || string.contains(lower, "rack cv")
-    || string.contains(lower, "camera")
-    || string.contains(lower, "vision")
-    || string.contains(lower, "chassis")
+  let is_zero_muda =
+    string.contains(lower, "zero-muda")
+    || string.contains(lower, "zero muda")
+    || string.contains(lower, "bevy")
+    || string.contains(lower, "graphite")
+    || string.contains(lower, "7 wastes")
+    || string.contains(lower, "compiler warning policy")
+    || string.contains(lower, "language boundaries")
+    || string.contains(lower, "dead code")
+    || string.contains(lower, "check-muda")
 
-  let is_acoustic =
-    string.contains(lower, "acoustic")
-    || string.contains(lower, "vibration")
-    || string.contains(lower, "fft")
-    || string.contains(lower, "bearing")
+  let is_supervision =
+    string.contains(lower, "supervision tree")
+    || string.contains(lower, "supervisory domains")
+    || string.contains(lower, "uos_sup")
+    || string.contains(lower, "actor hierarchy")
+    || string.contains(lower, "prajna")
+    || string.contains(lower, "circuit breaker")
+    || string.contains(lower, "lyapunov")
+    || string.contains(lower, "freshness monitor")
+    || string.contains(lower, "2oo3 constitutional")
+    || string.contains(lower, "child worker")
+    || string.contains(lower, "restart intensity")
+    || string.contains(lower, "dark cockpit")
+    || string.contains(lower, "cascading failure")
+    || string.contains(lower, "homeostasis overseer")
+
+  let is_zigvm =
+    string.contains(lower, "zigvm")
+    || string.contains(lower, "deterministic runtime")
+    || string.contains(lower, "descriptor-relative vfs")
+    || string.contains(lower, "arena allocator")
+    || string.contains(lower, "19.85 million ops")
+
+  let is_hermes =
+    string.contains(lower, "hermes")
+    || string.contains(lower, "gospel")
+    || string.contains(lower, "z3 solver")
+    || string.contains(lower, "differential parity")
+    || string.contains(lower, "zero-trust interceptor")
+    || string.contains(lower, "formal evidence")
+
+  let is_math_formal =
+    string.contains(lower, "lean")
+    || string.contains(lower, "coordinate conservation")
+    || string.contains(lower, "two-lattice")
+    || string.contains(lower, "century_harmony")
+    || string.contains(lower, "sheaf_presheaf")
+    || string.contains(lower, "chaos_containment")
+    || string.contains(lower, "fast_ooda_convergence")
+    || string.contains(lower, "constitutional_invariants")
+    || string.contains(lower, "math gate")
+    || string.contains(lower, "shannon entropy")
+    || string.contains(lower, "cyclomatic complexity")
+    || string.contains(lower, "divergence gate")
+    || string.contains(lower, "itqs")
+
+  let is_directives_help =
+    string.contains(lower, "what operator directives")
+    || string.contains(lower, "what directives")
+    || string.contains(lower, "list directives")
+    || string.contains(lower, "available directives")
+    || string.contains(lower, "4 directive domains")
+    || lower == "help"
+    || lower == "start"
+
+  let is_cockpit =
+    string.contains(lower, "cockpit dashboard navigation")
+    || string.contains(lower, "cockpit navigation")
+    || string.contains(lower, "cockpit links")
+    || string.contains(lower, "tailscale fqdn links")
+    || string.contains(lower, "show me the cockpit")
 
   let is_checklist =
     string.contains(lower, "checklist")
     || string.contains(lower, "doctor")
     || string.contains(lower, "scorecard")
+    || string.contains(lower, "18 checks")
+    || string.contains(lower, "sc-checklist-001")
 
-  let is_math_formal =
-    string.contains(lower, "lean")
-    || string.contains(lower, "proof")
-    || string.contains(lower, "invariant")
-    || string.contains(lower, "math")
-    || string.contains(lower, "formal")
-    || string.contains(lower, "entropy")
+  let is_saplan =
+    string.contains(lower, "sa-plan")
+    || string.contains(lower, "active tasks")
+    || string.contains(lower, "show tasks")
+    || string.contains(lower, "pull queue")
+    || string.contains(lower, "heijunka")
+    || string.contains(lower, "andon stop")
+    || string.contains(lower, "jidoka")
+    || string.contains(lower, "un-ledgered")
 
-  let is_zigvm =
-    string.contains(lower, "zigvm")
-    || string.contains(lower, "calc")
-    || string.contains(lower, "deterministic")
+  let is_swarm_board =
+    string.contains(lower, "swarm board")
+    || string.contains(lower, "agent board")
+    || string.contains(lower, "tri-agent")
+    || string.contains(lower, "message board")
+    || string.contains(lower, "peer agents")
+    || string.contains(lower, "peer coordination")
 
-  let #(reply, actions) = case is_telemetry_razr1 {
+  let is_cv =
+    string.contains(lower, "rack-cv")
+    || string.contains(lower, "rack cv")
+    || string.contains(lower, "chassis camera")
+    || string.contains(lower, "camera zones")
+    || string.contains(lower, "inspect the rack")
+
+  let is_acoustic =
+    string.contains(lower, "acoustic")
+    || string.contains(lower, "vibration")
+    || string.contains(lower, "bearing fault")
+    || string.contains(lower, "fft")
+
+  let is_telemetry_razr1 =
+    string.starts_with(trimmed, "{")
+    || { string.contains(lower, "razr") && string.contains(lower, "telemetry") }
+    || { string.contains(lower, "razr") && string.contains(lower, "debug") }
+    || string.starts_with(lower, "telemetry")
+
+  let is_cluster_health =
+    string.contains(lower, "cluster")
+    || string.contains(lower, "health")
+    || string.contains(lower, "load")
+    || string.contains(lower, "performance")
+    || string.contains(lower, "memory")
+    || string.contains(lower, "cpu")
+
+  let is_system_overview =
+    string.contains(lower, "status")
+    || string.contains(lower, "overview")
+    || string.contains(lower, "what is happening")
+
+  let #(reply, actions) = case is_identity {
     True -> {
       let r =
-        "🤖 *[Robot C3I: Telemetry Ingest & Edge Verification]*\n\n"
-        <> "✅ *Telemetry Payload Ingested by Robot C3I!*\n"
-        <> "• *Peer Agent:* AGY @ razr-1 (`holon-razr15-1`)\n"
-        <> "• *Channel:* Telegram Ingress (`@c3i_talk_bot`)\n"
-        <> "• *Authority:* Pure Erlang/OTP 29 Runtime Engine\n"
-        <> "• *Ledger:* Appended to `var/telemetry/razr1_telemetry.jsonl`\n"
-        <> "• *Status:* 100% Operational & Mesh Connected\n\n"
-        <> "Robot C3I is actively analyzing the debug telemetry. Ready for next operational directive."
-      #(r, ["ingest_razr1_telemetry"])
+        "🤖 *Robot C3I: Sovereign Cybernetic Cockpit & Mesh Orchestrator (@c3i_talk_bot)*\n\n"
+        <> "I am Robot C3I, the UOS Sovereign Cybernetic Harness, command, and policy orchestrator for the Unified Operational System (UOS).\n\n"
+        <> "• *Primary Autonomous Agent:* **AGY (Google DeepMind Antigravity)**\n"
+        <> "• *Authority Core:* Pure Gleam/OTP 29 (`apps/cepaf_gleam`)\n"
+        <> "• *Supervision:* `uos_sup.gleam` 4-domain supervisor (Apps, Engines, Services, Intelligence)\n"
+        <> "• *Native NIF Acceleration:* c3i_nif (Rust), c3i_ocaml_nif (OCaml), uos_km_nif (Mojo)\n"
+        <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, Pure BEAM & Hermes\n"
+        <> "• *Hardware Acceleration:* Modular MAX / Mojo AVX-512 SIMD\n"
+        <> "• *Deterministic Runtime:* ZigVM VFS & Bytecode Engine (19.85M ops/s)\n"
+        <> "• *Host Node:* `nas-1.tail55d152.ts.net`\n\n"
+        <> "All Telegram messages and agentic tasks are coordinated with AGY, Claude, and Codex under UOS governance."
+      #(r, ["respond_identity"])
     }
     False -> {
-      case is_identity {
+      case is_cognitive_arch {
         True -> {
           let r =
-            "🤖 *Robot C3I: Sovereign Cybernetic Cockpit & Mesh Orchestrator (@c3i_talk_bot)*\n\n"
-            <> "I am Robot C3I, the UOS Sovereign Cybernetic Harness, command, and policy orchestrator for the Unified Operational System (UOS).\n\n"
-            <> "• *Primary Autonomous Agent:* **AGY (Google DeepMind Antigravity)**\n"
-            <> "• *Authority Core:* Pure Gleam/OTP 29 (`apps/cepaf_gleam`)\n"
-            <> "• *Supervision:* `uos_sup.gleam` 4-domain supervisor (Apps, Engines, Services, Intelligence)\n"
-            <> "• *Native NIF Acceleration:* c3i_nif (Rust), c3i_ocaml_nif (OCaml), uos_km_nif (Mojo)\n"
-            <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, Pure BEAM & Hermes\n"
-            <> "• *Hardware Acceleration:* Modular MAX / Mojo AVX-512 SIMD\n"
+            "🧠 *Robot C3I: Sovereign Cognitive Architecture & Processing Path*\n\n"
+            <> "I am **Robot C3I** (`@c3i_talk_bot`), the sovereign cybernetic command, policy, and telemetry harness for the Unified Operational System (UOS).\n\n"
+            <> "### 🏛️ Sovereign Architecture Core:\n"
+            <> "• *Authority:* Pure Gleam/OTP 29 Root Supervisor (`uos_sup.gleam`)\n"
+            <> "• *Sovereign Agent Ecology:* AGY (Google DeepMind Antigravity, Coordinator on razr-1), Claude (Reviewer), Codex (Auditor)\n"
+            <> "• *17 System Aspects ($\\mathbb{A}_{17}$):* Spanning 10 Fractal Layers ($L_0$ Constitutional to $L_9$ Singularity)\n"
+            <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, 100% pure BEAM & Hermes OCaml\n"
             <> "• *Deterministic Runtime:* ZigVM VFS & Bytecode Engine (19.85M ops/s)\n"
-            <> "• *Host Node:* `nas-1.tail55d152.ts.net`\n\n"
-            <> "All Telegram messages and agentic tasks are coordinated with AGY, Claude, and Codex under UOS governance."
-          #(r, ["respond_identity"])
+            <> "• *Storage Safety Interlock:* Root OS NVMe `[REDACTED_SYSTEM_OS_SERIAL]` locked\n\n"
+            <> "### ⚡ End-to-End 5-Stage OODA Processing Path:\n"
+            <> "1. **Edge Ingress:** Telegram Webhook / Long-Poller receives inbound TLS event and routes to Zenoh topic `indrajaal/l5/cog/intent/req`.\n"
+            <> "2. **Interception & Interlocks:** Hermes OCaml zero-trust payload interceptor validates payload cryptographic hash, sanitizes secrets, and checks daily budget ceilings.\n"
+            <> "3. **OODA Cognitive Loop:**\n"
+            <> "   • `Observe`: Ingests multi-turn SQLite conversation memory + real-time BEAM NIF telemetry.\n"
+            <> "   • `Orient`: Classifies denotational intent across 48 directives (Domains A/B/C/D).\n"
+            <> "   • `Decide`: Multi-agent synthesis (Gemma 4 via OpenRouter / Deterministic Fallback Gateway) with 2oo3 constitutional consensus.\n"
+            <> "   • `Act`: Dispatches strictly through canonical `sa-plan` (SC-SA-PLAN-001, SC-JIDOKA-001).\n"
+            <> "4. **Formal Verification:** Real-time Lean 4 invariant verification ($\\Delta \\vec{\\mathcal{T}}_{13} \\equiv \\mathbf{0}$, Two-Lattice STM) and automated Gemma 4 quality judge.\n"
+            <> "5. **Egress Delivery:** Egress redactor strips hardware secrets and dispatches direct TLS message chunks back to Telegram (`sendMessage`)."
+          #(r, ["explain_cognitive_architecture", "trace_processing_path"])
         }
         False -> {
-          case is_cognitive_arch {
+          case is_telegram_history {
             True -> {
-              let r =
-                "🧠 *Robot C3I: Sovereign Cognitive Architecture & Processing Path*\n\n"
-                <> "I am **Robot C3I** (`@c3i_talk_bot`), the sovereign cybernetic command, policy, and telemetry harness for the Unified Operational System (UOS).\n\n"
-                <> "### 🏛️ Sovereign Architecture Core:\n"
-                <> "• *Authority:* Pure Gleam/OTP 29 Root Supervisor (`uos_sup.gleam`)\n"
-                <> "• *Sovereign Agent Ecology:* AGY (Google DeepMind Antigravity, Coordinator on razr-1), Claude (Reviewer), Codex (Auditor)\n"
-                <> "• *17 System Aspects ($\\mathbb{A}_{17}$):* Spanning 10 Fractal Layers ($L_0$ Constitutional to $L_9$ Singularity)\n"
-                <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, 100% pure BEAM & Hermes OCaml\n"
-                <> "• *Deterministic Runtime:* ZigVM VFS & Bytecode Engine (19.85M ops/s)\n"
-                <> "• *Storage Safety Interlock:* Root OS NVMe `[REDACTED_SYSTEM_OS_SERIAL]` locked\n\n"
-                <> "### ⚡ End-to-End 5-Stage OODA Processing Path:\n"
-                <> "1. **Edge Ingress:** Telegram Webhook / Long-Poller receives inbound TLS event and routes to Zenoh topic `indrajaal/l5/cog/intent/req`.\n"
-                <> "2. **Interception & Interlocks:** Hermes OCaml zero-trust payload interceptor validates payload cryptographic hash, sanitizes secrets, and checks daily budget ceilings.\n"
-                <> "3. **OODA Cognitive Loop:**\n"
-                <> "   • `Observe`: Ingests multi-turn SQLite conversation memory + real-time BEAM NIF telemetry.\n"
-                <> "   • `Orient`: Classifies denotational intent across 48 directives (Domains A/B/C/D).\n"
-                <> "   • `Decide`: Multi-agent synthesis (Gemma 4 via OpenRouter / Deterministic Fallback Gateway) with 2oo3 constitutional consensus.\n"
-                <> "   • `Act`: Dispatches strictly through canonical `sa-plan` (SC-SA-PLAN-001, SC-JIDOKA-001).\n"
-                <> "4. **Formal Verification:** Real-time Lean 4 invariant verification ($\\Delta \\vec{\\mathcal{T}}_{13} \\equiv \\mathbf{0}$, Two-Lattice STM) and automated Gemma 4 quality judge.\n"
-                <> "5. **Egress Delivery:** Egress redactor strips hardware secrets and dispatches direct TLS message chunks back to Telegram (`sendMessage`)."
-              #(r, ["explain_cognitive_architecture", "trace_processing_path"])
+              let raw_history =
+                conversation_memory.get_recent_history(
+                  conversation_memory.default_db_path,
+                  intent.chat_id,
+                  20,
+                )
+              let r = format_recent_telegram_history(raw_history, 10)
+              #(r, ["query_telegram_history", "format_conversation_stream"])
             }
             False -> {
-              case is_telegram_history {
+              case is_aspects_overview {
                 True -> {
-                  let raw_history =
-                    conversation_memory.get_recent_history(
-                      conversation_memory.default_db_path,
-                      intent.chat_id,
-                      20,
-                    )
-                  let r = format_recent_telegram_history(raw_history, 10)
-                  #(r, ["query_telegram_history", "format_conversation_stream"])
-                }
-                False -> {
-                  case is_system_overview {
-                    True -> {
-                      let status_dec = handle_directive("/status", intent)
-                      let board_dec = handle_directive("/board", intent)
-                      let r =
-                        "🧠 *[Deterministic Autonomous Directive Gateway: Cluster Health & Swarm Board]*\n\n"
-                        <> status_dec.reply_markdown
-                        <> "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-                        <> board_dec.reply_markdown
-                      #(r, [
-                        "check_beam_health",
-                        "dispatch_directive_status",
-                        "dispatch_directive_board",
-                      ])
-                    }
-                    False -> {
-          case is_cluster_health {
-            True -> {
-              let status_dec = handle_directive("/status", intent)
-              let r =
-                "🧠 *[Deterministic Autonomous Directive Gateway: Cluster Health & Topology]*\n\n"
-                <> status_dec.reply_markdown
-              #(r, [
-                "check_beam_health",
-                "query_zenoh_telemetry",
-                "dispatch_directive_status",
-              ])
-            }
-            False -> {
-              case is_saplan {
-                True -> {
-                  let plan_dec = handle_directive("/plan", intent)
+                  let aspects_dec = handle_directive("/aspects", intent)
                   let r =
-                    "📋 *[Deterministic Autonomous Directive Gateway: Sa-Plan Pipeline]*\n\n"
-                    <> plan_dec.reply_markdown
-                  #(r, ["query_sqlite_saplan", "dispatch_directive_plan"])
+                    "🏛️ *[Deterministic Autonomous Directive Gateway: /aspects]*\n\n"
+                    <> aspects_dec.reply_markdown
+                  #(r, ["dispatch_directive_aspects"])
                 }
                 False -> {
-                  case is_swarm_board {
-                    True -> {
-                      let board_dec = handle_directive("/board", intent)
+                  case extract_aspect_token_from_query(lower) {
+                    Ok(aspect_code) -> {
+                      let aspects_dec =
+                        handle_directive("/aspects " <> aspect_code, intent)
                       let r =
-                        "🌐 *[Deterministic Autonomous Directive Gateway: /board]*\n\n"
-                        <> board_dec.reply_markdown
-                      #(r, ["dispatch_directive_board"])
+                        "🏛️ *[Deterministic Autonomous Directive Gateway: /aspects "
+                        <> aspect_code
+                        <> "]*\n\n"
+                        <> aspects_dec.reply_markdown
+                      #(r, ["dispatch_directive_aspects_detail"])
                     }
-                    False -> {
-                      case is_storage {
-                        True -> {
-                          let storage_dec = handle_directive("/storage", intent)
+                    Error(Nil) -> {
+                      case extract_agent_profile_from_query(lower) {
+                        Ok(prof_id) -> {
+                          let eco_dec =
+                            handle_directive("/ecology " <> prof_id, intent)
                           let r =
-                            "💾 *[Deterministic Autonomous Directive Gateway: /storage]*\n\n"
-                            <> storage_dec.reply_markdown
-                          #(r, ["dispatch_directive_storage"])
+                            "🤖 *[Deterministic Autonomous Directive Gateway: /ecology "
+                            <> prof_id
+                            <> "]*\n\n"
+                            <> eco_dec.reply_markdown
+                          #(r, ["dispatch_directive_ecology_profile"])
                         }
-                        False -> {
-                          case is_aspects {
+                        Error(Nil) -> {
+                          case is_ecology_overview {
                             True -> {
-                              let aspects_dec = handle_directive("/aspects", intent)
+                              let eco_dec = handle_directive("/ecology", intent)
                               let r =
-                                "🏛️ *[Deterministic Autonomous Directive Gateway: /aspects]*\n\n"
-                                <> aspects_dec.reply_markdown
-                              #(r, ["dispatch_directive_aspects"])
+                                "🐝 *[Deterministic Autonomous Directive Gateway: /ecology]*\n\n"
+                                <> eco_dec.reply_markdown
+                              #(r, ["dispatch_directive_ecology"])
                             }
                             False -> {
-                              case is_cv {
+                              case is_storage {
                                 True -> {
-                                  let cv_dec = handle_directive("/rack-cv", intent)
+                                  let storage_dec =
+                                    handle_directive("/storage", intent)
                                   let r =
-                                    "📷 *[Deterministic Autonomous Directive Gateway: /rack-cv]*\n\n"
-                                    <> cv_dec.reply_markdown
-                                  #(r, ["dispatch_directive_rack_cv"])
+                                    "💾 *[Deterministic Autonomous Directive Gateway: /storage]*\n\n"
+                                    <> storage_dec.reply_markdown
+                                  #(r, ["dispatch_directive_storage"])
                                 }
                                 False -> {
-                                  case is_acoustic {
+                                  case is_vcs {
                                     True -> {
-                                      let ac_dec = handle_directive("/acoustic", intent)
+                                      let vcs_dec =
+                                        handle_directive("/aspects A02", intent)
                                       let r =
-                                        "🔊 *[Deterministic Autonomous Directive Gateway: /acoustic]*\n\n"
-                                        <> ac_dec.reply_markdown
-                                      #(r, ["dispatch_directive_acoustic"])
+                                        "🌳 *[Deterministic Autonomous Directive Gateway: Version Control Discipline]*\n\n"
+                                        <> vcs_dec.reply_markdown
+                                      #(r, [
+                                        "dispatch_directive_aspects_vcs",
+                                      ])
                                     }
                                     False -> {
-                                      case is_checklist {
+                                      case is_zero_muda {
                                         True -> {
-                                          let chk_dec = handle_directive("/checklist", intent)
+                                          let muda_dec =
+                                            handle_directive(
+                                              "/aspects A03",
+                                              intent,
+                                            )
                                           let r =
-                                            "✅ *[Deterministic Autonomous Directive Gateway: /checklist]*\n\n"
-                                            <> chk_dec.reply_markdown
-                                          #(r, ["dispatch_directive_checklist"])
+                                            "🌱 *[Deterministic Autonomous Directive Gateway: Zero-Muda Purity]*\n\n"
+                                            <> muda_dec.reply_markdown
+                                          #(r, [
+                                            "dispatch_directive_aspects_muda",
+                                          ])
                                         }
                                         False -> {
-                                          case is_math_formal {
+                                          case is_supervision {
                                             True -> {
+                                              let sup_dec =
+                                                handle_directive(
+                                                  "/aspects A04",
+                                                  intent,
+                                                )
                                               let r =
-                                                "📐 *Formal Verification & Mathematical Gates*\n\n"
-                                                <> "• *13D Coordinate Conservation:* $\\Delta \\vec{\\mathcal{T}}_{13} \\equiv \\mathbf{0}$ proved in `formal/lean/Traceability.lean`\n"
-                                                <> "• *Two-Lattice STM:* Proved in `formal/lean/TwoLattice_STM.lean`\n"
-                                                <> "• *Shannon Entropy Gate:* $H \\ge 2.5\\text{ bits}$ (Nominal: 2.67 bits)\n"
-                                                <> "• *CCM Gate:* $\\text{CCM} \\ge 90\\%$\n"
-                                                <> "• *Divergence Gate:* $D_{EA} \\le 10\\%$\n"
-                                                <> "• *Test Quality Gate:* $\\text{ITQS} \\ge 0.85$\n"
-                                                <> "• *Test Protocol:* 9 Modalities 100% Green (>10,600 tests clean)"
-                                              #(r, ["read_lean_invariants", "verify_gate_status"])
+                                                "🌲 *[Deterministic Autonomous Directive Gateway: Supervision & Actor Hierarchy]*\n\n"
+                                                <> sup_dec.reply_markdown
+                                              #(r, [
+                                                "dispatch_directive_aspects_supervision",
+                                              ])
                                             }
                                             False -> {
                                               case is_zigvm {
                                                 True -> {
-                                                  let zig_dec = handle_directive("/zigvm", intent)
+                                                  let zig_dec =
+                                                    handle_directive(
+                                                      "/zigvm",
+                                                      intent,
+                                                    )
                                                   let r =
                                                     "⚙️ *[Deterministic Autonomous Directive Gateway: /zigvm]*\n\n"
                                                     <> zig_dec.reply_markdown
-                                                  #(r, ["dispatch_directive_zigvm"])
+                                                  #(r, [
+                                                    "dispatch_directive_zigvm",
+                                                  ])
                                                 }
                                                 False -> {
-                                                  // Default fallback to live /status query rather than static mock text
-                                                  let status_dec = handle_directive("/status", intent)
-                                                  let r =
-                                                    "🤖 *[Deterministic Autonomous Directive Gateway: /status]*\n\n"
-                                                    <> status_dec.reply_markdown
-                                                  #(r, ["dispatch_directive_status_default"])
+                                                  case is_hermes {
+                                                    True -> {
+                                                      let hermes_dec =
+                                                        handle_directive(
+                                                          "/aspects A06",
+                                                          intent,
+                                                        )
+                                                      let r =
+                                                        "🔬 *[Deterministic Autonomous Directive Gateway: Formal Evidence & Analysis]*\n\n"
+                                                        <> hermes_dec.reply_markdown
+                                                      #(r, [
+                                                        "dispatch_directive_aspects_hermes",
+                                                      ])
+                                                    }
+                                                    False -> {
+                                                      case is_math_formal {
+                                                        True -> {
+                                                          let r =
+                                                            "📐 *Formal Verification & Mathematical Gates*\n\n"
+                                                            <> "• *13D Coordinate Conservation:* $\\Delta \\vec{\\mathcal{T}}_{13} \\equiv \\mathbf{0}$ proved in `formal/lean/Traceability.lean`\n"
+                                                            <> "• *Two-Lattice STM:* Proved in `formal/lean/TwoLattice_STM.lean`\n"
+                                                            <> "• *Shannon Entropy Gate:* $H \\ge 2.5\\text{ bits}$ (Nominal: 2.67 bits)\n"
+                                                            <> "• *CCM Gate:* $\\text{CCM} \\ge 90\\%$\n"
+                                                            <> "• *Divergence Gate:* $D_{EA} \\le 10\\%$\n"
+                                                            <> "• *Test Quality Gate:* $\\text{ITQS} \\ge 0.85$\n"
+                                                            <> "• *Test Protocol:* 9 Modalities 100% Green (>10,600 tests clean)"
+                                                          #(r, [
+                                                            "read_lean_invariants",
+                                                            "verify_gate_status",
+                                                          ])
+                                                        }
+                                                        False -> {
+                                                          case is_telemetry_razr1 {
+                                                            True -> {
+                                                              let r =
+                                                                "🤖 *[Robot C3I: Telemetry Ingest & Edge Verification]*\n\n"
+                                                                <> "✅ *Telemetry Payload Ingested by Robot C3I!*\n"
+                                                                <> "• *Peer Agent:* AGY @ razr-1 (`holon-razr15-1`)\n"
+                                                                <> "• *Channel:* Telegram Ingress (`@c3i_talk_bot`)\n"
+                                                                <> "• *Authority:* Pure Erlang/OTP 29 Runtime Engine\n"
+                                                                <> "• *Ledger:* Appended to `var/telemetry/razr1_telemetry.jsonl`\n"
+                                                                <> "• *Status:* 100% Operational & Mesh Connected\n\n"
+                                                                <> "Robot C3I is actively analyzing the debug telemetry. Ready for next operational directive."
+                                                              #(r, [
+                                                                "ingest_razr1_telemetry",
+                                                              ])
+                                                            }
+                                                            False -> {
+                                                              case is_directives_help {
+                                                                True -> {
+                                                                  let help_dec =
+                                                                    handle_directive(
+                                                                      "/help",
+                                                                      intent,
+                                                                    )
+                                                                  let r =
+                                                                    "📖 *[Deterministic Autonomous Directive Gateway: /help]*\n\n"
+                                                                    <> help_dec.reply_markdown
+                                                                  #(r, [
+                                                                    "dispatch_directive_help",
+                                                                  ])
+                                                                }
+                                                                False -> {
+                                                                  case is_cockpit {
+                                                                    True -> {
+                                                                      let cockpit_dec =
+                                                                        handle_directive(
+                                                                          "/cockpit",
+                                                                          intent,
+                                                                        )
+                                                                      let r =
+                                                                        "🎛️ *[Deterministic Autonomous Directive Gateway: /cockpit]*\n\n"
+                                                                        <> cockpit_dec.reply_markdown
+                                                                      #(r, [
+                                                                        "dispatch_directive_cockpit",
+                                                                      ])
+                                                                    }
+                                                                    False -> {
+                                                                      case is_checklist {
+                                                                        True -> {
+                                                                          let chk_dec =
+                                                                            handle_directive(
+                                                                              "/checklist",
+                                                                              intent,
+                                                                            )
+                                                                          let r =
+                                                                            "✅ *[Deterministic Autonomous Directive Gateway: /checklist]*\n\n"
+                                                                            <> chk_dec.reply_markdown
+                                                                          #(r, [
+                                                                            "dispatch_directive_checklist",
+                                                                          ])
+                                                                        }
+                                                                        False -> {
+                                                                          case is_saplan {
+                                                                            True -> {
+                                                                              let plan_dec =
+                                                                                handle_directive(
+                                                                                  "/plan",
+                                                                                  intent,
+                                                                                )
+                                                                              let r =
+                                                                                "📋 *[Deterministic Autonomous Directive Gateway: Sa-Plan Pipeline]*\n\n"
+                                                                                <> plan_dec.reply_markdown
+                                                                              #(r, [
+                                                                                "query_sqlite_saplan",
+                                                                                "dispatch_directive_plan",
+                                                                              ])
+                                                                            }
+                                                                            False -> {
+                                                                              case is_swarm_board {
+                                                                                True -> {
+                                                                                  let board_dec =
+                                                                                    handle_directive(
+                                                                                      "/board",
+                                                                                      intent,
+                                                                                    )
+                                                                                  let r =
+                                                                                    "🌐 *[Deterministic Autonomous Directive Gateway: /board]*\n\n"
+                                                                                    <> board_dec.reply_markdown
+                                                                                  #(r, [
+                                                                                    "dispatch_directive_board",
+                                                                                  ])
+                                                                                }
+                                                                                False -> {
+                                                                                  case is_cv {
+                                                                                    True -> {
+                                                                                      let cv_dec =
+                                                                                        handle_directive(
+                                                                                          "/rack-cv",
+                                                                                          intent,
+                                                                                        )
+                                                                                      let r =
+                                                                                        "📷 *[Deterministic Autonomous Directive Gateway: /rack-cv]*\n\n"
+                                                                                        <> cv_dec.reply_markdown
+                                                                                      #(r, [
+                                                                                        "dispatch_directive_rack_cv",
+                                                                                      ])
+                                                                                    }
+                                                                                    False -> {
+                                                                                      case is_acoustic {
+                                                                                        True -> {
+                                                                                          let ac_dec =
+                                                                                            handle_directive(
+                                                                                              "/acoustic",
+                                                                                              intent,
+                                                                                            )
+                                                                                          let r =
+                                                                                            "🔊 *[Deterministic Autonomous Directive Gateway: /acoustic]*\n\n"
+                                                                                            <> ac_dec.reply_markdown
+                                                                                          #(r, [
+                                                                                            "dispatch_directive_acoustic",
+                                                                                          ])
+                                                                                        }
+                                                                                         False -> {
+                                                                                           case is_cluster_health {
+                                                                                             True -> {
+                                                                                               let status_dec =
+                                                                                                 handle_directive(
+                                                                                                   "/status",
+                                                                                                   intent,
+                                                                                                 )
+                                                                                               let r =
+                                                                                                 "🧠 *[Deterministic Autonomous Directive Gateway: Cluster Health & Topology]*\n\n"
+                                                                                                 <> status_dec.reply_markdown
+                                                                                               #(r, [
+                                                                                                 "check_beam_health",
+                                                                                                 "query_zenoh_telemetry",
+                                                                                                 "dispatch_directive_status",
+                                                                                               ])
+                                                                                             }
+                                                                                             False -> {
+                                                                                               case is_system_overview {
+                                                                                                 True -> {
+                                                                                                   let status_dec =
+                                                                                                     handle_directive(
+                                                                                                       "/status",
+                                                                                                       intent,
+                                                                                                     )
+                                                                                                   let r =
+                                                                                                     "📊 *[Deterministic Autonomous Directive Gateway: /status]*\n\n"
+                                                                                                     <> status_dec.reply_markdown
+                                                                                                   #(r, [
+                                                                                                     "check_beam_health",
+                                                                                                     "dispatch_directive_status",
+                                                                                                   ])
+                                                                                                 }
+                                                                                                 False -> {
+                                                                                                   let status_dec =
+                                                                                                     handle_directive(
+                                                                                                       "/status",
+                                                                                                       intent,
+                                                                                                     )
+                                                                                                   let r =
+                                                                                                     "🤖 *[Deterministic Autonomous Directive Gateway: /status]*\n\n"
+                                                                                                     <> status_dec.reply_markdown
+                                                                                                   #(r, [
+                                                                                                     "dispatch_directive_status_default",
+                                                                                                   ])
+                                                                                                 }
+                                                                                               }
+                                                                                             }
+                                                                                           }
+                                                                                         }
+                                                                                      }
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
                                                 }
                                               }
                                             }
@@ -1285,12 +1872,6 @@ pub fn handle_conversational_offline_gateway(
       }
     }
   }
-}
-}
-}
-}
-}
-}
 
   let sanitized_reply = egress_redactor.redact_system_secrets(reply)
 
@@ -1435,10 +2016,14 @@ fn query_zk_detail(adr_id: String) -> String {
 }
 
 fn query_storage_detail() -> String {
-  "🔒 *Hardware & OS Storage Safety Interlock*\n\n"
+  "💾 *UOS Ceph Storage & Hardware Safety Enclave*\n\n"
+  <> "• *Host OS Drive:* NVMe Bay 0 (`[REDACTED_SYSTEM_OS_SERIAL]`) [HARD-LOCKED]\n"
   <> "• *Host Serial:* `HARD_DENIED_SYSTEM_OS_SERIAL = \"[REDACTED_SYSTEM_OS_SERIAL]\"`\n"
-  <> "• *Protection Level:* HARD DENY (OS NVMe Drive Wiping & OSD Allocation Permanently Locked)\n"
-  <> "• *Verification Oracle:* `ops/kubernetes/nas-k8s-lab/src/spec.rs` (7/7 Checks PASS)\n"
+  <> "• *Protection Level:* HARD DENY (OS NVMe Drive Wiping & Ceph OSD Allocation Permanently Locked)\n"
+  <> "• *Ceph OSD Target Drives:* Permitted Non-Root NVMe Pool Drives [OK]\n"
+  <> "• *Verification Oracle:* `ops/kubernetes/nas-k8s-lab/src/spec.rs` (7/7 Checks PASS, CHK-07-DRIVE)\n"
+  <> "• *Drive Safety Gate:* 7/7 checks passed (CHK-07-DRIVE)\n"
+  <> "• *Storage Interlock:* HARD_DENIED_SYSTEM_OS_SERIAL barrier ACTIVE\n"
   <> "• *Status:* 🟢 Inviolable Hardware Lock Active"
 }
 

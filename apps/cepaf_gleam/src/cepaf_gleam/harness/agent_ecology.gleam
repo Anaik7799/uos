@@ -179,10 +179,23 @@ pub fn all_agent_profiles() -> List(AgentProfile) {
   ]
 }
 
-/// Retrieve a specific AgentProfile by its unique identifier.
+/// Retrieve a specific AgentProfile by its unique identifier or alias.
 pub fn get_agent_profile(agent_id: String) -> Result(AgentProfile, String) {
+  let normalized = string.lowercase(string.trim(agent_id))
+  let target_id = case normalized {
+    "agy" | "antigravity" | "coordinator" -> "agy_sovereign_coordinator"
+    "sre" | "homeostasis" | "overseer" -> "sre_homeostasis_overseer"
+    "security" | "guardian" | "hardware" -> "security_hardware_guardian"
+    "edge" | "multimodal" | "ingestor" | "razr" | "razr-1" | "holon-razr15-1" ->
+      "multimodal_edge_ingestor"
+    "formal" | "verifier" | "oracle" -> "formal_verifier_oracle"
+    "knowledge" | "sheaf" | "curator" | "zk" | "wiki" -> "knowledge_sheaf_curator"
+    "inference" | "quarantined" | "max" | "mojo" ->
+      "quarantined_inference_worker"
+    _ -> string.trim(agent_id)
+  }
   let matches =
-    list.filter(all_agent_profiles(), fn(profile) { profile.id == agent_id })
+    list.filter(all_agent_profiles(), fn(profile) { profile.id == target_id })
   case matches {
     [profile, ..] -> Ok(profile)
     [] -> Error("Agent profile not found: " <> agent_id)
