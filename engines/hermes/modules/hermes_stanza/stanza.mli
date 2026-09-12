@@ -2,7 +2,7 @@
    Do not edit. A dune rule regenerates this and diffs it, so drift
    fails the build rather than rotting quietly.
 
-   201 libraries. A value of this type is a WITNESS that the library
+   202 libraries. A value of this type is a WITNESS that the library
    exists in the graph; there is no way to make one from a string, which
    is the whole point. *)
 
@@ -30,6 +30,7 @@ val agent_dispatch_hook : t
 val agent_time_hook : t
 val atlas_algebra : t
 val gospel_dispatch_contracts : t
+val gospel_poodavr : t
 val hermes_agent_loop_compress_units : t
 val hermes_agent_loop_context_compression : t
 val hermes_agent_loop_context_engine : t

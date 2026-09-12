@@ -117,31 +117,33 @@ fi
 
 # Step 3: Verify Single-Page Link Collator Sink (/links & /link-tracker)
 log_info "Step 3: Probing Single-Page Multi-Sink Collator at /links..."
-if curl -s "http://127.0.0.1:4100/links" | grep -q "Universal Link Tracker"; then
+LINKS_HTML=$(curl -s --retry 3 --retry-connrefused --max-time 15 "http://127.0.0.1:4100/links")
+
+if echo "${LINKS_HTML}" | grep -q "Universal Link Tracker"; then
     log_pass "Single-page collator view renders header and route sink"
 else
     log_fail "Single-page collator view at /links missing expected title"
 fi
 
-if curl -s "http://127.0.0.1:4100/links" | grep -q "Spectral Graph Centrality"; then
+if echo "${LINKS_HTML}" | grep -q "Spectral Graph Centrality"; then
     log_pass "Single-page collator renders Spectral Graph Centrality & Literature Lineage"
 else
     log_fail "Spectral Graph Centrality panel missing from /links"
 fi
 
-if curl -s "http://127.0.0.1:4100/links" | grep -E -q "Knowledge Base (&amp;|&) Transclusion Sink"; then
+if echo "${LINKS_HTML}" | grep -E -q "Knowledge Base (&amp;|&) Transclusion Sink"; then
     log_pass "Single-page collator renders Knowledge Base & Transclusion Sink"
 else
     log_fail "Knowledge Base & Transclusion Sink missing from /links"
 fi
 
-if curl -s "http://127.0.0.1:4100/links" | grep -q "A2UI Component Functionality Sink"; then
+if echo "${LINKS_HTML}" | grep -q "A2UI Component Functionality Sink"; then
     log_pass "Single-page collator renders A2UI Component Functionality Sink"
 else
     log_fail "A2UI Component Functionality Sink missing from /links"
 fi
 
-if curl -s "http://127.0.0.1:4100/links" | grep -E -q "Operational Health (&amp;|&) Hardware Enclave Sink"; then
+if echo "${LINKS_HTML}" | grep -E -q "Operational Health (&amp;|&) Hardware Enclave Sink"; then
     log_pass "Single-page collator renders Operational Health & Hardware Enclave Sink"
 else
     log_fail "Operational Health & Hardware Enclave Sink missing from /links"
@@ -149,7 +151,7 @@ fi
 
 # Step 4: Verify REST API Status Endpoint (/api/v1/links/status)
 log_info "Step 4: Probing REST API /api/v1/links/status..."
-API_JSON=$(curl -s "http://127.0.0.1:4100/api/v1/links/status")
+API_JSON=$(curl -s --retry 3 --retry-connrefused --max-time 15 "http://127.0.0.1:4100/api/v1/links/status")
 
 if echo "${API_JSON}" | jq -e '.status == "nominal"' >/dev/null 2>&1; then
     log_pass "REST API returns status == 'nominal'"
