@@ -1245,6 +1245,14 @@ pub fn handle_conversational_offline_gateway(
     || lower == "name"
     || lower == "identity"
 
+  let is_cluster_health =
+    string.contains(lower, "cluster load")
+    || string.contains(lower, "cluster health")
+    || {
+      string.contains(lower, "cluster")
+      && { string.contains(lower, "health") || string.contains(lower, "load") }
+    }
+
   let is_cognitive_arch =
     string.contains(lower, "cognitive architecture")
     || string.contains(lower, "cognitive architect")
@@ -1518,7 +1526,15 @@ pub fn handle_conversational_offline_gateway(
       #(r, ["respond_identity"])
     }
     False -> {
-      case is_cognitive_arch {
+      case is_cluster_health {
+        True -> {
+          let r =
+            "📊 *[Deterministic Autonomous Directive Gateway: Cluster Health & Telemetry]*\n\n"
+            <> query_cluster_status()
+          #(r, ["check_beam_health", "query_cluster_health"])
+        }
+        False -> {
+          case is_cognitive_arch {
         True -> {
           let r =
             "🧠 *Robot C3I: Sovereign Cognitive Architecture & Processing Path*\n\n"
@@ -1877,6 +1893,8 @@ pub fn handle_conversational_offline_gateway(
         }
       }
     }
+  }
+}
   let sanitized_reply = egress_redactor.redact_system_secrets(reply)
 
   CognitiveDecision(

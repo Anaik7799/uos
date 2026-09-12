@@ -16,7 +16,7 @@ raw_exec(PathBinary, SqlBinary) ->
                               case esqlite3:exec(Conn, Stmt) of
                                   ok -> Loop(Rest);
                                   {ok, _} -> Loop(Rest);
-                                  {error, Reason} -> {error, Reason}
+                                  {error, Reason} -> {error, {Stmt, Reason}}
                               end
                       end,
             Result = ExecAll(Statements),

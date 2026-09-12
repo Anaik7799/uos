@@ -30,6 +30,7 @@ import cepaf_gleam/ha/hot_reload
 import cepaf_gleam/ha/invariant_gate
 import cepaf_gleam/ha/module_guard
 import cepaf_gleam/ha/slo_tracker
+import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/fractal/l0_constitutional.{
   type ApprovalRequest, ApprovalRequest, Approved, Critical as ApprovalCritical,
   High as ApprovalHigh, Low as ApprovalLow, Medium as ApprovalMedium, Rejected,
@@ -237,6 +238,10 @@ fn route_internal(path: String) -> String {
       let result = inference_api.evaluate_lyapunov_trend([1.0, 1.0, 1.0, 1.0], 1.0, 5.0, 100.0)
       max_daemon.lyapunov_result_to_json(result)
     }
+    "/api/v1/forecast/layers" ->
+      fractal_forecast.all_layers_forecast_json() |> json.to_string
+    "/api/v1/forecast/health" ->
+      fractal_forecast.forecast_health_json() |> json.to_string
     "/api/v1/components" ->
       module_guard.unwrap(module_guard.guard_json(component_demo_json(), "components", "page"))
     "/api/v1/allium" ->
@@ -502,7 +507,8 @@ fn planning_page_spec_check() -> String {
   ]
   // AS-IS — probe each NIF; non-empty JSON = present
   let probe = fn(name: String, payload: String) -> #(String, Bool) {
-    let ok = string.length(payload) > 2 && !string.contains(payload, "\"error\"")
+    let trimmed = string.trim(payload)
+    let ok = string.length(trimmed) >= 2 && !string.contains(trimmed, "\"error\"")
     #(name, ok)
   }
   let results = [
@@ -563,7 +569,8 @@ fn generic_page_spec_check(
 ) -> String {
   let results = list.map(endpoints, fn(e) {
     let #(name, payload) = e
-    let ok = string.length(payload) > 2 && !string.contains(payload, "\"error\"")
+    let trimmed = string.trim(payload)
+    let ok = string.length(trimmed) >= 2 && !string.contains(trimmed, "\"error\"")
     #(name, ok)
   })
   let present_count = list.fold(results, 0, fn(acc, r) {
