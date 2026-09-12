@@ -62,6 +62,7 @@ pub type UosCommand {
   SelfcheckInference
   SelfcheckCortex
   SelfcheckSaPlanSimulators
+  SelfcheckWebuiBrowser
   VerifyAll
   Help
 }
@@ -119,6 +120,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       SelfcheckCortex
     ["saplan-sim-check"] | ["selfcheck-saplan-sim"] | ["--selfcheck-saplan-sim"] | ["simulators"] ->
       SelfcheckSaPlanSimulators
+    ["webui-browser-check"] | ["webui-check"] | ["browser-check"] | ["selfcheck-webui"] | ["--selfcheck-webui"] ->
+      SelfcheckWebuiBrowser
     ["verify-all"] | ["verify"] -> VerifyAll
     _ -> Help
   }
@@ -2262,9 +2265,25 @@ pub fn execute(cmd: UosCommand) -> Int {
       ))
       exit_for(checks)
     }
+    SelfcheckWebuiBrowser -> {
+      io.println(
+        "Evaluating Native OCaml WebUI Browser Verification Suite (--selfcheck-webui, Zero Node.js):",
+      )
+      case file_exists("tools/webui_browser_suite") {
+        True -> {
+          let #(code, out) = run_command("tools/webui_browser_suite", [], 60_000)
+          io.println(out)
+          code
+        }
+        False -> {
+          io.println("FAIL: tools/webui_browser_suite executable not found")
+          1
+        }
+      }
+    }
     Help -> {
       io.println(
-        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check|web-links|checklist|rocha-check|selfcheck-vfs|selfcheck-sa-plan|selfcheck-hermes-bionic|selfcheck-omni-matrix|selfcheck-15-cycles|selfcheck-c3i-knowledge|selfcheck-wave3-cycles|selfcheck-wave4-cycles|selfcheck-vertical-slice|selfcheck-zigvm-add|selfcheck-raga|selfcheck-mirage|selfcheck-mirage-migration|selfcheck-mirage-prod|selfcheck-forecast|selfcheck-inference|cortex-check|verify-all>",
+        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check|web-links|checklist|rocha-check|selfcheck-vfs|selfcheck-sa-plan|selfcheck-hermes-bionic|selfcheck-omni-matrix|selfcheck-15-cycles|selfcheck-c3i-knowledge|selfcheck-wave3-cycles|selfcheck-wave4-cycles|selfcheck-vertical-slice|selfcheck-zigvm-add|selfcheck-raga|selfcheck-mirage|selfcheck-mirage-migration|selfcheck-mirage-prod|selfcheck-forecast|selfcheck-inference|cortex-check|webui-browser-check|verify-all>",
       )
       0
     }

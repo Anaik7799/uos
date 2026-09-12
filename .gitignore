@@ -57,6 +57,7 @@ _esy/
 *.cmxa
 *.cmxs
 *.annot
+*.o
 
 # Zig Build Artifacts
 zig-cache/
