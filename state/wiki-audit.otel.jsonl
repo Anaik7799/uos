@@ -1,0 +1,1 @@
+{"ts":"2026-09-12T10:45:42Z","severity_number":9,"severity_text":"INFO","body":"state transition","attributes":{"actor":"auditLoop","from":"Idle","to":"Sensing"}}

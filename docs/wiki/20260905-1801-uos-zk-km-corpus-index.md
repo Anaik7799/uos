@@ -274,13 +274,13 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:km-wiki-zk-contract]]` (`contracts/rules/km-wiki-zk-contract.md`)
   - `[[wiki:dmc-tcm-mandate]]` (`contracts/rules/dmc-tcm-mandate.md`)
   - `[[wiki:timestamp-mandate]]` (`contracts/rules/timestamp-mandate.md`)
-  - `[[wiki:20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki]]` ([Sa-Plan Engine & Actor Ecosystem Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki.md))
-  - `[[wiki:20260906-1700-uos-hermes-bionic-full-integration-wiki]]` ([Hermes-Bionic Full Integration Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1700-uos-hermes-bionic-full-integration-wiki.md))
-  - `[[zk:ADR-048]]` Hermes-Bionic Full Integration Ratification ([ADR-048 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1700-adr-048-hermes-bionic-full-integration-ratification.md))
-  - `[[wiki:20260906-1730-uos-omni-fractal-matrix-and-17-aspect-wiki]]` ([Omni-Fractal Matrix & 17-Aspect Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1730-uos-omni-fractal-matrix-and-17-aspect-wiki.md))
-  - `[[zk:ADR-049]]` Omni-Fractal Systemic Symbiosis Ratification ([ADR-049 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1730-adr-049-omni-fractal-systemic-symbiosis-ratification.md))
-  - `[[wiki:20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki]]` ([Omni-Fractal Mainline Merge & Sovereign Closure Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki.md))
-  - `[[zk:ADR-050]]` Omni-Fractal Mainline Merge & Sovereign Closure ([ADR-050 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1745-adr-050-omni-fractal-mainline-merge-and-sovereign-closure.md))
+  - `[[wiki:20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki]]` ([Sa-Plan Engine & Actor Ecosystem Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki.md))
+  - `[[wiki:20260906-1700-uos-hermes-bionic-full-integration-wiki]]` ([Hermes-Bionic Full Integration Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1700-uos-hermes-bionic-full-integration-wiki.md))
+  - `[[zk:ADR-048]]` Hermes-Bionic Full Integration Ratification ([ADR-048 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1700-adr-048-hermes-bionic-full-integration-ratification.md))
+  - `[[wiki:20260906-1730-uos-omni-fractal-matrix-and-17-aspect-wiki]]` ([Omni-Fractal Matrix & 17-Aspect Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1730-uos-omni-fractal-matrix-and-17-aspect-wiki.md))
+  - `[[zk:ADR-049]]` Omni-Fractal Systemic Symbiosis Ratification ([ADR-049 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1730-adr-049-omni-fractal-systemic-symbiosis-ratification.md))
+  - `[[wiki:20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki]]` ([Omni-Fractal Mainline Merge & Sovereign Closure Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki.md))
+  - `[[zk:ADR-050]]` Omni-Fractal Mainline Merge & Sovereign Closure ([ADR-050 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1745-adr-050-omni-fractal-mainline-merge-and-sovereign-closure.md))
   - `[[wiki:20260906-1755-uos-omni-fractal-full-generation-and-systemic-ratification-wiki]]` ([Omni-Fractal Full Generation & Systemic Ratification Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1755-uos-omni-fractal-full-generation-and-systemic-ratification-wiki.md))
   - `[[zk:ADR-051]]` Omni-Fractal Cartesian Tensor Generation & Systemic Ratification ([ADR-051 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1755-adr-051-omni-fractal-full-generation-and-systemic-ratification.md))
   - `[[wiki:20260906-1800-uos-omni-fractal-systemic-cartesian-tensor-closure-wiki]]` ([Omni-Fractal Systemic Cartesian Tensor Closure Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1800-uos-omni-fractal-systemic-cartesian-tensor-closure-wiki.md))
@@ -307,7 +307,144 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:20260908-1325-tui-and-gui-manual-verification-guide]]` ([Manual TUI & GUI Verification Guide](http://nas-1.tail55d152.ts.net:4100/docs/manual/20260908-1325-tui-and-gui-manual-verification-guide.md))
   - `[[wiki:20260909-0640-uos-system-ontology-dictionary-and-glossary-guide]]` ([System Ontology, Living KM Triad, Dictionary & Glossary Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-0640-uos-system-ontology-dictionary-and-glossary-guide.md))
 
+---
 
+## §5.0 System Architecture & Operational Guides Directory (`docs/wiki/`)
 
+The canonical `docs/wiki/` corpus houses deep technical specifications, multi-agent ecologies, and operational runbooks:
 
+- `[[wiki:20260905-2026-uos-comprehensive-zigvm-wiki-zk-km-catalogue]]` ([Comprehensive Catalogue of ZigVM Wiki, Zettelkasten & Knowledge Management Corpus](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-2026-uos-comprehensive-zigvm-wiki-zk-km-catalogue.md))
+- `[[wiki:20260906-0945-uos-fprime-ontology-dmc-tcm-algebraic-atlas]]` ([NASA JPL F Prime / FPP Transmutation: Hierarchical State Machines, Living Ontology, DMC+TCM, and 5-Tier Algebraic Atlas](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-0945-uos-fprime-ontology-dmc-tcm-algebraic-atlas.md))
+- `[[wiki:20260906-0955-uos-fprime-agent-ecosystem-and-taxonomy]]` ([UOS Master Wiki Tome: NASA JPL F Prime Aerospace Agent Ecosystem, 6D Systemic Integration Matrix, and 16 Canonical Agent Taxonomy on Pure BEAM / Gleam OTP 29](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-0955-uos-fprime-agent-ecosystem-and-taxonomy.md))
+- `[[wiki:20260906-0955-uos-harness-bionic-import-and-agentic-architecture]]` ([UOS Master Wiki Tome: Harness-Bionic to UOS Agentic Ecosystem Mapping, Transmutation & Integration: Functionality, Code, SOPs, Skills, and Superpowers](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-0955-uos-harness-bionic-import-and-agentic-architecture.md))
+- `[[wiki:20260906-1215-uos-adk-and-zigvm-ontology-to-code-lifecycle-guide]]` ([20260906-1215-UOS Google ADK & ZigVM Complete Ontology-to-Code Lifecycle Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1215-uos-adk-and-zigvm-ontology-to-code-lifecycle-guide.md))
+- `[[wiki:20260906-1230-uos-adk-c3i-master-ontology-guide]]` ([UOS Master Guide: Google ADK Complete Coverage, 96-Agent Sovereign Ecology & Master Ontology Graph](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1230-uos-adk-c3i-master-ontology-guide.md))
+- `[[wiki:20260906-1300-uos-sdlc-sre-verification-process-guide]]` ([20260906-1300-uos-sdlc-sre-verification-process-guide.md — UOS Algebraic Fractal SDLC, SRE & Verification Operational Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1300-uos-sdlc-sre-verification-process-guide.md))
+- `[[wiki:20260906-1330-uos-256-agent-ecology-and-testing-disciplines-guide]]` ([UOS 256-Agent Ecology and Multi-Paradigm Testing Disciplines Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1330-uos-256-agent-ecology-and-testing-disciplines-guide.md))
+- `[[wiki:20260906-1400-uos-14-aspect-tri-plane-and-native-nif-dataplane-wiki]]` ([UOS Hermes Wiki: 14-Aspect Fractal Processing, Tri-Plane ASCII Architecture, and Native NIF Dataplane](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1400-uos-14-aspect-tri-plane-and-native-nif-dataplane-wiki.md))
+- `[[wiki:20260906-1415-uos-17-aspect-tri-plane-and-native-nif-dataplane-wiki]]` ([Unified Operational System (UOS) — 17-Aspect Elastic Agent Ecosystem, Native NIF Dataplane & Knowledge Corpus](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1415-uos-17-aspect-tri-plane-and-native-nif-dataplane-wiki.md))
+- `[[wiki:20260906-1430-uos-complete-session-analysis-and-prompt-history-wiki]]` ([Hermes Wiki: Master Session Analysis History & 21-Prompt Lineage](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1430-uos-complete-session-analysis-and-prompt-history-wiki.md))
+- `[[wiki:20260906-1500-uos-master-prompt-history-and-comprehensive-analysis-wiki]]` ([Hermes Wiki: Master Prompt History & Comprehensive Analysis Portal](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1500-uos-master-prompt-history-and-comprehensive-analysis-wiki.md))
+- `[[wiki:20260906-1515-uos-master-prompt-history-and-definitive-analysis-wiki]]` ([Hermes Wiki: Master Prompt History & Definitive Analysis Portal](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1515-uos-master-prompt-history-and-definitive-analysis-wiki.md))
+- `[[wiki:20260906-1530-uos-master-prompt-history-and-supreme-analysis-wiki]]` ([Hermes Wiki: Master Prompt History & Supreme Analysis Portal](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1530-uos-master-prompt-history-and-supreme-analysis-wiki.md))
+- `[[wiki:20260906-1545-uos-master-prompt-history-and-mainline-merge-wiki]]` ([Hermes Wiki: Master Prompt History & Mainline Merge Portal](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1545-uos-master-prompt-history-and-mainline-merge-wiki.md))
+- `[[wiki:20260906-1620-uos-master-prompt-history-and-vfs-analysis-wiki]]` ([Hermes Wiki: Master Prompt History Lineage, Systemic Analysis & VFS Integration](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1620-uos-master-prompt-history-and-vfs-analysis-wiki.md))
+- `[[wiki:20260906-2150-textual-applications-review-and-uos-tui-lessons-wiki]]` ([20260906-2150- Textual Applications Review & Lessons for uos_tui](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2150-textual-applications-review-and-uos-tui-lessons-wiki.md))
+- `[[wiki:20260906-2150-uos-fractal-textual-ontology-wiki]]` ([20260906-2150- UOS Fractal Textual Ontology (Textual → uos_tui across L0..L9)](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2150-uos-fractal-textual-ontology-wiki.md))
+- `[[wiki:20260907-0440-textual-widget-gallery-parity-matrix-wiki]]` ([20260907-0440- Textual Widget Gallery Parity Matrix (Textual → uos_tui)](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0440-textual-widget-gallery-parity-matrix-wiki.md))
+- `[[wiki:20260907-0537-uos-hive-mind-architecture-wiki]]` ([20260907-0537- UOS Hive Mind: Message Board, Coordination, Language and Holarchy (samūha-buddhi · समूह-बुद्धि)](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0537-uos-hive-mind-architecture-wiki.md))
+- `[[wiki:20260907-0550-uos-agentic-infrastructure-building-blocks]]` ([UOS agentic infrastructure — building blocks and implementation map](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md))
+- `[[wiki:20260907-0653-uos-tri-agent-swarm-operations]]` ([20260907-0653 — UOS three-agent swarm operating runbook](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md))
+- `[[wiki:20260907-1105-uos-km-index-round-o]]` ([UOS Knowledge Management Index — Round O](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1105-uos-km-index-round-o.md))
+- `[[wiki:20260907-1105-uos-system-ontology-and-hive-cognition-wiki]]` ([UOS System Ontology & Hive Cognition Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1105-uos-system-ontology-and-hive-cognition-wiki.md))
+- `[[wiki:20260907-1310-uos-jujutsu-ontology-and-library-wiki]]` ([Uos Jujutsu Ontology And Library Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1310-uos-jujutsu-ontology-and-library-wiki.md))
+- `[[wiki:20260907-1559-risk-prioritization-guide]]` ([20260907-1559 — Use the UOS risk prioritization process](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1559-risk-prioritization-guide.md))
+- `[[wiki:20260907-1606-risk-checkers-guide]]` ([20260907-1606 — Running the UOS risk checkers](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1606-risk-checkers-guide.md))
+- `[[wiki:20260907-1830-uos-modular-max-high-utility-models-guide]]` ([Unified Operational System: Modular MAX / Mojo High-Utility AI Models Operator Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1830-uos-modular-max-high-utility-models-guide.md))
+- `[[wiki:20260908-0844-unification-evidence-guide]]` ([Unification evidence navigation](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260908-0844-unification-evidence-guide.md))
+- `[[wiki:20260908-0927-uos-provenance-integrity-and-km-gate-guide]]` ([UOS Provenance Integrity & KM Gate — Operational Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260908-0927-uos-provenance-integrity-and-km-gate-guide.md))
+- `[[wiki:20260908-1345-uos-intent-based-config-and-algebraic-atlas-guide]]` ([UOS Operator Guide: Intent-Based Configuration & Algebraic Atlas](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260908-1345-uos-intent-based-config-and-algebraic-atlas-guide.md))
+- `[[wiki:20260908-1715-uos-constitutional-invariants-and-directives-guide]]` ([UOS Constitutional Invariants (Ψ) & Operational Directives (Ω) Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260908-1715-uos-constitutional-invariants-and-directives-guide.md))
+- `[[wiki:20260909-0525-uos-toolchain-preflight-guide]]` ([UOS Operator Guide: Toolchain Preflight](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-0525-uos-toolchain-preflight-guide.md))
+- `[[wiki:20260909-0626-harness-evolution-completion-status]]` ([Harness evolution: live completion status](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-0626-harness-evolution-completion-status.md))
+- `[[wiki:20260909-0720-harness-evolution-completion-status]]` ([Harness evolution completion status](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-0720-harness-evolution-completion-status.md))
+
+---
+
+## §6.0 UOS Holarchy Multi-Agent Census (`docs/wiki/holons/`)
+
+The UOS agentic substrate organizes 158 autonomous holons across all 10 fractal layers ($L_0 \dots L_9$). The complete holon catalog is mapped in `[[wiki:20260907-1645-moc-uos-holarchy]]` ([Holarchy Map of Content](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1645-moc-uos-holarchy.md)).
+
+Representative holonic layers and nodes include:
+- **$L_0$ Constitutional & Core**: `[[wiki:holon-kernel]]`, `[[wiki:holon-constitution]]`, `[[wiki:holon-allocator]]`
+- **$L_1$ Atomic & JIT**: `[[wiki:holon-trace-context]]`, `[[wiki:holon-nif-facade]]`, `[[wiki:holon-timer-wheel]]`
+- **$L_2$ Component & Vector**: `[[wiki:holon-graphene-vector]]`, `[[wiki:holon-badge-grid]]`, `[[wiki:holon-sparkline-canvas]]`
+- **$L_3$ Byte Parity & State**: `[[wiki:holon-sqlite-header]]`, `[[wiki:holon-stm-lease]]`, `[[wiki:holon-wal-fencing]]`
+- **$L_4$ System Concurrency**: `[[wiki:holon-sa-plan-scheduler]]`, `[[wiki:holon-filesystem-vfs]]`, `[[wiki:holon-podman-orchestrator]]`
+- **$L_5$ Cognitive & OODA**: `[[wiki:holon-uos-supervisor]]`, `[[wiki:holon-prajna-breaker]]`, `[[wiki:holon-telegram-bridge]]`, `[[wiki:holon-fast-ooda]]`
+- **$L_6$ Defense & Interception**: `[[wiki:holon-samvid-vajravyuha]]`, `[[wiki:holon-mcp-interceptor]]`, `[[wiki:holon-zero-trust-gate]]`
+- **$L_7$ Federation & Telemetry**: `[[wiki:holon-zenoh-mesh]]`, `[[wiki:holon-otel-publisher]]`, `[[wiki:holon-crdt-synchronizer]]`
+- **$L_8$ Knowledge & Living Ontology**: `[[wiki:holon-wiki-engine]]`, `[[wiki:holon-zk-manager]]`, `[[wiki:holon-ontology-catalog]]`
+- **$L_9$ Self-Evolution & Quorum**: `[[wiki:holon-century-harmony]]`, `[[wiki:holon-tri-sovereign-quorum]]`, `[[wiki:holon-heijunka-balancer]]`
+
+All 158 holon documents are directly accessible under `/docs/wiki/holons/` (e.g. [Holon Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1645-moc-uos-holarchy.md)).
+
+---
+
+## §7.0 Foundational Architectural Maps of Content & Invariants (`docs/zk/`)
+
+Permanent architectural decision anchors, maps of content, and formal design invariants:
+
+- `[[zk:2026-08-04-0859-oais-package-algebra]]` ([An archival bundle is a SIP-to-AIP-to-DIP algebra](http://nas-1.tail55d152.ts.net:4100/docs/zk/2026-08-04-0859-oais-package-algebra.md))
+- `[[zk:20260725-zk-wiki-system-architecture]]` ([The ZK/wiki as the system's symbiotic memory & process surface](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260725-zk-wiki-system-architecture.md))
+- `[[zk:20260729-fractal-atlas]]` ([Fractal Atlas — every object × every layer, one graph](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260729-fractal-atlas.md))
+- `[[zk:20260729-zk-bridge-and-orphan-index]]` ([ZK bridge — connecting the islands (healing pass, 2026-07-29)](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260729-zk-bridge-and-orphan-index.md))
+- `[[zk:20260731-instr-loader-coupling-inherent]]` ([S13 instruction ↔ loading/dispatch coupling is inherent, not a layering violation](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260731-instr-loader-coupling-inherent.md))
+- `[[zk:20260804-094248-sa-plan-c3i-parity-fractal-audit]]` ([Sa-plan C3I/Rust parity fractal audit](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-094248-sa-plan-c3i-parity-fractal-audit.md))
+- `[[zk:20260804-121012-sa-plan-remaining-impact]]` ([Sa-plan remaining-task impact](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-121012-sa-plan-remaining-impact.md))
+- `[[zk:20260804-125557-sa-plan-pipeline-observability]]` ([Sa-plan, web, wiki, and ZK pipeline observability](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-125557-sa-plan-pipeline-observability.md))
+- `[[zk:20260804-131604-sa-plan-c3i-admission]]` ([Sa-plan C3I observability, differential parity, and admission](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-131604-sa-plan-c3i-admission.md))
+- `[[zk:20260804-155119-codex-harness-mcp-zenoh-bridge]]` ([MCP control plus Zenoh event transport](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-155119-codex-harness-mcp-zenoh-bridge.md))
+- `[[zk:20260804-215818-s7-stitch-generation-operator-unavailable-observed-ach-verdict-sc-f38-39]]` ([S7 Stitch generation operator Unavailable_observed — ACH verdict + SC-F38/39](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-215818-s7-stitch-generation-operator-unavailable-observed-ach-verdict-sc-f38-39.md))
+- `[[zk:20260804-222210-integrated-w0-w8-design-workflow-lattice-p0-p9-walk-sc-f40-wiki-projection-advisory]]` ([Integrated W0–W8 design workflow lattice + P0→P9 walk; SC-F40 wiki-projection-advisory](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-222210-integrated-w0-w8-design-workflow-lattice-p0-p9-walk-sc-f40-wiki-projection-advisory.md))
+- `[[zk:20260804-ooda-sa-plan-control-plane]]` ([OODA to Sa-plan mandatory control-plane bridge](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-ooda-sa-plan-control-plane.md))
+- `[[zk:20260804-wiki-zk-parallel-pipeline]]` ([Indexed and bounded-parallel wiki/Zettelkasten processing](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260804-wiki-zk-parallel-pipeline.md))
+- `[[zk:20260805-010325-design-governance-mechanized-check-design-armed-sc-design-rules]]` ([Design governance MECHANIZED — check_design gate + armed SC-DESIGN Rete rules (DIVERGENCE 755)](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260805-010325-design-governance-mechanized-check-design-armed-sc-design-rules.md))
+- `[[zk:20260805-061231-phase-activity-runbook-and-activity-fractal-layer-sc-f42]]` ([Phase activity runbook + the ACTIVITY fractal layer (SC-F42, phase-totality armed) — DIVERGENCE 756](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260805-061231-phase-activity-runbook-and-activity-fractal-layer-sc-f42.md))
+- `[[zk:20260805-065319-design-onboarding-and-functional-domain-artifacts]]` ([Design onboarding + functional domain artifacts — guide, ontology instance, model and glossary, IPO per phase](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260805-065319-design-onboarding-and-functional-domain-artifacts.md))
+- `[[zk:20260805-091406-doc-lint-programme-handover]]` ([Document-lint programme — record and handover](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260805-091406-doc-lint-programme-handover.md))
+- `[[zk:20260814-support-infrastructure-unification-atlas]]` ([Support Infrastructure Unification & Capability Atlas](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260814-support-infrastructure-unification-atlas.md))
+- `[[zk:20260904-150155-two-lattice-software-transactional-memory-and-mathematical-non-interference]]` ([Two-Lattice Software Transactional Memory and Mathematical Non-Interference](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-150155-two-lattice-software-transactional-memory-and-mathematical-non-interference.md))
+- `[[zk:20260904-150201-sil-6-zero-trust-rete-gate-salience-hierarchy-and-fail-closed-emergency-precedence]]` ([SIL-6 Zero-Trust RETE Gate Salience Hierarchy and Fail-Closed Emergency Precedence](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-150201-sil-6-zero-trust-rete-gate-salience-hierarchy-and-fail-closed-emergency-precedence.md))
+- `[[zk:20260904-150206-source-backed-operational-catalogue-and-living-ontology-traceability]]` ([Source-Backed Operational Catalogue and Living Ontology Traceability](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-150206-source-backed-operational-catalogue-and-living-ontology-traceability.md))
+- `[[zk:20260904-150844-zigvm-functional-sdlc-sre-and-verification-catalogue]]` ([ZigVM functional, SDLC, SRE, and verification catalogue](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-150844-zigvm-functional-sdlc-sre-and-verification-catalogue.md))
+- `[[zk:20260904-153128-twelve-pillar-fractal-architecture-and-multi-paradigm-operational-integration]]` ([Twelve-Pillar Fractal Architecture and Multi-Paradigm Operational Integration](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-153128-twelve-pillar-fractal-architecture-and-multi-paradigm-operational-integration.md))
+- `[[zk:20260904-zigvm-functional-sre-catalog]]` ([ZigVM functional, SDLC, SRE, and verification catalogue](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-zigvm-functional-sre-catalog.md))
+- `[[zk:20260906-0606-agy-handover-understanding-and-actor-ecology-plan]]` ([20260906-0606- AGY handover: new understanding and actor ecology implementation plan](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md))
+- `[[zk:20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks]]` ([ADR-UOS-AINF-001 — compose agentic infrastructure from UOS building blocks](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md))
+- `[[zk:20260907-1559-adr-risk-prioritization]]` ([20260907-1559 — ADR: one risk prioritization policy across UOS](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1559-adr-risk-prioritization.md))
+- `[[zk:20260907-1645-moc-uos-holarchy]]` ([UOS Holarchy Map of Content](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1645-moc-uos-holarchy.md))
+- `[[zk:20260907-2220-plan-swarm-stabilization-and-initiation]]` ([20260907-2220 — Permanent ZK Anchor: Swarm Stabilization, Initiation & Multi-Agent Coordination Plan](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2220-plan-swarm-stabilization-and-initiation.md))
+- `[[zk:20260908-0844-unification-evidence-note]]` ([Evidence note: preserve failed observations during repair](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-0844-unification-evidence-note.md))
+- `[[zk:20260909-0626-harness-tracking-is-not-completion]]` ([Tracking is evidence of work, not evidence that work is complete](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0626-harness-tracking-is-not-completion.md))
+- `[[zk:20260909-0720-harness-reviews-and-execution-evidence]]` ([Bind the observation to the property being claimed](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0720-harness-reviews-and-execution-evidence.md))
+- `[[zk:moc-20260729-051217-s-epoch-smp-coordinator-lock-fractal]]` ([MoC: S-epoch — eliminating the residual coordinator `L_v` (the last Amdahl term)](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-20260729-051217-s-epoch-smp-coordinator-lock-fractal.md))
+- `[[zk:moc-agent-handover]]` ([MoC: Agent handover — vendor-neutral operating manual](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-agent-handover.md))
+- `[[zk:moc-agents-codex-symbiosis-supervisor]]` ([MoC: Codex Symbiosis Supervisor](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-agents-codex-symbiosis-supervisor.md))
+- `[[zk:moc-algebra-driven-ocaml-doctrine]]` ([MoC: Algebra-Driven OCaml Doctrine: System Integration Ontology](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-algebra-driven-ocaml-doctrine.md))
+- `[[zk:moc-features-notion-agent-audit]]` ([MoC: Agent action audit log (2026) (Notion)](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-features-notion-agent-audit.md))
+- `[[zk:moc-features-notion-ontology]]` ([MoC: Notion ontology — the concept model](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-features-notion-ontology.md))
+- `[[zk:moc-handoff]]` ([MoC: HANDOFF — beam-zig, ALL 14 MILESTONES COMPLETE (2026-07-11)](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-handoff.md))
+- `[[zk:moc-journal-20260718-zigvm-otp-parity-full-plan-journal]]` ([MoC: ZigVM → OTP 30-rc Full Equivalence — Program Plan (As-Is vs To-Be, KPIs)](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-journal-20260718-zigvm-otp-parity-full-plan-journal.md))
+- `[[zk:moc-journal-20260731-full-system-audit-and-fractal-execution-plan]]` ([MoC: 2026-07-31 — Full-system audit (5 lanes) + fractal execution plan — prompts & results](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-journal-20260731-full-system-audit-and-fractal-execution-plan.md))
+
+---
+
+## §8.0 Hermes Wiki Engine Formal Specifications (240 Pages)
+
+The Hermes formal wiki engine (`engines/hermes/modules/hermes_wiki/pages/`) maintains 240 structured specifications with Gospel contract bindings and AST transclusion:
+- **Feature Parity Models (184 pages)**: Complete bidirectional modeling of Notion and Obsidian knowledge capabilities.
+- **Task & Process Journals (14 pages)**: Epistemic task execution records and verification transcripts.
+- **Playbooks & SRE Runbooks (8 pages)**: Operational contingency procedures, failover sequences, and incident remediation.
+- **Bonsai UI Architecture (9 pages)**: Server-side declarative component specifications and render trees.
+- **ZK Test Fixtures & Transclusions (6 pages)**: Formal fixtures validating recursive transclusion cycle containment ($d \le 8$).
+- **System Algebras & Category Models (5 pages)**: Denotational intent algebras and presheaf consistency models.
+- **Master Structure Indices (6 pages)**: Corpus entrypoints, tag taxonomies, and lexical search indexes.
+
+Accessible via the Hermes Wiki Engine and viewed live at [Hermes Wiki Explorer](http://nas-1.tail55d152.ts.net:4100/wiki).
+
+---
+
+## §9.0 Grand Synthesis Tomes & Canonical Governance Contracts
+
+Core architectural tomes and governing constitutional rules:
+- `[[wiki:grand-synthesis-tome]]` ([Grand Synthesis Review Tome](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-2020-uos-grand-synthesis-review-tome-wiki-zk-km.md))
+- `[[wiki:master-encyclopedia-tome]]` ([Master Encyclopedia Tome](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-2025-uos-master-encyclopedia-tome-wiki-zk-km.md))
+- `[[wiki:unified-web-wiki-zk-semantics]]` ([Unified Web, Wiki & ZK Semantics Specification](http://nas-1.tail55d152.ts.net:4100/docs/design/20260912-1050-uos-unified-web-wiki-zk-semantics-and-component-specification.md))
+- `[[wiki:monorepo-implementation-plan]]` ([Standalone Jujutsu Monorepo Implementation Plan](http://nas-1.tail55d152.ts.net:4100/docs/design/2026-09-05-uos-standalone-jujutsu-monorepo-implementation-plan.md))
+- `[[wiki:rocha-semiotics-contract]]` ([Rocha Biosemiotics Cybernetics Contract SC-ROCHA-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/rocha-semiotics-cybernetics-contract.md))
+- `[[wiki:comprehensive-checklist-contract]]` ([Universal 18-Checkpoint Checklist Contract SC-CHECKLIST-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/comprehensive-checklist-contract.md))
+- `[[wiki:sa-plan-tps-mandate]]` ([Sa-Plan Exclusivity & Fractal Jidoka Mandate SC-JIDOKA-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1530-sa-plan-tps-mandate.md))
+- `[[wiki:timestamp-mandate]]` ([Mandatory Timestamp Prefix Mandate SC-TIME](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/timestamp-mandate.md))
+- `[[wiki:determinate-nix-mandate]]` ([Determinate Nix & Devenv Toolchain Mandate SC-NIX-DEVENV-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-2142-determinate-nix-devenv-mandate.md))
 
