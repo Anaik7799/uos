@@ -213,22 +213,23 @@ discovered -> classified -> mapped -> implemented -> built -> executed -> passed
 - **Mandatory Generated Document Timestamp Prefix**: Per explicit operator mandate (`contracts/rules/timestamp-mandate.md`), all newly generated documents across UOS MUST carry the `YYYYMMDD-HHSS-` timestamp prefix (e.g. `20260905-1725-`). Historical source formats are preserved byte-for-byte in typed namespaces.
 - Machine-checked by `tools/uos-cli timestamp-check` and `dependability_clock.ml`.
 
-### 8.2 Journal Protocol (`SC-JOURNAL`)
-Every task completion journal MUST contain the exact 13 required sections:
-1. Scope & Trigger
-2. Pre-State Assessment
-3. Execution Detail
-4. Root Cause Analysis
-5. Fix Taxonomy
-6. Patterns & Anti-Patterns Discovered
-7. Verification Matrix
-8. Files Modified
-9. Architectural Observations
-10. Remaining Gaps
-11. Metrics Summary
-12. STAMP & Constitutional Alignment
-13. Conclusion
+### 8.2 Journal Protocol (`SC-JOURNAL-v3`, `SC-JOURNAL-003`)
+Every task completion journal MUST strictly implement the **SC-JOURNAL-v3 Anticipatory Epistemic Ledger** architecture (`contracts/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md`), containing the exact 13 required sections evaluated against the **7 Verification Engines**:
+1. Scope & Trigger (Engine 5: Formal Lean 4 / Gospel gateways)
+2. Pre-State Assessment (Engine 7: Predictive Kalman state prior)
+3. Execution Detail (Engine 6: Rete-UL production invariant rules)
+4. Root Cause Analysis (Engine 1: Analysis of Competing Hypotheses - ACH disconfirmation matrix)
+5. Fix Taxonomy (Engine 6: Poka-Yoke, Jidoka, Muda structural classification)
+6. Patterns & Anti-Patterns Discovered (Engine 4: Devil's Advocate & Red Team Popperian falsification)
+7. Verification Matrix (Engine 2: NATO STANAG 2017 Admiralty Protocol admissibility gate >= B2)
+8. Files Modified (Engine 6: Standalone Jujutsu clean diff accounting)
+9. Architectural Observations (Engine 5: Sheaf-presheaf & category theoretic consistency)
+10. Remaining Gaps (Engine 4: Unmitigated failure mode residual analysis)
+11. Metrics Summary (Engine 3: Bayesian Beta-Binomial conjugate update with half-life decay & Lyapunov stability derivative dV/dt < 0)
+12. STAMP & Constitutional Alignment (Engine 6: Control loop hazard & UCA prevention)
+13. Conclusion (Engine 7: Precommitted Brier-scored prognostications with explicit time horizon)
 
+Enforcement: Machine-checked by `tools/journal-check`, `tools/journal_linter`, and `tools/uos-cli gate G-JOURNAL`.
 Scaling boundaries: trivial (1–3 files: 1–2 lines/sec), standard (4–14 files: paragraph detail), major (15+ files: full subsections & diagrams).
 
 ### 8.3 Mandatory Diagram Source Rule (`SC-DIAGRAM-001`)

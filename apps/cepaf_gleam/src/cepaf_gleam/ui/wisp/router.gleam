@@ -70,6 +70,7 @@ import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
 import cepaf_gleam/ui/lustre/cortex_cockpit
+import cepaf_gleam/ui/lustre/checklist_page
 import simplifile
 import cepaf_gleam/ui/web/shell
 import cepaf_gleam/ui/wisp/agui_sse_api
@@ -4532,7 +4533,7 @@ fn route_html(path: String) -> String {
       shell.render_page(
         "Comprehensive Verification Checklist",
         "verification",
-        guard("verification", page_views.verification_view),
+        checklist_page.view(),
       )
     "/wiki" ->
       shell.render_page(

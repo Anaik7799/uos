@@ -6,10 +6,21 @@ This repository is the canonical Unified Operational System (UOS).
 
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
-- EV-Cycle Status: `EV-01` through `EV-99` admitted (`EV-99` Decentralized Work-Stealing Swarm Mesh, SVG Topology View & Lean 4 Fairness Ratified); `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
+- EV-Cycle Status: admitted ceiling is `EV-93` (`SC-PROVENANCE-001`, `admitted_ev_ceiling = 93`). Cycles `EV-94`..`EV-109` are `NOT_ADMITTED` pending sovereign review by Codex and AGY. No new EV number may be minted while that range is under review (`INV-PROV-05`). `DMC-TCM` completed; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
 - Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
+
+> **PROVENANCE CAVEAT on the EV-Cycle Status above and the Status Line in section 9 (`SC-RISK-PRIORITY-001`, task `s2-policy-status-correction`, recorded 2026-09-07T23:0xZ by session `0288c197`).**
+> The EV claims above `EV-93` are **NOT ADMITTED** and must not be cited as admission evidence. Recorded, not rewritten, per the historical-preservation rule.
+>
+> 1. **`EV-94` through `EV-104` originate in quarantined coordinator events.** Events 422 to 432 were appended by a foreign writer using an invented `publish_evidence` operation that the coordinator's command type has no constructor for, stamped with session `656f0d2c`'s identity although that session did not write them. Their content is exactly these EV claims plus `ADR-071` and related test-green counts. Evidence: `var/coordination/tri-agent/events-quarantine/0000000422-0000000432.quarantine-note.txt`.
+> 2. **`EV-108`'s identifier matches a forged journal event.** At approximately 22:5xZ, journal event 437 briefly carried `operation_id` `l0-ev108-fast-ooda-1788812700000000` with `tick_us` equal to `utc_us`, an impossible clock, before being repaired back to its true content. That was the **third** in-place journal corruption of the day.
+> 3. **The two statements in this file disagreed.** The first line claimed `EV-01`..`EV-99` admitted while section 9 advertised `CURRENT EV-CYCLE: EV-108`. RESOLVED 2026-09-08 under sa-plan `uos/km-index-refresh/20260908-0912` (`t10`): both now state the `EV-93` ceiling and carry the `NOT_ADMITTED` range. The contradiction is recorded here because it existed, not because it persists.
+> 4. **Two-key verification is not satisfied** for any EV cycle above `EV-93`: no fresh observed runtime behaviour is bound to a candidate revision for them in this workspace.
+>
+> Status of these claims is `NOT_ADMITTED` pending sovereign review by Codex and AGY. The boundary is now pinned as a single constant and machine-checked: see [`SC-PROVENANCE-001`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-provenance-integrity-contract.md) and `bash tools/km-gate --gate`. The structural fix that prevents a recurrence, the SQLite coordinator store with append-only triggers, was integrated on 2026-09-07 under task `s1-sqlite-coordinator-cutover`; its falsifiers, a raw `UPDATE` and a raw `DELETE` on the events table, are both refused with `events are append-only`.
+
 
 All agents operating in this repository must strictly adhere to the policies, boundaries, and evidence contracts defined herein.
 
@@ -128,7 +139,7 @@ Per operator mandate (`contracts/rules/comprehensive-checklist-contract.md` `SC-
 1. **Interactive Checklist Component**: 18/18 checks rendered via expandable accordion component on every single web screen and document view.
 2. **5 Verification Domains**: (1) Metadata/Timestamp/Tailscale Navigation, (2) Zero-Muda Purity & Storage Safety, (3) Testing Gold Standard C1–C8 & 4 Math Gates, (4) Cross-Language Control & Observability, (5) Tri-Sovereign Governance & Jujutsu Monorepo.
 3. **Uniform Cohesive Navigation**: Grouped Sidebar (Command & Control, Knowledge Base, Repository & Gov), Top Status Bar with clickable Tailscale FQDN URL and click-to-copy, Breadcrumb hierarchy, Dual View Mode (Rendered Markdown vs Raw Source toggle), Bottom linear Prev/Next navigation, and Persistent System Footer.
-4. **Machine Verification**: Validated by `tools/uos checklist`, gate `G-CHECKLIST`, and `tools/uos doctor` EV-19.
+4. **Machine Verification**: Validated by `tools/uos-cli checklist`, gate `G-CHECKLIST`, and `tools/uos-cli doctor` EV-19.
 
 ### 5.4 Shared Claude, Codex, AGY and OpenRouter Coordination
 
@@ -173,6 +184,10 @@ A passing observation never replaces Sa-plan authority or effect-time fencing.
 Process guidance and report-only validation do not establish runtime scheduler enforcement.
 Respect the active session's scope, permission and delegation restrictions.
 
+### 5.7 Mandatory Gleam Harness Agent Boundary (`SC-HARNESS-MCP-001`)
+
+All agents MUST operate through the Gleam/OTP harness using MCP or admitted Zenoh ingress. Gleam owns agent/control/check/time policy and backend selection; bounded native services remain behind it. Source changes and tests run in development; production requires independently verified release and state authority. Follow [the operator-mandated contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md) and [formal specification](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md). The explicitly approved one-time development bootstrap is scoped there; policy text and advisory hooks do not establish runtime enforcement or system admission.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:
@@ -196,24 +211,25 @@ discovered -> classified -> mapped -> implemented -> built -> executed -> passed
 - Host NTP offset, system-to-model delta, and agent-context delta are non-aliasing typed measurements.
 - Inherited drift bands: nominal (<2s), minor (2–5s), warning (5–10s), critical (>10s).
 - **Mandatory Generated Document Timestamp Prefix**: Per explicit operator mandate (`contracts/rules/timestamp-mandate.md`), all newly generated documents across UOS MUST carry the `YYYYMMDD-HHSS-` timestamp prefix (e.g. `20260905-1725-`). Historical source formats are preserved byte-for-byte in typed namespaces.
-- Machine-checked by `tools/uos timestamp-check` and `dependability_clock.ml`.
+- Machine-checked by `tools/uos-cli timestamp-check` and `dependability_clock.ml`.
 
-### 8.2 Journal Protocol (`SC-JOURNAL`)
-Every task completion journal MUST contain the exact 13 required sections:
-1. Scope & Trigger
-2. Pre-State Assessment
-3. Execution Detail
-4. Root Cause Analysis
-5. Fix Taxonomy
-6. Patterns & Anti-Patterns Discovered
-7. Verification Matrix
-8. Files Modified
-9. Architectural Observations
-10. Remaining Gaps
-11. Metrics Summary
-12. STAMP & Constitutional Alignment
-13. Conclusion
+### 8.2 Journal Protocol (`SC-JOURNAL-v3`, `SC-JOURNAL-003`)
+Every task completion journal MUST strictly implement the **SC-JOURNAL-v3 Anticipatory Epistemic Ledger** architecture (`contracts/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md`), containing the exact 13 required sections evaluated against the **7 Verification Engines**:
+1. Scope & Trigger (Engine 5: Formal Lean 4 / Gospel gateways)
+2. Pre-State Assessment (Engine 7: Predictive Kalman state prior)
+3. Execution Detail (Engine 6: Rete-UL production invariant rules)
+4. Root Cause Analysis (Engine 1: Analysis of Competing Hypotheses - ACH disconfirmation matrix)
+5. Fix Taxonomy (Engine 6: Poka-Yoke, Jidoka, Muda structural classification)
+6. Patterns & Anti-Patterns Discovered (Engine 4: Devil's Advocate & Red Team Popperian falsification)
+7. Verification Matrix (Engine 2: NATO STANAG 2017 Admiralty Protocol admissibility gate >= B2)
+8. Files Modified (Engine 6: Standalone Jujutsu clean diff accounting)
+9. Architectural Observations (Engine 5: Sheaf-presheaf & category theoretic consistency)
+10. Remaining Gaps (Engine 4: Unmitigated failure mode residual analysis)
+11. Metrics Summary (Engine 3: Bayesian Beta-Binomial conjugate update with half-life decay & Lyapunov stability derivative dV/dt < 0)
+12. STAMP & Constitutional Alignment (Engine 6: Control loop hazard & UCA prevention)
+13. Conclusion (Engine 7: Precommitted Brier-scored prognostications with explicit time horizon)
 
+Enforcement: Machine-checked by `tools/journal-check`, `tools/journal_linter`, and `tools/uos-cli gate G-JOURNAL`.
 Scaling boundaries: trivial (1–3 files: 1–2 lines/sec), standard (4–14 files: paragraph detail), major (15+ files: full subsections & diagrams).
 
 ### 8.3 Mandatory Diagram Source Rule (`SC-DIAGRAM-001`)
@@ -227,6 +243,22 @@ observed test evidence, not explanatory diagrams, and MUST retain provenance.
 Preserve historical and external originals byte-for-byte; record nonconformance
 without rewriting them. Apply this rule to documentation, journals, specifications,
 skills, and UI design artifacts at every fractal layer L0–L9.
+
+## 8.4 SDLC/SRE Release Assurance and Package Provisioning
+
+Follow `contracts/rules/20260908-0551-release-assurance-sdlc-sre-sop.md`
+(`SC-RELEASE-ASSURANCE-001`) for release and operational changes. Provision new
+packages, including Python and Python libraries, only through repository-pinned
+Determinate Nix or devenv inputs. Use native OCaml/Mojo release commands, canonical
+Sa-plan authority, candidate-bound tests, actual OTP/ERTS observations, explicit
+17-aspect evidence, fractal RCA/Jidoka containment and tested recovery. Historical
+status strings and passing component counts never replace current evidence.
+Operational host names, URLs and remote targets must use Tailscale FQDNs even
+for private staging. Require already-realized Nix outputs or a configured Tailnet fetch
+path; `--offline` alone does not prevent fixed-output builders downloading sources.
+For bounded multi-layer reviews use `docs/sop/20260908-0844-unification-cycle-sop.md`:
+preserve failures, check source/task/runtime fences, receive bounded peer observations,
+and verify exact byte/hash board-to-Zenoh reconciliation without implied admission.
 
 ## 9. Status Line
 
