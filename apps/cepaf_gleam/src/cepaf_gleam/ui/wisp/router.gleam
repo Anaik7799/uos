@@ -54,6 +54,7 @@ import cepaf_gleam/ui/lustre/checklist_page
 import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/link_tracker_view
+import cepaf_gleam/ui/lustre/knowledge_explorer
 import cepaf_gleam/ui/web/page_views
 import lustre/element
 import lustre/element/html
@@ -74,7 +75,7 @@ import cepaf_gleam/ui/ecology_refresh
 import gleam/bit_array
 import gleam/crypto
 import gleam/dynamic/decode
-import gleam/http.{Get, Post}
+import gleam/http.{Get, Head, Post}
 import gleam/http/request.{type Request as HttpRequest}
 import gleam/http/response.{type Response as HttpResponse}
 import gleam/int
@@ -2349,7 +2350,7 @@ pub fn handle_request(req: HttpRequest(String)) -> HttpResponse(String) {
   }
   let method = req.method
   case method {
-    Get -> handle_get(path)
+    Get | Head -> handle_get(path)
     Post -> handle_post(req, path)
     _ -> method_not_allowed_response()
   }
@@ -2573,6 +2574,28 @@ fn route_html(path: String) -> String {
         "link-tracker",
         guard("link-tracker", fn(_state) { link_tracker_view.view() }),
       )
+    "/wiki" ->
+      shell.render_page(
+        "Hermes Wiki Master Index",
+        "wiki",
+        guard("wiki", fn(_state) {
+          knowledge_explorer.view(knowledge_explorer.init())
+        }),
+      )
+    "/zk" -> {
+      let zk_model =
+        knowledge_explorer.Model(
+          ..knowledge_explorer.init(),
+          active_tab: knowledge_explorer.TabZkInvariants,
+        )
+      shell.render_page(
+        "ZigVM ZK Master MOC",
+        "zk",
+        guard("zk", fn(_state) {
+          knowledge_explorer.view(zk_model)
+        }),
+      )
+    }
     "/verification" ->
       shell.render_page(
         "Verification",
