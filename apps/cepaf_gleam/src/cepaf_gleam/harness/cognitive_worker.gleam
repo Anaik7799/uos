@@ -42,6 +42,7 @@ import gleam/json
 import gleam/list
 import gleam/otp/actor
 import gleam/otp/supervision
+import gleam/result
 import gleam/string
 
 @external(erlang, "cepaf_gleam_ffi", "os_cmd")
@@ -213,6 +214,56 @@ pub fn evaluate_intent(intent: CognitiveIntent) -> CognitiveDecision {
       decision.timestamp_ms,
     )
   decision
+}
+
+/// Formats recent Telegram conversation stream turns into clean, numbered Markdown.
+pub fn format_recent_telegram_history(
+  messages: List(conversation_memory.ChatMessage),
+  max_turns: Int,
+) -> String {
+  let deduped = deduplicate_turns(messages, [])
+  let sliced = case list.length(deduped) > max_turns {
+    True -> list.drop(deduped, list.length(deduped) - max_turns)
+    False -> deduped
+  }
+  case sliced {
+    [] -> "📭 *No prior conversation messages recorded in memory for this chat.*"
+    _ -> {
+      let turns =
+        list.index_map(sliced, fn(msg, idx) {
+          let role_label = case msg.role {
+            "user" -> "👤 *User:*"
+            "assistant" -> "🤖 *Robot C3I:*"
+            _ -> "💬 *" <> msg.role <> ":*"
+          }
+          let snippet = case string.length(msg.content) > 160 {
+            True -> string.slice(msg.content, 0, 160) <> "..."
+            False -> msg.content
+          }
+          int.to_string(idx + 1) <> ". " <> role_label <> " " <> snippet
+        })
+      "📜 *Recent Telegram Conversation Stream (Last "
+      <> int.to_string(list.length(sliced))
+      <> " turns)*:\n\n"
+      <> string.join(turns, "\n\n")
+    }
+  }
+}
+
+fn deduplicate_turns(
+  remaining: List(conversation_memory.ChatMessage),
+  acc: List(conversation_memory.ChatMessage),
+) -> List(conversation_memory.ChatMessage) {
+  case remaining {
+    [] -> list.reverse(acc)
+    [first, ..rest] -> {
+      case acc {
+        [prev, ..] if prev.role == first.role && prev.content == first.content ->
+          deduplicate_turns(rest, acc)
+        _ -> deduplicate_turns(rest, [first, ..acc])
+      }
+    }
+  }
 }
 
 pub fn handle_directive(trimmed: String, intent: CognitiveIntent) -> CognitiveDecision {
@@ -698,6 +749,29 @@ pub fn handle_directive(trimmed: String, intent: CognitiveIntent) -> CognitiveDe
       }
     }
 
+    "/messages" | "/history" -> {
+      let limit = case args {
+        [lim_str, ..] -> int.parse(lim_str) |> result.unwrap(10)
+        [] -> 10
+      }
+      let raw_history =
+        conversation_memory.get_recent_history(
+          conversation_memory.default_db_path,
+          intent.chat_id,
+          limit * 2,
+        )
+      let reply = format_recent_telegram_history(raw_history, limit)
+      CognitiveDecision(
+        intent_id: intent.intent_id,
+        ooda_phase: "Completed",
+        reasoning: "Operator queried recent Telegram message history.",
+        actions: ["query_telegram_history"],
+        reply_markdown: reply,
+        confidence: 1.0,
+        timestamp_ms: intent.timestamp_ms,
+      )
+    }
+
     "/tool" | "/action" -> {
       case args {
         [tool_name, ..rest_args] -> {
@@ -860,26 +934,6 @@ pub fn handle_conversational(trimmed: String, intent: CognitiveIntent) -> Cognit
           }
           let sanitized_reply = egress_redactor.redact_system_secrets(final_reply)
 
-          // Persist turns in multi-turn conversation memory
-          let _ =
-            conversation_memory.record_turn(
-              conversation_memory.default_db_path,
-              intent.chat_id,
-              "user",
-              trimmed,
-              None,
-              intent.timestamp_ms,
-            )
-          let _ =
-            conversation_memory.record_turn(
-              conversation_memory.default_db_path,
-              intent.chat_id,
-              "assistant",
-              sanitized_reply,
-              None,
-              intent.timestamp_ms,
-            )
-
           CognitiveDecision(
             intent_id: intent.intent_id,
             ooda_phase: "Act",
@@ -945,13 +999,36 @@ pub fn handle_conversational_offline_gateway(
     || string.contains(lower, "worker")
     || string.contains(lower, "lease")
 
+  let is_cognitive_arch =
+    string.contains(lower, "cognitive architecture")
+    || string.contains(lower, "cognitive architect")
+    || string.contains(lower, "processing path")
+    || string.contains(lower, "what does the sovereign")
+    || string.contains(lower, "how does c3i process")
+    || string.contains(lower, "sovereign architecture")
+    || string.contains(lower, "ooda loop")
+
+  let is_telegram_history =
+    string.contains(lower, "telegram message")
+    || string.contains(lower, "chat message")
+    || string.contains(lower, "last 10")
+    || string.contains(lower, "last message")
+    || string.contains(lower, "recent message")
+    || string.contains(lower, "conversation history")
+    || string.contains(lower, "chat history")
+    || string.contains(lower, "telegram history")
+    || lower == "messages"
+    || lower == "history"
+
   let is_swarm_board =
-    string.contains(lower, "board")
+    string.contains(lower, "swarm board")
+    || string.contains(lower, "agent board")
+    || string.contains(lower, "tri-agent")
+    || string.contains(lower, "board")
     || string.contains(lower, "swarm")
     || string.contains(lower, "claude")
     || string.contains(lower, "codex")
     || string.contains(lower, "peer")
-    || string.contains(lower, "message")
 
   let is_storage =
     string.contains(lower, "storage")
@@ -1013,7 +1090,7 @@ pub fn handle_conversational_offline_gateway(
         True -> {
           let r =
             "🤖 *Robot C3I: Sovereign Cybernetic Cockpit & Mesh Orchestrator (@c3i_talk_bot)*\n\n"
-            <> "I am Robot C3I, the sovereign command, policy, and telemetry harness for the Unified Operational System (UOS).\n\n"
+            <> "I am Robot C3I, the UOS Sovereign Cybernetic Harness, command, and policy orchestrator for the Unified Operational System (UOS).\n\n"
             <> "• *Primary Autonomous Agent:* **AGY (Google DeepMind Antigravity)**\n"
             <> "• *Authority Core:* Pure Gleam/OTP 29 (`apps/cepaf_gleam`)\n"
             <> "• *Supervision:* `uos_sup.gleam` 4-domain supervisor (Apps, Engines, Services, Intelligence)\n"
@@ -1026,22 +1103,59 @@ pub fn handle_conversational_offline_gateway(
           #(r, ["respond_identity"])
         }
         False -> {
-      case is_system_overview {
-        True -> {
-          let status_dec = handle_directive("/status", intent)
-          let board_dec = handle_directive("/board", intent)
-          let r =
-            "🧠 *[Deterministic Autonomous Directive Gateway: Cluster Health & Swarm Board]*\n\n"
-            <> status_dec.reply_markdown
-            <> "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-            <> board_dec.reply_markdown
-          #(r, [
-            "check_beam_health",
-            "dispatch_directive_status",
-            "dispatch_directive_board",
-          ])
-        }
-        False -> {
+          case is_cognitive_arch {
+            True -> {
+              let r =
+                "🧠 *Robot C3I: Sovereign Cognitive Architecture & Processing Path*\n\n"
+                <> "I am **Robot C3I** (`@c3i_talk_bot`), the sovereign cybernetic command, policy, and telemetry harness for the Unified Operational System (UOS).\n\n"
+                <> "### 🏛️ Sovereign Architecture Core:\n"
+                <> "• *Authority:* Pure Gleam/OTP 29 Root Supervisor (`uos_sup.gleam`)\n"
+                <> "• *Sovereign Agent Ecology:* AGY (Google DeepMind Antigravity, Coordinator on razr-1), Claude (Reviewer), Codex (Auditor)\n"
+                <> "• *17 System Aspects ($\\mathbb{A}_{17}$):* Spanning 10 Fractal Layers ($L_0$ Constitutional to $L_9$ Singularity)\n"
+                <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, 100% pure BEAM & Hermes OCaml\n"
+                <> "• *Deterministic Runtime:* ZigVM VFS & Bytecode Engine (19.85M ops/s)\n"
+                <> "• *Storage Safety Interlock:* Root OS NVMe `[REDACTED_SYSTEM_OS_SERIAL]` locked\n\n"
+                <> "### ⚡ End-to-End 5-Stage OODA Processing Path:\n"
+                <> "1. **Edge Ingress:** Telegram Webhook / Long-Poller receives inbound TLS event and routes to Zenoh topic `indrajaal/l5/cog/intent/req`.\n"
+                <> "2. **Interception & Interlocks:** Hermes OCaml zero-trust payload interceptor validates payload cryptographic hash, sanitizes secrets, and checks daily budget ceilings.\n"
+                <> "3. **OODA Cognitive Loop:**\n"
+                <> "   • `Observe`: Ingests multi-turn SQLite conversation memory + real-time BEAM NIF telemetry.\n"
+                <> "   • `Orient`: Classifies denotational intent across 48 directives (Domains A/B/C/D).\n"
+                <> "   • `Decide`: Multi-agent synthesis (Gemma 4 via OpenRouter / Deterministic Fallback Gateway) with 2oo3 constitutional consensus.\n"
+                <> "   • `Act`: Dispatches strictly through canonical `sa-plan` (SC-SA-PLAN-001, SC-JIDOKA-001).\n"
+                <> "4. **Formal Verification:** Real-time Lean 4 invariant verification ($\\Delta \\vec{\\mathcal{T}}_{13} \\equiv \\mathbf{0}$, Two-Lattice STM) and automated Gemma 4 quality judge.\n"
+                <> "5. **Egress Delivery:** Egress redactor strips hardware secrets and dispatches direct TLS message chunks back to Telegram (`sendMessage`)."
+              #(r, ["explain_cognitive_architecture", "trace_processing_path"])
+            }
+            False -> {
+              case is_telegram_history {
+                True -> {
+                  let raw_history =
+                    conversation_memory.get_recent_history(
+                      conversation_memory.default_db_path,
+                      intent.chat_id,
+                      20,
+                    )
+                  let r = format_recent_telegram_history(raw_history, 10)
+                  #(r, ["query_telegram_history", "format_conversation_stream"])
+                }
+                False -> {
+                  case is_system_overview {
+                    True -> {
+                      let status_dec = handle_directive("/status", intent)
+                      let board_dec = handle_directive("/board", intent)
+                      let r =
+                        "🧠 *[Deterministic Autonomous Directive Gateway: Cluster Health & Swarm Board]*\n\n"
+                        <> status_dec.reply_markdown
+                        <> "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                        <> board_dec.reply_markdown
+                      #(r, [
+                        "check_beam_health",
+                        "dispatch_directive_status",
+                        "dispatch_directive_board",
+                      ])
+                    }
+                    False -> {
           case is_cluster_health {
             True -> {
               let status_dec = handle_directive("/status", intent)
@@ -1173,28 +1287,12 @@ pub fn handle_conversational_offline_gateway(
   }
 }
 }
+}
+}
+}
+}
 
   let sanitized_reply = egress_redactor.redact_system_secrets(reply)
-
-  // Persist turns in multi-turn conversation memory
-  let _ =
-    conversation_memory.record_turn(
-      conversation_memory.default_db_path,
-      intent.chat_id,
-      "user",
-      trimmed,
-      None,
-      intent.timestamp_ms,
-    )
-  let _ =
-    conversation_memory.record_turn(
-      conversation_memory.default_db_path,
-      intent.chat_id,
-      "assistant",
-      sanitized_reply,
-      None,
-      intent.timestamp_ms,
-    )
 
   CognitiveDecision(
     intent_id: intent.intent_id,

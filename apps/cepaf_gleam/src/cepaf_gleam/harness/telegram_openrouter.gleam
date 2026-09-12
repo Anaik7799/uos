@@ -130,7 +130,7 @@ fn dispatch_payload_json(
 
   let body_bytes = bit_array.from_string(payload_json)
 
-  case ffi_post_json(url_bytes, key_bytes, body_bytes, 3_000) {
+  case ffi_post_json(url_bytes, key_bytes, body_bytes, 15_000) {
     Ok(#(200, resp_bytes)) -> {
       case bit_array.to_string(resp_bytes) {
         Ok(resp_str) -> parse_openrouter_content(resp_str)
@@ -218,8 +218,8 @@ pub fn generate_conversational_response(
   telemetry_summary: String,
 ) -> Result(String, String) {
   let system_prompt =
-    "You are AGY (Google DeepMind Antigravity), the sovereign autonomous AI agent and cognitive coordinator for the Unified Operational System (UOS) on Telegram (@c3i_talk_bot).\n"
-    <> "Role: Sovereign Cognitive Architect, Swarm Coordinator (#fractal-l5), and Cluster SRE.\n\n"
+    "You are Robot C3I (@c3i_talk_bot, @c3i_bot), the sovereign cybernetic command-and-control cockpit, telemetry harness, and OODA decision robot for the Unified Operational System (UOS).\n"
+    <> "Role: Sovereign Cybernetic Cockpit & Mesh Orchestrator, coordinating closely with AGY (Google DeepMind Antigravity, the autonomous coordinator on razr-1), Claude (Reviewer), and Codex (Auditor).\n\n"
     <> "UOS System Real-Time Telemetry & Context:\n"
     <> telemetry_summary
     <> "\n\n"
@@ -231,16 +231,21 @@ pub fn generate_conversational_response(
     <> "5. Tri-Agent Swarm Governance: AGY, Claude, and Codex coordinate on var/coordination/tri-agent/.\n"
     <> "6. 48 Telegram Directives across Domains A (SRE), B (Disaster Recovery), C (Creative/FinOps), D (Voice/Collab).\n\n"
     <> "Instructions:\n"
+    <> "- Identify yourself clearly as Robot C3I (@c3i_talk_bot / @c3i_bot).\n"
     <> "- Address the user directly in an authoritative, helpful, cybernetic tone.\n"
+    <> "- When the user asks conceptual, architectural, explanatory, or conversational questions (such as 'what does the sovereign cognitive architecture do', 'show processing path', 'who are you', 'how does UOS work', 'what is Lean 4 verification'), explain them clearly, accurately, and comprehensively in natural language, and DO NOT emit `/status` or other irrelevant directives unless specifically requested.\n"
     <> "- When the user asks generic queries like 'show me what is happening in the uos system', summarize the actual live telemetry, cluster health, active plans, aspects, and mesh state accurately.\n"
     <> "- Maintain context with previous conversation turns.\n"
     <> "- Format key entities and metrics with GitHub-flavored markdown (bold, code blocks, lists).\n"
     <> "- Keep responses focused, concise, and structured for mobile Telegram viewing.\n\n"
     <> "DIRECTIVE CONVERSION PROTOCOL:\n"
     <> "- Whenever the user query requires an action, telemetry inspection, or operational command, you MUST convert the intent into one or more executable directives.\n"
+    <> "- If the user asks for recent chat/telegram messages, emit 'DIRECTIVE: /messages 10'.\n"
+    <> "- If the user asks for the agent swarm board, emit 'DIRECTIVE: /board'.\n"
     <> "- Output each directive on its own standalone line with the prefix 'DIRECTIVE: '.\n"
     <> "  Examples:\n"
     <> "  DIRECTIVE: /status\n"
+    <> "  DIRECTIVE: /messages 10\n"
     <> "  DIRECTIVE: /storage\n"
     <> "  DIRECTIVE: /plan\n"
     <> "  DIRECTIVE: /board\n"

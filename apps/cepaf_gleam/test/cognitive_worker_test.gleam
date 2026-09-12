@@ -264,3 +264,54 @@ pub fn actor_tick_handling_test() {
   let _next = handle_message(state, cognitive_worker.Tick)
   state.worker_id |> should.equal("test-worker-3")
 }
+
+pub fn evaluate_cognitive_architecture_query_test() {
+  envoy.set("UOS_TEST_MODE", "1")
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-arch-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "142270921",
+      text: "what does the sovereign cognitive architect do — show processing path",
+      timestamp_ms: 1788978900000,
+    )
+  let decision = evaluate_intent(intent)
+  decision.intent_id |> should.equal("cog-arch-1")
+  decision.reply_markdown |> string.contains("5-Stage OODA Processing Path") |> should.be_true
+  decision.reply_markdown |> string.contains("Robot C3I") |> should.be_true
+  decision.actions |> list.contains("explain_cognitive_architecture") |> should.be_true
+}
+
+pub fn evaluate_telegram_history_query_test() {
+  envoy.set("UOS_TEST_MODE", "1")
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-hist-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "142270921",
+      text: "show last 10 telegram messages",
+      timestamp_ms: 1788978900000,
+    )
+  let decision = evaluate_intent(intent)
+  decision.intent_id |> should.equal("cog-hist-1")
+  decision.reply_markdown |> string.contains("Recent Telegram Conversation Stream") |> should.be_true
+  decision.actions |> list.contains("query_telegram_history") |> should.be_true
+}
+
+pub fn evaluate_directive_messages_test() {
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-msg-dir-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "142270921",
+      text: "/messages 5",
+      timestamp_ms: 1788978900000,
+    )
+  let decision = evaluate_intent(intent)
+  decision.intent_id |> should.equal("cog-msg-dir-1")
+  decision.reply_markdown |> string.contains("Recent Telegram Conversation Stream") |> should.be_true
+  decision.actions |> list.contains("query_telegram_history") |> should.be_true
+}
