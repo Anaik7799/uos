@@ -189,8 +189,8 @@ Allowing short substrings (e.g., `"vcs"`, `"muda"`, `"agy"`, `"doc"`) to trigger
    - Disambiguation routing, razr guard, fallback enrichment, 0 compiler warnings.
 4. [`apps/cepaf_gleam/test/uos_user_queries_200_test.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/test/uos_user_queries_200_test.gleam) (Created/Updated)
    - 200 executable EUnit test cases across all 10 categories.
-5. [`docs/journal/20260912-0615-uos-user-query-test-cases-200-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260912-0615-uos-user-query-test-cases-200-journal.md) (Created)
-   - Canonical 13-section completion journal.
+5. [`docs/journal/20260912-0615-uos-user-query-test-cases-200-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260912-0615-uos-user-query-test-cases-200-journal.md) (Created/Updated)
+   - Canonical 13-section completion journal detailing 200 query execution, root causes, patterns, and comprehensive matrix of unsupported Telegram capabilities, architectural exclusions, and SC-DIAGRAM-001 boundary diagrams.
 
 ---
 
@@ -207,10 +207,129 @@ Allowing short substrings (e.g., `"vcs"`, `"muda"`, `"agy"`, `"doc"`) to trigger
 
 ## 10. Remaining Gaps
 
+### 10.1 Active Operational Gaps & In-Flight Tracking
+
 1. **Live OpenRouter Token Budget Monitoring**:
-   While offline deterministic gateway routing is 100% verified, live OpenRouter API interactions continue to be monitored by FinOps budget guards in non-test production environments.
-2. **Voice Telemetry Extension**:
-   Future conversational layers can route transcribed audio voice notes from Telegram directly into the multimodal vector pipeline for continuous hands-free cockpit operations.
+   While offline deterministic gateway routing is 100% verified across all 200 user query test cases, live external OpenRouter API interactions continue to be monitored by FinOps budget guards in non-test production environments to enforce free-tier quota limits and prevent cost overruns.
+2. **Real-Time Voice Acoustic Telemetry Ingestion**:
+   Future conversational iterations will route transcribed audio voice notes from Telegram directly into the multimodal vector pipeline (`/acoustic` endpoint) for continuous hands-free cockpit operations, binding acoustic sentiment to Lyapunov trend detectors.
+3. **Automated Continuous Regression Execution**:
+   Although the 200 test cases run in ~1.2s under BEAM OTP 29 EUnit, hooking them into pre-commit Jujutsu hooks ensures that future prompt or routing adjustments cannot regress any of the 17 System Aspects.
+
+---
+
+### 10.2 Unsupported Telegram Capabilities & Architectural Exclusions Matrix
+
+To preserve **Zero-Muda Purity (`SC-MUDA-001`)**, **Deterministic Execution (`engines/zigvm`)**, and **STAMP SIL-6 Safety Containment (`SC-STAMP-001`)**, UOS purposefully bars and excludes several standard Telegram Bot API and client-side features from the sovereign command perimeter. The table below details these exclusions, their rationale, and the sovereign UOS alternative:
+
+| # | Telegram Capability / Feature | Telegram API Methods | UOS Support Status | Sovereign UOS Alternative | Architectural & Safety Rationale |
+|---|---|---|---|---|---|
+| 1 | **Client-Side JavaScript / SPA WebApps** | `WebAppInfo`, client-side React/Vue/Svelte hydration | **BARRED** | Pure Gleam Lustre 5.6+ Server-Rendered HTML/MVU (`0.00 KB` Client JS) | **Zero-Muda Purity (`SC-MUDA-001`)**: Eliminates node_modules, Webpack/Vite bundlers, browser XSS vectors, and client hydration lag. Web views render directly on BEAM OTP 29. |
+| 2 | **Native Payments & Financial APIs** | `sendInvoice`, `answerPrecheckoutQuery`, Telegram Stars | **BARRED** | Local Zero-Cost MAX/Mojo GPU Compute & Free-Tier Bounded OpenRouter Keys | **Financial Isolation & Safety**: Barring fiat transactions and payment tokens protects the SRE cockpit from commercial billing exploits, credential theft, and unauthorized charge attacks. |
+| 3 | **Telegram Games API & Canvas Loops** | `sendGame`, `setGameScore`, WebGL / HTML5 gaming | **BARRED** | Textual OODA Game Theory & Chaos Testing Harvester (`/chaos`, `/property`) | **Muda Elimination & Determinism**: Zero Bevy, zero Graphite, zero gaming engine bloat. SRE simulation runs deterministically in Hermes OCaml and Lean 4. |
+| 4 | **Telegram Passport & KYC Data Ingestion** | `passport_data`, identity document capture | **BARRED** | Sovereign Ed25519 Node Keys, Tailscale WireGuard Identity & Vocal Tract Biometrics | **STAMP SIL-6 Sovereign Privacy**: UOS never ingests, handles, or stores government PII or cloud identity credentials. Access is governed by physical cluster keypairs. |
+| 5 | **Animated Stickers (`.tgs`/Lottie) & Video Notes** | `sendVideoNote`, `.tgs` vector animation rendering | **BARRED** | Static Chassis Photos (`/rack-cv`), 16kHz PCM Waveforms (`/acoustic`), SVG State Trees | **Zero Foreign Graphics Libraries**: Eliminates heavy C/C++ rendering engines (`rlottie`, `Skia`). Multimodal inputs are strictly bounded to static chassis JPEG/PNG and raw PCM audio. |
+| 6 | **Public Group Moderation & Social Bots** | `banChatMember`, `restrictChatMember`, `promoteChatMember` | **BARRED** | Guardian Approval (`l0_constitutional.gleam`) & 2oo3 Sovereign Consensus | **Operational Scope Boundary**: UOS is a mission-critical cybernetic SRE cockpit for authorized cluster operators, not a public social media community manager or spam banhammer bot. |
+| 7 | **Client-to-Client MTProto Secret Chats** | MTProto Diffie-Hellman Secret Chats | **BARRED / N/A** | Tailnet WireGuard Encryption, Local AES-GCM WAL Re-Keying (`/lockbox`) | **Air-Gap Defense**: Bot API cannot join MTProto secret chats by Telegram platform design; cluster communication is encrypted over private WireGuard tunnels and descriptor-relative VFS paths. |
+| 8 | **Unbounded Binary Streaming & File Dump** | Direct upload/download of >50MB media binaries | **BARRED** | Descriptor-Relative ZigVM VFS & Tailscale FQDN Web Viewer (`http://nas-1.tail55d152.ts.net:4100/files/`) | **Deterministic Storage Discipline**: Barring large cloud file transfers prevents WAN saturation and Telegram API rate limiting. Diagnostic artifacts remain in descriptor-relative VFS storage. |
+| 9 | **Ad-Hoc Global Inline Mode Autocomplete** | `answerInlineQuery` across arbitrary chats | **BARRED** | Explicit Directives (`/status`, `/health`, `/board`) & Bounded Cognitive OODA Loops | **Token & CPU Exhaustion Prevention**: Keystroke-by-keystroke inline autocompletion risks uncontrolled token burn and telemetry exfiltration. Operator intent must be explicitly dispatched. |
+
+---
+
+### 10.3 Architectural Boundary Diagram (`SC-DIAGRAM-001`)
+
+The following diagrams illustrate the strict boundary between permitted sovereign capabilities and barred external Telegram features:
+
+#### ASCII Representation
+```
++---------------------------------------------------------------------------------------------------+
+|                        UOS Telegram Gateway Architectural Boundary                                |
++---------------------------------------------------------------------------------------------------+
+|                                                                                                   |
+|   INBOUND OPERATOR INTERACTION                                                                    |
+|   +-------------------------------------------------------------------------------------------+   |
+|   |  Supported Sovereign Capabilities               Barred / Excluded Telegram Capabilities   |   |
+|   |  --------------------------------               ---------------------------------------   |   |
+|   |  [x] Explicit SRE Directives (/status, /plan)   [!] Client-Side JS / SPA Mini Apps (React)|   |
+|   |  [x] 2-Column Inline Keyboards (CallbackQuery)  [!] Native Telegram Payments (Stars/Fiat) |   |
+|   |  [x] Server-Rendered Lustre WebApps (0 KB JS)   [!] HTML5 Games & WebGL Canvas Loops      |   |
+|   |  [x] Bounded Chassis Photos (/rack-cv)          [!] Telegram Passport & KYC PII Ingest    |   |
+|   |  [x] 16kHz PCM Voice Notes (/acoustic)          [!] Lottie Animated Stickers (.tgs/rlottie|   |
+|   |  [x] MarkdownV2 Formatted Telemetry Reports     [!] Public Supergroup Community Banhammers|   |
+|   |  [x] Egress Redaction (NVMe Serial Locked)      [!] Unbounded Large Cloud File Dumps (>50M|   |
+|   |  [x] Offline Deterministic OODA Disambiguation  [!] High-Frequency Global Inline Queries  |   |
+|   +-------------------------------------------------------------------------------------------+   |
+|                                     |                                 |                           |
+|                                     v                                 v                           |
+|                      +-----------------------------+   +-----------------------------+            |
+|                      |   Sovereign BEAM OTP 29     |   |   Fail-Closed Interceptor   |            |
+|                      |   Cognitive Harness Core    |   |   (Zero-Muda / STAMP SIL-6) |            |
+|                      +-----------------------------+   +-----------------------------+            |
+|                                     |                                                             |
+|                                     v                                                             |
+|                      +-----------------------------+                                              |
+|                      |  Deterministic Execution    |                                              |
+|                      |  - ZigVM VFS                |                                              |
+|                      |  - Hermes OCaml Ledgers     |                                              |
+|                      |  - MAX/Mojo GPU Inference   |                                              |
+|                      +-----------------------------+                                              |
++---------------------------------------------------------------------------------------------------+
+```
+
+#### Mermaid Representation
+```mermaid
+flowchart TD
+    subgraph TelegramGateway["UOS Telegram Gateway Boundary"]
+        subgraph Supported["Supported Sovereign Capabilities"]
+            S1["Explicit SRE Directives (/status, /plan)"]
+            S2["2-Column Inline Keyboards (CallbackQuery)"]
+            S3["Server-Rendered Lustre WebApps (0.00 KB JS)"]
+            S4["Bounded Multimodal Ingest (/rack-cv, /acoustic)"]
+            S5["MarkdownV2 Telemetry Reports & Egress Redaction"]
+            S6["Offline Deterministic OODA Disambiguation"]
+        end
+
+        subgraph Excluded["Barred / Excluded Capabilities"]
+            E1["Client JS / SPAs (Zero-Muda SC-MUDA-001)"]
+            E2["Native Payments & Stars (FinOps Isolation)"]
+            E3["Games API & Canvas Loops (Zero-Muda Purity)"]
+            E4["Passport & KYC PII (STAMP SIL-6 Privacy)"]
+            E5["Lottie .tgs & Round Videos (0 Foreign Libs)"]
+            E6["Public Group Moderation & Banhammers"]
+            E7["Unbounded Cloud Media Dumps (>50MB)"]
+            E8["Global Keystroke Inline Queries (Rate Guard)"]
+        end
+
+        subgraph Core["Sovereign Execution Core"]
+            Beam["BEAM OTP 29 Root Supervisor (uos_sup)"]
+            Zig["Deterministic ZigVM VFS"]
+            Hermes["Hermes OCaml Evidence & Gospel Contracts"]
+            Max["Modular MAX/Mojo Isolated Inference Tier"]
+        end
+
+        subgraph Guard["Security & Safety Perimeter"]
+            Interceptor["Fail-Closed Interceptor & Redactor<br/>(OS Serial Redacted: [REDACTED_SYSTEM_OS_SERIAL] Locked)"]
+        end
+    end
+
+    Supported --> Interceptor
+    Interceptor --> Core
+    Excluded -.->|REJECTED / FAIL-CLOSED| Guard
+```
+
+---
+
+### 10.4 Architectural & Security Rationale for Exclusions
+
+1. **Zero-Muda Waste Elimination (`SC-MUDA-001`)**:
+   - Every additional foreign runtime (Node.js, client-side React bundles, rlottie, WebGL) introduces memory bloat, dependency rot, build instability, and potential crash surfaces.
+   - UOS enforces an absolute ban on Bevy, Graphite, and unvetted foreign NIFs. The Telegram interface complies fully: all dynamic web views are pure Gleam Lustre rendered on BEAM, and vector graphics are pure SVG state trees.
+2. **Deterministic & Bounded Execution**:
+   - High-frequency keystroke autocompletion (`answerInlineQuery`) and unbounded media downloads introduce non-deterministic I/O latency and network variance.
+   - Restricting operations to explicit directives and bounded cognitive OODA loops ensures that every interaction is deterministic, reproducible, and verifiable.
+3. **STAMP SIL-6 Safety & Air-Gap Integrity (`SC-STAMP-001`)**:
+   - The UOS cockpit governs physical NAS storage arrays, ZFS pools, Ceph clusters, and hardware NVMe interlocks.
+   - Permitting commercial financial transactions, public chat administration, or unvetted cloud PII ingestion inside the primary SRE control loop introduces unacceptable hazards (Unsafe Control Actions - UCAs). Excluded capabilities are failed-closed at the gateway boundary.
 
 ---
 
