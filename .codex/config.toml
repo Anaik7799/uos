@@ -15,3 +15,29 @@ enabled_tools = ["read_file", "knowledge_search"]
 
 [mcp_servers.uos_gleam.env]
 ERL_CRASH_DUMP_SECONDS = "0"
+
+# Full task-scoped interface. Enable only with a current reviewed launcher grant.
+# Grant values are inherited from the launcher environment, never checked in.
+[mcp_servers.uos_development]
+enabled = false
+command = "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl"
+args = [
+  "+S", "2:2",
+  "+A", "2",
+  "-noshell",
+  "-eval",
+  "ok = file:set_cwd(\"/home/an/NAS-setup/uos\"), code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), cepaf_gleam@harness@successor_mcp:main(), halt(0).",
+]
+env_vars = ["UOS_HARNESS_GRANT_PATH", "UOS_HARNESS_GRANT_SHA256"]
+startup_timeout_sec = 30
+tool_timeout_sec = 300
+enabled_tools = [
+  "harness_status", "harness_clock", "harness_heartbeat",
+  "harness_claim", "harness_attach", "harness_release",
+  "harness_read_file", "harness_write_file",
+  "harness_build", "harness_test", "harness_assess",
+  "harness_finish", "harness_reconcile",
+]
+
+[mcp_servers.uos_development.env]
+ERL_CRASH_DUMP_SECONDS = "0"
