@@ -63,7 +63,12 @@ pub fn resolve_db_path(path: String) -> String {
       let repo_path = "/home/an/NAS-setup/uos/" <> path
       case simplifile.is_file(repo_path) {
         Ok(True) -> repo_path
-        _ -> path
+        _ -> {
+          case string.starts_with(path, "var/") {
+            True -> repo_path
+            False -> path
+          }
+        }
       }
     }
   }
