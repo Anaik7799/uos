@@ -55,6 +55,10 @@ import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/link_tracker_view
 import cepaf_gleam/ui/lustre/knowledge_explorer
+import cepaf_gleam/ui/lustre/testing_page
+import cepaf_gleam/ui/lustre/inference_tier
+import cepaf_gleam/ui/wisp/inference_api
+import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/ui/web/page_views
 import lustre/element
 import lustre/element/html
@@ -216,6 +220,23 @@ fn route_internal(path: String) -> String {
       module_guard.unwrap(module_guard.guard_json(bicameral_json(), "bicameral", "page"))
     "/api/v1/singularity" ->
       module_guard.unwrap(module_guard.guard_json(singularity_json(), "singularity", "page"))
+    "/api/v1/inference/status" -> {
+      let model = inference_tier.init()
+      inference_api.status_json(model) |> json.to_string
+    }
+    "/api/v1/inference/modalities" -> inference_api.modalities_json()
+    "/api/v1/inference/ast-anomaly" -> {
+      let report = inference_api.evaluate_ast_anomaly("", "gleam", True)
+      max_daemon.ast_report_to_json(report)
+    }
+    "/api/v1/inference/zk-transclude" -> {
+      let result = inference_api.evaluate_zk_transclusion("sa-plan", 3)
+      max_daemon.zk_result_to_json(result)
+    }
+    "/api/v1/inference/lyapunov-trend" -> {
+      let result = inference_api.evaluate_lyapunov_trend([1.0, 1.0, 1.0, 1.0], 1.0, 5.0, 100.0)
+      max_daemon.lyapunov_result_to_json(result)
+    }
     "/api/v1/components" ->
       module_guard.unwrap(module_guard.guard_json(component_demo_json(), "components", "page"))
     "/api/v1/allium" ->
@@ -2559,6 +2580,12 @@ fn route_html(path: String) -> String {
         "Comprehensive Verification Checklist",
         "checklist",
         guard("checklist", fn(_state) { checklist_page.view() }),
+      )
+    "/testing" ->
+      shell.render_page(
+        "Testing Gold Standard C1-C8",
+        "testing",
+        guard("testing", fn(_state) { testing_page.view() }),
       )
     "/cortex" ->
       shell.render_page(

@@ -85,6 +85,7 @@ let canonical_pages = [
 let specialized_pages = [
   "/";
   "/checklist";
+  "/testing";
   "/cortex";
   "/links";
   "/link-tracker";
@@ -653,7 +654,7 @@ let main () =
   let graph_nodes = List.map (fun (p, kind) ->
     let nav_edges =
       if kind = CanonicalLustre || kind = SpecializedCockpit then
-        List.filter (fun dest -> dest <> p) (canonical_pages @ ["/checklist"; "/cortex"; "/links"; "/wiki"; "/zk"])
+        List.filter (fun dest -> dest <> p) (canonical_pages @ ["/checklist"; "/testing"; "/cortex"; "/links"; "/wiki"; "/zk"])
       else []
     in
     let crawled_edges =
@@ -679,7 +680,7 @@ let main () =
   ) graph_nodes;
 
   (* 5. Topological Graph Invariants *)
-  let canonical_graph_nodes = List.filter (fun n -> n.kind = CanonicalLustre || n.id = "/checklist") graph_nodes in
+  let canonical_graph_nodes = List.filter (fun n -> n.kind = CanonicalLustre || n.id = "/checklist" || n.id = "/testing") graph_nodes in
   let scc_components = compute_scc canonical_graph_nodes in
   let total_canonical_edges = List.fold_left (fun acc n -> acc + List.length n.out_edges) 0 canonical_graph_nodes in
 
