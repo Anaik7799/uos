@@ -78,6 +78,7 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["km-check"] -> KmCheck
     ["web-links"] | ["tailscale-links"] -> WebLinks
     ["checklist"] -> Checklist
+    ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
     ["preflight"] | ["preflight-check"] | ["toolchain-check"] ->
@@ -305,6 +306,36 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println("  [FAIL] Comprehensive Checklist specification or rules missing")
+              1
+            }
+          }
+        }
+        "G-JOURNAL" -> {
+          let contract_ok =
+            file_exists(
+              "contracts/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md",
+            )
+          let spec_ok =
+            file_exists(
+              "docs/design/20260912-0745-sc-journal-v3-anticipatory-spec.md",
+            )
+          let agent_ok =
+            file_exists(
+              ".agents/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md",
+            )
+          let linter_ok =
+            file_exists("tools/journal_linter") || file_exists("tools/journal_linter.ml")
+          case contract_ok && spec_ok && agent_ok && linter_ok {
+            True -> {
+              io.println(
+                "  [PASS] SC-JOURNAL-v3 Anticipatory Epistemic Ledger contract, spec, and linter active",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] SC-JOURNAL-v3 contract, specification, agent rules, or linter missing",
+              )
               1
             }
           }

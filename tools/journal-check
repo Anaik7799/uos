@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# SC-JOURNAL-003 / SC-JOURNAL-v3 mechanical journal verification gate.
+# Authority: contracts/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md
+set -euo pipefail
+uos_repo="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [ ! -x "$uos_repo/tools/journal_linter" ]; then
+  echo "tools/journal_linter missing or not executable, recompiling..." >&2
+  source "$uos_repo/tools/lib/uos-toolchain.sh"
+  uos_env
+  ocamlfind ocamlopt -package str,unix -linkpkg "$uos_repo/tools/journal_linter.ml" -o "$uos_repo/tools/journal_linter"
+  rm -f "$uos_repo/tools/journal_linter.cmi" "$uos_repo/tools/journal_linter.cmx" "$uos_repo/tools/journal_linter.o"
+fi
+
+exec "$uos_repo/tools/journal_linter" "${@:---latest}"
