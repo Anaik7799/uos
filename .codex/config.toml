@@ -1,0 +1,17 @@
+# Project-local MCP registration. This does not grant task or runtime authority.
+# Only observed read operations are enabled until control bindings are verified.
+[mcp_servers.uos_gleam]
+command = "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl"
+args = [
+  "+S", "2:2",
+  "+A", "2",
+  "-noshell",
+  "-eval",
+  "ok = file:set_cwd(\"/home/an/NAS-setup/uos\"), code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), cepaf_gleam@mcp@server:main(), halt(0).",
+]
+startup_timeout_sec = 20
+tool_timeout_sec = 30
+enabled_tools = ["read_file", "knowledge_search"]
+
+[mcp_servers.uos_gleam.env]
+ERL_CRASH_DUMP_SECONDS = "0"

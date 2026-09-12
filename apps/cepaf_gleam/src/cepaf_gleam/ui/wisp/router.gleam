@@ -52,6 +52,7 @@ import cepaf_gleam/ui/domain.{
 }
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/lustre/checklist_page
+import cepaf_gleam/ui/lustre/sciviz_cockpit
 import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/link_tracker_view
@@ -244,6 +245,17 @@ fn route_internal(path: String) -> String {
       fractal_forecast.forecast_health_json() |> json.to_string
     "/api/v1/components" ->
       module_guard.unwrap(module_guard.guard_json(component_demo_json(), "components", "page"))
+    "/api/v1/sciviz" ->
+      json.object([
+        #("suite", json.string("SciViz Scientific Visualization")),
+        #("total_components", json.int(356)),
+        #("unbounded_passes", json.int(15)),
+        #("merkle_head", json.string("a90542be2e775e9a8e1d142b42850494d2bc9330471d9bef3b0558f3cdf12ac6")),
+        #("provenance_seq", json.int(426)),
+        #("sovereignty", json.string("worker-claude")),
+        #("purity", json.string("zero-muda-pure-lustre-ssr")),
+      ])
+      |> json.to_string
     "/api/v1/allium" ->
       module_guard.unwrap(module_guard.guard_json(allium_list_json(), "allium", "page"))
     "/api/v1/allium/ignition" ->
@@ -2751,6 +2763,12 @@ fn route_html(path: String) -> String {
         "Component Demo",
         "components",
         guard("components", page_views.component_demo_view),
+      )
+    "/sciviz" ->
+      shell.render_page(
+        "SciViz Cockpit",
+        "sciviz",
+        sciviz_cockpit.view(),
       )
     "/allium" ->
       shell.render_page(
