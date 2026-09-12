@@ -1160,17 +1160,20 @@ pub fn extract_aspect_token_from_query(lower: String) -> Result(String, Nil) {
 }
 
 pub fn extract_agent_profile_from_query(lower: String) -> Result(String, Nil) {
-  let patterns = [
-    #(
-      "agy_sovereign_coordinator",
-      [
-        "agy sovereign coordinator",
-        "agy profile",
-        "antigravity coordinator",
-        "agy sovereign",
-        "agy",
-      ],
-    ),
+  case string.contains(lower, "razr") && !string.contains(lower, "ingestor") {
+    True -> Error(Nil)
+    False -> {
+      let patterns = [
+        #(
+          "agy_sovereign_coordinator",
+          [
+            "agy sovereign coordinator",
+            "agy profile",
+            "antigravity coordinator",
+            "agy sovereign",
+            "agy",
+          ],
+        ),
     #(
       "sre_homeostasis_overseer",
       [
@@ -1224,6 +1227,8 @@ pub fn extract_agent_profile_from_query(lower: String) -> Result(String, Nil) {
     ),
   ]
   find_matching_code(patterns, lower)
+    }
+  }
 }
 
 pub fn handle_conversational_offline_gateway(
@@ -1490,8 +1495,7 @@ pub fn handle_conversational_offline_gateway(
 
   let is_telemetry_razr1 =
     string.starts_with(trimmed, "{")
-    || { string.contains(lower, "razr") && string.contains(lower, "telemetry") }
-    || { string.contains(lower, "razr") && string.contains(lower, "debug") }
+    || string.contains(lower, "razr")
     || string.starts_with(lower, "telemetry")
     || string.contains(lower, "edge telemetry")
 
@@ -1822,10 +1826,10 @@ pub fn handle_conversational_offline_gateway(
                                                                 intent,
                                                               )
                                                             let r =
-                                                              "🤖 *[Deterministic Autonomous Directive Gateway: /status]*
-
-"
+                                                              "🤖 *[Deterministic Autonomous Directive Gateway: /status]*\n\n"
                                                               <> status_dec.reply_markdown
+                                                              <> "\n\n🌐 *[Tri-Agent Swarm Message Board]*\n"
+                                                              <> query_tri_agent_board_summary()
                                                             #(r, [
                                                               "dispatch_directive_status_default",
                                                             ])
