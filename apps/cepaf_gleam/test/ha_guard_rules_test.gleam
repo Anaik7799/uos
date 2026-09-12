@@ -5,17 +5,25 @@
 
 import cepaf_gleam/ha/guard_rules.{
   type GuardRule, type RuleEvaluation, ActionSequence, AllOf, AnyOf,
-  AttemptHotReload, BootWithoutDagValidation, BuildFailed, CascadeDepth,
-  ClassifyPattern, CompileWarningsExist, ConsecutiveFailures,
-  CoreServiceDegraded, CorrelateFailures, DataStalenessExceeds, EntropyExceeds,
-  EntropyIncreasing, EscalateToOperator, FailureCountExceeds, HealthAbove,
-  HealthBelow, HealthDeclining, HealthOscillating, InternalHttpDetected,
-  IsolateCell, JidokaHalt, L0ActionWithoutConsensus, LargeFileDetected,
-  LayersFailing, LogWarning, LyapunovPositive, MockDataInProduction,
-  ModuleConsecutiveFailures, MultipleContainersDown, NoAction, PartitionDetected,
-  PredictiveAlert, PreventiveCooldown, QuorumLost, RecordMilestone,
-  SessionNoHolonProduced, SetCockpitMode, ShutdownWithoutCheckpoint,
-  TaskWithoutZkSearch, TriggerRunbook, ZenohDisconnected, ZkNoCitation,
+  AttemptHotReload, AutonomousDegradationTriggered, BootWithoutDagValidation,
+  BuildFailed, CascadeDepth, ChecklistDomainUnsatisfied, ClassifyPattern,
+  CompileWarningsExist, ConsecutiveFailures, CoreServiceDegraded,
+  CorrelateFailures, CyberneticConsonanceDiverged, DataStalenessExceeds,
+  DeterminateNixToolchainBypassed, EntropyExceeds, EntropyIncreasing,
+  EscalateToOperator, FailureCountExceeds, GospelNulByteDetected,
+  GospelSqlInjectionDetected, HealthAbove, HealthBelow, HealthDeclining,
+  HealthOscillating, HomeostasisLyapunovViolated, InternalHttpDetected,
+  IsolateCell, JidokaHalt, JournalV3SectionMissing, L0ActionWithoutConsensus,
+  LargeFileDetected, LayersFailing, LivingSwarmMeshDegraded,
+  LocalSovereigntyCompromised, LogWarning, LyapunovPositive,
+  MockDataInProduction, ModuleConsecutiveFailures, MultipleContainersDown,
+  NativeGitMutationAttempted, NoAction, NvmeOsDiskTargeted, Otp29RuntimeViolated,
+  PartitionDetected, PredictiveAlert, PreventiveCooldown,
+  ProvenanceCeilingExceeded, QuorumLost, RecordMilestone,
+  SaPlanAuthorityBypassed, SessionNoHolonProduced, SetCockpitMode,
+  ShutdownWithoutCheckpoint, TailscaleFqdnMissing, TaskWithoutZkSearch,
+  TimestampPrefixInvalid, Trace13CoordinateNonZero, TriAgentSurveillanceFailed,
+  TriggerRunbook, ZenohDisconnected, ZeroMudaViolationDetected, ZkNoCitation,
   ZkRecallIgnored,
 }
 import gleam/list
@@ -27,7 +35,7 @@ import gleeunit/should
 // ═══════════════════════════════════════════════════════════════
 
 pub fn all_rules_returns_thirty_test() {
-  guard_rules.rule_count() |> should.equal(85)
+  guard_rules.rule_count() |> should.equal(105)
 }
 
 pub fn all_rules_have_unique_ids_test() {
@@ -35,7 +43,7 @@ pub fn all_rules_have_unique_ids_test() {
     guard_rules.all_rules()
     |> list.map(fn(r: GuardRule) { r.id })
   let unique_count = list.unique(ids) |> list.length()
-  unique_count |> should.equal(85)
+  unique_count |> should.equal(105)
 }
 
 pub fn all_rules_have_non_empty_names_test() {
@@ -108,6 +116,30 @@ pub fn rules_contain_stamp_guard_ids_gr051_to_gr070_test() {
   list.contains(ids, "GR-068") |> should.be_true()
   list.contains(ids, "GR-069") |> should.be_true()
   list.contains(ids, "GR-070") |> should.be_true()
+}
+
+pub fn rules_contain_uos_guard_ids_gr086_to_gr105_test() {
+  let ids = guard_rules.all_rules() |> list.map(fn(r: GuardRule) { r.id })
+  list.contains(ids, "GR-086") |> should.be_true()
+  list.contains(ids, "GR-087") |> should.be_true()
+  list.contains(ids, "GR-088") |> should.be_true()
+  list.contains(ids, "GR-089") |> should.be_true()
+  list.contains(ids, "GR-090") |> should.be_true()
+  list.contains(ids, "GR-091") |> should.be_true()
+  list.contains(ids, "GR-092") |> should.be_true()
+  list.contains(ids, "GR-093") |> should.be_true()
+  list.contains(ids, "GR-094") |> should.be_true()
+  list.contains(ids, "GR-095") |> should.be_true()
+  list.contains(ids, "GR-096") |> should.be_true()
+  list.contains(ids, "GR-097") |> should.be_true()
+  list.contains(ids, "GR-098") |> should.be_true()
+  list.contains(ids, "GR-099") |> should.be_true()
+  list.contains(ids, "GR-100") |> should.be_true()
+  list.contains(ids, "GR-101") |> should.be_true()
+  list.contains(ids, "GR-102") |> should.be_true()
+  list.contains(ids, "GR-103") |> should.be_true()
+  list.contains(ids, "GR-104") |> should.be_true()
+  list.contains(ids, "GR-105") |> should.be_true()
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -969,7 +1001,7 @@ pub fn any_of_with_empty_list_is_false_test() {
 
 pub fn evaluate_all_returns_thirty_evaluations_test() {
   let evals = guard_rules.evaluate_all(0.8, 0.5, 0, 0, 0.0)
-  list.length(evals) |> should.equal(85)
+  list.length(evals) |> should.equal(105)
 }
 
 pub fn evaluate_all_sorted_by_salience_descending_test() {
@@ -1491,5 +1523,397 @@ pub fn evaluate_all_with_gr019_nif_planning_does_not_fire_single_layer_test() {
   let evals = guard_rules.evaluate_all_with_layers(0.7, 0.5, 0, 1, 0.0, ["L1"])
   let fired = list.filter(evals, fn(e: RuleEvaluation) { e.condition_met })
   list.any(fired, fn(e: RuleEvaluation) { e.rule_id == "GR-019" })
+  |> should.be_false()
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UOS sovereign, toolchain, safety & formal guard rules (GR-086..GR-105)
+// ═══════════════════════════════════════════════════════════════
+
+// GR-086: NvmeOsDriveLockout fires when lyapunov in (-210.0, -200.0]
+pub fn gr086_nvme_os_drive_lockout_fires_test() {
+  guard_rules.evaluate_condition(NvmeOsDiskTargeted, 1.0, 0.0, 0, 0, -205.0)
+  |> should.be_true()
+}
+
+pub fn gr086_nvme_os_drive_lockout_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(NvmeOsDiskTargeted, 1.0, 0.0, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+pub fn gr086_action_is_jidoka_halt_test() {
+  let rule =
+    guard_rules.all_rules()
+    |> list.find(fn(r: GuardRule) { r.id == "GR-086" })
+  case rule {
+    Ok(r) ->
+      case r.action {
+        JidokaHalt(_) -> should.be_true(True)
+        _ -> should.be_true(False)
+      }
+    Error(_) -> should.be_true(False)
+  }
+}
+
+// GR-087: ProvenanceCeilingGuard fires when lyapunov in (-220.0, -210.0]
+pub fn gr087_provenance_ceiling_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    ProvenanceCeilingExceeded,
+    1.0,
+    0.0,
+    0,
+    0,
+    -215.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr087_provenance_ceiling_guard_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(ProvenanceCeilingExceeded, 1.0, 0.0, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-088: ZeroMudaSubstratePurity fires when lyapunov in (-230.0, -220.0]
+pub fn gr088_zero_muda_substrate_purity_fires_test() {
+  guard_rules.evaluate_condition(
+    ZeroMudaViolationDetected,
+    1.0,
+    0.0,
+    0,
+    0,
+    -225.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr088_zero_muda_substrate_purity_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(ZeroMudaViolationDetected, 1.0, 0.0, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-089: SaPlanSoleAuthorityHalt fires when lyapunov in (-240.0, -230.0]
+pub fn gr089_sa_plan_sole_authority_halt_fires_test() {
+  guard_rules.evaluate_condition(
+    SaPlanAuthorityBypassed,
+    1.0,
+    0.0,
+    0,
+    0,
+    -235.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr089_sa_plan_sole_authority_halt_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(SaPlanAuthorityBypassed, 1.0, 0.0, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-090: HomeostasisLyapunovGuard fires when lyapunov in (-250.0, -240.0]
+pub fn gr090_homeostasis_lyapunov_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    HomeostasisLyapunovViolated,
+    1.0,
+    0.0,
+    0,
+    0,
+    -245.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr090_homeostasis_lyapunov_guard_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(
+    HomeostasisLyapunovViolated,
+    1.0,
+    0.0,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-091: LocalSovereigntyGuard fires when lyapunov in (-260.0, -250.0]
+pub fn gr091_local_sovereignty_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    LocalSovereigntyCompromised,
+    1.0,
+    0.0,
+    0,
+    0,
+    -255.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr091_local_sovereignty_guard_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(
+    LocalSovereigntyCompromised,
+    1.0,
+    0.0,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-092: TriAgentSurveillanceGuard fires when lyapunov in (-270.0, -260.0]
+pub fn gr092_tri_agent_surveillance_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    TriAgentSurveillanceFailed,
+    1.0,
+    0.0,
+    0,
+    0,
+    -265.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr092_tri_agent_surveillance_guard_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(
+    TriAgentSurveillanceFailed,
+    1.0,
+    0.0,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-093: AutonomousDegradationDEFCON fires when lyapunov in (-280.0, -270.0]
+pub fn gr093_autonomous_degradation_defcon_fires_test() {
+  guard_rules.evaluate_condition(
+    AutonomousDegradationTriggered,
+    1.0,
+    0.0,
+    0,
+    0,
+    -275.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr093_autonomous_degradation_defcon_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(
+    AutonomousDegradationTriggered,
+    1.0,
+    0.0,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-094: Otp29RuntimePinning fires when lyapunov in (-290.0, -280.0]
+pub fn gr094_otp29_runtime_pinning_fires_test() {
+  guard_rules.evaluate_condition(Otp29RuntimeViolated, 1.0, 0.0, 0, 0, -285.0)
+  |> should.be_true()
+}
+
+pub fn gr094_otp29_runtime_pinning_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(Otp29RuntimeViolated, 1.0, 0.0, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-095: DeterminateNixToolchainGuard fires when lyapunov in (-300.0, -290.0]
+pub fn gr095_determinate_nix_toolchain_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    DeterminateNixToolchainBypassed,
+    1.0,
+    0.0,
+    0,
+    0,
+    -295.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr095_determinate_nix_toolchain_guard_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(
+    DeterminateNixToolchainBypassed,
+    1.0,
+    0.0,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-096: NativeGitMutationGuard fires when lyapunov in (-310.0, -300.0]
+pub fn gr096_native_git_mutation_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    NativeGitMutationAttempted,
+    1.0,
+    0.0,
+    0,
+    0,
+    -305.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr096_native_git_mutation_guard_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(
+    NativeGitMutationAttempted,
+    1.0,
+    0.0,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-097: Checklist18DomainGuard fires when failure_count > 0 && entropy in [5.5, 6.0)
+pub fn gr097_checklist_18_domain_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    ChecklistDomainUnsatisfied,
+    1.0,
+    5.7,
+    0,
+    1,
+    0.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr097_checklist_18_domain_guard_does_not_fire_without_failures_test() {
+  guard_rules.evaluate_condition(
+    ChecklistDomainUnsatisfied,
+    1.0,
+    5.7,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-098: Trace13ConservationGuard fires when lyapunov in (-320.0, -310.0]
+pub fn gr098_trace13_conservation_guard_fires_test() {
+  guard_rules.evaluate_condition(
+    Trace13CoordinateNonZero,
+    1.0,
+    0.0,
+    0,
+    0,
+    -315.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr098_trace13_conservation_guard_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(Trace13CoordinateNonZero, 1.0, 0.0, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-099: GospelNulByteTrap fires when lyapunov in (-330.0, -320.0]
+pub fn gr099_gospel_nul_byte_trap_fires_test() {
+  guard_rules.evaluate_condition(GospelNulByteDetected, 1.0, 0.0, 0, 0, -325.0)
+  |> should.be_true()
+}
+
+pub fn gr099_gospel_nul_byte_trap_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(GospelNulByteDetected, 1.0, 0.0, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-100: GospelSqlInjectionTrap fires when lyapunov in (-340.0, -330.0]
+pub fn gr100_gospel_sql_injection_trap_fires_test() {
+  guard_rules.evaluate_condition(
+    GospelSqlInjectionDetected,
+    1.0,
+    0.0,
+    0,
+    0,
+    -335.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr100_gospel_sql_injection_trap_does_not_fire_normal_test() {
+  guard_rules.evaluate_condition(
+    GospelSqlInjectionDetected,
+    1.0,
+    0.0,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-101: TailscaleFqdnMandate fires when failure_count > 0 && entropy in [6.0, 6.5)
+pub fn gr101_tailscale_fqdn_mandate_fires_test() {
+  guard_rules.evaluate_condition(TailscaleFqdnMissing, 1.0, 6.2, 0, 1, 0.0)
+  |> should.be_true()
+}
+
+pub fn gr101_tailscale_fqdn_mandate_does_not_fire_without_failures_test() {
+  guard_rules.evaluate_condition(TailscaleFqdnMissing, 1.0, 6.2, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-102: JournalV3ThirteenSectionGuard fires when failure_count > 0 && entropy in [6.5, 7.0)
+pub fn gr102_journal_v3_thirteen_section_guard_fires_test() {
+  guard_rules.evaluate_condition(JournalV3SectionMissing, 1.0, 6.8, 0, 1, 0.0)
+  |> should.be_true()
+}
+
+pub fn gr102_journal_v3_thirteen_section_guard_does_not_fire_without_failures_test() {
+  guard_rules.evaluate_condition(JournalV3SectionMissing, 1.0, 6.8, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-103: LivingSwarmMeshHeartbeat fires when failure_count > 0 && entropy in [7.0, 7.5)
+pub fn gr103_living_swarm_mesh_heartbeat_fires_test() {
+  guard_rules.evaluate_condition(LivingSwarmMeshDegraded, 1.0, 7.2, 0, 1, 0.0)
+  |> should.be_true()
+}
+
+pub fn gr103_living_swarm_mesh_heartbeat_does_not_fire_without_failures_test() {
+  guard_rules.evaluate_condition(LivingSwarmMeshDegraded, 1.0, 7.2, 0, 0, 0.0)
+  |> should.be_false()
+}
+
+// GR-104: CyberneticSingingConsonance fires when failure_count > 0 && entropy in [7.5, 8.0)
+pub fn gr104_cybernetic_singing_consonance_fires_test() {
+  guard_rules.evaluate_condition(
+    CyberneticConsonanceDiverged,
+    1.0,
+    7.7,
+    0,
+    1,
+    0.0,
+  )
+  |> should.be_true()
+}
+
+pub fn gr104_cybernetic_singing_consonance_does_not_fire_without_failures_test() {
+  guard_rules.evaluate_condition(
+    CyberneticConsonanceDiverged,
+    1.0,
+    7.7,
+    0,
+    0,
+    0.0,
+  )
+  |> should.be_false()
+}
+
+// GR-105: TimestampPrefixMandate fires when failure_count > 0 && entropy in [8.0, 8.5)
+pub fn gr105_timestamp_prefix_mandate_fires_test() {
+  guard_rules.evaluate_condition(TimestampPrefixInvalid, 1.0, 8.2, 0, 1, 0.0)
+  |> should.be_true()
+}
+
+pub fn gr105_timestamp_prefix_mandate_does_not_fire_without_failures_test() {
+  guard_rules.evaluate_condition(TimestampPrefixInvalid, 1.0, 8.2, 0, 0, 0.0)
   |> should.be_false()
 }

@@ -120,24 +120,34 @@ fn render_header() -> Element(msg) {
         ],
       ),
       html.div(
-        [attribute.attribute("style", "display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;")],
+        [attribute.attribute("style", "display: flex; flex-wrap: gap: 0.75rem; margin-top: 1rem;")],
         [
           html.span(
             [
               attribute.class("badge badge-checklist"),
               attribute.attribute(
                 "style",
-                "background: #141922; border: 1px solid #00d4aa; color: #00d4aa; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem;",
+                "background: #141922; border: 1px solid #00d4aa; color: #00d4aa; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; margin-right: 0.5rem;",
               ),
             ],
             [html.text("Status: 18/18 PASS (100% Green)")],
           ),
           html.span(
             [
+              attribute.class("badge badge-hot-reload"),
+              attribute.attribute(
+                "style",
+                "background: #141922; border: 1px solid #79b8ff; color: #79b8ff; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; margin-right: 0.5rem;",
+              ),
+            ],
+            [html.text("⚡ Dynamic Hot-Reload: ACTIVE (Native OCaml Inotify Engine)")],
+          ),
+          html.span(
+            [
               attribute.class("badge badge-sil6"),
               attribute.attribute(
                 "style",
-                "background: #141922; border: 1px solid #3dd68c; color: #3dd68c; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;",
+                "background: #141922; border: 1px solid #3dd68c; color: #3dd68c; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem; margin-right: 0.5rem;",
               ),
             ],
             [html.text("SIL-6 Constitutional Consensus")],
@@ -147,7 +157,7 @@ fn render_header() -> Element(msg) {
               attribute.class("badge badge-muda"),
               attribute.attribute(
                 "style",
-                "background: #141922; border: 1px solid #3dd68c; color: #3dd68c; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;",
+                "background: #141922; border: 1px solid #3dd68c; color: #3dd68c; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem; margin-right: 0.5rem;",
               ),
             ],
             [html.text("Zero-Muda: 0 Bevy, 0 Graphite")],
@@ -157,7 +167,7 @@ fn render_header() -> Element(msg) {
               attribute.class("badge badge-storage"),
               attribute.attribute(
                 "style",
-                "background: #141922; border: 1px solid #ffcc00; color: #ffcc00; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;",
+                "background: #141922; border: 1px solid #ffcc00; color: #ffcc00; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem; margin-right: 0.5rem;",
               ),
             ],
             [html.text("Hardware Safety: NVMe 25503L801736 LOCKED")],

@@ -46,8 +46,7 @@ pub type BiomorphicMsg {
 }
 
 pub fn init() -> BiomorphicModel {
-  let sym =
-    symbiosis.new()
+  let sym = symbiosis.new()
     // Core subsystem relationships
     |> symbiosis.record("cortex", "rule_engine", 0.8, 0.7)
     |> symbiosis.record("zenoh", "otel", 0.9, 0.6)

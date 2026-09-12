@@ -57,24 +57,14 @@ pub fn init() -> VoicePipelineModel {
   )
 }
 
-pub fn update(
-  model: VoicePipelineModel,
-  msg: VoicePipelineMsg,
-) -> VoicePipelineModel {
+pub fn update(model: VoicePipelineModel, msg: VoicePipelineMsg) -> VoicePipelineModel {
   case msg {
-    TiersUpdated(tiers) ->
-      VoicePipelineModel(..model, tiers: tiers, loading: False)
+    TiersUpdated(tiers) -> VoicePipelineModel(..model, tiers: tiers, loading: False)
     TranscriptionReceived(text) ->
-      VoicePipelineModel(
-        ..model,
-        last_transcription: text,
-        transcription_active: True,
-      )
-    WsStateChanged(connected) ->
-      VoicePipelineModel(..model, ws_connected: connected)
+      VoicePipelineModel(..model, last_transcription: text, transcription_active: True)
+    WsStateChanged(connected) -> VoicePipelineModel(..model, ws_connected: connected)
     RefreshVoice -> VoicePipelineModel(..model, loading: True)
-    ErrorReceived(e) ->
-      VoicePipelineModel(..model, error: Some(e), loading: False)
+    ErrorReceived(e) -> VoicePipelineModel(..model, error: Some(e), loading: False)
   }
 }
 

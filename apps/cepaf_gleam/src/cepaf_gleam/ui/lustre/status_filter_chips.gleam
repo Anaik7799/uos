@@ -21,7 +21,12 @@ import gleam/string
 
 /// Live counts of tasks by status — source from `c3i_nif::plan_status`.
 pub type StatusCounts {
-  StatusCounts(pending: Int, in_progress: Int, blocked: Int, completed: Int)
+  StatusCounts(
+    pending: Int,
+    in_progress: Int,
+    blocked: Int,
+    completed: Int,
+  )
 }
 
 /// Currently-selected chip filter.
@@ -151,10 +156,11 @@ pub fn render_html(chips: List(Chip)) -> String {
 /// with the active one bracketed.
 pub fn render_ansi(chips: List(Chip)) -> String {
   list.fold(chips, "", fn(acc, c) {
-    let cell = case c.active {
-      True -> "[" <> c.label <> " " <> int_to_str(c.count) <> "]"
-      False -> c.label <> " " <> int_to_str(c.count)
-    }
+    let cell =
+      case c.active {
+        True -> "[" <> c.label <> " " <> int_to_str(c.count) <> "]"
+        False -> c.label <> " " <> int_to_str(c.count)
+      }
     case acc {
       "" -> cell
       _ -> acc <> " | " <> cell

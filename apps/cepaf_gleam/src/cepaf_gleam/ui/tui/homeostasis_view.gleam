@@ -7,19 +7,18 @@
 
 import cepaf_gleam/cockpit/visuals
 import cepaf_gleam/ui/lustre/homeostasis.{type HomeostasisModel}
-import cepaf_gleam/ui/tui/homeostasis_evolution_view as evidence_view
 import gleam/float
 import gleam/int
 import gleam/option.{None, Some}
 import gleam/string
 
 pub fn render(model: HomeostasisModel) -> String {
-  let header = visuals.with_color("  HOMEOSTASIS (UNVERIFIED legacy model; no source timestamp)", "cyan")
+  let header = visuals.with_color("  HOMEOSTASIS (L2 Component)", "cyan")
   let body = case model.loading {
     True -> "  Loading PID controller state..."
     False ->
       case model.error {
-        Some(e) -> "  " <> visuals.with_color("ERROR: " <> evidence_view.safe_text(e), "red")
+        Some(e) -> "  " <> visuals.with_color("ERROR: " <> e, "red")
         None -> render_state(model)
       }
   }

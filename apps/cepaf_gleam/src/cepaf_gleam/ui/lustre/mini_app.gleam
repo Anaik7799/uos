@@ -39,7 +39,9 @@ pub fn dashboard_view() -> String {
   }
 
   "<div class=\"tg-status-hero\">C3I Mesh</div>
-<div class=\"tg-status-sub\">" <> health_label <> "</div>
+<div class=\"tg-status-sub\">"
+  <> health_label
+  <> "</div>
 
 <div class=\"tg-grid-2\">
   <div class=\"tg-card\">
@@ -100,9 +102,9 @@ pub fn dashboard_view() -> String {
 pub fn health_grid_view() -> String {
   let model = health_grid.init()
   "<div class=\"tg-status-hero\">Health Grid</div>
-<div class=\"tg-status-sub\">Device monitoring — " <> int.to_string(list.length(
-    model.devices,
-  )) <> " devices</div>
+<div class=\"tg-status-sub\">Device monitoring — "
+  <> int.to_string(list.length(model.devices))
+  <> " devices</div>
 <div class=\"tg-card\">
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-icon tg-badge-ok\">&#9679;</div>
@@ -135,10 +137,13 @@ pub fn cockpit_view() -> String {
   <> case alarm_count {
     0 ->
       "<div class=\"tg-hint\" style=\"padding: 16px; text-align: center;\">No active alarms. System nominal.</div>"
-    _ -> "<div class=\"tg-list-cell\">
+    _ ->
+      "<div class=\"tg-list-cell\">
       <div class=\"tg-list-icon tg-badge-warn\">&#9888;</div>
       <div class=\"tg-list-body\">
-        <div class=\"tg-list-title\">" <> int.to_string(alarm_count) <> " alarms pending</div>
+        <div class=\"tg-list-title\">"
+      <> int.to_string(alarm_count)
+      <> " alarms pending</div>
         <div class=\"tg-list-subtitle\">Tap to review and acknowledge</div>
       </div>
     </div>"
@@ -157,29 +162,31 @@ pub fn cockpit_view() -> String {
 pub fn immune_view() -> String {
   let model = immune.init()
   "<div class=\"tg-status-hero\">Immune System</div>
-<div class=\"tg-status-sub\">" <> int.to_string(list.length(
-    model.active_attacks,
-  )) <> " active threats | Mara: " <> case model.mara_running {
+<div class=\"tg-status-sub\">"
+  <> int.to_string(list.length(model.active_attacks))
+  <> " active threats | Mara: "
+  <> case model.mara_running {
     True -> "Running"
     False -> "Idle"
-  } <> "</div>
+  }
+  <> "</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-icon tg-badge-ok\">&#128737;</div>
     <div class=\"tg-list-body\">
-      <div class=\"tg-list-title\">Antibodies: " <> int.to_string(list.length(
-    model.antibodies,
-  )) <> "</div>
+      <div class=\"tg-list-title\">Antibodies: "
+  <> int.to_string(list.length(model.antibodies))
+  <> "</div>
       <div class=\"tg-list-subtitle\">Active defense agents</div>
     </div>
   </div>
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-icon tg-badge-warn\">&#128270;</div>
     <div class=\"tg-list-body\">
-      <div class=\"tg-list-title\">Recent Events: " <> int.to_string(
-    list.length(model.recent_events),
-  ) <> "</div>
+      <div class=\"tg-list-title\">Recent Events: "
+  <> int.to_string(list.length(model.recent_events))
+  <> "</div>
       <div class=\"tg-list-subtitle\">Threat detection log</div>
     </div>
   </div>
@@ -197,7 +204,9 @@ pub fn immune_view() -> String {
 pub fn planning_view() -> String {
   let model = planning.init()
   "<div class=\"tg-status-hero\">Tasks</div>
-<div class=\"tg-status-sub\">" <> int.to_string(list.length(model.tasks)) <> " tasks</div>
+<div class=\"tg-status-sub\">"
+  <> int.to_string(list.length(model.tasks))
+  <> " tasks</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-hint\" style=\"padding: 8px 0;\">No tasks loaded. Connect to Smriti DB for live data.</div>
@@ -211,41 +220,59 @@ pub fn planning_view() -> String {
 pub fn inference_view() -> String {
   let model = inference_tier.init()
   "<div class=\"tg-status-hero\">Inference</div>
-<div class=\"tg-status-sub\">6-tier hedged cascade | " <> case
-    model.hedged_mode
-  {
+<div class=\"tg-status-sub\">6-tier hedged cascade | "
+  <> case model.hedged_mode {
     True -> "Hedged mode ON"
     False -> "Sequential mode"
-  } <> "</div>
+  }
+  <> "</div>
 
 <div class=\"tg-grid-2\">
   <div class=\"tg-card\">
     <div class=\"tg-metric-label\">Requests</div>
-    <div class=\"tg-metric-value\">" <> int.to_string(model.total_requests) <> "</div>
+    <div class=\"tg-metric-value\">"
+  <> int.to_string(model.total_requests)
+  <> "</div>
   </div>
   <div class=\"tg-card\">
     <div class=\"tg-metric-label\">Avg Latency</div>
-    <div class=\"tg-metric-value\">" <> int.to_string(model.avg_latency_ms) <> "ms</div>
+    <div class=\"tg-metric-value\">"
+  <> int.to_string(model.avg_latency_ms)
+  <> "ms</div>
   </div>
 </div>
 
 <div class=\"tg-section-title\">Tiers</div>
-<div class=\"tg-card\">" <> string.join(
-    list.index_map(model.tiers, fn(tier, idx) { "<div class=\"tg-list-cell\">
+<div class=\"tg-card\">"
+  <> string.join(
+    list.index_map(model.tiers, fn(tier, idx) {
+      "<div class=\"tg-list-cell\">
       <div class=\"tg-list-body\">
-        <div class=\"tg-list-title\">Tier " <> int.to_string(idx + 1) <> ": " <> tier.name <> "</div>
-        <div class=\"tg-list-subtitle\">" <> tier.model <> " | " <> int.to_string(
-        tier.latency_ms,
-      ) <> "ms</div>
+        <div class=\"tg-list-title\">Tier "
+      <> int.to_string(idx + 1)
+      <> ": "
+      <> tier.name
+      <> "</div>
+        <div class=\"tg-list-subtitle\">"
+      <> tier.model
+      <> " | "
+      <> int.to_string(tier.latency_ms)
+      <> "ms</div>
       </div>
-      <span class=\"tg-badge " <> case tier.circuit {
+      <span class=\"tg-badge "
+      <> case tier.circuit {
         inference_tier.CircuitClosed -> "tg-badge-ok"
         inference_tier.CircuitOpen(_) -> "tg-badge-crit"
         inference_tier.CircuitHalfOpen -> "tg-badge-warn"
-      } <> "\">" <> inference_tier.circuit_state_label(tier.circuit) <> "</span>
-    </div>" }),
+      }
+      <> "\">"
+      <> inference_tier.circuit_state_label(tier.circuit)
+      <> "</span>
+    </div>"
+    }),
     "",
-  ) <> "</div>"
+  )
+  <> "</div>"
 }
 
 // =============================================================================
@@ -255,9 +282,11 @@ pub fn inference_view() -> String {
 pub fn conversation_view() -> String {
   let model = conversation.init()
   "<div class=\"tg-status-hero\">Chat History</div>
-<div class=\"tg-status-sub\">Chat " <> model.chat_id <> " | Max " <> int.to_string(
-    model.max_messages,
-  ) <> " messages</div>
+<div class=\"tg-status-sub\">Chat "
+  <> model.chat_id
+  <> " | Max "
+  <> int.to_string(model.max_messages)
+  <> " messages</div>
 <div class=\"tg-card\">
   <div class=\"tg-hint\" style=\"padding: 8px 0;\">No messages loaded. Connect for live conversation data.</div>
 </div>"
@@ -270,28 +299,30 @@ pub fn conversation_view() -> String {
 pub fn config_view() -> String {
   let model = config.init()
   "<div class=\"tg-status-hero\">Configuration</div>
-<div class=\"tg-status-sub\">Quorum: " <> int.to_string(model.quorum_size) <> " | Valid: " <> case
-    model.is_valid
-  {
+<div class=\"tg-status-sub\">Quorum: "
+  <> int.to_string(model.quorum_size)
+  <> " | Valid: "
+  <> case model.is_valid {
     True -> "Yes"
     False -> "No"
-  } <> "</div>
+  }
+  <> "</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Containers</div>
-      <div class=\"tg-list-subtitle\">" <> int.to_string(list.length(
-    model.containers,
-  )) <> " configured</div>
+      <div class=\"tg-list-subtitle\">"
+  <> int.to_string(list.length(model.containers))
+  <> " configured</div>
     </div>
   </div>
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Networks</div>
-      <div class=\"tg-list-subtitle\">" <> int.to_string(list.length(
-    model.networks,
-  )) <> " configured</div>
+      <div class=\"tg-list-subtitle\">"
+  <> int.to_string(list.length(model.networks))
+  <> " configured</div>
     </div>
   </div>
 </div>"
@@ -304,9 +335,11 @@ pub fn config_view() -> String {
 pub fn podman_view() -> String {
   let model = podman.init()
   "<div class=\"tg-status-hero\">Containers</div>
-<div class=\"tg-status-sub\">" <> int.to_string(list.length(model.containers)) <> " containers | " <> int.to_string(
-    list.length(model.images),
-  ) <> " images</div>
+<div class=\"tg-status-sub\">"
+  <> int.to_string(list.length(model.containers))
+  <> " containers | "
+  <> int.to_string(list.length(model.images))
+  <> " images</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-hint\" style=\"padding: 8px 0;\">Connect to Podman for live container data.</div>
@@ -320,34 +353,38 @@ pub fn podman_view() -> String {
 pub fn federation_view() -> String {
   let model = federation.init()
   "<div class=\"tg-status-hero\">Federation</div>
-<div class=\"tg-status-sub\">HA Role: " <> federation.ha_role_label(
-    model.ha.role,
-  ) <> " | Peers: " <> int.to_string(federation.total_peer_count(model)) <> "</div>
+<div class=\"tg-status-sub\">HA Role: "
+  <> federation.ha_role_label(model.ha.role)
+  <> " | Peers: "
+  <> int.to_string(federation.total_peer_count(model))
+  <> "</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Lease TTL</div>
-      <div class=\"tg-list-subtitle\">" <> int.to_string(model.ha.lease_ttl_ms) <> "ms</div>
+      <div class=\"tg-list-subtitle\">"
+  <> int.to_string(model.ha.lease_ttl_ms)
+  <> "ms</div>
     </div>
   </div>
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Missed Heartbeats</div>
-      <div class=\"tg-list-subtitle\">" <> int.to_string(
-    model.ha.missed_heartbeats,
-  ) <> "</div>
+      <div class=\"tg-list-subtitle\">"
+  <> int.to_string(model.ha.missed_heartbeats)
+  <> "</div>
     </div>
   </div>
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">All Attested</div>
-      <div class=\"tg-list-subtitle\">" <> case
-    federation.all_attested_check(model)
-  {
+      <div class=\"tg-list-subtitle\">"
+  <> case federation.all_attested_check(model) {
     True -> "Yes"
     False -> "No"
-  } <> "</div>
+  }
+  <> "</div>
     </div>
   </div>
 </div>"
@@ -360,18 +397,22 @@ pub fn federation_view() -> String {
 pub fn verification_view() -> String {
   let model = verification.init()
   "<div class=\"tg-status-hero\">Verification</div>
-<div class=\"tg-status-sub\">DAG: " <> int.to_string(model.dag_node_count) <> " nodes, " <> int.to_string(
-    model.dag_edge_count,
-  ) <> " edges</div>
+<div class=\"tg-status-sub\">DAG: "
+  <> int.to_string(model.dag_node_count)
+  <> " nodes, "
+  <> int.to_string(model.dag_edge_count)
+  <> " edges</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Running</div>
-      <div class=\"tg-list-subtitle\">" <> case model.running {
+      <div class=\"tg-list-subtitle\">"
+  <> case model.running {
     True -> "Verification in progress"
     False -> "Idle"
-  } <> "</div>
+  }
+  <> "</div>
     </div>
   </div>
 </div>
@@ -388,9 +429,11 @@ pub fn verification_view() -> String {
 pub fn fmea_view() -> String {
   let model = fmea_report.init()
   "<div class=\"tg-status-hero\">FMEA Report</div>
-<div class=\"tg-status-sub\">Total RPN: " <> int.to_string(model.total_rpn) <> " | Critical: " <> int.to_string(
-    model.critical_count,
-  ) <> "</div>
+<div class=\"tg-status-sub\">Total RPN: "
+  <> int.to_string(model.total_rpn)
+  <> " | Critical: "
+  <> int.to_string(model.critical_count)
+  <> "</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-hint\" style=\"padding: 8px 0;\">Load FMEA data for failure mode analysis.</div>
@@ -404,20 +447,24 @@ pub fn fmea_view() -> String {
 pub fn telemetry_view() -> String {
   let model = telemetry.init()
   "<div class=\"tg-status-hero\">Telemetry</div>
-<div class=\"tg-status-sub\">" <> int.to_string(list.length(model.spans)) <> " spans | " <> int.to_string(
-    model.active_traces,
-  ) <> " active traces</div>
+<div class=\"tg-status-sub\">"
+  <> int.to_string(list.length(model.spans))
+  <> " spans | "
+  <> int.to_string(model.active_traces)
+  <> " active traces</div>
 
 <div class=\"tg-card\">
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Log Level</div>
-      <div class=\"tg-list-subtitle\">" <> case model.log_level {
+      <div class=\"tg-list-subtitle\">"
+  <> case model.log_level {
     telemetry.Debug -> "DEBUG"
     telemetry.Info -> "INFO"
     telemetry.Warning -> "WARNING"
     telemetry.Error -> "ERROR"
-  } <> "</div>
+  }
+  <> "</div>
     </div>
   </div>
 </div>"
@@ -436,24 +483,28 @@ pub fn zenoh_browser_view() -> String {
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Topics</div>
-      <div class=\"tg-list-subtitle\">" <> int.to_string(list.length(model.root)) <> " root nodes</div>
+      <div class=\"tg-list-subtitle\">"
+  <> int.to_string(list.length(model.root))
+  <> " root nodes</div>
     </div>
   </div>
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Subscriptions</div>
-      <div class=\"tg-list-subtitle\">" <> int.to_string(list.length(
-    model.subscribed,
-  )) <> " active</div>
+      <div class=\"tg-list-subtitle\">"
+  <> int.to_string(list.length(model.subscribed))
+  <> " active</div>
     </div>
   </div>
   <div class=\"tg-list-cell\">
     <div class=\"tg-list-body\">
       <div class=\"tg-list-title\">Selected</div>
-      <div class=\"tg-list-subtitle\">" <> case model.selected_topic {
+      <div class=\"tg-list-subtitle\">"
+  <> case model.selected_topic {
     option.Some(t) -> t
     option.None -> "None"
-  } <> "</div>
+  }
+  <> "</div>
     </div>
   </div>
 </div>"

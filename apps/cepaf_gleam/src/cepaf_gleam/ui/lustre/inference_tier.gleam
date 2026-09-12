@@ -67,13 +67,11 @@ pub fn update(
   msg: InferenceTierMsg,
 ) -> InferenceTierModel {
   case msg {
-    TiersLoaded(tiers) ->
-      InferenceTierModel(..model, tiers: tiers, loading: False)
+    TiersLoaded(tiers) -> InferenceTierModel(..model, tiers: tiers, loading: False)
     ActiveTierChanged(tier) -> InferenceTierModel(..model, active_tier: tier)
     CacheStatsUpdated(rate) -> InferenceTierModel(..model, cache_hit_rate: rate)
     RefreshInference -> InferenceTierModel(..model, loading: True)
-    ErrorReceived(e) ->
-      InferenceTierModel(..model, error: Some(e), loading: False)
+    ErrorReceived(e) -> InferenceTierModel(..model, error: Some(e), loading: False)
   }
 }
 
@@ -103,37 +101,10 @@ pub fn all_circuits_healthy(model: InferenceTierModel) -> Bool {
 
 fn default_tiers() -> List(TierStatus) {
   [
-    TierStatus(
-      1,
-      "Modular MAX / Mojo",
-      "modular-max-v26.5.0-mojo",
-      25,
-      True,
-      CircuitClosed,
-      0,
-      0,
-    ),
-    TierStatus(
-      2,
-      "Gemini Direct",
-      "gemini-3.1-flash-lite-preview",
-      900,
-      True,
-      CircuitClosed,
-      0,
-      0,
-    ),
-    TierStatus(
-      3,
-      "OpenRouter",
-      "gemini-3-flash-preview",
-      1100,
-      True,
-      CircuitClosed,
-      0,
-      0,
-    ),
-    TierStatus(4, "Ollama gemma4", "gemma4", 4000, False, CircuitClosed, 0, 0),
+    TierStatus(1, "Gemini Direct", "gemini-3.1-flash-lite-preview", 900, True, CircuitClosed, 0, 0),
+    TierStatus(2, "OpenRouter", "gemini-3-flash-preview", 1100, True, CircuitClosed, 0, 0),
+    TierStatus(3, "Ollama gemma4", "gemma4", 4000, False, CircuitClosed, 0, 0),
+    TierStatus(4, "Ollama gemma3", "gemma3", 10000, False, CircuitClosed, 0, 0),
     TierStatus(5, "RETE-UL Rules", "rule-engine", 1, False, CircuitClosed, 0, 0),
     TierStatus(6, "Static Ack", "static", 0, False, CircuitClosed, 0, 0),
   ]

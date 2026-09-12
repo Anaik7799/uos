@@ -22,17 +22,17 @@
 //// function body is a byte-equivalent move from the original.
 
 import cepaf_gleam/ui/state.{
-  type SharedMeshState, cockpit_mode_to_string, ooda_phase_to_string,
+  type SharedMeshState, ThreatElevated, ThreatLow, ThreatNominal, ThreatNone,
+  cockpit_mode_to_string, ooda_phase_to_string,
 }
-
-// import gleam/float
-import cepaf_gleam/ui/lustre/shell
+import gleam/float
 import gleam/int
 import gleam/list
 import gleam/string
 import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
+import cepaf_gleam/ui/lustre/shell
 
 // SC-MUDA-001 / audit-E3 — process-start nanosecond clock (Erlang FFI).
 // Used as static asset cache-bust suffix so each daemon restart serves a
@@ -53,146 +53,11 @@ pub fn asset_cachebust_id() -> Int {
 }
 
 pub fn page_header(title: String, subtitle: String) -> Element(msg) {
-  // SC-AGUI-UI-002/003/007 chrome — fractal filter chips + AI search +
-  // change log placeholder. Single edit here propagates AGUI components
-  // to every page that calls page_header() (~30 baseline pages).
-  // ZK: anti-Stub-That-Lies [zk-bd82645aedcb5ef4] — components present in
-  // DOM, agui_conformance validator measures via substring match.
   html.div([attribute.class("page-header")], [
     html.div([], [
       html.h1([attribute.class("page-title")], [element.text(title)]),
       html.div([attribute.class("page-subtitle")], [element.text(subtitle)]),
     ]),
-    html.div([attribute.class("agui-chrome")], [
-      agui_filter_chips(),
-      agui_search_bar(),
-      agui_change_log(),
-      agui_drill_down(),
-      agui_gemma_chat(),
-    ]),
-  ])
-}
-
-/// SC-AGUI-UI-002/003/007 — exported chrome block for pages with custom headers.
-/// Use this when page_header() can't be reused (e.g. cockpit_view custom header).
-pub fn agui_chrome_block() -> Element(msg) {
-  html.div([attribute.class("agui-chrome")], [
-    agui_filter_chips(),
-    agui_search_bar(),
-    agui_change_log(),
-    agui_drill_down(),
-    agui_gemma_chat(),
-  ])
-}
-
-/// SC-AGUI-UI-005 — Gemma AI chat widget. POSTs to /api/v1/ai/chat (real
-/// endpoint, gemma3 fast + gemma4 fallback). agui-chrome.js wires submit.
-/// Not Stub-That-Lies — endpoint exists; auth failures surface as real errors.
-fn agui_gemma_chat() -> Element(msg) {
-  html.details([attribute.class("gemma chat-widget chat-panel")], [
-    element.element("summary", [], [element.text("Ask Gemma")]),
-    html.div(
-      [
-        attribute.class("chat-panel-feed"),
-        attribute.attribute("id", "agui-chat-feed"),
-      ],
-      [],
-    ),
-    // SC-HTTP-FORM-ACTION (Pass-97) — explicit action prevents the
-    // browser from defaulting to current URL on JS-disabled submit.
-    // chat-panel-form is JS-driven (agui-chrome.js prevents default
-    // and POSTs to /api/v1/ai/chat); the action declares the same
-    // endpoint as a degraded fallback if JS is blocked.
-    html.form(
-      [
-        attribute.class("chat-panel-form"),
-        attribute.attribute("action", "/api/v1/ai/chat"),
-        attribute.attribute("method", "POST"),
-      ],
-      [
-        html.input([
-          attribute.type_("text"),
-          attribute.attribute("id", "agui-chat-input"),
-          attribute.class("chat-panel-input"),
-          attribute.placeholder("Question for Gemma…"),
-          attribute.attribute("aria-label", "Ask Gemma a question"),
-          // SC-A11Y-AUTOCOMPLETE (Pass-98) — opt out of browser
-          // autofill: chat input is ephemeral, never an account field.
-          attribute.attribute("autocomplete", "off"),
-        ]),
-        html.button(
-          [attribute.type_("submit"), attribute.class("chat-panel-send")],
-          [element.text("Send")],
-        ),
-      ],
-    ),
-  ])
-}
-
-/// SC-AGUI-UI-004 — drill-down detail panel.
-/// Wired by agui-chrome.js: clicking a `.card` or `.section` populates this
-/// with the element's text content. Not Stub-That-Lies — JS event handler exists.
-fn agui_drill_down() -> Element(msg) {
-  html.aside(
-    [
-      attribute.class("detail-panel drill-down task-detail"),
-      attribute.attribute("data-state", "empty"),
-      attribute.attribute("aria-live", "polite"),
-    ],
-    [
-      html.div([attribute.class("detail-panel-label")], [
-        element.text("Detail panel"),
-      ]),
-      html.div(
-        [
-          attribute.class("detail-panel-body"),
-          attribute.attribute("id", "agui-detail-body"),
-        ],
-        [element.text("Click any card or section to drill down.")],
-      ),
-    ],
-  )
-}
-
-/// SC-AGUI-UI-002 — L0-L7 fractal layer filter chips.
-fn agui_filter_chips() -> Element(msg) {
-  html.div([attribute.class("fractal-filter layer-filter")], [
-    html.span([attribute.class("fractal-chip fractal-all")], [
-      element.text("All"),
-    ]),
-    html.span([attribute.class("fractal-chip fractal-l0")], [element.text("L0")]),
-    html.span([attribute.class("fractal-chip fractal-l1")], [element.text("L1")]),
-    html.span([attribute.class("fractal-chip fractal-l2")], [element.text("L2")]),
-    html.span([attribute.class("fractal-chip fractal-l3")], [element.text("L3")]),
-    html.span([attribute.class("fractal-chip fractal-l4")], [element.text("L4")]),
-    html.span([attribute.class("fractal-chip fractal-l5")], [element.text("L5")]),
-    html.span([attribute.class("fractal-chip fractal-l6")], [element.text("L6")]),
-    html.span([attribute.class("fractal-chip fractal-l7")], [element.text("L7")]),
-  ])
-}
-
-/// SC-AGUI-UI-003 — AI search bar with Ctrl+K hint.
-fn agui_search_bar() -> Element(msg) {
-  html.div([attribute.class("search-bar ai-search")], [
-    html.input([
-      attribute.type_("search"),
-      attribute.placeholder("Search (Ctrl+K)"),
-      attribute.class("ai-search-input"),
-      attribute.attribute("aria-label", "Search across system"),
-      // SC-A11Y-AUTOCOMPLETE (Pass-98) — search is ephemeral.
-      attribute.attribute("autocomplete", "off"),
-    ]),
-    html.span([attribute.class("search-hint")], [element.text("Ctrl+K")]),
-  ])
-}
-
-/// SC-AGUI-UI-007 — state change event log placeholder.
-fn agui_change_log() -> Element(msg) {
-  html.div([attribute.class("change-log event-log")], [
-    html.span([attribute.class("change-log-label")], [
-      element.text("Recent changes"),
-    ]),
-    html.div([attribute.class("change-log-feed")], []),
   ])
 }
 
@@ -200,15 +65,9 @@ pub fn state_kv_block(state: SharedMeshState) -> Element(msg) {
   html.div([attribute.class("card")], [
     shell.kv_row("Containers", int.to_string(state.container_count)),
     shell.kv_row("Healthy", int.to_string(state.healthy_count)),
-    shell.kv_row(
-      "Threat Level",
-      state.threat_level_to_string(state.threat_level),
-    ),
+    shell.kv_row("Threat Level", state.threat_level_to_string(state.threat_level)),
     shell.kv_row("OODA Phase", ooda_phase_to_string(state.ooda_phase)),
-    shell.kv_row(
-      "Dark Cockpit",
-      cockpit_mode_to_string(state.dark_cockpit_mode),
-    ),
+    shell.kv_row("Dark Cockpit", cockpit_mode_to_string(state.dark_cockpit_mode)),
     shell.kv_row("Zenoh", case state.zenoh_connected {
       True -> "connected"
       False -> "offline"

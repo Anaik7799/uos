@@ -44,7 +44,6 @@ import cepaf_gleam/fractal/l2_component
 import cepaf_gleam/fractal/l3_transaction
 import cepaf_gleam/fractal/l4_system
 import cepaf_gleam/fractal/l6_ecosystem
-import cepaf_gleam/ui/lustre/auth as auth_page
 import cepaf_gleam/ui/state.{type SharedMeshState}
 import cepaf_gleam/ui/web/dashboard_views
 import cepaf_gleam/ui/web/domain_views
@@ -190,15 +189,6 @@ pub fn health_grid_view(state: SharedMeshState) -> Element(msg) {
 
 pub fn component_demo_view(state: SharedMeshState) -> Element(msg) {
   special_views.component_demo_view(state)
-}
-
-pub fn auth_view(_state: SharedMeshState) -> Element(msg) {
-  element.unsafe_raw_html(
-    "",
-    "div",
-    [],
-    element.to_string(auth_page.view(auth_page.init())),
-  )
 }
 
 pub fn allium_index_view() -> Element(msg) {

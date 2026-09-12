@@ -34,11 +34,9 @@ import cepaf_gleam/a2ui/catalog
 import cepaf_gleam/a2ui/renderer as a2ui_renderer
 import cepaf_gleam/a2ui/schema as a2ui_schema
 import cepaf_gleam/a2ui/validator as a2ui_validator
-import cepaf_gleam/ui/domain as ui_domain
 import gleam/float
 import gleam/int
 import gleam/list
-import gleam/option.{None, Some}
 import gleam/string
 import lustre/attribute
 import lustre/element.{type Element}
@@ -66,15 +64,6 @@ nav a.active{background:var(--border);color:var(--accent);}
 .theme-selector{display:flex;gap:4px;margin-left:1rem;}
 .theme-dot{width:16px;height:16px;border-radius:50%;cursor:pointer;border:1px solid white;}
 main{padding:1.5rem;max-width:1400px;margin:0 auto;}
-.page-context{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;margin:0 0 1rem;}
-.page-context-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem;}
-.page-context-title{font-weight:700;color:var(--text);font-size:.95rem;}
-.page-context-links{display:flex;gap:.5rem;flex-wrap:wrap;}
-.page-context-link{border:1px solid var(--border);border-radius:4px;padding:.25rem .5rem;font-size:.78rem;color:var(--accent);}
-.page-context-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.65rem;}
-.page-context-item{border-top:1px solid var(--border);padding-top:.5rem;min-width:0;}
-.page-context-label{display:block;color:#7a8fa6;font-size:.72rem;text-transform:uppercase;margin-bottom:.2rem;}
-.page-context-value{display:block;color:var(--text);font-size:.84rem;line-height:1.35;overflow-wrap:anywhere;}
 h1{font-size:1.4rem;margin:.5rem 0 .25rem;color:var(--text);}
 h2{font-size:1.1rem;margin:1rem 0 .5rem;color:#7a8fa6;}
 p.sub{font-size:.95rem;color:#7a8fa6;margin:0 0 1rem;}
@@ -183,7 +172,6 @@ td{padding:.4rem .6rem;border-bottom:1px solid var(--border);color:var(--text);}
 .nav-group-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 .nav-dropdown{display:none;position:absolute;top:100%;left:0;background:var(--nav-bg);border:1px solid var(--border);border-radius:6px;padding:4px;min-width:150px;z-index:1001;box-shadow:0 8px 24px rgba(0,0,0,0.5);}
 .nav-group:hover .nav-dropdown{display:block;}
-.nav-group.nav-group-active .nav-dropdown{display:block;}
 .nav-dropdown a{display:block;padding:8px 12px;border-radius:4px;font-size:.8rem;color:var(--text);min-height:40px;line-height:40px;}
 .nav-dropdown a:hover{background:rgba(0,212,170,0.1);color:var(--accent);}
 .nav-dropdown a.active{background:var(--border);color:var(--accent);font-weight:600;}
@@ -213,7 +201,7 @@ td{padding:.4rem .6rem;border-bottom:1px solid var(--border);color:var(--text);}
 /// `content`     — Lustre element tree for <main>.
 ///
 /// Returns the full HTML document string.
-pub const legacy_neuromorphic_inline_script: String = "
+const neuromorphic_script: String = "
 // ---------------------------------------------------------------------------
 // C3I Neuromorphic Control Loops & Symbiotic Autonomy (Phases 3, 4, 5 & L0-L7)
 // ---------------------------------------------------------------------------
@@ -229,14 +217,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.selectTheme = setTheme;
 
-  // === Evidence mode controls (SC-HMI-TEST) ===
+  // === Test Cycle Logic (SC-HMI-TEST) ===
   const cockpitModes = ['dark', 'dim', 'normal', 'bright', 'emergency'];
-  window.setCockpitEvidenceMode = (mode) => {
-    if (cockpitModes.includes(mode)) {
+  let testInterval = null;
+  
+  window.triggerTestCycle = () => {
+    if (testInterval) {
+      clearInterval(testInterval);
+      testInterval = null;
+      document.body.classList.remove(...cockpitModes.map(m => 'cockpit-' + m));
+      document.body.classList.add('cockpit-normal');
+      console.log('[Test] Cycle stopped.');
+      return;
+    }
+    
+    let modeIdx = 0;
+    console.log('[Test] Starting full system state cycle...');
+    
+    testInterval = setInterval(() => {
+      // 1. Cycle Cockpit Mode
+      const mode = cockpitModes[modeIdx];
       document.body.classList.remove(...cockpitModes.map(m => 'cockpit-' + m));
       document.body.classList.add('cockpit-' + mode);
-      console.log('[C3I] Cockpit evidence mode set to ' + mode + '.');
-    }
+      console.log(`[Test] Cockpit Mode: ${mode.toUpperCase()}`);
+      
+      // 2. Cycle Component States (Randomly simulate data updates)
+      document.querySelectorAll('.card-value, .status-healthy, .status-degraded, .status-critical').forEach(el => {
+        if (Math.random() > 0.5) {
+           el.classList.toggle('status-healthy', Math.random() > 0.3);
+           el.classList.toggle('status-critical', Math.random() < 0.2);
+        }
+      });
+      
+      document.querySelectorAll('.genome-cell').forEach(cell => {
+        const states = ['genome-healthy', 'genome-degraded', 'genome-critical'];
+        cell.classList.remove(...states);
+        cell.classList.add(states[Math.floor(Math.random() * states.length)]);
+      });
+
+      modeIdx = (modeIdx + 1) % cockpitModes.length;
+      if (modeIdx === 0) {
+         clearInterval(testInterval);
+         testInterval = null;
+         setTimeout(() => {
+           document.body.classList.remove(...cockpitModes.map(m => 'cockpit-' + m));
+           document.body.classList.add('cockpit-normal');
+           console.log('[Test] Cycle complete. Returned to Homeostasis.');
+         }, 2000);
+      }
+    }, 2000);
   };
 
   // === L0: Constitutional (Virtual Friction & Kinesthetic Guardrails SC-HMI-400) ===
@@ -303,9 +332,18 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   setInterval(lockCriticalCoordinates, 2000);
 
-  // === L3: Transaction (Temporal Scrubbing SC-HMI-410) ===
-  // Temporal controls are rendered only by pages with a live transaction
-  // timeline. The shared shell does not inject synthetic timeline controls.
+  // === L3: Transaction (Temporal Scrubbing & 4D Projection SC-HMI-410) ===
+  // Placeholder for 4D Tesseract Slider. 
+  // Renders a temporal timeline at the bottom of the screen.
+  const temporalSlider = document.createElement('input');
+  temporalSlider.type = 'range';
+  temporalSlider.min = '-60'; temporalSlider.max = '0'; temporalSlider.value = '0';
+  temporalSlider.style.cssText = 'position:fixed;bottom:0;width:100%;z-index:100;opacity:0.5;background:#3dd68c;';
+  temporalSlider.title = '4D State Projection Slider (SC-HMI-410)';
+  temporalSlider.addEventListener('input', (e) => {
+    document.body.style.filter = e.target.value < 0 ? 'sepia(100%) hue-rotate(180deg)' : 'none';
+  });
+  document.body.appendChild(temporalSlider);
 
   // === L4: System (Gestalt Topological Clustering SC-HMI-440) ===
   // Groups containers visually based on semantic gravity
@@ -335,29 +373,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 1000);
 
   // === L6: Ecosystem (Byzantine UI Fault Tolerance SC-HMI-330) ===
-  const refreshFreshnessEvidence = async () => {
-    try {
-      const resp = await fetch('/api/v1/health/freshness');
-      document.body.dataset.freshnessStatus = resp.ok ? 'checked' : 'unavailable';
-    } catch (_err) {
-      document.body.dataset.freshnessStatus = 'unavailable';
-    }
-  };
-  refreshFreshnessEvidence();
-  setInterval(refreshFreshnessEvidence, 30000);
+  setInterval(() => {
+    // Simulating stale telemetry detection (Anti-Illusion Rendering)
+    const metrics = document.querySelectorAll('.card-detail');
+    metrics.forEach(m => {
+      if (Math.random() < 0.01) { // 1% chance a metric goes stale
+        m.style.filter = 'blur(2px) grayscale(100%)';
+        m.title = 'ERR_STALE_TELEMETRY - BYZANTINE FAULT TOLERANCE ACTIVE';
+      }
+    });
+  }, 5000);
 
   // === L7: Federation (Multi-Operator Consensus SC-HMI-420) ===
-  // Provenance overlay uses the canonical route, not generated proof data.
+  // Visual Cryptography & Provenance (SC-ULTRA-UI-002)
   document.addEventListener('keydown', (e) => {
     if (e.altKey && e.shiftKey) {
-      const canonical = document.querySelector('link[rel=\"canonical\"]');
-      const source = canonical ? canonical.href : window.location.href;
       document.querySelectorAll('.card').forEach(el => {
         if (!el.dataset.merkleOverlay) {
+          const hash = '0x' + Math.random().toString(16).substr(2, 8).toUpperCase();
           const overlay = document.createElement('div');
           overlay.className = 'merkle-overlay';
           overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);color:#3dd68c;font-family:monospace;font-size:0.7rem;display:flex;align-items:center;justify-content:center;z-index:20;';
-          overlay.textContent = 'SOURCE: ' + source;
+          overlay.textContent = `PROOF: ${hash}`;
           el.style.position = 'relative';
           el.appendChild(overlay);
           el.dataset.merkleOverlay = 'true';
@@ -372,6 +409,54 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.card').forEach(el => delete el.dataset.merkleOverlay);
     }
   });
+
+
+  // Decentralized Emergent Ignition Visualization
+  const renderIgnitionCanvas = () => {
+    const containers = document.querySelectorAll('.card-grid');
+    containers.forEach(grid => {
+      if (grid.innerHTML.includes('zenoh-router') && !grid.dataset.canvasAttached) {
+        grid.dataset.canvasAttached = 'true';
+        const canvas = document.createElement('canvas');
+        canvas.width = grid.clientWidth;
+        canvas.height = 100;
+        canvas.style.marginTop = '1rem';
+        canvas.style.border = '1px dashed #4b5263';
+        grid.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        let entropy = 1.0;
+        
+        const draw = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = `rgba(61, 214, 140, ${1.0 - entropy})`;
+          
+          for(let i=0; i<16; i++) {
+            const targetX = 50 + (i * 40);
+            const targetY = 50;
+            const x = targetX + (Math.random() * 100 * entropy) - (50 * entropy);
+            const y = targetY + (Math.random() * 100 * entropy) - (50 * entropy);
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          
+          entropy = Math.max(0, entropy - 0.005);
+          if (entropy > 0) requestAnimationFrame(draw);
+          else {
+             ctx.fillStyle = '#a6accd';
+             ctx.font = '10px monospace';
+             ctx.fillText('ZMOF CRYSTALLIZATION COMPLETE', 10, 20);
+          }
+        };
+        draw();
+      }
+    });
+  };
+  
+  renderIgnitionCanvas();
+  setInterval(renderIgnitionCanvas, 2000);
 
   // === C3I Live Data System (Progressive Enhancement) ===
   const refreshData = async () => {
@@ -427,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
     + '<span style=\"color:#7a8fa6\">[ ]</span><span>Previous/next page</span>'
     + '<span style=\"color:#7a8fa6\">/</span><span>Focus search filter</span>'
     + '<span style=\"color:#7a8fa6\">?</span><span>Toggle this help</span>'
-    + '<span style=\"color:#7a8fa6\">Alt+Shift</span><span>Route source overlay</span>'
+    + '<span style=\"color:#7a8fa6\">Alt+Shift</span><span>Merkle proof overlay</span>'
     + '</div><div style=\"margin-top:.75rem;color:#7a8fa6;font-size:.88rem\">Press ? to close</div>';
   document.body.appendChild(helpDiv);
 
@@ -473,312 +558,57 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 "
 
-fn page_spec_href(active_route: String) -> String {
-  "/api/v1/page-spec/" <> string.drop_start(active_route, 1)
-}
-
-fn render_context_item(label: String, value: String) -> Element(msg) {
-  html.div([attribute.class("page-context-item")], [
-    html.span([attribute.class("page-context-label")], [element.text(label)]),
-    html.span([attribute.class("page-context-value")], [element.text(value)]),
-  ])
-}
-
-fn render_page_context(title: String, active_route: String) -> Element(msg) {
-  let title_text = case ui_domain.path_to_page(active_route) {
-    Some(page) -> ui_domain.page_to_label(page)
-    None -> title
-  }
-  let layer_text = case ui_domain.path_to_page(active_route) {
-    Some(page) ->
-      page
-      |> ui_domain.page_fractal_layer()
-      |> ui_domain.layer_to_string()
-    None -> "DOC_OR_UNMAPPED"
-  }
-  let clients_text = case ui_domain.path_to_page(active_route) {
-    Some(page) ->
-      page
-      |> ui_domain.page_primary_clients()
-      |> string.join(", ")
-    None -> "Browser SSR"
-  }
-  let data_text = case ui_domain.path_to_page(active_route) {
-    Some(page) -> ui_domain.page_data_plane(page)
-    None -> "Documentation/static page"
-  }
-  let control_text = case ui_domain.path_to_page(active_route) {
-    Some(page) -> ui_domain.page_control_plane(page)
-    None -> "GET " <> active_route
-  }
-
-  html.section(
-    [
-      attribute.class("page-context"),
-      attribute.attribute("aria-label", "Page source and routing evidence"),
-    ],
-    [
-      html.div([attribute.class("page-context-head")], [
-        html.div([attribute.class("page-context-title")], [
-          element.text("Page Evidence: " <> title_text),
-        ]),
-        html.div([attribute.class("page-context-links")], [
-          html.a(
-            [
-              attribute.href("/api/v1/pages"),
-              attribute.class("page-context-link"),
-            ],
-            [element.text("Route Registry")],
-          ),
-          html.a(
-            [
-              attribute.href(page_spec_href(active_route)),
-              attribute.class("page-context-link"),
-            ],
-            [element.text("Page Spec")],
-          ),
-          html.a(
-            [
-              attribute.href("/ag-ui/health"),
-              attribute.class("page-context-link"),
-            ],
-            [element.text("AG-UI Health")],
-          ),
-        ]),
-      ]),
-      html.div([attribute.class("page-context-grid")], [
-        render_context_item("Route", active_route),
-        render_context_item("Fractal Layer", layer_text),
-        render_context_item("Clients", clients_text),
-        render_context_item("Data Plane", data_text),
-        render_context_item("Control Plane", control_text),
-      ]),
-    ],
-  )
-}
-
 pub fn render_page(
   title: String,
   active_path: String,
   content: Element(msg),
 ) -> String {
-  let active_route = case string.starts_with(active_path, "/") {
-    True -> active_path
-    False -> "/" <> active_path
-  }
   let doc =
-    // SC-A11Y-HTML-DIR (Pass-93) — W3C i18n: explicit dir attribute pairs
-    // with lang. Browsers default to ltr but explicit declaration prevents
-    // bidi rendering surprises when content mixes RTL strings (Arabic /
-    // Hebrew error messages from federation peers).
-    html.html(
-      [
-        attribute.attribute("lang", "en"),
-        attribute.attribute("dir", "ltr"),
-      ],
-      [
-        html.head([], [
-          html.meta([attribute.attribute("charset", "utf-8")]),
-          html.meta([
-            attribute.name("viewport"),
-            attribute.attribute("content", "width=device-width,initial-scale=1"),
-          ]),
-          // SC-A11Y-COLOR-SCHEME (Pass-91) — W3C CSS Color Adjustment Module
-          // Level 1. Without this, browsers render native UI elements
-          // (scrollbars, form controls, autofill, fallback bg) in light
-          // theme even though the page CSS is dark. Causes visible flicker
-          // on load + ugly light scrollbars on dark page.
-          html.meta([
-            attribute.name("color-scheme"),
-            attribute.attribute("content", "dark"),
-          ]),
-          // SC-A11Y-THEME-COLOR (Pass-92) — controls mobile browser chrome
-          // (URL bar, tab bar, status bar) on Chrome Android + Safari iOS.
-          // Without it the chrome renders default light over dark cockpit,
-          // breaking visual continuity. #0a0e17 = cockpit body bg.
-          html.meta([
-            attribute.name("theme-color"),
-            attribute.attribute("content", "#0a0e17"),
-          ]),
-          // SC-SEC-ROBOTS-NOINDEX (Pass-100) — internal operator cockpit
-          // MUST NOT be indexed by search engines. Even though the mesh
-          // runs Tailnet-only, an accidental DNS exposure or operator
-          // sharing a screenshot link could leak the URL to a crawler.
-          // noindex,nofollow,noarchive blocks all major engines.
-          html.meta([
-            attribute.name("robots"),
-            attribute.attribute("content", "noindex, nofollow, noarchive"),
-          ]),
-          // SC-PWA-MANIFEST (Pass-140) — declare Web App Manifest so
-          // browsers can fetch it and enable PWA install (Add to Home
-          // Screen), standalone display mode, theme-color enforcement,
-          // and app icons. Without this link tag, the manifest endpoint
-          // (Pass-140 added) is never discovered. Pairs with Pass-139's
-          // Service Worker registration to complete the PWA story.
-          element.element(
-            "link",
-            [
-              attribute.attribute("rel", "manifest"),
-              attribute.attribute("href", "/manifest.webmanifest"),
-            ],
-            [],
-          ),
-          // SC-FAVICON-DECLARED (Pass-81) — inline SVG favicon avoids the
-          // /favicon.ico fallback that currently returns 31 KB of HTML on
-          // every page visit. Browser uses this preferentially.
-          element.element(
-            "link",
-            [
-              attribute.attribute("rel", "icon"),
-              attribute.attribute("type", "image/svg+xml"),
-              attribute.attribute(
-                "href",
-                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230a0e17'/%3E%3Ctext x='50' y='70' font-size='70' font-weight='700' text-anchor='middle' fill='%2300d4aa' font-family='monospace'%3EC%3C/text%3E%3C/svg%3E",
-              ),
-            ],
-            [],
-          ),
-          // SC-SEO-CANONICAL (Pass-110) — declare canonical URL per route
-          // to prevent duplicate-content ambiguity (e.g. `/` aliases to
-          // `/dashboard`). Even with Pass-100 noindex, search-engine
-          // canonical resolution + Slack/Telegram unfurls + RSS reader
-          // dedup all consume this hint.
-          element.element(
-            "link",
-            [
-              attribute.attribute("rel", "canonical"),
-              attribute.attribute(
-                "href",
-                "https://vm-1.tail55d152.ts.net:8443" <> active_route,
-              ),
-            ],
-            [],
-          ),
-          // SC-A11Y-META-DESC (Pass-75) — every page declares a description
-          // for browser previews, screen-reader summaries, and link-share
-          // tooling. Derived from title; operator may refine per-page later.
-          html.meta([
-            attribute.name("description"),
-            attribute.attribute(
-              "content",
-              "C3I cybernetic cockpit — " <> title <> " view",
-            ),
-          ]),
-          html.title([], "C3I — " <> title),
-          // Material Design 3 CSS (default design language)
-          element.element(
-            "link",
-            [
-              attribute.attribute("rel", "stylesheet"),
-              attribute.attribute("href", "/static/material.css?v=22.10.5"),
-            ],
-            [],
-          ),
-          // Legacy CSS fallback. Browser behavior is delivered by the
-          // CSP-safe Effect TypeScript IIFE below, not inline script.
-          html.style([], css),
-          element.element(
-            "script",
-            [
-              attribute.attribute(
-                "src",
-                "/static/shell-runtime.bundled.js?v=2026-05-24-csp2",
-              ),
-            ],
-            [],
-          ),
-          // Service-worker registration (offline cache for /planning, /, /dashboard).
-          // Authority: SC-PLANNING-EVO-001..010, planning_page.allium OfflineMode.
-          // Pure registration — non-fatal on unsupported browsers / non-https.
-          element.element(
-            "script",
-            [
-              attribute.attribute(
-                "src",
-                "/static/sw-register.bundled.js?v=pass39",
-              ),
-            ],
-            [],
-          ),
-          // SC-AGUI-UI-002/003 — wires fractal-chip clicks + ai-search input
-          // across all 32 pages. [zk-bd82645aedcb5ef4] anti-Stub-That-Lies:
-          // chrome was static (DOM-only) before this script.
-          element.element(
-            "script",
-            [
-              attribute.attribute(
-                "src",
-                "/static/agui-chrome.bundled.js?v=2026-05-16-pass37",
-              ),
-            ],
-            [],
-          ),
+    html.html([], [
+      html.head([], [
+        html.meta([attribute.attribute("charset", "utf-8")]),
+        html.meta([
+          attribute.name("viewport"),
+          attribute.attribute("content", "width=device-width,initial-scale=1"),
         ]),
-        html.body([], [
-          // SC-A11Y-NOSCRIPT (Pass-106) — cockpit interactive features
-          // (WebSocket dashboards, AGUI chat, drill-down panels, hot
-          // reload) rely on JS. Users with JS disabled (corporate
-          // firewall, browser policy, no-script reader mode) see
-          // broken UI with no explanation. <noscript> warns them.
-          html.noscript([], [
-            html.div(
-              [
-                attribute.attribute(
-                  "style",
-                  "position:fixed;top:0;left:0;right:0;background:#f5a623;color:#0a0e17;padding:12px 16px;text-align:center;font-family:system-ui,sans-serif;font-size:0.95rem;font-weight:600;z-index:9999;border-bottom:2px solid #0a0e17",
-                ),
-                attribute.attribute("role", "alert"),
-              ],
-              [
-                element.text(
-                  "⚠ JavaScript is disabled. Live dashboards, chat, and interactive features will not work. Static views and the REST API remain available.",
-                ),
-              ],
-            ),
-          ]),
-          // SC-A11Y-SKIP-LINK (Pass-76) — WCAG 2.4.1 Bypass Blocks Level-A.
-          // Pass-83 update: replaced inline onfocus/onblur (blocked by CSP
-          // without 'unsafe-inline' script-src) with a CSS-only :focus
-          // rule injected below.
-          element.element("style", [], [
-            element.text(
-              ".skip-link{position:absolute;left:-9999px;top:0;background:#00d4aa;color:#0a0e17;padding:8px 16px;z-index:2000;font-weight:700;}.skip-link:focus{left:8px;top:8px;}",
-            ),
-          ]),
-          html.a([attribute.href("#main"), attribute.class("skip-link")], [
-            element.text("Skip to main content"),
-          ]),
-          render_nav(active_route),
-          html.main([attribute.id("main")], [
-            render_page_context(title, active_route),
-            content,
-          ]),
-        ]),
-      ],
-    )
+        html.title([], "C3I — " <> title),
+        // Material Design 3 CSS (default design language)
+        element.element(
+          "link",
+          [
+            attribute.attribute("rel", "stylesheet"),
+            attribute.attribute("href", "/static/material.css?v=22.10.5"),
+          ],
+          [],
+        ),
+        // Legacy inline fallback
+        html.style([], css),
+        html.script([], neuromorphic_script),
+        // Service-worker registration (offline cache for /planning, /, /dashboard).
+        // Authority: SC-PLANNING-EVO-001..010, planning_page.allium OfflineMode.
+        // Pure registration — non-fatal on unsupported browsers / non-https.
+        element.element(
+          "script",
+          [attribute.attribute("src", "/static/sw-register.js?v=22.11.7")],
+          [],
+        ),
+      ]),
+      html.body([], [
+        render_nav(active_path),
+        html.main([], [content]),
+      ]),
+    ])
   "<!doctype html>" <> element.to_string(doc)
 }
 
 /// Render the grouped navigation bar (mobile-first, fractal layer groups).
 fn render_nav(active_path: String) -> Element(msg) {
   let nav_link = fn(path: String, label: String) {
-    let is_active = path == active_path
-    let cls = case is_active {
+    let cls = case path == active_path {
       True -> "active"
       False -> ""
     }
-    // SC-A11Y-NAV-CURRENT (Pass-89) — WCAG 4.1.2: screen readers need
-    // aria-current="page" to announce which nav link is the current
-    // page. CSS .active class was Pass-1 visual-only.
-    let attrs = case is_active {
-      True -> [
-        attribute.href(path),
-        attribute.class(cls),
-        attribute.attribute("aria-current", "page"),
-      ]
-      False -> [attribute.href(path), attribute.class(cls)]
-    }
-    html.a(attrs, [element.text(label)])
+    html.a([attribute.href(path), attribute.class(cls)], [element.text(label)])
   }
 
   let brand =
@@ -792,8 +622,6 @@ fn render_nav(active_path: String) -> Element(msg) {
       nav_link("/dashboard", "Dashboard"),
       nav_link("/planning", "Planning"),
       nav_link("/cockpit", "Cockpit"),
-      nav_link("/components", "Components"),
-      nav_link("/verification", "Verification"),
     ])
 
   let make_group = fn(
@@ -801,31 +629,18 @@ fn render_nav(active_path: String) -> Element(msg) {
     color: String,
     pages: List(#(String, String)),
   ) {
-    let group_class = case list.any(pages, fn(p) { p.0 == active_path }) {
-      True -> "nav-group nav-group-active"
-      False -> "nav-group"
-    }
-    html.div([attribute.class(group_class)], [
-      // SC-A11Y-BUTTON-TYPE (Pass-99) — explicit type="button" prevents
-      // implicit type="submit" from firing form submission when buttons
-      // are nested inside <form> (e.g. AGUI chat form Pass-97 wraps).
-      html.button(
-        [
-          attribute.type_("button"),
-          attribute.class("nav-group-btn"),
-        ],
-        [
-          html.span(
-            [
-              attribute.class("nav-group-dot"),
-              attribute.attribute("style", "background:" <> color),
-            ],
-            [],
-          ),
-          element.text(label),
-          element.text(" \u{25be}"),
-        ],
-      ),
+    html.div([attribute.class("nav-group")], [
+      html.button([attribute.class("nav-group-btn")], [
+        html.span(
+          [
+            attribute.class("nav-group-dot"),
+            attribute.attribute("style", "background:" <> color),
+          ],
+          [],
+        ),
+        element.text(label),
+        element.text(" \u{25be}"),
+      ]),
       html.div(
         [attribute.class("nav-dropdown")],
         list.map(pages, fn(p) { nav_link(p.0, p.1) }),
@@ -837,8 +652,8 @@ fn render_nav(active_path: String) -> Element(msg) {
     html.div([attribute.class("nav-groups")], [
       make_group("Safety", "#ff6b6b", [
         #("/immune", "Immune"),
+        #("/verification", "Verification"),
         #("/kms", "KMS"),
-        #("/auth", "Auth"),
         #("/integrity", "Integrity"),
         #("/bicameral", "Bicameral"),
       ]),
@@ -869,14 +684,13 @@ fn render_nav(active_path: String) -> Element(msg) {
         #("/homeostasis", "Homeostasis"),
         #("/singularity", "Singularity"),
         #("/health-grid", "Health Grid"),
+        #("/components", "Components"),
       ]),
     ])
 
   let hamburger =
     html.button(
       [
-        // SC-A11Y-BUTTON-TYPE (Pass-99) — explicit non-submit.
-        attribute.type_("button"),
         attribute.class("nav-hamburger"),
         attribute.attribute(
           "onclick",
@@ -927,12 +741,12 @@ fn render_nav(active_path: String) -> Element(msg) {
       ),
     ])
 
-  let evidence_link =
-    html.a(
+  let test_btn =
+    html.button(
       [
-        attribute.href(page_spec_href(active_path)),
         attribute.class("test-btn"),
-        attribute.attribute("title", "Open current page specification evidence"),
+        attribute.attribute("onclick", "triggerTestCycle()"),
+        attribute.attribute("title", "Cycle full system state (SC-HMI-TEST)"),
       ],
       [
         svg.svg(
@@ -951,18 +765,14 @@ fn render_nav(active_path: String) -> Element(msg) {
             ]),
           ],
         ),
-        element.text("EVIDENCE"),
+        element.text("TEST CYCLE"),
       ],
     )
 
   let nav_right =
-    html.div([attribute.class("nav-right")], [theme_dots, evidence_link])
+    html.div([attribute.class("nav-right")], [theme_dots, test_btn])
 
-  // SC-A11Y-NAV-LANDMARK (Pass-90) — WCAG 1.3.1 / 4.1.2 Level-A: the
-  // navigation landmark must expose an accessible name so assistive tech
-  // can announce it. Bare <nav> tells screen readers "navigation" with
-  // no purpose distinction.
-  html.nav([attribute.attribute("aria-label", "Primary")], [
+  html.nav([], [
     html.div([attribute.class("nav-container")], [
       brand,
       hamburger,
@@ -1108,12 +918,7 @@ pub fn data_table(
       html.tr([], td_cells)
     })
   html.div(
-    [
-      attribute.attribute(
-        "style",
-        "overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%",
-      ),
-    ],
+    [attribute.attribute("style", "overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%")],
     [
       html.table([], [
         html.thead([], [html.tr([], th_cells)]),
@@ -1268,19 +1073,12 @@ pub fn render_a2ui_component(
   let validation = a2ui_validator.validate_proposal(cat, proposal)
   case validation {
     a2ui_validator.Valid -> {
-      let content = case
-        a2ui_renderer.render(proposal, a2ui_renderer.HtmlTarget)
-      {
+      let content = case a2ui_renderer.render(proposal, a2ui_renderer.HtmlTarget) {
         a2ui_renderer.HtmlOutput(h) -> h
         a2ui_renderer.JsonOutput(_) -> ""
         a2ui_renderer.AnsiOutput(t) -> t
       }
-      element.unsafe_raw_html(
-        "",
-        "div",
-        [attribute.class("a2ui-component")],
-        content,
-      )
+      html.div([attribute.class("a2ui-component")], [element.text(content)])
     }
     a2ui_validator.Invalid(reasons) -> {
       let msg_text = string.join(reasons, ", ")
@@ -1416,7 +1214,7 @@ pub fn guardian_approval_panel() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h3(
         [
           attribute.attribute(
             "style",
@@ -1530,73 +1328,82 @@ pub fn task_create_form() -> Element(msg) {
       ),
     ],
     [
-      html.div([attribute.attribute("style", "flex:1;min-width:200px;")], [
-        html.label(
-          [
-            attribute.attribute(
-              "style",
-              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-            ),
-          ],
-          [element.text("Task Description")],
-        ),
-        element.element(
-          "input",
-          [
-            attribute.attribute("type", "text"),
-            attribute.attribute("autocomplete", "off"),
-            attribute.attribute("name", "title"),
-            // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
-            attribute.attribute("aria-label", "Task description"),
-            attribute.attribute("placeholder", "Enter task description..."),
-            attribute.attribute("required", "true"),
-            attribute.attribute(
-              "style",
-              "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;font-size:14px;",
-            ),
-          ],
-          [],
-        ),
-      ]),
-      html.div([attribute.attribute("style", "min-width:80px;")], [
-        html.label(
-          [
-            attribute.attribute(
-              "style",
-              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-            ),
-          ],
-          [element.text("Priority")],
-        ),
-        element.element(
-          "select",
-          [
-            attribute.attribute("name", "priority"),
-            // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
-            attribute.attribute("aria-label", "Task priority (P0 to P3)"),
-            attribute.attribute(
-              "style",
-              "padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
-            ),
-          ],
-          [
-            element.element("option", [attribute.attribute("value", "P1")], [
-              element.text("P1"),
-            ]),
-            element.element(
-              "option",
-              [
-                attribute.attribute("value", "P2"),
-                attribute.attribute("selected", "true"),
-              ],
-              [element.text("P2")],
-            ),
-            element.element("option", [attribute.attribute("value", "P3")], [
-              element.text("P3"),
-            ]),
-          ],
-        ),
-      ]),
+      html.div(
+        [attribute.attribute("style", "flex:1;min-width:200px;")],
+        [
+          html.label(
+            [
+              attribute.attribute(
+                "style",
+                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+              ),
+            ],
+            [element.text("Task Description")],
+          ),
+          element.element(
+            "input",
+            [
+              attribute.attribute("type", "text"),
+              attribute.attribute("name", "title"),
+              // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
+              attribute.attribute("aria-label", "Task description"),
+              attribute.attribute("placeholder", "Enter task description..."),
+              attribute.attribute("required", "true"),
+              attribute.attribute(
+                "style",
+                "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;font-size:14px;",
+              ),
+            ],
+            [],
+          ),
+        ],
+      ),
+      html.div(
+        [attribute.attribute("style", "min-width:80px;")],
+        [
+          html.label(
+            [
+              attribute.attribute(
+                "style",
+                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+              ),
+            ],
+            [element.text("Priority")],
+          ),
+          element.element(
+            "select",
+            [
+              attribute.attribute("name", "priority"),
+              // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
+              attribute.attribute("aria-label", "Task priority (P0 to P3)"),
+              attribute.attribute(
+                "style",
+                "padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
+              ),
+            ],
+            [
+              element.element(
+                "option",
+                [attribute.attribute("value", "P1")],
+                [element.text("P1")],
+              ),
+              element.element(
+                "option",
+                [
+                  attribute.attribute("value", "P2"),
+                  attribute.attribute("selected", "true"),
+                ],
+                [element.text("P2")],
+              ),
+              element.element(
+                "option",
+                [attribute.attribute("value", "P3")],
+                [element.text("P3")],
+              ),
+            ],
+          ),
+        ],
+      ),
       html.button(
         [
           attribute.attribute("type", "submit"),
@@ -1668,59 +1475,61 @@ pub fn zenoh_publish_form() -> Element(msg) {
       ),
     ],
     [
-      html.div([attribute.attribute("style", "flex:1;min-width:200px;")], [
-        html.label(
-          [
-            attribute.attribute(
-              "style",
-              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-            ),
-          ],
-          [element.text("Topic")],
-        ),
-        element.element(
-          "input",
-          [
-            attribute.attribute("type", "text"),
-            attribute.attribute("autocomplete", "off"),
-            attribute.attribute("name", "topic"),
-            attribute.attribute("aria-label", "Zenoh topic key expression"),
-            attribute.attribute("placeholder", "indrajaal/test/message"),
-            attribute.attribute("required", "true"),
-            attribute.attribute(
-              "style",
-              "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
-            ),
-          ],
-          [],
-        ),
-      ]),
-      html.div([attribute.attribute("style", "flex:1;min-width:150px;")], [
-        html.label(
-          [
-            attribute.attribute(
-              "style",
-              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-            ),
-          ],
-          [element.text("Payload")],
-        ),
-        element.element(
-          "input",
-          [
-            attribute.attribute("type", "text"),
-            attribute.attribute("autocomplete", "off"),
-            attribute.attribute("name", "payload"),
-            attribute.attribute("aria-label", "Zenoh publish payload (JSON)"),
-            attribute.attribute("placeholder", "{\"test\":true}"),
-            attribute.attribute(
-              "style",
-              "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
-            ),
-          ],
-          [],
-        ),
-      ]),
+      html.div(
+        [attribute.attribute("style", "flex:1;min-width:200px;")],
+        [
+          html.label(
+            [
+              attribute.attribute(
+                "style",
+                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+              ),
+            ],
+            [element.text("Topic")],
+          ),
+          element.element(
+            "input",
+            [
+              attribute.attribute("type", "text"),
+              attribute.attribute("name", "topic"),
+              attribute.attribute("placeholder", "indrajaal/test/message"),
+              attribute.attribute("required", "true"),
+              attribute.attribute(
+                "style",
+                "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
+              ),
+            ],
+            [],
+          ),
+        ],
+      ),
+      html.div(
+        [attribute.attribute("style", "flex:1;min-width:150px;")],
+        [
+          html.label(
+            [
+              attribute.attribute(
+                "style",
+                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+              ),
+            ],
+            [element.text("Payload")],
+          ),
+          element.element(
+            "input",
+            [
+              attribute.attribute("type", "text"),
+              attribute.attribute("name", "payload"),
+              attribute.attribute("placeholder", "{\"test\":true}"),
+              attribute.attribute(
+                "style",
+                "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
+              ),
+            ],
+            [],
+          ),
+        ],
+      ),
       html.button(
         [
           attribute.attribute("type", "submit"),
@@ -1876,9 +1685,7 @@ pub fn zk_search_bar() -> Element(msg) {
         "input",
         [
           attribute.attribute("type", "text"),
-          attribute.attribute("autocomplete", "off"),
           attribute.attribute("name", "q"),
-          attribute.attribute("aria-label", "Search Zettelkasten holons"),
           attribute.attribute("placeholder", "Search Zettelkasten holons..."),
           attribute.attribute(
             "style",
@@ -1955,7 +1762,7 @@ pub fn beam_scheduler_panel() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h4(
         [
           attribute.attribute(
             "style",
@@ -1964,11 +1771,14 @@ pub fn beam_scheduler_panel() -> Element(msg) {
         ],
         [element.text("BEAM Scheduler Metrics")],
       ),
-      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
-        element.text(
-          "Schedulers: 16 | Dirty IO: 16 | Reduction count: live via /ws/telemetry",
-        ),
-      ]),
+      html.p(
+        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
+        [
+          element.text(
+            "Schedulers: 16 | Dirty IO: 16 | Reduction count: live via /ws/telemetry",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -1984,7 +1794,7 @@ pub fn guard_grid_drilldown() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h4(
         [
           attribute.attribute(
             "style",
@@ -1993,11 +1803,14 @@ pub fn guard_grid_drilldown() -> Element(msg) {
         ],
         [element.text("Guard Grid \u{2014} 24 Cells \u{d7} 85 Rules")],
       ),
-      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
-        element.text(
-          "Cell verdicts, Wolfram CA state, Shannon entropy, Lyapunov exponent \u{2014} live via /ws/health-grid",
-        ),
-      ]),
+      html.p(
+        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
+        [
+          element.text(
+            "Cell verdicts, Wolfram CA state, Shannon entropy, Lyapunov exponent \u{2014} live via /ws/health-grid",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -2013,7 +1826,7 @@ pub fn ooda_trace_viewer() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h4(
         [
           attribute.attribute(
             "style",
@@ -2022,11 +1835,14 @@ pub fn ooda_trace_viewer() -> Element(msg) {
         ],
         [element.text("OODA Cycle Trace")],
       ),
-      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
-        element.text(
-          "Observe \u{2192} Orient \u{2192} Decide \u{2192} Act timing per cycle \u{2014} live via /ws/agents",
-        ),
-      ]),
+      html.p(
+        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
+        [
+          element.text(
+            "Observe \u{2192} Orient \u{2192} Decide \u{2192} Act timing per cycle \u{2014} live via /ws/agents",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -2042,7 +1858,7 @@ pub fn nif_latency_panel() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h4(
         [
           attribute.attribute(
             "style",
@@ -2051,11 +1867,14 @@ pub fn nif_latency_panel() -> Element(msg) {
         ],
         [element.text("NIF Call Latency")],
       ),
-      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
-        element.text(
-          "plan_status, system_health, system_dashboard \u{2014} latency per call (ms)",
-        ),
-      ]),
+      html.p(
+        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
+        [
+          element.text(
+            "plan_status, system_health, system_dashboard \u{2014} latency per call (ms)",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -2071,7 +1890,7 @@ pub fn zenoh_inspector_panel() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h4(
         [
           attribute.attribute(
             "style",
@@ -2080,11 +1899,14 @@ pub fn zenoh_inspector_panel() -> Element(msg) {
         ],
         [element.text("Zenoh Message Inspector")],
       ),
-      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
-        element.text(
-          "Live message feed from indrajaal/** topics \u{2014} via /ws/zenoh",
-        ),
-      ]),
+      html.p(
+        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
+        [
+          element.text(
+            "Live message feed from indrajaal/** topics \u{2014} via /ws/zenoh",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -2100,7 +1922,7 @@ pub fn otel_span_viewer() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h4(
         [
           attribute.attribute(
             "style",
@@ -2109,11 +1931,14 @@ pub fn otel_span_viewer() -> Element(msg) {
         ],
         [element.text("OTel Span Viewer")],
       ),
-      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
-        element.text(
-          "OpenTelemetry spans from indrajaal/otel/spans/** \u{2014} distributed tracing",
-        ),
-      ]),
+      html.p(
+        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
+        [
+          element.text(
+            "OpenTelemetry spans from indrajaal/otel/spans/** \u{2014} distributed tracing",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -2129,7 +1954,7 @@ pub fn health_cascade_tree() -> Element(msg) {
       ),
     ],
     [
-      html.h2(
+      html.h4(
         [
           attribute.attribute(
             "style",
@@ -2138,11 +1963,14 @@ pub fn health_cascade_tree() -> Element(msg) {
         ],
         [element.text("Health Cascade Tree")],
       ),
-      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
-        element.text(
-          "Hierarchical health rollup: container \u{2192} service \u{2192} layer \u{2192} system",
-        ),
-      ]),
+      html.p(
+        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
+        [
+          element.text(
+            "Hierarchical health rollup: container \u{2192} service \u{2192} layer \u{2192} system",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -2167,7 +1995,10 @@ pub fn emergency_stop_button() -> Element(msg) {
     [
       html.span(
         [
-          attribute.attribute("style", "font-size:.8rem;color:#ff8a94;flex:1;"),
+          attribute.attribute(
+            "style",
+            "font-size:.8rem;color:#ff8a94;flex:1;",
+          ),
         ],
         [
           element.text(

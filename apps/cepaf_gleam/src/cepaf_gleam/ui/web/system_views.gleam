@@ -30,10 +30,9 @@
 import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ui/lustre/shell
 import cepaf_gleam/ui/state.{
-  type SharedMeshState, ThreatCritical, ThreatElevated, ThreatNominal,
-  ThreatNone, ThreatSevere,
+  type SharedMeshState, ThreatCritical, ThreatElevated, ThreatNominal, ThreatNone,
+  ThreatSevere,
 }
-import cepaf_gleam/ui/web/page_helpers.{page_header}
 import gleam/int
 import gleam/list
 import gleam/string
@@ -69,27 +68,12 @@ pub fn immune_view(state: SharedMeshState) -> Element(msg) {
         ),
         shell.status_card(
           "Mesh Nodes",
-          case state.quorum_healthy {
-            True -> "Healthy"
-            False -> "Degraded"
-          },
-          int.to_string(state.healthy_count)
-            <> "/"
-            <> int.to_string(state.container_count),
+          case state.quorum_healthy { True -> "Healthy" False -> "Degraded" },
+          int.to_string(state.healthy_count) <> "/" <> int.to_string(state.container_count),
           "protected by immune system",
         ),
-        shell.status_card(
-          "Attacks Blocked",
-          "Healthy",
-          "12",
-          "since last reset",
-        ),
-        shell.status_card(
-          "Antibodies",
-          "Healthy",
-          "35",
-          "deployed rules (GR-001..GR-035)",
-        ),
+        shell.status_card("Attacks Blocked", "Healthy", "12", "since last reset"),
+        shell.status_card("Antibodies", "Healthy", "35", "deployed rules (GR-001..GR-035)"),
       ]),
     ]),
     shell.section("Psi Invariants", [
@@ -110,7 +94,7 @@ pub fn immune_view(state: SharedMeshState) -> Element(msg) {
     ]),
     element.element(
       "script",
-      [attribute.attribute("src", "/static/immune-grid.bundled.js?v=pass41")],
+      [attribute.attribute("src", "/static/immune-grid.js?v=22.10.0")],
       [],
     ),
   ])
@@ -179,7 +163,7 @@ pub fn zenoh_view(state: SharedMeshState) -> Element(msg) {
     ]),
     element.element(
       "script",
-      [attribute.attribute("src", "/static/zenoh-grid.bundled.js?v=pass46")],
+      [attribute.attribute("src", "/static/zenoh-grid.js?v=22.10.0")],
       [],
     ),
   ])
@@ -190,9 +174,7 @@ pub fn verification_view(state: SharedMeshState) -> Element(msg) {
   let health_raw = c3i_nif.system_health()
   let container_count = count_in_json(health_raw, "container_count")
   let healthy_count = count_in_json(health_raw, "healthy_count")
-  let container_status = case
-    healthy_count == container_count && container_count > 0
-  {
+  let container_status = case healthy_count == container_count && container_count > 0 {
     True -> "Healthy"
     False -> "Degraded"
   }
@@ -210,7 +192,9 @@ pub fn verification_view(state: SharedMeshState) -> Element(msg) {
         shell.status_card(
           "Container Health",
           container_status,
-          int.to_string(healthy_count) <> "/" <> int.to_string(container_count),
+          int.to_string(healthy_count)
+            <> "/"
+            <> int.to_string(container_count),
           "live NIF data",
         ),
       ]),
@@ -268,12 +252,7 @@ pub fn verification_view(state: SharedMeshState) -> Element(msg) {
     ]),
     element.element(
       "script",
-      [
-        attribute.attribute(
-          "src",
-          "/static/verification-grid.bundled.js?v=pass40",
-        ),
-      ],
+      [attribute.attribute("src", "/static/verification-grid.js?v=22.10.0")],
       [],
     ),
   ])
@@ -288,10 +267,8 @@ pub fn substrate_view(_state: SharedMeshState) -> Element(msg) {
     True -> "Healthy"
     False -> "Degraded"
   }
-  let mesh_status = case
-    string.contains(health_raw, "\"status\":\"active\"")
-    || string.contains(health_raw, "status: active")
-  {
+  let mesh_status = case string.contains(health_raw, "\"status\":\"active\"")
+    || string.contains(health_raw, "status: active") {
     True -> "active"
     False -> "unknown"
   }
@@ -313,12 +290,7 @@ pub fn substrate_view(_state: SharedMeshState) -> Element(msg) {
           int.to_string(container_count),
           "live NIF count",
         ),
-        shell.status_card(
-          "Zenoh KV",
-          "Healthy",
-          mesh_status,
-          "ephemeral mesh KV",
-        ),
+        shell.status_card("Zenoh KV", "Healthy", mesh_status, "ephemeral mesh KV"),
       ]),
     ]),
     shell.section("Database Files", [
@@ -342,7 +314,7 @@ pub fn substrate_view(_state: SharedMeshState) -> Element(msg) {
     shell.section("DB4 — NIF Call Latency", [shell.nif_latency_panel()]),
     element.element(
       "script",
-      [attribute.attribute("src", "/static/substrate-grid.bundled.js?v=pass43")],
+      [attribute.attribute("src", "/static/substrate-grid.js?v=22.10.0")],
       [],
     ),
   ])
@@ -353,9 +325,7 @@ pub fn metabolic_view(_state: SharedMeshState) -> Element(msg) {
   let health_raw = c3i_nif.system_health()
   let container_count = count_in_json(health_raw, "container_count")
   let healthy_count = count_in_json(health_raw, "healthy_count")
-  let metabolic_status = case
-    healthy_count == container_count && container_count > 0
-  {
+  let metabolic_status = case healthy_count == container_count && container_count > 0 {
     True -> "Healthy"
     False -> "Degraded"
   }
@@ -371,7 +341,9 @@ pub fn metabolic_view(_state: SharedMeshState) -> Element(msg) {
         shell.status_card(
           "Active Containers",
           metabolic_status,
-          int.to_string(healthy_count) <> "/" <> int.to_string(container_count),
+          int.to_string(healthy_count)
+            <> "/"
+            <> int.to_string(container_count),
           "live NIF data",
         ),
         shell.status_card("Build Jobs", "Healthy", "16", "--jobs 16"),
@@ -410,12 +382,7 @@ pub fn metabolic_view(_state: SharedMeshState) -> Element(msg) {
     ]),
     element.element(
       "script",
-      [
-        attribute.attribute(
-          "src",
-          "/static/page-grid.bundled.js?page=metabolic",
-        ),
-      ],
+      [attribute.attribute("src", "/static/metabolic-grid.js?v=22.10.1")],
       [],
     ),
   ])
@@ -507,7 +474,7 @@ pub fn podman_view(state: SharedMeshState) -> Element(msg) {
     shell.section("Container Controls", [shell.container_action_buttons()]),
     element.element(
       "script",
-      [attribute.attribute("src", "/static/podman-grid.bundled.js?v=pass44")],
+      [attribute.attribute("src", "/static/podman-grid.js?v=22.10.0")],
       [],
     ),
   ])
@@ -558,7 +525,7 @@ pub fn mcp_view(_state: SharedMeshState) -> Element(msg) {
     ]),
     element.element(
       "script",
-      [attribute.attribute("src", "/static/page-grid.bundled.js?page=mcp")],
+      [attribute.attribute("src", "/static/mcp-grid.js?v=22.10.1")],
       [],
     ),
   ])
@@ -601,7 +568,7 @@ pub fn kms_view(_state: SharedMeshState) -> Element(msg) {
     ]),
     element.element(
       "script",
-      [attribute.attribute("src", "/static/page-grid.bundled.js?page=kms")],
+      [attribute.attribute("src", "/static/kms-grid.js?v=22.10.1")],
       [],
     ),
   ])
@@ -612,9 +579,7 @@ pub fn telemetry_view(_state: SharedMeshState) -> Element(msg) {
   let health_raw = c3i_nif.system_health()
   let container_count = count_in_json(health_raw, "container_count")
   let healthy_count = count_in_json(health_raw, "healthy_count")
-  let pipeline_status = case
-    healthy_count == container_count && container_count > 0
-  {
+  let pipeline_status = case healthy_count == container_count && container_count > 0 {
     True -> "Healthy"
     False -> "Degraded"
   }
@@ -651,7 +616,7 @@ pub fn telemetry_view(_state: SharedMeshState) -> Element(msg) {
     shell.section("MO2 — OTel Span Viewer", [shell.otel_span_viewer()]),
     element.element(
       "script",
-      [attribute.attribute("src", "/static/telemetry-grid.bundled.js?v=pass47")],
+      [attribute.attribute("src", "/static/telemetry-grid.js?v=22.10.0")],
       [],
     ),
   ])
@@ -661,9 +626,14 @@ pub fn telemetry_view(_state: SharedMeshState) -> Element(msg) {
 // Private helpers (duplicated from page_views — SC-MUDA-001 approved)
 // ---------------------------------------------------------------------------
 
-// page_header — SC-MUDA-001 consolidated to page_helpers.page_header (single
-// source of truth across system_views / dashboard_views / special_views /
-// page_helpers; ZK [zk-50657feb899e0a2f] two-step collapse pattern).
+fn page_header(title: String, subtitle: String) -> Element(msg) {
+  html.div([attribute.class("page-header")], [
+    html.div([], [
+      html.h1([attribute.class("page-title")], [element.text(title)]),
+      html.div([attribute.class("page-subtitle")], [element.text(subtitle)]),
+    ]),
+  ])
+}
 
 fn threat_label(level: state.ThreatLevel) -> String {
   case level {

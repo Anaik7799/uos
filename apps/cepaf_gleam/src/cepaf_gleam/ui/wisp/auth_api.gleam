@@ -42,22 +42,21 @@ pub fn me_json(user: rbac.AuthenticatedUser) -> String {
     #("roles", json.array(user.roles, json.string)),
     #("permission", json.string(rbac.permission_to_string(user.permission))),
     #("has_mfa", json.bool(user.has_mfa)),
-    #(
-      "accessible_layers",
+    #("accessible_layers",
       json.array(
         rbac.accessible_layers(user.permission)
-          |> list.map(fn(l) {
-            case l {
-              domain.L0Constitutional -> "L0"
-              domain.L1AtomicDebug -> "L1"
-              domain.L2Component -> "L2"
-              domain.L3Transaction -> "L3"
-              domain.L4System -> "L4"
-              domain.L5Cognitive -> "L5"
-              domain.L6Ecosystem -> "L6"
-              domain.L7Federation -> "L7"
-            }
-          }),
+        |> list.map(fn(l) {
+          case l {
+            domain.L0Constitutional -> "L0"
+            domain.L1AtomicDebug -> "L1"
+            domain.L2Component -> "L2"
+            domain.L3Transaction -> "L3"
+            domain.L4System -> "L4"
+            domain.L5Cognitive -> "L5"
+            domain.L6Ecosystem -> "L6"
+            domain.L7Federation -> "L7"
+          }
+        }),
         json.string,
       ),
     ),
@@ -70,25 +69,19 @@ pub fn status_json(ferriskey_enabled: Bool) -> String {
   json.object([
     #("page", json.string("auth")),
     #("ferriskey_enabled", json.bool(ferriskey_enabled)),
-    #(
-      "auth_method",
-      json.string(case ferriskey_enabled {
-        True -> "oidc_jwt"
-        False -> "static_bearer_token"
-      }),
-    ),
+    #("auth_method", json.string(case ferriskey_enabled {
+      True -> "oidc_jwt"
+      False -> "static_bearer_token"
+    })),
     #("stamp", json.string("SC-AUTH-001")),
-    #(
-      "iam_features",
-      json.object([
-        #("oidc", json.bool(ferriskey_enabled)),
-        #("rbac", json.bool(ferriskey_enabled)),
-        #("mfa", json.bool(ferriskey_enabled)),
-        #("webhooks", json.bool(ferriskey_enabled)),
-        #("federation", json.bool(ferriskey_enabled)),
-        #("audit_events", json.bool(ferriskey_enabled)),
-      ]),
-    ),
+    #("iam_features", json.object([
+      #("oidc", json.bool(ferriskey_enabled)),
+      #("rbac", json.bool(ferriskey_enabled)),
+      #("mfa", json.bool(ferriskey_enabled)),
+      #("webhooks", json.bool(ferriskey_enabled)),
+      #("federation", json.bool(ferriskey_enabled)),
+      #("audit_events", json.bool(ferriskey_enabled)),
+    ])),
   ])
   |> json.to_string()
 }

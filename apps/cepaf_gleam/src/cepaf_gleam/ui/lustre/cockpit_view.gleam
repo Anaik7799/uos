@@ -7,11 +7,11 @@ import cepaf_gleam/cockpit/domain.{
   Connected, Critical, Normal, Warning,
 }
 import cepaf_gleam/ui/domain as ui_domain
+import cepaf_gleam/ui/zenoh_otel
 import cepaf_gleam/ui/lustre/widgets/biomorphic_matrix.{type BiomorphicData}
 import cepaf_gleam/ui/lustre/widgets/homeostasis_control.{
   type HomeostasisMsg, SetThreshold, TriggerEquilibrium,
 }
-import cepaf_gleam/ui/zenoh_otel
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/order.{Eq, Gt, Lt}

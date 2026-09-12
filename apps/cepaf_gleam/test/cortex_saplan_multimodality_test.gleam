@@ -151,7 +151,11 @@ pub fn cortex_system_tripartite_ui_rendering_test() {
   let coord = init_coordinator()
   let model =
     CortexCockpitModel(
-      coordinator: coord,
+      coordinator: cortex_cockpit.CoordinatorState(
+        andon_active: coord.andon_active,
+        total_dispatched: coord.total_dispatched,
+        total_completed: coord.total_completed,
+      ),
       current_phase: "CognitiveActStage",
       active_intents_count: 2,
       circuit_breaker_status: "HealthyNominal",

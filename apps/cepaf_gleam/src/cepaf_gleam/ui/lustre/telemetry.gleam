@@ -47,15 +47,8 @@ pub type TelemetryMsg {
 }
 
 pub fn init() -> TelemetryModel {
-  TelemetryModel(
-    spans: [],
-    metrics: [],
-    log_level: Info,
-    active_traces: 0,
-    rate_limit_remaining: 20,
-    rate_limit_max: 20,
-    rate_limit_reset_s: 60,
-  )
+  TelemetryModel(spans: [], metrics: [], log_level: Info, active_traces: 0,
+    rate_limit_remaining: 20, rate_limit_max: 20, rate_limit_reset_s: 60)
 }
 
 pub fn update(model: TelemetryModel, msg: TelemetryMsg) -> TelemetryModel {

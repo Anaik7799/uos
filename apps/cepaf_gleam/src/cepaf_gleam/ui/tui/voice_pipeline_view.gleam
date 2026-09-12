@@ -1,7 +1,5 @@
 // STAMP: SC-GLM-UI-001, SC-OPENCLAW-001
-import cepaf_gleam/ui/lustre/voice_pipeline.{
-  type VoicePipelineModel, type VoiceTierStatus,
-}
+import cepaf_gleam/ui/lustre/voice_pipeline.{type VoicePipelineModel, type VoiceTierStatus}
 import gleam/list
 import gleam/string
 
@@ -28,11 +26,7 @@ fn render_tier(t: VoiceTierStatus) -> String {
     True -> "\u{001b}[32mOK\u{001b}[0m"
     False -> "\u{001b}[31m--\u{001b}[0m"
   }
-  status
-  <> " "
-  <> pad(t.name, 24)
-  <> pad(int_str(t.latency_ms) <> "ms", 8)
-  <> conn
+  status <> " " <> pad(t.name, 24) <> pad(int_str(t.latency_ms) <> "ms", 8) <> conn
 }
 
 fn pad(s: String, w: Int) -> String {

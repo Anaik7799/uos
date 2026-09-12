@@ -28,9 +28,8 @@ import cepaf_gleam/auth/rbac.{
 import gleam/list
 import lustre/attribute.{class}
 import lustre/element.{type Element, text}
-import lustre/element/html.{
-  div, h2, h3, li, p, span, table, tbody, td, th, tr, ul,
-}
+import lustre/element/html.{div, h2, h3, li, p, span, table, tbody, td, th,
+  tr, ul}
 
 // ---------------------------------------------------------------------------
 // Model
@@ -126,27 +125,28 @@ fn rbac_card(model: AuthModel) -> Element(AuthMsg) {
       ul([], case model.roles {
         [] -> [li([], [text("No roles assigned")])]
         roles ->
-          list.map(roles, fn(role) { li([class("role-item")], [text(role)]) })
+          list.map(roles, fn(role) {
+            li([class("role-item")], [text(role)])
+          })
       }),
     ]),
     // Accessible layers
     h3([], [text("Accessible Fractal Layers")]),
-    div(
-      [class("layer-chips")],
+    div([class("layer-chips")],
       rbac.accessible_layers(model.permission)
-        |> list.map(fn(layer) {
-          let layer_str = case layer {
-            domain.L0Constitutional -> "L0"
-            domain.L1AtomicDebug -> "L1"
-            domain.L2Component -> "L2"
-            domain.L3Transaction -> "L3"
-            domain.L4System -> "L4"
-            domain.L5Cognitive -> "L5"
-            domain.L6Ecosystem -> "L6"
-            domain.L7Federation -> "L7"
-          }
-          span([class("chip layer-chip")], [text(layer_str)])
-        }),
+      |> list.map(fn(layer) {
+        let layer_str = case layer {
+          domain.L0Constitutional -> "L0"
+          domain.L1AtomicDebug -> "L1"
+          domain.L2Component -> "L2"
+          domain.L3Transaction -> "L3"
+          domain.L4System -> "L4"
+          domain.L5Cognitive -> "L5"
+          domain.L6Ecosystem -> "L6"
+          domain.L7Federation -> "L7"
+        }
+        span([class("chip layer-chip")], [text(layer_str)])
+      }),
     ),
   ])
 }

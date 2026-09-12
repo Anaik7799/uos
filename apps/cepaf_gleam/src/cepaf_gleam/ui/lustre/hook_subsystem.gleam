@@ -106,7 +106,11 @@ pub fn update(
     StopLockChanged(state) -> HookSubsystemModel(..model, stop_lock: state)
     AgentCountsUpdated(counts) -> {
       let total = counts.claude + counts.pi + counts.gemini
-      HookSubsystemModel(..model, agent_counts: counts, total_hook_fires: total)
+      HookSubsystemModel(
+        ..model,
+        agent_counts: counts,
+        total_hook_fires: total,
+      )
     }
     DaemonHealthUpdated(posterior) ->
       HookSubsystemModel(..model, daemon_health_posterior: posterior)

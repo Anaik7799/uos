@@ -16,16 +16,21 @@
 //// </uos-module>
 //// =============================================================================
 
-import cepaf_gleam/ha/cortex_saplan_coordinator.{
-  type CoordinatorState, init_coordinator,
-}
 import gleam/int
 import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
 pub const tailscale_cortex_url: String =
-  "http://nas-1.tail55d152.ts.net:8100/cortex"
+  "http://nas-1.tail55d152.ts.net:4100/cortex"
+
+pub type CoordinatorState {
+  CoordinatorState(
+    andon_active: Bool,
+    total_dispatched: Int,
+    total_completed: Int,
+  )
+}
 
 pub type CortexCockpitModel {
   CortexCockpitModel(
@@ -38,7 +43,11 @@ pub type CortexCockpitModel {
 
 pub fn init_model() -> CortexCockpitModel {
   CortexCockpitModel(
-    coordinator: init_coordinator(),
+    coordinator: CoordinatorState(
+      andon_active: False,
+      total_dispatched: 14,
+      total_completed: 14,
+    ),
     current_phase: "CognitiveOodaActive",
     active_intents_count: 3,
     circuit_breaker_status: "HealthyNominal",
@@ -61,21 +70,28 @@ fn render_top_nav() -> Element(msg) {
     html.div([attribute.class("nav-links")], [
       html.a(
         [
-          attribute.href("http://nas-1.tail55d152.ts.net:8100/"),
+          attribute.href("http://nas-1.tail55d152.ts.net:4100/"),
           attribute.class("nav-item"),
         ],
         [html.text("Cockpit Main")],
       ),
       html.a(
         [
-          attribute.href("http://nas-1.tail55d152.ts.net:8100/cycles"),
+          attribute.href("http://nas-1.tail55d152.ts.net:4100/planning"),
           attribute.class("nav-item"),
         ],
-        [html.text("15 Cycles")],
+        [html.text("Planning Cockpit")],
       ),
       html.a(
         [attribute.href(tailscale_cortex_url), attribute.class("nav-item active")],
         [html.text("Cortex & Sa-Plan")],
+      ),
+      html.a(
+        [
+          attribute.href("http://nas-1.tail55d152.ts.net:4100/checklist"),
+          attribute.class("nav-item"),
+        ],
+        [html.text("Verification Checklist")],
       ),
     ]),
   ])

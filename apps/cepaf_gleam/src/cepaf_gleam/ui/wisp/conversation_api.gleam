@@ -1,7 +1,5 @@
 // STAMP: SC-GLM-UI-001, SC-GLM-UI-003, SC-SMRITI-001
-import cepaf_gleam/ui/lustre/conversation.{
-  type ChatMessage, type ConversationModel,
-}
+import cepaf_gleam/ui/lustre/conversation.{type ChatMessage, type ConversationModel}
 import gleam/json
 
 pub fn messages_json(model: ConversationModel) -> json.Json {

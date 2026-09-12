@@ -46,25 +46,17 @@ pub fn init() -> ConversationModel {
   )
 }
 
-pub fn update(
-  model: ConversationModel,
-  msg: ConversationMsg,
-) -> ConversationModel {
+pub fn update(model: ConversationModel, msg: ConversationMsg) -> ConversationModel {
   case msg {
     MessagesLoaded(msgs) ->
-      ConversationModel(
-        ..model,
-        messages: list.take(msgs, model.max_messages),
-        loading: False,
-      )
+      ConversationModel(..model, messages: list.take(msgs, model.max_messages), loading: False)
     NewMessage(m) -> {
       let msgs = list.take([m, ..model.messages], model.max_messages)
       ConversationModel(..model, messages: msgs)
     }
     SetChatId(id) -> ConversationModel(..model, chat_id: id)
     RefreshConversation -> ConversationModel(..model, loading: True)
-    ErrorReceived(e) ->
-      ConversationModel(..model, error: Some(e), loading: False)
+    ErrorReceived(e) -> ConversationModel(..model, error: Some(e), loading: False)
   }
 }
 

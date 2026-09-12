@@ -1,7 +1,8 @@
 /// Wisp API for Device Health Grid (SC-GLM-UI-001, SC-GLM-UI-003).
 /// STAMP: SC-GLM-UI-001, SC-GLM-UI-003, SC-GLM-UI-007
 import cepaf_gleam/ui/domain.{
-  type DeviceHealth, type DeviceStatus, Maintenance, Offline, Online,
+  type DeviceHealth, type DeviceStatus, DeviceHealth, Maintenance, Offline,
+  Online,
 }
 import gleam/json
 import gleam/list
@@ -31,4 +32,14 @@ fn status_to_string(status: DeviceStatus) -> String {
     Offline -> "offline"
     Maintenance -> "maintenance"
   }
+}
+
+pub fn mock_devices() -> List(DeviceHealth) {
+  [
+    DeviceHealth("cam-001", 0.95, "camera", Online, 1_712_150_000),
+    DeviceHealth("cam-002", 0.72, "camera", Online, 1_712_150_010),
+    DeviceHealth("reader-001", 0.98, "card_reader", Online, 1_712_150_020),
+    DeviceHealth("panel-001", 0.45, "alarm_panel", Maintenance, 1_712_150_030),
+    DeviceHealth("sensor-001", 0.88, "motion_sensor", Online, 1_712_150_040),
+  ]
 }

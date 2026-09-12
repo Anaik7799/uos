@@ -41,13 +41,7 @@ pub fn init() -> ConfigModel {
     total_memory: 0,
     pii_patterns: default_pii_patterns(),
     active_model: "gemini-3.1-flash-lite-preview",
-    available_models: [
-      "gemini-3.1-flash-lite-preview",
-      "gemini-3-flash-preview",
-      "gemma4",
-      "gemma3",
-      "rule-engine",
-    ],
+    available_models: ["gemini-3.1-flash-lite-preview", "gemini-3-flash-preview", "gemma4", "gemma3", "rule-engine"],
   )
 }
 

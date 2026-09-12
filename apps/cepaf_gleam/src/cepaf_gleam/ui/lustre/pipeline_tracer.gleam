@@ -83,9 +83,12 @@ pub fn update(
   case msg {
     TracesLoaded(traces) ->
       PipelineTracerModel(..model, traces: traces, loading: False)
-    SummaryUpdated(summary) -> PipelineTracerModel(..model, summary: summary)
-    SelectTrace(id) -> PipelineTracerModel(..model, selected_trace: Some(id))
-    RefreshTraces -> PipelineTracerModel(..model, loading: True)
+    SummaryUpdated(summary) ->
+      PipelineTracerModel(..model, summary: summary)
+    SelectTrace(id) ->
+      PipelineTracerModel(..model, selected_trace: Some(id))
+    RefreshTraces ->
+      PipelineTracerModel(..model, loading: True)
     ErrorReceived(e) ->
       PipelineTracerModel(..model, error: Some(e), loading: False)
   }
@@ -107,13 +110,12 @@ pub fn bottleneck_stage(trace: PipelineTrace) -> Option(StageEvent) {
   case trace.stages {
     [] -> None
     stages -> {
-      let max =
-        list.fold(stages, StageEvent("", 0, ""), fn(acc, s) {
-          case s.elapsed_ms > acc.elapsed_ms {
-            True -> s
-            False -> acc
-          }
-        })
+      let max = list.fold(stages, StageEvent("", 0, ""), fn(acc, s) {
+        case s.elapsed_ms > acc.elapsed_ms {
+          True -> s
+          False -> acc
+        }
+      })
       Some(max)
     }
   }
@@ -147,9 +149,5 @@ pub fn load_from_nif(limit: Int) -> PipelineTracerModel {
     Error(_) -> 0
   }
   let model = init()
-  PipelineTracerModel(
-    ..model,
-    summary: PipelineSummary(count, 0, 0, 0, 0, 0.0, 0),
-    loading: False,
-  )
+  PipelineTracerModel(..model, summary: PipelineSummary(count, 0, 0, 0, 0, 0.0, 0), loading: False)
 }

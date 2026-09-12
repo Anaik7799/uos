@@ -138,6 +138,38 @@
 ////   GR-084  CoverageDecreased        salience  65  CoverageDecreased → WarnLog
 ////   GR-085  CommitWithoutTest        salience  75  CommitWithoutTest → WarnLog
 ////
+//// Rule inventory (GR-086..GR-105 — UOS sovereign, toolchain, safety & mathematical gates):
+////
+////   HARDWARE & PROVENANCE:
+////   GR-086  NvmeOsDriveLockout       salience 100  NvmeOsDiskTargeted → JidokaHalt
+////   GR-087  ProvenanceCeilingGuard   salience 100  ProvenanceCeilingExceeded → JidokaHalt
+////   GR-088  ZeroMudaSubstratePurity  salience 100  ZeroMudaViolationDetected → JidokaHalt
+////   GR-089  SaPlanSoleAuthorityHalt  salience 100  SaPlanAuthorityBypassed → JidokaHalt
+////
+////   SOVEREIGNTY & STABILITY:
+////   GR-090  HomeostasisLyapunovGuard salience  95  HomeostasisLyapunovViolated → PreventiveCooldown
+////   GR-091  LocalSovereigntyGuard    salience  90  LocalSovereigntyCompromised → EscalateToOperator
+////   GR-092  TriAgentSurveillanceGuard salience 100  TriAgentSurveillanceFailed → JidokaHalt
+////   GR-093  AutonomousDegradationDEFCON salience  85  AutonomousDegradationTriggered → SetCockpitMode("emergency")
+////
+////   TOOLCHAIN & VCS PURITY:
+////   GR-094  Otp29RuntimePinning      salience 100  Otp29RuntimeViolated → JidokaHalt
+////   GR-095  DeterminateNixToolchainGuard salience  90  DeterminateNixToolchainBypassed → EscalateToOperator
+////   GR-096  NativeGitMutationGuard   salience 100  NativeGitMutationAttempted → JidokaHalt
+////   GR-097  Checklist18DomainGuard   salience  80  ChecklistDomainUnsatisfied → LogWarning
+////
+////   FORMAL ORACLES & ZERO-TRUST:
+////   GR-098  Trace13ConservationGuard salience  95  Trace13CoordinateNonZero → JidokaHalt
+////   GR-099  GospelNulByteTrap        salience 100  GospelNulByteDetected → JidokaHalt
+////   GR-100  GospelSqlInjectionTrap   salience 100  GospelSqlInjectionDetected → JidokaHalt
+////
+////   NAVIGATION, AUDIT & SWARM:
+////   GR-101  TailscaleFqdnMandate     salience  60  TailscaleFqdnMissing → LogWarning
+////   GR-102  JournalV3ThirteenSectionGuard salience  70  JournalV3SectionMissing → LogWarning
+////   GR-103  LivingSwarmMeshHeartbeat salience  75  LivingSwarmMeshDegraded → TriggerRunbook("RB-SWARM-001")
+////   GR-104  CyberneticSingingConsonance salience  50  CyberneticConsonanceDiverged → LogWarning
+////   GR-105  TimestampPrefixMandate   salience  65  TimestampPrefixInvalid → LogWarning
+////
 //// STAMP: SC-SIL4-001, SC-HA-001, SC-OODA-001, SC-MUDA-001, SC-FUNC-001,
 ////        SC-FUNC-002, SC-FUNC-005, SC-FUNC-007, SC-TRUTH-001, SC-TRUTH-003,
 ////        SC-TRUTH-004, SC-TRUTH-010, SC-SIL4-006, SC-SIL4-007, SC-SIL4-010,
@@ -147,7 +179,11 @@
 ////        AOR-DELETE-001, AOR-DELETE-003, AOR-DELETE-007,
 ////        AOR-WIRE-001, AOR-WIRE-004, AOR-WIRE-005,
 ////        AOR-ZENOH-001, AOR-ZENOH-005, AOR-ZENOH-007,
-////        AOR-MOKSHA-001, AOR-MOKSHA-002
+////        AOR-MOKSHA-001, AOR-MOKSHA-002,
+////        SC-DRIVE-001, SC-PROVENANCE-001, SC-ZERO-MUDA-001, SC-SA-PLAN-001,
+////        SC-JIDOKA-001, SC-SOV-001, SC-SOV-002, SC-DEFCON-001, SC-NIX-DEVENV-001,
+////        SC-JJ-001, SC-CHECKLIST-001, SC-TRACE-001, ADR-084, SC-TAILSCALE-WEB-001,
+////        SC-JOURNAL-v3, ADR-093, ADR-094, SC-TIME-001
 
 import gleam/float
 import gleam/int
@@ -309,6 +345,47 @@ pub type RuleCondition {
   CoverageDecreased
   /// AOR-MOKSHA-002: a commit was attempted without running gleam test first
   CommitWithoutTest
+  // ── UOS Sovereign, Toolchain & Mathematical Conditions (GR-086..GR-105) ──
+  /// SC-DRIVE-001: Root NVMe OS drive 25503L801736 targeted for disk/OSD mutation
+  NvmeOsDiskTargeted
+  /// SC-PROVENANCE-001: EV cycle claim exceeds admitted ceiling 93 without dual-key verification
+  ProvenanceCeilingExceeded
+  /// SC-ZERO-MUDA-001: Barred substrate detected (Bevy, Graphite, unpinned foreign NIF)
+  ZeroMudaViolationDetected
+  /// SC-SA-PLAN-001 / SC-JIDOKA-001: Non-sa-plan task execution attempted (err -32002)
+  SaPlanAuthorityBypassed
+  /// SC-HA-001: Lyapunov derivative dV/dt > 0 or PID error |e| >= 0.05
+  HomeostasisLyapunovViolated
+  /// SC-SOV-001: Mandatory internet/cloud dependency attempted for safety-critical subsystem
+  LocalSovereigntyCompromised
+  /// SC-SOV-002: Tri-agent surveillance consensus failed or unledgered session mutation
+  TriAgentSurveillanceFailed
+  /// SC-DEFCON-001: Frontier API failure triggers autonomous local degradation
+  AutonomousDegradationTriggered
+  /// SC-NIX-DEVENV-001: Host running non-OTP 29 BEAM or unpinned zigvm bytecode
+  Otp29RuntimeViolated
+  /// SC-NIX-DEVENV-001: Toolchain resolved outside Determinate Nix / devenv profile
+  DeterminateNixToolchainBypassed
+  /// SC-JJ-001: Native git mutation command attempted in standalone Jujutsu monorepo
+  NativeGitMutationAttempted
+  /// SC-CHECKLIST-001: Comprehensive verification checklist has unsatisfied checkpoints (< 18/18)
+  ChecklistDomainUnsatisfied
+  /// SC-TRACE-001: 13D trace coordinate delta non-zero (ΔT13 ≠ 0)
+  Trace13CoordinateNonZero
+  /// ADR-084: Gospel zero-trust interceptor trapped embedded NUL byte in tool payload
+  GospelNulByteDetected
+  /// ADR-084: Gospel zero-trust interceptor trapped raw SQL injection pattern
+  GospelSqlInjectionDetected
+  /// SC-TAILSCALE-WEB-001: Document or web view lacks canonical Tailscale FQDN link
+  TailscaleFqdnMissing
+  /// SC-JOURNAL-v3: Completion journal missing one or more of the 13 required epistemic sections
+  JournalV3SectionMissing
+  /// ADR-093: Living 21-holon swarm mesh health degraded or heartbeat dropped
+  LivingSwarmMeshDegraded
+  /// ADR-094: 22-Shruti acoustic raga consonance diverged from harmonic lattice (> 15 cent drift)
+  CyberneticConsonanceDiverged
+  /// SC-TIME-001: Generated document lacks mandatory YYYYMMDD-HHSS- timestamp prefix
+  TimestampPrefixInvalid
 }
 
 /// Rule actions — control decisions produced by fired rules
@@ -1288,6 +1365,227 @@ pub fn all_rules() -> List(GuardRule) {
       layer: "*",
       description: "AOR-MOKSHA-002: gleam test must pass before every commit",
     ),
+    // ── GR-086..089: Hardware Safety & Provenance ───────────────────────────
+    GuardRule(
+      id: "GR-086",
+      name: "NvmeOsDriveLockout",
+      salience: 100,
+      condition: NvmeOsDiskTargeted,
+      action: JidokaHalt(
+        "CRITICAL: Root NVMe OS drive 25503L801736 targeted for disk/OSD mutation — HARD INTERLOCK HALT (SC-DRIVE-001)",
+      ),
+      layer: "L4",
+      description: "Hardware safety: Deny any allocation or wiping of root NVMe drive 25503L801736",
+    ),
+    GuardRule(
+      id: "GR-087",
+      name: "ProvenanceCeilingGuard",
+      salience: 100,
+      condition: ProvenanceCeilingExceeded,
+      action: JidokaHalt(
+        "SC-PROVENANCE-001: EV cycle claim exceeds admitted ceiling 93 without dual-key verification",
+      ),
+      layer: "L0",
+      description: "Enforce admitted EV ceiling 93; reject unadmitted EV-94..EV-109 claims",
+    ),
+    GuardRule(
+      id: "GR-088",
+      name: "ZeroMudaSubstratePurity",
+      salience: 100,
+      condition: ZeroMudaViolationDetected,
+      action: JidokaHalt(
+        "SC-ZERO-MUDA-001: Barred substrate detected (Bevy, Graphite, or unpinned foreign NIF)",
+      ),
+      layer: "L1",
+      description: "Enforce Zero-Muda purity: 0 Bevy, 0 Graphite, pure BEAM / Hermes OCaml",
+    ),
+    GuardRule(
+      id: "GR-089",
+      name: "SaPlanSoleAuthorityHalt",
+      salience: 100,
+      condition: SaPlanAuthorityBypassed,
+      action: JidokaHalt(
+        "SC-JIDOKA-001: Fractal Jidoka Andon Stop Line — non-sa-plan task execution attempted (err -32002)",
+      ),
+      layer: "L0",
+      description: "sa-plan is the sole canonical execution authority for all plans, tasks, jobs, and workflows",
+    ),
+    // ── GR-090..093: Sovereignty, Homeostasis & DEFCON ──────────────────────
+    GuardRule(
+      id: "GR-090",
+      name: "HomeostasisLyapunovGuard",
+      salience: 95,
+      condition: HomeostasisLyapunovViolated,
+      action: PreventiveCooldown(
+        "SC-HA-001: Lyapunov derivative dV/dt > 0 or PID error |e| >= 0.05 — arresting trajectory",
+      ),
+      layer: "L5",
+      description: "Lyapunov stability dV/dt <= 0 and PID error convergence |e| < 0.05",
+    ),
+    GuardRule(
+      id: "GR-091",
+      name: "LocalSovereigntyGuard",
+      salience: 90,
+      condition: LocalSovereigntyCompromised,
+      action: EscalateToOperator(
+        "SC-SOV-001: Mandatory internet/cloud dependency attempted for safety-critical subsystem",
+      ),
+      layer: "L0",
+      description: "Local sovereignty: all safety-critical operations must operate offline without WAN access",
+    ),
+    GuardRule(
+      id: "GR-092",
+      name: "TriAgentSurveillanceGuard",
+      salience: 100,
+      condition: TriAgentSurveillanceFailed,
+      action: JidokaHalt(
+        "SC-SOV-002: Tri-agent surveillance consensus failed or unledgered session mutation detected",
+      ),
+      layer: "L0",
+      description: "Enforce tri-agent consensus across AGY, Claude, and Codex with durable append-only coordinator",
+    ),
+    GuardRule(
+      id: "GR-093",
+      name: "AutonomousDegradationDEFCON",
+      salience: 85,
+      condition: AutonomousDegradationTriggered,
+      action: SetCockpitMode("emergency"),
+      layer: "L5",
+      description: "DEFCON escalation: degrade gracefully to local models/oracles on frontier API timeout",
+    ),
+    // ── GR-094..097: Toolchain, VCS Purity & Checklist ──────────────────────
+    GuardRule(
+      id: "GR-094",
+      name: "Otp29RuntimePinning",
+      salience: 100,
+      condition: Otp29RuntimeViolated,
+      action: JidokaHalt(
+        "SC-NIX-DEVENV-001: Host running non-OTP 29 BEAM or unpinned zigvm OTP bytecode",
+      ),
+      layer: "L1",
+      description: "Enforce OTP 29 minimal runtime; bar host OTP 27 and unpinned zigvm OTP bytecode",
+    ),
+    GuardRule(
+      id: "GR-095",
+      name: "DeterminateNixToolchainGuard",
+      salience: 90,
+      condition: DeterminateNixToolchainBypassed,
+      action: EscalateToOperator(
+        "SC-NIX-DEVENV-001: Toolchain resolved outside Determinate Nix / devenv profile",
+      ),
+      layer: "L4",
+      description: "Enforce toolchain provisioning exclusively through Determinate Nix / devenv",
+    ),
+    GuardRule(
+      id: "GR-096",
+      name: "NativeGitMutationGuard",
+      salience: 100,
+      condition: NativeGitMutationAttempted,
+      action: JidokaHalt(
+        "SC-JJ-001: Native git mutation command attempted in standalone Jujutsu monorepo",
+      ),
+      layer: "L0",
+      description: "Standalone Jujutsu monorepo purity: 0 native git mutations allowed",
+    ),
+    GuardRule(
+      id: "GR-097",
+      name: "Checklist18DomainGuard",
+      salience: 80,
+      condition: ChecklistDomainUnsatisfied,
+      action: LogWarning(
+        "SC-CHECKLIST-001: Comprehensive verification checklist has unsatisfied checkpoints (< 18/18)",
+      ),
+      layer: "L2",
+      description: "Enforce 5-domain 18-checkpoint verification on all documents and views",
+    ),
+    // ── GR-098..100: Formal Oracles & Zero-Trust Interception ───────────────
+    GuardRule(
+      id: "GR-098",
+      name: "Trace13ConservationGuard",
+      salience: 95,
+      condition: Trace13CoordinateNonZero,
+      action: JidokaHalt(
+        "SC-TRACE-001: 13D trace coordinate delta non-zero (ΔT13 ≠ 0) — coordinate conservation broken",
+      ),
+      layer: "L1",
+      description: "13D Traceability coordinate conservation: ΔT13 ≡ 0 fail-closed invariant",
+    ),
+    GuardRule(
+      id: "GR-099",
+      name: "GospelNulByteTrap",
+      salience: 100,
+      condition: GospelNulByteDetected,
+      action: JidokaHalt(
+        "ADR-084: Gospel zero-trust interceptor trapped embedded NUL byte in tool payload (code -2)",
+      ),
+      layer: "L3",
+      description: "Hermes Gospel zero-trust interceptor: trap embedded NUL byte in tool payloads",
+    ),
+    GuardRule(
+      id: "GR-100",
+      name: "GospelSqlInjectionTrap",
+      salience: 100,
+      condition: GospelSqlInjectionDetected,
+      action: JidokaHalt(
+        "ADR-084: Gospel zero-trust interceptor trapped raw SQL injection pattern (code -3)",
+      ),
+      layer: "L3",
+      description: "Hermes Gospel zero-trust interceptor: trap SQL injection patterns in tool payloads",
+    ),
+    // ── GR-101..105: Navigation, Audit, Swarm & Raga Consonance ─────────────
+    GuardRule(
+      id: "GR-101",
+      name: "TailscaleFqdnMandate",
+      salience: 60,
+      condition: TailscaleFqdnMissing,
+      action: LogWarning(
+        "SC-TAILSCALE-WEB-001: Document or web view lacks canonical Tailscale FQDN link (nas-1.tail55d152.ts.net)",
+      ),
+      layer: "L2",
+      description: "All web pages, ADRs, and files must carry clickable Tailscale FQDN links",
+    ),
+    GuardRule(
+      id: "GR-102",
+      name: "JournalV3ThirteenSectionGuard",
+      salience: 70,
+      condition: JournalV3SectionMissing,
+      action: LogWarning(
+        "SC-JOURNAL-v3: Completion journal missing one or more of the 13 required epistemic sections",
+      ),
+      layer: "L5",
+      description: "Validate SC-JOURNAL-v3 13-section structure against 7 verification engines",
+    ),
+    GuardRule(
+      id: "GR-103",
+      name: "LivingSwarmMeshHeartbeat",
+      salience: 75,
+      condition: LivingSwarmMeshDegraded,
+      action: TriggerRunbook("RB-SWARM-001"),
+      layer: "L6",
+      description: "Living 21-holon swarm mesh health and decentralized work-stealing heartbeat",
+    ),
+    GuardRule(
+      id: "GR-104",
+      name: "CyberneticSingingConsonance",
+      salience: 50,
+      condition: CyberneticConsonanceDiverged,
+      action: LogWarning(
+        "ADR-094: 22-Shruti acoustic raga consonance diverged from harmonic lattice (> 15 cent drift)",
+      ),
+      layer: "L5",
+      description: "Cybernetic singing acoustic telemetric feedback consonance over 22 Indian shrutis",
+    ),
+    GuardRule(
+      id: "GR-105",
+      name: "TimestampPrefixMandate",
+      salience: 65,
+      condition: TimestampPrefixInvalid,
+      action: LogWarning(
+        "SC-TIME-001: Generated document lacks mandatory YYYYMMDD-HHSS- timestamp prefix",
+      ),
+      layer: "L2",
+      description: "Mandatory YYYYMMDD-HHSS- timestamp prefix on all generated documents",
+    ),
   ]
 }
 
@@ -1458,9 +1756,9 @@ pub fn evaluate_condition(
     // Convention: callers pass cascade_depth = staleness_seconds for freshness checks.
     DataStalenessExceeds(seconds) -> cascade_depth >= seconds
 
-    // MockDataInProduction: SC-TRUTH-010 — lyapunov = -99.0 signals mock data detected.
+    // MockDataInProduction: SC-TRUTH-010 — lyapunov in (-150.0, -99.0] signals mock data detected.
     // This is an exceptional sentinel value; normal lyapunov values are in [-10, 10].
-    MockDataInProduction -> lyapunov <=. -99.0
+    MockDataInProduction -> lyapunov <=. -99.0 && lyapunov >. -150.0
 
     // L0ActionWithoutConsensus: SC-SIL4-006 — lyapunov = -50.0 signals consensus bypass.
     L0ActionWithoutConsensus -> lyapunov <=. -50.0 && lyapunov >. -99.0
@@ -1578,6 +1876,73 @@ pub fn evaluate_condition(
     // CommitWithoutTest: AOR-MOKSHA-002 — entropy in [5.0, 5.5) with failure_count = 1.
     // Convention: callers pass failure_count = 1 and entropy = 5.1 for test-skipped commit events.
     CommitWithoutTest -> failure_count > 0 && entropy >=. 5.0 && entropy <. 5.5
+
+    // ── UOS Sovereign, Toolchain & Safety conditions (GR-086..GR-105) ──
+    // NvmeOsDiskTargeted: SC-DRIVE-001 — lyapunov in (-210.0, -200.0] signals root NVMe disk violation.
+    NvmeOsDiskTargeted -> lyapunov <=. -200.0 && lyapunov >. -210.0
+
+    // ProvenanceCeilingExceeded: SC-PROVENANCE-001 — lyapunov in (-220.0, -210.0] signals EV > 93 violation.
+    ProvenanceCeilingExceeded -> lyapunov <=. -210.0 && lyapunov >. -220.0
+
+    // ZeroMudaViolationDetected: SC-ZERO-MUDA-001 — lyapunov in (-230.0, -220.0] signals Bevy/Graphite detected.
+    ZeroMudaViolationDetected -> lyapunov <=. -220.0 && lyapunov >. -230.0
+
+    // SaPlanAuthorityBypassed: SC-SA-PLAN-001 — lyapunov in (-240.0, -230.0] signals unledgered task execution.
+    SaPlanAuthorityBypassed -> lyapunov <=. -230.0 && lyapunov >. -240.0
+
+    // HomeostasisLyapunovViolated: SC-HA-001 — lyapunov in (-250.0, -240.0] signals Lyapunov divergence.
+    HomeostasisLyapunovViolated -> lyapunov <=. -240.0 && lyapunov >. -250.0
+
+    // LocalSovereigntyCompromised: SC-SOV-001 — lyapunov in (-260.0, -250.0] signals WAN cloud dependency.
+    LocalSovereigntyCompromised -> lyapunov <=. -250.0 && lyapunov >. -260.0
+
+    // TriAgentSurveillanceFailed: SC-SOV-002 — lyapunov in (-270.0, -260.0] signals tri-agent consensus failure.
+    TriAgentSurveillanceFailed -> lyapunov <=. -260.0 && lyapunov >. -270.0
+
+    // AutonomousDegradationTriggered: SC-DEFCON-001 — lyapunov in (-280.0, -270.0] signals API drop degradation.
+    AutonomousDegradationTriggered -> lyapunov <=. -270.0 && lyapunov >. -280.0
+
+    // Otp29RuntimeViolated: SC-NIX-DEVENV-001 — lyapunov in (-290.0, -280.0] signals non-OTP 29 runtime.
+    Otp29RuntimeViolated -> lyapunov <=. -280.0 && lyapunov >. -290.0
+
+    // DeterminateNixToolchainBypassed: SC-NIX-DEVENV-001 — lyapunov in (-300.0, -290.0] signals Nix bypass.
+    DeterminateNixToolchainBypassed -> lyapunov <=. -290.0 && lyapunov >. -300.0
+
+    // NativeGitMutationAttempted: SC-JJ-001 — lyapunov in (-310.0, -300.0] signals native git mutation attempt.
+    NativeGitMutationAttempted -> lyapunov <=. -300.0 && lyapunov >. -310.0
+
+    // Trace13CoordinateNonZero: SC-TRACE-001 — lyapunov in (-320.0, -310.0] signals 13D trace drift.
+    Trace13CoordinateNonZero -> lyapunov <=. -310.0 && lyapunov >. -320.0
+
+    // GospelNulByteDetected: ADR-084 — lyapunov in (-330.0, -320.0] signals embedded NUL byte (exit code -2).
+    GospelNulByteDetected -> lyapunov <=. -320.0 && lyapunov >. -330.0
+
+    // GospelSqlInjectionDetected: ADR-084 — lyapunov in (-340.0, -330.0] signals SQL injection (exit code -3).
+    GospelSqlInjectionDetected -> lyapunov <=. -330.0 && lyapunov >. -340.0
+
+    // ChecklistDomainUnsatisfied: SC-CHECKLIST-001 — entropy in [5.5, 6.0) with failure_count > 0.
+    ChecklistDomainUnsatisfied ->
+      failure_count > 0 && entropy >=. 5.5 && entropy <. 6.0
+
+    // TailscaleFqdnMissing: SC-TAILSCALE-WEB-001 — entropy in [6.0, 6.5) with failure_count > 0.
+    TailscaleFqdnMissing ->
+      failure_count > 0 && entropy >=. 6.0 && entropy <. 6.5
+
+    // JournalV3SectionMissing: SC-JOURNAL-v3 — entropy in [6.5, 7.0) with failure_count > 0.
+    JournalV3SectionMissing ->
+      failure_count > 0 && entropy >=. 6.5 && entropy <. 7.0
+
+    // LivingSwarmMeshDegraded: ADR-093 — entropy in [7.0, 7.5) with failure_count > 0.
+    LivingSwarmMeshDegraded ->
+      failure_count > 0 && entropy >=. 7.0 && entropy <. 7.5
+
+    // CyberneticConsonanceDiverged: ADR-094 — entropy in [7.5, 8.0) with failure_count > 0.
+    CyberneticConsonanceDiverged ->
+      failure_count > 0 && entropy >=. 7.5 && entropy <. 8.0
+
+    // TimestampPrefixInvalid: SC-TIME-001 — entropy in [8.0, 8.5) with failure_count > 0.
+    TimestampPrefixInvalid ->
+      failure_count > 0 && entropy >=. 8.0 && entropy <. 8.5
   }
 }
 

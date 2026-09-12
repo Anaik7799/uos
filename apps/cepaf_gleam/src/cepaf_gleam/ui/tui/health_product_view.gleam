@@ -17,7 +17,8 @@ pub fn render(model: HealthProductModel) -> String {
     _ -> "red"
   }
   let weather_line =
-    "  Weather: " <> visuals.with_color(model.weather, weather_color)
+    "  Weather: "
+    <> visuals.with_color(model.weather, weather_color)
   let product_line =
     "  Π(health) = "
     <> float.to_string(model.product)

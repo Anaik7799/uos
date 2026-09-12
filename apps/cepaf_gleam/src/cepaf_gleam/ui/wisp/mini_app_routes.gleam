@@ -7,12 +7,12 @@
 //// Route prefix: /mini-app/*
 //// All pages wrapped in TeleNative HTML shell with Telegram CSS variables.
 //// STAMP: SC-GLM-UI-001, SC-OPENCLAW-001, SC-SEC-001
-
 import cepaf_gleam/telegram/theme
-import cepaf_gleam/telegram/types.{TabAlerts, TabDashboard, TabSystem, TabTasks}
+import cepaf_gleam/telegram/types.{
+  TabAlerts, TabDashboard, TabSystem, TabTasks,
+}
 import cepaf_gleam/ui/lustre/mini_app
 import gleam/string
-
 /// Route a /mini-app/* path to the appropriate handler.
 /// Returns full HTML string ready for HTTP response body.
 pub fn route(path: String) -> String {
@@ -37,23 +37,20 @@ pub fn route(path: String) -> String {
   let active_tab = case path {
     "/mini-app/alerts" | "/mini-app/immune" -> TabAlerts
     "/mini-app/tasks" | "/mini-app/chat" -> TabTasks
-    "/mini-app/inference"
-    | "/mini-app/config"
-    | "/mini-app/containers"
+    "/mini-app/inference" | "/mini-app/config" | "/mini-app/containers"
     | "/mini-app/federation"
     | "/mini-app/verify"
     | "/mini-app/fmea"
-    | "/mini-app/zenoh" -> TabSystem
+    | "/mini-app/zenoh"
+    -> TabSystem
     _ -> TabDashboard
   }
   render_shell(page_content, active_tab)
 }
-
 /// Check if a path belongs to the Mini App routes.
 pub fn is_mini_app_path(path: String) -> Bool {
   string.starts_with(path, "/mini-app")
 }
-
 /// Render the TeleNative HTML shell with content and bottom navigation.
 fn render_shell(content: String, active_tab: types.NavTab) -> String {
   let css = theme.mini_app_css()
@@ -65,10 +62,15 @@ fn render_shell(content: String, active_tab: types.NavTab) -> String {
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\">
 <title>C3I</title>
 <script src=\"https://telegram.org/js/telegram-web-app.js\"></script>
-<style>" <> css <> "</style>
+<style>"
+  <> css
+  <> "</style>
 </head>
 <body>
-" <> content <> nav <> "
+"
+  <> content
+  <> nav
+  <> "
 <script>
 // Initialize Telegram WebApp
 if (window.Telegram && window.Telegram.WebApp) {
@@ -93,7 +95,6 @@ document.querySelectorAll('[data-navigate]').forEach(el => {
 </body>
 </html>"
 }
-
 /// Render the 4-tab bottom navigation bar.
 fn render_nav_bar(active: types.NavTab) -> String {
   let dashboard_class = case active {
@@ -113,9 +114,17 @@ fn render_nav_bar(active: types.NavTab) -> String {
     _ -> "tg-nav-item"
   }
   "<nav class=\"tg-nav-bar\">
-  <a href=\"/mini-app/dashboard\" class=\"" <> dashboard_class <> "\"><span class=\"tg-nav-icon\">&#9776;</span>Home</a>
-  <a href=\"/mini-app/alerts\" class=\"" <> alerts_class <> "\"><span class=\"tg-nav-icon\">&#9888;</span>Alerts</a>
-  <a href=\"/mini-app/tasks\" class=\"" <> tasks_class <> "\"><span class=\"tg-nav-icon\">&#9745;</span>Tasks</a>
-  <a href=\"/mini-app/inference\" class=\"" <> system_class <> "\"><span class=\"tg-nav-icon\">&#9881;</span>System</a>
+  <a href=\"/mini-app/dashboard\" class=\""
+  <> dashboard_class
+  <> "\"><span class=\"tg-nav-icon\">&#9776;</span>Home</a>
+  <a href=\"/mini-app/alerts\" class=\""
+  <> alerts_class
+  <> "\"><span class=\"tg-nav-icon\">&#9888;</span>Alerts</a>
+  <a href=\"/mini-app/tasks\" class=\""
+  <> tasks_class
+  <> "\"><span class=\"tg-nav-icon\">&#9745;</span>Tasks</a>
+  <a href=\"/mini-app/inference\" class=\""
+  <> system_class
+  <> "\"><span class=\"tg-nav-icon\">&#9881;</span>System</a>
 </nav>"
 }

@@ -17,7 +17,10 @@ pub fn render(model: HeartbeatModel) -> String {
     True -> visuals.with_color("  FAILOVER ACTIVE", "yellow")
     False -> ""
   }
-  let status = "  Rust Daemon: " <> alive_str <> failover_str
+  let status =
+    "  Rust Daemon: "
+    <> alive_str
+    <> failover_str
   let metrics =
     "  Pings: "
     <> int.to_string(model.total_pings)

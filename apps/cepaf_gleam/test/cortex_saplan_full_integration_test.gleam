@@ -147,7 +147,11 @@ pub fn cortex_ui_cockpit_lustre_and_tui_test() {
   // 2. Lustre Web View
   let model =
     CortexCockpitModel(
-      coordinator: coord1,
+      coordinator: cortex_cockpit.CoordinatorState(
+        andon_active: coord1.andon_active,
+        total_dispatched: coord1.total_dispatched,
+        total_completed: coord1.total_completed,
+      ),
       current_phase: "CognitiveOodaActive",
       active_intents_count: 1,
       circuit_breaker_status: "HealthyNominal",
@@ -159,7 +163,7 @@ pub fn cortex_ui_cockpit_lustre_and_tui_test() {
   string.contains(rendered_html, "Storage Lock: 25503L801736 (PROTECTED)")
   |> should.be_true()
   string.contains(rendered_html, "Jidoka Stop Line: NOMINAL") |> should.be_true()
-  string.contains(rendered_html, "http://nas-1.tail55d152.ts.net:8100/cortex")
+  string.contains(rendered_html, "http://nas-1.tail55d152.ts.net:4100/cortex")
   |> should.be_true()
 }
 

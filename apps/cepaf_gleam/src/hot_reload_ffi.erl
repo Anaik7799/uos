@@ -29,7 +29,11 @@
     compile_and_reload/1,
     safe_reload_with_check/1,
     reload_changed_modules/0,
-    get_beam_path/1
+    get_beam_path/1,
+    parallel_scan_changed_modules/0,
+    concurrent_fractal_reload_ffi/0,
+    sequential_fractal_reload_ffi/0,
+    classify_layer_atom/1
 ]).
 
 %% @doc Reload a single module by atom name.
@@ -155,16 +159,19 @@ get_module_md5(Module) when is_atom(Module) ->
 
 %% @doc Compile a .gleam file and reload the resulting BEAM module.
 %% This is for development-time hot reload (gleam build + load).
-compile_and_reload(GleamFile) when is_binary(GleamFile) ->
-    %% Step 1: Run gleam build
-    Cmd = "cd " ++ binary_to_list(get_project_root()) ++ " && gleam build 2>&1",
+compile_and_reload(_GleamFile) ->
+    ProjectRoot = binary_to_list(get_project_root()),
+    GleamBin = case os:getenv("GLEAM_BIN") of
+        false -> "gleam";
+        Bin -> Bin
+    end,
+    Cmd = "cd " ++ ProjectRoot ++ " && " ++ GleamBin ++ " build 2>&1; echo \"__STATUS:$?\"",
     Output = os:cmd(Cmd),
-    case string:find(Output, "error") of
+    case string:find(Output, "__STATUS:0") of
         nomatch ->
-            %% Step 2: Reload changed modules
-            reload_changed_modules();
+            {error, list_to_binary(Output)};
         _ ->
-            {error, list_to_binary(Output)}
+            reload_gleam_app()
     end.
 
 %% @doc Safe reload with pre/post verification checks.
@@ -259,9 +266,165 @@ has_changed(Module) ->
         _:_ -> false
     end.
 
+find_gleam_root(Dir) ->
+    case filelib:is_file(filename:join(Dir, "gleam.toml")) of
+        true -> list_to_binary(Dir);
+        false ->
+            Parent = filename:dirname(Dir),
+            if Parent =:= Dir -> <<".">>;
+               true -> find_gleam_root(Parent)
+            end
+    end.
+
 get_project_root() ->
-    %% Navigate from ebin/ to project root
-    case code:priv_dir(cepaf_gleam) of
-        {error, _} -> <<".">>;
-        Dir -> list_to_binary(filename:dirname(filename:dirname(Dir)))
+    case os:getenv("GLEAM_PROJECT_ROOT") of
+        false ->
+            case code:priv_dir(cepaf_gleam) of
+                {error, _} ->
+                    {ok, Cwd} = file:get_cwd(),
+                    find_gleam_root(Cwd);
+                Dir ->
+                    find_gleam_root(Dir)
+            end;
+        GleamDir -> list_to_binary(GleamDir)
+    end.
+
+%% ---------------------------------------------------------------------------
+%% Concurrent Fractal Chain Hot-Reload Subsystem (SC-HA-001, SC-STPA-001)
+%% ---------------------------------------------------------------------------
+
+%% @doc Parallel scan of all loaded modules to discover modifications in parallel.
+parallel_scan_changed_modules() ->
+    LoadedModules = [M || {M, _} <- code:all_loaded(), is_gleam_module(M)],
+    Pids = [spawn_monitor(fun() ->
+        case has_changed(M) of
+            true -> exit({changed, M});
+            false -> exit(unchanged)
+        end
+    end) || M <- LoadedModules],
+    collect_parallel_scan(Pids, []).
+
+collect_parallel_scan([], Acc) ->
+    [list_to_binary(atom_to_list(M)) || M <- Acc];
+collect_parallel_scan([{Pid, Ref} | Rest], Acc) ->
+    receive
+        {'DOWN', Ref, process, Pid, {changed, M}} ->
+            collect_parallel_scan(Rest, [M | Acc]);
+        {'DOWN', Ref, process, Pid, _} ->
+            collect_parallel_scan(Rest, Acc)
+    after 5000 ->
+        collect_parallel_scan(Rest, Acc)
+    end.
+
+%% @doc Classify a module into its canonical fractal layer.
+classify_layer_atom(Module) ->
+    Str = case is_binary(Module) of
+        true -> binary_to_list(Module);
+        false -> atom_to_list(Module)
+    end,
+    classify_str(Str).
+
+classify_str(Str) ->
+    case string:find(Str, "l0_constitutional") of
+        nomatch ->
+            case string:find(Str, "l1_atomic") of
+                nomatch ->
+                    case string:find(Str, "l2_component") of
+                        nomatch ->
+                            case string:find(Str, "l3_transaction") of
+                                nomatch ->
+                                    case string:find(Str, "l4_system") of
+                                        nomatch ->
+                                            case string:find(Str, "l5_cognitive") of
+                                                nomatch ->
+                                                    case string:find(Str, "l6_ecosystem") of
+                                                        nomatch ->
+                                                            case string:find(Str, "l7_federation") of
+                                                                nomatch ->
+                                                                    case string:find(Str, "evolution") of
+                                                                        nomatch ->
+                                                                            case string:find(Str, "singularity") of
+                                                                                nomatch -> l4_system_supervision;
+                                                                                _ -> l9_singularity_harmonic
+                                                                            end;
+                                                                        _ -> l8_evolution_immune
+                                                                    end;
+                                                                _ -> l7_federation_zenoh
+                                                            end;
+                                                        _ -> l6_ecosystem_swarm
+                                                    end;
+                                                _ -> l5_cognitive_ooda
+                                            end;
+                                        _ -> l4_system_supervision
+                                    end;
+                                _ -> l3_transaction_state
+                            end;
+                        _ -> l2_component_health
+                    end;
+                _ -> l1_atomic_debug
+            end;
+        _ -> l0_constitutional
+    end.
+
+%% @doc Concurrent fractal reload across L0 constitutional barrier and parallel mid/high tiers.
+concurrent_fractal_reload_ffi() ->
+    T0 = erlang:monotonic_time(microsecond),
+    AllLoaded = [M || {M, _} <- code:all_loaded(), is_gleam_module(M)],
+    TotalScanned = length(AllLoaded),
+    ChangedBinList = parallel_scan_changed_modules(),
+    ChangedAtoms = [binary_to_atom(B, utf8) || B <- ChangedBinList],
+
+    %% Partition by fractal layer
+    L0Mods = [M || M <- ChangedAtoms, classify_layer_atom(M) =:= l0_constitutional],
+    SubstrateMods = [M || M <- ChangedAtoms, lists:member(classify_layer_atom(M), [l1_atomic_debug, l2_component_health, l3_transaction_state, l4_system_supervision])],
+    CognitiveMods = [M || M <- ChangedAtoms, lists:member(classify_layer_atom(M), [l5_cognitive_ooda, l6_ecosystem_swarm, l7_federation_zenoh, l8_evolution_immune, l9_singularity_harmonic])],
+
+    %% Stage 1: L0 Constitutional Barrier (Fail-Closed)
+    L0Result = case L0Mods of
+        [] -> {ok, []};
+        _ -> reload_modules(L0Mods)
+    end,
+
+    case L0Result of
+        {error, Reason} ->
+            T1 = erlang:monotonic_time(microsecond),
+            {error, {l0_constitutional_barrier_failed, Reason, T1 - T0}};
+        {ok, L0Reloaded} ->
+            %% Stage 2: Concurrent Substrate & Cognitive Workers
+            Parent = self(),
+            _PidSub = spawn_link(fun() -> Parent ! {substrate_done, reload_modules(SubstrateMods)} end),
+            _PidCog = spawn_link(fun() -> Parent ! {cognitive_done, reload_modules(CognitiveMods)} end),
+
+            SubReloaded = receive
+                {substrate_done, {ok, SR}} -> SR;
+                {substrate_done, {error, _}} -> []
+            after 5000 -> []
+            end,
+
+            CogReloaded = receive
+                {cognitive_done, {ok, CR}} -> CR;
+                {cognitive_done, {error, _}} -> []
+            after 5000 -> []
+            end,
+
+            AllReloaded = L0Reloaded ++ SubReloaded ++ CogReloaded,
+            T1 = erlang:monotonic_time(microsecond),
+            DurationUs = T1 - T0,
+            {ok, {TotalScanned, length(AllReloaded), DurationUs, [list_to_binary(atom_to_list(M)) || M <- AllReloaded]}}
+    end.
+
+%% @doc Sequential fractal reload for comparative benchmarking.
+sequential_fractal_reload_ffi() ->
+    T0 = erlang:monotonic_time(microsecond),
+    AllLoaded = [M || {M, _} <- code:all_loaded(), is_gleam_module(M)],
+    TotalScanned = length(AllLoaded),
+    Changed = lists:filter(fun(M) -> has_changed(M) end, AllLoaded),
+    Result = reload_modules(Changed),
+    T1 = erlang:monotonic_time(microsecond),
+    DurationUs = T1 - T0,
+    case Result of
+        {ok, Reloaded} ->
+            {ok, {TotalScanned, length(Reloaded), DurationUs, [list_to_binary(atom_to_list(M)) || M <- Reloaded]}};
+        {error, Reason} ->
+            {error, Reason}
     end.

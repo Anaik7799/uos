@@ -51,13 +51,8 @@ pub fn update(model: SmritiModel, msg: SmritiMsg) -> SmritiModel {
       SmritiModel(..model, embeddings_stored: model.embeddings_stored + 1)
     RefreshSmriti -> model
     CacheStatsUpdated(entries, hit_rate, hits, misses) ->
-      SmritiModel(
-        ..model,
-        cache_entries: entries,
-        cache_hit_rate: hit_rate,
-        cache_total_hits: hits,
-        cache_total_misses: misses,
-      )
+      SmritiModel(..model, cache_entries: entries, cache_hit_rate: hit_rate,
+        cache_total_hits: hits, cache_total_misses: misses)
   }
 }
 

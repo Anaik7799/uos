@@ -3,15 +3,8 @@
 import gleam/option.{type Option, None, Some}
 
 pub type EmailModel {
-  EmailModel(
-    to: String,
-    subject: String,
-    body: String,
-    attachments: List(String),
-    sending: Bool,
-    sent: Bool,
-    error: Option(String),
-  )
+  EmailModel(to: String, subject: String, body: String, attachments: List(String),
+    sending: Bool, sent: Bool, error: Option(String))
 }
 
 pub type EmailMsg {
@@ -25,15 +18,7 @@ pub type EmailMsg {
 }
 
 pub fn init() -> EmailModel {
-  EmailModel(
-    to: "",
-    subject: "",
-    body: "",
-    attachments: [],
-    sending: False,
-    sent: False,
-    error: None,
-  )
+  EmailModel(to: "", subject: "", body: "", attachments: [], sending: False, sent: False, error: None)
 }
 
 pub fn update(model: EmailModel, msg: EmailMsg) -> EmailModel {
@@ -41,8 +26,7 @@ pub fn update(model: EmailModel, msg: EmailMsg) -> EmailModel {
     SetTo(v) -> EmailModel(..model, to: v)
     SetSubject(v) -> EmailModel(..model, subject: v)
     SetBody(v) -> EmailModel(..model, body: v)
-    AddAttachment(path) ->
-      EmailModel(..model, attachments: [path, ..model.attachments])
+    AddAttachment(path) -> EmailModel(..model, attachments: [path, ..model.attachments])
     SendEmail -> EmailModel(..model, sending: True)
     EmailSent -> EmailModel(..model, sending: False, sent: True)
     ErrorReceived(e) -> EmailModel(..model, error: Some(e), sending: False)

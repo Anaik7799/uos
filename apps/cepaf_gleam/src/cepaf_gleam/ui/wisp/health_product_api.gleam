@@ -12,7 +12,10 @@ pub fn health_product_json(hp: health_product.HealthProduct) -> String {
     #("product", json.string(float.to_string(hp.product))),
     #("weather", json.string(health_product.weather_to_string(hp.weather))),
     #("weakest_name", json.string(hp.weakest_name)),
-    #("weakest_health", json.string(float.to_string(hp.weakest_health))),
+    #(
+      "weakest_health",
+      json.string(float.to_string(hp.weakest_health)),
+    ),
     #("subsystem_count", json.int(hp.subsystem_count)),
     #("is_alive", json.bool(health_product.is_alive(hp))),
     #("is_healthy", json.bool(health_product.is_healthy(hp))),

@@ -57,13 +57,8 @@ pub fn update(model: FmeaReportModel, msg: FmeaReportMsg) -> FmeaReportModel {
     EntriesLoaded(entries) -> {
       let total = list.fold(entries, 0, fn(acc, e) { acc + e.rpn })
       let critical = list.count(entries, fn(e) { e.rpn >= 200 })
-      FmeaReportModel(
-        ..model,
-        entries: entries,
-        total_rpn: total,
-        critical_count: critical,
-        loading: False,
-      )
+      FmeaReportModel(..model, entries: entries, total_rpn: total,
+        critical_count: critical, loading: False)
     }
     SortBy(field) -> FmeaReportModel(..model, sort_by: field)
     FilterCategory(cat) -> FmeaReportModel(..model, filter_category: cat)
@@ -75,15 +70,13 @@ pub fn update(model: FmeaReportModel, msg: FmeaReportMsg) -> FmeaReportModel {
 pub fn rpn_band(rpn: Int) -> String {
   case rpn >= 200 {
     True -> "CRITICAL"
-    False ->
-      case rpn >= 100 {
-        True -> "HIGH"
-        False ->
-          case rpn >= 50 {
-            True -> "MODERATE"
-            False -> "LOW"
-          }
+    False -> case rpn >= 100 {
+      True -> "HIGH"
+      False -> case rpn >= 50 {
+        True -> "MODERATE"
+        False -> "LOW"
       }
+    }
   }
 }
 

@@ -106,10 +106,7 @@ pub fn render_container_controls(
 }
 
 /// Render container log lines.
-pub fn render_container_logs(
-  log_lines: List(String),
-  max_lines: Int,
-) -> String {
+pub fn render_container_logs(log_lines: List(String), max_lines: Int) -> String {
   let header = visuals.with_color("  CONTAINER LOGS", "cyan")
   let lines =
     log_lines

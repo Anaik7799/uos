@@ -8,8 +8,8 @@ const max_run_history = 100
 
 import cepaf_gleam/ui/domain.{Verification}
 import cepaf_gleam/ui/lustre/widgets/evolution_vector.{type EvolutionVectorData}
-import cepaf_gleam/ui/lustre/widgets/hs_ds_pane.{type HsDsData}
 import cepaf_gleam/ui/zenoh_otel
+import cepaf_gleam/ui/lustre/widgets/hs_ds_pane.{type HsDsData}
 import cepaf_gleam/verification/graph_verification.{type GraphCheck}
 import cepaf_gleam/verification/prometheus.{
   type ProofToken, type VerificationResult, Inconclusive, Rejected, Verified,

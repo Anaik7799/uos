@@ -2,8 +2,8 @@
 /// STAMP: SC-GLM-UI-001, SC-GLM-UI-004, SC-GLM-UI-007
 import cepaf_gleam/cockpit/visuals
 import cepaf_gleam/ui/lustre/hook_subsystem.{
-  type HookSubsystemModel, type StopLockState, StopLockFree, StopLockHeld,
-  StopLockStale,
+  type HookSubsystemModel, type StopLockState,
+  StopLockFree, StopLockHeld, StopLockStale,
 }
 import gleam/float
 import gleam/int
@@ -20,7 +20,8 @@ pub fn render(model: HookSubsystemModel) -> String {
 }
 
 fn render_fires(model: HookSubsystemModel) -> String {
-  let total = visuals.with_color(int.to_string(model.total_hook_fires), "green")
+  let total =
+    visuals.with_color(int.to_string(model.total_hook_fires), "green")
   let rete = visuals.with_color(int.to_string(model.rete_rule_fires), "yellow")
   "  Hook fires: "
   <> total
@@ -55,14 +56,16 @@ fn render_entropy(model: HookSubsystemModel) -> String {
 fn render_daemon(model: HookSubsystemModel) -> String {
   let color = case model.daemon_health_posterior >=. 0.9 {
     True -> "green"
-    False ->
-      case model.daemon_health_posterior >=. 0.7 {
-        True -> "yellow"
-        False -> "red"
-      }
+    False -> case model.daemon_health_posterior >=. 0.7 {
+      True -> "yellow"
+      False -> "red"
+    }
   }
   let p =
-    visuals.with_color(float.to_string(model.daemon_health_posterior), color)
+    visuals.with_color(
+      float.to_string(model.daemon_health_posterior),
+      color,
+    )
   "  Daemon health P(safe|Δ): " <> p
 }
 
@@ -91,21 +94,19 @@ fn stop_lock_color(state: StopLockState) -> String {
 fn entropy_color(h: Float) -> String {
   case h >=. 2.5 {
     True -> "green"
-    False ->
-      case h >=. 1.5 {
-        True -> "yellow"
-        False -> "red"
-      }
+    False -> case h >=. 1.5 {
+      True -> "yellow"
+      False -> "red"
+    }
   }
 }
 
 fn cache_color(rate: Float) -> String {
   case rate >=. 0.9 {
     True -> "green"
-    False ->
-      case rate >=. 0.7 {
-        True -> "yellow"
-        False -> "cyan"
-      }
+    False -> case rate >=. 0.7 {
+      True -> "yellow"
+      False -> "cyan"
+    }
   }
 }

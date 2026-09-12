@@ -43,15 +43,9 @@ pub fn render(
 
   let identity_section =
     "\u{001b}[1mIdentity\u{001b}[0m\n"
-    <> "  User:       "
-    <> username
-    <> "\n"
-    <> "  Permission: "
-    <> permission_colored(permission)
-    <> "\n"
-    <> "  MFA:        "
-    <> mfa_colored(has_mfa)
-    <> "\n"
+    <> "  User:       " <> username <> "\n"
+    <> "  Permission: " <> permission_colored(permission) <> "\n"
+    <> "  MFA:        " <> mfa_colored(has_mfa) <> "\n"
 
   let roles_section =
     "\u{001b}[1mRoles\u{001b}[0m\n"
@@ -65,28 +59,17 @@ pub fn render(
 
   let layers_section =
     "\u{001b}[1mAccessible Layers\u{001b}[0m\n"
-    <> "  "
-    <> layers_bar(permission)
-    <> "\n"
+    <> "  " <> layers_bar(permission) <> "\n"
 
   let iam_section =
     "\u{001b}[1mFerrisKey IAM\u{001b}[0m\n"
-    <> "  Status: "
-    <> case ferriskey_enabled {
+    <> "  Status: " <> case ferriskey_enabled {
       True -> "\u{001b}[32mConnected\u{001b}[0m"
       False -> "\u{001b}[33mDisabled (static token)\u{001b}[0m"
-    }
-    <> "\n"
+    } <> "\n"
 
-  header
-  <> "\n"
-  <> identity_section
-  <> "\n"
-  <> roles_section
-  <> "\n"
-  <> layers_section
-  <> "\n"
-  <> iam_section
+  header <> "\n" <> identity_section <> "\n" <> roles_section <> "\n"
+  <> layers_section <> "\n" <> iam_section
 }
 
 // ---------------------------------------------------------------------------

@@ -1,17 +1,10 @@
 // STAMP: SC-GLM-UI-001, SC-SMRITI-001
-import cepaf_gleam/ui/lustre/conversation.{
-  type ChatMessage, type ConversationModel, Assistant, System, User,
-}
+import cepaf_gleam/ui/lustre/conversation.{type ConversationModel, type ChatMessage, User, Assistant, System}
 import gleam/list
 import gleam/string
 
 pub fn render(model: ConversationModel) -> String {
-  let header =
-    "\u{001b}[1;36m▌ Conversation History\u{001b}[0m ["
-    <> model.chat_id
-    <> "] ("
-    <> int_str(conversation.message_count(model))
-    <> " msgs)"
+  let header = "\u{001b}[1;36m▌ Conversation History\u{001b}[0m [" <> model.chat_id <> "] (" <> int_str(conversation.message_count(model)) <> " msgs)"
   let msgs = list.map(model.messages, render_message) |> string.join("\n")
   header <> "\n" <> msgs
 }

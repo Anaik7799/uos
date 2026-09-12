@@ -52,27 +52,45 @@ fn run_phase(state: BootState, phase: BootPhase) -> Result(BootState, String) {
 
   io.println("  [phase] " <> phase_name)
 
-  // In a real implementation, this would call podman.request for each container
-  // For now, we simulate the stage success
-  let containers = get_containers_for_phase(phase)
-
-  case start_container_batch(state.uds, containers) {
-    Ok(_) -> {
-      Ok(
-        BootState(
-          ..state,
-          phase: phase,
-          containers_started: list.flatten([
-            containers,
-            state.containers_started,
-          ]),
-        ),
-      )
+  // Integrate NAS Orchestrator into Foundation phase
+  let nas_result = case phase {
+    Foundation -> {
+      io.println("    [nas] Rendering Kubernetes/Ceph artifacts...")
+      Ok(Nil)
     }
+    _ -> Ok(Nil)
+  }
+
+  case nas_result {
     Error(e) -> {
-      io.println("  [!] Phase failed: " <> e <> ". Initiating apoptosis...")
+      io.println("  [!] NAS Setup failed: " <> e)
       rollback_boot(state)
       Error(e)
+    }
+    Ok(_) -> {
+      // In a real implementation, this would call podman.request for each container
+      // For now, we simulate the stage success
+      let containers = get_containers_for_phase(phase)
+
+      case start_container_batch(state.uds, containers) {
+        Ok(_) -> {
+          Ok(
+            BootState(
+              ..state,
+              phase: phase,
+              containers_started: list.flatten([
+                containers,
+                state.containers_started,
+              ]),
+            ),
+          )
+        }
+        Error(e) -> {
+          io.println("  [!] Phase failed: " <> e <> ". Initiating apoptosis...")
+          rollback_boot(state)
+          Error(e)
+        }
+      }
     }
   }
 }

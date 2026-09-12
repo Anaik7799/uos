@@ -53,3 +53,41 @@ fn encode_version_entry(entry: #(String, Int)) -> json.Json {
     #("version", json.int(version)),
   ])
 }
+
+/// Build a sample FederationState suitable for stub/demo responses.
+pub fn sample_state() -> FederationState {
+  let local = "indrajaal-ex-app-1"
+  let base = l7_federation.initial_federation(local)
+  let peer1 =
+    l7_federation.FederationPeer(
+      peer_id: "indrajaal-ex-app-2",
+      endpoint: "tcp/indrajaal-ex-app-2:4001",
+      status: l7_federation.PeerConnected,
+      version_vector: [#(local, 1), #("indrajaal-ex-app-2", 3)],
+      attestation_valid: True,
+      last_seen: 1_712_120_000,
+    )
+  let peer2 =
+    l7_federation.FederationPeer(
+      peer_id: "indrajaal-ex-app-3",
+      endpoint: "tcp/indrajaal-ex-app-3:4002",
+      status: l7_federation.PeerConnected,
+      version_vector: [#(local, 1), #("indrajaal-ex-app-3", 2)],
+      attestation_valid: True,
+      last_seen: 1_712_120_100,
+    )
+  let peer3 =
+    l7_federation.FederationPeer(
+      peer_id: "indrajaal-chaya",
+      endpoint: "tcp/indrajaal-chaya:4003",
+      status: l7_federation.PeerSuspected,
+      version_vector: [#(local, 0), #("indrajaal-chaya", 1)],
+      attestation_valid: False,
+      last_seen: 1_712_119_000,
+    )
+  base
+  |> l7_federation.add_peer(peer1)
+  |> l7_federation.add_peer(peer2)
+  |> l7_federation.add_peer(peer3)
+  |> l7_federation.increment_version()
+}

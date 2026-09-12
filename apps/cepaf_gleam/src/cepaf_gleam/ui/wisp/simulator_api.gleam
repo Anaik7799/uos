@@ -1,5 +1,5 @@
 // STAMP: SC-GLM-UI-001, SC-SIM-001
-import cepaf_gleam/ui/lustre/simulator.{type Scenario, type SimulatorModel}
+import cepaf_gleam/ui/lustre/simulator.{type SimulatorModel, type Scenario}
 import gleam/json
 
 pub fn status_json(model: SimulatorModel) -> json.Json {
@@ -11,7 +11,6 @@ pub fn status_json(model: SimulatorModel) -> json.Json {
     #("scenarios", json.array(model.scenarios, scenario_json)),
   ])
 }
-
 fn scenario_json(s: Scenario) -> json.Json {
   json.object([
     #("category", json.string(s.category)),

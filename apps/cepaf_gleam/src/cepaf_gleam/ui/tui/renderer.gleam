@@ -71,10 +71,6 @@ pub fn mode_label(mode: CockpitMode) -> String {
 
 /// Render a full TUI frame for the given context.
 pub fn render_frame(ctx: RenderContext) -> String {
-  render_overview(ctx)
-}
-
-fn render_overview(ctx: RenderContext) -> String {
   let mode = determine_mode(ctx.health, 0)
   let header = render_header(ctx, mode)
   let health_line = render_health(ctx.health)

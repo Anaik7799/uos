@@ -1,5 +1,5 @@
 //! =============================================================================
-//! [C3I-SIL6-MSTS] UOS CORTEX BOUNDED RUST NIF KERNEL
+//! [C3I-SIL6-MSTS] UOS CORTEX & SA-PLAN BOUNDED RUST NIF KERNEL
 //! =============================================================================
 //! <uos-module>
 //!   <identity>
@@ -8,10 +8,10 @@
 //!   </identity>
 //!   <fractal-topology>
 //!     <layer>L1_ATOMIC_DEBUG</layer>
-//!     <topology>Fast Sensory DSP, PII Scrubbing & Bounded Local Execution</topology>
+//!     <topology>Fast Sensory DSP, PII Scrubbing, Fencing Tokens & Bounded Local Execution</topology>
 //!   </fractal-topology>
 //!   <compliance>
-//!     <stamp-controls>SC-COG-001, SC-COG-MAX-001, SC-JIDOKA-001, SC-WIRE-001, CHK-07-DRIVE</stamp-controls>
+//!     <stamp-controls>SC-COG-001, SC-COG-MAX-001, SC-JIDOKA-001, SC-SA-PLAN-001, SC-WIRE-001, CHK-07-DRIVE</stamp-controls>
 //!   </compliance>
 //! </uos-module>
 //! =============================================================================
@@ -19,6 +19,7 @@
 use regex::Regex;
 use rustler::{Encoder, Env, NifResult, Term};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::sync::OnceLock;
 
 pub const HARD_DENIED_SYSTEM_OS_SERIAL: &str = "25503L801736";
@@ -179,6 +180,42 @@ pub fn cortex_infer_local<'a>(
 #[rustler::nif]
 pub fn cortex_check_storage_safety(serial_query: String) -> bool {
     !serial_query.contains(HARD_DENIED_SYSTEM_OS_SERIAL)
+}
+
+// =============================================================================
+// Sa-Plan Bounded Primitive Kernel Functions
+// =============================================================================
+
+#[rustler::nif]
+pub fn sa_plan_monotone_fencing_token(current_token: u64) -> u64 {
+    current_token.saturating_add(1)
+}
+
+#[rustler::nif]
+pub fn sa_plan_action_receipt_sha256(
+    worker: String,
+    plan_id: String,
+    task_id: String,
+    fencing_token: u64,
+    result: String,
+) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(worker.as_bytes());
+    hasher.update(b":");
+    hasher.update(plan_id.as_bytes());
+    hasher.update(b":");
+    hasher.update(task_id.as_bytes());
+    hasher.update(b":");
+    hasher.update(fencing_token.to_be_bytes());
+    hasher.update(b":");
+    hasher.update(result.as_bytes());
+    let hash = hasher.finalize();
+    hash.iter().map(|b| format!("{:02x}", b)).collect::<String>()
+}
+
+#[rustler::nif]
+pub fn sa_plan_verify_hardware_safety_interlock(target_serial: String) -> bool {
+    !target_serial.contains(HARD_DENIED_SYSTEM_OS_SERIAL)
 }
 
 rustler::init!("cortex_nif");

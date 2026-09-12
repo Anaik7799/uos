@@ -49,8 +49,11 @@ fn render_state(model: BiomorphicModel) -> String {
   let symbiosis_section = render_symbiosis(model.symbiosis)
   string.join(
     [
-      mode_line, overall_line, "", bio_line, neuro_line, immune_line, "", status,
-      "", tensor_section, "", symbiosis_section,
+      mode_line, overall_line, "",
+      bio_line, neuro_line, immune_line, "",
+      status, "",
+      tensor_section, "",
+      symbiosis_section,
     ],
     "\n",
   )

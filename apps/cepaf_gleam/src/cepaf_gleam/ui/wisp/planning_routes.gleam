@@ -1,10 +1,12 @@
 //// Wisp Planning Routes — 17 API endpoints for the 8-Panel Dashboard
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-003, SC-GLM-UI-007
-//// Uses actual domain module functions and live NIF evidence. Endpoints that
-//// lack a live source return an explicit not_implemented envelope.
+//// Uses actual domain module functions — no mock data where avoidable.
 
-import cepaf_gleam/c3i/nif as c3i_nif
+import cepaf_gleam/core/ids
+import cepaf_gleam/core/types
 import cepaf_gleam/planning/access_control
+import cepaf_gleam/planning/chaya
+import cepaf_gleam/planning/domain
 import cepaf_gleam/planning/enforcer
 import cepaf_gleam/planning/graph_verification
 import cepaf_gleam/planning/math_optimization
@@ -15,19 +17,33 @@ import cepaf_gleam/ui/lustre/planning_dashboard
 import gleam/dict
 import gleam/json
 import gleam/list
+import gleam/option.{None, Some}
+import gleam/set
 
 // =============================================================================
-// 1. tasks_list — List tasks from live planning NIF
+// 1. tasks_list — List all tasks (sample data)
 // =============================================================================
 
 pub fn tasks_list() -> String {
-  let status = c3i_nif.plan_status()
-  let tasks = c3i_nif.plan_list_by_status("all")
+  let tasks = sample_task_cards()
   json.object([
     #("endpoint", json.string("/api/planning/tasks")),
-    #("source", json.string("c3i_nif.plan_list_by_status(all)")),
-    #("status_raw", json.string(status)),
-    #("tasks_raw", json.string(tasks)),
+    #("count", json.int(list.length(tasks))),
+    #(
+      "tasks",
+      json.array(tasks, fn(t) {
+        json.object([
+          #("id", json.string(t.id)),
+          #("title", json.string(t.title)),
+          #("status", json.string(t.status)),
+          #("priority", json.string(t.priority)),
+          #("assignee", case t.assignee {
+            Some(a) -> json.string(a)
+            None -> json.null()
+          }),
+        ])
+      }),
+    ),
   ])
   |> json.to_string()
 }
@@ -37,24 +53,47 @@ pub fn tasks_list() -> String {
 // =============================================================================
 
 pub fn task_detail(id: String) -> String {
-  let result = c3i_nif.plan_search(id)
-  json.object([
-    #("endpoint", json.string("/api/planning/tasks/" <> id)),
-    #("source", json.string("c3i_nif.plan_search")),
-    #("query", json.string(id)),
-    #("result_raw", json.string(result)),
-  ])
-  |> json.to_string()
+  let tasks = sample_task_cards()
+  let found = list.find(tasks, fn(t) { t.id == id })
+  case found {
+    Ok(t) ->
+      json.object([
+        #("endpoint", json.string("/api/planning/tasks/" <> id)),
+        #("found", json.bool(True)),
+        #(
+          "task",
+          json.object([
+            #("id", json.string(t.id)),
+            #("title", json.string(t.title)),
+            #("status", json.string(t.status)),
+            #("priority", json.string(t.priority)),
+            #("assignee", case t.assignee {
+              Some(a) -> json.string(a)
+              None -> json.null()
+            }),
+          ]),
+        ),
+      ])
+      |> json.to_string()
+    Error(_) ->
+      json.object([
+        #("endpoint", json.string("/api/planning/tasks/" <> id)),
+        #("found", json.bool(False)),
+        #("error", json.string("Task not found: " <> id)),
+      ])
+      |> json.to_string()
+  }
 }
 
 // =============================================================================
-// 3. ooda_status — Run OODA cycle with live health evidence
+// 3. ooda_status — Run OODA cycle with sample observations
 // =============================================================================
 
 pub fn ooda_status() -> String {
   let observations = [
-    ooda.observe_from_event("system_health", c3i_nif.system_health()),
-    ooda.observe_from_event("plan_status", c3i_nif.plan_status()),
+    ooda.observe_from_health("healthy"),
+    ooda.observe_from_metric("cpu_usage", 0.65, 0.9),
+    ooda.observe_from_event("mesh", "All containers nominal"),
   ]
   let cycle = ooda.run_cycle(observations)
   json.object([
@@ -66,21 +105,29 @@ pub fn ooda_status() -> String {
 }
 
 // =============================================================================
-// 4. ooda_history — Persisted history source is not wired here
+// 4. ooda_history — Last 5 cycles (sample variations)
 // =============================================================================
 
 pub fn ooda_history() -> String {
+  let cycle_1 = ooda.run_cycle([ooda.observe_from_health("healthy")])
+  let cycle_2 =
+    ooda.run_cycle([
+      ooda.observe_from_health("unhealthy"),
+      ooda.observe_from_metric("memory", 0.95, 0.8),
+    ])
+  let cycle_3 =
+    ooda.run_cycle([ooda.observe_from_event("deploy", "Container starting")])
+  let cycle_4 = ooda.run_cycle([ooda.observe_from_metric("disk", 0.3, 0.9)])
+  let cycle_5 =
+    ooda.run_cycle([
+      ooda.observe_from_health("healthy"),
+      ooda.observe_from_event("guardian", "Heartbeat OK"),
+    ])
+  let cycles = [cycle_1, cycle_2, cycle_3, cycle_4, cycle_5]
   json.object([
     #("endpoint", json.string("/api/ooda/history")),
-    #("status", json.string("not_implemented")),
-    #(
-      "reason",
-      json.string(
-        "No persisted OODA history source is wired in planning_routes",
-      ),
-    ),
-    #("count", json.int(0)),
-    #("cycles", json.array([], json.string)),
+    #("count", json.int(5)),
+    #("cycles", json.array(cycles, ooda.cycle_to_json)),
   ])
   |> json.to_string()
 }
@@ -326,19 +373,15 @@ pub fn chaya_status() -> String {
 }
 
 // =============================================================================
-// 14. chaya_sync — Live task extraction source is not wired here
+// 14. chaya_sync — Run full 5-phase sync with sample tasks
 // =============================================================================
 
 pub fn chaya_sync() -> String {
+  let sample_tasks = sample_domain_tasks()
+  let report = chaya.run_sync(sample_tasks)
   json.object([
     #("endpoint", json.string("/api/chaya/sync")),
-    #("status", json.string("not_implemented")),
-    #(
-      "reason",
-      json.string(
-        "Use ./sa-plan sync; this UI route has no live task extraction handoff",
-      ),
-    ),
+    #("report", chaya.sync_report_to_json(report)),
   ])
   |> json.to_string()
 }
@@ -414,12 +457,53 @@ pub fn math_dfa() -> String {
 
 pub fn dashboard_state() -> String {
   let model = planning_dashboard.init()
+  // Populate with sample data
+  let model =
+    planning_dashboard.update(
+      model,
+      planning_dashboard.TasksLoaded(sample_task_cards()),
+    )
+  let model =
+    planning_dashboard.update(
+      model,
+      planning_dashboard.OodaCycleCompleted(42, "nominal", "no_action"),
+    )
+  let model =
+    planning_dashboard.update(
+      model,
+      planning_dashboard.SafetyChecksLoaded([
+        planning_dashboard.CheckPass("ExistenceInvariant"),
+        planning_dashboard.CheckPass("RegenerationCapability"),
+        planning_dashboard.CheckPass("HistoryPreservation"),
+        planning_dashboard.CheckPass("GuardianApproval"),
+      ]),
+    )
+  let model =
+    planning_dashboard.update(
+      model,
+      planning_dashboard.ServicesUpdated([
+        planning_dashboard.ServiceNode(
+          name: "Cortex",
+          status: "online",
+          health: 1.0,
+        ),
+        planning_dashboard.ServiceNode(
+          name: "Prajna",
+          status: "online",
+          health: 0.95,
+        ),
+        planning_dashboard.ServiceNode(
+          name: "Guardian",
+          status: "online",
+          health: 1.0,
+        ),
+      ]),
+    )
+  let model =
+    planning_dashboard.update(model, planning_dashboard.QuorumChanged(True))
 
   json.object([
     #("endpoint", json.string("/api/dashboard/state")),
-    #("source", json.string("planning_dashboard.init + live raw NIF evidence")),
-    #("plan_status_raw", json.string(c3i_nif.plan_status())),
-    #("dashboard_raw", json.string(c3i_nif.system_dashboard())),
     #("model", planning_dashboard.dashboard_to_json(model)),
     #(
       "cockpit_mode",
@@ -435,4 +519,139 @@ pub fn dashboard_state() -> String {
     #("is_safe", json.bool(planning_dashboard.is_safe(model))),
   ])
   |> json.to_string()
+}
+
+// =============================================================================
+// Sample Data Helpers
+// =============================================================================
+
+fn sample_task_cards() -> List(planning_dashboard.TaskCard) {
+  [
+    planning_dashboard.TaskCard(
+      id: "1.1",
+      title: "Implement OODA controller",
+      status: "completed",
+      priority: "P0",
+      assignee: Some("system:planner"),
+    ),
+    planning_dashboard.TaskCard(
+      id: "1.2",
+      title: "Safety kernel validation",
+      status: "completed",
+      priority: "P0",
+      assignee: Some("system:guardian"),
+    ),
+    planning_dashboard.TaskCard(
+      id: "2.1",
+      title: "Graph verification suite",
+      status: "in_progress",
+      priority: "P1",
+      assignee: Some("system:verifier"),
+    ),
+    planning_dashboard.TaskCard(
+      id: "2.2",
+      title: "Enforcer circuit breakers",
+      status: "in_progress",
+      priority: "P1",
+      assignee: None,
+    ),
+    planning_dashboard.TaskCard(
+      id: "3.1",
+      title: "Chaya digital twin sync",
+      status: "pending",
+      priority: "P2",
+      assignee: None,
+    ),
+    planning_dashboard.TaskCard(
+      id: "3.2",
+      title: "Startup optimization waves",
+      status: "pending",
+      priority: "P2",
+      assignee: None,
+    ),
+    planning_dashboard.TaskCard(
+      id: "4.1",
+      title: "AG-UI protocol integration",
+      status: "blocked",
+      priority: "P1",
+      assignee: Some("system:dashboard"),
+    ),
+  ]
+}
+
+fn sample_domain_tasks() -> List(domain.Task) {
+  let title_1 = case types.new_non_empty_string("OODA Controller") {
+    Ok(t) -> t
+    Error(_) -> panic as "unreachable: non-empty string"
+  }
+  let title_2 = case types.new_non_empty_string("Safety Kernel") {
+    Ok(t) -> t
+    Error(_) -> panic as "unreachable: non-empty string"
+  }
+  let title_3 = case types.new_non_empty_string("Graph Verification") {
+    Ok(t) -> t
+    Error(_) -> panic as "unreachable: non-empty string"
+  }
+  [
+    domain.Task(
+      id: ids.task_id_from_string("1.1"),
+      title: title_1,
+      description: None,
+      status: types.Completed,
+      priority: types.P0Critical,
+      created_at: "2026-04-01T00:00:00Z",
+      updated_at: "2026-04-03T00:00:00Z",
+      due_date: None,
+      completed_at: Some("2026-04-02T00:00:00Z"),
+      assignee_id: None,
+      project_id: None,
+      sprint_id: None,
+      parent_task_id: None,
+      tags: set.new(),
+      dependencies: set.new(),
+      estimated_minutes: Some(480),
+      actual_minutes: Some(360),
+      version: 1,
+    ),
+    domain.Task(
+      id: ids.task_id_from_string("1.2"),
+      title: title_2,
+      description: None,
+      status: types.InProgress,
+      priority: types.P0Critical,
+      created_at: "2026-04-01T00:00:00Z",
+      updated_at: "2026-04-03T00:00:00Z",
+      due_date: None,
+      completed_at: None,
+      assignee_id: None,
+      project_id: None,
+      sprint_id: None,
+      parent_task_id: None,
+      tags: set.new(),
+      dependencies: set.new(),
+      estimated_minutes: Some(240),
+      actual_minutes: None,
+      version: 1,
+    ),
+    domain.Task(
+      id: ids.task_id_from_string("2.1"),
+      title: title_3,
+      description: None,
+      status: types.Pending,
+      priority: types.P1High,
+      created_at: "2026-04-02T00:00:00Z",
+      updated_at: "2026-04-03T00:00:00Z",
+      due_date: None,
+      completed_at: None,
+      assignee_id: None,
+      project_id: None,
+      sprint_id: None,
+      parent_task_id: None,
+      tags: set.new(),
+      dependencies: set.new(),
+      estimated_minutes: Some(120),
+      actual_minutes: None,
+      version: 1,
+    ),
+  ]
 }

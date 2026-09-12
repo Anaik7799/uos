@@ -7,12 +7,7 @@ import gleam/option.{type Option, None, Some}
 
 // All 5 ruliology structures matching Rust ruliology.rs
 pub type AutomatonState {
-  AutomatonState(
-    name: String,
-    states: List(String),
-    current: String,
-    step_count: Int,
-  )
+  AutomatonState(name: String, states: List(String), current: String, step_count: Int)
 }
 
 pub type MultiwayNode {
@@ -28,30 +23,15 @@ pub type CausalGraph {
 }
 
 pub type ProductionRule {
-  ProductionRule(
-    name: String,
-    salience: Int,
-    preconditions: List(String),
-    decision: String,
-    reason: String,
-  )
+  ProductionRule(name: String, salience: Int, preconditions: List(String), decision: String, reason: String)
 }
 
 pub type ProductionSystem {
-  ProductionSystem(
-    rules: List(ProductionRule),
-    fired_count: Int,
-    last_decision: String,
-  )
+  ProductionSystem(rules: List(ProductionRule), fired_count: Int, last_decision: String)
 }
 
 pub type HypergraphEdge {
-  HypergraphEdge(
-    id: String,
-    source_nodes: List(String),
-    target_nodes: List(String),
-    label: String,
-  )
+  HypergraphEdge(id: String, source_nodes: List(String), target_nodes: List(String), label: String)
 }
 
 pub type Hypergraph {
@@ -113,17 +93,10 @@ pub fn update(model: RuliologyModel, msg: RuliologyMsg) -> RuliologyModel {
     StepAutomaton -> RuliologyModel(..model, steps: model.steps + 1)
     FireRule(name) -> {
       let ps = model.production_system
-      RuliologyModel(
-        ..model,
-        production_system: ProductionSystem(
-          ..ps,
-          fired_count: ps.fired_count + 1,
-          last_decision: name,
-        ),
-      )
+      RuliologyModel(..model, production_system: ProductionSystem(
+        ..ps, fired_count: ps.fired_count + 1, last_decision: name))
     }
-    SelectAutomaton(name) ->
-      RuliologyModel(..model, selected_automaton: Some(name))
+    SelectAutomaton(name) -> RuliologyModel(..model, selected_automaton: Some(name))
     RefreshRuliology -> RuliologyModel(..model, loading: True)
     ErrorReceived(e) -> RuliologyModel(..model, error: Some(e), loading: False)
   }

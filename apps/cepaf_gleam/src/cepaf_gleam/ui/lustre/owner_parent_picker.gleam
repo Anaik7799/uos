@@ -89,11 +89,14 @@ pub fn update(model: PickerModel, msg: PickerMsg) -> PickerModel {
         // Clear submitted flag so the UI knows this is a fresh interaction.
         submitted: False,
       )
-    ClosePicker -> PickerModel(..model, open: False, query: "", candidates: [])
+    ClosePicker ->
+      PickerModel(..model, open: False, query: "", candidates: [])
     UpdateQuery(q) -> PickerModel(..model, query: q)
     CandidatesLoaded(cs) -> PickerModel(..model, candidates: cs)
-    SelectOwner(id) -> PickerModel(..model, selected_owner: Some(id))
-    SelectParent(id) -> PickerModel(..model, selected_parent: Some(id))
+    SelectOwner(id) ->
+      PickerModel(..model, selected_owner: Some(id))
+    SelectParent(id) ->
+      PickerModel(..model, selected_parent: Some(id))
     Submit -> PickerModel(..model, open: False, submitted: True)
     Reset -> init()
   }
@@ -189,7 +192,9 @@ pub fn render_ansi(model: PickerModel) -> String {
       let header = "── PICKER (" <> kind_to_string(model.kind) <> ") ──\n"
       let q_line = "  query: " <> model.query <> "\n"
       let count_line =
-        "  candidates: " <> int_to_str(visible_count(model)) <> " visible\n"
+        "  candidates: "
+        <> int_to_str(visible_count(model))
+        <> " visible\n"
       let candidate_lines =
         list.fold(filtered(model), "", fn(acc, c) {
           acc <> "    • " <> c.label <> " (" <> c.id <> ")\n"

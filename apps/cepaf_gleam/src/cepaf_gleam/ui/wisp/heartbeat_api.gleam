@@ -6,9 +6,7 @@ import gleam/float
 import gleam/json
 
 /// Render heartbeat status as JSON.
-pub fn heartbeat_status_json(
-  state: heartbeat_monitor.HeartbeatState,
-) -> String {
+pub fn heartbeat_status_json(state: heartbeat_monitor.HeartbeatState) -> String {
   json.object([
     #("plane", json.string("heartbeat")),
     #("rust_alive", json.bool(state.rust_alive)),
@@ -20,7 +18,10 @@ pub fn heartbeat_status_json(
       "uptime_ratio",
       json.string(float.to_string(heartbeat_monitor.uptime_ratio(state))),
     ),
-    #("health", json.string(float.to_string(heartbeat_monitor.health(state)))),
+    #(
+      "health",
+      json.string(float.to_string(heartbeat_monitor.health(state))),
+    ),
     #("status", json.string(heartbeat_monitor.status_string(state))),
   ])
   |> json.to_string()
