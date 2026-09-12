@@ -5,9 +5,16 @@
 import cepaf_gleam/sciviz/dsl
 import cepaf_gleam/sciviz/schema.{
   type GeomType, type Point2D, type SceneNode, type SciVizPlot, ArcLayer,
-  GeomArea, GeomLine, GeomPhasePortrait, GeomPoint, HeatmapMatrixLayer, PathLayer,
-  ScatterplotLayer, TopologyGraphLayer, VisualCircle, VisualComposite,
-  VisualRect, VisualText,
+  BitmapLayer, ColumnLayer, GeoJsonLayer, GeomArea, GeomBar, GeomBoxplot,
+  GeomContour, GeomDensity2D, GeomErrorBar, GeomHex, GeomLine,
+  GeomPhasePortrait, GeomPoint, GeomRibbon, GeomSegment, GeomStep, GeomText,
+  Point2D,
+  GeomViolin, GridLayer, H3HexagonLayer, HeatmapMatrixLayer, HexagonLayer,
+  IconLayer, LineLayer, PathLayer, PointCloudLayer, S2Layer, ScatterplotLayer,
+  ScreenGridLayer, TextLayer, TileLayer, TopologyGraphLayer, TripsLayer,
+  VisualCircle, VisualComposite, VisualMesh, VisualNineSlicePlane,
+  VisualParticleContainer, VisualRect, VisualSprite, VisualText,
+  VisualTilingSprite,
 }
 import gleam/float
 import gleam/int
@@ -24,8 +31,10 @@ pub fn render_plot(plot: SciVizPlot) -> Element(msg) {
 
   svg.svg(
     [
-      attribute.class("sciviz-plot w-full h-auto font-mono select-none"),
       attribute.attribute("viewBox", viewbox),
+      attribute.attribute("width", w_str),
+      attribute.attribute("height", h_str),
+      attribute.class("sciviz-plot w-full h-auto font-mono select-none"),
     ],
     [
       render_background(plot),
@@ -45,54 +54,60 @@ fn render_background(plot: SciVizPlot) -> Element(msg) {
     attribute.attribute("width", float.to_string(plot.width)),
     attribute.attribute("height", float.to_string(plot.height)),
     attribute.attribute("fill", plot.theme.bg_color),
-    attribute.attribute("rx", "6"),
   ])
 }
 
 fn render_grid(plot: SciVizPlot) -> Element(msg) {
-  let step_x = plot.width /. 5.0
-  let step_y = plot.height /. 4.0
+  let x_steps = [0.25, 0.5, 0.75]
+  let y_steps = [0.25, 0.5, 0.75]
+
   let v_lines =
-    list.map([1.0, 2.0, 3.0, 4.0], fn(i) {
-      let x = float.to_string(i *. step_x)
+    list.map(x_steps, fn(step) {
+      let x_pos = float.to_string(plot.width *. step)
       svg.line([
-        attribute.attribute("x1", x),
+        attribute.attribute("x1", x_pos),
         attribute.attribute("y1", "0"),
-        attribute.attribute("x2", x),
+        attribute.attribute("x2", x_pos),
         attribute.attribute("y2", float.to_string(plot.height)),
         attribute.attribute("stroke", plot.theme.grid_color),
         attribute.attribute("stroke-width", "1"),
-        attribute.attribute("stroke-dasharray", "3 3"),
+        attribute.attribute("stroke-dasharray", "2 4"),
       ])
     })
+
   let h_lines =
-    list.map([1.0, 2.0, 3.0], fn(i) {
-      let y = float.to_string(i *. step_y)
+    list.map(y_steps, fn(step) {
+      let y_pos = float.to_string(plot.height *. step)
       svg.line([
         attribute.attribute("x1", "0"),
-        attribute.attribute("y1", y),
+        attribute.attribute("y1", y_pos),
         attribute.attribute("x2", float.to_string(plot.width)),
-        attribute.attribute("y2", y),
+        attribute.attribute("y2", y_pos),
         attribute.attribute("stroke", plot.theme.grid_color),
         attribute.attribute("stroke-width", "1"),
-        attribute.attribute("stroke-dasharray", "3 3"),
+        attribute.attribute("stroke-dasharray", "2 4"),
       ])
     })
-  svg.g([], list.append(v_lines, h_lines))
+
+  svg.g([attribute.class("sciviz-grid")], list.append(v_lines, h_lines))
 }
 
 fn render_title(plot: SciVizPlot) -> Element(msg) {
-  svg.text(
-    [
-      attribute.attribute("x", "16"),
-      attribute.attribute("y", "24"),
-      attribute.attribute("fill", plot.theme.text_color),
-      attribute.attribute("font-size", "11"),
-      attribute.attribute("font-weight", "bold"),
-      attribute.attribute("letter-spacing", "0.08em"),
-    ],
-    plot.title,
-  )
+  case plot.title == "" {
+    True -> svg.g([], [])
+    False ->
+      svg.text(
+        [
+          attribute.attribute("x", "16"),
+          attribute.attribute("y", "24"),
+          attribute.attribute("fill", plot.theme.text_color),
+          attribute.attribute("font-size", "11"),
+          attribute.attribute("font-weight", "bold"),
+          attribute.attribute("letter-spacing", "0.08em"),
+        ],
+        string.uppercase(plot.title),
+      )
+  }
 }
 
 fn render_data_geoms(plot: SciVizPlot) -> Element(msg) {
@@ -180,33 +195,234 @@ fn render_single_geom(
             <> first_x
             <> ","
             <> base_y
+
           svg.polygon([
+            attribute.attribute("points", closed_str),
             attribute.attribute("fill", fill_color),
             attribute.attribute("fill-opacity", float.to_string(opacity)),
-            attribute.attribute("points", closed_str),
           ])
         }
       }
     }
 
-    GeomPhasePortrait(scale_val, color) -> {
+    GeomBar(bar_width, fill_color) -> {
+      let bars =
+        list.map(points, fn(p) {
+          let h = plot.height -. p.y
+          svg.rect([
+            attribute.attribute("x", float.to_string(p.x -. { bar_width /. 2.0 })),
+            attribute.attribute("y", float.to_string(p.y)),
+            attribute.attribute("width", float.to_string(bar_width)),
+            attribute.attribute("height", float.to_string(h)),
+            attribute.attribute("fill", fill_color),
+          ])
+        })
+      svg.g([], bars)
+    }
+
+    GeomRibbon(fill_color, opacity) -> {
+      let points_str =
+        points
+        |> list.map(fn(p) {
+          float.to_string(p.x) <> "," <> float.to_string(p.y)
+        })
+        |> string.join(" ")
+      svg.polyline([
+        attribute.attribute("points", points_str),
+        attribute.attribute("fill", fill_color),
+        attribute.attribute("fill-opacity", float.to_string(opacity)),
+      ])
+    }
+
+    GeomPhasePortrait(vector_scale, color) -> {
       let vectors =
         list.map(points, fn(p) {
-          let target_x = p.x +. { scale_val *. 10.0 }
-          let target_y = p.y -. { scale_val *. 8.0 }
+          let dx = { p.y -. { plot.height /. 2.0 } } *. 0.1 *. vector_scale
+          let dy = { 0.0 -. { p.x -. { plot.width /. 2.0 } } } *. 0.1 *. vector_scale
           svg.line([
             attribute.attribute("x1", float.to_string(p.x)),
             attribute.attribute("y1", float.to_string(p.y)),
-            attribute.attribute("x2", float.to_string(target_x)),
-            attribute.attribute("y2", float.to_string(target_y)),
+            attribute.attribute("x2", float.to_string(p.x +. dx)),
+            attribute.attribute("y2", float.to_string(p.y +. dy)),
             attribute.attribute("stroke", color),
-            attribute.attribute("stroke-width", "1.5"),
+            attribute.attribute("stroke-width", "1.2"),
           ])
         })
       svg.g([], vectors)
     }
 
-    _ -> svg.g([], [])
+    GeomBoxplot(width, fill, stroke) -> {
+      let boxes =
+        list.map(points, fn(p) {
+          let half_w = width /. 2.0
+          svg.g([], [
+            svg.rect([
+              attribute.attribute("x", float.to_string(p.x -. half_w)),
+              attribute.attribute("y", float.to_string(p.y -. 15.0)),
+              attribute.attribute("width", float.to_string(width)),
+              attribute.attribute("height", "30"),
+              attribute.attribute("fill", fill),
+              attribute.attribute("stroke", stroke),
+              attribute.attribute("stroke-width", "1.5"),
+            ]),
+            svg.line([
+              attribute.attribute("x1", float.to_string(p.x)),
+              attribute.attribute("y1", float.to_string(p.y -. 25.0)),
+              attribute.attribute("x2", float.to_string(p.x)),
+              attribute.attribute("y2", float.to_string(p.y +. 25.0)),
+              attribute.attribute("stroke", stroke),
+              attribute.attribute("stroke-width", "1.2"),
+            ]),
+          ])
+        })
+      svg.g([], boxes)
+    }
+
+    GeomViolin(_bw, fill, opacity) -> {
+      let violins =
+        list.map(points, fn(p) {
+          svg.circle([
+            attribute.attribute("cx", float.to_string(p.x)),
+            attribute.attribute("cy", float.to_string(p.y)),
+            attribute.attribute("r", "18"),
+            attribute.attribute("fill", fill),
+            attribute.attribute("fill-opacity", float.to_string(opacity)),
+          ])
+        })
+      svg.g([], violins)
+    }
+
+    GeomHex(radius, stroke) -> {
+      let hexes =
+        list.map(points, fn(p) {
+          let r = radius
+          let p1 = float.to_string(p.x) <> "," <> float.to_string(p.y -. r)
+          let p2 = float.to_string(p.x +. r) <> "," <> float.to_string(p.y -. { r /. 2.0 })
+          let p3 = float.to_string(p.x +. r) <> "," <> float.to_string(p.y +. { r /. 2.0 })
+          let p4 = float.to_string(p.x) <> "," <> float.to_string(p.y +. r)
+          let p5 = float.to_string(p.x -. r) <> "," <> float.to_string(p.y +. { r /. 2.0 })
+          let p6 = float.to_string(p.x -. r) <> "," <> float.to_string(p.y -. { r /. 2.0 })
+          let hex_pts = p1 <> " " <> p2 <> " " <> p3 <> " " <> p4 <> " " <> p5 <> " " <> p6
+          svg.polygon([
+            attribute.attribute("points", hex_pts),
+            attribute.attribute("fill", "none"),
+            attribute.attribute("stroke", stroke),
+            attribute.attribute("stroke-width", "1.5"),
+          ])
+        })
+      svg.g([], hexes)
+    }
+
+    GeomDensity2D(_levels, color) -> {
+      let densities =
+        list.map(points, fn(p) {
+          svg.g([], [
+            svg.circle([
+              attribute.attribute("cx", float.to_string(p.x)),
+              attribute.attribute("cy", float.to_string(p.y)),
+              attribute.attribute("r", "20"),
+              attribute.attribute("fill", "none"),
+              attribute.attribute("stroke", color),
+              attribute.attribute("stroke-opacity", "0.4"),
+            ]),
+            svg.circle([
+              attribute.attribute("cx", float.to_string(p.x)),
+              attribute.attribute("cy", float.to_string(p.y)),
+              attribute.attribute("r", "10"),
+              attribute.attribute("fill", "none"),
+              attribute.attribute("stroke", color),
+              attribute.attribute("stroke-opacity", "0.8"),
+            ]),
+          ])
+        })
+      svg.g([], densities)
+    }
+
+    GeomErrorBar(width, stroke_w, color) -> {
+      let bars =
+        list.map(points, fn(p) {
+          let half_w = width /. 2.0
+          svg.g([], [
+            svg.line([
+              attribute.attribute("x1", float.to_string(p.x)),
+              attribute.attribute("y1", float.to_string(p.y -. 12.0)),
+              attribute.attribute("x2", float.to_string(p.x)),
+              attribute.attribute("y2", float.to_string(p.y +. 12.0)),
+              attribute.attribute("stroke", color),
+              attribute.attribute("stroke-width", float.to_string(stroke_w)),
+            ]),
+            svg.line([
+              attribute.attribute("x1", float.to_string(p.x -. half_w)),
+              attribute.attribute("y1", float.to_string(p.y -. 12.0)),
+              attribute.attribute("x2", float.to_string(p.x +. half_w)),
+              attribute.attribute("y2", float.to_string(p.y -. 12.0)),
+              attribute.attribute("stroke", color),
+              attribute.attribute("stroke-width", float.to_string(stroke_w)),
+            ]),
+          ])
+        })
+      svg.g([], bars)
+    }
+
+    GeomStep(stroke_w, color) -> {
+      let points_str =
+        points
+        |> list.map(fn(p) {
+          float.to_string(p.x) <> "," <> float.to_string(p.y)
+        })
+        |> string.join(" ")
+      svg.polyline([
+        attribute.attribute("points", points_str),
+        attribute.attribute("fill", "none"),
+        attribute.attribute("stroke", color),
+        attribute.attribute("stroke-width", float.to_string(stroke_w)),
+      ])
+    }
+
+    GeomContour(_thresholds, color) -> {
+      let contours =
+        list.map(points, fn(p) {
+          svg.circle([
+            attribute.attribute("cx", float.to_string(p.x)),
+            attribute.attribute("cy", float.to_string(p.y)),
+            attribute.attribute("r", "15"),
+            attribute.attribute("fill", "none"),
+            attribute.attribute("stroke", color),
+          ])
+        })
+      svg.g([], contours)
+    }
+
+    GeomSegment(stroke_w, color) -> {
+      let points_str =
+        points
+        |> list.map(fn(p) {
+          float.to_string(p.x) <> "," <> float.to_string(p.y)
+        })
+        |> string.join(" ")
+      svg.polyline([
+        attribute.attribute("points", points_str),
+        attribute.attribute("fill", "none"),
+        attribute.attribute("stroke", color),
+        attribute.attribute("stroke-width", float.to_string(stroke_w)),
+      ])
+    }
+
+    GeomText(size, color, _font) -> {
+      let texts =
+        list.map(points, fn(p) {
+          svg.text(
+            [
+              attribute.attribute("x", float.to_string(p.x)),
+              attribute.attribute("y", float.to_string(p.y)),
+              attribute.attribute("fill", color),
+              attribute.attribute("font-size", int.to_string(size)),
+            ],
+            "pt",
+          )
+        })
+      svg.g([], texts)
+    }
   }
 }
 
@@ -214,13 +430,13 @@ fn render_deck_layers(plot: SciVizPlot) -> Element(msg) {
   let layer_elements =
     list.map(plot.layers, fn(layer) {
       case layer {
-        ScatterplotLayer(_id, points, radius, color) -> {
-          let projected = list.map(points, fn(p) { dsl.project_point(plot.scale, p) })
+        ScatterplotLayer(_id, pts, radius, color) -> {
           let circles =
-            list.map(projected, fn(p) {
+            list.map(pts, fn(p) {
+              let sp = dsl.project_point(plot.scale, p)
               svg.circle([
-                attribute.attribute("cx", float.to_string(p.x)),
-                attribute.attribute("cy", float.to_string(p.y)),
+                attribute.attribute("cx", float.to_string(sp.x)),
+                attribute.attribute("cy", float.to_string(sp.y)),
                 attribute.attribute("r", float.to_string(radius)),
                 attribute.attribute("fill", color),
               ])
@@ -229,11 +445,11 @@ fn render_deck_layers(plot: SciVizPlot) -> Element(msg) {
         }
 
         PathLayer(_id, path, stroke_width, color) -> {
-          let projected = list.map(path, fn(p) { dsl.project_point(plot.scale, p) })
           let points_str =
-            projected
+            path
             |> list.map(fn(p) {
-              float.to_string(p.x) <> "," <> float.to_string(p.y)
+              let sp = dsl.project_point(plot.scale, p)
+              float.to_string(sp.x) <> "," <> float.to_string(sp.y)
             })
             |> string.join(" ")
           svg.polyline([
@@ -355,6 +571,184 @@ fn render_deck_layers(plot: SciVizPlot) -> Element(msg) {
             list.append(rendered_edges, rendered_nodes),
           )
         }
+
+        LineLayer(_id, lines, stroke_w, color) -> {
+          let els =
+            list.map(lines, fn(pair) {
+              let sp1 = dsl.project_point(plot.scale, pair.0)
+              let sp2 = dsl.project_point(plot.scale, pair.1)
+              svg.line([
+                attribute.attribute("x1", float.to_string(sp1.x)),
+                attribute.attribute("y1", float.to_string(sp1.y)),
+                attribute.attribute("x2", float.to_string(sp2.x)),
+                attribute.attribute("y2", float.to_string(sp2.y)),
+                attribute.attribute("stroke", color),
+                attribute.attribute("stroke-width", float.to_string(stroke_w)),
+              ])
+            })
+          svg.g([attribute.class("deck-lines")], els)
+        }
+
+        BitmapLayer(_id, bounds, _url, opacity) -> {
+          svg.rect([
+            attribute.attribute("x", float.to_string(bounds.x)),
+            attribute.attribute("y", float.to_string(bounds.y)),
+            attribute.attribute("width", float.to_string(bounds.width)),
+            attribute.attribute("height", float.to_string(bounds.height)),
+            attribute.attribute("fill", plot.theme.grid_color),
+            attribute.attribute("fill-opacity", float.to_string(opacity)),
+          ])
+        }
+
+        IconLayer(_id, icons, size_scale) -> {
+          let els =
+            list.map(icons, fn(icon) {
+              let sp = dsl.project_point(plot.scale, icon.position)
+              svg.circle([
+                attribute.attribute("cx", float.to_string(sp.x)),
+                attribute.attribute("cy", float.to_string(sp.y)),
+                attribute.attribute("r", float.to_string(icon.size *. size_scale)),
+                attribute.attribute("fill", icon.color),
+              ])
+            })
+          svg.g([attribute.class("deck-icons")], els)
+        }
+
+        GeoJsonLayer(_id, features, fill, stroke) -> {
+          let polys =
+            list.map(features, fn(feat) {
+              let pts_str =
+                feat.coordinates
+                |> list.map(fn(p) {
+                  let sp = dsl.project_point(plot.scale, p)
+                  float.to_string(sp.x) <> "," <> float.to_string(sp.y)
+                })
+                |> string.join(" ")
+              svg.polygon([
+                attribute.attribute("points", pts_str),
+                attribute.attribute("fill", fill),
+                attribute.attribute("stroke", stroke),
+                attribute.attribute("stroke-width", "1"),
+              ])
+            })
+          svg.g([attribute.class("deck-geojson")], polys)
+        }
+
+        GridLayer(_id, pts, cell_sz, _elev) -> {
+          let cells =
+            list.map(pts, fn(p) {
+              let sp = dsl.project_point(plot.scale, p)
+              svg.rect([
+                attribute.attribute("x", float.to_string(sp.x)),
+                attribute.attribute("y", float.to_string(sp.y)),
+                attribute.attribute("width", float.to_string(cell_sz)),
+                attribute.attribute("height", float.to_string(cell_sz)),
+                attribute.attribute("fill", plot.theme.primary_color),
+                attribute.attribute("fill-opacity", "0.5"),
+              ])
+            })
+          svg.g([attribute.class("deck-grid")], cells)
+        }
+
+        HexagonLayer(_id, pts, radius, _cov) -> {
+          let hexes =
+            list.map(pts, fn(p) {
+              let sp = dsl.project_point(plot.scale, p)
+              svg.circle([
+                attribute.attribute("cx", float.to_string(sp.x)),
+                attribute.attribute("cy", float.to_string(sp.y)),
+                attribute.attribute("r", float.to_string(radius)),
+                attribute.attribute("fill", plot.theme.accent_color),
+              ])
+            })
+          svg.g([attribute.class("deck-hexagons")], hexes)
+        }
+
+        ColumnLayer(_id, cols, _res, radius) -> {
+          let els =
+            list.map(cols, fn(col) {
+              let sp = dsl.project_point(plot.scale, col.position)
+              svg.rect([
+                attribute.attribute("x", float.to_string(sp.x -. radius)),
+                attribute.attribute("y", float.to_string(sp.y -. col.elevation)),
+                attribute.attribute("width", float.to_string(radius *. 2.0)),
+                attribute.attribute("height", float.to_string(col.elevation)),
+                attribute.attribute("fill", col.color),
+              ])
+            })
+          svg.g([attribute.class("deck-columns")], els)
+        }
+
+        PointCloudLayer(_id, pts, pt_sz, color) -> {
+          let circles =
+            list.map(pts, fn(p) {
+              let sp = dsl.project_point(plot.scale, Point2D(p.x, p.y))
+              svg.circle([
+                attribute.attribute("cx", float.to_string(sp.x)),
+                attribute.attribute("cy", float.to_string(sp.y)),
+                attribute.attribute("r", float.to_string(pt_sz)),
+                attribute.attribute("fill", color),
+              ])
+            })
+          svg.g([attribute.class("deck-pointcloud")], circles)
+        }
+
+        ScreenGridLayer(_id, pts, cell_px) -> {
+          let els =
+            list.map(pts, fn(p) {
+              let sp = dsl.project_point(plot.scale, p)
+              svg.rect([
+                attribute.attribute("x", float.to_string(sp.x)),
+                attribute.attribute("y", float.to_string(sp.y)),
+                attribute.attribute("width", float.to_string(cell_px)),
+                attribute.attribute("height", float.to_string(cell_px)),
+                attribute.attribute("fill", plot.theme.warning_color),
+                attribute.attribute("fill-opacity", "0.4"),
+              ])
+            })
+          svg.g([attribute.class("deck-screengrid")], els)
+        }
+
+        TextLayer(_id, labels, font_sz) -> {
+          let els =
+            list.map(labels, fn(lbl) {
+              let sp = dsl.project_point(plot.scale, lbl.position)
+              svg.text(
+                [
+                  attribute.attribute("x", float.to_string(sp.x)),
+                  attribute.attribute("y", float.to_string(sp.y)),
+                  attribute.attribute("fill", lbl.color),
+                  attribute.attribute("font-size", int.to_string(font_sz)),
+                ],
+                lbl.text,
+              )
+            })
+          svg.g([attribute.class("deck-text")], els)
+        }
+
+        TripsLayer(_id, trips, _trail_len, _cur_time) -> {
+          let els =
+            list.map(trips, fn(trip) {
+              let pts_str =
+                trip.path_with_timestamps
+                |> list.map(fn(pair) {
+                  let sp = dsl.project_point(plot.scale, pair.0)
+                  float.to_string(sp.x) <> "," <> float.to_string(sp.y)
+                })
+                |> string.join(" ")
+              svg.polyline([
+                attribute.attribute("points", pts_str),
+                attribute.attribute("fill", "none"),
+                attribute.attribute("stroke", trip.color),
+                attribute.attribute("stroke-width", "2"),
+              ])
+            })
+          svg.g([attribute.class("deck-trips")], els)
+        }
+
+        H3HexagonLayer(_id, _hex_ids, _elev) -> svg.g([], [])
+        S2Layer(_id, _tokens, _fill) -> svg.g([], [])
+        TileLayer(_id, _tmpl, _minz, _maxz) -> svg.g([], [])
       }
     })
   svg.g([attribute.class("sciviz-deck-layers")], layer_elements)
@@ -388,6 +782,58 @@ fn render_scene_node(node: SceneNode) -> Element(msg) {
         content,
       )
     VisualComposite(_) -> svg.g([], [])
+    VisualSprite(x, y, w, h, _tex, tint) ->
+      svg.rect([
+        attribute.attribute("x", float.to_string(x)),
+        attribute.attribute("y", float.to_string(y)),
+        attribute.attribute("width", float.to_string(w)),
+        attribute.attribute("height", float.to_string(h)),
+        attribute.attribute("fill", tint),
+      ])
+    VisualNineSlicePlane(x, y, w, h, _l, _t, _r, _b, fill) ->
+      svg.rect([
+        attribute.attribute("x", float.to_string(x)),
+        attribute.attribute("y", float.to_string(y)),
+        attribute.attribute("width", float.to_string(w)),
+        attribute.attribute("height", float.to_string(h)),
+        attribute.attribute("fill", fill),
+        attribute.attribute("stroke", "#38bdf8"),
+        attribute.attribute("stroke-width", "2"),
+      ])
+    VisualTilingSprite(x, y, w, h, _sx, _sy, _pat) ->
+      svg.rect([
+        attribute.attribute("x", float.to_string(x)),
+        attribute.attribute("y", float.to_string(y)),
+        attribute.attribute("width", float.to_string(w)),
+        attribute.attribute("height", float.to_string(h)),
+        attribute.attribute("fill", "#1e293b"),
+      ])
+    VisualParticleContainer(particles, _blend) -> {
+      let circles =
+        list.map(particles, fn(p) {
+          svg.circle([
+            attribute.attribute("cx", float.to_string(p.x)),
+            attribute.attribute("cy", float.to_string(p.y)),
+            attribute.attribute("r", float.to_string(p.scale *. 2.0)),
+            attribute.attribute("fill", p.color),
+            attribute.attribute("fill-opacity", float.to_string(p.alpha)),
+          ])
+        })
+      svg.g([], circles)
+    }
+    VisualMesh(vertices, _uvs, _indices, color) -> {
+      let pts_str =
+        vertices
+        |> list.map(fn(p) {
+          float.to_string(p.x) <> "," <> float.to_string(p.y)
+        })
+        |> string.join(" ")
+      svg.polygon([
+        attribute.attribute("points", pts_str),
+        attribute.attribute("fill", color),
+        attribute.attribute("stroke", "#0284c7"),
+      ])
+    }
   }
   let children_els = list.map(node.children, fn(c) { render_scene_node(c) })
   let transform_attr =
