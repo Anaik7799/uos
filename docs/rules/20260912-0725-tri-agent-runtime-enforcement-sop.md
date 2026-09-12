@@ -1,0 +1,1 @@
+../../contracts/rules/20260912-0725-tri-agent-runtime-enforcement-sop.md
