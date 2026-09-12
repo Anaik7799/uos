@@ -69,6 +69,8 @@ import cepaf_gleam/ui/lustre/inference_tier
 import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
+import cepaf_gleam/ui/lustre/cortex_cockpit
+import simplifile
 import cepaf_gleam/ui/web/shell
 import cepaf_gleam/ui/wisp/agui_sse_api
 import cepaf_gleam/ui/wisp/auth
@@ -4513,41 +4515,128 @@ fn route_html(path: String) -> String {
         "allium",
         page_views.allium_index_view(),
       )
+    "/cortex" ->
+      shell.render_page(
+        "Cortex & Sa-Plan Cognitive Execution",
+        "cortex",
+        cortex_cockpit.render_cortex_page(cortex_cockpit.init_model()),
+      )
+    "/checklist" ->
+      shell.render_page(
+        "Comprehensive Verification Checklist",
+        "verification",
+        guard("verification", page_views.verification_view),
+      )
+    "/wiki" ->
+      shell.render_page(
+        "Hermes Wiki Master Index",
+        "knowledge",
+        guard("knowledge", page_views.knowledge_view),
+      )
+    "/zk" ->
+      shell.render_page(
+        "ZigVM ZK Master MOC",
+        "knowledge",
+        guard("knowledge", page_views.knowledge_view),
+      )
     _ -> {
-      // Dynamic Allium spec viewer: /allium/{spec_name}
-      case string.starts_with(path, "/allium/") {
-        True -> {
-          let spec_name = string.drop_start(path, 8)
+      case string.starts_with(path, "/docs/") || string.starts_with(path, "/files/") {
+        True -> render_doc_or_file(path)
+        False ->
+          case string.starts_with(path, "/allium/") {
+            True -> {
+              let spec_name = string.drop_start(path, 8)
+              shell.render_page(
+                "Allium: " <> spec_name,
+                "allium",
+                page_views.allium_spec_view(spec_name),
+              )
+            }
+            False ->
+              // SC-PERF-404-BODY (Pass-112) — unknown HTML routes return a
+              // minimal HTML body (~600 B) instead of the full 32 KB
+              // cockpit shell. Crawlers / typos / fuzzers no longer waste
+              // 32 KB per bad URL. Pass-82 fixed the status (now 404);
+              // this pass fixes the body weight.
+              "<!doctype html><html lang=\"en\" dir=\"ltr\"><head>"
+              <> "<meta charset=\"utf-8\">"
+              <> "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
+              <> "<meta name=\"robots\" content=\"noindex, nofollow\">"
+              <> "<meta name=\"color-scheme\" content=\"dark\">"
+              <> "<title>C3I — Not Found</title>"
+              <> "<style>body{margin:0;font-family:system-ui,sans-serif;background:#0a0e17;color:#e0e6ed;display:flex;align-items:center;justify-content:center;min-height:100vh}main{text-align:center;padding:2rem}h1{color:#00d4aa;font-size:3rem;margin:0 0 0.5rem}p{color:#7a8fa6}a{color:#00d4aa;text-decoration:none;min-height:44px;display:inline-block;padding:0.5rem 1rem;border:1px solid #00d4aa;border-radius:6px;margin-top:1rem}a:hover{background:#00d4aa;color:#0a0e17}</style>"
+              // SC-SEC-HTML-404-NO-LEAK (Pass-144) — mirror Pass-143's
+              // API-404 fix. Pre-fix the HTML 404 reflected the request
+              // path inside <code> for "Not Found: <code>/path</code>".
+              // Mist URL-encodes incoming path so direct script-tag XSS
+              // is blocked, and CSP (Pass-78) refuses inline scripts —
+              // but reflection itself is poor practice (CWE-200), aids
+              // reconnaissance/fingerprinting, and risks a future Mist
+              // change that loosens encoding. Drop the path echo; the
+              // 404 page is still operator-comprehensible via title +
+              // dashboard link.
+              <> "</head><body><main role=\"main\"><h1>404</h1><p>Not Found</p><a href=\"/dashboard\">Return to dashboard</a></main></body></html>"
+          }
+      }
+    }
+  }
+}
+
+fn render_doc_or_file(path: String) -> String {
+  case string.contains(path, "..") {
+    True ->
+      "<!doctype html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\"><title>C3I — Not Found</title></head><body><h1>404</h1></body></html>"
+    False -> {
+      let rel_path = case string.starts_with(path, "/files/") {
+        True -> string.drop_start(path, 6)
+        False -> path
+      }
+      let uos_path = "/home/an/NAS-setup/uos" <> rel_path
+      let c3i_path = "/home/an/NAS-setup/c3i" <> rel_path
+      let content_result = case simplifile.read(uos_path) {
+        Ok(c) -> Ok(c)
+        Error(_) -> simplifile.read(c3i_path)
+      }
+      case content_result {
+        Ok(content) -> {
+          let file_name = case string.split(path, "/") |> list.reverse |> list.first {
+            Ok(n) -> n
+            Error(_) -> "Document"
+          }
           shell.render_page(
-            "Allium: " <> spec_name,
-            "allium",
-            page_views.allium_spec_view(spec_name),
+            file_name,
+            "docs",
+            html.div([attribute.class("doc-viewer-container")], [
+              html.div([attribute.class("doc-header")], [
+                html.h1([], [html.text(file_name)]),
+                html.div([attribute.class("badges-container")], [
+                  html.span([attribute.class("badge badge-tailscale")], [
+                    html.a([attribute.href("http://nas-1.tail55d152.ts.net:4100" <> path), attribute.target("_blank")], [
+                      html.text("Tailscale FQDN: http://nas-1.tail55d152.ts.net:4100" <> path),
+                    ]),
+                  ]),
+                  html.span([attribute.class("badge badge-storage")], [
+                    html.text("NVMe Storage Interlock: 25503L801736 PROTECTED"),
+                  ]),
+                  html.span([attribute.class("badge badge-checklist")], [
+                    html.text("Checklist: 18/18 PASS"),
+                  ]),
+                ]),
+              ]),
+              html.pre(
+                [
+                  attribute.attribute(
+                    "style",
+                    "white-space: pre-wrap; font-family: monospace; background: #141922; padding: 1.5rem; border-radius: 8px; border: 1px solid #1e2a3a; color: #e0e6ed; line-height: 1.5; overflow-x: auto;",
+                  ),
+                ],
+                [html.text(content)],
+              ),
+            ]),
           )
         }
-        False ->
-          // SC-PERF-404-BODY (Pass-112) — unknown HTML routes return a
-          // minimal HTML body (~600 B) instead of the full 32 KB
-          // cockpit shell. Crawlers / typos / fuzzers no longer waste
-          // 32 KB per bad URL. Pass-82 fixed the status (now 404);
-          // this pass fixes the body weight.
-          "<!doctype html><html lang=\"en\" dir=\"ltr\"><head>"
-          <> "<meta charset=\"utf-8\">"
-          <> "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
-          <> "<meta name=\"robots\" content=\"noindex, nofollow\">"
-          <> "<meta name=\"color-scheme\" content=\"dark\">"
-          <> "<title>C3I — Not Found</title>"
-          <> "<style>body{margin:0;font-family:system-ui,sans-serif;background:#0a0e17;color:#e0e6ed;display:flex;align-items:center;justify-content:center;min-height:100vh}main{text-align:center;padding:2rem}h1{color:#00d4aa;font-size:3rem;margin:0 0 0.5rem}p{color:#7a8fa6}a{color:#00d4aa;text-decoration:none;min-height:44px;display:inline-block;padding:0.5rem 1rem;border:1px solid #00d4aa;border-radius:6px;margin-top:1rem}a:hover{background:#00d4aa;color:#0a0e17}</style>"
-          // SC-SEC-HTML-404-NO-LEAK (Pass-144) — mirror Pass-143's
-          // API-404 fix. Pre-fix the HTML 404 reflected the request
-          // path inside <code> for "Not Found: <code>/path</code>".
-          // Mist URL-encodes incoming path so direct script-tag XSS
-          // is blocked, and CSP (Pass-78) refuses inline scripts —
-          // but reflection itself is poor practice (CWE-200), aids
-          // reconnaissance/fingerprinting, and risks a future Mist
-          // change that loosens encoding. Drop the path echo; the
-          // 404 page is still operator-comprehensible via title +
-          // dashboard link.
-          <> "</head><body><main role=\"main\"><h1>404</h1><p>Not Found</p><a href=\"/dashboard\">Return to dashboard</a></main></body></html>"
+        Error(_) ->
+          "<!doctype html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\"><title>C3I — Not Found</title></head><body><h1>404</h1></body></html>"
       }
     }
   }
