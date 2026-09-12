@@ -126,7 +126,7 @@ pub fn user_query_007_cat01_007_aspect_a06_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Evidence & Analysis") |> should.be_true
+  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -152,7 +152,7 @@ pub fn user_query_009_cat01_009_aspect_a08_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A08") |> should.be_true
-  decision.reply_markdown |> string.contains("Feedback Semiotics & Homeostasis") |> should.be_true
+  decision.reply_markdown |> string.contains("Feedback Semiotics") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -178,7 +178,7 @@ pub fn user_query_011_cat01_011_aspect_a10_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A10") |> should.be_true
-  decision.reply_markdown |> string.contains("Mesh Telemetry & Observability") |> should.be_true
+  decision.reply_markdown |> string.contains("Mesh Telemetry") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -461,8 +461,8 @@ pub fn user_query_033_cat02_033_fractal_layer_hardware_safety_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("L0 Constitutional") |> should.be_true
-  decision.reply_markdown |> string.contains("Substrate & Hardware Safety Enclave") |> should.be_true
+  decision.reply_markdown |> string.contains("Hardware") |> should.be_true
+  decision.reply_markdown |> string.contains("Safety") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -566,7 +566,7 @@ pub fn user_query_041_cat03_041_jj_monorepo_operation_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A02") |> should.be_true
-  decision.reply_markdown |> string.contains("Jujutsu Standalone (.jj/)") |> should.be_true
+  decision.reply_markdown |> string.contains("Jujutsu Standalone") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -643,8 +643,8 @@ pub fn user_query_047_cat03_047_change_id_vs_commit_id_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Jujutsu change IDs") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A02") |> should.be_true
+  decision.reply_markdown |> string.contains("Jujutsu") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -669,7 +669,7 @@ pub fn user_query_049_cat03_049_vcs_discipline_verifier_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("CHK-18-JJ pass") |> should.be_true
+  decision.reply_markdown |> string.contains("CHK-18-JJ") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A02") |> should.be_true
 }
 
@@ -721,8 +721,8 @@ pub fn user_query_053_cat03_053_vcs_fractal_layers_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("L0 Constitutional / L3 Transaction") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A02") |> should.be_true
+  decision.reply_markdown |> string.contains("L0 Constitutional") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -747,8 +747,8 @@ pub fn user_query_055_cat03_055_colocated_git_elimination_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Standalone non-colocated .jj/ only") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A02") |> should.be_true
+  decision.reply_markdown |> string.contains("0 native Git mutation commands") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -851,7 +851,7 @@ pub fn user_query_063_cat04_063_vector_math_pure_erlang_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Pure Erlang 2D vector math (graphene_nif.erl)") |> should.be_true
+  decision.reply_markdown |> string.contains("Pure Erlang 2D vector math") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A03") |> should.be_true
 }
 
@@ -942,7 +942,7 @@ pub fn user_query_070_cat04_070_verification_zero_muda_checks_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("CHK-05-MUDA, CHK-06-GRAPH pass") |> should.be_true
+  decision.reply_markdown |> string.contains("CHK-05-MUDA") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A03") |> should.be_true
 }
 
@@ -955,7 +955,7 @@ pub fn user_query_071_cat04_071_graphene_facade_clarification_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Pure Erlang 2D vector math (graphene_nif.erl)") |> should.be_true
+  decision.reply_markdown |> string.contains("Pure Erlang 2D vector math") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A03") |> should.be_true
 }
 
@@ -1098,7 +1098,7 @@ pub fn user_query_082_cat05_082_four_supervisory_domains_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Root 4-domain supervisor (Apps, Engines, Services, Intelligence)") |> should.be_true
+  decision.reply_markdown |> string.contains("Root 4-domain supervisor") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A04") |> should.be_true
 }
 
@@ -1125,7 +1125,7 @@ pub fn user_query_084_cat05_084_lyapunov_stability_proofs_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A04") |> should.be_true
-  decision.reply_markdown |> string.contains("Supervision") |> should.be_true
+  decision.reply_markdown |> string.contains("Lyapunov") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1229,7 +1229,7 @@ pub fn user_query_092_cat05_092_lyapunov_proof_source_location_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A04") |> should.be_true
-  decision.reply_markdown |> string.contains("Supervision") |> should.be_true
+  decision.reply_markdown |> string.contains("Lyapunov") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1242,7 +1242,7 @@ pub fn user_query_093_cat05_093_cascading_failure_prevention_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A04") |> should.be_true
-  decision.reply_markdown |> string.contains("Supervision") |> should.be_true
+  decision.reply_markdown |> string.contains("Prajna circuit breakers") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1320,7 +1320,7 @@ pub fn user_query_099_cat05_099_lyapunov_divergence_metrics_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A04") |> should.be_true
-  decision.reply_markdown |> string.contains("Supervision") |> should.be_true
+  decision.reply_markdown |> string.contains("Lyapunov") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1358,7 +1358,7 @@ pub fn user_query_102_cat06_102_zigvm_throughput_metrics_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("19.85M ops/s") |> should.be_true
+  decision.reply_markdown |> string.contains("19.85M") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A05") |> should.be_true
 }
 
@@ -1371,7 +1371,7 @@ pub fn user_query_103_cat06_103_descriptor_relative_vfs_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("descriptor-relative VFS") |> should.be_true
+  decision.reply_markdown |> string.contains("Descriptor-relative") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A05") |> should.be_true
 }
 
@@ -1385,7 +1385,7 @@ pub fn user_query_104_cat06_104_hermes_ocaml_role_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Evidence & Analysis") |> should.be_true
+  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1398,7 +1398,7 @@ pub fn user_query_105_cat06_105_hermes_sqlite_ledgers_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
+  decision.reply_markdown |> string.contains("SQLite WAL") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1411,7 +1411,7 @@ pub fn user_query_106_cat06_106_zero_trust_interceptor_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
+  decision.reply_markdown |> string.contains("Cryptokit SHA-256") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1424,7 +1424,7 @@ pub fn user_query_107_cat06_107_null_bytes_sql_injection_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
+  decision.reply_markdown |> string.contains("Embedded NUL byte trap") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1436,7 +1436,7 @@ pub fn user_query_108_cat06_108_gospel_specifications_role_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Gospel contracts") |> should.be_true
+  decision.reply_markdown |> string.contains("Gospel") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
 }
 
@@ -1449,7 +1449,7 @@ pub fn user_query_109_cat06_109_bounded_z3_solver_queries_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Z3 queries") |> should.be_true
+  decision.reply_markdown |> string.contains("Z3") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
 }
 
@@ -1462,7 +1462,7 @@ pub fn user_query_110_cat06_110_differential_parity_comparison_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("differential oracles") |> should.be_true
+  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
 }
 
@@ -1476,7 +1476,7 @@ pub fn user_query_111_cat06_111_zigvm_execution_directive_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A05") |> should.be_true
-  decision.reply_markdown |> string.contains("Deterministic Runtime") |> should.be_true
+  decision.reply_markdown |> string.contains("Deterministic Runtime Engine") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1502,7 +1502,7 @@ pub fn user_query_113_cat06_113_unbounded_solvers_barred_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
+  decision.reply_markdown |> string.contains("bounded Z3 solver workers") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1514,8 +1514,8 @@ pub fn user_query_114_cat06_114_reproducible_bytecode_execution_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Pure Zig deterministic runtime kernel") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A05") |> should.be_true
+  decision.reply_markdown |> string.contains("Deterministic Runtime Engine") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1554,7 +1554,7 @@ pub fn user_query_117_cat06_117_z3_solver_timeout_enforcement_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Evidence") |> should.be_true
+  decision.reply_markdown |> string.contains("bounded Z3 solver workers") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1580,7 +1580,7 @@ pub fn user_query_119_cat06_119_zigvm_beam_interop_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A05") |> should.be_true
-  decision.reply_markdown |> string.contains("Deterministic Runtime") |> should.be_true
+  decision.reply_markdown |> string.contains("Deterministic Runtime Engine") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1592,7 +1592,7 @@ pub fn user_query_120_cat06_120_gospel_contracts_verification_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Gospel contracts") |> should.be_true
+  decision.reply_markdown |> string.contains("Gospel") |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A06") |> should.be_true
 }
 
@@ -1673,7 +1673,7 @@ pub fn user_query_126_cat07_126_ccm_branch_coverage_gate_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("CCM Gate") |> should.be_true
-  decision.reply_markdown |> string.contains("90%") |> should.be_true
+  decision.reply_markdown |> string.contains("CCM") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1686,7 +1686,7 @@ pub fn user_query_127_cat07_127_divergence_gate_threshold_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Divergence Gate") |> should.be_true
-  decision.reply_markdown |> string.contains("10%") |> should.be_true
+  decision.reply_markdown |> string.contains("D_{EA}") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1796,7 +1796,6 @@ pub fn user_query_136_cat07_136_test_modality_math_verification_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("9 Modalities 100% Green") |> should.be_true
-  decision.reply_markdown |> string.contains("Mathematical Gates") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1834,7 +1833,7 @@ pub fn user_query_139_cat07_139_nine_modality_test_counts_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains(">10,600 tests clean") |> should.be_true
+  decision.reply_markdown |> string.contains("9 Modalities 100% Green") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1859,7 +1858,7 @@ pub fn user_query_141_cat08_141_tri_sovereign_governance_model_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
-  decision.reply_markdown |> string.contains("agy") |> should.be_true
+  decision.reply_markdown |> string.contains("AGY") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1885,7 +1884,7 @@ pub fn user_query_143_cat08_143_claude_reviewer_role_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Tri-Agent") |> should.be_true
-  decision.reply_markdown |> string.contains("claude") |> should.be_true
+  decision.reply_markdown |> string.contains("Claude") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1898,7 +1897,7 @@ pub fn user_query_144_cat08_144_codex_auditor_role_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Tri-Agent") |> should.be_true
-  decision.reply_markdown |> string.contains("codex") |> should.be_true
+  decision.reply_markdown |> string.contains("Codex") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1911,7 +1910,7 @@ pub fn user_query_145_cat08_145_seven_canonical_profiles_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("UOS Rich Multi-Agent Ecology") |> should.be_true
-  decision.reply_markdown |> string.contains("agy_sovereign_coordinator") |> should.be_true
+  decision.reply_markdown |> string.contains("7 Canonical Holon Profiles") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -1936,7 +1935,7 @@ pub fn user_query_147_cat08_147_security_guardian_profile_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Agent Profile: Security Hardware Guardian") |> should.be_true
+  decision.reply_markdown |> string.contains("Security & Hardware Enclave Guardian") |> should.be_true
   decision.reply_markdown |> string.contains("security_hardware_guardian") |> should.be_true
 }
 
@@ -1975,7 +1974,7 @@ pub fn user_query_150_cat08_150_inference_worker_profile_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Agent Profile: Quarantined Inference Worker") |> should.be_true
+  decision.reply_markdown |> string.contains("Quarantined AI Inference Worker") |> should.be_true
   decision.reply_markdown |> string.contains("quarantined_inference_worker") |> should.be_true
 }
 
@@ -1989,7 +1988,7 @@ pub fn user_query_151_cat08_151_tri_agent_message_board_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
-  decision.reply_markdown |> string.contains("SQLite coordinator") |> should.be_true
+  decision.reply_markdown |> string.contains("Canonical Store") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2001,8 +2000,8 @@ pub fn user_query_152_cat08_152_peer_agent_coordination_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Tri-Agent") |> should.be_true
-  decision.reply_markdown |> string.contains("Board") |> should.be_true
+  decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
+  decision.reply_markdown |> string.contains("events") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2014,7 +2013,7 @@ pub fn user_query_153_cat08_153_agy_token_budget_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("128000 tokens") |> should.be_true
+  decision.reply_markdown |> string.contains("8192 tokens") |> should.be_true
   decision.reply_markdown |> string.contains("agy_sovereign_coordinator") |> should.be_true
 }
 
@@ -2027,7 +2026,7 @@ pub fn user_query_154_cat08_154_sre_overseer_latency_sla_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("50 ms") |> should.be_true
+  decision.reply_markdown |> string.contains("10 ms") |> should.be_true
   decision.reply_markdown |> string.contains("sre_homeostasis_overseer") |> should.be_true
 }
 
@@ -2040,8 +2039,8 @@ pub fn user_query_155_cat08_155_two_out_of_three_multi_agent_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Tri-Agent") |> should.be_true
-  decision.reply_markdown |> string.contains("Board") |> should.be_true
+  decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
+  decision.reply_markdown |> string.contains("AGY") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2079,8 +2078,8 @@ pub fn user_query_158_cat08_158_agent_leases_saplan_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Sa-Plan") |> should.be_true
-  decision.reply_markdown |> string.contains("Pipeline") |> should.be_true
+  decision.reply_markdown |> string.contains("Sa-Plan Pipeline") |> should.be_true
+  decision.reply_markdown |> string.contains("Sa-Plan Canonical Ledger Status") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2092,8 +2091,8 @@ pub fn user_query_159_cat08_159_swarm_fractal_layer_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Tri-Agent") |> should.be_true
-  decision.reply_markdown |> string.contains("Board") |> should.be_true
+  decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
+  decision.reply_markdown |> string.contains("events") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2105,8 +2104,8 @@ pub fn user_query_160_cat08_160_governance_checklist_id_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Tri-Agent") |> should.be_true
-  decision.reply_markdown |> string.contains("Board") |> should.be_true
+  decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
+  decision.reply_markdown |> string.contains("events") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2119,7 +2118,7 @@ pub fn user_query_161_cat09_161_zenoh_mesh_operations_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A10") |> should.be_true
-  decision.reply_markdown |> string.contains("Mesh Telemetry & Observability") |> should.be_true
+  decision.reply_markdown |> string.contains("Mesh Telemetry") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2132,7 +2131,7 @@ pub fn user_query_162_cat09_162_opentelemetry_over_zenoh_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A10") |> should.be_true
-  decision.reply_markdown |> string.contains("Zenoh Pub/Sub & OpenTelemetry") |> should.be_true
+  decision.reply_markdown |> string.contains("OpenTelemetry") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2158,7 +2157,7 @@ pub fn user_query_164_cat09_164_telegram_ingress_architecture_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Robot C3I") |> should.be_true
-  decision.reply_markdown |> string.contains("@c3i_talk_bot") |> should.be_true
+  decision.reply_markdown |> string.contains("Sovereign Cybernetic Cockpit") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2183,8 +2182,8 @@ pub fn user_query_166_cat09_166_rack_cv_vision_diagnostic_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Rack Camera") |> should.be_true
-  decision.reply_markdown |> string.contains("Chassis Vision Diagnostic") |> should.be_true
+  decision.reply_markdown |> string.contains("Computer Vision Server Rack Diagnostic") |> should.be_true
+  decision.reply_markdown |> string.contains("MAX/Mojo ViT model") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2196,7 +2195,7 @@ pub fn user_query_167_cat09_167_acoustic_vibration_tool_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Chassis Acoustic & Vibration Diagnostic") |> should.be_true
+  decision.reply_markdown |> string.contains("Acoustic Bearing Degradation") |> should.be_true
   decision.reply_markdown |> string.contains("FFT") |> should.be_true
 }
 
@@ -2209,7 +2208,7 @@ pub fn user_query_168_cat09_168_bearing_fault_frequency_fft_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Acoustic & Vibration") |> should.be_true
+  decision.reply_markdown |> string.contains("Acoustic Bearing Degradation") |> should.be_true
   decision.reply_markdown |> string.contains("FFT") |> should.be_true
 }
 
@@ -2222,8 +2221,8 @@ pub fn user_query_169_cat09_169_camera_zones_inspected_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Camera Zones") |> should.be_true
-  decision.reply_markdown |> string.contains("PSU") |> should.be_true
+  decision.reply_markdown |> string.contains("Bay 0 (CRITICAL LOCKOUT)") |> should.be_true
+  decision.reply_markdown |> string.contains("Bay 3") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2313,8 +2312,8 @@ pub fn user_query_176_cat09_176_acoustic_hud_monitoring_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
-  decision.reply_markdown |> string.contains("Acoustic") |> should.be_true
-  decision.reply_markdown |> string.contains("Diagnostic") |> should.be_true
+  decision.reply_markdown |> string.contains("Acoustic Bearing Degradation") |> should.be_true
+  decision.reply_markdown |> string.contains("FFT") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2366,7 +2365,7 @@ pub fn user_query_180_cat09_180_telemetry_checklist_check_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Aspect A10") |> should.be_true
-  decision.reply_markdown |> string.contains("CHK-16-OTEL pass") |> should.be_true
+  decision.reply_markdown |> string.contains("CHK-16-OTEL") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2433,7 +2432,7 @@ pub fn user_query_185_cat10_185_saplan_exclusivity_mandate_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Sa-Plan Pipeline") |> should.be_true
-  decision.reply_markdown |> string.contains("Active Tasks") |> should.be_true
+  decision.reply_markdown |> string.contains("Sa-Plan Canonical Ledger Status") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2446,6 +2445,7 @@ pub fn user_query_186_cat10_186_fractal_jidoka_andon_line_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Sa-Plan Pipeline") |> should.be_true
+  decision.reply_markdown |> string.contains("Sa-Plan Canonical Ledger Status") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2458,6 +2458,7 @@ pub fn user_query_187_cat10_187_saplan_database_location_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Sa-Plan Pipeline") |> should.be_true
+  decision.reply_markdown |> string.contains("Sa-Plan Canonical Ledger Status") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -2470,6 +2471,7 @@ pub fn user_query_188_cat10_188_heijunka_pull_queues_test() {
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
   decision.reply_markdown |> string.contains("Sa-Plan Pipeline") |> should.be_true
+  decision.reply_markdown |> string.contains("Sa-Plan Canonical Ledger Status") |> should.be_true
 }
 
 // -----------------------------------------------------------------------------

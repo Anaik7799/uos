@@ -671,7 +671,7 @@ pub fn format_aspect_detail(input: String) -> String {
       <> "• *Domain:* Pure Gleam / OTP 29 (`uos_sup.gleam`)\n"
       <> "• *Fractal Layer:* L4 System / L9 SRE Homeostasis\n"
       <> "• *Primary Invariant:* Root 4-domain supervisor (Apps, Engines, Services, Intelligence) with isolated restart budgets.\n"
-      <> "• *Safety Control:* Let-it-crash fault isolation, dead-man freshness monitors, zero zombie processes.\n"
+      <> "• *Safety Control:* Let-it-crash fault isolation, Prajna circuit breakers, Lyapunov stability proofs, dead-man freshness monitors, zero zombie processes.\n"
       <> "• *Verification Gate:* `CHK-12-GLEAM` pass."
 
     "A05" ->
