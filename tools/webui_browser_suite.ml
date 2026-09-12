@@ -289,6 +289,7 @@ let run_suite () =
         "nav_active", nav_active;
         "cards_rendered", card_count;
         "js_exceptions", string_of_int (List.length sess.exceptions);
+        "exception_details", (if sess.exceptions = [] then "none" else String.concat "; " sess.exceptions);
       ])
     );
 
