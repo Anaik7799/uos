@@ -3684,6 +3684,13 @@ fn handle_get(path: String) -> HttpResponse(String) {
     // AI agent status + Gemma 4 availability
     "/api/v1/ai/status" -> json_response(ai_status_json(), 200)
     // Static file serving (JS, CSS for data grids)
+    "/static/planning-grid.js" ->
+      serve_static_file("priv/static/planning-grid.js", "application/javascript")
+    "/static/planning-grid.bundled.js" ->
+      serve_static_file(
+        "priv/static/planning-grid.bundled.js",
+        "application/javascript",
+      )
     // Pass-12 P3 #21 — extracted RADICAL Command-Center Layout CSS (~5 KB)
     // from inline string in planning-grid.js. Source-of-truth: this file.
     "/static/planning-radical.css" ->
