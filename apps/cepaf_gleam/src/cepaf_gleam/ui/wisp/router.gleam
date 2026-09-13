@@ -27,6 +27,7 @@ import cepaf_gleam/ha/request_guard
 import cepaf_gleam/substrate/beam_cache
 import cepaf_gleam/zenoh/ets_zenoh_bridge
 import cepaf_gleam/testing/tri_language_orchestrator
+import cepaf_gleam/verification/fractal_triad_matrix_engine
 import cepaf_gleam/ha/health_cascade
 import cepaf_gleam/ha/hot_reload
 import cepaf_gleam/ha/invariant_gate
@@ -367,6 +368,12 @@ fn route_internal(path: String) -> String {
     "/api/v1/testing/observability" -> {
       tri_language_orchestrator.global_test_observability_snapshot()
       |> json.to_string
+    }
+    "/api/v1/matrix/fractal_triad" -> {
+      fractal_triad_matrix_engine.encode_triad_matrix_json()
+    }
+    "/api/v1/matrix/claude_verification" -> {
+      fractal_triad_matrix_engine.encode_claude_verification_json()
     }
     "/api/v1/allium" ->
       module_guard.unwrap(module_guard.guard_json(allium_list_json(), "allium", "page"))

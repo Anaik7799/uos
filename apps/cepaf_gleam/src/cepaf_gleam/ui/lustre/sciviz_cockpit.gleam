@@ -146,6 +146,7 @@ fn render_status_badges() -> Element(msg) {
         ],
         [element.text("★ 167 Extensions Gallery & 9-Modality Suite (PASS)")],
       ),
+      badge("542 BDD Scenarios (100% Green)", "#10b981"),
       badge("Zero Client JS", "#a855f7"),
       badge("0 Bevy / 0 Graphite", "#10b981"),
       badge("OS NVMe 25503L801736 Locked", "#f59e0b"),

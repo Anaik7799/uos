@@ -92,6 +92,12 @@ fn default_tools() -> List(tools.ToolDef) {
       json.null(),
       False,
     ),
+    tools.ToolDef(
+      "sciviz_bdd_verify",
+      "Execute SciViz and 167 extensions BDD verification suite via native OCaml CDP",
+      json.null(),
+      False,
+    ),
   ]
 }
 
@@ -527,6 +533,12 @@ fn classify_intent(text: String) -> #(String, String, json.Json) {
     "/zenoh" | "zenoh" -> #("ignition", "system_zenoh", empty)
     // Verification
     "verify" | "/verify" -> #("ignition", "verification_run", empty)
+    // SciViz & BDD Verification
+    "sciviz" <> _ | "/sciviz" <> _ | "bdd" <> _ | "/bdd" <> _ -> #(
+      "ignition",
+      "sciviz_bdd_verify",
+      json.object([#("prompt", json.string(text))]),
+    )
     // Help
     "help" | "/help" -> #("plan", "help", empty)
     // Model/inference

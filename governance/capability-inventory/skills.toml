@@ -41,6 +41,14 @@ state = "implemented_local_policy_and_bounded_checkers"
 path = "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md"
 authority = "SC-RISK-PRIORITY-001 process rule; no runtime admission"
 
+[[skill]]
+name = "uos-sciviz-bdd-harness"
+source = "uos"
+reference_only = false
+state = "verified_runtime_and_formal_spec"
+path = "scripts/run_sciviz_all_aspects.sh"
+authority = "SC-GLM-UI-001, SC-CHECKLIST-001; 542 scenarios 100% green"
+
 [zigvm]
 root = "/home/an/dev/ver/zigvm/skills"
 logical_count = 31

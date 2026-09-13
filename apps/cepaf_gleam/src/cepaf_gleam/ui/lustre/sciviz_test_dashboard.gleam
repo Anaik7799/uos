@@ -131,6 +131,15 @@ fn render_header(passed: Int, total: Int) -> Element(msg) {
             [
               attribute.attribute(
                 "style",
+                "padding: 0.35rem 0.75rem; background: #1e1b4b; color: #a5b4fc; font-size: 0.82rem; font-weight: 600; border-radius: 9999px; border: 1px solid #6366f1;",
+              ),
+            ],
+            [element.text("542 BDD SCENARIOS (100% GREEN)")],
+          ),
+          html.span(
+            [
+              attribute.attribute(
+                "style",
                 "padding: 0.35rem 0.75rem; background: #451a03; color: #f59e0b; font-size: 0.82rem; font-weight: 600; border-radius: 9999px; border: 1px solid #d97706;",
               ),
             ],

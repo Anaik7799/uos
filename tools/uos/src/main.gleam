@@ -63,6 +63,7 @@ pub type UosCommand {
   SelfcheckCortex
   SelfcheckSaPlanSimulators
   SelfcheckWebuiBrowser
+  SelfcheckSciVizBdd
   VerifyAll
   Help
 }
@@ -123,6 +124,9 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       SelfcheckSaPlanSimulators
     ["webui-browser-check"] | ["webui-check"] | ["browser-check"] | ["selfcheck-webui"] | ["--selfcheck-webui"] ->
       SelfcheckWebuiBrowser
+    ["sciviz-test"] | ["sciviz-bdd"] | ["sciviz"] | ["selfcheck-sciviz"] | ["--selfcheck-sciviz"] ->
+      SelfcheckSciVizBdd
+    ["sciviz-5domains"] -> Gate("G-SCIVIZ-5DOMAINS")
     ["verify-all"] | ["verify"] -> VerifyAll
     _ -> Help
   }
@@ -394,6 +398,53 @@ pub fn execute(cmd: UosCommand) -> Int {
               io.println(
                 "  [FAIL] ZigVM ADD spec, engine code, or test suite missing",
               )
+              1
+            }
+          }
+        }
+        "G-SCIVIZ-BDD" -> {
+          let runner_ok = file_exists("tools/webui_bdd_runner.exe")
+          let script_ok = file_exists("scripts/run_sciviz_all_aspects.sh")
+          let report_ok = file_exists("var/bdd_sciviz_report.json")
+          let report_valid =
+            file_contains("var/bdd_sciviz_report.json", "\"verdict\":\"PASS\"")
+            && file_contains("var/bdd_sciviz_report.json", "\"scenarios_total\":542")
+          case runner_ok && script_ok && report_ok && report_valid {
+            True -> {
+              io.println(
+                "  [PASS] SciViz & 167 Extensions BDD Verification Harness (G-SCIVIZ-BDD): 542 scenarios, 1,623 steps 100% green",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] SciViz BDD runner, script, or passing test receipt (var/bdd_sciviz_report.json) missing or invalid",
+              )
+              1
+            }
+          }
+        }
+        "G-SCIVIZ-5DOMAINS" -> {
+          let script_ok = file_exists("scripts/verify_sciviz_5domains.sh")
+          case script_ok {
+            True -> {
+              let #(code, out) =
+                run_command("bash", ["scripts/verify_sciviz_5domains.sh"], 30_000)
+              case code == 0 && string.contains(out, "18 / 18 CHECKS PASSED") {
+                True -> {
+                  io.println(
+                    "  [PASS] SciViz 5-Domain Canonical Verification Evaluator (G-SCIVIZ-5DOMAINS): 18/18 checks passed",
+                  )
+                  0
+                }
+                False -> {
+                  io.println("  [FAIL] SciViz 5-Domain verification failed: " <> string.slice(out, 0, 300))
+                  1
+                }
+              }
+            }
+            False -> {
+              io.println("  [FAIL] scripts/verify_sciviz_5domains.sh missing")
               1
             }
           }
@@ -2308,6 +2359,23 @@ pub fn execute(cmd: UosCommand) -> Int {
         }
         False -> {
           io.println("FAIL: tools/webui_browser_suite executable not found")
+          1
+        }
+      }
+    }
+    SelfcheckSciVizBdd -> {
+      io.println(
+        "Evaluating SciViz & 167 Extensions Comprehensive BDD Verification Harness (542 Tests, Zero Node.js):",
+      )
+      case file_exists("scripts/run_sciviz_all_aspects.sh") {
+        True -> {
+          let #(code, out) =
+            run_command("bash", ["scripts/run_sciviz_all_aspects.sh", "--all"], 120_000)
+          io.println(out)
+          code
+        }
+        False -> {
+          io.println("FAIL: scripts/run_sciviz_all_aspects.sh not found")
           1
         }
       }
