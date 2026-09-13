@@ -170,7 +170,7 @@ Enforcement is mechanically automated via `tools/journal_linter` (invoked via `t
 1. **Structure Check**: Verifies exact existence and order of all 13 canonical `## ` sections.
 2. **Admiralty Check**: Parses Section 7 markdown tables, extracting source reliability and credibility tags. Ensures all passing assertions meet $\ge \text{B2}$.
 3. **ACH Check**: Parses Section 4 for diagnostic hypothesis matrix.
-4. **Diagram Check**: Confirms that any ```` ```mermaid ```` block has a corresponding ASCII diagram block (`SC-DIAGRAM-001`).
+4. **Diagram Check** (amended 2026-09-13, see §7): Confirms that any ```` ```mermaid ```` block is accompanied by a fenced ```` ```text ```` or ```` ```ascii ```` block containing at least one non-blank line that is not a Markdown table row (`SC-DIAGRAM-001`). This establishes **CO-PRESENCE ONLY**. Topology comparison is performed separately by gate `G-DIAGRAM`.
 5. **Redaction Check**: Asserts zero occurrences of raw host NVMe serial bytes, ensuring replacement with `[REDACTED_SYSTEM_OS_SERIAL]`.
 6. **Forecast Check**: Validates Section 13 Brier horizon and probability syntax.
 
@@ -184,3 +184,64 @@ Enforcement is mechanically automated via `tools/journal_linter` (invoked via `t
 | **Claude Fable 5.1** | Formal Verification & Review | RATIFIED | `docs/design/20260912-0745-uos-claude-fable-sc-journal-v3-review-certificate.md` |
 | **Antigravity AGY** | Cockpit & Telemetry Review | RATIFIED | `docs/design/20260912-0745-uos-agy-sc-journal-v3-review-certificate.md` |
 
+---
+
+## 7. Amendment 2026-09-13 — what the diagram check actually enforces
+
+Recorded additively per `INV-PROV-03`; no prior text is rewritten.
+
+### 7.1 The defect
+
+`INV-JRN-06` requires both diagram forms to describe "identical topology". §5.4 previously specified only that a mermaid block "has a corresponding ASCII diagram block" — **co-presence, strictly weaker than topology**. The implementation in `tools/journal_linter.ml` was weaker still: it accepted `"+---"`, `"|   "`, `"|  "`, `"+==="` or a box-drawing glyph **anywhere in the document**, then printed `dual diagram source parity verified`.
+
+Markdown table syntax contains `"|  "` whenever a cell is empty or right-aligned. **Measured by execution on 2026-09-13**, both of these documents PASSED with no ASCII diagram anywhere:
+
+```text
+| Col | Note |          | Metric | Value |
+|---|---|               |---:|---:|
+| x |  |                |   1 |   2 |
+```
+
+A three-step degradation from mandate to procedure to code. `INV-JRN-08` then required exit code 0 from that linter for journal completion, converting the gap into a positive admission signal.
+
+### 7.2 The repair
+
+| Layer | Change |
+|---|---|
+| §5.4 above | now states co-presence, which is what the linter establishes |
+| `tools/journal_linter.ml` check 10 | an ASCII diagram must be a fenced `text`/`ascii` block with a non-table, non-blank line; the message no longer claims "parity verified" |
+| `G-DIAGRAM` (new) | `engines/hermes/modules/hermes_toolchain/diagram_check.ml` — real edge-set comparison |
+| Pure core + laws (new) | `diagram_parity.ml` with 33 laws, 3 killed mutants |
+
+`G-DIAGRAM` compares edge sets in **normalised label space**, the only vocabulary the two forms share: mermaid writes terse ids with labels (`M["Models/actors"]`) while ASCII arrow lists write the label text (`[Models/actors]`). Its verdicts are deliberately five-valued, and only one of them is passing:
+
+```text
+  PASS        edge sets compared and equal
+  FAIL        no ASCII diagram / a table standing in for one / edge sets differ
+  UNVERIFIED  box-art ASCII: 2D line art has no extractable edge set
+  UNVERIFIED  arrow lists whose node vocabularies do not overlap
+  (n/a)       no mermaid block; nothing owed
+```
+
+### 7.3 The finding this leaves open for sovereign decision
+
+Measured over **1,135** markdown files in `docs/` and `contracts/`:
+
+| Outcome | Count |
+|---|---|
+| Topology **verified** (edge sets compared and equal) | 2 |
+| **UNVERIFIED** — box-art ASCII, topology not mechanically comparable | 338 |
+| **FAILED** — mermaid with no ASCII diagram source at all | 129 |
+| No mermaid block; nothing owed | 666 |
+
+**`INV-JRN-06` as written is not satisfiable by mechanical check for 338 documents, and that is a property of the mandate, not a defect in those documents.** Authors write an ASCII *illustration* and a Mermaid *graph* that convey the same idea in different registers. In `20260908-0912-provenance-integrity-contract.md` the ASCII reads `EV-01 ..... EV-93` beside "outside the quarantined evidence range" while the mermaid node is labelled `EV-01 .. EV-93<br/>outside quarantined range<br/>no positive admission claim asserted here`. Same meaning, different bytes. Exact parity would fail that document, and that document is correct.
+
+Three options, each a **sovereign decision** and none taken here:
+
+1. **Narrow `INV-JRN-06`** to co-presence plus topology parity *where both forms are arrow lists*, matching what is decidable.
+2. **Migrate the corpus** to arrow-list ASCII for graph-shaped diagrams, keeping box art for layouts and exempting it explicitly.
+3. **Keep `INV-JRN-06`** and accept 338 standing `UNVERIFIED` rows as the honest measure of unverified coverage.
+
+`G-DIAGRAM`'s exit status currently fails only on the 129 genuine failures; `UNVERIFIED` is counted and printed but does not fail the gate, because failing 338 documents would break every concurrent session's build to report a mandate/corpus mismatch rather than any document's defect. **That scope decision is recorded here so it is visible, and it is reversible by the operator.**
+
+**UOS footer:** amendment is `REPORT_ONLY`; it grants no admission.

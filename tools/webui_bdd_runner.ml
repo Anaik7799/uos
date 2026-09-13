@@ -821,24 +821,39 @@ let run_bdd_suite () =
     Printf.printf "[BDD-RUNNER] Reusing active Google Chrome CDP on port 9222\n%!";
   end;
 
-  let feature_files =
+  let raw_args =
     if Array.length Sys.argv > 1 then
-      let arg = Sys.argv.(1) in
-      if Sys.is_directory arg then
-        Sys.readdir arg
-        |> Array.to_list
-        |> List.filter (fun f -> Filename.check_suffix f ".feature")
-        |> List.sort String.compare
-        |> List.map (fun f -> Filename.concat arg f)
-      else if Filename.check_suffix arg ".feature" then
-        [arg]
-      else
-        let feature_dir = "test/features" in
-        Sys.readdir feature_dir
-        |> Array.to_list
-        |> List.filter (fun f -> Filename.check_suffix f ".feature")
-        |> List.sort String.compare
-        |> List.map (fun f -> Filename.concat feature_dir f)
+      Array.to_list (Array.sub Sys.argv 1 (Array.length Sys.argv - 1))
+    else []
+  in
+  let tag_filter = ref None in
+  let name_filter = ref None in
+  let report_path = ref "var/bdd_report.json" in
+  let specified_files = ref [] in
+  let rec parse_cli_args = function
+    | [] -> ()
+    | "--tag" :: t :: rest -> tag_filter := Some t; parse_cli_args rest
+    | "--filter" :: f :: rest -> name_filter := Some f; parse_cli_args rest
+    | "--report" :: r :: rest -> report_path := r; parse_cli_args rest
+    | arg :: rest ->
+      if Sys.file_exists arg && Sys.is_directory arg then
+        let fs = Sys.readdir arg
+          |> Array.to_list
+          |> List.filter (fun f -> Filename.check_suffix f ".feature")
+          |> List.sort String.compare
+          |> List.map (fun f -> Filename.concat arg f) in
+        specified_files := !specified_files @ fs;
+        parse_cli_args rest
+      else if Filename.check_suffix arg ".feature" then begin
+        specified_files := !specified_files @ [arg];
+        parse_cli_args rest
+      end
+      else parse_cli_args rest
+  in
+  parse_cli_args raw_args;
+
+  let feature_files =
+    if !specified_files <> [] then !specified_files
     else
       let feature_dir = "test/features" in
       Sys.readdir feature_dir
@@ -848,7 +863,7 @@ let run_bdd_suite () =
       |> List.map (fun f -> Filename.concat feature_dir f)
   in
 
-  let total_features = List.length feature_files in
+  let total_features = ref 0 in
   let passed_features = ref 0 in
   let total_scenarios = ref 0 in
   let passed_scenarios = ref 0 in
@@ -856,94 +871,110 @@ let run_bdd_suite () =
   let passed_steps = ref 0 in
 
   List.iter (fun file ->
-    Printf.printf "\n[FEATURE] Parsing: %s ...\n%!" file;
     let feat = parse_feature_file file in
-    let sc_count = List.length feat.scenarios in
-    Printf.printf "  Feature: %s (Tags: %s, Scenarios: %d)\n%!" feat.name (String.concat ", " feat.tags) sc_count;
-    let feat_passed = ref true in
+    let matching_scenarios =
+      List.filter (fun (sc : scenario) ->
+        let matches_tag = match !tag_filter with
+          | None -> true
+          | Some t -> List.mem t feat.tags || List.mem t sc.tags
+        in
+        let matches_name = match !name_filter with
+          | None -> true
+          | Some q -> string_contains (String.lowercase_ascii sc.name) (String.lowercase_ascii q)
+        in
+        matches_tag && matches_name
+      ) feat.scenarios
+    in
+    let sc_count = List.length matching_scenarios in
+    if sc_count > 0 then begin
+      incr total_features;
+      Printf.printf "\n[FEATURE] Parsing: %s ...\n%!" file;
+      Printf.printf "  Feature: %s (Tags: %s, Scenarios: %d)\n%!" feat.name (String.concat ", " feat.tags) sc_count;
+      let feat_passed = ref true in
 
-    (* Open one session per feature for fast execution *)
-    let sess = open_page_session "http://127.0.0.1:4100/" in
+      (* Open one session per feature for fast execution *)
+      let sess = open_page_session "http://127.0.0.1:4100/" in
 
-    List.iteri (fun idx (sc : scenario) ->
-      incr total_scenarios;
-      if sc_count <= 20 || idx < 3 || idx mod 25 = 0 || idx = sc_count - 1 then
-        Printf.printf "    Scenario [%d/%d]: %s ...\n%!" (idx + 1) sc_count sc.name;
-      let sc_passed = ref true in
-      sess.exceptions <- [];
-      sess.initial_details_open <- false;
-      sess.last_eval <- "";
+      List.iteri (fun idx (sc : scenario) ->
+        incr total_scenarios;
+        if sc_count <= 20 || idx < 3 || idx mod 25 = 0 || idx = sc_count - 1 then
+          Printf.printf "    Scenario [%d/%d]: %s ...\n%!" (idx + 1) sc_count sc.name;
+        let sc_passed = ref true in
+        sess.exceptions <- [];
+        sess.initial_details_open <- false;
+        sess.last_eval <- "";
 
-      (* Execute Background if present *)
-      (match feat.background with
-      | Some bg_steps ->
-        List.iter (fun step ->
-          incr total_steps;
-          match execute_step sess step with
-          | StepPass msg ->
-            incr passed_steps;
-            if sc_count <= 20 then Printf.printf "      [PASS] (bg) %s: %s\n%!" step.text msg
-          | StepFail err ->
-            sc_passed := false;
-            feat_passed := false;
-            Printf.printf "      [FAIL] (bg) %s: %s\n%!" step.text err
-        ) bg_steps
-      | None -> ());
+        (* Execute Background if present *)
+        (match feat.background with
+        | Some bg_steps ->
+          List.iter (fun step ->
+            incr total_steps;
+            match execute_step sess step with
+            | StepPass msg ->
+              incr passed_steps;
+              if sc_count <= 20 then Printf.printf "      [PASS] (bg) %s: %s\n%!" step.text msg
+            | StepFail err ->
+              sc_passed := false;
+              feat_passed := false;
+              Printf.printf "      [FAIL] (bg) %s: %s\n%!" step.text err
+          ) bg_steps
+        | None -> ());
 
-      (* Execute Scenario Steps *)
-      if !sc_passed then begin
-        List.iter (fun step ->
-          incr total_steps;
-          match execute_step sess step with
-          | StepPass msg ->
-            incr passed_steps;
-            if sc_count <= 20 then Printf.printf "      [PASS] %s: %s\n%!" step.text msg
-          | StepFail err ->
-            sc_passed := false;
-            feat_passed := false;
-            Printf.printf "      [FAIL] %s: %s\n%!" step.text err
-        ) sc.steps
-      end;
+        (* Execute Scenario Steps *)
+        if !sc_passed then begin
+          List.iter (fun step ->
+            incr total_steps;
+            match execute_step sess step with
+            | StepPass msg ->
+              incr passed_steps;
+              if sc_count <= 20 then Printf.printf "      [PASS] %s: %s\n%!" step.text msg
+            | StepFail err ->
+              sc_passed := false;
+              feat_passed := false;
+              Printf.printf "      [FAIL] %s: %s\n%!" step.text err
+          ) sc.steps
+        end;
 
-      if !sc_passed then begin
-        incr passed_scenarios;
-        if sc_count <= 20 then Printf.printf "    => SCENARIO PASS\n%!"
+        if !sc_passed then begin
+          incr passed_scenarios;
+          if sc_count <= 20 then Printf.printf "    => SCENARIO PASS\n%!"
+        end else begin
+          Printf.printf "    => SCENARIO FAIL: %s\n%!" sc.name
+        end
+      ) matching_scenarios;
+
+      close_page_session sess;
+      if !feat_passed then begin
+        incr passed_features;
+        Printf.printf "  => FEATURE PASS: %s (%d scenarios)\n%!" feat.name sc_count
       end else begin
-        Printf.printf "    => SCENARIO FAIL: %s\n%!" sc.name
+        Printf.printf "  => FEATURE FAIL: %s\n%!" feat.name
       end
-    ) feat.scenarios;
-
-    close_page_session sess;
-    if !feat_passed then begin
-      incr passed_features;
-      Printf.printf "  => FEATURE PASS: %s (%d scenarios)\n%!" feat.name sc_count
-    end else begin
-      Printf.printf "  => FEATURE FAIL: %s\n%!" feat.name
     end
   ) feature_files;
 
   Printf.printf "\n===============================================================================\n%!";
   Printf.printf "                     OCAML BDD GHERKIN SUMMARY                                 \n%!";
   Printf.printf "===============================================================================\n%!";
-  Printf.printf "  Features:               %d / %d passed\n%!" !passed_features total_features;
+  Printf.printf "  Features:               %d / %d passed\n%!" !passed_features !total_features;
   Printf.printf "  Scenarios (Test Cases): %d / %d passed\n%!" !passed_scenarios !total_scenarios;
   Printf.printf "  Steps (Assertions):     %d / %d passed\n%!" !passed_steps !total_steps;
   Printf.printf "  TOTAL TESTS EXECUTED:   %d (VERDICT: %s)\n%!" !total_scenarios
-    (if !passed_features = total_features then "100% GREEN" else "FAILURES DETECTED");
+    (if !passed_features = !total_features && !total_scenarios > 0 then "100% GREEN" else if !total_scenarios = 0 then "NO TESTS MATCHED" else "FAILURES DETECTED");
   Printf.printf "===============================================================================\n%!";
 
   (* Save report to JSON *)
   let report_json = Printf.sprintf
     "{\"features_total\":%d,\"features_passed\":%d,\"scenarios_total\":%d,\"scenarios_passed\":%d,\"steps_total\":%d,\"steps_passed\":%d,\"total_tests\":%d,\"verdict\":\"%s\"}"
-    total_features !passed_features !total_scenarios !passed_scenarios !total_steps !passed_steps !total_scenarios
-    (if !passed_features = total_features then "PASS" else "FAIL") in
-  let oc = open_out "var/bdd_report.json" in
+    !total_features !passed_features !total_scenarios !passed_scenarios !total_steps !passed_steps !total_scenarios
+    (if !passed_features = !total_features && !total_scenarios > 0 then "PASS" else "FAIL") in
+  let oc = open_out !report_path in
   output_string oc report_json;
   close_out oc;
 
   if !chrome_pid_ref > 0 then (try Unix.kill !chrome_pid_ref Sys.sigkill with _ -> ());
 
-  if !passed_features = total_features then begin
+  if !passed_features = !total_features && !total_scenarios > 0 then begin
     Printf.printf "OVERALL BDD GHERKIN RESULT: 100%% GREEN (ALL FEATURES PASSED)\n%!";
     exit 0
   end else begin

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# G-DIAGRAM: the SC-DIAGRAM-001 / INV-JRN-06 dual-source diagram gate.
+#
+# Fails (exit 1) only on genuine failures: a mermaid diagram with no ASCII
+# source, a Markdown table standing in for one, or arrow-list edge sets that
+# disagree. Box-art ASCII is reported UNVERIFIED and does NOT fail the gate --
+# 338 of the corpus's documents use it, and failing them would break every
+# concurrent session's build to report a mandate/corpus mismatch rather than a
+# defect in any one document. See §7.3 of
+# contracts/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md.
+#
+# Report-only authority: a PASS here is not admission.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+# shellcheck source=lib/uos-toolchain.sh
+source tools/lib/uos-toolchain.sh
+uos_env
+
+EXE="engines/hermes/_build/default/modules/hermes_toolchain/diagram_check.exe"
+if [ ! -x "$EXE" ]; then
+  echo "diagram-check: building the gate..." >&2
+  (cd engines/hermes && dune build modules/hermes_toolchain/diagram_check.exe) \
+    || { echo "diagram-check: BUILD FAILED -- failing closed, no verdict" >&2; exit 2; }
+fi
+exec "$EXE" "$@"

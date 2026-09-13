@@ -252,22 +252,51 @@ let lint_journal file_path =
     add_err "Storage serial redaction violation"
   end;
 
-  (* Check 10: SC-DIAGRAM-001 Dual-Source Diagram Parity *)
+  (* Check 10: SC-DIAGRAM-001 dual-source diagram.
+
+     REPAIRED 2026-09-13. The previous predicate accepted any of "+---",
+     "|   ", "|  ", "+===" or a box-drawing glyph ANYWHERE in the document as
+     proof of an ASCII diagram, then printed "dual diagram source parity
+     verified". Markdown table syntax contains "|  " whenever a cell is empty
+     or right-aligned, so a journal carrying one mermaid diagram and one
+     ordinary table passed. Measured by execution; both falsifiers are pinned
+     as laws L1/L2 in
+     engines/hermes/modules/hermes_toolchain/test_diagram_parity.ml.
+
+     Two changes. (1) An ASCII diagram must be an actual fenced ```text or
+     ```ascii block containing at least one non-blank line that is not a
+     table row. (2) The message no longer says "parity verified" -- this
+     check establishes CO-PRESENCE, and announcing a topology property it
+     never examines is the defect itself. Edge-set comparison lives in
+     G-DIAGRAM (diagram_check.exe), which compares the two forms in label
+     space where both are arrow lists and reports UNVERIFIED, not PASS, for
+     box art whose topology is not mechanically extractable. *)
   let has_mermaid = contains_substring full_text "```mermaid" in
-  let has_ascii =
-    contains_substring full_text "+---" ||
-    contains_substring full_text "|   " ||
-    contains_substring full_text "|  " ||
-    contains_substring full_text "+===" ||
-    contains_substring full_text "┌──" ||
-    contains_substring full_text "├──"
+  let fenced_non_table_block tag =
+    let want = "```" ^ tag in
+    let ls = String.split_on_char '\n' full_text in
+    let rec go inside saw = function
+      | [] -> saw
+      | l :: rest ->
+        let t = String.trim l in
+        if inside then
+          if String.length t >= 3 && String.sub t 0 3 = "```" then
+            (if saw then true else go false false rest)
+          else
+            let is_row = String.length t > 1 && t.[0] = '|' in
+            go true (saw || (t <> "" && not is_row)) rest
+        else if t = want then go true false rest
+        else go false false rest
+    in
+    go false false ls
   in
+  let has_ascii = fenced_non_table_block "text" || fenced_non_table_block "ascii" in
   if has_mermaid then begin
     if has_ascii then
-      printf "  [PASS] CHK-DIAG: SC-DIAGRAM-001 dual diagram source parity verified (ASCII + Mermaid)\n"
+      printf "  [PASS] CHK-DIAG: SC-DIAGRAM-001 ASCII diagram source present alongside mermaid (CO-PRESENCE only; topology parity is checked by G-DIAGRAM)\n"
     else begin
-      printf "  [FAIL] CHK-DIAG: Mermaid diagram found without corresponding ASCII diagram source (SC-DIAGRAM-001)\n";
-      add_err "SC-DIAGRAM-001 dual diagram parity missing"
+      printf "  [FAIL] CHK-DIAG: mermaid diagram with no ASCII diagram source; a Markdown table is not an ASCII diagram (SC-DIAGRAM-001)\n";
+      add_err "SC-DIAGRAM-001 dual diagram source missing"
     end
   end else
     printf "  [PASS] CHK-DIAG: No diagrams or text-only (SC-DIAGRAM-001 satisfied)\n";

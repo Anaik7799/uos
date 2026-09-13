@@ -76,3 +76,21 @@
  (name test_lease_health)
  (modules test_lease_health)
  (libraries lease_health hermes_harness_suite_telemetry))
+
+; SC-DIAGRAM-001 / INV-JRN-06 dual-source diagram checking. A LIBRARY so the
+; law suite links the shipped derivation rather than a copy: the old check it
+; replaces was wrong in exactly the place no test looked.
+(library
+ (name diagram_parity)
+ (wrapped false)
+ (modules diagram_parity))
+
+(executable
+ (name test_diagram_parity)
+ (modules test_diagram_parity)
+ (libraries diagram_parity hermes_harness_suite_telemetry))
+
+(executable
+ (name diagram_check)
+ (modules diagram_check)
+ (libraries diagram_parity))
