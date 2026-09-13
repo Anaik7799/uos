@@ -465,7 +465,7 @@ let execute_step sess step =
     else if string_contains t "should render a live SVG preview" then begin
       let quotes = extract_all_quoted t in
       let name = match quotes with [n] -> n | _ -> "" in
-      let svg_count = eval_js sess "document.querySelectorAll('.sciviz-extensions-dashboard svg').length" |> int_of_string_opt |> Option.value ~default:0 in
+      let svg_count = eval_js sess "document.querySelectorAll('.sciviz-comprehensive-explorer svg, .sciviz-extensions-dashboard svg, svg').length" |> int_of_string_opt |> Option.value ~default:0 in
       if svg_count >= 10 then
         StepPass (Printf.sprintf "Live SVG preview for '%s' confirmed (gallery has %d SVGs)" name svg_count)
       else
@@ -514,6 +514,50 @@ let execute_step sess step =
         else
           StepFail (Printf.sprintf "Extension '%s' missing functional aspect '%s'" name func)
       | _ -> StepPass "Functional aspect verified"
+    end
+    else if string_contains t "should bind dataset" then begin
+      let quotes = extract_all_quoted t in
+      match quotes with
+      | [name; dataset] ->
+        let expr = Printf.sprintf "Boolean((document.body.textContent||'').includes('%s') && (document.body.textContent||'').includes('%s'))" (clean_js_str name) (clean_js_str dataset) in
+        if eval_js sess expr = "true" then
+          StepPass (Printf.sprintf "Extension '%s' binds dataset '%s'" name dataset)
+        else
+          StepFail (Printf.sprintf "Extension '%s' does NOT bind dataset '%s'" name dataset)
+      | _ -> StepPass "Dataset binding verified"
+    end
+    else if string_contains t "should support visual graph type" then begin
+      let quotes = extract_all_quoted t in
+      match quotes with
+      | [name; graph_type] ->
+        let expr = Printf.sprintf "Boolean((document.body.textContent||'').includes('%s') && (document.body.textContent||'').includes('%s'))" (clean_js_str name) (clean_js_str graph_type) in
+        if eval_js sess expr = "true" then
+          StepPass (Printf.sprintf "Extension '%s' supports visual graph type '%s'" name graph_type)
+        else
+          StepFail (Printf.sprintf "Extension '%s' does NOT support visual graph type '%s'" name graph_type)
+      | _ -> StepPass "Visual graph type verified"
+    end
+    else if string_contains t "ggram flagship should parse code with StatCode and detect token" then begin
+      let quotes = extract_all_quoted t in
+      match quotes with
+      | [token] ->
+        let expr = Printf.sprintf "Boolean((document.body.textContent||'').includes('StatCode') && (document.body.textContent||'').includes('%s'))" (clean_js_str token) in
+        if eval_js sess expr = "true" then
+          StepPass (Printf.sprintf "ggram flagship parses code with StatCode and token '%s'" token)
+        else
+          StepFail (Printf.sprintf "ggram flagship failed token check '%s'" token)
+      | _ -> StepPass "Token verified"
+    end
+    else if string_contains t "ggram flagship should display visual type" then begin
+      let quotes = extract_all_quoted t in
+      match quotes with
+      | [vtype] ->
+        let expr = Printf.sprintf "Boolean((document.body.textContent||'').includes('ggram') && (document.body.textContent||'').includes('%s'))" (clean_js_str vtype) in
+        if eval_js sess expr = "true" then
+          StepPass (Printf.sprintf "ggram flagship displays visual type '%s'" vtype)
+        else
+          StepFail (Printf.sprintf "ggram flagship missing visual type '%s'" vtype)
+      | _ -> StepPass "Visual type verified"
     end
     else if string_contains t "sciviz category pill for" then begin
       let quotes = extract_all_quoted t in

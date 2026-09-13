@@ -72,6 +72,7 @@ import cepaf_gleam/prajna/immune_system as prajna_immune
 import cepaf_gleam/prajna/neuro
 import cepaf_gleam/prajna/smart_metrics as prajna_metrics
 import cepaf_gleam/substrate/beam_cache
+import cepaf_gleam/verification/fractal_triad_matrix_engine
 import gleam/float
 import gleam/int
 import gleam/io
@@ -226,6 +227,12 @@ pub fn start() -> AppState {
   let metrics = claude_metrics.init(session_id, now_ms)
   let _ = claude_metrics.publish_to_ets(metrics)
   io.println("[C3I] Claude metrics initialised (session: " <> session_id <> ")")
+
+  // 12. 3D Fractal Triad Matrix & Claude Sovereign Verification (SC-CHECKLIST-001)
+  let _ = fractal_triad_matrix_engine.publish_triad_to_ets_and_zenoh()
+  io.println(
+    "[C3I] 3D Fractal Triad Matrix & Claude Sovereign Verification published to ETS and Zenoh",
+  )
 
   io.println("[C3I] All subsystems started. System is ALIVE.")
 

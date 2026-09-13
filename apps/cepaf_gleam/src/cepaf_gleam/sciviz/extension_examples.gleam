@@ -28,6 +28,28 @@ pub fn example_svg(ext: ExtensionMetadata) -> String {
     <> "</text>"
 
   let geom_svg = case ext.name {
+    "ggram" ->
+      // Side-by-side code notebook on left + generated ggplot on right (patchwork stitch)
+      "<rect x=\"25\" y=\"32\" width=\"130\" height=\"72\" rx=\"4\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1\"/>"
+      <> "<circle cx=\"32\" cy=\"48\" r=\"2.5\" fill=\"#1e293b\" stroke=\"#475569\" stroke-width=\"0.8\"/>"
+      <> "<circle cx=\"32\" cy=\"68\" r=\"2.5\" fill=\"#1e293b\" stroke=\"#475569\" stroke-width=\"0.8\"/>"
+      <> "<circle cx=\"32\" cy=\"88\" r=\"2.5\" fill=\"#1e293b\" stroke=\"#475569\" stroke-width=\"0.8\"/>"
+      <> "<line x1=\"38\" y1=\"32\" x2=\"38\" y2=\"104\" stroke=\"#dc2626\" stroke-width=\"0.8\" stroke-opacity=\"0.6\"/>"
+      <> "<line x1=\"38\" y1=\"46\" x2=\"155\" y2=\"46\" stroke=\"#3b82f6\" stroke-width=\"0.5\" stroke-opacity=\"0.3\"/>"
+      <> "<line x1=\"38\" y1=\"60\" x2=\"155\" y2=\"60\" stroke=\"#3b82f6\" stroke-width=\"0.5\" stroke-opacity=\"0.3\"/>"
+      <> "<line x1=\"38\" y1=\"74\" x2=\"155\" y2=\"74\" stroke=\"#3b82f6\" stroke-width=\"0.5\" stroke-opacity=\"0.3\"/>"
+      <> "<line x1=\"38\" y1=\"88\" x2=\"155\" y2=\"88\" stroke=\"#3b82f6\" stroke-width=\"0.5\" stroke-opacity=\"0.3\"/>"
+      <> "<rect x=\"39\" y=\"62\" width=\"115\" height=\"12\" fill=\"#fef08a\" fill-opacity=\"0.25\"/>"
+      <> "<text x=\"42\" y=\"44\" fill=\"#94a3b8\" font-size=\"6.5\" font-family=\"monospace\">1: ggplot(cars) +</text>"
+      <> "<text x=\"42\" y=\"58\" fill=\"#94a3b8\" font-size=\"6.5\" font-family=\"monospace\">2:   aes(speed, dist) +</text>"
+      <> "<text x=\"42\" y=\"72\" fill=\"#facc15\" font-size=\"6.5\" font-family=\"monospace\" font-weight=\"bold\">3:   geom_smooth() #&lt;&lt;</text>"
+      <> "<text x=\"42\" y=\"86\" fill=\"#38bdf8\" font-size=\"6.5\" font-family=\"monospace\">4: ggram(&quot;Cars&quot;)</text>"
+      <> "<rect x=\"165\" y=\"32\" width=\"135\" height=\"72\" rx=\"4\" fill=\"#020617\" stroke=\"#38bdf8\" stroke-width=\"1\"/>"
+      <> "<text x=\"172\" y=\"42\" fill=\"#38bdf8\" font-size=\"7\" font-family=\"monospace\" font-weight=\"bold\">Cars Output Plot</text>"
+      <> "<circle cx=\"185\" cy=\"85\" r=\"2\" fill=\"#94a3b8\"/><circle cx=\"195\" cy=\"78\" r=\"2\" fill=\"#94a3b8\"/><circle cx=\"210\" cy=\"80\" r=\"2\" fill=\"#94a3b8\"/><circle cx=\"225\" cy=\"65\" r=\"2\" fill=\"#94a3b8\"/><circle cx=\"240\" cy=\"58\" r=\"2\" fill=\"#94a3b8\"/><circle cx=\"260\" cy=\"48\" r=\"2\" fill=\"#94a3b8\"/>"
+      <> "<path d=\"M 180 90 Q 215 78, 240 60 T 285 45\" fill=\"none\" stroke=\"#38bdf8\" stroke-width=\"2\"/>"
+      <> "<path d=\"M 180 94 Q 215 82, 240 64 T 285 49 L 285 41 Q 240 56, 215 74 T 180 86 Z\" fill=\"#38bdf8\" fill-opacity=\"0.2\"/>"
+
     "ggrepel" ->
       // Repelled labels with leader segments and anchor points
       "<circle cx=\"80\" cy=\"85\" r=\"4\" fill=\"#38bdf8\"/>"

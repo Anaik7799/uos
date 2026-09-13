@@ -144,9 +144,19 @@ fn render_status_badges() -> Element(msg) {
             "padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 600; font-family: monospace; border-radius: 9999px; background: #1e1b4b; color: #c7d2fe; border: 1px solid #6366f1; text-decoration: none;",
           ),
         ],
-        [element.text("★ 167 Extensions Gallery & 9-Modality Suite (PASS)")],
+        [element.text("★ 167 Extensions Gallery (PASS)")],
       ),
-      badge("542 BDD Scenarios (100% Green)", "#10b981"),
+      html.a(
+        [
+          attribute.href("/sciviz/comprehensive"),
+          attribute.attribute(
+            "style",
+            "padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 600; font-family: monospace; border-radius: 9999px; background: #0c4a6e; color: #7dd3fc; border: 1px solid #0284c7; text-decoration: none;",
+          ),
+        ],
+        [element.text("🔬 167 Comprehensive Deep-Dive & ggram (PASS)")],
+      ),
+      badge("586 BDD Scenarios (100% Green)", "#10b981"),
       badge("Zero Client JS", "#a855f7"),
       badge("0 Bevy / 0 Graphite", "#10b981"),
       badge("OS NVMe 25503L801736 Locked", "#f59e0b"),

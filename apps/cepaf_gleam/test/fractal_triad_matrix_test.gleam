@@ -2,11 +2,12 @@
 //// Fractal Triad Matrix Unit & Invariant Test Suite (Layers x Components x Processes)
 //// STAMP: SC-GLM-UI-001, SC-ZMOF-001, SC-CHECKLIST-001, SC-MUDA-001
 
+import cepaf_gleam/ui/tui/triad_matrix_tui
 import cepaf_gleam/verification/fractal_triad_matrix_engine.{
   L0Constitutional, L5CognitiveOoda, L9BiosemioticTransKnowledge,
   canonical_layers, encode_claude_verification_json, encode_triad_matrix_json,
   evaluate_fractal_triad_matrix, generate_canonical_tensor_nodes, layer_to_code,
-  layer_to_name, verify_with_claude,
+  layer_to_name, publish_triad_to_ets_and_zenoh, verify_with_claude,
 }
 import gleam/list
 import gleam/string
@@ -142,5 +143,25 @@ pub fn claude_verification_json_valid_test() {
   string.contains(json_str, "GAP-02-METRICS") |> should.be_true()
   string.contains(json_str, "GAP-03-FORMAL") |> should.be_true()
   string.contains(json_str, "GAP-04-REST") |> should.be_true()
+}
+
+pub fn publish_triad_to_ets_and_zenoh_test() {
+  let result = publish_triad_to_ets_and_zenoh()
+  result |> should.equal(Ok(Nil))
+}
+
+pub fn triad_matrix_tui_render_test() {
+  let tui_output = triad_matrix_tui.render_triad_matrix_tui()
+  string.contains(tui_output, "UOS 3D FRACTAL TRIAD MATRIX") |> should.be_true()
+  string.contains(tui_output, "nas-1.tail55d152.ts.net:4100/matrix")
+  |> should.be_true()
+  string.contains(tui_output, "25503L801736") |> should.be_true()
+  string.contains(tui_output, "CLAUDE SOVEREIGN VERIFICATION RECEIPT")
+  |> should.be_true()
+  string.contains(tui_output, "CERT-CLAUDE-TRIAD-VERIFY-20260913-1200")
+  |> should.be_true()
+  string.contains(tui_output, "RATIFIED") |> should.be_true()
+  string.contains(tui_output, "18/18 Checkpoints 100% Green") |> should.be_true()
+  string.contains(tui_output, "25 CANONICAL TENSOR NODES") |> should.be_true()
 }
 

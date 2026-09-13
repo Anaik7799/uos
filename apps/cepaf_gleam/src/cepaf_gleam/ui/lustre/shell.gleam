@@ -653,6 +653,8 @@ fn render_nav(active_path: String) -> Element(msg) {
       make_group("Safety", "#ff6b6b", [
         #("/immune", "Immune"),
         #("/verification", "Verification"),
+        #("/matrix", "Triad Matrix"),
+        #("/checklist", "Checklist"),
         #("/kms", "KMS"),
         #("/integrity", "Integrity"),
         #("/bicameral", "Bicameral"),
@@ -685,6 +687,12 @@ fn render_nav(active_path: String) -> Element(msg) {
         #("/singularity", "Singularity"),
         #("/health-grid", "Health Grid"),
         #("/components", "Components"),
+      ]),
+      make_group("SciViz", "#38bdf8", [
+        #("/sciviz", "SciViz Cockpit"),
+        #("/sciviz/comprehensive", "Deep Dive Explorer"),
+        #("/sciviz/extensions", "167 Extensions"),
+        #("/sciviz/tests", "9 Modalities"),
       ]),
     ])
 

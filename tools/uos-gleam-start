@@ -5,8 +5,11 @@
 set -euo pipefail
 
 UOS_ROOT="/home/an/NAS-setup/uos"
+source "${UOS_ROOT}/tools/lib/uos-toolchain.sh"
+uos_env
+
 GLEAM_DIR="${UOS_ROOT}/apps/cepaf_gleam"
-GLEAM_BIN="${GLEAM_BIN:-/home/an/.nix-portable/nix/store/bidkr31zk2cp0fr5zaxcz2qqnxrpx466-gleam-1.16.0/bin/gleam}"
+GLEAM_BIN="$(uos_tool_path gleam)"
 
 cd "${GLEAM_DIR}"
 exec "${GLEAM_BIN}" run -- --serve

@@ -98,6 +98,18 @@ fn default_tools() -> List(tools.ToolDef) {
       json.null(),
       False,
     ),
+    tools.ToolDef(
+      "fractal_triad_matrix",
+      "Evaluate 3D tensor matrix: Fractal Layers x Components x Processes (L0-L9 x C1-C6 x P1-P10)",
+      json.null(),
+      False,
+    ),
+    tools.ToolDef(
+      "claude_verify_triad",
+      "Trigger Claude sovereign verification and gap audit for the 3D fractal triad matrix",
+      json.null(),
+      False,
+    ),
   ]
 }
 
@@ -537,6 +549,20 @@ fn classify_intent(text: String) -> #(String, String, json.Json) {
     "sciviz" <> _ | "/sciviz" <> _ | "bdd" <> _ | "/bdd" <> _ -> #(
       "ignition",
       "sciviz_bdd_verify",
+      json.object([#("prompt", json.string(text))]),
+    )
+    // 3D Fractal Triad Matrix & Claude Verification
+    "matrix" <> _ | "/matrix" <> _ | "triad" <> _ | "/triad" <> _ -> #(
+      "ignition",
+      "fractal_triad_matrix",
+      json.object([#("prompt", json.string(text))]),
+    )
+    "claude_verify" <> _
+    | "/claude_verify" <> _
+    | "claude_audit" <> _
+    | "/claude_audit" <> _ -> #(
+      "ignition",
+      "claude_verify_triad",
       json.object([#("prompt", json.string(text))]),
     )
     // Help

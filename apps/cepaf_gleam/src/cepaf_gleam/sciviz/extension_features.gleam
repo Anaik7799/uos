@@ -32,6 +32,25 @@ pub type ExtensionFeatureProfile {
 /// Retrieves the comprehensive 1x1 fractal feature profile for any of the 167 extensions.
 pub fn get_feature_profile(ext: ExtensionMetadata) -> ExtensionFeatureProfile {
   case ext.name {
+    "ggram" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "StatCode character-by-character R/ggplot2 code parsing to spatial coordinate grid",
+          "StatCodeLineNumbers right-aligned margin code line numbering engine",
+          "stamp_notebook and stamp_graph_paper realistic paper styling overlays with punched binder holes",
+          "Inline token syntax highlighting using #<< comment notation with customizable highlight strips",
+          "patchwork side-by-side meta-plot assembly binding executable code on left with generated ggplot on right",
+          "Multi-environment code ingestion supporting code strings, .Rhistory sessions, and clipboard buffers",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l5",
+        technical_aspects:
+          "StatCode ggproto transformation splitting multi-line code into characters, mapping lines to Y coordinates and character offsets to X coordinates, detecting #<< tokens to generate highlight bounding tiles, while StatCodeLineNumbers offsets line indices to X=-0.5 for margin alignment before patchwork stitches the code plot and ggplot output into a compound patchwork grob.",
+        functional_aspects:
+          "Interactive teaching tutorials, reproducible computational research notebooks, software documentation cards, code-to-plot pedagogical greetings, and step-by-step graphical grammar evolution.",
+        ui_ux_aspects:
+          "Dual-card side-by-side layout: left panel simulates lined ruled notebook or dark-mode IDE window with traffic-light chrome, yellow highlight strips on active lines, and right panel renders crisp, full-fidelity output plot.",
+      )
+
     "ggrepel" ->
       ExtensionFeatureProfile(
         features_offered: [

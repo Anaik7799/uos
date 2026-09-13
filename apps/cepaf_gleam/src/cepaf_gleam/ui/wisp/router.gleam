@@ -58,6 +58,8 @@ import cepaf_gleam/ui/lustre/checklist_page
 import cepaf_gleam/ui/lustre/sciviz_cockpit
 import cepaf_gleam/ui/lustre/sciviz_test_dashboard
 import cepaf_gleam/ui/lustre/sciviz_extensions_dashboard
+import cepaf_gleam/ui/lustre/sciviz_comprehensive_explorer
+import cepaf_gleam/ui/lustre/triad_matrix_view
 import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/link_tracker_view
@@ -291,6 +293,24 @@ fn route_internal(path: String) -> String {
         #("categories", json.int(16)),
         #("use_cases_verified", json.int(15)),
         #("status", json.string("ALL_15_EXTENSION_TESTS_PASS")),
+        #("pure_svg_displays", json.bool(True)),
+        #("zero_muda", json.bool(True)),
+        #("drive_locked", json.string("25503L801736")),
+      ])
+      |> json.to_string
+    "/api/v1/sciviz/comprehensive" ->
+      json.object([
+        #(
+          "feature",
+          json.string("SciViz 167 Extensions Comprehensive Aspect Explorer"),
+        ),
+        #("total_extensions", json.int(167)),
+        #("flagship", json.string("ggram")),
+        #("flagship_author", json.string("EvaMaeRey")),
+        #("categories", json.int(16)),
+        #("total_bdd_scenarios", json.int(586)),
+        #("total_records_modeled", json.int(17800000)),
+        #("status", json.string("ALL_167_ASPECTS_VERIFIED")),
         #("pure_svg_displays", json.bool(True)),
         #("zero_muda", json.bool(True)),
         #("drive_locked", json.string("25503L801736")),
@@ -2806,6 +2826,12 @@ fn route_html(path: String) -> String {
         "checklist",
         guard("checklist", fn(_state) { checklist_page.view() }),
       )
+    "/matrix" | "/triad" ->
+      shell.render_page(
+        "Fractal Triad Matrix & Claude Verification",
+        "matrix",
+        guard("matrix", fn(_state) { triad_matrix_view.view() }),
+      )
     "/testing" ->
       shell.render_page(
         "Testing Gold Standard C1-C8",
@@ -2987,6 +3013,12 @@ fn route_html(path: String) -> String {
         "ggplot2 Extensions Gallery Cockpit",
         "sciviz_extensions",
         sciviz_extensions_dashboard.view(),
+      )
+    "/sciviz/comprehensive" ->
+      shell.render_page(
+        "SciViz 167 Extensions Comprehensive Aspect Explorer",
+        "sciviz_comprehensive",
+        sciviz_comprehensive_explorer.view(),
       )
     "/allium" ->
       shell.render_page(

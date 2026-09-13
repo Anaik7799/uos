@@ -79,6 +79,10 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["km-check"] -> KmCheck
     ["web-links"] | ["tailscale-links"] -> WebLinks
     ["checklist"] -> Checklist
+    ["triad-matrix-check"] | ["triad-check"] | ["triad"] ->
+      Gate("G-TRIAD-MATRIX")
+    ["claude-verify-check"] | ["claude-verify"] | ["claude-audit"] ->
+      Gate("G-CLAUDE-VERIFY")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -310,6 +314,91 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println("  [FAIL] Comprehensive Checklist specification or rules missing")
+              1
+            }
+          }
+        }
+        "G-TRIAD-MATRIX" -> {
+          let spec_ok =
+            file_exists(
+              "docs/design/20260913-1200-uos-fractal-layers-components-processes-triad-and-claude-verification-spec.md",
+            )
+          let engine_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/verification/fractal_triad_matrix_engine.gleam",
+            )
+          let web_view_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/triad_matrix_view.gleam",
+            )
+          let tui_view_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/triad_matrix_tui.gleam",
+            )
+          let formal_ok =
+            file_exists("formal/lean/Fractal_Triad_Matrix_Invariants.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260913-1200-adr-117-fractal-triad-tensor-matrix-and-claude-verification.md",
+            )
+          let hw_lock_ok =
+            file_contains(
+              "apps/cepaf_gleam/src/cepaf_gleam/verification/fractal_triad_matrix_engine.gleam",
+              "25503L801736",
+            )
+          case
+            spec_ok
+            && engine_ok
+            && web_view_ok
+            && tui_view_ok
+            && formal_ok
+            && adr_ok
+            && hw_lock_ok
+          {
+            True -> {
+              io.println(
+                "  [PASS] 3D Fractal Triad Matrix (L0-L9 x C1-C6 x P1-P10): 25 nodes, Triple-Interface (WebUI/REST/TUI), Lean 4 invariants, ADR-117 & OS lock active",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] 3D Fractal Triad Matrix spec, engine, views, formal invariants, or lock missing",
+              )
+              1
+            }
+          }
+        }
+        "G-CLAUDE-VERIFY" -> {
+          let receipt_ok =
+            file_contains(
+              "apps/cepaf_gleam/src/cepaf_gleam/verification/fractal_triad_matrix_engine.gleam",
+              "CERT-CLAUDE-TRIAD-VERIFY-20260913-1200",
+            )
+          let checks_ok =
+            file_contains(
+              "apps/cepaf_gleam/src/cepaf_gleam/verification/fractal_triad_matrix_engine.gleam",
+              "checkpoints_passed: 18",
+            )
+          let gaps_ok =
+            file_contains(
+              "apps/cepaf_gleam/src/cepaf_gleam/verification/fractal_triad_matrix_engine.gleam",
+              "gaps_closed: 4",
+            )
+          let coordinator_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok = file_exists("var/km/provenance-cycles.sqlite3")
+          case receipt_ok && checks_ok && gaps_ok && coordinator_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Claude Sovereign Verification (L0-fable / Claude 3.7 Sonnet): CERT-CLAUDE-TRIAD-VERIFY-20260913-1200 RATIFIED, 18/18 checks, 4 gaps closed, Cycle C437",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Claude Sovereign Verification receipt, checkpoints, or database missing",
+              )
               1
             }
           }

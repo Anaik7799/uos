@@ -108,6 +108,16 @@ fn render_top_nav() -> Element(a) {
         ),
         html.a(
           [
+            attribute.href("/sciviz/comprehensive"),
+            attribute.attribute(
+              "style",
+              "color: #a78bfa; text-decoration: none; font-size: 0.85rem; padding: 0.3rem 0.6rem; border: 1px solid #8b5cf6; border-radius: 4px;",
+            ),
+          ],
+          [element.text("🔬 Deep-Dive Explorer")],
+        ),
+        html.a(
+          [
             attribute.href("/sciviz"),
             attribute.attribute(
               "style",
