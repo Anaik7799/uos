@@ -113,6 +113,24 @@ def run_test():
     assert tri_json.get("mojo_state") == "MOJO_MAX_SIMD_RANKER_ACTIVE", "Mojo state mismatch"
     assert tri_json.get("is_converged") is True, f"Tri-language mesh expected is_converged=True, got {tri_json.get('is_converged')}"
 
+    # 8. Publish fractal telemetry hooks to Zenoh & ETS
+    import time
+    now_ts = time.time()
+    telem_payload = json.dumps({
+        "subsystem": "Modular_MAX",
+        "language": "Mojo/Python",
+        "status": "PASSED",
+        "fractal_layer": "L5_COGNITIVE",
+        "simd_vector_ops": 1024,
+        "timestamp": now_ts
+    })
+    http_put(f"{ZENOH_BASE}/c3i/testing/events/mojo", telem_payload)
+    http_put(f"{ZENOH_BASE}/indrajaal/otel/ops/testing/mojo", telem_payload)
+    put_ets_state("test:mojo:status", "PASSED")
+    put_ets_state("test:mojo:timestamp", str(now_ts))
+    put_ets_state("test:mojo:runner", "services/inference/max/tri_language_state_runner.py")
+    print(f"[MOJO-MAX] Telemetry hooks published to Zenoh (c3i/testing/events/mojo) and ETS (test:mojo:status)")
+
     print("=" * 60)
     print("[MOJO-MAX] FULL TRI-LANGUAGE CONVERGENCE VERIFIED!")
     print(f"[MOJO-MAX] Gleam (BEAM): {tri_json.get('gleam_state')}")

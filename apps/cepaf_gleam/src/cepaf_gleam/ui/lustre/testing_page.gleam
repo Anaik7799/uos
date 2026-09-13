@@ -42,6 +42,7 @@ pub fn view() -> Element(msg) {
       render_breadcrumb(),
       render_header(),
       render_interactive_accordion(),
+      render_tri_language_observability_section(),
       render_math_gates(),
       render_gold_standard_categories(),
       render_nine_modalities(),

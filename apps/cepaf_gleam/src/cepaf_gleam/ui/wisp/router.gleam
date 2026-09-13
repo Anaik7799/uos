@@ -26,6 +26,7 @@ import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/request_guard
 import cepaf_gleam/substrate/beam_cache
 import cepaf_gleam/zenoh/ets_zenoh_bridge
+import cepaf_gleam/testing/tri_language_orchestrator
 import cepaf_gleam/ha/health_cascade
 import cepaf_gleam/ha/hot_reload
 import cepaf_gleam/ha/invariant_gate
@@ -356,6 +357,15 @@ fn route_internal(path: String) -> String {
         #("zenoh_router", json.string("http://127.0.0.1:8080")),
         #("ets_store", json.string("c3i_cache")),
       ])
+      |> json.to_string
+    }
+    "/api/v1/testing/orchestrator" -> {
+      tri_language_orchestrator.run_all_tests()
+      |> tri_language_orchestrator.report_to_json
+      |> json.to_string
+    }
+    "/api/v1/testing/observability" -> {
+      tri_language_orchestrator.global_test_observability_snapshot()
       |> json.to_string
     }
     "/api/v1/allium" ->

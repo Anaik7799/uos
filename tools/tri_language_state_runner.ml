@@ -128,6 +128,16 @@ let run_test () =
    | None ->
        failwith "Failed to fetch /api/v1/state/tri_language");
 
+  (* 7. Publish fractal telemetry hooks to Zenoh & ETS *)
+  let now = Unix.gettimeofday () in
+  let telem_payload = Printf.sprintf "{\"subsystem\":\"Hermes_Engine\",\"language\":\"OCaml\",\"status\":\"PASSED\",\"fractal_layer\":\"L3_TRANSACTION\",\"timestamp\":%.3f}" now in
+  let _ = http_put (Printf.sprintf "%s/c3i/testing/events/ocaml" zenoh_base) telem_payload in
+  let _ = http_put (Printf.sprintf "%s/indrajaal/otel/ops/testing/ocaml" zenoh_base) telem_payload in
+  let _ = put_ets_state "test:ocaml:status" "PASSED" in
+  let _ = put_ets_state "test:ocaml:timestamp" (Printf.sprintf "%.3f" now) in
+  let _ = put_ets_state "test:ocaml:runner" "tools/tri_language_state_runner.ml" in
+  Printf.printf "[OCAML-HERMES] Telemetry hooks published to Zenoh (c3i/testing/events/ocaml) and ETS (test:ocaml:status)\n%!";
+
   Printf.printf "========================================================\n%!";
   Printf.printf "[OCAML-HERMES] ALL OCAML ZENOH/ETS PARITY CHECKS PASSED!\n%!";
   Printf.printf "========================================================\n%!"

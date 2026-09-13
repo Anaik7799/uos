@@ -316,3 +316,79 @@ Fixing only (3) leaves a contract that still specifies the weaker check, and the
 ---
 
 **UOS footer:** [nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100/) · advisory review; no admission, no task completion.
+
+---
+
+# Fourth pass — remaining site areas, and a hypothesis that failed
+
+Observed `2026-09-13T08:4x`Z, same session and authority. Pages fetched: `websites/website-search`, `books/book-structure`, `output-formats/html-code`, `authoring/code-annotation`, `publishing/`.
+
+## 16. Q13 — Code annotation → line-anchored evidence citations
+
+**Quarto.** Two-part binding: a marker comment terminates the annotated line (`# <2>`, using the language's own comment character), and an ordered list below the block supplies the prose. The binding is by *number to marker*, not by line offset, so the marker travels with the line when code moves. Styles: `below` (default), `hover`, `select`, `none`.
+
+**Why this looked like the sharpest mapping.** Our contracts and reviews cite source by `file:line` constantly — `spec.rs:192` for `CHK-07-DRIVE`, `daily_budget.gleam:13` for the byte bound, `journal_linter.ml:256` in this very review. A line *number* is an offset into a mutable file. Nothing in the corpus verifies one. The predicted failure mode: citations silently rot as code shifts, and `CHK-07-DRIVE` ends up pointing at a blank line while still reading PASS.
+
+**The measurement refutes the urgency.** I sampled six line citations drawn from contracts and reviews:
+
+| Citation | Expected at that line | Result |
+|---|---|---|
+| `ops/kubernetes/nas-k8s-lab/src/spec.rs:192` | `HARD_DENIED_SYSTEM_OS_SERIAL` | **OK** |
+| `tools/ecology_openrouter.ml:154` | non-empty | **OK** |
+| `apps/cepaf_gleam/.../ecology/daily_budget.gleam:13` | `max_input_bytes` | **OK** |
+| `engines/hermes/.../source/wiki_source_ext.mli:233` | `xref` | **OK** |
+| `tools/journal_linter.ml:256` | `has_mermaid` | **OK** |
+| `apps/cepaf_gleam/.../harness/egress_redactor.gleam:23` | `denied_os_nvme_serial` | **OK** |
+
+**6/6 accurate.** The hypothesis that our line citations have rotted is **not supported**. Stating this plainly because the opposite would have been the more interesting finding, and writing it up unmeasured would have been the same error this review keeps documenting in others.
+
+**Revised finding and priority.** Citation accuracy is **unverified, not broken**. Every sampled citation is correct today, by the stability of the files rather than by any check. The adoptable value is therefore **preventive** — and the priority drops from High to **Medium**, below the diagram gate, which is actively printing a passing verdict for an untested property. Sequence position: after item 6, not before.
+
+**Adopt (preventive).** Bind an evidence citation to content, not to an offset: either a marker comment the cited line carries, or a `file:line` plus a short digest of that line's text, checked by the same resolver Q1 introduces. A citation whose target moved must then fail loudly rather than dangle. Note the sample is 6 of a corpus in the hundreds and was chosen from citations I had already read this session — it is a spot check, not a survey, and does not license "all citations are accurate."
+
+## 17. Q14 — Website search → `navigational_omnisearch` (Low-Medium)
+
+Quarto builds a **local** full-text index at render time (no service required), with optional Algolia for hosted search. The transferable detail is `show-item-context`, which renders a result's hierarchical position ("Guide > Authoring > Figures") rather than a bare title, plus `<mark>` term highlighting on arrival that also opens the correct tab inside a tabset.
+
+We already have `ui/lustre/navigational_omnisearch.gleam` and `graph/wiki_similarity`. The borrowable idea is small and real: **display the KM path of a hit** (corpus → layer → record) so a search result carries its position in the triad. Locally-built index also matters for us specifically — no external service, which keeps the Tailnet-only posture intact.
+
+## 18. Q15 — Books: parts, appendices, automatic numbering → MOC (Medium)
+
+Books declare an ordered chapter list in `_quarto.yml`, group chapters into `part`s, number `appendices` A/B/C automatically, number all chapters for cross-referencing, and offer `page-navigation` for sequential movement. EPUB and Word do not support parts; HTML/PDF/Typst do.
+
+**Mapping.** `SC-CHECKLIST-001` §3.5 already mandates "Bottom linear Prev/Next navigation" on every surface, and the ZK corpus is a numbered sequence (`ADR-001`..`ADR-091`) with a Master MOC on top — a book in all but declaration. Declaring the MOC as an ordered structure would give **automatic numbering and linear navigation as derived properties**, and composes directly with Q2: a listing generates the membership, a book structure orders it. The appendix convention (letters, distinct from chapter numbers) is a good fit for quarantine-derived records, which need to be *in* the corpus and *distinguishable* from admitted sequence — exactly the additive-marking requirement of `INV-PROV-03`.
+
+## 19. Q16 — Publishing: the one place we are ahead
+
+Quarto publishes to eight targets (Posit Connect/Cloud, GitHub Pages, Quarto Pub, Netlify, Confluence, Hugging Face Spaces, other) via `quarto publish`.
+
+**Recorded as a gap in Quarto, not in us.** The publishing documentation covers destinations and does not address reproducibility of a publish, versioning, or provenance of published content. Our `.md`-at-`:4100` surface is thinner in reach, but every document is jj-committed at a named revision, and `SC-PROVENANCE-001` binds digests. **Adopt nothing here.** Any future publishing adapter must carry the revision and digest with the artifact, which is precisely the property `quarto publish` does not document.
+
+This is worth stating because a feature review that only flows one direction is not a review. Quarto is stronger than us on authoring ergonomics and rendering breadth; we are stronger on evidence binding. Importing the first must not cost the second.
+
+## 20. Site coverage statement
+
+Reviewed across four passes: home/overview, cross-references, citations, execution options, projects/metadata, code-execution (freeze/cache), listings, includes/shortcodes, conditional content, diagrams, dashboards, manuscripts, extensions, website search, book structure, HTML code options, code annotation, publishing.
+
+**Deliberately not reviewed, with reasons:** presentations/revealjs (no UOS surface; the cockpit is not a slide deck), Shiny/interactive and Observable JS (requires an execution tier we bar by §5.4), Typst output (a PDF-path concern we do not have), `_brand.yml` theming (cosmetic; the uniform-structure mandate already fixes our theming), Gallery/Blog/FAQ (not feature documentation). Any of these can be picked up on request; none appeared likely to yield a KM mapping.
+
+## 21. Final priority order (all four passes)
+
+| # | Work | Why here | Value |
+|---|---|---|---|
+| 1 | Typed xref resolver over ZK corpus | prerequisite for 5, 6, 7 | High |
+| 2 | `SC-JOURNAL-v3` §5.4 wording, then `G-DIAGRAM`, then the `has_ascii` proxy | **only item where a checker prints PASS for a property it does not test** | High |
+| 3 | Generate MOC + corpus index from corpus | completeness true by construction | High |
+| 4 | Evidence freeze receipts | STALE vs UNRUN | High |
+| 5 | Directory `_metadata.yml` layer defaults | inherited ≠ declared | Med-High |
+| 6 | `#thm-` → Lean binding | claim ↔ proof becomes checked | Med-High |
+| 7 | MOC as ordered structure (parts/appendices) | numbering + nav derived; quarantine as appendix | Medium |
+| 8 | Content-bound evidence citations | **preventive only — 6/6 sampled are accurate** | Medium |
+| 9 | Evidence bibliography; MECA-style review bundle | depends on 1 | Medium |
+| 10 | Search result KM-path context | small, cosmetic-adjacent | Low-Med |
+
+Items 1–4 are unchanged from the first pass. Item 2 rose on measurement; item 8 fell on measurement.
+
+---
+
+**UOS footer:** [nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100/) · advisory review across four passes; no admission, no task completion, no implementation.
