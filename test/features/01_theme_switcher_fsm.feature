@@ -8,6 +8,36 @@ Feature: Theme Switcher Finite State Machine
     Given I navigate to "http://127.0.0.1:4100/"
     And the page title should contain "C3I — Dashboard"
 
+  Scenario Outline: Individual Theme Selection and Class Application
+    Given the theme should be default "dark"
+    When I select theme "<theme>"
+    Then the body class should contain "<expected_class>"
+    When I select theme "dark"
+    Then the body should have no theme class
+    And no unhandled JavaScript exceptions should have occurred
+
+    Examples:
+      | theme   | expected_class |
+      | amber   | theme-amber    |
+      | solaris | theme-solaris  |
+      | forest  | theme-forest   |
+
+  Scenario Outline: LocalStorage Theme Persistence Across Page States
+    Given I select theme "<theme>"
+    And the body class should contain "<expected_class>"
+    When I evaluate script "localStorage.getItem('c3i-theme')"
+    Then the script result should equal "<theme>"
+    When I select theme "dark"
+    And I evaluate script "localStorage.getItem('c3i-theme')"
+    Then the script result should equal "dark"
+    And no unhandled JavaScript exceptions should have occurred
+
+    Examples:
+      | theme   | expected_class |
+      | amber   | theme-amber    |
+      | solaris | theme-solaris  |
+      | forest  | theme-forest   |
+
   Scenario: Cyclic Theme Transition Dark -> Amber -> Solaris -> Forest -> Dark
     Given the theme should be default "dark"
     When I select theme "amber"
@@ -20,12 +50,3 @@ Feature: Theme Switcher Finite State Machine
     Then the body should have no theme class
     And no unhandled JavaScript exceptions should have occurred
 
-  Scenario: LocalStorage Theme Persistence
-    Given I select theme "amber"
-    And the body class should contain "theme-amber"
-    When I evaluate script "localStorage.getItem('c3i-theme')"
-    Then the script result should equal "amber"
-    When I select theme "dark"
-    And I evaluate script "localStorage.getItem('c3i-theme')"
-    Then the script result should equal "dark"
-    And no unhandled JavaScript exceptions should have occurred

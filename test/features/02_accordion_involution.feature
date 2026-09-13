@@ -17,9 +17,9 @@ Feature: Interactive Disclosure and Accordion Involution
     Then the details "details" open state should be restored to initial
     And no unhandled JavaScript exceptions should have occurred
 
-  Scenario: Multi-Sink Collator Details Involution
-    Given I navigate to "http://127.0.0.1:4100/links"
-    And the page title should contain "Universal Link Tracker & Verifier"
+  Scenario Outline: Universal Accordion Involution Across System Pages
+    Given I navigate to "<url>"
+    And the page title should contain "<title_fragment>"
     And the details "details" exists on the page
     And I record the initial details open state for "details"
     When I click the summary for "details"
@@ -27,3 +27,10 @@ Feature: Interactive Disclosure and Accordion Involution
     When I click the summary for "details"
     Then the details "details" open state should be restored to initial
     And no unhandled JavaScript exceptions should have occurred
+
+    Examples:
+      | url                                    | title_fragment                       |
+      | http://127.0.0.1:4100/links            | Universal Link Tracker & Verifier    |
+      | http://127.0.0.1:4100/sciviz/extensions| Extensions                           |
+      | http://127.0.0.1:4100/checklist        | Comprehensive Verification Checklist |
+

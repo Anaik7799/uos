@@ -17,3 +17,22 @@ Feature: Responsive Mobile Navigation Hamburger Drawer
     Then the element ".nav-groups" should not have class "nav-open"
     And the element ".nav-top" should not have class "nav-open"
     And no unhandled JavaScript exceptions should have occurred
+
+  Scenario Outline: Mobile Navigation Drawer Across Core Pages
+    Given I navigate to "<url>"
+    And the mobile hamburger button ".nav-hamburger" exists
+    When I click the element ".nav-hamburger"
+    Then the element ".nav-groups" should have class "nav-open"
+    And the element ".nav-top" should have class "nav-open"
+    When I click the element ".nav-hamburger"
+    Then the element ".nav-groups" should not have class "nav-open"
+    And the element ".nav-top" should not have class "nav-open"
+    And no unhandled JavaScript exceptions should have occurred
+
+    Examples:
+      | url                            |
+      | http://127.0.0.1:4100/planning |
+      | http://127.0.0.1:4100/cortex   |
+      | http://127.0.0.1:4100/cockpit  |
+      | http://127.0.0.1:4100/links    |
+
