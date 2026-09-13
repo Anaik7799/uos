@@ -366,6 +366,9 @@ fn render_footer() -> Element(msg) {
         html.a([attribute.href("/sciviz"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
           element.text("SciViz Cockpit"),
         ]),
+        html.a([attribute.href("/sciviz/extensions"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
+          element.text("Extensions Gallery"),
+        ]),
         html.a([attribute.href("/components"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
           element.text("Components"),
         ]),

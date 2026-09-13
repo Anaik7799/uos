@@ -54,6 +54,7 @@ import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/lustre/checklist_page
 import cepaf_gleam/ui/lustre/sciviz_cockpit
 import cepaf_gleam/ui/lustre/sciviz_test_dashboard
+import cepaf_gleam/ui/lustre/sciviz_extensions_dashboard
 import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/link_tracker_view
@@ -263,6 +264,18 @@ fn route_internal(path: String) -> String {
         #("total_use_cases", json.int(15)),
         #("modalities_verified", json.int(9)),
         #("status", json.string("ALL_15_TESTS_PASS")),
+        #("pure_svg_displays", json.bool(True)),
+        #("zero_muda", json.bool(True)),
+        #("drive_locked", json.string("25503L801736")),
+      ])
+      |> json.to_string
+    "/api/v1/sciviz/extensions" ->
+      json.object([
+        #("gallery", json.string("ggplot2 Extensions Gallery")),
+        #("total_extensions", json.int(167)),
+        #("categories", json.int(16)),
+        #("use_cases_verified", json.int(15)),
+        #("status", json.string("ALL_15_EXTENSION_TESTS_PASS")),
         #("pure_svg_displays", json.bool(True)),
         #("zero_muda", json.bool(True)),
         #("drive_locked", json.string("25503L801736")),
@@ -2787,6 +2800,12 @@ fn route_html(path: String) -> String {
         "SciViz Comprehensive Test Modalities Cockpit",
         "sciviz_tests",
         sciviz_test_dashboard.view(),
+      )
+    "/sciviz/extensions" ->
+      shell.render_page(
+        "ggplot2 Extensions Gallery Cockpit",
+        "sciviz_extensions",
+        sciviz_extensions_dashboard.view(),
       )
     "/allium" ->
       shell.render_page(
