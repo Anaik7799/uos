@@ -25,6 +25,7 @@ import cepaf_gleam/ha/fitness_gate
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/request_guard
 import cepaf_gleam/substrate/beam_cache
+import cepaf_gleam/zenoh/ets_zenoh_bridge
 import cepaf_gleam/ha/health_cascade
 import cepaf_gleam/ha/hot_reload
 import cepaf_gleam/ha/invariant_gate
@@ -62,6 +63,10 @@ import cepaf_gleam/ui/lustre/knowledge_explorer
 import cepaf_gleam/ui/lustre/testing_page
 import cepaf_gleam/ui/lustre/inference_tier
 import cepaf_gleam/ui/wisp/inference_api
+import cepaf_gleam/services/mirage_migration_engine
+import cepaf_gleam/services/mirage_unikernel_daemon
+import cepaf_gleam/ui/lustre/mirage_cockpit
+import cepaf_gleam/ui/wisp/mirage_api
 import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/ui/web/page_views
 import lustre/element
@@ -241,6 +246,14 @@ fn route_internal(path: String) -> String {
       let result = inference_api.evaluate_lyapunov_trend([1.0, 1.0, 1.0, 1.0], 1.0, 5.0, 100.0)
       max_daemon.lyapunov_result_to_json(result)
     }
+    "/api/v1/mirage/candidates" ->
+      json.to_string(mirage_api.candidates_json(mirage_migration_engine.get_migration_candidates()))
+    "/api/v1/mirage/status" ->
+      json.to_string(mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state()))
+    "/api/v1/mirage/hypervisors" ->
+      json.to_string(mirage_api.hypervisors_json())
+    "/api/v1/mirage/telemetry" ->
+      json.to_string(mirage_api.telemetry_json())
     "/api/v1/forecast/layers" ->
       fractal_forecast.all_layers_forecast_json() |> json.to_string
     "/api/v1/forecast/health" ->
@@ -298,6 +311,53 @@ fn route_internal(path: String) -> String {
         #("drive_locked", json.string("25503L801736")),
       ])
       |> json.to_string
+    "/api/v1/ets" -> {
+      let entries = ets_zenoh_bridge.all_ets_state()
+      json.object([
+        #("status", json.string("ok")),
+        #("count", json.int(list.length(entries))),
+        #(
+          "entries",
+          json.array(entries, fn(e) {
+            json.object([
+              #("key", json.string(e.key)),
+              #("value", json.string(e.value)),
+            ])
+          }),
+        ),
+      ])
+      |> json.to_string
+    }
+    "/api/v1/ets/sync" -> {
+      case ets_zenoh_bridge.sync_zenoh_to_ets() {
+        Ok(count) ->
+          json.object([
+            #("status", json.string("ok")),
+            #("synced_from_zenoh", json.int(count)),
+          ])
+          |> json.to_string
+        Error(err) ->
+          json.object([
+            #("status", json.string("error")),
+            #("message", json.string(err)),
+          ])
+          |> json.to_string
+      }
+    }
+    "/api/v1/state/tri_language" -> {
+      let summary = ets_zenoh_bridge.evaluate_tri_language_state()
+      json.object([
+        #("status", json.string("ok")),
+        #("gleam_state", json.string(summary.gleam_state)),
+        #("ocaml_state", json.string(summary.ocaml_state)),
+        #("mojo_state", json.string(summary.mojo_state)),
+        #("ets_entry_count", json.int(summary.ets_entry_count)),
+        #("is_converged", json.bool(summary.is_converged)),
+        #("zenoh_router", json.string("http://127.0.0.1:8080")),
+        #("ets_store", json.string("c3i_cache")),
+      ])
+      |> json.to_string
+    }
     "/api/v1/allium" ->
       module_guard.unwrap(module_guard.guard_json(allium_list_json(), "allium", "page"))
     "/api/v1/allium/ignition" ->
@@ -421,6 +481,58 @@ fn route_internal(path: String) -> String {
     "/ag-ui/run" | "/ag-ui/events" -> agui_run_json(path)
     "/ag-ui/health" -> agui_sse.health_json()
     _ -> {
+      case string.starts_with(path, "/api/v1/ets/put?") {
+        True -> {
+          let params = string.drop_start(path, string.length("/api/v1/ets/put?"))
+          let k = extract_query_param(params, "key=")
+          let v = case extract_query_param(params, "val=") {
+            "" -> extract_query_param(params, "value=")
+            val -> val
+          }
+          case k != "" {
+            True -> {
+              let _ = ets_zenoh_bridge.put_state(k, v)
+              json.object([
+                #("status", json.string("ok")),
+                #("key", json.string(k)),
+                #("value", json.string(v)),
+                #("persisted_in_ets", json.bool(True)),
+                #("published_to_zenoh", json.bool(True)),
+              ])
+              |> json.to_string
+            }
+            False ->
+              json.object([
+                #("status", json.string("error")),
+                #("message", json.string("missing_key")),
+              ])
+              |> json.to_string
+          }
+        }
+        False ->
+      case string.starts_with(path, "/api/v1/ets/") {
+        True -> {
+          let key = string.drop_start(path, string.length("/api/v1/ets/"))
+          case ets_zenoh_bridge.get_state(key) {
+            Ok(val) ->
+              json.object([
+                #("status", json.string("ok")),
+                #("key", json.string(key)),
+                #("value", json.string(val)),
+                #("found", json.bool(True)),
+              ])
+              |> json.to_string
+            Error(err) ->
+              json.object([
+                #("status", json.string("not_found")),
+                #("key", json.string(key)),
+                #("error", json.string(err)),
+                #("found", json.bool(False)),
+              ])
+              |> json.to_string
+          }
+        }
+        False ->
       // Dynamic route matching for paths with query parameters
       // Pass-23 — P1 #5 server-side pagination (SC-AGUI-UI-013).
       // Matches "/api/v1/planning/page?status=X&offset=N&limit=M".
@@ -464,7 +576,21 @@ fn route_internal(path: String) -> String {
           }
       }
       }
+      }
+      }
     }
+  }
+}
+
+fn extract_query_param(query_str: String, param_name: String) -> String {
+  let parts = string.split(query_str, "&")
+  case list.find(parts, fn(p) { string.starts_with(p, param_name) }) {
+    Ok(matching) -> {
+      string.drop_start(matching, string.length(param_name))
+      |> string.replace("%20", " ")
+      |> string.replace("+", " ")
+    }
+    Error(_) -> ""
   }
 }
 
@@ -1393,10 +1519,9 @@ fn cockpit_mode_json() -> String {
 }
 
 /// 404 handler.
-fn not_found_json(path: String) -> String {
+fn not_found_json(_path: String) -> String {
   json.object([
     #("error", json.string("not_found")),
-    #("path", json.string(path)),
     #("hint", json.string("Try /health or /api/v1/pages")),
   ])
   |> json.to_string()
@@ -2485,6 +2610,20 @@ fn handle_get(path: String) -> HttpResponse(String) {
     "/api/v1/plan/stream" -> sse_response(planning_sse_stream())
     // AI agent status + Gemma 4 availability
     "/api/v1/ai/status" -> json_response(ai_status_json(), 200)
+    "/mirage" -> html_response(mirage_cockpit.view())
+    "/api/v1/mirage/candidates" ->
+      json_response(json.to_string(mirage_api.candidates_json(mirage_migration_engine.get_migration_candidates())), 200)
+    "/api/v1/mirage/status" ->
+      json_response(json.to_string(mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state())), 200)
+    "/api/v1/mirage/hypervisors" ->
+      json_response(json.to_string(mirage_api.hypervisors_json()), 200)
+    "/api/v1/mirage/telemetry" ->
+      json_response(json.to_string(mirage_api.telemetry_json()), 200)
+    "/api/v1/federation" | "/api/federation/status" ->
+      json_response(
+        "{\"plane\":\"federation\",\"status\":\"unavailable\",\"error\":\"l7_federation_state_source_not_wired\",\"peer_count\":0,\"peer\":\"disconnected\"}",
+        503,
+      )
     // Static file serving (JS, CSS for data grids)
     "/static/planning-grid.js" -> serve_static_file("priv/static/planning-grid.js", "application/javascript")
     "/static/planning-grid.bundled.js" -> serve_static_file("priv/static/planning-grid.bundled.js", "application/javascript")
@@ -2546,7 +2685,14 @@ fn handle_get(path: String) -> HttpResponse(String) {
             }
             False ->
               case is_api_path(path) {
-                True -> json_response(route(path), 200)
+                True -> {
+                  let body = route(path)
+                  let status = case string.contains(body, "\"error\":\"not_found\"") {
+                    True -> 404
+                    False -> 200
+                  }
+                  json_response(body, status)
+                }
                 False -> {
                   let _ = hot_reload.reload_changed()
                   html_response(route_html(path))
@@ -2605,6 +2751,7 @@ fn route_html(path: String) -> String {
     invariant_gate.guard_render(state, page_name, render_fn)
   }
   case path {
+    "/mirage" -> mirage_cockpit.view()
     "/" | "/dashboard" ->
       shell.render_page("Dashboard", "dashboard", guard("dashboard", page_views.dashboard_view))
     "/hook-subsystem" ->

@@ -10,7 +10,7 @@
 %% अक्षरं ब्रह्म परमम् — The imperishable is the supreme Brahman (Gita 8.3)
 
 -module(beam_cache_ffi).
--export([ets_init/0, ets_put/2, ets_get/1, ets_delete/1, ets_keys/0, ets_size/0]).
+-export([ets_init/0, ets_put/2, ets_get/1, ets_delete/1, ets_keys/0, ets_size/0, ets_all/0]).
 -export([pt_set/2, pt_get/1]).
 
 %% ---------------------------------------------------------------------------
@@ -53,6 +53,13 @@ ets_keys() ->
 %% @doc Return the number of entries currently in the table.
 ets_size() ->
     ets:info(c3i_cache, size).
+
+%% @doc Return all key/value pairs currently in the table.
+ets_all() ->
+    case ets:whereis(c3i_cache) of
+        undefined -> [];
+        _ -> ets:tab2list(c3i_cache)
+    end.
 
 %% ---------------------------------------------------------------------------
 %% persistent_term — O(1) read, one-time GC cost on write

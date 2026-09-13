@@ -93,6 +93,10 @@ pub fn keys() -> List(String)
 @external(erlang, "beam_cache_ffi", "ets_size")
 pub fn size() -> Int
 
+/// Return all key/value pairs currently held in the cache.
+@external(erlang, "beam_cache_ffi", "ets_all")
+pub fn all() -> List(#(String, String))
+
 // ---------------------------------------------------------------------------
 // persistent_term Config Store (F08) — O(1) read, no message passing
 // ---------------------------------------------------------------------------

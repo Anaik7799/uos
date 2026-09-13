@@ -150,3 +150,169 @@ Items 1 and 2 are the ones that would have caught real defects already recorded 
 ---
 
 **UOS footer:** [nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100/) · Sa-plan is the sole execution authority; this review grants no admission and completes no task.
+
+---
+
+# Second pass — remaining site areas
+
+Observed `2026-09-13T07:51:52Z`, same session and authority. Pages fetched: `authoring/includes`, `authoring/conditional`, `authoring/diagrams`, `dashboards/`, `manuscripts/`, `extensions/`.
+
+## 7. Q7 — Diagrams: the finding this pass exists for
+
+Quarto renders Mermaid and Graphviz natively, treats a diagram **as a figure** (so `label`, `fig-cap`, and `@fig-` cross-referencing apply), accepts an external `.mmd`/`.dot` via a `file` option, and renders format-adaptively (JS for HTML, PNG for PDF via headless Chrome). One source, many renderings.
+
+Checking our side against `SC-DIAGRAM-001`, which requires that ASCII and Mermaid "describe the exact same nodes, edges, labels, and hierarchical groupings," produced three facts.
+
+**7.1 `G-DIAGRAM` is not implemented.** The string appears in exactly four places in the repository — `.claude/`, `.gemini/`, `.agents/`, `.codex/` mirrors of the same rule, each line 8, each naming it as enforcement. There is no gate, no `tools/` entry, no implementation anywhere. The mandate advertises machine enforcement that does not exist. In full-symbiosis drift terms this is a **P1 missing guard**; note that rule-mirror parity is perfect, which is precisely why the absence is invisible — four surfaces agree about a gate none of them can run.
+
+**7.2 The corpus-wide checker tests co-presence and calls it parity.** `tools/journal_linter.ml:255-271`:
+
+```ocaml
+let has_mermaid = contains_substring full_text "```mermaid" in
+let has_ascii =
+  contains_substring full_text "+---" ||
+  contains_substring full_text "|   " ||      (* pipe + three spaces *)
+  ...
+if has_mermaid then
+  if has_ascii then
+    printf "  [PASS] CHK-DIAG: SC-DIAGRAM-001 dual diagram source parity verified (ASCII + Mermaid)\n"
+```
+
+`"|   "` — a pipe followed by three spaces — matches **any padded Markdown table**. So a journal containing one Mermaid diagram and one ordinary table prints *"dual diagram source parity verified."* The check cannot fail for any document that has a table, and it proves nothing about nodes, edges, or labels even when it does fire. It is weaker than co-presence of two diagrams: it is co-presence of a fence and a punctuation pattern. **And it prints the word "parity."**
+
+This is the session's recurring defect class, now with the strongest wording yet attached to the weakest observable: *an observable coarser than the property being enforced*, announcing the property by name.
+
+**7.3 The correct algebra already exists in the tree.** `tools/validate_implementation_plan.ml:115-120` does real semantic parity — it extracts ` --> ` edges from both the ASCII block and the Mermaid block, builds the expected edge set, and compares sorted lists:
+
+```ocaml
+check (sorted ascii = sorted expected_ascii && sorted mermaid = sorted expected_mermaid)
+      "master diagram parity";
+```
+
+That is genuine node/edge comparison. It is scoped to one master document inside one tool.
+
+**The structural parallel is exact.** This is the same shape as Q1: the right algebra is implemented once and narrowly, while the corpus-wide checker uses a coarse proxy. Two independent instances in two independent subsystems — which suggests the pattern is not accidental but a consequence of corpus-wide checks being written under pressure to pass.
+
+**Adopt — and prefer generation over checking.** Quarto's actual lesson is not "check two forms agree," it is **one source, generated renderings**. If the ASCII form were *generated from* the Mermaid (or both from a common edge list), parity would be free rather than tested. The repository already argues exactly this, in `engine/wiki_transclude.mli`:
+
+> "Expanding text-to-text before either renderer sees it makes byte-equality FREE rather than something to test for."
+
+Same argument, made for prose, available for diagrams. Recommended order: (a) implement `G-DIAGRAM` using the `validate_implementation_plan` edge algebra corpus-wide; (b) replace `journal_linter`'s `has_ascii` proxy, which should fail loudly rather than pass vacuously; (c) longer term, generate one form from the other and retire the check.
+
+## 8. Q8 — Conditional content: an instance of our defect class *in the wild*
+
+Quarto's `.content-visible` / `.content-hidden` with `when-format`, `unless-format`, `when-profile`, `when-meta` produce different output per target from one source. Format aliasing is neat (`latex` covers latex/pdf/beamer; `html:js` covers JS-capable formats).
+
+Quarto's own documented limitation is the interesting part:
+
+> "They do **not** prevent the code in cells they wrap from executing."
+
+A **visibility** control mistaken for an **execution** control. Content can be hidden from every output while its code still runs — hiding the evidence of an effect, not the effect. That is our defect class, in a mature external tool, documented by its own authors.
+
+**Relevance.** `SC-CHECKLIST-001` §3.4 mandates a Dual View Mode (Rendered Markdown vs Raw Source) on every document view. If conditional visibility is ever adopted for that, the hazard must be explicit: **visibility is not authorization and not execution control.** Anything with an effect is gated by typed policy per §6, never by a rendering class. Worth recording as a hazard we now have a citation for.
+
+## 9. Q9 — Includes: adopt nothing; we already have the better design
+
+Quarto's `{{< include >}}` is, in its own words, "equivalent to copying and pasting the text from the included file into the main file." Consequences it documents: relative paths in the *included* file resolve from the **main** document's directory (fix: absolute paths from project root); YAML frontmatter in an included file affects every document that includes it; includes must sit on their own line and cannot appear inside a list; computational includes require a single shared engine.
+
+**Our `Wiki_transclude` is stronger on every axis that matters here** — and this is worth stating plainly so it is not "modernised" into a regression:
+
+| Property | Quarto include | `Wiki_transclude` |
+|---|---|---|
+| Cycle handling | not documented | broken where it closes, **reported** (`cycles`) |
+| Depth bound | not documented | bounded and **reported** (`truncated`) |
+| Missing target | not documented | visible marker + **reported** (`missing`) |
+| Sub-document addressing | whole file only | block-level `![[Note#^id]]`, `None` when absent |
+| Expansion time | render-path paste | build-time, so byte-equality is free by construction |
+
+**Adopt: nothing.** The one idea worth borrowing is the underscore filename convention (`_partial.qmd`) so partials are structurally excluded from standalone rendering — a cheap poka-yoke against a fragment being published as a document.
+
+## 10. Q10–Q12 — Manuscripts, extensions, dashboards
+
+**Q10 Manuscript project type → KM / journal protocol (Medium-High).** Notebooks are simultaneously the computation and the evidence layer: selected cells embed into the article while the *complete* notebook stays reachable from the site. That is the shape `SC-JOURNAL-v3` needs — a journal section citing a specific evidence cell, with the whole artifact one click away, rather than prose asserting a result. The **MECA archive** (one zip capturing article plus supporting documents for a publisher) maps cleanly onto a *sealed evidence bundle for sovereign review*: exactly what `CHK-17-SOV` review by Codex and AGY currently lacks as a single addressable object.
+
+**Q11 Extensions → plugin surface (Medium).** Eight extension classes (shortcodes, filters, formats, project types, metadata, brand, engines, revealjs plugins), living inside the project directory rather than an external package manager, with registry metadata linking to source. The in-project placement matches `SC-TOOLCHAIN-INPROJECT-001` exactly, and we already have `plugins/uos-risk-prioritization`. The transferable requirement is **pinning**: an extension that floats reproduces the `nixpkgs-weekly/*` wildcard hazard `SC-NIX-DEVENV-001` §5 records.
+
+**Q12 Dashboards → cockpit (Low-Medium).** A declarative layout grammar — pages/rows/columns/tabsets with proportional sizing, cards, value boxes, sidebars — versus our hand-built Lustre pages. Genuinely elegant, but we already serve 31 pages with an 18-checkpoint accordion, and the C1–C8 gold standard encodes requirements this grammar does not express. Borrow the *proportional row/column sizing* idea if page layout is ever revisited; do not restructure the cockpit for it.
+
+## 11. Revised mapping table (both passes)
+
+| Quarto feature | Wiki | ZK | KM | UOS gap | Value |
+|---|---|---|---|---|---|
+| Typed resolvable xrefs | ●●● | ●●● | ●●● | byte-presence ≠ resolution | **High** |
+| **Diagrams as single-source figures** | ●● | ●●● | ●●● | **`G-DIAGRAM` unimplemented; linter tests a pipe-and-spaces proxy** | **High** |
+| Listings | ●● | ●●● | ●●● | MOC/index checked, not generated | **High** |
+| `freeze` / `_freeze` in VCS | ○ | ● | ●●● | STALE vs UNRUN | **High** |
+| Metadata hierarchy + merge | ●● | ●●● | ●● | ritual tagging | Med-High |
+| Theorem envs → Lean | ● | ●●● | ●● | claim ↔ proof binding is prose | Med-High |
+| Manuscript / MECA bundle | ● | ●● | ●●● | no sealed evidence object for sovereign review | Med-High |
+| Citations / bibliography | ●● | ●● | ●●● | evidence locators unresolvable | Medium |
+| Extensions (in-project, pinned) | ● | ○ | ●● | plugin pinning | Medium |
+| Profiles (dev/prod) | ● | ○ | ● | dev/prod boundary | Medium |
+| Multi-format render | ●● | ● | ● | `.md` at :4100 only | Low-Med |
+| Dashboard layout grammar | ●● | ○ | ○ | cockpit already meets C1–C8 | Low-Med |
+| Conditional content | ●● | ● | ● | **adopt with hazard noted** — visibility ≠ execution | Low (hazard) |
+| Include shortcode | ● | ● | ○ | **do not adopt** — ours is stronger | None |
+| Computation engines | ○ | ○ | ○ | **conflicts** — Python confined to MAX | **Do not adopt** |
+
+## 12. Revised sequence
+
+Unchanged at the top; the diagram work enters at position 2 because it is the only item where a checker currently prints a passing verdict for a property it does not test.
+
+| Order | Work | Gate |
+|---|---|---|
+| 1 | Typed xref resolver over ZK corpus | dangling ref fails |
+| 2 | **Implement `G-DIAGRAM` with the `validate_implementation_plan` edge algebra; replace `journal_linter`'s `has_ascii` proxy** | **edge sets must match; a table must not satisfy the check** |
+| 3 | Generate MOC + corpus index from corpus | derivation checked, not artifact |
+| 4 | Evidence freeze receipts | drift invalidates |
+| 5 | Directory `_metadata.yml` layer defaults | inherited ≠ declared |
+| 6 | `#thm-` → Lean binding | dangling `#thm-` fails |
+| 7 | Evidence bibliography; MECA-style review bundle | unresolved key fails |
+
+## 13. Added limits for this pass
+
+- §7.1's absence claim is scoped to a repository-wide search for `G-DIAGRAM` excluding `.jj`, `_build`, `docs/`, and `contracts/`; four rule-mirror hits were the only results. If an equivalent gate exists under a different name I did not find it.
+- §7.2's reading of `has_ascii` is from source. **I did not execute `journal_linter`**, so "a table satisfies the check" is a property of the code as written, not an observed run. It is worth confirming by execution before the fix is scoped.
+- Quarto behaviour in this pass, as in the first, comes from fetched-page summaries. No Quarto binary was installed or run.
+
+---
+
+**UOS footer:** [nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100/) · advisory review; no admission, no task completion.
+
+---
+
+# Third pass — the diagram weakening is specified, not merely implemented
+
+Added on reading `SC-JOURNAL-v3` (`contracts/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md`, ratified by all three sovereigns). It supersedes §8.2 of `CLAUDE.md` and restates the diagram rule twice, at different strengths.
+
+## 14. A three-step degradation from mandate to implementation
+
+| Tier | Artifact | What it requires |
+|---|---|---|
+| 1. Mandate | `INV-JRN-06` / `SC-DIAGRAM-001` | ASCII and Mermaid "describing **identical topology**" — same nodes, edges, labels, groupings |
+| 2. Enforcement spec | `SC-JOURNAL-v3` §5.4 | "Confirms that any ` ```mermaid ` block **has a corresponding ASCII diagram block**" |
+| 3. Implementation | `tools/journal_linter.ml:255-271` | `has_mermaid && contains "\|   "` — a pipe and three spaces, i.e. **any padded Markdown table** |
+
+Tier 2 is strictly weaker than tier 1: co-presence of two blocks cannot establish identical topology. Tier 3 is strictly weaker than tier 2: a Markdown table is not an ASCII diagram.
+
+**This matters more than the implementation gap alone.** §7.2 read as a coding shortcut. It is not — the weakening is *written into the contract's own enforcement section*, and that section was ratified by Codex, Claude Fable, and AGY (§6, three ratification certificates). The checker faithfully implements a specification that was already too weak, and then weakened it once more. No reviewer in the triad caught either step.
+
+So the defect is not "someone wrote a lazy check." It is: **the invariant and the procedure said to enforce it were authored at different strengths, and the review process compared neither against the other.** `INV-JRN-08` then requires exit code 0 from that linter for journal completion, which converts the gap into a positive admission signal.
+
+**Revised recommendation for sequence item 2.** Fix all three tiers, in this order, or the gap reopens:
+1. Amend `SC-JOURNAL-v3` §5.4 to state the topology comparison, not co-presence — the contract must ask for what `INV-JRN-06` means.
+2. Implement `G-DIAGRAM` with the `validate_implementation_plan.ml:115-120` edge algebra.
+3. Replace `journal_linter`'s `has_ascii` proxy so a table cannot satisfy it.
+
+Fixing only (3) leaves a contract that still specifies the weaker check, and the next implementer is entitled to write the weaker check again.
+
+**Cross-check that passed.** `INV-JRN-07` requires the host NVMe serial appear in journals only as `[REDACTED_SYSTEM_OS_SERIAL]`. That is byte-identical to `egress_redactor.redacted_serial_placeholder` in `apps/cepaf_gleam/src/cepaf_gleam/harness/egress_redactor.gleam`, wired at the Telegram and OpenRouter transport boundaries under commit `61ba9a60`. Contract and implementation agree here, and the placeholder is shared rather than duplicated — the counter-example showing the failure above is not systemic to the contract.
+
+## 15. Limits for this pass
+
+- The three tiers are quoted from the contract text supplied in-session and from source read directly. **The linter was still not executed**, so tier 3's behaviour remains a property of the code as written.
+- Whether the three ratification certificates in §6 examined §5.4 specifically is **UNKNOWN** — I did not read them. The claim above is only that the published contract carries the weaker wording, not that any particular reviewer overlooked it deliberately.
+
+---
+
+**UOS footer:** [nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100/) · advisory review; no admission, no task completion.
