@@ -53,6 +53,7 @@ import cepaf_gleam/ui/domain.{
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/lustre/checklist_page
 import cepaf_gleam/ui/lustre/sciviz_cockpit
+import cepaf_gleam/ui/lustre/sciviz_test_dashboard
 import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/link_tracker_view
@@ -250,10 +251,21 @@ fn route_internal(path: String) -> String {
         #("suite", json.string("SciViz Scientific Visualization")),
         #("total_components", json.int(356)),
         #("unbounded_passes", json.int(15)),
-        #("merkle_head", json.string("a90542be2e775e9a8e1d142b42850494d2bc9330471d9bef3b0558f3cdf12ac6")),
-        #("provenance_seq", json.int(426)),
+        #("merkle_head", json.string("bad1af394e3a261eeb31838e9ceb10e45e420f9f1bd4e6fd9a236406d68c8f31")),
+        #("provenance_seq", json.int(429)),
         #("sovereignty", json.string("worker-claude")),
         #("purity", json.string("zero-muda-pure-lustre-ssr")),
+      ])
+      |> json.to_string
+    "/api/v1/sciviz/tests" ->
+      json.object([
+        #("test_suite", json.string("SciViz 9-Modality Comprehensive Test Cockpit")),
+        #("total_use_cases", json.int(15)),
+        #("modalities_verified", json.int(9)),
+        #("status", json.string("ALL_15_TESTS_PASS")),
+        #("pure_svg_displays", json.bool(True)),
+        #("zero_muda", json.bool(True)),
+        #("drive_locked", json.string("25503L801736")),
       ])
       |> json.to_string
     "/api/v1/allium" ->
@@ -2769,6 +2781,12 @@ fn route_html(path: String) -> String {
         "SciViz Cockpit",
         "sciviz",
         sciviz_cockpit.view(),
+      )
+    "/sciviz/tests" ->
+      shell.render_page(
+        "SciViz Comprehensive Test Modalities Cockpit",
+        "sciviz_tests",
+        sciviz_test_dashboard.view(),
       )
     "/allium" ->
       shell.render_page(

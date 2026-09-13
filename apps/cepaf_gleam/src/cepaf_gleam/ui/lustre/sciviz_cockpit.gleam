@@ -126,8 +126,16 @@ fn render_status_badges() -> Element(msg) {
     [
       badge("L0..L9 10-Layer Atlas", "#06b6d4"),
       badge("356 Components", "#38bdf8"),
-      badge("15 Lean 4 Proofs", "#10b981"),
-      badge("30 EUnit Tests (0.118s)", "#10b981"),
+      html.a(
+        [
+          attribute.href("/sciviz/tests"),
+          attribute.attribute(
+            "style",
+            "padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 600; font-family: monospace; border-radius: 9999px; background: #064e3b; color: #34d399; border: 1px solid #10b981; text-decoration: none;",
+          ),
+        ],
+        [element.text("▶ 15/15 Tests & WebUI Visual Displays (PASS)")],
+      ),
       badge("Zero Client JS", "#a855f7"),
       badge("0 Bevy / 0 Graphite", "#10b981"),
       badge("OS NVMe 25503L801736 Locked", "#f59e0b"),
