@@ -129,7 +129,7 @@ pub fn claude_verification_receipt_ratified_test() {
   cert.gaps_closed |> should.equal(4)
   cert.federated_tools_count |> should.equal(93)
   cert.events_mapped_count |> should.equal(32)
-  cert.lean4_theorems_verified |> should.equal(10)
+  cert.lean4_theorems_verified |> should.equal(13)
 }
 
 pub fn claude_verification_json_valid_test() {

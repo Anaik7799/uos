@@ -671,12 +671,12 @@ pub fn verify_with_claude() -> ClaudeVerificationReceipt {
     closed_gaps_summary: [
       "GAP-01-BRIDGE: Pi-mono x Claude Code 93-tool bidirectional bridge explicitly bound in L6 tensor node",
       "GAP-02-METRICS: Claude session self-observation (SC-SATYA-002) bound in L5 cognitive OODA tensor node",
-      "GAP-03-FORMAL: 10 Lean 4 machine-checked theorems in Fractal_Triad_Matrix_Invariants.lean verified with 0 errors",
+      "GAP-03-FORMAL: 13 Lean 4 machine-checked theorems in Fractal_Triad_Matrix_Invariants.lean verified with 0 errors",
       "GAP-04-REST: Wisp REST API endpoints /api/v1/matrix/fractal_triad and /api/v1/matrix/claude_verification exposed on port 4100",
     ],
     federated_tools_count: 93,
     events_mapped_count: 32,
-    lean4_theorems_verified: 10,
+    lean4_theorems_verified: 13,
     timestamp_utc: "2026-09-13T11:45:00Z",
     certificate_id: "CERT-CLAUDE-TRIAD-VERIFY-20260913-1200",
   )

@@ -263,6 +263,7 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:20260911-1000-adr-114-centralized-code-distributed-run]]` [ADR-114](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260911-1000-adr-114-centralized-code-distributed-run.md) Saṁvid Kendrīkṛta-Vyūha: Centralized Monorepo Authority & Distributed Execution Mesh
   - `[[zk:20260912-0745-adr-115-sc-journal-v3-anticipatory-epistemic-ledger]]` [ADR-115](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260912-0745-adr-115-sc-journal-v3-anticipatory-epistemic-ledger.md) SC-JOURNAL-v3: Anticipatory Epistemic Ledger Architecture & 7-Engine Verification Framework
   - `[[zk:20260913-1145-adr-116-sciviz-167-extensions-comprehensive-bdd-harness-and-system-wiring]]` [ADR-116](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1145-adr-116-sciviz-167-extensions-comprehensive-bdd-harness-and-system-wiring.md) SciViz & 167 Extensions Comprehensive BDD Browser Verification Harness and Cross-Layer System Wiring
+  - `[[zk:20260913-1200-adr-117-fractal-triad-tensor-matrix-and-claude-verification]]` [ADR-117](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1200-adr-117-fractal-triad-tensor-matrix-and-claude-verification.md) Fractal Triad Matrix Tensor Space Engine and Claude Sovereign Verification & Gap Closure
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
