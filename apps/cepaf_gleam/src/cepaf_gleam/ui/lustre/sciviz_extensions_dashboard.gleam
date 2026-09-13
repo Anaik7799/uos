@@ -22,6 +22,7 @@ import cepaf_gleam/sciviz/extension_catalog.{
   count_by_category,
 }
 import cepaf_gleam/sciviz/extension_examples.{example_code, example_svg}
+import cepaf_gleam/sciviz/extension_features.{get_feature_profile}
 import cepaf_gleam/sciviz/extension_suite.{
   type ExtensionTestCaseResult, run_all_15_extension_test_cases,
 }
@@ -396,6 +397,8 @@ fn render_extensions_gallery_grid(extensions: List(ExtensionMetadata)) -> Elemen
 }
 
 fn render_extension_card(ext: ExtensionMetadata) -> Element(a) {
+  let profile = get_feature_profile(ext)
+
   html.div(
     [
       attribute.attribute(
@@ -433,15 +436,26 @@ fn render_extension_card(ext: ExtensionMetadata) -> Element(a) {
               [element.text("by " <> ext.author)],
             ),
           ]),
-          html.span(
-            [
-              attribute.attribute(
-                "style",
-                "background: #1e293b; color: #cbd5e1; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #334155; white-space: nowrap;",
-              ),
-            ],
-            [element.text(category_to_string(ext.category))],
-          ),
+          html.div([attribute.attribute("style", "display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;")], [
+            html.span(
+              [
+                attribute.attribute(
+                  "style",
+                  "background: #1e293b; color: #cbd5e1; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #334155; white-space: nowrap;",
+                ),
+              ],
+              [element.text(category_to_string(ext.category))],
+            ),
+            html.span(
+              [
+                attribute.attribute(
+                  "style",
+                  "background: #020617; color: #34d399; font-size: 0.65rem; font-family: monospace; padding: 0.1rem 0.35rem; border-radius: 3px; border: 1px solid #065f46;",
+                ),
+              ],
+              [element.text(profile.fractal_layer)],
+            ),
+          ]),
         ],
       ),
       // Live Server-Rendered SVG Visual Example Preview
@@ -454,18 +468,75 @@ fn render_extension_card(ext: ExtensionMetadata) -> Element(a) {
         ],
         [element.unsafe_raw_html("", "div", [attribute.attribute("style", "width: 100%;")], example_svg(ext))],
       ),
-      // Description & Tags Body
+      // Description & Comprehensive Profile Body
       html.div(
         [
           attribute.attribute(
             "style",
-            "padding: 0.85rem 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 0.75rem;",
+            "padding: 0.85rem 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 0.6rem;",
           ),
         ],
         [
           html.div(
             [attribute.attribute("style", "font-size: 0.82rem; color: #cbd5e1; line-height: 1.4; min-height: 2.4rem;")],
             [element.text(ext.description)],
+          ),
+          // Features Offered Section
+          html.div(
+            [
+              attribute.attribute(
+                "style",
+                "background: #020617; border: 1px solid #1e293b; border-radius: 4px; padding: 0.5rem 0.6rem;",
+              ),
+            ],
+            [
+              html.div(
+                [attribute.attribute("style", "color: #38bdf8; font-size: 0.72rem; font-weight: 600; margin-bottom: 0.25rem;")],
+                [element.text("Features Offered:")],
+              ),
+              html.ul(
+                [attribute.attribute("style", "margin: 0; padding-left: 1.1rem; color: #cbd5e1; font-size: 0.72rem; line-height: 1.35;")],
+                list.map(profile.features_offered, fn(f) {
+                  html.li([], [element.text(f)])
+                }),
+              ),
+            ],
+          ),
+          // 1x1 Full Fractal Feature Map Specification Accordion
+          html.details(
+            [
+              attribute.attribute("class", "fractal-map-details"),
+              attribute.attribute(
+                "style",
+                "background: #020617; border: 1px solid #1e293b; border-left: 3px solid #10b981; border-radius: 4px; padding: 0.4rem 0.6rem; font-size: 0.72rem;",
+              ),
+            ],
+            [
+              html.summary(
+                [attribute.attribute("style", "color: #34d399; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem;")],
+                [
+                  element.text("1x1 Fractal Feature Map Specification"),
+                  html.span([attribute.attribute("style", "color: #64748b; font-family: monospace; font-size: 0.65rem;")], [element.text("View Details")]),
+                ],
+              ),
+              html.div(
+                [attribute.attribute("style", "margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.35rem; color: #cbd5e1; line-height: 1.35; border-top: 1px solid #1e293b; padding-top: 0.35rem;")],
+                [
+                  html.div([], [
+                    html.span([attribute.attribute("style", "color: #38bdf8; font-weight: bold;")], [element.text("Technical Aspects: ")]),
+                    element.text(profile.technical_aspects),
+                  ]),
+                  html.div([], [
+                    html.span([attribute.attribute("style", "color: #fbbf24; font-weight: bold;")], [element.text("Functional Aspects: ")]),
+                    element.text(profile.functional_aspects),
+                  ]),
+                  html.div([], [
+                    html.span([attribute.attribute("style", "color: #a78bfa; font-weight: bold;")], [element.text("UI/UX Aspects: ")]),
+                    element.text(profile.ui_ux_aspects),
+                  ]),
+                ],
+              ),
+            ],
           ),
           // Tag pills
           html.div(

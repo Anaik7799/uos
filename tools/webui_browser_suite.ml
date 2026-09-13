@@ -719,6 +719,12 @@ let run_suite () =
        let has_ext_count = eval_js sess "document.body.innerText.includes('167')" = "true" in
        let has_cat_count = eval_js sess "document.body.innerText.includes('16')" = "true" in
        let has_median_point = eval_js sess "document.body.innerText.includes('Median')" = "true" in
+       let has_features_offered = eval_js sess "document.body.innerText.includes('Features Offered:')" = "true" in
+       let has_fractal_map = eval_js sess "document.body.innerText.includes('1x1 Fractal Feature Map Specification')" = "true" in
+        let has_technical = eval_js sess "Boolean(document.body.innerText.includes('Technical Aspects:') || document.body.textContent.includes('Technical Aspects:'))" = "true" in
+        let has_functional = eval_js sess "Boolean(document.body.innerText.includes('Functional Aspects:') || document.body.textContent.includes('Functional Aspects:'))" = "true" in
+        let has_ui_ux = eval_js sess "Boolean(document.body.innerText.includes('UI/UX Aspects:') || document.body.textContent.includes('UI/UX Aspects:'))" = "true" in
+       let details_count = eval_js sess "document.querySelectorAll('.fractal-map-details').length" |> int_of_string_opt |> Option.value ~default:0 in
        let passed = sem.has_title
          && svg_count >= 180
          && path_count >= 10
@@ -727,6 +733,12 @@ let run_suite () =
          && has_ext_count
          && has_cat_count
          && has_median_point
+         && has_features_offered
+         && has_fractal_map
+         && has_technical
+         && has_functional
+         && has_ui_ux
+         && details_count >= 167
          && sem.js_exceptions = 0 in
        (passed, sem.has_landmarks, true, [
          "title", sem.title_text;
@@ -736,7 +748,9 @@ let run_suite () =
          "svg_text_annotations", string_of_int text_count;
          "extensions_cataloged", "167";
          "categories_cataloged", "16";
-         "synthetic_data_verified", string_of_bool has_median_point;
+         "features_offered_verified", string_of_bool has_features_offered;
+         "fractal_map_specs_verified", string_of_bool has_fractal_map;
+         "fractal_details_accordions", string_of_int details_count;
          "exceptions", string_of_int sem.js_exceptions;
        ])
     );

@@ -37,3 +37,14 @@ Feature: SciViz ggplot2 Extensions Gallery & 9-Modality Test Verification
     And the element count for "svg path" should be at least 10
     And the element count for "svg text" should be at least 20
     And no unhandled JavaScript exceptions should have occurred
+
+  Scenario: Verify 1x1 Fractal Feature Map Specification & Features Offered Across All 167 Extensions
+    Given I navigate to "http://127.0.0.1:4100/sciviz/extensions"
+    Then the page text should contain "Features Offered"
+    And the page text should contain "1x1 Fractal Feature Map Specification"
+    And the page text should contain "Technical Aspects"
+    And the page text should contain "Functional Aspects"
+    And the page text should contain "UI/UX Aspects"
+    And the element count for ".fractal-map-details" should be at least 167
+    And no unhandled JavaScript exceptions should have occurred
+

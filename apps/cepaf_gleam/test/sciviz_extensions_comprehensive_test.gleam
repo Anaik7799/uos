@@ -13,6 +13,8 @@ import gleam/string
 import cepaf_gleam/sciviz/extension_catalog.{
   all_167_extensions, count_by_category,
 }
+import cepaf_gleam/sciviz/extension_examples
+import cepaf_gleam/sciviz/extension_features
 import cepaf_gleam/sciviz/extension_suite.{
   run_all_15_extension_test_cases,
   uc_ext01_ggdist_slab_interval_test,
@@ -168,3 +170,31 @@ pub fn individual_extension_use_cases_test() {
   r15.passed |> should.be_true
   r15.use_case_id |> should.equal("UC-EXT-15")
 }
+
+pub fn all_167_extensions_feature_profiles_test() {
+  let exts = all_167_extensions()
+  list.each(exts, fn(ext) {
+    let profile = extension_features.get_feature_profile(ext)
+    { list.length(profile.features_offered) >= 3 } |> should.be_true
+    string.is_empty(profile.fractal_layer) |> should.be_false
+    string.contains(profile.fractal_layer, "#fractal-l") |> should.be_true
+    string.is_empty(profile.technical_aspects) |> should.be_false
+    string.is_empty(profile.functional_aspects) |> should.be_false
+    string.is_empty(profile.ui_ux_aspects) |> should.be_false
+  })
+}
+
+pub fn all_167_extensions_svg_and_code_parity_test() {
+  let exts = all_167_extensions()
+  list.each(exts, fn(ext) {
+    let svg = extension_examples.example_svg(ext)
+    string.contains(svg, "<svg") |> should.be_true
+    string.contains(svg, "</svg>") |> should.be_true
+    string.contains(svg, "<script") |> should.be_false
+
+    let code = extension_examples.example_code(ext)
+    string.contains(code, "library(") |> should.be_true
+    string.contains(code, "ggplot(") |> should.be_true
+  })
+}
+

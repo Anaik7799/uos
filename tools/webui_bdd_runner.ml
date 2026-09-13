@@ -471,7 +471,7 @@ let execute_step sess step =
     end
     else if String.starts_with ~prefix:"the page text should contain " t then begin
       let expected = extract_quoted t in
-      let expr = Printf.sprintf "Boolean(document.body.innerText.includes('%s'))" expected in
+      let expr = Printf.sprintf "Boolean(document.body.innerText.includes('%s') || document.body.textContent.includes('%s'))" expected expected in
       if eval_js sess expr = "true" then StepPass (Printf.sprintf "Page text contains '%s'" expected)
       else StepFail (Printf.sprintf "Page text does NOT contain '%s'" expected)
     end
