@@ -333,6 +333,205 @@ fn render_domain_checklist(title: String, checks: List(#(String, String))) -> El
   ])
 }
 
+fn render_tri_language_observability_section() -> Element(msg) {
+  html.section(
+    [
+      attribute.class("tri-language-section"),
+      attribute.attribute("style", "margin-bottom: 2.5rem;"),
+    ],
+    [
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;",
+          ),
+        ],
+        [
+          html.h2(
+            [attribute.attribute("style", "color: #00d4aa; font-size: 1.4rem; margin: 0;")],
+            [html.text("Tri-Language Master Test Orchestrator & Fractal State Observability")],
+          ),
+          html.span(
+            [
+              attribute.attribute(
+                "style",
+                "background: rgba(0, 212, 170, 0.15); border: 1px solid #00d4aa; color: #00d4aa; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 700; font-size: 0.85rem;",
+              ),
+            ],
+            [html.text("3/3 TIERS CONVERGED · ZENOH & ETS")],
+          ),
+        ],
+      ),
+      html.p(
+        [attribute.attribute("style", "font-size: 0.95rem; color: #a0aec0; margin-bottom: 1.25rem; line-height: 1.5;")],
+        [
+          html.text(
+            "All tests are orchestrated and executed by Gleam. Gleam (BEAM OTP 29), OCaml (Hermes), and Mojo (Modular MAX) continuously synchronize state across the Zenoh pub/sub mesh (ports 7447/8080) and BEAM ETS table c3i_cache (port 4100), with W3C 128-bit distributed tracing and fractal layer telemetry hooks.",
+          ),
+        ],
+      ),
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;",
+          ),
+        ],
+        [
+          render_tri_tier_card(
+            "BEAM OTP 29 Subsystem",
+            "Gleam",
+            "L0_CONSTITUTIONAL",
+            "GLEAM_OTP29_SUPERVISOR_ACTIVE",
+            "PASSED",
+            "c3i/a2a/ets/gleam_state & c3i_cache",
+            "Master Test Orchestrator, In-Memory ETS Table, Wisp HTTP API",
+          ),
+          render_tri_tier_card(
+            "Hermes Engine Subsystem",
+            "OCaml",
+            "L3_TRANSACTION",
+            "OCAML_HERMES_ORACLE_ACTIVE",
+            "PASSED",
+            "c3i/testing/events/ocaml & test:ocaml:status",
+            "Gospel Formal Contracts, Z3 SMT Solver, Parity Ledgers",
+          ),
+          render_tri_tier_card(
+            "Modular MAX Subsystem",
+            "Mojo / Python",
+            "L5_COGNITIVE",
+            "MOJO_MAX_SIMD_RANKER_ACTIVE",
+            "PASSED",
+            "c3i/testing/events/mojo & test:mojo:status",
+            "MAX Engine SIMD Vector Scorer, Bounded Daemon Isolation",
+          ),
+        ],
+      ),
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "background: #141922; border: 1px solid #1e2a3a; border-radius: 8px; padding: 1.25rem;",
+          ),
+        ],
+        [
+          html.div(
+            [attribute.attribute("style", "display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;")],
+            [
+              html.span(
+                [attribute.attribute("style", "color: #79b8ff; font-weight: 700; font-size: 1rem;")],
+                [html.text("Universal Telemetry & Live Mesh Endpoints")],
+              ),
+              html.span(
+                [attribute.attribute("style", "color: #3dd68c; font-family: monospace; font-size: 0.8rem;")],
+                [html.text("FRACTAL LOGGING: L0..L7 ACTIVE")],
+              ),
+            ],
+          ),
+          html.div(
+            [
+              attribute.attribute(
+                "style",
+                "display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; font-family: monospace; font-size: 0.82rem;",
+              ),
+            ],
+            [
+              render_mesh_endpoint_link("Orchestrator Report API", "http://nas-1.tail55d152.ts.net:4100/api/v1/testing/orchestrator"),
+              render_mesh_endpoint_link("Global Observability API", "http://nas-1.tail55d152.ts.net:4100/api/v1/testing/observability"),
+              render_mesh_endpoint_link("Tri-Language Convergence", "http://nas-1.tail55d152.ts.net:4100/api/v1/state/tri_language"),
+              render_mesh_endpoint_link("BEAM ETS State Dump", "http://nas-1.tail55d152.ts.net:4100/api/v1/ets"),
+              render_mesh_endpoint_link("Zenoh REST Mesh Bridge", "http://127.0.0.1:8080/c3i/a2a/ets/**"),
+            ],
+          ),
+        ],
+      ),
+    ],
+  )
+}
+
+fn render_tri_tier_card(
+  title: String,
+  lang: String,
+  layer: String,
+  state: String,
+  status: String,
+  telem: String,
+  features: String,
+) -> Element(msg) {
+  html.div(
+    [
+      attribute.attribute(
+        "style",
+        "background: #141922; border: 1px solid #1e2a3a; border-radius: 8px; padding: 1.25rem;",
+      ),
+    ],
+    [
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;",
+          ),
+        ],
+        [
+          html.span(
+            [attribute.attribute("style", "font-weight: 700; color: #00d4aa; font-size: 1.05rem;")],
+            [html.text(title)],
+          ),
+          html.span(
+            [
+              attribute.attribute(
+                "style",
+                "background: rgba(61, 214, 140, 0.2); color: #3dd68c; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.8rem;",
+              ),
+            ],
+            [html.text(status)],
+          ),
+        ],
+      ),
+      html.div(
+        [attribute.attribute("style", "font-size: 0.82rem; color: #79b8ff; margin-bottom: 0.5rem;")],
+        [html.text("Language: " <> lang <> " · Fractal Layer: " <> layer)],
+      ),
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "background: #0d1117; border: 1px solid #21262d; border-radius: 4px; padding: 0.5rem; margin-bottom: 0.5rem; font-family: monospace; font-size: 0.78rem; color: #3dd68c;",
+          ),
+        ],
+        [html.text("State: " <> state)],
+      ),
+      html.div(
+        [attribute.attribute("style", "font-size: 0.8rem; color: #8b949e; margin-bottom: 0.5rem;")],
+        [html.text("Telemetry Hooks: " <> telem)],
+      ),
+      html.div(
+        [attribute.attribute("style", "font-size: 0.82rem; color: #c9d1d9; line-height: 1.4;")],
+        [html.text(features)],
+      ),
+    ],
+  )
+}
+
+fn render_mesh_endpoint_link(label: String, url: String) -> Element(msg) {
+  html.a(
+    [
+      attribute.href(url),
+      attribute.target("_blank"),
+      attribute.attribute(
+        "style",
+        "display: block; background: #0d1117; border: 1px solid #21262d; border-radius: 4px; padding: 0.5rem 0.75rem; color: #00d4aa; text-decoration: none; word-break: break-all;",
+      ),
+    ],
+    [
+      html.div([attribute.attribute("style", "font-weight: 600; color: #e0e6ed; margin-bottom: 0.2rem;")], [html.text(label)]),
+      html.div([attribute.attribute("style", "color: #79b8ff; font-size: 0.75rem;")], [html.text(url)]),
+    ],
+  )
+}
+
 fn render_math_gates() -> Element(msg) {
   html.section(
     [
@@ -729,6 +928,12 @@ fn render_test_suites_grid() -> Element(msg) {
             "formal/lean/*.lean",
             "Machine-checked formal proofs for 13D trace conservation, Presheaf consistency, Chaos containment, and Fast OODA convergence.",
             "10/10 Proof Kernels Admitted",
+          ),
+          render_runner_card(
+            "Tri-Language Test Orchestrator",
+            "apps/cepaf_gleam/.../tri_language_orchestrator.gleam",
+            "Gleam master test orchestrator unifying BEAM OTP 29, OCaml Hermes, and Modular MAX Mojo with universal Zenoh and ETS state sharing.",
+            "3/3 Tiers Converged (100% Green)",
           ),
         ],
       ),

@@ -108,10 +108,53 @@ graph TD
        "gleam_state": "GLEAM_OTP29_SUPERVISOR_ACTIVE",
        "ocaml_state": "OCAML_HERMES_ORACLE_ACTIVE",
        "mojo_state": "MOJO_MAX_SIMD_RANKER_ACTIVE",
-       "ets_entry_count": 17,
+       "ets_entry_count": 27,
        "is_converged": true,
        "zenoh_router": "http://127.0.0.1:8080",
        "ets_store": "c3i_cache"
+     }
+     ```
+6. `GET /api/v1/testing/orchestrator`
+   - Executes the Gleam master test orchestrator across Gleam, OCaml Hermes, and Modular MAX Mojo tiers.
+   - Verifies telemetry across Zenoh and ETS, formats W3C 128-bit distributed trace context, and emits fractal structured log string.
+   - Format:
+     ```json
+     {
+       "timestamp_utc": "2026-09-13T09:01:37.389442Z",
+       "trace_id": "6b9f12b38a2be0aef671c575fa55716c",
+       "span_id": "2f9bd3b27dbda7ef",
+       "all_passed": true,
+       "subsystems": {
+         "gleam": {"subsystem":"BEAM_OTP29","language":"Gleam","passed":true,"duration_ms":45,"fractal_layer":"L0_CONSTITUTIONAL","telemetry_verified":true},
+         "ocaml": {"subsystem":"Hermes_Engine","language":"OCaml","passed":true,"duration_ms":303,"fractal_layer":"L3_TRANSACTION","telemetry_verified":true},
+         "mojo": {"subsystem":"Modular_MAX","language":"Mojo/Python","passed":true,"duration_ms":103,"fractal_layer":"L5_COGNITIVE","telemetry_verified":true}
+       },
+       "ets_entries_count": 27,
+       "zenoh_active": true,
+       "fractal_log": "[C3I-FRACTAL-LOG] trace_id=6b9f12b38a2be0aef671c575fa55716c span_id=2f9bd3b27dbda7ef layers=L0..L7 verdict=PASS gleam=45ms ocaml=303ms mojo=103ms"
+     }
+     ```
+7. `GET /api/v1/testing/observability`
+   - Returns the global test observability snapshot for UOS C3I cockpit monitoring.
+   - Format:
+     ```json
+     {
+       "scope": "uos_c3i_global_test_observability",
+       "verdict": "100%_CONVERGED_GREEN",
+       "subsystems": {
+         "gleam_beam": "PASSED",
+         "ocaml_hermes": "PASSED",
+         "mojo_modular_max": "PASSED"
+       },
+       "fractal_layers": {
+         "L0_Constitutional": "BEAM OTP 29 Root Supervisor",
+         "L1_Atomic_Debug": "NIF FFI & W3C Trace Context",
+         "L3_Transaction": "BEAM ETS c3i_cache & Hermes DB",
+         "L5_Cognitive": "Modular MAX SIMD Vector Scorer",
+         "L6_Ecosystem": "Zenoh Distributed Pub/Sub Mesh"
+       },
+       "ets_cache_size": 30,
+       "active_trace_id": "6b9f12b38a2be0aef671c575fa55716c"
      }
      ```
 
@@ -121,13 +164,17 @@ graph TD
   - Gleam state: `c3i/a2a/ets/gleam_state`
   - OCaml state: `c3i/a2a/ets/ocaml_state`
   - Mojo state: `c3i/a2a/ets/mojo_state`
+  - Master report: `c3i/a2a/ets/test_orchestrator_report`
+- Test Telemetry Events Namespace:
+  - OCaml Hermes telemetry: `c3i/testing/events/ocaml` and `indrajaal/otel/ops/testing/ocaml`
+  - Mojo Modular MAX telemetry: `c3i/testing/events/mojo` and `indrajaal/otel/ops/testing/mojo`
 - Format: Plain text payload or JSONL; UTF-8 encoded; timestamp-tagged by Zenoh router.
 
 ---
 
 ## 3. Formal Lean 4 Verification
 
-Formally proved in `formal/lean/TriLanguage_Zenoh_ETS_Invariants.lean` (machine-checked with `tools/lean`):
+Formally proved in `formal/lean/TriLanguage_Zenoh_ETS_Invariants.lean` (machine-checked with `tools/lean`, 0 errors, 0 axioms, 0 sorry):
 1. **Theorem 1 (`tri_language_consensus_soundness`)**:
    $$\forall S, (S.\text{gleam} = \text{GLEAM\_ACTIVE} \land S.\text{ocaml} = \text{OCAML\_ACTIVE} \land S.\text{mojo} = \text{MOJO\_ACTIVE}) \implies \mathcal{C}(S) = \top$$
 2. **Theorem 2 (`tri_language_fail_closed`)**:
@@ -136,6 +183,14 @@ Formally proved in `formal/lean/TriLanguage_Zenoh_ETS_Invariants.lean` (machine-
    $$\text{payload} = \text{"25503L801736"} \implies \text{is\_storage\_safe}(\text{payload}) = \bot$$
 4. **Theorem 4 (`kv_set_get_coherent`)**:
    $$\forall K, V, \text{get}(\text{set}(\text{store}, K, V), K) \equiv \text{some}(V)$$
+5. **Theorem 5 (`gleam_master_orchestrator_soundness`)**:
+   $$\forall R, (R.\text{all\_passed} = \top \land R.\text{telemetry\_verified} = \top \land R.\text{trace\_id\_len} = 32 \land R.\text{span\_id\_len} = 16) \implies \text{master\_verdict}(R) = \top$$
+6. **Theorem 6 (`gleam_master_orchestrator_fail_closed`)**:
+   $$\forall R, (\exists t, \neg R.t.\text{passed}) \implies \text{master\_verdict}(R) = \bot$$
+7. **Theorem 7 (`telemetry_conservation_fail_closed`)**:
+   $$\forall R, (\exists t, \neg R.t.\text{telemetry\_verified}) \implies \text{master\_verdict}(R) = \bot$$
+8. **Theorem 8 (`w3c_trace_integrity_fail_closed`)**:
+   $$\forall R, (R.\text{trace\_id\_len} \ne 32) \implies \text{master\_verdict}(R) = \bot$$
 
 ---
 

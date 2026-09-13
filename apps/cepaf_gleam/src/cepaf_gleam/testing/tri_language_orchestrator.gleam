@@ -110,7 +110,7 @@ pub fn run_ocaml_subsystem_tests() -> SubsystemTestResult {
 
   // Execute OCaml state runner
   let cmd =
-    "cd /home/an/NAS-setup/uos && ocamlfind ocamlopt -package unix -linkpkg tools/tri_language_state_runner.ml -o tools/tri_language_state_runner.exe && ./tools/tri_language_state_runner.exe && rm -f tools/tri_language_state_runner.exe tools/tri_language_state_runner.cmi tools/tri_language_state_runner.cmx tools/tri_language_state_runner.o"
+    "cd /home/an/NAS-setup/uos && PATH=\"/home/an/dev/ver/zigvm/_opam/bin:$PATH\" ocamlfind ocamlopt -package unix -linkpkg tools/tri_language_state_runner.ml -o tools/tri_language_state_runner.exe && ./tools/tri_language_state_runner.exe && rm -f tools/tri_language_state_runner.exe tools/tri_language_state_runner.cmi tools/tri_language_state_runner.cmx tools/tri_language_state_runner.o"
   let res = file_system.run_cmd(cmd)
 
   let end_ns = system_time_nanos()
