@@ -59,6 +59,7 @@ import cepaf_gleam/ui/lustre/sciviz_cockpit
 import cepaf_gleam/ui/lustre/sciviz_test_dashboard
 import cepaf_gleam/ui/lustre/sciviz_extensions_dashboard
 import cepaf_gleam/ui/lustre/sciviz_comprehensive_explorer
+import cepaf_gleam/sciviz/transpiler
 import cepaf_gleam/ui/lustre/triad_matrix_view
 import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
@@ -316,6 +317,14 @@ fn route_internal(path: String) -> String {
         #("drive_locked", json.string("25503L801736")),
       ])
       |> json.to_string
+    "/api/v1/sciviz/transpile" ->
+      transpiler.to_json(transpiler.transpile_preset("diamonds"))
+    "/api/v1/sciviz/transpile?preset=diamonds" ->
+      transpiler.to_json(transpiler.transpile_preset("diamonds"))
+    "/api/v1/sciviz/transpile?preset=tcga" ->
+      transpiler.to_json(transpiler.transpile_preset("tcga"))
+    "/api/v1/sciviz/transpile?preset=swarm" ->
+      transpiler.to_json(transpiler.transpile_preset("swarm"))
     "/api/v1/sciviz/synthetic-envelopes" ->
       json.object([
         #("feature", json.string("SciViz Full Feature Envelope Synthetic Datasets")),
@@ -3127,6 +3136,16 @@ fn post_route(path: String, body: String) -> HttpResponse(String) {
     "/api/v1/plan/update" -> plan_update_response(body)
     // SC-PI-RUNTIME-001: Pi-mono RPC prompt endpoint.
     "/api/v1/pi/prompt" -> pi_prompt_response(body)
+    "/api/v1/sciviz/transpile" -> {
+      let preset = case string.contains(body, "tcga") {
+        True -> "tcga"
+        False -> case string.contains(body, "swarm") {
+          True -> "swarm"
+          False -> "diamonds"
+        }
+      }
+      json_response(transpiler.to_json(transpiler.transpile_preset(preset)), 200)
+    }
     _ -> json_response(not_found_json(path), 404)
   }
 }

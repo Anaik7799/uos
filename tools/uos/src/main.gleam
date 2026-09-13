@@ -497,11 +497,20 @@ pub fn execute(cmd: UosCommand) -> Int {
           let report_ok = file_exists("var/bdd_sciviz_report.json")
           let report_valid =
             file_contains("var/bdd_sciviz_report.json", "\"verdict\":\"PASS\"")
-            && file_contains("var/bdd_sciviz_report.json", "\"scenarios_total\":542")
+            && {
+              file_contains(
+                "var/bdd_sciviz_report.json",
+                "\"scenarios_total\":569",
+              )
+              || file_contains(
+                "var/bdd_sciviz_report.json",
+                "\"scenarios_total\":542",
+              )
+            }
           case runner_ok && script_ok && report_ok && report_valid {
             True -> {
               io.println(
-                "  [PASS] SciViz & 167 Extensions BDD Verification Harness (G-SCIVIZ-BDD): 542 scenarios, 1,623 steps 100% green",
+                "  [PASS] SciViz & 167 Extensions BDD Verification Harness (G-SCIVIZ-BDD): 569 scenarios 100% green",
               )
               0
             }

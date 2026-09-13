@@ -1276,5 +1276,59 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
         #("required", json.array(["telemetry"], json.string)),
       ]),
     ),
+    ToolDefinition(
+      name: "sciviz_extension_deep_dive",
+      description: "Query deep-dive aspects of any of the 167 registered ggplot2/SciViz extensions (e.g. ggram, ggfx, gg3D, ggupset, ComplexUpset, treemapify)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "extension",
+              json.object([
+                #("type", json.string("string")),
+                #(
+                  "description",
+                  json.string("Extension name (e.g. 'ggram', 'ggfx', 'all')"),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "ggram_synthesize",
+      description: "Synthesize code-as-data spatial geometry tokens and pure SVG preview using the live ggram transpiler",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "preset",
+              json.object([
+                #("type", json.string("string")),
+                #(
+                  "description",
+                  json.string("Preset name: 'diamonds', 'tcga', or 'swarm'"),
+                ),
+              ]),
+            ),
+            #(
+              "code",
+              json.object([
+                #("type", json.string("string")),
+                #(
+                  "description",
+                  json.string("Optional custom R ggplot2/ggram source code"),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+      ]),
+    ),
   ]
 }

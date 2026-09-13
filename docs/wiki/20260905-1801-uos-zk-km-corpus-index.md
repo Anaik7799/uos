@@ -265,6 +265,7 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:20260913-1145-adr-116-sciviz-167-extensions-comprehensive-bdd-harness-and-system-wiring]]` [ADR-116](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1145-adr-116-sciviz-167-extensions-comprehensive-bdd-harness-and-system-wiring.md) SciViz & 167 Extensions Comprehensive BDD Browser Verification Harness and Cross-Layer System Wiring
   - `[[zk:20260913-1200-adr-117-fractal-triad-tensor-matrix-and-claude-verification]]` [ADR-117](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1200-adr-117-fractal-triad-tensor-matrix-and-claude-verification.md) Fractal Triad Matrix Tensor Space Engine and Claude Sovereign Verification & Gap Closure
   - `[[zk:20260913-1215-adr-118-sciviz-167-extensions-comprehensive-aspect-explorer-and-ggram-synthesis]]` [ADR-118](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1215-adr-118-sciviz-167-extensions-comprehensive-aspect-explorer-and-ggram-synthesis.md) SciViz 167 Extensions Comprehensive Aspect Explorer, ggram Flagship Synthesis, Denotational Algebra & Large Dataset BDD Harness
+  - `[[zk:20260913-1430-adr-119-sciviz-live-transpiler-agentic-mcp-and-sre-receipts]]` [ADR-119](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1430-adr-119-sciviz-live-transpiler-agentic-mcp-and-sre-receipts.md) SciViz Live ggram Transpiler, Agentic MCP Tooling, SRE Receipts & Lean 4 Determinism
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)

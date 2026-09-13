@@ -43,11 +43,12 @@ FEAT_16="$FEATURE_DIR/16_sciviz_167_features_offered.feature"
 FEAT_17="$FEATURE_DIR/17_sciviz_167_fractal_specifications.feature"
 FEAT_18="$FEATURE_DIR/18_sciviz_categories_and_modalities.feature"
 FEAT_19="$FEATURE_DIR/19_sciviz_cockpit_and_dsl_invariants.feature"
-ALL_SCIVIZ_FEATS=("$FEAT_15" "$FEAT_16" "$FEAT_17" "$FEAT_18" "$FEAT_19")
+FEAT_20="$FEATURE_DIR/20_sciviz_comprehensive_deep_dive.feature"
+ALL_SCIVIZ_FEATS=("$FEAT_15" "$FEAT_16" "$FEAT_17" "$FEAT_18" "$FEAT_19" "$FEAT_20")
 
 print_banner() {
   echo "==============================================================================="
-  echo "    SCIVIZ & 167 EXTENSIONS COMPREHENSIVE MULTI-ASPECT RUNNER (542 TESTS)      "
+  echo "    SCIVIZ & 167 EXTENSIONS COMPREHENSIVE MULTI-ASPECT RUNNER (569 TESTS)      "
   echo "   Zero-Muda Pure OCaml Native CDP Browser Runner (Zero Playwright/Node.js)    "
   echo "==============================================================================="
 }
