@@ -2,4 +2,4 @@
 # In-project toolchain wrapper (SC-TOOLCHAIN-INPROJECT-001). No $HOME paths.
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/uos-toolchain.sh"
-exec "$(uos_tool pixi)" run --manifest-path "$UOS_ROOT/services/inference/max/pixi.toml" mojo "$@"
+exec "$UOS_ROOT/services/inference/max/.pixi/envs/default/bin/mojo" "$@"
