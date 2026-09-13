@@ -530,6 +530,13 @@ let execute_step sess step =
       if h1_count >= 1 then StepPass (Printf.sprintf "Found %d <h1> element(s)" h1_count)
       else StepFail "No <h1> elements found"
     end
+    else if String.starts_with ~prefix:"the svg count should be at least " t then begin
+      let parts = String.split_on_char ' ' t in
+      let min_c = List.nth parts (List.length parts - 1) |> int_of_string in
+      let c = eval_js sess "document.querySelectorAll('svg').length" |> int_of_string_opt |> Option.value ~default:0 in
+      if c >= min_c then StepPass (Printf.sprintf "SVG count (%d) >= %d" c min_c)
+      else StepFail (Printf.sprintf "Expected SVG count >= %d, got %d" min_c c)
+    end
     else if t = "no unhandled JavaScript exceptions should have occurred" then begin
       if sess.exceptions = [] then StepPass "0 unhandled JS exceptions"
       else StepFail (Printf.sprintf "%d JS exceptions: %s" (List.length sess.exceptions) (String.concat "; " sess.exceptions))
@@ -606,6 +613,7 @@ let run_bdd_suite () =
     "test/features/06_a2ui_components_heartbeat.feature";
     "test/features/07_document_viewer_dual_mode.feature";
     "test/features/08_semantic_html5_accessibility.feature";
+    "test/features/09_sciviz_extensions_gallery_bdd.feature";
   ] in
 
   let total_features = List.length feature_files in

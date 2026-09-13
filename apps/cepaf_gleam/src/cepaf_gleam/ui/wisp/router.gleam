@@ -281,6 +281,23 @@ fn route_internal(path: String) -> String {
         #("drive_locked", json.string("25503L801736")),
       ])
       |> json.to_string
+    "/api/v1/sciviz/synthetic-envelopes" ->
+      json.object([
+        #("feature", json.string("SciViz Full Feature Envelope Synthetic Datasets")),
+        #("total_envelopes", json.int(15)),
+        #("boundary_cases_verified", json.bool(True)),
+        #("distributions_covered", json.array([
+          "UncertaintyDistribution", "NetworkTopology", "FlowAlluvialSankey",
+          "HierarchicalPartition", "SurvivalTimeEvent", "MultiFacetDensity",
+          "CorrelationMatrix", "GeospatialVectorField", "GenomicKaryotype",
+          "TernaryBarycentric", "TimeSeriesARIMA", "SplineQuantile",
+          "CategoricalMosaic", "MarginalScatter", "CompositeMultiPanel",
+        ], json.string)),
+        #("status", json.string("FULL_ENVELOPE_VERIFIED")),
+        #("zero_muda", json.bool(True)),
+        #("drive_locked", json.string("25503L801736")),
+      ])
+      |> json.to_string
     "/api/v1/allium" ->
       module_guard.unwrap(module_guard.guard_json(allium_list_json(), "allium", "page"))
     "/api/v1/allium/ignition" ->

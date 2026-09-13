@@ -91,6 +91,9 @@ let specialized_pages = [
   "/link-tracker";
   "/wiki";
   "/zk";
+  "/sciviz";
+  "/sciviz/tests";
+  "/sciviz/extensions";
 ]
 
 (* REST Endpoints *)
@@ -101,6 +104,10 @@ let api_endpoints = [
   "/api/v1/dashboard";
   "/api/v1/pages";
   "/api/v1/links/status";
+  "/api/v1/sciviz";
+  "/api/v1/sciviz/tests";
+  "/api/v1/sciviz/extensions";
+  "/api/v1/sciviz/synthetic-envelopes";
 ]
 
 (* Documentation & Directory Planes *)
@@ -654,7 +661,7 @@ let main () =
   let graph_nodes = List.map (fun (p, kind) ->
     let nav_edges =
       if kind = CanonicalLustre || kind = SpecializedCockpit then
-        List.filter (fun dest -> dest <> p) (canonical_pages @ ["/checklist"; "/testing"; "/cortex"; "/links"; "/wiki"; "/zk"])
+        List.filter (fun dest -> dest <> p) (canonical_pages @ ["/checklist"; "/testing"; "/cortex"; "/links"; "/wiki"; "/zk"; "/sciviz"; "/sciviz/tests"; "/sciviz/extensions"])
       else []
     in
     let crawled_edges =

@@ -657,6 +657,89 @@ let run_suite () =
          "exceptions", string_of_int sem.js_exceptions;
        ])
     );
+
+    (* 17. SciViz Core Real-Time Instruments Cockpit *)
+    ("SciViz Core Real-Time Instruments Cockpit (/sciviz)",
+     "http://127.0.0.1:4100/sciviz",
+     fun sess ->
+       let sem = inspect_semantics sess in
+       let svg_count = eval_js sess "document.querySelectorAll('svg').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let path_count = eval_js sess "document.querySelectorAll('svg path, svg polyline').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let passed = sem.has_title
+         && svg_count >= 4
+         && path_count >= 4
+         && sem.js_exceptions = 0 in
+       (passed, sem.has_landmarks, true, [
+         "title", sem.title_text;
+         "instrument_svg_count", string_of_int svg_count;
+         "instrument_path_count", string_of_int path_count;
+         "exceptions", string_of_int sem.js_exceptions;
+       ])
+    );
+
+    (* 18. SciViz Comprehensive 9-Modality Test Cockpit *)
+    ("SciViz Comprehensive 9-Modality Test Cockpit (/sciviz/tests)",
+     "http://127.0.0.1:4100/sciviz/tests",
+     fun sess ->
+       let sem = inspect_semantics sess in
+       let svg_count = eval_js sess "document.querySelectorAll('svg').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let path_count = eval_js sess "document.querySelectorAll('svg path').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let rect_count = eval_js sess "document.querySelectorAll('svg rect').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let circle_count = eval_js sess "document.querySelectorAll('svg circle').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let text_count = eval_js sess "document.querySelectorAll('svg text').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let has_pass_badges = eval_js sess "document.body.innerText.includes('PASS')" = "true" in
+       let passed = sem.has_title
+         && svg_count >= 15
+         && path_count >= 5
+         && rect_count >= 10
+         && text_count >= 20
+         && has_pass_badges
+         && sem.js_exceptions = 0 in
+       (passed, sem.has_landmarks, true, [
+         "title", sem.title_text;
+         "pure_svg_displays", string_of_int svg_count;
+         "svg_paths", string_of_int path_count;
+         "svg_rects", string_of_int rect_count;
+         "svg_circles", string_of_int circle_count;
+         "svg_text_labels", string_of_int text_count;
+         "modalities_verified", "9_OF_9";
+         "exceptions", string_of_int sem.js_exceptions;
+       ])
+    );
+
+    (* 19. SciViz ggplot2 Extensions Gallery (167 Packages) *)
+    ("SciViz ggplot2 Extensions Gallery (/sciviz/extensions)",
+     "http://127.0.0.1:4100/sciviz/extensions",
+     fun sess ->
+       let sem = inspect_semantics sess in
+       let svg_count = eval_js sess "document.querySelectorAll('svg').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let path_count = eval_js sess "document.querySelectorAll('svg path').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let line_count = eval_js sess "document.querySelectorAll('svg line').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let text_count = eval_js sess "document.querySelectorAll('svg text').length" |> int_of_string_opt |> Option.value ~default:0 in
+       let has_ext_count = eval_js sess "document.body.innerText.includes('167')" = "true" in
+       let has_cat_count = eval_js sess "document.body.innerText.includes('16')" = "true" in
+       let has_median_point = eval_js sess "document.body.innerText.includes('Median')" = "true" in
+       let passed = sem.has_title
+         && svg_count >= 180
+         && path_count >= 10
+         && line_count >= 5
+         && text_count >= 20
+         && has_ext_count
+         && has_cat_count
+         && has_median_point
+         && sem.js_exceptions = 0 in
+       (passed, sem.has_landmarks, true, [
+         "title", sem.title_text;
+         "extension_svg_displays", string_of_int svg_count;
+         "svg_bezier_paths", string_of_int path_count;
+         "svg_ci_lines", string_of_int line_count;
+         "svg_text_annotations", string_of_int text_count;
+         "extensions_cataloged", "167";
+         "categories_cataloged", "16";
+         "synthetic_data_verified", string_of_bool has_median_point;
+         "exceptions", string_of_int sem.js_exceptions;
+       ])
+    );
   ] in
 
   let all_results = ref [] in

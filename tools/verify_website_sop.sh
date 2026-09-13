@@ -193,30 +193,38 @@ if [[ -x "${UOS_ROOT}/tools/lean" ]]; then
         echo "${LEAN_OUTPUT4}"
         log_fail "Lean 4 BrowserStateMachineInvariants encountered errors"
     fi
+
+    LEAN_OUTPUT5=$("${UOS_ROOT}/tools/lean" "${UOS_ROOT}/formal/lean/SciViz_Browser_Verification_Invariants.lean" 2>&1)
+    if [[ -z "${LEAN_OUTPUT5}" ]]; then
+        log_pass "Lean 4 SciViz_Browser_Verification_Invariants.lean verified cleanly (0 sorry, 0 warnings)"
+    else
+        echo "${LEAN_OUTPUT5}"
+        log_fail "Lean 4 SciViz_Browser_Verification_Invariants encountered errors"
+    fi
 else
     log_fail "tools/lean toolchain wrapper not found or not executable"
 fi
 
-# Step 5b: Native OCaml Browser Deep DOM Inspection & FSM Test Suite (16 Views)
+# Step 5b: Native OCaml Browser Deep DOM Inspection & FSM Test Suite (19 Views)
 log_info "Step 5b: Executing Native OCaml Google Chrome CDP Deep DOM & FSM Suite..."
 if [[ ! -x "${UOS_ROOT}/tools/webui_browser_suite.exe" ]]; then
     log_info "Compiling tools/webui_browser_suite.ml..."
     ocamlfind ocamlopt -package yojson,unix -linkpkg "${UOS_ROOT}/tools/webui_browser_suite.ml" -o "${UOS_ROOT}/tools/webui_browser_suite.exe"
 fi
 if "${UOS_ROOT}/tools/webui_browser_suite.exe"; then
-    log_pass "Native OCaml Google Chrome CDP Suite passed (16/16 endpoints 100% green)"
+    log_pass "Native OCaml Google Chrome CDP Suite passed (19/19 endpoints 100% green)"
 else
     log_fail "Native OCaml Google Chrome CDP Suite reported failures"
 fi
 
-# Step 5c: Native OCaml BDD Gherkin Browser Test Suite (8 Features, 86 Steps)
+# Step 5c: Native OCaml BDD Gherkin Browser Test Suite (9 Features)
 log_info "Step 5c: Executing Native OCaml BDD Gherkin Browser Test Suite..."
 if [[ ! -x "${UOS_ROOT}/tools/webui_bdd_runner.exe" ]]; then
     log_info "Compiling tools/webui_bdd_runner.ml..."
     ocamlfind ocamlopt -package yojson,unix,str -linkpkg "${UOS_ROOT}/tools/webui_bdd_runner.ml" -o "${UOS_ROOT}/tools/webui_bdd_runner.exe"
 fi
 if "${UOS_ROOT}/tools/webui_bdd_runner.exe"; then
-    log_pass "Native OCaml BDD Gherkin Browser Suite passed (8/8 features, 86/86 steps 100% green)"
+    log_pass "Native OCaml BDD Gherkin Browser Suite passed (9/9 features 100% green)"
 else
     log_fail "Native OCaml BDD Gherkin Browser Suite reported failures"
 fi

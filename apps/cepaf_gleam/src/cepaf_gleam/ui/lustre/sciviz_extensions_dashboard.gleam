@@ -21,6 +21,7 @@ import cepaf_gleam/sciviz/extension_catalog.{
   type ExtensionMetadata, all_167_extensions, category_to_string,
   count_by_category,
 }
+import cepaf_gleam/sciviz/extension_examples.{example_code, example_svg}
 import cepaf_gleam/sciviz/extension_suite.{
   type ExtensionTestCaseResult, run_all_15_extension_test_cases,
 }
@@ -46,7 +47,9 @@ pub fn view() -> Element(a) {
       render_category_pills(category_counts),
       render_section_heading("15 Formal Feature Use Cases & Live WebUI Displays (9 Modalities)"),
       render_test_cases_grid(test_results),
-      render_section_heading("All 167 Registered Extensions Gallery Catalog"),
+      render_section_heading("All 167 Registered Extensions Visual Gallery (Exact Tidyverse Parity)"),
+      render_extensions_gallery_grid(extensions),
+      render_section_heading("All 167 Registered Extensions Catalog (Table View)"),
       render_extensions_table(extensions),
       render_footer(),
     ],
@@ -376,6 +379,138 @@ fn render_test_case_card(tc: ExtensionTestCaseResult) -> Element(a) {
           [element.unsafe_raw_html("", "div", [], tc.rendered_svg)],
         ),
       ]),
+    ],
+  )
+}
+
+fn render_extensions_gallery_grid(extensions: List(ExtensionMetadata)) -> Element(a) {
+  html.div(
+    [
+      attribute.attribute(
+        "style",
+        "display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;",
+      ),
+    ],
+    list.map(extensions, render_extension_card),
+  )
+}
+
+fn render_extension_card(ext: ExtensionMetadata) -> Element(a) {
+  html.div(
+    [
+      attribute.attribute(
+        "style",
+        "background: #0b132b; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);",
+      ),
+    ],
+    [
+      // Top Card Header
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "padding: 0.85rem 1rem; border-bottom: 1px solid #1e293b; background: #0f172a; display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;",
+          ),
+        ],
+        [
+          html.div([], [
+            html.a(
+              [
+                attribute.href(ext.url),
+                attribute.target("_blank"),
+                attribute.attribute(
+                  "style",
+                  "color: #38bdf8; font-weight: 700; font-family: monospace; font-size: 1rem; text-decoration: none; display: flex; align-items: center; gap: 0.35rem;",
+                ),
+              ],
+              [
+                element.text(ext.name),
+                html.span([attribute.attribute("style", "font-size: 0.75rem; color: #64748b;")], [element.text("↗")]),
+              ],
+            ),
+            html.div(
+              [attribute.attribute("style", "color: #94a3b8; font-size: 0.75rem; margin-top: 0.15rem;")],
+              [element.text("by " <> ext.author)],
+            ),
+          ]),
+          html.span(
+            [
+              attribute.attribute(
+                "style",
+                "background: #1e293b; color: #cbd5e1; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #334155; white-space: nowrap;",
+              ),
+            ],
+            [element.text(category_to_string(ext.category))],
+          ),
+        ],
+      ),
+      // Live Server-Rendered SVG Visual Example Preview
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "background: #020617; line-height: 0; padding: 0.5rem 0.75rem; border-bottom: 1px solid #1e293b; display: flex; justify-content: center;",
+          ),
+        ],
+        [element.unsafe_raw_html("", "div", [attribute.attribute("style", "width: 100%;")], example_svg(ext))],
+      ),
+      // Description & Tags Body
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "padding: 0.85rem 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 0.75rem;",
+          ),
+        ],
+        [
+          html.div(
+            [attribute.attribute("style", "font-size: 0.82rem; color: #cbd5e1; line-height: 1.4; min-height: 2.4rem;")],
+            [element.text(ext.description)],
+          ),
+          // Tag pills
+          html.div(
+            [attribute.attribute("style", "display: flex; flex-wrap: wrap; gap: 0.35rem;")],
+            list.map(ext.tags, fn(t) {
+              html.span(
+                [
+                  attribute.attribute(
+                    "style",
+                    "background: #020617; color: #64748b; font-size: 0.7rem; font-family: monospace; padding: 0.1rem 0.35rem; border-radius: 3px; border: 1px solid #1e293b;",
+                  ),
+                ],
+                [element.text("#" <> t)],
+              )
+            }),
+          ),
+          // Declarative Code Example Box
+          html.div(
+            [
+              attribute.attribute(
+                "style",
+                "background: #020617; border: 1px solid #1e293b; border-radius: 4px; padding: 0.5rem 0.6rem; margin-top: 0.25rem;",
+              ),
+            ],
+            [
+              html.div(
+                [attribute.attribute("style", "color: #38bdf8; font-size: 0.7rem; font-weight: 600; margin-bottom: 0.2rem; display: flex; justify-content: space-between;")],
+                [
+                  element.text("Code Example:"),
+                  html.span([attribute.attribute("style", "color: #64748b; font-size: 0.65rem; font-family: monospace;")], [element.text("R / SciViz")]),
+                ],
+              ),
+              html.pre(
+                [
+                  attribute.attribute(
+                    "style",
+                    "margin: 0; color: #94a3b8; font-family: monospace; font-size: 0.72rem; white-space: pre-wrap; line-height: 1.35;",
+                  ),
+                ],
+                [element.text(example_code(ext))],
+              ),
+            ],
+          ),
+        ],
+      ),
     ],
   )
 }
