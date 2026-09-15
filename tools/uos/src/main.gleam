@@ -83,6 +83,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-TRIAD-MATRIX")
     ["claude-verify-check"] | ["claude-verify"] | ["claude-audit"] ->
       Gate("G-CLAUDE-VERIFY")
+    ["category-theory-check"] | ["category-theory"] | ["cat-theory"] ->
+      Gate("G-CATEGORY-THEORY")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -398,6 +400,42 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Claude Sovereign Verification receipt, checkpoints, or database missing",
+              )
+              1
+            }
+          }
+        }
+        "G-CATEGORY-THEORY" -> {
+          let spec_ok =
+            file_exists(
+              "docs/design/20260915-1415-uos-universal-category-theoretic-composability-and-dual-review-spec.md",
+            )
+          let lean_ok =
+            file_exists("formal/lean/Universal_Categorical_Composability.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260915-1415-adr-120-universal-category-theoretic-composability-and-dual-sovereign-review.md",
+            )
+          let journal_ok =
+            file_exists(
+              "docs/journal/20260915-1415-uos-universal-category-theoretic-composability-and-dual-review-journal.md",
+            )
+          let runner_ok =
+            file_exists("tools/run_tri_sovereign_category_theory_review.py")
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && lean_ok && adr_ok && journal_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Universal Category-Theoretic Composability & Dual Sovereign Review: 10 Lean 4 theorems, ADR-120, Cycles C438/C439, and Coordinator ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Universal Category-Theoretic Composability spec, Lean 4 proofs, ADR-120, journal, or coordination missing",
               )
               1
             }

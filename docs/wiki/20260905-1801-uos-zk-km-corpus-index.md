@@ -266,6 +266,7 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:20260913-1200-adr-117-fractal-triad-tensor-matrix-and-claude-verification]]` [ADR-117](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1200-adr-117-fractal-triad-tensor-matrix-and-claude-verification.md) Fractal Triad Matrix Tensor Space Engine and Claude Sovereign Verification & Gap Closure
   - `[[zk:20260913-1215-adr-118-sciviz-167-extensions-comprehensive-aspect-explorer-and-ggram-synthesis]]` [ADR-118](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1215-adr-118-sciviz-167-extensions-comprehensive-aspect-explorer-and-ggram-synthesis.md) SciViz 167 Extensions Comprehensive Aspect Explorer, ggram Flagship Synthesis, Denotational Algebra & Large Dataset BDD Harness
   - `[[zk:20260913-1430-adr-119-sciviz-live-transpiler-agentic-mcp-and-sre-receipts]]` [ADR-119](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1430-adr-119-sciviz-live-transpiler-agentic-mcp-and-sre-receipts.md) SciViz Live ggram Transpiler, Agentic MCP Tooling, SRE Receipts & Lean 4 Determinism
+  - `[[zk:20260915-1415-adr-120-universal-category-theoretic-composability-and-dual-sovereign-review]]` [ADR-120](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260915-1415-adr-120-universal-category-theoretic-composability-and-dual-sovereign-review.md) Universal Category-Theoretic Composability & Claude Fable / Codex Astra Dual Sovereign Review
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
