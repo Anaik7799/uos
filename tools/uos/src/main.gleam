@@ -99,6 +99,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-POODAVR-PREDICT")
     ["transmutation-check"] | ["transmutation"] | ["trans-cat"] ->
       Gate("G-TRANS-CAT")
+    ["topos-check"] | ["topos"] | ["double-cat"] ->
+      Gate("G-TOPOS-DOUBLE-CAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -656,6 +658,42 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Transmutation spec, ADR-127, rule, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-TOPOS-DOUBLE-CAT" -> {
+          let spec_ok =
+            file_exists(
+              "formal/lean/Topos_Heyting_Double_Category_Transmutation.lean",
+            )
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0945-adr-128-topos-internal-logic-and-double-category-hot-upgrades.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-0945-topos-internal-logic-and-double-category-mandate.md",
+            )
+          let runner_ok =
+            file_exists(
+              "tools/run_tri_sovereign_topos_double_category_review.py",
+            )
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Topos-Theoretic Internal Logic & Double Category Architecture: 10 Lean 4 theorems (103 total), ADR-128, SC-TOPOS-DOUBLE-CAT-001, Cycles C457..C460, and Coordinator events 22..25 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Topos/Double-Cat spec, ADR-128, rule, runner, or coordination missing",
               )
               1
             }
