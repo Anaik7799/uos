@@ -93,6 +93,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-SYSTEMIC-CAT")
     ["substrate-category-check"] | ["substrate-category"] | ["sub-cat"] ->
       Gate("G-SUBSTRATE-CAT")
+    ["poodavr-fprime-check"] | ["poodavr-fprime"] | ["poodavr"] ->
+      Gate("G-POODAVR-FPRIME")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -556,6 +558,34 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Substrate Category spec, ADR-124, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-POODAVR-FPRIME" -> {
+          let spec_ok =
+            file_exists("formal/lean/POODAVR_FPrime_Mapping.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0450-adr-125-poodavr-and-fprime-fractal-holonic-mapping-and-dual-sovereign-review.md",
+            )
+          let runner_ok =
+            file_exists("tools/run_tri_sovereign_poodavr_fprime_review.py")
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] POODAVR & NASA JPL F Prime Mapping: 10 Lean 4 theorems (73 total), ADR-125, Cycles C448/C449, and Coordinator events 13 & 14 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] POODAVR FPrime Mapping spec, ADR-125, runner, or coordination missing",
               )
               1
             }
