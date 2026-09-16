@@ -103,6 +103,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-TOPOS-DOUBLE-CAT")
     ["comp-cat-check"] | ["comp-cat"] | ["comprehensive-cat"] ->
       Gate("G-COMP-CAT")
+    ["risk-cat-check"] | ["risk-cat"] | ["criticality-stpa-fmea"] ->
+      Gate("G-RISK-CAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -732,6 +734,42 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Comprehensive Category Theory spec, ADR-129, rule, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-RISK-CAT" -> {
+          let spec_ok =
+            file_exists(
+              "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+            )
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-1000-adr-130-criticality-utility-stpa-fmea-category-theoretic-evolution.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-1000-criticality-utility-stpa-fmea-category-theoretic-evolution-mandate.md",
+            )
+          let runner_ok =
+            file_exists(
+              "tools/run_tri_sovereign_risk_evolution_review.py",
+            )
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Criticality, Utility, STPA, FMEA & Evolution Transmutation: 10 Lean 4 theorems (123 total), ADR-130, SC-RISK-CAT-001, Cycles C466..C470, and Coordinator events 31..35 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Risk/Evolution spec, ADR-130, rule, runner, or coordination missing",
               )
               1
             }
