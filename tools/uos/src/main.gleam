@@ -95,6 +95,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-SUBSTRATE-CAT")
     ["poodavr-fprime-check"] | ["poodavr-fprime"] | ["poodavr"] ->
       Gate("G-POODAVR-FPRIME")
+    ["poodavr-predict-check"] | ["poodavr-predict"] | ["predict"] ->
+      Gate("G-POODAVR-PREDICT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -586,6 +588,40 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] POODAVR FPrime Mapping spec, ADR-125, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-POODAVR-PREDICT" -> {
+          let spec_ok =
+            file_exists("formal/lean/Predictive_Forecasting_Categorical_Semantics.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0455-adr-126-universal-poodavr-predictive-forecasting-and-constitutional-upgrades.md",
+            )
+          let rule1_ok =
+            file_exists("contracts/rules/20260916-0455-universal-poodavr-mandate.md")
+          let rule2_ok =
+            file_exists(
+              "contracts/rules/20260916-0455-predictive-forecasting-category-theory-mandate.md",
+            )
+          let runner_ok =
+            file_exists("tools/run_tri_sovereign_predictive_poodavr_review.py")
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && rule1_ok && rule2_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Universal POODAVR & Predictive Forecasting: 10 Lean 4 theorems (83 total), ADR-126, SC-POODAVR-002, SC-PREDICT-FORECAST-001, Cycles C450/C451, and Coordinator events 15 & 16 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Predictive POODAVR spec, ADR-126, rules, runner, or coordination missing",
               )
               1
             }

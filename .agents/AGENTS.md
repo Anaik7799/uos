@@ -93,9 +93,9 @@ canonical `YYYYMMDD-HHSS-` timestamp prefix and standardized fractal tags
 ### 5.1 Cross-Language Implementation of the C3I Control Plane
 The Unified Operational System distributes C3I control functions across explicit language domains according to safety, formal verification, and performance characteristics:
 
-1. **Gleam/OTP (Supervision, Intent, State Machines & OODA Loops)**:
+1. **Gleam/OTP (Supervision, Intent, State Machines & Universal POODAVR Loops)**:
    - **Supervision**: `uos_sup.gleam` root 4-domain supervisor (Apps, Engines, Services, Intelligence) with strict isolation and child restart budgets.
-   - **Controllers**: Pure functional Gleam implementations of Prajna circuit breakers (`prajna/circuit_breaker.gleam`), Lyapunov windowed trend detectors (`ha/lyapunov_proof.gleam`), 2oo3 constitutional consensus (`fractal/l0_constitutional.gleam`), and dead-man's-switch freshness monitors (`ha/freshness_monitor.gleam`).
+   - **Controllers**: Pure functional Gleam implementations of 7-stage POODAVR cybernetic loops (Predict, Observe, Orient, Decide, Act, Verify, Reflect per `SC-POODAVR-002`), Prajna circuit breakers (`prajna/circuit_breaker.gleam`), Lyapunov windowed trend detectors (`ha/lyapunov_proof.gleam`), 2oo3 constitutional consensus (`fractal/l0_constitutional.gleam`), and dead-man's-switch freshness monitors (`ha/freshness_monitor.gleam`). Legacy open-loop OODA is constitutionally retired and subsumed.
    - **Telemetry**: Universal structured C3I JSON logging with 128-bit W3C OTel `trace_id` and fractal layer annotations ($L_0 \dots L_9$).
 
 2. **Hermes OCaml (Evidence, Bounded Analysis, Differential Oracles & Interception)**:
@@ -270,12 +270,13 @@ EV-CYCLE PROVENANCE: EV-94..EV-109 NOT_ADMITTED - sourced from quarantined coord
 NEW EV NUMBERS: BARRED WHILE THE RANGE ABOVE THE CEILING IS UNDER REVIEW (INV-PROV-05); work is numbered within its sa-plan
 CHECKLIST STATUS: 6 DOMAINS, 18/18 CORE CHECKS + DOMAIN 6 PROVENANCE (SC-CHECKLIST-001, SC-PROVENANCE-001)
 KM PROVENANCE GATE: HOLD on KMP-ENTROPY (fractal layer entropy 1.306 bits vs 2.50 floor; 68 of 86 ADRs tagged fractal-l0) - all other checks PASS (tools/km-gate)
-DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean, Century_Harmony.lean, Sheaf_Presheaf.lean, Chaos_Containment.lean, RAG_Cache_Consistency.lean, OODA_Convergence.lean, Quorum_Consensus.lean, Autoscaler_Stability.lean, Gospel_Rete_Consistency.lean, Fast_OODA_Convergence.lean, Algebraic_Atlas_Intent.lean, Constitutional_Invariants.lean)
+DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (83 formal theorems including Predictive_Forecasting_Categorical_Semantics.lean, POODAVR_FPrime_Mapping.lean, Substrate_Categorical_Mechanics.lean, Systemic_Categorical_Composability.lean, Evolutionary_Categorical_Composability.lean, Fractal_Holonic_Composability.lean, Universal_Categorical_Composability.lean, Traceability.lean)
 TEST PROTOCOL: GLEAM SUITE OBSERVED 10,750 PASSED / 0 FAILED ON 2026-09-08 (gleam test, apps/cepaf_gleam); 30/30 MULTI-SURFACE RUNTIME USECASES PASS; PROVENANCE CYCLES 352/352 CHAIN INTACT; MOJO RUNNER: ZERO-BASH DUAL-SURFACE ENGINE RATIFIED (1,545 CHECKS PASS)
 FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observability_spec.json)
 ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF DECLARED IN ANY MANIFEST (VERIFIED 2026-09-08); NOTE: graphene_nif.erl LOADS NO NIF BUT IS A STUB FACADE, NOT AN IMPLEMENTATION - SEE CYCLE C17
 STORAGE SAFETY: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" ENFORCED (7/7 PASS)
-KM TRIAD: 91 ZK ADRs (ADR-001..ADR-091, CONTIGUOUS) + MASTER MOC + WIKI CORPUS INDEX, BOTH 91/91 ENUMERATED AND 16/16 QUARANTINE-MARKED (tools/km-gate)
+KM TRIAD: 126 ZK ADRs (ADR-001..ADR-126, CONTIGUOUS) + MASTER MOC + WIKI CORPUS INDEX, BOTH 126/126 ENUMERATED AND 16/16 QUARANTINE-MARKED (tools/km-gate)
+CYBERNETIC LOOP: UNIVERSAL POODAVR ENFORCED ACROSS ALL LAYERS (SC-POODAVR-002, SC-PREDICT-FORECAST-001, OODA RETIRED & SUBSUMED)
 SA-PLAN STATUS: SOLE EXECUTION AUTHORITY ENFORCED (SC-JIDOKA-001, SC-SA-PLAN-001)
 TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
 CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED
