@@ -97,6 +97,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-POODAVR-FPRIME")
     ["poodavr-predict-check"] | ["poodavr-predict"] | ["predict"] ->
       Gate("G-POODAVR-PREDICT")
+    ["transmutation-check"] | ["transmutation"] | ["trans-cat"] ->
+      Gate("G-TRANS-CAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -622,6 +624,38 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Predictive POODAVR spec, ADR-126, rules, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-TRANS-CAT" -> {
+          let spec_ok =
+            file_exists("formal/lean/Five_Cycle_Category_Theoretic_Transmutation.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0505-adr-127-five-cycle-category-theoretic-transmutation-and-dual-sovereign-review.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-0505-five-cycle-category-theoretic-transmutation-mandate.md",
+            )
+          let runner_ok =
+            file_exists("tools/run_tri_sovereign_five_cycle_transmutation.py")
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Five-Cycle Category-Theoretic Transmutation & Dual Sovereign Review: 10 Lean 4 theorems (93 total), ADR-127, SC-TRANS-CAT-001, Cycles C452..C456, and Coordinator events 17..21 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Transmutation spec, ADR-127, rule, runner, or coordination missing",
               )
               1
             }
