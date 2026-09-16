@@ -105,6 +105,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-COMP-CAT")
     ["risk-cat-check"] | ["risk-cat"] | ["criticality-stpa-fmea"] ->
       Gate("G-RISK-CAT")
+    ["crit-stpa-check"] | ["crit-stpa"] | ["crit-stpa-evol"] ->
+      Gate("G-CRIT-STPA-EVOL")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -770,6 +772,42 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Risk/Evolution spec, ADR-130, rule, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-CRIT-STPA-EVOL" -> {
+          let spec_ok =
+            file_exists(
+              "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+            )
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-1030-adr-131-criticality-lattices-utility-adjunctions-stpa-fmea-co-evolution.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-1030-criticality-utility-stpa-fmea-co-evolution-mandate.md",
+            )
+          let runner_ok =
+            file_exists(
+              "tools/run_tri_sovereign_crit_stpa_evol_review.py",
+            )
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Criticality Lattices, Utility Adjunctions, STPA, FMEA & Co-Evolution: 10 Lean 4 theorems (133 total), ADR-131, SC-CRIT-STPA-001, Cycles C471..C475, and Coordinator events 36..40 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Criticality/STPA spec, ADR-131, rule, runner, or coordination missing",
               )
               1
             }

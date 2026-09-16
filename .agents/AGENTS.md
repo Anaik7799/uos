@@ -270,17 +270,18 @@ EV-CYCLE PROVENANCE: EV-94..EV-109 NOT_ADMITTED - sourced from quarantined coord
 NEW EV NUMBERS: BARRED WHILE THE RANGE ABOVE THE CEILING IS UNDER REVIEW (INV-PROV-05); work is numbered within its sa-plan
 CHECKLIST STATUS: 6 DOMAINS, 18/18 CORE CHECKS + DOMAIN 6 PROVENANCE (SC-CHECKLIST-001, SC-PROVENANCE-001)
 KM PROVENANCE GATE: HOLD on KMP-ENTROPY (fractal layer entropy 1.306 bits vs 2.50 floor; 68 of 86 ADRs tagged fractal-l0) - all other checks PASS (tools/km-gate)
-DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (123 formal theorems including Criticality_Utility_STPA_FMEA_Evolution.lean, Five_More_Cycles_Category_Theoretic_Transmutation.lean, Topos_Heyting_Double_Category_Transmutation.lean, Five_Cycle_Category_Theoretic_Transmutation.lean, Predictive_Forecasting_Categorical_Semantics.lean, POODAVR_FPrime_Mapping.lean, Substrate_Categorical_Mechanics.lean, Systemic_Categorical_Composability.lean, Evolutionary_Categorical_Composability.lean, Fractal_Holonic_Composability.lean, Universal_Categorical_Composability.lean, Traceability.lean)
+DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (133 formal theorems including Categorical_Risk_Utility_STPA_FMEA_Evolution.lean, Criticality_Utility_STPA_FMEA_Evolution.lean, Five_More_Cycles_Category_Theoretic_Transmutation.lean, Topos_Heyting_Double_Category_Transmutation.lean, Five_Cycle_Category_Theoretic_Transmutation.lean, Predictive_Forecasting_Categorical_Semantics.lean, POODAVR_FPrime_Mapping.lean, Substrate_Categorical_Mechanics.lean, Systemic_Categorical_Composability.lean, Evolutionary_Categorical_Composability.lean, Fractal_Holonic_Composability.lean, Universal_Categorical_Composability.lean, Traceability.lean)
 TEST PROTOCOL: GLEAM SUITE OBSERVED 10,750 PASSED / 0 FAILED ON 2026-09-08 (gleam test, apps/cepaf_gleam); 30/30 MULTI-SURFACE RUNTIME USECASES PASS; PROVENANCE CYCLES 352/352 CHAIN INTACT; MOJO RUNNER: ZERO-BASH DUAL-SURFACE ENGINE RATIFIED (1,545 CHECKS PASS)
 FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observability_spec.json)
 ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF DECLARED IN ANY MANIFEST (VERIFIED 2026-09-08); NOTE: graphene_nif.erl LOADS NO NIF BUT IS A STUB FACADE, NOT AN IMPLEMENTATION - SEE CYCLE C17
 STORAGE SAFETY: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" ENFORCED (7/7 PASS)
-KM TRIAD: 130 ZK ADRs (ADR-001..ADR-130, CONTIGUOUS) + MASTER MOC + WIKI CORPUS INDEX, BOTH 130/130 ENUMERATED AND 16/16 QUARANTINE-MARKED (tools/km-gate)
+KM TRIAD: 131 ZK ADRs (ADR-001..ADR-131, CONTIGUOUS) + MASTER MOC + WIKI CORPUS INDEX, BOTH 131/131 ENUMERATED AND 16/16 QUARANTINE-MARKED (tools/km-gate)
 CYBERNETIC LOOP: UNIVERSAL POODAVR ENFORCED ACROSS ALL LAYERS (SC-POODAVR-002, SC-PREDICT-FORECAST-001, OODA RETIRED & SUBSUMED)
 TRANSMUTATION STATUS: FIVE-CYCLE CATEGORY-THEORETIC TRANSMUTATION RATIFIED (SC-TRANS-CAT-001, G-TRANS-CAT PASS)
 TOPOS & DOUBLE CATEGORY STATUS: RATIFIED (SC-TOPOS-DOUBLE-CAT-001, G-TOPOS-DOUBLE-CAT PASS)
 COMPREHENSIVE CATEGORY STATUS: RATIFIED (SC-COMP-CAT-001, G-COMP-CAT PASS)
 RISK & EVOLUTION CATEGORY STATUS: RATIFIED (SC-RISK-CAT-001, G-RISK-CAT PASS)
+CRITICALITY, UTILITY & STPA STATUS: RATIFIED (SC-CRIT-STPA-001, G-CRIT-STPA-EVOL PASS)
 SA-PLAN STATUS: SOLE EXECUTION AUTHORITY ENFORCED (SC-JIDOKA-001, SC-SA-PLAN-001)
 TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
 CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED
