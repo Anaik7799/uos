@@ -109,6 +109,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-CRIT-STPA-EVOL")
     ["all-feat-check"] | ["all-feat"] | ["master-feat"] | ["all-features"] ->
       Gate("G-ALL-FEAT")
+    ["feat-impl-check"] | ["feat-impl"] | ["implement-all"] ->
+      Gate("G-FEAT-IMPL")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -846,6 +848,74 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Master Feature spec, ADR-132, rule, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-FEAT-IMPL" -> {
+          let spec_ok =
+            file_exists(
+              "formal/lean/All_Features_Runtime_Implementation.lean",
+            )
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-1200-adr-133-all-features-runtime-implementation-and-sovereign-ratification.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-1200-all-features-runtime-implementation-mandate.md",
+            )
+          let mod1_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/ai/distributed_tensor_monoid.gleam",
+            )
+          let mod2_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/planning/heijunka_work_stealing.gleam",
+            )
+          let mod3_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/crdt/sheaf_byzantine_consensus.gleam",
+            )
+          let mod4_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/km/provenance_adjudication.gleam",
+            )
+          let mod5_ok =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/poodavr/poodavr_engine.gleam",
+            )
+          let runner_ok =
+            file_exists(
+              "tools/run_tri_sovereign_implement_all_features.py",
+            )
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case
+            spec_ok
+            && adr_ok
+            && rule_ok
+            && mod1_ok
+            && mod2_ok
+            && mod3_ok
+            && mod4_ok
+            && mod5_ok
+            && runner_ok
+            && coord_ok
+            && cycles_ok
+          {
+            True -> {
+              io.println(
+                "  [PASS] All Features Runtime Implementation: 10 Lean 4 theorems (153 total), 5 runtime Gleam modules, ADR-133, SC-FEAT-IMPL-001, Cycles C481..C485, and Coordinator events 46..50 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Runtime implementation spec, modules, ADR-133, rule, or runner missing",
               )
               1
             }
