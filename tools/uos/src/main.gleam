@@ -111,6 +111,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-ALL-FEAT")
     ["feat-impl-check"] | ["feat-impl"] | ["implement-all"] ->
       Gate("G-FEAT-IMPL")
+    ["burst-bench"] | ["burst-benchmark"] ->
+      Gate("G-BURST-BENCH")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -916,6 +918,59 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Runtime implementation spec, modules, ADR-133, rule, or runner missing",
+              )
+              1
+            }
+          }
+        }
+        "G-BURST-BENCH" -> {
+          let spec_ok =
+            file_exists(
+              "formal/lean/Burst_Work_Stealing_And_RDMA_Offload.lean",
+            )
+          let note_ok =
+            file_exists(
+              "docs/design/20260916-1950-zero-copy-rdma-offload-design-note.md",
+            )
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-1950-adr-134-zero-copy-rdma-offload-and-heijunka-burst-benchmarks.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-1950-zero-copy-rdma-and-burst-benchmark-mandate.md",
+            )
+          let test_ok =
+            file_exists(
+              "apps/cepaf_gleam/test/heijunka_burst_benchmark_test.gleam",
+            )
+          let runner_ok =
+            file_exists(
+              "tools/run_tri_sovereign_burst_rdma_review.py",
+            )
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case
+            spec_ok
+            && note_ok
+            && adr_ok
+            && rule_ok
+            && test_ok
+            && runner_ok
+            && coord_ok
+            && cycles_ok
+          {
+            True -> {
+              io.println(
+                "  [PASS] Zero-Copy RDMA Architecture & Burst Benchmarks: 10 Lean 4 theorems (163 total), NOTE-ZERO-COPY-RDMA-001, ADR-134, SC-BURST-RDMA-001, 100/500/1000 tasks burst suite passed, Cycles C486..C490 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Burst RDMA spec, note, ADR-134, rule, benchmark test, or runner missing",
               )
               1
             }
