@@ -268,6 +268,7 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:20260913-1430-adr-119-sciviz-live-transpiler-agentic-mcp-and-sre-receipts]]` [ADR-119](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260913-1430-adr-119-sciviz-live-transpiler-agentic-mcp-and-sre-receipts.md) SciViz Live ggram Transpiler, Agentic MCP Tooling, SRE Receipts & Lean 4 Determinism
   - `[[zk:20260915-1415-adr-120-universal-category-theoretic-composability-and-dual-sovereign-review]]` [ADR-120](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260915-1415-adr-120-universal-category-theoretic-composability-and-dual-sovereign-review.md) Universal Category-Theoretic Composability & Claude Fable / Codex Astra Dual Sovereign Review
   - `[[zk:20260916-0418-adr-121-fractal-and-holonic-categorical-structures-and-dual-sovereign-review]]` [ADR-121](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260916-0418-adr-121-fractal-and-holonic-categorical-structures-and-dual-sovereign-review.md) Fractal & Holonic Categorical Structures, Static-Dynamic Duality & Dual Sovereign Review
+  - `[[zk:20260916-0425-adr-122-evolutionary-category-theoretic-composability-and-dual-sovereign-review]]` [ADR-122](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260916-0425-adr-122-evolutionary-category-theoretic-composability-and-dual-sovereign-review.md) Evolutionary Category-Theoretic Composability, Lineage Sheaves & Dual Sovereign Review
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)

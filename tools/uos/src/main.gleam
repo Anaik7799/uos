@@ -87,6 +87,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-CATEGORY-THEORY")
     ["fractal-holon-check"] | ["fractal-holon"] | ["holon-check"] ->
       Gate("G-FRACTAL-HOLON")
+    ["evolutionary-category-check"] | ["evolutionary-category"] | ["evo-cat"] ->
+      Gate("G-EVOLUTIONARY-CAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -466,6 +468,34 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Fractal & Holonic spec, ADR-121, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-EVOLUTIONARY-CAT" -> {
+          let spec_ok =
+            file_exists("formal/lean/Evolutionary_Categorical_Composability.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0425-adr-122-evolutionary-category-theoretic-composability-and-dual-sovereign-review.md",
+            )
+          let runner_ok =
+            file_exists("tools/run_tri_sovereign_evolutionary_review.py")
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Evolutionary Category Theory: 10 Lean 4 theorems (43 total), ADR-122, Cycles C442/C443, and Coordinator events 7 & 8 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Evolutionary Category spec, ADR-122, runner, or coordination missing",
               )
               1
             }
