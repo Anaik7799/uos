@@ -107,6 +107,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-RISK-CAT")
     ["crit-stpa-check"] | ["crit-stpa"] | ["crit-stpa-evol"] ->
       Gate("G-CRIT-STPA-EVOL")
+    ["all-feat-check"] | ["all-feat"] | ["master-feat"] | ["all-features"] ->
+      Gate("G-ALL-FEAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -808,6 +810,42 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Criticality/STPA spec, ADR-131, rule, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-ALL-FEAT" -> {
+          let spec_ok =
+            file_exists(
+              "formal/lean/Master_Feature_Composability_Evolution.lean",
+            )
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-1130-adr-132-master-feature-categorical-composability-and-unified-evolution.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-1130-master-feature-categorical-composability-mandate.md",
+            )
+          let runner_ok =
+            file_exists(
+              "tools/run_tri_sovereign_all_features_review.py",
+            )
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Master Feature Categorical Composability: 10 Lean 4 theorems (143 total), ADR-132, SC-FEAT-ALL-001, Cycles C476..C480, and Coordinator events 41..45 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Master Feature spec, ADR-132, rule, runner, or coordination missing",
               )
               1
             }

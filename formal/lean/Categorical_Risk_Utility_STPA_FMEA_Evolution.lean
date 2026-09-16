@@ -49,9 +49,7 @@ theorem utility_pareto_optimality_adjunction (p : ResourceProfile)
     (h_cost : p.cost <= p.payoff) :
     net_utility p >= 0 := by
   dsimp [net_utility]
-  have h_int : (p.cost : Int) <= (p.payoff : Int) := by
-    exact Int.ofNat_le.mpr h_cost
-  linarith
+  exact Int.sub_nonneg_of_le (Int.ofNat_le.mpr h_cost)
 
 
 /- =========================================================================
@@ -113,7 +111,7 @@ def compute_rpn (t : FMEATriad) : Nat :=
   t.sev * t.occ * t.det
 
 def apply_mitigation (t : FMEATriad) (new_occ : Nat) (new_det : Nat)
-    (h_o : new_occ <= t.occ) (h_d : new_det <= t.det) : FMEATriad :=
+    (_h_o : new_occ <= t.occ) (_h_d : new_det <= t.det) : FMEATriad :=
   { t with occ := new_occ, det := new_det }
 
 /-- THEOREM 5: Corrective mitigation actions act as graded monad morphisms
@@ -134,7 +132,9 @@ theorem fmea_worst_case_risk_bound (t : FMEATriad)
   dsimp [compute_rpn]
   have h_so : t.sev * t.occ <= 100 := by
     exact Nat.mul_le_mul h_s h_o
-  exact Nat.mul_le_mul h_so h_d
+  have h_sod : t.sev * t.occ * t.det <= 1000 := by
+    exact Nat.mul_le_mul h_so h_d
+  exact h_sod
 
 
 /- =========================================================================
@@ -189,7 +189,6 @@ def is_storage_locked (serial : String) : Bool :=
     or repartition commands. -/
 theorem stamp_storage_drive_hard_lock :
     is_storage_locked "25503L801736" = true := by
-  dsimp [is_storage_locked]
   rfl
 
 end UOS.RiskUtilitySTPAEvolution
