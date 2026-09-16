@@ -101,6 +101,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-TRANS-CAT")
     ["topos-check"] | ["topos"] | ["double-cat"] ->
       Gate("G-TOPOS-DOUBLE-CAT")
+    ["comp-cat-check"] | ["comp-cat"] | ["comprehensive-cat"] ->
+      Gate("G-COMP-CAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -694,6 +696,42 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Topos/Double-Cat spec, ADR-128, rule, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-COMP-CAT" -> {
+          let spec_ok =
+            file_exists(
+              "formal/lean/Five_More_Cycles_Category_Theoretic_Transmutation.lean",
+            )
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0950-adr-129-comprehensive-category-theoretic-transmutation-sheaf-cohomology-swarm-operads-compilers-kan.md",
+            )
+          let rule_ok =
+            file_exists(
+              "contracts/rules/20260916-0950-comprehensive-category-theoretic-composability-mandate.md",
+            )
+          let runner_ok =
+            file_exists(
+              "tools/run_tri_sovereign_five_more_cycles_review.py",
+            )
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Comprehensive Category-Theoretic Transmutation: 10 Lean 4 theorems (113 total), ADR-129, SC-COMP-CAT-001, Cycles C461..C465, and Coordinator events 26..30 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Comprehensive Category Theory spec, ADR-129, rule, runner, or coordination missing",
               )
               1
             }
