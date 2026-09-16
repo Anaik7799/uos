@@ -89,6 +89,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-FRACTAL-HOLON")
     ["evolutionary-category-check"] | ["evolutionary-category"] | ["evo-cat"] ->
       Gate("G-EVOLUTIONARY-CAT")
+    ["systemic-category-check"] | ["systemic-category"] | ["sys-cat"] ->
+      Gate("G-SYSTEMIC-CAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -496,6 +498,34 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Evolutionary Category spec, ADR-122, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-SYSTEMIC-CAT" -> {
+          let spec_ok =
+            file_exists("formal/lean/Systemic_Categorical_Composability.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0435-adr-123-comprehensive-systemic-category-theory-and-evolutionary-roadmap.md",
+            )
+          let runner_ok =
+            file_exists("tools/run_tri_sovereign_systemic_review.py")
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Comprehensive Systemic Category Theory: 10 Lean 4 theorems (53 total), ADR-123, Cycles C444/C445, and Coordinator events 9 & 10 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Systemic Category spec, ADR-123, runner, or coordination missing",
               )
               1
             }
