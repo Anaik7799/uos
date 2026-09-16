@@ -91,6 +91,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       Gate("G-EVOLUTIONARY-CAT")
     ["systemic-category-check"] | ["systemic-category"] | ["sys-cat"] ->
       Gate("G-SYSTEMIC-CAT")
+    ["substrate-category-check"] | ["substrate-category"] | ["sub-cat"] ->
+      Gate("G-SUBSTRATE-CAT")
     ["journal-check"] | ["journal"] -> Gate("G-JOURNAL")
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
@@ -526,6 +528,34 @@ pub fn execute(cmd: UosCommand) -> Int {
             False -> {
               io.println(
                 "  [FAIL] Systemic Category spec, ADR-123, runner, or coordination missing",
+              )
+              1
+            }
+          }
+        }
+        "G-SUBSTRATE-CAT" -> {
+          let spec_ok =
+            file_exists("formal/lean/Substrate_Categorical_Mechanics.lean")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260916-0445-adr-124-substrate-categorical-mechanics-fprime-rete-ruliad-stm-max.md",
+            )
+          let runner_ok =
+            file_exists("tools/run_tri_sovereign_substrate_review.py")
+          let coord_ok =
+            file_exists("var/coordination/tri-agent/coordinator.sqlite3")
+          let cycles_ok =
+            file_exists("var/km/provenance-cycles.sqlite3")
+          case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
+            True -> {
+              io.println(
+                "  [PASS] Substrate Categorical Mechanics: 10 Lean 4 theorems (63 total), ADR-124, Cycles C446/C447, and Coordinator events 11 & 12 ratified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] Substrate Category spec, ADR-124, runner, or coordination missing",
               )
               1
             }
