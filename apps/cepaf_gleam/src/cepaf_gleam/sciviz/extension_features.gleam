@@ -627,6 +627,2489 @@ pub fn get_feature_profile(ext: ExtensionMetadata) -> ExtensionFeatureProfile {
           "Vibrant colored ribbons weaving smoothly across discrete time intervals, node circles with rank numbers, high visual flow.",
       )
 
+    "ggQQunif" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggQQunif specialized ggproto layer providing visualization, quantiles, p-values, statistics visual components",
+          "Aesthetic mapping binding multidimensional variables to ggQQunif scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggQQunif",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggQQunif parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in make qq plots for big data expected to be uniformly distributed, e.g. p-values.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gg3D" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gg3D specialized ggproto layer providing 3D, Visualization visual components",
+          "Aesthetic mapping binding multidimensional variables to gg3D scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gg3D",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gg3D parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in 3d perspective plots for ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggedit" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggedit specialized ggproto layer providing visualization, interactive, shiny, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggedit scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggedit",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggedit parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggedit is aimed to interactively edit ggplot layers, scales and themes aesthetics.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpage" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpage specialized ggproto layer providing visualization, text visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpage scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpage",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpage parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in creates page layout visualizations.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpca" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpca specialized ggproto layer providing visualization, dimensionality_reduction, PCA, t-SNE visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpca scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpca",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpca parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in provides tools for creating publication-ready pca, t-sne, and umap plots.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggimg" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggimg specialized ggproto layer providing visualization, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to ggimg scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggimg",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggimg parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in graphics layers for plotting image data with ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gganatogram" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gganatogram specialized ggproto layer providing anatograms, tissue, visualization, anatomy visual components",
+          "Aesthetic mapping binding multidimensional variables to gganatogram scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gganatogram",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gganatogram parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in gganatogram makes it possible to visualise tissues for different organisms or cell compartments.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggalt" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggalt specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggalt scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggalt",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggalt parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a compendium of ‘geoms’, ‘coords’ and ‘stats’ for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggiraph" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggiraph specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggiraph scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggiraph",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggiraph parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in htmlwidget to make ‘ggplot’ graphics interactive.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggmuller" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggmuller specialized ggproto layer providing visualization, evolution, dynamics visual components",
+          "Aesthetic mapping binding multidimensional variables to ggmuller scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggmuller",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggmuller parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in creates muller plots for visualizing evolutionary dynamics.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggstance" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggstance specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggstance scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggstance",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggstance parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggstance implements horizontal versions of common ggplot2 geoms.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpp" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpp specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpp scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpp",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpp parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in plot annotations, data labels, plot insets, filter labels by local density (geoms, statistics, positions).",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpmisc" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpmisc specialized ggproto layer providing visualization, statistics, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpmisc scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpmisc",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpmisc parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in model equation, line, residuals (lm, quantile, ma, rlm, etc.), p, f, aic, bic, n, correlation, anova and summary tables,.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "geomnet" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "geomnet specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to geomnet scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for geomnet",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in geomnet parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in geomnet implements network visualizations in ggplot2 via geom_net.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggExtra" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggExtra specialized ggproto layer providing histogram, marginal, density visual components",
+          "Aesthetic mapping binding multidimensional variables to ggExtra scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggExtra",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggExtra parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggextra lets you add marginal density plots or histograms to ggplot2 scatterplots.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggfortify" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggfortify specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggfortify scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggfortify",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggfortify parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in the unified interface to ggplot2 many popular statistical pakackage results.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "autoplotly" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "autoplotly specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to autoplotly scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for autoplotly",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in autoplotly parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in automatic generation of interactive visualizations for popular statistical results.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggthemes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggthemes specialized ggproto layer providing visualization, general, themes visual components",
+          "Aesthetic mapping binding multidimensional variables to ggthemes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggthemes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggthemes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in some extra geoms, scales, and themes for ggplot.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggspectra" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggspectra specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggspectra scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggspectra",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggspectra parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in plot light-related spectra, peaks, valleys, half maximum, labels with summaries and colours from spectral data (autoplot.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggnetwork" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggnetwork specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggnetwork scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggnetwork",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggnetwork parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in the ggnetwork package provides a way to build network plots with ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggtech" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggtech specialized ggproto layer providing visualization, general, themes visual components",
+          "Aesthetic mapping binding multidimensional variables to ggtech scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggtech",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggtech parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggplot2 tech themes, scales, and geoms.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggx" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggx specialized ggproto layer providing visualization, nlp visual components",
+          "Aesthetic mapping binding multidimensional variables to ggx scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggx",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggx parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a natural language interface to ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggTimeSeries" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggTimeSeries specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggTimeSeries scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggTimeSeries",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggTimeSeries parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in this r package offers novel time series visualisations.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggseas" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggseas specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggseas scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggseas",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggseas parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in seasonal adjustment on the fly extension for ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsci" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsci specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsci scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsci",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsci parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a collection of ‘ggplot2’ color palettes inspired by scientific journals and science fiction tv shows.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggeasy" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggeasy specialized ggproto layer providing visualization, teaching visual components",
+          "Aesthetic mapping binding multidimensional variables to ggeasy scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggeasy",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggeasy parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in easy access to ‘ggplot2’ commands.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggside" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggside specialized ggproto layer providing visualization, correlation visual components",
+          "Aesthetic mapping binding multidimensional variables to ggside scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggside",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggside parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in side grammar graphics.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpubr" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpubr specialized ggproto layer providing visualization, statistics visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpubr scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpubr",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpubr parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ‘ggplot2’ based publication ready plots.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggthemr" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggthemr specialized ggproto layer providing visualization, general, themes visual components",
+          "Aesthetic mapping binding multidimensional variables to ggthemr scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggthemr",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggthemr parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in themes for ggplot.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "GGally" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "GGally specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to GGally scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for GGally",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in GGally parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggally extends ‘ggplot2’ by adding several functions to reduce the complexity of combining geometric objects with transf.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggseqlogo" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggseqlogo specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggseqlogo scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggseqlogo",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggseqlogo parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in publication-ready sequence logos using ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggChernoff" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggChernoff specialized ggproto layer providing visualization visual components",
+          "Aesthetic mapping binding multidimensional variables to ggChernoff scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggChernoff",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggChernoff parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualise multivariate data using human faces.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "lemon" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "lemon specialized ggproto layer providing visualization, brackets, axis visual components",
+          "Aesthetic mapping binding multidimensional variables to lemon scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for lemon",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in lemon parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in repositioning legends and adding brackets to axes to ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "qqplotr" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "qqplotr specialized ggproto layer providing quantile-quantile, probability-probability visual components",
+          "Aesthetic mapping binding multidimensional variables to qqplotr scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for qqplotr",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in qqplotr parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in quantile-quantile and probability-probability plot extensions for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggquiver" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggquiver specialized ggproto layer providing visualization, quiver, velocity, vector visual components",
+          "Aesthetic mapping binding multidimensional variables to ggquiver scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggquiver",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggquiver parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in quiver/velocity plots for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsignif" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsignif specialized ggproto layer providing visualization, multiple comparisons visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsignif scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsignif",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsignif parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in significance brackets for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggdag" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggdag specialized ggproto layer providing visualization, dags, inference visual components",
+          "Aesthetic mapping binding multidimensional variables to ggdag scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggdag",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggdag parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in causal directed acyclic graphs (dags) in ggplot2  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggformula" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggformula specialized ggproto layer providing visualization, general, interface visual components",
+          "Aesthetic mapping binding multidimensional variables to ggformula scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggformula",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggformula parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggplot2 via formulas and pipes  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggperiodic" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggperiodic specialized ggproto layer providing visualization, periodic visual components",
+          "Aesthetic mapping binding multidimensional variables to ggperiodic scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggperiodic",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggperiodic parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in automagically augment periodic data in ggplot2  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpol" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpol specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpol scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpol",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpol parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggpol adds parliament diagrams and several other geoms to ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpirate" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpirate specialized ggproto layer providing visualization visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpirate scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpirate",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpirate parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in pirate plots for ggplot2  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "esquisse" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "esquisse specialized ggproto layer providing visualization, interface visual components",
+          "Aesthetic mapping binding multidimensional variables to esquisse scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for esquisse",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in esquisse parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in explore and visualize your data interactively with ggplot2  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggerror" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggerror specialized ggproto layer providing errors, geom visual components",
+          "Aesthetic mapping binding multidimensional variables to ggerror scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggerror",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggerror parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in simplifying and extanding ggplot2’s error geoms  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggdark" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggdark specialized ggproto layer providing visualization, general, themes visual components",
+          "Aesthetic mapping binding multidimensional variables to ggdark scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggdark",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggdark parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in dark mode for ggplot2 themes  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "sugrrants" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "sugrrants specialized ggproto layer providing visualization, calendar, time-series visual components",
+          "Aesthetic mapping binding multidimensional variables to sugrrants scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for sugrrants",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in sugrrants parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in supporting graphs for analysing temporal data with ggplot2.  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "tvthemes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "tvthemes specialized ggproto layer providing visualization, general, palettes, themes visual components",
+          "Aesthetic mapping binding multidimensional variables to tvthemes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for tvthemes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in tvthemes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggplot2 themes & palettes from popular tv shows!  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggfittext" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggfittext specialized ggproto layer providing visualization, general, text visual components",
+          "Aesthetic mapping binding multidimensional variables to ggfittext scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggfittext",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggfittext parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggplot2 geoms to fit text in a box  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggparty" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggparty specialized ggproto layer providing visualization, tree, partykit visual components",
+          "Aesthetic mapping binding multidimensional variables to ggparty scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggparty",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggparty parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggplot2 visualizations for the partykit package  ``` ggplot2 ```   ``` partykit ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gggenes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gggenes specialized ggproto layer providing visualization, general, genetics visual components",
+          "Aesthetic mapping binding multidimensional variables to gggenes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gggenes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gggenes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggplot2 geoms to draw gene arrow maps  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gggenomes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gggenomes specialized ggproto layer providing visualization, genetics, genomics visual components",
+          "Aesthetic mapping binding multidimensional variables to gggenomes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gggenomes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gggenomes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a grammar of graphics for comparative genomics.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "lindia" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "lindia specialized ggproto layer providing visualization, general, diagnostics, regression visual components",
+          "Aesthetic mapping binding multidimensional variables to lindia scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for lindia",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in lindia parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create diagnostics plots for linear regression.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggrastr" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggrastr specialized ggproto layer providing visualization, raster visual components",
+          "Aesthetic mapping binding multidimensional variables to ggrastr scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggrastr",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggrastr parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in rasterize only specific layers of your plot.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpointdensity" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpointdensity specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpointdensity scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpointdensity",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpointdensity parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in introduces geom_pointdensity(): a cross between a scatter plot and a 2d density plot.  ``` geom_pointdensity() ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsom" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsom specialized ggproto layer providing visualization, SOM, multi-dimensional, parallel-coordinates visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsom scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsom",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsom parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in the aim of this package is to offer more variability of graphics based on the self-organizing maps.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggh4x" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggh4x specialized ggproto layer providing visualization, general, scales, facets visual components",
+          "Aesthetic mapping binding multidimensional variables to ggh4x scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggh4x",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggh4x parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in options for tailored facets, multiple colourscales and miscellaneous.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggarrow" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggarrow specialized ggproto layer providing visualization, arrows, lines visual components",
+          "Aesthetic mapping binding multidimensional variables to ggarrow scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggarrow",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggarrow parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in arrow geoms and arrow theme element with customisation options.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "legendry" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "legendry specialized ggproto layer providing visualization, guide, legend, axis visual components",
+          "Aesthetic mapping binding multidimensional variables to legendry scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for legendry",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in legendry parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in extended legends and axes.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggcharts" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggcharts specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggcharts scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggcharts",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggcharts parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in shorten the distance from data visualization idea to actual plot.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "humapr" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "humapr specialized ggproto layer providing visualization, general, tabulation, choropleth visual components",
+          "Aesthetic mapping binding multidimensional variables to humapr scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for humapr",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in humapr parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualise topographic human data with choropleths.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggshadow" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggshadow specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggshadow scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggshadow",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggshadow parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in draw a shadow below lines to make busy plots more aesthetically pleasing.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggseg" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggseg specialized ggproto layer providing visualization, brain imaging visual components",
+          "Aesthetic mapping binding multidimensional variables to ggseg scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggseg",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggseg parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in draw polygons of brain atlas segmentations.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "mdthemes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "mdthemes specialized ggproto layer providing visualization, themes visual components",
+          "Aesthetic mapping binding multidimensional variables to mdthemes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for mdthemes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in mdthemes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ‘ggplot2’ themes that render text as markdown/html.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggwordcloud" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggwordcloud specialized ggproto layer providing visualization, text visual components",
+          "Aesthetic mapping binding multidimensional variables to ggwordcloud scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggwordcloud",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggwordcloud parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a word cloud text geom for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggasym" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggasym specialized ggproto layer providing visualization, multi-dimensional, matrix, scales visual components",
+          "Aesthetic mapping binding multidimensional variables to ggasym scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggasym",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggasym parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in asymmetric matrix plotting with multiple scales.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gglorenz" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gglorenz specialized ggproto layer providing visualization, general, statistics visual components",
+          "Aesthetic mapping binding multidimensional variables to gglorenz scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gglorenz",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gglorenz parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in plotting lorenz curves with the blessing of ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "hrbrthemes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "hrbrthemes specialized ggproto layer providing theme, typography visual components",
+          "Aesthetic mapping binding multidimensional variables to hrbrthemes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for hrbrthemes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in hrbrthemes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a compilation of extra {ggplot2} themes, scales and utilities, including a spell check function for plot label fields an.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpattern" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpattern specialized ggproto layer providing visualization, pattern visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpattern scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpattern",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpattern parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in pattern fills for ggplot2 geoms.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggtext" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggtext specialized ggproto layer providing general, theme, typography visual components",
+          "Aesthetic mapping binding multidimensional variables to ggtext scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggtext",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggtext parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in improved text rendering support for ggplot2  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "calendR" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "calendR specialized ggproto layer providing visualization, calendar, time-series visual components",
+          "Aesthetic mapping binding multidimensional variables to calendR scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for calendR",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in calendR parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ready to print monthly and yearly calendars.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggip" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggip specialized ggproto layer providing visualization, cyber, space-filling curves visual components",
+          "Aesthetic mapping binding multidimensional variables to ggip scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggip",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggip parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in data visualization of ip addresses and networks.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gglm" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gglm specialized ggproto layer providing visualization, modeling, diagnostic visual components",
+          "Aesthetic mapping binding multidimensional variables to gglm scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gglm",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gglm parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in grammar of graphics for linear model diagnostic plots.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "econocharts" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "econocharts specialized ggproto layer providing economics, microeconomics, macroeconomics visual components",
+          "Aesthetic mapping binding multidimensional variables to econocharts scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for econocharts",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in econocharts parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in microeconomics and macroeconomics charts.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ComplexUpset" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ComplexUpset specialized ggproto layer providing visualization, venn, set, intersections visual components",
+          "Aesthetic mapping binding multidimensional variables to ComplexUpset scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ComplexUpset",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ComplexUpset parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualize set intersections and add ggplot2 annotations  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggchromatic" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggchromatic specialized ggproto layer providing visualization, scales visual components",
+          "Aesthetic mapping binding multidimensional variables to ggchromatic scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggchromatic",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggchromatic parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in colourspace scales for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggheatmap" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggheatmap specialized ggproto layer providing visualization, heatmap visual components",
+          "Aesthetic mapping binding multidimensional variables to ggheatmap scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggheatmap",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggheatmap parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ggplot2 version of heatmap.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "see" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "see specialized ggproto layer providing visualizations, statistics visual components",
+          "Aesthetic mapping binding multidimensional variables to see scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for see",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in see parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualisation toolbox for ‘easystats’ and extra geoms, themes and color palettes for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "directlabels" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "directlabels specialized ggproto layer providing visualization, direct-labels, positioning, general visual components",
+          "Aesthetic mapping binding multidimensional variables to directlabels scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for directlabels",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in directlabels parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in framework for adding direct labels to lattice or ggplot2 plots.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggHoriPlot" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggHoriPlot specialized ggproto layer providing visualization, general, horizon-plot, time-series visual components",
+          "Aesthetic mapping binding multidimensional variables to ggHoriPlot scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggHoriPlot",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggHoriPlot parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in horizon plots for ggplot2  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggtrace" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggtrace specialized ggproto layer providing visualization visual components",
+          "Aesthetic mapping binding multidimensional variables to ggtrace scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggtrace",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggtrace parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in outline groups of data points using ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggESDA" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggESDA specialized ggproto layer providing visualization, symbolic data, interval-valued data visual components",
+          "Aesthetic mapping binding multidimensional variables to ggESDA scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggESDA",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggESDA parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in exploratory symbolic data analysis with ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggdensity" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggdensity specialized ggproto layer providing visualization, density-estimation visual components",
+          "Aesthetic mapping binding multidimensional variables to ggdensity scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggdensity",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggdensity parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in interpretable bivariate density visualization with highest density regions.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggtranscript" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggtranscript specialized ggproto layer providing visualization, genetics, genomics, transcripts visual components",
+          "Aesthetic mapping binding multidimensional variables to ggtranscript scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggtranscript",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggtranscript parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualizing transcript structure and annotation using ggplot2  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "piecepackr" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "piecepackr specialized ggproto layer providing board games, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to piecepackr scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for piecepackr",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in piecepackr parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in board game graphics.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "oblicubes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "oblicubes specialized ggproto layer providing visualization, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to oblicubes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for oblicubes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in oblicubes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in 3d rendering using obliquely projected cubes and cuboids.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggDoubleHeat" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggDoubleHeat specialized ggproto layer providing visualization, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to ggDoubleHeat scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggDoubleHeat",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggDoubleHeat parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a heatmap-like visualization tool.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "nflplotR" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "nflplotR specialized ggproto layer providing general, scales, geoms, images visual components",
+          "Aesthetic mapping binding multidimensional variables to nflplotR scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for nflplotR",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in nflplotR parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ‘nflplotr’ provides a set of functions to visualize national football league analysis in ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggbraid" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggbraid specialized ggproto layer providing visualization, general, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to ggbraid scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggbraid",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggbraid parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in braid ribbons in ggplot2.  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggblanket" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggblanket specialized ggproto layer providing visualization visual components",
+          "Aesthetic mapping binding multidimensional variables to ggblanket scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggblanket",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggblanket parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in simplify ggplot2 visualisation.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpie" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpie specialized ggproto layer providing visualization, general, pie, donut visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpie scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpie",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpie parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create pie and donut plot using ggplot2.  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggstar" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggstar specialized ggproto layer providing visualization, different shape points visual components",
+          "Aesthetic mapping binding multidimensional variables to ggstar scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggstar",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggstar parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in multiple geometric shape point layer for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggarchery" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggarchery specialized ggproto layer providing visualization, arrows visual components",
+          "Aesthetic mapping binding multidimensional variables to ggarchery scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggarchery",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggarchery parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in flexible segment geoms with arrows for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "tidyterra" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "tidyterra specialized ggproto layer providing visualization, raster, spatial visual components",
+          "Aesthetic mapping binding multidimensional variables to tidyterra scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for tidyterra",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in tidyterra parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ‘ggplot2’ geoms for ‘terra’ rasters and vectors.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggseqplot" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggseqplot specialized ggproto layer providing visualization, sequence analysis visual components",
+          "Aesthetic mapping binding multidimensional variables to ggseqplot scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggseqplot",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggseqplot parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ‘ggseqplot’ renders sequence plots using ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsurvfit" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsurvfit specialized ggproto layer providing visualization, survival, statistics visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsurvfit scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsurvfit",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsurvfit parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in flexible time-to-event figures.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsector" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsector specialized ggproto layer providing visualization, geoms, sector, fan visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsector scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsector",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsector parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create sector plots using ggplot2.  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggterror" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggterror specialized ggproto layer providing visualization, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to ggterror scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggterror",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggterror parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create t-errorbars like in that paper.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggragged" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggragged specialized ggproto layer providing facets visual components",
+          "Aesthetic mapping binding multidimensional variables to ggragged scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggragged",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggragged parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in facets for panel layouts with ragged edges.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggmapinset" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggmapinset specialized ggproto layer providing visualization, spatial visual components",
+          "Aesthetic mapping binding multidimensional variables to ggmapinset scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggmapinset",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggmapinset parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in add zoomed inset panels to your ggplot maps.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggmagnify" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggmagnify specialized ggproto layer providing visualization, geoms, inset, zoom visual components",
+          "Aesthetic mapping binding multidimensional variables to ggmagnify scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggmagnify",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggmagnify parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create a magnified inset of part of a ggplot object.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggblend" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggblend specialized ggproto layer providing visualization, blending, affine transformation, layer algebra visual components",
+          "Aesthetic mapping binding multidimensional variables to ggblend scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggblend",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggblend parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in algebra of operations for blending, copying, adjusting, transforming, and compositing ggplot2 layers.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggflowchart" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggflowchart specialized ggproto layer providing visualization, flowchart, network, diagram visual components",
+          "Aesthetic mapping binding multidimensional variables to ggflowchart scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggflowchart",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggflowchart parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create flowcharts using ggplot2.  ``` ggplot2 ```.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggrain" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggrain specialized ggproto layer providing visualization, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggrain scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggrain",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggrain parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in raincloud geom for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggoutlierscatterplot" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggoutlierscatterplot specialized ggproto layer providing visualization, outlier, outliers, scatterplot visual components",
+          "Aesthetic mapping binding multidimensional variables to ggoutlierscatterplot scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggoutlierscatterplot",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggoutlierscatterplot parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualize multidimensional outlier detection algorithms.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggautothemes" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggautothemes specialized ggproto layer providing visualization, theme, themeing, color visual components",
+          "Aesthetic mapping binding multidimensional variables to ggautothemes scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggautothemes",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggautothemes parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in quickly see how different themes will look on your ggplot visual.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "AMR" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "AMR specialized ggproto layer providing visualization, epidemiology, color, fill visual components",
+          "Aesthetic mapping binding multidimensional variables to AMR scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for AMR",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in AMR parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in plotting amr results for sir categories, mic values, and disk diffusion diameters.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ichimoku" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ichimoku specialized ggproto layer providing visualization, time-series, finance, trading visual components",
+          "Aesthetic mapping binding multidimensional variables to ichimoku scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ichimoku",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ichimoku parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualization and tools for ichimoku kinko hyo strategies.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "eheat" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "eheat specialized ggproto layer providing visualization, heatmap visual components",
+          "Aesthetic mapping binding multidimensional variables to eheat scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for eheat",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in eheat parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in extended complexheatmap with ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggstats" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggstats specialized ggproto layer providing visualization, p-values, forest plot, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to ggstats scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggstats",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggstats parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in forest plots of model coefficients, likert plots and custom proportions.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggfoundry" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggfoundry specialized ggproto layer providing visualization, geoms, color, fill visual components",
+          "Aesthetic mapping binding multidimensional variables to ggfoundry scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggfoundry",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggfoundry parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in shape foundry & geom for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggalign" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggalign specialized ggproto layer providing visualization, composition, heatmap visual components",
+          "Aesthetic mapping binding multidimensional variables to ggalign scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggalign",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggalign parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a ‘ggplot2’ extension for consistent axis alignment.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggreveal" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggreveal specialized ggproto layer providing visualization, presentation, slides visual components",
+          "Aesthetic mapping binding multidimensional variables to ggreveal scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggreveal",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggreveal parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in reveal a ‘ggplot’ incrementally.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "geofacet" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "geofacet specialized ggproto layer providing visualization, facet, facets, geo visual components",
+          "Aesthetic mapping binding multidimensional variables to geofacet scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for geofacet",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in geofacet parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in easy faceting according to geographic position.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "tidyplots" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "tidyplots specialized ggproto layer providing visualization, general, theme, color visual components",
+          "Aesthetic mapping binding multidimensional variables to tidyplots scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for tidyplots",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in tidyplots parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in tidy plots for scientific papers.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "rphylopic" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "rphylopic specialized ggproto layer providing visualization, silhouettes, images, biology visual components",
+          "Aesthetic mapping binding multidimensional variables to rphylopic scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for rphylopic",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in rphylopic parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in get and use silhouettes of organisms from phylopic.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "deeptime" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "deeptime specialized ggproto layer providing visualization, earth sciences, phylogenetics, pattern visual components",
+          "Aesthetic mapping binding multidimensional variables to deeptime scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for deeptime",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in deeptime parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in plotting tools for anyone working in deep time.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpcp" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpcp specialized ggproto layer providing visualization, parallel coordinate plot, multivariate, categorical visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpcp scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpcp",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpcp parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in generalized parallel coordinate plots in ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggvolcano" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggvolcano specialized ggproto layer providing visualization, volcano_plot, differential_expression visual components",
+          "Aesthetic mapping binding multidimensional variables to ggvolcano scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggvolcano",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggvolcano parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in provides tools for creating publication-ready volcano plots.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggfootball" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggfootball specialized ggproto layer providing general, football, interactive, visualization visual components",
+          "Aesthetic mapping binding multidimensional variables to ggfootball scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggfootball",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggfootball parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ‘plotting football matches expected goals (xg) stats with ‘understat’ data’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggfields" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggfields specialized ggproto layer providing visualization, vector, velocity, angle visual components",
+          "Aesthetic mapping binding multidimensional variables to ggfields scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggfields",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggfields parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in plot arrows or arrow fields, with accompanying scales and guides.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsankeyfier" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsankeyfier specialized ggproto layer providing visualization, Sankey, alluvial, diagram visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsankeyfier scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsankeyfier",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsankeyfier parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualise your data as sankey or alluvial diagrams.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpath" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpath specialized ggproto layer providing general, geoms, images, theme visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpath scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpath",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpath parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in robust image rendering support for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gglinedensity" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gglinedensity specialized ggproto layer providing visualization, general, heatmap, time-series visual components",
+          "Aesthetic mapping binding multidimensional variables to gglinedensity scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gglinedensity",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gglinedensity parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in make heatmaps of line density using the denselines algorithm.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsurveillance" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsurveillance specialized ggproto layer providing visualization, general, scales, time-series visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsurveillance scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsurveillance",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsurveillance parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualisations for outbreak investigation and infectious disease surveillance.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "gguapo" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "gguapo specialized ggproto layer providing themes, art, styles, general visual components",
+          "Aesthetic mapping binding multidimensional variables to gguapo scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for gguapo",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in gguapo parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in charts with unique styles inspired by renowned artists.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggDNAvis" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggDNAvis specialized ggproto layer providing DNA, RNA, genetics, biology visual components",
+          "Aesthetic mapping binding multidimensional variables to ggDNAvis scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggDNAvis",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggDNAvis parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in ‘ggplot2’-based tools for visualising dna sequences and modifications.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggdibbler" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggdibbler specialized ggproto layer providing uncertainty, visualization, general, statistics visual components",
+          "Aesthetic mapping binding multidimensional variables to ggdibbler scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggdibbler",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggdibbler parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in uncertainty visualisation for signal supression.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggprop.test" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggprop.test specialized ggproto layer providing ggplot2 syntax, longform graphical poems visual components",
+          "Aesthetic mapping binding multidimensional variables to ggprop.test scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggprop.test",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggprop.test parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a ggplot2 extension package to teach/learn the logic of the prop test.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggsky" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggsky specialized ggproto layer providing visualization, astronomy, coordinates, projection visual components",
+          "Aesthetic mapping binding multidimensional variables to ggsky scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggsky",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggsky parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in draw all-sky maps in galactic or equatorial coordinates with a hammer-aitoff projection.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpop" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpop specialized ggproto layer providing visualization, population, icons, fontawesome visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpop scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpop",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpop parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create icon-based representative population and geomcharts with font awesome icons.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggpointless" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggpointless specialized ggproto layer providing visualisation, general visual components",
+          "Aesthetic mapping binding multidimensional variables to ggpointless scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggpointless",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggpointless parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in a collection of geometries, and stats for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggincerta" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggincerta specialized ggproto layer providing uncertainty, spatial, sf, maps visual components",
+          "Aesthetic mapping binding multidimensional variables to ggincerta scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggincerta",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggincerta parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visualise uncertainty in spatial areal data through bivariate colour palettes, pixelation and glyphs.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggRandomForests" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggRandomForests specialized ggproto layer providing visualization, random forests, randomForestSRC, survival visual components",
+          "Aesthetic mapping binding multidimensional variables to ggRandomForests scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggRandomForests",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggRandomForests parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in visually exploring random forests from the randomforestsrc package with ggplot2.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggcube" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggcube specialized ggproto layer providing visualization, general, 3D visual components",
+          "Aesthetic mapping binding multidimensional variables to ggcube scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggcube",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggcube parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create 3d ggplots by combining a 3d coordinate specification with 3d layer functions.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggtaichi" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggtaichi specialized ggproto layer providing visualization, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to ggtaichi scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggtaichi",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggtaichi parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in compare two data sources on a single grid of taichi (yin-yang) diagrams.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggchord2" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggchord2 specialized ggproto layer providing visualization, chords, arcs, flows visual components",
+          "Aesthetic mapping binding multidimensional variables to ggchord2 scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggchord2",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggchord2 parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in create chord diagrams with ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggtintshade" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggtintshade specialized ggproto layer providing visualization, color, tint, shade visual components",
+          "Aesthetic mapping binding multidimensional variables to ggtintshade scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggtintshade",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggtintshade parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in tinting and shading aesthetics for ‘ggplot2’.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "glydraw" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "glydraw specialized ggproto layer providing glycan, SNFG, biology, scales visual components",
+          "Aesthetic mapping binding multidimensional variables to glydraw scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for glydraw",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in glydraw parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in draw customizable snfg glycan cartoons in ggplot2 plots from structures or text notations.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
+
+    "ggmultiglyph" ->
+      ExtensionFeatureProfile(
+        features_offered: [
+          "ggmultiglyph specialized ggproto layer providing visualization, multivariate, glyphs, geoms visual components",
+          "Aesthetic mapping binding multidimensional variables to ggmultiglyph scales and coordinates",
+          "Statistical transformations and robust parameter tuning tailored for ggmultiglyph",
+          "Seamless composition with ggplot2 facets, scales, guides, and theme hierarchies",
+          "Pure functional BEAM execution with zero client JavaScript and SVG rendering",
+        ],
+        fractal_layer: "#fractal-l2 #fractal-l3 #fractal-l4",
+        technical_aspects:
+          "Specialized ggproto transformation and compute pipeline in ggmultiglyph parsing analytical inputs into layout aesthetics and Euclidean coordinates.",
+        functional_aspects:
+          "High-impact scientific analysis, experimental reproducibility, and publication figures in multivariate data visualization using glyphs.",
+        ui_ux_aspects:
+          "High-contrast SVG rendering compliant with dark cockpit specifications (#020617), clear typographic hierarchy, and responsive scaling.",
+      )
     _ ->
       // Algorithmic Fractal Synthesis by Taxonomic Category
       synthesize_category_profile(ext)
