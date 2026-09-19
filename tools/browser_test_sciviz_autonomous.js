@@ -57,6 +57,15 @@ async function run() {
     throw new Error(`Expected 167 cards and 167 rows, found ${totalCards} cards and ${totalRows} rows`);
   }
 
+  // Verify Unbounded Feature Surface KPI Card & Progress Metric
+  const kpiText = await page.locator('text=37,322 PASS').count();
+  const progressText = await page.locator('text=37,322 Dynamic Invariants').count();
+  console.log(`[PASS] Unbounded Feature Surface KPI ("37,322 PASS") present: ${kpiText > 0}`);
+  console.log(`[PASS] Unbounded Feature Surface Progress ("37,322 Dynamic Invariants") present: ${progressText > 0}`);
+  if (kpiText === 0 || progressText === 0) {
+    throw new Error('Unbounded Feature Surface KPI or Progress Metric missing from DOM');
+  }
+
   // Audit all 167 cards and rows for specific bespoke attributes
   console.log('[AUDIT 167 EXTENSIONS] Verifying specific bespoke test attributes across all 167 cards and rows ...');
   const auditResult = await page.evaluate(() => {

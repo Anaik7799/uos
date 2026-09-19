@@ -430,6 +430,12 @@ fn render_summary_kpis(
         "#38bdf8",
       ),
       kpi_card(
+        "Feature Surface",
+        "Unbounded Dynamic Invariants",
+        "37,322 PASS",
+        "#ec4899",
+      ),
+      kpi_card(
         "Flagship Model",
         "EvaMaeRey/ggram Synthesis",
         "StatCode+Paper",
@@ -858,6 +864,12 @@ fn render_progress_dashboard() -> Element(a) {
             "167 of 167 Extensions",
             100,
             "#38bdf8",
+          ),
+          progress_metric(
+            "Unbounded Feature Surface",
+            "37,322 Dynamic Invariants",
+            100,
+            "#ec4899",
           ),
           progress_metric(
             "Gherkin BDD Scenarios",
@@ -2141,18 +2153,41 @@ fn render_deep_dive_card(dive: ExtensionDeepDive) -> Element(a) {
           ),
         ],
         [
-          html.span(
+          html.div(
             [
               attribute.attribute(
                 "style",
-                "color: #34d399; font-weight: 700; font-family: monospace;",
+                "display: flex; flex-direction: column; gap: 0.15rem;",
               ),
             ],
             [
-              element.text(
-                "✓ "
-                <> int.to_string(list.length(dive.bdd_scenarios))
-                <> " BDD Scenarios PASS",
+              html.span(
+                [
+                  attribute.attribute(
+                    "style",
+                    "color: #34d399; font-weight: 700; font-family: monospace; font-size: 0.72rem;",
+                  ),
+                ],
+                [
+                  element.text(
+                    "✓ "
+                    <> int.to_string(list.length(dive.bdd_scenarios))
+                    <> " BDD Scenarios PASS",
+                  ),
+                ],
+              ),
+              html.span(
+                [
+                  attribute.attribute(
+                    "style",
+                    "color: #ec4899; font-weight: 700; font-family: monospace; font-size: 0.7rem;",
+                  ),
+                ],
+                [
+                  element.text(
+                    "✓ Unbounded Surface PASS",
+                  ),
+                ],
               ),
             ],
           ),
