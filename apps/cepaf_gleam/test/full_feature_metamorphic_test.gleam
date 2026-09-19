@@ -4,7 +4,6 @@
 // Covers full feature surface across all 10 fractal layers L0..L9
 // =============================================================================
 
-import gleam/float
 import gleam/int
 import gleam/list
 import gleam/string
@@ -302,4 +301,258 @@ pub fn mr12_storage_serial_lockout_invariance_test() {
   })
 
   verify_drive_safety_strict("/dev/nvme0n1p2_data_allowed") |> should.be_ok
+}
+
+// -----------------------------------------------------------------------------
+// MR-13: MAUT Criticality Monotonicity
+// For fixed STPA, readiness, FMEA risk, and cost:
+// If C2 > C1, then Utility(C2) > Utility(C1)
+// -----------------------------------------------------------------------------
+
+pub fn compute_simple_maut_5(criticality: Float, severity: Float, readiness: Float, fmea: Float, cost: Float) -> Float {
+  let wc = 0.35
+  let ws = 0.25
+  let wd = 0.20
+  let wf = 0.10
+  let wi = 0.10
+  let positive = { wc *. criticality } +. { ws *. severity } +. { wd *. readiness }
+  let penalty = { wf *. fmea } +. { wi *. cost }
+  positive -. penalty
+}
+
+pub fn mr13_maut_criticality_monotonicity_test() {
+  let c1 = 4.0
+  let s = 5.0
+  let d = 8.0
+  let f = 2.0
+  let i = 1.0
+
+  let u1 = compute_simple_maut_5(c1, s, d, f, i)
+
+  let c_deltas = [1.0, 2.5, 4.0, 5.0]
+  list.each(c_deltas, fn(delta) {
+    let c2 = c1 +. delta
+    let u2 = compute_simple_maut_5(c2, s, d, f, i)
+    should.be_true(u2 >. u1)
+  })
+}
+
+// -----------------------------------------------------------------------------
+// MR-14: VFS Descriptor-Relative Path Canonization
+// Internal redundant segments "./" or sanitized paths within descriptor resolve identically
+// -----------------------------------------------------------------------------
+
+pub fn canonicalize_vfs_subpath(raw: String) -> String {
+  raw
+  |> string.replace(each: "./", with: "")
+  |> string.replace(each: "//", with: "/")
+}
+
+pub fn mr14_vfs_path_canonization_test() {
+  let base = "var/data/log.txt"
+  let variations = [
+    "./var/data/log.txt",
+    "var/./data/log.txt",
+    "var/data/./log.txt",
+    "var//data//log.txt",
+  ]
+
+  list.each(variations, fn(v) {
+    canonicalize_vfs_subpath(v) |> should.equal(base)
+  })
+}
+
+// -----------------------------------------------------------------------------
+// MR-15: Monotonic Fencing Token Expiry Ordering
+// Monotonically increasing lease sequence ensures older tokens are rejected
+// -----------------------------------------------------------------------------
+
+pub type LeaseToken {
+  LeaseToken(token_id: Int, lease_until_ns: Int)
+}
+
+pub fn validate_fencing_token(current_highest: Int, candidate: LeaseToken) -> Result(Int, String) {
+  case candidate.token_id > current_highest {
+    True -> Ok(candidate.token_id)
+    False -> Error("StaleFencingToken")
+  }
+}
+
+pub fn mr15_monotonic_fencing_token_test() {
+  let mut_seq = [101, 102, 105, 110, 115]
+  let final_token =
+    list.fold(mut_seq, 100, fn(highest, next_tok) {
+      let cand = LeaseToken(next_tok, 1789800000 + next_tok)
+      let res = validate_fencing_token(highest, cand)
+      should.be_ok(res)
+      let assert Ok(new_highest) = res
+      new_highest
+    })
+
+  final_token |> should.equal(115)
+
+  // Stale token (e.g. 104 <= 115) must be rejected
+  let stale = LeaseToken(104, 1789800104)
+  validate_fencing_token(final_token, stale) |> should.be_error
+}
+
+// -----------------------------------------------------------------------------
+// MR-16: CRDT State Convergence under Asynchronous Commutative Shuffling
+// State merge of PN-counters is associative, commutative, and idempotent
+// -----------------------------------------------------------------------------
+
+pub type PNCounter {
+  PNCounter(pos: Int, neg: Int)
+}
+
+pub fn merge_pn(a: PNCounter, b: PNCounter) -> PNCounter {
+  PNCounter(pos: int.max(a.pos, b.pos), neg: int.max(a.neg, b.neg))
+}
+
+pub fn value_pn(c: PNCounter) -> Int {
+  c.pos - c.neg
+}
+
+pub fn mr16_crdt_convergence_test() {
+  let c1 = PNCounter(pos: 10, neg: 2)
+  let c2 = PNCounter(pos: 15, neg: 5)
+  let c3 = PNCounter(pos: 8, neg: 7)
+
+  // Commutativity: merge(A, B) == merge(B, A)
+  merge_pn(c1, c2) |> should.equal(merge_pn(c2, c1))
+
+  // Associativity: merge(merge(A, B), C) == merge(A, merge(B, C))
+  let left = merge_pn(merge_pn(c1, c2), c3)
+  let right = merge_pn(c1, merge_pn(c2, c3))
+  left |> should.equal(right)
+
+  // Idempotence: merge(A, A) == A
+  merge_pn(c1, c1) |> should.equal(c1)
+
+  // Converged value
+  value_pn(left) |> should.equal(15 - 7)
+}
+
+// -----------------------------------------------------------------------------
+// MR-17: Dirty Scheduler Signal Trapping Invariance
+// Trapping signals from NIF / foreign execution ensures bounded error domain
+// -----------------------------------------------------------------------------
+
+pub type SchedulerSignal {
+  SignalOk(String)
+  SignalTimeout
+  SignalTrapExit(Int)
+}
+
+pub fn handle_scheduler_signal(code: Int) -> SchedulerSignal {
+  case code {
+    0 -> SignalOk("SUCCESS")
+    -1 -> SignalTimeout
+    err -> SignalTrapExit(err)
+  }
+}
+
+pub fn mr17_dirty_scheduler_trapping_test() {
+  handle_scheduler_signal(0) |> should.equal(SignalOk("SUCCESS"))
+  handle_scheduler_signal(-1) |> should.equal(SignalTimeout)
+  handle_scheduler_signal(-9) |> should.equal(SignalTrapExit(-9))
+  handle_scheduler_signal(-11) |> should.equal(SignalTrapExit(-11))
+}
+
+// -----------------------------------------------------------------------------
+// MR-18: Heijunka Work-Leveling Affinity Distribution
+// Tasks dispatched across pools maintain balanced load and prevent starvation
+// -----------------------------------------------------------------------------
+
+pub type WorkerPool {
+  WorkerPool(name: String, capacity: Int, current_load: Int)
+}
+
+pub fn dispatch_heijunka(pools: List(WorkerPool), task_cost: Int) -> Result(List(WorkerPool), String) {
+  // Find pool with minimum current load that has capacity
+  let sorted =
+    list.sort(pools, fn(a, b) {
+      int.compare(a.current_load, b.current_load)
+    })
+
+  case sorted {
+    [head, ..tail] -> {
+      case head.current_load + task_cost <= head.capacity {
+        True -> {
+          let updated = WorkerPool(..head, current_load: head.current_load + task_cost)
+          Ok([updated, ..tail])
+        }
+        False -> Error("AllPoolsAtCapacity")
+      }
+    }
+    [] -> Error("NoPoolsAvailable")
+  }
+}
+
+pub fn mr18_heijunka_leveling_test() {
+  let initial = [
+    WorkerPool("pool-alpha", 10, 4),
+    WorkerPool("pool-beta", 10, 1),
+    WorkerPool("pool-gamma", 10, 3),
+  ]
+
+  // First dispatch should pick pool-beta (least load: 1)
+  let res1 = dispatch_heijunka(initial, 2)
+  should.be_ok(res1)
+  let assert Ok([updated_beta, ..rest1]) = res1
+  should.equal(updated_beta.name, "pool-beta")
+  should.equal(updated_beta.current_load, 3)
+
+  // Next dispatch will pick among load 3 (pool-beta or pool-gamma)
+  let res2 = dispatch_heijunka([updated_beta, ..rest1], 1)
+  should.be_ok(res2)
+}
+
+// -----------------------------------------------------------------------------
+// MR-19: OTel Trace Context Bounded Propagation
+// Traceparent header format: 00-{trace_id_32hex}-{span_id_16hex}-{flags_2hex}
+// Length is strictly 55 characters invariant
+// -----------------------------------------------------------------------------
+
+pub fn format_w3c_traceparent(trace_id: String, span_id: String, sampled: Bool) -> String {
+  let flags = case sampled {
+    True -> "01"
+    False -> "00"
+  }
+  "00-" <> trace_id <> "-" <> span_id <> "-" <> flags
+}
+
+pub fn mr19_otel_trace_propagation_test() {
+  let trace_id = "4bf92f3577b34da6a3ce929d0e0e4736"
+  let span_id = "00f067aa0ba902b7"
+  let header = format_w3c_traceparent(trace_id, span_id, True)
+
+  // Standard W3C traceparent length is invariant at 55 bytes
+  string.length(header) |> should.equal(55)
+  string.starts_with(header, "00-") |> should.be_true
+  string.ends_with(header, "-01") |> should.be_true
+}
+
+// -----------------------------------------------------------------------------
+// MR-20: Zero-Muda Byte Purity Invariance (0 Bevy, 0 Graphite across all binaries)
+// Verify scanning rejects any occurrence of barred foreign frameworks
+// -----------------------------------------------------------------------------
+
+pub fn verify_zero_muda_purity(content: String) -> Result(String, String) {
+  let lower = string.lowercase(content)
+  case string.contains(lower, "bevy") || string.contains(lower, "graphite") {
+    True -> Error("MUDA_VIOLATION: Barred framework detected")
+    False -> Ok("ZERO_MUDA_COMPLIANT")
+  }
+}
+
+pub fn mr20_zero_muda_purity_test() {
+  verify_zero_muda_purity("pure Erlang graphene_nif and Gleam/OTP state machine")
+  |> should.be_ok
+
+  verify_zero_muda_purity("import bevy::prelude::*;")
+  |> should.be_error
+
+  verify_zero_muda_purity("graphite vector engine dependency")
+  |> should.be_error
 }

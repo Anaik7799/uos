@@ -109,3 +109,73 @@ pub fn pull_highest_utility_matching_affinity_test() {
   let assert Ok(best_codex) = pull_highest_utility_task(queue, "L0-codex-gpt-6-astra", weights)
   best_codex.task.task_id |> should.equal("task-codex-mid")
 }
+
+// -----------------------------------------------------------------------------
+// Codex Astra 5-Attribute Formulation Tests
+// -----------------------------------------------------------------------------
+
+pub fn maut_5_attribute_utility_test() {
+  let weights = maut_pull_queue.default_weights_5()
+  let task =
+    maut_pull_queue.CandidateTask5(
+      task_id: "task-astra-opt",
+      plan_id: "plan-codex",
+      criticality: 9.0,
+      stpa_hazard: 8.0,
+      dependency_readiness: 10.0,
+      fmea_risk: 1.0,
+      resource_cost: 2.0,
+      required_affinity: "L0-codex-gpt-6-astra",
+    )
+  // positive = (9.0 * 0.30) + (8.0 * 0.25) + (10.0 * 0.25) = 2.7 + 2.0 + 2.5 = 7.2
+  // penalty = (1.0 * 0.10) + (2.0 * 0.10) = 0.1 + 0.2 = 0.3
+  // utility = 7.2 - 0.3 = 6.9
+  let u = maut_pull_queue.compute_utility_5(task, weights)
+  should.be_true(u >. 6.8 && u <. 7.0)
+}
+
+pub fn maut_5_attribute_blocked_dependency_test() {
+  let weights = maut_pull_queue.default_weights_5()
+  let task =
+    maut_pull_queue.CandidateTask5(
+      task_id: "task-blocked-deps",
+      plan_id: "plan-codex",
+      criticality: 10.0,
+      stpa_hazard: 10.0,
+      dependency_readiness: 0.0,
+      fmea_risk: 0.0,
+      resource_cost: 0.0,
+      required_affinity: "any",
+    )
+  let u = maut_pull_queue.compute_utility_5(task, weights)
+  u |> should.equal(0.0)
+}
+
+pub fn maut_5_attribute_fenced_lease_test() {
+  let weights = maut_pull_queue.default_weights_5()
+  let task =
+    maut_pull_queue.CandidateTask5(
+      task_id: "task-codex-critical",
+      plan_id: "plan-codex",
+      criticality: 10.0,
+      stpa_hazard: 9.0,
+      dependency_readiness: 10.0,
+      fmea_risk: 1.0,
+      resource_cost: 1.0,
+      required_affinity: "L0-codex-gpt-6-astra",
+    )
+  let assert Ok(best) =
+    maut_pull_queue.pull_highest_utility_task_5(
+      [task],
+      "L0-codex-gpt-6-astra",
+      weights,
+    )
+  let claim = maut_pull_queue.issue_fenced_lease(best, "L0-codex-gpt-6-astra", 1000, 3600_000)
+
+  claim.task_id |> should.equal("task-codex-critical")
+  claim.worker_id |> should.equal("L0-codex-gpt-6-astra")
+  claim.fencing_token |> should.equal(1001)
+  claim.lease_until_ms |> should.equal(3601_000)
+  should.be_true(claim.utility_score >. 0.0)
+}
+

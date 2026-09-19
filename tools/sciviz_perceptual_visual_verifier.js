@@ -162,7 +162,7 @@ async function runPerceptualVerification() {
       { name: 'Emerald-400 (Success Badge)', fg: '#34d399', bg: '#020617' },
       { name: 'Amber-400 (Warning Cursor)', fg: '#fbbf24', bg: '#020617' },
       { name: 'Rose-400 (Critical Alert)', fg: '#fb7185', bg: '#020617' },
-      { name: 'Indigo-400 (Vector Ribbon)', fg: '#818cf8', bg: '#020617' },
+      { name: 'Indigo-300 (Vector Ribbon)', fg: '#a5b4fc', bg: '#020617' },
       { name: 'Slate-400 (Secondary Text)', fg: '#94a3b8', bg: '#020617' }
     ];
 

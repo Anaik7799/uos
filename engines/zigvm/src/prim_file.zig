@@ -667,3 +667,89 @@ test "LAW gap-real-file-io LIST_DIR SET-EQUALITY: listDir returns exactly the re
     try std.testing.expectError(error.Enoent, listDir(io, tmp.dir, gpa, "no_such_dir"));
 }
 
+test "LAW E4.4 CODEX-ASTRA VFS DESCRIPTOR ISOLATION & 64MB ARENA BOUNDS: openat isolation, race-free traversal, and bounded arena allocation stress" {
+    const gpa = std.testing.allocator;
+    const io = std.testing.io;
+    var tmp = std.testing.tmpDir(.{});
+    defer tmp.cleanup();
+
+    // 1. Sub-directory VFS descriptor isolation test
+    try makeDir(io, tmp.dir, "sandbox_a");
+    try makeDir(io, tmp.dir, "sandbox_b");
+
+    var dir_a = try tmp.dir.openDir(io, "sandbox_a", .{});
+    defer dir_a.close(io);
+
+    var dir_b = try tmp.dir.openDir(io, "sandbox_b", .{});
+    defer dir_b.close(io);
+
+    try writeFile(io, dir_a, "target_a.dat", "sandbox_a_isolated_payload");
+    try writeFile(io, dir_b, "target_b.dat", "sandbox_b_isolated_payload");
+
+    // Reading target_a.dat from dir_b must fail with Enoent
+    try std.testing.expectError(error.Enoent, readFile(io, dir_b, gpa, "target_a.dat", 1024));
+
+    // Reading target_b.dat from dir_a must fail with Enoent
+    try std.testing.expectError(error.Enoent, readFile(io, dir_a, gpa, "target_b.dat", 1024));
+
+    // Confirm payloads match within their own descriptors
+    const read_a = try readFile(io, dir_a, gpa, "target_a.dat", 1024);
+    defer gpa.free(read_a);
+    try std.testing.expectEqualStrings("sandbox_a_isolated_payload", read_a);
+
+    const read_b = try readFile(io, dir_b, gpa, "target_b.dat", 1024);
+    defer gpa.free(read_b);
+    try std.testing.expectEqualStrings("sandbox_b_isolated_payload", read_b);
+
+    // 2. High-iteration descriptor-relative VFS stress loop
+    var iter: usize = 0;
+    while (iter < 50) : (iter += 1) {
+        var filename_buf: [32]u8 = undefined;
+        const fname = try std.fmt.bufPrint(&filename_buf, "stress_file_{d}.dat", .{iter});
+        
+        var content_buf: [64]u8 = undefined;
+        const content = try std.fmt.bufPrint(&content_buf, "codex_astra_stress_payload_iteration_{d}", .{iter});
+
+        try writeFile(io, dir_a, fname, content);
+        const fi = try readFileInfo(io, dir_a, fname);
+        try std.testing.expectEqual(@as(u64, content.len), fi.size);
+
+        const loaded = try readFile(io, dir_a, gpa, fname, 1024);
+        try std.testing.expectEqualStrings(content, loaded);
+        gpa.free(loaded);
+
+        try delete(io, dir_a, fname);
+        try std.testing.expectError(error.Enoent, readFile(io, dir_a, gpa, fname, 1024));
+    }
+
+    // 3. Bounded 64MB Arena Allocation & Leak-Free Deinit Stress
+    {
+        var arena = std.heap.ArenaAllocator.init(gpa);
+        defer arena.deinit();
+        const arena_alloc = arena.allocator();
+
+        const chunk_size = 1024 * 1024; // 1 MB
+        const num_chunks = 64; // 64 MB envelope ceiling
+        var total_allocated: usize = 0;
+
+        var chunks: [64][]u8 = undefined;
+        for (0..num_chunks) |i| {
+            const buf = try arena_alloc.alloc(u8, chunk_size);
+            // Touch all pages to guarantee active physical mapping
+            @memset(buf, @as(u8, @intCast(i % 256)));
+            chunks[i] = buf;
+            total_allocated += chunk_size;
+        }
+
+        try std.testing.expectEqual(@as(usize, 64 * 1024 * 1024), total_allocated);
+
+        // Verify page integrity across the entire 64MB arena
+        for (0..num_chunks) |i| {
+            const expected_byte = @as(u8, @intCast(i % 256));
+            try std.testing.expectEqual(expected_byte, chunks[i][0]);
+            try std.testing.expectEqual(expected_byte, chunks[i][chunk_size / 2]);
+            try std.testing.expectEqual(expected_byte, chunks[i][chunk_size - 1]);
+        }
+    } // arena.deinit() called here; std.testing.allocator will verify 0 leaks on exit
+}
+
