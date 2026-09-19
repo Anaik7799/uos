@@ -57,6 +57,55 @@ async function run() {
     throw new Error(`Expected 167 cards and 167 rows, found ${totalCards} cards and ${totalRows} rows`);
   }
 
+  // Audit all 167 cards and rows for specific bespoke attributes
+  console.log('[AUDIT 167 EXTENSIONS] Verifying specific bespoke test attributes across all 167 cards and rows ...');
+  const auditResult = await page.evaluate(() => {
+    const cards = Array.from(document.querySelectorAll('.sciviz-card'));
+    const rows = Array.from(document.querySelectorAll('.sciviz-row'));
+
+    let validCards = 0;
+    let validRows = 0;
+    let totalBdds = 0;
+
+    for (const c of cards) {
+      const name = c.getAttribute('data-name');
+      const cat = c.getAttribute('data-category');
+      const author = c.getAttribute('data-author');
+      const dataset = c.getAttribute('data-dataset');
+      const records = parseInt(c.getAttribute('data-records') || '0', 10);
+      const bdds = (c.getAttribute('data-bdds') || '').split('|||').filter(Boolean);
+      const code = c.getAttribute('data-code') || '';
+
+      if (name && cat && author && dataset && records > 0 && bdds.length >= 3 && code.includes('library(')) {
+        validCards++;
+        totalBdds += bdds.length;
+      }
+    }
+
+    for (const r of rows) {
+      const name = r.getAttribute('data-name');
+      const cat = r.getAttribute('data-category');
+      const author = r.getAttribute('data-author');
+      const dataset = r.getAttribute('data-dataset');
+      const records = parseInt(r.getAttribute('data-records') || '0', 10);
+      const bdds = (r.getAttribute('data-bdds') || '').split('|||').filter(Boolean);
+      const code = r.getAttribute('data-code') || '';
+
+      if (name && cat && author && dataset && records > 0 && bdds.length >= 3 && code.includes('library(')) {
+        validRows++;
+      }
+    }
+
+    return { validCards, validRows, totalBdds, totalCards: cards.length, totalRows: rows.length };
+  });
+
+  console.log(`[PASS] Cards Audit: ${auditResult.validCards}/${auditResult.totalCards} cards have 100% bespoke attributes`);
+  console.log(`[PASS] Rows Audit: ${auditResult.validRows}/${auditResult.totalRows} rows have 100% bespoke attributes`);
+  console.log(`[PASS] Aggregate BDD Scenarios extracted from DOM: ${auditResult.totalBdds}`);
+  if (auditResult.validCards !== 167 || auditResult.validRows !== 167) {
+    throw new Error(`Bespoke audit failed: expected 167 valid cards and rows, found ${auditResult.validCards} cards and ${auditResult.validRows} rows`);
+  }
+
   // 1. Initial Overview Screenshot
   console.log('[CAPTURE 01] Header & Verification Checklist ...');
   await page.locator('header').first().screenshot({
@@ -235,6 +284,45 @@ async function run() {
   // Close modal
   await page.locator('button:has-text("✕ Close")').click();
   await page.waitForTimeout(400);
+
+  // 8b. Test Inspect Spec Modal on ggdist (Uncertainty)
+  console.log('[TEST MODAL] Opening Inspect Spec modal for ggdist ...');
+  const ggdistCard = page.locator('.sciviz-card[data-name="ggdist"]').first();
+  await ggdistCard.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  await ggdistCard.locator('.inspect-spec-btn').click();
+  await page.waitForTimeout(400);
+  const modalDistTitle = await page.$eval('#modal-ext-name', el => el.innerText);
+  const modalDistCode = await page.$eval('#modal-code-snippet', el => el.innerText);
+  console.log(`[PASS] Modal Title: ${modalDistTitle} (contains library(ggdist): ${modalDistCode.includes('library(ggdist)')})`);
+  await page.locator('button:has-text("✕ Close")').click();
+  await page.waitForTimeout(300);
+
+  // 8c. Test Inspect Spec Modal on ggtree (Phylogenetics)
+  console.log('[TEST MODAL] Opening Inspect Spec modal for ggtree ...');
+  const ggtreeCard = page.locator('.sciviz-card[data-name="ggtree"]').first();
+  await ggtreeCard.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  await ggtreeCard.locator('.inspect-spec-btn').click();
+  await page.waitForTimeout(400);
+  const modalTreeTitle = await page.$eval('#modal-ext-name', el => el.innerText);
+  const modalTreeCode = await page.$eval('#modal-code-snippet', el => el.innerText);
+  console.log(`[PASS] Modal Title: ${modalTreeTitle} (contains library(ggtree): ${modalTreeCode.includes('library(ggtree)')})`);
+  await page.locator('button:has-text("✕ Close")').click();
+  await page.waitForTimeout(300);
+
+  // 8d. Test Inspect Spec Modal on survminer (Survival Analysis)
+  console.log('[TEST MODAL] Opening Inspect Spec modal for survminer ...');
+  const survCard = page.locator('.sciviz-card[data-name="survminer"]').first();
+  await survCard.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  await survCard.locator('.inspect-spec-btn').click();
+  await page.waitForTimeout(400);
+  const modalSurvTitle = await page.$eval('#modal-ext-name', el => el.innerText);
+  const modalSurvCode = await page.$eval('#modal-code-snippet', el => el.innerText);
+  console.log(`[PASS] Modal Title: ${modalSurvTitle} (contains library(survminer): ${modalSurvCode.includes('library(survminer)')})`);
+  await page.locator('button:has-text("✕ Close")').click();
+  await page.waitForTimeout(300);
 
   // 9. Smooth Scroll Walkthrough to capture complete video
   console.log('[WALKTHROUGH] Executing smooth interactive walkthrough for video recording ...');

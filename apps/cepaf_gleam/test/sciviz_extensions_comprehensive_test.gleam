@@ -9,14 +9,20 @@
 
 import gleeunit/should
 import gleam/list
+import gleam/option
 import gleam/string
 import cepaf_gleam/sciviz/extension_catalog.{
   all_167_extensions, count_by_category,
+}
+import cepaf_gleam/sciviz/extension_deep_dive.{
+  build_deep_dive, total_bdd_scenarios, total_large_dataset_records,
 }
 import cepaf_gleam/sciviz/extension_examples
 import cepaf_gleam/sciviz/extension_features
 import cepaf_gleam/sciviz/extension_suite.{
   run_all_15_extension_test_cases,
+  run_all_167_extension_test_cases,
+  get_test_case_for_extension,
   uc_ext01_ggdist_slab_interval_test,
   uc_ext02_ggraph_force_directed_network_test,
   uc_ext03_ggalluvial_stream_flow_ribbon_test,
@@ -34,8 +40,8 @@ import cepaf_gleam/sciviz/extension_suite.{
   uc_ext15_gginnards_ast_inspect_storage_defense_test,
 }
 import cepaf_gleam/sciviz/test_suite.{
-  ChaosTesting, ComponentTesting, FuzzTesting, PropertyTesting, SystemTesting,
-  TddTesting, UiElementsTesting,
+  BddTesting, ChaosTesting, ComponentTesting, FuzzTesting, PropertyTesting, SystemTesting,
+  TddTesting, UiElementsTesting, UnitTesting,
 }
 
 pub fn all_15_extension_test_cases_pass_test() {
@@ -197,4 +203,110 @@ pub fn all_167_extensions_svg_and_code_parity_test() {
     string.contains(code, "ggplot(") |> should.be_true
   })
 }
+
+pub fn all_167_extension_test_cases_pass_test() {
+  let results = run_all_167_extension_test_cases()
+  list.length(results) |> should.equal(167)
+
+  let all_passed = list.all(results, fn(t) { t.passed })
+  all_passed |> should.be_true
+}
+
+pub fn all_167_extension_tests_have_specific_names_and_gherkin_test() {
+  let results = run_all_167_extension_test_cases()
+
+  list.each(results, fn(tc) {
+    string.is_empty(tc.extension_name) |> should.be_false
+    string.is_empty(tc.feature_name) |> should.be_false
+    string.is_empty(tc.specification) |> should.be_false
+    string.is_empty(tc.inputs_description) |> should.be_false
+    string.is_empty(tc.assertion_description) |> should.be_false
+
+    // Specific Gherkin scenario containing Given/When/Then and the extension name
+    string.contains(tc.gherkin_scenario, "Given") |> should.be_true
+    string.contains(tc.gherkin_scenario, "When") |> should.be_true
+    string.contains(tc.gherkin_scenario, "Then") |> should.be_true
+    string.contains(tc.gherkin_scenario, tc.extension_name) |> should.be_true
+
+    // Positive duration and valid Shannon entropy
+    { tc.duration_us > 0 } |> should.be_true
+    { tc.shannon_entropy_bits >=. 2.5 } |> should.be_true
+
+    // Valid SVG render
+    string.contains(tc.rendered_svg, "<svg") |> should.be_true
+    string.contains(tc.rendered_svg, "</svg>") |> should.be_true
+    string.contains(tc.rendered_svg, "<script") |> should.be_false
+
+    // Specific tags
+    list.contains(tc.tags, tc.extension_name) |> should.be_true
+  })
+}
+
+pub fn all_167_extension_deep_dive_profiles_test() {
+  let exts = all_167_extensions()
+  list.each(exts, fn(ext) {
+    let d = build_deep_dive(ext)
+    d.name |> should.equal(ext.name)
+    d.category |> should.equal(ext.category)
+    d.author |> should.equal(ext.author)
+
+    { list.length(d.key_features) >= 3 } |> should.be_true
+    { list.length(d.visual_graph_types) >= 1 } |> should.be_true
+    string.is_empty(d.dataset_name) |> should.be_false
+    { d.dataset_record_count > 0 } |> should.be_true
+    { list.length(d.dataset_dimensions) >= 2 } |> should.be_true
+    string.is_empty(d.dataset_schema_summary) |> should.be_false
+
+    { list.length(d.bdd_scenarios) >= 3 } |> should.be_true
+    list.all(d.bdd_scenarios, fn(scen) { string.starts_with(scen, "Scenario:") })
+    |> should.be_true
+
+    string.contains(d.svg_rich_aspect, "<svg") |> should.be_true
+    string.contains(d.svg_rich_aspect, "</svg>") |> should.be_true
+    string.contains(d.svg_rich_aspect, "<script") |> should.be_false
+    string.contains(d.fractal_coordinates, "#fractal-l") |> should.be_true
+  })
+}
+
+pub fn all_9_modalities_represented_across_167_test() {
+  let results = run_all_167_extension_test_cases()
+  let modalities = list.map(results, fn(t) { t.modality })
+
+  list.contains(modalities, UnitTesting) |> should.be_true
+  list.contains(modalities, ComponentTesting) |> should.be_true
+  list.contains(modalities, SystemTesting) |> should.be_true
+  list.contains(modalities, TddTesting) |> should.be_true
+  list.contains(modalities, BddTesting) |> should.be_true
+  list.contains(modalities, UiElementsTesting) |> should.be_true
+  list.contains(modalities, PropertyTesting) |> should.be_true
+  list.contains(modalities, FuzzTesting) |> should.be_true
+  list.contains(modalities, ChaosTesting) |> should.be_true
+}
+
+pub fn total_bdd_scenarios_and_records_aggregate_test() {
+  let bdds = total_bdd_scenarios()
+  { bdds >= 500 } |> should.be_true
+
+  let records = total_large_dataset_records()
+  { records >= 10_000_000 } |> should.be_true
+}
+
+pub fn lookup_test_case_for_extension_test() {
+  case get_test_case_for_extension("ggram") {
+    option.Some(tc) -> {
+      tc.extension_name |> should.equal("ggram")
+      tc.passed |> should.be_true
+    }
+    option.None -> panic as "ggram test case should exist"
+  }
+
+  case get_test_case_for_extension("ggdist") {
+    option.Some(tc) -> {
+      tc.extension_name |> should.equal("ggdist")
+      tc.passed |> should.be_true
+    }
+    option.None -> panic as "ggdist test case should exist"
+  }
+}
+
 
