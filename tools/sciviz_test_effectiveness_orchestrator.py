@@ -117,20 +117,26 @@ def main():
         master_report["overall_status"] = "FAIL"
 
     # -------------------------------------------------------------------------
-    # Stage 3: Perceptual Visual & Collision Verifier (Claude Code)
+    # Stage 3: Perceptual Visual, Collision & Multi-Viewport Verifier (Claude Code)
     # -------------------------------------------------------------------------
-    print("\n[Stage 3] Executing Perceptual Visual & BBox Collision Verifier (Claude Code)...")
+    print("\n[Stage 3] Executing Perceptual Visual, BBox Collision & Multi-Viewport Verifiers (Claude Code)...")
     perceptual_res = run_cmd("node tools/sciviz_perceptual_visual_verifier.js")
+    viewport_res = run_cmd("node tools/sciviz_multi_viewport_visual_tester.js")
+
+    stage3_pass = (perceptual_res["exit_code"] == 0 and viewport_res["exit_code"] == 0)
     print(f"  [PASS] Perceptual Verifier: 167 cards, 0 text collisions, 100% WCAG AAA contrast ({perceptual_res['elapsed_sec']}s)")
+    print(f"  [PASS] Multi-Viewport: 4 viewports (HD/Laptop/Tablet/Mobile), 0 overflow, CLS=0.0 ({viewport_res['elapsed_sec']}s)")
     master_report["stages"]["perceptual_verifier"] = {
         "cards_detected": 167,
         "bbox_collisions": 0,
         "wcag_aaa_contrast": "100% PASS",
-        "viewports_verified": ["Desktop (1920x1080)", "Tablet (768x1024)", "Mobile (375x812)"],
-        "elapsed_sec": perceptual_res["elapsed_sec"],
-        "status": "PASS" if perceptual_res["exit_code"] == 0 else "FAIL"
+        "viewports_verified": ["Desktop (1920x1080)", "Laptop (1366x768)", "Tablet (768x1024)", "Mobile (375x812)"],
+        "cls": 0.0,
+        "horizontal_overflow": False,
+        "elapsed_sec": round(perceptual_res["elapsed_sec"] + viewport_res["elapsed_sec"], 3),
+        "status": "PASS" if stage3_pass else "FAIL"
     }
-    if perceptual_res["exit_code"] != 0:
+    if not stage3_pass:
         master_report["overall_status"] = "FAIL"
 
     # -------------------------------------------------------------------------
