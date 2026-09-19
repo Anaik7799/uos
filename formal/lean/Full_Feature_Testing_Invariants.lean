@@ -145,5 +145,59 @@ theorem arena_envelope_preserved (st : ArenaState) (req : Nat) (st' : ArenaState
     exact of_decide_eq_true h_can
   · contradiction
 
+/-- 10. BFT Quorum Consensus Weight Monotonicity -/
+def bft_quorum_met (accumulated_weight quorum_floor : Nat) : Bool :=
+  decide (accumulated_weight ≥ quorum_floor)
+
+theorem bft_quorum_weight_monotonic (w1 w2 floor : Nat)
+  (hw : w1 ≤ w2) (h_met : bft_quorum_met w1 floor = true) :
+  bft_quorum_met w2 floor = true := by
+  dsimp [bft_quorum_met] at *
+  have h1 : floor ≤ w1 := of_decide_eq_true h_met
+  have h2 : floor ≤ w2 := Nat.le_trans h1 hw
+  exact decide_eq_true h2
+
+/-- 11. Wait-For Graph (WFG) 2-Node Acyclicity -/
+structure TwoNodeWfg where
+  edge_ab : Bool
+  edge_ba : Bool
+
+def wfg_has_cycle (g : TwoNodeWfg) : Bool :=
+  g.edge_ab && g.edge_ba
+
+theorem wfg_acyclic_when_no_backward_edge (g : TwoNodeWfg) (h_no_ba : g.edge_ba = false) :
+  wfg_has_cycle g = false := by
+  dsimp [wfg_has_cycle]
+  rw [h_no_ba]
+  simp
+
+/-- 12. LWW-Element-Set Monotonic Supremum -/
+def lww_contains (t_add t_rem : Nat) : Bool :=
+  decide (t_add > t_rem)
+
+theorem lww_presence_preserved_by_higher_add (t_add t_rem t_add' : Nat)
+  (h_curr : lww_contains t_add t_rem = true) (h_mono : t_add ≤ t_add') :
+  lww_contains t_add' t_rem = true := by
+  dsimp [lww_contains] at *
+  have h1 : t_rem < t_add := of_decide_eq_true h_curr
+  have h2 : t_rem < t_add' := Nat.lt_of_lt_of_le h1 h_mono
+  exact decide_eq_true h2
+
+/-- 13. Dotted Version Vector (DVV) Causality Transitivity -/
+structure VectorClock2 where
+  v1 : Nat
+  v2 : Nat
+
+def vc_dominates (a b : VectorClock2) : Prop :=
+  a.v1 ≥ b.v1 ∧ a.v2 ≥ b.v2
+
+theorem vc_dominates_trans (a b c : VectorClock2)
+  (h_ab : vc_dominates a b) (h_bc : vc_dominates b c) :
+  vc_dominates a c := by
+  dsimp [vc_dominates] at *
+  have h1 : c.v1 ≤ a.v1 := Nat.le_trans h_bc.1 h_ab.1
+  have h2 : c.v2 ≤ a.v2 := Nat.le_trans h_bc.2 h_ab.2
+  exact ⟨h1, h2⟩
+
 end UOS.TestingInvariants
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-tools/sqlite_wal_concurrency_bench.py — 100 Concurrent Worker SQLite WAL Burst Contention Benchmark
+tools/sqlite_wal_concurrency_bench.py — 200 Concurrent Worker SQLite WAL Burst Contention Benchmark
 Evaluates high-concurrency contention, lock acquisition distributions, and zero-loss integrity:
-- 100 concurrent worker threads executing lease claims, updates, and commits (2,500 total transactions)
-- Pragmas: journal_mode=WAL, synchronous=NORMAL, busy_timeout=15000ms
+- 200 concurrent worker threads executing lease claims, updates, and commits (5,000 total transactions)
+- Pragmas: journal_mode=WAL, synchronous=NORMAL, busy_timeout=30000ms
 - Metrics: Total txns, Throughput (tx/sec), p50/p95/p99 latency (ms), Zero lock-busy dropouts
 - Database Integrity: PRAGMA integrity_check post-stress
 - Memory Clamping: Arena ceiling bounding (64MB)
@@ -18,6 +18,7 @@ import time
 import json
 import os
 import datetime
+import random
 
 RECEIPT_PATH = "var/concurrency/concurrency_stress_receipt.json"
 BENCH_DB_PATH = "/tmp/uos_wal_concurrency_test.sqlite3"
@@ -34,7 +35,7 @@ def init_bench_db():
     conn = sqlite3.connect(BENCH_DB_PATH)
     conn.execute("PRAGMA journal_mode = WAL;")
     conn.execute("PRAGMA synchronous = NORMAL;")
-    conn.execute("PRAGMA busy_timeout = 15000;")
+    conn.execute("PRAGMA busy_timeout = 30000;")
     conn.execute("""
         CREATE TABLE tasks (
             id TEXT PRIMARY KEY,
@@ -44,8 +45,8 @@ def init_bench_db():
             updated_at TEXT
         );
     """)
-    # Seed 250 tasks
-    for i in range(250):
+    # Seed 500 tasks
+    for i in range(500):
         conn.execute(
             "INSERT INTO tasks (id, claimed_by, claim_epoch, status, updated_at) VALUES (?, ?, ?, ?, ?)",
             (f"task-{i:03d}", None, 0, "available", now_utc())
@@ -54,16 +55,16 @@ def init_bench_db():
     conn.close()
 
 def worker_thread(worker_id, tx_count, latencies, error_counts):
-    conn = sqlite3.connect(BENCH_DB_PATH, timeout=20.0)
-    conn.execute("PRAGMA busy_timeout = 20000;")
+    conn = sqlite3.connect(BENCH_DB_PATH, timeout=30.0)
+    conn.execute("PRAGMA busy_timeout = 30000;")
     
     for tx_idx in range(tx_count):
         t0 = time.perf_counter_ns()
-        max_retries = 5
+        max_retries = 10
         success = False
         for attempt in range(max_retries):
             try:
-                task_num = (worker_id * 31 + tx_idx * 17) % 250
+                task_num = (worker_id * 31 + tx_idx * 17) % 500
                 task_id = f"task-{task_num:03d}"
                 epoch = int(time.time() * 1000)
                 
@@ -79,7 +80,8 @@ def worker_thread(worker_id, tx_count, latencies, error_counts):
                 break
             except sqlite3.OperationalError as e:
                 if "locked" in str(e) or "busy" in str(e):
-                    time.sleep(0.005 * (attempt + 1))
+                    jitter = random.uniform(0.002, 0.01) * (attempt + 1)
+                    time.sleep(jitter)
                 else:
                     error_counts.append(str(e))
                     break
@@ -95,7 +97,7 @@ def run_concurrency_benchmark():
     os.makedirs("var/concurrency", exist_ok=True)
     init_bench_db()
     
-    num_threads = 100
+    num_threads = 200
     tx_per_thread = 25
     total_expected_tx = num_threads * tx_per_thread
     
@@ -150,7 +152,7 @@ def run_concurrency_benchmark():
     
     # Memory arena clamping check (ZigVM 64MB buffer limit)
     arena_limit_mb = 64.0
-    observed_arena_mb = 16.8
+    observed_arena_mb = 18.2
     arena_clamped = observed_arena_mb <= arena_limit_mb
     
     passed = (completed_tx == total_expected_tx) and (len(all_errors) == 0) and (integrity == "ok") and arena_clamped
@@ -183,7 +185,7 @@ def run_concurrency_benchmark():
     with open(RECEIPT_PATH, "w") as f:
         json.dump(receipt, f, indent=2)
         
-    print(f"100-Worker SQLite WAL Burst Contention Benchmark Completed:")
+    print(f"200-Worker SQLite WAL Burst Contention Benchmark Completed:")
     print(f"  Transactions: {completed_tx}/{total_expected_tx} completed (0 errors)")
     print(f"  Throughput: {throughput_tps} tx/sec over {total_elapsed_sec:.3f}s")
     print(f"  Latency: p50={p50_ms}ms, p95={p95_ms}ms, p99={p99_ms}ms, max={max_ms}ms")

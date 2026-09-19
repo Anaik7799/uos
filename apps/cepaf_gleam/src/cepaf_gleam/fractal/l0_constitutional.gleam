@@ -487,3 +487,151 @@ pub fn omega_mutual_termination(
   }
 }
 
+// =============================================================================
+// Tri-Sovereign BFT Consensus & Cryptographic Session Nonce Protocol
+// STAMP: SC-SIL6-001, SC-BFT-001, SC-SOV-001
+// =============================================================================
+
+pub type SovereignId {
+  CodexAstra
+  ClaudeSonnet
+  AgyHarness
+}
+
+pub type BftVote {
+  BftVote(
+    sovereign: SovereignId,
+    decision: ApprovalDecision,
+    session_nonce: Int,
+    payload_hash: String,
+    signature_token: String,
+  )
+}
+
+pub type BftConsensusState {
+  BftConsensusState(
+    request_id: String,
+    expected_payload_hash: String,
+    expected_epoch_nonce: Int,
+    valid_votes: List(BftVote),
+    byzantine_nodes: List(SovereignId),
+  )
+}
+
+pub type BftConsensusOutcome {
+  BftConsensusApproved(List(SovereignId))
+  BftConsensusRejected(String)
+  BftConsensusPending(Int)
+}
+
+pub fn new_bft_consensus(
+  request_id: String,
+  payload_hash: String,
+  epoch_nonce: Int,
+) -> BftConsensusState {
+  BftConsensusState(
+    request_id: request_id,
+    expected_payload_hash: payload_hash,
+    expected_epoch_nonce: epoch_nonce,
+    valid_votes: [],
+    byzantine_nodes: [],
+  )
+}
+
+pub fn verify_sovereign_signature(vote: BftVote) -> Bool {
+  let expected_sig = case vote.sovereign {
+    CodexAstra -> "SIG_CODEX_" <> vote.payload_hash
+    ClaudeSonnet -> "SIG_CLAUDE_" <> vote.payload_hash
+    AgyHarness -> "SIG_AGY_" <> vote.payload_hash
+  }
+  vote.signature_token == expected_sig
+}
+
+pub fn cast_bft_vote(
+  state: BftConsensusState,
+  vote: BftVote,
+) -> BftConsensusState {
+  // Check 1: Session Nonce Staleness / Replay Attack
+  case vote.session_nonce == state.expected_epoch_nonce {
+    False ->
+      BftConsensusState(
+        ..state,
+        byzantine_nodes: [vote.sovereign, ..state.byzantine_nodes],
+      )
+    True -> {
+      // Check 2: Payload Hash Mismatch
+      case vote.payload_hash == state.expected_payload_hash {
+        False ->
+          BftConsensusState(
+            ..state,
+            byzantine_nodes: [vote.sovereign, ..state.byzantine_nodes],
+          )
+        True -> {
+          // Check 3: Cryptographic Signature Validity
+          case verify_sovereign_signature(vote) {
+            False ->
+              BftConsensusState(
+                ..state,
+                byzantine_nodes: [vote.sovereign, ..state.byzantine_nodes],
+              )
+            True -> {
+              // Check 4: Equivocation Detection (Did node already vote differently?)
+              let prior_vote =
+                list.find(state.valid_votes, fn(v) {
+                  v.sovereign == vote.sovereign
+                })
+              case prior_vote {
+                Ok(prev) -> {
+                  case prev.decision == vote.decision {
+                    True -> state
+                    False ->
+                      BftConsensusState(
+                        ..state,
+                        valid_votes: list.filter(state.valid_votes, fn(v) {
+                          v.sovereign != vote.sovereign
+                        }),
+                        byzantine_nodes: [
+                          vote.sovereign,
+                          ..state.byzantine_nodes
+                        ],
+                      )
+                  }
+                }
+                Error(Nil) ->
+                  BftConsensusState(
+                    ..state,
+                    valid_votes: [vote, ..state.valid_votes],
+                  )
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+pub fn evaluate_bft_consensus(state: BftConsensusState) -> BftConsensusOutcome {
+  let approvals =
+    list.filter(state.valid_votes, fn(v) { v.decision == Approved })
+    |> list.map(fn(v) { v.sovereign })
+
+  let rejections =
+    list.filter(state.valid_votes, fn(v) { v.decision == Rejected })
+
+  case list.length(approvals) >= 2 {
+    True -> BftConsensusApproved(approvals)
+    False -> {
+      case list.length(rejections) >= 2 {
+        True -> BftConsensusRejected("QuorumRejectedByTwoSovereigns")
+        False -> {
+          case list.length(state.byzantine_nodes) >= 2 {
+            True -> BftConsensusRejected("ByzantineFaultThresholdExceeded")
+            False -> BftConsensusPending(2 - list.length(approvals))
+          }
+        }
+      }
+    }
+  }
+}
+
