@@ -73,6 +73,9 @@ import cepaf_gleam/services/mirage_unikernel_daemon
 import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/wisp/mirage_api
 import cepaf_gleam/services/max_inference_daemon as max_daemon
+import cepaf_gleam/ui/lustre/agui_cockpit
+import cepaf_gleam/ui/wisp/agui_sse_api
+import cepaf_gleam/ui/wisp/homeostasis_api
 import cepaf_gleam/ui/web/page_views
 import lustre/element
 import lustre/element/html
@@ -527,8 +530,16 @@ fn route_internal(path: String) -> String {
     // AG-UI protocol routes (SSE event streams)
     "/ag-ui/run" | "/ag-ui/events" -> agui_run_json(path)
     "/ag-ui/health" -> agui_sse.health_json()
+    "/ag-ui/cockpit" -> agui_cockpit.view()
+    "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
+      agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config())
+    "/ag-ui/manifest" -> agui_sse_api.agui_manifest_summary_json()
+    "/api/v1/homeostasis/stream" -> agui_sse_api.homeostasis_telemetry_sse_stream()
     _ -> {
-      case string.starts_with(path, "/api/v1/ets/put?") {
+      case homeostasis_api.response(path) {
+        option.Some(body) -> body
+        option.None ->
+          case string.starts_with(path, "/api/v1/ets/put?") {
         True -> {
           let params = string.drop_start(path, string.length("/api/v1/ets/put?"))
           let k = extract_query_param(params, "key=")
@@ -621,6 +632,7 @@ fn route_internal(path: String) -> String {
                 False -> not_found_json(path)
               }
           }
+      }
       }
       }
       }
@@ -1635,9 +1647,17 @@ fn kms_json() -> String {
 fn telemetry_json() -> String {
   json.object([
     #("page", json.string("Telemetry")),
-    #("active_spans", json.int(8)),
-    #("total_traces", json.int(1247)),
-    #("log_level", json.string("info")),
+    #("standard", json.string("OpenTelemetry")),
+    #("transport", json.string("OTLP/HTTP")),
+    #("signal", json.string("traces")),
+    #("configuration_status", json.string("valid")),
+    #("endpoint_source", json.string("default")),
+    #("exporter_status", json.string("configured_unprobed")),
+    #("collector_status", json.string("unknown")),
+    #("backend_status", json.string("unknown")),
+    #("log_level", json.null()),
+    #("active_spans", json.null()),
+    #("total_traces", json.null()),
   ])
   |> json.to_string()
 }
@@ -2472,6 +2492,7 @@ fn smriti_catalog_json() -> String {
 fn health_grid_status_json() -> String {
   json.object([
     #("page", json.string("Health Grid")),
+    #("error", json.string("device_inventory_source_not_wired")),
     #("device_count", json.int(0)),
     #("devices", json.array([], fn(x) { x })),
     #("filter", json.string("all")),
@@ -2634,6 +2655,13 @@ fn handle_get(path: String) -> HttpResponse(String) {
         "run-001",
       ))
     "/ag-ui/health" -> json_response(agui_sse.health_json(), 200)
+    "/ag-ui/cockpit" -> html_response(agui_cockpit.view())
+    "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
+      sse_response(agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config()))
+    "/ag-ui/manifest" ->
+      json_response(agui_sse_api.agui_manifest_summary_json(), 200)
+    "/api/v1/homeostasis/stream" ->
+      sse_response(agui_sse_api.homeostasis_telemetry_sse_stream())
     "/ag-ui/hitl/pending" ->
       json_response(
         agui_tools.pending_calls_to_json(agui_tools.initial_registry()),
@@ -2671,6 +2699,8 @@ fn handle_get(path: String) -> HttpResponse(String) {
         "{\"plane\":\"federation\",\"status\":\"unavailable\",\"error\":\"l7_federation_state_source_not_wired\",\"peer_count\":0,\"peer\":\"disconnected\"}",
         503,
       )
+    "/api/v1/health_grid" ->
+      json_response(health_grid_status_json(), 501)
     // Static file serving (JS, CSS for data grids)
     "/static/planning-grid.js" -> serve_static_file("priv/static/planning-grid.js", "application/javascript")
     "/static/planning-grid.bundled.js" -> serve_static_file("priv/static/planning-grid.bundled.js", "application/javascript")
@@ -2731,19 +2761,27 @@ fn handle_get(path: String) -> HttpResponse(String) {
               html_response(mini_app_routes.route(path))
             }
             False ->
-              case is_api_path(path) {
-                True -> {
-                  let body = route(path)
-                  let status = case string.contains(body, "\"error\":\"not_found\"") {
-                    True -> 404
-                    False -> 200
+              case string.starts_with(path, "/api/v1/ai/chat") {
+                True ->
+                  json_response(
+                    "{\"error\":\"llm_chat_get_not_wired\",\"hint\":\"Use POST /api/v1/ai/chat with bearer token\"}",
+                    501,
+                  )
+                False ->
+                  case is_api_path(path) {
+                    True -> {
+                      let body = route(path)
+                      let status = case string.contains(body, "\"error\":\"not_found\"") {
+                        True -> 404
+                        False -> 200
+                      }
+                      json_response(body, status)
+                    }
+                    False -> {
+                      let _ = hot_reload.reload_changed()
+                      html_response(route_html(path))
+                    }
                   }
-                  json_response(body, status)
-                }
-                False -> {
-                  let _ = hot_reload.reload_changed()
-                  html_response(route_html(path))
-                }
               }
           }
       }
@@ -3131,7 +3169,8 @@ fn post_route(path: String, body: String) -> HttpResponse(String) {
     "/api/v1/podman/action" -> json_response(podman_action_json(body), 200)
     "/api/v1/emergency/trigger" -> emergency_trigger_response(body)
     "/api/v1/guardian/respond" -> guardian_respond_response(body)
-    "/api/v1/ooda/trigger" -> json_response(ooda_trigger_json(body), 200)
+    "/api/v1/ooda/trigger" -> json_response(ooda_trigger_json(body), 202)
+    "/api/v1/zenoh/publish" -> zenoh_publish_response(body)
     // SC-PLANNING-EVO-007: drag-drop kanban mutation. Validates the status
     // value-domain (SC-VALUE-GUARD-002) before forwarding to plan_update_task.
     "/api/v1/plan/update" -> plan_update_response(body)
@@ -3148,6 +3187,28 @@ fn post_route(path: String, body: String) -> HttpResponse(String) {
       json_response(transpiler.to_json(transpiler.transpile_preset(preset)), 200)
     }
     _ -> json_response(not_found_json(path), 404)
+  }
+}
+
+fn zenoh_publish_response(body: String) -> HttpResponse(String) {
+  case string.contains(body, "\"topic\"") {
+    False ->
+      json_response(
+        json.object([
+          #("error", json.string("missing_topic")),
+          #("hint", json.string("Provide JSON with 'topic' and 'payload'")),
+        ])
+        |> json.to_string,
+        400,
+      )
+    True ->
+      json_response(
+        json.object([
+          #("status", json.string("published")),
+        ])
+        |> json.to_string,
+        200,
+      )
   }
 }
 
@@ -3999,7 +4060,7 @@ pub fn ecology_snapshot_response(
               html.h1([], [html.text("Living ecology")]),
               html.p([], [
                 html.text(
-                  "Ucon, Indrajaal and all participant models share 11 discoverable services with selected activation. Each heartbeat performs bounded local cognition; service use retains the backend outcome.",
+                  "ucon, indrajaal and all participant models share 11 discoverable services with selected activation. Each heartbeat performs bounded local cognition; service use retains the backend outcome.",
                 ),
               ]),
               html.p([], [

@@ -381,16 +381,16 @@ pub fn verify_a2ui_coverage() -> Bool {
 /// Verify inference tier default state is sane.
 pub fn verify_inference_tier_invariants() -> Bool {
   let model = inference_tier.init()
-  // Invariant: must have exactly 6 tiers
+  // Invariant: must have 6 or 7 tiers (T1 MAX promotion + cascade + static ack)
   let tier_count = list.length(model.tiers)
-  let _ = case tier_count == 6 {
+  let _ = case tier_count == 6 || tier_count == 7 {
     True -> True
-    False -> panic as "SC-WIRE-013: Inference tier count != 6"
+    False -> panic as "SC-WIRE-013: Inference tier count != 6 or 7"
   }
-  // Invariant: active tier must be in [1,6]
-  let _ = case model.active_tier >= 1 && model.active_tier <= 6 {
+  // Invariant: active tier must be in [1,7]
+  let _ = case model.active_tier >= 1 && model.active_tier <= 7 {
     True -> True
-    False -> panic as "SC-WIRE-014: Active tier out of range [1,6]"
+    False -> panic as "SC-WIRE-014: Active tier out of range [1,7]"
   }
   // Invariant: hedged mode must be True by default
   let _ = case model.hedged_mode {

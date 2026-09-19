@@ -780,7 +780,7 @@ fn render_nav(active_path: String) -> Element(msg) {
   let nav_right =
     html.div([attribute.class("nav-right")], [theme_dots, test_btn])
 
-  html.nav([], [
+  html.nav([attribute.attribute("aria-label", "Primary")], [
     html.div([attribute.class("nav-container")], [
       brand,
       hamburger,
