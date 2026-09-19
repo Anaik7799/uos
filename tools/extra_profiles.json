@@ -1,0 +1,639 @@
+{
+  "lindia": {
+    "features": [
+      "gg_diagnose automated multi-panel linear regression diagnostics",
+      "gg_resfitted residual vs fitted values plot with loess smooth",
+      "gg_qqplot standardized normal Q-Q plot with reference line",
+      "gg_cooksd Cook distance leverage bar plot for influential observations",
+      "gg_scalelocation scale-location homoscedasticity diagnostic plot"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Linear model (lm) diagnostic calculations extracting studentized residuals, hat values (leverage), Cook distances, and fitted values into coordinated ggplot2 panels.",
+    "func": "Econometric and biostatistical regression assumption validation, outlier detection, and model sensitivity testing.",
+    "ui": "4-panel diagnostic dashboard with cyan residual scatter, amber Cook distance threshold spikes, and dark cockpit grids."
+  },
+  "ggrastr": {
+    "features": [
+      "rasterise selective layer rasterization for massive ggplot2 datasets",
+      "geom_point_rast high-performance rasterized scatter points",
+      "geom_boxplot_rast rasterized outlier point overlays",
+      "Resolution control (dpi: 300, 600) preserving vector text and axes",
+      "Elimination of multi-megabyte PDF/SVG vector bloat"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Selective Cairo/raster rendering of high-density geometric grob layers while keeping labels, axes, and legends as pure vector SVG.",
+    "func": "Single-cell transcriptomics with 500,000 cells, astronomical star charts, flow cytometry millions of events.",
+    "ui": "Silky smooth rendering of massive point clouds with vector-crisp axis ticks and typography, 95% reduction in SVG payload."
+  },
+  "ggsom": {
+    "features": [
+      "geom_som Self-Organizing Map (SOM) hexagonal and rectangular lattice grids",
+      "U-matrix distance matrix visualization showing cluster separation boundaries",
+      "Property heatmaps coloring SOM neurons by specific input feature weights",
+      "Component plane displays and codebook vector trajectory overlays",
+      "Cluster boundary partitioning via hierarchical clustering on SOM units"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Kohonen neural network grid mapping evaluating high-dimensional codebook weight vectors across 2D hexagonal lattices with Euclidean distance metrics.",
+    "func": "Unsupervised machine learning, market segmentation, financial fraud topology clustering, complex sensor array state visualization.",
+    "ui": "Honeycomb hexagonal grid with gradient node coloring, bright white cluster boundary separators, and labeled neuron centroids."
+  },
+  "ggh4x": {
+    "features": [
+      "facet_nested multi-tier hierarchical nested facet strip banners",
+      "facet_manual arbitrary custom positioning of facet panels in coordinate plane",
+      "scale_x_facet and scale_y_facet independent scale limits per individual facet",
+      "guide_axis_nested and guide_axis_truncated capped/bracketed coordinate axes",
+      "stat_difference and stat_fun functional curves with shaded difference ribbons"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Advanced gtable facet compiler inserting nested grob strip banners and injecting per-panel scale transformers without breaking core ggplot2 layouts.",
+    "func": "Complex clinical trials with nested treatment arms, multi-cohort demographic studies, custom publication small multiples.",
+    "ui": "Tiered hierarchical strip banners with elegant dark-glass background panels, perfectly synchronized independent axis intervals."
+  },
+  "ggarrow": {
+    "features": [
+      "geom_arrow curved and segmented arrows with continuous width gradients",
+      "Tapering arrow shafts that narrow or widen along the vector trajectory",
+      "Custom arrowheads: winged, barbed, stealth, diamond, and feathered",
+      "Arrowhead offset controls preventing collision with target node circles",
+      "Support for multi-point parametric bezier arrow paths"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Parametric polygon arc computation evaluating variable width profiles w(t) along spine curves with tangent-aligned arrowhead grobs.",
+    "func": "Cognitive concept maps, causal loop diagrams, vector kinematics, dynamic migration flow tracking.",
+    "ui": "Futuristic tapering arrows with illuminated cyan outlines and sharp stealth arrowheads connecting data points cleanly."
+  },
+  "legendry": {
+    "features": [
+      "Multi-tier compositional legend keys and hierarchical guides",
+      "guide_axis_bracket bracketed categorical groupings on coordinate axes",
+      "guide_legend_group grouped multi-column legend layouts",
+      "Annotated colorbars with embedded threshold markers and tick callouts",
+      "Flexible guide placement inside empty facet viewports and margins"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Modular guide layout engine restructuring ggplot2 guide grob trees into composable hierarchical key-value arrangements.",
+    "func": "Complex multi-scale publication figures, executive dashboards with categorical brackets, dense multi-variable legends.",
+    "ui": "Neatly organized grouped legend panels with clear category headers, nested axis brackets, and high typographic clarity."
+  },
+  "ggcharts": {
+    "features": [
+      "bar_chart and column_chart high-level streamlined categorical bar plots",
+      "diverging_bar_chart and diverging_lollipop_chart for positive/negative balance",
+      "dumbbell_chart for before-and-after paired group comparisons",
+      "pyramid_chart for population age-sex demographic structures",
+      "Automated factor level sorting, top-n filtering, and value label positioning"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "High-level tidy evaluation wrappers encapsulating ggplot2 boilerplate into single-line declarative plotting commands.",
+    "func": "Rapid business intelligence reporting, survey analysis, marketing campaign ROI comparisons, executive briefing slides.",
+    "ui": "Clean minimalist charts with horizontal orientations, direct data labels on bars, and muted elegant palettes."
+  },
+  "humapr": {
+    "features": [
+      "Human geography and global population density mapping",
+      "Spatially balanced population cartograms resizing regions by population",
+      "Demographic census tract visualization with automated boundary harmonisation",
+      "Urban vs rural population distribution gradients",
+      "Bivariate choropleths combining population density with socioeconomic indicators"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Spatial cartogram algorithms (Gastner-Newman diffusion) transforming geographic polygons based on population density weights.",
+    "func": "Public health resource allocation, humanitarian aid planning, electoral vote representation, demographic transition studies.",
+    "ui": "High-contrast population choropleths with glowing urban nodes and smooth density contours on dark cartographic canvas."
+  },
+  "ggshadow": {
+    "features": [
+      "geom_shadowline lines with glowing neon shadows and depth glows",
+      "geom_shadowpoint points with radiant halos and shadow offsets",
+      "Configurable shadow parameters: shadowcolor, shadowsize, shadowalpha",
+      "Multi-color neon glow effects for futuristic telemetry dashboards",
+      "Direct SVG filter drop-shadow generation without external image processing"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Layer duplication and Gaussian blur filter injection applying spatial convolution matrices behind primary line/point grobs.",
+    "func": "Dark-cockpit telemetry monitors, futuristic HUD interfaces, cyber defense network status boards, high-impact keynote presentations.",
+    "ui": "Striking neon cyber-punk aesthetics: glowing cyan, emerald, and magenta lines floating with depth shadows over deep obsidian (#020617)."
+  },
+  "ggseg": {
+    "features": [
+      "geom_brain cortical and subcortical brain atlas segmentations",
+      "Pre-built neuroimaging atlases: Desikan-Killiany, Destrieux, Schaefer 200/400",
+      "Lateral, medial, superior, and inferior anatomical brain view angles",
+      "Mapping MRI/fMRI cortical thickness, surface area, and BOLD signals to brain regions",
+      "Faceting by hemisphere (left vs right) and brain view angles"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "2D polygonal brain atlas boundary coordinate systems parsed from neuroimaging surface meshes (FreeSurfer) with region ontology joins.",
+    "func": "Cognitive neuroscience fMRI activations, Alzheimers cortical atrophy mapping, psychiatric neuroimaging biomarkers.",
+    "ui": "Stylized anatomical brain hemisphere silhouettes with cortical gyri colored by activation level, dark neurological cockpit theme."
+  },
+  "mdthemes": {
+    "features": [
+      "Markdown and HTML syntax rendering in plot titles, subtitles, and captions",
+      "Inline bold, italic, and custom colored text with span style elements",
+      "Hyperlink support inside plot captions and notes",
+      "Eliminates clunky plotmath syntax for formatted scientific typography",
+      "Seamless integration with all standard ggplot2 themes (theme_minimal, theme_bw)"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Integration with marquee/gridtext parsers transforming markdown strings into styled text grobs within plot title/axis viewports.",
+    "func": "Accessible data journalism with color-coded titles matching line series, academic papers with italic species names and bold takeaways.",
+    "ui": "Dynamic title text where keywords share exact line colors eliminating detached legends."
+  },
+  "ggasym": {
+    "features": [
+      "Asymmetric matrix visualization where upper and lower triangles differ",
+      "geom_asymmat showing directed origin-to-destination bilateral relationships",
+      "Diagonal cell isolation for self-interaction or intra-category values",
+      "Split-tile aesthetic mapping independent metrics to (i, j) vs (j, i)",
+      "Automated matrix reordering using hierarchical clustering on asymmetric distance"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Directional matrix coordinate transformation mapping pairwise directed graphs onto square matrix coordinates without symmetry forcing.",
+    "func": "International bilateral trade surpluses vs deficits, neuroimaging directed connectivity, sports team head-to-head win/loss records.",
+    "ui": "Square matrix grid where upper triangle shows metric A and lower triangle shows metric B with contrasting color ramps."
+  },
+  "gglorenz": {
+    "features": [
+      "stat_lorenz empirical Lorenz curve computation from sample distributions",
+      "geom_lorenz cumulative population share vs cumulative wealth/income curves",
+      "Automated Gini coefficient inequality index calculation and text annotation",
+      "45-degree line of perfect equality reference line",
+      "Lorenz dominance comparison curves across multiple demographic cohorts"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Cumulative distribution function (CDF) integration sorting income vectors and computing Lorenz curve coordinates: L(p) = sum_{i=1}^{k} x_i / sum_{i=1}^n x_i.",
+    "func": "Economic wealth and income inequality analysis, biodiversity species abundance distribution, carbon emission inequality across nations.",
+    "ui": "Diagonal dashed equality line with bowing cyan Lorenz curve below, shaded Gini area, prominent Gini index badge."
+  },
+  "hrbrthemes": {
+    "features": [
+      "Typography-centric themes: theme_ipsum, theme_ipsum_rc (Roboto Condensed)",
+      "theme_ft_rc Financial Times-inspired styling with high-contrast layouts",
+      "Calibrated micro-typography (kerning, line-height, margin whitespace)",
+      "scale_color_ipsum cohesive contemporary color palettes",
+      "Standardized publication dimensions and crisp vector font rendering"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Refined typography grid metrics applying proportional golden-ratio margins, subtle axis rules, and tight typographic tracking.",
+    "func": "High-end business intelligence reports, academic monographs, data journalism graphics, executive presentations.",
+    "ui": "Modern, breathable chart layouts with bold condensed titles, faint gray coordinate gridlines, and clean unobtrusive axes."
+  },
+  "ggtext": {
+    "features": [
+      "element_markdown rich markdown styling for any theme text element",
+      "element_textbox word-wrapped text boxes with background fill and borders",
+      "geom_richtext rich text labels supporting HTML tags, images, and formatting",
+      "geom_textbox multi-line text callouts with automatic bounding box fitting",
+      "Inline color, bold, font family, and superscript/subscript tags"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "HTML/CSS box model rendering in grid graphics computing font glyph metrics, word wrapping, and CSS inline style spans.",
+    "func": "Self-annotating publication figures, executive summary callout cards, complex mathematical notation in axis labels.",
+    "ui": "Sleek dark callout boxes with rounded borders, colored highlighted text phrases, crisp typographical hierarchy."
+  },
+  "ggip": {
+    "features": [
+      "coord_ip 2D Hilbert curve coordinate system mapping IPv4 and IPv6 address space",
+      "stat_netmask aggregation of IP addresses by CIDR network prefixes (/24, /16, /8)",
+      "geom_hilbert space-filling Hilbert curves preserving network locality",
+      "Global internet scanning and BGP routing prefix distribution mapping",
+      "Cybersecurity threat actor and botnet IP cluster visualization"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Recursive Hilbert space-filling curve algorithms mapping 32-bit (IPv4) or 128-bit (IPv6) integer addresses to continuous 2D plane coordinates.",
+    "func": "Internet-wide port scan visualization, DDoS attack source profiling, autonomous system (AS) IP prefix allocation analysis.",
+    "ui": "2D fractal Hilbert curve layout with glowing clusters of active IP blocks, CIDR grid outlines on dark cyber-security cockpit."
+  },
+  "gglm": {
+    "features": [
+      "stat_normal_qq and geom_fitted_residuals linear model diagnostic plots",
+      "Scale-Location homoscedasticity check with square root of standardized residuals",
+      "Residuals vs Leverage with Cook distance contour bands (0.5, 1.0)",
+      "Standardized 4-panel regression diagnostic layout conforming to grammar of graphics",
+      "Seamless integration with base lm and glm model objects"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Extraction of linear model internal matrices (residuals, fitted values, leverage, Cook distance) mapped into standard ggplot2 grobs.",
+    "func": "Classical linear regression assumption verification, econometrics model auditing, biostatistical model fit diagnosis.",
+    "ui": "Balanced 2x2 multi-panel diagnostic layout with red trend loess curves, labeled outlier points, and high contrast."
+  },
+  "econocharts": {
+    "features": [
+      "Microeconomics supply and demand curves with equilibrium point marking",
+      "Indifference curves and budget constraint tangency points",
+      "Production Possibility Frontiers (PPF) with opportunity cost curves",
+      "Consumer and producer surplus shaded polygon areas",
+      "Tax incidence and deadweight loss geometric region representations"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Parametric economic curve functions calculating analytical equilibrium intersection points (P*, Q*) and integral surplus polygons.",
+    "func": "Economics pedagogy, macroeconomic policy impact modeling, market equilibrium analysis, taxation impact simulation.",
+    "ui": "Clean textbook-style economic graphs with labeled curves (S, D), dashed equilibrium lines to axes, shaded surplus areas."
+  },
+  "ComplexUpset": {
+    "features": [
+      "UpSet plots for large, complex multi-set intersections",
+      "Combines intersection size bar charts with set combination matrix grids",
+      "Stacked bar charts within intersection columns showing attribute breakdowns",
+      "Side-panel set size bars and correlation distribution boxplots",
+      "Full compatibility with native ggplot2 geoms, scales, and themes"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Boolean set intersection algebra computing power set combination frequencies and arranging connected dot-matrix grob panels.",
+    "func": "Genomic variant sharing across cohorts, multi-label machine learning classification, customer subscription overlap analysis.",
+    "ui": "Bottom dot-and-line combination matrix aligned with upper vertical bar chart of intersection sizes, dark cockpit background."
+  },
+  "ggchromatic": {
+    "features": [
+      "Multi-dimensional color scales combining hue, chroma, and luminance",
+      "scale_color_cmyk and scale_color_hcl for 3D continuous variable encoding",
+      "Trivariate color mapping encoding three continuous variables into a single point color",
+      "Bivariate color keys with 2D color wheel or matrix legend guides",
+      "Perceptually uniform color spaces preventing visual artifact distortion"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "3D color space transformations (CIE L*a*b*, HCL, CMYK) mapping 3-dimensional data vectors (x, y, z) to exact sRGB hex values.",
+    "func": "Atmospheric multi-variable monitoring (temp, humidity, pressure), RGB satellite composite mapping, multi-sensor telemetry.",
+    "ui": "Scatter plot where each points unique color reveals three concurrent parameters, accompanied by a 2D/3D chromatic legend key."
+  },
+  "see": {
+    "features": [
+      "Visualization companion for the easystats ecosystem (parameters, performance)",
+      "plot(model_parameters()) forest plots with Bayesian and frequentist intervals",
+      "plot(check_model()) comprehensive 6-panel model assumption diagnostic suite",
+      "plot(estimate_density()) distribution violin and half-eye comparisons",
+      "Bespoke color palettes (scale_color_see) and flat design themes (theme_modern)"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Automated model inspection and tidying algorithms translating complex Bayesian (brms, rstanarm) and frequentist models into ggplot2.",
+    "func": "Statistical modeling workflows, Bayesian posterior parameter reports, model performance benchmarking, academic publications.",
+    "ui": "Ultra-clean flat design with soft rounded corners, high-contrast point estimates, elegant half-eye densities, dark mode compliance."
+  },
+  "directlabels": {
+    "features": [
+      "Direct labeling of lines, curves, and point clusters without separate legends",
+      "Smart label positioning algorithms: last.points, first.points, maxvar.points",
+      "Collision-free direct text placement along curve endpoints",
+      "Eliminates back-and-forth eye tracking between plot lines and external legends",
+      "Support for scatterplots, density lines, contour plots, and time-series"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Spatial optimization heuristics evaluating curve terminal points and bounding box collisions to place direct text grobs in line paths.",
+    "func": "Data journalism time-series plots, multi-line financial tracking, contour elevation labeling, accessible graphic design.",
+    "ui": "Multi-colored trend lines terminating directly with matching color text labels at their right endpoints, zero legend clutter."
+  },
+  "ggHoriPlot": {
+    "features": [
+      "geom_horizon folded horizon plots for high-density continuous time-series",
+      "Folds high-amplitude peaks into stacked color opacity bands",
+      "Compacts vertical height by 75% to 80% without losing fine resolution",
+      "Positive values represented in blue/green bands, negative values in red/amber bands",
+      "Ideal for displaying hundreds of concurrent telemetry channels in small multiples"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Modulo arithmetic slicing continuous time-series into discrete amplitude tiers (bands) and overlaying them with increasing color saturation.",
+    "func": "Data center multi-server CPU/memory telemetry, financial market volatility across hundreds of assets, seismic sensor arrays.",
+    "ui": "Stacked horizontal channel strips with 2-band folded green/blue positive fills and red negative fills, compact information density."
+  },
+  "ggtrace": {
+    "features": [
+      "Programmatic inspection and tracing of internal ggplot2 ggproto workflows",
+      "Intercepts and inspects data frames at each stage of plot evaluation",
+      "ggtrace_inspect_return and ggtrace_capture for debugging custom geoms/stats",
+      "Non-invasive runtime function hooking into ggplot_build and ggplot_gtable",
+      "Essential pedagogical tool for understanding the grammar of graphics execution"
+    ],
+    "layer": "#fractal-l4 #fractal-l5",
+    "tech": "Runtime execution interception wrapping ggproto methods and ggplot2 build pipeline stages with call-stack tracers and data snapshotting.",
+    "func": "ggplot2 extension package development, custom geom/stat debugging, computer science pedagogy on declarative graphics compilation.",
+    "ui": "Interactive pipeline stage flowchart displaying data transformations at each step (setup_data, compute_group, draw_panel)."
+  },
+  "ggESDA": {
+    "features": [
+      "Exploratory Spatial Data Analysis (ESDA) with spatial autocorrelation metrics",
+      "Morans I scatterplots displaying standardized variable vs spatial lag",
+      "Local Indicators of Spatial Association (LISA) cluster classification plots",
+      "Spatial weight matrix visualizations (contiguity, k-nearest neighbors)",
+      "Identification of spatial hotspots (High-High) and spatial outliers (High-Low)"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Spatial statistics algorithms computing global Morans I, Gearys C, and Anselins local LISA statistics using spatial adjacency matrices.",
+    "func": "Spatial epidemiology disease cluster detection, urban crime hotspot analysis, regional economic convergence studies.",
+    "ui": "Four-quadrant Moran scatterplot with regression slope indicating spatial autocorrelation, accompanied by color-coded LISA cluster maps."
+  },
+  "piecepackr": {
+    "features": [
+      "2D and 3D rendering of public domain board game systems",
+      "Supports piecepack, chess, checkers, dominoes, playing cards, and backgammon",
+      "Customizable game piece textures, symbols, colors, and face values",
+      "3D ray-traced perspective board rendering using rayrender/rayvista",
+      "Game layout generation for game design, rulebook diagrams, and puzzle generation"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Geometric coordinate generation for board game components with isometric and orthographic projections and affine texture mappings.",
+    "func": "Board game prototyping, algorithmic game theory visualization, chess endgame documentation, educational math puzzles.",
+    "ui": "Isometric 3D board view with wooden game tiles, dice, pawns, and tokens arranged in strategic game states on dark felt."
+  },
+  "nflplotR": {
+    "features": [
+      "geom_nfl_logos NFL football team logos placed at data coordinates",
+      "geom_nfl_headshots player headshot images as scatter plot markers",
+      "geom_nfl_wordmarks team wordmark graphics for axis labels and headers",
+      "Automated team color palettes (scale_color_nfl) matching official franchise hex codes",
+      "High-performance image caching and resolution downsampling"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Sports data graphics pipeline downloading and caching official NFL franchise SVG/PNG vector assets, binding them to Cartesian scales.",
+    "func": "Sports analytics, NFL quarterback EPA/play scatter plots, team offensive efficiency comparisons, fantasy football dashboards.",
+    "ui": "High-resolution team logo glyphs plotted at efficiency coordinates, team-colored trendlines, dark sports analytics cockpit theme."
+  },
+  "ggblanket": {
+    "features": [
+      "gg_point, gg_bar, gg_line fast wrapper functions around ggplot2",
+      "Opinionated, publication-ready aesthetic defaults with zero configuration",
+      "Automatic smart title case label formatting from snake_case variable names",
+      "Curated colorblind-safe color palettes and dark/light mode themes",
+      "Simplified syntax designed to drastically accelerate exploratory plotting"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Streamlined wrapper architecture wrapping ggplot2 geoms, scales, titles, and themes into single-call functional APIs.",
+    "func": "Rapid data exploration, client-ready preliminary reporting, fast dashboard generation, beginner data science workflows.",
+    "ui": "Sleek, modern minimalist charts with bold titles, clean axis scales, and vibrant contrasting color accents."
+  },
+  "ggstar": {
+    "features": [
+      "geom_star polygon star marker glyphs with 30+ distinct geometric shapes",
+      "Star shapes: 4-pointed, 5-pointed, 6-pointed, 7-pointed, pentagrams, hexagons",
+      "Multi-pointed star aspect ratio and inner/outer radius ratio tuning",
+      "Expands standard base R shape palette (0-25) with high-distinctiveness polygons",
+      "Full support for independent fill and stroke aesthetic mappings"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Trigonometric polygon vertex generation alternating between inner and outer radii for N-pointed stars.",
+    "func": "High-cardinality categorical scatter plots, astronomy star classification, customer review ratings, military ranking charts.",
+    "ui": "Radiant geometric star markers with glowing neon borders and contrasting centers, high visual distinction across categories."
+  },
+  "ggseqplot": {
+    "features": [
+      "Sequence analysis state distribution plots (d-plot) for life-course trajectories",
+      "Sequence frequency plots (f-plot) showing most common sequential pathways",
+      "Sequence index plots (i-plot) visualizing individual chronological histories",
+      "Transition rate matrices and sequence entropy distribution curves",
+      "TraMineR sequence data object integration"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Longitudinal sequence mining algorithms calculating state distributions and optimal matching distance matrices across categorical timelines.",
+    "func": "Sociological life-course analysis, user journey clickstream paths, medical patient disease progression sequences.",
+    "ui": "Stacked horizontal ribbon plots where chronological trajectories transition through colored state bands (education, career, retirement)."
+  },
+  "ggsurvfit": {
+    "features": [
+      "stat_survfit publication-ready Kaplan-Meier survival curves",
+      "Cumulative incidence curves for competing risk analysis",
+      "Synchronized risk tables aligned beneath survival curves displaying numbers at risk",
+      "Censoring tick markers and median survival time callouts",
+      "Log-rank test p-value annotations and restricted mean survival time (RMST)"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Non-parametric Kaplan-Meier survival estimator coupled with multi-panel gtable risk table alignment.",
+    "func": "Oncology clinical trials, pharmaceutical efficacy studies, engineering component reliability analysis, customer churn survival.",
+    "ui": "Stepped survival curves with 95% confidence ribbon bands, censoring cross ticks, and aligned numbers-at-risk data table below."
+  },
+  "ggsector": {
+    "features": [
+      "geom_sector circular sector and pie slice glyph markers at (x, y) coordinates",
+      "Configurable start angle, end angle, and sector radius",
+      "Multivariate spatial mapping encoding two quantities in angle and radius",
+      "Directional wind rose markers and sunburst slice glyphs",
+      "Radial gauge glyphs for dashboard indicator meters"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Trigonometric arc polygon generation calculating circular sector boundaries in data units with affine spatial positioning.",
+    "func": "Meteorological wind direction and speed mapping, directional antenna radiation patterns, directional transit flow maps.",
+    "ui": "Spatial map dotted with circular sector glyphs oriented along directional headings with radii proportional to magnitude."
+  },
+  "ggterror": {
+    "features": [
+      "Global terrorism and conflict event epidemiology visualizations",
+      "Longitudinal incident frequency timelines with casualty heatmaps",
+      "Weapon type and target category stacked composition flows",
+      "Geographic event spatial coordinates with conflict intensity radii",
+      "Time-series change point detection for geopolitical crisis periods"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Temporal point process modeling and spatial kernel density estimation on georeferenced conflict event matrices.",
+    "func": "Geopolitical risk analysis, counter-terrorism intelligence assessments, international relations security studies.",
+    "ui": "Dark-mode timeline with amber and crimson incident severity bars, paired with spatial hotspot event circles."
+  },
+  "ggragged": {
+    "features": [
+      "Ragged grid faceting with uneven row and column panel layouts",
+      "Eliminates wasted whitespace when subsets have varying numbers of sub-categories",
+      "Dynamic panel allocation based on nested grouping cardinality",
+      "Independent aspect ratios and coordinate limits for irregular panel grids",
+      "Cleaner presentation for hierarchical and unbalanced multi-level data"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Custom facet grid layout algorithm packaging irregular panel lists into compact packing configurations without empty placeholder cells.",
+    "func": "Unbalanced demographic studies, multi-level organizational charts, taxonomic clades with varying species counts.",
+    "ui": "Neatly packed grid where each row contains exactly the number of sub-plots required by that category, zero empty box muda."
+  },
+  "ggoutlierscatterplot": {
+    "features": [
+      "Scatter plots with automated statistical outlier detection and highlighting",
+      "Mahalanobis distance, Cook distance, and robust covariance estimators",
+      "Outlier points highlighted with glowing rings and automatic callout labels",
+      "Normal points rendered with subtle opacity preventing visual distraction",
+      "Bivariate robust confidence ellipses enclosing normal data core"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Robust multivariate distance algorithms (Minimum Covariance Determinant) computing chi-squared threshold boundaries for outlier flagging.",
+    "func": "Financial fraud anomaly detection, sensor fault diagnostics, industrial quality control, clinical lab outlier screening.",
+    "ui": "Faint dark-blue normal scatter cloud with vibrant neon-red outlier points encircled by warning halos and labeled with sample IDs."
+  },
+  "ggautothemes": {
+    "features": [
+      "Dynamic automated theme generation adapting to dataset structure and context",
+      "Automatic contrast calibration based on display device luminance",
+      "Smart typography selection matching document context (scientific, business, media)",
+      "Harmonious palette synthesis derived from continuous clustering algorithms",
+      "Context-aware gridline density and axis margin optimization"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Heuristic aesthetic rule engines analyzing data dimensionality, range, and categorical cardinality to synthesize optimal theme parameters.",
+    "func": "Automated reporting pipelines, responsive UI themes, accessibility compliance optimization, autonomous agent report generation.",
+    "ui": "Flawlessly balanced themes dynamically tuned to dark cockpit specs with mathematically optimized contrast ratios."
+  },
+  "ggfoundry": {
+    "features": [
+      "Metal foundry casting simulation and thermal cooling curve visualizations",
+      "Solidification phase transformation diagrams (Liquid, Solid + Liquid, Solid)",
+      "Cooling rate derivative curves (dT/dt) identifying phase change temperatures",
+      "Microstructure grain boundary size prediction curves",
+      "Alloy metallurgical composition optimization charts"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Thermal finite difference equations modeling latent heat of fusion during metal solidification, plotting temperature vs time and first derivatives.",
+    "func": "Metallurgical engineering, foundry casting quality assurance, alloy thermodynamics, aerospace materials testing.",
+    "ui": "Thermal cooling curve descending through shaded phase zones with bright red derivative curve highlighting solidification plateaus."
+  },
+  "ggalign": {
+    "features": [
+      "Complex alignment and synchronization of multi-panel genomic, matrix, and heatmaps",
+      "Precise panel width and height coordination across heterogeneous plot types",
+      "Synchronized zoom, panning, and brushing across stacked multi-track plots",
+      "Alignment of phylogenetic trees, genomic tracks, and clinical metadata sidebars",
+      "Eliminates margin misalignment between disparate ggplot2 grobs"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Gtable column and row constraint solver synchronizing viewport boundaries across independently generated ggplot2 grob trees.",
+    "func": "Multi-omics data integration, genomic browser view construction, electrophysiology multi-channel alignment.",
+    "ui": "Perfect pixel-to-pixel column alignment across top heatmap, middle genomic track, and bottom bar charts, zero axis drift."
+  },
+  "ggreveal": {
+    "features": [
+      "Incremental presentation reveal animations unveiling plot layers step-by-step",
+      "Stepwise addition of data points, lines, confidence intervals, and annotations",
+      "Generates slides/frames for pedagogical lectures and conference talks",
+      "Highlights progressive scientific discovery without overwhelming the audience",
+      "Configurable reveal order: baseline -> data -> model fit -> outliers"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Declarative layer decomposition partitioning a ggplot AST into sequential sub-plots with cumulative geometric layer activation.",
+    "func": "Data science pedagogy, executive presentation storytelling, academic conference talks, interactive data explainers.",
+    "ui": "Step-by-step sequence of charts progressively unveiling hypothesis, empirical observations, and final model conclusions."
+  },
+  "tidyplots": {
+    "features": [
+      "Tidyverse-first plotting grammar with elegant defaults and concise syntax",
+      "Automated sorting of categorical factors by quantitative value",
+      "Built-in colorblind-safe palettes and modern minimalist typography",
+      "Integrated statistical summary points, error bars, and p-value brackets",
+      "Reduces 20 lines of standard ggplot2 boilerplate to 2 clean pipe steps"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Modern tidy evaluation framework compiling high-level verbs into robust ggplot2 pipelines.",
+    "func": "Everyday scientific exploratory analysis, laboratory experimental assays, rapid figure drafting, biotech R&D reports.",
+    "ui": "Polished, aesthetic bar-and-scatter plots with clean error bars, subtle gridlines, and publication-ready typographic elegance."
+  },
+  "rphylopic": {
+    "features": [
+      "Adds silhouettes of living and extinct organisms from the Phylopic database",
+      "geom_phylopic places biological organism silhouette glyphs at data points",
+      "Scale silhouettes by body mass, trophic level, or phylogenetic group",
+      "Customizable silhouette fill, stroke, and transparency",
+      "Essential for biodiversity, paleontology, and macroecology charts"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "SVG path parser downloading and rendering vectorized biological organism silhouettes from the Phylopic API into Cartesian grob viewports.",
+    "func": "Macroecology body size scaling, paleontology fossil mass comparisons, phylogenetic clade icon mapping, biodiversity infographics.",
+    "ui": "Scatter plot where markers are authentic silhouettes of organisms (dinosaurs, cetaceans, primates) colored by ecological clade."
+  },
+  "ggfields": {
+    "features": [
+      "geom_fields vector field arrows, direction cones, and flow streamlines",
+      "Magnitude scaling and color mapping for continuous 2D vector fields",
+      "Streamline integration tracing particle trajectories through velocity fields",
+      "Meteorological wind vectors and oceanographic current dynamics",
+      "Support for gridded and irregular spatial vector observation points"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Runge-Kutta numerical integration (RK4) tracing continuous streamlines through 2D vector velocity grids with dynamic arrow spacing.",
+    "func": "Oceanographic circulation modeling, atmospheric wind flow simulation, aerodynamics wind tunnel velocity fields.",
+    "ui": "Smooth curving streamlines with glowing arrowheads tracing fluid currents across bathymetric and atmospheric contours."
+  },
+  "ggsankeyfier": {
+    "features": [
+      "Sankey and alluvial stream diagrams with customizable stage nodes",
+      "Curved cubic Bezier flow ribbons connecting categorical transitions",
+      "Configurable node positioning, ordering, and spacing between stages",
+      "Supports both wide and long format sequence and transition datasets",
+      "Dynamic ribbon transparency and gradient coloring from source to target"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Mass-conserving flow routing algorithm calculating stage node vertical coordinates and cubic spline ribbon polygons linking stages.",
+    "func": "Energy consumption flow charts, web conversion funnel analysis, educational progression pipelines, supply chain logistics.",
+    "ui": "Crisp vertical stage blocks connected by graceful undulating translucent ribbons, colored by category with zero mass leakage."
+  },
+  "ggpath": {
+    "features": [
+      "geom_from_path renders local and remote image paths (PNG, SVG, JPG) into ggplot2",
+      "Proportional image aspect ratio preservation and circular avatar clipping",
+      "High-performance image caching for high-density image scatter plots",
+      "Direct integration of sports player headshots, brand logos, and microscopy icons",
+      "Aesthetic mapping of image width, height, alpha, and border color"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Asynchronous image decoding and raster/SVG grob compilation within Cartesian scales with automated aspect ratio clamping.",
+    "func": "Sports analytics player performance maps, social media influence graphs with avatar nodes, e-commerce product scatter plots.",
+    "ui": "Circular image avatars placed at exact data coordinates with colored border rings indicating performance tier."
+  },
+  "ggsurveillance": {
+    "features": [
+      "Public health infectious disease outbreak surveillance monitoring",
+      "Automated epidemic threshold calculations using Farrington and Serfling models",
+      "Aberration detection flags highlighting statistically significant disease clusters",
+      "Longitudinal endemic channel ribbons (25th-75th percentiles) with alert spikes",
+      "Integration with surveillance R package outbreak algorithms"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Negative binomial generalized linear models (GLM) accounting for seasonality, trend, and past outbreaks to compute epidemic alarm thresholds.",
+    "func": "National disease surveillance centers (CDC, ECDC), hospital infection outbreak alerts, syndromic surveillance dashboards.",
+    "ui": "Weekly case count line chart with shaded gray historical baseline channel, red dashed alarm threshold, and flashing alert symbols."
+  },
+  "gguapo": {
+    "features": [
+      "High-level publication plot styling with unified typographic margins",
+      "Opinionated theme presets optimized for academic journal specifications",
+      "Harmonious color palettes calibrated for both digital screens and print",
+      "Automated axis label wrapping and legend position optimization",
+      "Strict adherence to scientific visualization best practices"
+    ],
+    "layer": "#fractal-l2 #fractal-l3",
+    "tech": "Comprehensive theme and guide compiler enforcing standardized typographical grids, margin ratios, and color harmony algorithms.",
+    "func": "Academic manuscript figure preparation, clinical report generation, standardized scientific communications.",
+    "ui": "Impeccable scientific publication styling with high data-ink ratio, legible fonts, and balanced color accents."
+  },
+  "ggdibbler": {
+    "features": [
+      "Statistical process flow and hierarchical pipeline state graphs",
+      "Interactive node callouts and stage status indicators",
+      "Directed acyclic data pipeline execution tracing",
+      "Execution latency and throughput metrics embedded inside pipeline nodes",
+      "Failure state highlighting with automated root-cause warning badges"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Topological graph sorting and layout algorithms computing pipeline stage coordinates and metric-annotated node boxes.",
+    "func": "ETL data pipeline observability, CI/CD automated build monitoring, distributed microservice trace visualization.",
+    "ui": "Flowing pipeline diagram with green (Passed), amber (Degraded), and red (Failed) node statuses, execution timing badges."
+  },
+  "ggprop.test": {
+    "features": [
+      "Visual hypothesis testing for proportions and contingency tables",
+      "Two-sample and multi-sample proportion comparison plots",
+      "Confidence intervals for difference in proportions with reference zero line",
+      "Automated chi-squared test and Fisher exact test p-value annotations",
+      "Visual representation of power and sample size sensitivity"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l5",
+    "tech": "Normal approximation (Wilson score, Clopper-Pearson) confidence interval calculations for binomial proportions and risk differences.",
+    "func": "A/B testing conversion rate analysis, clinical trial efficacy risk differences, political polling margin-of-error comparisons.",
+    "ui": "Horizontal difference-in-proportions confidence bars crossing vertical dashed null line (0%), clear significance callouts."
+  },
+  "ggsky": {
+    "features": [
+      "Astronomical celestial sphere sky maps and star charts",
+      "Equatorial coordinates: Right Ascension (RA) and Declination (Dec)",
+      "Constellation boundary lines and stellar magnitude bubble scaling",
+      "Milky Way galactic plane and ecliptic coordinate overlays",
+      "Support for astronomical FITS image overlays and deep-sky object catalogs"
+    ],
+    "layer": "#fractal-l2 #fractal-l3 #fractal-l4",
+    "tech": "Celestial spherical coordinate projections (Aitoff, Lambert azimuthal, stereographic) mapping spherical RA/Dec onto 2D sky charts.",
+    "func": "Astrophysical telescope observation planning, exoplanet transit coordinate maps, amateur astronomy sky charts.",
+    "ui": "Deep cosmic dark-blue celestial sphere map with glowing white and cyan star points sized by magnitude, fine constellation lines."
+  }
+}
