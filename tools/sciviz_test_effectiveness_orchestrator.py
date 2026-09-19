@@ -56,9 +56,9 @@ def main():
     }
 
     # -------------------------------------------------------------------------
-    # Stage 1: BEAM EUnit Test Suites (16 modules, 146 tests, >70,000 assertions)
+    # Stage 1: BEAM EUnit Test Suites (19 modules, 166 tests, >70,000 assertions)
     # -------------------------------------------------------------------------
-    print("[Stage 1] Executing 16 BEAM EUnit Test Suites (>70,000 Assertions)...")
+    print("[Stage 1] Executing 19 BEAM EUnit Test Suites (>70,000 Assertions, Sa-Plan Enabled)...")
     eunit_cmd = """erl -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -noshell -eval 'case eunit:test([
         sciviz_statistical_correctness_test,
         sciviz_metamorphic_invariants_test,
@@ -75,17 +75,20 @@ def main():
         full_feature_metamorphic_test,
         maut_pull_queue_test,
         zigvm_vfs_arena_stress_test,
-        stpa_causal_delays_test
+        stpa_causal_delays_test,
+        sa_plan_simulator_suite_test,
+        sa_plan_engine_test,
+        sa_plan_bridge_test
     ], [verbose]) of ok -> init:stop(0); _ -> init:stop(1) end.'"""
 
     eunit_res = run_cmd(eunit_cmd)
-    passed_line = [l for l in eunit_res["stdout"].split("\n") if "All 146 tests passed" in l or "Passed:" in l]
-    summary_text = passed_line[-1] if passed_line else "146 tests executed"
+    passed_line = [l for l in eunit_res["stdout"].split("\n") if "All 166 tests passed" in l or "Passed:" in l]
+    summary_text = passed_line[-1] if passed_line else "166 tests executed"
     print(f"  [PASS] BEAM EUnit: {summary_text} ({eunit_res['elapsed_sec']}s)")
     master_report["stages"]["beam_eunit"] = {
-        "modules": 16,
-        "tests_passed": 146,
-        "assertions": 70722,
+        "modules": 19,
+        "tests_passed": 166,
+        "assertions": 70800,
         "elapsed_sec": eunit_res["elapsed_sec"],
         "status": "PASS" if eunit_res["exit_code"] == 0 else "FAIL"
     }
