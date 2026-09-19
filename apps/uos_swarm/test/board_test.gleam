@@ -280,7 +280,7 @@ pub fn fuzz_decode_test() {
 
 pub fn ledger_line_carries_delivery_record_test() {
   let path =
-    "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/board_test_ledger_"
+    "/tmp/board_test_ledger_"
     <> string.inspect(board.system_time_us())
     <> ".jsonl"
   let b = case
@@ -493,7 +493,7 @@ pub fn ledger_latest_line_wins_test() {
 
 pub fn retry_records_attempts_and_dead_letters_test() {
   let path =
-    "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/board_test_retry_"
+    "/tmp/board_test_retry_"
     <> string.inspect(board.system_time_us())
     <> ".jsonl"
   let b = case
@@ -797,7 +797,7 @@ pub fn per_sender_key_separation_test() {
 /// verbatim to `<ledger_path>.quarantine.jsonl` and counted.
 pub fn open_quarantines_unparseable_lines_test() {
   let path =
-    "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/board_test_quarantine_"
+    "/tmp/board_test_quarantine_"
     <> string.inspect(board.system_time_us())
     <> ".jsonl"
   let ms = chain(2)
@@ -832,7 +832,7 @@ pub fn open_quarantines_unparseable_lines_test() {
 /// ledger transport shows Delivered (never faked, never lost).
 pub fn crash_recovery_reopens_full_chain_test() {
   let path =
-    "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/board_test_crash_"
+    "/tmp/board_test_crash_"
     <> string.inspect(board.system_time_us())
     <> ".jsonl"
   let b1 = case

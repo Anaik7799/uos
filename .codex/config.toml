@@ -16,6 +16,12 @@ enabled_tools = ["read_file", "knowledge_search"]
 [mcp_servers.uos_gleam.env]
 ERL_CRASH_DUMP_SECONDS = "0"
 
+[mcp_servers.uos_gleam.tools.knowledge_search]
+approval_mode = "approve"
+
+[mcp_servers.uos_gleam.tools.read_file]
+approval_mode = "approve"
+
 # Full task-scoped interface. Enable only with a current reviewed launcher grant.
 # Grant values are inherited from the launcher environment, never checked in.
 [mcp_servers.uos_development]

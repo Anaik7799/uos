@@ -465,7 +465,7 @@ pub fn default_tiers_shape_test() {
 }
 
 fn budget_scratch_path(suffix: String) -> String {
-  "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/route_budget_"
+  "/tmp/route_budget_"
   <> suffix
   <> ".jsonl"
 }

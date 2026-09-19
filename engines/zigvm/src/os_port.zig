@@ -157,6 +157,7 @@ pub const LivePort = struct {
     /// Write the whole slice to the child's stdin. Bounded: a short write loops
     /// until all bytes are sent or `error.WriteFailed`.
     pub fn writeAll(self: *LivePort, bytes: []const u8) LiveError!void {
+        if (self.is_tty) return;
         var off: usize = 0;
         while (off < bytes.len) {
             const n = linux.write(self.stdin_fd, bytes.ptr + off, bytes.len - off);

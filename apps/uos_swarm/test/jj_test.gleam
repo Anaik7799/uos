@@ -45,7 +45,7 @@ fn is_file(path: String) -> Bool
 @external(erlang, "filelib", "ensure_dir")
 fn ensure_dir(path: String) -> Nil
 
-const scratch_base = "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/jjlib-tests"
+const scratch_base = "/tmp/jjlib-tests"
 
 /// Fails the test immediately with a clear message instead of letting it
 /// silently pass with nothing exercised, per the ground rule that a missing

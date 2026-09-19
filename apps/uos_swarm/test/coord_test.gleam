@@ -606,7 +606,7 @@ pub fn filter_pushable_pushes_valid_local_row_test() {
 
 pub fn seed_epochs_recovers_after_restart_test() {
   let path =
-    "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/coord_test_seed_epochs_"
+    "/tmp/coord_test_seed_epochs_"
     <> string_of(board.system_time_us())
     <> ".jsonl"
   let ba = case

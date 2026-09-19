@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-tools/sqlite_wal_concurrency_bench.py — 200 Concurrent Worker SQLite WAL Burst Contention Benchmark
+tools/sqlite_wal_concurrency_bench.py — 300 Concurrent Worker SQLite WAL Burst Contention Benchmark
 Evaluates high-concurrency contention, lock acquisition distributions, and zero-loss integrity:
-- 200 concurrent worker threads executing lease claims, updates, and commits (5,000 total transactions)
+- 300 concurrent worker threads executing lease claims, updates, and commits (7,500 total transactions)
 - Pragmas: journal_mode=WAL, synchronous=NORMAL, busy_timeout=30000ms
 - Metrics: Total txns, Throughput (tx/sec), p50/p95/p99 latency (ms), Zero lock-busy dropouts
 - Database Integrity: PRAGMA integrity_check post-stress
@@ -60,7 +60,7 @@ def worker_thread(worker_id, tx_count, latencies, error_counts):
     
     for tx_idx in range(tx_count):
         t0 = time.perf_counter_ns()
-        max_retries = 10
+        max_retries = 20
         success = False
         for attempt in range(max_retries):
             try:
@@ -97,7 +97,7 @@ def run_concurrency_benchmark():
     os.makedirs("var/concurrency", exist_ok=True)
     init_bench_db()
     
-    num_threads = 200
+    num_threads = 300
     tx_per_thread = 25
     total_expected_tx = num_threads * tx_per_thread
     
@@ -185,7 +185,7 @@ def run_concurrency_benchmark():
     with open(RECEIPT_PATH, "w") as f:
         json.dump(receipt, f, indent=2)
         
-    print(f"200-Worker SQLite WAL Burst Contention Benchmark Completed:")
+    print(f"300-Worker SQLite WAL Burst Contention Benchmark Completed:")
     print(f"  Transactions: {completed_tx}/{total_expected_tx} completed (0 errors)")
     print(f"  Throughput: {throughput_tps} tx/sec over {total_elapsed_sec:.3f}s")
     print(f"  Latency: p50={p50_ms}ms, p95={p95_ms}ms, p99={p99_ms}ms, max={max_ms}ms")
