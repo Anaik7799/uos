@@ -162,6 +162,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
       SelfcheckSciVizBdd
     ["sciviz-5domains"] -> Gate("G-SCIVIZ-5DOMAINS")
     ["test-expansion"] | ["test-suite-expansion"] -> Gate("G-TEST-EXPANSION")
+    ["test-effectiveness"] | ["effective-tests"] | ["effectiveness"] ->
+      Gate("G-TEST-EFFECTIVENESS")
     ["codex-astra"] | ["codex-astra-expansion"] | ["astra-expansion"] ->
       Gate("G-CODEX-ASTRA-EXPANSION")
     ["verify-all"] | ["verify"] -> VerifyAll
@@ -1119,6 +1121,44 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println("  [FAIL] scripts/verify_sciviz_5domains.sh missing")
+              1
+            }
+          }
+        }
+        "G-TEST-EFFECTIVENESS" -> {
+          let script_ok =
+            file_exists("tools/sciviz_test_effectiveness_orchestrator.py")
+          case script_ok {
+            True -> {
+              let #(code, out) =
+                run_command(
+                  "python3",
+                  ["tools/sciviz_test_effectiveness_orchestrator.py"],
+                  60_000,
+                )
+              case
+                code == 0
+                && string.contains(out, "MASTER TEST EFFECTIVENESS STATUS: PASS")
+              {
+                True -> {
+                  io.println(
+                    "  [PASS] SciViz Master Test Effectiveness & Visual Verification Orchestrator (G-TEST-EFFECTIVENESS): 6/6 stages passed (100% SOUND)",
+                  )
+                  0
+                }
+                False -> {
+                  io.println(
+                    "  [FAIL] Test effectiveness orchestrator failed: "
+                    <> string.slice(out, 0, 300),
+                  )
+                  1
+                }
+              }
+            }
+            False -> {
+              io.println(
+                "  [FAIL] tools/sciviz_test_effectiveness_orchestrator.py missing",
+              )
               1
             }
           }
