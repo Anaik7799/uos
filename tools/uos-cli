@@ -18,4 +18,4 @@ fi
 command -v gleam >/dev/null || { echo "Missing toolchain dependency: gleam" >&2; exit 2; }
 cd "$uos_repo/tools/uos"
 # The CLI resolves repository-relative paths, so run it with the repo as cwd.
-exec env UOS_REPO="$uos_repo" gleam run -m uos -- "$@"
+exec env UOS_REPO="$uos_repo" gleam run -m main -- "$@"
