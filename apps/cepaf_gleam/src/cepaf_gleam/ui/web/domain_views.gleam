@@ -27,32 +27,18 @@
 //// Prajna (L5), Smriti (L5), Holon (L4), Config (L4), Git (L4),
 //// Database (L3), Bridge (L6).
 
-import cepaf_gleam/c3i/nif as c3i_nif
-import cepaf_gleam/ui/lustre/shell
-import cepaf_gleam/ui/state.{
-  type SharedMeshState, ThreatElevated, ThreatLow, ThreatNominal, ThreatNone,
-  cockpit_mode_to_string, ooda_phase_to_string,
-}
-// Pass-26 — Phase 3a per-page split: bridge view extracted.
-// Pass-27 — Phase 3b: shared helpers extracted to page_helpers module.
-import cepaf_gleam/ui/web/page_helpers.{asset_cachebust_id, count_in_json, page_header, planning_enhanced_css, progress_ring, state_kv_block}
+import cepaf_gleam/ui/state.{type SharedMeshState}
+import cepaf_gleam/ui/web/pages/agents_page
 import cepaf_gleam/ui/web/pages/bridge_page
 import cepaf_gleam/ui/web/pages/config_page
 import cepaf_gleam/ui/web/pages/database_page
 import cepaf_gleam/ui/web/pages/git_page
 import cepaf_gleam/ui/web/pages/holon_page
 import cepaf_gleam/ui/web/pages/knowledge_page
-import cepaf_gleam/ui/web/pages/prajna_page
-import cepaf_gleam/ui/web/pages/agents_page
-import cepaf_gleam/ui/web/pages/smriti_page
 import cepaf_gleam/ui/web/pages/planning_page
-import gleam/float
-import gleam/int
-import gleam/list
-import gleam/string
-import lustre/attribute
+import cepaf_gleam/ui/web/pages/prajna_page
+import cepaf_gleam/ui/web/pages/smriti_page
 import lustre/element.{type Element}
-import lustre/element/html
 
 // ---------------------------------------------------------------------------
 // Public views

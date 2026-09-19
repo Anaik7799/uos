@@ -24,7 +24,6 @@
 //// </c3i-module>
 //// =============================================================================
 
-import gleam/list
 import gleam/string
 
 /// Canonical 10-tier fractal layers
