@@ -4,7 +4,6 @@
 
 import cepaf_gleam/ha/deadman_freshness.{
   ActionInitiateFailover, ActionTripDeadMan, ActionWarnStaleness,
-  HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,
   active_healthy_actors_count, evaluate_freshness_tick,
   init_deadman_registry, is_l0_constitutional_safe, record_heartbeat,
   register_actor,

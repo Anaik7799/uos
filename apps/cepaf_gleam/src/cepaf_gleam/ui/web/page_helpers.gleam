@@ -22,10 +22,9 @@
 //// function body is a byte-equivalent move from the original.
 
 import cepaf_gleam/ui/state.{
-  type SharedMeshState, ThreatElevated, ThreatLow, ThreatNominal, ThreatNone,
+  type SharedMeshState,
   cockpit_mode_to_string, ooda_phase_to_string,
 }
-import gleam/float
 import gleam/int
 import gleam/list
 import gleam/string

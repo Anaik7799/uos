@@ -7,7 +7,7 @@
 //// Unit tests for Declarative Intent Poka-Yoke Validator.
 
 import cepaf_gleam/intent/config.{
-  type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
+  ContainerIntent, type IntentConfig, IntentConfig,
 }
 import cepaf_gleam/intent/validator
 import gleeunit/should

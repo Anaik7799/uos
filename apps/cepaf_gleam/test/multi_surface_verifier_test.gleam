@@ -11,9 +11,7 @@ import cepaf_gleam/semantics/sheaf_cohomology.{
   transition_morphism, cech_coboundary, verify_h1_vanishing, glue_global_section
 }
 import cepaf_gleam/intent/parser.{default_baseline, normalize_config}
-import cepaf_gleam/intent/config.{
-  type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
-}
+import cepaf_gleam/intent/config.{ContainerIntent, IntentConfig}
 import cepaf_gleam/intent/validator
 import cepaf_gleam/testing/tui_test_engine.{
   all_canonical_screens, all_subsystem_views,

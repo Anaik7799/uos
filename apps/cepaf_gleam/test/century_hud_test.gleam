@@ -3,8 +3,8 @@
 //// =============================================================================
 
 import cepaf_gleam/ui/lustre/century_hud.{
-  CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,
-  render_checklist_section, render_html, render_hud_svg, update_pid_telemetry,
+  init_century_hud, render_ansi, render_checklist_section, render_html,
+  render_hud_svg, update_pid_telemetry,
 }
 import gleam/string
 import gleeunit/should

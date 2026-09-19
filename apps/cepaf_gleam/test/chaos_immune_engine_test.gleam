@@ -3,7 +3,7 @@
 //// =============================================================================
 
 import cepaf_gleam/immune/chaos_immune_engine.{
-  AntibodyNeutralized, AndonEmergencyHalt, HeartbeatJitter, HotReloadTriggered,
+  AntibodyNeutralized, AndonEmergencyHalt, HotReloadTriggered,
   PacketLoss, WorkerOom, compute_metabolic_health, init_immune_engine,
   inject_fault, is_containment_preserved, synthesize_antibody,
 }
