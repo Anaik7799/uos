@@ -4,8 +4,8 @@
 // =============================================================================
 
 import cepaf_gleam/ha/crdt_sets.{
-  lww_add, lww_contains, lww_merge, lww_remove, new_lww_set, new_or_set,
-  or_add, or_contains, or_merge, or_remove,
+  lww_add, lww_contains, lww_merge, lww_remove, new_lww_set, new_or_set, or_add,
+  or_contains, or_merge, or_remove,
 }
 import gleeunit/should
 
@@ -37,8 +37,10 @@ pub fn lww_concurrent_merge_commutativity_test() {
 
   let s_b =
     new_lww_set()
-    |> lww_remove("item-alpha", 150) // Removed after add
-    |> lww_add("item-gamma", 250) // Added before remove
+    |> lww_remove("item-alpha", 150)
+    // Removed after add
+    |> lww_add("item-gamma", 250)
+    // Added before remove
     |> lww_add("item-delta", 400)
 
   // Merge A with B

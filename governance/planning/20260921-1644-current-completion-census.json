@@ -1,0 +1,14 @@
+{
+  "schema": "uos.current-completion-census.v1",
+  "observed_at": "2026-09-21T16:44:29Z",
+  "authority": "read-only Sa-plan and SQLite census",
+  "database": {
+    "path": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "sha256": "0d205a49991e64b2844991689b09a0850a76f7ccfde2e4a3ec5dd9512f9857ad"
+  },
+  "plan": {"id":"uos/system-mcp-features/20260919-1642","total":21,"completed":4,"ready":3,"executing":0},
+  "feature_workflows": {"total":52,"missing_catalog_digest":52,"missing_ledger_digest":52},
+  "target_running_workflows": 8,
+  "interpretation": "No digest migration or stale-workflow reconciliation has occurred; dashboard completion remains evidence-only and unadmitted.",
+  "completion_credit": false
+}

@@ -42,7 +42,7 @@ pub fn bdd_scenario_1_cognitive_architecture_query_test() {
       user: "Avi",
       chat_id: "6249174059",
       text: "what does the sovereign cognitive architect do — show processing path",
-      timestamp_ms: 1789184000000,
+      timestamp_ms: 1_789_184_000_000,
     )
 
   // WHEN: The cognitive worker evaluates the intent
@@ -54,9 +54,15 @@ pub fn bdd_scenario_1_cognitive_architecture_query_test() {
   |> string.contains("5-Stage OODA Processing Path")
   |> should.be_true
   decision.reply_markdown |> string.contains("Edge Ingress") |> should.be_true
-  decision.reply_markdown |> string.contains("OODA Cognitive Loop") |> should.be_true
-  decision.reply_markdown |> string.contains("Formal Verification") |> should.be_true
-  decision.reply_markdown |> string.contains("Egress Delivery") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("OODA Cognitive Loop")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Formal Verification")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Egress Delivery")
+  |> should.be_true
   decision.actions
   |> list.contains("explain_cognitive_architecture")
   |> should.be_true
@@ -76,7 +82,7 @@ pub fn bdd_scenario_2_telegram_message_history_query_test() {
       "user",
       "Hello Robot C3I",
       None,
-      1789184001000,
+      1_789_184_001_000,
     )
   let _ =
     conversation_memory.record_turn(
@@ -85,20 +91,25 @@ pub fn bdd_scenario_2_telegram_message_history_query_test() {
       "assistant",
       "Greetings Operator Avi",
       None,
-      1789184002000,
+      1_789_184_002_000,
     )
 
   // WHEN: The operator asks to show last 10 telegram messages
-  let raw_history = conversation_memory.get_recent_history(test_db, "bdd-chat-1", 10)
+  let raw_history =
+    conversation_memory.get_recent_history(test_db, "bdd-chat-1", 10)
   let formatted = format_recent_telegram_history(raw_history, 10)
 
   // THEN: It returns the formatted stream of user and bot turns, not the agent swarm board
-  formatted |> string.contains("Recent Telegram Conversation Stream") |> should.be_true
+  formatted
+  |> string.contains("Recent Telegram Conversation Stream")
+  |> should.be_true
   formatted |> string.contains("User:") |> should.be_true
   formatted |> string.contains("Hello Robot C3I") |> should.be_true
   formatted |> string.contains("Robot C3I:") |> should.be_true
   formatted |> string.contains("Greetings Operator Avi") |> should.be_true
-  formatted |> string.contains("Tri-Agent Swarm Message Board") |> should.be_false
+  formatted
+  |> string.contains("Tri-Agent Swarm Message Board")
+  |> should.be_false
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +125,7 @@ pub fn bdd_scenario_3_identity_and_peer_coordination_test() {
       user: "Avi",
       chat_id: "6249174059",
       text: "who are you?",
-      timestamp_ms: 1789184003000,
+      timestamp_ms: 1_789_184_003_000,
     )
 
   // WHEN: The cognitive worker evaluates identity
@@ -123,8 +134,12 @@ pub fn bdd_scenario_3_identity_and_peer_coordination_test() {
   // THEN: It identifies itself as Robot C3I and specifies AGY as the remote coordinator
   decision.reply_markdown |> string.contains("Robot C3I") |> should.be_true
   decision.reply_markdown |> string.contains("@c3i_talk_bot") |> should.be_true
-  decision.reply_markdown |> string.contains("AGY (Google DeepMind Antigravity)") |> should.be_true
-  decision.reply_markdown |> string.contains("Pure Gleam/OTP 29") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("AGY (Google DeepMind Antigravity)")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Pure Gleam/OTP 29")
+  |> should.be_true
   decision.actions |> list.contains("respond_identity") |> should.be_true
 }
 
@@ -149,10 +164,10 @@ pub fn bdd_scenario_4_hardware_nvme_redaction_guard_test() {
 pub fn bdd_scenario_5_turn_deduplication_persistence_test() {
   // GIVEN: A test conversation database with duplicate consecutive turns
   let msgs = [
-    ChatMessage("user", "ping", 1789184010000),
-    ChatMessage("user", "ping", 1789184010000),
-    ChatMessage("assistant", "pong", 1789184011000),
-    ChatMessage("assistant", "pong", 1789184011000),
+    ChatMessage("user", "ping", 1_789_184_010_000),
+    ChatMessage("user", "ping", 1_789_184_010_000),
+    ChatMessage("assistant", "pong", 1_789_184_011_000),
+    ChatMessage("assistant", "pong", 1_789_184_011_000),
   ]
 
   // WHEN: Sliced through format_recent_telegram_history
@@ -176,7 +191,7 @@ pub fn bdd_scenario_6_messages_directive_execution_test() {
       user: "Avi",
       chat_id: "bdd-chat-dir",
       text: "/messages 5",
-      timestamp_ms: 1789184020000,
+      timestamp_ms: 1_789_184_020_000,
     )
 
   // WHEN: The directive is handled
@@ -192,7 +207,8 @@ pub fn bdd_scenario_6_messages_directive_execution_test() {
 // -----------------------------------------------------------------------------
 pub fn bdd_scenario_7_outbound_chunking_limit_test() {
   // GIVEN: A large cognitive response of 10,000 characters
-  let large_response = string.repeat("UOS Sovereign Cockpit Telemetry Line\n", 280)
+  let large_response =
+    string.repeat("UOS Sovereign Cockpit Telemetry Line\n", 280)
   string.length(large_response) |> fn(n) { n > 4096 } |> should.be_true
 
   // WHEN: It is sliced into Telegram chunks
@@ -216,16 +232,22 @@ pub fn bdd_scenario_8_status_directive_integrity_test() {
       user: "Avi",
       chat_id: "bdd-chat-status",
       text: "/status",
-      timestamp_ms: 1789184030000,
+      timestamp_ms: 1_789_184_030_000,
     )
 
   // WHEN: The directive is handled
   let decision = handle_directive("/status", intent)
 
   // THEN: It outputs cluster telemetry with OTP 29 authority, zero muda, and locked storage
-  decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
-  decision.reply_markdown |> string.contains("Gleam/OTP 29 Root Supervisor") |> should.be_true
-  decision.reply_markdown |> string.contains("Zero-Muda Purity") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("UOS Cluster Telemetry")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Gleam/OTP 29 Root Supervisor")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Zero-Muda Purity")
+  |> should.be_true
   decision.reply_markdown |> string.contains("100%") |> should.be_true
 }
 
@@ -241,15 +263,19 @@ pub fn bdd_scenario_9_memory_clear_directive_test() {
       user: "Avi",
       chat_id: "bdd-chat-clear",
       text: "/memory clear",
-      timestamp_ms: 1789184040000,
+      timestamp_ms: 1_789_184_040_000,
     )
 
   // WHEN: The directive is handled
   let decision = handle_directive("/memory clear", intent)
 
   // THEN: Memory reset confirmation is returned
-  decision.reply_markdown |> string.contains("Conversation Memory Reset") |> should.be_true
-  decision.actions |> list.contains("clear_conversation_memory") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Conversation Memory Reset")
+  |> should.be_true
+  decision.actions
+  |> list.contains("clear_conversation_memory")
+  |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -258,7 +284,8 @@ pub fn bdd_scenario_9_memory_clear_directive_test() {
 pub fn bdd_scenario_10_razr1_telemetry_ingestion_test() {
   // GIVEN: Inbound telemetry payload from AGY on razr-1
   envoy.set("UOS_TEST_MODE", "1")
-  let telemetry_payload = "{\"node\":\"razr-1\",\"cpu_temp_c\":42.5,\"battery_pct\":98}"
+  let telemetry_payload =
+    "{\"node\":\"razr-1\",\"cpu_temp_c\":42.5,\"battery_pct\":98}"
   let intent =
     CognitiveIntent(
       intent_id: "bdd-sc10-razr1",
@@ -266,14 +293,16 @@ pub fn bdd_scenario_10_razr1_telemetry_ingestion_test() {
       user: "Avi",
       chat_id: "6249174059",
       text: telemetry_payload,
-      timestamp_ms: 1789184050000,
+      timestamp_ms: 1_789_184_050_000,
     )
 
   // WHEN: Handled by the cognitive worker
   let decision = evaluate_intent(intent)
 
   // THEN: Robot C3I ingests telemetry payload and confirms edge verification
-  decision.reply_markdown |> string.contains("Robot C3I: Telemetry Ingest & Edge Verification") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Robot C3I: Telemetry Ingest & Edge Verification")
+  |> should.be_true
   decision.reply_markdown |> string.contains("AGY @ razr-1") |> should.be_true
   decision.actions |> list.contains("ingest_razr1_telemetry") |> should.be_true
 }

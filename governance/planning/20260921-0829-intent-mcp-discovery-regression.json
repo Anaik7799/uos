@@ -1,0 +1,12 @@
+{
+  "schema": "uos.intent-mcp-discovery-regression.v1",
+  "recorded_at_utc": "2026-09-21T08:29:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t2-contracts",
+  "workflow": "t2/declarative-intent-development",
+  "command": "gleam test",
+  "result": {"passed": 11987, "failed": 0, "log_sha256": "aed999b94d7e2c61fa852f8a9c173328b937d218163b134e371c50425b044328"},
+  "assertion": "tools/list discovery includes harness_system_feature_intent on the actual development harness MCP surface",
+  "authority": {"effect_authority": false, "system_admission": false, "production_deployment": false},
+  "completion_semantics": "regression receipt only; canonical t2 remains dependency-held"
+}

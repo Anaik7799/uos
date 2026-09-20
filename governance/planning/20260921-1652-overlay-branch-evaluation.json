@@ -1,0 +1,12 @@
+{
+  "schema": "uos.coordinator-overlay-branch-evaluation.v1",
+  "timestamp": "20260921-1652",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "branches": {
+    "current_events_1_421": {"migration": "pass", "verify": "sequence/chain/digest/replay pass", "candidate": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3"},
+    "damaged_1_416_quarantine_417_419_damaged_420_421": {"migration": "refused at sequence 417: malformed journal event; resign refused", "candidate": "/home/an/uos-recovery-candidates/20260921-1650-overlay-branch/coordinator.sqlite3"}
+  },
+  "selection": "current-events branch is the only tested typed-replayable branch, but remains evidence-only until provenance adjudication and cutover authority exist",
+  "canonical_mutation": false,
+  "admission": "not_admitted"
+}

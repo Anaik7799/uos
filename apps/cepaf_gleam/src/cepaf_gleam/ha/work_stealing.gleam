@@ -56,11 +56,7 @@ pub type NodeQueueState {
 
 /// Protocol request sent to initiate work stealing from a peer.
 pub type StealRequest {
-  StealRequest(
-    initiator_node: String,
-    max_tasks: Int,
-    epoch_us: Int,
-  )
+  StealRequest(initiator_node: String, max_tasks: Int, epoch_us: Int)
 }
 
 /// Protocol response returning stolen tasks from donor to initiator.
@@ -126,9 +122,7 @@ pub fn should_initiate_steal(engine: WorkStealingEngine) -> Bool {
   let is_idle = engine.active_workers < engine.capacity
   let has_no_local_work = list.is_empty(engine.local_queue)
   let has_eligible_peers =
-    list.any(engine.peer_queues, fn(p) {
-      list.length(p.queue) > 1
-    })
+    list.any(engine.peer_queues, fn(p) { list.length(p.queue) > 1 })
   is_idle && has_no_local_work && has_eligible_peers
 }
 
@@ -138,9 +132,7 @@ pub fn select_victim_node(
   strategy: StealStrategy,
 ) -> Option(String) {
   let candidates =
-    list.filter(engine.peer_queues, fn(p) {
-      list.length(p.queue) > 1
-    })
+    list.filter(engine.peer_queues, fn(p) { list.length(p.queue) > 1 })
 
   case strategy {
     HeaviestQueueFirst -> {
@@ -197,16 +189,12 @@ pub fn handle_steal_request(
   now_us: Int,
 ) -> #(WorkStealingEngine, StealResponse) {
   let queue_len = list.length(engine.local_queue)
-  
+
   case queue_len > 1 {
     True -> {
       let steal_quota = int.min(req.max_tasks, queue_len / 2)
       let #(stolen, remaining) = list.split(engine.local_queue, steal_quota)
-      let updated_engine =
-        WorkStealingEngine(
-          ..engine,
-          local_queue: remaining,
-        )
+      let updated_engine = WorkStealingEngine(..engine, local_queue: remaining)
       let resp =
         StealResponse(
           donor_node: engine.local_node_id,
@@ -248,8 +236,6 @@ pub fn apply_steal_response(
 pub fn total_cluster_queued_tasks(engine: WorkStealingEngine) -> Int {
   let local_count = list.length(engine.local_queue)
   let peer_count =
-    list.fold(engine.peer_queues, 0, fn(acc, p) {
-      acc + list.length(p.queue)
-    })
+    list.fold(engine.peer_queues, 0, fn(acc, p) { acc + list.length(p.queue) })
   local_count + peer_count
 }

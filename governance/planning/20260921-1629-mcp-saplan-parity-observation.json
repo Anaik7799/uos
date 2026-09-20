@@ -1,0 +1,13 @@
+{
+  "schema": "uos.mcp-saplan-parity-observation.v1",
+  "observed_at": "2026-09-21T16:29:00Z",
+  "authority": "read-only MCP data-plane observation",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "response_path": "/tmp/mcp-sa-plan-status-refresh-20260921-1629.json",
+  "response_sha256": "e1b4e842707babb59266626b55c9e9a3ca1f9df05d5a4d7979142c5b340d11ca",
+  "mcp_projection": {"total":21,"completed":4,"ready":3,"executing":0},
+  "cli_projection": {"total":21,"completed":4,"ready":3,"executing":0},
+  "parity": true,
+  "authority_mode": "report_only",
+  "completion_credit": false
+}

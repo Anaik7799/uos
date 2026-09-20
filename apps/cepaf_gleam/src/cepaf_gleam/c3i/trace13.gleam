@@ -476,12 +476,14 @@ pub fn decoder() -> decode.Decoder(TraceCoordinate) {
   use authority_str <- decode.field("authority", decode.string)
   use status_str <- decode.field("status", decode.string)
 
-  let layer = layer_from_string(layer_str) |> result.unwrap(L0MicroKernelAllocator)
+  let layer =
+    layer_from_string(layer_str) |> result.unwrap(L0MicroKernelAllocator)
   let surface = surface_from_string(surface_str) |> result.unwrap(Development)
   let modal = modal_from_string(modal_str) |> result.unwrap(ActorMessage)
   let plane = plane_from_string(plane_str) |> result.unwrap(GleamControlPlane)
   let profile = profile_from_string(profile_str) |> result.unwrap(Lean4Theorem)
-  let authority = authority_from_string(authority_str) |> result.unwrap(SandboxedWorker)
+  let authority =
+    authority_from_string(authority_str) |> result.unwrap(SandboxedWorker)
   let status = status_from_string(status_str) |> result.unwrap(Discovered)
 
   decode.success(TraceCoordinate(

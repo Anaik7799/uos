@@ -1,0 +1,13 @@
+{
+  "schema": "uos.goal-completion-matrix.v2",
+  "timestamp": "20260921-1740",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authoritative_status": {"total": 21, "completed": 4, "ready": 3, "executing": 0, "blocked": 17, "unknown": 0, "admission": "not_admitted"},
+  "new_evidence": [
+    {"path": "governance/planning/20260921-1739-dashboard-dependency-regression-receipt.json", "result": "dashboard_dependency_regression_green", "counts_as_completion": false},
+    {"path": "governance/planning/20260921-1735-risk-portfolio-refresh.json", "result": "current_risk_portfolio_refresh_but_all_unfinished_tasks_readiness_blocked", "counts_as_completion": false}
+  ],
+  "selection": {"authority": "sa-plan", "risk_runtime_admission": "not_granted", "task_selection_changed": false},
+  "completion_rules": {"blocked_unrun_stale_unadmitted_not_counted": true, "two_key_runtime_and_formal_required": true, "sa_plan_sole_execution_authority": true},
+  "next_gate": "obtain an evidence-backed risk readiness transition for the read-only coordination task; do not bypass RP-SELECTION HOLD"
+}

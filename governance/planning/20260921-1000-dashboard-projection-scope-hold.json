@@ -1,0 +1,18 @@
+{
+  "schema": "uos.dashboard-projection-scope-hold.v1",
+  "timestamp_utc": "2026-09-21T10:00:00Z",
+  "requested_plan": "uos/system-mcp-features/20260919-1642",
+  "command": "tools/sa-plan ui snapshot governance/planning/20260921-1000-dashboard-snapshot.json",
+  "observed": {
+    "read_only": true,
+    "returned_plan": "infranodus-fractal-closure-20260804-0936",
+    "returned_summary": {"total": 18, "completed": 0, "ready": 0, "executing": 1},
+    "returned_artifact_sha256": "54bc5402798b93e88ad34e11a58f93abf7744d3cc71630779f025b7213d05150"
+  },
+  "decision": "HOLD",
+  "reason": "Sa-plan UI snapshot currently projects an unrelated legacy plan and cannot be used as canonical dashboard evidence for the system-mcp-features plan.",
+  "canonical_dashboard_receipt": "governance/planning/20260921-0936-dashboard-integrity-aware-snapshot.json",
+  "remediation": "Fix or parameterize the Sa-plan UI snapshot projection to accept and bind the canonical plan id, then regenerate a read-only snapshot.",
+  "canonical_task_remains_open": true,
+  "admission": "NOT_ADMITTED"
+}

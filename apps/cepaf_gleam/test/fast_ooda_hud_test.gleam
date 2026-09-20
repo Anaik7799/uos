@@ -24,7 +24,13 @@ pub fn render_fast_ooda_hud_html_test() {
 
   // Verify key components exist in rendered HTML
   should.be_true(html_str != "")
-  should.be_true(string.contains(html_str, "Fast OODA Cybernetic Convergence Cockpit"))
+  should.be_true(string.contains(
+    html_str,
+    "Fast OODA Cybernetic Convergence Cockpit",
+  ))
   should.be_true(string.contains(html_str, "25503L801736"))
-  should.be_true(string.contains(html_str, "Comprehensive Verification Checklist"))
+  should.be_true(string.contains(
+    html_str,
+    "Comprehensive Verification Checklist",
+  ))
 }

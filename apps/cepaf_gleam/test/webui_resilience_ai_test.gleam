@@ -2,12 +2,12 @@
 //// WebUI Resilience, Immune & AI Tabs (Immune, Metabolic, MCP, HealthGrid) Test Suite
 //// STAMP: SC-GLM-UI-001, SC-CHECKLIST-001
 
-import gleeunit/should
 import cepaf_gleam/testing/webui_test_engine.{
-  WebImmune, WebMetabolic, WebMcp, WebHealthGrid,
-  evaluate_c1_c8, evaluate_checklist_accordion
+  WebHealthGrid, WebImmune, WebMcp, WebMetabolic, evaluate_c1_c8,
+  evaluate_checklist_accordion,
 }
 import gleam/list
+import gleeunit/should
 
 pub fn webui_resilience_ai_c1_c8_test() {
   let tabs = [WebImmune, WebMetabolic, WebMcp, WebHealthGrid]

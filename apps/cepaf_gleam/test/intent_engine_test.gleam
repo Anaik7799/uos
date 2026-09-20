@@ -7,9 +7,8 @@ import cepaf_gleam/c3i/trace13.{
   RootSupervisor, SynchronousNif, TraceCoordinate,
 }
 import cepaf_gleam/intent/engine.{
-  type CapabilityToken, CapabilityToken, Condition,
-  Intent, IntentAuthorized, IntentVetoed, PlanMutation, ReadOnlyTelemetry,
-  StorageMutation,
+  type CapabilityToken, CapabilityToken, Condition, Intent, IntentAuthorized,
+  IntentVetoed, PlanMutation, ReadOnlyTelemetry, StorageMutation,
 }
 import gleam/option.{Some}
 import gleeunit/should
@@ -99,9 +98,13 @@ pub fn veto_insufficient_capability_test() {
   case res {
     IntentVetoed(intent_id, reason, _) -> {
       intent_id |> should.equal("int-101")
-      reason |> should.equal("Invalid, expired, or insufficient capability token for target domain")
+      reason
+      |> should.equal(
+        "Invalid, expired, or insufficient capability token for target domain",
+      )
     }
-    IntentAuthorized(_, _, _, _, _, _, _, _, _) -> panic as "Should have been vetoed"
+    IntentAuthorized(_, _, _, _, _, _, _, _, _) ->
+      panic as "Should have been vetoed"
   }
 }
 
@@ -127,7 +130,8 @@ pub fn veto_storage_serial_lock_test() {
       intent_id |> should.equal("int-102")
       failing |> should.equal(Some("INV_STORAGE_SERIAL_LOCK"))
     }
-    IntentAuthorized(_, _, _, _, _, _, _, _, _) -> panic as "Should have been vetoed"
+    IntentAuthorized(_, _, _, _, _, _, _, _, _) ->
+      panic as "Should have been vetoed"
   }
 }
 
@@ -155,6 +159,7 @@ pub fn veto_unsatisfied_precondition_test() {
       intent_id |> should.equal("int-103")
       failing |> should.equal(Some("lease_acquired"))
     }
-    IntentAuthorized(_, _, _, _, _, _, _, _, _) -> panic as "Should have been vetoed"
+    IntentAuthorized(_, _, _, _, _, _, _, _, _) ->
+      panic as "Should have been vetoed"
   }
 }

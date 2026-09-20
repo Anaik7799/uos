@@ -143,25 +143,19 @@ pub fn probe_report_to_json(report: HypervisorProbeReport) -> json.Json {
       json.object([
         #("dev_kvm_present", json.bool(report.kvm.dev_kvm_present)),
         #("dev_kvm_rw_accessible", json.bool(report.kvm.dev_kvm_rw_accessible)),
-        #(
-          "api_version",
-          case report.kvm.api_version {
-            Some(v) -> json.int(v)
-            None -> json.null()
-          },
-        ),
+        #("api_version", case report.kvm.api_version {
+          Some(v) -> json.int(v)
+          None -> json.null()
+        }),
       ]),
     ),
     #(
       "qemu",
       json.object([
-        #(
-          "binary_path",
-          case report.qemu.binary_path {
-            Some(p) -> json.string(p)
-            None -> json.null()
-          },
-        ),
+        #("binary_path", case report.qemu.binary_path {
+          Some(p) -> json.string(p)
+          None -> json.null()
+        }),
         #("microvm_supported", json.bool(report.qemu.microvm_supported)),
         #("kvm_accel_supported", json.bool(report.qemu.kvm_accel_supported)),
       ]),
@@ -169,27 +163,18 @@ pub fn probe_report_to_json(report: HypervisorProbeReport) -> json.Json {
     #(
       "solo5",
       json.object([
-        #(
-          "solo5_hvt_path",
-          case report.solo5.solo5_hvt_path {
-            Some(p) -> json.string(p)
-            None -> json.null()
-          },
-        ),
-        #(
-          "solo5_spt_path",
-          case report.solo5.solo5_spt_path {
-            Some(p) -> json.string(p)
-            None -> json.null()
-          },
-        ),
-        #(
-          "solo5_virtio_path",
-          case report.solo5.solo5_virtio_path {
-            Some(p) -> json.string(p)
-            None -> json.null()
-          },
-        ),
+        #("solo5_hvt_path", case report.solo5.solo5_hvt_path {
+          Some(p) -> json.string(p)
+          None -> json.null()
+        }),
+        #("solo5_spt_path", case report.solo5.solo5_spt_path {
+          Some(p) -> json.string(p)
+          None -> json.null()
+        }),
+        #("solo5_virtio_path", case report.solo5.solo5_virtio_path {
+          Some(p) -> json.string(p)
+          None -> json.null()
+        }),
         #("hvt_execution", receipt_to_json(report.solo5.hvt_execution)),
         #("spt_execution", receipt_to_json(report.solo5.spt_execution)),
         #("virtio_execution", receipt_to_json(report.solo5.virtio_execution)),
@@ -204,31 +189,79 @@ fn receipt_decoder() -> decode.Decoder(Solo5ExecutionReceipt) {
   use exit_code <- decode.field("exit_code", decode.int)
   use output_snippet <- decode.field("output_snippet", decode.string)
   use passed <- decode.field("passed", decode.bool)
-  decode.success(Solo5ExecutionReceipt(tender, unikernel, exit_code, output_snippet, passed))
+  decode.success(Solo5ExecutionReceipt(
+    tender,
+    unikernel,
+    exit_code,
+    output_snippet,
+    passed,
+  ))
 }
 
 fn kvm_decoder() -> decode.Decoder(KvmStatus) {
   use dev_kvm_present <- decode.field("dev_kvm_present", decode.bool)
-  use dev_kvm_rw_accessible <- decode.field("dev_kvm_rw_accessible", decode.bool)
-  use api_version <- decode.optional_field("api_version", None, decode.optional(decode.int))
+  use dev_kvm_rw_accessible <- decode.field(
+    "dev_kvm_rw_accessible",
+    decode.bool,
+  )
+  use api_version <- decode.optional_field(
+    "api_version",
+    None,
+    decode.optional(decode.int),
+  )
   decode.success(KvmStatus(dev_kvm_present, dev_kvm_rw_accessible, api_version))
 }
 
 fn qemu_decoder() -> decode.Decoder(QemuStatus) {
-  use binary_path <- decode.optional_field("binary_path", None, decode.optional(decode.string))
+  use binary_path <- decode.optional_field(
+    "binary_path",
+    None,
+    decode.optional(decode.string),
+  )
   use microvm_supported <- decode.field("microvm_supported", decode.bool)
   use kvm_accel_supported <- decode.field("kvm_accel_supported", decode.bool)
   decode.success(QemuStatus(binary_path, microvm_supported, kvm_accel_supported))
 }
 
 fn solo5_decoder() -> decode.Decoder(Solo5Status) {
-  use solo5_hvt_path <- decode.optional_field("solo5_hvt_path", None, decode.optional(decode.string))
-  use solo5_spt_path <- decode.optional_field("solo5_spt_path", None, decode.optional(decode.string))
-  use solo5_virtio_path <- decode.optional_field("solo5_virtio_path", None, decode.optional(decode.string))
-  use hvt_execution <- decode.optional_field("hvt_execution", None, decode.optional(receipt_decoder()))
-  use spt_execution <- decode.optional_field("spt_execution", None, decode.optional(receipt_decoder()))
-  use virtio_execution <- decode.optional_field("virtio_execution", None, decode.optional(receipt_decoder()))
-  decode.success(Solo5Status(solo5_hvt_path, solo5_spt_path, solo5_virtio_path, hvt_execution, spt_execution, virtio_execution))
+  use solo5_hvt_path <- decode.optional_field(
+    "solo5_hvt_path",
+    None,
+    decode.optional(decode.string),
+  )
+  use solo5_spt_path <- decode.optional_field(
+    "solo5_spt_path",
+    None,
+    decode.optional(decode.string),
+  )
+  use solo5_virtio_path <- decode.optional_field(
+    "solo5_virtio_path",
+    None,
+    decode.optional(decode.string),
+  )
+  use hvt_execution <- decode.optional_field(
+    "hvt_execution",
+    None,
+    decode.optional(receipt_decoder()),
+  )
+  use spt_execution <- decode.optional_field(
+    "spt_execution",
+    None,
+    decode.optional(receipt_decoder()),
+  )
+  use virtio_execution <- decode.optional_field(
+    "virtio_execution",
+    None,
+    decode.optional(receipt_decoder()),
+  )
+  decode.success(Solo5Status(
+    solo5_hvt_path,
+    solo5_spt_path,
+    solo5_virtio_path,
+    hvt_execution,
+    spt_execution,
+    virtio_execution,
+  ))
 }
 
 pub fn probe_report_decoder() -> decode.Decoder(HypervisorProbeReport) {
@@ -238,7 +271,10 @@ pub fn probe_report_decoder() -> decode.Decoder(HypervisorProbeReport) {
   use overall_readiness <- decode.field("overall_readiness", decode.string)
   use execution_policy <- decode.field("execution_policy", decode.string)
   use evidence_scope <- decode.field("evidence_scope", decode.string)
-  use deployment_admission <- decode.field("deployment_admission", decode.string)
+  use deployment_admission <- decode.field(
+    "deployment_admission",
+    decode.string,
+  )
   use kvm <- decode.field("kvm", kvm_decoder())
   use qemu <- decode.field("qemu", qemu_decoder())
   use solo5 <- decode.field("solo5", solo5_decoder())
@@ -305,8 +341,7 @@ pub fn validate_probe_report(
       None -> False
     }
 
-  let qemu_ok =
-    report.qemu.microvm_supported && report.qemu.kvm_accel_supported
+  let qemu_ok = report.qemu.microvm_supported && report.qemu.kvm_accel_supported
 
   let hvt_ok = case report.solo5.hvt_execution {
     Some(r) -> r.passed && r.exit_code == 0
@@ -342,7 +377,8 @@ pub fn validate_probe_report(
 
 pub fn read_probe_receipt() -> HypervisorProbeReport {
   let primary_path = "var/mirage/receipts/hypervisors_probe.json"
-  let fallback_path = "/home/an/NAS-setup/uos/var/mirage/receipts/hypervisors_probe.json"
+  let fallback_path =
+    "/home/an/NAS-setup/uos/var/mirage/receipts/hypervisors_probe.json"
   let content = case simplifile.read(primary_path) {
     Ok(c) -> Ok(c)
     Error(_) -> simplifile.read(fallback_path)
@@ -362,4 +398,3 @@ pub fn read_probe_receipt() -> HypervisorProbeReport {
     Error(_) -> unverified_probe()
   }
 }
-

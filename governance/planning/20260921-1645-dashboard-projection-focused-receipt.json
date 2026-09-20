@@ -1,0 +1,10 @@
+{
+  "schema": "uos.test-receipt.v1",
+  "timestamp": "20260921-1645",
+  "scope": "execution_projection_test",
+  "command": "erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin direct exported *_test functions",
+  "result": "15 projection tests passed",
+  "new_assertion": "completed dependencies do not receive inherited effective priority",
+  "authority": "development_observation_only",
+  "admission": "not_admitted"
+}

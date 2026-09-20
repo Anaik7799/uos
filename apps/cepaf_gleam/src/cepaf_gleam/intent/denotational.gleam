@@ -28,6 +28,7 @@ pub type Intent {
 }
 
 pub const hard_denied_system_os_serial = "25503L801736"
+
 pub const admitted_ev_ceiling = 93
 
 pub fn bottom(reason: String) -> LatticeState {
@@ -67,9 +68,14 @@ pub fn evaluate(intent: Intent, state: LatticeState) -> LatticeState {
               case intent.criticality == "DAL-A" && !intent.guardian_approved {
                 True -> bottom("GUARDIAN_APPROVAL_MANDATORY_FOR_DAL_A")
                 False -> {
-                  let next_coords = list.map(state.trace_coords, fn(c) { c +. intent.delta_coord })
-                  let next_containers = list.append(state.active_containers, intent.add_containers)
-                  let next_topics = list.append(state.zenoh_topics, intent.add_topics)
+                  let next_coords =
+                    list.map(state.trace_coords, fn(c) {
+                      c +. intent.delta_coord
+                    })
+                  let next_containers =
+                    list.append(state.active_containers, intent.add_containers)
+                  let next_topics =
+                    list.append(state.zenoh_topics, intent.add_topics)
                   LatticeState(
                     version: state.version + 1,
                     trace_coords: next_coords,
@@ -106,7 +112,10 @@ pub fn pure(state: LatticeState) -> LatticeState {
 }
 
 /// Monadic bind: s >>= f
-pub fn bind(state: LatticeState, f: fn(LatticeState) -> LatticeState) -> LatticeState {
+pub fn bind(
+  state: LatticeState,
+  f: fn(LatticeState) -> LatticeState,
+) -> LatticeState {
   case state.is_bottom {
     True -> state
     False -> f(state)
@@ -114,7 +123,10 @@ pub fn bind(state: LatticeState, f: fn(LatticeState) -> LatticeState) -> Lattice
 }
 
 /// Monadic map: f <$> s
-pub fn map(state: LatticeState, f: fn(LatticeState) -> LatticeState) -> LatticeState {
+pub fn map(
+  state: LatticeState,
+  f: fn(LatticeState) -> LatticeState,
+) -> LatticeState {
   bind(state, f)
 }
 

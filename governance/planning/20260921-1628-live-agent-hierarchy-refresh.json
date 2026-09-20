@@ -1,0 +1,11 @@
+{
+  "schema": "uos.live-agent-hierarchy-refresh.v1",
+  "observed_at": "2026-09-21T16:28:00Z",
+  "authority": "read-only MCP observation; no coordination mutation",
+  "response_path": "/tmp/mcp-agent-hierarchy-refresh-20260921-1628.json",
+  "response_sha256": "3b090e687e0df42e894b71f2d76ba8b106a03eaf94acf3383e38a6cec895fc0a",
+  "projection": {"total_agents":50,"executive":1,"domain_supervisors":10,"functional_supervisors":15,"workers":24,"efficiency_compliance":true,"deadlock_detected":false,"executive_authority":true},
+  "limitation": "This projection does not prove live Claude/Codex/AGY session registration, peer acknowledgement, coordinator leases, or effect authority.",
+  "admission": "not_granted",
+  "completion_credit": false
+}

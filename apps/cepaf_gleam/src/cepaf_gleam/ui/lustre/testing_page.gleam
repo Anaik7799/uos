@@ -24,10 +24,10 @@
 //// </c3i-module>
 //// =============================================================================
 
+import gleam/list
 import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
-import gleam/list
 
 pub fn view() -> Element(msg) {
   html.div(
@@ -93,9 +93,12 @@ fn render_breadcrumb() -> Element(msg) {
         [html.text("Verification")],
       ),
       html.span([], [html.text("›")]),
-      html.span([attribute.attribute("style", "color: #3dd68c; font-weight: 600;")], [
-        html.text("Testing Protocol"),
-      ]),
+      html.span(
+        [attribute.attribute("style", "color: #3dd68c; font-weight: 600;")],
+        [
+          html.text("Testing Protocol"),
+        ],
+      ),
     ],
   )
 }
@@ -112,7 +115,10 @@ fn render_header() -> Element(msg) {
       html.h1(
         [
           attribute.class("page-title"),
-          attribute.attribute("style", "color: #00d4aa; margin-top: 0; font-size: 2.2rem;"),
+          attribute.attribute(
+            "style",
+            "color: #00d4aa; margin-top: 0; font-size: 2.2rem;",
+          ),
         ],
         [html.text("Testing Gold Standard C1–C8 & Comprehensive Protocol")],
       ),
@@ -209,9 +215,16 @@ fn render_header() -> Element(msg) {
               html.a(
                 [
                   attribute.href("http://nas-1.tail55d152.ts.net:4100/testing"),
-                  attribute.attribute("style", "color: #00d4aa; text-decoration: none;"),
+                  attribute.attribute(
+                    "style",
+                    "color: #00d4aa; text-decoration: none;",
+                  ),
                 ],
-                [html.text("Tailscale FQDN: nas-1.tail55d152.ts.net:4100/testing")],
+                [
+                  html.text(
+                    "Tailscale FQDN: nas-1.tail55d152.ts.net:4100/testing",
+                  ),
+                ],
               ),
             ],
           ),
@@ -246,42 +259,117 @@ fn render_interactive_accordion() -> Element(msg) {
             ),
           ],
         ),
-        html.div([attribute.attribute("style", "margin-top: 1rem; line-height: 1.8;")], [
-          render_domain_checklist("Domain 1: Metadata, Timestamp & Tailscale Navigation", [
-            #("CHK-01-TIME", "Mandatory YYYYMMDD-HHSS- timestamp prefix verified (tools/uos-cli timestamp-check)."),
-            #("CHK-02-TAIL", "Universal Tailscale FQDN clickable links active (http://nas-1.tail55d152.ts.net:4100/)."),
-            #("CHK-03-FRACT", "Standardized fractal layer tags (#fractal-l0 through #fractal-l9) assigned."),
-            #("CHK-04-KM", "Bidirectional KM transclusions active ([[wiki:...]] and [[zk:...]])."),
-          ]),
-          render_domain_checklist("Domain 2: Zero-Muda Purity & Hardware Storage Safety", [
-            #("CHK-05-MUDA", "Strict Zero-Muda: 0 Bevy, 0 Graphite across all code, dependencies and history."),
-            #("CHK-06-GRAPH", "Pure Erlang/Gleam vector rendering (graphene_nif.erl); zero foreign NIF libraries."),
-            #("CHK-07-DRIVE", "Hardware Root Drive Interlock: NVMe serial HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736' locked."),
-          ]),
-          render_domain_checklist("Domain 3: Testing Gold Standard C1–C8 & Mathematical Gates", [
-            #("CHK-08-C1C8", "C3I 8-Category Gold Standard satisfied (C1 Structure through C8 Action Interlocks)."),
-            #("CHK-09-MATH", "All 4 Math Gates green (H >= 2.50b, CCM >= 90%, D_EA <= 10%, ITQS >= 0.85)."),
-            #("CHK-10-9MOD", "Full 9-Modality Test Protocol 100% Green (Unit, System, TDD, BDD, Property, Chaos, etc.)."),
-            #("CHK-11-REGR", "WebUI regression test suite verified via native OCaml (0 Node.js)."),
-          ]),
-          render_domain_checklist("Domain 4: Cross-Language Control & Observability", [
-            #("CHK-12-GLEAM", "Gleam / BEAM OTP 29 owns supervision tree (uos_sup.gleam) & Prajna circuit breakers."),
-            #("CHK-13-HERMES", "Hermes OCaml Gospel contracts, Z3 queries, and SQLite WAL ledgers operational."),
-            #("CHK-14-ZIGVM", "ZigVM deterministic engine with descriptor-relative VFS operational."),
-            #("CHK-15-MAX", "Modular MAX / Mojo strictly quarantines AI inference over JSON-RPC stdio pipes."),
-            #("CHK-16-OTEL", "Universal C3I Telemetry with microsecond UTC ISO 8601 timestamps ending in Z."),
-          ]),
-          render_domain_checklist("Domain 5: Tri-Sovereign Governance & Jujutsu Monorepo", [
-            #("CHK-17-SOV", "Tri-sovereign multi-agent review consensus (AGY, Claude, Codex) ratified."),
-            #("CHK-18-JJ", "Standalone non-colocated Jujutsu repository (.jj/) with 0 native Git mutations."),
-          ]),
-        ]),
+        html.div(
+          [attribute.attribute("style", "margin-top: 1rem; line-height: 1.8;")],
+          [
+            render_domain_checklist(
+              "Domain 1: Metadata, Timestamp & Tailscale Navigation",
+              [
+                #(
+                  "CHK-01-TIME",
+                  "Mandatory YYYYMMDD-HHSS- timestamp prefix verified (tools/uos-cli timestamp-check).",
+                ),
+                #(
+                  "CHK-02-TAIL",
+                  "Universal Tailscale FQDN clickable links active (http://nas-1.tail55d152.ts.net:4100/).",
+                ),
+                #(
+                  "CHK-03-FRACT",
+                  "Standardized fractal layer tags (#fractal-l0 through #fractal-l9) assigned.",
+                ),
+                #(
+                  "CHK-04-KM",
+                  "Bidirectional KM transclusions active ([[wiki:...]] and [[zk:...]]).",
+                ),
+              ],
+            ),
+            render_domain_checklist(
+              "Domain 2: Zero-Muda Purity & Hardware Storage Safety",
+              [
+                #(
+                  "CHK-05-MUDA",
+                  "Strict Zero-Muda: 0 Bevy, 0 Graphite across all code, dependencies and history.",
+                ),
+                #(
+                  "CHK-06-GRAPH",
+                  "Pure Erlang/Gleam vector rendering (graphene_nif.erl); zero foreign NIF libraries.",
+                ),
+                #(
+                  "CHK-07-DRIVE",
+                  "Hardware Root Drive Interlock: NVMe serial HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736' locked.",
+                ),
+              ],
+            ),
+            render_domain_checklist(
+              "Domain 3: Testing Gold Standard C1–C8 & Mathematical Gates",
+              [
+                #(
+                  "CHK-08-C1C8",
+                  "C3I 8-Category Gold Standard satisfied (C1 Structure through C8 Action Interlocks).",
+                ),
+                #(
+                  "CHK-09-MATH",
+                  "All 4 Math Gates green (H >= 2.50b, CCM >= 90%, D_EA <= 10%, ITQS >= 0.85).",
+                ),
+                #(
+                  "CHK-10-9MOD",
+                  "Full 9-Modality Test Protocol 100% Green (Unit, System, TDD, BDD, Property, Chaos, etc.).",
+                ),
+                #(
+                  "CHK-11-REGR",
+                  "WebUI regression test suite verified via native OCaml (0 Node.js).",
+                ),
+              ],
+            ),
+            render_domain_checklist(
+              "Domain 4: Cross-Language Control & Observability",
+              [
+                #(
+                  "CHK-12-GLEAM",
+                  "Gleam / BEAM OTP 29 owns supervision tree (uos_sup.gleam) & Prajna circuit breakers.",
+                ),
+                #(
+                  "CHK-13-HERMES",
+                  "Hermes OCaml Gospel contracts, Z3 queries, and SQLite WAL ledgers operational.",
+                ),
+                #(
+                  "CHK-14-ZIGVM",
+                  "ZigVM deterministic engine with descriptor-relative VFS operational.",
+                ),
+                #(
+                  "CHK-15-MAX",
+                  "Modular MAX / Mojo strictly quarantines AI inference over JSON-RPC stdio pipes.",
+                ),
+                #(
+                  "CHK-16-OTEL",
+                  "Universal C3I Telemetry with microsecond UTC ISO 8601 timestamps ending in Z.",
+                ),
+              ],
+            ),
+            render_domain_checklist(
+              "Domain 5: Tri-Sovereign Governance & Jujutsu Monorepo",
+              [
+                #(
+                  "CHK-17-SOV",
+                  "Tri-sovereign multi-agent review consensus (AGY, Claude, Codex) ratified.",
+                ),
+                #(
+                  "CHK-18-JJ",
+                  "Standalone non-colocated Jujutsu repository (.jj/) with 0 native Git mutations.",
+                ),
+              ],
+            ),
+          ],
+        ),
       ]),
     ],
   )
 }
 
-fn render_domain_checklist(title: String, checks: List(#(String, String))) -> Element(msg) {
+fn render_domain_checklist(
+  title: String,
+  checks: List(#(String, String)),
+) -> Element(msg) {
   html.div([attribute.attribute("style", "margin-bottom: 1.25rem;")], [
     html.div(
       [
@@ -311,7 +399,12 @@ fn render_domain_checklist(title: String, checks: List(#(String, String))) -> El
             ],
             [
               html.span(
-                [attribute.attribute("style", "color: #3dd68c; font-weight: bold;")],
+                [
+                  attribute.attribute(
+                    "style",
+                    "color: #3dd68c; font-weight: bold;",
+                  ),
+                ],
                 [html.text("[PASS]")],
               ),
               html.span(
@@ -349,8 +442,17 @@ fn render_tri_language_observability_section() -> Element(msg) {
         ],
         [
           html.h2(
-            [attribute.attribute("style", "color: #00d4aa; font-size: 1.4rem; margin: 0;")],
-            [html.text("Tri-Language Master Test Orchestrator & Fractal State Observability")],
+            [
+              attribute.attribute(
+                "style",
+                "color: #00d4aa; font-size: 1.4rem; margin: 0;",
+              ),
+            ],
+            [
+              html.text(
+                "Tri-Language Master Test Orchestrator & Fractal State Observability",
+              ),
+            ],
           ),
           html.span(
             [
@@ -364,7 +466,12 @@ fn render_tri_language_observability_section() -> Element(msg) {
         ],
       ),
       html.p(
-        [attribute.attribute("style", "font-size: 0.95rem; color: #a0aec0; margin-bottom: 1.25rem; line-height: 1.5;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.95rem; color: #a0aec0; margin-bottom: 1.25rem; line-height: 1.5;",
+          ),
+        ],
         [
           html.text(
             "All tests are orchestrated and executed by Gleam. Gleam (BEAM OTP 29), OCaml (Hermes), and Mojo (Modular MAX) continuously synchronize state across the Zenoh pub/sub mesh (ports 7447/8080) and BEAM ETS table c3i_cache (port 4100), with W3C 128-bit distributed tracing and fractal layer telemetry hooks.",
@@ -417,14 +524,29 @@ fn render_tri_language_observability_section() -> Element(msg) {
         ],
         [
           html.div(
-            [attribute.attribute("style", "display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;")],
+            [
+              attribute.attribute(
+                "style",
+                "display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;",
+              ),
+            ],
             [
               html.span(
-                [attribute.attribute("style", "color: #79b8ff; font-weight: 700; font-size: 1rem;")],
+                [
+                  attribute.attribute(
+                    "style",
+                    "color: #79b8ff; font-weight: 700; font-size: 1rem;",
+                  ),
+                ],
                 [html.text("Universal Telemetry & Live Mesh Endpoints")],
               ),
               html.span(
-                [attribute.attribute("style", "color: #3dd68c; font-family: monospace; font-size: 0.8rem;")],
+                [
+                  attribute.attribute(
+                    "style",
+                    "color: #3dd68c; font-family: monospace; font-size: 0.8rem;",
+                  ),
+                ],
                 [html.text("FRACTAL LOGGING: L0..L7 ACTIVE")],
               ),
             ],
@@ -437,11 +559,26 @@ fn render_tri_language_observability_section() -> Element(msg) {
               ),
             ],
             [
-              render_mesh_endpoint_link("Orchestrator Report API", "http://nas-1.tail55d152.ts.net:4100/api/v1/testing/orchestrator"),
-              render_mesh_endpoint_link("Global Observability API", "http://nas-1.tail55d152.ts.net:4100/api/v1/testing/observability"),
-              render_mesh_endpoint_link("Tri-Language Convergence", "http://nas-1.tail55d152.ts.net:4100/api/v1/state/tri_language"),
-              render_mesh_endpoint_link("BEAM ETS State Dump", "http://nas-1.tail55d152.ts.net:4100/api/v1/ets"),
-              render_mesh_endpoint_link("Zenoh REST Mesh Bridge", "http://127.0.0.1:8080/c3i/a2a/ets/**"),
+              render_mesh_endpoint_link(
+                "Orchestrator Report API",
+                "http://nas-1.tail55d152.ts.net:4100/api/v1/testing/orchestrator",
+              ),
+              render_mesh_endpoint_link(
+                "Global Observability API",
+                "http://nas-1.tail55d152.ts.net:4100/api/v1/testing/observability",
+              ),
+              render_mesh_endpoint_link(
+                "Tri-Language Convergence",
+                "http://nas-1.tail55d152.ts.net:4100/api/v1/state/tri_language",
+              ),
+              render_mesh_endpoint_link(
+                "BEAM ETS State Dump",
+                "http://nas-1.tail55d152.ts.net:4100/api/v1/ets",
+              ),
+              render_mesh_endpoint_link(
+                "Zenoh REST Mesh Bridge",
+                "http://127.0.0.1:8080/c3i/a2a/ets/**",
+              ),
             ],
           ),
         ],
@@ -476,7 +613,12 @@ fn render_tri_tier_card(
         ],
         [
           html.span(
-            [attribute.attribute("style", "font-weight: 700; color: #00d4aa; font-size: 1.05rem;")],
+            [
+              attribute.attribute(
+                "style",
+                "font-weight: 700; color: #00d4aa; font-size: 1.05rem;",
+              ),
+            ],
             [html.text(title)],
           ),
           html.span(
@@ -491,7 +633,12 @@ fn render_tri_tier_card(
         ],
       ),
       html.div(
-        [attribute.attribute("style", "font-size: 0.82rem; color: #79b8ff; margin-bottom: 0.5rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.82rem; color: #79b8ff; margin-bottom: 0.5rem;",
+          ),
+        ],
         [html.text("Language: " <> lang <> " · Fractal Layer: " <> layer)],
       ),
       html.div(
@@ -504,11 +651,21 @@ fn render_tri_tier_card(
         [html.text("State: " <> state)],
       ),
       html.div(
-        [attribute.attribute("style", "font-size: 0.8rem; color: #8b949e; margin-bottom: 0.5rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.8rem; color: #8b949e; margin-bottom: 0.5rem;",
+          ),
+        ],
         [html.text("Telemetry Hooks: " <> telem)],
       ),
       html.div(
-        [attribute.attribute("style", "font-size: 0.82rem; color: #c9d1d9; line-height: 1.4;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.82rem; color: #c9d1d9; line-height: 1.4;",
+          ),
+        ],
         [html.text(features)],
       ),
     ],
@@ -526,8 +683,19 @@ fn render_mesh_endpoint_link(label: String, url: String) -> Element(msg) {
       ),
     ],
     [
-      html.div([attribute.attribute("style", "font-weight: 600; color: #e0e6ed; margin-bottom: 0.2rem;")], [html.text(label)]),
-      html.div([attribute.attribute("style", "color: #79b8ff; font-size: 0.75rem;")], [html.text(url)]),
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "font-weight: 600; color: #e0e6ed; margin-bottom: 0.2rem;",
+          ),
+        ],
+        [html.text(label)],
+      ),
+      html.div(
+        [attribute.attribute("style", "color: #79b8ff; font-size: 0.75rem;")],
+        [html.text(url)],
+      ),
     ],
   )
 }
@@ -540,7 +708,12 @@ fn render_math_gates() -> Element(msg) {
     ],
     [
       html.h2(
-        [attribute.attribute("style", "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;",
+          ),
+        ],
         [html.text("Four Mathematical Gates (ALL 4 REQUIRED)")],
       ),
       html.div(
@@ -610,7 +783,12 @@ fn render_math_gate_card(
         ],
         [
           html.span(
-            [attribute.attribute("style", "font-weight: 700; color: #00d4aa; font-size: 1.05rem;")],
+            [
+              attribute.attribute(
+                "style",
+                "font-weight: 700; color: #00d4aa; font-size: 1.05rem;",
+              ),
+            ],
             [html.text(title)],
           ),
           html.span(
@@ -625,15 +803,30 @@ fn render_math_gate_card(
         ],
       ),
       html.div(
-        [attribute.attribute("style", "font-size: 1.8rem; font-weight: 700; color: #e0e6ed; margin: 0.5rem 0;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 1.8rem; font-weight: 700; color: #e0e6ed; margin: 0.5rem 0;",
+          ),
+        ],
         [html.text(actual)],
       ),
       html.div(
-        [attribute.attribute("style", "font-size: 0.85rem; color: #79b8ff; margin-bottom: 0.5rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.85rem; color: #79b8ff; margin-bottom: 0.5rem;",
+          ),
+        ],
         [html.text("Threshold: " <> threshold)],
       ),
       html.div(
-        [attribute.attribute("style", "font-size: 0.82rem; color: #7a8fa6; line-height: 1.4;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.82rem; color: #7a8fa6; line-height: 1.4;",
+          ),
+        ],
         [html.text(explanation)],
       ),
     ],
@@ -648,7 +841,12 @@ fn render_gold_standard_categories() -> Element(msg) {
     ],
     [
       html.h2(
-        [attribute.attribute("style", "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;",
+          ),
+        ],
         [html.text("C3I 8-Category Gold Standard Test Suite (C1–C8)")],
       ),
       html.div(
@@ -660,29 +858,127 @@ fn render_gold_standard_categories() -> Element(msg) {
         ],
         [
           html.table(
-            [attribute.attribute("style", "width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;")],
+            [
+              attribute.attribute(
+                "style",
+                "width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;",
+              ),
+            ],
             [
               html.thead([], [
                 html.tr(
-                  [attribute.attribute("style", "background: #0d1420; border-bottom: 1px solid #1e2a3a;")],
                   [
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem; color: #7a8fa6;")], [html.text("Category")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem; color: #7a8fa6;")], [html.text("Weight")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem; color: #7a8fa6;")], [html.text("Gate Requirement")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem; color: #7a8fa6;")], [html.text("Check Specification")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem; color: #7a8fa6;")], [html.text("Status")]),
+                    attribute.attribute(
+                      "style",
+                      "background: #0d1420; border-bottom: 1px solid #1e2a3a;",
+                    ),
+                  ],
+                  [
+                    html.th(
+                      [
+                        attribute.attribute(
+                          "style",
+                          "padding: 0.75rem 1rem; color: #7a8fa6;",
+                        ),
+                      ],
+                      [html.text("Category")],
+                    ),
+                    html.th(
+                      [
+                        attribute.attribute(
+                          "style",
+                          "padding: 0.75rem 1rem; color: #7a8fa6;",
+                        ),
+                      ],
+                      [html.text("Weight")],
+                    ),
+                    html.th(
+                      [
+                        attribute.attribute(
+                          "style",
+                          "padding: 0.75rem 1rem; color: #7a8fa6;",
+                        ),
+                      ],
+                      [html.text("Gate Requirement")],
+                    ),
+                    html.th(
+                      [
+                        attribute.attribute(
+                          "style",
+                          "padding: 0.75rem 1rem; color: #7a8fa6;",
+                        ),
+                      ],
+                      [html.text("Check Specification")],
+                    ),
+                    html.th(
+                      [
+                        attribute.attribute(
+                          "style",
+                          "padding: 0.75rem 1rem; color: #7a8fa6;",
+                        ),
+                      ],
+                      [html.text("Status")],
+                    ),
                   ],
                 ),
               ]),
               html.tbody([], [
-                render_gold_standard_row("C1 Page Structure", "1.0", "Renders without error", "Lustre element count >= 5", "PASS"),
-                render_gold_standard_row("C2 Status Badges", "1.5", "All states visible", "Healthy / Degraded / Critical present", "PASS"),
-                render_gold_standard_row("C3 Data Grids", "1.0", "Rows render properly", ">= 3 rows × >= 3 columns populated", "PASS"),
-                render_gold_standard_row("C4 Timeline", "0.8", "Chronological order", "Monotonic microsecond timestamp validation", "PASS"),
-                render_gold_standard_row("C5 Interactive", "1.2", "Buttons function", "Click triggers deterministic state transition", "PASS"),
-                render_gold_standard_row("C6 Media/Rich", "0.8", "Assets load properly", "Pure Erlang vector / Kurbo SVG verified", "PASS"),
-                render_gold_standard_row("C7 AI Advisory", "1.5", "AG-UI events stream", "32-event AG-UI streaming via SSE & Zenoh", "PASS"),
-                render_gold_standard_row("C8 Action Button", "3.0", "Safety interlocks pass", "Guardian approval + 2oo3 consensus required", "PASS"),
+                render_gold_standard_row(
+                  "C1 Page Structure",
+                  "1.0",
+                  "Renders without error",
+                  "Lustre element count >= 5",
+                  "PASS",
+                ),
+                render_gold_standard_row(
+                  "C2 Status Badges",
+                  "1.5",
+                  "All states visible",
+                  "Healthy / Degraded / Critical present",
+                  "PASS",
+                ),
+                render_gold_standard_row(
+                  "C3 Data Grids",
+                  "1.0",
+                  "Rows render properly",
+                  ">= 3 rows × >= 3 columns populated",
+                  "PASS",
+                ),
+                render_gold_standard_row(
+                  "C4 Timeline",
+                  "0.8",
+                  "Chronological order",
+                  "Monotonic microsecond timestamp validation",
+                  "PASS",
+                ),
+                render_gold_standard_row(
+                  "C5 Interactive",
+                  "1.2",
+                  "Buttons function",
+                  "Click triggers deterministic state transition",
+                  "PASS",
+                ),
+                render_gold_standard_row(
+                  "C6 Media/Rich",
+                  "0.8",
+                  "Assets load properly",
+                  "Pure Erlang vector / Kurbo SVG verified",
+                  "PASS",
+                ),
+                render_gold_standard_row(
+                  "C7 AI Advisory",
+                  "1.5",
+                  "AG-UI events stream",
+                  "32-event AG-UI streaming via SSE & Zenoh",
+                  "PASS",
+                ),
+                render_gold_standard_row(
+                  "C8 Action Button",
+                  "3.0",
+                  "Safety interlocks pass",
+                  "Guardian approval + 2oo3 consensus required",
+                  "PASS",
+                ),
               ]),
             ],
           ),
@@ -699,41 +995,45 @@ fn render_gold_standard_row(
   check: String,
   status: String,
 ) -> Element(msg) {
-  html.tr(
-    [attribute.attribute("style", "border-bottom: 1px solid #1e2a3a;")],
-    [
-      html.td(
-        [attribute.attribute("style", "padding: 0.75rem 1rem; font-weight: 600; color: #00d4aa;")],
-        [html.text(category)],
-      ),
-      html.td(
-        [attribute.attribute("style", "padding: 0.75rem 1rem; color: #ffcc00; font-family: monospace;")],
-        [html.text(weight)],
-      ),
-      html.td(
-        [attribute.attribute("style", "padding: 0.75rem 1rem; color: #e0e6ed;")],
-        [html.text(gate)],
-      ),
-      html.td(
-        [attribute.attribute("style", "padding: 0.75rem 1rem; color: #7a8fa6;")],
-        [html.text(check)],
-      ),
-      html.td(
-        [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+  html.tr([attribute.attribute("style", "border-bottom: 1px solid #1e2a3a;")], [
+    html.td(
+      [
+        attribute.attribute(
+          "style",
+          "padding: 0.75rem 1rem; font-weight: 600; color: #00d4aa;",
+        ),
+      ],
+      [html.text(category)],
+    ),
+    html.td(
+      [
+        attribute.attribute(
+          "style",
+          "padding: 0.75rem 1rem; color: #ffcc00; font-family: monospace;",
+        ),
+      ],
+      [html.text(weight)],
+    ),
+    html.td(
+      [attribute.attribute("style", "padding: 0.75rem 1rem; color: #e0e6ed;")],
+      [html.text(gate)],
+    ),
+    html.td(
+      [attribute.attribute("style", "padding: 0.75rem 1rem; color: #7a8fa6;")],
+      [html.text(check)],
+    ),
+    html.td([attribute.attribute("style", "padding: 0.75rem 1rem;")], [
+      html.span(
         [
-          html.span(
-            [
-              attribute.attribute(
-                "style",
-                "background: rgba(61, 214, 140, 0.2); color: #3dd68c; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.8rem;",
-              ),
-            ],
-            [html.text(status)],
+          attribute.attribute(
+            "style",
+            "background: rgba(61, 214, 140, 0.2); color: #3dd68c; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.8rem;",
           ),
         ],
+        [html.text(status)],
       ),
-    ],
-  )
+    ]),
+  ])
 }
 
 fn render_nine_modalities() -> Element(msg) {
@@ -744,7 +1044,12 @@ fn render_nine_modalities() -> Element(msg) {
     ],
     [
       html.h2(
-        [attribute.attribute("style", "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;",
+          ),
+        ],
         [html.text("Full 9-Modality Test Protocol Matrix (100% Green)")],
       ),
       html.div(
@@ -850,11 +1155,21 @@ fn render_modality_card(
         [
           html.div([], [
             html.div(
-              [attribute.attribute("style", "font-weight: 700; color: #00d4aa; font-size: 1.05rem;")],
+              [
+                attribute.attribute(
+                  "style",
+                  "font-weight: 700; color: #00d4aa; font-size: 1.05rem;",
+                ),
+              ],
               [html.text(title)],
             ),
             html.div(
-              [attribute.attribute("style", "font-size: 0.85rem; color: #79b8ff; margin-top: 0.2rem;")],
+              [
+                attribute.attribute(
+                  "style",
+                  "font-size: 0.85rem; color: #79b8ff; margin-top: 0.2rem;",
+                ),
+              ],
               [html.text(subtitle)],
             ),
           ]),
@@ -870,7 +1185,12 @@ fn render_modality_card(
         ],
       ),
       html.p(
-        [attribute.attribute("style", "font-size: 0.85rem; color: #7a8fa6; line-height: 1.5; margin: 0.75rem 0;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.85rem; color: #7a8fa6; line-height: 1.5; margin: 0.75rem 0;",
+          ),
+        ],
         [html.text(detail)],
       ),
       html.div(
@@ -894,7 +1214,12 @@ fn render_test_suites_grid() -> Element(msg) {
     ],
     [
       html.h2(
-        [attribute.attribute("style", "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "color: #79b8ff; font-size: 1.4rem; margin-bottom: 1rem;",
+          ),
+        ],
         [html.text("Specialized Test Runners & Formal Provers")],
       ),
       html.div(
@@ -957,7 +1282,12 @@ fn render_runner_card(
     ],
     [
       html.div(
-        [attribute.attribute("style", "font-weight: 700; color: #00d4aa; font-size: 1.05rem; margin-bottom: 0.25rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-weight: 700; color: #00d4aa; font-size: 1.05rem; margin-bottom: 0.25rem;",
+          ),
+        ],
         [html.text(name)],
       ),
       html.div(
@@ -970,7 +1300,12 @@ fn render_runner_card(
         [html.text(binary_path)],
       ),
       html.p(
-        [attribute.attribute("style", "font-size: 0.85rem; color: #7a8fa6; line-height: 1.5; margin-bottom: 0.75rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.85rem; color: #7a8fa6; line-height: 1.5; margin-bottom: 0.75rem;",
+          ),
+        ],
         [html.text(description)],
       ),
       html.div(
@@ -982,7 +1317,12 @@ fn render_runner_card(
         ],
         [
           html.span(
-            [attribute.attribute("style", "font-size: 0.85rem; color: #3dd68c; font-weight: 600;")],
+            [
+              attribute.attribute(
+                "style",
+                "font-size: 0.85rem; color: #3dd68c; font-weight: 600;",
+              ),
+            ],
             [html.text(metric)],
           ),
           html.span(
@@ -1017,7 +1357,10 @@ fn render_navigation_footer() -> Element(msg) {
           html.a(
             [
               attribute.href("http://nas-1.tail55d152.ts.net:4100/testing"),
-              attribute.attribute("style", "color: #00d4aa; text-decoration: none;"),
+              attribute.attribute(
+                "style",
+                "color: #00d4aa; text-decoration: none;",
+              ),
             ],
             [html.text("http://nas-1.tail55d152.ts.net:4100/testing")],
           ),
@@ -1025,19 +1368,30 @@ fn render_navigation_footer() -> Element(msg) {
         ],
       ),
       html.div(
-        [attribute.attribute("style", "display: flex; gap: 1rem; font-size: 0.88rem;")],
+        [
+          attribute.attribute(
+            "style",
+            "display: flex; gap: 1rem; font-size: 0.88rem;",
+          ),
+        ],
         [
           html.a(
             [
               attribute.href("http://nas-1.tail55d152.ts.net:4100/checklist"),
-              attribute.attribute("style", "color: #00d4aa; text-decoration: none;"),
+              attribute.attribute(
+                "style",
+                "color: #00d4aa; text-decoration: none;",
+              ),
             ],
             [html.text("‹ Comprehensive Checklist")],
           ),
           html.a(
             [
               attribute.href("http://nas-1.tail55d152.ts.net:4100/verification"),
-              attribute.attribute("style", "color: #00d4aa; text-decoration: none;"),
+              attribute.attribute(
+                "style",
+                "color: #00d4aa; text-decoration: none;",
+              ),
             ],
             [html.text("Verification Plane ›")],
           ),

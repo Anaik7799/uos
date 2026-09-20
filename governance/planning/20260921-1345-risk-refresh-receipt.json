@@ -1,0 +1,13 @@
+{
+  "receipt_id": "risk-refresh-20260921-1345",
+  "timestamp": "20260921-1345",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "workflow_id": "risk/priority-refresh-1345",
+  "result": "PASS",
+  "checks": {"baseline":375,"adversarial":32843,"independent_dag":32768,"local_paths":39},
+  "authority": "NONE / REPORT_ONLY",
+  "runtime_admission": "NOT_GRANTED",
+  "live_agent_tests": "UNRUN",
+  "interpretation": "Risk ordering is valid evidence but does not grant task, effect, runtime, or release authority.",
+  "admission": "NOT_ADMITTED"
+}

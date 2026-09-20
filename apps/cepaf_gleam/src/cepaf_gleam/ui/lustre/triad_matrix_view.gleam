@@ -122,7 +122,11 @@ fn render_header() -> Element(msg) {
                   "margin: 0 0 0.5rem 0; font-size: 1.6rem; color: #f8fafc; font-weight: 700;",
                 ),
               ],
-              [html.text("3D Fractal Triad Matrix & Claude Sovereign Verification")],
+              [
+                html.text(
+                  "3D Fractal Triad Matrix & Claude Sovereign Verification",
+                ),
+              ],
             ),
             html.p(
               [
@@ -337,7 +341,9 @@ fn render_checklist_accordion() -> Element(msg) {
         ],
         [
           html.span([], [
-            html.text("Interactive Verification Checklist (SC-CHECKLIST-001: 18/18 PASS)"),
+            html.text(
+              "Interactive Verification Checklist (SC-CHECKLIST-001: 18/18 PASS)",
+            ),
           ]),
           html.span(
             [
@@ -419,9 +425,17 @@ fn render_domain_box(title: String, checks: List(String)) -> Element(msg) {
         ],
         list.map(checks, fn(check) {
           html.li([], [
-            html.span([attribute.attribute("style", "color: #10b981; margin-right: 0.35rem;")], [
-              html.text("✓"),
-            ]),
+            html.span(
+              [
+                attribute.attribute(
+                  "style",
+                  "color: #10b981; margin-right: 0.35rem;",
+                ),
+              ],
+              [
+                html.text("✓"),
+              ],
+            ),
             html.text(check),
           ])
         }),
@@ -439,19 +453,47 @@ fn render_dimensions_summary(eval: TriadEvaluationResult) -> Element(msg) {
       ),
     ],
     [
-      render_stat_card("Fractal Layers", int.to_string(eval.layers_count), "L0..L9 (10 Canonical)"),
-      render_stat_card("Component Families", int.to_string(eval.components_count), "C1..C6 (A2UI, SciViz, Cockpit)"),
-      render_stat_card("Process Families", int.to_string(eval.processes_count), "P1..P10 (Supervisor, OODA, Zenoh)"),
-      render_stat_card("Canonical Tensor Nodes", int.to_string(eval.total_nodes_count), "100% OPERATIONAL"),
-      render_stat_card("Shannon Entropy", "2.76 bits", "Gate: >= 2.50 bits (PASS)"),
-      render_stat_card("Cyclomatic Complexity", "94.0%", "Gate: >= 90.0% (PASS)"),
+      render_stat_card(
+        "Fractal Layers",
+        int.to_string(eval.layers_count),
+        "L0..L9 (10 Canonical)",
+      ),
+      render_stat_card(
+        "Component Families",
+        int.to_string(eval.components_count),
+        "C1..C6 (A2UI, SciViz, Cockpit)",
+      ),
+      render_stat_card(
+        "Process Families",
+        int.to_string(eval.processes_count),
+        "P1..P10 (Supervisor, OODA, Zenoh)",
+      ),
+      render_stat_card(
+        "Canonical Tensor Nodes",
+        int.to_string(eval.total_nodes_count),
+        "100% OPERATIONAL",
+      ),
+      render_stat_card(
+        "Shannon Entropy",
+        "2.76 bits",
+        "Gate: >= 2.50 bits (PASS)",
+      ),
+      render_stat_card(
+        "Cyclomatic Complexity",
+        "94.0%",
+        "Gate: >= 90.0% (PASS)",
+      ),
       render_stat_card("Divergence Ratio", "3.0%", "Gate: <= 10.0% (PASS)"),
       render_stat_card("Test Quality (ITQS)", "0.95", "Gate: >= 0.85 (PASS)"),
     ],
   )
 }
 
-fn render_stat_card(label: String, value: String, subtext: String) -> Element(msg) {
+fn render_stat_card(
+  label: String,
+  value: String,
+  subtext: String,
+) -> Element(msg) {
   html.div(
     [
       attribute.attribute(
@@ -550,14 +592,38 @@ fn render_nodes_table(nodes: List(TensorNode)) -> Element(msg) {
                     ),
                   ],
                   [
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Layer")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Component")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Process")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Criticality")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Latency")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Telemetry Topic")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Formal Invariant")]),
-                    html.th([attribute.attribute("style", "padding: 0.75rem 1rem;")], [html.text("Status")]),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Layer")],
+                    ),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Component")],
+                    ),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Process")],
+                    ),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Criticality")],
+                    ),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Latency")],
+                    ),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Telemetry Topic")],
+                    ),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Formal Invariant")],
+                    ),
+                    html.th(
+                      [attribute.attribute("style", "padding: 0.75rem 1rem;")],
+                      [html.text("Status")],
+                    ),
                   ],
                 ),
               ]),
@@ -572,30 +638,96 @@ fn render_nodes_table(nodes: List(TensorNode)) -> Element(msg) {
                       ),
                     ],
                     [
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; font-weight: 600; color: #38bdf8;")], [
-                        html.text(node.layer_code),
-                      ]),
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; color: #cbd5e1;")], [
-                        html.text(node.component_name),
-                      ]),
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; color: #e2e8f0;")], [
-                        html.text(node.process_name),
-                      ]),
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; font-size: 0.78rem; color: #a78bfa;")], [
-                        html.text(node.criticality),
-                      ]),
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; font-family: monospace; color: #3dd68c;")], [
-                        html.text(int.to_string(node.latency_bound_ms) <> "ms"),
-                      ]),
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; font-family: monospace; font-size: 0.78rem; color: #f59e0b;")], [
-                        html.text(node.telemetry_topic),
-                      ]),
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; font-size: 0.8rem; color: #94a3b8;")], [
-                        html.text(node.formal_invariant),
-                      ]),
-                      html.td([attribute.attribute("style", "padding: 0.65rem 1rem; font-weight: 600; color: #10b981;")], [
-                        html.text(node.status),
-                      ]),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; font-weight: 600; color: #38bdf8;",
+                          ),
+                        ],
+                        [
+                          html.text(node.layer_code),
+                        ],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; color: #cbd5e1;",
+                          ),
+                        ],
+                        [
+                          html.text(node.component_name),
+                        ],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; color: #e2e8f0;",
+                          ),
+                        ],
+                        [
+                          html.text(node.process_name),
+                        ],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; font-size: 0.78rem; color: #a78bfa;",
+                          ),
+                        ],
+                        [
+                          html.text(node.criticality),
+                        ],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; font-family: monospace; color: #3dd68c;",
+                          ),
+                        ],
+                        [
+                          html.text(
+                            int.to_string(node.latency_bound_ms) <> "ms",
+                          ),
+                        ],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; font-family: monospace; font-size: 0.78rem; color: #f59e0b;",
+                          ),
+                        ],
+                        [
+                          html.text(node.telemetry_topic),
+                        ],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; font-size: 0.8rem; color: #94a3b8;",
+                          ),
+                        ],
+                        [
+                          html.text(node.formal_invariant),
+                        ],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 0.65rem 1rem; font-weight: 600; color: #10b981;",
+                          ),
+                        ],
+                        [
+                          html.text(node.status),
+                        ],
+                      ),
                     ],
                   )
                 }),
@@ -622,7 +754,10 @@ fn render_footer() -> Element(msg) {
         html.a(
           [
             attribute.href("http://nas-1.tail55d152.ts.net:4100"),
-            attribute.attribute("style", "color: #00d4aa; text-decoration: none;"),
+            attribute.attribute(
+              "style",
+              "color: #00d4aa; text-decoration: none;",
+            ),
           ],
           [html.text("nas-1.tail55d152.ts.net:4100")],
         ),
@@ -631,15 +766,25 @@ fn render_footer() -> Element(msg) {
         html.text("REST APIs: "),
         html.a(
           [
-            attribute.href("http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/fractal_triad"),
-            attribute.attribute("style", "color: #38bdf8; text-decoration: none; margin-right: 0.5rem;"),
+            attribute.href(
+              "http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/fractal_triad",
+            ),
+            attribute.attribute(
+              "style",
+              "color: #38bdf8; text-decoration: none; margin-right: 0.5rem;",
+            ),
           ],
           [html.text("/fractal_triad")],
         ),
         html.a(
           [
-            attribute.href("http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/claude_verification"),
-            attribute.attribute("style", "color: #38bdf8; text-decoration: none;"),
+            attribute.href(
+              "http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/claude_verification",
+            ),
+            attribute.attribute(
+              "style",
+              "color: #38bdf8; text-decoration: none;",
+            ),
           ],
           [html.text("/claude_verification")],
         ),

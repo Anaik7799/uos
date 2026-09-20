@@ -229,13 +229,11 @@ pub fn semantic_search(
 
       case total_score >=. min_relevance {
         True ->
-          Ok(
-            QueryResult(
-              node: n,
-              relevance_score: total_score,
-              transclusion_chain: n.outbound_transclusions,
-            ),
-          )
+          Ok(QueryResult(
+            node: n,
+            relevance_score: total_score,
+            transclusion_chain: n.outbound_transclusions,
+          ))
         False -> Error(Nil)
       }
     })

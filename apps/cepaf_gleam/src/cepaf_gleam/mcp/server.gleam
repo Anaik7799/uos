@@ -12,16 +12,18 @@
 
 import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ha/fractal_forecast
+import cepaf_gleam/harness/mcp as task_mcp
+import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/authz
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/tools
 import cepaf_gleam/planning/sa_plan_bridge
-import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/sciviz/extension_deep_dive
 import cepaf_gleam/sciviz/transpiler
-import cepaf_gleam/zenoh/client as zenoh_client
+import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/router as wisp_router
+import cepaf_gleam/zenoh/client as zenoh_client
 import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/int
@@ -470,6 +472,10 @@ fn execute_available_tool(
     "mesh_topology" -> tool_adapter_response(id, c3i_nif.system_zenoh())
     "ooda_decide" -> tool_page_json(id, "/api/v1/ooda/decide")
     "kms_catalog" -> tool_page_json(id, "/api/v1/kms")
+    // Holonic coordination and swarm observability (read-only projections)
+    "holon_status" -> tool_page_json(id, "/api/v1/holon")
+    "swarm_status" -> tool_page_json(id, "/api/v1/ecology/capabilities")
+    "agent_hierarchy" -> tool_page_json(id, "/api/v1/agents")
     // ZigVM / Hermes Harness tools
     "control_loop" -> tool_control_loop(id, raw_line)
     "safety_status" -> tool_safety_status(id)
@@ -483,6 +489,21 @@ fn execute_available_tool(
     "preflight_check" -> tool_preflight_check(id, raw_line)
     // Sa-Plan Durable Execution Tools (SC-JIDOKA-001, SC-SA-PLAN-001)
     "sa_plan_status" -> tool_sa_plan_status(id)
+    "sa_plan_status_for" -> tool_sa_plan_status_for(id, raw_line)
+    "feature_tracker_status" -> tool_feature_tracker_status(id, raw_line)
+    "mcp_capability_inventory" -> tool_mcp_capability_inventory(id)
+    "harness_system_feature_catalog" ->
+      tool_task_bound_feature(id, "harness_system_feature_catalog", raw_line)
+    "harness_system_feature_observations" ->
+      tool_task_bound_feature(
+        id,
+        "harness_system_feature_observations",
+        raw_line,
+      )
+    "harness_system_feature_intent" ->
+      tool_task_bound_feature(id, "harness_system_feature_intent", raw_line)
+    "harness_execution_progress" ->
+      tool_task_bound_feature(id, "harness_execution_progress", raw_line)
     "sa_plan_list" -> tool_sa_plan_list(id)
     "sa_task_claim" -> tool_sa_task_claim(id, raw_line)
     "sa_task_complete" -> tool_sa_task_complete(id, raw_line)
@@ -497,7 +518,8 @@ fn execute_available_tool(
     "zk_transclude" -> tool_zk_transclude(id, raw_line)
     "lyapunov_trend_predict" -> tool_lyapunov_trend_predict(id, raw_line)
     // SciViz 167 Extensions & ggram Live Synthesis (SC-SCIVIZ-001)
-    "sciviz_extension_deep_dive" -> tool_sciviz_extension_deep_dive(id, raw_line)
+    "sciviz_extension_deep_dive" ->
+      tool_sciviz_extension_deep_dive(id, raw_line)
     "ggram_synthesize" -> tool_ggram_synthesize(id, raw_line)
     _ -> error_response(id, -32_602, "Unknown tool: " <> name)
   }
@@ -871,6 +893,96 @@ fn tool_sa_plan_status(id: Option(json.Json)) -> String {
   }
 }
 
+fn tool_sa_plan_status_for(id: Option(json.Json), raw_line: String) -> String {
+  let plan_decoder = {
+    use plan <- decode.subfield(["params", "arguments", "plan"], decode.string)
+    decode.success(plan)
+  }
+  case json.parse(raw_line, plan_decoder) {
+    Ok(plan) ->
+      case sa_plan_bridge.query_sa_plan_status_for(plan) {
+        Ok(out) -> tool_content_response(id, out)
+        Error(err) -> tool_error_response(id, err)
+      }
+    Error(_) ->
+      tool_error_response(id, "Missing required params.arguments.plan")
+  }
+}
+
+fn tool_feature_tracker_status(
+  id: Option(json.Json),
+  raw_line: String,
+) -> String {
+  let plan_decoder = {
+    use plan <- decode.subfield(["params", "arguments", "plan"], decode.string)
+    decode.success(plan)
+  }
+  case json.parse(raw_line, plan_decoder) {
+    Ok(plan) ->
+      case sa_plan_bridge.query_sa_plan_status_for(plan) {
+        Ok(out) ->
+          tool_content_response(
+            id,
+            "schema=uos.feature-tracker-status.v1 plan=" <> plan <> "\n" <> out,
+          )
+        Error(err) -> tool_error_response(id, err)
+      }
+    Error(_) ->
+      tool_error_response(id, "Missing required params.arguments.plan")
+  }
+}
+
+fn tool_mcp_capability_inventory(id: Option(json.Json)) -> String {
+  let definitions = tools.get_tool_definitions()
+  let unavailable = tools.unavailable_tools
+  let unavailable_count = list.length(unavailable)
+  let declared_count = list.length(definitions)
+  let entries =
+    list.map(definitions, fn(definition) {
+      let status = case list.contains(unavailable, definition.name) {
+        True -> "unavailable"
+        False -> "declared_unprobed"
+      }
+      json.object([
+        #("name", json.string(definition.name)),
+        #("status", json.string(status)),
+        #("admission", json.string("unknown")),
+      ])
+    })
+  tool_content_response(
+    id,
+    json.object([
+      #("schema", json.string("uos.mcp-capability-inventory.v1")),
+      #("declared_count", json.int(declared_count)),
+      #("unavailable_count", json.int(unavailable_count)),
+      #("declared_unprobed_count", json.int(declared_count - unavailable_count)),
+      #("entries", json.array(entries, fn(entry) { entry })),
+      #("runtime_admission", json.string("not_granted")),
+      #("effect_authority", json.bool(False)),
+    ])
+      |> json.to_string,
+  )
+}
+
+fn tool_task_bound_feature(
+  id: Option(json.Json),
+  name: String,
+  raw_line: String,
+) -> String {
+  let args_decoder = {
+    use args <- decode.subfield(["params", "arguments"], value.decoder())
+    decode.success(args)
+  }
+  case json.parse(raw_line, args_decoder) {
+    Ok(args) ->
+      case task_mcp.call_task_bound(name, args) {
+        Ok(result) -> tool_content_response(id, json.to_string(result))
+        Error(reason) -> tool_error_response(id, reason)
+      }
+    Error(_) -> tool_error_response(id, "Missing required params.arguments")
+  }
+}
+
 fn tool_sa_plan_list(id: Option(json.Json)) -> String {
   case sa_plan_bridge.query_sa_plan_list() {
     Ok(out) -> tool_content_response(id, out)
@@ -1133,13 +1245,15 @@ fn tool_stpa_fmea_hazard(id: Option(json.Json), raw_line: String) -> String {
 }
 
 fn tool_rete_rule_conflict(id: Option(json.Json), raw_line: String) -> String {
+  let number_decoder =
+    decode.one_of(decode.float, [decode.map(decode.int, int.to_float)])
   let rule_decoder = {
     use r_id <- decode.field("id", decode.string)
     use name <- decode.optional_field("name", "rule", decode.string)
     use layer <- decode.optional_field("layer", "L5", decode.string)
-    use score <- decode.optional_field("score", 10.0, decode.float)
+    use score <- decode.optional_field("score", 10.0, number_decoder)
     use layer_rank <- decode.optional_field("layer_rank", 5, decode.int)
-    use salience <- decode.optional_field("salience", 1.0, decode.float)
+    use salience <- decode.optional_field("salience", 1.0, number_decoder)
     use specificity <- decode.optional_field("specificity", 1, decode.int)
     use matched_conditions <- decode.optional_field(
       "matched_conditions",
@@ -1167,13 +1281,17 @@ fn tool_rete_rule_conflict(id: Option(json.Json), raw_line: String) -> String {
     decode.success(r)
   }
 
-  let rules = case json.parse(raw_line, rules_decoder) {
-    Ok(r) -> r
-    Error(_) -> []
+  case json.parse(raw_line, rules_decoder) {
+    Ok(rules) -> {
+      let rep = inference_api.evaluate_rete_conflict(rules)
+      tool_adapter_response(id, max_daemon.rete_conflict_report_to_json(rep))
+    }
+    Error(_) ->
+      tool_error_response(
+        id,
+        "Missing or invalid params.arguments.rules; expected a list of rule objects",
+      )
   }
-
-  let rep = inference_api.evaluate_rete_conflict(rules)
-  tool_adapter_response(id, max_daemon.rete_conflict_report_to_json(rep))
 }
 
 fn tool_ruliad_branch_eval(id: Option(json.Json), raw_line: String) -> String {
@@ -1377,7 +1495,10 @@ fn tool_sciviz_extension_deep_dive(
   raw_line: String,
 ) -> String {
   let ext_decoder = {
-    use ext <- decode.subfield(["params", "arguments", "extension"], decode.string)
+    use ext <- decode.subfield(
+      ["params", "arguments", "extension"],
+      decode.string,
+    )
     decode.success(ext)
   }
   let target_ext = case json.parse(raw_line, ext_decoder) {
@@ -1430,12 +1551,12 @@ fn tool_sciviz_extension_deep_dive(
   tool_content_response(id, payload)
 }
 
-fn tool_ggram_synthesize(
-  id: Option(json.Json),
-  raw_line: String,
-) -> String {
+fn tool_ggram_synthesize(id: Option(json.Json), raw_line: String) -> String {
   let preset_decoder = {
-    use preset <- decode.subfield(["params", "arguments", "preset"], decode.string)
+    use preset <- decode.subfield(
+      ["params", "arguments", "preset"],
+      decode.string,
+    )
     decode.success(preset)
   }
   let target_preset = case json.parse(raw_line, preset_decoder) {

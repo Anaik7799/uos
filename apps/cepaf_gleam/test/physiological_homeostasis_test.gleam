@@ -1,8 +1,7 @@
 import cepaf_gleam/ha/physiological_homeostasis.{
-  CpuUtilization, ErrorRate, MemoryUtilization, RequestLatency,
-  StressCritical, StressHigh, StressLow, StressOptimal,
-  TrendRising, TrendStable, classify_stress,
-  default_variables, initial_physiological_state, step_variable,
+  CpuUtilization, ErrorRate, MemoryUtilization, RequestLatency, StressCritical,
+  StressHigh, StressLow, StressOptimal, TrendRising, TrendStable,
+  classify_stress, default_variables, initial_physiological_state, step_variable,
   update_physiological_telemetry,
 }
 import gleam/list
@@ -32,7 +31,8 @@ pub fn stress_classification_test() {
 
 pub fn step_variable_pid_anti_windup_test() {
   let vars = default_variables()
-  let assert Ok(cpu_var) = list.find(vars, fn(v) { v.variable == CpuUtilization })
+  let assert Ok(cpu_var) =
+    list.find(vars, fn(v) { v.variable == CpuUtilization })
 
   // High load for sustained period should clamp integral to 10.0
   let s1 = step_variable(cpu_var, 95.0, 10.0)
@@ -50,7 +50,12 @@ pub fn physiological_telemetry_trend_and_homeostasis_test() {
   let s1 =
     update_physiological_telemetry(
       s0,
-      [#(CpuUtilization, 40.0), #(MemoryUtilization, 50.0), #(RequestLatency, 45.0), #(ErrorRate, 0.01)],
+      [
+        #(CpuUtilization, 40.0),
+        #(MemoryUtilization, 50.0),
+        #(RequestLatency, 45.0),
+        #(ErrorRate, 0.01),
+      ],
       1.0,
       2000,
     )
@@ -58,12 +63,7 @@ pub fn physiological_telemetry_trend_and_homeostasis_test() {
 
   // Ingest critical observation
   let s2 =
-    update_physiological_telemetry(
-      s1,
-      [#(CpuUtilization, 98.0)],
-      1.0,
-      3000,
-    )
+    update_physiological_telemetry(s1, [#(CpuUtilization, 98.0)], 1.0, 3000)
   s2.is_homeostatic |> should.equal(False)
   s2.stress_trend |> should.equal(TrendRising)
 }

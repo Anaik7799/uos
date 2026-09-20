@@ -3,8 +3,8 @@
 //// =============================================================================
 
 import cepaf_gleam/ui/lustre/mesh_topology_view.{
-  TopologyNode, init_topology_view, render_topology_page,
-  render_topology_svg, update_topology_node,
+  TopologyNode, init_topology_view, render_topology_page, render_topology_svg,
+  update_topology_node,
 }
 import gleeunit
 import gleeunit/should

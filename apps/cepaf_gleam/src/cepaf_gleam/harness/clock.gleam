@@ -4,9 +4,9 @@
 import gleam/bit_array
 import gleam/int
 import gleam/json
+import gleam/list
 import gleam/result
 import gleam/string
-import gleam/list
 import uos_swarm/clock_contract as contract
 import uos_swarm/clock_guard
 
@@ -42,7 +42,8 @@ pub fn reference_and_delivery_valid(
   reference_utc_us: Int,
   delivery_us: Int,
 ) -> Bool {
-  delivery_us >= 0 && delivery_us <= sample_max_delivery_us
+  delivery_us >= 0
+  && delivery_us <= sample_max_delivery_us
   && reference_utc_us <= captured_utc_us
   && captured_utc_us - reference_utc_us <= reference_max_age_us
 }
@@ -94,11 +95,7 @@ pub fn observe() -> Result(Observation, String) {
     False -> Error("clock_sample_delivery_expired")
     True -> {
       use _ <- result.try(
-        contract.validate(
-          sample.evidence,
-          sample.observed,
-          policy,
-        )
+        contract.validate(sample.evidence, sample.observed, policy)
         |> result.map_error(contract.failure_label),
       )
       Ok(Observation(sample, elapsed, reference))

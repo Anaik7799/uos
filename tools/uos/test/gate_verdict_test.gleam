@@ -3,7 +3,7 @@ import main.{
   Checklist, Selfcheck15Cycles, SelfcheckInference, SelfcheckMirage,
   SelfcheckMirageMigration, SelfcheckMirageProd, SelfcheckMirageTenders,
   SelfcheckSaPlan, SelfcheckVfs, SelfcheckWave3Cycles, SelfcheckWave4Cycles,
-  count_ok_lines, count_pass_lines, count_passed, exit_for, execute,
+  count_ok_lines, count_pass_lines, count_passed, execute, exit_for,
   inference_selfcheck_ok, last_line, sa_plan_suites, suite_ok, suite_pass_ok,
   summary_line, vfs_laws, wave3_records, wave4_records,
 }
@@ -127,7 +127,6 @@ fn list_length(items: List(a)) -> Int {
   }
 }
 
-
 // --- sa-plan suite execution ---------------------------------------------------
 
 pub fn count_ok_lines_counts_only_ok_prefixed_lines_test() {
@@ -145,7 +144,12 @@ pub fn suite_ok_requires_zero_exit_and_law_floor_test() {
 }
 
 pub fn suite_ok_prose_suite_requires_phrase_test() {
-  suite_ok(0, "Workflow Durable Execution Completed Successfully.", 0, "Completed Successfully")
+  suite_ok(
+    0,
+    "Workflow Durable Execution Completed Successfully.",
+    0,
+    "Completed Successfully",
+  )
   |> should.be_true
   suite_ok(0, "", 0, "Completed Successfully")
   |> should.be_false
@@ -158,7 +162,6 @@ pub fn sa_plan_gate_executes_thirteen_suites_and_returns_zero_test() {
   execute(SelfcheckSaPlan)
   |> should.equal(0)
 }
-
 
 // --- wave inventories -----------------------------------------------------------
 

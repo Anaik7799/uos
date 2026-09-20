@@ -33,6 +33,58 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 
+pub type Method {
+  Health
+  Metrics
+  Modalities
+  InferText
+  InferAudio
+  Embed
+  DetectAstAnomaly
+  MatchZkTransclusion
+  PredictLyapunovTrend
+  InferStpaFmeaHazard
+  EvalReteRuleConflict
+  EvaluateRuliadBranch
+  SynthesizeBiomorphicHarmonics
+}
+
+pub fn all_methods() -> List(Method) {
+  [
+    Health,
+    Metrics,
+    Modalities,
+    InferText,
+    InferAudio,
+    Embed,
+    DetectAstAnomaly,
+    MatchZkTransclusion,
+    PredictLyapunovTrend,
+    InferStpaFmeaHazard,
+    EvalReteRuleConflict,
+    EvaluateRuliadBranch,
+    SynthesizeBiomorphicHarmonics,
+  ]
+}
+
+pub fn method_name(method: Method) -> String {
+  case method {
+    Health -> "health"
+    Metrics -> "metrics"
+    Modalities -> "modalities"
+    InferText -> "infer_text"
+    InferAudio -> "infer_audio"
+    Embed -> "embed"
+    DetectAstAnomaly -> "detect_ast_anomaly"
+    MatchZkTransclusion -> "match_zk_transclusion"
+    PredictLyapunovTrend -> "predict_lyapunov_trend"
+    InferStpaFmeaHazard -> "infer_stpa_fmea_hazard"
+    EvalReteRuleConflict -> "eval_rete_rule_conflict"
+    EvaluateRuliadBranch -> "evaluate_ruliad_branch"
+    SynthesizeBiomorphicHarmonics -> "synthesize_biomorphic_harmonics"
+  }
+}
+
 // -----------------------------------------------------------------------------
 // Public Data Types
 // -----------------------------------------------------------------------------
@@ -264,19 +316,25 @@ pub type ShrutiHarmonicReport {
 // -----------------------------------------------------------------------------
 
 pub fn build_health_request(id: String) -> String {
-  json.object([#("id", json.string(id)), #("method", json.string("health"))])
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string(method_name(Health))),
+  ])
   |> json.to_string
 }
 
 pub fn build_metrics_request(id: String) -> String {
-  json.object([#("id", json.string(id)), #("method", json.string("metrics"))])
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string(method_name(Metrics))),
+  ])
   |> json.to_string
 }
 
 pub fn build_modalities_request(id: String) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("modalities")),
+    #("method", json.string(method_name(Modalities))),
   ])
   |> json.to_string
 }
@@ -289,7 +347,7 @@ pub fn build_infer_text_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("infer_text")),
+    #("method", json.string(method_name(InferText))),
     #(
       "params",
       json.object([
@@ -309,7 +367,7 @@ pub fn build_infer_audio_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("infer_audio")),
+    #("method", json.string(method_name(InferAudio))),
     #(
       "params",
       json.object([
@@ -328,7 +386,7 @@ pub fn build_embed_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("embed")),
+    #("method", json.string(method_name(Embed))),
     #(
       "params",
       json.object([
@@ -349,7 +407,7 @@ pub fn build_detect_ast_anomaly_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("detect_ast_anomaly")),
+    #("method", json.string(method_name(DetectAstAnomaly))),
     #(
       "params",
       json.object([
@@ -378,7 +436,7 @@ pub fn build_match_zk_transclusion_request(
   }
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("match_zk_transclusion")),
+    #("method", json.string(method_name(MatchZkTransclusion))),
     #("params", json.object(params)),
   ])
   |> json.to_string
@@ -393,7 +451,7 @@ pub fn build_predict_lyapunov_trend_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("predict_lyapunov_trend")),
+    #("method", json.string(method_name(PredictLyapunovTrend))),
     #(
       "params",
       json.object([
@@ -418,7 +476,7 @@ pub fn build_infer_stpa_fmea_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("infer_stpa_fmea_hazard")),
+    #("method", json.string(method_name(InferStpaFmeaHazard))),
     #(
       "params",
       json.object([
@@ -441,7 +499,7 @@ pub fn build_eval_rete_rule_conflict_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("eval_rete_rule_conflict")),
+    #("method", json.string(method_name(EvalReteRuleConflict))),
     #(
       "params",
       json.object([
@@ -462,7 +520,7 @@ pub fn build_evaluate_ruliad_branch_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("evaluate_ruliad_branch")),
+    #("method", json.string(method_name(EvaluateRuliadBranch))),
     #(
       "params",
       json.object([
@@ -484,7 +542,7 @@ pub fn build_synthesize_shruti_harmonics_request(
 ) -> String {
   json.object([
     #("id", json.string(id)),
-    #("method", json.string("synthesize_biomorphic_harmonics")),
+    #("method", json.string(method_name(SynthesizeBiomorphicHarmonics))),
     #(
       "params",
       json.object([
@@ -610,7 +668,9 @@ pub fn decode_infer_audio_response(
   |> result.map_error(fn(_) { "failed_to_decode_infer_audio_response" })
 }
 
-pub fn decode_embed_response(raw_json: String) -> Result(MaxEmbedResult, String) {
+pub fn decode_embed_response(
+  raw_json: String,
+) -> Result(MaxEmbedResult, String) {
   let decoder = {
     use id <- decode.field("id", decode.string)
     use status <- decode.field("status", decode.string)
@@ -827,9 +887,7 @@ pub fn decode_infer_stpa_fmea_response(
     ))
   }
   json.parse(raw_json, decoder)
-  |> result.map_error(fn(_) {
-    "failed_to_decode_infer_stpa_fmea_response"
-  })
+  |> result.map_error(fn(_) { "failed_to_decode_infer_stpa_fmea_response" })
 }
 
 pub fn decode_eval_rete_conflict_response(
@@ -884,9 +942,7 @@ pub fn decode_eval_rete_conflict_response(
     ))
   }
   json.parse(raw_json, decoder)
-  |> result.map_error(fn(_) {
-    "failed_to_decode_eval_rete_conflict_response"
-  })
+  |> result.map_error(fn(_) { "failed_to_decode_eval_rete_conflict_response" })
 }
 
 pub fn decode_evaluate_ruliad_branch_response(
@@ -1055,10 +1111,7 @@ pub fn lyapunov_result_to_json(result: LyapunovTrendResult) -> String {
     #("lyapunov_exponent", json.float(result.lyapunov_exponent)),
     #("stability_state", json.string(result.stability_state)),
     #("time_to_cascade_s", cascade_json),
-    #(
-      "forecast_trajectory",
-      json.array(result.forecast_trajectory, json.float),
-    ),
+    #("forecast_trajectory", json.array(result.forecast_trajectory, json.float)),
     #("seu_preflight_passed", json.bool(result.seu_preflight_passed)),
     #("preflight_status", json.string(result.preflight_status)),
     #(
@@ -1214,7 +1267,7 @@ pub fn is_harmony_pass(result: MaxAudioResult) -> Bool {
 }
 
 pub fn is_entropy_rich(result: MaxAudioResult) -> Bool {
-  result.shannon_entropy >=. 2.50
+  result.shannon_entropy >=. 2.5
 }
 
 pub fn is_ast_safe(report: AstAnomalyReport) -> Bool {
@@ -1244,7 +1297,7 @@ pub fn is_rete_l0_winner(report: ReteConflictReport) -> Bool {
 }
 
 pub fn is_ruliad_mergeable(report: RuliadBranchReport) -> Bool {
-  report.conflict_probability <. 0.50
+  report.conflict_probability <. 0.5
 }
 
 pub fn is_acoustic_healthy(report: ShrutiHarmonicReport) -> Bool {

@@ -1,10 +1,9 @@
 import cepaf_gleam/ha/concurrent_fractal_reload.{
-  L0Constitutional, L1AtomicDebug, L2ComponentHealth, L3TransactionState,
-  L4SystemSupervision, L5CognitiveOoda, L6EcosystemSwarm, L7FederationZenoh,
-  L8EvolutionImmune, L9SingularityHarmonic,
-  classify_module_layer, layer_to_string, layer_to_level,
-  concurrent_reload, sequential_reload, parallel_scan_changed, compare_concurrency,
-  ConcurrentReloadSuccess
+  ConcurrentReloadSuccess, L0Constitutional, L1AtomicDebug, L2ComponentHealth,
+  L3TransactionState, L4SystemSupervision, L5CognitiveOoda, L6EcosystemSwarm,
+  L7FederationZenoh, L8EvolutionImmune, L9SingularityHarmonic,
+  classify_module_layer, compare_concurrency, concurrent_reload, layer_to_level,
+  layer_to_string, parallel_scan_changed, sequential_reload,
 }
 import gleeunit/should
 
@@ -55,7 +54,8 @@ pub fn fractal_layer_ordinals_test() {
 
 pub fn fractal_layer_strings_test() {
   layer_to_string(L0Constitutional) |> should.equal("L0_Constitutional")
-  layer_to_string(L9SingularityHarmonic) |> should.equal("L9_Singularity_Harmonic")
+  layer_to_string(L9SingularityHarmonic)
+  |> should.equal("L9_Singularity_Harmonic")
 }
 
 pub fn parallel_scan_changed_test() {
@@ -94,7 +94,9 @@ pub fn sequential_reload_execution_test() {
 pub fn sequential_vs_concurrent_benchmark_test() {
   let #(seq, conc, speedup) = compare_concurrency()
   case seq, conc {
-    ConcurrentReloadSuccess(scanned1, _, _, _, _), ConcurrentReloadSuccess(scanned2, _, _, _, _) -> {
+    ConcurrentReloadSuccess(scanned1, _, _, _, _),
+      ConcurrentReloadSuccess(scanned2, _, _, _, _)
+    -> {
       scanned1 |> should.equal(scanned2)
       should.be_true(speedup >=. 1.0)
     }

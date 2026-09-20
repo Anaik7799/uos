@@ -71,12 +71,7 @@ pub type InferenceResult {
 }
 
 pub type TraceStage {
-  TraceStage(
-    name: String,
-    detail: String,
-    status: String,
-    elapsed_ms: Int,
-  )
+  TraceStage(name: String, detail: String, status: String, elapsed_ms: Int)
 }
 
 pub type PipelineTrace {

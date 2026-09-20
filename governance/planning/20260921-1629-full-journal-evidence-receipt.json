@@ -1,0 +1,16 @@
+{
+  "schema": "uos.coordinator-recovery-evidence-receipt.v1",
+  "timestamp": "20260921-1629",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "source": "var/coordination/tri-agent/events",
+  "candidate_directory": "/home/an/uos-recovery-candidates/20260921-1627-full-evidence",
+  "candidate_database": "/home/an/uos-recovery-candidates/20260921-1627-full-evidence/coordinator.sqlite3",
+  "candidate_digest": "ee63471f953977fef998615f15d2fdbf7a96a90dd565c8a51cbab393ddedc104",
+  "evidence_only": true,
+  "verified_event_prefix": 421,
+  "canonical_tail": "post-421 records preserved as graded evidence; no event activated",
+  "canonical_mutation": false,
+  "authority_selection": "pending independent review",
+  "runtime_admission": "not_granted",
+  "admission": "not_admitted"
+}

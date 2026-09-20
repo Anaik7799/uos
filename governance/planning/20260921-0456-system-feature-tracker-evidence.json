@@ -1,0 +1,189 @@
+{
+  "schema": "uos.system-feature-tracker-foundation.v1",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "worker": "codex-01a0ba74-feature-tracker",
+  "attempt": 1,
+  "observed_at": "2026-09-21T04:56:52Z",
+  "stage": "passed_focused_development",
+  "task_complete": false,
+  "overall_goal_complete": false,
+  "deployment": "NOT_PERFORMED",
+  "canonical_inventory_import": "NOT_PERFORMED",
+  "connected_mcp_success": "NOT_VERIFIED",
+  "source_hashes": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam",
+      "sha256": "6f81abb31774e4992a2d672e621e0d53d4fd88a04d85ff0bdbcbe77e72b9c991",
+      "observed_at": "2026-09-21T04:56:52Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam",
+      "sha256": "5e634c84bafcd1d6eb39bcb6070984041b09ce7c30b49b613c22c71a29ea528d",
+      "observed_at": "2026-09-21T04:56:52Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam",
+      "sha256": "73fc378b8294650a77cdafd74c3f88386f37b39a37503f775ddebab33794b974",
+      "observed_at": "2026-09-21T04:56:52Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "78cb9d9c708ce38b3d8383a995ce75371d1ac7ab2028e21cd511243fefadfe72",
+      "observed_at": "2026-09-21T04:56:52Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_tracker_test.gleam",
+      "sha256": "5905ba4ebf5883a23b52d09fb385bf32d10efeaac7ccc90c0da45904d23ead72",
+      "observed_at": "2026-09-21T04:56:52Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_store_test.gleam",
+      "sha256": "0430892b09107f8f4d9a6e05f609a93cbdae237adb9f4dd5410c546f6c81fcc1",
+      "observed_at": "2026-09-21T04:56:52Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_api_test.gleam",
+      "sha256": "4698e747580eb29997543d92d4eca18c710ca8430ea73c243c64cc93bc08d993",
+      "observed_at": "2026-09-21T04:56:52Z"
+    }
+  ],
+  "tests": {
+    "focused": {
+      "passed": 32,
+      "failed": 0
+    },
+    "reference_cases": 64,
+    "reference_reversed_cases": 64,
+    "first_full_suite": {
+      "passed": 11923,
+      "failed": 0,
+      "scope": "Before final deadline and escaped-key fixes"
+    },
+    "subsequent_full_suite": {
+      "passed": 11924,
+      "failed": 2,
+      "exit_code": 1,
+      "details": "Failure names were lost in truncated output. One bounded rerun with unchanged source passed 11926/0; transient failure mechanism remains unidentified, not claimed repaired."
+    },
+    "full_rerun": {
+      "status": "PASS",
+      "passed": 11926,
+      "failed": 0,
+      "exit_code": 0,
+      "log": "/tmp/uos-feature-regression.LsZ0Bc",
+      "scope": "Final source candidate; prior two failures remain unexplained and retained"
+    },
+    "journal_lint": {
+      "passed": 10,
+      "scope": "mechanical checks only"
+    }
+  },
+  "semantics": {
+    "declarations": "claims only",
+    "availability": "unknown/absent/disabled/stale/failing/usable; usable requires privileged exact observation fingerprint plus candidate/auth/client/transport/actor/freshness checks",
+    "trusted_verifier": "NOT_IMPLEMENTED",
+    "metadata_store": "Canonical Sa-plan CLI workflow protocol; private SQLite fixtures observed; root manifests published after complete children",
+    "tamper_proof": false,
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "bounds": {
+    "catalog_features": 128,
+    "feature_bytes": 16384,
+    "catalog_bytes": 2097152,
+    "endpoints_per_feature": 32,
+    "in_memory_observations": 4096,
+    "manifest_bytes": 65536,
+    "response_bytes": 262144,
+    "query_page": 8,
+    "native_call_ms": 3000,
+    "cooperative_operation_ms": 60000
+  },
+  "mcp": {
+    "tool": "harness_system_feature_catalog",
+    "args": [
+      "catalog_sha256",
+      "offset"
+    ],
+    "state": "development discovery and unbound denial verified",
+    "runtime_availability": "always unknown until trusted verifier is connected",
+    "writes_exposed": false
+  },
+  "review": {
+    "agent": "internal Codex dashboard_review",
+    "method": "Gleam MCP read_file only",
+    "independent_execution": false,
+    "findings": [
+      "Sa-plan workflow tables have no SQL append-only/authenticated provenance enforcement; corrected by additive design activity, no tamper-proof claim.",
+      "Aggregate catalog byte bounds now enforced by constructor and parser.",
+      "Trusted receipt map allocation occurs only after input bounds.",
+      "Escaped endpoint key must fit observation key bound.",
+      "Effect deadline rechecked after fence/before dispatch; late return is unknown outcome, never retried."
+    ],
+    "verdict": "No further blocking source defect in private-development scope",
+    "sovereign_admission": false
+  },
+  "inventory_sources": {
+    "scope": "Reviewer source observations only; complete inventory not established",
+    "sources": [
+      {
+        "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+        "declared_features": 52
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "declared_tools": 55,
+        "explicitly_unavailable": 12
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "purpose": "dispatcher reconciliation"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+        "purpose": "data/control route inventory"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+        "declared_children": 26,
+        "startup_children": 5
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_port.gleam",
+        "adapters": 11
+      },
+      {
+        "path": "governance/capability-inventory/skills.toml",
+        "purpose": "reference-only guidance"
+      },
+      {
+        "path": "governance/agents/policy/superset.toml",
+        "purpose": "policy source"
+      }
+    ],
+    "missing_historical_sources": [
+      "docs/design/2026-09-05-uos-agent-capability-inventory.json",
+      "docs/design/2026-09-05-uos-source-feature-traceability-catalog.md"
+    ]
+  },
+  "residuals": [
+    "t1 complete source ingestion and canonical metadata import remain pending.",
+    "Missing schema details need explicit gap representation before ingesting incomplete MCP declarations; no placeholder hashes may be used as real schemas.",
+    "Trusted runtime observation verifier, current launcher/risk integration, connected positive MCP invocation and stateful successor integration remain unverified.",
+    "Database owner/root can alter workflow rows; content hashes are integrity bindings, not writer authentication.",
+    "Private fixtures and source review do not establish actual Claude/AGY enrollment, hive operation or release authority.",
+    "Full suite transiently reported two unidentified failures before unchanged-source rerun passed; release confidence must not erase this counterevidence."
+  ],
+  "journal": "docs/journal/20260921-0456-system-feature-tracker-foundation.md",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-development/20260921-0456",
+  "progress": {
+    "observed_at": "2026-09-21T05:02:03Z",
+    "total": 20,
+    "completed": 2,
+    "executing": 1,
+    "blocked": 17,
+    "unknown": 0,
+    "task_snapshot_sha256": "b8996f553bc1185815dbc4fd02515aa5130882acbde6dcb018d25453cbd815f0"
+  }
+}

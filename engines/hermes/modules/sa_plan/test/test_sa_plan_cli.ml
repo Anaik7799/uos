@@ -92,6 +92,13 @@ let () =
        (Sa_plan_cli.normalize
           [| "sa-plan"; "ui"; "snapshot"; "work/sa-plan-observation.json" |])
        [| "sa-plan"; "--snapshot"; "work/sa-plan-observation.json" |]);
+  require "LAW CLI-UI-SNAPSHOT-EXPLICIT-PLAN"
+    (array_equal
+       (Sa_plan_cli.normalize
+          [| "sa-plan"; "ui"; "snapshot"; "work/sa-plan-observation.json";
+             "uos/system-mcp-features/20260919-1642" |])
+       [| "sa-plan"; "--snapshot"; "work/sa-plan-observation.json";
+          "uos/system-mcp-features/20260919-1642" |]);
   require "LAW CLI-UI-C3I-PARITY"
     (array_equal
        (Sa_plan_cli.normalize

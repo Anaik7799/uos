@@ -4,8 +4,8 @@ import cepaf_gleam/harness/value
 import gleam/bit_array
 import gleam/crypto
 import gleam/erlang/process
-import gleam/json
 import gleam/int
+import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
@@ -445,19 +445,29 @@ pub fn journal_words_alone_are_not_valid_sections_test() {
   dev.journal_sections_valid(string.join(titles, " ")) |> should.be_false
   dev.journal_sections_valid("## 1. Scope & Trigger\n## 1. Scope & Trigger")
   |> should.be_false
-  let valid = titles
-    |> list.index_map(fn(title, index) { "## " <> int.to_string(index + 1) <> ". " <> title })
+  let valid =
+    titles
+    |> list.index_map(fn(title, index) {
+      "## " <> int.to_string(index + 1) <> ". " <> title
+    })
     |> string.join("\n")
-  dev.journal_sections_valid(valid <> "\n## Comprehensive verification checklist")
+  dev.journal_sections_valid(
+    valid <> "\n## Comprehensive verification checklist",
+  )
   |> should.be_true
   dev.journal_sections_valid(valid <> "\n## Arbitrary unreviewed section")
   |> should.be_false
-  dev.journal_sections_valid(valid <> "\n## Comprehensive verification checklist\n## Comprehensive verification checklist")
+  dev.journal_sections_valid(
+    valid
+    <> "\n## Comprehensive verification checklist\n## Comprehensive verification checklist",
+  )
   |> should.be_false
 }
 
 pub fn unlisted_prefix_source_is_not_covered_by_manifest_or_write_grant_test() {
-  dev.source_allowed("apps/cepaf_gleam/src/cepaf_gleam/harness/unlisted_escape.gleam")
+  dev.source_allowed(
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/unlisted_escape.gleam",
+  )
   |> should.be_false
   dev.source_allowed("apps/cepaf_gleam/test/harness_unlisted_escape.gleam")
   |> should.be_false

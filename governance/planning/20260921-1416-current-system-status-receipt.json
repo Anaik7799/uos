@@ -1,0 +1,22 @@
+{
+  "receipt_id": "20260921-1416-current-system-status",
+  "observed_at": "2026-09-21T14:16:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "dashboard": {
+    "tasks_total": 20,
+    "tasks_completed": 3,
+    "tasks_ready": 3,
+    "tasks_executing": 0,
+    "feature_tracker_mcp": "PASS",
+    "mcp_tools_registered": 57,
+    "gleam_tests": "11988 passed, 0 failures",
+    "risk_priority": "PASS"
+  },
+  "holds": [
+    "feature runtime admission remains unproven",
+    "coordinator digest/replay authority remains failed",
+    "release and operational acceptance remain ungranted"
+  ],
+  "execution_policy": "Do not count available, blocked, unrun, stale, or unadmitted work as complete",
+  "admission": "NOT_ADMITTED"
+}

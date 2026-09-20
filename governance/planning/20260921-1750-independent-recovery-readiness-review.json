@@ -1,0 +1,26 @@
+{
+  "schema": "uos.independent-recovery-readiness-review.v1",
+  "observed_at": "2026-09-21T14:47:14Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r02-recovery-candidate",
+  "reviewer": "recovery_review",
+  "scope": "evidence-only; no live coordinator mutation; no Sa-plan completion",
+  "findings": {
+    "candidate_database_and_manifest": "match",
+    "implementation_hashes": "all seven match",
+    "private_snapshot_checksums": "421/421 pass",
+    "risk_packet_readiness": "blocked",
+    "risk_packet_task_state": "available",
+    "risk_packet_actor": "codex-01a0ba74-feature-tracker",
+    "prefix_receipt_worker": "codex-01a083d2-recovery",
+    "prefix_receipt_attempt": 4,
+    "worker_attempt_binding": "mismatch",
+    "writer_quiescence": "unproven",
+    "fresh_ownership_bound_ack_or_fence": "missing",
+    "canonical_source_bytes_reviewed": false
+  },
+  "decision": "hold",
+  "falsifier": "A fresh ownership-bound lease, matching worker/attempt receipt, canonical source review, and writer-quiescent cutover fence are observed.",
+  "admission": "not_admitted",
+  "completion_credit": false
+}

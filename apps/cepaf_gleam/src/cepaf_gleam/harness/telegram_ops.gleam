@@ -94,8 +94,7 @@ pub fn handle_merge(args: List(String)) -> String {
       <> "• *Zero-Muda Status:* 0 Bevy, 0 Graphite verified\n"
       <> "• *Execution:* Fast-forward merge via `jj bookmark set integration/main`\n\n"
       <> "Merge successfully completed with zero native Git mutations."
-    [] ->
-      "Usage: `/merge <bookmark_name>` (e.g. `/merge feat/prajna-window`)"
+    [] -> "Usage: `/merge <bookmark_name>` (e.g. `/merge feat/prajna-window`)"
   }
 }
 
@@ -111,7 +110,8 @@ pub fn handle_bisect(args: List(String)) -> String {
       <> "• *Batch Iterations:* 10 runs per revision in ephemeral workspaces\n"
       <> "• *Isolation:* Independent BEAM VM instances\n\n"
       <> "Bisection running in background. Culprit commit will be reported upon convergence."
-    [] -> "Usage: `/bisect <test_name>` (e.g. `/bisect comprehensive_ui_regression_test`)"
+    [] ->
+      "Usage: `/bisect <test_name>` (e.g. `/bisect comprehensive_ui_regression_test`)"
   }
 }
 

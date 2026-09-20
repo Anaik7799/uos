@@ -102,11 +102,13 @@ pub fn pull_highest_utility_matching_affinity_test() {
   let queue = [task1, task2]
 
   // Pull for L0-fable gets task1
-  let assert Ok(best_fable) = pull_highest_utility_task(queue, "L0-fable", weights)
+  let assert Ok(best_fable) =
+    pull_highest_utility_task(queue, "L0-fable", weights)
   best_fable.task.task_id |> should.equal("task-claude-high")
 
   // Pull for L0-codex gets task2
-  let assert Ok(best_codex) = pull_highest_utility_task(queue, "L0-codex-gpt-6-astra", weights)
+  let assert Ok(best_codex) =
+    pull_highest_utility_task(queue, "L0-codex-gpt-6-astra", weights)
   best_codex.task.task_id |> should.equal("task-codex-mid")
 }
 
@@ -170,12 +172,17 @@ pub fn maut_5_attribute_fenced_lease_test() {
       "L0-codex-gpt-6-astra",
       weights,
     )
-  let claim = maut_pull_queue.issue_fenced_lease(best, "L0-codex-gpt-6-astra", 1000, 3600_000)
+  let claim =
+    maut_pull_queue.issue_fenced_lease(
+      best,
+      "L0-codex-gpt-6-astra",
+      1000,
+      3_600_000,
+    )
 
   claim.task_id |> should.equal("task-codex-critical")
   claim.worker_id |> should.equal("L0-codex-gpt-6-astra")
   claim.fencing_token |> should.equal(1001)
-  claim.lease_until_ms |> should.equal(3601_000)
+  claim.lease_until_ms |> should.equal(3_601_000)
   should.be_true(claim.utility_score >. 0.0)
 }
-

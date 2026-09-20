@@ -116,23 +116,16 @@ pub fn check_rule_consistency(
       True -> {
         case rule.consequence, existing.consequence {
           ConsequenceGateVerdict(v1), ConsequenceGateVerdict(v2) if v1 != v2 ->
-            Ok(
-              ContradictoryRules(
-                rule_a: rule.name,
-                rule_b: existing.name,
-                reason: "Identical conditions yield conflicting verdicts: "
-                  <> v1
-                  <> " vs "
-                  <> v2,
-              ),
-            )
+            Ok(ContradictoryRules(
+              rule_a: rule.name,
+              rule_b: existing.name,
+              reason: "Identical conditions yield conflicting verdicts: "
+                <> v1
+                <> " vs "
+                <> v2,
+            ))
           _, _ ->
-            Ok(
-              ShadowedRule(
-                rule_name: rule.name,
-                shadowed_by: existing.name,
-              ),
-            )
+            Ok(ShadowedRule(rule_name: rule.name, shadowed_by: existing.name))
         }
       }
       False -> {
@@ -153,12 +146,10 @@ pub fn check_rule_consistency(
                       })
                     case reciprocal {
                       True ->
-                        Ok(
-                          CyclicChaining(
-                            rule_name: rule.name,
-                            cycle_target: existing.name,
-                          ),
-                        )
+                        Ok(CyclicChaining(
+                          rule_name: rule.name,
+                          cycle_target: existing.name,
+                        ))
                       False -> Error(Nil)
                     }
                   }
@@ -204,7 +195,12 @@ pub fn fire_forward_chaining(wm: WorkingMemory) -> WorkingMemory {
           list.all(rule.conditions, fn(cond) {
             list.any(wm.facts, fn(fact) {
               fact.kind == cond.fact_kind
-              && check_attribute(fact.attributes, cond.attribute, cond.op, cond.value)
+              && check_attribute(
+                fact.attributes,
+                cond.attribute,
+                cond.op,
+                cond.value,
+              )
             })
           })
         })

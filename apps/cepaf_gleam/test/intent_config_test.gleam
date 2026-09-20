@@ -67,7 +67,7 @@ pub fn compute_delta_with_changes_test() {
   let cfg2 =
     config.IntentConfig(
       ..cfg1,
-      prajna_health_threshold: 0.90,
+      prajna_health_threshold: 0.9,
       containers: modified_containers,
     )
 

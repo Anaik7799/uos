@@ -10,9 +10,13 @@ import argv
 import gleam/int
 import gleam/io
 import gleam/json
+import gleam/list
 import gleam/result
 import gleam/string
+import simplifile
 import uos_swarm/board
+import uos_swarm/session_recovery as recovery
+import uos_swarm/session_recovery_store as recovery_store
 import uos_swarm/session_store as store
 import uos_swarm/session_sync as sync
 
@@ -76,15 +80,61 @@ fn execute(
   })
 }
 
+fn recovery_source(root: String) -> Result(recovery.Source, String) {
+  use names <- result.try(
+    simplifile.read_directory(root)
+    |> result.map_error(fn(error) {
+      "recovery source read: " <> string.inspect(error)
+    }),
+  )
+  let files =
+    names
+    |> list.filter(string.ends_with(_, ".json"))
+    |> list.sort(string.compare)
+  use records <- result.try(
+    list.try_map(files, fn(name) {
+      simplifile.read(root <> "/" <> name)
+      |> result.map(fn(raw) { recovery.RawRecord(root <> "/" <> name, raw) })
+      |> result.map_error(fn(error) {
+        "recovery source file: " <> string.inspect(error)
+      })
+    }),
+  )
+  Ok(recovery.Source(recovery.FileJournal, root, records))
+}
+
+fn stage_recovery(
+  root: String,
+  candidate_dir: String,
+) -> Result(String, String) {
+  use source <- result.try(recovery_source(root))
+  use candidate <- result.try(recovery.assess([source]))
+  use receipt <- result.try(recovery_store.stage(candidate_dir, candidate))
+  Ok(
+    json.to_string(
+      json.object([
+        #("ok", json.bool(True)),
+        #("authority", json.string("evidence_only")),
+        #("admitted", json.bool(False)),
+        #("source", json.string(root)),
+        #("candidate_database", json.string(receipt.database)),
+        #("candidate_digest", json.string(receipt.digest)),
+      ]),
+    ),
+  )
+}
+
 pub fn run(args: List(String)) -> Result(String, String) {
   case args {
     ["schema"] -> Ok(store.schema_sql())
     ["verify", db] ->
       with_store(db, fn(opened) {
-        store.verify(opened)
-        |> result.map(fn(report) {
-          json.to_string(store.verify_report_json(report))
-        })
+        use report <- result.try(store.verify(opened))
+        let rendered = json.to_string(store.verify_report_json(report))
+        case report.ok {
+          True -> Ok(rendered)
+          False -> Error(store.CorruptError(rendered))
+        }
       })
     ["migrate", events_dir, db] ->
       with_store(db, fn(opened) {
@@ -113,6 +163,8 @@ pub fn run(args: List(String)) -> Result(String, String) {
           )
         })
       })
+    ["recover-stage", source_root, candidate_dir] ->
+      stage_recovery(source_root, candidate_dir)
     [db, "register", s, provider, workspace, revision, metadata, op] ->
       execute(
         db,
@@ -199,6 +251,7 @@ pub fn usage() -> String {
   <> "gleam run -m session_store_cli -- verify <absolute_sqlite3_path>\n"
   <> "gleam run -m session_store_cli -- migrate <events_dir> <absolute_sqlite3_path>\n"
   <> "gleam run -m session_store_cli -- export <absolute_sqlite3_path> <out_root>\n"
+  <> "gleam run -m session_store_cli -- recover-stage <event_directory> <new_candidate_directory>\n"
   <> "gleam run -m session_store_cli -- schema\n"
   <> "\n"
   <> "SQLite store, journal_mode=WAL, busy_timeout=30s. ACKs are self-reported;\n"

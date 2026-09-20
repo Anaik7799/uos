@@ -1,0 +1,40 @@
+{
+  "schema": "uos.goal-completion-matrix.v2",
+  "timestamp": "20260921-1746",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authoritative_status": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0,
+    "blocked": 17,
+    "unknown": 0,
+    "admission": "not_admitted"
+  },
+  "new_evidence": [
+    {
+      "path": "governance/planning/20260921-1745-mcp-task-scope-probe.json",
+      "result": "reachable_but_task_scope_refused",
+      "counts_as_completion": false
+    },
+    {
+      "path": "docs/plans/20260921-1715-execution-optimization-plan.md",
+      "result": "optimized_wave_plan_recorded",
+      "counts_as_completion": false
+    }
+  ],
+  "completion_rules": {
+    "blocked_unrun_stale_unadmitted_not_counted": true,
+    "two_key_runtime_and_formal_required": true,
+    "sa_plan_sole_execution_authority": true
+  },
+  "open_gates": [
+    "canonical source provenance adjudication",
+    "authorized t1-tracker binding",
+    "fresh Claude/Codex/AGY enrollment",
+    "MCP data/control two-key acceptance",
+    "hive/swarm end-to-end acceptance",
+    "independent release review",
+    "operational acceptance"
+  ]
+}

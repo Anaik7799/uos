@@ -16,17 +16,15 @@
 ////   MR-7: ViewBox Aspect Ratio & Tag Continuity Across All 167 Extensions
 ////   MR-8: Mutant AST Sensitivity (Synthetic Fault Detection Oracle)
 
-import gleeunit/should
-import gleam/list
-import gleam/string
-import gleam/float
-import gleam/int
 import cepaf_gleam/sciviz/dsl
-import cepaf_gleam/sciviz/schema.{
-  Point2D, Scale2D, new_fifo, push_fifo,
-}
 import cepaf_gleam/sciviz/extension_catalog.{all_167_extensions}
 import cepaf_gleam/sciviz/extension_deep_dive.{build_deep_dive}
+import cepaf_gleam/sciviz/schema.{Point2D, Scale2D, new_fifo, push_fifo}
+import gleam/float
+import gleam/int
+import gleam/list
+import gleam/string
+import gleeunit/should
 
 fn int_range(from: Int, to: Int) -> List(Int) {
   case from > to {
@@ -42,34 +40,38 @@ fn int_range(from: Int, to: Int) -> List(Int) {
 //   proj(scale + D, P + D) == proj(scale, P)
 // =============================================================================
 pub fn mr1_translational_invariance_test() {
-  let scale0 = Scale2D(
-    x_min: 0.0,
-    x_max: 100.0,
-    y_min: 0.0,
-    y_max: 100.0,
-    target_w: 800.0,
-    target_h: 600.0,
-  )
+  let scale0 =
+    Scale2D(
+      x_min: 0.0,
+      x_max: 100.0,
+      y_min: 0.0,
+      y_max: 100.0,
+      target_w: 800.0,
+      target_h: 600.0,
+    )
   let pt0 = Point2D(x: 25.0, y: 75.0)
   let screen0 = dsl.project_point(scale0, pt0)
 
   // Translations by +50.0, +1000.0, -200.0
   let deltas = [50.0, 1000.0, -200.0, 42.42]
   list.each(deltas, fn(d) {
-    let scale_shifted = Scale2D(
-      x_min: scale0.x_min +. d,
-      x_max: scale0.x_max +. d,
-      y_min: scale0.y_min +. d,
-      y_max: scale0.y_max +. d,
-      target_w: scale0.target_w,
-      target_h: scale0.target_h,
-    )
+    let scale_shifted =
+      Scale2D(
+        x_min: scale0.x_min +. d,
+        x_max: scale0.x_max +. d,
+        y_min: scale0.y_min +. d,
+        y_max: scale0.y_max +. d,
+        target_w: scale0.target_w,
+        target_h: scale0.target_h,
+      )
     let pt_shifted = Point2D(x: pt0.x +. d, y: pt0.y +. d)
     let screen_shifted = dsl.project_point(scale_shifted, pt_shifted)
 
     // Screen coordinates must be invariant to epsilon <= 0.0001
-    { float.absolute_value(screen_shifted.x -. screen0.x) <. 0.001 } |> should.be_true
-    { float.absolute_value(screen_shifted.y -. screen0.y) <. 0.001 } |> should.be_true
+    { float.absolute_value(screen_shifted.x -. screen0.x) <. 0.001 }
+    |> should.be_true
+    { float.absolute_value(screen_shifted.y -. screen0.y) <. 0.001 }
+    |> should.be_true
   })
 }
 
@@ -80,32 +82,36 @@ pub fn mr1_translational_invariance_test() {
 //   proj(k * scale, k * P) == proj(scale, P)
 // =============================================================================
 pub fn mr2_scale_equivariance_test() {
-  let scale0 = Scale2D(
-    x_min: 10.0,
-    x_max: 60.0,
-    y_min: 20.0,
-    y_max: 80.0,
-    target_w: 480.0,
-    target_h: 200.0,
-  )
+  let scale0 =
+    Scale2D(
+      x_min: 10.0,
+      x_max: 60.0,
+      y_min: 20.0,
+      y_max: 80.0,
+      target_w: 480.0,
+      target_h: 200.0,
+    )
   let pt0 = Point2D(x: 35.0, y: 50.0)
   let screen0 = dsl.project_point(scale0, pt0)
 
   let factors = [0.1, 2.0, 5.0, 10.0, 100.0]
   list.each(factors, fn(k) {
-    let scale_dilated = Scale2D(
-      x_min: scale0.x_min *. k,
-      x_max: scale0.x_max *. k,
-      y_min: scale0.y_min *. k,
-      y_max: scale0.y_max *. k,
-      target_w: scale0.target_w,
-      target_h: scale0.target_h,
-    )
+    let scale_dilated =
+      Scale2D(
+        x_min: scale0.x_min *. k,
+        x_max: scale0.x_max *. k,
+        y_min: scale0.y_min *. k,
+        y_max: scale0.y_max *. k,
+        target_w: scale0.target_w,
+        target_h: scale0.target_h,
+      )
     let pt_dilated = Point2D(x: pt0.x *. k, y: pt0.y *. k)
     let screen_dilated = dsl.project_point(scale_dilated, pt_dilated)
 
-    { float.absolute_value(screen_dilated.x -. screen0.x) <. 0.001 } |> should.be_true
-    { float.absolute_value(screen_dilated.y -. screen0.y) <. 0.001 } |> should.be_true
+    { float.absolute_value(screen_dilated.x -. screen0.x) <. 0.001 }
+    |> should.be_true
+    { float.absolute_value(screen_dilated.y -. screen0.y) <. 0.001 }
+    |> should.be_true
   })
 }
 
@@ -117,19 +123,21 @@ pub fn mr2_scale_equivariance_test() {
 //   y1 < y2  ==>  proj(y1).y > proj(y2).y
 // =============================================================================
 pub fn mr3_monotonicity_and_y_inversion_test() {
-  let scale = Scale2D(
-    x_min: 0.0,
-    x_max: 100.0,
-    y_min: 0.0,
-    y_max: 100.0,
-    target_w: 800.0,
-    target_h: 600.0,
-  )
+  let scale =
+    Scale2D(
+      x_min: 0.0,
+      x_max: 100.0,
+      y_min: 0.0,
+      y_max: 100.0,
+      target_w: 800.0,
+      target_h: 600.0,
+    )
 
   let y_values = [10.0, 25.0, 50.0, 75.0, 90.0]
-  let screen_pts = list.map(y_values, fn(y) {
-    dsl.project_point(scale, Point2D(x: 50.0, y: y))
-  })
+  let screen_pts =
+    list.map(y_values, fn(y) {
+      dsl.project_point(scale, Point2D(x: 50.0, y: y))
+    })
 
   // Verify that screen_y is strictly monotonically decreasing as Cartesian Y increases
   case screen_pts {
@@ -149,22 +157,29 @@ pub fn mr3_monotonicity_and_y_inversion_test() {
 // the projected point must lie strictly within [0, target_w] x [0, target_h].
 // =============================================================================
 pub fn mr4_viewport_convex_hull_enclosure_test() {
-  let scale = Scale2D(
-    x_min: -50.0,
-    x_max: 150.0,
-    y_min: -20.0,
-    y_max: 80.0,
-    target_w: 1920.0,
-    target_h: 1080.0,
-  )
+  let scale =
+    Scale2D(
+      x_min: -50.0,
+      x_max: 150.0,
+      y_min: -20.0,
+      y_max: 80.0,
+      target_w: 1920.0,
+      target_h: 1080.0,
+    )
 
   let test_points = [
-    Point2D(-50.0, -20.0), // bottom-left
-    Point2D(150.0, -20.0), // bottom-right
-    Point2D(-50.0, 80.0),  // top-left
-    Point2D(150.0, 80.0),  // top-right
-    Point2D(50.0, 30.0),   // center
-    Point2D(0.0, 0.0),     // origin
+    Point2D(-50.0, -20.0),
+    // bottom-left
+    Point2D(150.0, -20.0),
+    // bottom-right
+    Point2D(-50.0, 80.0),
+    // top-left
+    Point2D(150.0, 80.0),
+    // top-right
+    Point2D(50.0, 30.0),
+    // center
+    Point2D(0.0, 0.0),
+    // origin
   ]
 
   list.each(test_points, fn(p) {
@@ -186,9 +201,10 @@ pub fn mr5_fifo_temporal_invariance_test() {
 
   // Push 20 items (0..19)
   let items = int_range(0, 19)
-  let fifo_final = list.fold(items, fifo0, fn(acc, i) {
-    push_fifo(acc, Point2D(x: int.to_float(i), y: int.to_float(i * 2)))
-  })
+  let fifo_final =
+    list.fold(items, fifo0, fn(acc, i) {
+      push_fifo(acc, Point2D(x: int.to_float(i), y: int.to_float(i * 2)))
+    })
 
   // 1. Capacity invariant
   list.length(fifo_final.points) |> should.equal(cap)
@@ -268,14 +284,15 @@ pub fn mr7_all_167_extensions_svg_aspect_test() {
 // proving that the test suite is non-tautological and sensitive to genuine defects.
 // =============================================================================
 pub fn mr8_mutant_ast_sensitivity_test() {
-  let scale = Scale2D(
-    x_min: 0.0,
-    x_max: 100.0,
-    y_min: 0.0,
-    y_max: 100.0,
-    target_w: 800.0,
-    target_h: 600.0,
-  )
+  let scale =
+    Scale2D(
+      x_min: 0.0,
+      x_max: 100.0,
+      y_min: 0.0,
+      y_max: 100.0,
+      target_w: 800.0,
+      target_h: 600.0,
+    )
   // Use asymmetric point (x: 25.0) to avoid reflection fixed-point at 50%
   let pt = Point2D(x: 25.0, y: 75.0)
 

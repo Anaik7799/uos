@@ -1,0 +1,34 @@
+{
+  "schema": "uos.holon-coordination-observation.v2",
+  "recorded_at_utc": "2026-09-21T08:31:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t0-coordination",
+  "scope": "read-only development observation",
+  "observed_processes": {
+    "codex": ["node codex resume 01a0ba74-d654-7de3-bdcf-25a0a85b93da", "codex resume 01a0ba74-d654-7de3-bdcf-25a0a85b93da"],
+    "claude": [],
+    "agy": []
+  },
+  "sessions_store": {"path": "var/coordination/tri-agent/sessions.sqlite3", "tables": [], "registered_sessions": 0},
+  "coordinator_store": {
+    "path": "var/coordination/tri-agent/coordinator.sqlite3",
+    "events": 117,
+    "head_sequence": 117,
+    "latest_actor": "L0-codex-gpt-6-astra",
+    "latest_operation": "ratify_cycle",
+    "latest_inserted_utc_us": 1789836209175252,
+    "append_only_triggers": true
+  },
+  "evidence_sha256": "f95fb967808ab48e5ce1653018c7131789160aa011535c326eeec97eb9ec50b4",
+  "assessment": {
+    "claude_enrollment": "UNKNOWN",
+    "agy_enrollment": "UNKNOWN",
+    "codex_enrollment": "UNKNOWN",
+    "heartbeat_ack": "UNKNOWN",
+    "holon_coordination": "NOT_OBSERVED",
+    "mcp_coordination_access": "NOT_OBSERVED",
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "completion_semantics": "fresh negative observation; no identity, ACK, lease, coordination authority, or admission inferred"
+}

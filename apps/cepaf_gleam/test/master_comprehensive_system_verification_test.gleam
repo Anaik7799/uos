@@ -41,9 +41,14 @@ pub fn browser_suite_engine_breakdown_test() {
 pub fn browser_test_efficacy_ratings_bound_test() {
   let tests = mvr.all_browser_tests()
   list.each(tests, fn(t) {
-    { t.historical_efficacy_claim >=. 0.8 && t.historical_efficacy_claim <=. 1.0 }
+    {
+      t.historical_efficacy_claim >=. 0.8 && t.historical_efficacy_claim <=. 1.0
+    }
     |> should.be_true
-    { t.historical_effectiveness_claim >=. 0.8 && t.historical_effectiveness_claim <=. 1.0 }
+    {
+      t.historical_effectiveness_claim >=. 0.8
+      && t.historical_effectiveness_claim <=. 1.0
+    }
     |> should.be_true
     t.historical_pass_claim |> should.be_true
   })
@@ -63,7 +68,10 @@ pub fn skills_and_superpowers_completeness_test() {
 pub fn skills_superpowers_ratings_bound_test() {
   let skills = mvr.all_skills_and_superpowers()
   list.each(skills, fn(s) {
-    { s.historical_effectiveness_claim >=. 0.9 && s.historical_effectiveness_claim <=. 1.0 }
+    {
+      s.historical_effectiveness_claim >=. 0.9
+      && s.historical_effectiveness_claim <=. 1.0
+    }
     |> should.be_true
   })
 }
@@ -93,7 +101,9 @@ pub fn standards_and_algorithms_domain_distribution_test() {
 pub fn standards_and_algorithms_efficacy_scores_test() {
   let algs = mvr.all_standards_and_algorithms()
   list.each(algs, fn(a) {
-    { a.historical_efficacy_claim >=. 0.9 && a.historical_efficacy_claim <=. 1.0 }
+    {
+      a.historical_efficacy_claim >=. 0.9 && a.historical_efficacy_claim <=. 1.0
+    }
     |> should.be_true
     a.historical_verified_claim |> should.be_true
   })

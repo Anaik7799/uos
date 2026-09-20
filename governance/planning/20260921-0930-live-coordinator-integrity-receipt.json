@@ -1,0 +1,44 @@
+{
+  "schema": "uos.coordinator-integrity-observation.v1",
+  "timestamp_utc": "2026-09-21T09:30:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r02-recovery-candidate",
+  "scope": "read-only verification of the live coordinator SQLite store",
+  "database": {
+    "path": "var/coordination/tri-agent/coordinator.sqlite3",
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "events_checked": 117,
+    "first_sequence": 1,
+    "last_sequence": 117,
+    "event_dump_sha256": "7c0aadb7984ab3ff534acea1d2159f56053d8b539fe4a4514cd1225174002fd2"
+  },
+  "verifier": {
+    "command": "gleam run -m session_store_cli -- verify /home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "build_repair": "gleam clean && gleam build",
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": false,
+    "replay_ok": false,
+    "triggers_present": true,
+    "unique_operations": true,
+    "digest_mismatch_sequences": "66-117",
+    "replay_failure": "session is not registered",
+    "log_sha256": "670faa826d17c8b0e8ba2ebd767eaeb57b5219a614a27d3da027c0dd31f7f7bb",
+    "first_bad_event_diagnostic": {
+      "sequence": 66,
+      "body_keys": ["detail", "evidence", "summary"],
+      "canonical_event_body_required": true,
+      "body_sha256": "df6846c7bd8b17a85cbc433b19979bbdbfa7f65e641aa5edf413bf7eb7f5991e",
+      "stored_digest": "0bd7d78bea4a068c25733a951b08748fc67cc08522700fba9c1a2f12a4b6886d",
+      "classification": "foreign_or_noncanonical_event_payload"
+    }
+  },
+  "disposition": {
+    "authority": "integrity_observation_only",
+    "live_history_activated": false,
+    "database_modified": false,
+    "candidate_admission": "NOT_ADMITTED",
+    "r02_task_completion": "NOT_ASSERTED",
+    "required_repair": "quarantine and independently reconcile digest-mismatched suffix before any recovery or coordination use"
+  }
+}

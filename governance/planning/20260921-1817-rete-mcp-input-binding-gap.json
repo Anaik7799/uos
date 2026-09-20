@@ -1,0 +1,12 @@
+{
+  "schema": "uos.rete-mcp-input-binding-gap.v1",
+  "observed_at": "2026-09-21T14:58:30Z",
+  "tool": "rete_rule_conflict",
+  "source": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam:1247",
+  "observed_behavior": "Both standard MCP params.arguments.rules and direct params.rules probes returned rules_evaluated=0.",
+  "expected_behavior": "A two-rule bounded input should produce a constitutional winner and one suppressed rule.",
+  "classification": "functional MCP/swarm acceptance gap",
+  "authority": "audit_only",
+  "completion_credit": false,
+  "next_action": "Add a task-bound regression fixture for raw JSON-RPC argument decoding, then rerun through Sa-plan and Gleam harness."
+}

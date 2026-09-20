@@ -65,10 +65,10 @@ pub type FitnessWeights {
 
 pub fn default_weights() -> FitnessWeights {
   FitnessWeights(
-    latency_weight: 0.30,
+    latency_weight: 0.3,
     throughput_weight: 0.25,
     error_weight: 0.25,
-    resource_weight: 0.20,
+    resource_weight: 0.2,
   )
 }
 

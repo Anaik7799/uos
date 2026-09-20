@@ -7,9 +7,7 @@ import cepaf_gleam/crdt/delta_mesh_engine.{
   handle_incoming_message, init_engine, is_cluster_fully_synchronized,
   record_local_health, record_worker_active, register_peer,
 }
-import cepaf_gleam/crdt/mesh_sync.{
-  SyncDigest,
-}
+import cepaf_gleam/crdt/mesh_sync.{SyncDigest}
 import gleeunit
 import gleeunit/should
 
@@ -42,7 +40,7 @@ pub fn engine_local_mutation_and_gossip_test() {
 
   let #(updated_engine, digest) = generate_gossip_digest(engine, 1000)
   updated_engine.gossip_round |> should.equal(1)
-  
+
   case digest {
     SyncDigest(from, _, active_count, epoch) -> {
       from |> should.equal("nas-1")
@@ -77,7 +75,7 @@ pub fn engine_two_node_reconciliation_test() {
     [d, ..] -> d
     _ -> panic as "expected delta response"
   }
-  
+
   // VM handles NAS's delta
   let #(vm_after_delta, vm_responses) =
     handle_incoming_message(engine_vm, delta_msg, 1200)

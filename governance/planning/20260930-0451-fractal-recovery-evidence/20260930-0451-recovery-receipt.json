@@ -1,0 +1,168 @@
+{
+  "schema": "uos.fractal-recovery-development-receipt.v1",
+  "observed_at": "2026-09-30T04:56:00Z",
+  "plan": "uos/fractal-recovery/20260930-0421",
+  "task": "RCA",
+  "worker": "codex-fractal-recovery-20260930",
+  "attempt": 1,
+  "verdict": "DEVELOPMENT_REVIEW_PASS",
+  "live_restoration": "HOLD",
+  "application_admitted": false,
+  "source_evidence": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "tools/ecology_release.ml",
+      "sha256": "94e14e0a0dfb6315b7088cbe7db4ff643f051aea9a5bc3415d788f33cb916cec",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "tools/km_provenance/km_chain.ml",
+      "sha256": "6dbed413c25ecf8f530c9b968c12b979065207703fa9e4cc85a2d1879a29df85",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "7e376281a0cd1cc87f3c54b9c63fd7b34cea264b36638846c57e126500a0c43c",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+      "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_recovery.gleam",
+      "sha256": "13c3ebd4df81077a77d6ef86b84f1bf962f7c1b44cb80078e414d163d5de34a2",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "tools/km_provenance/km_chain.mli",
+      "sha256": "f8c5573e206e821a177dec680383df384400561b1aa6501c40d7da5debb1eab5",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "tools/km_provenance/km_chain_test.ml",
+      "sha256": "e9be0bb44d68cd3e87d5f9b7a157c130851bbe6957d3528dc9a4cf02f3987069",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "tools/km_provenance/dune",
+      "sha256": "d21c11cf6204a81f6487fd90b32ef72007417c69c184e3e7c8f076e63e40634c",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "apps/uos_swarm/test/session_store_cli_test.gleam",
+      "sha256": "f244f7bd8c6339a6e84b6dcdf7aad110742d9587ffba45c119fdcb14ee3b7fc6",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "d4d4dfc204d815fa23617d70ac0d4779cf8c86119ca6d89948c52cca5c1f6210",
+      "observed_at": "2026-09-30T04:55:01Z"
+    },
+    {
+      "path": "tools/validation/ecology_capability_ffi_test.erl",
+      "sha256": "435e9cea45fe6e50a0573b2dc6451506176369e0a49541bff4b54d7ed5848099",
+      "observed_at": "2026-09-30T04:55:01Z"
+    }
+  ],
+  "coordinator": {
+    "canonical": "var/coordination/tri-agent/coordinator.sqlite3",
+    "original_rows": 117,
+    "bad_digest_rows": 52,
+    "first_replay_failure": 3,
+    "unknown_operation": "ratify_cycle",
+    "original_preserved": "/home/an/uos-recovery-candidates/20260930-0421-fractal-rca/coordinator-original.sqlite3",
+    "candidate": "/home/an/uos-recovery-candidates/20260930-0421-fractal-rca/coordinator-prefix1761-v2.sqlite3",
+    "candidate_sha256": "c6f8b0aa1e9d7b725debbd1bb07f4fb17db70f12e91940433d1fbec6e37861b5",
+    "rows": 1761,
+    "integrity": "PASS",
+    "historical_authenticity": "UNCORROBORATED",
+    "activated": false
+  },
+  "cycles": {
+    "canonical": "var/km/provenance-cycles.sqlite3",
+    "original_rows": 550,
+    "bad_digest_rows": 71,
+    "bad_sequences": [
+      "333..352",
+      "427",
+      "501..550"
+    ],
+    "candidate": "/home/an/uos-recovery-candidates/20260930-0421-fractal-rca/cycles-prefix332.sqlite3",
+    "candidate_sha256": "d6d11068329f2f1b24736e3f1180cc391ea401ce100a2a4c92bdc738890e92b8",
+    "rows": 332,
+    "holds": 24,
+    "hold_releases": 0,
+    "ev_evidence": 0,
+    "excluded_rows_preserved_in_original": 218,
+    "integrity": "PASS",
+    "activated": false
+  },
+  "ecology": {
+    "status": "PASS",
+    "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260930-0408-346e2b85ebdb3aac7e01fce61342b7db1edfae123df47200b621dd3175274a39",
+    "candidate_sha256": "346e2b85ebdb3aac7e01fce61342b7db1edfae123df47200b621dd3175274a39",
+    "payload_sha256": "d056f875a50fa82d8a591f8f63592b8328c41f41aa177b38c8973a3edeacc5f3",
+    "source_sha256": "b53401bc85ff18ece78b6a503bcb2931021bb90daef3b5567231f3f79eb5c58e",
+    "files": 1223,
+    "payload_bytes": 30692878,
+    "otp": "29",
+    "application_admitted": false,
+    "source_snapshot_sha1": "133a96deec47fb26f5d606d2cc33868dd4cc7616",
+    "source_snapshot_is_jj_revision": false,
+    "private_staging_port": 14110,
+    "health_cycles": [
+      24,
+      81
+    ],
+    "erts": "17.0.5",
+    "max_engine": "26.5.0",
+    "max_observed": "modular_max_graph",
+    "expected_probability": 0.9820137900379085,
+    "observed_probability": 0.9820137619972229,
+    "restarts": 0,
+    "shutdown": "inactive/dead, Result=success, ExecMainStatus=0",
+    "deployed": false
+  },
+  "verification": {
+    "swarm_tests": 671,
+    "focused_coordinator_tests_subset": 33,
+    "ecology_tests": 7,
+    "release_selftests": 23,
+    "cycle_regression": "PASS: positive append, corruption refusal, REPLACE refusal, rollback",
+    "toolchain_checks": 31,
+    "mojo_strict_verify": "PASS",
+    "independent_review": "Sa-plan REVIEW attempt1 completed; DEVELOPMENT_REVIEW_PASS / LIVE_RESTORATION_HOLD"
+  },
+  "activation_blockers": [
+    "No typed canonical recover-activate operation; recover-stage is evidence_only/admitted=false",
+    "No fresh canonical runtime ownership/effect fence; candidate-only state cannot grant it",
+    "Divergent historical lineage must be selected explicitly without promoting uncertain records"
+  ],
+  "recovery_proposal": {
+    "status": "NOT_AUTHORIZED_NOT_EXECUTED",
+    "task": "ACTIVATE",
+    "requirements": [
+      "Implement and verify a typed Gleam recovery authority path or obtain a separately explicit bounded operator recovery exception",
+      "Bind exact candidates and current source/target hashes; independently corroborate selected lineage",
+      "Quiesce known writers and prevent re-entry; refuse unknown ownership",
+      "Archive original DB/WAL/SHM and legacy tail; checkpoint and atomically select each candidate under recovery HOLD",
+      "Do not resurrect historical leases; register fresh session and acquire separately fenced runtime ownership",
+      "Validate all target stores before effects; bound ecology startup and verify actual runtime and MAX",
+      "On failure stop candidate service, preserve failure evidence and restore prior protected state; do not claim failed prior ecology is a healthy fallback"
+    ]
+  },
+  "preserved_failures": [
+    "Initial full swarm run had668passes/3missing-fixture failures; copying the two existing swarm fixtures into isolated scratch produced671passes",
+    "Initial per-call environment test exposed list/binary read_link mismatch; corrected and7tests passed",
+    "Earlier staging v2 reached configured180-second deadline; later final staging was deliberately stopped successfully",
+    "First staging run declared old source ID; retired. Final staging declares SHA1 of its exact source manifest and separately binds full SHA256 candidate",
+    "Obsolete first dependency-only rebind candidate is not a deployment candidate"
+  ],
+  "authority": "Observed development evidence only; no production admission; EV ceiling93; no new EV"
+}

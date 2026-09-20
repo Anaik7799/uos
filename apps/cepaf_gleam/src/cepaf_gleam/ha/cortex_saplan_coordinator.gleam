@@ -28,7 +28,8 @@ import gleam/option.{None, Some}
 import gleam/string
 
 pub const hard_denied_system_os_serial: String = "25503L801736"
-pub const jidoka_andon_halt_code: Int = -32002
+
+pub const jidoka_andon_halt_code: Int = -32_002
 
 pub type ExecutionDisposition {
   ExecutionSuccess(task_id: String, receipt_sha256: String, execution_ms: Int)

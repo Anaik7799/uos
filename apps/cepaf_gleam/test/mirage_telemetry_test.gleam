@@ -70,7 +70,8 @@ pub fn agui_event_generation_test() {
   ev.event_type |> should.equal(ToolCallResult)
 
   let state = init_telemetry_state("nas-1")
-  let delta_ev = to_agui_state_delta(state, "thread-01", "run-01", 1_788_800_000)
+  let delta_ev =
+    to_agui_state_delta(state, "thread-01", "run-01", 1_788_800_000)
   delta_ev.event_type |> should.equal(StateDelta)
 }
 

@@ -357,6 +357,38 @@ pub fn workflow_arguments(f: Feature) -> List(String) {
   ]
 }
 
+/// A workflow registration is content-bound even though task and job identity
+/// remain stable. The ledger digest is the digest of the canonical progress
+/// payload for this feature, so the workflow history cannot silently span a
+/// catalog or declaration revision.
+pub fn workflow_identity(catalog: Catalog, f: Feature) -> String {
+  json.object([
+    #("schema", json.string("uos.harness.feature-workflow-identity.v2")),
+    #("feature_id", json.string(f.id)),
+    #("plan_id", json.string(plan_id)),
+    #("task_id", json.string(f.id)),
+    #("job_id", json.string(job_id(f))),
+    #("workflow_id", json.string(workflow_id(f))),
+    #("catalog_sha256", json.string(catalog.source_sha256)),
+    #("ledger_sha256", json.string(files.digest(progress(catalog, f)))),
+    #("mode", json.string("metadata_only_no_automatic_dispatch")),
+  ])
+  |> json.to_string
+}
+
+pub fn workflow_arguments_bound(catalog: Catalog, f: Feature) -> List(String) {
+  [
+    "workflow",
+    "start",
+    workflow_id(f),
+    task_name(f) <> "/workflow",
+    "harness-feature-tracking",
+    workflow_identity(catalog, f),
+    "--format",
+    "json",
+  ]
+}
+
 pub fn progress_arguments(catalog: Catalog, f: Feature) -> List(String) {
   let payload = progress(catalog, f)
   let digest = files.digest(payload)
@@ -531,6 +563,19 @@ pub fn workflow_matches(f: Feature, rows: List(value.Value)) -> Bool {
   }
 }
 
+pub fn workflow_matches_bound(
+  catalog: Catalog,
+  f: Feature,
+  rows: List(value.Value),
+) -> Bool {
+  let starts =
+    list.filter(rows, fn(row) { text(row, "kind") == Ok("workflow_started") })
+  case starts {
+    [row] -> text(row, "payload") == Ok(workflow_identity(catalog, f))
+    _ -> False
+  }
+}
+
 pub fn progress_matches(
   catalog: Catalog,
   f: Feature,
@@ -569,9 +614,9 @@ fn verify_job(f: Feature) -> Result(Nil, String) {
   }
 }
 
-fn verify_workflow(f: Feature) -> Result(Nil, String) {
+fn verify_workflow(catalog: Catalog, f: Feature) -> Result(Nil, String) {
   use rows <- result.try(history(f))
-  case workflow_matches(f, rows) {
+  case workflow_matches_bound(catalog, f, rows) {
     True -> Ok(Nil)
     False -> Error("tracking_workflow_readback_conflict")
   }
@@ -783,18 +828,24 @@ fn sync_feature(
   })
   use _ <- result.try(case history(f) {
     Ok([]) ->
-      perform(binding, catalog.source_sha256, workflow_arguments(f), fn() {
-        verify_workflow(f)
-      })
+      perform(
+        binding,
+        catalog.source_sha256,
+        workflow_arguments_bound(catalog, f),
+        fn() { verify_workflow(catalog, f) },
+      )
     Ok(rows) ->
-      case workflow_matches(f, rows) {
+      case workflow_matches_bound(catalog, f, rows) {
         True -> Ok(Nil)
         False -> Error("tracking_workflow_identity_conflict")
       }
     Error("tracking_entity_missing") ->
-      perform(binding, catalog.source_sha256, workflow_arguments(f), fn() {
-        verify_workflow(f)
-      })
+      perform(
+        binding,
+        catalog.source_sha256,
+        workflow_arguments_bound(catalog, f),
+        fn() { verify_workflow(catalog, f) },
+      )
     Error(reason) -> Error(reason)
   })
   use events <- result.try(history(f))
@@ -856,7 +907,7 @@ fn status(catalog: Catalog) -> Result(json.Json, String) {
       }
       let #(workflow_ok, progress_ok) = case history(f) {
         Ok(events) -> #(
-          workflow_matches(f, events),
+          workflow_matches_bound(catalog, f, events),
           progress_matches(catalog, f, events),
         )
         Error(_) -> #(False, False)

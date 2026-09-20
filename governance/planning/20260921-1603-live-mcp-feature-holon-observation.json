@@ -1,0 +1,52 @@
+{
+  "schema_version": "uos.mcp.live-observation.v1",
+  "observed_at": "2026-09-21T16:03:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "transport": "stdio",
+  "server": {
+    "name": "c3i-planning-mcp",
+    "version": "1.0.0",
+    "initialize_protocol_version": "2024-11-05"
+  },
+  "tools_list": {
+    "count": 53,
+    "response_sha256": "9588562a647915c12e469725090dd86e4a7ce7f692de093394e3603cbe7e6f4f",
+    "required_surfaces_observed": [
+      "harness_system_feature_catalog",
+      "harness_system_feature_observations",
+      "harness_system_feature_intent",
+      "harness_execution_progress",
+      "holon_status",
+      "swarm_status"
+    ]
+  },
+  "feature_tracker_call": {
+    "tool": "feature_tracker_status",
+    "response_sha256": "acd6daa1df9a9f0a3da19afc6ec9ea934c5506fd2922fdd652008519b0635c23",
+    "reported_total": 21,
+    "reported_completed": 4,
+    "reported_ready": 3,
+    "reported_executing": 0,
+    "authority": "report_only"
+  },
+  "holon_call": {
+    "runtimes": ["Gleam", "Elixir", "FSharp", "Rust"],
+    "fractal_layers": 8,
+    "domains": 16,
+    "holon_types": 8,
+    "database_types": 5
+  },
+  "swarm_call": {
+    "contract": "SC-HOLON-001",
+    "probed_live": true,
+    "backend_discovery_only": true,
+    "bounded_in_process_capabilities": ["fprime", "bayesian", "rete_ul", "ets", "stm", "ruliad", "formal_twin", "denotational", "algebraic_atlas"],
+    "not_invoked": ["modular_max", "openrouter_free"]
+  },
+  "limits": [
+    "MCP discovery and read-only feature status do not establish task authority.",
+    "Holon/swarm discovery is not evidence of real external agent participation.",
+    "No mutating MCP call, task claim, workflow migration, release, or operational acceptance was performed."
+  ],
+  "decision": "OBSERVED_NOT_ADMITTED"
+}

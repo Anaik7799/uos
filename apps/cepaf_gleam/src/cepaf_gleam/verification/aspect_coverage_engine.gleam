@@ -90,7 +90,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Supervision",
       "uos_sup.gleam & OTP 29",
       "CHK-12-GLEAM",
-      tailscale_base_url <> "/files/apps/cepaf_gleam/src/cepaf_gleam/core/uos_sup.gleam",
+      tailscale_base_url
+        <> "/files/apps/cepaf_gleam/src/cepaf_gleam/core/uos_sup.gleam",
       "Active",
       True,
       "Root 4-domain supervisor, Prajna circuit breakers, Lyapunov proofs",
@@ -112,7 +113,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Evidence Plane",
       "Hermes OCaml & Gospel",
       "CHK-13-HERMES",
-      tailscale_base_url <> "/files/engines/hermes/modules/gospel_poodavr/poodavr_contract.mli",
+      tailscale_base_url
+        <> "/files/engines/hermes/modules/gospel_poodavr/poodavr_contract.mli",
       "Active",
       True,
       "Gospel contracts, Z3 queries, SQLite WAL append-only ledgers",
@@ -134,7 +136,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Control Theory",
       "Rocha Semiotics",
       "SC-BIO-001",
-      tailscale_base_url <> "/files/apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_biosemiotics_interlock.gleam",
+      tailscale_base_url
+        <> "/files/apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_biosemiotics_interlock.gleam",
       "Active",
       True,
       "Decoupled semiotic cut, cybernetic feedback loops, metabolic homeostat",
@@ -156,7 +159,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Network Plane",
       "Zenoh pub/sub mesh",
       "SC-ZMOF-001",
-      tailscale_base_url <> "/files/apps/cepaf_gleam/src/cepaf_gleam/zenoh/zenoh_bus.gleam",
+      tailscale_base_url
+        <> "/files/apps/cepaf_gleam/src/cepaf_gleam/zenoh/zenoh_bus.gleam",
       "Active",
       True,
       "OTel-over-Zenoh (OoZ) and MCP-over-Zenoh (MoZ) fractal backplane",
@@ -167,7 +171,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Agent Plane",
       "AG-UI 32-Event Spec",
       "SC-AGUI",
-      tailscale_base_url <> "/files/apps/cepaf_gleam/src/cepaf_gleam/agui/events.gleam",
+      tailscale_base_url
+        <> "/files/apps/cepaf_gleam/src/cepaf_gleam/agui/events.gleam",
       "Active",
       True,
       "32 structured event types across 7 categories (Lifecycle, Tool, etc.)",
@@ -178,7 +183,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Presentation",
       "A2UI Catalog",
       "SC-A2UI",
-      tailscale_base_url <> "/files/apps/cepaf_gleam/src/cepaf_gleam/a2ui/catalog.gleam",
+      tailscale_base_url
+        <> "/files/apps/cepaf_gleam/src/cepaf_gleam/a2ui/catalog.gleam",
       "Active",
       True,
       "233 verified declarative JSON component specs across 22 domains",
@@ -189,7 +195,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Interface Tier",
       "Penta-Stack UI",
       "SC-GLM-UI-001",
-      tailscale_base_url <> "/files/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fractal_atlas_cockpit.gleam",
+      tailscale_base_url
+        <> "/files/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fractal_atlas_cockpit.gleam",
       "Active",
       True,
       "Lustre Web (4100), Wisp REST (4100), ANSI TUI simultaneously",
@@ -200,7 +207,8 @@ pub fn evaluate_all_aspects(now_ms: Int) -> AspectAuditReport {
       "Network Routing",
       "Tailscale FQDN",
       "CHK-02-TAIL",
-      tailscale_base_url <> "/docs/design/20260911-2112-full-aspect-coverage-denotational-fractal-plan.md",
+      tailscale_base_url
+        <> "/docs/design/20260911-2112-full-aspect-coverage-denotational-fractal-plan.md",
       "Active",
       True,
       "Direct clickable links to http://nas-1.tail55d152.ts.net:8100",

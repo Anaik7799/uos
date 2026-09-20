@@ -1,0 +1,17 @@
+{
+  "schema": "uos.risk-priority-current-receipt.v1",
+  "timestamp": "20260921-1643",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/risk-priority-check --all",
+  "status": "PASS",
+  "authority": "NONE",
+  "baseline_checks": 375,
+  "adversarial_checks": 32843,
+  "independent_dag_scenarios": 32768,
+  "risk_portfolio": "governance/planning/20260921-1640-risk-portfolio-current.json",
+  "risk_portfolio_sha256": "548c248c01a45b22c1b524788f883ac494447807dbaa400db90cf251d83150c5",
+  "runtime_admission": "NOT_GRANTED",
+  "live_agent_tests": "UNRUN",
+  "interpretation": "fresh report-only optimization evidence; no execution or release authority",
+  "admission": "not_admitted"
+}

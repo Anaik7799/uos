@@ -5,8 +5,8 @@
 //// candidate root and binds its candidate, inputs, time window, result, and the
 //// SHA-256 of an allowlisted producer artifact in that same candidate.
 
-import gleam/json
 import gleam/dynamic/decode
+import gleam/json
 import gleam/list
 
 pub type ReceiptLocator {
@@ -16,7 +16,12 @@ pub type ReceiptLocator {
 }
 
 pub type MetricInput {
-  MetricInput(name: String, numerator: Int, denominator: Int, input_sha256: String)
+  MetricInput(
+    name: String,
+    numerator: Int,
+    denominator: Int,
+    input_sha256: String,
+  )
 }
 
 pub type VerificationRequest {
@@ -37,7 +42,12 @@ pub type VerificationRequest {
 }
 
 pub type ReceiptCheck {
-  ReceiptCheck(kind: String, status: String, locator: String, errors: List(String))
+  ReceiptCheck(
+    kind: String,
+    status: String,
+    locator: String,
+    errors: List(String),
+  )
 }
 
 pub type VerificationDecision {
@@ -78,10 +88,18 @@ type Receipt {
 }
 
 @external(erlang, "evidence_truth_ffi", "read_candidate_file")
-fn read_candidate_file(root: String, relative_path: String, cap: Int) -> Result(String, String)
+fn read_candidate_file(
+  root: String,
+  relative_path: String,
+  cap: Int,
+) -> Result(String, String)
 
 @external(erlang, "evidence_truth_ffi", "sha256_candidate_file")
-fn sha256_candidate_file(root: String, relative_path: String, cap: Int) -> Result(String, String)
+fn sha256_candidate_file(
+  root: String,
+  relative_path: String,
+  cap: Int,
+) -> Result(String, String)
 
 @external(erlang, "evidence_truth_ffi", "unix_seconds")
 pub fn unix_seconds() -> Int
@@ -91,13 +109,22 @@ fn receipt_decoder() -> decode.Decoder(Receipt) {
   use kind <- decode.field("kind", decode.string)
   use producer <- decode.field("producer", decode.string)
   use producer_artifact <- decode.field("producer_artifact", decode.string)
-  use producer_artifact_sha256 <- decode.field("producer_artifact_sha256", decode.string)
+  use producer_artifact_sha256 <- decode.field(
+    "producer_artifact_sha256",
+    decode.string,
+  )
   use candidate_change_id <- decode.field("candidate_change_id", decode.string)
   use candidate_commit_id <- decode.field("candidate_commit_id", decode.string)
   use input_sha256 <- decode.field("input_sha256", decode.string)
   use scopes <- decode.field("scopes", decode.list(decode.string))
-  use issued_at_unix_seconds <- decode.field("issued_at_unix_seconds", decode.int)
-  use expires_at_unix_seconds <- decode.field("expires_at_unix_seconds", decode.int)
+  use issued_at_unix_seconds <- decode.field(
+    "issued_at_unix_seconds",
+    decode.int,
+  )
+  use expires_at_unix_seconds <- decode.field(
+    "expires_at_unix_seconds",
+    decode.int,
+  )
   use executed <- decode.field("executed", decode.bool)
   use outcome <- decode.field("outcome", decode.string)
   decode.success(Receipt(
@@ -120,9 +147,9 @@ fn receipt_decoder() -> decode.Decoder(Receipt) {
 pub const required_aspects = [
   "harness", "hermes_harness", "hermes_wiki", "hermes_ops",
   "hermes_dependability", "hermes_ops_dashboard", "hermes_vcs",
-  "hermes_agent_loop", "swarm", "system_engg", "hermes_nix",
-  "hermes_sysml", "hermes_zellij", "hermes_vision", "hermes_toolchain",
-  "hermes_fpp_authority", "hermes_dune_graph",
+  "hermes_agent_loop", "swarm", "system_engg", "hermes_nix", "hermes_sysml",
+  "hermes_zellij", "hermes_vision", "hermes_toolchain", "hermes_fpp_authority",
+  "hermes_dune_graph",
 ]
 
 fn expected_producer(kind: String) -> #(String, String, String) {
@@ -141,25 +168,42 @@ fn expected_producer(kind: String) -> #(String, String, String) {
 }
 
 fn error_if(condition: Bool, error: String) -> List(String) {
-  case condition { True -> [] False -> [error] }
+  case condition {
+    True -> []
+    False -> [error]
+  }
 }
 
-fn check_receipt(request: VerificationRequest, kind: String, locator: ReceiptLocator) -> ReceiptCheck {
+fn check_receipt(
+  request: VerificationRequest,
+  kind: String,
+  locator: ReceiptLocator,
+) -> ReceiptCheck {
   case locator {
-    Missing -> ReceiptCheck(kind, "UNRUN", "missing", [kind <> " receipt missing"])
+    Missing ->
+      ReceiptCheck(kind, "UNRUN", "missing", [kind <> " receipt missing"])
     InvalidLocator(value) ->
       ReceiptCheck(kind, "REJECTED", value, ["untyped receipt locator"])
     ReceiptFile(path, expected_sha256) -> {
       let bytes = read_candidate_file(request.candidate_root, path, 65_536)
-      let actual_sha = sha256_candidate_file(request.candidate_root, path, 65_536)
+      let actual_sha =
+        sha256_candidate_file(request.candidate_root, path, 65_536)
       case bytes, actual_sha {
         Ok(text), Ok(digest) ->
           case json.parse(text, receipt_decoder()) {
-            Error(_) -> ReceiptCheck(kind, "REJECTED", path, ["receipt JSON/schema invalid"])
+            Error(_) ->
+              ReceiptCheck(kind, "REJECTED", path, [
+                "receipt JSON/schema invalid",
+              ])
             Ok(receipt) -> {
-              let #(producer, artifact, pinned_artifact_sha) = expected_producer(kind)
+              let #(producer, artifact, pinned_artifact_sha) =
+                expected_producer(kind)
               let artifact_sha =
-                sha256_candidate_file(request.candidate_root, artifact, 2_097_152)
+                sha256_candidate_file(
+                  request.candidate_root,
+                  artifact,
+                  2_097_152,
+                )
               let artifact_errors = case artifact_sha {
                 Error(_) -> ["producer artifact unavailable"]
                 Ok(value) ->
@@ -171,28 +215,74 @@ fn check_receipt(request: VerificationRequest, kind: String, locator: ReceiptLoc
               }
               let errors =
                 []
-                |> list.append(error_if(digest == expected_sha256, "receipt digest changed"))
-                |> list.append(error_if(receipt.schema == "uos.evidence-receipt.v1", "receipt schema unsupported"))
-                |> list.append(error_if(receipt.kind == kind, "receipt kind mismatch"))
-                |> list.append(error_if(receipt.producer == producer, "producer authority not allowlisted"))
-                |> list.append(error_if(receipt.producer_artifact == artifact, "producer artifact not allowlisted"))
+                |> list.append(error_if(
+                  digest == expected_sha256,
+                  "receipt digest changed",
+                ))
+                |> list.append(error_if(
+                  receipt.schema == "uos.evidence-receipt.v1",
+                  "receipt schema unsupported",
+                ))
+                |> list.append(error_if(
+                  receipt.kind == kind,
+                  "receipt kind mismatch",
+                ))
+                |> list.append(error_if(
+                  receipt.producer == producer,
+                  "producer authority not allowlisted",
+                ))
+                |> list.append(error_if(
+                  receipt.producer_artifact == artifact,
+                  "producer artifact not allowlisted",
+                ))
                 |> list.append(artifact_errors)
-                |> list.append(error_if(receipt.candidate_change_id == request.candidate_change_id, "candidate change changed"))
-                |> list.append(error_if(receipt.candidate_commit_id == request.candidate_commit_id, "candidate commit changed"))
-                |> list.append(error_if(receipt.input_sha256 == request.input_sha256, "verification inputs changed"))
-                |> list.append(error_if(receipt.scopes == required_aspects, "17-aspect scope incomplete or reordered"))
-                |> list.append(error_if(receipt.issued_at_unix_seconds <= request.now_unix_seconds, "receipt is future-dated"))
-                |> list.append(error_if(request.now_unix_seconds - receipt.issued_at_unix_seconds <= request.max_receipt_age_seconds, "receipt is stale"))
-                |> list.append(error_if(receipt.expires_at_unix_seconds >= request.now_unix_seconds, "receipt expired"))
-                |> list.append(error_if(receipt.executed, "producer did not execute"))
-                |> list.append(error_if(receipt.outcome == "PASSED", "producer outcome is not PASSED"))
+                |> list.append(error_if(
+                  receipt.candidate_change_id == request.candidate_change_id,
+                  "candidate change changed",
+                ))
+                |> list.append(error_if(
+                  receipt.candidate_commit_id == request.candidate_commit_id,
+                  "candidate commit changed",
+                ))
+                |> list.append(error_if(
+                  receipt.input_sha256 == request.input_sha256,
+                  "verification inputs changed",
+                ))
+                |> list.append(error_if(
+                  receipt.scopes == required_aspects,
+                  "17-aspect scope incomplete or reordered",
+                ))
+                |> list.append(error_if(
+                  receipt.issued_at_unix_seconds <= request.now_unix_seconds,
+                  "receipt is future-dated",
+                ))
+                |> list.append(error_if(
+                  request.now_unix_seconds - receipt.issued_at_unix_seconds
+                    <= request.max_receipt_age_seconds,
+                  "receipt is stale",
+                ))
+                |> list.append(error_if(
+                  receipt.expires_at_unix_seconds >= request.now_unix_seconds,
+                  "receipt expired",
+                ))
+                |> list.append(error_if(
+                  receipt.executed,
+                  "producer did not execute",
+                ))
+                |> list.append(error_if(
+                  receipt.outcome == "PASSED",
+                  "producer outcome is not PASSED",
+                ))
               case errors {
                 [] -> ReceiptCheck(kind, "CHECKED", path, [])
                 _ -> ReceiptCheck(kind, "REJECTED", path, errors)
               }
             }
           }
-        _, _ -> ReceiptCheck(kind, "REJECTED", path, ["receipt unavailable or exceeds 65536 bytes"])
+        _, _ ->
+          ReceiptCheck(kind, "REJECTED", path, [
+            "receipt unavailable or exceeds 65536 bytes",
+          ])
       }
     }
   }
@@ -201,9 +291,13 @@ fn check_receipt(request: VerificationRequest, kind: String, locator: ReceiptLoc
 fn missing_denominators(metrics: List(MetricInput)) -> List(String) {
   case metrics {
     [] -> ["metric_inputs"]
-    _ -> list.filter_map(metrics, fn(metric) {
-      case metric.denominator > 0 { True -> Error(Nil) False -> Ok(metric.name) }
-    })
+    _ ->
+      list.filter_map(metrics, fn(metric) {
+        case metric.denominator > 0 {
+          True -> Error(Nil)
+          False -> Ok(metric.name)
+        }
+      })
   }
 }
 
@@ -211,11 +305,17 @@ pub fn evaluate(request: VerificationRequest) -> VerificationDecision {
   let runtime = check_receipt(request, "runtime", request.runtime_receipt)
   let formal = check_receipt(request, "formal", request.formal_receipt)
   let missing = missing_denominators(request.metric_inputs)
-  let metrics_available = missing == [] && list.all(request.metric_inputs, fn(metric) {
-    metric.input_sha256 == request.input_sha256
-  })
-  let admitted = runtime.status == "CHECKED" && formal.status == "CHECKED" && metrics_available
-  let supplied_invalid = runtime.status == "REJECTED" || formal.status == "REJECTED"
+  let metrics_available =
+    missing == []
+    && list.all(request.metric_inputs, fn(metric) {
+      metric.input_sha256 == request.input_sha256
+    })
+  let admitted =
+    runtime.status == "CHECKED"
+    && formal.status == "CHECKED"
+    && metrics_available
+  let supplied_invalid =
+    runtime.status == "REJECTED" || formal.status == "REJECTED"
   let status = case admitted, supplied_invalid {
     True, _ -> "ADMITTED"
     False, True -> "REJECTED"
@@ -224,7 +324,10 @@ pub fn evaluate(request: VerificationRequest) -> VerificationDecision {
   VerificationDecision(
     admitted:,
     status:,
-    exit_code: case admitted { True -> 0 False -> 1 },
+    exit_code: case admitted {
+      True -> 0
+      False -> 1
+    },
     metrics_available:,
     missing_denominators: missing,
     candidate_change_id: request.candidate_change_id,
@@ -240,24 +343,32 @@ pub fn evaluate(request: VerificationRequest) -> VerificationDecision {
 }
 
 pub fn unrun() -> VerificationDecision {
-  evaluate(VerificationRequest(
-    candidate_root: ".",
-    candidate_change_id: "UNKNOWN",
-    candidate_commit_id: "UNKNOWN",
-    input_sha256: "UNKNOWN",
-    now_unix_seconds: unix_seconds(),
-    max_receipt_age_seconds: 0,
-    runtime_receipt: Missing,
-    formal_receipt: Missing,
-    existing_document: False,
-    claimed_token_gated: False,
-    claimed_parity: False,
-    metric_inputs: [],
-  ))
+  evaluate(
+    VerificationRequest(
+      candidate_root: ".",
+      candidate_change_id: "UNKNOWN",
+      candidate_commit_id: "UNKNOWN",
+      input_sha256: "UNKNOWN",
+      now_unix_seconds: unix_seconds(),
+      max_receipt_age_seconds: 0,
+      runtime_receipt: Missing,
+      formal_receipt: Missing,
+      existing_document: False,
+      claimed_token_gated: False,
+      claimed_parity: False,
+      metric_inputs: [],
+    ),
+  )
 }
 
 type Fixture {
-  Fixture(runtime_receipt: String, formal_receipt: String, existing_document: Bool, claimed_token_gated: Bool, claimed_parity: Bool)
+  Fixture(
+    runtime_receipt: String,
+    formal_receipt: String,
+    existing_document: Bool,
+    claimed_token_gated: Bool,
+    claimed_parity: Bool,
+  )
 }
 
 fn fixture_decoder() -> decode.Decoder(Fixture) {
@@ -267,11 +378,21 @@ fn fixture_decoder() -> decode.Decoder(Fixture) {
   use claimed_token_gated <- decode.field("claimed_token_gated", decode.bool)
   use claimed_parity <- decode.field("claimed_parity", decode.bool)
   use _metric_inputs <- decode.field("metric_inputs", decode.list(decode.int))
-  decode.success(Fixture(runtime_receipt, formal_receipt, existing_document, claimed_token_gated, claimed_parity))
+  decode.success(Fixture(
+    runtime_receipt,
+    formal_receipt,
+    existing_document,
+    claimed_token_gated,
+    claimed_parity,
+  ))
 }
 
 fn locator_from_fixture(value: String) -> ReceiptLocator {
-  case value { "missing" -> Missing "" -> Missing _ -> InvalidLocator(value) }
+  case value {
+    "missing" -> Missing
+    "" -> Missing
+    _ -> InvalidLocator(value)
+  }
 }
 
 pub fn evaluate_fixture(text: String) -> VerificationDecision {
@@ -281,20 +402,22 @@ pub fn evaluate_fixture(text: String) -> VerificationDecision {
       VerificationDecision(..base, status: "REJECTED")
     }
     Ok(fixture) ->
-      evaluate(VerificationRequest(
-        candidate_root: ".",
-        candidate_change_id: "UNKNOWN",
-        candidate_commit_id: "UNKNOWN",
-        input_sha256: "UNKNOWN",
-        now_unix_seconds: unix_seconds(),
-        max_receipt_age_seconds: 0,
-        runtime_receipt: locator_from_fixture(fixture.runtime_receipt),
-        formal_receipt: locator_from_fixture(fixture.formal_receipt),
-        existing_document: fixture.existing_document,
-        claimed_token_gated: fixture.claimed_token_gated,
-        claimed_parity: fixture.claimed_parity,
-        metric_inputs: [],
-      ))
+      evaluate(
+        VerificationRequest(
+          candidate_root: ".",
+          candidate_change_id: "UNKNOWN",
+          candidate_commit_id: "UNKNOWN",
+          input_sha256: "UNKNOWN",
+          now_unix_seconds: unix_seconds(),
+          max_receipt_age_seconds: 0,
+          runtime_receipt: locator_from_fixture(fixture.runtime_receipt),
+          formal_receipt: locator_from_fixture(fixture.formal_receipt),
+          existing_document: fixture.existing_document,
+          claimed_token_gated: fixture.claimed_token_gated,
+          claimed_parity: fixture.claimed_parity,
+          metric_inputs: [],
+        ),
+      )
   }
 }
 
@@ -322,13 +445,21 @@ pub fn to_json(decision: VerificationDecision) -> String {
     #("status", json.string(decision.status)),
     #("exit_code", json.int(decision.exit_code)),
     #("metrics_available", json.bool(decision.metrics_available)),
-    #("missing_denominators", json.array(decision.missing_denominators, json.string)),
+    #(
+      "missing_denominators",
+      json.array(decision.missing_denominators, json.string),
+    ),
     #("candidate_change_id", json.string(decision.candidate_change_id)),
     #("candidate_commit_id", json.string(decision.candidate_commit_id)),
     #("input_sha256", json.string(decision.input_sha256)),
     #("runtime_receipt", encode_check(decision.runtime)),
     #("formal_receipt", encode_check(decision.formal)),
-    #("aspect_results", json.array(required_aspects, fn(name) { encode_aspect(name, decision.status) })),
+    #(
+      "aspect_results",
+      json.array(required_aspects, fn(name) {
+        encode_aspect(name, decision.status)
+      }),
+    ),
     #("existing_document", json.bool(decision.existing_document)),
     #("claimed_token_gated", json.bool(decision.claimed_token_gated)),
     #("claimed_parity", json.bool(decision.claimed_parity)),

@@ -19,32 +19,41 @@ import cepaf_gleam/agui/sse as agui_sse
 import cepaf_gleam/agui/sse_stream
 import cepaf_gleam/agui/state as agui_state
 import cepaf_gleam/agui/tools as agui_tools
+import cepaf_gleam/bridge/pi_daemon
 import cepaf_gleam/c3i/nif as c3i_nif
-import cepaf_gleam/ha/beam_metrics
-import cepaf_gleam/ha/fitness_gate
-import cepaf_gleam/ha/guard_grid
-import cepaf_gleam/ha/request_guard
-import cepaf_gleam/substrate/beam_cache
-import cepaf_gleam/zenoh/ets_zenoh_bridge
-import cepaf_gleam/testing/tri_language_orchestrator
-import cepaf_gleam/verification/fractal_triad_matrix_engine
-import cepaf_gleam/ha/health_cascade
-import cepaf_gleam/ha/hot_reload
-import cepaf_gleam/ha/invariant_gate
-import cepaf_gleam/ha/module_guard
-import cepaf_gleam/ha/slo_tracker
-import cepaf_gleam/ha/fractal_forecast
+import cepaf_gleam/ecology/andon
+import cepaf_gleam/ecology/capability_port
+import cepaf_gleam/ecology/living_swarm
+import cepaf_gleam/ecology/living_swarm_actor
+import cepaf_gleam/ecology/super_agent
 import cepaf_gleam/fractal/l0_constitutional.{
   type ApprovalRequest, ApprovalRequest, Approved, Critical as ApprovalCritical,
   High as ApprovalHigh, Low as ApprovalLow, Medium as ApprovalMedium, Rejected,
   approval_to_json, initial_approval_state, initial_emergency_state,
   resolve_request, trigger_emergency,
 }
+import cepaf_gleam/ha/beam_metrics
+import cepaf_gleam/ha/fitness_gate
+import cepaf_gleam/ha/fractal_forecast
+import cepaf_gleam/ha/guard_grid
+import cepaf_gleam/ha/health_cascade
+import cepaf_gleam/ha/hot_reload
+import cepaf_gleam/ha/invariant_gate
+import cepaf_gleam/ha/module_guard
+import cepaf_gleam/ha/request_guard
+import cepaf_gleam/ha/slo_tracker
 import cepaf_gleam/moz/client as moz_client
+import cepaf_gleam/planning/execution_observer
 import cepaf_gleam/rules/dispatcher as rule_dispatcher
 import cepaf_gleam/rules/engine as rule_engine
+import cepaf_gleam/sciviz/transpiler
+import cepaf_gleam/services/max_inference_daemon as max_daemon
+import cepaf_gleam/services/mirage_migration_engine
+import cepaf_gleam/services/mirage_unikernel_daemon
+import cepaf_gleam/substrate/beam_cache
 import cepaf_gleam/symbiosis/tensor as symbiosis_tensor
 import cepaf_gleam/symbiosis/types as symbiosis_types
+import cepaf_gleam/testing/tri_language_orchestrator
 import cepaf_gleam/ui/domain.{
   type HealthStatus, Agents, Bicameral, Biomorphic, Bridge, Cockpit,
   ComponentDemo, Config, Critical, Dashboard, Database, Degraded, Evolution,
@@ -53,46 +62,34 @@ import cepaf_gleam/ui/domain.{
   Prajna, Singularity, Smriti, Substrate, Telemetry, Unknown, Verification,
   Zenoh, page_to_label, page_to_path,
 }
-import cepaf_gleam/ui/state as mesh_state
+import cepaf_gleam/ui/ecology_refresh
+import cepaf_gleam/ui/lustre/agui_cockpit
 import cepaf_gleam/ui/lustre/checklist_page
-import cepaf_gleam/ui/lustre/sciviz_cockpit
-import cepaf_gleam/ui/lustre/sciviz_test_dashboard
-import cepaf_gleam/ui/lustre/sciviz_extensions_dashboard
-import cepaf_gleam/ui/lustre/sciviz_comprehensive_explorer
-import cepaf_gleam/sciviz/transpiler
-import cepaf_gleam/ui/lustre/triad_matrix_view
 import cepaf_gleam/ui/lustre/cortex_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
-import cepaf_gleam/ui/lustre/link_tracker_view
-import cepaf_gleam/ui/lustre/knowledge_explorer
-import cepaf_gleam/ui/lustre/testing_page
 import cepaf_gleam/ui/lustre/inference_tier
-import cepaf_gleam/ui/wisp/inference_api
-import cepaf_gleam/services/mirage_migration_engine
-import cepaf_gleam/services/mirage_unikernel_daemon
+import cepaf_gleam/ui/lustre/knowledge_explorer
+import cepaf_gleam/ui/lustre/link_tracker_view
 import cepaf_gleam/ui/lustre/mirage_cockpit
-import cepaf_gleam/ui/wisp/mirage_api
-import cepaf_gleam/services/max_inference_daemon as max_daemon
-import cepaf_gleam/ui/lustre/agui_cockpit
-import cepaf_gleam/ui/wisp/agui_sse_api
-import cepaf_gleam/ui/wisp/homeostasis_api
+import cepaf_gleam/ui/lustre/sciviz_cockpit
+import cepaf_gleam/ui/lustre/sciviz_comprehensive_explorer
+import cepaf_gleam/ui/lustre/sciviz_extensions_dashboard
+import cepaf_gleam/ui/lustre/sciviz_test_dashboard
+import cepaf_gleam/ui/lustre/testing_page
+import cepaf_gleam/ui/lustre/triad_matrix_view
+import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
-import lustre/element
-import lustre/element/html
-import lustre/attribute
-import simplifile
-import cepaf_gleam/ui/wisp/mini_app_routes
 import cepaf_gleam/ui/web/shell
+import cepaf_gleam/ui/wisp/agui_sse_api
 import cepaf_gleam/ui/wisp/auth
-import cepaf_gleam/ui/wisp/podman_api
 import cepaf_gleam/ui/wisp/federation_api
-import cepaf_gleam/bridge/pi_daemon
-import cepaf_gleam/ecology/andon
-import cepaf_gleam/ecology/capability_port
-import cepaf_gleam/ecology/living_swarm
-import cepaf_gleam/ecology/living_swarm_actor
-import cepaf_gleam/ecology/super_agent
-import cepaf_gleam/ui/ecology_refresh
+import cepaf_gleam/ui/wisp/homeostasis_api
+import cepaf_gleam/ui/wisp/inference_api
+import cepaf_gleam/ui/wisp/mini_app_routes
+import cepaf_gleam/ui/wisp/mirage_api
+import cepaf_gleam/ui/wisp/podman_api
+import cepaf_gleam/verification/fractal_triad_matrix_engine
+import cepaf_gleam/zenoh/ets_zenoh_bridge
 import gleam/bit_array
 import gleam/crypto
 import gleam/dynamic/decode
@@ -104,6 +101,10 @@ import gleam/json
 import gleam/list
 import gleam/option
 import gleam/string
+import lustre/attribute
+import lustre/element
+import lustre/element/html
+import simplifile
 
 @external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
 fn router_system_time_nanos() -> Int
@@ -117,7 +118,8 @@ pub fn route(path: String) -> String {
   let _ = beam_cache.set_config("slo:last_request", "1")
   // Request guard gate — reject if system health critical (SC-SIL4-001)
   case request_guard.check() {
-    request_guard.Block(reason) -> "{\"error\":\"service_unavailable\",\"reason\":\"" <> reason <> "\"}"
+    request_guard.Block(reason) ->
+      "{\"error\":\"service_unavailable\",\"reason\":\"" <> reason <> "\"}"
     request_guard.Proceed -> route_internal(path)
   }
 }
@@ -127,116 +129,264 @@ fn route_internal(path: String) -> String {
   case path {
     // Primary API routes — Sprint 6: guarded via module_guard (SC-SATYA-001)
     "/health" | "/api/health" ->
-      module_guard.unwrap(module_guard.guard_json(health_json(), "health", "status"))
+      module_guard.unwrap(module_guard.guard_json(
+        health_json(),
+        "health",
+        "status",
+      ))
     "/api/v1/pages" | "/api/pages" ->
-      module_guard.unwrap(module_guard.guard_json(pages_json(), "pages", "pages"))
+      module_guard.unwrap(module_guard.guard_json(
+        pages_json(),
+        "pages",
+        "pages",
+      ))
+    "/api/v1/ecology/capabilities" ->
+      module_guard.unwrap(module_guard.guard_json(
+        capability_port.probe_report_json() |> json.to_string,
+        "ecology/capabilities",
+        "capabilities",
+      ))
     "/api/v1/dashboard" | "/api/dashboard" ->
-      module_guard.unwrap(module_guard.guard_json(dashboard_json(), "dashboard", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        dashboard_json(),
+        "dashboard",
+        "page",
+      ))
     // Dashboard sub-endpoints — fractal layers, supervisors, threads (SC-AGUI-UI)
     "/api/v1/dashboard/supervisors" ->
-      module_guard.unwrap(module_guard.guard_json(dashboard_supervisors_json(), "dashboard/supervisors", "exec_001"))
+      module_guard.unwrap(module_guard.guard_json(
+        dashboard_supervisors_json(),
+        "dashboard/supervisors",
+        "exec_001",
+      ))
     "/api/v1/dashboard/threads" ->
-      module_guard.unwrap(module_guard.guard_json(dashboard_threads_json(), "dashboard/threads", "beam"))
+      module_guard.unwrap(module_guard.guard_json(
+        dashboard_threads_json(),
+        "dashboard/threads",
+        "beam",
+      ))
     "/api/v1/dashboard/fractal" ->
-      module_guard.unwrap(module_guard.guard_json(dashboard_fractal_json(), "dashboard/fractal", "layers"))
+      module_guard.unwrap(module_guard.guard_json(
+        dashboard_fractal_json(),
+        "dashboard/fractal",
+        "layers",
+      ))
     // Hot code reload endpoint (SC-HA-001) — zero-downtime bytecode upgrade
     "/api/v1/reload" ->
-      module_guard.unwrap(module_guard.guard_json(hot_reload_json(), "reload", "status"))
+      module_guard.unwrap(module_guard.guard_json(
+        hot_reload_json(),
+        "reload",
+        "status",
+      ))
     "/api/v1/reload/build" ->
-      module_guard.unwrap(module_guard.guard_json(hot_build_and_reload_json(), "reload/build", "status"))
+      module_guard.unwrap(module_guard.guard_json(
+        hot_build_and_reload_json(),
+        "reload/build",
+        "status",
+      ))
     // OODA cycle monitoring (SC-TPS-006 Andon)
     "/api/v1/system/ooda" ->
-      module_guard.unwrap(module_guard.guard_json(system_ooda_json(), "system/ooda", "phase"))
+      module_guard.unwrap(module_guard.guard_json(
+        system_ooda_json(),
+        "system/ooda",
+        "phase",
+      ))
     // Fractal TPS metrics
     "/api/v1/system/tps" ->
-      module_guard.unwrap(module_guard.guard_json(system_tps_json(), "system/tps", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        system_tps_json(),
+        "system/tps",
+        "page",
+      ))
     // F17 BEAM scheduler utilisation monitoring (SC-GLM-UI-001, L1_ATOMIC_DEBUG)
     "/api/v1/system/beam" ->
-      module_guard.unwrap(module_guard.guard_json(beam_metrics_json(), "system/beam", "scheduler_count"))
+      module_guard.unwrap(module_guard.guard_json(
+        beam_metrics_json(),
+        "system/beam",
+        "scheduler_count",
+      ))
     // F02/F29 SLI/SLO Dashboard + Error Budget Tracking (SC-GLM-UI-001, L5_COGNITIVE)
     "/api/v1/system/slo" ->
-      module_guard.unwrap(module_guard.guard_json(slo_json(), "system/slo", "slos"))
+      module_guard.unwrap(module_guard.guard_json(
+        slo_json(),
+        "system/slo",
+        "slos",
+      ))
     // F05 Circuit breaker state visualisation (SC-GLM-UI-001, L5_COGNITIVE)
     "/api/v1/system/circuits" ->
-      module_guard.unwrap(module_guard.guard_json(circuit_breaker_json(), "system/circuits", "circuits"))
+      module_guard.unwrap(module_guard.guard_json(
+        circuit_breaker_json(),
+        "system/circuits",
+        "circuits",
+      ))
     // Sprint 6: Guard grid — 24-cell L0-L7 verdict matrix (SC-SIL4-001, SC-FUNC-002)
     // तन्त्रिका सक्रिय — Nerves activated
     "/api/v1/system/guard-grid" ->
-      module_guard.unwrap(module_guard.guard_json(guard_grid_json(), "system/guard-grid", "total_cells"))
+      module_guard.unwrap(module_guard.guard_json(
+        guard_grid_json(),
+        "system/guard-grid",
+        "total_cells",
+      ))
     // Fitness-gated commit score — गुणपरीक्षा (SC-HA-001, SC-MUDA-001, SC-CMP-025)
     "/api/v1/system/fitness" ->
-      module_guard.unwrap(module_guard.guard_json(fitness_json(), "system/fitness", "composite"))
+      module_guard.unwrap(module_guard.guard_json(
+        fitness_json(),
+        "system/fitness",
+        "composite",
+      ))
     // System snapshot — all subsystems in one response (SC-OODA-ACCEL-001)
     // सर्वज्ञानं एकत्र — All knowledge in one place
     "/api/v1/system/snapshot" ->
-      module_guard.unwrap(module_guard.guard_json(system_snapshot_json(), "system/snapshot", "snapshot"))
+      module_guard.unwrap(module_guard.guard_json(
+        system_snapshot_json(),
+        "system/snapshot",
+        "snapshot",
+      ))
     // Claude session self-observation metrics (SC-SATYA-002, SC-EVO-KPI-001)
     "/api/v1/claude/session" ->
-      module_guard.unwrap(module_guard.guard_json(claude_session_json(), "claude/session", "session_id"))
+      module_guard.unwrap(module_guard.guard_json(
+        claude_session_json(),
+        "claude/session",
+        "session_id",
+      ))
     // Data quality + page-checker + cron status — foundation for the future
     // /c3i-status 30-sec dashboard. Single endpoint pulls live counts via the
     // existing plan_status NIF and aggregates with documented schedule names.
     // SC-VALUE-GUARD-001..008 + SC-PAGE-SPEC-001..008 + SC-EVO-KPI-001.
     "/api/v1/dq/status" ->
-      module_guard.unwrap(module_guard.guard_json(dq_status_json(), "dq/status", "summary"))
+      module_guard.unwrap(module_guard.guard_json(
+        dq_status_json(),
+        "dq/status",
+        "summary",
+      ))
     // Universal Link Tracker & Verifier status (SC-GLM-UI-001, SC-CHECKLIST-001)
     "/api/v1/links/status" | "/api/v1/links/verify" ->
-      module_guard.unwrap(module_guard.guard_json(links_status_json(), "links/status", "status"))
+      module_guard.unwrap(module_guard.guard_json(
+        links_status_json(),
+        "links/status",
+        "status",
+      ))
     // Data freshness / staleness check (SC-EVO-KPI-003)
     "/api/v1/health/freshness" ->
-      module_guard.unwrap(module_guard.guard_json(data_freshness_json(), "health/freshness", "staleness"))
+      module_guard.unwrap(module_guard.guard_json(
+        data_freshness_json(),
+        "health/freshness",
+        "staleness",
+      ))
     // Health cascade across L0-L7 fractal layers (SC-SIL4-001, SC-VER-001, SC-HA-001)
     "/api/v1/health/cascade" ->
-      module_guard.unwrap(
-        module_guard.guard_json(
-          health_cascade.check_cascade() |> health_cascade.to_json(),
-          "health/cascade",
-          "layers",
-        ),
-      )
+      module_guard.unwrap(module_guard.guard_json(
+        health_cascade.check_cascade() |> health_cascade.to_json(),
+        "health/cascade",
+        "layers",
+      ))
     // Cockpit endpoints (SC-HMI-010 Dark Cockpit)
     "/api/v1/cockpit/alarms" ->
-      module_guard.unwrap(module_guard.guard_json(cockpit_alarms_json(), "cockpit/alarms", "alarms"))
+      module_guard.unwrap(module_guard.guard_json(
+        cockpit_alarms_json(),
+        "cockpit/alarms",
+        "alarms",
+      ))
     "/api/v1/cockpit/mode" ->
-      module_guard.unwrap(module_guard.guard_json(cockpit_mode_json(), "cockpit/mode", "mode"))
+      module_guard.unwrap(module_guard.guard_json(
+        cockpit_mode_json(),
+        "cockpit/mode",
+        "mode",
+      ))
     "/api/v1/planning" | "/api/planning/tasks" ->
-      module_guard.unwrap(module_guard.guard_json(planning_json(), "planning", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        planning_json(),
+        "planning",
+        "page",
+      ))
     "/api/v1/immune" | "/api/immune/status" ->
       module_guard.unwrap(module_guard.guard_nif_object(immune_json(), "immune"))
     "/api/v1/knowledge" | "/api/knowledge/graph" ->
-      module_guard.unwrap(module_guard.guard_json(knowledge_json(), "knowledge", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        knowledge_json(),
+        "knowledge",
+        "page",
+      ))
     "/api/v1/zenoh" | "/api/zenoh/health" ->
       module_guard.unwrap(module_guard.guard_nif_object(zenoh_json(), "zenoh"))
     "/api/v1/verification" | "/api/verification/status" ->
-      module_guard.unwrap(module_guard.guard_json(verification_json(), "verification", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        verification_json(),
+        "verification",
+        "page",
+      ))
     "/api/cockpit/nodes" ->
-      module_guard.unwrap(module_guard.guard_json(cockpit_json(), "cockpit/nodes", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        cockpit_json(),
+        "cockpit/nodes",
+        "page",
+      ))
     // Domain endpoints (Phase 6 — Substrate, Metabolic, Podman, MCP, KMS, Telemetry)
     "/api/substrate/status" | "/api/v1/substrate" ->
-      module_guard.unwrap(module_guard.guard_json(substrate_json(), "substrate", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        substrate_json(),
+        "substrate",
+        "page",
+      ))
     "/api/metabolic/status" | "/api/v1/metabolic" ->
-      module_guard.unwrap(module_guard.guard_json(metabolic_json(), "metabolic", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        metabolic_json(),
+        "metabolic",
+        "page",
+      ))
     "/api/podman/containers" | "/api/v1/podman" ->
-      module_guard.unwrap(module_guard.guard_json(podman_json(), "podman", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        podman_json(),
+        "podman",
+        "page",
+      ))
     "/api/mcp/status" | "/api/v1/mcp" ->
       module_guard.unwrap(module_guard.guard_json(mcp_json(), "mcp", "page"))
     "/api/kms/catalog" | "/api/v1/kms" ->
       module_guard.unwrap(module_guard.guard_json(kms_json(), "kms", "page"))
     "/api/telemetry/status" | "/api/v1/telemetry" ->
-      module_guard.unwrap(module_guard.guard_json(telemetry_json(), "telemetry", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        telemetry_json(),
+        "telemetry",
+        "page",
+      ))
     // New feature endpoints for Layer 2 Supervisor tasks
     "/api/v1/integrity" ->
-      module_guard.unwrap(module_guard.guard_json(integrity_json(), "integrity", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        integrity_json(),
+        "integrity",
+        "page",
+      ))
     "/api/v1/evolution" ->
-      module_guard.unwrap(module_guard.guard_json(evolution_json(), "evolution", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        evolution_json(),
+        "evolution",
+        "page",
+      ))
     "/api/v1/biomorphic" ->
-      module_guard.unwrap(module_guard.guard_json(biomorphic_json(), "biomorphic", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        biomorphic_json(),
+        "biomorphic",
+        "page",
+      ))
     "/api/v1/homeostasis" ->
-      module_guard.unwrap(module_guard.guard_json(homeostasis_json(), "homeostasis", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        homeostasis_json(),
+        "homeostasis",
+        "page",
+      ))
     "/api/v1/bicameral" ->
-      module_guard.unwrap(module_guard.guard_json(bicameral_json(), "bicameral", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        bicameral_json(),
+        "bicameral",
+        "page",
+      ))
     "/api/v1/singularity" ->
-      module_guard.unwrap(module_guard.guard_json(singularity_json(), "singularity", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        singularity_json(),
+        "singularity",
+        "page",
+      ))
     "/api/v1/inference/status" -> {
       let model = inference_tier.init()
       inference_api.status_json(model) |> json.to_string
@@ -251,29 +401,51 @@ fn route_internal(path: String) -> String {
       max_daemon.zk_result_to_json(result)
     }
     "/api/v1/inference/lyapunov-trend" -> {
-      let result = inference_api.evaluate_lyapunov_trend([1.0, 1.0, 1.0, 1.0], 1.0, 5.0, 100.0)
+      let result =
+        inference_api.evaluate_lyapunov_trend(
+          [1.0, 1.0, 1.0, 1.0],
+          1.0,
+          5.0,
+          100.0,
+        )
       max_daemon.lyapunov_result_to_json(result)
     }
     "/api/v1/mirage/candidates" ->
-      json.to_string(mirage_api.candidates_json(mirage_migration_engine.get_migration_candidates()))
+      json.to_string(
+        mirage_api.candidates_json(
+          mirage_migration_engine.get_migration_candidates(),
+        ),
+      )
     "/api/v1/mirage/status" ->
-      json.to_string(mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state()))
+      json.to_string(
+        mirage_api.unikernel_status_json(
+          mirage_unikernel_daemon.new_daemon_state(),
+        ),
+      )
     "/api/v1/mirage/hypervisors" ->
       json.to_string(mirage_api.hypervisors_json())
-    "/api/v1/mirage/telemetry" ->
-      json.to_string(mirage_api.telemetry_json())
+    "/api/v1/mirage/telemetry" -> json.to_string(mirage_api.telemetry_json())
     "/api/v1/forecast/layers" ->
       fractal_forecast.all_layers_forecast_json() |> json.to_string
     "/api/v1/forecast/health" ->
       fractal_forecast.forecast_health_json() |> json.to_string
     "/api/v1/components" ->
-      module_guard.unwrap(module_guard.guard_json(component_demo_json(), "components", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        component_demo_json(),
+        "components",
+        "page",
+      ))
     "/api/v1/sciviz" ->
       json.object([
         #("suite", json.string("SciViz Scientific Visualization")),
         #("total_components", json.int(356)),
         #("unbounded_passes", json.int(15)),
-        #("merkle_head", json.string("bad1af394e3a261eeb31838e9ceb10e45e420f9f1bd4e6fd9a236406d68c8f31")),
+        #(
+          "merkle_head",
+          json.string(
+            "bad1af394e3a261eeb31838e9ceb10e45e420f9f1bd4e6fd9a236406d68c8f31",
+          ),
+        ),
         #("provenance_seq", json.int(429)),
         #("sovereignty", json.string("worker-claude")),
         #("purity", json.string("zero-muda-pure-lustre-ssr")),
@@ -281,7 +453,10 @@ fn route_internal(path: String) -> String {
       |> json.to_string
     "/api/v1/sciviz/tests" ->
       json.object([
-        #("test_suite", json.string("SciViz 9-Modality Comprehensive Test Cockpit")),
+        #(
+          "test_suite",
+          json.string("SciViz 9-Modality Comprehensive Test Cockpit"),
+        ),
         #("total_use_cases", json.int(15)),
         #("modalities_verified", json.int(9)),
         #("status", json.string("ALL_15_TESTS_PASS")),
@@ -313,7 +488,7 @@ fn route_internal(path: String) -> String {
         #("flagship_author", json.string("EvaMaeRey")),
         #("categories", json.int(16)),
         #("total_bdd_scenarios", json.int(798)),
-        #("total_records_modeled", json.int(17800000)),
+        #("total_records_modeled", json.int(17_800_000)),
         #("status", json.string("ALL_167_ASPECTS_VERIFIED")),
         #("test_coverage", json.string("100%_BESPOKE_167_TESTS_VERIFIED")),
         #("pure_svg_displays", json.bool(True)),
@@ -331,16 +506,25 @@ fn route_internal(path: String) -> String {
       transpiler.to_json(transpiler.transpile_preset("swarm"))
     "/api/v1/sciviz/synthetic-envelopes" ->
       json.object([
-        #("feature", json.string("SciViz Full Feature Envelope Synthetic Datasets")),
+        #(
+          "feature",
+          json.string("SciViz Full Feature Envelope Synthetic Datasets"),
+        ),
         #("total_envelopes", json.int(15)),
         #("boundary_cases_verified", json.bool(True)),
-        #("distributions_covered", json.array([
-          "UncertaintyDistribution", "NetworkTopology", "FlowAlluvialSankey",
-          "HierarchicalPartition", "SurvivalTimeEvent", "MultiFacetDensity",
-          "CorrelationMatrix", "GeospatialVectorField", "GenomicKaryotype",
-          "TernaryBarycentric", "TimeSeriesARIMA", "SplineQuantile",
-          "CategoricalMosaic", "MarginalScatter", "CompositeMultiPanel",
-        ], json.string)),
+        #(
+          "distributions_covered",
+          json.array(
+            [
+              "UncertaintyDistribution", "NetworkTopology", "FlowAlluvialSankey",
+              "HierarchicalPartition", "SurvivalTimeEvent", "MultiFacetDensity",
+              "CorrelationMatrix", "GeospatialVectorField", "GenomicKaryotype",
+              "TernaryBarycentric", "TimeSeriesARIMA", "SplineQuantile",
+              "CategoricalMosaic", "MarginalScatter", "CompositeMultiPanel",
+            ],
+            json.string,
+          ),
+        ),
         #("status", json.string("FULL_ENVELOPE_VERIFIED")),
         #("zero_muda", json.bool(True)),
         #("drive_locked", json.string("25503L801736")),
@@ -409,122 +593,271 @@ fn route_internal(path: String) -> String {
       fractal_triad_matrix_engine.encode_claude_verification_json()
     }
     "/api/v1/allium" ->
-      module_guard.unwrap(module_guard.guard_json(allium_list_json(), "allium", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        allium_list_json(),
+        "allium",
+        "page",
+      ))
     "/api/v1/allium/ignition" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("ignition"), "allium/ignition"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("ignition"),
+        "allium/ignition",
+      ))
     "/api/v1/allium/gleam_webui_comprehensive" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("gleam_webui_comprehensive"), "allium/gleam_webui_comprehensive"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("gleam_webui_comprehensive"),
+        "allium/gleam_webui_comprehensive",
+      ))
     "/api/v1/allium/fractal_agentic_ui" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("fractal_agentic_ui"), "allium/fractal_agentic_ui"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("fractal_agentic_ui"),
+        "allium/fractal_agentic_ui",
+      ))
     "/api/v1/allium/control_center_operator_interface" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("control_center_operator_interface"), "allium/control_center_operator_interface"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("control_center_operator_interface"),
+        "allium/control_center_operator_interface",
+      ))
     "/api/v1/allium/webui_evolution_plan" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("webui_evolution_plan"), "allium/webui_evolution_plan"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("webui_evolution_plan"),
+        "allium/webui_evolution_plan",
+      ))
     "/api/v1/allium/webui_operational_control" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("webui_operational_control"), "allium/webui_operational_control"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("webui_operational_control"),
+        "allium/webui_operational_control",
+      ))
     "/api/v1/allium/webui_production_hardening" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("webui_production_hardening"), "allium/webui_production_hardening"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("webui_production_hardening"),
+        "allium/webui_production_hardening",
+      ))
     "/api/v1/allium/testing_architecture" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("testing_architecture"), "allium/testing_architecture"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("testing_architecture"),
+        "allium/testing_architecture",
+      ))
     "/api/v1/allium/ui_testing_framework" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("ui_testing_framework"), "allium/ui_testing_framework"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("ui_testing_framework"),
+        "allium/ui_testing_framework",
+      ))
     "/api/v1/allium/zmof" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("zmof"), "allium/zmof"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("zmof"),
+        "allium/zmof",
+      ))
     "/api/v1/allium/zenoh_ffi" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("zenoh_ffi"), "allium/zenoh_ffi"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("zenoh_ffi"),
+        "allium/zenoh_ffi",
+      ))
     "/api/v1/allium/dashboard_50_improvements" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("dashboard_50_improvements"), "allium/dashboard_50_improvements"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("dashboard_50_improvements"),
+        "allium/dashboard_50_improvements",
+      ))
     "/api/v1/allium/operator_hmi_standards" ->
-      module_guard.unwrap(module_guard.guard_json_nonempty(allium_spec_json("operator_hmi_standards"), "allium/operator_hmi_standards"))
+      module_guard.unwrap(module_guard.guard_json_nonempty(
+        allium_spec_json("operator_hmi_standards"),
+        "allium/operator_hmi_standards",
+      ))
     // Safety and Enforcer (Planning Panels 3 & 4)
     "/api/safety/status" | "/api/v1/safety" ->
-      module_guard.unwrap(module_guard.guard_json(safety_json(), "safety", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        safety_json(),
+        "safety",
+        "page",
+      ))
     "/api/enforcer/status" | "/api/v1/enforcer" ->
-      module_guard.unwrap(module_guard.guard_json(enforcer_json(), "enforcer", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        enforcer_json(),
+        "enforcer",
+        "page",
+      ))
     // New planning modules (Wave 2-7)
     "/api/ooda/status" | "/api/v1/ooda" ->
       module_guard.unwrap(module_guard.guard_json(ooda_json(), "ooda", "page"))
     "/api/v1/ooda/decide" ->
-      module_guard.unwrap(module_guard.guard_json(ooda_decide_json(), "ooda/decide", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        ooda_decide_json(),
+        "ooda/decide",
+        "page",
+      ))
     "/api/orchestration/status" | "/api/v1/orchestration" ->
-      module_guard.unwrap(module_guard.guard_json(orchestration_status_json(), "orchestration", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        orchestration_status_json(),
+        "orchestration",
+        "page",
+      ))
     "/api/graph/verify" | "/api/v1/graph" ->
-      module_guard.unwrap(module_guard.guard_json(graph_verification_json(), "graph", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        graph_verification_json(),
+        "graph",
+        "page",
+      ))
     "/api/access/policy" | "/api/v1/access" ->
-      module_guard.unwrap(module_guard.guard_json(access_control_json(), "access", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        access_control_json(),
+        "access",
+        "page",
+      ))
     "/api/chaya/sync" | "/api/v1/chaya" ->
-      module_guard.unwrap(module_guard.guard_json(chaya_sync_json(), "chaya", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        chaya_sync_json(),
+        "chaya",
+        "page",
+      ))
     "/api/math/optimize" | "/api/v1/math" ->
-      module_guard.unwrap(module_guard.guard_json(math_optimization_json(), "math", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        math_optimization_json(),
+        "math",
+        "page",
+      ))
     // New modules (Prajna, Agents, Holon, Config, Git, DB, Bridge, Smriti)
     "/api/prajna/health" | "/api/v1/prajna" ->
-      module_guard.unwrap(module_guard.guard_json(prajna_health_json(), "prajna", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        prajna_health_json(),
+        "prajna",
+        "page",
+      ))
     "/api/agents/hierarchy" | "/api/v1/agents" ->
-      module_guard.unwrap(module_guard.guard_json(agents_hierarchy_json(), "agents", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        agents_hierarchy_json(),
+        "agents",
+        "page",
+      ))
     "/api/holon/identity" | "/api/v1/holon" ->
-      module_guard.unwrap(module_guard.guard_json(holon_identity_json(), "holon", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        holon_identity_json(),
+        "holon",
+        "page",
+      ))
     "/api/config/mesh" | "/api/v1/config" ->
-      module_guard.unwrap(module_guard.guard_json(mesh_config_json(), "config", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        mesh_config_json(),
+        "config",
+        "page",
+      ))
     "/api/git/health" | "/api/v1/git" ->
-      module_guard.unwrap(module_guard.guard_json(git_intelligence_json(), "git", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        git_intelligence_json(),
+        "git",
+        "page",
+      ))
     "/api/db/status" | "/api/v1/db" ->
-      module_guard.unwrap(module_guard.guard_json(db_status_json(), "db", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        db_status_json(),
+        "db",
+        "page",
+      ))
     "/api/bridge/status" | "/api/v1/bridge" ->
-      module_guard.unwrap(module_guard.guard_json(bridge_status_json(), "bridge", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        bridge_status_json(),
+        "bridge",
+        "page",
+      ))
     "/api/smriti/catalog" | "/api/v1/smriti" ->
-      module_guard.unwrap(module_guard.guard_json(smriti_catalog_json(), "smriti", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        smriti_catalog_json(),
+        "smriti",
+        "page",
+      ))
     // Health Grid + Planning Dashboard (SC-GLM-UI-007 parity)
     "/api/health-grid/status" | "/api/v1/health_grid" ->
-      module_guard.unwrap(module_guard.guard_json(health_grid_status_json(), "health_grid", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        health_grid_status_json(),
+        "health_grid",
+        "page",
+      ))
     "/api/planning-dashboard/status" | "/api/v1/planning_dashboard" ->
-      module_guard.unwrap(module_guard.guard_json(planning_dashboard_status_json(), "planning_dashboard", "page"))
+      module_guard.unwrap(module_guard.guard_json(
+        planning_dashboard_status_json(),
+        "planning_dashboard",
+        "page",
+      ))
     // L7 Federation routes
     "/api/federation/status" | "/api/v1/federation" ->
-      module_guard.unwrap(module_guard.guard_json(federation_status_json(), "federation", "plane"))
+      module_guard.unwrap(module_guard.guard_json(
+        federation_status_json(),
+        "federation",
+        "plane",
+      ))
     // Guardian lane routes (T010) — L0 Constitutional (SC-SAFETY-001)
     "/api/v1/guardian/pending" ->
-      module_guard.unwrap(module_guard.guard_json(guardian_pending_json(), "guardian/pending", "pending"))
+      module_guard.unwrap(module_guard.guard_json(
+        guardian_pending_json(),
+        "guardian/pending",
+        "pending",
+      ))
     // Planning NIF routes (Rust NIF -> Smriti.db, SC-TODO-001, SC-ZMOF-005)
     "/api/v1/plan/status" ->
-      module_guard.unwrap(module_guard.guard_nif(c3i_nif.plan_status(), "plan_status"))
+      module_guard.unwrap(module_guard.guard_nif(
+        c3i_nif.plan_status(),
+        "plan_status",
+      ))
     "/api/v1/plan/pending" ->
-      module_guard.unwrap(module_guard.guard_nif_array(c3i_nif.plan_list_pending(), "plan_pending"))
+      module_guard.unwrap(module_guard.guard_nif_array(
+        c3i_nif.plan_list_pending(),
+        "plan_pending",
+      ))
     "/api/v1/plan/list/pending" ->
-      module_guard.unwrap(module_guard.guard_nif_array(c3i_nif.plan_list_by_status("pending"), "plan_list_pending"))
+      module_guard.unwrap(module_guard.guard_nif_array(
+        c3i_nif.plan_list_by_status("pending"),
+        "plan_list_pending",
+      ))
     "/api/v1/plan/list/in_progress" ->
-      module_guard.unwrap(module_guard.guard_nif_array(c3i_nif.plan_list_by_status("in_progress"), "plan_list_in_progress"))
+      module_guard.unwrap(module_guard.guard_nif_array(
+        c3i_nif.plan_list_by_status("in_progress"),
+        "plan_list_in_progress",
+      ))
     "/api/v1/plan/list/completed" ->
-      module_guard.unwrap(module_guard.guard_nif_array(c3i_nif.plan_list_by_status("completed"), "plan_list_completed"))
+      module_guard.unwrap(module_guard.guard_nif_array(
+        c3i_nif.plan_list_by_status("completed"),
+        "plan_list_completed",
+      ))
     "/api/v1/plan/list/blocked" ->
-      module_guard.unwrap(module_guard.guard_nif_array(c3i_nif.plan_list_by_status("blocked"), "plan_list_blocked"))
+      module_guard.unwrap(module_guard.guard_nif_array(
+        c3i_nif.plan_list_by_status("blocked"),
+        "plan_list_blocked",
+      ))
     "/api/v1/plan/list/all" ->
-      module_guard.unwrap(module_guard.guard_nif_array(c3i_nif.plan_list_by_status("all"), "plan_list_all"))
+      module_guard.unwrap(module_guard.guard_nif_array(
+        c3i_nif.plan_list_by_status("all"),
+        "plan_list_all",
+      ))
     // Workflow Monitor (WF-3) — durable execution history (SC-HA-001)
     "/api/v1/workflows" ->
       "{\"workflows\":[],\"message\":\"Use sa-plan-daemon workflow-list for full history\"}"
     // Page-spec checker (SC-PAGE-SPEC-001..008) — every page MUST verify itself against its spec
     "/api/v1/page-spec/planning" -> planning_page_spec_check()
-    "/api/v1/page-spec/dashboard" -> generic_page_spec_check("dashboard", "/dashboard", [
-      #("system_health", c3i_nif.system_health()),
-      #("system_dashboard", c3i_nif.system_dashboard()),
-      #("plan_status", c3i_nif.plan_status()),
-    ])
-    "/api/v1/page-spec/immune" -> generic_page_spec_check("immune", "/immune", [
-      #("system_immune", c3i_nif.system_immune()),
-      #("system_health", c3i_nif.system_health()),
-    ])
-    "/api/v1/page-spec/knowledge" -> generic_page_spec_check("knowledge", "/knowledge", [
-      #("knowledge_search", c3i_nif.knowledge_search("planning")),
-      #("plan_search", c3i_nif.plan_search("")),
-    ])
-    "/api/v1/page-spec/verification" -> generic_page_spec_check("verification", "/verification", [
-      #("system_verification", c3i_nif.system_verification()),
-      #("system_health", c3i_nif.system_health()),
-    ])
-    "/api/v1/page-spec/zenoh" -> generic_page_spec_check("zenoh", "/zenoh", [
-      #("system_zenoh", c3i_nif.system_zenoh()),
-      #("system_health", c3i_nif.system_health()),
-    ])
+    "/api/v1/page-spec/dashboard" ->
+      generic_page_spec_check("dashboard", "/dashboard", [
+        #("system_health", c3i_nif.system_health()),
+        #("system_dashboard", c3i_nif.system_dashboard()),
+        #("plan_status", c3i_nif.plan_status()),
+      ])
+    "/api/v1/page-spec/immune" ->
+      generic_page_spec_check("immune", "/immune", [
+        #("system_immune", c3i_nif.system_immune()),
+        #("system_health", c3i_nif.system_health()),
+      ])
+    "/api/v1/page-spec/knowledge" ->
+      generic_page_spec_check("knowledge", "/knowledge", [
+        #("knowledge_search", c3i_nif.knowledge_search("planning")),
+        #("plan_search", c3i_nif.plan_search("")),
+      ])
+    "/api/v1/page-spec/verification" ->
+      generic_page_spec_check("verification", "/verification", [
+        #("system_verification", c3i_nif.system_verification()),
+        #("system_health", c3i_nif.system_health()),
+      ])
+    "/api/v1/page-spec/zenoh" ->
+      generic_page_spec_check("zenoh", "/zenoh", [
+        #("system_zenoh", c3i_nif.system_zenoh()),
+        #("system_health", c3i_nif.system_health()),
+      ])
     "/api/v1/page-spec/all" -> page_spec_all_check()
     "/api/v1/page-spec" -> page_spec_index()
     // AG-UI protocol routes (SSE event streams)
@@ -534,108 +867,111 @@ fn route_internal(path: String) -> String {
     "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
       agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config())
     "/ag-ui/manifest" -> agui_sse_api.agui_manifest_summary_json()
-    "/api/v1/homeostasis/stream" -> agui_sse_api.homeostasis_telemetry_sse_stream()
+    "/api/v1/homeostasis/stream" ->
+      agui_sse_api.homeostasis_telemetry_sse_stream()
     _ -> {
       case homeostasis_api.response(path) {
         option.Some(body) -> body
         option.None ->
           case string.starts_with(path, "/api/v1/ets/put?") {
-        True -> {
-          let params = string.drop_start(path, string.length("/api/v1/ets/put?"))
-          let k = extract_query_param(params, "key=")
-          let v = case extract_query_param(params, "val=") {
-            "" -> extract_query_param(params, "value=")
-            val -> val
-          }
-          case k != "" {
             True -> {
-              let _ = ets_zenoh_bridge.put_state(k, v)
-              json.object([
-                #("status", json.string("ok")),
-                #("key", json.string(k)),
-                #("value", json.string(v)),
-                #("persisted_in_ets", json.bool(True)),
-                #("published_to_zenoh", json.bool(True)),
-              ])
-              |> json.to_string
-            }
-            False ->
-              json.object([
-                #("status", json.string("error")),
-                #("message", json.string("missing_key")),
-              ])
-              |> json.to_string
-          }
-        }
-        False ->
-      case string.starts_with(path, "/api/v1/ets/") {
-        True -> {
-          let key = string.drop_start(path, string.length("/api/v1/ets/"))
-          case ets_zenoh_bridge.get_state(key) {
-            Ok(val) ->
-              json.object([
-                #("status", json.string("ok")),
-                #("key", json.string(key)),
-                #("value", json.string(val)),
-                #("found", json.bool(True)),
-              ])
-              |> json.to_string
-            Error(err) ->
-              json.object([
-                #("status", json.string("not_found")),
-                #("key", json.string(key)),
-                #("error", json.string(err)),
-                #("found", json.bool(False)),
-              ])
-              |> json.to_string
-          }
-        }
-        False ->
-      // Dynamic route matching for paths with query parameters
-      // Pass-23 — P1 #5 server-side pagination (SC-AGUI-UI-013).
-      // Matches "/api/v1/planning/page?status=X&offset=N&limit=M".
-      // Pure additive: original "/api/v1/planning" full-list route unchanged.
-      case string.starts_with(path, "/api/v1/planning/page") {
-        True -> planning_paginated_json(path)
-        False ->
-      case string.starts_with(path, "/api/v1/plan/search") {
-        True -> {
-          let query = case string.split(path, "q=") {
-            [_, q] -> string.replace(q, "%20", " ")
-            _ -> ""
-          }
-          c3i_nif.plan_search(query)
-        }
-        False ->
-          // SC-AGUI-UI-003 — real Zettelkasten search via existing
-          // c3i_nif::knowledge_search (FTS5 over Smriti.db). Unblocks
-          // the planning-grid.js fallback chain (was 404, now real ZK).
-          case string.starts_with(path, "/api/v1/zk/search") {
-            True -> {
-              let query = case string.split(path, "q=") {
-                [_, q] -> string.replace(q, "%20", " ")
-                _ -> ""
+              let params =
+                string.drop_start(path, string.length("/api/v1/ets/put?"))
+              let k = extract_query_param(params, "key=")
+              let v = case extract_query_param(params, "val=") {
+                "" -> extract_query_param(params, "value=")
+                val -> val
               }
-              c3i_nif.knowledge_search(query)
-            }
-            False ->
-              case string.starts_with(path, "/api/v1/ai/chat") {
+              case k != "" {
                 True -> {
-                  let query = case string.split(path, "q=") {
-                    [_, q] ->
-                      string.replace(q, "%20", " ")
-                      |> string.replace("+", " ")
-                    _ -> "status"
-                  }
-                  ai_chat_response(query)
+                  let _ = ets_zenoh_bridge.put_state(k, v)
+                  json.object([
+                    #("status", json.string("ok")),
+                    #("key", json.string(k)),
+                    #("value", json.string(v)),
+                    #("persisted_in_ets", json.bool(True)),
+                    #("published_to_zenoh", json.bool(True)),
+                  ])
+                  |> json.to_string
                 }
-                False -> not_found_json(path)
+                False ->
+                  json.object([
+                    #("status", json.string("error")),
+                    #("message", json.string("missing_key")),
+                  ])
+                  |> json.to_string
+              }
+            }
+            False ->
+              case string.starts_with(path, "/api/v1/ets/") {
+                True -> {
+                  let key =
+                    string.drop_start(path, string.length("/api/v1/ets/"))
+                  case ets_zenoh_bridge.get_state(key) {
+                    Ok(val) ->
+                      json.object([
+                        #("status", json.string("ok")),
+                        #("key", json.string(key)),
+                        #("value", json.string(val)),
+                        #("found", json.bool(True)),
+                      ])
+                      |> json.to_string
+                    Error(err) ->
+                      json.object([
+                        #("status", json.string("not_found")),
+                        #("key", json.string(key)),
+                        #("error", json.string(err)),
+                        #("found", json.bool(False)),
+                      ])
+                      |> json.to_string
+                  }
+                }
+                False ->
+                  // Dynamic route matching for paths with query parameters
+                  // Pass-23 — P1 #5 server-side pagination (SC-AGUI-UI-013).
+                  // Matches "/api/v1/planning/page?status=X&offset=N&limit=M".
+                  // Pure additive: original "/api/v1/planning" full-list route unchanged.
+                  case string.starts_with(path, "/api/v1/planning/page") {
+                    True -> planning_paginated_json(path)
+                    False ->
+                      case string.starts_with(path, "/api/v1/plan/search") {
+                        True -> {
+                          let query = case string.split(path, "q=") {
+                            [_, q] -> string.replace(q, "%20", " ")
+                            _ -> ""
+                          }
+                          c3i_nif.plan_search(query)
+                        }
+                        False ->
+                          // SC-AGUI-UI-003 — real Zettelkasten search via existing
+                          // c3i_nif::knowledge_search (FTS5 over Smriti.db). Unblocks
+                          // the planning-grid.js fallback chain (was 404, now real ZK).
+                          case string.starts_with(path, "/api/v1/zk/search") {
+                            True -> {
+                              let query = case string.split(path, "q=") {
+                                [_, q] -> string.replace(q, "%20", " ")
+                                _ -> ""
+                              }
+                              c3i_nif.knowledge_search(query)
+                            }
+                            False ->
+                              case string.starts_with(path, "/api/v1/ai/chat") {
+                                True -> {
+                                  let query = case string.split(path, "q=") {
+                                    [_, q] ->
+                                      string.replace(q, "%20", " ")
+                                      |> string.replace("+", " ")
+                                    _ -> "status"
+                                  }
+                                  ai_chat_response(query)
+                                }
+                                False -> not_found_json(path)
+                              }
+                          }
+                      }
+                  }
               }
           }
-      }
-      }
-      }
-      }
       }
     }
   }
@@ -653,17 +989,8 @@ fn extract_query_param(query_str: String, param_name: String) -> String {
   }
 }
 
-/// Planning tasks endpoint — NIF-backed real data from Smriti.db (SC-TODO-001)
 fn planning_json() -> String {
-  let status_json = c3i_nif.plan_status()
-  let pending_json = c3i_nif.plan_list_pending()
-  json.object([
-    #("page", json.string("Planning")),
-    #("status", json.string("active")),
-    #("summary_raw", json.string(status_json)),
-    #("pending_raw", json.string(pending_json)),
-  ])
-  |> json.to_string()
+  execution_observer.observe() |> execution_observer.response |> json.to_string
 }
 
 /// Planning SSE stream — pushes current task status as SSE events.
@@ -675,10 +1002,18 @@ fn planning_sse_stream() -> String {
   let blocked = c3i_nif.plan_list_by_status("blocked")
   // Format as SSE events
   "retry: 3000\n\n"
-  <> "event: status\ndata: " <> status <> "\n\n"
-  <> "event: active\ndata: " <> active <> "\n\n"
-  <> "event: blocked\ndata: " <> blocked <> "\n\n"
-  <> "event: heartbeat\ndata: {\"ts\":" <> int.to_string(router_system_time_nanos() / 1_000_000) <> "}\n\n"
+  <> "event: status\ndata: "
+  <> status
+  <> "\n\n"
+  <> "event: active\ndata: "
+  <> active
+  <> "\n\n"
+  <> "event: blocked\ndata: "
+  <> blocked
+  <> "\n\n"
+  <> "event: heartbeat\ndata: {\"ts\":"
+  <> int.to_string(router_system_time_nanos() / 1_000_000)
+  <> "}\n\n"
 }
 
 /// AI agent status — reports Gemma 4 availability on Ollama
@@ -690,11 +1025,20 @@ fn ai_status_json() -> String {
     #("fallback_model", json.string("gemma3:latest")),
     #("fallback_port", json.int(11_434)),
     #("status", json.string("available")),
-    #("capabilities", json.array(
-      ["task_analysis", "priority_suggestion", "risk_assessment",
-       "knowledge_qa", "natural_language_search", "summarization"],
-      json.string,
-    )),
+    #(
+      "capabilities",
+      json.array(
+        [
+          "task_analysis",
+          "priority_suggestion",
+          "risk_assessment",
+          "knowledge_qa",
+          "natural_language_search",
+          "summarization",
+        ],
+        json.string,
+      ),
+    ),
   ])
   |> json.to_string()
 }
@@ -706,17 +1050,19 @@ fn ai_status_json() -> String {
 fn ai_chat_response(query: String) -> String {
   let status = c3i_nif.plan_status()
   // Build context-enriched prompt
-  let system_prompt = "You are the C3I Planning AI assistant. Current task status: "
+  let system_prompt =
+    "You are the C3I Planning AI assistant. Current task status: "
     <> status
     <> ". You help operators analyze tasks, suggest priorities, assess risks, "
     <> "and answer questions about the planning system. Be concise and actionable."
-  let prompt_json = json.object([
-    #("model", json.string("gemma4")),
-    #("prompt", json.string(query)),
-    #("system", json.string(system_prompt)),
-    #("stream", json.bool(False)),
-  ])
-  |> json.to_string()
+  let prompt_json =
+    json.object([
+      #("model", json.string("gemma4")),
+      #("prompt", json.string(query)),
+      #("system", json.string(system_prompt)),
+      #("stream", json.bool(False)),
+    ])
+    |> json.to_string()
   // Call Ollama via NIF or return context if Ollama unreachable
   let search_results = c3i_nif.plan_search(query)
   json.object([
@@ -725,7 +1071,12 @@ fn ai_chat_response(query: String) -> String {
     #("context", json.string(status)),
     #("search_results_raw", json.string(search_results)),
     #("ollama_prompt", json.string(prompt_json)),
-    #("hint", json.string("POST this ollama_prompt to http://localhost:11435/api/generate for Gemma 4 response")),
+    #(
+      "hint",
+      json.string(
+        "POST this ollama_prompt to http://localhost:11435/api/generate for Gemma 4 response",
+      ),
+    ),
   ])
   |> json.to_string()
 }
@@ -747,7 +1098,8 @@ fn planning_page_spec_check() -> String {
   // AS-IS — probe each NIF; non-empty JSON = present
   let probe = fn(name: String, payload: String) -> #(String, Bool) {
     let trimmed = string.trim(payload)
-    let ok = string.length(trimmed) >= 2 && !string.contains(trimmed, "\"error\"")
+    let ok =
+      string.length(trimmed) >= 2 && !string.contains(trimmed, "\"error\"")
     #(name, ok)
   }
   let results = [
@@ -759,12 +1111,13 @@ fn planning_page_spec_check() -> String {
     probe("plan_search", c3i_nif.plan_search("")),
     probe("knowledge_search", c3i_nif.knowledge_search("planning")),
   ]
-  let present_count = list.fold(results, 0, fn(acc, r) {
-    case r {
-      #(_, True) -> acc + 1
-      _ -> acc
-    }
-  })
+  let present_count =
+    list.fold(results, 0, fn(acc, r) {
+      case r {
+        #(_, True) -> acc + 1
+        _ -> acc
+      }
+    })
   let expected_count = list.length(required_endpoints)
   // Jaccard: |∩|/|∪| — since AS-IS ⊆ EXPECTED, |∪| = expected_count
   let score_pct = case expected_count {
@@ -776,10 +1129,11 @@ fn planning_page_spec_check() -> String {
     s if s >= 70 -> "DRIFT"
     _ -> "MISALIGNED"
   }
-  let probes_json = list.map(results, fn(r) {
-    let #(n, ok) = r
-    json.object([#("endpoint", json.string(n)), #("present", json.bool(ok))])
-  })
+  let probes_json =
+    list.map(results, fn(r) {
+      let #(n, ok) = r
+      json.object([#("endpoint", json.string(n)), #("present", json.bool(ok))])
+    })
   json.object([
     #("page", json.string("planning")),
     #("path", json.string("/planning")),
@@ -789,10 +1143,13 @@ fn planning_page_spec_check() -> String {
     #("expected", json.int(expected_count)),
     #("alignment_score_pct", json.int(score_pct)),
     #("alignment_status", json.string(alignment_status)),
-    #("stamp", json.array(
-      ["SC-PAGE-SPEC-001", "SC-PAGE-SPEC-002", "SC-PAGE-SPEC-003"],
-      json.string,
-    )),
+    #(
+      "stamp",
+      json.array(
+        ["SC-PAGE-SPEC-001", "SC-PAGE-SPEC-002", "SC-PAGE-SPEC-003"],
+        json.string,
+      ),
+    ),
     #("checked_at_ms", json.int(router_system_time_nanos() / 1_000_000)),
   ])
   |> json.to_string()
@@ -806,18 +1163,21 @@ fn generic_page_spec_check(
   path: String,
   endpoints: List(#(String, String)),
 ) -> String {
-  let results = list.map(endpoints, fn(e) {
-    let #(name, payload) = e
-    let trimmed = string.trim(payload)
-    let ok = string.length(trimmed) >= 2 && !string.contains(trimmed, "\"error\"")
-    #(name, ok)
-  })
-  let present_count = list.fold(results, 0, fn(acc, r) {
-    case r {
-      #(_, True) -> acc + 1
-      _ -> acc
-    }
-  })
+  let results =
+    list.map(endpoints, fn(e) {
+      let #(name, payload) = e
+      let trimmed = string.trim(payload)
+      let ok =
+        string.length(trimmed) >= 2 && !string.contains(trimmed, "\"error\"")
+      #(name, ok)
+    })
+  let present_count =
+    list.fold(results, 0, fn(acc, r) {
+      case r {
+        #(_, True) -> acc + 1
+        _ -> acc
+      }
+    })
   let expected_count = list.length(endpoints)
   let score_pct = case expected_count {
     0 -> 0
@@ -828,10 +1188,11 @@ fn generic_page_spec_check(
     s if s >= 70 -> "DRIFT"
     _ -> "MISALIGNED"
   }
-  let probes_json = list.map(results, fn(r) {
-    let #(n, ok) = r
-    json.object([#("endpoint", json.string(n)), #("present", json.bool(ok))])
-  })
+  let probes_json =
+    list.map(results, fn(r) {
+      let #(n, ok) = r
+      json.object([#("endpoint", json.string(n)), #("present", json.bool(ok))])
+    })
   let endpoint_names = list.map(endpoints, fn(e) { e.0 })
   json.object([
     #("page", json.string(page)),
@@ -842,10 +1203,13 @@ fn generic_page_spec_check(
     #("expected", json.int(expected_count)),
     #("alignment_score_pct", json.int(score_pct)),
     #("alignment_status", json.string(alignment_status)),
-    #("stamp", json.array(
-      ["SC-PAGE-SPEC-001", "SC-PAGE-SPEC-002", "SC-PAGE-SPEC-003"],
-      json.string,
-    )),
+    #(
+      "stamp",
+      json.array(
+        ["SC-PAGE-SPEC-001", "SC-PAGE-SPEC-002", "SC-PAGE-SPEC-003"],
+        json.string,
+      ),
+    ),
     #("checked_at_ms", json.int(router_system_time_nanos() / 1_000_000)),
   ])
   |> json.to_string()
@@ -855,36 +1219,55 @@ fn generic_page_spec_check(
 fn page_spec_all_check() -> String {
   let checkers = [
     #("planning", planning_page_spec_check()),
-    #("dashboard", generic_page_spec_check("dashboard", "/dashboard", [
-      #("system_health", c3i_nif.system_health()),
-      #("system_dashboard", c3i_nif.system_dashboard()),
-      #("plan_status", c3i_nif.plan_status()),
-    ])),
-    #("immune", generic_page_spec_check("immune", "/immune", [
-      #("system_immune", c3i_nif.system_immune()),
-      #("system_health", c3i_nif.system_health()),
-    ])),
-    #("knowledge", generic_page_spec_check("knowledge", "/knowledge", [
-      #("knowledge_search", c3i_nif.knowledge_search("planning")),
-      #("plan_search", c3i_nif.plan_search("")),
-    ])),
-    #("verification", generic_page_spec_check("verification", "/verification", [
-      #("system_verification", c3i_nif.system_verification()),
-      #("system_health", c3i_nif.system_health()),
-    ])),
-    #("zenoh", generic_page_spec_check("zenoh", "/zenoh", [
-      #("system_zenoh", c3i_nif.system_zenoh()),
-      #("system_health", c3i_nif.system_health()),
-    ])),
+    #(
+      "dashboard",
+      generic_page_spec_check("dashboard", "/dashboard", [
+        #("system_health", c3i_nif.system_health()),
+        #("system_dashboard", c3i_nif.system_dashboard()),
+        #("plan_status", c3i_nif.plan_status()),
+      ]),
+    ),
+    #(
+      "immune",
+      generic_page_spec_check("immune", "/immune", [
+        #("system_immune", c3i_nif.system_immune()),
+        #("system_health", c3i_nif.system_health()),
+      ]),
+    ),
+    #(
+      "knowledge",
+      generic_page_spec_check("knowledge", "/knowledge", [
+        #("knowledge_search", c3i_nif.knowledge_search("planning")),
+        #("plan_search", c3i_nif.plan_search("")),
+      ]),
+    ),
+    #(
+      "verification",
+      generic_page_spec_check("verification", "/verification", [
+        #("system_verification", c3i_nif.system_verification()),
+        #("system_health", c3i_nif.system_health()),
+      ]),
+    ),
+    #(
+      "zenoh",
+      generic_page_spec_check("zenoh", "/zenoh", [
+        #("system_zenoh", c3i_nif.system_zenoh()),
+        #("system_health", c3i_nif.system_health()),
+      ]),
+    ),
   ]
   // Embed each result raw — they are already JSON strings.
-  let entries = list.map(checkers, fn(c) {
-    let #(name, payload) = c
-    "\"" <> name <> "\":" <> payload
-  })
+  let entries =
+    list.map(checkers, fn(c) {
+      let #(name, payload) = c
+      "\"" <> name <> "\":" <> payload
+    })
   let body = string.join(entries, ",")
-  "{\"pages\":{" <> body <> "},\"total\":6,\"checked_at_ms\":"
-    <> int.to_string(router_system_time_nanos() / 1_000_000) <> "}"
+  "{\"pages\":{"
+  <> body
+  <> "},\"total\":6,\"checked_at_ms\":"
+  <> int.to_string(router_system_time_nanos() / 1_000_000)
+  <> "}"
 }
 
 /// Page-spec index — lists pages with available checkers.
@@ -902,7 +1285,10 @@ fn page_spec_index() -> String {
     #("checkers", json.array(checkers, json.string)),
     #("total", json.int(7)),
     #("coverage", json.string("6/31 pages — 19.4%. Phase I lite expansion.")),
-    #("anti_pattern_guard", json.string("zk-3346fc607a1ef9e6 — empty/error envelopes correctly fail")),
+    #(
+      "anti_pattern_guard",
+      json.string("zk-3346fc607a1ef9e6 — empty/error envelopes correctly fail"),
+    ),
   ])
   |> json.to_string()
 }
@@ -1015,10 +1401,7 @@ fn dq_status_json() -> String {
     // Live counts — reuse the plan_status NIF that already powers /api/v1/dashboard
     #("plan_status", json.string(c3i_nif.plan_status())),
     // Canonical enum sets (mirrors db.rs::VALID_PRIORITIES / VALID_STATUSES)
-    #(
-      "canonical_priorities",
-      json.array(["P0", "P1", "P2", "P3"], json.string),
-    ),
+    #("canonical_priorities", json.array(["P0", "P1", "P2", "P3"], json.string)),
     #(
       "canonical_statuses",
       json.array(
@@ -1121,10 +1504,17 @@ fn dq_status_json() -> String {
         },
       ),
     ),
-    #("stamp_families", json.array(
-      ["SC-VALUE-GUARD-001..008", "SC-PAGE-SPEC-001..008", "SC-TRUTH-001..010"],
-      json.string,
-    )),
+    #(
+      "stamp_families",
+      json.array(
+        [
+          "SC-VALUE-GUARD-001..008",
+          "SC-PAGE-SPEC-001..008",
+          "SC-TRUTH-001..010",
+        ],
+        json.string,
+      ),
+    ),
   ])
   |> json.to_string()
 }
@@ -1178,18 +1568,43 @@ fn dashboard_json() -> String {
 fn dashboard_supervisors_json() -> String {
   json.object([
     #("page", json.string("Dashboard Supervisors")),
-    #("exec_001", json.object([
-      #("name", json.string("EXEC-001")),
-      #("model", json.string("opus")),
-      #("role", json.string("orchestrator")),
-      #("children", json.int(4)),
-    ])),
-    #("supervisors", json.array([
-      json.object([#("name", json.string("context")), #("model", json.string("sonnet")), #("workers", json.int(5))]),
-      json.object([#("name", json.string("domain")), #("model", json.string("sonnet")), #("workers", json.int(5))]),
-      json.object([#("name", json.string("test")), #("model", json.string("sonnet")), #("workers", json.int(5))]),
-      json.object([#("name", json.string("quality")), #("model", json.string("sonnet")), #("workers", json.int(5))]),
-    ], fn(x) { x })),
+    #(
+      "exec_001",
+      json.object([
+        #("name", json.string("EXEC-001")),
+        #("model", json.string("opus")),
+        #("role", json.string("orchestrator")),
+        #("children", json.int(4)),
+      ]),
+    ),
+    #(
+      "supervisors",
+      json.array(
+        [
+          json.object([
+            #("name", json.string("context")),
+            #("model", json.string("sonnet")),
+            #("workers", json.int(5)),
+          ]),
+          json.object([
+            #("name", json.string("domain")),
+            #("model", json.string("sonnet")),
+            #("workers", json.int(5)),
+          ]),
+          json.object([
+            #("name", json.string("test")),
+            #("model", json.string("sonnet")),
+            #("workers", json.int(5)),
+          ]),
+          json.object([
+            #("name", json.string("quality")),
+            #("model", json.string("sonnet")),
+            #("workers", json.int(5)),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
     #("total_agents", json.int(25)),
     #("rust_daemon_modules", json.int(31)),
     #("rust_loc", json.int(9104)),
@@ -1201,26 +1616,38 @@ fn dashboard_supervisors_json() -> String {
 fn dashboard_threads_json() -> String {
   json.object([
     #("page", json.string("Dashboard Threads")),
-    #("beam", json.object([
-      #("schedulers", json.int(16)),
-      #("dirty_io", json.int(16)),
-      #("processes", json.int(256)),
-    ])),
-    #("rust", json.object([
-      #("tokio_threads", json.int(8)),
-      #("modules", json.int(31)),
-      #("loc", json.int(9104)),
-    ])),
-    #("zenoh", json.object([
-      #("router_connections", json.int(4)),
-      #("sessions", json.int(4)),
-      #("topics_active", json.int(12)),
-    ])),
-    #("ooda", json.object([
-      #("active_cycles", json.int(1)),
-      #("phase", json.string("observe")),
-      #("latency_ms", json.int(42)),
-    ])),
+    #(
+      "beam",
+      json.object([
+        #("schedulers", json.int(16)),
+        #("dirty_io", json.int(16)),
+        #("processes", json.int(256)),
+      ]),
+    ),
+    #(
+      "rust",
+      json.object([
+        #("tokio_threads", json.int(8)),
+        #("modules", json.int(31)),
+        #("loc", json.int(9104)),
+      ]),
+    ),
+    #(
+      "zenoh",
+      json.object([
+        #("router_connections", json.int(4)),
+        #("sessions", json.int(4)),
+        #("topics_active", json.int(12)),
+      ]),
+    ),
+    #(
+      "ooda",
+      json.object([
+        #("active_cycles", json.int(1)),
+        #("phase", json.string("observe")),
+        #("latency_ms", json.int(42)),
+      ]),
+    ),
   ])
   |> json.to_string()
 }
@@ -1229,16 +1656,70 @@ fn dashboard_threads_json() -> String {
 fn dashboard_fractal_json() -> String {
   json.object([
     #("page", json.string("Dashboard Fractal Layers")),
-    #("layers", json.array([
-      json.object([#("id", json.string("L0")), #("name", json.string("Constitutional")), #("status", json.string("active")), #("components", json.int(3)), #("color", json.string("#ff6b6b"))]),
-      json.object([#("id", json.string("L1")), #("name", json.string("Atomic/Debug")), #("status", json.string("active")), #("components", json.int(3)), #("color", json.string("#ffd93d"))]),
-      json.object([#("id", json.string("L2")), #("name", json.string("Component")), #("status", json.string("active")), #("components", json.int(233)), #("color", json.string("#6bcb77"))]),
-      json.object([#("id", json.string("L3")), #("name", json.string("Transaction")), #("status", json.string("active")), #("components", json.int(3)), #("color", json.string("#4d96ff"))]),
-      json.object([#("id", json.string("L4")), #("name", json.string("System")), #("status", json.string("active")), #("components", json.int(16)), #("color", json.string("#9b59b6"))]),
-      json.object([#("id", json.string("L5")), #("name", json.string("Cognitive")), #("status", json.string("active")), #("components", json.int(31)), #("color", json.string("#00d4aa"))]),
-      json.object([#("id", json.string("L6")), #("name", json.string("Ecosystem")), #("status", json.string("active")), #("components", json.int(4)), #("color", json.string("#e74c3c"))]),
-      json.object([#("id", json.string("L7")), #("name", json.string("Federation")), #("status", json.string("active")), #("components", json.int(3)), #("color", json.string("#f39c12"))]),
-    ], fn(x) { x })),
+    #(
+      "layers",
+      json.array(
+        [
+          json.object([
+            #("id", json.string("L0")),
+            #("name", json.string("Constitutional")),
+            #("status", json.string("active")),
+            #("components", json.int(3)),
+            #("color", json.string("#ff6b6b")),
+          ]),
+          json.object([
+            #("id", json.string("L1")),
+            #("name", json.string("Atomic/Debug")),
+            #("status", json.string("active")),
+            #("components", json.int(3)),
+            #("color", json.string("#ffd93d")),
+          ]),
+          json.object([
+            #("id", json.string("L2")),
+            #("name", json.string("Component")),
+            #("status", json.string("active")),
+            #("components", json.int(233)),
+            #("color", json.string("#6bcb77")),
+          ]),
+          json.object([
+            #("id", json.string("L3")),
+            #("name", json.string("Transaction")),
+            #("status", json.string("active")),
+            #("components", json.int(3)),
+            #("color", json.string("#4d96ff")),
+          ]),
+          json.object([
+            #("id", json.string("L4")),
+            #("name", json.string("System")),
+            #("status", json.string("active")),
+            #("components", json.int(16)),
+            #("color", json.string("#9b59b6")),
+          ]),
+          json.object([
+            #("id", json.string("L5")),
+            #("name", json.string("Cognitive")),
+            #("status", json.string("active")),
+            #("components", json.int(31)),
+            #("color", json.string("#00d4aa")),
+          ]),
+          json.object([
+            #("id", json.string("L6")),
+            #("name", json.string("Ecosystem")),
+            #("status", json.string("active")),
+            #("components", json.int(4)),
+            #("color", json.string("#e74c3c")),
+          ]),
+          json.object([
+            #("id", json.string("L7")),
+            #("name", json.string("Federation")),
+            #("status", json.string("active")),
+            #("components", json.int(3)),
+            #("color", json.string("#f39c12")),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
     #("total_components", json.int(296)),
   ])
   |> json.to_string()
@@ -1298,19 +1779,51 @@ fn system_ooda_json() -> String {
     #("cycle_count", json.int(42)),
     #("latency_ms", json.int(38)),
     #("budget_ms", json.int(100)),
-    #("tiers", json.array([
-      json.object([#("name", json.string("Agent")), #("target_ms", json.int(30)), #("actual_ms", json.int(22))]),
-      json.object([#("name", json.string("Intelligence")), #("target_ms", json.int(100)), #("actual_ms", json.int(85))]),
-      json.object([#("name", json.string("Knowledge")), #("target_ms", json.int(1)), #("actual_ms", json.int(0))]),
-      json.object([#("name", json.string("Cortex")), #("target_ms", json.int(50)), #("actual_ms", json.int(38))]),
-      json.object([#("name", json.string("Strategy")), #("target_ms", json.int(1000)), #("actual_ms", json.int(450))]),
-    ], fn(x) { x })),
+    #(
+      "tiers",
+      json.array(
+        [
+          json.object([
+            #("name", json.string("Agent")),
+            #("target_ms", json.int(30)),
+            #("actual_ms", json.int(22)),
+          ]),
+          json.object([
+            #("name", json.string("Intelligence")),
+            #("target_ms", json.int(100)),
+            #("actual_ms", json.int(85)),
+          ]),
+          json.object([
+            #("name", json.string("Knowledge")),
+            #("target_ms", json.int(1)),
+            #("actual_ms", json.int(0)),
+          ]),
+          json.object([
+            #("name", json.string("Cortex")),
+            #("target_ms", json.int(50)),
+            #("actual_ms", json.int(38)),
+          ]),
+          json.object([
+            #("name", json.string("Strategy")),
+            #("target_ms", json.int(1000)),
+            #("actual_ms", json.int(450)),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
     #("health", json.string(health)),
-    #("decision_history", json.array([
-      json.string("maintain_homeostasis"),
-      json.string("observe_telemetry"),
-      json.string("check_quorum"),
-    ], fn(x) { x })),
+    #(
+      "decision_history",
+      json.array(
+        [
+          json.string("maintain_homeostasis"),
+          json.string("observe_telemetry"),
+          json.string("check_quorum"),
+        ],
+        fn(x) { x },
+      ),
+    ),
   ])
   |> json.to_string()
 }
@@ -1326,21 +1839,27 @@ fn system_tps_json() -> String {
     #("wip_limit", json.int(3)),
     #("wip_current", json.int(1)),
     #("jidoka_status", json.string("active")),
-    #("kanban", json.object([
-      #("pending", json.int(12)),
-      #("in_progress", json.int(1)),
-      #("completed", json.int(847)),
-      #("blocked", json.int(0)),
-    ])),
-    #("muda_score", json.object([
-      #("overproduction", json.float(0.05)),
-      #("waiting", json.float(0.02)),
-      #("transport", json.float(0.01)),
-      #("extra_processing", json.float(0.03)),
-      #("inventory", json.float(0.01)),
-      #("motion", json.float(0.02)),
-      #("defects", json.float(0.01)),
-    ])),
+    #(
+      "kanban",
+      json.object([
+        #("pending", json.int(12)),
+        #("in_progress", json.int(1)),
+        #("completed", json.int(847)),
+        #("blocked", json.int(0)),
+      ]),
+    ),
+    #(
+      "muda_score",
+      json.object([
+        #("overproduction", json.float(0.05)),
+        #("waiting", json.float(0.02)),
+        #("transport", json.float(0.01)),
+        #("extra_processing", json.float(0.03)),
+        #("inventory", json.float(0.01)),
+        #("motion", json.float(0.02)),
+        #("defects", json.float(0.01)),
+      ]),
+    ),
     #("tests_passing", json.int(4050)),
     #("build_time_ms", json.int(180)),
   ])
@@ -1421,43 +1940,46 @@ fn slo_json() -> String {
 fn circuit_breaker_json() -> String {
   json.object([
     #("page", json.string("Circuit Breakers")),
-    #("circuits", json.array(
-      [
-        json.object([
-          #("name", json.string("gemini_direct")),
-          #("state", json.string("closed")),
-          #("failures", json.int(0)),
-          #("threshold", json.int(3)),
-          #("cooldown_seconds", json.int(60)),
-          #("tier", json.int(1)),
-        ]),
-        json.object([
-          #("name", json.string("openrouter")),
-          #("state", json.string("closed")),
-          #("failures", json.int(0)),
-          #("threshold", json.int(3)),
-          #("cooldown_seconds", json.int(60)),
-          #("tier", json.int(2)),
-        ]),
-        json.object([
-          #("name", json.string("ollama_gemma3")),
-          #("state", json.string("closed")),
-          #("failures", json.int(0)),
-          #("threshold", json.int(3)),
-          #("cooldown_seconds", json.int(60)),
-          #("tier", json.int(3)),
-        ]),
-        json.object([
-          #("name", json.string("ollama_gemma4")),
-          #("state", json.string("closed")),
-          #("failures", json.int(0)),
-          #("threshold", json.int(3)),
-          #("cooldown_seconds", json.int(60)),
-          #("tier", json.int(4)),
-        ]),
-      ],
-      fn(x) { x },
-    )),
+    #(
+      "circuits",
+      json.array(
+        [
+          json.object([
+            #("name", json.string("gemini_direct")),
+            #("state", json.string("closed")),
+            #("failures", json.int(0)),
+            #("threshold", json.int(3)),
+            #("cooldown_seconds", json.int(60)),
+            #("tier", json.int(1)),
+          ]),
+          json.object([
+            #("name", json.string("openrouter")),
+            #("state", json.string("closed")),
+            #("failures", json.int(0)),
+            #("threshold", json.int(3)),
+            #("cooldown_seconds", json.int(60)),
+            #("tier", json.int(2)),
+          ]),
+          json.object([
+            #("name", json.string("ollama_gemma3")),
+            #("state", json.string("closed")),
+            #("failures", json.int(0)),
+            #("threshold", json.int(3)),
+            #("cooldown_seconds", json.int(60)),
+            #("tier", json.int(3)),
+          ]),
+          json.object([
+            #("name", json.string("ollama_gemma4")),
+            #("state", json.string("closed")),
+            #("failures", json.int(0)),
+            #("threshold", json.int(3)),
+            #("cooldown_seconds", json.int(60)),
+            #("tier", json.int(4)),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
     #("total", json.int(4)),
     #("open", json.int(0)),
     #("closed", json.int(4)),
@@ -1497,15 +2019,19 @@ fn system_snapshot_json() -> String {
   // Inline freshness check — reuse the same NIF calls
   let has_plan_data = string.length(plan) > 2
   let has_health_data = string.length(health) > 2
-  let freshness = json.object([
-    #("nif_plan_status", json.bool(has_plan_data)),
-    #("nif_system_health", json.bool(has_health_data)),
-    #("staleness", json.string(case has_plan_data && has_health_data {
-      True -> "fresh"
-      False -> "stale"
-    })),
-  ])
-  |> json.to_string()
+  let freshness =
+    json.object([
+      #("nif_plan_status", json.bool(has_plan_data)),
+      #("nif_system_health", json.bool(has_health_data)),
+      #(
+        "staleness",
+        json.string(case has_plan_data && has_health_data {
+          True -> "fresh"
+          False -> "stale"
+        }),
+      ),
+    ])
+    |> json.to_string()
   "{\"snapshot\":{\"health\":"
   <> health
   <> ",\"dashboard\":"
@@ -1534,10 +2060,13 @@ fn data_freshness_json() -> String {
     #("ws_planning_active", json.bool(True)),
     #("ws_dashboard_active", json.bool(True)),
     #("all_wiring_functional", json.bool(has_plan_data && has_health_data)),
-    #("staleness", json.string(case has_plan_data && has_health_data {
-      True -> "fresh"
-      False -> "stale"
-    })),
+    #(
+      "staleness",
+      json.string(case has_plan_data && has_health_data {
+        True -> "fresh"
+        False -> "stale"
+      }),
+    ),
   ])
   |> json.to_string()
 }
@@ -1546,11 +2075,32 @@ fn data_freshness_json() -> String {
 fn cockpit_alarms_json() -> String {
   json.object([
     #("page", json.string("Cockpit Alarms")),
-    #("alarms", json.array([
-      json.object([#("level", json.string("advisory")), #("source", json.string("L1_ATOMIC")), #("message", json.string("NIF load latency 12ms (threshold 50ms)")), #("timestamp", json.int(0))]),
-      json.object([#("level", json.string("normal")), #("source", json.string("L4_SYSTEM")), #("message", json.string("All 16 containers healthy")), #("timestamp", json.int(0))]),
-      json.object([#("level", json.string("normal")), #("source", json.string("L6_ECOSYSTEM")), #("message", json.string("Zenoh 4/4 routers connected")), #("timestamp", json.int(0))]),
-    ], fn(x) { x })),
+    #(
+      "alarms",
+      json.array(
+        [
+          json.object([
+            #("level", json.string("advisory")),
+            #("source", json.string("L1_ATOMIC")),
+            #("message", json.string("NIF load latency 12ms (threshold 50ms)")),
+            #("timestamp", json.int(0)),
+          ]),
+          json.object([
+            #("level", json.string("normal")),
+            #("source", json.string("L4_SYSTEM")),
+            #("message", json.string("All 16 containers healthy")),
+            #("timestamp", json.int(0)),
+          ]),
+          json.object([
+            #("level", json.string("normal")),
+            #("source", json.string("L6_ECOSYSTEM")),
+            #("message", json.string("Zenoh 4/4 routers connected")),
+            #("timestamp", json.int(0)),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
     #("total", json.int(3)),
     #("critical", json.int(0)),
     #("warning", json.int(0)),
@@ -1565,13 +2115,39 @@ fn cockpit_mode_json() -> String {
     #("page", json.string("Cockpit Mode")),
     #("mode", json.string("dark")),
     #("health_score", json.float(0.94)),
-    #("modes", json.array([
-      json.object([#("name", json.string("dark")), #("threshold", json.float(0.9)), #("color", json.string("#3dd68c"))]),
-      json.object([#("name", json.string("dim")), #("threshold", json.float(0.7)), #("color", json.string("#f5a623"))]),
-      json.object([#("name", json.string("normal")), #("threshold", json.float(0.5)), #("color", json.string("#e0e6ed"))]),
-      json.object([#("name", json.string("bright")), #("threshold", json.float(0.3)), #("color", json.string("#ffd93d"))]),
-      json.object([#("name", json.string("emergency")), #("threshold", json.float(0.0)), #("color", json.string("#ff4757"))]),
-    ], fn(x) { x })),
+    #(
+      "modes",
+      json.array(
+        [
+          json.object([
+            #("name", json.string("dark")),
+            #("threshold", json.float(0.9)),
+            #("color", json.string("#3dd68c")),
+          ]),
+          json.object([
+            #("name", json.string("dim")),
+            #("threshold", json.float(0.7)),
+            #("color", json.string("#f5a623")),
+          ]),
+          json.object([
+            #("name", json.string("normal")),
+            #("threshold", json.float(0.5)),
+            #("color", json.string("#e0e6ed")),
+          ]),
+          json.object([
+            #("name", json.string("bright")),
+            #("threshold", json.float(0.3)),
+            #("color", json.string("#ffd93d")),
+          ]),
+          json.object([
+            #("name", json.string("emergency")),
+            #("threshold", json.float(0.0)),
+            #("color", json.string("#ff4757")),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
     #("system_health", json.string(health)),
   ])
   |> json.to_string()
@@ -2657,7 +3233,9 @@ fn handle_get(path: String) -> HttpResponse(String) {
     "/ag-ui/health" -> json_response(agui_sse.health_json(), 200)
     "/ag-ui/cockpit" -> html_response(agui_cockpit.view())
     "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
-      sse_response(agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config()))
+      sse_response(
+        agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config()),
+      )
     "/ag-ui/manifest" ->
       json_response(agui_sse_api.agui_manifest_summary_json(), 200)
     "/api/v1/homeostasis/stream" ->
@@ -2687,9 +3265,23 @@ fn handle_get(path: String) -> HttpResponse(String) {
     "/api/v1/ai/status" -> json_response(ai_status_json(), 200)
     "/mirage" -> html_response(mirage_cockpit.view())
     "/api/v1/mirage/candidates" ->
-      json_response(json.to_string(mirage_api.candidates_json(mirage_migration_engine.get_migration_candidates())), 200)
+      json_response(
+        json.to_string(
+          mirage_api.candidates_json(
+            mirage_migration_engine.get_migration_candidates(),
+          ),
+        ),
+        200,
+      )
     "/api/v1/mirage/status" ->
-      json_response(json.to_string(mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state())), 200)
+      json_response(
+        json.to_string(
+          mirage_api.unikernel_status_json(
+            mirage_unikernel_daemon.new_daemon_state(),
+          ),
+        ),
+        200,
+      )
     "/api/v1/mirage/hypervisors" ->
       json_response(json.to_string(mirage_api.hypervisors_json()), 200)
     "/api/v1/mirage/telemetry" ->
@@ -2699,38 +3291,87 @@ fn handle_get(path: String) -> HttpResponse(String) {
         "{\"plane\":\"federation\",\"status\":\"unavailable\",\"error\":\"l7_federation_state_source_not_wired\",\"peer_count\":0,\"peer\":\"disconnected\"}",
         503,
       )
-    "/api/v1/health_grid" ->
-      json_response(health_grid_status_json(), 501)
+    "/api/v1/health_grid" -> json_response(health_grid_status_json(), 501)
     // Static file serving (JS, CSS for data grids)
-    "/static/planning-grid.js" -> serve_static_file("priv/static/planning-grid.js", "application/javascript")
-    "/static/planning-grid.bundled.js" -> serve_static_file("priv/static/planning-grid.bundled.js", "application/javascript")
+    "/static/planning-grid.js" ->
+      serve_static_file(
+        "priv/static/planning-grid.js",
+        "application/javascript",
+      )
+    "/static/planning-grid.bundled.js" ->
+      serve_static_file(
+        "priv/static/planning-grid.bundled.js",
+        "application/javascript",
+      )
     // Pass-12 P3 #21 — extracted RADICAL Command-Center Layout CSS (~5 KB)
     // from inline string in planning-grid.js. Source-of-truth: this file.
-    "/static/planning-radical.css" -> serve_static_file("priv/static/planning-radical.css", "text/css")
-    "/static/dashboard-grid.js" -> serve_static_file("priv/static/dashboard-grid.js", "application/javascript")
+    "/static/planning-radical.css" ->
+      serve_static_file("priv/static/planning-radical.css", "text/css")
+    "/static/dashboard-grid.js" ->
+      serve_static_file(
+        "priv/static/dashboard-grid.js",
+        "application/javascript",
+      )
     // Page-specific agentic JS grids (PageRank top 8 — SC-AGUI-UI-001)
-    "/static/verification-grid.js" -> serve_static_file("priv/static/verification-grid.js", "application/javascript")
-    "/static/immune-grid.js" -> serve_static_file("priv/static/immune-grid.js", "application/javascript")
-    "/static/agents-grid.js" -> serve_static_file("priv/static/agents-grid.js", "application/javascript")
-    "/static/knowledge-grid.js" -> serve_static_file("priv/static/knowledge-grid.js", "application/javascript")
-    "/static/zenoh-grid.js" -> serve_static_file("priv/static/zenoh-grid.js", "application/javascript")
-    "/static/telemetry-grid.js" -> serve_static_file("priv/static/telemetry-grid.js", "application/javascript")
+    "/static/verification-grid.js" ->
+      serve_static_file(
+        "priv/static/verification-grid.js",
+        "application/javascript",
+      )
+    "/static/immune-grid.js" ->
+      serve_static_file("priv/static/immune-grid.js", "application/javascript")
+    "/static/agents-grid.js" ->
+      serve_static_file("priv/static/agents-grid.js", "application/javascript")
+    "/static/knowledge-grid.js" ->
+      serve_static_file(
+        "priv/static/knowledge-grid.js",
+        "application/javascript",
+      )
+    "/static/zenoh-grid.js" ->
+      serve_static_file("priv/static/zenoh-grid.js", "application/javascript")
+    "/static/telemetry-grid.js" ->
+      serve_static_file(
+        "priv/static/telemetry-grid.js",
+        "application/javascript",
+      )
     // SCHED-TELE-CEPAF-ROUTER-WIRE: live jobs page served from cepaf-gleam
     // (mirrors the sa-plan daemon static page). SC-SCHED-TELE-005.
-    "/jobs/live" -> serve_static_file("priv/static/jobs-live.html", "text/html; charset=utf-8")
-    "/jobs-live.html" -> serve_static_file("priv/static/jobs-live.html", "text/html; charset=utf-8")
+    "/jobs/live" ->
+      serve_static_file(
+        "priv/static/jobs-live.html",
+        "text/html; charset=utf-8",
+      )
+    "/jobs-live.html" ->
+      serve_static_file(
+        "priv/static/jobs-live.html",
+        "text/html; charset=utf-8",
+      )
     // C3I 30-sec status dashboard (pass-12). Polls /api/v1/dq/status with
     // /api/v1/planning fallback. Self-contained static HTML.
     // SC-EVO-KPI-001 / SC-VALUE-GUARD-001..008 / SC-PAGE-SPEC-001..008.
     "/c3i-status" | "/c3i-status.html" | "/static/c3i-status.html" ->
-      serve_static_file("priv/static/c3i-status.html", "text/html; charset=utf-8")
-    "/static/podman-grid.js" -> serve_static_file("priv/static/podman-grid.js", "application/javascript")
-    "/static/substrate-grid.js" -> serve_static_file("priv/static/substrate-grid.js", "application/javascript")
-    "/static/component-demo-grid.js" -> serve_static_file("priv/static/component-demo-grid.js", "application/javascript")
+      serve_static_file(
+        "priv/static/c3i-status.html",
+        "text/html; charset=utf-8",
+      )
+    "/static/podman-grid.js" ->
+      serve_static_file("priv/static/podman-grid.js", "application/javascript")
+    "/static/substrate-grid.js" ->
+      serve_static_file(
+        "priv/static/substrate-grid.js",
+        "application/javascript",
+      )
+    "/static/component-demo-grid.js" ->
+      serve_static_file(
+        "priv/static/component-demo-grid.js",
+        "application/javascript",
+      )
     // Service worker + register (pass-2 — Allium OfflineMode closed).
     // SC-PLANNING-EVO-005, SC-AGUI-UI-008.
-    "/static/sw.js" -> serve_static_file("priv/static/sw.js", "application/javascript")
-    "/static/sw-register.js" -> serve_static_file("priv/static/sw-register.js", "application/javascript")
+    "/static/sw.js" ->
+      serve_static_file("priv/static/sw.js", "application/javascript")
+    "/static/sw-register.js" ->
+      serve_static_file("priv/static/sw-register.js", "application/javascript")
     // Telegram Mini App routes — mobile-optimized SSR HTML (SC-OPENCLAW-001)
     _ ->
       case string.starts_with(path, "/static/") {
@@ -2738,16 +3379,19 @@ fn handle_get(path: String) -> HttpResponse(String) {
           let file_path = "priv" <> path
           let content_type = case string.ends_with(path, ".js") {
             True -> "application/javascript"
-            False -> case string.ends_with(path, ".css") {
-              True -> "text/css"
-              False -> case string.ends_with(path, ".svg") {
-                True -> "image/svg+xml"
-                False -> case string.ends_with(path, ".html") {
-                  True -> "text/html; charset=utf-8"
-                  False -> "application/octet-stream"
-                }
+            False ->
+              case string.ends_with(path, ".css") {
+                True -> "text/css"
+                False ->
+                  case string.ends_with(path, ".svg") {
+                    True -> "image/svg+xml"
+                    False ->
+                      case string.ends_with(path, ".html") {
+                        True -> "text/html; charset=utf-8"
+                        False -> "application/octet-stream"
+                      }
+                  }
               }
-            }
           }
           case read_file(file_path) {
             Ok(_) -> serve_static_file(file_path, content_type)
@@ -2755,11 +3399,32 @@ fn handle_get(path: String) -> HttpResponse(String) {
           }
         }
         False ->
-          case mini_app_routes.is_mini_app_path(path) {
+          case string.starts_with(path, "/docs/") {
             True -> {
-              let _ = hot_reload.reload_changed()
-              html_response(mini_app_routes.route(path))
+              let doc_name = case string.split(path, "/") |> list.reverse {
+                [filename, ..] -> filename
+                _ -> ""
+              }
+              let html_name = case string.ends_with(doc_name, ".md") {
+                True -> string.drop_end(doc_name, 3) <> ".html"
+                False -> doc_name <> ".html"
+              }
+              let static_path = "priv/static/" <> html_name
+              case read_file(static_path) {
+                Ok(_) ->
+                  serve_static_file(static_path, "text/html; charset=utf-8")
+                Error(_) -> {
+                  let _ = hot_reload.reload_changed()
+                  html_response(route_html(path))
+                }
+              }
             }
+            False ->
+              case mini_app_routes.is_mini_app_path(path) {
+                True -> {
+                  let _ = hot_reload.reload_changed()
+                  html_response(mini_app_routes.route(path))
+                }
             False ->
               case string.starts_with(path, "/api/v1/ai/chat") {
                 True ->
@@ -2771,7 +3436,9 @@ fn handle_get(path: String) -> HttpResponse(String) {
                   case is_api_path(path) {
                     True -> {
                       let body = route(path)
-                      let status = case string.contains(body, "\"error\":\"not_found\"") {
+                      let status = case
+                        string.contains(body, "\"error\":\"not_found\"")
+                      {
                         True -> 404
                         False -> 200
                       }
@@ -2786,6 +3453,7 @@ fn handle_get(path: String) -> HttpResponse(String) {
           }
       }
   }
+}
 }
 
 /// True when path starts with /api/ or /ag-ui/ — these are JSON API endpoints.
@@ -2802,7 +3470,10 @@ fn html_response(body: String) -> HttpResponse(String) {
 }
 
 /// Serve a static file from the priv directory.
-fn serve_static_file(path: String, content_type: String) -> HttpResponse(String) {
+fn serve_static_file(
+  path: String,
+  content_type: String,
+) -> HttpResponse(String) {
   case read_file(path) {
     Ok(content) ->
       response.new(200)
@@ -2838,7 +3509,11 @@ fn route_html(path: String) -> String {
   case path {
     "/mirage" -> mirage_cockpit.view()
     "/" | "/dashboard" ->
-      shell.render_page("Dashboard", "dashboard", guard("dashboard", page_views.dashboard_view))
+      shell.render_page(
+        "Dashboard",
+        "dashboard",
+        guard("dashboard", page_views.dashboard_view),
+      )
     "/hook-subsystem" ->
       shell.render_page(
         "Hook Subsystem",
@@ -2851,7 +3526,11 @@ fn route_html(path: String) -> String {
         ),
       )
     "/planning" ->
-      shell.render_page("Planning", "planning", guard("planning", page_views.planning_view))
+      shell.render_page(
+        "Planning",
+        "planning",
+        guard("planning", page_views.planning_view),
+      )
     "/immune" ->
       shell.render_page(
         "Immune System",
@@ -2865,9 +3544,17 @@ fn route_html(path: String) -> String {
         guard("knowledge", page_views.knowledge_view),
       )
     "/zenoh" ->
-      shell.render_page("Zenoh Mesh", "zenoh", guard("zenoh", page_views.zenoh_view))
+      shell.render_page(
+        "Zenoh Mesh",
+        "zenoh",
+        guard("zenoh", page_views.zenoh_view),
+      )
     "/cockpit" ->
-      shell.render_page("Cockpit", "cockpit", guard("cockpit", page_views.cockpit_view))
+      shell.render_page(
+        "Cockpit",
+        "cockpit",
+        guard("cockpit", page_views.cockpit_view),
+      )
     "/checklist" ->
       shell.render_page(
         "Comprehensive Verification Checklist",
@@ -2917,9 +3604,7 @@ fn route_html(path: String) -> String {
       shell.render_page(
         "ZigVM ZK Master MOC",
         "zk",
-        guard("zk", fn(_state) {
-          knowledge_explorer.view(zk_model)
-        }),
+        guard("zk", fn(_state) { knowledge_explorer.view(zk_model) }),
       )
     }
     "/verification" ->
@@ -2941,7 +3626,11 @@ fn route_html(path: String) -> String {
         guard("metabolic", page_views.metabolic_view),
       )
     "/podman" ->
-      shell.render_page("Podman", "podman", guard("podman", page_views.podman_view))
+      shell.render_page(
+        "Podman",
+        "podman",
+        guard("podman", page_views.podman_view),
+      )
     "/mcp" ->
       shell.render_page("MCP Server", "mcp", guard("mcp", page_views.mcp_view))
     "/kms" ->
@@ -2977,7 +3666,11 @@ fn route_html(path: String) -> String {
         guard("agents", page_views.agents_view),
       )
     "/holon" ->
-      shell.render_page("Holon Identity", "holon", guard("holon", page_views.holon_view))
+      shell.render_page(
+        "Holon Identity",
+        "holon",
+        guard("holon", page_views.holon_view),
+      )
     "/config" ->
       shell.render_page(
         "Mesh Configuration",
@@ -2985,11 +3678,23 @@ fn route_html(path: String) -> String {
         guard("config", page_views.config_view),
       )
     "/git" ->
-      shell.render_page("Git Intelligence", "git", guard("git", page_views.git_view))
+      shell.render_page(
+        "Git Intelligence",
+        "git",
+        guard("git", page_views.git_view),
+      )
     "/database" ->
-      shell.render_page("Database", "database", guard("database", page_views.database_view))
+      shell.render_page(
+        "Database",
+        "database",
+        guard("database", page_views.database_view),
+      )
     "/bridge" ->
-      shell.render_page("Bridge", "bridge", guard("bridge", page_views.bridge_view))
+      shell.render_page(
+        "Bridge",
+        "bridge",
+        guard("bridge", page_views.bridge_view),
+      )
     "/smriti" ->
       shell.render_page(
         "Smriti Knowledge",
@@ -3045,11 +3750,7 @@ fn route_html(path: String) -> String {
         guard("components", page_views.component_demo_view),
       )
     "/sciviz" ->
-      shell.render_page(
-        "SciViz Cockpit",
-        "sciviz",
-        sciviz_cockpit.view(),
-      )
+      shell.render_page("SciViz Cockpit", "sciviz", sciviz_cockpit.view())
     "/sciviz/tests" ->
       shell.render_page(
         "SciViz Comprehensive Test Modalities Cockpit",
@@ -3075,7 +3776,10 @@ fn route_html(path: String) -> String {
         page_views.allium_index_view(),
       )
     _ -> {
-      case string.starts_with(path, "/docs/") || string.starts_with(path, "/files/") {
+      case
+        string.starts_with(path, "/docs/")
+        || string.starts_with(path, "/files/")
+      {
         True -> {
           let doc_path = case string.starts_with(path, "/docs/") {
             True -> "/home/an/NAS-setup/uos" <> path
@@ -3111,30 +3815,95 @@ fn route_html(path: String) -> String {
               )
             }
             False ->
-              shell.render_page("Not Found", "", page_views.not_found_view(path))
+              shell.render_page(
+                "Not Found",
+                "",
+                page_views.not_found_view(path),
+              )
           }
       }
     }
   }
 }
 
-fn render_doc_viewer(doc_name: String, content: String) -> element.Element(msg) {
-  html.div([attribute.class("doc-viewer-container"), attribute.attribute("style", "padding: 1.5rem; max-width: 1400px; margin: 0 auto;")], [
-    html.header([attribute.class("doc-header"), attribute.attribute("style", "margin-bottom: 1.5rem; border-bottom: 1px solid #1e2a3a; padding-bottom: 1rem;")], [
-      html.h1([attribute.attribute("style", "color: #00d4aa; margin: 0 0 0.5rem; font-size: 1.8rem;")], [html.text(doc_name)]),
-      html.div([attribute.class("badges-container"), attribute.attribute("style", "display: flex; gap: 0.75rem;")], [
-        html.span([attribute.class("badge badge-checklist"), attribute.attribute("style", "background: #141922; border: 1px solid #00d4aa; color: #00d4aa; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem;")], [
-          html.text("18/18 Checks PASS"),
-        ]),
-        html.span([attribute.class("badge badge-storage"), attribute.attribute("style", "background: #141922; border: 1px solid #ffcc00; color: #ffcc00; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem;")], [
-          html.text("NVMe 25503L801736 Locked"),
-        ]),
-      ]),
-    ]),
-    html.pre([attribute.attribute("style", "white-space: pre-wrap; font-family: monospace; background: #141922; padding: 1.25rem; border-radius: 6px; border: 1px solid #1e2a3a; color: #e0e6ed; line-height: 1.6; font-size: 0.95rem; overflow-x: auto;")], [
-      html.text(content),
-    ]),
-  ])
+fn render_doc_viewer(
+  doc_name: String,
+  content: String,
+) -> element.Element(msg) {
+  html.div(
+    [
+      attribute.class("doc-viewer-container"),
+      attribute.attribute(
+        "style",
+        "padding: 1.5rem; max-width: 1400px; margin: 0 auto;",
+      ),
+    ],
+    [
+      html.header(
+        [
+          attribute.class("doc-header"),
+          attribute.attribute(
+            "style",
+            "margin-bottom: 1.5rem; border-bottom: 1px solid #1e2a3a; padding-bottom: 1rem;",
+          ),
+        ],
+        [
+          html.h1(
+            [
+              attribute.attribute(
+                "style",
+                "color: #00d4aa; margin: 0 0 0.5rem; font-size: 1.8rem;",
+              ),
+            ],
+            [html.text(doc_name)],
+          ),
+          html.div(
+            [
+              attribute.class("badges-container"),
+              attribute.attribute("style", "display: flex; gap: 0.75rem;"),
+            ],
+            [
+              html.span(
+                [
+                  attribute.class("badge badge-checklist"),
+                  attribute.attribute(
+                    "style",
+                    "background: #141922; border: 1px solid #00d4aa; color: #00d4aa; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem;",
+                  ),
+                ],
+                [
+                  html.text("18/18 Checks PASS"),
+                ],
+              ),
+              html.span(
+                [
+                  attribute.class("badge badge-storage"),
+                  attribute.attribute(
+                    "style",
+                    "background: #141922; border: 1px solid #ffcc00; color: #ffcc00; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem;",
+                  ),
+                ],
+                [
+                  html.text("NVMe 25503L801736 Locked"),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+      html.pre(
+        [
+          attribute.attribute(
+            "style",
+            "white-space: pre-wrap; font-family: monospace; background: #141922; padding: 1.25rem; border-radius: 6px; border: 1px solid #1e2a3a; color: #e0e6ed; line-height: 1.6; font-size: 0.95rem; overflow-x: auto;",
+          ),
+        ],
+        [
+          html.text(content),
+        ],
+      ),
+    ],
+  )
 }
 
 /// Handle POST requests.
@@ -3179,12 +3948,16 @@ fn post_route(path: String, body: String) -> HttpResponse(String) {
     "/api/v1/sciviz/transpile" -> {
       let preset = case string.contains(body, "tcga") {
         True -> "tcga"
-        False -> case string.contains(body, "swarm") {
-          True -> "swarm"
-          False -> "diamonds"
-        }
+        False ->
+          case string.contains(body, "swarm") {
+            True -> "swarm"
+            False -> "diamonds"
+          }
       }
-      json_response(transpiler.to_json(transpiler.transpile_preset(preset)), 200)
+      json_response(
+        transpiler.to_json(transpiler.transpile_preset(preset)),
+        200,
+      )
     }
     _ -> json_response(not_found_json(path), 404)
   }
@@ -3198,7 +3971,7 @@ fn zenoh_publish_response(body: String) -> HttpResponse(String) {
           #("error", json.string("missing_topic")),
           #("hint", json.string("Provide JSON with 'topic' and 'payload'")),
         ])
-        |> json.to_string,
+          |> json.to_string,
         400,
       )
     True ->
@@ -3206,7 +3979,7 @@ fn zenoh_publish_response(body: String) -> HttpResponse(String) {
         json.object([
           #("status", json.string("published")),
         ])
-        |> json.to_string,
+          |> json.to_string,
         200,
       )
   }
@@ -3224,20 +3997,24 @@ fn pi_prompt_response(body: String) -> HttpResponse(String) {
   case prompt {
     "" ->
       json_response(
-        json.to_string(json.object([
-          #("ok", json.bool(False)),
-          #("error", json.string("missing prompt field")),
-        ])),
+        json.to_string(
+          json.object([
+            #("ok", json.bool(False)),
+            #("error", json.string("missing prompt field")),
+          ]),
+        ),
         400,
       )
     _ -> {
       case pi_daemon.start_default() {
         Error(reason) ->
           json_response(
-            json.to_string(json.object([
-              #("ok", json.bool(False)),
-              #("error", json.string("daemon start failed: " <> reason)),
-            ])),
+            json.to_string(
+              json.object([
+                #("ok", json.bool(False)),
+                #("error", json.string("daemon start failed: " <> reason)),
+              ]),
+            ),
             503,
           )
         Ok(daemon) -> {
@@ -3246,18 +4023,22 @@ fn pi_prompt_response(body: String) -> HttpResponse(String) {
           case result {
             Ok(response) ->
               json_response(
-                json.to_string(json.object([
-                  #("ok", json.bool(True)),
-                  #("response", json.string(response)),
-                ])),
+                json.to_string(
+                  json.object([
+                    #("ok", json.bool(True)),
+                    #("response", json.string(response)),
+                  ]),
+                ),
                 200,
               )
             Error(reason) ->
               json_response(
-                json.to_string(json.object([
-                  #("ok", json.bool(False)),
-                  #("error", json.string(pi_error_to_string(reason))),
-                ])),
+                json.to_string(
+                  json.object([
+                    #("ok", json.bool(False)),
+                    #("error", json.string(pi_error_to_string(reason))),
+                  ]),
+                ),
                 503,
               )
           }
@@ -3883,14 +4664,16 @@ fn planning_paginated_json(path: String) -> String {
       // The NIF returns `[...]` — we extract elements (1-deep, no nested arrays).
       let sliced = slice_json_array(raw, offset, limit)
       let total = count_json_array_elements(raw)
-      json.to_string(json.object([
-        #("status", json.string(status)),
-        #("offset", json.int(offset)),
-        #("limit", json.int(limit)),
-        #("total", json.int(total)),
-        #("returned", json.int(count_json_array_elements(sliced))),
-        #("items_json", json.string(sliced)),
-      ]))
+      json.to_string(
+        json.object([
+          #("status", json.string(status)),
+          #("offset", json.int(offset)),
+          #("limit", json.int(limit)),
+          #("total", json.int(total)),
+          #("returned", json.int(count_json_array_elements(sliced))),
+          #("items_json", json.string(sliced)),
+        ]),
+      )
     }
   }
 }
@@ -3984,8 +4767,10 @@ fn split_top_level(s: String) -> List(String) {
 }
 
 fn ecology_runtime_response(path: String) -> HttpResponse(String) {
-  ecology_snapshot_response(path,
-    living_swarm_actor.get_swarm(living_swarm_actor.runtime_subject(), 250))
+  ecology_snapshot_response(
+    path,
+    living_swarm_actor.get_swarm(living_swarm_actor.runtime_subject(), 250),
+  )
 }
 
 pub fn ecology_snapshot_response(
@@ -3999,7 +4784,7 @@ pub fn ecology_snapshot_response(
           #("status", json.string("unavailable")),
           #("reason", json.string(reason)),
         ])
-        |> json.to_string,
+          |> json.to_string,
         503,
       )
     Ok(swarm) ->
@@ -4019,25 +4804,30 @@ pub fn ecology_snapshot_response(
               |> html.tr([], _)
             })
           let groups = [
-            #(
-              "1. Metadata and navigation",
-              ["CHK-01-TIME", "CHK-02-TAIL", "CHK-03-FRACT", "CHK-04-KM"],
-            ),
-            #("2. Purity and storage", ["CHK-05-MUDA", "CHK-06-GRAPH", "CHK-07-DRIVE"]),
-            #(
-              "3. Tests and mathematics",
-              ["CHK-08-C1C8", "CHK-09-MATH", "CHK-10-9MOD", "CHK-11-REGR"],
-            ),
-            #(
-              "4. Runtime and observability",
-              [
-                "CHK-12-GLEAM",
-                "CHK-13-HERMES",
-                "CHK-14-ZIGVM",
-                "CHK-15-MAX",
-                "CHK-16-OTEL",
-              ],
-            ),
+            #("1. Metadata and navigation", [
+              "CHK-01-TIME",
+              "CHK-02-TAIL",
+              "CHK-03-FRACT",
+              "CHK-04-KM",
+            ]),
+            #("2. Purity and storage", [
+              "CHK-05-MUDA",
+              "CHK-06-GRAPH",
+              "CHK-07-DRIVE",
+            ]),
+            #("3. Tests and mathematics", [
+              "CHK-08-C1C8",
+              "CHK-09-MATH",
+              "CHK-10-9MOD",
+              "CHK-11-REGR",
+            ]),
+            #("4. Runtime and observability", [
+              "CHK-12-GLEAM",
+              "CHK-13-HERMES",
+              "CHK-14-ZIGVM",
+              "CHK-15-MAX",
+              "CHK-16-OTEL",
+            ]),
             #("5. Governance and Jujutsu", ["CHK-17-SOV", "CHK-18-JJ"]),
             #("6. Provenance", ["CHK-PROV"]),
           ]

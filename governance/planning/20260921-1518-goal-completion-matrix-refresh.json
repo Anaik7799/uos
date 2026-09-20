@@ -1,0 +1,32 @@
+{
+  "schema": "uos.goal-completion-matrix-refresh.v1",
+  "timestamp": "20260921-1518",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "supersedes": "governance/planning/20260921-1512-goal-completion-matrix.json",
+  "live_dashboard": "governance/planning/20260921-1517-sa-plan-dashboard-snapshot.json",
+  "requirements": {
+    "database_feature_mcp_coverage": "PARTIAL",
+    "declarative_functional_algebraic_mcp": "PARTIAL_FAIL_CLOSED",
+    "real_holonic_coordination_hive_swarm": "HOLD",
+    "dashboard_completion_tracking": {
+      "status": "OBSERVED",
+      "fresh_receipt": "governance/planning/20260921-1516-dashboard-risk-binding-receipt.json"
+    },
+    "risk_dependency_optimization": "PARTIAL_HOLD",
+    "current_artifacts": "OBSERVED",
+    "independent_release_operational_acceptance": "NOT_ADMITTED"
+  },
+  "live_counts": {
+    "total": 21,
+    "completed": 4,
+    "blocked": 17,
+    "unknown": 0,
+    "executing": 0
+  },
+  "completion_policy": {
+    "blocked_or_unadmitted_counts_as_complete": false,
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false,
+    "goal_complete": false
+  }
+}

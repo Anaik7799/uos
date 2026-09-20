@@ -64,11 +64,7 @@ pub type DeadManAction {
 
 /// Initialize an empty dead-man registry.
 pub fn init_deadman_registry() -> DeadManRegistry {
-  DeadManRegistry(
-    actors: [],
-    last_eval_ms: 0,
-    total_tripped_count: 0,
-  )
+  DeadManRegistry(actors: [], last_eval_ms: 0, total_tripped_count: 0)
 }
 
 /// Register a new distributed actor into the dead-man switch monitor.
@@ -133,7 +129,12 @@ pub fn evaluate_freshness_tick(
       case elapsed_ms > interval {
         False -> {
           // Healthy
-          let updated = ActorRegistration(..actor, status: HeartbeatNominal, missed_count: 0)
+          let updated =
+            ActorRegistration(
+              ..actor,
+              status: HeartbeatNominal,
+              missed_count: 0,
+            )
           #([updated, ..actor_list], action_list, trip_count)
         }
         True -> {
@@ -181,7 +182,11 @@ pub fn evaluate_freshness_tick(
                   layer: actor.fractal_layer,
                   missed: missed,
                 )
-              #([updated, ..actor_list], [warn_action, ..action_list], trip_count)
+              #(
+                [updated, ..actor_list],
+                [warn_action, ..action_list],
+                trip_count,
+              )
             }
           }
         }

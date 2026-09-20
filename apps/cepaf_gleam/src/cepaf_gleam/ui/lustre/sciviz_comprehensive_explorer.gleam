@@ -10,14 +10,14 @@
 //// Dedicated route: /sciviz/comprehensive
 //// Zero Client JavaScript, Zero npm, Zero Foreign NIFs (Zero-Muda compliance).
 
-import cepaf_gleam/sciviz/extension_examples
 import cepaf_gleam/sciviz/extension_catalog.{
   category_to_string, count_by_category,
 }
 import cepaf_gleam/sciviz/extension_deep_dive.{
-  type ExtensionDeepDive, all_deep_dives, ggram_deep_dive,
-  total_bdd_scenarios, total_large_dataset_records,
+  type ExtensionDeepDive, all_deep_dives, ggram_deep_dive, total_bdd_scenarios,
+  total_large_dataset_records,
 }
+import cepaf_gleam/sciviz/extension_examples
 import gleam/int
 import gleam/list
 import gleam/string
@@ -179,10 +179,7 @@ fn render_breadcrumb() -> Element(a) {
       html.a(
         [
           attribute.href("/"),
-          attribute.attribute(
-            "style",
-            "color: #38bdf8; text-decoration: none;",
-          ),
+          attribute.attribute("style", "color: #38bdf8; text-decoration: none;"),
         ],
         [element.text("Cockpit")],
       ),
@@ -190,10 +187,7 @@ fn render_breadcrumb() -> Element(a) {
       html.a(
         [
           attribute.href("/sciviz"),
-          attribute.attribute(
-            "style",
-            "color: #38bdf8; text-decoration: none;",
-          ),
+          attribute.attribute("style", "color: #38bdf8; text-decoration: none;"),
         ],
         [element.text("SciViz")],
       ),
@@ -201,10 +195,7 @@ fn render_breadcrumb() -> Element(a) {
       html.a(
         [
           attribute.href("/sciviz/extensions"),
-          attribute.attribute(
-            "style",
-            "color: #38bdf8; text-decoration: none;",
-          ),
+          attribute.attribute("style", "color: #38bdf8; text-decoration: none;"),
         ],
         [element.text("Extensions")],
       ),
@@ -385,15 +376,12 @@ fn render_checklist_domain(
               ]),
               html.span(
                 [
-                  attribute.attribute(
-                    "style",
-                    case pass {
-                      True ->
-                        "color: #34d399; font-weight: 700; font-family: monospace;"
-                      False ->
-                        "color: #f87171; font-weight: 700; font-family: monospace;"
-                    },
-                  ),
+                  attribute.attribute("style", case pass {
+                    True ->
+                      "color: #34d399; font-weight: 700; font-family: monospace;"
+                    False ->
+                      "color: #f87171; font-weight: 700; font-family: monospace;"
+                  }),
                 ],
                 [
                   element.text(case pass {
@@ -993,7 +981,10 @@ fn render_live_transpiler_section() -> Element(a) {
               html.button(
                 [
                   attribute.class("transpiler-preset-btn"),
-                  attribute.attribute("onclick", "setTranspilerPreset('diamonds')"),
+                  attribute.attribute(
+                    "onclick",
+                    "setTranspilerPreset('diamonds')",
+                  ),
                   attribute.attribute(
                     "style",
                     "background: #1e293b; color: #38bdf8; border: 1px solid #0284c7; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;",
@@ -1107,7 +1098,10 @@ fn render_live_transpiler_section() -> Element(a) {
               html.textarea(
                 [
                   attribute.attribute("id", "transpiler-code-input"),
-                  attribute.attribute("oninput", "handleTranspilerInput(this.value)"),
+                  attribute.attribute(
+                    "oninput",
+                    "handleTranspilerInput(this.value)",
+                  ),
                   attribute.attribute(
                     "style",
                     "flex-grow: 1; min-height: 180px; width: 100%; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #38bdf8; font-family: monospace; font-size: 0.85rem; padding: 0.75rem; box-sizing: border-box; resize: vertical;",
@@ -1248,7 +1242,11 @@ fn render_ggram_flagship(ggram: ExtensionDeepDive) -> Element(a) {
                       "font-size: 1.5rem; font-weight: 800; color: #f8fafc; margin: 0; display: inline-block;",
                     ),
                   ],
-                  [element.text("ggram: Grammar-of-Graphics Code-Plot Synthesis")],
+                  [
+                    element.text(
+                      "ggram: Grammar-of-Graphics Code-Plot Synthesis",
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1462,7 +1460,11 @@ fn render_category_pills(
               "font-size: 0.8rem; font-weight: 700; color: #64748b; text-transform: uppercase;",
             ),
           ],
-          [element.text("Interactive Taxonomic Category Filter (Click to Isolate)")],
+          [
+            element.text(
+              "Interactive Taxonomic Category Filter (Click to Isolate)",
+            ),
+          ],
         ),
         html.button(
           [
@@ -1492,7 +1494,10 @@ fn render_category_pills(
           [
             attribute.class("sciviz-cat-btn"),
             attribute.attribute("data-cat", cat_str),
-            attribute.attribute("onclick", "filterCategory('" <> cat_str <> "', this)"),
+            attribute.attribute(
+              "onclick",
+              "filterCategory('" <> cat_str <> "', this)",
+            ),
             attribute.attribute(
               "style",
               "background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0.3rem 0.65rem; display: flex; align-items: center; gap: 0.45rem; cursor: pointer; transition: all 0.15s ease;",
@@ -1816,16 +1821,14 @@ fn render_deep_dive_table_row(dive: ExtensionDeepDive) -> Element(a) {
   let bdds_joined = string.join(dive.bdd_scenarios, "|||")
   let feats_joined = string.join(dive.key_features, "|||")
   let code_sample =
-    extension_examples.example_code(
-      extension_catalog.ExtensionMetadata(
-        name: dive.name,
-        url: dive.url,
-        author: dive.author,
-        description: dive.dataset_schema_summary,
-        tags: dive.visual_graph_types,
-        category: dive.category,
-      ),
-    )
+    extension_examples.example_code(extension_catalog.ExtensionMetadata(
+      name: dive.name,
+      url: dive.url,
+      author: dive.author,
+      description: dive.dataset_schema_summary,
+      tags: dive.visual_graph_types,
+      category: dive.category,
+    ))
 
   html.tr(
     [
@@ -1857,20 +1860,17 @@ fn render_deep_dive_table_row(dive: ExtensionDeepDive) -> Element(a) {
         ],
         [element.text(dive.name)],
       ),
-      html.td(
-        [attribute.attribute("style", "padding: 0.75rem 1rem;")],
-        [
-          html.span(
-            [
-              attribute.attribute(
-                "style",
-                "background: #1e293b; color: #94a3b8; font-size: 0.7rem; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 600;",
-              ),
-            ],
-            [element.text(dive.category_name)],
-          ),
-        ],
-      ),
+      html.td([attribute.attribute("style", "padding: 0.75rem 1rem;")], [
+        html.span(
+          [
+            attribute.attribute(
+              "style",
+              "background: #1e293b; color: #94a3b8; font-size: 0.7rem; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 600;",
+            ),
+          ],
+          [element.text(dive.category_name)],
+        ),
+      ]),
       html.td(
         [
           attribute.attribute(
@@ -1922,9 +1922,7 @@ fn render_deep_dive_table_row(dive: ExtensionDeepDive) -> Element(a) {
             ],
             [
               element.text(
-                "✓ "
-                <> int.to_string(list.length(dive.bdd_scenarios))
-                <> " BDD",
+                "✓ " <> int.to_string(list.length(dive.bdd_scenarios)) <> " BDD",
               ),
             ],
           ),
@@ -1979,19 +1977,20 @@ fn render_deep_dive_card(dive: ExtensionDeepDive) -> Element(a) {
         int.to_string(dive.dataset_record_count),
       ),
       attribute.attribute("data-bdds", string.join(dive.bdd_scenarios, "|||")),
-      attribute.attribute("data-features", string.join(dive.key_features, "|||")),
+      attribute.attribute(
+        "data-features",
+        string.join(dive.key_features, "|||"),
+      ),
       attribute.attribute(
         "data-code",
-        extension_examples.example_code(
-          extension_catalog.ExtensionMetadata(
-            name: dive.name,
-            url: dive.url,
-            author: dive.author,
-            description: dive.dataset_schema_summary,
-            tags: dive.visual_graph_types,
-            category: dive.category,
-          ),
-        ),
+        extension_examples.example_code(extension_catalog.ExtensionMetadata(
+          name: dive.name,
+          url: dive.url,
+          author: dive.author,
+          description: dive.dataset_schema_summary,
+          tags: dive.visual_graph_types,
+          category: dive.category,
+        )),
       ),
       attribute.attribute(
         "style",
@@ -2020,7 +2019,12 @@ fn render_deep_dive_card(dive: ExtensionDeepDive) -> Element(a) {
                 [element.text(dive.name)],
               ),
               html.span(
-                [attribute.attribute("style", "color: #64748b; font-size: 0.75rem;")],
+                [
+                  attribute.attribute(
+                    "style",
+                    "color: #64748b; font-size: 0.75rem;",
+                  ),
+                ],
                 [element.text("by " <> dive.author)],
               ),
             ]),
@@ -2036,14 +2040,17 @@ fn render_deep_dive_card(dive: ExtensionDeepDive) -> Element(a) {
           ],
         ),
         // Live Aspect SVG
-        html.div([attribute.attribute("style", "margin: 0.6rem 0; width: 100%;")], [
-          element.unsafe_raw_html(
-            "",
-            "div",
-            [attribute.attribute("style", "width: 100%;")],
-            dive.svg_rich_aspect,
-          ),
-        ]),
+        html.div(
+          [attribute.attribute("style", "margin: 0.6rem 0; width: 100%;")],
+          [
+            element.unsafe_raw_html(
+              "",
+              "div",
+              [attribute.attribute("style", "width: 100%;")],
+              dive.svg_rich_aspect,
+            ),
+          ],
+        ),
         // Key Features List
         html.div([attribute.attribute("style", "margin-bottom: 0.6rem;")], [
           html.div(
@@ -2184,9 +2191,7 @@ fn render_deep_dive_card(dive: ExtensionDeepDive) -> Element(a) {
                   ),
                 ],
                 [
-                  element.text(
-                    "✓ Unbounded Surface PASS",
-                  ),
+                  element.text("✓ Unbounded Surface PASS"),
                 ],
               ),
             ],
@@ -2253,7 +2258,11 @@ fn render_footer() -> Element(a) {
               "color: #38bdf8; text-decoration: none;",
             ),
           ],
-          [element.text("http://nas-1.tail55d152.ts.net:4100/sciviz/comprehensive")],
+          [
+            element.text(
+              "http://nas-1.tail55d152.ts.net:4100/sciviz/comprehensive",
+            ),
+          ],
         ),
         html.a(
           [
@@ -2279,7 +2288,6 @@ fn render_footer() -> Element(a) {
     ],
   )
 }
-
 
 fn render_search_and_filter_toolbar() -> Element(a) {
   html.div(
@@ -2327,9 +2335,22 @@ fn render_search_and_filter_toolbar() -> Element(a) {
         ],
         [
           html.div(
-            [attribute.attribute("style", "display: flex; align-items: center; gap: 0.5rem;")],
             [
-              html.span([attribute.attribute("style", "color: #64748b; font-size: 0.75rem;")], [element.text("Sort:")]),
+              attribute.attribute(
+                "style",
+                "display: flex; align-items: center; gap: 0.5rem;",
+              ),
+            ],
+            [
+              html.span(
+                [
+                  attribute.attribute(
+                    "style",
+                    "color: #64748b; font-size: 0.75rem;",
+                  ),
+                ],
+                [element.text("Sort:")],
+              ),
               html.select(
                 [
                   attribute.attribute("id", "sciviz-sort-select"),
@@ -2340,16 +2361,33 @@ fn render_search_and_filter_toolbar() -> Element(a) {
                   ),
                 ],
                 [
-                  html.option([attribute.attribute("value", "name-asc")], "Name (A-Z)"),
-                  html.option([attribute.attribute("value", "name-desc")], "Name (Z-A)"),
-                  html.option([attribute.attribute("value", "category")], "Category"),
-                  html.option([attribute.attribute("value", "records")], "Records (High to Low)"),
+                  html.option(
+                    [attribute.attribute("value", "name-asc")],
+                    "Name (A-Z)",
+                  ),
+                  html.option(
+                    [attribute.attribute("value", "name-desc")],
+                    "Name (Z-A)",
+                  ),
+                  html.option(
+                    [attribute.attribute("value", "category")],
+                    "Category",
+                  ),
+                  html.option(
+                    [attribute.attribute("value", "records")],
+                    "Records (High to Low)",
+                  ),
                 ],
               ),
             ],
           ),
           html.div(
-            [attribute.attribute("style", "display: flex; align-items: center; background: #020617; border: 1px solid #334155; border-radius: 6px; padding: 0.15rem; gap: 0.2rem;")],
+            [
+              attribute.attribute(
+                "style",
+                "display: flex; align-items: center; background: #020617; border: 1px solid #334155; border-radius: 6px; padding: 0.15rem; gap: 0.2rem;",
+              ),
+            ],
             [
               html.button(
                 [
@@ -2552,9 +2590,21 @@ fn render_interactive_modal_container() -> Element(a) {
                 ),
               ],
               [
-                html.div([], [element.text("✔ Scenario: Exact visual layout rendering without client JavaScript")]),
-                html.div([], [element.text("✔ Scenario: Statistical coordinate transformation and scale mapping")]),
-                html.div([], [element.text("✔ Scenario: Large empirical dataset ingestion and zero memory leak verification")]),
+                html.div([], [
+                  element.text(
+                    "✔ Scenario: Exact visual layout rendering without client JavaScript",
+                  ),
+                ]),
+                html.div([], [
+                  element.text(
+                    "✔ Scenario: Statistical coordinate transformation and scale mapping",
+                  ),
+                ]),
+                html.div([], [
+                  element.text(
+                    "✔ Scenario: Large empirical dataset ingestion and zero memory leak verification",
+                  ),
+                ]),
               ],
             ),
           ]),

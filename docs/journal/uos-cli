@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec bash /home/an/NAS-setup/uos/tools/uos-cli "$@"

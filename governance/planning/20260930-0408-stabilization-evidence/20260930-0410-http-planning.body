@@ -1,0 +1,488 @@
+<!doctype html><html><head><meta charset="utf-8"><meta content="width=device-width,initial-scale=1" name="viewport"><title>C3I — Planning</title><link href="/static/material.css?v=22.10.5" rel="stylesheet"><style>
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg,#0a0e17);color:var(--text,#e0e6ed);transition:all 0.5s ease;}
+:root{--bg:#0a0e17;--text:#e0e6ed;--primary:#00d4aa;--accent:#3dd68c;--nav-bg:#0d1420;--card-bg:#141922;--border:#1e2a3a;--warn:#f5a623;--crit:#e05252;}
+.theme-amber{--bg:#1a1000;--text:#ffb000;--primary:#ffb000;--accent:#ffcc00;--nav-bg:#2a1a00;--card-bg:#251500;--border:#4a3000;--warn:#ff8000;--crit:#ff4400;}
+.theme-solaris{--bg:#f0f4f8;--text:#1a2a3a;--primary:#005fb8;--accent:#0078d4;--nav-bg:#ffffff;--card-bg:#ffffff;--border:#d0dce8;--warn:#8a5a00;--crit:#a4262c;}
+.theme-forest{--bg:#081008;--text:#a0c0a0;--primary:#2d5a27;--accent:#4e9a06;--nav-bg:#0c1a0c;--card-bg:#122012;--border:#1e3a1e;--warn:#c4a000;--crit:#ef2929;}
+a{color:var(--primary);text-decoration:none;}
+a:hover{color:var(--accent);}
+nav{background:var(--nav-bg);border-bottom:1px solid var(--border);padding:0 1rem;display:flex;flex-wrap:wrap;gap:.25rem;align-items:center;position:sticky;top:0;z-index:1000;}
+nav a{padding:.5rem .75rem;border-radius:4px;font-size:.95rem;color:var(--text);}
+nav a.active{background:var(--border);color:var(--accent);}
+.test-btn{background:var(--accent);color:var(--bg);border:none;padding:.3rem .8rem;border-radius:4px;font-weight:700;cursor:pointer;font-size:.88rem;margin-left:auto;display:flex;align-items:center;gap:4px;}
+.theme-selector{display:flex;gap:4px;margin-left:1rem;}
+.theme-dot{width:16px;height:16px;border-radius:50%;cursor:pointer;border:1px solid white;}
+main{padding:1.5rem;max-width:1400px;margin:0 auto;}
+h1{font-size:1.4rem;margin:.5rem 0 .25rem;color:var(--text);}
+h2{font-size:1.1rem;margin:1rem 0 .5rem;color:#7a8fa6;}
+p.sub{font-size:.95rem;color:#7a8fa6;margin:0 0 1rem;}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin:.75rem 0;}
+.card-grid-wide{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin:.75rem 0;}
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:1rem;position:relative;overflow:hidden;}
+.card-title{font-size:.8rem;color:#7a8fa6;text-transform:uppercase;margin:0 0 .4rem;}
+.card-value{font-size:1.5rem;font-weight:700;margin:0 0 .25rem;color:var(--text);}
+.card-detail{font-size:.8rem;color:#7a8fa6;}
+.status-healthy{color:var(--accent);}
+.status-degraded{color:var(--warn);}
+.status-critical{color:var(--crit);}
+.status-unknown{color:#7a8fa6;}
+.badge{display:inline-block;padding:.15rem .5rem;border-radius:3px;font-size:.88rem;font-weight:600;}
+.badge-healthy{background:rgba(61,214,140,0.2);color:var(--accent);}
+.badge-degraded{background:rgba(245,166,35,0.2);color:var(--warn);}
+.badge-critical{background:rgba(224,82,82,0.2);color:var(--crit);}
+.section{margin:1.25rem 0;}
+.section-title{font-size:.95rem;color:#7a8fa6;text-transform:uppercase;margin:0 0 .5rem;border-bottom:1px solid var(--border);padding-bottom:.35rem;}
+.alert{padding:.75rem 1rem;border-radius:4px;margin:.5rem 0;font-size:.9rem;}
+.alert-critical{background:rgba(224,82,82,0.1);border:1px solid var(--crit);color:var(--crit);}
+.alert-warning{background:rgba(245,166,35,0.1);border:1px solid var(--warn);color:var(--warn);}
+.alert-info{background:rgba(0,212,170,0.1);border:1px solid var(--primary);color:var(--primary);}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{text-align:left;padding:.4rem .6rem;background:var(--nav-bg);color:#7a8fa6;font-size:.9rem;text-transform:uppercase;}
+td{padding:.4rem .6rem;border-bottom:1px solid var(--border);color:var(--text);}
+.bar-wrap{background:var(--border);border-radius:2px;height:6px;width:100%;overflow:hidden;}
+.bar-fill{height:100%;border-radius:2px;background:var(--accent);}
+.kv-row{display:flex;gap:.75rem;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;}
+.kv-key{color:#7a8fa6;min-width:140px;}
+.kv-value{color:var(--text);}
+.ooda-phases{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;padding:.5rem 0;}
+.ooda-arrow{color:#7a8fa6;}
+.pill{display:inline-block;padding:.2rem .6rem;border-radius:12px;font-size:.8rem;background:var(--border);color:#7a8fa6;}
+.pill-active{background:rgba(61,214,140,0.2);color:var(--accent);}
+.w-full{width:100%;max-width:100%;overflow-x:hidden;}
+.dashboard-evolutionary{background-image:linear-gradient(rgba(30,42,58,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(30,42,58,0.1) 1px,transparent 1px);background-size:20px 20px;}
+@keyframes pulse{0%{opacity:0.6;}50%{opacity:1;}100%{opacity:0.6;}}
+.cyber-pulse{animation:pulse 2s infinite ease-in-out;}
+@keyframes breath{0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+.mesh-breath{animation:breath 4s infinite ease-in-out;}
+.led-on{box-shadow:0 0 10px var(--accent);border-color:var(--accent);}
+.emergency-stop-btn{background:var(--crit);color:white;border:none;padding:.75rem 1.5rem;border-radius:6px;font-weight:700;cursor:pointer;width:100%;margin-top:1rem;font-size:1.1rem;box-shadow:0 4px 15px rgba(224,82,82,0.4);transition:transform 0.1s;}
+.emergency-stop-btn:active{transform:scale(0.98);box-shadow:0 2px 5px rgba(224,82,82,0.4);}
+.section-actions{display:flex;justify-content:center;padding:1rem 0;}
+.cognitive-multilayer-display{background:rgba(20,25,34,0.5);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-top:.5rem;}
+.multilayer-row{display:flex;flex-wrap:wrap;gap:2rem;margin-bottom:.75rem;border-bottom:1px solid rgba(30,42,58,0.5);padding-bottom:.5rem;}
+.multilayer-row:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0;}
+/* === Dark Cockpit 5-Mode System (SC-HMI-010) === */
+/* Mode 1: DARK — healthy system, minimal display, suppress nominal cards */
+.cockpit-dark .card{opacity:0.6;transform:scale(0.98);}
+.cockpit-dark .status-healthy{opacity:0.3;}
+.cockpit-dark .section{border-color:transparent;}
+.cockpit-dark .card-detail{display:none;}
+.cockpit-dark .alert-critical,.cockpit-dark .status-critical{opacity:1;transform:scale(1);}
+/* Mode 2: DIM — warnings present, subtle yellow accents */
+.cockpit-dim .card{opacity:0.8;}
+.cockpit-dim .section-title{color:var(--warn);}
+.cockpit-dim nav{border-bottom-color:var(--warn);}
+/* Mode 3: NORMAL — standard display, all elements visible */
+.cockpit-normal .card{opacity:1;}
+/* Mode 4: BRIGHT — errors present, high contrast, enlarged critical elements */
+.cockpit-bright .card{border-color:var(--warn);border-width:2px;}
+.cockpit-bright .status-critical{font-size:1.2rem;font-weight:700;}
+.cockpit-bright .alert-critical{border-width:3px;box-shadow:0 0 15px rgba(224,82,82,0.5);}
+.cockpit-bright main{background:#000000 !important;}
+/* Mode 5: EMERGENCY — critical failure, red dominant, pulsing border */
+.cockpit-emergency{background:#2a0505 !important;}
+.cockpit-emergency main{background:#2a0505;}
+.cockpit-emergency nav{background:#4a0505;border-bottom-color:var(--crit);}
+.cockpit-emergency .card{border-color:var(--crit);animation:pulse 1s infinite;background:#3a0a0a;}
+.cockpit-emergency .section-title{color:var(--crit);}
+.cockpit-emergency h1,.cockpit-emergency h2{color:var(--crit);}
+.cockpit-emergency .status-healthy{color:#555;}
+/* === Container Genome Grid (16-cell SIL-6 Biomorphic Mesh) === */
+.genome-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:.75rem 0;}
+.genome-cell{background:var(--card-bg);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center;font-size:.88rem;position:relative;transition:all 0.3s;}
+.genome-cell .genome-name{font-weight:600;color:var(--text);margin-bottom:2px;}
+.genome-cell .genome-status{font-size:.82rem;color:#7a8fa6;}
+.genome-cell .genome-led{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;}
+.genome-cell.genome-healthy{border-color:rgba(61,214,140,0.3);}.genome-cell.genome-healthy .genome-led{background:var(--accent);box-shadow:0 0 6px var(--accent);}
+.genome-cell.genome-degraded{border-color:rgba(245,166,35,0.3);}.genome-cell.genome-degraded .genome-led{background:var(--warn);box-shadow:0 0 6px var(--warn);}
+.genome-cell.genome-critical{border-color:rgba(224,82,82,0.3);animation:pulse 2s infinite;}.genome-cell.genome-critical .genome-led{background:var(--crit);box-shadow:0 0 6px var(--crit);}
+/* === OODA Phase Ring (5-tier) === */
+.ooda-5tier{display:flex;flex-direction:column;gap:4px;margin:.5rem 0;}
+.ooda-tier{display:flex;align-items:center;gap:.5rem;padding:4px 8px;border-radius:4px;font-size:.8rem;color:var(--text);}
+.ooda-tier.active{background:rgba(61,214,140,0.1);border:1px solid var(--accent);}
+.ooda-tier .ooda-budget{color:#7a8fa6;font-size:.85rem;margin-left:auto;}
+.ooda-tier .ooda-dot{width:8px;height:8px;border-radius:50%;background:#7a8fa6;}
+.ooda-tier.active .ooda-dot{background:var(--accent);box-shadow:0 0 8px var(--accent);}
+/* === Proof Chain Visualization === */
+.proof-chain{display:flex;align-items:center;gap:0;margin:.5rem 0;overflow-x:auto;}
+.proof-block{background:var(--card-bg);border:1px solid var(--border);border-radius:3px;padding:4px 8px;font-size:.85rem;font-family:monospace;white-space:nowrap;color:var(--text);}
+.proof-block.verified{border-color:var(--accent);color:var(--accent);}
+.proof-block.pending{border-color:var(--warn);color:var(--warn);}
+.proof-arrow{color:#7a8fa6;padding:0 2px;font-size:.85rem;}
+@media(max-width:768px){nav{padding:.25rem;overflow-x:auto;flex-wrap:nowrap;}.card-grid,.card-grid-wide{grid-template-columns:1fr;}main{padding:.75rem;overflow-x:hidden;}body{overflow-x:hidden;}table{font-size:.75rem;}table th,table td{padding:.4rem .5rem;word-break:break-word;max-width:40vw;}.test-btn{margin-left:0;width:100%;}}
+/* Optimized Navigation — Mobile-First Grouped */
+.nav-container{display:flex;align-items:center;gap:4px;width:100%;}
+.nav-brand{display:flex;align-items:center;gap:6px;font-weight:800;font-size:.95rem;color:var(--accent);letter-spacing:1px;white-space:nowrap;padding:0 .5rem;text-decoration:none;}
+.nav-brand-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent);}
+.nav-groups{display:flex;flex-wrap:wrap;gap:1px;flex:1;align-items:center;}
+.nav-group{position:relative;}
+.nav-group-btn{padding:6px 10px;font-size:.72rem;font-weight:700;color:#7a8fa6;cursor:pointer;border-radius:4px;transition:all 0.15s;letter-spacing:.3px;text-transform:uppercase;min-height:36px;display:flex;align-items:center;gap:4px;border:none;background:none;font-family:inherit;}
+.nav-group-btn:hover{background:rgba(0,212,170,0.08);color:var(--accent);}
+.nav-group-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.nav-dropdown{display:none;position:absolute;top:100%;left:0;background:var(--nav-bg);border:1px solid var(--border);border-radius:6px;padding:4px;min-width:150px;z-index:1001;box-shadow:0 8px 24px rgba(0,0,0,0.5);}
+.nav-group:hover .nav-dropdown{display:block;}
+.nav-dropdown a{display:block;padding:8px 12px;border-radius:4px;font-size:.8rem;color:var(--text);min-height:40px;line-height:40px;}
+.nav-dropdown a:hover{background:rgba(0,212,170,0.1);color:var(--accent);}
+.nav-dropdown a.active{background:var(--border);color:var(--accent);font-weight:600;}
+.nav-top{display:flex;gap:1px;align-items:center;}
+.nav-top a{padding:6px 10px;font-size:.82rem;border-radius:4px;min-height:36px;display:flex;align-items:center;}
+.nav-right{display:flex;align-items:center;gap:6px;margin-left:auto;}
+.nav-hamburger{display:none;padding:8px;cursor:pointer;color:var(--text);font-size:1.3rem;min-height:44px;min-width:44px;align-items:center;justify-content:center;border:none;background:none;}
+.nav-groups.nav-open,.nav-top.nav-open{display:flex!important;flex-direction:column;width:100%;background:var(--nav-bg);padding:.5rem 0;}
+@media(max-width:768px){.nav-groups,.nav-top{display:none;}.nav-hamburger{display:flex;}.nav-right .theme-selector,.nav-right .test-btn{display:none;}.nav-dropdown{position:static;display:block;box-shadow:none;border:none;padding:0 0 0 16px;min-width:auto;}}
+</style><script>
+// ---------------------------------------------------------------------------
+// C3I Neuromorphic Control Loops & Symbiotic Autonomy (Phases 3, 4, 5 & L0-L7)
+// ---------------------------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+  // === Theme Management ===
+  const setTheme = (theme) => {
+    document.body.classList.remove('theme-amber', 'theme-solaris', 'theme-forest');
+    if (theme && theme !== 'dark') document.body.classList.add('theme-' + theme);
+    localStorage.setItem('c3i-theme', theme);
+  };
+  setTheme(localStorage.getItem('c3i-theme') || 'dark');
+
+  window.selectTheme = setTheme;
+
+  // === Test Cycle Logic (SC-HMI-TEST) ===
+  const cockpitModes = ['dark', 'dim', 'normal', 'bright', 'emergency'];
+  let testInterval = null;
+  
+  window.triggerTestCycle = () => {
+    if (testInterval) {
+      clearInterval(testInterval);
+      testInterval = null;
+      document.body.classList.remove(...cockpitModes.map(m => 'cockpit-' + m));
+      document.body.classList.add('cockpit-normal');
+      console.log('[Test] Cycle stopped.');
+      return;
+    }
+    
+    let modeIdx = 0;
+    console.log('[Test] Starting full system state cycle...');
+    
+    testInterval = setInterval(() => {
+      // 1. Cycle Cockpit Mode
+      const mode = cockpitModes[modeIdx];
+      document.body.classList.remove(...cockpitModes.map(m => 'cockpit-' + m));
+      document.body.classList.add('cockpit-' + mode);
+      console.log(`[Test] Cockpit Mode: ${mode.toUpperCase()}`);
+      
+      // 2. Cycle Component States (Randomly simulate data updates)
+      document.querySelectorAll('.card-value, .status-healthy, .status-degraded, .status-critical').forEach(el => {
+        if (Math.random() > 0.5) {
+           el.classList.toggle('status-healthy', Math.random() > 0.3);
+           el.classList.toggle('status-critical', Math.random() < 0.2);
+        }
+      });
+      
+      document.querySelectorAll('.genome-cell').forEach(cell => {
+        const states = ['genome-healthy', 'genome-degraded', 'genome-critical'];
+        cell.classList.remove(...states);
+        cell.classList.add(states[Math.floor(Math.random() * states.length)]);
+      });
+
+      modeIdx = (modeIdx + 1) % cockpitModes.length;
+      if (modeIdx === 0) {
+         clearInterval(testInterval);
+         testInterval = null;
+         setTimeout(() => {
+           document.body.classList.remove(...cockpitModes.map(m => 'cockpit-' + m));
+           document.body.classList.add('cockpit-normal');
+           console.log('[Test] Cycle complete. Returned to Homeostasis.');
+         }, 2000);
+      }
+    }, 2000);
+  };
+
+  // === L0: Constitutional (Virtual Friction & Kinesthetic Guardrails SC-HMI-400) ===
+  const setupVirtualFriction = () => {
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.innerText.includes('< 5s') || btn.innerText.includes('Emergency')) {
+        let pressTimer;
+        let overlay;
+        btn.addEventListener('mousedown', (e) => {
+          overlay = document.createElement('div');
+          overlay.style.cssText = 'position:absolute;bottom:0;left:0;height:4px;background:#e06c75;width:0%;transition:width 2.5s linear;';
+          btn.style.position = 'relative';
+          btn.appendChild(overlay);
+          setTimeout(() => overlay.style.width = '100%', 10);
+          
+          btn.dataset.armed = 'false';
+          pressTimer = setTimeout(() => {
+            btn.dataset.armed = 'true';
+            btn.style.background = '#e06c75';
+            btn.style.color = '#fff';
+            overlay.remove();
+          }, 2500); // 2.5s Virtual Friction
+        });
+        const cancelFriction = (e) => {
+          clearTimeout(pressTimer);
+          if (overlay) overlay.remove();
+          if (btn.dataset.armed !== 'true' && e.type === 'click') {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('[L0 Guard] Action aborted: Virtual friction threshold not met.');
+          }
+        };
+        btn.addEventListener('mouseup', cancelFriction);
+        btn.addEventListener('mouseleave', cancelFriction);
+        btn.addEventListener('click', cancelFriction, true);
+      }
+    });
+  };
+  setInterval(setupVirtualFriction, 2000);
+
+  // === L1: Atomic/Debug (High-Stress Jitter Filtering SC-HMI-430) ===
+  let lastMouseY = 0;
+  let jitterCount = 0;
+  document.addEventListener('mousemove', (e) => {
+    if (Math.abs(e.clientY - lastMouseY) < 3) jitterCount++;
+    else jitterCount = 0;
+    if (jitterCount > 10) {
+      document.documentElement.style.setProperty('--btn-padding', '1rem'); // Expand hitboxes
+      jitterCount = 0;
+    }
+    lastMouseY = e.clientY;
+  });
+
+  // === L2: Component (Muscle Memory & Spatial Invariance SC-HMI-320) ===
+  // Locks critical UI components to absolute screen coordinates
+  const lockCriticalCoordinates = () => {
+    document.querySelectorAll('.apalache-guard').forEach(el => {
+      if (!el.dataset.spatiallyLocked) {
+        el.dataset.spatiallyLocked = 'true';
+        // In a full implementation, this calculates and enforces absolute window coordinates
+        // shielding the element from DOM reflows during crisis states.
+      }
+    });
+  };
+  setInterval(lockCriticalCoordinates, 2000);
+
+  // === L3: Transaction (Temporal Scrubbing & 4D Projection SC-HMI-410) ===
+  // Placeholder for 4D Tesseract Slider. 
+  // Renders a temporal timeline at the bottom of the screen.
+  const temporalSlider = document.createElement('input');
+  temporalSlider.type = 'range';
+  temporalSlider.min = '-60'; temporalSlider.max = '0'; temporalSlider.value = '0';
+  temporalSlider.style.cssText = 'position:fixed;bottom:0;width:100%;z-index:100;opacity:0.5;background:#3dd68c;';
+  temporalSlider.title = '4D State Projection Slider (SC-HMI-410)';
+  temporalSlider.addEventListener('input', (e) => {
+    document.body.style.filter = e.target.value < 0 ? 'sepia(100%) hue-rotate(180deg)' : 'none';
+  });
+  document.body.appendChild(temporalSlider);
+
+  // === L4: System (Gestalt Topological Clustering SC-HMI-440) ===
+  // Groups containers visually based on semantic gravity
+  setInterval(() => {
+    const cards = document.querySelectorAll('.card-value');
+    cards.forEach(c => {
+      if (c.innerText.includes('apoptotic')) {
+        c.parentElement.style.opacity = '0.5';
+        c.parentElement.style.transform = 'scale(0.95)';
+        c.parentElement.style.transition = 'all 2s ease-out';
+      }
+    });
+  }, 1000);
+
+  // === L5: Cognitive (Hick's Law Pruning SC-HMI-060) ===
+  // Handled dynamically by Gleam SSR based on threat_level, 
+  // but client-side script enforces maximum 5 buttons visible in specific sections.
+  setInterval(() => {
+    const ctrlSections = document.querySelectorAll('.card-grid');
+    ctrlSections.forEach(grid => {
+      if (grid.children.length > 5 && grid.parentElement.innerText.includes('Cognitive')) {
+        for(let i=5; i<grid.children.length; i++) {
+          grid.children[i].style.display = 'none'; // Prune extraneous options
+        }
+      }
+    });
+  }, 1000);
+
+  // === L6: Ecosystem (Byzantine UI Fault Tolerance SC-HMI-330) ===
+  setInterval(() => {
+    // Simulating stale telemetry detection (Anti-Illusion Rendering)
+    const metrics = document.querySelectorAll('.card-detail');
+    metrics.forEach(m => {
+      if (Math.random() < 0.01) { // 1% chance a metric goes stale
+        m.style.filter = 'blur(2px) grayscale(100%)';
+        m.title = 'ERR_STALE_TELEMETRY - BYZANTINE FAULT TOLERANCE ACTIVE';
+      }
+    });
+  }, 5000);
+
+  // === L7: Federation (Multi-Operator Consensus SC-HMI-420) ===
+  // Visual Cryptography & Provenance (SC-ULTRA-UI-002)
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey && e.shiftKey) {
+      document.querySelectorAll('.card').forEach(el => {
+        if (!el.dataset.merkleOverlay) {
+          const hash = '0x' + Math.random().toString(16).substr(2, 8).toUpperCase();
+          const overlay = document.createElement('div');
+          overlay.className = 'merkle-overlay';
+          overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);color:#3dd68c;font-family:monospace;font-size:0.7rem;display:flex;align-items:center;justify-content:center;z-index:20;';
+          overlay.textContent = `PROOF: ${hash}`;
+          el.style.position = 'relative';
+          el.appendChild(overlay);
+          el.dataset.merkleOverlay = 'true';
+        }
+      });
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (!e.altKey || !e.shiftKey) {
+      document.querySelectorAll('.merkle-overlay').forEach(el => el.remove());
+      document.querySelectorAll('.card').forEach(el => delete el.dataset.merkleOverlay);
+    }
+  });
+
+
+  // Decentralized Emergent Ignition Visualization
+  const renderIgnitionCanvas = () => {
+    const containers = document.querySelectorAll('.card-grid');
+    containers.forEach(grid => {
+      if (grid.innerHTML.includes('zenoh-router') && !grid.dataset.canvasAttached) {
+        grid.dataset.canvasAttached = 'true';
+        const canvas = document.createElement('canvas');
+        canvas.width = grid.clientWidth;
+        canvas.height = 100;
+        canvas.style.marginTop = '1rem';
+        canvas.style.border = '1px dashed #4b5263';
+        grid.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        let entropy = 1.0;
+        
+        const draw = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = `rgba(61, 214, 140, ${1.0 - entropy})`;
+          
+          for(let i=0; i<16; i++) {
+            const targetX = 50 + (i * 40);
+            const targetY = 50;
+            const x = targetX + (Math.random() * 100 * entropy) - (50 * entropy);
+            const y = targetY + (Math.random() * 100 * entropy) - (50 * entropy);
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          
+          entropy = Math.max(0, entropy - 0.005);
+          if (entropy > 0) requestAnimationFrame(draw);
+          else {
+             ctx.fillStyle = '#a6accd';
+             ctx.font = '10px monospace';
+             ctx.fillText('ZMOF CRYSTALLIZATION COMPLETE', 10, 20);
+          }
+        };
+        draw();
+      }
+    });
+  };
+  
+  renderIgnitionCanvas();
+  setInterval(renderIgnitionCanvas, 2000);
+
+  // === C3I Live Data System (Progressive Enhancement) ===
+  const refreshData = async () => {
+    try {
+      const resp = await fetch('/api/v1/dashboard');
+      const data = await resp.json();
+      console.log('[Dashboard] Heartbeat update received.');
+    } catch (err) {}
+  };
+
+  const connectSSE = () => {
+    // SSE removed — WebSocket /ws/dashboard is the primary real-time channel
+    return;
+    const sse = new EventSource('/api/v1/sse/mesh');
+    sse.onmessage = (ev) => {
+      try {
+        const data = JSON.parse(ev.data);
+        if (data.dark_cockpit_mode) {
+          document.body.classList.remove('cockpit-dark', 'cockpit-dim', 'cockpit-normal', 'cockpit-bright', 'cockpit-emergency');
+          document.body.classList.add('cockpit-' + data.dark_cockpit_mode);
+        }
+      } catch (e) {}
+    };
+    sse.onerror = () => {
+      console.warn('[SSE] Connection lost. Re-orienting...');
+      sse.close();
+      setTimeout(connectSSE, 5000);
+    };
+  };
+
+  // Search filter for tables
+  document.querySelectorAll('table').forEach(table => {
+    const search = document.createElement('input');
+    search.placeholder = 'Filter table...';
+    search.style.cssText = 'margin-bottom:.5rem;background:#1e2a3a;border:1px solid #3dd68c;color:#e0e6ed;padding:.3rem .6rem;border-radius:4px;font-size:.8rem;';
+    search.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      table.querySelectorAll('tbody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+    table.parentElement.insertBefore(search, table);
+  });
+
+  // Keyboard shortcut help overlay
+  const helpDiv = document.createElement('div');
+  helpDiv.id = 'c3i-help';
+  helpDiv.style.cssText = 'display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0d1420;border:1px solid #1e2a3a;border-radius:8px;padding:1.5rem;z-index:300;color:#e0e6ed;font-family:monospace;font-size:.95rem;min-width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.6);';
+  helpDiv.innerHTML = '<div style="color:#3dd68c;font-weight:bold;margin-bottom:.75rem">⌨ Keyboard Shortcuts</div>'
+    + '<div style="display:grid;grid-template-columns:60px 1fr;gap:4px">'
+    + '<span style="color:#7a8fa6">j/k</span><span>Scroll down/up</span>'
+    + '<span style="color:#7a8fa6">1-9,0</span><span>Jump to page 1-10</span>'
+    + '<span style="color:#7a8fa6">[ ]</span><span>Previous/next page</span>'
+    + '<span style="color:#7a8fa6">/</span><span>Focus search filter</span>'
+    + '<span style="color:#7a8fa6">?</span><span>Toggle this help</span>'
+    + '<span style="color:#7a8fa6">Alt+Shift</span><span>Merkle proof overlay</span>'
+    + '</div><div style="margin-top:.75rem;color:#7a8fa6;font-size:.88rem">Press ? to close</div>';
+  document.body.appendChild(helpDiv);
+
+  // Keyboard navigation (j/k scroll, 1-9 page switch, / search, ? help)
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    const navLinks = Array.from(document.querySelectorAll('nav a'));
+    const activeIdx = navLinks.findIndex(a => a.classList.contains('active'));
+    if (e.key === 'j') window.scrollBy(0, 80);
+    else if (e.key === 'k') window.scrollBy(0, -80);
+    else if (e.key >= '1' && e.key <= '9' && navLinks[parseInt(e.key)-1]) window.location.href = navLinks[parseInt(e.key)-1].href;
+    else if (e.key === '0' && navLinks[9]) window.location.href = navLinks[9].href;
+    else if (e.key === '[' && activeIdx > 0) window.location.href = navLinks[activeIdx-1].href;
+    else if (e.key === ']' && activeIdx < navLinks.length-1) window.location.href = navLinks[activeIdx+1].href;
+    else if (e.key === '/' && !e.ctrlKey) { e.preventDefault(); const s = document.getElementById('c3i-search'); if (s) s.focus(); }
+    else if (e.key === '?' && !e.ctrlKey) {
+      const h = document.getElementById('c3i-help');
+      if (h) h.style.display = h.style.display === 'none' ? 'block' : 'none';
+    }
+  });
+
+  // Heartbeat pulse dot (shows mesh is alive)
+  const dot = document.createElement('div');
+  dot.id = 'c3i-health-dot';
+  dot.style.cssText = 'position:fixed;top:8px;right:12px;width:8px;height:8px;border-radius:50%;background:#3dd68c;z-index:200;';
+  dot.classList.add('cyber-pulse');
+  dot.title = 'Mesh heartbeat';
+  document.body.appendChild(dot);
+
+  // Activity indicator
+  const activity = document.createElement('div');
+  activity.id = 'c3i-activity';
+  activity.style.cssText = 'position:fixed;top:8px;right:28px;width:8px;height:8px;border-radius:50%;background:#7a8fa6;z-index:200;';
+  activity.title = 'Agent activity';
+  document.body.appendChild(activity);
+
+  // Initial data fetch + SSE connection
+  refreshData();
+  setInterval(refreshData, 10000); // Refresh every 10s
+  connectSSE();
+
+  console.log('[C3I] Live data system active. Press ? for keyboard shortcuts.');
+});
+</script><script src="/static/sw-register.js?v=22.11.7"></script></head><body><nav aria-label="Primary"><div class="nav-container"><a class="nav-brand" href="/dashboard"><span class="nav-brand-dot"></span>C3I</a><button aria-label="Menu" class="nav-hamburger" onclick="document.querySelector(&#39;.nav-groups&#39;).classList.toggle(&#39;nav-open&#39;);document.querySelector(&#39;.nav-top&#39;).classList.toggle(&#39;nav-open&#39;)">☰</button><div class="nav-top"><a href="/dashboard">Dashboard</a><a class="active" href="/planning">Planning</a><a href="/cockpit">Cockpit</a></div><div class="nav-groups"><div class="nav-group"><button class="nav-group-btn"><span class="nav-group-dot" style="background:#ff6b6b"></span>Safety ▾</button><div class="nav-dropdown"><a href="/immune">Immune</a><a href="/verification">Verification</a><a href="/matrix">Triad Matrix</a><a href="/checklist">Checklist</a><a href="/kms">KMS</a><a href="/integrity">Integrity</a><a href="/bicameral">Bicameral</a></div></div><div class="nav-group"><button class="nav-group-btn"><span class="nav-group-dot" style="background:#9b59b6"></span>System ▾</button><div class="nav-dropdown"><a href="/substrate">Substrate</a><a href="/metabolic">Metabolic</a><a href="/podman">Podman</a><a href="/config">Config</a><a href="/database">Database</a><a href="/git">Git</a></div></div><div class="nav-group"><button class="nav-group-btn"><span class="nav-group-dot" style="background:#00d4aa"></span>Intelligence ▾</button><div class="nav-dropdown"><a href="/knowledge">Knowledge</a><a href="/zenoh">Zenoh</a><a href="/mcp">MCP</a><a href="/telemetry">Telemetry</a><a href="/agents">Agents</a><a href="/prajna">Prajna</a><a href="/planning-dashboard">OODA</a></div></div><div class="nav-group"><button class="nav-group-btn"><span class="nav-group-dot" style="background:#f39c12"></span>Evolution ▾</button><div class="nav-dropdown"><a href="/federation">Federation</a><a href="/bridge">Bridge</a><a href="/smriti">Smriti</a><a href="/holon">Holon</a><a href="/evolution">Evolution</a><a href="/biomorphic">Biomorphic</a><a href="/homeostasis">Homeostasis</a><a href="/singularity">Singularity</a><a href="/health-grid">Health Grid</a><a href="/components">Components</a></div></div><div class="nav-group"><button class="nav-group-btn"><span class="nav-group-dot" style="background:#38bdf8"></span>SciViz ▾</button><div class="nav-dropdown"><a href="/sciviz">SciViz Cockpit</a><a href="/sciviz/comprehensive">Deep Dive Explorer</a><a href="/sciviz/extensions">167 Extensions</a><a href="/sciviz/tests">9 Modalities</a></div></div></div><div class="nav-right"><div class="theme-selector"><div class="theme-dot" onclick="selectTheme(&#39;dark&#39;)" style="background:#0a0e17;" title="Dark Mode (Default)"></div><div class="theme-dot" onclick="selectTheme(&#39;amber&#39;)" style="background:#ffb000;" title="Cyber Amber"></div><div class="theme-dot" onclick="selectTheme(&#39;solaris&#39;)" style="background:#0078d4;" title="Solaris White"></div><div class="theme-dot" onclick="selectTheme(&#39;forest&#39;)" style="background:#2d5a27;" title="Deep Forest"></div></div><button class="test-btn" onclick="triggerTestCycle()" title="Cycle full system state (SC-HMI-TEST)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>TEST CYCLE</button></div></div></nav><main><section class="p-6 space-y-6" id="canonical-execution-progress"><h1>Sa-plan execution progress</h1><p>Canonical plan: uos/system-mcp-features/20260919-1642</p><nav aria-label="Execution navigation"><a href="http://nas-1.tail55d152.ts.net:4100/planning">Refresh current observation</a> · <a href="http://nas-1.tail55d152.ts.net:4100/api/planning/tasks">JSON progress</a> · <a href="http://nas-1.tail55d152.ts.net:4100/files/docs/plans/20260920-1438-hive-swarm-mcp-recovery-plan.md">Recovery and optimization plan</a></nav><p role="note">Read-only observation. Sa-plan owns all execution. Task completion is not system admission; no claim, retry or deployment is performed here.</p><div class="space-y-6"><p>Observed UTC: 2026-09-30T04:10:20Z</p><h2>4 / 21 canonical tasks completed</h2><progress aria-label="Canonical task completion" max="21" value="4">4 / 21</progress><div class="grid grid-cols-2 lg:grid-cols-5 gap-3"><div class="rounded border border-slate-700 p-4"><div class="text-2xl font-bold">4</div><div>Completed with receipt</div></div><div class="rounded border border-slate-700 p-4"><div class="text-2xl font-bold">0</div><div>Executing with current lease</div></div><div class="rounded border border-slate-700 p-4"><div class="text-2xl font-bold">14</div><div>Blocked</div></div><div class="rounded border border-slate-700 p-4"><div class="text-2xl font-bold">3</div><div>Unknown / needs reconciliation</div></div><div class="rounded border border-slate-700 p-4"><div class="text-2xl font-bold">0</div><div>Candidates for preflight only</div></div></div><h2>Execution optimization</h2><p>Authority and dependency readiness first, then safety class and criticality × STPA × FMEA × dependency × impact. Consumer urgency propagates to prerequisites without making blocked tasks eligible. Ties use oldest ready time and stable task ID. Cost/effort evidence is unavailable; no global optimum is asserted.</p><p>Recommended preflight order: None. Resolve visible blockers or refresh evidence.</p><p>Risk scores are declarations, not source-verified dispatch authorization. Unknown or expired evidence never becomes ready. Re-run source-bound risk preflight, then claim through Sa-plan and check effect-time fences.</p><div aria-label="Canonical task table" class="overflow-x-auto" role="region" tabindex="0"><table class="w-full text-left"><caption>All tasks in this plan, including unfinished work</caption><thead><tr><th class="p-3" scope="col">Task</th><th class="p-3" scope="col">Progress</th><th class="p-3" scope="col">Owner / attempt</th><th class="p-3" scope="col">Risk / score</th><th class="p-3" scope="col">Dependencies</th><th class="p-3" scope="col">Why / next action</th></tr></thead><tbody><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r01-store-gates</strong><p>Fail closed on coordinator verification and semantic replay failures</p></td><td class="p-3 align-top">completed (DB: completed)</td><td class="p-3 align-top">codex-01a0ba74-feature-tracker / attempt 2</td><td class="p-3 align-top">P0 / 3125 (declared)</td><td class="p-3 align-top">None</td><td class="p-3 align-top">Sa-plan completion receipt present; not runtime admission</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r02-recovery-candidate</strong><p>Build non-destructive graded SQLite authority candidate</p></td><td class="p-3 align-top">unknown (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 4</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r01-store-gates</td><td class="p-3 align-top">Risk assessment stale, invalid or inconsistent with canonical task</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r03-harness-coordinator</strong><p>Route reviewed Gleam harness through selected canonical coordinator</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r02-recovery-candidate</td><td class="p-3 align-top">Dependency incomplete: r02-recovery-candidate</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r04-identity-enrollment</strong><p>Enroll real external agents and internal actor incarnations</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r03-harness-coordinator</td><td class="p-3 align-top">Dependency incomplete: r03-harness-coordinator</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r05-mcp-data</strong><p>Provide authorized MCP data-plane discovery and reads</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r03-harness-coordinator, t1-tracker</td><td class="p-3 align-top">Dependency incomplete: r03-harness-coordinator</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r06-mcp-control</strong><p>Provide fenced MCP control-plane intent execution</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r04-identity-enrollment, t2-contracts</td><td class="p-3 align-top">Dependency incomplete: r04-identity-enrollment; Dependency incomplete: t2-contracts</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r07-hive-swarm</strong><p>Wire usable hive and swarm orchestration through canonical authority</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r04-identity-enrollment, r06-mcp-control</td><td class="p-3 align-top">Dependency incomplete: r04-identity-enrollment; Dependency incomplete: r06-mcp-control</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r08-service-adapters</strong><p>Close remaining system service MCP adapter gaps</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r05-mcp-data, r06-mcp-control</td><td class="p-3 align-top">Dependency incomplete: r05-mcp-data; Dependency incomplete: r06-mcp-control</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r09-end-to-end</strong><p>Run full data/control MCP and hive/swarm acceptance campaign</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r07-hive-swarm, r08-service-adapters, t0c-conformance</td><td class="p-3 align-top">Dependency incomplete: r07-hive-swarm; Dependency incomplete: r08-service-adapters; Dependency incomplete: t0c-conformance</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r10-artifact-sync</strong><p>Regenerate current system artifacts from verified DB inventory</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r09-end-to-end, t3-evidence</td><td class="p-3 align-top">Dependency incomplete: r09-end-to-end; Dependency incomplete: t3-evidence</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r11-release-review</strong><p>Obtain independent release and recovery review</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r10-artifact-sync</td><td class="p-3 align-top">Dependency incomplete: r10-artifact-sync</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r12-operational-acceptance</strong><p>Verify deployed usability and reconcile every plan action</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">r11-release-review</td><td class="p-3 align-top">Dependency incomplete: r11-release-review</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>r13-task-dashboard</strong><p>Develop and verify canonical task dashboard with risk/dependency execution projection and MCP progress query; release remains r12</p></td><td class="p-3 align-top">completed (DB: completed)</td><td class="p-3 align-top">codex-01a0ba74-feature-tracker / attempt 1</td><td class="p-3 align-top">P0 / 3125 (declared)</td><td class="p-3 align-top">r01-store-gates</td><td class="p-3 align-top">Sa-plan completion receipt present; not runtime admission</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t0-coordination</strong><p>Diagnose coordinator integrity and verify Claude Codex AGY actor and holon participation</p></td><td class="p-3 align-top">unknown (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 5</td><td class="p-3 align-top">P0 / 3125 (declared)</td><td class="p-3 align-top">None</td><td class="p-3 align-top">Risk assessment stale, invalid or inconsistent with canonical task</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t0a-reconcile</strong><p>Select and reconcile canonical coordination authority with independent evidence; preserve all histories</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">t0-coordination</td><td class="p-3 align-top">Dependency incomplete: t0-coordination</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t0b-bindings</strong><p>Bind actual Claude Codex AGY sessions and runtime actors to holons with heartbeat ACK and Sa-plan fences</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">t0a-reconcile</td><td class="p-3 align-top">Dependency incomplete: t0a-reconcile</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t0c-conformance</strong><p>Verify all declared participants, stale identity rejection, scope conflicts and MCP coordination access</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">t0b-bindings</td><td class="p-3 align-top">Dependency incomplete: t0b-bindings</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t1-tracker</strong><p>Implement database-backed system feature inventory and MCP coverage</p></td><td class="p-3 align-top">completed (DB: completed)</td><td class="p-3 align-top">codex-01a0ba74-feature-tracker / attempt 6</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">None</td><td class="p-3 align-top">Sa-plan completion receipt present; not runtime admission</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t1a-source-reconcile</strong><p>Materialize successor source ledger from validated correction overlay; conserve targets and preserve UNKNOWN MCP/runtime states</p></td><td class="p-3 align-top">completed (DB: completed)</td><td class="p-3 align-top">codex-source-reconcile / attempt 2</td><td class="p-3 align-top">P0 / 3125 (declared)</td><td class="p-3 align-top">t1-tracker</td><td class="p-3 align-top">Sa-plan completion receipt present; not runtime admission</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t2-contracts</strong><p>Expose declarative algebraic feature queries and intents through MCP</p></td><td class="p-3 align-top">unknown (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 4</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">t1-tracker</td><td class="p-3 align-top">Risk assessment stale, invalid or inconsistent with canonical task</td></tr><tr class="border-t border-slate-700"><td class="p-3 align-top"><strong>t3-evidence</strong><p>Verify feature tracker, publish current-system review and coverage gaps</p></td><td class="p-3 align-top">blocked (DB: available)</td><td class="p-3 align-top">Unassigned / attempt 0</td><td class="p-3 align-top">P1 / 3125 (declared)</td><td class="p-3 align-top">t2-contracts</td><td class="p-3 align-top">Dependency incomplete: t2-contracts</td></tr></tbody></table></div><details><summary>Observation provenance and limitations</summary><p>Database: /home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3</p><p>Task snapshot SHA-256: 8fd1e57d0e24eb0e58b70908c8541c145b2219323e8afa237a7d465f2df2a66c</p><p>Risk snapshot SHA-256: 380104340c387ad3919794ae78c87ad0688eb2b0214b99f4a53d7c2250ae285f</p><a href="http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20260921-1556-risk-portfolio-refresh.json">Risk portfolio</a><p>One read-only SQLite SELECT; risk file and clock are separate bounded observations. Reload to refresh. Full MCP coverage, hive usability and production admission remain separate acceptance gates.</p></details></div><section id="execution-verification-checklist"><h2>Comprehensive verification checklist</h2><p>18 obligations, not 18 passing claims. Consult the task&#39;s candidate-bound evidence; runtime and formal checks not observed here remain UNRUN.</p><div><details><summary>Metadata and navigation</summary><ul><li>CHK-01-TIME — Observe synchronized clock and evidence freshness: evidence required</li><li>CHK-02-TAIL — Verify Tailnet delivery and navigation: evidence required</li><li>CHK-03-FRACT — Account for L0–L9 applicability: evidence required</li><li>CHK-04-KM — Reconcile knowledge and artifact sources: evidence required</li></ul></details><details><summary>Purity and storage safety</summary><ul><li>CHK-05-MUDA — Verify excluded dependency boundaries: evidence required</li><li>CHK-06-GRAPH — Verify language and bounded native boundaries: evidence required</li><li>CHK-07-DRIVE — Preserve OS-storage interlock and data: evidence required</li></ul></details><details><summary>Testing and mathematical gates</summary><ul><li>CHK-08-C1C8 — Exercise all applicable client surfaces: evidence required</li><li>CHK-09-MATH — Bind mathematical gates to candidate: evidence required</li><li>CHK-10-9MOD — Record applicable test modalities: evidence required</li><li>CHK-11-REGR — Observe fresh regressions and failures: evidence required</li></ul></details><details><summary>Control and observability</summary><ul><li>CHK-12-GLEAM — Verify actual OTP supervision and fences: evidence required</li><li>CHK-13-HERMES — Verify bounded formal/evidence services: evidence required</li><li>CHK-14-ZIGVM — Verify deterministic kernel and VFS: evidence required</li><li>CHK-15-MAX — Verify isolated inference where applicable: evidence required</li><li>CHK-16-OTEL — Correlate actual control and data traces: evidence required</li></ul></details><details><summary>Governance and standalone Jujutsu</summary><ul><li>CHK-17-SOV — Obtain independent review and admission: evidence required</li><li>CHK-18-JJ — Bind standalone JJ candidate and ownership: evidence required</li></ul></details></div><details><summary>Provenance extension</summary><p>Admitted EV ceiling 93. EV-94..109 NOT_ADMITTED; no new EV is minted. Task results and advisory scores cannot grant admission.</p></details></section><footer>UOS · #fractal-l0–l9 · #zero-muda · development observation, not admission. <a href="http://nas-1.tail55d152.ts.net:4100/">Previous: cockpit</a> · <a href="http://nas-1.tail55d152.ts.net:4100/checklist">Next: verification checklist</a></footer></section></main></body></html>

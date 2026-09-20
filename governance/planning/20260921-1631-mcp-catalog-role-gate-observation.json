@@ -1,0 +1,10 @@
+{
+  "schema": "uos.mcp-feature-catalog-role-gate.v1",
+  "observed_at": "2026-09-21T16:29:44Z",
+  "authority": "read-only MCP probe; no effect attempted",
+  "tool": "harness_system_feature_catalog",
+  "arguments": {"catalog_sha256":"","offset":"0"},
+  "result": {"isError":true,"error":"role_binding_missing"},
+  "interpretation": "The declarative catalog endpoint refuses access at the harness role gate before digest evaluation when no admitted role binding is present.",
+  "completion_credit": false
+}

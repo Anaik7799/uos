@@ -2,12 +2,12 @@
 //// WebUI Core Operations Tabs (Dashboard, Planning, Cockpit, Verification) Test Suite
 //// STAMP: SC-GLM-UI-001, SC-CHECKLIST-001
 
-import gleeunit/should
 import cepaf_gleam/testing/webui_test_engine.{
-  WebDashboard, WebPlanning, WebCockpit, WebVerification,
-  evaluate_c1_c8, evaluate_checklist_accordion
+  WebCockpit, WebDashboard, WebPlanning, WebVerification, evaluate_c1_c8,
+  evaluate_checklist_accordion,
 }
 import gleam/list
+import gleeunit/should
 
 pub fn webui_core_ops_c1_c8_test() {
   let tabs = [WebDashboard, WebPlanning, WebCockpit, WebVerification]

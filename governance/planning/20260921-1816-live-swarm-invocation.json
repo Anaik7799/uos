@@ -1,0 +1,24 @@
+{
+  "schema": "uos.live-swarm-invocation.v1",
+  "observed_at": "2026-09-21T14:58:09Z",
+  "transport": "Gleam MCP stdio",
+  "authority": "audit_only",
+  "invocations": [
+    {
+      "tool": "rete_rule_conflict",
+      "input_shape": "two candidate rules",
+      "result": {"status": "ok", "rules_evaluated": 0, "winner": null, "firing_strategy": "empty"},
+      "interpretation": "Handler returned a bounded empty evaluation; input-to-rule normalization remains an acceptance gap.",
+      "completion_credit": false
+    },
+    {
+      "tool": "ruliad_branch_eval",
+      "input": {"source_branch": "integration/main", "target_branch": "integration/main", "candidate_changes": ["dashboard snapshot"], "agents": ["codex"]},
+      "result": {"status": "ok", "branchial_distance": 0.15, "branchial_similarity": 0.98, "conflict_probability": 0.1, "convergence_status": "NOMINAL_MERGE_READY"},
+      "completion_credit": false
+    }
+  ],
+  "admission": "not_admitted",
+  "effect_authority": false,
+  "next_gate": "candidate-bound end-to-end swarm acceptance with constitutional rule evaluation and failure falsifiers"
+}

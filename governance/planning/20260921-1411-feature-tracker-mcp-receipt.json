@@ -1,0 +1,25 @@
+{
+  "receipt_id": "20260921-1411-feature-tracker-mcp",
+  "observed_at": "2026-09-21T14:11:00+02:00",
+  "authority": "codex-development-observation",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "capability": "feature_tracker_status",
+  "checks": {
+    "mcp_tool_registered": "PASS",
+    "mcp_tool_invoked": "PASS",
+    "database_backed_plan_status": "PASS",
+    "canonical_total": 20,
+    "canonical_completed": 3,
+    "canonical_ready": 3,
+    "canonical_executing": 0,
+    "gleam_regression": "PASS: 11988 passed, 0 failures",
+    "feature_admission": "NOT_ADMITTED: tracker reports progress only; feature runtime probes remain required"
+  },
+  "runtime_output": "/tmp/feature-tracker-mcp-20260921.jsonl",
+  "implementation": [
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"
+  ],
+  "admission": "NOT_ADMITTED"
+}

@@ -36,8 +36,7 @@ import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
-pub const tailscale_atlas_url: String =
-  "http://nas-1.tail55d152.ts.net:8100/atlas"
+pub const tailscale_atlas_url: String = "http://nas-1.tail55d152.ts.net:8100/atlas"
 
 pub type AtlasCockpitModel {
   AtlasCockpitModel(
@@ -69,9 +68,7 @@ pub fn render_cockpit(model: AtlasCockpitModel) -> Element(msg) {
 fn render_header() -> Element(msg) {
   html.header([attribute.class("cockpit-header")], [
     html.h1([], [
-      html.text(
-        "UOS 10-Chart Fractal Atlas & 17-Aspect POODAVR Cockpit",
-      ),
+      html.text("UOS 10-Chart Fractal Atlas & 17-Aspect POODAVR Cockpit"),
     ]),
     html.div([attribute.class("header-meta")], [
       html.span([], [
@@ -95,24 +92,56 @@ fn render_checklist_accordion() -> Element(msg) {
       html.text("Comprehensive Verification Checklist (18/18 Checks PASS)"),
     ]),
     html.ul([], [
-      html.li([], [html.text("CHK-01-TIME: YYYYMMDD-HHSS- timestamp rule verified")]),
-      html.li([], [html.text("CHK-02-TAIL: Tailscale FQDN clickable links active")]),
+      html.li([], [
+        html.text("CHK-01-TIME: YYYYMMDD-HHSS- timestamp rule verified"),
+      ]),
+      html.li([], [
+        html.text("CHK-02-TAIL: Tailscale FQDN clickable links active"),
+      ]),
       html.li([], [html.text("CHK-03-FRACT: Fractal L0-L9 tags attached")]),
-      html.li([], [html.text("CHK-04-KM: Transclusion links [[wiki:...]] & [[zk:...]] validated")]),
-      html.li([], [html.text("CHK-05-MUDA: 0 Bevy, 0 Graphite in source and deps")]),
-      html.li([], [html.text("CHK-06-GRAPH: Pure Erlang graphene_nif.erl vector math")]),
-      html.li([], [html.text("CHK-07-DRIVE: NVMe 25503L801736 interlocked against wiping")]),
-      html.li([], [html.text("CHK-08-C1C8: Gold-Standard categories C1-C8 covered")]),
-      html.li([], [html.text("CHK-09-MATH: 4 Math Gates satisfied (H >= 2.5b, CCM >= 90%)")]),
+      html.li([], [
+        html.text(
+          "CHK-04-KM: Transclusion links [[wiki:...]] & [[zk:...]] validated",
+        ),
+      ]),
+      html.li([], [
+        html.text("CHK-05-MUDA: 0 Bevy, 0 Graphite in source and deps"),
+      ]),
+      html.li([], [
+        html.text("CHK-06-GRAPH: Pure Erlang graphene_nif.erl vector math"),
+      ]),
+      html.li([], [
+        html.text("CHK-07-DRIVE: NVMe 25503L801736 interlocked against wiping"),
+      ]),
+      html.li([], [
+        html.text("CHK-08-C1C8: Gold-Standard categories C1-C8 covered"),
+      ]),
+      html.li([], [
+        html.text("CHK-09-MATH: 4 Math Gates satisfied (H >= 2.5b, CCM >= 90%)"),
+      ]),
       html.li([], [html.text("CHK-10-9MOD: 9-Modality test protocol passing")]),
       html.li([], [html.text("CHK-11-REGR: 381 UI regression tests green")]),
-      html.li([], [html.text("CHK-12-GLEAM: Gleam/OTP 29 root supervisor active")]),
-      html.li([], [html.text("CHK-13-HERMES: Hermes OCaml & Gospel contracts verified")]),
-      html.li([], [html.text("CHK-14-ZIGVM: ZigVM descriptor-relative VFS active")]),
-      html.li([], [html.text("CHK-15-MAX: MAX/Mojo isolated daemon operational")]),
-      html.li([], [html.text("CHK-16-OTEL: Universal C3I Telemetry with microsecond Z timestamps")]),
+      html.li([], [
+        html.text("CHK-12-GLEAM: Gleam/OTP 29 root supervisor active"),
+      ]),
+      html.li([], [
+        html.text("CHK-13-HERMES: Hermes OCaml & Gospel contracts verified"),
+      ]),
+      html.li([], [
+        html.text("CHK-14-ZIGVM: ZigVM descriptor-relative VFS active"),
+      ]),
+      html.li([], [
+        html.text("CHK-15-MAX: MAX/Mojo isolated daemon operational"),
+      ]),
+      html.li([], [
+        html.text(
+          "CHK-16-OTEL: Universal C3I Telemetry with microsecond Z timestamps",
+        ),
+      ]),
       html.li([], [html.text("CHK-17-SOV: Tri-Sovereign consensus ratified")]),
-      html.li([], [html.text("CHK-18-JJ: Standalone Jujutsu repository operational")]),
+      html.li([], [
+        html.text("CHK-18-JJ: Standalone Jujutsu repository operational"),
+      ]),
     ]),
   ])
 }
@@ -143,7 +172,8 @@ fn render_charts_grid(selected: ChartIndex) -> Element(msg) {
             ]),
             html.p([], [
               html.text(case c {
-                L0Constitutional -> "Constitutional Psi-0..5, OS Lock, Zero-Muda"
+                L0Constitutional ->
+                  "Constitutional Psi-0..5, OS Lock, Zero-Muda"
                 L1AtomicKernel -> "ZigVM VFS, Rust Bounded NIFs"
                 L2Homeostasis -> "OTP 29 Supervision, Prajna Breakers"
                 L3Transactions -> "Sa-Plan Durable Engine, Oban Jobs"

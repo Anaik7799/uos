@@ -73,8 +73,8 @@ pub fn triad_evaluation_predicate_passes_test() {
 pub fn math_gates_in_triad_evaluation_test() {
   let eval = evaluate_fractal_triad_matrix()
   { eval.shannon_entropy >=. 2.5 } |> should.be_true()
-  { eval.ccm_ratio >=. 0.90 } |> should.be_true()
-  { eval.divergence_ratio <=. 0.10 } |> should.be_true()
+  { eval.ccm_ratio >=. 0.9 } |> should.be_true()
+  { eval.divergence_ratio <=. 0.1 } |> should.be_true()
   { eval.itqs_score >=. 0.85 } |> should.be_true()
 }
 
@@ -161,7 +161,7 @@ pub fn triad_matrix_tui_render_test() {
   string.contains(tui_output, "CERT-CLAUDE-TRIAD-VERIFY-20260913-1200")
   |> should.be_true()
   string.contains(tui_output, "RATIFIED") |> should.be_true()
-  string.contains(tui_output, "18/18 Checkpoints 100% Green") |> should.be_true()
+  string.contains(tui_output, "18/18 Checkpoints 100% Green")
+  |> should.be_true()
   string.contains(tui_output, "25 CANONICAL TENSOR NODES") |> should.be_true()
 }
-

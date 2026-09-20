@@ -1,0 +1,27 @@
+{
+  "schema": "uos.recovery-suite-receipt.v1",
+  "timestamp": "20260921-1349",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r02-recovery-candidate",
+  "command": "gleam test",
+  "workspace": "apps/uos_swarm",
+  "result": {"passed": 669, "failed": 0, "status": "PASS"},
+  "scope": "isolated recovery and swarm test suite; canonical coordinator was not modified",
+  "candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1048-coordinator-evidence/coordinator.sqlite3",
+    "admitted": false,
+    "activation": false,
+    "runtime_leases": false
+  },
+  "completion": {
+    "test_evidence": true,
+    "task_complete": false,
+    "release_authorization": "missing",
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "limits": [
+    "Passing recovery tests do not repair the corrupt canonical journal.",
+    "Independent operational release authorization is still required before cutover.",
+    "No task completion credit is granted by this receipt."
+  ]
+}

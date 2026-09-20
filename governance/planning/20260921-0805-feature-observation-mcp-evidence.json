@@ -1,0 +1,35 @@
+{
+  "schema": "uos.system-feature-observation-mcp-evidence.v1",
+  "recorded_at_utc": "2026-09-21T08:05:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1-tracker",
+  "workflow": "t1/observation-mcp",
+  "scope": "development-only",
+  "command": "gleam test",
+  "result": {
+    "passed": 11985,
+    "failed": 0,
+    "log_sha256": "bb0dcbc2e179bd0853a135011675331c9e3b3c17c75d231b725221007248315d"
+  },
+  "implemented": [
+    "harness_system_feature_observations",
+    "persisted feature observation ledger pagination",
+    "explicit unknown availability and false authority fields"
+  ],
+  "files": [
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+    "apps/cepaf_gleam/test/system_feature_api_test.gleam",
+    "apps/cepaf_gleam/test/system_feature_interfaces_test.gleam",
+    "apps/cepaf_gleam/test/system_feature_census_test.gleam",
+    "apps/cepaf_gleam/test/system_feature_store_test.gleam"
+  ],
+  "authority": {
+    "mcp_runtime_available": false,
+    "effect_authority": false,
+    "system_admission": false,
+    "production_deployment": false
+  },
+  "completion_semantics": "receipt records a passing development checkpoint; canonical task remains incomplete until independent runtime observation, formal binding, and authorized admission"
+}

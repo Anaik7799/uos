@@ -3,11 +3,10 @@
 //// =============================================================================
 
 import cepaf_gleam/zenoh/zmof_transport.{
-  ConstitutionalStream, CrdtMeshSync, MoZRequest, MoZResponse,
-  MoZReqPayload, MoZResPayload, OoZSpan, OoZSpanPayload,
-  classify_topic, crdt_sync_topic, decode_moz_request, decode_moz_response,
-  decode_ooz_span, encode_moz_request, encode_moz_response, encode_ooz_span,
-  moz_req_topic, moz_res_topic, ooz_topic,
+  ConstitutionalStream, CrdtMeshSync, MoZReqPayload, MoZRequest, MoZResPayload,
+  MoZResponse, OoZSpan, OoZSpanPayload, classify_topic, crdt_sync_topic,
+  decode_moz_request, decode_moz_response, decode_ooz_span, encode_moz_request,
+  encode_moz_response, encode_ooz_span, moz_req_topic, moz_res_topic, ooz_topic,
 }
 import gleeunit
 import gleeunit/should
@@ -23,7 +22,9 @@ pub fn ooz_topic_generation_and_classification_test() {
 
   let classified = classify_topic(topic)
   classified
-  |> should.equal(Ok(OoZSpan(layer: "l4_system", entity_id: "podman_controller_01")))
+  |> should.equal(
+    Ok(OoZSpan(layer: "l4_system", entity_id: "podman_controller_01")),
+  )
 }
 
 pub fn moz_req_topic_generation_and_classification_test() {
@@ -75,8 +76,8 @@ pub fn ooz_span_roundtrip_test() {
       span_id: "00f067aa0ba902b7",
       name: "prajna.lyapunov_eval",
       layer: "l0_constitutional",
-      start_time_us: 1725720000000000,
-      end_time_us: 1725720000002500,
+      start_time_us: 1_725_720_000_000_000,
+      end_time_us: 1_725_720_000_002_500,
       status: "OK",
     )
 
@@ -93,7 +94,7 @@ pub fn moz_request_roundtrip_test() {
       tool: "plan_status",
       arguments_json: "{\"plan_id\":\"ev-94\"}",
       caller_id: "worker-node-1",
-      timestamp_us: 1725720001000000,
+      timestamp_us: 1_725_720_001_000_000,
     )
 
   let encoded = encode_moz_request(req)
@@ -109,7 +110,7 @@ pub fn moz_response_roundtrip_test() {
       success: True,
       result_json: "{\"status\":\"active\"}",
       error_msg: "",
-      timestamp_us: 1725720001005000,
+      timestamp_us: 1_725_720_001_005_000,
     )
 
   let encoded = encode_moz_response(res)

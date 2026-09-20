@@ -1,0 +1,23 @@
+{
+  "schema": "uos.gleam-suite-refresh-receipt.v1",
+  "observed_at": "2026-09-21T19:14:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "toolchains/gleam-1.16.0/bin/gleam test",
+  "working_directory": "apps/cepaf_gleam",
+  "log": "/tmp/gleam-test-refresh-1910.log",
+  "log_sha256": "7b28b82ef5ec75c565d8641723a3885bf429ebe339e3fa98074dbb8d87749c92",
+  "exit_code": 0,
+  "result": {
+    "passed": 11993,
+    "failed": 0
+  },
+  "scope": [
+    "declarative MCP interfaces",
+    "feature tracker",
+    "dashboard execution projection",
+    "harness and swarm modules"
+  ],
+  "interpretation": "The candidate revision remains test-green; this is component evidence only and does not grant coordinator, MCP effect, release, or operational admission.",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

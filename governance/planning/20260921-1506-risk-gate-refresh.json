@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "receipt_type": "risk_priority_gate_refresh",
+  "generated_at": "2026-09-21T15:06:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/risk-priority-check --all",
+  "status": "PASS",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "live_agent_tests": "UNRUN",
+  "checks": {
+    "baseline": 375,
+    "adversarial": 32843,
+    "independent_dag_scenarios": 32768,
+    "local_paths_checked": 39
+  },
+  "scheduling_effect": "Evidence refresh only; no task claim, execution, release, or completion transition authorized.",
+  "next_gate": "Resolve coordinator authority and candidate-bound test/census drift before selecting the next effectful task."
+}

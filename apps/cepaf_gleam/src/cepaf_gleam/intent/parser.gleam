@@ -6,21 +6,11 @@ import gleam/list
 import gleam/string
 
 pub type ContainerIntent {
-  ContainerIntent(
-    name: String,
-    image: String,
-    port: Int,
-    enabled: Bool,
-  )
+  ContainerIntent(name: String, image: String, port: Int, enabled: Bool)
 }
 
 pub type TopologyNodeIntent {
-  TopologyNodeIntent(
-    id: String,
-    role: String,
-    ip: String,
-    status: String,
-  )
+  TopologyNodeIntent(id: String, role: String, ip: String, status: String)
 }
 
 pub type SystemIntentConfig {

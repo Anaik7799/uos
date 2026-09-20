@@ -1,0 +1,18 @@
+{
+  "schema": "uos.recovery-candidate-provenance.v1",
+  "timestamp": "20260921-1633",
+  "candidate": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+  "source": "var/coordination/tri-agent/events sequences 1..421",
+  "event_count": 421,
+  "event_manifest": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/events.sha256",
+  "event_manifest_sha256": "c9b3c4092cfeee1bb4d33721154308f2a0a0da6fc6d5eadb753af27d962661e1",
+  "candidate_database_sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+  "implementation_hashes": {
+    "apps/uos_swarm/src/session_store_cli.gleam": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+    "apps/uos_swarm/src/uos_swarm/session_recovery.gleam": "13c3ebd4df81077a77d6ef86b84f1bf962f7c1b44cb80078e414d163d5de34a2",
+    "apps/uos_swarm/src/uos_swarm/session_recovery_store.gleam": "899423a8744a24514fd8bb77a0dd0bcc650c98f9ec62246f142cf5abf98ec80c"
+  },
+  "verification": {"checked": 421, "sequence_ok": true, "chain_ok": true, "digest_ok": true, "replay_ok": true},
+  "authority": "evidence_only",
+  "admission": "not_admitted"
+}

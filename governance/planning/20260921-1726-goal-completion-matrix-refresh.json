@@ -1,0 +1,13 @@
+{
+  "schema": "uos.goal-completion-matrix.v2",
+  "timestamp": "20260921-1726",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authoritative_status": {"total": 21, "completed": 4, "ready": 3, "executing": 0, "blocked": 17, "unknown": 0, "admission": "not_admitted"},
+  "new_evidence": [
+    {"path": "governance/planning/20260921-1725-dashboard-execution-optimization-status.json", "result": "dashboard_projection_and_optimized_order_published", "counts_as_completion": false},
+    {"path": "/tmp/gleam-test-registry-rollback-1924.log", "result": "11990_passed_3_failed_stale_census_pins", "counts_as_completion": false}
+  ],
+  "selection": {"authority": "sa-plan", "risk_runtime_admission": "not_granted", "task_selection_changed": false},
+  "completion_rules": {"blocked_unrun_stale_unadmitted_not_counted": true, "two_key_runtime_and_formal_required": true, "sa_plan_sole_execution_authority": true},
+  "next_gate": "resolve coordinator common-prefix, writer-quiescence, and sovereign source selection before claiming optimized execution order"
+}

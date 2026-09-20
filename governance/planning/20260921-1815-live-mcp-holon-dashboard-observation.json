@@ -1,0 +1,35 @@
+{
+  "schema": "uos.live-mcp-holon-dashboard-observation.v1",
+  "observed_at": "2026-09-21T14:57:29Z",
+  "transport": "Gleam MCP stdio",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "feature_tracker": {"total": 21, "completed": 4, "ready": 3, "executing": 0},
+  "holon": {
+    "runtimes": ["Gleam", "Elixir", "FSharp", "Rust"],
+    "fractal_layers": 8,
+    "domains": 16,
+    "holon_types": 8,
+    "database_types": 5
+  },
+  "swarm": {
+    "contract": "SC-HOLON-001",
+    "probed_live": true,
+    "scope": "backend discovery only; service invocation required",
+    "in_process_available": ["fprime", "bayesian", "rete_ul", "ets", "stm", "ruliad", "formal_twin", "denotational", "algebraic_atlas"],
+    "pending_bounded_invocation": ["modular_max", "openrouter_free"]
+  },
+  "agent_hierarchy": {
+    "total_agents": 50,
+    "executive": 1,
+    "domain_supervisors": 10,
+    "functional_supervisors": 15,
+    "workers": 24,
+    "efficiency_compliance": true,
+    "deadlock_detected": false,
+    "executive_authority": true
+  },
+  "authority": "audit_only",
+  "effect_authority": false,
+  "admission": "not_admitted",
+  "completion_credit": false
+}

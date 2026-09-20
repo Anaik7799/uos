@@ -1,0 +1,22 @@
+{
+  "receipt_type": "uos_swarm_full_regression",
+  "generated_at": "2026-09-21T11:08:00+02:00",
+  "authority": "gleam_test",
+  "scope": "apps/uos_swarm",
+  "command": "gleam test",
+  "result": {"passed": 669, "failed": 0, "exit_code": 0},
+  "log": "/tmp/uos-swarm-full-1106.log",
+  "coverage_interpretation": {
+    "recovery_cli": "tested",
+    "candidate_store": "tested",
+    "canonical_coordinator_admission": "not_proven",
+    "runtime_effect_authority": "not_granted",
+    "system_admission": false
+  },
+  "sa_plan": {
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "workflow": "uos-system-mcp-features/swarm-regression/20260921-1108",
+    "task_completion": false
+  },
+  "admitted": false
+}

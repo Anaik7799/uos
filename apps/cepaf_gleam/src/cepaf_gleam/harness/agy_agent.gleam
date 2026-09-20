@@ -88,7 +88,8 @@ pub fn process_with_agy(intent: AgentIntent) -> AgentDecision {
           timestamp_ms: intent.timestamp_ms,
         )
       let out_msg = telegram.handle_message(in_msg)
-      let reasoning_narrative = "AGY Sovereign Agent executed directive: " <> trimmed
+      let reasoning_narrative =
+        "AGY Sovereign Agent executed directive: " <> trimmed
       let agui_events =
         build_agui_trace(
           thread_id: intent.intent_id,
@@ -203,7 +204,10 @@ fn format_agy_markdown(
       <> "🤝 **Domain D: Team Collaboration & Multi-Party Voice Cybernetics (12 directives):**\n"
       <> "• `/sidecar`, `/voice-roll-call`, `/babel`, `/whiteboard`, `/socratic`, `/handover`, `/pair-voice`, `/exec-brief`, `/commitments`, `/acoustic-hud`, `/retro`, `/gameday`\n\n"
     False ->
-      case string.contains(lower_query, "commands") || string.contains(lower_query, "supported") {
+      case
+        string.contains(lower_query, "commands")
+        || string.contains(lower_query, "supported")
+      {
         True ->
           "### 🧭 Sovereign Command Navigation (48 Directives Across 4 Domains)\n"
           <> "UOS provides 48 operator directives across 4 specialized domains:\n\n"

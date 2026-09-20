@@ -1,0 +1,20 @@
+{
+  "schema": "uos.live-tracker-holon-refresh.v1",
+  "observed_at": "2026-09-21T16:27:00Z",
+  "authority": "read-only MCP observation; no mutating tools invoked",
+  "server": {"name":"c3i-planning-mcp","version":"1.0.0"},
+  "artifacts": {
+    "response_path": "/tmp/mcp-tracker-holon-refresh-20260921-1627.json",
+    "response_sha256": "a382692097bc5d2e9d87e9164d03ca1eec7088ada6d1fca48ea906a49aea3289",
+    "stderr_sha256": "a2738a7e07ef66db7cce69dadc2d1b9eaec4d4eab47cc1f55f586f725a08d035"
+  },
+  "tracker": {"plan":"uos/system-mcp-features/20260919-1642","total":21,"completed":4,"ready":3,"executing":0},
+  "holon": {"runtimes":["Gleam","Elixir","FSharp","Rust"],"fractal_layers":8,"domains":16,"holon_types":8,"database_types":5},
+  "swarm": {
+    "probed_live": true,
+    "backend_capabilities_observed": ["fprime","bayesian","rete_ul","ets","stm","ruliad","formal_twin","denotational","algebraic_atlas"],
+    "uninvoked": ["modular_max","openrouter_free"]
+  },
+  "admission": "not_granted",
+  "completion_credit": false
+}

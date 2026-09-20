@@ -1,0 +1,15 @@
+{
+  "schema": "uos.coordinator-session-store-cli-receipt.v1",
+  "timestamp_utc": "2026-09-21T10:05:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "source_database": "var/coordination/tri-agent/coordinator.sqlite3",
+  "source_database_sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+  "method": "copied database to a temporary path, then ran the read-only status observation through apps/uos_swarm session_store_cli",
+  "command": "gleam run -m session_store_cli -- <temporary-coordinator-copy> status",
+  "result": {"exit_code": 1, "error": "corrupt: session is not registered", "log_sha256": "a206918cc1bfcd9e7bb5e937524e39c26fe1ebf85d390f44f53d818dbe35f7c6"},
+  "interpretation": "Independent session-store semantic replay confirms the coordinator cannot establish a registered session for its current journal; no mutation was attempted.",
+  "holon_coordination": "NOT_VERIFIED",
+  "effect_authority": false,
+  "canonical_task_remains_open": true,
+  "admission": "NOT_ADMITTED"
+}

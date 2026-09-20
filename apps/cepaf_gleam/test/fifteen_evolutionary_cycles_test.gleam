@@ -5,12 +5,8 @@ import cepaf_gleam/fpp/fifteen_evolutionary_cycles.{
   covered_aspect_ids, get_15_system_evolutionary_cycles,
   verify_aspect_coverage_across_15_cycles,
 }
-import cepaf_gleam/ha/fifteen_cycles_runner.{
-  execute_cycle, run_all_15_cycles,
-}
-import cepaf_gleam/ha/homeostasis_evolution_engine.{
-  init_homeostasis_system,
-}
+import cepaf_gleam/ha/fifteen_cycles_runner.{execute_cycle, run_all_15_cycles}
+import cepaf_gleam/ha/homeostasis_evolution_engine.{init_homeostasis_system}
 import cepaf_gleam/ui/lustre/fifteen_cycles_cockpit.{
   CyclesCockpitModel, render_cockpit,
 }
@@ -107,8 +103,13 @@ pub fn ui_tripartite_test() {
     Error(err) -> panic as err
     Ok(#(receipts, final_st)) -> {
       // 1. TUI ANSI Dashboard
-      let ansi = fifteen_cycles_tui.render_fifteen_cycles_tui(receipts, final_st.generation)
-      string.contains(ansi, "15 CONTINUOUS EVOLUTIONARY CYCLES") |> should.be_true()
+      let ansi =
+        fifteen_cycles_tui.render_fifteen_cycles_tui(
+          receipts,
+          final_st.generation,
+        )
+      string.contains(ansi, "15 CONTINUOUS EVOLUTIONARY CYCLES")
+      |> should.be_true()
       string.contains(ansi, "GENERATION: 15 / 15") |> should.be_true()
       string.contains(ansi, "EV-111") |> should.be_true()
       string.contains(ansi, "EV-125") |> should.be_true()
@@ -122,10 +123,15 @@ pub fn ui_tripartite_test() {
         )
       let html_elem = render_cockpit(cockpit_model)
       let rendered_html = element.to_string(html_elem)
-      string.contains(rendered_html, "Autonomous Evolutionary Generation: 15 / 15") |> should.be_true()
+      string.contains(
+        rendered_html,
+        "Autonomous Evolutionary Generation: 15 / 15",
+      )
+      |> should.be_true()
       string.contains(rendered_html, "EV-111") |> should.be_true()
       string.contains(rendered_html, "EV-125") |> should.be_true()
-      string.contains(rendered_html, "100% Aspect Exhaustiveness") |> should.be_true()
+      string.contains(rendered_html, "100% Aspect Exhaustiveness")
+      |> should.be_true()
     }
   }
 }
@@ -137,11 +143,11 @@ pub fn four_math_gates_test() {
 
   // Gate 2: Cyclomatic Complexity CCM >= 90%
   let ccm = 0.94
-  { ccm >=. 0.90 } |> should.be_true()
+  { ccm >=. 0.9 } |> should.be_true()
 
   // Gate 3: Divergence D_EA <= 10%
   let d_ea = 0.04
-  { d_ea <=. 0.10 } |> should.be_true()
+  { d_ea <=. 0.1 } |> should.be_true()
 
   // Gate 4: Integrated Test Quality Score ITQS >= 0.85
   let itqs = 0.89
@@ -152,6 +158,6 @@ pub fn storage_and_jidoka_invariants_test() {
   let denied_serial = "25503L801736"
   denied_serial |> should.equal("25503L801736")
 
-  let jidoka_halt_code = -32002
-  jidoka_halt_code |> should.equal(-32002)
+  let jidoka_halt_code = -32_002
+  jidoka_halt_code |> should.equal(-32_002)
 }

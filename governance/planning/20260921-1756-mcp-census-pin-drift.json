@@ -1,0 +1,16 @@
+{
+  "schema": "uos.mcp-census-pin-drift.v1",
+  "observed_at": "2026-09-21T14:56:00Z",
+  "source": "apps/cepaf_gleam/test/system_feature_census_test.gleam",
+  "binding": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+  "pinned_sha256": "4a3964afeedb03e5fc5ccc15776096ae7b43343ec2b01dd97e7fc32fdb9150ad",
+  "observed_sha256": "a3a8562344c675d1f21124ae94efd66cac82d7a82061cc8327fc586a8d2b1320",
+  "protocol_binding": {
+    "pinned_sha256": "7415b762c8bfafae63ea5d949f5cdf94b5638dacbc8094261d6864edbb8c4405",
+    "observed_sha256": "7415b762c8bfafae63ea5d949f5cdf94b5638dacbc8094261d6864edbb8c4405",
+    "status": "match"
+  },
+  "decision": "hold",
+  "reason": "Refreshing only the source hash is insufficient; expected feature count and IDs must be recomputed and independently reviewed through Sa-plan.",
+  "completion_credit": false
+}

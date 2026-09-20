@@ -1,0 +1,28 @@
+{
+  "schema": "uos.risk-priority-current-receipt.v1",
+  "created_at": "2026-09-21T11:20:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "command": "bash tools/risk-priority-check --all",
+  "observed": {
+    "status": "PASS",
+    "authority": "NONE",
+    "baseline_checks": 375,
+    "adversarial_checks": 32843,
+    "independent_dag_scenarios": 32768,
+    "local_paths_checked": 39,
+    "runtime_enforcement": "NOT_ASSERTED",
+    "runtime_admission": "NOT_GRANTED",
+    "live_agent_tests": "UNRUN"
+  },
+  "log_sha256": "8ae4d5edf26bcf975d4184cef6f4f4cf1225c1700a433cd6df560b81889c390f",
+  "execution_order": [
+    "canonical feature-store persistence",
+    "digest-bound MCP readback",
+    "real holon identity and heartbeat evidence",
+    "runtime/formal two-key verification",
+    "independent release and operational acceptance"
+  ],
+  "verification": {"observed": true, "effect_authority": false, "system_admission": false, "state": "observed_not_verified"},
+  "tags": ["#fractal-l0", "#fractal-l1", "#risk", "#sa-plan", "#zero-muda"]
+}

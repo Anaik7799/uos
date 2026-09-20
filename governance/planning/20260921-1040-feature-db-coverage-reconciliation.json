@@ -1,0 +1,52 @@
+{
+  "schema": "uos.feature-db-coverage-reconciliation.v1",
+  "created_at": "2026-09-21T10:40:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "authority": "sa_plan_sqlite_read_only_observation",
+  "database": "var/sa-plan/uos.sqlite3",
+  "feature_workflow_store": {
+    "table": "sa_plan_workflow",
+    "kind": "harness-feature-tracking",
+    "rows": 52,
+    "distinct_feature_ids": 52,
+    "states": {"running": 52},
+    "rows_sha256": "a507595812459a122ffc6efead133253c592f2ddbfdd5025a3ce3d81742690f8",
+    "mode": "metadata_only_no_automatic_dispatch",
+    "catalog_digest_bound": false,
+    "ledger_digest_bound": false
+  },
+  "census_reconciliation": {
+    "latest_interface_census": "governance/capability-inventory/20260921-0631-system-feature-inference-census.json",
+    "census_sha256": "22b791b1013c8ddd6ee5ba54e4f046fc276c3c2fe4b2490939268a0cfabcb3fc",
+    "declaration_records": 861,
+    "source_sets": 12,
+    "catalog_shards": 15,
+    "mcp_declared_tools": 87,
+    "selected_record_sets_complete": true,
+    "inventory_complete": false
+  },
+  "interpretation": {
+    "selected_harness_catalog_workflows": "52 persisted rows reconcile to the selected 52-feature source catalog",
+    "declaration_to_workflow_coverage": "not a valid semantic percentage; declarations intentionally overlap namespaces",
+    "missing_workflow_proof": "861 declaration records are not individually bound to canonical feature workflows",
+    "mcp_availability": "unknown_without_authorized_context",
+    "runtime_admission": false,
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "required_followups": [
+    "bind catalog and ledger digests to every persisted feature workflow",
+    "reconcile all selected source sets and shards to canonical workflow identities",
+    "expose bounded readback through MCP and verify exact database hash",
+    "obtain authorized runtime probes and formal evidence before availability claims"
+  ],
+  "verification": {
+    "command": "sqlite3 -readonly -json var/sa-plan/uos.sqlite3 SELECT ... FROM sa_plan_workflow WHERE kind='harness-feature-tracking'",
+    "observed": true,
+    "fresh_runtime_behavior": false,
+    "formal_two_key_verification": false,
+    "state": "observed_not_verified"
+  },
+  "tags": ["#fractal-l0", "#fractal-l1", "#mcp", "#sa-plan", "#dashboard", "#zero-muda"]
+}

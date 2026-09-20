@@ -16,11 +16,19 @@ pub type VfsError {
 }
 
 pub type VfsDescriptor {
-  VfsDescriptor(descriptor_id: String, root_prefix: String, active_files: List(#(String, String)))
+  VfsDescriptor(
+    descriptor_id: String,
+    root_prefix: String,
+    active_files: List(#(String, String)),
+  )
 }
 
 pub type MemoryArena {
-  MemoryArena(max_capacity_bytes: Int, current_allocated_bytes: Int, allocation_count: Int)
+  MemoryArena(
+    max_capacity_bytes: Int,
+    current_allocated_bytes: Int,
+    allocation_count: Int,
+  )
 }
 
 pub fn sanitize_vfs_path(path: String) -> Result(String, VfsError) {
@@ -37,10 +45,17 @@ pub fn sanitize_vfs_path(path: String) -> Result(String, VfsError) {
 }
 
 pub fn init_arena(capacity_bytes: Int) -> MemoryArena {
-  MemoryArena(max_capacity_bytes: capacity_bytes, current_allocated_bytes: 0, allocation_count: 0)
+  MemoryArena(
+    max_capacity_bytes: capacity_bytes,
+    current_allocated_bytes: 0,
+    allocation_count: 0,
+  )
 }
 
-pub fn arena_alloc(arena: MemoryArena, size_bytes: Int) -> Result(MemoryArena, VfsError) {
+pub fn arena_alloc(
+  arena: MemoryArena,
+  size_bytes: Int,
+) -> Result(MemoryArena, VfsError) {
   let new_total = arena.current_allocated_bytes + size_bytes
   case new_total <= arena.max_capacity_bytes {
     True ->
@@ -54,7 +69,11 @@ pub fn arena_alloc(arena: MemoryArena, size_bytes: Int) -> Result(MemoryArena, V
 }
 
 pub fn arena_reset(arena: MemoryArena) -> MemoryArena {
-  MemoryArena(max_capacity_bytes: arena.max_capacity_bytes, current_allocated_bytes: 0, allocation_count: 0)
+  MemoryArena(
+    max_capacity_bytes: arena.max_capacity_bytes,
+    current_allocated_bytes: 0,
+    allocation_count: 0,
+  )
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +95,11 @@ pub fn vfs_descriptor_path_sanitization_test() {
   should.be_error(sanitize_vfs_path(overly_long))
 }
 
-fn allocate_chunks(arena: MemoryArena, chunk_size: Int, count: Int) -> Result(MemoryArena, VfsError) {
+fn allocate_chunks(
+  arena: MemoryArena,
+  chunk_size: Int,
+  count: Int,
+) -> Result(MemoryArena, VfsError) {
   case count <= 0 {
     True -> Ok(arena)
     False -> {
@@ -112,8 +135,10 @@ pub fn vfs_bounded_64mb_arena_envelope_test() {
 }
 
 pub fn vfs_descriptor_isolation_invariance_test() {
-  let desc_a = VfsDescriptor("desc-001", "sandbox_a/", [#("data.txt", "payload_a")])
-  let desc_b = VfsDescriptor("desc-002", "sandbox_b/", [#("data.txt", "payload_b")])
+  let desc_a =
+    VfsDescriptor("desc-001", "sandbox_a/", [#("data.txt", "payload_a")])
+  let desc_b =
+    VfsDescriptor("desc-002", "sandbox_b/", [#("data.txt", "payload_b")])
 
   // Lookups within descriptor scopes are isolated
   let find_a = list.find(desc_a.active_files, fn(item) { item.0 == "data.txt" })

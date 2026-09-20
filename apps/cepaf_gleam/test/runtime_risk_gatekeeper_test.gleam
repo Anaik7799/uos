@@ -4,9 +4,8 @@
 // =============================================================================
 
 import cepaf_gleam/ha/runtime_risk_gatekeeper.{
-  AdmissionGranted, AndonHaltTriggered, EnforcedRuntime,
-  PreflightEvidence, TaskContext, evaluate_admission,
-  format_decision,
+  AdmissionGranted, AndonHaltTriggered, EnforcedRuntime, PreflightEvidence,
+  TaskContext, evaluate_admission, format_decision,
 }
 import gleam/string
 import gleeunit/should
@@ -64,7 +63,7 @@ pub fn hardware_storage_lockout_test() {
   let result = evaluate_admission(EnforcedRuntime, evidence, ctx)
   case result {
     AndonHaltTriggered(code, reason, remed) -> {
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       string.contains(reason, "Hardware Safety Lockout") |> should.be_true
       string.contains(remed, "OS NVMe 25503L801736") |> should.be_true
     }
@@ -94,7 +93,7 @@ pub fn expired_lease_rejection_test() {
   let result = evaluate_admission(EnforcedRuntime, evidence, ctx)
   case result {
     AndonHaltTriggered(code, reason, _) -> {
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       string.contains(reason, "Lease Expired") |> should.be_true
     }
     _ -> should.fail()
@@ -123,7 +122,7 @@ pub fn stale_preflight_evidence_test() {
   let result = evaluate_admission(EnforcedRuntime, evidence, ctx)
   case result {
     AndonHaltTriggered(code, reason, _) -> {
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       string.contains(reason, "Stale Preflight Evidence") |> should.be_true
     }
     _ -> should.fail()
@@ -152,7 +151,7 @@ pub fn stpa_uca_trap_test() {
   let result = evaluate_admission(EnforcedRuntime, evidence, ctx)
   case result {
     AndonHaltTriggered(code, reason, _) -> {
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       string.contains(reason, "STPA UCA Violation") |> should.be_true
     }
     _ -> should.fail()
@@ -182,8 +181,9 @@ pub fn high_rpn_quorum_consensus_test() {
   let result1 = evaluate_admission(EnforcedRuntime, high_rpn_evidence, ctx1)
   case result1 {
     AndonHaltTriggered(code, reason, _) -> {
-      code |> should.equal(-32003)
-      string.contains(reason, "2oo3 Constitutional Quorum Required") |> should.be_true
+      code |> should.equal(-32_003)
+      string.contains(reason, "2oo3 Constitutional Quorum Required")
+      |> should.be_true
     }
     _ -> should.fail()
   }

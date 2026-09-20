@@ -32,7 +32,11 @@ import gleam/string
 fn http_get(url: String) -> Result(BitArray, String)
 
 @external(erlang, "cepaf_gleam_ffi", "http_put")
-fn http_put(url: String, content_type: String, body: String) -> Result(Nil, String)
+fn http_put(
+  url: String,
+  content_type: String,
+  body: String,
+) -> Result(Nil, String)
 
 @external(erlang, "cepaf_gleam_ffi", "base64_decode")
 fn base64_decode(input: String) -> Result(BitArray, Nil)
@@ -173,7 +177,10 @@ fn zenoh_item_decoder() -> decode.Decoder(RawZenohItem) {
   decode.success(RawZenohItem(key: key, value: value))
 }
 
-fn parse_single_zenoh_val(body_str: String, requested_key: String) -> Result(String, String) {
+fn parse_single_zenoh_val(
+  body_str: String,
+  requested_key: String,
+) -> Result(String, String) {
   let decoder = decode.list(zenoh_item_decoder())
   case json.parse(body_str, decoder) {
     Ok([first, ..]) -> {

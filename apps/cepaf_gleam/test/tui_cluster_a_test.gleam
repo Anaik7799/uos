@@ -2,12 +2,12 @@
 //// System TUI Cluster A (Operations & Mission Control: Screens 1-8) Test Suite
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-004
 
-import gleeunit/should
 import cepaf_gleam/testing/tui_test_engine.{
-  DashboardScreen, PlanningScreen, ImmuneScreen, KnowledgeScreen,
-  ZenohScreen, CockpitScreen, VerificationScreen, SubstrateScreen,
-  render_screen_buffer, verify_frame_buffer
+  CockpitScreen, DashboardScreen, ImmuneScreen, KnowledgeScreen, PlanningScreen,
+  SubstrateScreen, VerificationScreen, ZenohScreen, render_screen_buffer,
+  verify_frame_buffer,
 }
+import gleeunit/should
 
 pub fn tui_cluster_a_dashboard_test() {
   let fb = render_screen_buffer(DashboardScreen)

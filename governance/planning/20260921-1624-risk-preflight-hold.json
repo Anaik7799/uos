@@ -1,0 +1,15 @@
+{
+  "schema": "uos.risk-preflight-observation.v1",
+  "observed_at": "2026-09-21T16:24:34Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "portfolio": "governance/planning/20260921-1556-risk-portfolio-refresh.json",
+  "portfolio_sha256": "380104340c387ad3919794ae78c87ad0688eb2b0214b99f4a53d7c2250ae285f",
+  "tasks_checked": ["r02-recovery-candidate", "t0-coordination", "t2-contracts"],
+  "results": [
+    {"task":"r02-recovery-candidate","status":"HOLD","authority":"NONE","runtime_admission":"NOT_GRANTED","finding":"RP-SELECTION"},
+    {"task":"t0-coordination","status":"HOLD","authority":"NONE","runtime_admission":"NOT_GRANTED","finding":"RP-SELECTION"},
+    {"task":"t2-contracts","status":"HOLD","authority":"NONE","runtime_admission":"NOT_GRANTED","finding":"RP-SELECTION"}
+  ],
+  "interpretation": "No requested task can be claimed from this unregistered session; read-only risk preflight does not grant execution authority.",
+  "completion_credit": false
+}

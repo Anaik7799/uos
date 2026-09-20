@@ -1,0 +1,1 @@
+{"status":"ok","interface":"wisp","port":4100,"version":"1.0.0","container_count":16,"healthy_count":16,"threat_level":"nominal","ooda_phase":"observe","dark_cockpit_mode":"dark","zenoh_connected":true,"quorum_healthy":true,"last_updated_ms":1790741420329}

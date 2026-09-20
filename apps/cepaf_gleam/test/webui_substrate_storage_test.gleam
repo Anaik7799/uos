@@ -2,12 +2,11 @@
 //// WebUI Substrate, Storage & KMS Tabs (Substrate, KMS, Podman) Test Suite
 //// STAMP: SC-GLM-UI-001, SC-CHECKLIST-001
 
-import gleeunit/should
 import cepaf_gleam/testing/webui_test_engine.{
-  WebSubstrate, WebKms, WebPodman,
-  evaluate_c1_c8, evaluate_checklist_accordion
+  WebKms, WebPodman, WebSubstrate, evaluate_c1_c8, evaluate_checklist_accordion,
 }
 import gleam/list
+import gleeunit/should
 
 pub fn webui_substrate_storage_c1_c8_test() {
   let tabs = [WebSubstrate, WebKms, WebPodman]

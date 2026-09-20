@@ -1,0 +1,73 @@
+{
+  "schema": "uos.current-source-frontier-audit.v1",
+  "created_at": "2026-09-21T10:15:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1-tracker",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-tracker/20260921-1015-source-frontier-audit",
+  "candidate": "development-report-only",
+  "observation": {
+    "source_file_count": 30481,
+    "source_file_counts_by_root": {
+      "apps": 2100,
+      "services": 23,
+      "engines": 28077,
+      "native": 26,
+      "tools": 255
+    },
+    "interface_census": {
+      "source_sets": 12,
+      "raw_json_records": 98,
+      "compiled_declaration_records": 763,
+      "total_declaration_records": 861,
+      "catalog_shards": 15,
+      "mcp_declared_tools": 87,
+      "known_input_schemas": 87,
+      "known_output_schemas": 0,
+      "known_refusal_schemas": 0,
+      "selected_record_sets_complete": true,
+      "inventory_complete": false,
+      "runtime_availability": "UNKNOWN",
+      "effect_authority": false,
+      "system_admission": false
+    },
+    "source_hashes": {
+      "interface_census": "22b791b1013c8ddd6ee5ba54e4f046fc276c3c2fe4b2490939268a0cfabcb3fc",
+      "prior_interface_census": "0d67a62f8f3e82111a957f7b22ff7e4d53bc8604a27268acc7caa6d803f9557d"
+    }
+  },
+  "coverage_interpretation": {
+    "complete_inventory_claim": false,
+    "selected_catalogs_reconcile": true,
+    "semantic_deduplication": "not_proven",
+    "runtime_mcp_usability": "not_observed",
+    "canonical_database_population": "not_proven",
+    "dashboard_completion": "must_remain_evidence_bound"
+  },
+  "remaining_frontier": [
+    "Native, engine, service, formal, contract, and operational entrypoints are not fully mapped to feature records.",
+    "MCP discovery and authorized runtime probes remain unobserved; declared tools do not establish availability.",
+    "Output/refusal schemas and effect-time policy bindings remain unknown for the census population.",
+    "Canonical feature database import and dashboard readback require an independently authorized runtime observation.",
+    "Holon enrollment and cross-agent acknowledgements are not observed in the current coordinator/session stores."
+  ],
+  "execution_optimization": {
+    "ordering": [
+      "repair source-universe coverage before semantic completion claims",
+      "verify database persistence and readback before dashboard completion",
+      "run MCP discovery and bounded probes only after risk preflight",
+      "require two-key verification before any availability or admission transition"
+    ],
+    "risk_gate": "bash tools/risk-priority-check --all",
+    "authority": "sa-plan only",
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "verification": {
+    "method": "rg --files apps services engines native tools; jq census coverage; sha256sum census artifacts",
+    "observed": true,
+    "fresh_runtime_behavior": false,
+    "formal_specification": false,
+    "admissible_state": "observed-but-not-verified"
+  },
+  "tags": ["#fractal-l0", "#fractal-l1", "#zero-muda", "#mcp", "#sa-plan", "#dashboard"]
+}

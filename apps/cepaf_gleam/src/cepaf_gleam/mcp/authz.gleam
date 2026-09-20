@@ -39,7 +39,11 @@ pub type Denial {
 }
 
 pub type Authorization {
-  Authorization(agent: String, decision: GateDecision, rate_state: RateLimitState)
+  Authorization(
+    agent: String,
+    decision: GateDecision,
+    rate_state: RateLimitState,
+  )
 }
 
 pub const default_rate_limit_per_minute = 600
@@ -172,7 +176,10 @@ pub fn extract_paths(raw_line: String) -> List(String) {
 
 fn extract_proof_token(raw_line: String) -> Option(String) {
   let decoder = {
-    use t <- decode.subfield(["params", "arguments", "proof_token"], decode.string)
+    use t <- decode.subfield(
+      ["params", "arguments", "proof_token"],
+      decode.string,
+    )
     decode.success(t)
   }
   case json.parse(raw_line, decoder) {
@@ -238,7 +245,8 @@ pub fn authorize(
   let tool = federated_tool_for(name, mutating)
   let decision = pi_tools.check_gate(policy, tool)
   case pi_tools.is_allowed(decision) {
-    True -> Ok(Authorization(agent: agent, decision: decision, rate_state: state))
+    True ->
+      Ok(Authorization(agent: agent, decision: decision, rate_state: state))
     False ->
       Error(GuardianDenied(
         pi_tools.gate_decision_to_string(decision)
@@ -251,9 +259,17 @@ pub fn authorize(
   }
 }
 
-fn check_paths(agent: String, name: String, raw_line: String) -> Result(Nil, Denial) {
+fn check_paths(
+  agent: String,
+  name: String,
+  raw_line: String,
+) -> Result(Nil, Denial) {
   let paths = extract_paths(raw_line)
-  case list.find(paths, fn(p) { enforcer.is_forbidden_path(p, forbidden_patterns()) }) {
+  case
+    list.find(paths, fn(p) {
+      enforcer.is_forbidden_path(p, forbidden_patterns())
+    })
+  {
     Ok(p) -> Error(AccessDenied("forbidden path " <> p <> " for tool " <> name))
     Error(Nil) ->
       case
@@ -324,7 +340,12 @@ pub fn authorize_and_persist(
       io.println_error(audit_line(name, auth.agent, policy, Ok(auth.decision)))
     }
     Error(denial) ->
-      io.println_error(audit_line(name, extract_agent(raw_line), policy, Error(denial)))
+      io.println_error(audit_line(
+        name,
+        extract_agent(raw_line),
+        policy,
+        Error(denial),
+      ))
   }
   outcome
 }

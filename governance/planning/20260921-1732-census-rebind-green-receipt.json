@@ -1,0 +1,21 @@
+{
+  "schema": "uos.verification-receipt.v1",
+  "timestamp": "20260921-1732",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t3-evidence",
+  "worker": "codex",
+  "operation": "rebind current MCP source digest and rerun full Gleam suite",
+  "observed": {
+    "tools_source_sha256": "cc3280246b847aac96ad287c03311ef48a559f8a535e3f6a055c6ec21d17c081",
+    "mcp_record_count": 65,
+    "mcp_record_ids_sha256": "0241247b579e14ae6b1ee3d22ac289076d1790fa56aa1b0540a8e8307effde04",
+    "gleam_test": {"passed": 11993, "failed": 0, "log": "/tmp/gleam-test-census-rebind-1932.log", "log_sha256": "37e1ccdfb425d5b89a07372ecd51e8ab12e39a8821e15e0aac9fc274cecc13d0"}
+  },
+  "formal_boundary": {
+    "runtime_admission": "not_granted",
+    "effect_authority": false,
+    "mcp_availability": "not_admitted",
+    "counts_as_plan_completion": false
+  },
+  "note": "The test pin now matches the observed current source bytes while preserving the 65-record identifier fingerprint. This verifies source/census consistency only; it does not authorize deployment or feature admission."
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "uos.agy-plan-handoff.v1",
+  "batch_observed_at": "2026-09-27T05:26:26Z",
+  "mcp_probe_observed_at": "2026-09-27T05:30:29Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "agent": "Google AGY via installed CLI",
+  "configured_model": "gemini-3.8-flash-medium",
+  "configured_effort": "medium",
+  "configured_mode": "plan",
+  "configured_timeout_seconds": 90,
+  "exit_code": 0,
+  "actual_work": "Bounded supplied-context implementation planning; requested no tool calls or source changes.",
+  "response": "Received model acknowledgement, six-stage implementation proposal, acceptance/negative tests, model routing and first-action handoff.",
+  "codex_review": {
+    "accepted": [
+      "Preserve completed tasks",
+      "Repair task-bound ingress",
+      "Isolate lineage recovery",
+      "Pure intent/effect algebra",
+      "Follow-up dashboard and evidence tasks",
+      "Scoped execution and cost accounting"
+    ],
+    "corrected": [
+      "Invented grant/tool names do not establish execution authority",
+      "Dependency order made acyclic",
+      "No arbitrary heartbeat, freshness or error-code constants",
+      "No live history copy/overwrite",
+      "No additional generic user permission requested"
+    ],
+    "not_asserted": [
+      "Provider-authenticated model attestation",
+      "Token count",
+      "Dollar cost",
+      "Source implementation",
+      "Canonical task registration",
+      "Admission"
+    ]
+  },
+  "artifacts": [
+    "docs/design/20260927-0526-system-mcp-agy-implementation-plan.md",
+    "governance/planning/20260927-0526-system-mcp-agy-implementation-proposal.json"
+  ],
+  "canonical_status": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0
+  },
+  "registration": {
+    "transport": "Gleam MCP stdio",
+    "tool": "sa_workflow_start",
+    "result": "refused",
+    "jsonrpc_error": -32003,
+    "message": "Transport-bound task authority unavailable; legacy mutation refused",
+    "registered": false
+  },
+  "next_action": "Materialize reviewed UOS execution ingress for AGY and register/read back the proposal through canonical Sa-plan before any source implementation claim.",
+  "completion_credit": false,
+  "mcp_probe_transcript": "[mcp-server] Starting C3I Planning MCP Server (stdio transport)...\n[mcp-server] request received\n[mcp-server] response emitted\n{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{\"tools\":{}},\"serverInfo\":{\"name\":\"c3i-planning-mcp\",\"version\":\"1.0.0\"}}}\n[mcp-server] request received\n[mcp-authz] {\"ts\":\"2026-09-27T05:30:28Z\",\"tool\":\"sa_plan_status_for\",\"agent\":\"unknown:anonymous\",\"mode\":\"audit_only\",\"verdict\":\"allowed\",\"detail\":\"ALLOWED: no_gate_required\"}\n[mcp-server] response emitted\n{\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"plan=uos/system-mcp-features/20260919-1642 total=21 completed=4 ready=3 executing=0\\nsa-plan-pipeline {\\\"request_id\\\":\\\"sa-plan-1790487029038498867\\\",\\\"command\\\":\\\"--status\\\",\\\"authority\\\":\\\"report_only\\\",\\\"total_ns\\\":3101090,\\\"server_timing\\\":\\\"decode;dur=0.001, normalize;dur=0.001, validate;dur=0.001, store_open;dur=2.665, dispatch;dur=0.182, store_close;dur=0.234, total;dur=3.101\\\",\\\"stages\\\":[{\\\"name\\\":\\\"decode\\\",\\\"duration_ns\\\":1473,\\\"duration_ms\\\":0.001473},{\\\"name\\\":\\\"normalize\\\",\\\"duration_ns\\\":1312,\\\"duration_ms\\\":0.001312},{\\\"name\\\":\\\"validate\\\",\\\"duration_ns\\\":1032,\\\"duration_ms\\\":0.001032},{\\\"name\\\":\\\"store_open\\\",\\\"duration_ns\\\":2665081,\\\"duration_ms\\\":2.665081},{\\\"name\\\":\\\"dispatch\\\",\\\"duration_ns\\\":181632,\\\"duration_ms\\\":0.181632},{\\\"name\\\":\\\"store_close\\\",\\\"duration_ns\\\":234121,\\\"duration_ms\\\":0.234121}]}\"}]}}\n[mcp-server] request received\n[mcp-authz] {\"ts\":\"2026-09-27T05:30:29Z\",\"tool\":\"sa_workflow_start\",\"agent\":\"unknown:anonymous\",\"mode\":\"audit_only\",\"verdict\":\"allowed\",\"detail\":\"ALLOWED_AUDIT: guardian_required_audit_only\"}\n[mcp-server] response emitted\n{\"jsonrpc\":\"2.0\",\"id\":3,\"error\":{\"code\":-32003,\"message\":\"Transport-bound task authority unavailable; legacy mutation refused\"}}\n[mcp-server] stdin closed, shutting down\n"
+}

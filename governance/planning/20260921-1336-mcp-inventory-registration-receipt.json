@@ -1,0 +1,15 @@
+{
+  "schema": "uos.mcp-inventory-registration-receipt.v1",
+  "timestamp": "20260921-1336Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "workflow": "uos/system-features/mcp-capability-inventory/4a3964afeedb03e5fc5ccc15776096ae7b43343ec2b01dd97e7fc32fdb9150ad",
+  "feature_id": "mcp.capability-inventory",
+  "tool_source_sha256": "4a3964afeedb03e5fc5ccc15776096ae7b43343ec2b01dd97e7fc32fdb9150ad",
+  "inventory": {"declared": 64, "unavailable": 12, "declared_unprobed": 52},
+  "result": "MCP_INVENTORY_METADATA_REGISTERED",
+  "mcp_availability": "PARTIAL_OBSERVED",
+  "runtime_admission": "NOT_GRANTED",
+  "effect_authority": false,
+  "completion": {"database_recorded": true, "all_capabilities_runtime_verified": false, "goal_complete": false},
+  "limits": ["Inventory observation and metadata registration do not prove all tools are reachable or effect-authorized."]
+}

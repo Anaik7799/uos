@@ -1,0 +1,16 @@
+{
+  "schema": "uos.dashboard-projection-fix-receipt.v1",
+  "timestamp": "20260921-1642",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "change": "execution_projection excludes completed dependency targets from inherited effective priorities",
+  "source": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_projection.gleam",
+  "validation": {"format_check": "pass", "gleam_build": "pass"},
+  "observer_output": "governance/planning/20260921-1641-execution-observer-output.json",
+  "observer_output_sha256": "4fcf67a4bddb7e1d057462fa4006e5b978afeff8fc0d5632f902373cc809dfec",
+  "risk_path": "governance/planning/20260921-1640-risk-portfolio-current.json",
+  "risk_snapshot_sha256": "548c248c01a45b22c1b524788f883ac494447807dbaa400db90cf251d83150c5",
+  "observed_counts": {"total": 21, "completed": 4, "blocked": 17, "executing": 0, "unknown": 0},
+  "completed_priority_assertion": "r01-store-gates and t1-tracker have null effective priority",
+  "authority": "read_only_projection",
+  "admission": "not_admitted"
+}

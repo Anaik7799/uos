@@ -77,7 +77,11 @@ pub type LocalOrCloud {
 
 /// Agent Activity Classification.
 pub type AgentActivityKind {
-  ToolCallProposal(tool_name: String, args_summary: String, payload_hash: String)
+  ToolCallProposal(
+    tool_name: String,
+    args_summary: String,
+    payload_hash: String,
+  )
   CodeSynthesisProposal(file_path: String, diff_size: Int, content_hash: String)
   PlanMutationProposal(plan_id: String, task_id: String, operation: String)
   SystemQueryProposal(query_kind: String, target_subsystem: String)
@@ -193,7 +197,9 @@ pub fn evaluate_security_invariants(
             "Psi-13 Autonomous Degradation: External cloud disconnected or prohibited. Rerouting to bare-metal MAX Gemma.",
           )
         False ->
-          VerdictAllow("External cloud dispatch permitted under nominal connectivity.")
+          VerdictAllow(
+            "External cloud dispatch permitted under nominal connectivity.",
+          )
       }
     }
 
@@ -211,7 +217,9 @@ pub fn evaluate_security_invariants(
               <> ". Un-ledgered plan modification forbidden.",
           )
         True ->
-          VerdictAllow("Sa-plan mutation authorized with valid execution lease.")
+          VerdictAllow(
+            "Sa-plan mutation authorized with valid execution lease.",
+          )
       }
     }
 
@@ -219,8 +227,7 @@ pub fn evaluate_security_invariants(
     ToolCallProposal(tool_name, args_summary, _hash) -> {
       let is_mutating = tool_fenced_dispatcher.is_mutating_tool(tool_name)
       case is_mutating, quorum_signed {
-        True, False ->
-          VerdictRequireQuorum(["CODEX", "AGY"])
+        True, False -> VerdictRequireQuorum(["CODEX", "AGY"])
         _, _ -> {
           // Check for dangerous exfiltration or unsafe patterns
           case contains_prohibited_exfiltration(args_summary) {
@@ -230,7 +237,9 @@ pub fn evaluate_security_invariants(
                 "Psi-12: Prohibited external exfiltration or unvetted command pattern detected in tool args.",
               )
             False ->
-              VerdictAllow("Tool proposal validated against constitutional invariants.")
+              VerdictAllow(
+                "Tool proposal validated against constitutional invariants.",
+              )
           }
         }
       }
@@ -246,10 +255,8 @@ pub fn evaluate_security_invariants(
           )
         False -> {
           case is_constitutional_contract_path(file_path), quorum_signed {
-            True, False ->
-              VerdictRequireQuorum(["CODEX", "AGY"])
-            _, _ ->
-              VerdictAllow("Code synthesis path approved.")
+            True, False -> VerdictRequireQuorum(["CODEX", "AGY"])
+            _, _ -> VerdictAllow("Code synthesis path approved.")
           }
         }
       }
@@ -376,51 +383,45 @@ pub fn activity_to_json(record: ActivityRecord) -> json.Json {
     #("agent", json.string(agent_to_string(record.agent))),
     #("verdict", json.string(verdict_to_string(record.verdict))),
     #("digest", json.string(record.sha256_digest)),
-    #(
-      "activity_kind",
-      case record.activity {
-        ToolCallProposal(t, a, h) ->
-          json.object([
-            #("kind", json.string("tool_call")),
-            #("tool_name", json.string(t)),
-            #("args_summary", json.string(a)),
-            #("payload_hash", json.string(h)),
-          ])
-        CodeSynthesisProposal(p, d, h) ->
-          json.object([
-            #("kind", json.string("code_synthesis")),
-            #("file_path", json.string(p)),
-            #("diff_size", json.int(d)),
-            #("content_hash", json.string(h)),
-          ])
-        PlanMutationProposal(p, t, o) ->
-          json.object([
-            #("kind", json.string("plan_mutation")),
-            #("plan_id", json.string(p)),
-            #("task_id", json.string(t)),
-            #("operation", json.string(o)),
-          ])
-        SystemQueryProposal(q, s) ->
-          json.object([
-            #("kind", json.string("system_query")),
-            #("query_kind", json.string(q)),
-            #("target_subsystem", json.string(s)),
-          ])
-        InferenceDispatch(m, tok, target) ->
-          json.object([
-            #("kind", json.string("inference_dispatch")),
-            #("model", json.string(m)),
-            #("tokens", json.int(tok)),
-            #(
-              "target",
-              case target {
-                LocalBareMetalMax -> json.string("local_bare_metal_max")
-                ExternalCloudModel -> json.string("external_cloud")
-              },
-            ),
-          ])
-      },
-    ),
+    #("activity_kind", case record.activity {
+      ToolCallProposal(t, a, h) ->
+        json.object([
+          #("kind", json.string("tool_call")),
+          #("tool_name", json.string(t)),
+          #("args_summary", json.string(a)),
+          #("payload_hash", json.string(h)),
+        ])
+      CodeSynthesisProposal(p, d, h) ->
+        json.object([
+          #("kind", json.string("code_synthesis")),
+          #("file_path", json.string(p)),
+          #("diff_size", json.int(d)),
+          #("content_hash", json.string(h)),
+        ])
+      PlanMutationProposal(p, t, o) ->
+        json.object([
+          #("kind", json.string("plan_mutation")),
+          #("plan_id", json.string(p)),
+          #("task_id", json.string(t)),
+          #("operation", json.string(o)),
+        ])
+      SystemQueryProposal(q, s) ->
+        json.object([
+          #("kind", json.string("system_query")),
+          #("query_kind", json.string(q)),
+          #("target_subsystem", json.string(s)),
+        ])
+      InferenceDispatch(m, tok, target) ->
+        json.object([
+          #("kind", json.string("inference_dispatch")),
+          #("model", json.string(m)),
+          #("tokens", json.int(tok)),
+          #("target", case target {
+            LocalBareMetalMax -> json.string("local_bare_metal_max")
+            ExternalCloudModel -> json.string("external_cloud")
+          }),
+        ])
+    }),
   ])
 }
 

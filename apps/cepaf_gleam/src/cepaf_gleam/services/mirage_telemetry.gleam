@@ -130,10 +130,7 @@ pub fn to_agui_state_delta(
       #("total_runs", json.int(state.total_runs)),
       #("successful_runs", json.int(state.successful_runs)),
       #("failed_runs", json.int(state.failed_runs)),
-      #(
-        "readiness",
-        json.string(state.probe_report.overall_readiness),
-      ),
+      #("readiness", json.string(state.probe_report.overall_readiness)),
     ])
 
   AgUiEvent(
@@ -155,14 +152,8 @@ pub fn state_to_json(state: MirageTelemetryState) -> Json {
     #("total_runs", json.int(state.total_runs)),
     #("successful_runs", json.int(state.successful_runs)),
     #("failed_runs", json.int(state.failed_runs)),
-    #(
-      "overall_readiness",
-      json.string(state.probe_report.overall_readiness),
-    ),
-    #(
-      "recent_count",
-      json.int(list.length(state.recent_metrics)),
-    ),
+    #("overall_readiness", json.string(state.probe_report.overall_readiness)),
+    #("recent_count", json.int(list.length(state.recent_metrics))),
   ])
 }
 

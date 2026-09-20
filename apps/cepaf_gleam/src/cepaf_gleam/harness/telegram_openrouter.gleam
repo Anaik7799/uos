@@ -28,6 +28,7 @@ import gleam/result
 import gleam/string
 
 pub const primary_model: String = "google/gemma-4-26b-a4b-it"
+
 pub const fallback_model: String = "google/gemma-4-31b-it"
 
 pub const uos_ground_truth_catalog: String = "
@@ -94,20 +95,21 @@ fn dispatch_payload_json(
     |> result.map_error(fn(err) { "daily_budget rejected model: " <> err }),
   )
 
-  let url_bytes = bit_array.from_string("https://openrouter.ai/api/v1/chat/completions")
+  let url_bytes =
+    bit_array.from_string("https://openrouter.ai/api/v1/chat/completions")
 
   // EGRESS GUARD on the WHOLE ASSEMBLED PAYLOAD. Fail-closed.
-  use _egress <- result.try(case
-    string.contains(payload_json, egress_redactor.denied_os_nvme_serial)
-  {
-    True ->
-      Error(
-        "egress refused: outbound payload carries the prohibited system "
-        <> "identifier. It is not needed to evaluate a conversation; use "
-        <> egress_redactor.redacted_serial_placeholder,
-      )
-    False -> Ok(Nil)
-  })
+  use _egress <- result.try(
+    case string.contains(payload_json, egress_redactor.denied_os_nvme_serial) {
+      True ->
+        Error(
+          "egress refused: outbound payload carries the prohibited system "
+          <> "identifier. It is not needed to evaluate a conversation; use "
+          <> egress_redactor.redacted_serial_placeholder,
+        )
+      False -> Ok(Nil)
+    },
+  )
 
   // Generate unique valid call_id and strictly verify daily_budget admission
   let call_id = "gemma4-" <> int.to_string(ffi_system_time_nanos())
@@ -139,10 +141,13 @@ fn dispatch_payload_json(
     }
     Ok(#(status, resp_bytes)) -> {
       let err_body = bit_array.to_string(resp_bytes) |> result.unwrap("")
-      Error("OpenRouter returned HTTP " <> int.to_string(status) <> ": " <> err_body)
+      Error(
+        "OpenRouter returned HTTP " <> int.to_string(status) <> ": " <> err_body,
+      )
     }
     Error(err_bytes) -> {
-      let err_str = bit_array.to_string(err_bytes) |> result.unwrap("transport_error")
+      let err_str =
+        bit_array.to_string(err_bytes) |> result.unwrap("transport_error")
       Error("OpenRouter BEAM TLS transport error: " <> err_str)
     }
   }
@@ -294,7 +299,9 @@ pub fn generate_conversational_response(
   case post_chat_openrouter(primary_model, user_query, all_messages, 1200) {
     Ok(res) -> Ok(res)
     Error(e1) -> {
-      case post_chat_openrouter(fallback_model, user_query, all_messages, 1200) {
+      case
+        post_chat_openrouter(fallback_model, user_query, all_messages, 1200)
+      {
         Ok(res2) -> Ok(res2)
         Error(e2) -> Error("Both Gemma 4 models failed: " <> e1 <> " | " <> e2)
       }
@@ -304,13 +311,16 @@ pub fn generate_conversational_response(
 
 fn parse_openrouter_content(resp_json_str: String) -> Result(String, String) {
   let decoder = {
-    use choices <- decode.field("choices", decode.list({
-      use msg <- decode.field("message", {
-        use content <- decode.field("content", decode.string)
-        decode.success(content)
-      })
-      decode.success(msg)
-    }))
+    use choices <- decode.field(
+      "choices",
+      decode.list({
+        use msg <- decode.field("message", {
+          use content <- decode.field("content", decode.string)
+          decode.success(content)
+        })
+        decode.success(msg)
+      }),
+    )
     case choices {
       [first, ..] -> decode.success(first)
       [] -> decode.failure("", "expected non-empty choices list")
@@ -319,7 +329,8 @@ fn parse_openrouter_content(resp_json_str: String) -> Result(String, String) {
 
   case json.parse(resp_json_str, decoder) {
     Ok(content) -> Ok(content)
-    Error(_) -> Error("Failed to parse OpenRouter choices JSON: " <> resp_json_str)
+    Error(_) ->
+      Error("Failed to parse OpenRouter choices JSON: " <> resp_json_str)
   }
 }
 
@@ -332,8 +343,14 @@ pub fn evaluate_telegram_interaction(
 ) -> Result(GemmaEvaluation, String) {
   let prompt =
     "Evaluate the following Telegram interaction:\n"
-    <> "- Sender: " <> sender <> " (Message ID: " <> int.to_string(msg_id) <> ")\n"
-    <> "- Inbound User Message: \"" <> user_msg <> "\"\n"
+    <> "- Sender: "
+    <> sender
+    <> " (Message ID: "
+    <> int.to_string(msg_id)
+    <> ")\n"
+    <> "- Inbound User Message: \""
+    <> user_msg
+    <> "\"\n"
     <> "- Outbound Bot Response:\n\"\"\"\n"
     <> bot_resp
     <> "\n\"\"\"\n\n"
@@ -370,11 +387,19 @@ pub fn evaluate_telegram_interaction(
     |> string.trim
 
   let eval_decoder = {
-    use und <- decode.optional_field("understanding_summary", "Parsed by Gemma 4", decode.string)
+    use und <- decode.optional_field(
+      "understanding_summary",
+      "Parsed by Gemma 4",
+      decode.string,
+    )
     use corr <- decode.optional_field("correctness_score", 70, decode.int)
     use comp <- decode.optional_field("completeness_score", 50, decode.int)
     use verd <- decode.optional_field("verdict", "MARGINAL", decode.string)
-    use disc <- decode.optional_field("discrepancies", [], decode.list(decode.string))
+    use disc <- decode.optional_field(
+      "discrepancies",
+      [],
+      decode.list(decode.string),
+    )
     use anal <- decode.optional_field("analysis", "", decode.string)
     use rec <- decode.optional_field("recommended_response", "", decode.string)
     decode.success(GemmaEvaluation(
@@ -427,11 +452,19 @@ pub fn parse_evaluation_json(
     |> string.trim
 
   let eval_decoder = {
-    use und <- decode.optional_field("understanding_summary", "Parsed by Gemma 4", decode.string)
+    use und <- decode.optional_field(
+      "understanding_summary",
+      "Parsed by Gemma 4",
+      decode.string,
+    )
     use corr <- decode.optional_field("correctness_score", 70, decode.int)
     use comp <- decode.optional_field("completeness_score", 50, decode.int)
     use verd <- decode.optional_field("verdict", "MARGINAL", decode.string)
-    use disc <- decode.optional_field("discrepancies", [], decode.list(decode.string))
+    use disc <- decode.optional_field(
+      "discrepancies",
+      [],
+      decode.list(decode.string),
+    )
     use anal <- decode.optional_field("analysis", "", decode.string)
     use rec <- decode.optional_field("recommended_response", "", decode.string)
     decode.success(GemmaEvaluation(
@@ -450,4 +483,3 @@ pub fn parse_evaluation_json(
   json.parse(clean_json, eval_decoder)
   |> result.replace_error("failed_to_decode_evaluation_json")
 }
-

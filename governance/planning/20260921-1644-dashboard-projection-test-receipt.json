@@ -1,0 +1,11 @@
+{
+  "schema": "uos.test-receipt.v1",
+  "timestamp": "20260921-1644",
+  "scope": "apps/cepaf_gleam execution_projection",
+  "validation": {"format_check": "pass", "gleam_build": "pass"},
+  "test_command": "timeout 60 gleam test --target erlang -- --module execution_projection_test",
+  "test_result": "inconclusive_timeout",
+  "observed": "suite reached runtime tests and was terminated at timeout; no assertion failure was reported",
+  "authority": "development_observation_only",
+  "admission": "not_admitted"
+}

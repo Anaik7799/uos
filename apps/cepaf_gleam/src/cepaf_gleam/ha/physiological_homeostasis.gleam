@@ -184,7 +184,10 @@ pub fn initial_physiological_state(now_us: Int) -> PhysiologicalState {
 // 3. Controller Algorithms
 // ---------------------------------------------------------------------------
 
-pub fn classify_stress(variable: PhysiologicalVariable, measurement: Float) -> StressLevel {
+pub fn classify_stress(
+  variable: PhysiologicalVariable,
+  measurement: Float,
+) -> StressLevel {
   case variable {
     CpuUtilization ->
       case True {
@@ -234,14 +237,16 @@ pub fn step_variable(
   let raw_integral = prev.integral +. { error *. dt }
   let integral = case raw_integral >. integral_clamp {
     True -> integral_clamp
-    False -> case raw_integral <. -0.0 -. integral_clamp {
-      True -> -0.0 -. integral_clamp
-      False -> raw_integral
-    }
+    False ->
+      case raw_integral <. -0.0 -. integral_clamp {
+        True -> -0.0 -. integral_clamp
+        False -> raw_integral
+      }
   }
 
   let derivative = { error -. prev.error } /. dt
-  let control = { prev.kp *. error } +. { prev.ki *. integral } +. { prev.kd *. derivative }
+  let control =
+    { prev.kp *. error } +. { prev.ki *. integral } +. { prev.kd *. derivative }
   let stress = classify_stress(prev.variable, new_measurement)
 
   VariablePidState(
@@ -301,7 +306,7 @@ pub fn update_physiological_telemetry(
       }
     })
 
-  let is_homeostatic = !has_critical && new_composite <=. 0.70
+  let is_homeostatic = !has_critical && new_composite <=. 0.7
 
   PhysiologicalState(
     variables: updated_vars,

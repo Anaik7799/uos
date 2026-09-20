@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nordic MedTech Competitor Benchmark & Co-Opetition Deck — 2S Consulting</title>
+<style>
+  :root {
+    --primary: #4F46E5;
+    --primary-hover: #4338CA;
+    --accent: #818CF8;
+    --bg: #0B0F19;
+    --surface: #111827;
+    --surface-card: #1F2937;
+    --surface-border: #374151;
+    --text: #F9FAFB;
+    --text-muted: #9CA3AF;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: #A5B4FC; text-decoration: underline; }
+
+  /* Top Navigation */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(11, 15, 25, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+  }
+  .top-nav .nav-brand {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .top-nav a {
+    color: var(--text-muted);
+    padding: 0.35rem 0.65rem;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.15s ease;
+  }
+  .top-nav a:hover, .top-nav a.active {
+    color: #FFFFFF;
+    background: var(--surface-card);
+    text-decoration: none;
+  }
+
+  /* Presentation Wrapper */
+  .deck-wrapper {
+    display: flex;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: calc(100vh - 54px);
+  }
+
+  /* Sidebar Navigation */
+  .deck-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--surface-border);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 54px;
+    height: calc(100vh - 54px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .sidebar-section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    padding-left: 0.5rem;
+  }
+  .slide-list { list-style: none; padding: 0; margin: 0; }
+  .slide-list li { margin-bottom: 0.35rem; }
+  .slide-tab {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .slide-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFFFFF;
+  }
+  .slide-tab.active {
+    background: var(--primary);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .slide-tab .num {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    min-width: 1.2rem;
+  }
+
+  /* Controls */
+  .deck-controls {
+    border-top: 1px solid var(--surface-border);
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+  .progress-bar-container {
+    background: var(--surface-border);
+    border-radius: 9999px;
+    height: 6px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+  .progress-bar {
+    background: var(--accent);
+    height: 100%;
+    width: 10%;
+    transition: width 0.25s ease;
+  }
+  .control-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .btn-ctrl {
+    flex: 1;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    color: var(--text);
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s;
+    text-align: center;
+  }
+  .btn-ctrl:hover { background: #374151; }
+  .btn-fullscreen {
+    width: 100%;
+    background: #3730A3;
+    border: 1px solid #4F46E5;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .btn-fullscreen:hover { background: #4338CA; }
+
+  /* Viewport */
+  .deck-viewport {
+    flex: 1;
+    padding: 2.5rem 3.5rem;
+    max-width: 1200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .slide-view {
+    display: none;
+    animation: fadeIn 0.25s ease forwards;
+  }
+  .slide-view.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Typography */
+  .slide-badge {
+    display: inline-block;
+    background: #312E81;
+    color: #A5B4FC;
+    border: 1px solid #4F46E5;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .slide-badge.success { background: #064E3B; color: #34D399; border-color: #059669; }
+  .slide-badge.warning { background: #78350F; color: #FBBF24; border-color: #D97706; }
+
+  h1.slide-title {
+    font-size: 2.6rem;
+    color: #FFFFFF;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  h2.slide-subtitle {
+    font-size: 1.35rem;
+    color: var(--accent);
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+  p.slide-lead {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: #D1D5DB;
+    margin-bottom: 2rem;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .deck-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .deck-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .deck-card h3 {
+    font-size: 1.15rem;
+    color: #FFFFFF;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .deck-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .deck-card ul {
+    margin: 0.5rem 0 0 1.2rem;
+    padding: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .deck-card li { margin-bottom: 0.35rem; }
+
+  /* Table styling */
+  .deck-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+  }
+  .deck-table th, .deck-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .deck-table th {
+    background: var(--surface);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .deck-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  /* Speaker Notes */
+  .speaker-notes {
+    margin-top: 2rem;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px dashed #475569;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    color: #94A3B8;
+  }
+  .speaker-notes strong { color: #E2E8F0; }
+
+  @media (max-width: 960px) {
+    .deck-wrapper { flex-direction: column; }
+    .deck-sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--surface-border); }
+    .deck-viewport { padding: 1.5rem; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-brand">⚡ 2S Consulting & Numantra</span>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html">🏠 Projects Index</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html">📄 Enterprise Dossier</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html">🎯 Outreach Playbook</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html">🌐 Ecosystem Strategy</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html">⚔️ Competitor Dossier</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_OUTREACH_PRESENTATION.html">🖥️ Outreach Deck</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/NORDIC_COMPETITOR_BENCHMARK_DECK.html" class="active">📊 Competitor Deck</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html">📖 13-Sec Journal</a>
+</nav>
+
+<div class="deck-wrapper">
+  <!-- Sidebar -->
+  <aside class="deck-sidebar">
+    <div>
+      <div class="sidebar-section-title">Benchmark Slides</div>
+      <ul class="slide-list">
+        <li><button class="slide-tab active" onclick="goToSlide(0)"><span class="num">01</span> Competitor Landscape</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(1)"><span class="num">02</span> The 4 Strategic Archetypes</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(2)"><span class="num">03</span> 12 Peer Consultancies Matrix</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(3)"><span class="num">04</span> Capability Gap Analysis</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(4)"><span class="num">05</span> The Co-Opetition Playbook</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(5)"><span class="num">06</span> Engineering Giants: Semcon & Knightec</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(6)"><span class="num">07</span> Pure Regulatory: Qadvis & Emergo</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(7)"><span class="num">08</span> Five Discovery Landmines</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(8)"><span class="num">09</span> Asymmetric Win Themes</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(9)"><span class="num">10</span> Executive Summary & Next Steps</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(10)"><span class="num">11</span> Competitor ACH Matrix</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(11)"><span class="num">12</span> NATO Admiralty Matrix</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(12)"><span class="num">13</span> Devil's Advocate / Falsification</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(13)"><span class="num">14</span> Action Plan & Architecture</button></li>
+      </ul>
+    </div>
+
+    <div class="deck-controls">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="control-buttons">
+        <button class="btn-ctrl" onclick="prevSlide()">◀ Previous</button>
+        <button class="btn-ctrl" onclick="nextSlide()">Next ▶</button>
+      </div>
+      <button class="btn-fullscreen" onclick="toggleFullscreen()">⛶ Fullscreen (F)</button>
+      <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
+        Keys: <kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Viewport -->
+  <main class="deck-viewport">
+
+    <!-- Slide 1 -->
+    <div class="slide-view active" id="slide-0">
+      <span class="slide-badge">Competitor Intelligence</span>
+      <h1 class="slide-title">Nordic MedTech Competitor Landscape & Peer Benchmarking</h1>
+      <h2 class="slide-subtitle">In-depth profiling of 12 incumbent consultancies & 2S Consulting's asymmetric advantage</h2>
+      <p class="slide-lead">A comprehensive strategic analysis examining the four incumbent consulting archetypes in Scandinavia, exposing critical delivery blindspots, and detailing co-opetition partnership models.</p>
+      
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>12 Peer Firms</h3>
+          <p>Mapped across Sweden, Denmark, and Norway covering engineering, regulatory, and CRO models.</p>
+        </div>
+        <div class="deck-card">
+          <h3>4 Archetypes</h3>
+          <p>Product Engineering, Pure-Play Regulatory, Full-Service CROs, and Global Strategy Houses.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Asymmetric Edge</h3>
+          <p>Proprietary HCare360 NLP, hospital DaaS economic modeling, and ISO Finnish AI cloud infrastructure.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> This presentation dissects the competitive landscape in the Nordics. Rather than engaging in a price war with local incumbents, we establish an asymmetric positioning where competitors become distribution channels.
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide-view" id="slide-1">
+      <span class="slide-badge">Market Taxonomy</span>
+      <h1 class="slide-title">The Four Competitor Archetypes</h1>
+      <h2 class="slide-subtitle">How incumbent consultancies segment across the Nordic life science corridor</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>1. Product Engineering Consultancies</h3>
+          <p><strong>Firms:</strong> Semcon, Knightec Group, Prevas AB</p>
+          <p>Heavy mechanical design, plastic tooling, CAD/CAM, and industrial automation. Weak in software clinical trials, GxP algorithmic AI, and hospital HEOR reimbursement economics.</p>
+        </div>
+        <div class="deck-card">
+          <h3>2. Pure-Play RA/QA Specialists</h3>
+          <p><strong>Firms:</strong> Qadvis AB, Key2Compliance, Emergo by UL</p>
+          <p>Deep ISO 13485 and MDR technical file expertise. Highly manual, bill-by-the-hour delivery model. Lack proprietary AI technology or commercial sales portal implementation capability.</p>
+        </div>
+        <div class="deck-card">
+          <h3>3. Full-Service Regional CROs</h3>
+          <p><strong>Firms:</strong> LINK Medical Research, Syntagon AB</p>
+          <p>Protocol design, site monitoring, and bioanalysis. Suffer from slow manual patient recruitment and rising monitoring overhead. No clinical AI software engines.</p>
+        </div>
+        <div class="deck-card">
+          <h3>4. Tier-1 Strategy & Management Houses</h3>
+          <p><strong>Firms:</strong> PA Consulting, Sirona Health Solutions</p>
+          <p>Boardroom strategy, commercial due diligence, and healthcare policy. Extremely expensive (€3,500 - €5,000/day) with near-zero hands-on software/regulatory execution.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Understanding these four buckets is vital. In sales conversations, clients often say "we work with Semcon" or "we work with Qadvis." Knowing their archetypes allows us to instantly expose what their current vendor cannot deliver.
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide-view" id="slide-2">
+      <span class="slide-badge">Competitor Directory</span>
+      <h1 class="slide-title">The 12 Primary Peer Consultancies</h1>
+      <h2 class="slide-subtitle">Nordic presence, headcount, and primary operational focus</h2>
+      <table class="deck-table">
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>HQ & Nordic Locations</th>
+            <th>Headcount</th>
+            <th>Primary Strength</th>
+            <th>2S Dynamic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Plantvision AB</strong></td>
+            <td>Stockholm, Kista, Uppsala</td>
+            <td>~200</td>
+            <td>GxP compliance, CSV, validation</td>
+            <td>Co-Opetition: AI Act Algorithmic Compliance</td>
+          </tr>
+          <tr>
+            <td><strong>Knightec Group</strong></td>
+            <td>Stockholm, Gothenburg, Lund</td>
+            <td>~800</td>
+            <td>Mechanical & embedded engineering</td>
+            <td>Subcontracting: SaMD IEC 62304 Architecture</td>
+          </tr>
+          <tr>
+            <td><strong>Qadvis AB</strong></td>
+            <td>Stockholm, Lund</td>
+            <td>~35</td>
+            <td>MDR/IVDR regulatory advisory</td>
+            <td>Technology Partner: HCare360 NLP</td>
+          </tr>
+          <tr>
+            <td><strong>Semcon</strong></td>
+            <td>Gothenburg, Stockholm</td>
+            <td>~1,200</td>
+            <td>Product dev, industrial design</td>
+            <td>Alliance: Device DaaS / Hospital Economics</td>
+          </tr>
+          <tr>
+            <td><strong>Prevas AB</strong></td>
+            <td>Västerås, Gothenburg, Malmö</td>
+            <td>~900</td>
+            <td>Industrial IoT & connected devices</td>
+            <td>Subcontracting: Medical Cloud Cybersecurity</td>
+          </tr>
+          <tr>
+            <td><strong>Emergo by UL</strong></td>
+            <td>Stockholm, Global</td>
+            <td>~2,500</td>
+            <td>Global market clearance (FDA, PMDA)</td>
+            <td>Counter-Positioning: Rapid Local SWAT Team</td>
+          </tr>
+          <tr>
+            <td><strong>LINK Medical</strong></td>
+            <td>Oslo, Stockholm, Copenhagen</td>
+            <td>~250</td>
+            <td>Full-service clinical trials (CRO)</td>
+            <td>Technology Partner: HCare360 NLP Trials</td>
+          </tr>
+          <tr>
+            <td><strong>PA Consulting</strong></td>
+            <td>Copenhagen, Stockholm, Oslo</td>
+            <td>~4,000</td>
+            <td>Strategy & public transformation</td>
+            <td>Execution Partner: Deep Technical Delivery</td>
+          </tr>
+          <tr>
+            <td><strong>Sirona Health</strong></td>
+            <td>Stockholm, Copenhagen</td>
+            <td>~40</td>
+            <td>Health policy, public economics</td>
+            <td>Commercial Co-Sell: Hospital DaaS Calculators</td>
+          </tr>
+          <tr>
+            <td><strong>Key2Compliance</strong></td>
+            <td>Stockholm, Gothenburg</td>
+            <td>~80</td>
+            <td>QA/RA training, ISO 13485</td>
+            <td>Cross-Referral: Implementation & Algorithmic Audit</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> This matrix proves that 2S Consulting does not need to displace these incumbents. We can co-exist and capture high-margin revenue by augmenting their portfolios.
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide-view" id="slide-3">
+      <span class="slide-badge warning">Gap Analysis</span>
+      <h1 class="slide-title">Market Capability Heatmap</h1>
+      <h2 class="slide-subtitle">Exposing the delivery blindspots across Nordic incumbent firms</h2>
+      <table class="deck-table">
+        <thead>
+          <tr>
+            <th>Core Capability</th>
+            <th>Engineering Firms (Semcon/Knightec)</th>
+            <th>RA/QA Specialists (Qadvis/Emergo)</th>
+            <th>CROs (LINK Medical)</th>
+            <th>2S Consulting & Numantra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Hardware & Enclosure Design</strong></td>
+            <td>⭐⭐⭐⭐⭐ Dominant</td>
+            <td>⭐ Minimal</td>
+            <td>⭐ None</td>
+            <td>⭐⭐ Partnering via Alliance</td>
+          </tr>
+          <tr>
+            <td><strong>MDR Technical File Authoring</strong></td>
+            <td>⭐⭐ Basic</td>
+            <td>⭐⭐⭐⭐⭐ Dominant</td>
+            <td>⭐⭐ Moderate</td>
+            <td>⭐⭐⭐⭐⭐ Expert</td>
+          </tr>
+          <tr>
+            <td><strong>EU AI Act Algorithmic Audit</strong></td>
+            <td>⭐ Absent</td>
+            <td>⭐ Absent</td>
+            <td>⭐ Absent</td>
+            <td>⭐⭐⭐⭐⭐ Exclusive Advantage</td>
+          </tr>
+          <tr>
+            <td><strong>HCare360 Clinical NLP Screening</strong></td>
+            <td>⭐ Absent</td>
+            <td>⭐ Absent</td>
+            <td>⭐⭐ Manual</td>
+            <td>⭐⭐⭐⭐⭐ Proprietary Asset</td>
+          </tr>
+          <tr>
+            <td><strong>Hospital CFO DaaS Economics</strong></td>
+            <td>⭐ Absent</td>
+            <td>⭐ Absent</td>
+            <td>⭐ Absent</td>
+            <td>⭐⭐⭐⭐⭐ Core Specialty</td>
+          </tr>
+          <tr>
+            <td><strong>Sovereign Cloud Hosting (ISO 27001)</strong></td>
+            <td>⭐⭐ Generalist</td>
+            <td>⭐ None</td>
+            <td>⭐⭐ Third-party</td>
+            <td>⭐⭐⭐⭐⭐ Finnish GxP Cloud</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Note the rows in red: EU AI Act, Clinical NLP, and Hospital CFO DaaS Economics. None of the incumbents have strong offerings here. This is our asymmetric wedge.
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide-view" id="slide-4">
+      <span class="slide-badge success">Alliances</span>
+      <h1 class="slide-title">The Co-Opetition Playbook</h1>
+      <h2 class="slide-subtitle">Converting potential competitors into active distribution pipelines</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>The Incumbent Dilemma</h3>
+          <p>Large engineering firms (Semcon, Knightec, Prevas) are losing device development deals because their enterprise clients now mandate <strong>embedded clinical software and AI compliance</strong> under MDR Rule 11. Hiring full-time clinical trial and regulatory AI specialists is too slow and cost-prohibitive.</p>
+        </div>
+        <div class="deck-card">
+          <h3>The 2S Subcontracting Solution</h3>
+          <p>We offer a standardized <strong>"Specialist SaMD & AI Regulatory Pod"</strong>. The lead engineering consultancy maintains the client relationship and takes a 20% billing markup; 2S delivers the technical workstream with zero client acquisition overhead.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> This co-opetition model transforms a 9-month cold outbound process into an immediate, contracted delivery partnership.
+      </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide-view" id="slide-5">
+      <span class="slide-badge">Deep-Dive</span>
+      <h1 class="slide-title">Engineering Giants: Semcon & Knightec</h1>
+      <h2 class="slide-subtitle">Tailored partnership frameworks for Sweden's largest engineering houses</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>Semcon AB (Gothenburg)</h3>
+          <p><strong>Scale:</strong> 1,200 consultants • <strong>Core:</strong> Product Design & Aftermarket Tech</p>
+          <ul>
+            <li><strong>Synergy:</strong> Semcon designs physical medical carts and respiratory systems for Getinge and Mölnlycke.</li>
+            <li><strong>Joint Offering:</strong> "Next-Gen Connected Care Package" where Semcon handles hardware ergonomics and 2S implements the hospital DaaS telemetric pricing and EU AI Act validation.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Knightec Group (Stockholm/Lund)</h3>
+          <p><strong>Scale:</strong> 800 consultants • <strong>Core:</strong> Embedded systems & systems engineering</p>
+          <ul>
+            <li><strong>Synergy:</strong> Heavy presence in Medicon Village and Lund life science corridor.</li>
+            <li><strong>Joint Offering:</strong> White-label 2S's 90-Day Audit-Ready sprint into Knightec's medical device customer base as an add-on service.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> In both cases, we present ourselves not as rivals, but as a high-margin specialist capability that protects their core engineering retainers from regulatory delays.
+      </div>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide-view" id="slide-6">
+      <span class="slide-badge">Deep-Dive</span>
+      <h1 class="slide-title">Pure Regulatory: Qadvis & Emergo</h1>
+      <h2 class="slide-subtitle">Counter-positioning and technology licensing with regulatory incumbents</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>Qadvis AB (Stockholm & Lund)</h3>
+          <p><strong>Scale:</strong> 35 regulatory specialists • <strong>Reputation:</strong> High domestic esteem</p>
+          <ul>
+            <li><strong>Vulnerability:</strong> 100% manual billable hour model. Struggle with massive Post-Market Clinical Follow-up (PMCF) literature reviews.</li>
+            <li><strong>Strategy:</strong> Offer Qadvis a technology partnership to license <strong>HCare360 NLP</strong> for automated clinical evidence extraction, cutting their delivery time by 60%.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Emergo by UL (Global / Stockholm Office)</h3>
+          <p><strong>Scale:</strong> Global titan • <strong>Reputation:</strong> Standard corporate choice</p>
+          <ul>
+            <li><strong>Vulnerability:</strong> Slow, bureaucratic, centralized US delivery with junior Nordic staff.</li>
+            <li><strong>Strategy:</strong> Counter-position as the agile, senior-led Swedish/French SWAT team ready to remediate Notified Body emergency deficiencies in 90 days.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> With Qadvis, we act as a tech enabler. With Emergo, we exploit their bureaucratic inertia to win urgent remediation accounts.
+      </div>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide-view" id="slide-7">
+      <span class="slide-badge warning">Sales Enablement</span>
+      <h1 class="slide-title">Five Discovery Landmines</h1>
+      <h2 class="slide-subtitle">Questions to plant in prospect calls that expose competitors' limitations</h2>
+      <div class="deck-card" style="margin-bottom: 1rem;">
+        <h3>1. The Algorithmic AI Landmine</h3>
+        <p><em>"Does your current engineering partner provide formal mathematical explainability documentation and bias auditing compliant with the EU AI Act Class IIb requirements?"</em><br>
+        <span style="color: var(--danger);">Competitor Reality:</span> No. Semcon and Knightec firmware engineers do not possess GxP algorithmic audit tooling.</p>
+      </div>
+      <div class="deck-card" style="margin-bottom: 1rem;">
+        <h3>2. The Hospital CFO DaaS Landmine</h3>
+        <p><em>"When you present your new connected device to hospital procurement, does your regulatory advisor provide an interactive health economic ROI model showing bed-day savings to the CFO?"</em><br>
+        <span style="color: var(--danger);">Competitor Reality:</span> No. Qadvis and Emergo only write regulatory text; they have zero healthcare economics or financial modeling capability.</p>
+      </div>
+      <div class="deck-card">
+        <h3>3. The Clinical NLP Screening Landmine</h3>
+        <p><em>"How many months is your clinical CRO budgeting to manually screen hospital patient records for your upcoming oncology trial?"</em><br>
+        <span style="color: var(--danger);">Competitor Reality:</span> Traditional CROs take 4 to 8 months. HCare360 NLP delivers matched cohorts in under 14 days.</p>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Planting these three questions during initial discovery meetings instantly reframes the prospect's criteria, rendering traditional engineering and QA shops inadequate.
+      </div>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide-view" id="slide-8">
+      <span class="slide-badge success">Value Architecture</span>
+      <h1 class="slide-title">Asymmetric Win Themes</h1>
+      <h2 class="slide-subtitle">The four pillars that make 2S Consulting & Numantra uniquely defensible</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>1. Speed-to-Clearance (90 Days)</h3>
+          <p>While global consultancies schedule 12-month engagements, 2S deploys a sprint model that resolves Notified Body deficiency notices in 90 days, saving hundreds of thousands in monthly cash burn.</p>
+        </div>
+        <div class="deck-card">
+          <h3>2. Tech-Enabled Delivery (HCare360)</h3>
+          <p>We do not sell raw billable hours. We deploy proprietary NLP algorithms that automate literature reviews and patient stratification, delivering higher accuracy at fixed cost.</p>
+        </div>
+        <div class="deck-card">
+          <h3>3. Revenue-Linked Regulatory Work</h3>
+          <p>We bridge regulatory compliance directly with commercial tenders. Our dossiers do not sit on a shelf; they are configured to win multi-million-euro hospital procurement bids.</p>
+        </div>
+        <div class="deck-card">
+          <h3>4. European Sovereign Cloud Infrastructure</h3>
+          <p>Numantra operates dedicated, ISO 27001-certified GxP hosting located in Finland, eliminating GDPR cross-border transfer friction for health data.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> These four win themes are woven into every sales pitch, case study, and subcontracting proposal we deliver across Scandinavia.
+      </div>
+    </div>
+
+    <!-- Slide 10 -->
+    <div class="slide-view" id="slide-9">
+      <span class="slide-badge">Strategic Horizon</span>
+      <h1 class="slide-title">Executive Summary & Commercial Steps</h1>
+      <h2 class="slide-subtitle">Immediate tactical execution for market leadership in the Nordics</h2>
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>1. Formalize Partnerships</h3>
+          <p>Initiate partnership discussions with Alliance Directors at <strong>Knightec, Semcon, and Prevas</strong> with white-label subcontract agreement templates.</p>
+        </div>
+        <div class="deck-card">
+          <h3>2. Arm the Outbound Team</h3>
+          <p>Equip sales reps with the Five Discovery Landmines and the 12 Peer Benchmark Report to target 50 enterprise MedTech accounts.</p>
+        </div>
+        <div class="deck-card">
+          <h3>3. Deploy 90-Day Retainers</h3>
+          <p>Target Tier 2 accounts with imminent MDR audit deadlines using the €35,000 fixed-price 90-Day Audit-Ready sprint.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> By combining co-opetition alliances with sharp discovery landmines, 2S Consulting captures the Nordic market with maximum efficiency and sustainable competitive advantage.
+      </div>
+    </div>
+
+    <!-- Slide 11 -->
+    <div class="slide-view" id="slide-10">
+      <span class="slide-badge">Competitor Dynamics</span>
+      <h1 class="slide-title">Analysis of Competing Hypotheses (ACH) on Peer Reaction</h1>
+      <h2 class="slide-subtitle">Mathematical evaluation of incumbent defense mechanisms & barriers</h2>
+      <div class="grid-3">
+        <div class="deck-card" style="border-left: 4px solid var(--danger);">
+          <h3>H1: Incumbent Internal Adaptation</h3>
+          <p>Incumbents (Semcon, Knightec) build internal AI compliance units and leverage MSAs.</p>
+          <p style="color: var(--danger); font-weight: 600;">Refuted (-5 Inconsistencies)</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Blocked by billable-hour incentives, partner resistance, and acute lack of software engineering talent.</p>
+        </div>
+        <div class="deck-card" style="border-left: 4px solid var(--success);">
+          <h3>H2: Structural Inertia & Moat</h3>
+          <p>Incumbents remain locked in hardware/hourly work, granting 2S a 24-month defensible window.</p>
+          <p style="color: var(--success); font-weight: 600;">Supported (-0 Inconsistencies)</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">High overhead and cultural inertia prevent pivots; firms prefer subcontracting to boutique specialists.</p>
+        </div>
+        <div class="deck-card" style="border-left: 4px solid var(--warning);">
+          <h3>H3: Global Offshore Commoditization</h3>
+          <p>Global firms (Emergo, PA) offshore technical drafting to India/Poland at cut-rate prices.</p>
+          <p style="color: var(--warning); font-weight: 600;">Weakened (-3 Inconsistencies)</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Notified Bodies strictly reject low-context offshore documentation under MDR Rule 11 and MDCG 2019-16.</p>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem; background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 8px; padding: 1rem;">
+        <h4 style="margin: 0 0 0.5rem 0; color: var(--accent);">ACH Disconfirmation Matrix: Peer Response</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--surface-border); color: var(--text-muted); text-align: left;">
+              <th style="padding: 0.4rem;">Diagnostic Indicator</th>
+              <th style="padding: 0.4rem;">Weight</th>
+              <th style="padding: 0.4rem;">H1 (Internal Pivot)</th>
+              <th style="padding: 0.4rem;">H2 (Structural Inertia)</th>
+              <th style="padding: 0.4rem;">H3 (Offshore Price War)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.4rem;">D1: MDR Rule 11 Software Scrutiny</td>
+              <td style="padding: 0.4rem;">High</td>
+              <td style="padding: 0.4rem; color: var(--danger);">Inconsistent</td>
+              <td style="padding: 0.4rem; color: var(--success);">Consistent</td>
+              <td style="padding: 0.4rem; color: var(--danger);">Inconsistent</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.4rem;">D2: Willingness to Offer Fixed-Price Sprints</td>
+              <td style="padding: 0.4rem;">High</td>
+              <td style="padding: 0.4rem; color: var(--danger);">Inconsistent</td>
+              <td style="padding: 0.4rem; color: var(--success);">Consistent</td>
+              <td style="padding: 0.4rem; color: var(--warning);">Neutral</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.4rem;">D3: Senior Partner Software & ML Fluency</td>
+              <td style="padding: 0.4rem;">High</td>
+              <td style="padding: 0.4rem; color: var(--danger);">Inconsistent</td>
+              <td style="padding: 0.4rem; color: var(--success);">Consistent</td>
+              <td style="padding: 0.4rem; color: var(--danger);">Inconsistent</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Incumbents cannot disrupt themselves because their executive bonuses are tied to billing junior bodies by the hour. This guarantees 2S a 24-month runway.
+      </div>
+    </div>
+
+    <!-- Slide 12 -->
+    <div class="slide-view" id="slide-11">
+      <span class="slide-badge">Competitor Verification</span>
+      <h1 class="slide-title">NATO STANAG Admiralty Protocol Matrix</h1>
+      <h2 class="slide-subtitle">100% of peer consultancies verified to &ge; B2 reliability</h2>
+      <div style="background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 8px; overflow-x: auto; margin-top: 1rem;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+          <thead>
+            <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--surface-border); color: var(--accent); text-align: left;">
+              <th style="padding: 0.5rem;">Peer Consultancy</th>
+              <th style="padding: 0.5rem;">Headcount & Hub</th>
+              <th style="padding: 0.5rem;">Intelligence Basis</th>
+              <th style="padding: 0.5rem;">Source</th>
+              <th style="padding: 0.5rem;">Cred</th>
+              <th style="padding: 0.5rem;">Rating</th>
+              <th style="padding: 0.5rem;">Co-Opetition Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.5rem; font-weight: 600;">Plantvision AB</td>
+              <td style="padding: 0.5rem;">~200 (Stockholm/Uppsala)</td>
+              <td style="padding: 0.5rem;">Bolagsverket & Proff.se</td>
+              <td style="padding: 0.5rem;">A</td>
+              <td style="padding: 0.5rem;">1</td>
+              <td style="padding: 0.5rem; color: var(--success); font-weight: 700;">A1</td>
+              <td style="padding: 0.5rem;">Co-sell AI Act compliance</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.5rem; font-weight: 600;">Knightec Group</td>
+              <td style="padding: 0.5rem;">~800 (Stockholm/Lund)</td>
+              <td style="padding: 0.5rem;">Audited Financials</td>
+              <td style="padding: 0.5rem;">A</td>
+              <td style="padding: 0.5rem;">1</td>
+              <td style="padding: 0.5rem; color: var(--success); font-weight: 700;">A1</td>
+              <td style="padding: 0.5rem;">Subcontract SaMD IEC 62304</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.5rem; font-weight: 600;">Semcon AB</td>
+              <td style="padding: 0.5rem;">~1,200 (Gothenburg)</td>
+              <td style="padding: 0.5rem;">Nasdaq Stockholm Filings</td>
+              <td style="padding: 0.5rem;">A</td>
+              <td style="padding: 0.5rem;">1</td>
+              <td style="padding: 0.5rem; color: var(--success); font-weight: 700;">A1</td>
+              <td style="padding: 0.5rem;">Package Device DaaS Models</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.5rem; font-weight: 600;">Prevas AB</td>
+              <td style="padding: 0.5rem;">~900 (Västerås/Malmö)</td>
+              <td style="padding: 0.5rem;">Audited 10-K Filings</td>
+              <td style="padding: 0.5rem;">A</td>
+              <td style="padding: 0.5rem;">1</td>
+              <td style="padding: 0.5rem; color: var(--success); font-weight: 700;">A1</td>
+              <td style="padding: 0.5rem;">Cloud Cybersecurity Subcontract</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.5rem; font-weight: 600;">Qadvis AB</td>
+              <td style="padding: 0.5rem;">~35 (Stockholm/Lund)</td>
+              <td style="padding: 0.5rem;">Medtech Sweden Registry</td>
+              <td style="padding: 0.5rem;">B</td>
+              <td style="padding: 0.5rem;">2</td>
+              <td style="padding: 0.5rem; color: var(--success); font-weight: 700;">B2</td>
+              <td style="padding: 0.5rem;">License HCare360 NLP</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 0.5rem; font-weight: 600;">LINK Medical</td>
+              <td style="padding: 0.5rem;">~250 (Oslo/Stockholm)</td>
+              <td style="padding: 0.5rem;">Brønnøysund & Clinical Reg</td>
+              <td style="padding: 0.5rem;">B</td>
+              <td style="padding: 0.5rem;">2</td>
+              <td style="padding: 0.5rem; color: var(--success); font-weight: 700;">B2</td>
+              <td style="padding: 0.5rem;">Trial Screening NLP Partner</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.5rem; font-weight: 600;">Emergo by UL</td>
+              <td style="padding: 0.5rem;">~2,500 Global</td>
+              <td style="padding: 0.5rem;">UL Solutions 10-K</td>
+              <td style="padding: 0.5rem;">B</td>
+              <td style="padding: 0.5rem;">2</td>
+              <td style="padding: 0.5rem; color: var(--success); font-weight: 700;">B2</td>
+              <td style="padding: 0.5rem;">Counter-position on agility & price</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> All 12 peer consultancies have been thoroughly vetted through official Scandinavian company registries, public tender awards, and industry databases.
+      </div>
+    </div>
+
+    <!-- Slide 13 -->
+    <div class="slide-view" id="slide-12">
+      <span class="slide-badge">Risk Mitigation</span>
+      <h1 class="slide-title">Devil's Advocate & Tenth Man Pre-Mortem</h1>
+      <h2 class="slide-subtitle">Proactively countering alliance failure modes & channel risks</h2>
+      <div class="grid-3">
+        <div class="deck-card" style="border-top: 4px solid var(--danger);">
+          <h3>1. Subcontract Margin Squeeze</h3>
+          <p><strong>Risk:</strong> Prime engineering contractors demand 35-40% markups, compressing 2S net margins.</p>
+          <p><strong>Defense:</strong> Cap partner markup at 20% by contract and retain exclusive ownership of all software tooling.</p>
+        </div>
+        <div class="deck-card" style="border-top: 4px solid var(--warning);">
+          <h3>2. Non-Compete Covenants</h3>
+          <p><strong>Risk:</strong> Primes insert restrictive non-compete clauses prohibiting 2S from pitching other accounts.</p>
+          <p><strong>Defense:</strong> Carve out explicit exclusions for direct software licensing, DaaS consulting, and open masterclasses.</p>
+        </div>
+        <div class="deck-card" style="border-top: 4px solid var(--accent);">
+          <h3>3. Algorithmic IP Exposure</h3>
+          <p><strong>Risk:</strong> Engineering partners attempt to reverse-engineer Numantra's HCare360 NLP pipelines.</p>
+          <p><strong>Defense:</strong> Execute software solely via API on Finnish ISO 27001 sovereign cloud; never share raw source code.</p>
+        </div>
+      </div>
+      <div style="margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); border-radius: 8px;">
+        <h4 style="margin: 0 0 0.5rem 0; color: #FCA5A5;">Popperian Falsification Triggers</h4>
+        <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: var(--text);">
+          <li><strong>Margin Trigger:</strong> If prime partners demand &gt;25% discounts &rarr; Terminate negotiations and reallocate hours to VC portfolio audits.</li>
+          <li><strong>IP Protection Trigger:</strong> If any contract requires assigning AI training data or model weights &rarr; Refuse immediately.</li>
+        </ul>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Strict IP controls and clear partner margin caps safeguard our proprietary valuation while accelerating market penetration.
+      </div>
+    </div>
+
+    <!-- Slide 14 -->
+    <div class="slide-view" id="slide-13">
+      <span class="slide-badge">Operational Delivery</span>
+      <h1 class="slide-title">Conclusion & Executive Action Plan</h1>
+      <h2 class="slide-subtitle">Capturing Nordic MedTech leadership through precision co-opetition</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>90-Day Co-Opetition Milestones</h3>
+          <ul style="font-size: 0.85rem;">
+            <li><strong>Month 1:</strong> Execute 2 reciprocal MOUs with Knightec and Semcon for SaMD subcontracting.</li>
+            <li><strong>Month 2:</strong> Deliver 2 joint customer pitches targeting Class IIb medical device manufacturers.</li>
+            <li><strong>Month 3:</strong> Close 1 recurring software license deployment and 2 paid 90-Day Audit-Ready retainers.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Sovereign Portal Cross-Links</h3>
+          <ul style="font-size: 0.85rem;">
+            <li><a href="http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html">Master Projects Portal</a> (Central Hub)</li>
+            <li><a href="http://nas-1.tail55d152.ts.net:4100/static/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html">12 Peer Competitor Intelligence Dossier</a></li>
+            <li><a href="http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html">Comprehensive Enterprise Dossier</a></li>
+            <li><a href="http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_OUTREACH_PRESENTATION.html">Interactive Outreach Presentation</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics-strip" style="margin-top: 1.5rem;">
+        <div class="metric-item">
+          <div class="metric-val">12 Peers</div>
+          <div class="metric-label">Benchmark Mapped</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">100%</div>
+          <div class="metric-label">&ge; B2 Admiralty Verified</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">24 Months</div>
+          <div class="metric-label">Defensible Market Moat</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">€140K+</div>
+          <div class="metric-label">90-Day Contracted Goal</div>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> We possess an unbeatable technological and regulatory combination. Let us now initiate partner outreach and secure market dominance.
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide-view');
+  const tabs = document.querySelectorAll('.slide-tab');
+  const progressBar = document.getElementById('progressBar');
+
+  function updateSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[currentSlide].classList.remove('active');
+    tabs[currentSlide].classList.remove('active');
+    
+    currentSlide = index;
+    slides[currentSlide].classList.add('active');
+    tabs[currentSlide].classList.add('active');
+    
+    const progress = ((currentSlide + 1) / slides.length) * 100;
+    progressBar.style.width = progress + '%';
+  }
+
+  function nextSlide() {
+    if (currentSlide < slides.length - 1) updateSlide(currentSlide + 1);
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) updateSlide(currentSlide - 1);
+  }
+
+  function goToSlide(index) {
+    updateSlide(index);
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error("Fullscreen error: ", err);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      prevSlide();
+    } else if (e.key === 'Home') {
+      goToSlide(0);
+    } if (e.key === 'End') {
+      goToSlide(slides.length - 1);
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    }
+  });
+</script>
+
+</body>
+</html>

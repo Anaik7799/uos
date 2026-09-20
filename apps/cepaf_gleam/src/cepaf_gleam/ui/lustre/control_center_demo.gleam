@@ -64,7 +64,7 @@ pub fn init() -> ControlCenterDemoModel {
     spring_armed: False,
     key_a_turned: False,
     key_b_turned: False,
-    interlock_skew_ms: 30000,
+    interlock_skew_ms: 30_000,
     andon_tripped: False,
     andon_reason: "",
     os_drive_serial: "25503L801736",
@@ -86,7 +86,8 @@ pub fn update(
     ToggleSpringCover -> {
       let new_state = !model.spring_cover_open
       let log_msg = case new_state {
-        True -> "[ACTUATION] Spring-loaded cover flipped OPEN (5.0s timer active)"
+        True ->
+          "[ACTUATION] Spring-loaded cover flipped OPEN (5.0s timer active)"
         False -> "[SAFETY] Spring-loaded cover snapped SHUT"
       }
       ControlCenterDemoModel(
@@ -113,7 +114,10 @@ pub fn update(
         False -> {
           let log_msg =
             "[TRIPWIRE] Blocked actuation: Cover is CLOSED (ERR_COVER_CLOSED)"
-          ControlCenterDemoModel(..model, event_log: [log_msg, ..model.event_log])
+          ControlCenterDemoModel(..model, event_log: [
+            log_msg,
+            ..model.event_log
+          ])
         }
       }
     }
@@ -312,55 +316,67 @@ fn render_spring_cover_card(
           element.text("Target: /dev/nvme0n1"),
         ]),
       ]),
-      html.div([attribute.class("p-4 bg-slate-950 rounded border border-slate-800 my-2")], [
-        case model.spring_cover_open {
-          False ->
-            html.button(
-              [
-                attribute.class(
-                  "w-full py-6 text-center text-xs font-bold text-slate-300 rounded border border-slate-700 hover:border-amber-500 transition cursor-pointer",
-                ),
-                attribute.attribute(
-                  "style",
-                  "background: repeating-linear-gradient(45deg, #1e293b, #1e293b 10px, #334155 10px, #334155 20px);",
-                ),
-                event.on_click(ToggleSpringCover),
-              ],
-              [element.text("[ CLICK TO FLIP SPRING COVER OPEN ]")],
-            )
-          True ->
-            html.div([attribute.class("space-y-3")], [
-              html.div([attribute.class("flex justify-between text-xs text-red-400")], [
-                html.span([], [element.text("COVER: OPEN (DANGER)")]),
-                html.span([attribute.class("font-bold")], [
-                  element.text(
-                    "TIMER: "
-                    <> float.to_string(int.to_float(model.spring_timer_ms) /. 1000.0)
-                    <> "s",
-                  ),
-                ]),
-              ]),
+      html.div(
+        [
+          attribute.class(
+            "p-4 bg-slate-950 rounded border border-slate-800 my-2",
+          ),
+        ],
+        [
+          case model.spring_cover_open {
+            False ->
               html.button(
                 [
                   attribute.class(
-                    "w-full py-4 text-center text-sm font-bold text-white bg-red-600 hover:bg-red-500 rounded border border-red-400 shadow-[0_0_15px_rgba(220,38,38,0.7)] cursor-pointer animate-pulse",
+                    "w-full py-6 text-center text-xs font-bold text-slate-300 rounded border border-slate-700 hover:border-amber-500 transition cursor-pointer",
                   ),
-                  event.on_click(ConfirmSpringActuate),
-                ],
-                [element.text(">>> PRESS TO CONFIRM REBOOT <<<")],
-              ),
-              html.button(
-                [
-                  attribute.class(
-                    "w-full py-1 text-center text-xs text-slate-400 hover:text-slate-200 cursor-pointer",
+                  attribute.attribute(
+                    "style",
+                    "background: repeating-linear-gradient(45deg, #1e293b, #1e293b 10px, #334155 10px, #334155 20px);",
                   ),
                   event.on_click(ToggleSpringCover),
                 ],
-                [element.text("[ Snap Cover Shut (Cancel) ]")],
-              ),
-            ])
-        },
-      ]),
+                [element.text("[ CLICK TO FLIP SPRING COVER OPEN ]")],
+              )
+            True ->
+              html.div([attribute.class("space-y-3")], [
+                html.div(
+                  [attribute.class("flex justify-between text-xs text-red-400")],
+                  [
+                    html.span([], [element.text("COVER: OPEN (DANGER)")]),
+                    html.span([attribute.class("font-bold")], [
+                      element.text(
+                        "TIMER: "
+                        <> float.to_string(
+                          int.to_float(model.spring_timer_ms) /. 1000.0,
+                        )
+                        <> "s",
+                      ),
+                    ]),
+                  ],
+                ),
+                html.button(
+                  [
+                    attribute.class(
+                      "w-full py-4 text-center text-sm font-bold text-white bg-red-600 hover:bg-red-500 rounded border border-red-400 shadow-[0_0_15px_rgba(220,38,38,0.7)] cursor-pointer animate-pulse",
+                    ),
+                    event.on_click(ConfirmSpringActuate),
+                  ],
+                  [element.text(">>> PRESS TO CONFIRM REBOOT <<<")],
+                ),
+                html.button(
+                  [
+                    attribute.class(
+                      "w-full py-1 text-center text-xs text-slate-400 hover:text-slate-200 cursor-pointer",
+                    ),
+                    event.on_click(ToggleSpringCover),
+                  ],
+                  [element.text("[ Snap Cover Shut (Cancel) ]")],
+                ),
+              ])
+          },
+        ],
+      ),
       html.p([attribute.class("text-xs text-slate-500 mt-2")], [
         element.text(
           "Mechanical spring resistance prevents accidental clicks. 5-second vulnerability window automatically snaps shut on expiry.",
@@ -468,35 +484,44 @@ fn render_andon_cord_card(
           element.text("Mandate: SC-JIDOKA-001"),
         ]),
       ]),
-      html.div([attribute.class("p-4 bg-slate-950 rounded border border-slate-800 my-2 text-center")], [
-        case model.andon_tripped {
-          False ->
-            html.button(
-              [
-                attribute.class(
-                  "py-3 px-6 bg-red-950/40 hover:bg-red-900/60 border border-red-700 text-red-300 font-bold rounded cursor-pointer transition",
-                ),
-                event.on_click(PullAndonCord("Manual Operator Emergency Stop")),
-              ],
-              [element.text("||| YANK BRAIDED ANDON PULL CORD |||")],
-            )
-          True ->
-            html.div([attribute.class("space-y-3")], [
-              html.div([attribute.class("text-red-400 font-bold text-xs")], [
-                element.text("! STOP LINE ACTIVE ! Reason: " <> model.andon_reason),
-              ]),
+      html.div(
+        [
+          attribute.class(
+            "p-4 bg-slate-950 rounded border border-slate-800 my-2 text-center",
+          ),
+        ],
+        [
+          case model.andon_tripped {
+            False ->
               html.button(
                 [
                   attribute.class(
-                    "py-2 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs text-slate-200 rounded cursor-pointer",
+                    "py-3 px-6 bg-red-950/40 hover:bg-red-900/60 border border-red-700 text-red-300 font-bold rounded cursor-pointer transition",
                   ),
-                  event.on_click(ResetAndonCord),
+                  event.on_click(PullAndonCord("Manual Operator Emergency Stop")),
                 ],
-                [element.text("[ Reset Stop Line via L0 Clearance Key ]")],
-              ),
-            ])
-        },
-      ]),
+                [element.text("||| YANK BRAIDED ANDON PULL CORD |||")],
+              )
+            True ->
+              html.div([attribute.class("space-y-3")], [
+                html.div([attribute.class("text-red-400 font-bold text-xs")], [
+                  element.text(
+                    "! STOP LINE ACTIVE ! Reason: " <> model.andon_reason,
+                  ),
+                ]),
+                html.button(
+                  [
+                    attribute.class(
+                      "py-2 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs text-slate-200 rounded cursor-pointer",
+                    ),
+                    event.on_click(ResetAndonCord),
+                  ],
+                  [element.text("[ Reset Stop Line via L0 Clearance Key ]")],
+                ),
+              ])
+          },
+        ],
+      ),
       html.p([attribute.class("text-xs text-slate-500 mt-2")], [
         element.text(
           "Immediately halts autonomous worker pull queues across all 10 fractal layers, failing closed to bottom state Bot (code -32002).",
@@ -524,26 +549,33 @@ fn render_storage_sentry_card(
           element.text("[ LOCKED ]"),
         ]),
       ]),
-      html.div([attribute.class("p-3 bg-slate-950 rounded border border-slate-800 my-2 text-xs space-y-1")], [
-        html.div([attribute.class("flex justify-between text-slate-400")], [
-          html.span([], [element.text("Drive Serial:")]),
-          html.span([attribute.class("font-bold text-slate-200")], [
-            element.text(model.os_drive_serial),
+      html.div(
+        [
+          attribute.class(
+            "p-3 bg-slate-950 rounded border border-slate-800 my-2 text-xs space-y-1",
+          ),
+        ],
+        [
+          html.div([attribute.class("flex justify-between text-slate-400")], [
+            html.span([], [element.text("Drive Serial:")]),
+            html.span([attribute.class("font-bold text-slate-200")], [
+              element.text(model.os_drive_serial),
+            ]),
           ]),
-        ]),
-        html.div([attribute.class("flex justify-between text-slate-400")], [
-          html.span([], [element.text("Interlock Rule:")]),
-          html.span([attribute.class("text-red-400")], [
-            element.text("HARD_DENIED_SYSTEM_OS_SERIAL"),
+          html.div([attribute.class("flex justify-between text-slate-400")], [
+            html.span([], [element.text("Interlock Rule:")]),
+            html.span([attribute.class("text-red-400")], [
+              element.text("HARD_DENIED_SYSTEM_OS_SERIAL"),
+            ]),
           ]),
-        ]),
-        html.div([attribute.class("flex justify-between text-slate-400")], [
-          html.span([], [element.text("Enforcement:")]),
-          html.span([attribute.class("text-cyan-400")], [
-            element.text("Tri-Kernel (Rust + OCaml + Gleam)"),
+          html.div([attribute.class("flex justify-between text-slate-400")], [
+            html.span([], [element.text("Enforcement:")]),
+            html.span([attribute.class("text-cyan-400")], [
+              element.text("Tri-Kernel (Rust + OCaml + Gleam)"),
+            ]),
           ]),
-        ]),
-      ]),
+        ],
+      ),
       html.p([attribute.class("text-xs text-slate-500 mt-2")], [
         element.text(
           "Host NVMe system root drive is mathematically barred from Rook-Ceph allocation, wiping, or persistent volume formatting.",
@@ -571,38 +603,48 @@ fn render_lyapunov_card(
           element.text("Ceiling: 0.850"),
         ]),
       ]),
-      html.div([attribute.class("p-3 bg-slate-950 rounded border border-slate-800 my-2 space-y-2")], [
-        html.div([attribute.class("flex justify-between text-xs")], [
-          html.span([attribute.class("text-slate-400")], [
-            element.text("Energy: V(e)"),
+      html.div(
+        [
+          attribute.class(
+            "p-3 bg-slate-950 rounded border border-slate-800 my-2 space-y-2",
+          ),
+        ],
+        [
+          html.div([attribute.class("flex justify-between text-xs")], [
+            html.span([attribute.class("text-slate-400")], [
+              element.text("Energy: V(e)"),
+            ]),
+            html.span([attribute.class("text-emerald-400 font-bold")], [
+              element.text(float.to_string(model.lyapunov_energy) <> " Joules"),
+            ]),
           ]),
-          html.span([attribute.class("text-emerald-400 font-bold")], [
-            element.text(float.to_string(model.lyapunov_energy) <> " Joules"),
+          html.div([attribute.class("flex justify-between text-xs")], [
+            html.span([attribute.class("text-slate-400")], [
+              element.text("Damping: dV/dt"),
+            ]),
+            html.span([attribute.class("text-cyan-400 font-bold")], [
+              element.text(float.to_string(model.lyapunov_damping) <> " / s"),
+            ]),
           ]),
-        ]),
-        html.div([attribute.class("flex justify-between text-xs")], [
-          html.span([attribute.class("text-slate-400")], [
-            element.text("Damping: dV/dt"),
-          ]),
-          html.span([attribute.class("text-cyan-400 font-bold")], [
-            element.text(float.to_string(model.lyapunov_damping) <> " / s"),
-          ]),
-        ]),
-        html.div([attribute.class("w-full bg-slate-800 h-2 rounded overflow-hidden")], [
           html.div(
+            [attribute.class("w-full bg-slate-800 h-2 rounded overflow-hidden")],
             [
-              attribute.class("bg-emerald-500 h-full"),
-              attribute.attribute(
-                "style",
-                "width: "
-                <> float.to_string(model.lyapunov_energy *. 100.0)
-                <> "%",
+              html.div(
+                [
+                  attribute.class("bg-emerald-500 h-full"),
+                  attribute.attribute(
+                    "style",
+                    "width: "
+                      <> float.to_string(model.lyapunov_energy *. 100.0)
+                      <> "%",
+                  ),
+                ],
+                [],
               ),
             ],
-            [],
           ),
-        ]),
-      ]),
+        ],
+      ),
       html.p([attribute.class("text-xs text-slate-500 mt-2")], [
         element.text(
           "Asymptotic stability monitor ensuring negative decay rate dV/dt < 0. Dynamically throttles swarm pull rates on divergence.",
@@ -630,24 +672,32 @@ fn render_rocha_scope_card(
           element.text("D_EA <= 10.0%"),
         ]),
       ]),
-      html.div([attribute.class("p-3 bg-slate-950 rounded border border-slate-800 my-2 space-y-2")], [
-        html.div([attribute.class("flex justify-between text-xs")], [
-          html.span([attribute.class("text-slate-400")], [
-            element.text("Beam Congruence D_EA:"),
+      html.div(
+        [
+          attribute.class(
+            "p-3 bg-slate-950 rounded border border-slate-800 my-2 space-y-2",
+          ),
+        ],
+        [
+          html.div([attribute.class("flex justify-between text-xs")], [
+            html.span([attribute.class("text-slate-400")], [
+              element.text("Beam Congruence D_EA:"),
+            ]),
+            html.span([attribute.class("text-cyan-300 font-bold")], [
+              element.text(
+                float.to_string(model.rocha_divergence *. 100.0)
+                <> "% (NOMINAL)",
+              ),
+            ]),
           ]),
-          html.span([attribute.class("text-cyan-300 font-bold")], [
-            element.text(
-              float.to_string(model.rocha_divergence *. 100.0) <> "% (NOMINAL)",
-            ),
+          html.div([attribute.class("font-mono text-xs text-cyan-600")], [
+            element.text("CH1: /\\/\\/\\/\\/\\ (Syntactic Intent)"),
           ]),
-        ]),
-        html.div([attribute.class("font-mono text-xs text-cyan-600")], [
-          element.text("CH1: /\\/\\/\\/\\/\\ (Syntactic Intent)"),
-        ]),
-        html.div([attribute.class("font-mono text-xs text-amber-500")], [
-          element.text("CH2: =/\\/\\/\\/\\/= (Observed Semantics)"),
-        ]),
-      ]),
+          html.div([attribute.class("font-mono text-xs text-amber-500")], [
+            element.text("CH2: =/\\/\\/\\/\\/= (Observed Semantics)"),
+          ]),
+        ],
+      ),
       html.p([attribute.class("text-xs text-slate-500 mt-2")], [
         element.text(
           "Measures divergence between declarative user intent and actual runtime execution. Prevents hallucinated drift.",
@@ -675,29 +725,36 @@ fn render_heijunka_card(
           element.text("Cadence: 100ms"),
         ]),
       ]),
-      html.div([attribute.class("p-3 bg-slate-950 rounded border border-slate-800 my-2 text-xs space-y-2")], [
-        html.div([attribute.class("text-slate-400")], [
-          element.text("Active Leased Slots:"),
-        ]),
-        html.div(
-          [attribute.class("space-y-1")],
-          list.map(model.active_worker_tasks, fn(task) {
-            html.div(
-              [
-                attribute.class(
-                  "p-1.5 rounded bg-slate-900 border border-slate-800 text-slate-300 flex justify-between",
-                ),
-              ],
-              [
-                html.span([], [element.text(task)]),
-                html.span([attribute.class("text-emerald-400 font-bold")], [
-                  element.text("LEASED"),
-                ]),
-              ],
-            )
-          }),
-        ),
-      ]),
+      html.div(
+        [
+          attribute.class(
+            "p-3 bg-slate-950 rounded border border-slate-800 my-2 text-xs space-y-2",
+          ),
+        ],
+        [
+          html.div([attribute.class("text-slate-400")], [
+            element.text("Active Leased Slots:"),
+          ]),
+          html.div(
+            [attribute.class("space-y-1")],
+            list.map(model.active_worker_tasks, fn(task) {
+              html.div(
+                [
+                  attribute.class(
+                    "p-1.5 rounded bg-slate-900 border border-slate-800 text-slate-300 flex justify-between",
+                  ),
+                ],
+                [
+                  html.span([], [element.text(task)]),
+                  html.span([attribute.class("text-emerald-400 font-bold")], [
+                    element.text("LEASED"),
+                  ]),
+                ],
+              )
+            }),
+          ),
+        ],
+      ),
       html.p([attribute.class("text-xs text-slate-500 mt-2")], [
         element.text(
           "Paces and level-loads work across autonomous workers, preventing resource starvation and eliminating Muda waste.",
@@ -725,14 +782,21 @@ fn render_sheaf_card(
           element.text("H^1(U, F) = 0"),
         ]),
       ]),
-      html.div([attribute.class("p-3 bg-slate-950 rounded border border-slate-800 my-2 text-xs space-y-1 font-mono text-center")], [
-        html.div([attribute.class("text-emerald-400")], [
-          element.text("[U0..U9]: 45/45 INTERSECTIONS COMMUTATIVE"),
-        ]),
-        html.div([attribute.class("text-slate-500 text-[10px]")], [
-          element.text("phi_jk o phi_ij == phi_ik on all triple overlaps"),
-        ]),
-      ]),
+      html.div(
+        [
+          attribute.class(
+            "p-3 bg-slate-950 rounded border border-slate-800 my-2 text-xs space-y-1 font-mono text-center",
+          ),
+        ],
+        [
+          html.div([attribute.class("text-emerald-400")], [
+            element.text("[U0..U9]: 45/45 INTERSECTIONS COMMUTATIVE"),
+          ]),
+          html.div([attribute.class("text-slate-500 text-[10px]")], [
+            element.text("phi_jk o phi_ij == phi_ik on all triple overlaps"),
+          ]),
+        ],
+      ),
       html.p([attribute.class("text-xs text-slate-500 mt-2")], [
         element.text(
           "Zero first cohomology group mathematically guarantees no cross-screen tearing or stale state hallucination.",

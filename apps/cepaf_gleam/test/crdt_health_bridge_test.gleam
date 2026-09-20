@@ -3,8 +3,8 @@
 // =============================================================================
 
 import cepaf_gleam/crdt/health_bridge.{
-  detect_divergent_nodes, empty_health_map, evaluate_quorum,
-  merge_health_maps, record_health,
+  detect_divergent_nodes, empty_health_map, evaluate_quorum, merge_health_maps,
+  record_health,
 }
 import gleeunit/should
 
@@ -28,7 +28,7 @@ pub fn record_and_merge_health_test() {
     record_health(
       map0,
       "vm-1",
-      0.80,
+      0.8,
       -0.01,
       True,
       "closed",
@@ -40,7 +40,7 @@ pub fn record_and_merge_health_test() {
     record_health(
       map0,
       "worker-3",
-      0.40,
+      0.4,
       0.15,
       False,
       "open",
@@ -66,28 +66,11 @@ pub fn health_telemetry_lww_convergence_test() {
   let map0 = empty_health_map()
 
   // Initial state for node-1
-  let map_a =
-    record_health(
-      map0,
-      "node-1",
-      0.50,
-      0.10,
-      False,
-      "open",
-      1_000_000,
-    )
+  let map_a = record_health(map0, "node-1", 0.5, 0.1, False, "open", 1_000_000)
 
   // Newer update from node-1 showing recovery
   let map_b =
-    record_health(
-      map0,
-      "node-1",
-      0.98,
-      -0.08,
-      True,
-      "closed",
-      2_000_000,
-    )
+    record_health(map0, "node-1", 0.98, -0.08, True, "closed", 2_000_000)
 
   let converged = merge_health_maps(map_a, map_b)
   let #(quorum_met, avg_health, healthy_count, total_count) =

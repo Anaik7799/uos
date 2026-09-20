@@ -1,0 +1,15 @@
+{
+  "schema": "uos-system-feature-regression-evidence.v1",
+  "generated_at_utc": "20260921-0934",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-tracker/20260921-0934-regression",
+  "authority": "development_observation_only",
+  "command": "gleam clean && gleam test",
+  "workspace": "apps/cepaf_gleam",
+  "result": {"passed": 11983, "failed": 0, "exit_code": 0},
+  "observations": [
+    {"scope":"stale_build","command":"gleam test","result":"533 passed, 1 failure","failure":"beam/beam_load.c corrupt atom table while loading agents_coverage_test","admission":"not_passing"},
+    {"scope":"clean_rebuild","command":"gleam clean && gleam test","result":"11983 passed, no failures","admission":"development_only"}
+  ],
+  "constraints": ["no production runtime started","no MCP tools/call invoked","no canonical import or release authority"],
+  "completion": {"task_complete": false, "system_admission": false}
+}

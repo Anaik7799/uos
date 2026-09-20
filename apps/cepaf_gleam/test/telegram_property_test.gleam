@@ -39,7 +39,10 @@ pub fn property_p1_turn_deduplication_idempotence_test() {
   let repetitions = [1, 2, 3, 5, 10, 20]
   list.each(repetitions, fn(k) {
     let raw_msgs =
-      list.repeat(ChatMessage("user", "query-" <> int.to_string(k), 1789184000000), k)
+      list.repeat(
+        ChatMessage("user", "query-" <> int.to_string(k), 1_789_184_000_000),
+        k,
+      )
     let formatted = format_recent_telegram_history(raw_msgs, 10)
     // Regardless of how many duplicates, exactly 1 turn is rendered
     formatted |> string.contains("Last 1 turns") |> should.be_true
@@ -64,7 +67,9 @@ pub fn property_p2_hardware_nvme_zero_leak_invariant_test() {
   list.each(test_cases, fn(input) {
     let redacted = egress_redactor.redact_system_secrets(input)
     redacted |> string.contains(denied_serial) |> should.be_false
-    redacted |> string.contains(egress_redactor.redacted_serial_placeholder) |> should.be_true
+    redacted
+    |> string.contains(egress_redactor.redacted_serial_placeholder)
+    |> should.be_true
   })
 }
 
@@ -73,13 +78,11 @@ pub fn property_p2_hardware_nvme_zero_leak_invariant_test() {
 // forall s of length L, forall c in chunk_text(s, 4096), length(c) <= 4096
 // -----------------------------------------------------------------------------
 pub fn property_p3_chunk_length_bound_invariant_test() {
-  let lengths = [0, 1, 10, 100, 4095, 4096, 4097, 8192, 12288, 20000]
+  let lengths = [0, 1, 10, 100, 4095, 4096, 4097, 8192, 12_288, 20_000]
   list.each(lengths, fn(len) {
     let s = string.repeat("A", len)
     let chunks = telegram_outbound.chunk_text(s, 4096)
-    list.all(chunks, fn(chunk) {
-      string.length(chunk) <= 4096
-    })
+    list.all(chunks, fn(chunk) { string.length(chunk) <= 4096 })
     |> should.be_true
   })
 }
@@ -122,8 +125,12 @@ pub fn property_p5_directive_extraction_and_stripping_test() {
 
   let stripped = strip_directive_lines(joined_narrative)
   stripped |> string.contains("DIRECTIVE:") |> should.be_false
-  stripped |> string.contains("Here is the high-level system analysis.") |> should.be_true
-  stripped |> string.contains("All subsystems verified nominal.") |> should.be_true
+  stripped
+  |> string.contains("Here is the high-level system analysis.")
+  |> should.be_true
+  stripped
+  |> string.contains("All subsystems verified nominal.")
+  |> should.be_true
 }
 
 // -----------------------------------------------------------------------------
@@ -142,7 +149,7 @@ pub fn property_p6_intent_json_decoding_completeness_test() {
           #("user", json.string(user)),
           #("chat_id", json.string("6249174059")),
           #("text", json.string("system status")),
-          #("timestamp_ms", json.int(1789184000000)),
+          #("timestamp_ms", json.int(1_789_184_000_000)),
         ])
         |> json.to_string
 
@@ -187,7 +194,7 @@ pub fn property_p7_confidence_score_boundedness_test() {
         user: "Avi",
         chat_id: "6249174059",
         text: q,
-        timestamp_ms: 1789184000000,
+        timestamp_ms: 1_789_184_000_000,
       )
     let decision = evaluate_intent(intent)
     let valid_conf = decision.confidence >=. 0.0 && decision.confidence <=. 1.0
@@ -218,12 +225,14 @@ pub fn property_p8_non_empty_decision_invariants_test() {
         user: "Avi",
         chat_id: "6249174059",
         text: txt,
-        timestamp_ms: 1789184000000,
+        timestamp_ms: 1_789_184_000_000,
       )
     let decision = evaluate_intent(intent)
     decision.intent_id |> should.equal(intent.intent_id)
     decision.timestamp_ms |> fn(ts) { ts > 0 } |> should.be_true
-    string.length(decision.reply_markdown) |> fn(len) { len > 0 } |> should.be_true
+    string.length(decision.reply_markdown)
+    |> fn(len) { len > 0 }
+    |> should.be_true
     list.length(decision.actions) |> fn(cnt) { cnt > 0 } |> should.be_true
   })
 }

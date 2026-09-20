@@ -328,9 +328,7 @@ fn query_cluster_status() -> String {
     Error(_) -> "🔴 Unreachable"
   }
 
-  let cockpit_check = case
-    os_cmd("curl -s -m 2 -I http://127.0.0.1:4100/")
-  {
+  let cockpit_check = case os_cmd("curl -s -m 2 -I http://127.0.0.1:4100/") {
     Ok(out) ->
       case string.contains(out, "200") || string.contains(out, "HTTP") {
         True -> "🟢 Active (:4100 Mist/Lustre)"
@@ -424,20 +422,22 @@ fn handle_zigvm(args: List(String)) -> String {
 fn query_saplan_tasks() -> String {
   let sql =
     "SELECT plan_id, id, state, worker FROM sa_plan_task WHERE state != 'completed' LIMIT 6;"
-  case
-    os_cmd(
-      "sqlite3 var/sa-plan/uos.sqlite3 \""
-      <> sql
-      <> "\"",
-    )
-  {
+  case os_cmd("sqlite3 var/sa-plan/uos.sqlite3 \"" <> sql <> "\"") {
     Ok(out) -> {
       let lines = string.split(string.trim(out), "\n")
       let formatted =
         list.map(lines, fn(line) {
           case string.split(line, "|") {
             [pid, tid, st, wrk] ->
-              "• `" <> tid <> "` (" <> pid <> ") - *" <> st <> "* [" <> wrk <> "]"
+              "• `"
+              <> tid
+              <> "` ("
+              <> pid
+              <> ") - *"
+              <> st
+              <> "* ["
+              <> wrk
+              <> "]"
             _ -> line
           }
         })
@@ -519,7 +519,9 @@ fn query_zk(args: List(String)) -> String {
     query_parts -> {
       let query = string.join(query_parts, " ")
       let escaped = string.replace(query, "\"", "")
-      case os_cmd("grep -riIn -m 3 \"" <> escaped <> "\" docs/zk/ | head -n 3") {
+      case
+        os_cmd("grep -riIn -m 3 \"" <> escaped <> "\" docs/zk/ | head -n 3")
+      {
         Ok(out) -> {
           let trimmed = string.trim(out)
           case trimmed {
@@ -551,4 +553,3 @@ fn query_checklist_status() -> String {
   <> "Total: **18/18 (100% GREEN)**\n"
   <> "🔗 Interactive Checklist: [http://nas-1.tail55d152.ts.net:4100/checklist](http://nas-1.tail55d152.ts.net:4100/checklist)"
 }
-

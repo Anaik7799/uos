@@ -7,10 +7,6 @@
 ////
 //// Comprehensive Test Suite for ggplot2 Extensions Gallery (167 Extensions & 15 Use Cases).
 
-import gleeunit/should
-import gleam/list
-import gleam/option
-import gleam/string
 import cepaf_gleam/sciviz/extension_catalog.{
   all_167_extensions, count_by_category,
 }
@@ -20,10 +16,8 @@ import cepaf_gleam/sciviz/extension_deep_dive.{
 import cepaf_gleam/sciviz/extension_examples
 import cepaf_gleam/sciviz/extension_features
 import cepaf_gleam/sciviz/extension_suite.{
-  run_all_15_extension_test_cases,
-  run_all_167_extension_test_cases,
-  get_test_case_for_extension,
-  uc_ext01_ggdist_slab_interval_test,
+  get_test_case_for_extension, run_all_15_extension_test_cases,
+  run_all_167_extension_test_cases, uc_ext01_ggdist_slab_interval_test,
   uc_ext02_ggraph_force_directed_network_test,
   uc_ext03_ggalluvial_stream_flow_ribbon_test,
   uc_ext04_treemapify_nested_hierarchical_rect_test,
@@ -40,9 +34,13 @@ import cepaf_gleam/sciviz/extension_suite.{
   uc_ext15_gginnards_ast_inspect_storage_defense_test,
 }
 import cepaf_gleam/sciviz/test_suite.{
-  BddTesting, ChaosTesting, ComponentTesting, FuzzTesting, PropertyTesting, SystemTesting,
-  TddTesting, UiElementsTesting, UnitTesting,
+  BddTesting, ChaosTesting, ComponentTesting, FuzzTesting, PropertyTesting,
+  SystemTesting, TddTesting, UiElementsTesting, UnitTesting,
 }
+import gleam/list
+import gleam/option
+import gleam/string
+import gleeunit/should
 
 pub fn all_15_extension_test_cases_pass_test() {
   let results = run_all_15_extension_test_cases()
@@ -308,5 +306,3 @@ pub fn lookup_test_case_for_extension_test() {
     option.None -> panic as "ggdist test case should exist"
   }
 }
-
-

@@ -1,0 +1,22 @@
+{
+  "schema": "uos.km-provenance-hold-receipt.v1",
+  "timestamp_utc": "2026-09-21T09:51:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/km-gate --gate",
+  "result": "HOLD",
+  "findings": [
+    "CHAIN_BROKEN: 71 of 550 cycle rows do not recompute their content digest; first mismatch at 333",
+    "KMP-NOMINT: EV-111 is above admitted ceiling EV-93 while INV-PROV-05 bars minting"
+  ],
+  "metrics": {
+    "adr_total": 137,
+    "quarantined_total": 16,
+    "layer_entropy_bits": 3.2980706279534964,
+    "admitted_ev_ceiling": 93
+  },
+  "authority": "REPORT_ONLY",
+  "runtime_admission": "NOT_GRANTED",
+  "log_sha256": "b1185252c2f312fbc900a7fdfef69bf185b5d265a5ce806e92c6a6c3df141a3c",
+  "disposition": "preserve hold; do not rewrite historical records or mint EV numbers",
+  "canonical_task_remains_open": true
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "uos.task-risk-preflight-receipt.v1",
+  "timestamp_utc": "2026-09-21T09:54:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r02-recovery-candidate",
+  "command": "bash tools/risk-priority-check --preflight uos/system-mcp-features/20260919-1642 r02-recovery-candidate",
+  "result": "HOLD",
+  "authority": "NONE",
+  "rule": "RP-UNAVAILABLE",
+  "detail": "Input, dependency or checker unavailable; inspect locally.",
+  "log_sha256": "7283b7830232762be6c6c7d2ccd6f2a3b66b6732ded2f9f1bd6498570d0dcc3d",
+  "disposition": "do not claim or complete r02; preserve current integrity findings",
+  "canonical_task_remains_open": true
+}

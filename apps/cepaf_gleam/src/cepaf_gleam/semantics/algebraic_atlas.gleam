@@ -133,14 +133,12 @@ pub fn compose_morphisms(
 ) -> Result(TransitionMorphism, String) {
   case m1.target_chart == m2.source_chart {
     True ->
-      Ok(
-        TransitionMorphism(
-          source_chart: m1.source_chart,
-          target_chart: m2.target_chart,
-          transform_name: m1.transform_name <> " ∘ " <> m2.transform_name,
-          is_compatible: m1.is_compatible && m2.is_compatible,
-        ),
-      )
+      Ok(TransitionMorphism(
+        source_chart: m1.source_chart,
+        target_chart: m2.target_chart,
+        transform_name: m1.transform_name <> " ∘ " <> m2.transform_name,
+        is_compatible: m1.is_compatible && m2.is_compatible,
+      ))
     False ->
       Error(
         "MorphismCompositionMismatch: m1.target ("
@@ -444,6 +442,3 @@ pub fn project_global_section(
   let scale = int.to_float(chart_to_int(target_chart) + 1)
   global_coord *. scale
 }
-
-
-

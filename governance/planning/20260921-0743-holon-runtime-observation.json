@@ -1,0 +1,34 @@
+{
+  "schema": "uos-holon-runtime-observation.v1",
+  "generated_at_utc": "20260921-0743",
+  "workflow": "uos/system-mcp-features/20260919-1642/t0-coordination/20260921-0743-process-observation",
+  "authority": "read_only_observation",
+  "process_presence": [
+    {"pid":6468,"label":"claude","command":"claude --resume a65088e0-0f2b-497e-bd5c-97eeed9c3594"},
+    {"pid":6475,"label":"agy","command":"agy --conversation eb7a42c0-03e5-4814-9e55-4414c7c4eb28"},
+    {"pid":6476,"label":"agy","command":"agy --conversation 78478741-67b5-4c1e-8857-7a6dc948d10f"},
+    {"pid":180314,"label":"codex","command":"codex resume 01a0ba74-d654-7de3-bdcf-25a0a85b93da"}
+  ],
+  "coordination_store": {
+    "sessions_db":"var/coordination/tri-agent/sessions.sqlite3",
+    "session_tables":[],
+    "registered_sessions":0,
+    "coordinator_db":"var/coordination/tri-agent/coordinator.sqlite3",
+    "event_head":117,
+    "event_count":117,
+    "latest_event_actor":"L0-codex-gpt-6-astra",
+    "latest_event_operation":"ratify_cycle",
+    "latest_event_inserted_utc":"2026-09-19T16:43:29Z",
+    "quarantine_rows":0
+  },
+  "interpretation": {
+    "process_presence":"observed",
+    "holon_enrollment":"UNKNOWN_NOT_OBSERVED",
+    "heartbeat":"UNKNOWN_NOT_OBSERVED",
+    "durable_ack":"UNKNOWN_NOT_OBSERVED",
+    "sa_plan_fence":"UNKNOWN_NOT_OBSERVED",
+    "cross_provider_workflow":"NOT_RUN"
+  },
+  "negative_control":"No identity was enrolled and no ACK or authority was inferred from process labels.",
+  "completion":{"task_complete":false,"admitted":false}
+}

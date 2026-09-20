@@ -50,7 +50,7 @@ pub fn all_22_shrutis() -> List(Shruti) {
     Shruti(1, "Kshobhini", "Sa", 1, 1, 0.0, 261.63),
     Shruti(2, "Teevra", "re1", 256, 243, 90.22, 275.62),
     Shruti(3, "Kumudvati", "re2", 16, 15, 111.73, 279.07),
-    Shruti(4, "Manda", "Re1", 10, 9, 182.40, 290.69),
+    Shruti(4, "Manda", "Re1", 10, 9, 182.4, 290.69),
     Shruti(5, "Chhandovati", "Re2", 9, 8, 203.91, 294.33),
     Shruti(6, "Dayavati", "ga1", 32, 27, 294.13, 310.07),
     Shruti(7, "Ranjani", "ga2", 6, 5, 315.64, 313.95),
@@ -62,11 +62,11 @@ pub fn all_22_shrutis() -> List(Shruti) {
     Shruti(13, "Preeti", "Ma2", 64, 45, 609.78, 372.09),
     Shruti(14, "Marjani", "Pa", 3, 2, 701.96, 392.44),
     Shruti(15, "Kshiti", "dha1", 128, 81, 792.18, 413.43),
-    Shruti(16, "Rakta", "dha2", 8, 5, 813.69, 418.60),
+    Shruti(16, "Rakta", "dha2", 8, 5, 813.69, 418.6),
     Shruti(17, "Sandipini", "Dha1", 5, 3, 884.36, 436.04),
     Shruti(18, "Alapini", "Dha2", 27, 16, 905.87, 441.49),
     Shruti(19, "Madanti", "ni1", 16, 9, 996.09, 465.11),
-    Shruti(20, "Rohini", "ni2", 9, 5, 1017.60, 470.93),
+    Shruti(20, "Rohini", "ni2", 9, 5, 1017.6, 470.93),
     Shruti(21, "Ramya", "Ni1", 15, 8, 1088.27, 490.55),
     Shruti(22, "Ugra", "Ni2", 243, 128, 1109.78, 496.69),
   ]
@@ -181,7 +181,7 @@ pub fn verify_acoustic_harmony() -> AcousticAudit {
   let durga_ok = list.length(durga.arohana) == 6
   let beats_ok = list.length(beats) == 16
   let lyapunov_ok = durga.lyapunov_exponent <. 0.0
-  let entropy_ok = durga.shannon_entropy >=. 2.50
+  let entropy_ok = durga.shannon_entropy >=. 2.5
 
   // Verify Just Intonation ratios for Durgā's Vadi (Dha, 5/3) and Samvadi (Re, 9/8)
   let dha_shruti = list.find(shrutis, fn(s) { s.swara == "Dha1" })

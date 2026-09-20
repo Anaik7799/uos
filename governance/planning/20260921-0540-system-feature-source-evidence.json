@@ -1,0 +1,230 @@
+{
+  "schema": "uos.development-evidence.v1",
+  "created_at": "2026-09-21T05:28:39Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1-tracker",
+  "attempt": 1,
+  "worker": "codex-01a0ba74-feature-tracker",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-ingestion/20260921-0540",
+  "scope": "Source-bound inventory ingestion and typed unknowns; private DB development only",
+  "candidate": "6a2cbddd6cb97ebb67999c954ab36b2379817a8bc419aacc73caa5715406501a",
+  "candidate_scope": "Exact source/test/catalog binding in reconciliation manifest; not a committed revision or authenticated provenance",
+  "reconciliation": {
+    "path": "governance/capability-inventory/20260921-0540-system-feature-source-reconciliation.json",
+    "sha256": "ffda77c62ac695eca1d39cd1a22f288bef15bbe231edd2295961ea83bd4cdee9",
+    "source_arrays": 2,
+    "source_records": 98,
+    "selected_record_sets_complete": true,
+    "global_complete": false
+  },
+  "source_binding": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "78cb9d9c708ce38b3d8383a995ce75371d1ac7ab2028e21cd511243fefadfe72",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "sha256": "eeecf5597182f8c4b5d46896e185cb2ce4df5837656cbea36a7313d0d8daff97",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+      "sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam",
+      "sha256": "6dd478ea77ce10b26d591fd11a6fe39eb8411f0202192d49453ed8a555d669ca",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam",
+      "sha256": "5e634c84bafcd1d6eb39bcb6070984041b09ce7c30b49b613c22c71a29ea528d",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam",
+      "sha256": "73fc378b8294650a77cdafd74c3f88386f37b39a37503f775ddebab33794b974",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_tracker_test.gleam",
+      "sha256": "29779bff2e33fc7bfe90e0a58aba4005175fc819ed0d3e37317357cfcb60c803",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_store_test.gleam",
+      "sha256": "7df1bf37f103441d20b8da06756f9eb4dee3e0535f6141757385688885b981ad",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_api_test.gleam",
+      "sha256": "4698e747580eb29997543d92d4eca18c710ca8430ea73c243c64cc93bc08d993",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "governance/capability-inventory/20260907-1837-agentic-product-manifest.json",
+      "sha256": "e8818cb2b6bd9f418890f1738fdf8bf8945f23e371fa360346ca9afe56c9f394",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_sources.gleam",
+      "sha256": "532ad10cc1ff2e4ea2adb4fb5edc9d80d70a61729d8e8469da7faf06be51a7c3",
+      "observed_at": "2026-09-21T05:24:56Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_sources_test.gleam",
+      "sha256": "34f0e45298043f0dc9d61709a3dc7f45c9c2876b74c43c5463eb16b4d63e87f0",
+      "observed_at": "2026-09-21T05:24:56Z"
+    }
+  ],
+  "tests": [
+    {
+      "kind": "RED",
+      "check": "Missing output/refusal schema null",
+      "observed": "17 pass /1 failed catalog_json before Option schema implementation"
+    },
+    {
+      "kind": "RED",
+      "check": "Unknown dependency/layer plus raw declaration",
+      "observed": "18 pass /1 failed catalog_json before type correction"
+    },
+    {
+      "kind": "RED",
+      "check": "Source adapters",
+      "observed": "22 pass /4 failed source_adapter_not_implemented across core/source tests"
+    },
+    {
+      "kind": "BUILD_REFUSAL",
+      "check": "Generated source law test",
+      "observed": "list.range not present in pinned stdlib; replaced with finite indexed list, no package change"
+    },
+    {
+      "kind": "FOCUSED",
+      "passed": 44,
+      "failed": 0,
+      "scope": "Intermediate candidate before nullable-owner review fix; actual52/46source Sa-plan private DB roundtrips passed in30.348s/26.794s"
+    },
+    {
+      "kind": "FOCUSED",
+      "passed": 34,
+      "failed": 0,
+      "scope": "Final candidate pure tracker20 +sources10 +API4; store14 also included in full suite"
+    },
+    {
+      "kind": "FULL",
+      "passed": 11942,
+      "failed": 0,
+      "exit": 0,
+      "timeout_seconds": 180,
+      "log": "/tmp/uos-source-regression.z3bq4s",
+      "log_sha256": "0936d14257b8bb31bccfdfb9ef87bb4fce1469a77ca42a445b46c2356e728bd7",
+      "scoped_checks_included": 48,
+      "toolchain": "Gleam1.16.0 OTP29 +S4:4 +A4"
+    },
+    {
+      "kind": "FORMAT",
+      "status": "PASS",
+      "scope": "Five changed/new Gleam files only"
+    },
+    {
+      "kind": "JOURNAL_RED",
+      "check": "ACH hypothesis identifiers",
+      "observed": "1 lint failure; added explicit H1-H5 labels without changing conclusions"
+    },
+    {
+      "kind": "JOURNAL",
+      "status": "PASS",
+      "checks": 10,
+      "scope": "Mechanical13section policy lint, not execution of7independent engines"
+    },
+    {
+      "kind": "RISK_CHECK_ALL",
+      "status": "PASS",
+      "baseline_checks": 375,
+      "adversarial_checks": 32843,
+      "independent_dag_scenarios": 32768,
+      "runtime_admission": false
+    }
+  ],
+  "commands": {
+    "build": "env PATH=\"$PWD/../../toolchains/nix-profile/bin:$PATH\" ERL_FLAGS='+S 4:4 +A 4' ../../toolchains/gleam-1.16.0/bin/gleam build",
+    "full": "timeout180s same pinned environment: gleam test; retained private full log",
+    "working_directory": "apps/cepaf_gleam"
+  },
+  "review": {
+    "reviewer": "internal Codex dashboard_review",
+    "transport": "connected Gleam MCP read_file",
+    "scope": "read-only source",
+    "finding": "Unknown owner sentinel could alias real owner identity",
+    "repair": "Option(String), null and refusal tests",
+    "final": "No remaining source blocker in private development scope",
+    "independently_executed": false,
+    "external_peer_ack": false,
+    "admission": false
+  },
+  "connected_mcp": {
+    "tool": "read_file",
+    "path": "governance/capability-inventory/20260921-0540-system-feature-source-reconciliation.json",
+    "success": true,
+    "bytes": 27176,
+    "scope": "Actual artifact read only; no new tracker positive call or import"
+  },
+  "risk_observation": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "observed_at": "2026-09-21T05:28:41Z",
+    "assessment_sha256": "e5903c0819a6525a71ffaf631cf407e7ee89140e3d1127038a1657013a8a1209",
+    "findings": [],
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000066786,
+      "uncertainty_seconds": 0.0181216095,
+      "reference_age_seconds": 468.4855856895447,
+      "stratum": 3
+    }
+  },
+  "dashboard": {
+    "status": "observed",
+    "task_snapshot_sha256": "b8996f553bc1185815dbc4fd02515aa5130882acbde6dcb018d25453cbd815f0",
+    "risk_snapshot_sha256": "e5903c0819a6525a71ffaf631cf407e7ee89140e3d1127038a1657013a8a1209",
+    "progress": {
+      "observed_at": "2026-09-21T05:28:41Z",
+      "total": 20,
+      "completed": 2,
+      "executing": 1,
+      "blocked": 17,
+      "unknown": 0,
+      "recommendations": []
+    }
+  },
+  "completion": {
+    "development_checkpoint": true,
+    "task_complete": false,
+    "goal_complete": false,
+    "canonical_inventory_imported": false,
+    "system_admission": false
+  },
+  "residuals": [
+    "Source-set equality is not global coverage, source originality, authorization, runtime readiness, or feature completion.",
+    "Raw PLANNED/MAPPED/IMPLEMENTED/EXECUTED/REVIEWED claims stay Declaration strings. Missing ownership, layers, dependencies and schemas remain null.",
+    "Empty endpoints means unmapped, not absent. All17aspect IDs and adapter law labels are obligations, not verified feature evidence.",
+    "Product extraction validates selected identity/status/layer fields, not every nested product specification.",
+    "Caller-supplied candidate and source pins need independently trusted interpretation before live import; exact equality alone does not authenticate them.",
+    "Existing JSON value decoder collapses duplicate object keys. Strict duplicate-key admission is not established; no such incident observed in the pinned source arrays.",
+    "1MiB source/128record bounds refuse oversized inputs; large code catalogs require complete reviewed shard manifests rather than truncation.",
+    "Historical EV claims above93 remain NOT_ADMITTED; this artifact mints no EV number.",
+    "Prior foundation full regression11924pass/2 unidentified failures is retained despite unchanged-source11926/0 rerun and new11942/0 candidate. Root cause not claimed repaired.",
+    "Actual trusted runtime client probes, canonical harness import authority, stateful successor MCP integration, complete source census/shards and every remaining plan action are still required.",
+    "Sa-plan workflow metadata tables have no append-only SQL triggers/authentication; exact content readback is coherence, not tamper prevention."
+  ],
+  "navigation": {
+    "report": "http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20260921-0540-system-feature-source-reconciliation.json",
+    "journal": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260921-0540-system-feature-source-ingestion.md"
+  }
+}

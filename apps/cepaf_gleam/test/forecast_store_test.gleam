@@ -41,12 +41,10 @@ pub fn single_resolved_forecast_test() {
 }
 
 pub fn mixed_forecast_calibration_test() {
-  let f1 =
-    StoredForecast("p1", 0.8, True, True, 1000, "test")
-  let f2 =
-    StoredForecast("p2", 0.2, False, True, 2000, "test")
-  let f3 =
-    StoredForecast("p3", 0.5, False, False, 3000, "test") // unresolved
+  let f1 = StoredForecast("p1", 0.8, True, True, 1000, "test")
+  let f2 = StoredForecast("p2", 0.2, False, True, 2000, "test")
+  let f3 = StoredForecast("p3", 0.5, False, False, 3000, "test")
+  // unresolved
 
   let res = calculate_calibration([f1, f2, f3])
   case res {
@@ -92,7 +90,8 @@ pub fn record_load_and_score_round_trip_test() {
 
   // Both resolved predictions were perfect, so the Brier score is 0.0 over a
   // denominator of 2, not 3.
-  let assert Ok(Calibrated(brier, count)) = forecast_store.calibration_from_db(db)
+  let assert Ok(Calibrated(brier, count)) =
+    forecast_store.calibration_from_db(db)
   count |> should.equal(2)
   brier |> should.equal(0.0)
   forecast_store.close_db(db)

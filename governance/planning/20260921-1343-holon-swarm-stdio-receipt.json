@@ -1,0 +1,16 @@
+{
+  "schema": "uos.holon-swarm-stdio-receipt.v1",
+  "timestamp": "20260921-1343Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "transport": "stdio",
+  "binding_scope": "development HARNESSBOOT cooperative binding",
+  "observed_tools": ["holon_status", "swarm_status", "agent_hierarchy"],
+  "results": {
+    "holon_status": {"runtimes": 4, "fractal_layers": 8, "domains": 16, "holon_types": 8, "database_types": 5},
+    "swarm_status": {"contract":"SC-HOLON-001","probed_live":true,"capabilities":11,"available":9,"unavailable":2,"execution_credit":false},
+    "agent_hierarchy": {"total_agents":50,"executive":1,"domain_supervisors":10,"functional_supervisors":15,"workers":24,"efficiency_compliance":true,"deadlock_detected":false}
+  },
+  "result": "COORDINATION_DISCOVERY_OBSERVED",
+  "completion": {"holon_discovery": true, "real_multi_agent_participation": false, "swarm_execution": false, "runtime_admission": "NOT_GRANTED", "goal_complete": false},
+  "limits": ["SC-HOLON-001 response explicitly limits scope to backend discovery; service availability requires invocation and no execution credit is granted.", "No Claude/AGY/Codex peer ACK or coordinator lease was observed."]
+}

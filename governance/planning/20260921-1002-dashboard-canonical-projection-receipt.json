@@ -1,0 +1,28 @@
+{
+  "schema": "uos.canonical-dashboard-projection-receipt.v1",
+  "timestamp_utc": "2026-09-21T10:02:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "change": {
+    "source": "engines/hermes/modules/sa_plan/test/sa_plan_main.ml",
+    "source_sha256": "bb58c2e040165ad5c983368b309cb44d03f209e378121928bf5bcbdee6998fdc",
+    "behavior": "ui snapshot PATH [PLAN_ID] binds Observation.observe to the explicit canonical plan; legacy default preserved",
+    "build": "dune build modules/sa_plan/test/sa_plan_main.exe",
+    "binary_sha256": "656a965a5b1e264c4f3c3c8926e079748b11eaabec522d1826b967e21ed613c4"
+  },
+  "snapshot": {
+    "path": "governance/planning/20260921-1001-canonical-dashboard-snapshot.json",
+    "sha256": "c439f42a34a46739050989eeabeceadc2a22940aed5234d4045f96beb8a3a202",
+    "read_only": true,
+    "summary": {"total": 20, "completed": 2, "ready": 3, "executing": 0},
+    "plan_id_matches": true,
+    "source": "Sa-plan Observation.observe",
+    "mcp_readback": "verified via mcp__uos_gleam__read_file"
+  },
+  "limits": {
+    "authority": "report_only",
+    "runtime_admission": "NOT_GRANTED",
+    "task_completion_effects": "unchanged; no task was completed by projection"
+  },
+  "canonical_task_remains_open": true,
+  "admission": "NOT_ADMITTED"
+}

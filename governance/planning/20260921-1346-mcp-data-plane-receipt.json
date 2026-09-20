@@ -1,0 +1,58 @@
+{
+  "schema": "uos.mcp-data-plane-receipt.v1",
+  "timestamp": "20260921-1346",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "runtime": "gleam-mcp-stdio-development",
+  "binding": {
+    "role": "development",
+    "worker": "codex-01a083d2-harness",
+    "attempt": 2,
+    "session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+    "epoch": 1
+  },
+  "observations": [
+    {
+      "tool": "feature_tracker_status",
+      "arguments": {"plan": "uos/system-mcp-features/20260919-1642"},
+      "result": {
+        "schema": "uos.feature-tracker-status.v1",
+        "total": 21,
+        "completed": 4,
+        "ready": 3,
+        "executing": 0,
+        "runtime_admission": "NOT_GRANTED"
+      },
+      "status": "observed"
+    },
+    {
+      "tool": "sa_plan_status_for",
+      "arguments": {"plan": "uos/system-mcp-features/20260919-1642"},
+      "result": {
+        "total": 21,
+        "completed": 4,
+        "ready": 3,
+        "executing": 0,
+        "runtime_admission": "NOT_GRANTED"
+      },
+      "status": "observed"
+    },
+    {
+      "tool": "harness_execution_progress",
+      "arguments": {"plan": "uos/system-mcp-features/20260919-1642"},
+      "result": {"error_code": -32601, "error": "Unknown tool: harness_execution_progress"},
+      "status": "negative-control-observed"
+    }
+  ],
+  "interpretation": {
+    "feature_tracker": "MCP-visible and DB-backed status agrees with Sa-plan",
+    "dashboard": "completion and readiness can be refreshed from the MCP data plane",
+    "unknown_capability": "rejected fail-closed; no completion credit",
+    "runtime_admission": "NOT_GRANTED",
+    "task_completion_credit": "none"
+  },
+  "evidence_limits": [
+    "This is development-runtime observation only.",
+    "No production effect authority or independent release authorization is established.",
+    "Blocked, unknown, stale, and unadmitted work remains incomplete."
+  ]
+}

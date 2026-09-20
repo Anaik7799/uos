@@ -16,8 +16,8 @@ pub fn nif_runtime_available() -> Bool
 /// Historical declarations with no executable runtime binding are retained in
 /// the catalog as unavailable, and excluded from operational tools/list.
 pub const unavailable_tools = [
-  "control_loop", "safety_status", "registry_status", "run_selfcheck",
-  "run_gate", "zk_search", "sa_bridge_submit", "vault_status",
+  "control_loop", "safety_status", "run_selfcheck",
+  "registry_status", "run_gate", "zk_search", "sa_bridge_submit", "vault_status",
   "vault_list_secrets", "vault_policy_get", "vault_audit_tail", "vault_health",
 ]
 
@@ -755,6 +755,26 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
       ]),
     ),
     ToolDefinition(
+      name: "sa_plan_status_for",
+      description: "Get status for an explicitly selected Hermes sa-plan plan (SC-SA-PLAN-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "plan",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Canonical Sa-plan identifier")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array([json.string("plan")], of: fn(x) { x })),
+      ]),
+    ),
+    ToolDefinition(
       name: "sa_plan_list",
       description: "List all plans and DAG tasks registered in Hermes sa-plan durable execution engine (SC-SA-PLAN-001)",
       input_schema: json.object([
@@ -1328,6 +1348,144 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
             ),
           ]),
         ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "feature_tracker_status",
+      description: "Read the database-backed system feature tracker status for a canonical Sa-plan plan; reports task progress without asserting MCP admission",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "plan",
+              json.object([
+                #("type", json.string("string")),
+                #(
+                  "description",
+                  json.string("Canonical Sa-plan plan identifier"),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array([json.string("plan")], of: fn(x) { x })),
+      ]),
+    ),
+    ToolDefinition(
+      name: "mcp_capability_inventory",
+      description: "Read the complete MCP capability inventory with declared, unavailable, and unprobed states; never implies admission",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "holon_status",
+      description: "Read the live holon identity and coordination projection; observational only and never an admission decision",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "swarm_status",
+      description: "Read the swarm ecology capability projection used for agent coordination; observational only",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "agent_hierarchy",
+      description: "Read the current agent hierarchy projection used for holonic coordination; observational only",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "harness_system_feature_catalog",
+      description: "Query the admitted task-bound feature catalog through the declarative algebraic MCP interface",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #("catalog_sha256", json.object([#("type", json.string("string"))])),
+            #("offset", json.object([#("type", json.string("string"))])),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(
+            [json.string("catalog_sha256"), json.string("offset")],
+            of: fn(x) { x },
+          ),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "harness_system_feature_observations",
+      description: "Read verified feature observations from the task-bound canonical feature ledger",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #("catalog_sha256", json.object([#("type", json.string("string"))])),
+            #("ledger_sha256", json.object([#("type", json.string("string"))])),
+            #("offset", json.object([#("type", json.string("string"))])),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(
+            [
+              json.string("catalog_sha256"),
+              json.string("ledger_sha256"),
+              json.string("offset"),
+            ],
+            of: fn(x) { x },
+          ),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "harness_system_feature_intent",
+      description: "Evaluate a declarative feature intent algebraically under task-bound MCP admission",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #("intent", json.object([#("type", json.string("string"))])),
+            #("catalog_sha256", json.object([#("type", json.string("string"))])),
+            #("ledger_sha256", json.object([#("type", json.string("string"))])),
+            #("offset", json.object([#("type", json.string("string"))])),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(
+            [
+              json.string("intent"),
+              json.string("catalog_sha256"),
+              json.string("ledger_sha256"),
+              json.string("offset"),
+            ],
+            of: fn(x) { x },
+          ),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "harness_execution_progress",
+      description: "Read the task-bound Sa-plan execution projection and optimization evidence without granting execution authority",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
       ]),
     ),
   ]

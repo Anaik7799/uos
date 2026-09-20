@@ -79,7 +79,12 @@ pub fn unknown_mutating_tool_is_guardian_gated_under_enforce_test() {
       True,
       json.object([]),
     )
-  authorize_with(pi_tools.EnforceNonL0, "sa_plan_status", False, json.object([]))
+  authorize_with(
+    pi_tools.EnforceNonL0,
+    "sa_plan_status",
+    False,
+    json.object([]),
+  )
   |> should.be_ok
 }
 
@@ -94,9 +99,18 @@ pub fn policy_is_never_taken_from_the_request_test() {
 
 pub fn rate_limit_denies_third_call_when_max_is_two_test() {
   let policy = authz.policy_for_mode(pi_tools.Permissive)
-  let line = raw("system_health", json.object([#("actor", json.string("ai:agent-a:m"))]))
+  let line =
+    raw("system_health", json.object([#("actor", json.string("ai:agent-a:m"))]))
   let assert Ok(a1) =
-    authz.authorize(policy, enforcer.new_rate_limit_state(), 2, "w", "system_health", False, line)
+    authz.authorize(
+      policy,
+      enforcer.new_rate_limit_state(),
+      2,
+      "w",
+      "system_health",
+      False,
+      line,
+    )
   let assert Ok(a2) =
     authz.authorize(policy, a1.rate_state, 2, "w", "system_health", False, line)
   let assert Error(authz.RateLimited(_)) =
@@ -111,7 +125,15 @@ pub fn rate_limit_is_per_agent_test() {
   let a = raw("system_health", json.object([#("actor", json.string("ai:a:m"))]))
   let b = raw("system_health", json.object([#("actor", json.string("ai:b:m"))]))
   let assert Ok(s1) =
-    authz.authorize(policy, enforcer.new_rate_limit_state(), 1, "w", "system_health", False, a)
+    authz.authorize(
+      policy,
+      enforcer.new_rate_limit_state(),
+      1,
+      "w",
+      "system_health",
+      False,
+      a,
+    )
   authz.authorize(policy, s1.rate_state, 1, "w", "system_health", False, b)
   |> should.be_ok
 }
@@ -157,9 +179,14 @@ pub fn ordinary_path_is_allowed_test() {
 // --- request facts ---------------------------------------------------------------
 
 pub fn extract_agent_prefers_actor_then_meta_then_unknown_test() {
-  authz.extract_agent(raw("x", json.object([#("actor", json.string("human:an"))])))
+  authz.extract_agent(raw(
+    "x",
+    json.object([#("actor", json.string("human:an"))]),
+  ))
   |> should.equal("human:an")
-  authz.extract_agent("{\"params\":{\"_meta\":{\"agent_id\":\"ai:codex:astra\"}}}")
+  authz.extract_agent(
+    "{\"params\":{\"_meta\":{\"agent_id\":\"ai:codex:astra\"}}}",
+  )
   |> should.equal("ai:codex:astra")
   authz.extract_agent(raw("x", json.object([])))
   |> should.equal("unknown:anonymous")

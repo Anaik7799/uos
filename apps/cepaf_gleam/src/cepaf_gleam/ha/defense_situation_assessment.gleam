@@ -26,7 +26,9 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/health_derivative.{type HealthSample}
-import cepaf_gleam/ha/lyapunov_proof.{type StabilityVerdict, Marginal, Stable, Unstable}
+import cepaf_gleam/ha/lyapunov_proof.{
+  type StabilityVerdict, Marginal, Stable, Unstable,
+}
 import cepaf_gleam/ha/tri_agent_monitor.{type TriAgentMonitorState}
 import gleam/float
 import gleam/int
@@ -83,7 +85,8 @@ pub fn evaluate_defense_posture(
   samples: List(HealthSample),
   lambda_estimate: Float,
 ) -> DefenseAssessment {
-  let derivative = list.fold(samples, health_derivative.init(1.0), health_derivative.update)
+  let derivative =
+    list.fold(samples, health_derivative.init(1.0), health_derivative.update)
   let velocity = derivative.velocity
   let current_health = case samples {
     [latest, ..] -> latest.value

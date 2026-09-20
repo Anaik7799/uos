@@ -7,15 +7,14 @@ import cepaf_gleam/verification/omni_fractal_matrix_engine.{
   canonical_10_fractal_layers, canonical_10_sdlc_stages,
   canonical_14_superpowers, canonical_5_system_components,
   canonical_fast_ooda_cycle, canonical_mcp_ecosystem, canonical_skill_inventory,
-  canonical_symbiosis_topology, evaluate_formal_aspects,
+  canonical_symbiosis_topology, encode_omni_matrix_json, evaluate_formal_aspects,
   evaluate_scalability_and_performance, execute_all_17_aspect_processes,
+  execute_evolutionary_cycle, generate_all_15_evolutionary_cycles,
   generate_all_17_aspect_processes, generate_all_agent_specifications,
-  generate_all_feature_families, generate_all_formal_aspects,
-  generate_all_use_cases, generate_system_scalability_matrix, is_fast_ooda_safe,
-  verify_omni_fractal_system_matrix, encode_omni_matrix_json,
-  generate_all_15_evolutionary_cycles, generate_wave2_evolutionary_cycles,
-  generate_all_evolutionary_cycles,
-  execute_evolutionary_cycle,
+  generate_all_evolutionary_cycles, generate_all_feature_families,
+  generate_all_formal_aspects, generate_all_use_cases,
+  generate_system_scalability_matrix, generate_wave2_evolutionary_cycles,
+  is_fast_ooda_safe, verify_omni_fractal_system_matrix,
 }
 import gleam/list
 import gleam/string
@@ -147,10 +146,10 @@ pub fn scalability_and_performance_test() {
   let entropy_ok = eval.shannon_entropy_bits >=. 2.5
   entropy_ok |> should.be_true()
 
-  let ccm_ok = eval.cyclomatic_complexity_ratio >=. 0.90
+  let ccm_ok = eval.cyclomatic_complexity_ratio >=. 0.9
   ccm_ok |> should.be_true()
 
-  let div_ok = eval.expected_vs_actual_divergence <=. 0.10
+  let div_ok = eval.expected_vs_actual_divergence <=. 0.1
   div_ok |> should.be_true()
 
   let itqs_ok = eval.integrated_test_quality_score >=. 0.85
@@ -245,16 +244,19 @@ pub fn formal_aspect_proofs_test() {
 pub fn encode_omni_matrix_json_test() {
   let json_str = encode_omni_matrix_json()
   string.contains(json_str, "\"status\":\"ok\"") |> should.be_true()
-  string.contains(json_str, "\"contract\":\"SC-OMNI-FRACTAL-001\"") |> should.be_true()
+  string.contains(json_str, "\"contract\":\"SC-OMNI-FRACTAL-001\"")
+  |> should.be_true()
   string.contains(json_str, "\"ev_cycle\":\"EV-25..EV-84\"") |> should.be_true()
   string.contains(json_str, "\"cartesian_closure\":true") |> should.be_true()
   string.contains(json_str, "\"components_count\":5") |> should.be_true()
   string.contains(json_str, "\"agents_count\":10") |> should.be_true()
   string.contains(json_str, "\"feature_families_count\":18") |> should.be_true()
   string.contains(json_str, "\"aspect_processes_count\":17") |> should.be_true()
-  string.contains(json_str, "\"scalability_profiles_count\":5") |> should.be_true()
+  string.contains(json_str, "\"scalability_profiles_count\":5")
+  |> should.be_true()
   string.contains(json_str, "\"formal_proofs_count\":7") |> should.be_true()
-  string.contains(json_str, "\"evolutionary_cycles_count\":60") |> should.be_true()
+  string.contains(json_str, "\"evolutionary_cycles_count\":60")
+  |> should.be_true()
 }
 
 pub fn all_15_evolutionary_cycles_test() {

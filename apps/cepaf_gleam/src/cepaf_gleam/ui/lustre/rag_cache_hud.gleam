@@ -23,6 +23,7 @@ import gleam/float
 import gleam/int
 
 const tailscale_base_url = "http://nas-1.tail55d152.ts.net:4100"
+
 const peer_base_url = "http://vm-1.tail55d152.ts.net:8088"
 
 /// Mathematical Gates descriptor.
@@ -72,7 +73,7 @@ pub fn init_rag_cache_hud() -> RagCacheHudState {
   RagCacheHudState(
     cycle_id: "EV-103",
     cycle_name: "Dynamic Semantic RAG Vector Refresher & LLM Cache Mesh",
-    total_eunit_tests: 10495,
+    total_eunit_tests: 10_495,
     entry_count: 42,
     capacity: 100,
     hit_ratio: 0.885,

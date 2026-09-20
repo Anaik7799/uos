@@ -89,7 +89,8 @@ pub fn upsert_row(rows: List(JobRow), ev: JobEvent) -> List(JobRow) {
       let others = list.filter(rows, fn(r) { r.urn != ev.urn })
       let prev = case existing {
         [r, ..] -> r
-        [] -> JobRow(
+        [] ->
+          JobRow(
             urn: ev.urn,
             id: ev.id,
             queue: ev.queue,
@@ -100,12 +101,13 @@ pub fn upsert_row(rows: List(JobRow), ev: JobEvent) -> List(JobRow) {
           )
       }
       let next_state = event_to_state(ev.event, prev.state)
-      let next = JobRow(
-        ..prev,
-        state: next_state,
-        last_at: ev.at,
-        last_summary: ev.event,
-      )
+      let next =
+        JobRow(
+          ..prev,
+          state: next_state,
+          last_at: ev.at,
+          last_summary: ev.event,
+        )
       [next, ..others]
     }
   }

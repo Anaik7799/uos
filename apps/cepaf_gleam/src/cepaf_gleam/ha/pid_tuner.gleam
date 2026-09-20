@@ -145,8 +145,7 @@ pub fn update_pid(
       ),
     )
 
-  let rec_batch =
-    int.max(1, rec_concurrency / 2)
+  let rec_batch = int.max(1, rec_concurrency / 2)
 
   let updated_state =
     PidState(

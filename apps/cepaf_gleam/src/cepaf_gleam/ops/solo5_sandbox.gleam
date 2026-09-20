@@ -57,7 +57,9 @@ pub fn verify_sandbox(config: Solo5Config) -> SandboxStatus {
     _ if !config.seccomp_enabled ->
       SandboxViolation("Seccomp filter must be enabled for Solo5 sandbox")
     _ if !config.read_only_root ->
-      SandboxViolation("Read-only root filesystem required for Zero-Muda purity")
+      SandboxViolation(
+        "Read-only root filesystem required for Zero-Muda purity",
+      )
     _ if !config.zero_trust ->
       SandboxViolation("Zero-trust network confinement required")
     _ -> {

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "receipt_type": "sa_plan_task_gate_inspection",
+  "generated_at": "2026-09-21T15:05:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t2-contracts",
+  "task_state": "available",
+  "attempt": 4,
+  "priority": 90,
+  "authority": "report_only",
+  "decision": "HOLD",
+  "readiness": "blocked",
+  "blockers": [
+    "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review.",
+    "Canonical coordinator history has digest divergence and replay failure; private recovery candidate is not yet authorized for cutover.",
+    "Census fixture is stale against the current MCP tool surface, so broad test admission remains unavailable."
+  ],
+  "observations": {
+    "sa_plan_snapshot": "governance/planning/20260921-1810-sa-plan-dashboard-snapshot.json",
+    "risk_portfolio": "governance/planning/20260921-1640-risk-portfolio-current.json",
+    "mcp_live_observation": "governance/planning/20260921-1815-live-mcp-holon-dashboard-observation.json",
+    "rete_fix": {
+      "receipt": "governance/planning/20260921-1818-rete-mcp-numeric-decoder-fix.json",
+      "server_sha256": "7ffe6f5432478492f69e275add4cabb5333d0f3cb804b532a5d955d6b32e03fb",
+      "test_sha256": "6da952cf10696bf9b12f4dc4c7956e28c79d691db4599aa0a361e286c7cf639a",
+      "verification": "gleam format --check; gleam build; live integer-valued rete_rule_conflict probe returned winner r1 and suppressed r2"
+    }
+  },
+  "required_next_evidence": [
+    "Fresh coordinator authority with semantic validity, registered sessions, and peer review",
+    "Candidate-bound census refresh with regenerated count and identifier fingerprint",
+    "Task-scoped MCP contract tests passing at the candidate revision",
+    "Independent release/operational acceptance before any completion transition"
+  ],
+  "completion_claim": false
+}

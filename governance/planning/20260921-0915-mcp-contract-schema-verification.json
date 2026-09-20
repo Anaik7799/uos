@@ -1,0 +1,35 @@
+{
+  "schema": "uos.mcp-contract-schema-evidence.v1",
+  "timestamp_utc": "2026-09-21T09:15:00Z",
+  "scope": "tools/list output and refusal schemas for system feature tracker and execution progress MCP surface",
+  "source": {
+    "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+    "sha256": "fdc007f7f23ec02a24dd04128d64578d248413da9ee898837505f13e32fb59c3"
+  },
+  "observed_contract": {
+    "tools_list_digest": "d594a9765a0f6c2c7b4cbca01d5a72be59906add537be109673065ff58a71333",
+    "output_schema": "bounded JSON schemas are advertised for catalog, observations, intent decision, and execution progress tools",
+    "error_schema": "bounded refusal envelope is advertised for every development MCP tool",
+    "refusal_semantics": "unknown, malformed, or mutating intents remain fail-closed and non-authoritative"
+  },
+  "development_verification": {
+    "command": "gleam test",
+    "working_directory": "apps/cepaf_gleam",
+    "passed": 11988,
+    "failed": 0,
+    "log_sha256": "fe6c45698e0e07f4429569de27fd7cf273ae6dd9983421d983bb0cd6031c986e"
+  },
+  "sa_plan": {
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t1-tracker",
+    "checkpoint": "mcp-contract-schemas",
+    "status": "observed_not_verified",
+    "canonical_task_remains_open": true
+  },
+  "limits": [
+    "development observation only",
+    "does not prove runtime MCP availability",
+    "does not prove holonic coordination",
+    "does not grant execution authority, release authority, or admission"
+  ]
+}

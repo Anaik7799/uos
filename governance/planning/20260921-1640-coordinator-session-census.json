@@ -1,0 +1,14 @@
+{
+  "schema": "uos.coordinator-session-census.v1",
+  "observed_at": "2026-09-21T16:40:42Z",
+  "authority": "read-only SQLite census; no registration or lease mutation",
+  "database": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84"
+  },
+  "operation_counts": {"register":1,"send":64,"ratify_cycle":52},
+  "registered_identity": {"actor":"claude-sovereign-fable-l0","role":"claude","host_id":"cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7","boot_id":"1cb3ba2d-5600-44d5-b2d4-a88abea6b365"},
+  "finding": "No current Claude/Codex/AGY registration or lease table exists in this canonical store; only one historical register event is present, and the current session remains unregistered.",
+  "decision": "HOLD",
+  "completion_credit": false
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "uos.doctor-ev-ceiling-constant-receipt.v1",
+  "observed_at": "2026-09-21T16:39:00Z",
+  "supersedes": "governance/planning/20260921-1637-doctor-ev-ceiling-fix.json",
+  "source": {
+    "path": "tools/uos/src/main.gleam",
+    "sha256": "1deb3fc4798a73fd665c9d7fd0f5423b80d37fc90cf5b705ed2d4df39eec6f3f",
+    "change": "Uses one admitted_ev_ceiling constant for classification and reporting."
+  },
+  "validation": {
+    "gleam_check": "PASS",
+    "doctor_log": "/tmp/uos-doctor-ceiling-fix-20260921-1639.log",
+    "doctor_log_sha256": "1199dcc81a68786e54fd3e3e7c3b1e0ecf25a697b3b118a22d079c0a198898ea",
+    "doctor_result": "HOLD",
+    "not_admitted_above_ceiling": 18,
+    "unverifiable": 91,
+    "missing": 0
+  },
+  "completion_credit": false
+}

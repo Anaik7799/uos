@@ -36,7 +36,10 @@ fn extract_tool_result(response: String) -> Result(String, json.DecodeError) {
     decode.success(text)
   }
   let decoder = {
-    use items <- decode.subfield(["result", "content"], decode.list(item_decoder))
+    use items <- decode.subfield(
+      ["result", "content"],
+      decode.list(item_decoder),
+    )
     case items {
       [first, ..] -> decode.success(first)
       [] -> decode.failure("", "non-empty content")
@@ -112,6 +115,50 @@ pub fn tool_rete_rule_conflict_execution_test() {
   let assert Ok(text) = extract_tool_result(response)
   text |> string.contains("\"rules_evaluated\":2") |> should.be_true
   text |> string.contains("\"winner\":") |> should.be_true
+}
+
+pub fn tool_rete_rule_conflict_accepts_integer_numbers_test() {
+  let response =
+    tool_call(
+      "test-rete-integer",
+      "rete_rule_conflict",
+      json.object([
+        #(
+          "rules",
+          json.array(
+            [
+              json.object([
+                #("id", json.string("integer-safe")),
+                #("score", json.float(0.9)),
+                #("salience", json.int(10)),
+              ]),
+              json.object([
+                #("id", json.string("integer-fallback")),
+                #("score", json.float(0.8)),
+                #("salience", json.int(8)),
+              ]),
+            ],
+            fn(x) { x },
+          ),
+        ),
+      ]),
+    )
+  let assert Ok(text) = extract_tool_result(response)
+  text |> string.contains("\"rules_evaluated\":2") |> should.be_true
+  text |> string.contains("\"salience\":10.0") |> should.be_true
+}
+
+pub fn tool_rete_rule_conflict_rejects_invalid_rules_test() {
+  let response =
+    tool_call(
+      "test-rete-invalid",
+      "rete_rule_conflict",
+      json.object([#("rules", json.string("not-a-rule-list"))]),
+  )
+  let assert Ok(text) = extract_tool_result(response)
+  text
+  |> string.contains("expected a list of rule objects")
+  |> should.be_true
 }
 
 pub fn tool_ruliad_branch_eval_execution_test() {
@@ -192,7 +239,9 @@ pub fn tool_lyapunov_trend_predict_execution_test() {
     )
   let assert Ok(text) = extract_tool_result(response)
   text |> string.contains("\"status\":\"ok\"") |> should.be_true
-  text |> string.contains("\"stability_state\":\"strongly_stable\"") |> should.be_true
+  text
+  |> string.contains("\"stability_state\":\"strongly_stable\"")
+  |> should.be_true
   text |> string.contains("\"lyapunov_exponent\":") |> should.be_true
 }
 

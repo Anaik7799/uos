@@ -2,12 +2,12 @@
 //// System TUI Cluster D (Biomorphic Resilience & Cognition: Screens 25-32) Test Suite
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-004
 
-import gleeunit/should
 import cepaf_gleam/testing/tui_test_engine.{
-  IntegrityScreen, EvolutionScreen, BiomorphicScreen, HomeostasisScreen,
-  BicameralScreen, SingularityScreen, ComponentsScreen, AuthScreen,
-  render_screen_buffer, verify_frame_buffer
+  AuthScreen, BicameralScreen, BiomorphicScreen, ComponentsScreen,
+  EvolutionScreen, HomeostasisScreen, IntegrityScreen, SingularityScreen,
+  render_screen_buffer, verify_frame_buffer,
 }
+import gleeunit/should
 
 pub fn tui_cluster_d_integrity_test() {
   let fb = render_screen_buffer(IntegrityScreen)

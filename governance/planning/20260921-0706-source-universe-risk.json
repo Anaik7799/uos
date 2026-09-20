@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "policy": "SC-RISK-PRIORITY-001",
+  "assessment_id": "t1-source-universe-20260921-0706",
+  "observed_at": "2026-09-21T07:06:29Z",
+  "valid_until": "2026-09-21T15:00:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "actor": "codex-01a0ba74-feature-tracker",
+  "scope": "Bounded source-universe ledger for selected apps/services/engines/native/tools roots; classification and wrapper edges only.",
+  "phase": "implementation",
+  "fractal_layer": 4,
+  "task_state": "executing",
+  "readiness": "ready",
+  "blockers": [],
+  "dependencies": [],
+  "factors": {
+    "criticality": {
+      "value": 4,
+      "rationale": "A defensible source denominator is prerequisite to complete MCP coverage but does not itself grant runtime authority."
+    },
+    "stpa": {
+      "value": 5,
+      "rationale": "False completeness or classification collapse can hide unsafe unbound services."
+    },
+    "fmea": {
+      "value": 5,
+      "rationale": "False executable or MCP-usable claims are severity-floor5; occurrence/detection are analyst estimates."
+    },
+    "dependency": {
+      "value": 4,
+      "rationale": "t1 source reconciliation precedes t2 contracts and service adapters; blocked consumers remain ineligible."
+    },
+    "impact": {
+      "value": 5,
+      "rationale": "Correct denominator prevents false coverage and directs later adapter work."
+    }
+  },
+  "fmea_modes": [
+    {
+      "id": "FM-SOURCE-DENOMINATOR-COLLAPSE",
+      "cause": "Package, test, wrapper or reference artifact counted as executable service.",
+      "effect": "Coverage gaps hidden and unsafe release assumptions.",
+      "controls": "Path-qualified records, explicit classifications, wrapper edges, unresolved counts, separate MCP/runtime states.",
+      "s": 5,
+      "o": 3,
+      "det": 4,
+      "rpn": 60
+    },
+    {
+      "id": "FM-MISSING-SOURCE-ENTRY",
+      "cause": "Bounded listing treated as complete universe.",
+      "effect": "Untracked service or engine remains outside MCP plan.",
+      "controls": "Partial completeness flag and unresolved frontier; require authoritative registry reconciliation.",
+      "s": 5,
+      "o": 3,
+      "det": 5,
+      "rpn": 75
+    }
+  ],
+  "stpa_analysis": {
+    "controller": "Gleam tracker and Sa-plan workflow",
+    "control_action": "Classify candidate source entries and bind artifact edges",
+    "losses": [
+      "L-FALSE-COVERAGE",
+      "L-UNAUTHORIZED-EFFECT"
+    ],
+    "hazards": [
+      "H-INCOMPLETE-SOURCE-UNIVERSE"
+    ],
+    "ucas": [
+      {
+        "type": "not_provided",
+        "context": "Missing service or executable root is omitted.",
+        "constraint": "Reconcile all canonical roots and preserve unknown entries.",
+        "applicability": "applicable"
+      },
+      {
+        "type": "provided_unsafe",
+        "context": "Test/wrapper/reference is presented as live service.",
+        "constraint": "Classification and runtime usability remain separate.",
+        "applicability": "applicable"
+      },
+      {
+        "type": "wrong_timing",
+        "context": "Stale hashes or prior candidate used.",
+        "constraint": "Bind source SHA and current candidate before later claims.",
+        "applicability": "applicable"
+      },
+      {
+        "type": "duration",
+        "context": "Directory/target traversal escapes bounded budget.",
+        "constraint": "Finite depth/file bounds and Sa-plan lease fence.",
+        "applicability": "applicable"
+      }
+    ]
+  },
+  "decision": {
+    "summary": "Select a bounded candidate-pinned source-universe ledger as the cheapest discriminating t1 frontier. It exposes unresolved denominator gaps without claiming completeness or starting any service.",
+    "alternatives": [
+      "Count all files/functions as capabilities (rejected)",
+      "Treat README/manifest declarations as usable services (rejected)",
+      "Source-universe ledger with explicit partial status (selected)"
+    ],
+    "counterevidence": [
+      "No inspected registry defines the complete executable system.",
+      "Hermes nested Dune closure, native linkage and unlisted tool entrypoints remain unknown."
+    ],
+    "assumptions": [
+      "Root listing and selected source anchors are accurate at observation time.",
+      "No production or external-source authority is needed for this development artifact."
+    ],
+    "confidence": "analyst_estimate",
+    "forecast": "Ledger preserves classifications and unknown MCP/runtime states while preventing denominator shrinkage.",
+    "falsifier": "Authoritative registry contradicts selected paths or a record lacks required source binding.",
+    "acceptance": [
+      "Every selected record is path-qualified and hash-bound.",
+      "Package, executable, library, test, wrapper, placeholder and reference-only classes remain distinct.",
+      "Wrapper-to-artifact edges are explicit; tests never become services.",
+      "MCP mapping and runtime usability remain UNKNOWN.",
+      "Missing and unclassified entries are retained in unresolved."
+    ],
+    "rollback": "Preserve artifact as partial evidence; no live state to roll back.",
+    "reviewer": "Internal source review advisory pending",
+    "budget": "One writer, bounded read-only review, no package/runtime action.",
+    "residuals": [
+      "Partial bounded universe; no canonical import or operational acceptance."
+    ]
+  },
+  "authority": "DEVELOPMENT_ONLY",
+  "runtime_admission": false,
+  "canonical_import": false,
+  "system_admission": false,
+  "score": 2000,
+  "score_interval": [
+    2000,
+    2000
+  ]
+}

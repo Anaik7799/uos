@@ -1,0 +1,42 @@
+{
+  "schema": "uos.mcp-progress-dispatch-receipt.v1",
+  "timestamp": "20260921-1343",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "candidate": {
+    "tools_source_sha256": "a3a8562344c675d1f21124ae94efd66cac82d7a82061cc8327fc586a8d2b1320",
+    "server_source_sha256": "aa2d3252c94e0162ed238a19da7aac125ad681be0bb2dd7f5c83656e10a44c76"
+  },
+  "runtime": {
+    "transport": "stdio",
+    "role": "development",
+    "bootstrap_binding": "HARNESSBOOT",
+    "advertised_tool_count": 53,
+    "harness_execution_progress_advertised": true,
+    "log_sha256": "8a86288da01d6efd933125f0be7fde29ec397572525543764c63300f9570aff4"
+  },
+  "observations": [
+    {
+      "request": "tools/list",
+      "result": "harness_execution_progress present in advertised primary MCP surface",
+      "status": "observed"
+    },
+    {
+      "request": "tools/call harness_execution_progress with empty arguments",
+      "result": "journal sequence or digest mismatch; replay refused",
+      "status": "fail_closed_runtime_observed"
+    }
+  ],
+  "interpretation": {
+    "coverage": "primary MCP declaration and dispatch gap fixed",
+    "dashboard_projection": "not yet readable through this surface because coordinator integrity gate refused replay",
+    "task_completion_credit": false,
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false
+  },
+  "next_gate": "repair coordinator journal sequence/digest integrity and repeat the same task-bound probe",
+  "evidence_limits": [
+    "Development bootstrap is not production authorization.",
+    "A fail-closed refusal is not a successful progress observation.",
+    "No Sa-plan task was completed by this probe."
+  ]
+}

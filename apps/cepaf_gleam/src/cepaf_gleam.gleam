@@ -66,7 +66,9 @@ pub fn main() {
     True -> {
       io.println("  [agents] Starting 3-layer autonomous hierarchy...")
       let _ = cybernetic.start_executive_supervisor()
-      io.println("  [sup] Starting root OTP supervisor with homeostasis engine...")
+      io.println(
+        "  [sup] Starting root OTP supervisor with homeostasis engine...",
+      )
       let assert Ok(_) = uos_sup.start_root_supervisor()
         as "Root supervision must start before autonomous serving"
       Nil

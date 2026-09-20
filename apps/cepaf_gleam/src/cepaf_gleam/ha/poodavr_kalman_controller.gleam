@@ -4,7 +4,6 @@
 // Codex Astra Sovereign Cybernetic Engine: Kalman State Estimation + Lyapunov Guard
 // =============================================================================
 
-
 pub type KalmanState {
   KalmanState(
     estimate: Float,
@@ -42,7 +41,12 @@ pub type PoodavrVerdict {
   )
 }
 
-pub fn new_kalman(q: Float, r: Float, initial_x: Float, initial_p: Float) -> KalmanState {
+pub fn new_kalman(
+  q: Float,
+  r: Float,
+  initial_x: Float,
+  initial_p: Float,
+) -> KalmanState {
   KalmanState(
     estimate: initial_x,
     covariance: initial_p,
@@ -78,32 +82,37 @@ pub fn stage_predict(state: ControllerState) -> ControllerState {
     False -> {
       let prior_p = state.kalman.covariance +. state.kalman.process_noise
       let updated_kalman = KalmanState(..state.kalman, covariance: prior_p)
-      ControllerState(
-        ..state,
-        kalman: updated_kalman,
-        stage_history: ["Predict", ..state.stage_history],
-      )
+      ControllerState(..state, kalman: updated_kalman, stage_history: [
+        "Predict",
+        ..state.stage_history
+      ])
     }
   }
 }
 
 /// Stage 2: Observe — Receive Noisy Measurement z
-pub fn stage_observe(state: ControllerState, measurement: Float) -> #(ControllerState, Float) {
+pub fn stage_observe(
+  state: ControllerState,
+  measurement: Float,
+) -> #(ControllerState, Float) {
   case state.andon_halt {
     True -> #(state, 0.0)
     False -> {
       let next_state =
-        ControllerState(
-          ..state,
-          stage_history: ["Observe", ..state.stage_history],
-        )
+        ControllerState(..state, stage_history: [
+          "Observe",
+          ..state.stage_history
+        ])
       #(next_state, measurement)
     }
   }
 }
 
 /// Stage 3: Orient — Kalman Measurement Innovation and Posterior Update
-pub fn stage_orient(state: ControllerState, measurement: Float) -> ControllerState {
+pub fn stage_orient(
+  state: ControllerState,
+  measurement: Float,
+) -> ControllerState {
   case state.andon_halt {
     True -> state
     False -> {
@@ -125,13 +134,16 @@ pub fn stage_orient(state: ControllerState, measurement: Float) -> ControllerSta
       let posterior_p = { 1.0 -. k } *. prior_p
 
       let updated_kalman =
-        KalmanState(..state.kalman, estimate: posterior_x, covariance: posterior_p)
+        KalmanState(
+          ..state.kalman,
+          estimate: posterior_x,
+          covariance: posterior_p,
+        )
 
-      ControllerState(
-        ..state,
-        kalman: updated_kalman,
-        stage_history: ["Orient", ..state.stage_history],
-      )
+      ControllerState(..state, kalman: updated_kalman, stage_history: [
+        "Orient",
+        ..state.stage_history
+      ])
     }
   }
 }
@@ -143,11 +155,10 @@ pub fn stage_decide(state: ControllerState, kp: Float) -> ControllerState {
     False -> {
       let error = state.kalman.estimate -. state.setpoint
       let action = 0.0 -. { kp *. error }
-      ControllerState(
-        ..state,
-        control_action: action,
-        stage_history: ["Decide", ..state.stage_history],
-      )
+      ControllerState(..state, control_action: action, stage_history: [
+        "Decide",
+        ..state.stage_history
+      ])
     }
   }
 }
@@ -157,16 +168,16 @@ pub fn stage_act(state: ControllerState) -> ControllerState {
   case state.andon_halt {
     True -> state
     False -> {
-      ControllerState(
-        ..state,
-        stage_history: ["Act", ..state.stage_history],
-      )
+      ControllerState(..state, stage_history: ["Act", ..state.stage_history])
     }
   }
 }
 
 /// Stage 6: Verify — Evaluate Lyapunov Candidate V(x) = (x - x*)^2 and Energy Trend dV/dt <= 0
-pub fn stage_verify(state: ControllerState, max_divergence_allowed: Float) -> ControllerState {
+pub fn stage_verify(
+  state: ControllerState,
+  max_divergence_allowed: Float,
+) -> ControllerState {
   case state.andon_halt {
     True -> state
     False -> {
@@ -206,7 +217,7 @@ pub fn stage_reflect(state: ControllerState) -> PoodavrVerdict {
         cycle_id: state.cycle_id,
         stage_failed: "Verify",
         reason: "Lyapunov energy diverged: dV/dt > 0 violation",
-        code: -32002,
+        code: -32_002,
       )
     False ->
       ControllerNominal(

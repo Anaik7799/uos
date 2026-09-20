@@ -21,6 +21,7 @@ import gleam/list
 import gleam/string
 
 pub const andon_halt_unauthorized_code: Int = -32_002
+
 pub const andon_halt_quorum_missing_code: Int = -32_003
 
 pub type SystemAspect {
@@ -189,7 +190,8 @@ pub fn get_agent_profile(agent_id: String) -> Result(AgentProfile, String) {
     "edge" | "multimodal" | "ingestor" | "razr" | "razr-1" | "holon-razr15-1" ->
       "multimodal_edge_ingestor"
     "formal" | "verifier" | "oracle" -> "formal_verifier_oracle"
-    "knowledge" | "sheaf" | "curator" | "zk" | "wiki" -> "knowledge_sheaf_curator"
+    "knowledge" | "sheaf" | "curator" | "zk" | "wiki" ->
+      "knowledge_sheaf_curator"
     "inference" | "quarantined" | "max" | "mojo" ->
       "quarantined_inference_worker"
     _ -> string.trim(agent_id)
@@ -818,7 +820,13 @@ pub fn format_profile_detail(agent_id: String) -> String {
     Ok(profile) -> {
       let cap_lines =
         list.map(profile.capabilities, fn(cap) {
-          "• `" <> cap.id <> "` (" <> cap.name <> "): max budget " <> int.to_string(cap.max_budget_bytes) <> "B"
+          "• `"
+          <> cap.id
+          <> "` ("
+          <> cap.name
+          <> "): max budget "
+          <> int.to_string(cap.max_budget_bytes)
+          <> "B"
         })
         |> string.join("\n")
 
@@ -828,17 +836,31 @@ pub fn format_profile_detail(agent_id: String) -> String {
         False -> "No (Single-Agent Safe Dispatch)"
       }
 
-      "🤖 *Agent Profile: " <> profile.name <> "*\n\n"
-      <> "• *ID:* `" <> profile.id <> "`\n"
-      <> "• *Kind:* " <> case profile.kind {
+      "🤖 *Agent Profile: "
+      <> profile.name
+      <> "*\n\n"
+      <> "• *ID:* `"
+      <> profile.id
+      <> "`\n"
+      <> "• *Kind:* "
+      <> case profile.kind {
         Singleton -> "Singleton"
         ElasticSwarm -> "ElasticSwarm"
         EphemeralHolon -> "EphemeralHolon"
-      } <> "\n"
-      <> "• *2oo3 Quorum:* " <> quorum_str <> "\n"
-      <> "• *Max Token Budget:* " <> int.to_string(profile.max_token_budget) <> " tokens\n"
-      <> "• *SLA Latency:* " <> int.to_string(profile.sla_latency_ms) <> " ms\n"
-      <> "• *Tool Allowlist:* `" <> tools_str <> "`\n\n"
+      }
+      <> "\n"
+      <> "• *2oo3 Quorum:* "
+      <> quorum_str
+      <> "\n"
+      <> "• *Max Token Budget:* "
+      <> int.to_string(profile.max_token_budget)
+      <> " tokens\n"
+      <> "• *SLA Latency:* "
+      <> int.to_string(profile.sla_latency_ms)
+      <> " ms\n"
+      <> "• *Tool Allowlist:* `"
+      <> tools_str
+      <> "`\n\n"
       <> "### ⚡ Capabilities\n"
       <> cap_lines
     }

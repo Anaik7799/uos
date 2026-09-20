@@ -25,7 +25,9 @@
 //// </c3i-module>
 //// =============================================================================
 
-import cepaf_gleam/crdt/delta_state.{type LWWRegister, type NodeId, merge_lww, new_lww_register}
+import cepaf_gleam/crdt/delta_state.{
+  type LWWRegister, type NodeId, merge_lww, new_lww_register,
+}
 import gleam/int
 import gleam/list
 
@@ -95,8 +97,7 @@ pub fn merge_health_maps(
     })
 
   let keys_in_a = list.map(a, fn(p) { p.0 })
-  let missing_from_b =
-    list.filter(b, fn(p) { !list.contains(keys_in_a, p.0) })
+  let missing_from_b = list.filter(b, fn(p) { !list.contains(keys_in_a, p.0) })
 
   list.append(merged_from_a, missing_from_b)
 }
@@ -114,7 +115,9 @@ pub fn evaluate_quorum(
       let healthy_nodes =
         list.filter(map, fn(pair) {
           let tele = pair.1.value
-          tele.health_score >=. 0.7 && tele.is_stable && tele.breaker_state != "open"
+          tele.health_score >=. 0.7
+          && tele.is_stable
+          && tele.breaker_state != "open"
         })
       let healthy_count = list.length(healthy_nodes)
       let ratio = int.to_float(healthy_count) /. int.to_float(total_nodes)
@@ -133,7 +136,11 @@ pub fn evaluate_quorum(
 pub fn detect_divergent_nodes(map: ClusterHealthMap) -> List(NodeId) {
   list.filter_map(map, fn(pair) {
     let tele = pair.1.value
-    case !tele.is_stable || tele.lyapunov_exponent >. 0.0 || tele.breaker_state == "open" {
+    case
+      !tele.is_stable
+      || tele.lyapunov_exponent >. 0.0
+      || tele.breaker_state == "open"
+    {
       True -> Ok(pair.0)
       False -> Error(Nil)
     }

@@ -9,19 +9,20 @@
 //// Synthesizes Unit, Component, System, TDD, BDD, UI Elements, Property, Fuzz & Chaos
 //// testing with pure server-rendered WebUI displays.
 
+import cepaf_gleam/sciviz/atlas_intent.{
+  type VisualAtlasState, AnalyzeCorrelation, CartesianCoord, ExploreDistribution,
+  MarkLine, MarkPoint, U0PhysicalCanvas, U1DataDomain, U6GeomGrob,
+  ValuationSuccess, ValuationVetoed, VisualAtlasState, VisualIntent,
+  default_aesthetic_intent, evaluate_visual_intent,
+}
+import cepaf_gleam/sciviz/schema.{
+  type DarkCockpitTheme, Point2D, Scale2D, SciVizPlot,
+  default_dark_cockpit_theme,
+}
 import gleam/float
 import gleam/list
 import gleam/option.{None}
 import gleam/string
-import cepaf_gleam/sciviz/atlas_intent.{
-  type VisualAtlasState, AnalyzeCorrelation, CartesianCoord,
-  ExploreDistribution, MarkPoint, MarkLine, U0PhysicalCanvas, U1DataDomain,
-  U6GeomGrob, ValuationSuccess, ValuationVetoed, VisualAtlasState, VisualIntent,
-  default_aesthetic_intent, evaluate_visual_intent,
-}
-import cepaf_gleam/sciviz/schema.{
-  type DarkCockpitTheme, Point2D, Scale2D, SciVizPlot, default_dark_cockpit_theme,
-}
 
 /// The 9 Required Test Modalities
 pub type TestModality {
@@ -52,15 +53,24 @@ pub fn modality_to_string(modality: TestModality) -> String {
 
 pub fn modality_badge_color(modality: TestModality) -> String {
   case modality {
-    UnitTesting -> "#38bdf8"        // Sky Blue
-    ComponentTesting -> "#818cf8"   // Indigo
-    SystemTesting -> "#a855f7"      // Purple
-    TddTesting -> "#34d399"         // Emerald Green
-    BddTesting -> "#10b981"         // Teal
-    UiElementsTesting -> "#f59e0b"  // Amber
-    PropertyTesting -> "#ec4899"    // Pink
-    FuzzTesting -> "#f97316"        // Orange
-    ChaosTesting -> "#ef4444"       // Red
+    UnitTesting -> "#38bdf8"
+    // Sky Blue
+    ComponentTesting -> "#818cf8"
+    // Indigo
+    SystemTesting -> "#a855f7"
+    // Purple
+    TddTesting -> "#34d399"
+    // Emerald Green
+    BddTesting -> "#10b981"
+    // Teal
+    UiElementsTesting -> "#f59e0b"
+    // Amber
+    PropertyTesting -> "#ec4899"
+    // Pink
+    FuzzTesting -> "#f97316"
+    // Orange
+    ChaosTesting -> "#ef4444"
+    // Red
   }
 }
 
@@ -161,7 +171,10 @@ pub fn uc01_multivariate_scatter_test() -> TestCaseResult {
 
   let outcome = evaluate_visual_intent(intent, blank_state())
   let #(passed, svg) = case outcome {
-    ValuationSuccess(st, svg_out) -> #(st.epoch == 1 && string.contains(svg_out, "<circle"), svg_out)
+    ValuationSuccess(st, svg_out) -> #(
+      st.epoch == 1 && string.contains(svg_out, "<circle"),
+      svg_out,
+    )
     ValuationVetoed(_, _) -> #(False, "<svg></svg>")
   }
 
@@ -440,7 +453,8 @@ pub fn uc10_lyapunov_damping_test() -> TestCaseResult {
     gherkin_scenario: "Given Lyapunov damping factor=0.85 and cascade risk=0.05\nWhen the stability meter renders\nThen status shows STABLE in green and energy level reflects exponential damping decay.",
     input_summary: "Lyapunov damping factor=0.85, cascade risk=0.05",
     assertion_description: "SVG displays stability funnel, damping lines, and risk indicators.",
-    passed: string.contains(lyap_svg, "<svg") && string.contains(lyap_svg, "Damping"),
+    passed: string.contains(lyap_svg, "<svg")
+      && string.contains(lyap_svg, "Damping"),
     duration_us: 140,
     entropy_bits: 2.86,
     rendered_svg: lyap_svg,
@@ -552,7 +566,8 @@ pub fn uc13_scale_guide_adjunction_test() -> TestCaseResult {
 
 /// UC-14: Chaos Fault Injection & Degraded Homeostasis Veto (Chaos & Fuzz)
 pub fn uc14_chaos_fault_injection_test() -> TestCaseResult {
-  let degraded_state = VisualAtlasState(..blank_state(), constitutional_health: 0.65)
+  let degraded_state =
+    VisualAtlasState(..blank_state(), constitutional_health: 0.65)
   let intent =
     VisualIntent(
       intent_id: "uc14-chaos-attempt",
@@ -571,7 +586,8 @@ pub fn uc14_chaos_fault_injection_test() -> TestCaseResult {
 
   let outcome = evaluate_visual_intent(intent, degraded_state)
   let passed = case outcome {
-    ValuationVetoed(_, reason) -> string.contains(reason, "SystemHealthDegraded")
+    ValuationVetoed(_, reason) ->
+      string.contains(reason, "SystemHealthDegraded")
     ValuationSuccess(_, _) -> False
   }
 
@@ -616,7 +632,8 @@ pub fn uc15_hardware_storage_interlock_test() -> TestCaseResult {
       theme: test_theme(),
       target_chart: U1DataDomain,
       preserves_zero_muda: True,
-      target_drive_serial: "25503L801736", // HARD DENIED OS SERIAL
+      target_drive_serial: "25503L801736",
+      // HARD DENIED OS SERIAL
     )
 
   let outcome = evaluate_visual_intent(attack_intent, blank_state())

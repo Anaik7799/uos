@@ -1,0 +1,413 @@
+{
+  "schema": "uos.hive-mcp-remediation-plan.v1",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "created_at": "2026-09-20T03:55:20Z",
+  "status": "IN_PROGRESS_NOT_COMPLETE",
+  "authority": "Sa-plan SQLite owns task states, workers, attempts and dependencies; this manifest is a versioned acceptance projection, not a scheduler",
+  "scope": "All UOS system services, capabilities, data and control; actual hive/swarm external and internal participants; no secret disclosure or policy bypass implied by universal MCP availability",
+  "recovery_target": "One reconciled SQLite authority; historical stores preserved as evidence; no automatic history rehash-to-admission",
+  "development_boundary": "Initial repair confined to source and private test databases; live cutover waits for independent review, writer quiescence and explicit effect authority",
+  "session": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+  "worker": "codex-01a0ba74-feature-tracker",
+  "requirements": {
+    "execution": "All executable work, fan-out jobs and workflows have canonical Sa-plan identity; no direct task SQL or shadow queues",
+    "interface": "Pure typed intent decision and separate fenced interpreter; schemas for inputs, outputs, refusals, effects and observations",
+    "coordination": "Actual incarnation identity, hierarchy, scope, heartbeat, durable inbox/ACK, exclusive ownership and evidence",
+    "feature_tracker": "Canonical DB feature registry linking all services/capabilities to MCP mappings, coverage obligations and source-bound observations; inventory completeness independently reconciled",
+    "mcp_availability": "Listed is not usable; success requires current actual client invocation plus response schema, authorization/refusal and evidence checks"
+  },
+  "law_obligations": [
+    "Identity and compatible serial associativity",
+    "Independent-only parallel commutativity",
+    "Deny dominance and no amplification of caller authority",
+    "Idempotent same-intent replay and conflicting replay refusal",
+    "Expired epoch/session/lease refusal",
+    "Receipt and schema preservation across interpreters",
+    "No promotion of UNKNOWN STALE MOCK EXCLUDED or NOT_ADMITTED to availability",
+    "Pure reference interpreter agrees with bounded optimized interpreter"
+  ],
+  "all_aspects": [
+    "AINF-A01",
+    "AINF-A02",
+    "AINF-A03",
+    "AINF-A04",
+    "AINF-A05",
+    "AINF-A06",
+    "AINF-A07",
+    "AINF-A08",
+    "AINF-A09",
+    "AINF-A10",
+    "AINF-A11",
+    "AINF-A12",
+    "AINF-A13",
+    "AINF-A14",
+    "AINF-A15",
+    "AINF-A16",
+    "AINF-A17"
+  ],
+  "fractal_layers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "participants": {
+    "codex": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "claude_reviewer": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "agy_peer": "78478741-67b5-4c1e-8857-7a6dc948d10f",
+    "internal_runtime": "Must be discovered and identity-bound; local named models are not participant evidence"
+  },
+  "tasks": [
+    {
+      "id": "t0-coordination",
+      "title": "Diagnose coordinator and actual participation",
+      "dependencies": [],
+      "priority": 1000,
+      "scope": "Existing canonical task; reconcile current state before claim",
+      "acceptance": "Existing task acceptance plus system-wide completion gates"
+    },
+    {
+      "id": "t0a-reconcile",
+      "title": "Reconcile authority and preserve histories",
+      "dependencies": [
+        "t0-coordination"
+      ],
+      "priority": 999,
+      "scope": "Existing canonical task; reconcile current state before claim",
+      "acceptance": "Existing task acceptance plus system-wide completion gates"
+    },
+    {
+      "id": "t0b-bindings",
+      "title": "Verify real session and actor holon bindings",
+      "dependencies": [
+        "t0a-reconcile"
+      ],
+      "priority": 998,
+      "scope": "Existing canonical task; reconcile current state before claim",
+      "acceptance": "Existing task acceptance plus system-wide completion gates"
+    },
+    {
+      "id": "t0c-conformance",
+      "title": "Verify participant and coordination conformance",
+      "dependencies": [
+        "t0b-bindings"
+      ],
+      "priority": 997,
+      "scope": "Existing canonical task; reconcile current state before claim",
+      "acceptance": "Existing task acceptance plus system-wide completion gates"
+    },
+    {
+      "id": "t1-tracker",
+      "title": "Implement database-backed complete feature inventory",
+      "dependencies": [],
+      "priority": 100,
+      "scope": "Existing canonical task; reconcile current state before claim",
+      "acceptance": "Existing task acceptance plus system-wide completion gates"
+    },
+    {
+      "id": "t2-contracts",
+      "title": "Expose declarative algebraic MCP interfaces",
+      "dependencies": [
+        "t1-tracker"
+      ],
+      "priority": 90,
+      "scope": "Existing canonical task; reconcile current state before claim",
+      "acceptance": "Existing task acceptance plus system-wide completion gates"
+    },
+    {
+      "id": "t3-evidence",
+      "title": "Verify tracker and publish current-system evidence",
+      "dependencies": [
+        "t2-contracts"
+      ],
+      "priority": 80,
+      "scope": "Existing canonical task; reconcile current state before claim",
+      "acceptance": "Existing task acceptance plus system-wide completion gates"
+    },
+    {
+      "id": "r01-store-gates",
+      "title": "Fail closed on coordinator verification and semantic replay failures",
+      "dependencies": [],
+      "priority": 1200,
+      "paths": [
+        "apps/uos_swarm/src/session_store_cli.gleam",
+        "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+        "apps/uos_swarm/test/session_store_cli_test.gleam"
+      ],
+      "acceptance": [
+        "Digest, malformed command and unregistered actor controls refuse correctly; empty history is explicitly nonoperational",
+        "Valid nonempty typed history and idempotent replay pass",
+        "CLI exits nonzero on invalid verification"
+      ]
+    },
+    {
+      "id": "r02-recovery-candidate",
+      "title": "Build non-destructive graded SQLite authority candidate",
+      "dependencies": [
+        "r01-store-gates"
+      ],
+      "priority": 1190,
+      "paths": [
+        "apps/uos_swarm/src/uos_swarm/coordination_recovery.gleam",
+        "apps/uos_swarm/test/coordination_recovery_test.gleam"
+      ],
+      "acceptance": [
+        "Original histories remain byte-identical",
+        "Pure classification preserves source digest, locator, schema and admission grade",
+        "Unknown identities and rejected events cannot mint authority",
+        "Cutover candidate has bounded resource and rollback tests"
+      ]
+    },
+    {
+      "id": "r03-harness-coordinator",
+      "title": "Route reviewed Gleam harness through selected canonical coordinator",
+      "dependencies": [
+        "r02-recovery-candidate"
+      ],
+      "priority": 1180,
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam"
+      ],
+      "acceptance": [
+        "No fallback to divergent or empty authority",
+        "Grant binds backend identity and reviewed candidate",
+        "MCP claim, heartbeat, release and stale-epoch refusal pass"
+      ]
+    },
+    {
+      "id": "r04-identity-enrollment",
+      "title": "Enroll real external agents and internal actor incarnations",
+      "dependencies": [
+        "r03-harness-coordinator"
+      ],
+      "priority": 1170,
+      "paths": [],
+      "acceptance": [
+        "Actual Claude Codex AGY session identities observed independently",
+        "Each participating session sends its own ACK and heartbeat",
+        "All declared runtime actors have real supervised incarnation bindings or explicit unavailable status"
+      ]
+    },
+    {
+      "id": "r05-mcp-data",
+      "title": "Provide authorized MCP data-plane discovery and reads",
+      "dependencies": [
+        "r03-harness-coordinator",
+        "t1-tracker"
+      ],
+      "priority": 1160,
+      "paths": [],
+      "acceptance": [
+        "Paginated inventories, feature descriptions, tasks, evidence and participant status queryable",
+        "Strict schemas, provenance, expiry and access control",
+        "No raw SQL, secret exposure or fabricated data"
+      ]
+    },
+    {
+      "id": "r06-mcp-control",
+      "title": "Provide fenced MCP control-plane intent execution",
+      "dependencies": [
+        "r04-identity-enrollment",
+        "t2-contracts"
+      ],
+      "priority": 1150,
+      "paths": [],
+      "acceptance": [
+        "Pure intent decision separated from supervised effects",
+        "Sa-plan attempt, epoch, scope, approval and budget checked at effect time",
+        "Preview, cancellation, idempotency, timeout and unknown-outcome reconciliation exercised"
+      ]
+    },
+    {
+      "id": "r07-hive-swarm",
+      "title": "Wire usable hive and swarm orchestration through canonical authority",
+      "dependencies": [
+        "r04-identity-enrollment",
+        "r06-mcp-control"
+      ],
+      "priority": 1140,
+      "paths": [],
+      "acceptance": [
+        "Bounded task fan-out, claim, delegate, collaborate, review and gather actual results",
+        "Backpressure, cancellation, worker death and stale leases tested",
+        "Named local models never substituted for external agents"
+      ]
+    },
+    {
+      "id": "r08-service-adapters",
+      "title": "Close remaining system service MCP adapter gaps",
+      "dependencies": [
+        "r05-mcp-data",
+        "r06-mcp-control"
+      ],
+      "priority": 1130,
+      "paths": [],
+      "acceptance": [
+        "All inventoried eligible services have typed adapters and candidate-bound positive and negative tests",
+        "Unsupported, excluded and policy-disabled capabilities remain explicit and do not count as available",
+        "MAX, Hermes, ZigVM, knowledge and observability boundaries retained"
+      ]
+    },
+    {
+      "id": "r09-end-to-end",
+      "title": "Run full data/control MCP and hive/swarm acceptance campaign",
+      "dependencies": [
+        "r07-hive-swarm",
+        "r08-service-adapters",
+        "t0c-conformance"
+      ],
+      "priority": 1120,
+      "paths": [],
+      "acceptance": [
+        "Every required capability observed via actual MCP client",
+        "Real multi-agent task completes once with durable evidence",
+        "Disconnect, restart, malformed intent, replay, permission and storage faults exercised",
+        "All 17 aspects and L0-L9 obligations accounted for without empty denominators"
+      ]
+    },
+    {
+      "id": "r10-artifact-sync",
+      "title": "Regenerate current system artifacts from verified DB inventory",
+      "dependencies": [
+        "r09-end-to-end",
+        "t3-evidence"
+      ],
+      "priority": 1110,
+      "paths": [],
+      "acceptance": [
+        "Docs wiki ZK dashboard rules and compatible client projections agree",
+        "Historical claims preserved and superseded with current evidence",
+        "Checklist, timestamps, navigation, diagram sources and secret scans pass"
+      ]
+    },
+    {
+      "id": "r11-release-review",
+      "title": "Obtain independent release and recovery review",
+      "dependencies": [
+        "r10-artifact-sync"
+      ],
+      "priority": 1100,
+      "paths": [],
+      "acceptance": [
+        "Fresh independent candidate-bound review plus runtime evidence",
+        "Development production standby separation and rollback rehearsal",
+        "Explicit effect authority required; no automatic deployment from ACK or scores"
+      ]
+    },
+    {
+      "id": "r12-operational-acceptance",
+      "title": "Verify deployed usability and reconcile every plan action",
+      "dependencies": [
+        "r11-release-review"
+      ],
+      "priority": 1090,
+      "paths": [],
+      "acceptance": [
+        "Authorized cutover only; actual operator MCP workflow and hive task verified",
+        "Soak/restart/recovery evidence and complete database-backed feature coverage",
+        "All tasks and gates reconciled; no stale unknown blocked or unrun item promoted to completed"
+      ]
+    },
+    {
+      "id": "r13-task-dashboard",
+      "title": "Develop and verify canonical task dashboard and advisory execution optimization",
+      "dependencies": [
+        "r01-store-gates"
+      ],
+      "priority": 1080,
+      "scope": "Development-only read model, dashboard, fenced MCP progress handler; production deployment and connected acceptance remain r11/r12",
+      "acceptance": [
+        "Canonical SQLite task/dependency readback and honest completion counts",
+        "Missing, malformed, stale or inconsistent evidence is not promoted to readiness",
+        "Risk/dependency advisory ordering plus prerequisite urgency and bounded reference tests",
+        "Private DB tests, UI escaping, MCP denial and independent source review; no claim of production availability"
+      ]
+    }
+  ],
+  "completion_gates": [
+    "No eligible required feature is missing from independently reconciled inventory",
+    "Every required data/control operation is observed through actual MCP transport",
+    "Real multi-agent hive/swarm end-to-end scenario succeeds exactly once",
+    "Authorization, expiry, replay, crash, cancellation and rollback negative controls pass",
+    "Seventeen aspects and L0-L9 obligations have current applicable evidence or explicit justified exclusions; no skipped gates counted",
+    "Independent source-bound review and runtime evidence both satisfied",
+    "Artifacts project DB truth and all canonical actions reconciled; no remaining blocked or unknown items marked complete"
+  ],
+  "excluded_effects_without_separate_authority": [
+    "Production deployment or restart",
+    "History deletion, replacement or resign-as-authentication",
+    "Paid model requests without budget authority",
+    "Secret/key export and arbitrary shell or SQL endpoints"
+  ],
+  "updated_at": "2026-09-21T04:18:00Z",
+  "execution_optimization": {
+    "authority": "Sa-plan only; no automatic claims from this projection",
+    "eligibility": [
+      "Safety and effect authority",
+      "Canonical dependency readiness",
+      "Fresh complete source-bound assessment",
+      "No occupied/expired/unknown outcomes without reconciliation"
+    ],
+    "ranking": "safety class then criticality*STPA*FMEA*dependency*impact, dependency urgency inherited by prerequisites",
+    "ties": [
+      "Evidenced benefit per bounded cost when comparable measurements exist",
+      "Oldest ready time",
+      "Stable task ID"
+    ],
+    "uncertainty": "Intervals/provisional ordering require discriminating evidence; no global time/cost optimum asserted",
+    "wip": "one source writer per scope; maximum two concurrent agents for current development, second is read-only reviewer; integration/runtime ownership separate",
+    "waves": [
+      [
+        "r13-task-dashboard",
+        "r02-recovery-candidate",
+        "t1-tracker"
+      ],
+      [
+        "r03-harness-coordinator",
+        "t2-contracts"
+      ],
+      [
+        "r04-identity-enrollment",
+        "r05-mcp-data",
+        "t3-evidence"
+      ],
+      [
+        "r06-mcp-control",
+        "t0-coordination",
+        "t0a-reconcile",
+        "t0b-bindings",
+        "t0c-conformance"
+      ],
+      [
+        "r07-hive-swarm",
+        "r08-service-adapters"
+      ],
+      [
+        "r09-end-to-end"
+      ],
+      [
+        "r10-artifact-sync"
+      ],
+      [
+        "r11-release-review"
+      ],
+      [
+        "r12-operational-acceptance"
+      ]
+    ],
+    "wave_semantics": "Potential source-independent frontier only; every canonical dependency and authority gate still applies, including within a wave",
+    "dashboard": {
+      "html": "http://nas-1.tail55d152.ts.net:4100/planning",
+      "json": "http://nas-1.tail55d152.ts.net:4100/api/planning/tasks",
+      "mcp": "harness_execution_progress",
+      "scope": "development candidate, deployment and connected success NOT_VERIFIED",
+      "risk_portfolio": "governance/planning/20260921-0338-execution-optimization-risk.json"
+    }
+  }
+}

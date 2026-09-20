@@ -1,0 +1,18 @@
+{
+  "schema": "uos.intent-contract-hardening.v1",
+  "recorded_at_utc": "2026-09-21T08:37:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t2-contracts",
+  "workflow": "t2/declarative-intent-development",
+  "scope": "development-only; dependency readiness not promoted",
+  "command": "gleam check && gleam test",
+  "result": {"passed": 11988, "failed": 0, "log_sha256": "a60a8e325d39ee586f64e5735c1bbae2b65674414efebd0a5133f2cb39a6856b"},
+  "hardening": [
+    "exact four-key argument set with duplicate rejection",
+    "unknown and mutating intent refusal",
+    "same-intent replay idempotence",
+    "conflicting replay refusal"
+  ],
+  "authority": {"effect_authority": false, "system_admission": false, "production_deployment": false},
+  "completion_semantics": "hardening receipt only; canonical t2 remains dependency-held"
+}

@@ -60,7 +60,10 @@ pub fn get_clock(clock: VectorClock, node: NodeId) -> Int {
 }
 
 /// Increment the clock counter for a node, returning the updated clock and new dot.
-pub fn increment_clock(clock: VectorClock, node: NodeId) -> #(VectorClock, Dot) {
+pub fn increment_clock(
+  clock: VectorClock,
+  node: NodeId,
+) -> #(VectorClock, Dot) {
   let current = get_clock(clock, node)
   let next = current + 1
   let updated = list.key_set(clock, node, next)
@@ -161,9 +164,7 @@ pub fn orset_contains(set: ORSet(a), element: a) -> Bool {
 /// Returns the list of distinct active elements in the OR-Set.
 pub fn orset_read(set: ORSet(a)) -> List(a) {
   let active =
-    list.filter(set.elements, fn(pair) {
-      !dot_in_list(set.tombstones, pair.1)
-    })
+    list.filter(set.elements, fn(pair) { !dot_in_list(set.tombstones, pair.1) })
   let raw_elems = list.map(active, fn(pair) { pair.0 })
   list.unique(raw_elems)
 }
@@ -176,10 +177,7 @@ pub fn merge_orset(a: ORSet(a), b: ORSet(a)) -> ORSet(a) {
     list.filter(combined_elements, fn(pair) {
       !dot_in_list(all_tombstones, pair.1)
     })
-  ORSet(
-    elements: list.unique(surviving_elements),
-    tombstones: all_tombstones,
-  )
+  ORSet(elements: list.unique(surviving_elements), tombstones: all_tombstones)
 }
 
 fn dot_in_list(dots: List(Dot), target: Dot) -> Bool {
@@ -223,10 +221,8 @@ pub fn pncounter_decrement(
 }
 
 pub fn pncounter_value(counter: PNCounter) -> Int {
-  let pos_sum =
-    list.fold(counter.positive, 0, fn(acc, pair) { acc + pair.1 })
-  let neg_sum =
-    list.fold(counter.negative, 0, fn(acc, pair) { acc + pair.1 })
+  let pos_sum = list.fold(counter.positive, 0, fn(acc, pair) { acc + pair.1 })
+  let neg_sum = list.fold(counter.negative, 0, fn(acc, pair) { acc + pair.1 })
   pos_sum - neg_sum
 }
 

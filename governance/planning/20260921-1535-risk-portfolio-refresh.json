@@ -1,0 +1,4503 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t0-coordination-20260920-0329-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t0-coordination",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Read-only diagnosis, peer coordination and isolated reporting only; no shared-ledger mutation, integration, release or claim on runtime services.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P0",
+    "readiness": "blocked",
+    "blockers": [
+      "Diagnostic attempt released after recording findings; recovery target, valid coordinator authority and harness-mediated closure remain unresolved."
+    ],
+    "dependencies": [],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Bounded diagnostic attempt released after recording observations; no further claim selected pending recovery target, coordinator authority and harness-mediated closure.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t0a-reconcile-20260920-0329-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t0a-reconcile",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Prepare independently reviewed reconciliation of authority planes; any cutover requires explicit scope, writer quiescence and recovery verification.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review."
+    ],
+    "dependencies": [
+      "t0-coordination"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Deferred until authority and dependencies are resolved; no effect permission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t0b-bindings-20260920-0329-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t0b-bindings",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Bind actual external sessions and internal actors to holons with identity, scope, heartbeat, acknowledgements and Sa-plan ownership.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review."
+    ],
+    "dependencies": [
+      "t0a-reconcile"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Deferred until authority and dependencies are resolved; no effect permission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t0c-conformance-20260920-0329-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t0c-conformance",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Verify participant coverage, stale identity refusal, scope conflicts and MCP coordination.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review."
+    ],
+    "dependencies": [
+      "t0b-bindings"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Deferred until authority and dependencies are resolved; no effect permission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t1-tracker-20260920-0329-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t1-tracker",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Implement system feature inventory in canonical Sa-plan database, separating declaration, exposure and runtime evidence.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "completed",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review."
+    ],
+    "dependencies": [],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Deferred until authority and dependencies are resolved; no effect permission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t2-contracts-20260920-0329-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t2-contracts",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Expose pure declarative feature queries and fenced intents through Gleam MCP.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review."
+    ],
+    "dependencies": [
+      "t1-tracker"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Deferred until authority and dependencies are resolved; no effect permission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t3-evidence-20260920-0329-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t3-evidence",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Verify coverage, publish current-system artifacts and retain explicit gaps; no admission by report.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review."
+    ],
+    "dependencies": [
+      "t2-contracts"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Deferred until authority and dependencies are resolved; no effect permission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r01-store-gates-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r01-store-gates",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Development only: repair verification reporting in apps/uos_swarm and private fixture tests; no live coordinator mutation or runtime cutover.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "completed",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "path": "apps/uos_swarm/test/session_store_cli_test.gleam",
+          "sha256": "719ce5d0fafb7da73108848773164b9307aba3e101098909c3ef15e75ca6a63f",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P0",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Repair fail-open CLI verification and missing semantic validity observations using private development fixtures. Source repair is not authority migration or production admission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Digest, malformed command and unregistered actor controls refuse correctly; empty history is explicitly nonoperational",
+        "Valid nonempty typed history and idempotent replay pass",
+        "CLI exits nonzero on invalid verification"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r02-development-evidence-candidate-20260921-0245-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r02-recovery-candidate",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Development-only pure evidence grading and private SQLite staging. New session_recovery.gleam, session_recovery_store.gleam and session_recovery_test.gleam. No reading/copying or mutation of live stores, source ingestion, enrollment, cutover or deployment. Review hardening also owns src/session_store_ffi.erl for one bounded exclusive-file creation primitive; policy stays in Gleam.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-21T02:06:45Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current r01 repair and canonical replay policy; bounded development foundation for recovery, not live recovery eligibility.; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_recovery.gleam",
+          "sha256": "13c3ebd4df81077a77d6ef86b84f1bf962f7c1b44cb80078e414d163d5de34a2",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_recovery_store.gleam",
+          "sha256": "899423a8744a24514fd8bb77a0dd0bcc650c98f9ec62246f142cf5abf98ec80c",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "path": "apps/uos_swarm/test/session_recovery_test.gleam",
+          "sha256": "deca97d745ecebd30f6d1f30597de97026023be8937afc32a0fe8d5a2056ca51",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/session_store_ffi.erl",
+          "sha256": "f93dc29ebf8689242532f24608373cbf6f5250287e6ce890c01f96da83c42131",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Development foundation is passed; bounded actual-history acquisition adapter, coherent source snapshots and independent provenance review are still outstanding.",
+      "No live coordinator selection/cutover authority or writer-quiescence evidence is established."
+    ],
+    "dependencies": [
+      "r01-store-gates"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Partial development progress recorded in canonical Sa-plan workflow; attempt 1 released without falsely completing r02. Reassess the remaining acquisition/review slice before claim.",
+      "alternatives": [
+        "Continue blanket hold for every development action",
+        "Build evidence-only staging now; retain hold for real-history acquisition, independent provenance review and live effects"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "A bounded private candidate can preserve every supplied source byte and grade without creating any active coordinator event.",
+      "falsifier": "Staging executes an archived command, changes an existing destination, loses raw bytes, or accepts over-budget input.",
+      "acceptance": [
+        "Pure deterministic classification preserves source locator, exact raw bytes, claimed origin digest and explicit non-admission grade",
+        "Bad syntax, digest, semantic transitions and metadata binding fail closed; source failures never resurrect downstream authority",
+        "Private SQLite staging is evidence-only, rejects an existing destination, leaves zero active events and round-trips evidence",
+        "Resource limits and reference replay equivalence pass; actual historical candidate and cutover remain pending separate review"
+      ],
+      "rollback": "Leave the live coordinator selected; new private candidate is unselected evidence and is not deleted automatically.",
+      "reviewer": "Independent internal Codex source review via Gleam MCP: staging race addressed within trusted filesystem boundary. No independent runtime/formal or external sovereign admission.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority.",
+        "Staging excludes hostile same-UID/root processes and arbitrary non-UTF-8 source bytes; quarantine remains mutable evidence, not an authenticated authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r03-harness-coordinator-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r03-harness-coordinator",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Route reviewed Gleam harness through selected canonical coordinator",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r02-recovery-candidate"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "No fallback to divergent or empty authority",
+        "Grant binds backend identity and reviewed candidate",
+        "MCP claim, heartbeat, release and stale-epoch refusal pass"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r04-identity-enrollment-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r04-identity-enrollment",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Enroll real external agents and internal actor incarnations",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r03-harness-coordinator"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Actual Claude Codex AGY session identities observed independently",
+        "Each participating session sends its own ACK and heartbeat",
+        "All declared runtime actors have real supervised incarnation bindings or explicit unavailable status"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r05-mcp-data-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r05-mcp-data",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Provide authorized MCP data-plane discovery and reads",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r03-harness-coordinator",
+      "t1-tracker"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Paginated inventories, feature descriptions, tasks, evidence and participant status queryable",
+        "Strict schemas, provenance, expiry and access control",
+        "No raw SQL, secret exposure or fabricated data"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r06-mcp-control-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r06-mcp-control",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Provide fenced MCP control-plane intent execution",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r04-identity-enrollment",
+      "t2-contracts"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Pure intent decision separated from supervised effects",
+        "Sa-plan attempt, epoch, scope, approval and budget checked at effect time",
+        "Preview, cancellation, idempotency, timeout and unknown-outcome reconciliation exercised"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r07-hive-swarm-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r07-hive-swarm",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Wire usable hive and swarm orchestration through canonical authority",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r04-identity-enrollment",
+      "r06-mcp-control"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Bounded task fan-out, claim, delegate, collaborate, review and gather actual results",
+        "Backpressure, cancellation, worker death and stale leases tested",
+        "Named local models never substituted for external agents"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r08-service-adapters-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r08-service-adapters",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Close remaining system service MCP adapter gaps",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r05-mcp-data",
+      "r06-mcp-control"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "All inventoried eligible services have typed adapters and candidate-bound positive and negative tests",
+        "Unsupported, excluded and policy-disabled capabilities remain explicit and do not count as available",
+        "MAX, Hermes, ZigVM, knowledge and observability boundaries retained"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r09-end-to-end-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r09-end-to-end",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Run full data/control MCP and hive/swarm acceptance campaign",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r07-hive-swarm",
+      "r08-service-adapters",
+      "t0c-conformance"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Every required capability observed via actual MCP client",
+        "Real multi-agent task completes once with durable evidence",
+        "Disconnect, restart, malformed intent, replay, permission and storage faults exercised",
+        "All 17 aspects and L0-L9 obligations accounted for without empty denominators"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r10-artifact-sync-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r10-artifact-sync",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Regenerate current system artifacts from verified DB inventory",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r09-end-to-end",
+      "t3-evidence"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Docs wiki ZK dashboard rules and compatible client projections agree",
+        "Historical claims preserved and superseded with current evidence",
+        "Checklist, timestamps, navigation, diagram sources and secret scans pass"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r11-release-review-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r11-release-review",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Obtain independent release and recovery review",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r10-artifact-sync"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Fresh independent candidate-bound review plus runtime evidence",
+        "Development production standby separation and rollback rehearsal",
+        "Explicit effect authority required; no automatic deployment from ACK or scores"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "r12-operational-acceptance-20260920-0320-refresh-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r12-operational-acceptance",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Verify deployed usability and reconcile every plan action",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current verifier and pure replay sources; development-only candidate, no operational authority; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+          "path": "apps/uos_swarm/src/session_store_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_store_cli.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Dependency, independent review and effect authority not yet satisfied"
+    ],
+    "dependencies": [
+      "r11-release-review"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Defer until canonical dependencies, reviewed candidate and effect authority are satisfied.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator explicitly requests a plan to fix the system and complete actions; development repair remains bounded and does not authorize production cutover."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Verifier faults can be reproduced and repaired without touching historical/live coordination data.",
+      "falsifier": "Private malformed or tampered fixture is reported valid or exits successfully.",
+      "acceptance": [
+        "Authorized cutover only; actual operator MCP workflow and hive task verified",
+        "Soak/restart/recovery evidence and complete database-backed feature coverage",
+        "All tasks and gates reconciled; no stale unknown blocked or unrun item promoted to completed"
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "Pinned local Gleam/OTP; four schedulers; private bounded databases; no network model call; tests under 120 seconds each.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "successor-r13-task-dashboard-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "r13-task-dashboard",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Successor portfolio placeholder; task-specific evidence requires independent re-observation.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "completed",
+    "ready_since": "2026-09-21T13:55:52Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Generated to conserve the canonical Sa-plan task set; not completion evidence.; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P0",
+    "readiness": "blocked",
+    "blockers": [
+      "Diagnostic attempt released after recording findings; recovery target, valid coordinator authority and harness-mediated closure remain unresolved."
+    ],
+    "dependencies": [
+      "r01-store-gates"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Bounded diagnostic attempt released after recording observations; no further claim selected pending recovery target, coordinator authority and harness-mediated closure.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "successor-t1a-source-reconcile-20260921135552-refresh-20260921142559-refresh-20260921153510",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t1a-source-reconcile",
+    "actor": "codex-source-reconcile",
+    "scope": "Successor portfolio placeholder; task-specific evidence requires independent re-observation.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z",
+    "task_state": "completed",
+    "ready_since": "2026-09-21T13:55:52Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Generated to conserve the canonical Sa-plan task set; not completion evidence.; refreshed from canonical Sa-plan snapshot and current source bytes; refreshed from canonical Sa-plan snapshot and current source bytes",
+      "evidence": [
+        {
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        },
+        {
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "observed_at": "2026-09-21T15:35:10Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P0",
+    "readiness": "blocked",
+    "blockers": [
+      "Diagnostic attempt released after recording findings; recovery target, valid coordinator authority and harness-mediated closure remain unresolved."
+    ],
+    "dependencies": [
+      "t1-tracker"
+    ],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Bounded diagnostic attempt released after recording observations; no further claim selected pending recovery target, coordinator authority and harness-mediated closure.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  }
+]

@@ -145,8 +145,7 @@ pub fn pull_next_task(
                   claimed_by: Some(worker),
                   lease_until_ns: expires_at,
                 )
-              let new_tasks =
-                dict.insert(state.tasks, task.id, updated_task)
+              let new_tasks = dict.insert(state.tasks, task.id, updated_task)
               let new_state =
                 HeijunkaState(
                   ..state,
@@ -163,10 +162,7 @@ pub fn pull_next_task(
 }
 
 /// Complete task, retiring it from the queue and decaying Lyapunov potential
-pub fn complete_task(
-  state: HeijunkaState,
-  task_id: String,
-) -> HeijunkaState {
+pub fn complete_task(state: HeijunkaState, task_id: String) -> HeijunkaState {
   let new_tasks = dict.delete(state.tasks, task_id)
   let backlog = dict.size(new_tasks)
   let f_backlog = int.to_float(backlog)

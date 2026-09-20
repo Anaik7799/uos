@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "receipt_type": "execution_substrate_gate",
+  "generated_at": "2026-09-21T15:34:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "sa_plan_selftest": {
+    "status": "green",
+    "dag_tasks": 18,
+    "authority": "report_only"
+  },
+  "risk_priority_check": {
+    "status": "PASS",
+    "authority": "NONE",
+    "baseline_checks": 375,
+    "adversarial_checks": 32843,
+    "independent_dag_scenarios": 32768,
+    "runtime_admission": "NOT_GRANTED",
+    "live_agent_tests": "UNRUN"
+  },
+  "interpretation": "Execution substrate and risk model are structurally healthy, but neither grants task effect authority or runtime admission.",
+  "next_gate": "Resolve coordinator source-of-truth authority and bind feature workflow catalog/ledger digests before any effectful claim.",
+  "completion_claim": false
+}

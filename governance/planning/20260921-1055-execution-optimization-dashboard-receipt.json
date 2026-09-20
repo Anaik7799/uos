@@ -1,0 +1,55 @@
+{
+  "receipt_type": "execution_optimization_dashboard",
+  "generated_at": "2026-09-21T10:55:00+02:00",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "authority": "sa-plan",
+  "read_only_observation": true,
+  "completion": {
+    "total_tasks": 20,
+    "completed_tasks": 3,
+    "ready_tasks": 3,
+    "executing_tasks": 0,
+    "blocked_or_held_tasks": 14,
+    "completion_ratio": 0.15,
+    "admitted_tasks": 0
+  },
+  "optimization_gate": {
+    "requested_next": "t2-contracts",
+    "status": "HOLD",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "assessment_sha256": "bad94742976f56cdfc02cd94ab8b1beae05f0bb77525ea8f57c5e26f05a9b1d7",
+    "findings": [
+      "portfolio evidence predates the freshness window",
+      "t2-contracts is not the first eligible candidate",
+      "canonical coordinator authority and replay integrity remain unresolved"
+    ],
+    "policy": "criticality x STPA x FMEA x dependency x impact",
+    "action": "refresh evidence and repair coordinator authority; do not force-pass or claim a held task"
+  },
+  "recovery_checkpoint": {
+    "task_id": "r02-recovery-candidate",
+    "status": "evidence_staged_hold",
+    "receipt": "governance/planning/20260921-1050-recovery-candidate-evidence.json",
+    "candidate_digest": "2ba45409bcd888ed025dac430756d16fb52b7d1cc95320a412d72b9f0cdce46e",
+    "admitted": false
+  },
+  "feature_tracker": {
+    "declared_features": 848,
+    "source_groups": 11,
+    "mcp_unknown": 848,
+    "mcp_usable": 0,
+    "inventory_complete": false,
+    "admitted": false,
+    "receipt": "governance/planning/20260921-1043-feature-tracker-completion-receipt.json"
+  },
+  "verification": {
+    "targeted_recovery_cli_tests": {"passed": 669, "failed": 0},
+    "risk_preflight": "HOLD",
+    "sa_plan_only": true,
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "next_action": "obtain fresh, independently authorized coordinator evidence, then rerun risk preflight before any claim",
+  "admitted": false
+}

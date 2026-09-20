@@ -30,7 +30,9 @@
 /// monitoring (SC-GLM-UI-001, SC-GLM-UI-004, SC-GLM-UI-007, SC-GLM-UI-008).
 /// Dark Cockpit: panels auto-hide when all layers are healthy (SC-GLM-UI-008).
 import cepaf_gleam/cockpit/visuals
-import cepaf_gleam/ui/domain.{type HealthStatus, Critical, Degraded, Healthy, Unknown}
+import cepaf_gleam/ui/domain.{
+  type HealthStatus, Critical, Degraded, Healthy, Unknown,
+}
 import cepaf_gleam/ui/lustre/app.{type Model}
 import gleam/float
 import gleam/int
@@ -53,8 +55,22 @@ pub fn render(model: Model) -> String {
   let sparklines = render_health_sparklines(model)
 
   string.join(
-    [header, status_strip, "", ooda, "", fractal, "", genome, "", supervisor, "",
-      threads, "", sparklines],
+    [
+      header,
+      status_strip,
+      "",
+      ooda,
+      "",
+      fractal,
+      "",
+      genome,
+      "",
+      supervisor,
+      "",
+      threads,
+      "",
+      sparklines,
+    ],
     "\n",
   )
 }
@@ -74,13 +90,7 @@ fn render_header(model: Model) -> String {
     False -> visuals.render_badge("FULL", "info")
   }
   let health_badge = health_to_badge(model.context.health)
-  title
-  <> "  "
-  <> zenoh_badge
-  <> " "
-  <> cockpit_badge
-  <> " "
-  <> health_badge
+  title <> "  " <> zenoh_badge <> " " <> cockpit_badge <> " " <> health_badge
 }
 
 // ---------------------------------------------------------------------------
@@ -162,8 +172,7 @@ fn render_fractal_layers() -> String {
             False -> "red"
           }
       }
-      let pct_str =
-        int.to_string(float.round(health *. 100.0)) <> "%"
+      let pct_str = int.to_string(float.round(health *. 100.0)) <> "%"
       "  "
       <> visuals.with_color(layer_id, "magenta")
       <> " "
@@ -261,7 +270,8 @@ fn render_genome_grid() -> String {
 
 fn render_supervisor_tree() -> String {
   let header = visuals.with_color("  SUPERVISOR TREE (25 agents)", "cyan")
-  let exec = "  " <> visuals.with_color("EXEC-001", "magenta") <> " (orchestrator/opus)"
+  let exec =
+    "  " <> visuals.with_color("EXEC-001", "magenta") <> " (orchestrator/opus)"
   let supervisors = [
     #("SUP-CTX", "context", 5),
     #("SUP-DOM", "domain", 5),
@@ -269,10 +279,9 @@ fn render_supervisor_tree() -> String {
     #("SUP-QUA", "quality", 5),
   ]
   let worker_labels = [
-    "compile", "test", "credo", "fix", "doc",
-    "explore", "compile", "test", "credo", "fix",
-    "doc", "explore", "compile", "test", "credo",
-    "fix", "doc", "explore", "compile", "test",
+    "compile", "test", "credo", "fix", "doc", "explore", "compile", "test",
+    "credo", "fix", "doc", "explore", "compile", "test", "credo", "fix", "doc",
+    "explore", "compile", "test",
   ]
   let sup_lines =
     list.index_map(supervisors, fn(sup, i) {
@@ -305,8 +314,7 @@ fn render_supervisor_tree() -> String {
 // ---------------------------------------------------------------------------
 
 fn render_thread_monitor(model: Model) -> String {
-  let header =
-    visuals.with_color("  THREAD / PROCESS MONITOR", "cyan")
+  let header = visuals.with_color("  THREAD / PROCESS MONITOR", "cyan")
   let zenoh_status = case model.context.zenoh_connected {
     True -> visuals.with_color("CONNECTED", "green")
     False -> visuals.with_color("DISCONNECTED", "red")

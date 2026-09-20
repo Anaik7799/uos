@@ -28,9 +28,7 @@ import cepaf_gleam/crdt/delta_state.{
   type MeshDeltaState, type NodeId, type VectorClock, dominates,
   merge_mesh_states,
 }
-import cepaf_gleam/crdt/health_bridge.{
-  type ClusterHealthMap, merge_health_maps,
-}
+import cepaf_gleam/crdt/health_bridge.{type ClusterHealthMap, merge_health_maps}
 import gleam/json
 import gleam/list
 

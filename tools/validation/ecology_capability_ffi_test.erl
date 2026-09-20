@@ -1,6 +1,51 @@
 -module(ecology_capability_ffi_test).
 -include_lib("eunit/include/eunit.hrl").
 
+%% The isolated validation build uses erlc +export_all for this internal guard.
+release_environment_binding_test() ->
+    Root="/tmp/uos-max-binding-"++integer_to_list(erlang:system_time(nanosecond)),
+    Store=Root++"/environment", Env=Store++"/envs/default",
+    Hash=fun(B)->binary:encode_hex(crypto:hash(sha256,B),lowercase) end,
+    ManifestHash=Hash(<<"fixture manifest">>), LockHash=Hash(<<"fixture lock">>),
+    Identity=iolist_to_binary([<<"{\"environment\":" >>,json:encode(list_to_binary(Store)),
+        <<",\"lock\":" >>,json:encode(LockHash),<<",\"manifest\":" >>,json:encode(ManifestHash),<<"}">>]),
+    Capsule=Root++"/"++binary_to_list(Hash(Identity)),
+    ok=filelib:ensure_dir(Env++"/bin/python"),
+    ok=file:make_dir(Capsule),
+    Python=Env++"/bin/python", Manifest=Capsule++"/pixi.toml", Lock=Capsule++"/pixi.lock",
+    ok=file:write_file(Python,<<"fixture interpreter">>),
+    ok=file:write_file(Manifest,<<"fixture manifest">>),
+    ok=file:write_file(Lock,<<"fixture lock">>),
+    ok=file:write_file(Root++"/.uos-ecology-release",<<"uos.ecology-release.v1\n">>),
+    Doc=#{<<"schema">>=><<"uos.ecology-runtime-dependencies.v1">>,
+          <<"environment_locator">>=>list_to_binary(Env),
+          <<"environment_python">>=>#{<<"path">>=>list_to_binary(Python),
+              <<"sha256">>=>binary:encode_hex(crypto:hash(sha256,<<"fixture interpreter">>),lowercase)},
+          <<"max_manifest">>=>#{<<"sha256">>=>ManifestHash},
+          <<"max_lock">>=>#{<<"sha256">>=>LockHash},
+          <<"metadata_binding">>=>#{<<"mode">>=><<"immutable_capsule_v1">>,
+              <<"capsule">>=>list_to_binary(Capsule),<<"environment_store">>=>list_to_binary(Store)}},
+    ok=file:write_file(Root++"/runtime-dependencies.json",json:encode(Doc)),
+    ok=file:make_symlink(Store,Capsule++"/.pixi"),
+    [ok=file:change_mode(P,8#444)||P<-[Manifest,Lock]],
+    ok=file:change_mode(Capsule,8#555),
+    ?assertEqual(ok,ecology_capability_ffi:max_environment_binding(Root,Manifest,Lock)),
+    ok=file:change_mode(Capsule,8#755),
+    ?assertException(error,_,ecology_capability_ffi:max_environment_binding(Root,Manifest,Lock)),
+    ok=file:delete(Capsule++"/.pixi"),
+    ?assertException(error,_,ecology_capability_ffi:max_environment_binding(Root,Manifest,Lock)),
+    ok=file:make_symlink(Root,Capsule++"/.pixi"),
+    ok=file:change_mode(Capsule,8#555),
+    ?assertException(error,_,ecology_capability_ffi:max_environment_binding(Root,Manifest,Lock)),
+    ok=file:change_mode(Capsule,8#755),
+    ok=file:delete(Capsule++"/.pixi"),
+    ok=file:make_symlink(Store,Capsule++"/.pixi"),
+    ok=file:change_mode(Capsule,8#555),
+    ok=file:write_file(Python,<<"changed interpreter">>),
+    ?assertException(error,_,ecology_capability_ffi:max_environment_binding(Root,Manifest,Lock)),
+    ok=file:change_mode(Capsule,8#755),
+    ok=file:del_dir_r(Root).
+
 root() -> ecology_capability_ffi:uos_root().
 fixture(Mode, Extra, Ms) ->
     Root=root(),

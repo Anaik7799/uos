@@ -1,0 +1,26 @@
+{
+  "schema": "uos.mcp-bootstrap-scope-receipt.v1",
+  "observed_at": "2026-09-21T18:27:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "transport": "Gleam MCP stdio",
+  "binding": {
+    "role": "development",
+    "plan": "uos/ecology/20260909-0146",
+    "task": "HARNESSBOOT",
+    "worker": "codex-01a083d2-harness",
+    "attempt": 2,
+    "epoch": 1
+  },
+  "log": "/tmp/mcp-bootstrap-probe-1826.log",
+  "log_sha256": "91b3457507f13ff1287fa444e8d3d69ea10852a855865d4c68c29e214acb0d1",
+  "observed": {
+    "catalog_result": "feature_store_task_scope",
+    "observations_result": "feature_observations_bound",
+    "responses": 2,
+    "is_error": true
+  },
+  "interpretation": "The reviewed bootstrap transport and binding are live, but they are intentionally outside the canonical system-mcp-features plan and therefore cannot read its catalog or observations. No synthetic task authority was accepted.",
+  "next_gate": "independently reviewed successor grant bound to the canonical Sa-plan task",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

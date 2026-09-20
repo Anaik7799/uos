@@ -7,9 +7,6 @@
 ////
 //// Comprehensive 9-Modality Test Suite & 15 Formal Feature Use Cases Verification.
 
-import gleeunit/should
-import gleam/list
-import gleam/string
 import cepaf_gleam/sciviz/test_suite.{
   ChaosTesting, ComponentTesting, PropertyTesting, SystemTesting, TddTesting,
   UiElementsTesting, run_all_15_test_cases, uc01_multivariate_scatter_test,
@@ -21,6 +18,9 @@ import cepaf_gleam/sciviz/test_suite.{
   uc12_nine_slice_panel_test, uc13_scale_guide_adjunction_test,
   uc14_chaos_fault_injection_test, uc15_hardware_storage_interlock_test,
 }
+import gleam/list
+import gleam/string
+import gleeunit/should
 
 pub fn all_15_test_cases_pass_test() {
   let results = run_all_15_test_cases()

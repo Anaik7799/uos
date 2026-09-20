@@ -1,0 +1,31 @@
+{
+  "schema": "uos.coordinator-recovery-execution.v1",
+  "observed_at": "2026-09-21T10:50:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r02-recovery-candidate",
+  "status": "evidence_staged_hold",
+  "source": "var/coordination/tri-agent/events-damaged-20260907T2008Z",
+  "candidate_database": "/home/an/uos-recovery-candidates/20260921-1048-coordinator-evidence/coordinator.sqlite3",
+  "candidate_digest": "2ba45409bcd888ed025dac430756d16fb52b7d1cc95320a412d72b9f0cdce46e",
+  "candidate_store_verification": {
+    "empty_active_events": true,
+    "quarantine_rows": 1,
+    "authority": "integrity_observation_only",
+    "admitted": false
+  },
+  "assessment": {
+    "valid_prefix": "UNCORROBORATED",
+    "first_rejected_record": "0000000420.json",
+    "rejection": "event sequence, chain or digest mismatch",
+    "downstream_records": "BLOCKED_BY_PRIOR_FAILURE",
+    "historical_commands_activated": false,
+    "leases_activated": false
+  },
+  "verification": {
+    "session_store_cli_test_passed": 669,
+    "session_store_cli_test_failed": 0,
+    "recovery_cli": "recover-stage",
+    "source_sha256": "preserved in candidate quarantine payload"
+  },
+  "authority_boundary": "Candidate is isolated evidence only. Coordinator cutover, runtime leases, actor identity, MCP effects and system admission remain denied pending independent review."
+}

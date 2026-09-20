@@ -575,12 +575,18 @@ pub type WiredContext {
 }
 
 pub fn valid_wired_context(ctx: WiredContext) -> Bool {
-  ctx.cpu_pct >=. 0.0 && ctx.cpu_pct <=. 100.0
-  && ctx.memory_pct >=. 0.0 && ctx.memory_pct <=. 100.0
-  && ctx.latency_ms >=. 0.0 && ctx.error_rate_pct >=. 0.0
-  && ctx.error_rate_pct <=. 100.0 && ctx.heartbeat_age_ms >= 0
-  && ctx.fault_count >= 0 && ctx.lyapunov_v >=. 0.0
-  && ctx.quorum_votes >= 0 && ctx.quorum_votes <= 4
+  ctx.cpu_pct >=. 0.0
+  && ctx.cpu_pct <=. 100.0
+  && ctx.memory_pct >=. 0.0
+  && ctx.memory_pct <=. 100.0
+  && ctx.latency_ms >=. 0.0
+  && ctx.error_rate_pct >=. 0.0
+  && ctx.error_rate_pct <=. 100.0
+  && ctx.heartbeat_age_ms >= 0
+  && ctx.fault_count >= 0
+  && ctx.lyapunov_v >=. 0.0
+  && ctx.quorum_votes >= 0
+  && ctx.quorum_votes <= 4
 }
 
 /// Validate the context before permitting a positive guard.
@@ -603,7 +609,7 @@ pub fn wired_watchdog_signal(ctx: WiredContext) -> String {
     False, _ -> "dead_timeout"
     True, age if age <= 2000 -> "heartbeat_tick"
     True, age if age <= 5000 -> "warning_timeout"
-    True, age if age <= 10000 -> "stale_timeout"
+    True, age if age <= 10_000 -> "stale_timeout"
     True, _ -> "dead_timeout"
   }
 }
@@ -611,10 +617,10 @@ pub fn wired_watchdog_signal(ctx: WiredContext) -> String {
 /// Derive appropriate live FPP signal from wired context for Tolerance Envelope
 pub fn wired_envelope_signal(error: Float) -> String {
   case error {
-    e if e >. 0.50 -> "sample_breach_high"
-    e if e >. 0.10 -> "sample_drift_high"
-    e if e <. -0.50 -> "sample_breach_low"
-    e if e <. -0.10 -> "sample_drift_low"
+    e if e >. 0.5 -> "sample_breach_high"
+    e if e >. 0.1 -> "sample_drift_high"
+    e if e <. -0.5 -> "sample_breach_low"
+    e if e <. -0.1 -> "sample_drift_low"
     _ -> "sample_nominal"
   }
 }
@@ -628,6 +634,7 @@ pub fn step_wired(
 ) -> Result(MachineState, String) {
   case valid_wired_context(ctx) {
     False -> Error("invalid wired context")
-    True -> dispatch_signal(machine, evaluate_wired_guards(ctx), current, signal)
+    True ->
+      dispatch_signal(machine, evaluate_wired_guards(ctx), current, signal)
   }
 }

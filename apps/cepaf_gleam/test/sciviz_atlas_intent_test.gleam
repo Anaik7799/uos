@@ -5,21 +5,21 @@
 ////   <compliance><stamp-controls>SC-SCIVIZ-001, SC-INTENT-ATLAS-001, SC-CHECKLIST-001</stamp-controls></compliance>
 //// </c3i-test>
 
-import gleeunit/should
-import gleam/option.{None}
-import gleam/string
 import cepaf_gleam/sciviz/atlas_intent.{
-  type VisualAtlasState, AnalyzeCorrelation, AtlasMorphism,
-  CartesianCoord, ExploreDistribution, MarkPoint, MarkLine,
-  U0PhysicalCanvas, U1DataDomain, U2StatMeasure, U3NormalizedUnit,
-  U4CoordManifold, U5FacetSubspaces, U6GeomGrob, U7GuideInverse,
-  U8ThemedSurface, U9TelemetryStream, ValuationSuccess, ValuationVetoed,
-  VisualAtlasState, chart_to_int, chart_to_string, compose_morphisms,
-  default_aesthetic_intent, evaluate_visual_intent, int_to_chart,
+  type VisualAtlasState, AnalyzeCorrelation, AtlasMorphism, CartesianCoord,
+  ExploreDistribution, MarkLine, MarkPoint, U0PhysicalCanvas, U1DataDomain,
+  U2StatMeasure, U3NormalizedUnit, U4CoordManifold, U5FacetSubspaces, U6GeomGrob,
+  U7GuideInverse, U8ThemedSurface, U9TelemetryStream, ValuationSuccess,
+  ValuationVetoed, VisualAtlasState, chart_to_int, chart_to_string,
+  compose_morphisms, default_aesthetic_intent, evaluate_visual_intent,
+  int_to_chart,
 }
 import cepaf_gleam/sciviz/schema.{
   Point2D, Scale2D, SciVizPlot, default_dark_cockpit_theme,
 }
+import gleam/option.{None}
+import gleam/string
+import gleeunit/should
 
 fn initial_test_state() -> VisualAtlasState {
   let default_scale =
@@ -143,7 +143,10 @@ pub fn declarative_intent_valuation_pipeline_test() {
       dataset_name: "c3i_cluster_telemetry",
       data_points: points,
       aesthetics: default_aesthetic_intent("cpu_load", "latency_us"),
-      marks: [MarkPoint(size: 5.0, color: "#38bdf8"), MarkLine(stroke_width: 2.0, color: "#10b981")],
+      marks: [
+        MarkPoint(size: 5.0, color: "#38bdf8"),
+        MarkLine(stroke_width: 2.0, color: "#10b981"),
+      ],
       coordinate: CartesianCoord,
       faceting: None,
       theme: default_dark_cockpit_theme(),
@@ -182,7 +185,8 @@ pub fn hardware_safety_storage_interlock_test() {
       theme: default_dark_cockpit_theme(),
       target_chart: U1DataDomain,
       preserves_zero_muda: True,
-      target_drive_serial: "25503L801736", // HARD DENIED OS SERIAL
+      target_drive_serial: "25503L801736",
+      // HARD DENIED OS SERIAL
     )
 
   let outcome = evaluate_visual_intent(dangerous_intent, state)
@@ -209,7 +213,8 @@ pub fn zero_muda_enforcement_test() {
       faceting: None,
       theme: default_dark_cockpit_theme(),
       target_chart: U1DataDomain,
-      preserves_zero_muda: False, // MUDA VIOLATION
+      preserves_zero_muda: False,
+      // MUDA VIOLATION
       target_drive_serial: "SAFE_NVME_VOLUME_01",
     )
 
@@ -224,7 +229,8 @@ pub fn zero_muda_enforcement_test() {
 }
 
 pub fn constitutional_health_degraded_veto_test() {
-  let degraded_state = VisualAtlasState(..initial_test_state(), constitutional_health: 0.70)
+  let degraded_state =
+    VisualAtlasState(..initial_test_state(), constitutional_health: 0.7)
   let intent =
     atlas_intent.VisualIntent(
       intent_id: "intent-on-degraded-system",

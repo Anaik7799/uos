@@ -1,0 +1,26 @@
+{
+  "schema": "uos.holon-coordination-observation.v1",
+  "timestamp_utc": "2026-09-21T09:50:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "observation": {
+    "processes": [
+      {"actor": "claude", "pid": 6468, "command": "claude --resume a65088e0-0f2b-497e-bd5c-97eeed9c3594"},
+      {"actor": "codex", "pid": 180307, "command": "codex resume 01a0ba74-d654-7de3-bdcf-25a0a85b93da"},
+      {"actor": "codex-runtime", "pid": 180314, "command": "codex resume 01a0ba74-d654-7de3-bdcf-25a0a85b93da"}
+    ],
+    "agy_process_observed": false,
+    "sessions_sqlite_tables": [],
+    "coordinator_head": {"sequence": 117, "actor": "L0-codex-gpt-6-astra", "operation": "ratify_cycle"},
+    "coordinator_sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "sessions_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "result": {
+    "authenticated_holon_enrollment": "NOT_OBSERVED",
+    "fresh_peer_ack": "NOT_OBSERVED",
+    "mcp_coordination_access": "NOT_OBSERVED",
+    "effect_authority": false,
+    "canonical_task_remains_open": true
+  },
+  "method": "read-only bounded ps and sqlite queries; no coordinator or session mutation",
+  "admission": "NOT_ADMITTED"
+}

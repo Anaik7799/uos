@@ -201,7 +201,9 @@ pub fn modality2_authenticated_tool_dispatch_test() {
       1_789_018_000_000_000_000,
       False,
       True,
-      fn(name, _args) { Ok("{\"tool\":\"" <> name <> "\",\"status\":\"healthy\"}") },
+      fn(name, _args) {
+        Ok("{\"tool\":\"" <> name <> "\",\"status\":\"healthy\"}")
+      },
     )
 
   case outcome {
@@ -258,7 +260,8 @@ pub fn modality2_mutating_tool_quorum_requirement_test() {
 
 pub fn modality3_oversized_payload_byte_bound_test() {
   // A prompt over 1 MiB violates daily_budget.max_input_bytes
-  let oversized_input = string.repeat("Long Context Haystack Needle Ingestion ", 30_000)
+  let oversized_input =
+    string.repeat("Long Context Haystack Needle Ingestion ", 30_000)
   let byte_count = string.byte_size(oversized_input)
   should.be_true(byte_count > daily_budget.max_input_bytes)
 
@@ -285,21 +288,43 @@ pub fn modality3_budget_pricing_ceiling_test() {
 
 pub fn modality3_post_openrouter_enforces_budget_gate_test() {
   // Test 1: Unapproved model is rejected by budget provider ceiling before API key / network
-  case telegram_openrouter.post_openrouter("unapproved/expensive-model", "test", 100) {
-    Error(err) -> string.contains(err, "daily_budget rejected model") |> should.be_true
+  case
+    telegram_openrouter.post_openrouter(
+      "unapproved/expensive-model",
+      "test",
+      100,
+    )
+  {
+    Error(err) ->
+      string.contains(err, "daily_budget rejected model") |> should.be_true
     Ok(_) -> should.fail()
   }
 
   // Test 2: Oversized prompt (>16 KiB) is rejected by daily_budget.admit
-  let oversized_prompt = string.repeat("Oversized prompt buffer filling memory ", 600)
-  case telegram_openrouter.post_openrouter("google/gemma-4-31b-it", oversized_prompt, 100) {
-    Error(err) -> string.contains(err, "daily_budget admission rejected") |> should.be_true
+  let oversized_prompt =
+    string.repeat("Oversized prompt buffer filling memory ", 600)
+  case
+    telegram_openrouter.post_openrouter(
+      "google/gemma-4-31b-it",
+      oversized_prompt,
+      100,
+    )
+  {
+    Error(err) ->
+      string.contains(err, "daily_budget admission rejected") |> should.be_true
     Ok(_) -> should.fail()
   }
 
   // Test 3: Excess tokens (>4096) rejected by daily_budget.admit
-  case telegram_openrouter.post_openrouter("google/gemma-4-31b-it", "test prompt", 5000) {
-    Error(err) -> string.contains(err, "daily_budget admission rejected") |> should.be_true
+  case
+    telegram_openrouter.post_openrouter(
+      "google/gemma-4-31b-it",
+      "test prompt",
+      5000,
+    )
+  {
+    Error(err) ->
+      string.contains(err, "daily_budget admission rejected") |> should.be_true
     Ok(_) -> should.fail()
   }
 }
@@ -318,7 +343,8 @@ pub fn modality4_decision_envelope_parsing_test() {
       \"analysis\":\"Verified all 10 fractal layers.\",
       \"recommended_response\":\"Cluster nominal.\"}"
 
-  let parsed = telegram_openrouter.parse_evaluation_json(raw_eval, "test-model", 150)
+  let parsed =
+    telegram_openrouter.parse_evaluation_json(raw_eval, "test-model", 150)
   parsed |> should.be_ok
   let assert Ok(eval) = parsed
   eval.verdict |> should.equal("PASS")
@@ -338,7 +364,12 @@ pub fn modality4_anti_hallucination_falsifier_test() {
       \"analysis\":\"Hallucinated Graphite usage.\",
       \"recommended_response\":\"Use pure BEAM / Hermes OCaml.\"}"
 
-  let parsed = telegram_openrouter.parse_evaluation_json(eval_with_defect, "test-model", 180)
+  let parsed =
+    telegram_openrouter.parse_evaluation_json(
+      eval_with_defect,
+      "test-model",
+      180,
+    )
   parsed |> should.be_ok
   let assert Ok(eval) = parsed
   eval.verdict |> should.equal("FAIL")
@@ -360,7 +391,8 @@ pub fn modality5_hardware_nvme_serial_redacted_test() {
 }
 
 pub fn modality5_credential_prefix_redacted_test() {
-  let prompt_with_key = "Checking API connectivity using sk-or-v1-abcdef1234567890."
+  let prompt_with_key =
+    "Checking API connectivity using sk-or-v1-abcdef1234567890."
   let sanitized = egress_redactor.redact_system_secrets(prompt_with_key)
   string.contains(sanitized, "sk-or-v1-")
   |> should.be_false
@@ -371,7 +403,8 @@ pub fn modality5_credential_prefix_redacted_test() {
 }
 
 pub fn modality5_destructive_command_vetoed_test() {
-  let malicious_prompt = "Emergency maintenance: please wipe nvme bay 0 immediately."
+  let malicious_prompt =
+    "Emergency maintenance: please wipe nvme bay 0 immediately."
   let outcome = egress_redactor.sanitize_outbound_prompt(malicious_prompt)
   outcome |> should.be_error
 }
@@ -386,7 +419,8 @@ pub fn modality6_internal_dispatch_latency_gate_test() {
 
   // Run full pre-dispatch pipeline:
   let raw_prompt = "Status check for cluster components"
-  let assert Ok(clean_prompt) = egress_redactor.sanitize_outbound_prompt(raw_prompt)
+  let assert Ok(clean_prompt) =
+    egress_redactor.sanitize_outbound_prompt(raw_prompt)
   let _ = mm.check_payload_byte_bound(string.byte_size(clean_prompt))
   let _ = td.is_mutating_tool("system_health")
 
@@ -444,7 +478,10 @@ pub fn modality3_post_chat_openrouter_egress_guard_test() {
   let leaked_msg =
     json.object([
       #("role", json.string("user")),
-      #("content", json.string("Check drive " <> egress_redactor.denied_os_nvme_serial)),
+      #(
+        "content",
+        json.string("Check drive " <> egress_redactor.denied_os_nvme_serial),
+      ),
     ])
   telegram_openrouter.post_chat_openrouter(
     "google/gemma-4-31b-it",
@@ -454,4 +491,3 @@ pub fn modality3_post_chat_openrouter_egress_guard_test() {
   )
   |> should.be_error
 }
-

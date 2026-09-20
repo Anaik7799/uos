@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2S Consulting & Numantra — Dual-Track Nordic Life Sciences Outreach Deck</title>
+<style>
+  :root {
+    --primary: #0284C7;
+    --primary-hover: #0369A1;
+    --accent: #38BDF8;
+    --bg: #0B0F19;
+    --surface: #111827;
+    --surface-card: #1F2937;
+    --surface-border: #374151;
+    --text: #F9FAFB;
+    --text-muted: #9CA3AF;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: #7DD3FC; text-decoration: underline; }
+
+  /* Top Navigation */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(11, 15, 25, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+  }
+  .top-nav .nav-brand {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .top-nav a {
+    color: var(--text-muted);
+    padding: 0.35rem 0.65rem;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.15s ease;
+  }
+  .top-nav a:hover, .top-nav a.active {
+    color: #FFFFFF;
+    background: var(--surface-card);
+    text-decoration: none;
+  }
+
+  /* Presentation Wrapper */
+  .deck-wrapper {
+    display: flex;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: calc(100vh - 54px);
+  }
+
+  /* Sidebar Navigation */
+  .deck-sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--surface-border);
+    padding: 1.25rem 1rem;
+    position: sticky;
+    top: 54px;
+    height: calc(100vh - 54px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .sidebar-section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    padding-left: 0.5rem;
+  }
+  .slide-list { list-style: none; padding: 0; margin: 0; }
+  .slide-list li { margin-bottom: 0.25rem; }
+  .slide-tab {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.45rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .slide-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFFFFF;
+  }
+  .slide-tab.active {
+    background: var(--primary);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .slide-tab .num {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    min-width: 1.2rem;
+  }
+
+  /* Presentation Controls in Sidebar */
+  .deck-controls {
+    border-top: 1px solid var(--surface-border);
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+  .progress-bar-container {
+    background: var(--surface-border);
+    border-radius: 9999px;
+    height: 6px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+  .progress-bar {
+    background: var(--accent);
+    height: 100%;
+    width: 5.5%;
+    transition: width 0.25s ease;
+  }
+  .control-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .btn-ctrl {
+    flex: 1;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    color: var(--text);
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s;
+    text-align: center;
+  }
+  .btn-ctrl:hover {
+    background: #374151;
+  }
+  .btn-fullscreen {
+    width: 100%;
+    background: #1E3A8A;
+    border: 1px solid #2563EB;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .btn-fullscreen:hover { background: #1D4ED8; }
+
+  /* Main Slide Area */
+  .deck-viewport {
+    flex: 1;
+    padding: 2.5rem 3.5rem;
+    max-width: 1200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .slide-view {
+    display: none;
+    animation: fadeIn 0.25s ease forwards;
+  }
+  .slide-view.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Slide Typography & Elements */
+  .slide-badge {
+    display: inline-block;
+    background: #1E3A8A;
+    color: #60A5FA;
+    border: 1px solid #2563EB;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .slide-badge.success { background: #064E3B; color: #34D399; border-color: #059669; }
+  .slide-badge.warning { background: #78350F; color: #FBBF24; border-color: #D97706; }
+  .slide-badge.danger { background: #7F1D1D; color: #F87171; border-color: #DC2626; }
+  .slide-badge.purple { background: #4C1D95; color: #C084FC; border-color: #7C3AED; }
+
+  h1.slide-title {
+    font-size: 2.5rem;
+    color: #FFFFFF;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  h2.slide-subtitle {
+    font-size: 1.25rem;
+    color: var(--accent);
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 1.75rem;
+    line-height: 1.5;
+  }
+  p.slide-lead {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .deck-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .deck-card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #FFFFFF;
+  }
+  .deck-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .deck-card ul {
+    margin: 0.5rem 0 0 1.25rem;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .deck-card ul li { margin-bottom: 0.25rem; }
+
+  .metrics-strip {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .metric-item {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .metric-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+  .metric-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .deck-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+  }
+  .deck-table th, .deck-table td {
+    padding: 0.65rem 0.85rem;
+    text-align: left;
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .deck-table th {
+    background: var(--surface);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .deck-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+  .speaker-notes {
+    margin-top: 1.5rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(30, 41, 59, 0.5);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #CBD5E1;
+  }
+  .speaker-notes strong { color: var(--accent); }
+
+  @media (max-width: 1024px) {
+    .deck-wrapper { flex-direction: column; }
+    .deck-sidebar { width: 100%; height: auto; position: static; }
+    .deck-viewport { padding: 1.5rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body><aside id="bountytek-superseded" style="position:fixed;bottom:0;left:0;right:0;z-index:2147483647;padding:12px;background:#fff3df;color:#172338;font:14px/1.4 system-ui;border-top:3px solid #b85b00"><strong>Historical, unvalidated material.</strong> Earlier ratification and safety claims are superseded. No deployment authorization. <a style="color:#125a98" href="CODEX_HANDOVER.html">Current handover</a> · <a style="color:#125a98" href="ACH_ASSESSMENT_VALIDATION.html">Validation record</a></aside>
+
+<nav class="top-nav" role="navigation">
+  <span class="nav-brand">⚡ Bountytek AB • 2S Consulting &amp; Numantra</span>
+  <a href="https://www.2sconsulting.com/" target="_blank" rel="noopener" style="color:#38BDF8; font-weight:600;">🌐 2S Consulting</a>
+  <a href="https://www.numantratech.ai/" target="_blank" rel="noopener" style="color:#34D399; font-weight:600;">🤖 Numantra Tech</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html">🏠 Projects Index</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html">📄 Enterprise Dossier</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html">💊 Pharma & Chemicals</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html">🔬 3 Pillars Blueprint</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html">🎯 Outreach Playbook</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_OUTREACH_PRESENTATION.html" class="active">🖥️ Outreach Deck</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/NORDIC_COMPETITOR_BENCHMARK_DECK.html">📊 Competitor Deck</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/SKILLS_AND_SUPERPOWERS_CATALOG.html">🧠 Skills Catalog</a>
+</nav>
+
+<div class="deck-wrapper">
+  <!-- Sidebar -->
+  <aside class="deck-sidebar">
+    <div>
+      <div class="sidebar-section-title">Presentation Slides (18)</div>
+      <ul class="slide-list">
+        <li><button class="slide-tab active" onclick="goToSlide(0)"><span class="num">01</span> Title & Mandate</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(1)"><span class="num">02</span> Market Paradox</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(2)"><span class="num">03</span> Dual-Track Segmentation</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(3)"><span class="num">04</span> 6 High-Impact Wedges</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(4)"><span class="num">05</span> Track A: Global MedTech</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(5)"><span class="num">06</span> Track A: Mid-Cap Innovators</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(6)"><span class="num">07</span> Track B: Pharma Anchors</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(7)"><span class="num">08</span> Track B: Chemical CDMOs</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(8)"><span class="num">09</span> Pillar 1: S&OP & GTN</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(9)"><span class="num">10</span> Pillar 2: R&D Clinical Burn</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(10)"><span class="num">11</span> Pillar 3: API Margin Defense</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(11)"><span class="num">12</span> 6 Persona Cadences</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(12)"><span class="num">13</span> Cluster Infiltration</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(13)"><span class="num">14</span> Hospital Tenders (HEOR)</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(14)"><span class="num">15</span> 90-Day Execution Roadmap</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(15)"><span class="num">16</span> Epistemic Validation: ACH</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(16)"><span class="num">17</span> NATO Admiralty Matrix</button></li>
+        <li><button class="slide-tab" onclick="goToSlide(17)"><span class="num">18</span> Devil's Advocate / Falsification</button></li>
+      </ul>
+    </div>
+
+    <div class="deck-controls">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="control-buttons">
+        <button class="btn-ctrl" onclick="prevSlide()">◀ Previous</button>
+        <button class="btn-ctrl" onclick="nextSlide()">Next ▶</button>
+      </div>
+      <button class="btn-fullscreen" onclick="toggleFullscreen()">⛶ Fullscreen (F)</button>
+      <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
+        Keys: <kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Viewport -->
+  <main class="deck-viewport">
+    
+    <!-- Slide 1 -->
+    <div class="slide-view active" id="slide-0">
+      <span class="slide-badge">Executive Strategy Deck</span>
+      <h1 class="slide-title">Bountytek AB • 2S Consulting & Numantra Technologies</h1>
+      <h2 class="slide-subtitle">Dual-Track Nordic Life Sciences Commercial Penetration Blueprint</h2>
+      <p class="slide-lead">An authoritative, data-driven go-to-market architecture rationalizing 135 Nordic medical and biopharma facilities into actionable, high-conversion commercial accounts fronted exclusively by <strong>Bountytek AB</strong> (Sweden), representing <strong><a href="https://www.2sconsulting.com/" target="_blank" rel="noopener">2S Consulting</a></strong> and <strong><a href="https://www.numantratech.ai/" target="_blank" rel="noopener">Numantra Technologies</a></strong>.</p>
+      
+      <div class="metrics-strip">
+        <div class="metric-item">
+          <div class="metric-val">135</div>
+          <div class="metric-label">Facilities Rationalized</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">€500K+</div>
+          <div class="metric-label">90-Day Target Pipeline</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">6 Wedges</div>
+          <div class="metric-label">&lt;€35,000 / ~SEK 400K</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">20 Titans</div>
+          <div class="metric-label">Vetted Account Fleet</div>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Welcome executives. This presentation presents the operational penetration plan for Bountytek AB as the exclusive Nordic commercial agent representing 2S Consulting and Numantra Technologies, combining MedTech SaMD regulatory engineering with deep chemical API and specialty pharma S&OP capability under domestic Swedish contracts.
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide-view" id="slide-1">
+      <span class="slide-badge warning">Market Friction</span>
+      <h1 class="slide-title">The Nordic Life Sciences Paradox</h1>
+      <h2 class="slide-subtitle">World-class engineering innovation colliding with severe commercial margin compression</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>Track A: MedTech & SaMD Friction</h3>
+          <ul>
+            <li><strong>Hardware Capex Freezes:</strong> Nordic hospital councils capping capex budgets, driving hardware gross margins down from 65% to under 28%.</li>
+            <li><strong>Notified Body Review Bottlenecks:</strong> 18–24 month backlogs for MDR 2017/745 recertification.</li>
+            <li><strong>EU AI Act High-Risk Mandate:</strong> Regulation 2024/1689 Annex I/III imposing algorithmic validation hurdles on Class IIb/III software.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Track B: Pharma & Chemicals Friction (§6.1)</h3>
+          <ul>
+            <li><strong>Gross-to-Net (GTN) Leakage:</strong> Specialty pharma losing 3% to 6% of revenue in public tenders due to uncoordinated ERP and stockist data.</li>
+            <li><strong>Clinical Trial Cash-Burn:</strong> Nordic biotechs burning upwards of €25,000/day during delayed patient recruitment in university clinics.</li>
+            <li><strong>API Margin Compression:</strong> Regional chemical synthesis plants facing Asian price dumping and high cleanroom changeover downtime.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> While the Nordic life science economy is worth >€14.5B in pharma and >SEK 850B in healthcare, operators are caught in an operational squeeze. 2S provides immediate relief.
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide-view" id="slide-2">
+      <span class="slide-badge">Account Rationalization</span>
+      <h1 class="slide-title">Dual-Track Account Prioritization</h1>
+      <h2 class="slide-subtitle">Targeting 20 enterprise anchors across MedTech, Pharma, and Chemical CDMOs</h2>
+      <table class="deck-table">
+        <thead>
+          <tr>
+            <th>Segment & Track</th>
+            <th>Target Typology</th>
+            <th>Revenue / ARR</th>
+            <th>Key Target Accounts</th>
+            <th>Primary Value Proposition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Track A: Tier 1 MedTech</strong></td>
+            <td>Global Equipment Anchors</td>
+            <td>€500M - €3.5B+</td>
+            <td>Getinge, Elekta, Vitrolife, Sectra</td>
+            <td>Device-as-a-Service (DaaS) transformation & EU AI Act Annex III conformity.</td>
+          </tr>
+          <tr>
+            <td><strong>Track A: Tier 2 Mid-Caps</strong></td>
+            <td>Software & Implant Innovators</td>
+            <td>€20M - €500M</td>
+            <td>RaySearch Labs, Bactiguard, Mentice, AMRA</td>
+            <td>90-Day "Audit-Ready" CER remediation & software risk classification.</td>
+          </tr>
+          <tr>
+            <td><strong>Track B: Tier 1 Biopharma</strong></td>
+            <td>Specialty Pharma & Biologics</td>
+            <td>€1B - €32B+</td>
+            <td>Sobi, Novo Nordisk, AstraZeneca, Camurus</td>
+            <td>Commercial S&OP ERP integration & Gross-to-Net (GTN) tender defense.</td>
+          </tr>
+          <tr>
+            <td><strong>Track B: Tier 2 Chemical CDMO</strong></td>
+            <td>API Synthesis & Peptides</td>
+            <td>€50M - €1B</td>
+            <td>Cambrex Karlskoga, PolyPeptide, Recipharm</td>
+            <td>30-Day API batch yield diagnostic & cleanroom sanitization turnaround.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> We avoid spreading sales bandwidth thin across 135 names. We focus outbound SDR resources strictly on Tier 1 and Tier 2 anchors, while syndicating clinical biotechs via VC portfolio programs.
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide-view" id="slide-3">
+      <span class="slide-badge success">Value Proposition</span>
+      <h1 class="slide-title">The 6 High-Impact Entry Wedges</h1>
+      <h2 class="slide-subtitle">Fixed-fee diagnostic sprints (&lt;€35,000) that bypass lengthy procurement RFP committees</h2>
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>W1: 48-Hr MDR/AI Act Scan</h3>
+          <p><strong>Fee: €28,000 • 5 Days</strong></p>
+          <ul>
+            <li>GSPR & MDCG 2019-16 gap matrix</li>
+            <li>Red-flag software non-conformities</li>
+            <li>Target: VP QA/RA, CTO</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>W2: Hospital CFO DaaS Calc</h3>
+          <p><strong>Fee: €28,000 • 10 Days</strong></p>
+          <ul>
+            <li>Interactive ICU bed-day model</li>
+            <li>Capex-to-subscription transition</li>
+            <li>Target: CCO, VP Commercial</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>W3: API Yield & Turnaround</h3>
+          <p><strong>Fee: €32,000 • 30 Days</strong></p>
+          <ul>
+            <li>Activity-based batch costing</li>
+            <li>Cleanroom changeover -40%</li>
+            <li>Target: Plant Director</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>W4: Pharma GTN Tender Audit</h3>
+          <p><strong>Fee: €28,000 • 21 Days</strong></p>
+          <ul>
+            <li>ERP vs Tamro/Oriola reconciliation</li>
+            <li>Tender rebate clawback defense</li>
+            <li>Target: CCO, Market Access</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>W5: Clinical Burn & NLP</h3>
+          <p><strong>Fee: €35,000 • 14 Days</strong></p>
+          <ul>
+            <li>Multilingual EHR trial screening</li>
+            <li>Nordic clinic patient cohort match</li>
+            <li>Target: CMO, VP Clinical</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>W6: Adversarial Audit Sim</h3>
+          <p><strong>Fee: €35,000 • 10 Days</strong></p>
+          <ul>
+            <li>Mock ISO 13485 / cGMP Annex 1 audit</li>
+            <li>Pre-inspection CAPA roadmap</li>
+            <li>Target: VP Quality, COO</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Notice how each wedge has a crystal-clear deliverable, a defined stakeholder, and a fast-approval budget threshold (<€35k) that falls under discretionary VP signing limits.
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide-view" id="slide-4">
+      <span class="slide-badge">Account Battlecards</span>
+      <h1 class="slide-title">Track A: Global MedTech Anchors</h1>
+      <h2 class="slide-subtitle">Custom positioning for Sweden's largest medical technology champions</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>Getinge AB (Gothenburg) — €2.8B ARR</h3>
+          <p><strong>Core:</strong> ICU Ventilators, Surgical Suites, Cardiopulmonary Bypass</p>
+          <ul>
+            <li><strong>Acute Pain:</strong> Hospital procurement caps on ventilator capex; intense margin pressure from Draeger.</li>
+            <li><strong>2S Angle:</strong> Hospital CFO DaaS Calculator demonstrating €1.2M in annual ICU bed-day reductions to hospital buyers.</li>
+            <li><strong>Target Exec:</strong> Chief Commercial Officer & Global VP Acute Care.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Elekta AB (Stockholm) — €1.6B ARR</h3>
+          <p><strong>Core:</strong> Radiation Therapy & Precision Oncology Systems (Gamma Knife)</p>
+          <ul>
+            <li><strong>Acute Pain:</strong> EU AI Act Annex III conformity for machine-learning automated contouring algorithms.</li>
+            <li><strong>2S Angle:</strong> Independent Class IIb algorithmic verification and explainability audit on Numantra Finnish ISO cloud.</li>
+            <li><strong>Target Exec:</strong> Head of Global Regulatory Compliance & VP Software.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Vitrolife AB (Gothenburg) — €310M ARR</h3>
+          <p><strong>Core:</strong> Time-Lapse Embryo Monitoring (EmbryoScope+), IVF Media</p>
+          <ul>
+            <li><strong>Acute Pain:</strong> Transitioning AI embryo scoring software under IVDR Class C/D review backlogs.</li>
+            <li><strong>2S Angle:</strong> IVDR Class C/D Performance Evaluation Report (PER) & algorithmic audit package.</li>
+            <li><strong>Target Exec:</strong> VP Quality & Regulatory Affairs.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Sectra AB (Linköping) — €235M ARR</h3>
+          <p><strong>Core:</strong> Enterprise PACS, Digital Pathology AI Marketplace</p>
+          <ul>
+            <li><strong>Acute Pain:</strong> Validating third-party AI image diagnostic algorithms under MDR Rule 11 and NIS2 cybersecurity.</li>
+            <li><strong>2S Angle:</strong> PACS AI Marketplace Algorithm Verification Engine.</li>
+            <li><strong>Target Exec:</strong> VP Medical Informatics & Head of Compliance.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> With Getinge, Elekta, Vitrolife, and Sectra, we lead with executive commercial and algorithmic certainty, not generic IT staff augmentation.
+      </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide-view" id="slide-5">
+      <span class="slide-badge">Account Battlecards</span>
+      <h1 class="slide-title">Track A: Mid-Cap Innovators</h1>
+      <h2 class="slide-subtitle">High-urgency accounts with imminent regulatory and clinical deadlines</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>RaySearch Laboratories (Stockholm) — €92M</h3>
+          <p><strong>Focus:</strong> RayStation Oncology Treatment Planning Software</p>
+          <ul>
+            <li><strong>Acute Need:</strong> ISO 14971 software risk governance and automated contouring validation under EU AI Act.</li>
+            <li><strong>2S Solution:</strong> Deep learning algorithmic risk governance package and CER rewrite.</li>
+            <li><strong>Target:</strong> VP Quality Assurance & Regulatory Affairs.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Bactiguard AB (Stockholm) — €22M</h3>
+          <p><strong>Focus:</strong> Infection Prevention Coatings for Catheters and Implants</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Defending premium reimbursement against generic tenders in Region Stockholm and Region Skåne.</li>
+            <li><strong>2S Solution:</strong> Catheter Total Cost of Care (TCC) Hospital Tender Engine.</li>
+            <li><strong>Target:</strong> Chief Commercial Officer & Head of Market Access.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Mentice AB (Gothenburg) — €21M</h3>
+          <p><strong>Focus:</strong> Endovascular Interventional Surgical Simulators</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Transitioning simulation platforms into certified clinical decision support (Class IIb SaMD).</li>
+            <li><strong>2S Solution:</strong> MDR Rule 11 SaMD Clinical Transition Audit.</li>
+            <li><strong>Target:</strong> VP Strategic Marketing & VP Software R&D.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>AMRA Medical (Linköping) — Growth Stage</h3>
+          <p><strong>Focus:</strong> MRI-Based Body Composition Muscle Biomarker Software</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Scaling data pipelines for multinational biopharma sponsors under GCP and 21 CFR Part 11.</li>
+            <li><strong>2S Solution:</strong> Biopharma GCP Cloud Data Pipeline Verification.</li>
+            <li><strong>Target:</strong> Chief Executive Officer & Head of Clinical Ops.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Mid-cap players have high urgency: they lack giant in-house regulatory armies and must deliver results before their next board meeting or Notified Body deadline.
+      </div>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide-view" id="slide-6">
+      <span class="slide-badge purple">Track B: Pharma</span>
+      <h1 class="slide-title">Track B: Pharma & Biologics Anchors</h1>
+      <h2 class="slide-subtitle">Nordic pharmaceutical powerhouses driving >€14.5 Billion in regional turnover</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>Swedish Orphan Biovitrum / Sobi — €1.95B</h3>
+          <p><strong>Focus:</strong> Rare Diseases, Hematology (Elocta), Immunology</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Unifying primary ERP sales with secondary stockist sell-out (Tamro/Oriola) to stop tender GTN leakage.</li>
+            <li><strong>2S Solution:</strong> Commercial S&OP Portal & Tender Clawback Engine.</li>
+            <li><strong>Target Exec:</strong> Chief Commercial Officer & Head of Global Supply Chain.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Novo Nordisk A/S — €32B ARR</h3>
+          <p><strong>Focus:</strong> GLP-1 Diabetes & Obesity Biologics (Ozempic, Wegovy)</p>
+          <ul>
+            <li><strong>Acute Need:</strong> High-speed fill-finish cleanroom changeover bottlenecks across Nordic sterile filling lines.</li>
+            <li><strong>2S Solution:</strong> Sterile Cleanroom Changeover Turnaround Sprint.</li>
+            <li><strong>Target Exec:</strong> VP Aseptic Manufacturing Operations & Site Directors.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>AstraZeneca (Gothenburg Hub) — €42B</h3>
+          <p><strong>Focus:</strong> Cardiovascular, Renal, Metabolism, Oncology</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Clinical trial recruitment delays in Scandinavian university clinics costing €25,000/day.</li>
+            <li><strong>2S Solution:</strong> HCare360 NLP Scandinavian Clinical Cohort Acceleration.</li>
+            <li><strong>Target Exec:</strong> VP Clinical Development Operations (Gothenburg).</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Camurus AB (Lund) — €150M ARR</h3>
+          <p><strong>Focus:</strong> Long-Acting Lipid Injectables (Buvidal, CAM2029)</p>
+          <ul>
+            <li><strong>Acute Need:</strong> S&OP integration synchronizing European distribution data with sterile manufacturing campaigns.</li>
+            <li><strong>2S Solution:</strong> Hospital Tendering S&OP & Buffer Stock Optimization.</li>
+            <li><strong>Target Exec:</strong> Chief Commercial Officer & VP Manufacturing.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Track B represents colossal enterprise revenue. Our entry points target concrete operational leakage: tender penalties, sterile changeovers, and clinical trial delays.
+      </div>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide-view" id="slide-7">
+      <span class="slide-badge purple">Track B: Chemicals</span>
+      <h1 class="slide-title">Track B: Chemical CDMOs & API Powerhouses</h1>
+      <h2 class="slide-subtitle">Active chemical synthesis, custom peptides, and contract manufacturing leaders</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>Cambrex Karlskoga — €180M ARR</h3>
+          <p><strong>Focus:</strong> Small-Molecule API Synthesis, Energetic Chemistry</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Asian API price dumping, rising European solvent costs, high reactor idle turnaround times.</li>
+            <li><strong>2S Solution:</strong> Activity-based batch costing & cleanroom turnaround slashing changeover downtime by 40%.</li>
+            <li><strong>Target Exec:</strong> Managing Director & VP Chemical Operations.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>PolyPeptide Group (Malmö) — €280M ARR</h3>
+          <p><strong>Focus:</strong> Custom Peptide Chemical Synthesis (cGAP & Novel)</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Hazardous solvent consumption (DMF/NMP) and environmental waste handling costs.</li>
+            <li><strong>2S Solution:</strong> Green Peptide Synthesis & Solvent Recovery Cost Diagnostic.</li>
+            <li><strong>Target Exec:</strong> Director of Malmö Operations & Head of Process Dev.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Recipharm AB (Stockholm) — €1.1B ARR</h3>
+          <p><strong>Focus:</strong> Comprehensive CDMO (Sterile, Oral Solids, Inhalation)</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Margin leakage across multi-site manufacturing networks; decentralized ERP systems.</li>
+            <li><strong>2S Solution:</strong> Cross-Facility OEE & Sterile Cleanroom Optimization Sprint.</li>
+            <li><strong>Target Exec:</strong> Chief Operating Officer & VP Operational Excellence.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Biotage AB (Uppsala) — €165M ARR</h3>
+          <p><strong>Focus:</strong> Automated Chromatography & Sample Preparation Systems</p>
+          <ul>
+            <li><strong>Acute Need:</strong> Capital equipment sales slowing due to academic and biotech lab budget freezes.</li>
+            <li><strong>2S Solution:</strong> Consumable Reagent Subscription Model Calculator.</li>
+            <li><strong>Target Exec:</strong> Chief Commercial Officer & Head of Product Management.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> In chemicals and CDMOs, 2S brings direct chemical engineering pedigree, optimizing solvent cycles, continuous-flow synthesis, and cleanroom sanitization.
+      </div>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide-view" id="slide-8">
+      <span class="slide-badge success">Pharma Pillar 1</span>
+      <h1 class="slide-title">Pillar 1: Sales Force Excellence & S&OP</h1>
+      <h2 class="slide-subtitle">Unifying ERP billing, secondary stockist sell-out, and tender penalty mitigation</h2>
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>Unified Visibility Console</h3>
+          <p>Harmonizes primary SAP/Oracle ERP sales with secondary wholesaler sell-out data (Tamro Sweden, Oriola Finland, NMD Norway) into a real-time executive dashboard.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Gross-to-Net (GTN) Engine</h3>
+          <p>Models the full tender discount waterfall, retrospective rebates, distributor administration fees, and public hospital clawbacks to capture 3% to 5% in trapped margin.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Tender Early-Warning Triggers</h3>
+          <p>Automated algorithms alerting supply chain 45 days before regional inventory drops below mandated safety stock, preventing severe public tender default penalties.</p>
+        </div>
+      </div>
+      <div class="metrics-strip">
+        <div class="metric-item">
+          <div class="metric-val">15%</div>
+          <div class="metric-label">Channel Inventory Carrying Cost Reduction</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">3-5%</div>
+          <div class="metric-label">Gross-to-Net Margin Recaptured</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">100%</div>
+          <div class="metric-label">Tender Penalty Avoidance</div>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> This architecture is field-proven, modeled directly on 2S leadership's prior enterprise deployments for Merck and multinational pharmaceutical distributors.
+      </div>
+    </div>
+
+    <!-- Slide 10 -->
+    <div class="slide-view" id="slide-9">
+      <span class="slide-badge success">Pharma Pillar 2</span>
+      <h1 class="slide-title">Pillar 2: R&D Productivity & Clinical Burn</h1>
+      <h2 class="slide-subtitle">Stopping the €25,000/day trial delay burn via HCare360 NLP patient screening</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>The Clinical Cash-Burn Crisis</h3>
+          <ul>
+            <li>Mid-cap Nordic biopharmas burn upwards of <strong>€25,000 per calendar day</strong> during active clinical trial phases.</li>
+            <li>78% of Nordic oncology and rare-disease trials suffer recruitment delays of 3 to 9 months due to narrow eligibility criteria.</li>
+            <li>Delayed milestone velocity directly threatens corporate cash runway and triggers dilutive bridge financings.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>The HCare360 NLP Solution</h3>
+          <ul>
+            <li>Multilingual NLP ingestion of unstructured Scandinavian electronic health records (EHRs), pathology reports, and genetic registries.</li>
+            <li>Pre-screens patient cohorts across Nordic university clinics in under 14 days.</li>
+            <li>Saves an average of <strong>2.5 months in recruitment timelines</strong>, preserving over €1.8 Million in operational cash burn.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> By framing our clinical offering around daily cash burn, biopharma CEOs and CMOs immediately understand the ROI: a €35,000 sprint pays for itself in less than 36 hours of trial delay avoidance.
+      </div>
+    </div>
+
+    <!-- Slide 11 -->
+    <div class="slide-view" id="slide-10">
+      <span class="slide-badge success">Pharma Pillar 3</span>
+      <h1 class="slide-title">Pillar 3: Chemical API Margin Defense</h1>
+      <h2 class="slide-subtitle">Slashing cleanroom sanitization downtime by 40% and optimizing batch yields</h2>
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>Activity-Based Batch Costing</h3>
+          <p>Granular allocation of key starting materials (KSMs), solvent recovery distillation cycles, and reactor residence time to identify unprofitable molecule campaigns.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Cleanroom Turnaround Sprint</h3>
+          <p>Standardized sanitization and equipment changeover protocols (Unimark/Matix methodology) cutting cleaning validation downtime by 40%.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Continuous Flow Engineering</h3>
+          <p>Process intensification replacing hazardous, low-yield batch chemistry with continuous micro-reactors, cutting solvent waste by 25%.</p>
+        </div>
+      </div>
+      <div class="metrics-strip">
+        <div class="metric-item">
+          <div class="metric-val">-40%</div>
+          <div class="metric-label">Cleanroom Changeover Downtime</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">+18 hrs</div>
+          <div class="metric-label">Weekly Production Reclaimed per Line</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">+350 bps</div>
+          <div class="metric-label">Gross Manufacturing Margin Expansion</div>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> European chemical synthesis cannot compete on cheap labor with Asia. It must compete on process efficiency, solvent recovery, and sterile changeover speed.
+      </div>
+    </div>
+
+    <!-- Slide 12 -->
+    <div class="slide-view" id="slide-11">
+      <span class="slide-badge">Outbound Playbook</span>
+      <h1 class="slide-title">Multi-Touch Persona Cadences (6 Angles)</h1>
+      <h2 class="slide-subtitle">Trigger-based outreach sequences engineered for Scandinavian executive response</h2>
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>Angle A: MDR Crisis</h3>
+          <p><strong>Target: VP QA/RA</strong></p>
+          <p>Trigger: Imminent Notified Body re-certification audit. Hook: 48-Hour Technical Gap Scan.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Angle B: AI Act Governance</h3>
+          <p><strong>Target: CTO / Head of AI</strong></p>
+          <p>Trigger: ML diagnostic software launch. Hook: Sovereign Finnish cloud validation logs.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Angle C: DaaS Hospital CFO</h3>
+          <p><strong>Target: CCO / VP Sales</strong></p>
+          <p>Trigger: Hospital capex tender freeze. Hook: 90-second ICU bed-day ROI calculator.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Angle D: API Cleanroom Turn</h3>
+          <p><strong>Target: Plant Director</strong></p>
+          <p>Trigger: High changeover downtime. Hook: Reclaiming 18 hours/wk via Unimark protocol.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Angle E: Pharma S&OP & GTN</h3>
+          <p><strong>Target: Head Market Access</strong></p>
+          <p>Trigger: Tamro/Oriola stockouts. Hook: 3-5% GTN tender rebate recovery audit.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Angle F: Clinical Trial Burn</h3>
+          <p><strong>Target: CMO / VP Clinical</strong></p>
+          <p>Trigger: Clinical trial Phase II/III start. Hook: Shaving 2.5 months off trial recruitment.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Every cadence follows a strict 4-touch rhythm: Day 1 (Personalized Teardown) → Day 4 (Peer Benchmark) → Day 8 (Wedge Proposal) → Day 14 (Closing Briefing).
+      </div>
+    </div>
+
+    <!-- Slide 13 -->
+    <div class="slide-view" id="slide-12">
+      <span class="slide-badge">Ecosystem Acceleration</span>
+      <h1 class="slide-title">Nordic Life Science Cluster Infiltration</h1>
+      <h2 class="slide-subtitle">Physical co-location, VC due diligence alliances, and engineering co-opetition</h2>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>Cluster Advisory Desks</h3>
+          <ul>
+            <li><strong>Medicon Village (Lund):</strong> Housing 180+ life science entities; bi-weekly "Regulatory & S&OP Clinic" sessions.</li>
+            <li><strong>Stockholm-Uppsala / KI Science Park:</strong> Karolinska & SciLifeLab quarterly executive roundtables.</li>
+            <li><strong>Gothenburg GoCo Health Innovation:</strong> Co-located with AstraZeneca global R&D site and Sahlgrenska.</li>
+            <li><strong>Oslo Cancer Cluster & Health Capital Helsinki:</strong> Precision oncology and Finnish sovereign health data hubs.</li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Co-Opetition & VC Partnerships</h3>
+          <ul>
+            <li><strong>Engineering Primes Subcontracting:</strong> Partnering with Knightec, Semcon, Prevas, and Plantvision to deliver specialized software and AI certification under their master vendor codes.</li>
+            <li><strong>VC Pre-Investment Audits:</strong> Partnering with HealthCap, Industrifonden, and Novo Holdings to perform regulatory pre-audits on Series A/B portfolio companies.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> In the Nordics, cold outbound alone is not enough. You must build physical presence in Medicon Village and GoCo, and co-opt the domestic engineering primes.
+      </div>
+    </div>
+
+    <!-- Slide 14 -->
+    <div class="slide-view" id="slide-13">
+      <span class="slide-badge success">Procurement Strategy</span>
+      <h1 class="slide-title">Winning Value-Based Hospital Tenders</h1>
+      <h2 class="slide-subtitle">Turning health economics and bed-day reduction into public procurement weapons</h2>
+      <div class="deck-card" style="margin-bottom: 1.5rem;">
+        <h3>The Nordic Public Procurement Reality (LOU / LOV)</h3>
+        <p>Regional procurement boards (<em>Region Stockholm</em>, <em>Danske Regioner / Amgros</em>, <em>Sykehusinnkjøp</em>) evaluate bids using weighted multi-criteria formulas where pure acquisition price is only 40% of the score:</p>
+        <p style="text-align: center; font-size: 1.1rem; color: var(--accent); margin: 0.75rem 0;">
+          <strong>Tender Score = 0.40 × Price + 0.35 × Clinical Efficacy + 0.25 × Health Economic Impact</strong>
+        </p>
+      </div>
+      <div class="grid-2">
+        <div class="deck-card">
+          <h3>The Bountytek AB Co-Bidding Solution</h3>
+          <p>Bountytek AB acts as the domestic Swedish prime bidding entity (Bolagsverket, F-skatt, local banking), co-authoring health economic and clinical tender sections with client sales teams and embedding interactive HEOR models.</p>
+        </div>
+        <div class="deck-card">
+          <h3>Documented Procurement Results</h3>
+          <p>Clients co-bidding with Bountytek AB and 2S demonstrate an average <strong>3.2x lift in public healthcare tender win rates</strong> while defending gross margins above 60%.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> When hospital boards try to squeeze device and pharma prices, we give our clients the clinical and health economic proof that forces procurement boards to award on quality.
+      </div>
+    </div>
+
+    <!-- Slide 15 -->
+    <div class="slide-view" id="slide-14">
+      <span class="slide-badge">Action Plan</span>
+      <h1 class="slide-title">90-Day Execution Roadmap & Milestones</h1>
+      <h2 class="slide-subtitle">Clear commercial targets driving €1,200,000+ in annual contracted pipeline</h2>
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>Month 1: Activation</h3>
+          <p><strong>Days 1 - 30</strong></p>
+          <ul>
+            <li>Launch 20 Titan ABM personalized cadences</li>
+            <li>Submit cluster applications to Medicon Village & GoCo</li>
+            <li>Target: 12 discovery meetings booked</li>
+            <li><strong>Revenue: €56,000 (2 Wedges)</strong></li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Month 2: Acceleration</h3>
+          <p><strong>Days 31 - 60</strong></p>
+          <ul>
+            <li>Deliver 4 complimentary scans & 4 paid wedges</li>
+            <li>Host Executive Masterclass: "EU AI Act & API Margin Defense"</li>
+            <li>Target: 22 discovery meetings</li>
+            <li><strong>Revenue: €185,000 (4 Wedges + 1 Retainer)</strong></li>
+          </ul>
+        </div>
+        <div class="deck-card">
+          <h3>Month 3: Scaling</h3>
+          <p><strong>Days 61 - 90</strong></p>
+          <ul>
+            <li>Convert 3 diagnostic wedges into annual retainers</li>
+            <li>Sign 1 engineering prime subcontracting MSA</li>
+            <li>Target: €650k+ rolling qualified pipeline</li>
+            <li><strong>Revenue: €320,000 (3 Wedges + 2 Retainers)</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics-strip">
+        <div class="metric-item">
+          <div class="metric-val">260</div>
+          <div class="metric-label">Executive Touches</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">52</div>
+          <div class="metric-label">Discovery Briefings</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">9</div>
+          <div class="metric-label">Diagnostic Wedges</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">€1.2M+</div>
+          <div class="metric-label">Contracted ARR Run-Rate</div>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> By structuring Month 1 around rapid wedges, we achieve immediate revenue breakeven in 30 days while building the foundation for seven-figure retainers.
+      </div>
+    </div>
+
+    <!-- Slide 16 -->
+    <div class="slide-view" id="slide-15">
+      <span class="slide-badge">Epistemic Governance</span>
+      <h1 class="slide-title">Epistemic Validation: Heuer ACH Matrix</h1>
+      <h2 class="slide-subtitle">Richards J. Heuer Jr. Analysis of Competing Hypotheses validates Strategy H3</h2>
+      <table class="deck-table">
+        <thead>
+          <tr>
+            <th>Diagnostic Evidence (E1 .. E5)</th>
+            <th>Weight</th>
+            <th>$H_1$: Mass Outbound</th>
+            <th>$H_2$: Passive Inbound</th>
+            <th>$H_3$: Trigger-Driven Asymmetric ABM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>$E_1$: Nordic Gatekeeper Scrutiny</td>
+            <td>1.5</td>
+            <td>Inconsistent (-1.5)</td>
+            <td>Neutral (0.0)</td>
+            <td><strong>Very Consistent (0.0)</strong></td>
+          </tr>
+          <tr>
+            <td>$E_2$: Long Corporate Procurement Cycles</td>
+            <td>1.2</td>
+            <td>Inconsistent (-1.2)</td>
+            <td>Inconsistent (-1.2)</td>
+            <td><strong>Very Consistent (0.0)</strong></td>
+          </tr>
+          <tr>
+            <td>$E_3$: Regulatory & Manufacturing Pain Latency</td>
+            <td>1.6</td>
+            <td>Inconsistent (-1.6)</td>
+            <td>Inconsistent (-1.6)</td>
+            <td><strong>Very Consistent (0.0)</strong></td>
+          </tr>
+          <tr>
+            <td>$E_4$: Verified Chemical & Clinical IP Need</td>
+            <td>1.4</td>
+            <td>Inconsistent (-1.4)</td>
+            <td>Neutral (0.0)</td>
+            <td><strong>Very Consistent (0.0)</strong></td>
+          </tr>
+          <tr>
+            <td>$E_5$: Co-Opetition Channel Scalability</td>
+            <td>1.3</td>
+            <td>Inconsistent (-1.3)</td>
+            <td>Inconsistent (-1.3)</td>
+            <td><strong>Very Consistent (0.0)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Weighted Disconfirmation Penalty</strong></td>
+            <td>—</td>
+            <td><strong>-7.0 (REFUTED)</strong></td>
+            <td><strong>-4.1 (REFUTED)</strong></td>
+            <td><strong>0.0 (CONFIRMED OPTIMAL)</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Applying CIA intelligence methodology to our go-to-market strategy proves mathematically that mass spamming ($H_1$) and waiting for inbound ($H_2$) fail. Strategy $H_3$ is the only unrefuted path.
+      </div>
+    </div>
+
+    <!-- Slide 17 -->
+    <div class="slide-view" id="slide-16">
+      <span class="slide-badge">Intelligence Verification</span>
+      <h1 class="slide-title">NATO STANAG Admiralty Protocol Matrix</h1>
+      <h2 class="slide-subtitle">100% of target accounts and market parameters audited to &ge; B2 reliability</h2>
+      <table class="deck-table">
+        <thead>
+          <tr>
+            <th>Target Account</th>
+            <th>Sector / Category</th>
+            <th>Primary Source</th>
+            <th>Reliability</th>
+            <th>Credibility</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Bountytek AB</strong></td>
+            <td>Domestic Commercial Agent</td>
+            <td>Bolagsverket & Skatteverket (F-skatt)</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>2S Consulting</strong></td>
+            <td>Strategic Life Sciences Advisory</td>
+            <td>Swiss Commercial Register CHE-443.084.148</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Numantra Technologies</strong></td>
+            <td>Healthcare Cognitive Platform</td>
+            <td>ISO 27001 Finnish Sovereign Cloud</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Getinge AB</strong></td>
+            <td>MedTech Capital Equipment</td>
+            <td>Nasdaq Stockholm, Annual Report 2025</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Elekta AB</strong></td>
+            <td>Radiation Oncology SaMD</td>
+            <td>Audited 10-K Filings, Radiation Registry</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Vitrolife AB</strong></td>
+            <td>IVD & Reproductive AI</td>
+            <td>Nasdaq Stockholm, ESHRE European Registry</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Sobi AB</strong></td>
+            <td>Rare Disease Specialty Pharma</td>
+            <td>Nasdaq Stockholm Audited Filings</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Novo Nordisk A/S</strong></td>
+            <td>Biologics & Sterile Fill-Finish</td>
+            <td>Nasdaq Copenhagen, SEC Form 20-F</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Cambrex Karlskoga</strong></td>
+            <td>Active Chemical Synthesis CDMO</td>
+            <td>Swedish Chemical Inspectorate (Kemi)</td>
+            <td>B (Usually Reliable)</td>
+            <td>2 (Probably True)</td>
+            <td><strong>B2</strong></td>
+          </tr>
+          <tr>
+            <td><strong>PolyPeptide Group</strong></td>
+            <td>Peptide Chemical Synthesis</td>
+            <td>SIX Swiss Exchange Filings</td>
+            <td>A (Completely Reliable)</td>
+            <td>1 (Confirmed)</td>
+            <td><strong>A1</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> Every data point in this strategy is verified against audited securities filings and official Scandinavian registries, meeting or exceeding NATO STANAG B2 admissibility.
+      </div>
+    </div>
+
+    <!-- Slide 18 -->
+    <div class="slide-view" id="slide-17">
+      <span class="slide-badge danger">Risk Mitigation</span>
+      <h1 class="slide-title">Devil's Advocate & Tenth Man Falsification</h1>
+      <h2 class="slide-subtitle">Adversarial stress-testing of commercial assumptions with 30-day tripwires</h2>
+      <div class="grid-3">
+        <div class="deck-card">
+          <h3>1. The Procurement Wall</h3>
+          <p><strong>Trap:</strong> Tier-1 players stalling boutique vendor onboarding for 6+ months.</p>
+          <p><strong>Countermeasure:</strong> Lead via <strong>Bountytek AB</strong> (Sweden) with &lt;€35k entry wedges qualifying for discretionary departmental PO approval, or bill via engineering prime MSAs.</p>
+          <p><strong>Tripwire:</strong> If &gt;3 accounts require full vendor registration for wedges, divert 100% outbound to prime subcontracting.</p>
+        </div>
+        <div class="deck-card">
+          <h3>2. The Regulatory NIH Syndrome</h3>
+          <p><strong>Trap:</strong> Internal QA/RA and Plant Directors perceiving 2S as an external audit threat.</p>
+          <p><strong>Countermeasure:</strong> Frame Bountytek AB and 2S not as auditors, but as surge capacity execution engineers co-authoring technical files to protect internal leadership.</p>
+          <p><strong>Tripwire:</strong> If discovery calls show defensive hostility, re-label all collateral from "Compliance Audit" to "Pre-Submission Execution Surge".</p>
+        </div>
+        <div class="deck-card">
+          <h3>3. Academic Poverty Trap</h3>
+          <p><strong>Trap:</strong> Incubator startups lack operational advisory budgets.</p>
+          <p><strong>Countermeasure:</strong> Filter strictly for Series-A+ funded commercial entities (&gt;€5M raised) and sponsor portfolio workshops with VC funds.</p>
+          <p><strong>Tripwire:</strong> If &gt;50% of cluster inbound leads are pre-revenue, exit open advisory desks and focus on private VC portfolio days.</p>
+        </div>
+      </div>
+      <div class="speaker-notes">
+        <strong>Speaker Notes:</strong> By applying the Tenth Man principle, we build pre-programmed tripwires into our outbound campaigns, ensuring rapid pivoting before sales resources are squandered.
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide-view');
+  const tabs = document.querySelectorAll('.slide-tab');
+  const progressBar = document.getElementById('progressBar');
+
+  function updateSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[currentSlide].classList.remove('active');
+    tabs[currentSlide].classList.remove('active');
+    
+    currentSlide = index;
+    slides[currentSlide].classList.add('active');
+    tabs[currentSlide].classList.add('active');
+    
+    const progress = ((currentSlide + 1) / slides.length) * 100;
+    progressBar.style.width = progress + '%';
+  }
+
+  function nextSlide() {
+    if (currentSlide < slides.length - 1) updateSlide(currentSlide + 1);
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) updateSlide(currentSlide - 1);
+  }
+
+  function goToSlide(index) {
+    updateSlide(index);
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error("Fullscreen error: ", err);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      prevSlide();
+    } else if (e.key === 'Home') {
+      goToSlide(0);
+    } else if (e.key === 'End') {
+      goToSlide(slides.length - 1);
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    }
+  });
+</script>
+
+</body>
+</html>

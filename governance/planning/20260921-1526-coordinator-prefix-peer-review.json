@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "receipt_type": "independent_peer_review",
+  "generated_at": "2026-09-21T15:26:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "reviewer": "recovery_review",
+  "scope": "Read-only validation of coordinator prefix comparison",
+  "source_receipt": "governance/planning/20260921-1522-coordinator-prefix-comparison.json",
+  "verification": {
+    "canonical_file_sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "candidate_file_sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+    "canonical_events": 117,
+    "candidate_events": 421,
+    "exact_common_prefix_events": 0,
+    "first_mismatch_sequence": 1,
+    "mismatch_fields": [
+      "operation_id",
+      "boot_id",
+      "tick_us",
+      "utc_us",
+      "actor",
+      "command_json",
+      "body_json",
+      "digest",
+      "inserted_utc_us"
+    ],
+    "terminal_digests_match_source_receipt": true
+  },
+  "finding": "The candidate is a distinct history; prefix-based cutover is unsafe.",
+  "supersedes": "Earlier sequence-65 first-divergence claims are superseded by this exact sequence-1 comparison.",
+  "not_established": [
+    "Writer quiescence",
+    "Canonical-source equality",
+    "Cutover authority",
+    "Runtime admission"
+  ],
+  "decision": "HOLD",
+  "completion_claim": false
+}

@@ -6,7 +6,7 @@
 %% clock derivation as session_sync_ffi. No exception ever escapes to
 %% Gleam: every exported function returns {ok, _} | {error, Reason::binary()}.
 -module(session_store_ffi).
--export([open/1, exec/2, query/3, begin_immediate/1, commit/1, rollback/1,
+-export([open/1, create_exclusive/1, exec/2, query/3, begin_immediate/1, commit/1, rollback/1,
          close/1, clock/0, halt/1]).
 
 -spec halt(integer()) -> no_return().
@@ -34,6 +34,21 @@ open(PathBinary) -> guarded(fun() ->
             ok = require_pragma(Conn, "PRAGMA foreign_keys;", <<"1">>,
                                 <<"foreign_keys">>),
             {ok, Conn};
+        {error, Reason} -> fail(fmt(Reason))
+    end
+end).
+
+-spec create_exclusive(binary()) -> {ok, nil} | {error, binary()}.
+create_exclusive(Path) -> guarded(fun() ->
+    case file:open(Path, [write, exclusive, raw, binary]) of
+        {ok, Device} ->
+            try
+                ok = file:change_mode(Path, 8#600),
+                ok = file:sync(Device),
+                {ok, nil}
+            after
+                file:close(Device)
+            end;
         {error, Reason} -> fail(fmt(Reason))
     end
 end).

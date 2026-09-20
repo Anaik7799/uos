@@ -1,0 +1,34 @@
+{
+  "schema": "uos.recovery-candidate-verify-receipt.v1",
+  "timestamp": "20260921-1457",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r02-recovery-candidate",
+  "candidate_database": "/home/an/uos-recovery-candidates/20260921-1451-recovery-attempt-3/coordinator.sqlite3",
+  "command": "gleam run -m session_store_cli -- verify <candidate_database>",
+  "result": {
+    "exit_code": 0,
+    "ok": true,
+    "checked": 0,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": true,
+    "replay_ok": true,
+    "nonempty": false,
+    "triggers_present": true,
+    "unique_operations": true,
+    "authority": "integrity_observation_only"
+  },
+  "comparison": {
+    "canonical_coordinator": "corrupt_sequences_66_117_replay_refused",
+    "candidate": "empty_valid_store_with_quarantine_preserved",
+    "canonical_modified": false
+  },
+  "completion": {
+    "candidate_integrity_verified": true,
+    "task_complete": false,
+    "release_authorization": "missing",
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false
+  },
+  "next_gate": "independent sovereign review and authorized cutover decision"
+}

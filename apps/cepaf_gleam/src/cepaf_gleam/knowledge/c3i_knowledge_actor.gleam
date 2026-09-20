@@ -61,7 +61,10 @@ pub fn start() -> Result(actor.Started(Subject(Message)), actor.StartError) {
 }
 
 /// Message handler for the C3I Knowledge Actor
-pub fn handle_message(state: State, msg: Message) -> actor.Next(State, Message) {
+pub fn handle_message(
+  state: State,
+  msg: Message,
+) -> actor.Next(State, Message) {
   case msg {
     QueryKnowledge(query, min_trust, reply_to) -> {
       let filtered =
@@ -81,16 +84,14 @@ pub fn handle_message(state: State, msg: Message) -> actor.Next(State, Message) 
           }
         })
       process.send(reply_to, filtered)
-      let new_state =
-        State(..state, queries_handled: state.queries_handled + 1)
+      let new_state = State(..state, queries_handled: state.queries_handled + 1)
       actor.continue(new_state)
     }
 
     CitedRecall(query, min_trust, reply_to) -> {
       let recall_result = query_cited_recall(query, min_trust)
       process.send(reply_to, recall_result)
-      let new_state =
-        State(..state, queries_handled: state.queries_handled + 1)
+      let new_state = State(..state, queries_handled: state.queries_handled + 1)
       actor.continue(new_state)
     }
 

@@ -1,0 +1,29 @@
+{
+  "schema": "uos.coordinator-divergence-observation.v1",
+  "timestamp": "20260921-1628",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "canonical_database": "var/coordination/tri-agent/coordinator.sqlite3",
+  "journal_source": "var/coordination/tri-agent/events",
+  "first_divergence": 65,
+  "first_digest_mismatch": 66,
+  "last_canonical_sequence": 117,
+  "canonical_verify": {"checked": 117, "sequence_ok": true, "chain_ok": true, "digest_ok": false, "replay_ok": false},
+  "observed_divergence": {
+    "sequence_65": {"database_operation": "op-send-sciviz-interactive-step-5-20260917-2030", "journal_operation": "l0-fable-claim-integration-main-20260907-1415"},
+    "sequence_66": {"database_operation": "op-sciviz-c501-c505-c501", "journal_operation": "l0-fable-release-integration-main-20260907-1415"},
+    "sequence_67": {"database_operation": "op-sciviz-c501-c505-c502", "journal_operation": "l0-fable-send-main-report-20260907-1415"}
+  },
+  "candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "range": "1..421 from journal source",
+    "checked": 421,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": true,
+    "replay_ok": true,
+    "digest_at_421": "c8523e1f6f9a5a7c14f94759fda1d188a45fe361cae0906dfd74964e4adfeb0b"
+  },
+  "interpretation": "canonical SQLite first diverges from the preserved journal at sequence 65; its first stored-body digest mismatch is sequence 66. The journal prefix is independently replayable, but authority selection and writer quiescence remain unresolved",
+  "mutation": "none; canonical database and journal were not modified",
+  "admission": "not_admitted"
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "uos.agy-coordination-receipt.v1",
+  "observed_at": "2026-09-25T17:59:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "coordinator": "codex-01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+  "agy_sessions": [
+    "eb7a42c0-03e5-4814-9e55-4414c7c4eb28",
+    "78478741-67b5-4c1e-8857-7a6dc948d10f"
+  ],
+  "model_inventory": [
+    "gemini-3.8-flash-high",
+    "gemini-3.8-flash-medium",
+    "gemini-3.8-flash-low",
+    "gemini-3.7-flash-high",
+    "gemini-3.7-flash-medium",
+    "gemini-3.7-flash-low",
+    "gemini-3.6-flash-high",
+    "gemini-3.6-flash-medium",
+    "gemini-3.6-flash-low",
+    "gemini-3.1-pro-high",
+    "gemini-3.1-pro-low",
+    "claude-sonnet-4-6",
+    "claude-opus-4-6-thinking",
+    "gpt-oss-120b-medium"
+  ],
+  "selected_profile": {
+    "model": "gemini-3.8-flash-low",
+    "effort": "low",
+    "mode": "plan",
+    "rationale": "Lowest-cost suitable read-only diagnostic profile; no source mutation or admission authority."
+  },
+  "observed_result": "AGY eligibility check repeatedly failed before turn execution with DNS error for daily-cloudcode-pa.googleapis.com; no AGY review or fix receipt was produced.",
+  "attempt_logs": [
+    "/tmp/agy-blocker-review-1924.log",
+    "/tmp/agy-short-review-1928.log",
+    "/tmp/agy-review-1752.log",
+    "/tmp/agy-new-review-1755.log",
+    "/tmp/agy-facts-1955.log"
+  ],
+  "decision": "hold",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

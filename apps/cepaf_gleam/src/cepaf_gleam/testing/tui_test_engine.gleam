@@ -127,9 +127,14 @@ pub fn subsystem_view_to_string(view: SubsystemViewId) -> String {
 
 pub fn render_screen_buffer(screen: ScreenId) -> FrameBuffer {
   let name = screen_to_string(screen)
-  let header = "┌──────────────────────────────────────────────────────────────┐\n│ C3I COCKPIT — " <> string.uppercase(name) <> " SCREEN │\n├──────────────────────────────────────────────────────────────┤"
-  let body = "│  Status: HEALTHY   SIL-6: PASS   Mesh: CONNECTED             │\n│  Active Nodes: nas-1, vm-1        Trace: 0x4ad1c13284000     │\n│  Entropy: H >= 2.50b              Lyapunov: -3.732 (stable)  │"
-  let footer = "├──────────────────────────────────────────────────────────────┤\n│ [1..w] Screen Hotkeys   [s] Split-Screen   [q] Clean Exit   │\n└──────────────────────────────────────────────────────────────┘"
+  let header =
+    "┌──────────────────────────────────────────────────────────────┐\n│ C3I COCKPIT — "
+    <> string.uppercase(name)
+    <> " SCREEN │\n├──────────────────────────────────────────────────────────────┤"
+  let body =
+    "│  Status: HEALTHY   SIL-6: PASS   Mesh: CONNECTED             │\n│  Active Nodes: nas-1, vm-1        Trace: 0x4ad1c13284000     │\n│  Entropy: H >= 2.50b              Lyapunov: -3.732 (stable)  │"
+  let footer =
+    "├──────────────────────────────────────────────────────────────┤\n│ [1..w] Screen Hotkeys   [s] Split-Screen   [q] Clean Exit   │\n└──────────────────────────────────────────────────────────────┘"
   let content = header <> "\n" <> body <> "\n" <> footer
   let length = string.length(content)
   FrameBuffer(
@@ -143,7 +148,10 @@ pub fn render_screen_buffer(screen: ScreenId) -> FrameBuffer {
 
 pub fn render_subsystem_view_buffer(view: SubsystemViewId) -> FrameBuffer {
   let name = subsystem_view_to_string(view)
-  let content = "=== SUBSYSTEM VIEW: " <> string.uppercase(name) <> " ===\nHealth: 1.0 | Status: OPERATIONAL | Zero-Muda: TRUE\nDetailed telemetry points verified."
+  let content =
+    "=== SUBSYSTEM VIEW: "
+    <> string.uppercase(name)
+    <> " ===\nHealth: 1.0 | Status: OPERATIONAL | Zero-Muda: TRUE\nDetailed telemetry points verified."
   FrameBuffer(
     screen_name: name,
     content: content,
@@ -154,7 +162,8 @@ pub fn render_subsystem_view_buffer(view: SubsystemViewId) -> FrameBuffer {
 }
 
 pub fn render_split_screen_buffer() -> FrameBuffer {
-  let content = "┌──────────────────────────────┬──────────────────────────────┐\n│ LEFT PANE: SWARM TOPOLOGY    │ RIGHT PANE: OTEL 128-BIT SPAN│\n│ Node: nas-1 (Leader, DAL-A)  │ span_id: 0x178887e000000000  │\n│ Node: vm-1 (Worker, DAL-B)   │ trace_id: 0x69bb7712977b3e42 │\n│ Consensus: 4-Party 2oo3 Quorum│ Layer: L0_CONSTITUTIONAL     │\n└──────────────────────────────┴──────────────────────────────┘"
+  let content =
+    "┌──────────────────────────────┬──────────────────────────────┐\n│ LEFT PANE: SWARM TOPOLOGY    │ RIGHT PANE: OTEL 128-BIT SPAN│\n│ Node: nas-1 (Leader, DAL-A)  │ span_id: 0x178887e000000000  │\n│ Node: vm-1 (Worker, DAL-B)   │ trace_id: 0x69bb7712977b3e42 │\n│ Consensus: 4-Party 2oo3 Quorum│ Layer: L0_CONSTITUTIONAL     │\n└──────────────────────────────┴──────────────────────────────┘"
   FrameBuffer(
     screen_name: "split-screen",
     content: content,
@@ -167,18 +176,20 @@ pub fn render_split_screen_buffer() -> FrameBuffer {
 pub fn verify_frame_buffer(fb: FrameBuffer) -> Result(Int, String) {
   case fb.length >= 50 && fb.has_header && fb.has_status_line {
     True -> Ok(fb.length)
-    False -> Error("FrameBuffer failed sanity check: insufficient length or missing headers")
+    False ->
+      Error(
+        "FrameBuffer failed sanity check: insufficient length or missing headers",
+      )
   }
 }
 
 pub fn all_canonical_screens() -> List(ScreenId) {
   [
-    DashboardScreen, PlanningScreen, ImmuneScreen, KnowledgeScreen,
-    ZenohScreen, CockpitScreen, VerificationScreen, SubstrateScreen,
-    MetabolicScreen, PodmanScreen, McpScreen, KmsScreen,
-    TelemetryScreen, FederationScreen, HealthGridScreen, PrajnaScreen,
-    AgentsScreen, HolonScreen, ConfigScreen, GitScreen,
-    DatabaseScreen, BridgeScreen, SmritiScreen, PlanningDashScreen,
+    DashboardScreen, PlanningScreen, ImmuneScreen, KnowledgeScreen, ZenohScreen,
+    CockpitScreen, VerificationScreen, SubstrateScreen, MetabolicScreen,
+    PodmanScreen, McpScreen, KmsScreen, TelemetryScreen, FederationScreen,
+    HealthGridScreen, PrajnaScreen, AgentsScreen, HolonScreen, ConfigScreen,
+    GitScreen, DatabaseScreen, BridgeScreen, SmritiScreen, PlanningDashScreen,
     IntegrityScreen, EvolutionScreen, BiomorphicScreen, HomeostasisScreen,
     BicameralScreen, SingularityScreen, ComponentsScreen, AuthScreen,
   ]
@@ -186,8 +197,8 @@ pub fn all_canonical_screens() -> List(ScreenId) {
 
 pub fn all_subsystem_views() -> List(SubsystemViewId) {
   [
-    PlanningView, VerificationView, ImmuneView, ZenohView,
-    PodmanView, CockpitView, PrajnaView, HomeostasisView,
-    EvolutionView, FmeaView, RuliologyView, PipelineTracerView,
+    PlanningView, VerificationView, ImmuneView, ZenohView, PodmanView,
+    CockpitView, PrajnaView, HomeostasisView, EvolutionView, FmeaView,
+    RuliologyView, PipelineTracerView,
   ]
 }

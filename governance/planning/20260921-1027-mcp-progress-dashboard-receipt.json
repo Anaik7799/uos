@@ -1,0 +1,24 @@
+{
+  "receipt": "mcp-progress-dashboard-schema-and-parity",
+  "observed_at": "2026-09-21T10:28:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "dashboard": {
+    "snapshot": "governance/planning/20260921-1001-canonical-dashboard-snapshot.json",
+    "summary": {"total": 20, "completed": 2, "ready": 3, "executing": 0, "blocked": 15},
+    "cli_contract": "snapshot accepts explicit plan id and preserves canonical projection"
+  },
+  "mcp_progress_contract": {
+    "observer": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_observer.gleam",
+    "source_sha256": "ba46de71b182da82e09e17f77ae00482e8b79b8a11a3444435a887372f7e75c0",
+    "top_level_fields": ["tasks", "progress", "effect_authority", "system_admission"],
+    "effect_authority": false,
+    "system_admission": false,
+    "task_snapshot_sha256": "1aeda79bb7fb58d09b677f8959fb13db63a7519de7f147d000188198da4b54e0",
+    "risk_snapshot_sha256": "096686bdd689770779efb8f343e8d42691150c23e7378ac1fefe4972e7a8b229"
+  },
+  "verification": {
+    "gleam_test": {"status": "PASS", "passed": 11988, "failed": 0, "log_sha256": "902b638a8e59f6b5c137c3fb0276b935b5ae97957df9ab5fd58aec81a58725af"},
+    "risk_preflight": {"status": "HOLD", "assessment_sha256": "096686bdd689770779efb8f343e8d42691150c23e7378ac1fefe4972e7a8b229", "reason": "evidence freshness window; no source hash mismatch"}
+  },
+  "authority_boundary": "Observation and tests do not grant Sa-plan execution, effect authority, or system admission."
+}

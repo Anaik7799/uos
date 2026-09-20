@@ -1,0 +1,17 @@
+{
+  "schema": "uos.swarm-recovery-development-test.v1",
+  "timestamp_utc": "2026-09-21T09:38:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "scope": "bounded uos_swarm recovery, session store, and coordination tests after clean rebuild",
+  "command": "gleam test",
+  "working_directory": "apps/uos_swarm",
+  "result": {"passed": 669, "failed": 0, "exit_code": 0},
+  "log_sha256": "7a88a17fbe596ae6d0e55b781b3937884382d6777f89b765d58c55ba0036ea13",
+  "limits": [
+    "development tests only",
+    "does not repair the live coordinator suffix",
+    "does not establish holon enrollment or MCP runtime availability",
+    "does not grant release authority or system admission"
+  ],
+  "canonical_task_remains_open": true
+}

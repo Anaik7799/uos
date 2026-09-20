@@ -49,7 +49,12 @@ pub type OcamlRequest {
 }
 
 pub type OcamlResponse {
-  OcamlSuccess(id: String, verdict: String, elapsed_us: Int, reductions_used: Int)
+  OcamlSuccess(
+    id: String,
+    verdict: String,
+    elapsed_us: Int,
+    reductions_used: Int,
+  )
   OcamlTrapNulByte(code: Int, message: String)
   OcamlTrapSqlInjection(code: Int, message: String)
   OcamlTimeout(timeout_ms: Int)
@@ -79,7 +84,11 @@ pub type WorkerPoolState {
   )
 }
 
-fn make_workers(count: Int, current: Int, acc: List(OcamlWorker)) -> List(OcamlWorker) {
+fn make_workers(
+  count: Int,
+  current: Int,
+  acc: List(OcamlWorker),
+) -> List(OcamlWorker) {
   case current > count {
     True -> list.reverse(acc)
     False -> {
@@ -167,7 +176,8 @@ pub fn dispatch_request(
             )
           #(updated, trap)
         }
-        Ok(_) -> execute_dispatch(state, "gospel_admitted:" <> mod_name, 620, 240)
+        Ok(_) ->
+          execute_dispatch(state, "gospel_admitted:" <> mod_name, 620, 240)
       }
     }
     SolveZ3Bounded(formula, timeout_ms) -> {
@@ -251,7 +261,10 @@ pub fn pool_state_to_json(state: WorkerPoolState) -> Json {
     #("queue_depth", json.int(state.queue_depth)),
     #("max_queue_depth", json.int(state.max_queue_depth)),
     #("zero_trust_traps_total", json.int(state.zero_trust_traps_total)),
-    #("successful_dispatches_total", json.int(state.successful_dispatches_total)),
+    #(
+      "successful_dispatches_total",
+      json.int(state.successful_dispatches_total),
+    ),
     #(
       "workers",
       json.array(state.workers, fn(w: OcamlWorker) {

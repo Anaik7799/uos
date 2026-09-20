@@ -162,7 +162,7 @@ pub fn execute_pure_poodavr(
           confidence: 1.0,
           timestamp_ms: now_ms,
           is_halted: True,
-          halt_code: Some(-32002),
+          halt_code: Some(-32_002),
         )
       let next_st =
         PoodavrState(
@@ -188,7 +188,7 @@ pub fn execute_pure_poodavr(
           confidence: 1.0,
           timestamp_ms: now_ms,
           is_halted: True,
-          halt_code: Some(-32002),
+          halt_code: Some(-32_002),
         )
       let next_st =
         PoodavrState(
@@ -218,7 +218,7 @@ pub fn execute_pure_poodavr(
               confidence: 0.5,
               timestamp_ms: now_ms,
               is_halted: True,
-              halt_code: Some(-32001),
+              halt_code: Some(-32_001),
             )
           let next_st =
             PoodavrState(
@@ -290,7 +290,7 @@ pub fn execute_pure_poodavr(
                   confidence: 0.0,
                   timestamp_ms: now_ms,
                   is_halted: True,
-                  halt_code: Some(-32003),
+                  halt_code: Some(-32_003),
                 )
               let next_st =
                 PoodavrState(
@@ -363,8 +363,7 @@ fn handle_message(
 ) -> actor.Next(PoodavrState, PoodavrMessage) {
   case msg {
     ProcessIntent(intent, reply_to, now_ms) -> {
-      let #(decision, next_state) =
-        execute_pure_poodavr(intent, state, now_ms)
+      let #(decision, next_state) = execute_pure_poodavr(intent, state, now_ms)
       process.send(reply_to, decision)
       actor.continue(next_state)
     }

@@ -29,7 +29,9 @@ fn render_control(
   msg_mapper: fn(HomeostasisMsg) -> msg,
 ) -> Element(msg) {
   html.div([attribute.class("control-row")], [
-    html.label([attribute.attribute("for", "homeostasis-" <> metric)], [element.text(label)]),
+    html.label([attribute.attribute("for", "homeostasis-" <> metric)], [
+      element.text(label),
+    ]),
     html.input([
       attribute.id("homeostasis-" <> metric),
       attribute.type_("range"),

@@ -102,7 +102,11 @@ pub fn lustre_suite_heijunka_claim_release_test() {
   let m1 = suite.update(m0, suite.ClaimHeijunkaTask(target_task))
   m1.worker_queue |> should.not_equal(m0.worker_queue)
 
-  let m2 = suite.update(m1, suite.ReleaseHeijunkaTask("Worker-Active: " <> target_task))
+  let m2 =
+    suite.update(
+      m1,
+      suite.ReleaseHeijunkaTask("Worker-Active: " <> target_task),
+    )
   m2.active_worker_leases |> should.equal(m0.active_worker_leases)
 }
 

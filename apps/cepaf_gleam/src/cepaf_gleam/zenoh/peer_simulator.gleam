@@ -68,14 +68,17 @@ pub fn init_peer_node(node_id: String) -> PeerNodeState {
     is_stable: True,
     circuit_state: "closed",
     tick_counter: 0,
-    epoch_us: 1725720000000000,
+    epoch_us: 1_725_720_000_000_000,
   )
 }
 
 /// Transition the peer simulation state by one tick.
-pub fn step_peer_simulation(state: PeerNodeState, next_mode: PeerSimMode) -> PeerNodeState {
+pub fn step_peer_simulation(
+  state: PeerNodeState,
+  next_mode: PeerSimMode,
+) -> PeerNodeState {
   let next_tick = state.tick_counter + 1
-  let next_epoch = state.epoch_us + 1000000
+  let next_epoch = state.epoch_us + 1_000_000
 
   case next_mode {
     PeerNominal ->
@@ -119,7 +122,7 @@ pub fn step_peer_simulation(state: PeerNodeState, next_mode: PeerSimMode) -> Pee
         node_id: state.node_id,
         mode: PeerRecovering,
         health_score: 0.85,
-        lyapunov_lambda: -2.10,
+        lyapunov_lambda: -2.1,
         is_stable: True,
         circuit_state: "closed",
         tick_counter: next_tick,
@@ -158,7 +161,10 @@ pub fn generate_peer_ooz_span(
   }
   let payload =
     OoZSpanPayload(
-      trace_id: "peer-trace-" <> state.node_id <> "-" <> int.to_string(state.tick_counter),
+      trace_id: "peer-trace-"
+        <> state.node_id
+        <> "-"
+        <> int.to_string(state.tick_counter),
       span_id: "span-" <> int.to_string(state.tick_counter),
       name: span_name,
       layer: "l6_ecosystem",

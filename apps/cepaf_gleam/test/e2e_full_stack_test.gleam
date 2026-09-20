@@ -254,7 +254,20 @@ pub fn e2e_patch_method_returns_405_test() {
 pub fn e2e_dual_route_planning_test() {
   let a = router.route("/api/v1/planning")
   let b = router.route("/api/planning/tasks")
-  a |> should.equal(b)
+  // Both aliases are live observations and may cross a clock-second boundary.
+  // Assert stable contract fields rather than comparing volatile observed_at.
+  a |> string.contains("\"page\":\"Planning\"") |> should.be_true()
+  b |> string.contains("\"page\":\"Planning\"") |> should.be_true()
+  a
+  |> string.contains(
+    "\"authority\":\"read_only_projection; Sa-plan alone owns execution\"",
+  )
+  |> should.be_true()
+  b
+  |> string.contains(
+    "\"authority\":\"read_only_projection; Sa-plan alone owns execution\"",
+  )
+  |> should.be_true()
 }
 
 pub fn e2e_dual_route_immune_test() {

@@ -1,0 +1,19 @@
+{
+  "receipt_id": "20260921-1425-dashboard-projection",
+  "observed_at": "2026-09-21T14:25:00+02:00",
+  "authority": "sa-plan-read-only-projection",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "snapshot": "governance/planning/20260921-1425-dashboard-snapshot.json",
+  "summary": {
+    "total": 20,
+    "completed": 3,
+    "ready": 3,
+    "executing": 0,
+    "active_workflows": 75,
+    "dependency_edges": 24,
+    "observation_state": "selection_evidence_only",
+    "evidence_tasks": 4,
+    "unevidenced_tasks": 16
+  },
+  "admission": "NOT_ADMITTED"
+}

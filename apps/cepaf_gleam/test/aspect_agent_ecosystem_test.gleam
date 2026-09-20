@@ -8,10 +8,10 @@ import cepaf_gleam/sdlc/aspect_agent_ecosystem.{
   encode_aspect_coverage_json, encode_aspect_features_json,
   get_all_agent_descriptors, get_all_aspect_feature_details, get_all_features,
   get_all_fractal_aspects, get_aspect_coverage, get_aspect_features,
-  get_aspect_squad_agents, get_multi_instance_agents,
-  get_single_instance_agents, get_total_aspect_squad_agents,
-  is_elastic_swarm_unbounded, lookup_aspect_by_agent, lookup_aspect_by_feature,
-  verify_all_features_covered, verify_full_aspect_coverage,
+  get_aspect_squad_agents, get_multi_instance_agents, get_single_instance_agents,
+  get_total_aspect_squad_agents, is_elastic_swarm_unbounded,
+  lookup_aspect_by_agent, lookup_aspect_by_feature, verify_all_features_covered,
+  verify_full_aspect_coverage,
 }
 import gleam/list
 import gleam/string
@@ -185,7 +185,10 @@ pub fn agent_instances_json_encoding_test() {
 
   string.contains(json_str, "\"status\":\"ok\"") |> should.be_true
   string.contains(json_str, "\"agent_limit_enforced\":false") |> should.be_true
-  string.contains(json_str, "\"swarm_model\":\"UNCONSTRAINED_ELASTIC_BEAM_SWARM\"")
+  string.contains(
+    json_str,
+    "\"swarm_model\":\"UNCONSTRAINED_ELASTIC_BEAM_SWARM\"",
+  )
   |> should.be_true
   string.contains(json_str, "\"total_single_instance_agents\"")
   |> should.be_true

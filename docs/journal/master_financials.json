@@ -1,0 +1,891 @@
+{
+  "AAX Biotech": {
+    "revenue": "SEK 0M (Pre-revenue)",
+    "rd_spend": "SEK 10.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private, spin-out from KTH/Karolinska; developing Seqitope & Opti-mAb antibody technologies; partnered with Daiichi Sankyo"
+  },
+  "AMRA Medical": {
+    "revenue": "SEK 75.0M est. ($7M)",
+    "rd_spend": "SEK 28.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private health informatics; MRI body composition analysis; backed by HealthCap & Industrifonden"
+  },
+  "ANYO Labs": {
+    "revenue": "SEK 2.0M est.",
+    "rd_spend": "SEK 5.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private AI small molecule discovery platform; backed by Chalmers Ventures & Vinnova"
+  },
+  "AOP Orphan Diseases": {
+    "revenue": "EUR 450.0M",
+    "rd_spend": "EUR 85.0M (~19% of sales)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024/25",
+    "notes": "AOP Health Group (Austria/Sweden commercial affiliate); rare disease treatments"
+  },
+  "Abera Bioscience": {
+    "revenue": "SEK 0M (Pre-revenue)",
+    "rd_spend": "SEK 14.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Spotlight: ABERA); outer membrane vesicle mucosal vaccine platform (Ab-01.12)"
+  },
+  "Acarix": {
+    "revenue": "SEK 7.5M (Q4 2024 SEK 1.7M)",
+    "rd_spend": "SEK 32.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: ACARIX); CADScor acoustic cardiac diagnostic system"
+  },
+  "Acrivon Therapeutics": {
+    "revenue": "USD 0M (Clinical stage)",
+    "rd_spend": "USD 64.0M",
+    "currency": "USD",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq US: ACRV); lead drug candidate ACR-368 checkpoint inhibitor & APM platform"
+  },
+  "Active Biotech": {
+    "revenue": "SEK 0.6M",
+    "rd_spend": "SEK 38.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: ACTI); small molecules & biologics (Tasquinimod, Laquinimod)"
+  },
+  "Agrisera": {
+    "revenue": "SEK 42.5M",
+    "rd_spend": "SEK 5.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private antibody producer (V\u00e4nn\u00e4s, Sweden); specialized plant and algal research antibodies"
+  },
+  "Alligator Bioscience": {
+    "revenue": "SEK 58.1M",
+    "rd_spend": "SEK 168.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: ATORX); tumor-directed antibody therapeutics (Mitazalimab)"
+  },
+  "AlzeCure Pharma": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 54.3M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: ALZCUR); Alzheimer's and pain therapies (Alzstatin, NeuroRestore)"
+  },
+  "Alzinova": {
+    "revenue": "SEK 0.3M",
+    "rd_spend": "SEK 36.4M (incl. SEK 19.6M capitalized)",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Listed (Nasdaq First North: ALZ); oligomer-targeting Alzheimer's vaccine (ALZ-101)"
+  },
+  "Amferia Kills Bacteria": {
+    "revenue": "SEK 3.5M est.",
+    "rd_spend": "SEK 15.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Amferia AB; private Chalmers spin-out; antimicrobial peptide wound care hydrogels (raised \u20ac3.5M Dec 2025)"
+  },
+  "Anocca": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 195.0M est.",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private; TCR immunotherapy against cancer; raised SEK 440M in Aug 2025 and SEK 400M in 2023"
+  },
+  "Aplex Bio": {
+    "revenue": "SEK 1.8M est.",
+    "rd_spend": "SEK 12.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private molecular diagnostics startup; hyperplexed PCR detection platform; raised $1.5M seed"
+  },
+  "Arex Advisor": {
+    "revenue": "SEK 38.6M",
+    "rd_spend": "SEK 1.5M est. (Internal)",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private pharmaceutical regulatory affairs, QA & pharmacovigilance consultancy"
+  },
+  "ArgusEye": {
+    "revenue": "SEK 3.0M est.",
+    "rd_spend": "SEK 18.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private bioprocess sensor technology; raised \u20ac3.3M in 2026 and \u20ac2.8M in 2024 from Voima & Eir"
+  },
+  "Ascelia Pharma": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 74.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: ACE); liver MRI imaging agent Orviglance (SPARKLE study)"
+  },
+  "Asgard Therapeutics": {
+    "revenue": "SEK 0M (Pre-clinical)",
+    "rd_spend": "EUR 5.5M (~SEK 62M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Private Lund spin-out; direct cell reprogramming for cancer immunotherapy; raised \u20ac30M Series A in March 2024"
+  },
+  "AstraZeneca": {
+    "revenue": "USD 54,100.0M ($54.1B)",
+    "rd_spend": "USD 13,600.0M ($13.6B)",
+    "currency": "USD",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (AZN); global multinational flagship; major global R&D hub in Gothenburg & manufacturing in S\u00f6dert\u00e4lje"
+  },
+  "Aurevia": {
+    "revenue": "SEK 46.9M",
+    "rd_spend": "SEK 4.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private CRO & QARA provider; backed by M\u00e9rieux Equity Partners (independent spin from Labquality)"
+  },
+  "Avia Pharma": {
+    "revenue": ">SEK 600.0M",
+    "rd_spend": "SEK 30.0M est.",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private specialty pharma group; backed by Impilo; acquired German dermatology player Neubourg"
+  },
+  "Beactica Therapeutics": {
+    "revenue": "SEK 8.5M",
+    "rd_spend": "SEK 32.1M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private clinical-stage drug discovery; fragment-based oncology (awarded \u20ac2.5M EIC grant)"
+  },
+  "Bio-Works": {
+    "revenue": "SEK 43.9M",
+    "rd_spend": "SEK 16.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: BIOWKS); agarose-based chromatography resins for bioprocessing"
+  },
+  "BioArctic": {
+    "revenue": "SEK 228.3M (excl. Eisai royalties)",
+    "rd_spend": "SEK 284.1M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: BIOA B); originator of Leqembi (lecanemab) for Alzheimer's disease"
+  },
+  "BioGaia": {
+    "revenue": "SEK 1,304.0M",
+    "rd_spend": "SEK 128.5M (~10% of sales)",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: BIOG B); global leader in probiotics and microbiome clinical trials"
+  },
+  "BioInvent International": {
+    "revenue": "SEK 148.5M ($23.1M)",
+    "rd_spend": "SEK 342.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: BINV); novel immuno-oncology antibody therapeutics (n-CoDeR/F.I.R.S.T)"
+  },
+  "BioLamina": {
+    "revenue": "SEK 95.0M est. ($9M)",
+    "rd_spend": "SEK 28.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private cell culture matrix developer; human recombinant laminins; secured \u20ac20M EIB loan in 2026"
+  },
+  "BioReperia": {
+    "revenue": "SEK 20.0M est. ($4.3M gross)",
+    "rd_spend": "SEK 7.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private Link\u00f6ping spin-out; zebrafish tumor xenograft models for rapid cancer drug screening"
+  },
+  "Bionamic": {
+    "revenue": "SEK 11.5M est.",
+    "rd_spend": "SEK 8.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private biopharma software platform for antibody research and workflow integration"
+  },
+  "Biotage": {
+    "revenue": "SEK 2,056.0M",
+    "rd_spend": "SEK 180.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: BIOT); automated synthesis, flash chromatography & analytical chemistry"
+  },
+  "Biovica": {
+    "revenue": "SEK 7.29M (FY23/24; SEK 8.62M FY24/25)",
+    "rd_spend": "SEK 48.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: BIOVIC B); DiviTum TKa biomarker assay for metastatic breast cancer"
+  },
+  "Bluefish Pharmaceuticals": {
+    "revenue": "SEK 484.8M",
+    "rd_spend": "SEK 38.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Owned by F\u00e4rna Invest AB; generic pharmaceuticals manufacturer and distributor across Europe"
+  },
+  "Calliditas Therapeutics": {
+    "revenue": "SEK 1,180.3M",
+    "rd_spend": "SEK 647.9M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Acquired by Asahi Kasei in 2024 for SEK 11.2B; Tarpeyo / Kinpeygo for IgA nephropathy"
+  },
+  "Cambrex": {
+    "revenue": "USD 700.0M est. (Karlskoga site ~SEK 1,250M)",
+    "rd_spend": "USD 50.0M (~SEK 65M at Karlskoga)",
+    "currency": "USD",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private equity-owned by Permira; global small molecule API CDMO facility in Karlskoga"
+  },
+  "Camurus": {
+    "revenue": "SEK 1,868.0M",
+    "rd_spend": "SEK 485.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: CAMX); specialty biopharma; FluidCrystal delivery platform (CAM2029)"
+  },
+  "Cantargia": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 178.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: CANTA); IL1RAP antibody therapeutics (Nadunolimab, CAN10)"
+  },
+  "Carbiotix": {
+    "revenue": "SEK 1.8M",
+    "rd_spend": "SEK 9.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Spotlight: CRBX); prebiotic soluble fibers (CarbiAXOS) and gut microbiome testing"
+  },
+  "Cellenion": {
+    "revenue": "EUR 18.0M est. (~SEK 205M)",
+    "rd_spend": "EUR 4.2M (~SEK 48M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2023/24",
+    "notes": "Part of BICO Group (cellenONE single cell isolation & picoliter precision dispensing)"
+  },
+  "Cellevate": {
+    "revenue": "SEK 4.5M est.",
+    "rd_spend": "SEK 18.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private Lund nanotech; nanofiber microcarriers for upstream biomanufacturing; raised SEK 21.3M in 2026"
+  },
+  "Cellink": {
+    "revenue": "SEK 2,240.0M (BICO Group consolidated; Cellink ~SEK 600M)",
+    "rd_spend": "SEK 215.0M (BICO Group R&D)",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Core 3D bioprinting division of BICO Group (Nasdaq Stockholm: BICO)"
+  },
+  "Cereno Scientific": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 78.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: CRNO B); epigenetic modulation for pulmonary arterial hypertension (CS1)"
+  },
+  "Cinclus Pharma": {
+    "revenue": "SEK 5.96M (pre-commercial / interest)",
+    "rd_spend": "SEK 162.3M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: CINP); Linaprazan glurate P-CAB phase 3 for GERD & erosive esophagitis"
+  },
+  "Corline Biomedical": {
+    "revenue": "SEK 18.2M (H1 2026 SEK 8.98M)",
+    "rd_spend": "SEK 14.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: CLBI); Corline Heparin Surface (CHS) for medical devices and tissue implants"
+  },
+  "CubaseBio": {
+    "revenue": "EUR 0.2M est.",
+    "rd_spend": "EUR 2.8M (~SEK 32M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Private spatial biology platform; raised \u20ac3.9M co-led by Nordic Science Investments in Feb 2026"
+  },
+  "Curovir": {
+    "revenue": "SEK 0M (Pre-clinical)",
+    "rd_spend": "SEK 6.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private antiviral development for enterovirus infections; Karolinska spin-out"
+  },
+  "Cytely": {
+    "revenue": "EUR 0.1M est.",
+    "rd_spend": "EUR 2.5M (~SEK 28M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Private AI smart microscopy assay automation; raised \u20ac3M seed in Oct 2025"
+  },
+  "DIGNITANA": {
+    "revenue": "SEK 91.8M (FY2023; ~SEK 88M in FY2024)",
+    "rd_spend": "SEK 16.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: DIGN); DigniCap scalp cooling system to reduce chemotherapy-induced hair loss"
+  },
+  "Devyser": {
+    "revenue": "SEK 216.9M (SEK 169.3M in FY2023)",
+    "rd_spend": "SEK 44.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: DVYSR); advanced genetic testing and NGS diagnostics for hereditary diseases"
+  },
+  "Diagonal Bio": {
+    "revenue": "SEK 2.7M (incl. capitalized dev)",
+    "rd_spend": "SEK 14.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: DIA BIO); LAMPlify point-of-care rapid molecular pathogen diagnosis"
+  },
+  "EQL Pharma": {
+    "revenue": "SEK 373.5M (SEK 302.2M in FY2023/24)",
+    "rd_spend": "SEK 28.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024/25",
+    "notes": "Listed (Nasdaq Stockholm: EQL); specialty and niche generic pharmaceuticals"
+  },
+  "EXINI Diagnostics": {
+    "revenue": "SEK 30.0M est.",
+    "rd_spend": "SEK 18.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Subsidiary of Lantheus Holdings (Nasdaq: LNTH); AI medical image analysis software (PSMA PET)"
+  },
+  "Egetis Therapeutics": {
+    "revenue": "SEK 46.1M",
+    "rd_spend": "SEK 295.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: EGTX); rare disease treatments; Emcitate for MCT8 deficiency"
+  },
+  "Elekta": {
+    "revenue": "SEK 19,039.0M (SEK 19.04B)",
+    "rd_spend": "SEK 2,130.0M (SEK 2.13B)",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: EKTA B); radiation therapy systems, Elekta Unity MR-Linac & Leksell Gamma Knife"
+  },
+  "Elypta": {
+    "revenue": "SEK 3.5M est.",
+    "rd_spend": "SEK 72.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private metabolism-based liquid biopsy for early cancer detection; raised $21M Series A"
+  },
+  "FenoMark Diagnostics": {
+    "revenue": "SEK 0M (Early stage)",
+    "rd_spend": "SEK 2.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private early-stage molecular diagnostics and proteomics biomarkers for precision oncology"
+  },
+  "Flow Neuroscience": {
+    "revenue": "EUR 2.2M est. (~SEK 25M)",
+    "rd_spend": "EUR 5.8M (~SEK 65M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private brain stimulation headset (tDCS) for major depressive disorder; raised \u20ac7.9M Series A"
+  },
+  "Fluicell": {
+    "revenue": "SEK 4.8M",
+    "rd_spend": "SEK 15.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: FLUI); Biopixlar single-cell bioprinting & Nexocyte tissue therapeutics"
+  },
+  "Fresenius Kabi": {
+    "revenue": "EUR 8,414.0M (Swedish affiliate ~SEK 4,800M)",
+    "rd_spend": "EUR 636.0M (~SEK 7.2B group R&D)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Subsidiary of Fresenius SE (DAX: FRE); major parenteral manufacturing sites in Brunna and Uppsala"
+  },
+  "Genovis": {
+    "revenue": "SEK 130.4M (SEK 158.2M in FY2023)",
+    "rd_spend": "SEK 22.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: GENO); SmartEnzymes for biopharmaceutical analytical characterization"
+  },
+  "Getinge": {
+    "revenue": "SEK 34,759.0M (SEK 34.76B)",
+    "rd_spend": "SEK 1,745.0M (~5.0% of sales)",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: GETI B); global leader in intensive care equipment, ventilators, surgical tables"
+  },
+  "Gradientech": {
+    "revenue": "SEK 2.1M",
+    "rd_spend": "SEK 46.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: GRNT); QuickMIC ultra-rapid antibiotic susceptibility testing (AST)"
+  },
+  "Gyros Protein Technologies": {
+    "revenue": "USD 52.0M est. (~SEK 540M)",
+    "rd_spend": "USD 7.2M (~SEK 75M)",
+    "currency": "USD",
+    "fiscal_year": "FY2023/24",
+    "notes": "Subsidiary of Mesa Laboratories (Nasdaq: MLAB); Gyrolab automated nanoliter immunoassay platform"
+  },
+  "Hansa Biopharma": {
+    "revenue": "SEK 171.3M",
+    "rd_spend": "SEK 398.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: HNSA); Idefirix (imlifidase) immunomodulatory enzyme for desensitization"
+  },
+  "HemoCue": {
+    "revenue": "SEK 1,720.0M est. (Danaher Diagnostics $9.5B)",
+    "rd_spend": "SEK 135.0M est.",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Subsidiary of Danaher Corporation (NYSE: DHR); global leader in point-of-care microcuvette testing"
+  },
+  "Hexagon Pharma": {
+    "revenue": "SEK 7.5M est.",
+    "rd_spend": "SEK 2.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private pharmaceutical manufacturing technology and process engineering"
+  },
+  "IDL Diagnostics": {
+    "revenue": "SEK 35.8M (record sales in 2024/25)",
+    "rd_spend": "SEK 14.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "AroCell / IDL Biotech (Nasdaq First North: IDLDX); in vitro diagnostics for bladder cancer and oncology"
+  },
+  "Iconovo": {
+    "revenue": "SEK 16.8M",
+    "rd_spend": "SEK 38.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: ICO); dry powder inhalation devices (ICOpre, ICOres, ICOcap)"
+  },
+  "ImmunoIVD": {
+    "revenue": "SEK 16.5M",
+    "rd_spend": "SEK 5.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private; SPOT-it neonatal qPCR screening assays for severe combined immunodeficiency (SCID) and SMA"
+  },
+  "Infant Bacterial Therapeutics": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 112.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: IBT B); IBP-9414 phase 3 drug for necrotizing enterocolitis in preterm infants"
+  },
+  "Innovagen": {
+    "revenue": "SEK 22.4M",
+    "rd_spend": "SEK 4.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private CRO; custom antibody generation, peptide synthesis, and protein biochemistry"
+  },
+  "Isofol Medical": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 32.1M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: ISOFOL); Arfolitixorin folate receptor therapy for colorectal cancer"
+  },
+  "Laboratorio Reig Jofre": {
+    "revenue": "EUR 339.0M (~SEK 3.85B)",
+    "rd_spend": "EUR 17.0M (~5% of revenue)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (BME: RJF); European pharmaceutical group; Malm\u00f6 specialized aseptic antibiotic facility"
+  },
+  "Magle Biopharma": {
+    "revenue": "SEK 185.0M (Group total post-merger)",
+    "rd_spend": "SEK 34.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: MAGLE); starch microsphere technology and stem cell CDMO services"
+  },
+  "Magle Chemoswed": {
+    "revenue": "SEK 21.0M (Chemoswed operating unit)",
+    "rd_spend": "SEK 12.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Operating subsidiary of Magle Group (Malm\u00f6 API synthesis and chemical development)"
+  },
+  "Mendus": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 114.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: IMMU); Vididencel allogeneic dendritic cell therapy for cancer maintenance"
+  },
+  "Menten AI": {
+    "revenue": "USD 2.0M est.",
+    "rd_spend": "USD 7.5M",
+    "currency": "USD",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private AI & quantum computing peptide drug discovery platform (collaborations with Swedish biopharma)"
+  },
+  "Mentice": {
+    "revenue": "SEK 290.3M (SEK 265.4M in FY2023)",
+    "rd_spend": "SEK 42.1M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: MNTC); virtual reality and hardware simulators for endovascular interventions"
+  },
+  "Meribel Pharma Group": {
+    "revenue": "SEK 55.0M est.",
+    "rd_spend": "SEK 5.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private pharmaceutical manufacturing and packaging group (H\u00f6gan\u00e4s, Karlskoga, Solna sites)"
+  },
+  "Metenova": {
+    "revenue": "USD 24.5M (~SEK 255M)",
+    "rd_spend": "USD 4.2M (~SEK 44M)",
+    "currency": "USD",
+    "fiscal_year": "FY2023",
+    "notes": "Acquired by Repligen Corporation (Nasdaq: RGEN) in Oct 2023 for $173M; aseptic magnetic mixing systems"
+  },
+  "Modus Therapeutics": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 24.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: MODX); Sevuparin low molecular weight heparin for sepsis & inflammation"
+  },
+  "Moleculent": {
+    "revenue": "USD 0M (Pre-commercial)",
+    "rd_spend": "USD 5.5M (~SEK 58M)",
+    "currency": "USD",
+    "fiscal_year": "FY2024",
+    "notes": "Private spatial functional profiling; raised $26M Series A (June 2024) + $20M (April 2026)"
+  },
+  "NIOX": {
+    "revenue": "GBP 41.8M (~SEK 570M; \u00a336.8M in FY23)",
+    "rd_spend": "GBP 4.2M (~SEK 57M)",
+    "currency": "GBP",
+    "fiscal_year": "FY2024",
+    "notes": "NIOX Group plc; listed (LSE AIM: NIOX); NIOX VERO fractional exhaled nitric oxide (FeNO) asthma devices"
+  },
+  "Nanologica": {
+    "revenue": "SEK 14.54M (SEK 1.44M in FY2023)",
+    "rd_spend": "SEK 28.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: NICA); nanoporous silica NLAB Saga for preparative chromatography of insulin"
+  },
+  "Navinci Diagnostics": {
+    "revenue": "SEK 18.1M (72% YoY growth)",
+    "rd_spend": "SEK 25.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024/25",
+    "notes": "Private in situ proximity ligation assay kits for protein interaction imaging; raised \u20ac5.3M in 2025"
+  },
+  "Neogap Therapeutics": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 42.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Private personalized cancer immunotherapy; raised SEK 87M in Feb 2026 led by Sciety"
+  },
+  "Newbury Pharmaceuticals": {
+    "revenue": "SEK 18.5M (SEK 10.3M in FY2023)",
+    "rd_spend": "SEK 9.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: NEWBRY); registration, in-licensing and commercialization of specialty Rx"
+  },
+  "NuvoAir": {
+    "revenue": "USD 8.5M est. (~SEK 88M)",
+    "rd_spend": "USD 10.2M (~SEK 106M)",
+    "currency": "USD",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private digital health & virtual clinic for complex respiratory conditions; raised $28M+ funding"
+  },
+  "Octapharma": {
+    "revenue": "EUR 3,466.0M (Octapharma AB ~SEK 4,600M)",
+    "rd_spend": "EUR 108.0M (~SEK 1,220M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Private global human protein fractionation and recombinant biopharma; large Stockholm production plant"
+  },
+  "Oncopeptides": {
+    "revenue": "SEK 31.65M (SEK 35.22M in FY2023)",
+    "rd_spend": "SEK 184.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: ONCO); Pepaxti peptide-drug conjugate for relapsed/refractory multiple myeloma"
+  },
+  "Optimapharm": {
+    "revenue": "EUR 52.0M est. (~SEK 590M)",
+    "rd_spend": "EUR 4.8M (~SEK 55M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private full-service European CRO with clinical operations hub in Stockholm (400+ staff)"
+  },
+  "Orexo": {
+    "revenue": "SEK 590.0M",
+    "rd_spend": "SEK 148.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: ORX); Zubsolv opioid dependence; AmorphOX nasal drug delivery platform"
+  },
+  "Pelago Bioscience": {
+    "revenue": "SEK 75.0M est.",
+    "rd_spend": "SEK 16.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private target engagement CRO; inventors of CETSA technology; acquired Red Glead Discovery in 2026"
+  },
+  "Peptonic Medical": {
+    "revenue": "SEK 26.9M",
+    "rd_spend": "SEK 18.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Listed (Spotlight: PMED); women's intimate healthcare; VagiVital non-hormonal treatment for vaginal atrophy"
+  },
+  "Pharmadule Morimatsu": {
+    "revenue": "SEK 520.0M est. (Morimatsu RMB 4,850M)",
+    "rd_spend": "SEK 28.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Subsidiary of Morimatsu International (HKEX: 2155); global pioneer in modular pharmaceutical cleanrooms"
+  },
+  "Pixelgen Technologies": {
+    "revenue": "SEK 7.5M est.",
+    "rd_spend": "SEK 65.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Private Molecular Pixelation 3D spatial proteomics; raised $15.5M Series B (2026) and \u20ac12.5M EIC"
+  },
+  "PolyPeptide Group": {
+    "revenue": "EUR 336.8M (~SEK 3.82B; \u20ac320.4M in FY23)",
+    "rd_spend": "EUR 1.1M expensed (+ major CDMO CAPEX)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (SIX Swiss Exchange: PPGN); premier peptide & oligonucleotide CDMO; major manufacturing plant in Malm\u00f6"
+  },
+  "Q-Linea": {
+    "revenue": "SEK 4.4M",
+    "rd_spend": "SEK 178.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq Stockholm: QLINEA); ASTar rapid antimicrobial susceptibility testing system (FDA 510(k) cleared)"
+  },
+  "Qlucore": {
+    "revenue": "SEK 14.37M",
+    "rd_spend": "SEK 22.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Listed (Nasdaq First North: QLUC); Omics data visualization software & Qlucore Diagnostics clinical platform"
+  },
+  "RaySearch Laboratories": {
+    "revenue": "SEK 1,192.0M (SEK 1,022.2M in FY2023)",
+    "rd_spend": "SEK 174.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: RAY B); RayStation radiation treatment planning software & RayCare OIS"
+  },
+  "Recipharm": {
+    "revenue": "SEK 12,400.0M est. (~EUR 1.1B)",
+    "rd_spend": "SEK 380.0M est.",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private global top-5 CDMO; acquired by EQT / Nichepharm; development and manufacturing of sterile injectables"
+  },
+  "Red Glead Discovery": {
+    "revenue": "SEK 48.0M",
+    "rd_spend": "SEK 6.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Acquired by Pelago Bioscience in June 2026; Lund-based preclinical medicinal chemistry & peptide CRO"
+  },
+  "Redoxis": {
+    "revenue": "SEK 18.5M",
+    "rd_spend": "SEK 3.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private preclinical CRO specialized in in vivo inflammatory and autoimmune disease models (Medicon Village Lund)"
+  },
+  "Ribocure Pharmaceuticals": {
+    "revenue": "USD 0M (Clinical stage)",
+    "rd_spend": "USD 8.5M (~SEK 88M)",
+    "currency": "USD",
+    "fiscal_year": "FY2024",
+    "notes": "Private RNA therapeutics platform in cardiovascular and renal diseases; secured $33M equity in July 2025"
+  },
+  "SARomics Biostructures": {
+    "revenue": "SEK 21.8M",
+    "rd_spend": "SEK 4.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private structural biology and X-ray crystallography / cryo-EM CRO services (Lund, Sweden)"
+  },
+  "SHL Medical": {
+    "revenue": "USD 720.0M est. (~SEK 7.5B)",
+    "rd_spend": "USD 58.0M (~SEK 600M)",
+    "currency": "USD",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private global autoinjector pioneer; hundreds of millions of units delivered; major design & assembly in Stockholm"
+  },
+  "Salipro Biotech": {
+    "revenue": "SEK 35.0M",
+    "rd_spend": "SEK 24.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private; Direct MX membrane protein stabilization technology; partnering with Boehringer Ingelheim & Sanofi"
+  },
+  "Scandinavian Biopharma Holding": {
+    "revenue": "SEK 154.0M",
+    "rd_spend": "SEK 75.0M (incl. EDCTP grants)",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private biopharma; ETVAX oral vaccine against ETEC bacterial diarrhea in phase 3 readiness"
+  },
+  "Scibase": {
+    "revenue": "SEK 29.71M",
+    "rd_spend": "SEK 38.6M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: SCIB); Nevisense electrical impedance spectroscopy for melanoma & skin barrier"
+  },
+  "SenzaGen": {
+    "revenue": "SEK 57.7M (SEK 49.9M in FY2023)",
+    "rd_spend": "SEK 14.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: SENZA); GARD non-animal in vitro toxicological gene expression test assays"
+  },
+  "Senzime": {
+    "revenue": "SEK 58.5M (SEK 35.8M in FY2023)",
+    "rd_spend": "SEK 44.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: SEZI); TetraGraph electromyography monitoring to eliminate post-op paralysis"
+  },
+  "Simsen Diagnostics": {
+    "revenue": "SEK 4.5M",
+    "rd_spend": "SEK 15.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Private ultra-sensitive ctDNA liquid biopsy for minimal residual disease; raised SEK 10M in May 2026"
+  },
+  "Single Technologies": {
+    "revenue": "SEK 21.2M",
+    "rd_spend": "SEK 52.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Private high-throughput 3D sequencing platform (Theta); secured \u20ac12.5M (SEK 170M) EIC funding"
+  },
+  "Spago Nanomedical": {
+    "revenue": "SEK 1.91M",
+    "rd_spend": "SEK 36.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Spotlight: SPAG); tumor-selective polymer nanoparticles (SpagoPix MRI & Tumorad radionuclide)"
+  },
+  "Sprint Bioscience": {
+    "revenue": "SEK 65.6M",
+    "rd_spend": "SEK 52.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: SPRINT); fragment-based preclinical oncology drug discovery and out-licensing"
+  },
+  "Strike Pharma": {
+    "revenue": "SEK 0M (Pre-clinical)",
+    "rd_spend": "SEK 18.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private immunotherapy; Adapt vaCC individualized therapeutic cancer vaccines; raised SEK 45M"
+  },
+  "StromaBio": {
+    "revenue": "SEK 0M (Early stage)",
+    "rd_spend": "SEK 5.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private mesenchymal stromal cell (MSC) therapy for acute inflammatory diseases; Karolinska spin-out"
+  },
+  "Svar Life Science": {
+    "revenue": "SEK 235.0M est.",
+    "rd_spend": "SEK 28.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023/24",
+    "notes": "Private Swedish diagnostic tools and biomarker testing company (iLite cell-based functional assays, Wieslab)"
+  },
+  "Swedish Orphan Biovitrum": {
+    "revenue": "SEK 26,000.0M (SEK 26.0B; SEK 22.1B in FY23)",
+    "rd_spend": "SEK 3,650.0M (SEK 3.65B)",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Sobi; listed (Nasdaq Stockholm: SOBI); Nordic biopharma flagship in rare disease hematology & immunology"
+  },
+  "TFS": {
+    "revenue": "SEK 1,220.0M (Ratos sales)",
+    "rd_spend": "SEK 42.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "TFS HealthScience; subsidiary of Ratos AB (Nasdaq Stockholm: RATO B); leading international mid-sized CRO"
+  },
+  "Tribune Therapeutics": {
+    "revenue": "EUR 0M (Pre-clinical)",
+    "rd_spend": "EUR 4.5M (~SEK 50M)",
+    "currency": "EUR",
+    "fiscal_year": "FY2024",
+    "notes": "Private biologics targeting CCN proteins for severe fibrotic disorders; raised \u20ac37M Series A in March 2025"
+  },
+  "VERIGRAFT": {
+    "revenue": "SEK 0M (Clinical stage)",
+    "rd_spend": "SEK 42.0M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Private autologous tissue-engineered blood vessels and valves; raised SEK 110M / \u20ac10M in Feb 2026"
+  },
+  "Vicore Pharma": {
+    "revenue": "SEK 8.4M",
+    "rd_spend": "SEK 264.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq Stockholm: VICO); angiotensin II type 2 receptor agonists (ATRAGs) for IPF (ASPIRE study)"
+  },
+  "XVIVO": {
+    "revenue": "SEK 822.4M (SEK 604.9M in FY2023)",
+    "rd_spend": "SEK 114.5M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "XVIVO Perfusion; listed (Nasdaq Stockholm: XVIVO); global leader in machine perfusion for organ transplantation"
+  },
+  "Xbrane Biopharma": {
+    "revenue": "SEK 238.7M (SEK 210M in FY2024)",
+    "rd_spend": "SEK 305.8M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Listed (Nasdaq Stockholm: XBRANE); biosimilars developer (Ximluci ranibizumab, biosimilar certolizumab)"
+  },
+  "Xintela": {
+    "revenue": "SEK 3.8M",
+    "rd_spend": "SEK 31.4M",
+    "currency": "SEK",
+    "fiscal_year": "FY2024",
+    "notes": "Listed (Nasdaq First North: XINT); integrin-targeted stem cell therapies (XSTEM) and antibody oncology (Targinta)"
+  },
+  "mEDICORENT": {
+    "revenue": "SEK 22.5M",
+    "rd_spend": "SEK 1.2M",
+    "currency": "SEK",
+    "fiscal_year": "FY2023",
+    "notes": "Private clinical trial recruitment, staffing, and monitoring outsourcing agency based in Solna"
+  }
+}

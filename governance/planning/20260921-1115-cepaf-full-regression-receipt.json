@@ -1,0 +1,28 @@
+{
+  "receipt_type": "cepaf_gleam_full_regression",
+  "generated_at": "2026-09-21T11:15:00+02:00",
+  "authority": "gleam_test",
+  "scope": "apps/cepaf_gleam",
+  "command": "gleam test",
+  "result": {"passed": 11988, "failed": 0, "exit_code": 0},
+  "log": "/tmp/cepaf-full-1112.log",
+  "verified_surfaces": [
+    "MCP harness and successor MCP",
+    "system feature census/store/API",
+    "execution dashboard observer/projection",
+    "holonic swarm supervision",
+    "bounded lifecycle and safety tests"
+  ],
+  "limits": {
+    "canonical_coordinator_admission": "not_proven",
+    "independent_release_authority": "not_granted",
+    "feature_mcp_coverage": "848 declared, 0 usable observed",
+    "system_admission": false
+  },
+  "sa_plan": {
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "workflow": "uos-system-mcp-features/cepaf-regression/20260921-1115",
+    "task_completion": false
+  },
+  "admitted": false
+}

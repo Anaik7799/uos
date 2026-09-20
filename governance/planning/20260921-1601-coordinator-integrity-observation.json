@@ -1,0 +1,37 @@
+{
+  "schema_version": "uos.coordinator.integrity-observation.v1",
+  "observed_at": "2026-09-21T16:01:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "verifier": "apps/uos_swarm/src/session_store_cli.gleam verify",
+  "canonical": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "events": 117,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": false,
+    "replay_ok": false,
+    "result": "CORRUPT"
+  },
+  "candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+    "events": 421,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": true,
+    "replay_ok": true,
+    "result": "INTERNALLY_COHERENT"
+  },
+  "verifier_outputs": {
+    "canonical_sha256": "6edf7e034a3b2784818bde1f8b7961ffa3e5bf364efc68e923bf43fdb22028ea",
+    "candidate_sha256": "ded563706450cd8ccf9f847ef8878a4316b0e373e91cc154278737c8422e826e"
+  },
+  "reconciliation": {
+    "common_prefix_events": 0,
+    "automatic_cutover": "REFUSED",
+    "writer_quiescence": "NOT_OBSERVED",
+    "source_of_truth_selection": "PENDING_INDEPENDENT_AUTHORITY"
+  },
+  "authority_boundary": "Read-only integrity observation; no database mutation, migration, cutover, session claim, task completion, runtime admission, release, or operational acceptance."
+}

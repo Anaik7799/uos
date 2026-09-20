@@ -59,19 +59,28 @@ pub fn exact_and_semantic_lookup_test() {
     )
 
   // Exact lookup
-  let exact_res = rag_cache_mesh.lookup_exact(mesh, "what is zero-muda architecture? ")
+  let exact_res =
+    rag_cache_mesh.lookup_exact(mesh, "what is zero-muda architecture? ")
   should.be_true(exact_res != Error(Nil))
 
   // Semantic lookup with close vector
   let v_query_close = [0.79, 0.61, 0.0]
   let semantic_res =
-    rag_cache_mesh.lookup_semantic(mesh, "explain zero-muda design", v_query_close)
+    rag_cache_mesh.lookup_semantic(
+      mesh,
+      "explain zero-muda design",
+      v_query_close,
+    )
   should.be_true(semantic_res != Error(Nil))
 
   // Semantic lookup with distant vector should miss
   let v_query_distant = [0.0, 0.0, 1.0]
   let distant_res =
-    rag_cache_mesh.lookup_semantic(mesh, "unrelated cooking query", v_query_distant)
+    rag_cache_mesh.lookup_semantic(
+      mesh,
+      "unrelated cooking query",
+      v_query_distant,
+    )
   should.equal(distant_res, Error(Nil))
 }
 
@@ -103,41 +112,11 @@ pub fn record_hit_and_miss_test() {
 pub fn lru_capacity_and_expiry_test() {
   let mesh = rag_cache_mesh.new(2, 0.85)
   let mesh =
-    rag_cache_mesh.put(
-      mesh,
-      "e1",
-      "q1",
-      [1.0, 0.0],
-      "r1",
-      [],
-      100,
-      1000,
-      100,
-    )
+    rag_cache_mesh.put(mesh, "e1", "q1", [1.0, 0.0], "r1", [], 100, 1000, 100)
   let mesh =
-    rag_cache_mesh.put(
-      mesh,
-      "e2",
-      "q2",
-      [0.0, 1.0],
-      "r2",
-      [],
-      200,
-      1100,
-      500,
-    )
+    rag_cache_mesh.put(mesh, "e2", "q2", [0.0, 1.0], "r2", [], 200, 1100, 500)
   let mesh =
-    rag_cache_mesh.put(
-      mesh,
-      "e3",
-      "q3",
-      [0.5, 0.5],
-      "r3",
-      [],
-      300,
-      1200,
-      500,
-    )
+    rag_cache_mesh.put(mesh, "e3", "q3", [0.5, 0.5], "r3", [], 300, 1200, 500)
 
   // Cap should be 2
   let metrics = rag_cache_mesh.to_summary_metrics(mesh)
@@ -170,8 +149,7 @@ pub fn vector_refresh_test() {
       3600,
     )
 
-  let mesh =
-    rag_cache_mesh.refresh_vector(mesh, "e-refresh", [0.0, 1.0], 1500)
+  let mesh = rag_cache_mesh.refresh_vector(mesh, "e-refresh", [0.0, 1.0], 1500)
   let entry_res = rag_cache_mesh.lookup_exact(mesh, "Dynamic schema query")
   case entry_res {
     Ok(e) -> {

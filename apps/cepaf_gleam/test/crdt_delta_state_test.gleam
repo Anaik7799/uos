@@ -103,11 +103,7 @@ pub fn mesh_delta_state_composition_test() {
         "claude-worker",
         Dot("nas-1", 1),
       ),
-      task_counters: pncounter_increment(
-        state_nas1.task_counters,
-        "nas-1",
-        4,
-      ),
+      task_counters: pncounter_increment(state_nas1.task_counters, "nas-1", 4),
     )
 
   // vm-1 registers codex-worker
@@ -120,11 +116,7 @@ pub fn mesh_delta_state_composition_test() {
         Dot("vm-1", 1),
       ),
       task_counters: pncounter_increment(state_vm1.task_counters, "vm-1", 7),
-      leader_lease: new_lww_register(
-        "vm-1",
-        1_700_000_000_200_000,
-        "vm-1",
-      ),
+      leader_lease: new_lww_register("vm-1", 1_700_000_000_200_000, "vm-1"),
     )
 
   let unified = merge_mesh_states(s_nas1, s_vm1)

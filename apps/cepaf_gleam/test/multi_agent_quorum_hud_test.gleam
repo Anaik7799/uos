@@ -27,12 +27,30 @@ pub fn update_from_engine_test() {
   let hud = multi_agent_quorum_hud.init_quorum_hud()
   let engine0 = init_quorum_engine()
 
-  let ballot0 = create_ballot("prop-test-01", "Admission", TwoOfThreeSovereign, 1000)
-  let ballot1 = cast_ballot_vote(ballot0, AgySovereign, QuorumApprove, "Approved", "hash-1", 1010)
-  let ballot2 = cast_ballot_vote(ballot1, ClaudeSovereign, QuorumApprove, "Approved", "hash-2", 1020)
+  let ballot0 =
+    create_ballot("prop-test-01", "Admission", TwoOfThreeSovereign, 1000)
+  let ballot1 =
+    cast_ballot_vote(
+      ballot0,
+      AgySovereign,
+      QuorumApprove,
+      "Approved",
+      "hash-1",
+      1010,
+    )
+  let ballot2 =
+    cast_ballot_vote(
+      ballot1,
+      ClaudeSovereign,
+      QuorumApprove,
+      "Approved",
+      "hash-2",
+      1020,
+    )
 
   let engine1 = record_ballot(engine0, ballot2)
-  let updated_hud = multi_agent_quorum_hud.update_from_engine(hud, engine1, ballot2)
+  let updated_hud =
+    multi_agent_quorum_hud.update_from_engine(hud, engine1, ballot2)
 
   updated_hud.total_ballots |> should.equal(1)
   updated_hud.ratified_count |> should.equal(1)

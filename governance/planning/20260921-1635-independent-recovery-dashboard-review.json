@@ -1,0 +1,28 @@
+{
+  "schema": "uos.independent-review-receipt.v1",
+  "timestamp": "20260921-1635",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "reviewers": ["recovery_review", "dashboard_review"],
+  "recovery": {
+    "candidate_rows": 421,
+    "unique_operations": true,
+    "integrity_ok": true,
+    "typed_replay_ok": true,
+    "candidate_hash": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+    "historical_leases_present": true,
+    "fresh_enrollment_required": true,
+    "cutover_authority": "missing"
+  },
+  "dashboard": {
+    "rows": 21,
+    "completed": 4,
+    "blocked": 17,
+    "executing": 0,
+    "unknown": 0,
+    "dag_edges": 25,
+    "cycles": 0,
+    "recommendations": []
+  },
+  "conclusion": "Evidence is independently consistent but remains non-admitted; runtime authority, fresh agent enrollment, lease fencing, and operational acceptance are still open.",
+  "admission": "not_admitted"
+}

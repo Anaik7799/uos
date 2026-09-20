@@ -1,6 +1,4 @@
-import cepaf_gleam/knowledge/c3i_ingestion_actor.{
-  GetMetrics, ValidatePayload,
-}
+import cepaf_gleam/knowledge/c3i_ingestion_actor.{GetMetrics, ValidatePayload}
 import cepaf_gleam/knowledge/c3i_knowledge_actor.{
   ApplyDecay, CitedRecall, IngestItem, QueryKnowledge,
 }
@@ -99,7 +97,6 @@ pub fn ingestion_actor_zero_trust_filter_test() {
   sql_res |> should.be_error()
 
   // Verify metrics
-  let metrics =
-    actor.call(subject, 500, fn(reply_to) { GetMetrics(reply_to) })
+  let metrics = actor.call(subject, 500, fn(reply_to) { GetMetrics(reply_to) })
   metrics.zero_trust_violations |> should.equal(2)
 }

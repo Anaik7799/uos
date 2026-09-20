@@ -1,0 +1,22 @@
+{
+  "schema": "uos.live-mcp-inventory-refresh.v1",
+  "observed_at": "2026-09-21T16:26:37Z",
+  "authority": "read-only stdio MCP observation; no mutating tool invoked",
+  "server": {"name":"c3i-planning-mcp","version":"1.0.0"},
+  "transport": "stdio",
+  "artifacts": {
+    "response_path": "/tmp/mcp-inventory-20260921-1626.json",
+    "response_sha256": "ea25587a4519bfc113d4d675895a5c58d84b081af499828ce38911a043fd7377",
+    "stderr_sha256": "50ead389705b6c0f3c75628e831a008fc159e427dd1fd2e7d0895cef7d8466e4"
+  },
+  "observed": {
+    "tools_list_count": 53,
+    "declared_count": 65,
+    "unavailable_count": 12,
+    "declared_unprobed_count": 53,
+    "unavailable": ["vault_status","vault_list_secrets","vault_policy_get","vault_audit_tail","vault_health","control_loop","safety_status","registry_status","run_selfcheck","run_gate","zk_search","sa_bridge_submit"]
+  },
+  "runtime_admission": "not_granted",
+  "effect_authority": false,
+  "completion_credit": false
+}

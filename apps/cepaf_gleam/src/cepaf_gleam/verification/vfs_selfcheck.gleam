@@ -168,7 +168,13 @@ pub fn encode_selfcheck_report_json(report: VfsSelfcheckReport) -> String {
     })
 
   json.object([
-    #("status", json.string(case report.all_passed { True -> "ok" False -> "failed" })),
+    #(
+      "status",
+      json.string(case report.all_passed {
+        True -> "ok"
+        False -> "failed"
+      }),
+    ),
     #("contract", json.string(report.contract)),
     #("all_passed", json.bool(report.all_passed)),
     #("total_laws", json.int(report.total_laws)),

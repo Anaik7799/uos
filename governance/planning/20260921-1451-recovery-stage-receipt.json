@@ -1,0 +1,34 @@
+{
+  "schema": "uos.recovery-stage-receipt.v1",
+  "timestamp": "20260921-1451",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r02-recovery-candidate",
+  "worker": "codex-01a083d2-recovery",
+  "attempt": 3,
+  "command": "gleam run -m session_store_cli -- recover-stage <damaged-events> <candidate>",
+  "source": "var/coordination/tri-agent/events-damaged-20260907T2008Z",
+  "candidate_database": "/home/an/uos-recovery-candidates/20260921-1451-recovery-attempt-3/coordinator.sqlite3",
+  "candidate_digest": "2ba45409bcd888ed025dac430756d16fb52b7d1cc95320a412d72b9f0cdce46e",
+  "database_sha256": "e863f1e057542dcb2ca13dbcbfabfcf7504a5363dd53525baf473054fe9bfb51",
+  "observed": {
+    "exit_code": 0,
+    "sqlite_integrity_check": "ok",
+    "active_event_rows": 0,
+    "quarantine_rows": 1,
+    "authority": "evidence_only",
+    "admitted": false
+  },
+  "canonical_safety": {
+    "canonical_history_modified": false,
+    "canonical_leases_activated": false,
+    "production_cutover": false,
+    "effect_authority": false
+  },
+  "completion": {
+    "recovery_stage_observed": true,
+    "task_complete": false,
+    "release_authorization": "missing",
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "next_gate": "independent authorization of candidate comparison and operational cutover"
+}

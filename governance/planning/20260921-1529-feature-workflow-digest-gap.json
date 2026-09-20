@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "receipt_type": "feature_workflow_digest_gap_observation",
+  "generated_at": "2026-09-21T15:29:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "authority": "sa_plan_sqlite_read_only_observation",
+  "database": {
+    "path": "var/sa-plan/uos.sqlite3",
+    "sha256": "0d205a49991e64b2844991689b09a0850a76f7ccfde2e4a3ec5dd9512f9857ad"
+  },
+  "query": "SELECT input FROM sa_plan_workflow WHERE kind='harness-feature-tracking'",
+  "observed": {
+    "rows": 52,
+    "distinct_feature_ids": 52,
+    "schema": "uos.harness.feature-identity.v1",
+    "missing_catalog_sha256": 52,
+    "missing_ledger_sha256": 52,
+    "state": "running"
+  },
+  "interpretation": "Rows are metadata-only workflow identities; no catalog or ledger digest is bound, so exact database-backed coverage and two-key availability cannot be claimed.",
+  "required_followup": "Use an Sa-plan-authorized task to bind candidate catalog and ledger digests, then verify exact MCP readback against the immutable database hash.",
+  "effect_authority": false,
+  "runtime_admission": false,
+  "completion_claim": false
+}

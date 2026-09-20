@@ -23,18 +23,23 @@ pub fn new_lww_set() -> LwwElementSet(a) {
   LwwElementSet(add_set: [], remove_set: [])
 }
 
-pub fn lww_add(set: LwwElementSet(a), element: a, timestamp_ns: Int) -> LwwElementSet(a) {
-  LwwElementSet(
-    ..set,
-    add_set: [LwwEntry(element, timestamp_ns), ..set.add_set],
-  )
+pub fn lww_add(
+  set: LwwElementSet(a),
+  element: a,
+  timestamp_ns: Int,
+) -> LwwElementSet(a) {
+  LwwElementSet(..set, add_set: [LwwEntry(element, timestamp_ns), ..set.add_set])
 }
 
-pub fn lww_remove(set: LwwElementSet(a), element: a, timestamp_ns: Int) -> LwwElementSet(a) {
-  LwwElementSet(
-    ..set,
-    remove_set: [LwwEntry(element, timestamp_ns), ..set.remove_set],
-  )
+pub fn lww_remove(
+  set: LwwElementSet(a),
+  element: a,
+  timestamp_ns: Int,
+) -> LwwElementSet(a) {
+  LwwElementSet(..set, remove_set: [
+    LwwEntry(element, timestamp_ns),
+    ..set.remove_set
+  ])
 }
 
 pub fn lww_contains(set: LwwElementSet(a), element: a) -> Bool {
@@ -61,7 +66,10 @@ pub fn lww_contains(set: LwwElementSet(a), element: a) -> Bool {
   latest_add > 0 && latest_add > latest_rem
 }
 
-pub fn lww_merge(s1: LwwElementSet(a), s2: LwwElementSet(a)) -> LwwElementSet(a) {
+pub fn lww_merge(
+  s1: LwwElementSet(a),
+  s2: LwwElementSet(a),
+) -> LwwElementSet(a) {
   LwwElementSet(
     add_set: list.append(s1.add_set, s2.add_set),
     remove_set: list.append(s1.remove_set, s2.remove_set),
@@ -85,10 +93,7 @@ pub fn new_or_set() -> OrSet(a) {
 }
 
 pub fn or_add(set: OrSet(a), element: a, unique_tag: String) -> OrSet(a) {
-  OrSet(
-    ..set,
-    add_set: [OrEntry(element, unique_tag), ..set.add_set],
-  )
+  OrSet(..set, add_set: [OrEntry(element, unique_tag), ..set.add_set])
 }
 
 pub fn or_remove(set: OrSet(a), element: a) -> OrSet(a) {
@@ -98,10 +103,7 @@ pub fn or_remove(set: OrSet(a), element: a) -> OrSet(a) {
     |> list.map(fn(entry) { entry.tag })
     |> set.from_list
 
-  OrSet(
-    ..set,
-    tombstone_tags: set.union(set.tombstone_tags, tags_to_tombstone),
-  )
+  OrSet(..set, tombstone_tags: set.union(set.tombstone_tags, tags_to_tombstone))
 }
 
 pub fn or_contains(set: OrSet(a), element: a) -> Bool {

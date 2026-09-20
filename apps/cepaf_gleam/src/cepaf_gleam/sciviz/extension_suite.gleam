@@ -10,17 +10,12 @@
 //// Synthesizes Unit, Component, System, TDD, BDD, UI Elements, Property, Fuzz & Chaos
 //// testing with pure server-rendered WebUI displays (0 client JS, Zero-Muda purity).
 
-import gleam/int
-import gleam/list
-import gleam/option.{type Option}
-import gleam/string
 import cepaf_gleam/sciviz/extension_catalog.{
-  type ExtensionCategory, all_167_extensions, category_to_string,
-  BioinformaticsGenomics, CompositeMultiPanel,
+  type ExtensionCategory, BioinformaticsGenomics, CompositeMultiPanel,
   FlowAlluvialSankey, HierarchicalPartition, IntrospectionLayerEditing,
   MultiScaleCoordinate, NetworkGraphTopology, PatternFilterShader,
   QualityControlTimeSeries, SpatialVectorField, TypographyTextRepel,
-  UncertaintyDistribution,
+  UncertaintyDistribution, all_167_extensions, category_to_string,
 }
 import cepaf_gleam/sciviz/extension_deep_dive.{build_deep_dive}
 import cepaf_gleam/sciviz/extension_features.{get_feature_profile}
@@ -28,6 +23,10 @@ import cepaf_gleam/sciviz/test_suite.{
   type TestModality, BddTesting, ChaosTesting, ComponentTesting, FuzzTesting,
   PropertyTesting, SystemTesting, TddTesting, UiElementsTesting, UnitTesting,
 }
+import gleam/int
+import gleam/list
+import gleam/option.{type Option}
+import gleam/string
 
 /// Result of an Extension Feature Test Case
 pub type ExtensionTestCaseResult {
@@ -53,7 +52,8 @@ pub type ExtensionTestCaseResult {
 // USE CASE EXT-01: ggdist / ggridges Slab & Interval Distributional Uncertainty
 // -----------------------------------------------------------------------------
 pub fn uc_ext01_ggdist_slab_interval_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<defs><linearGradient id=\"slabGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">"
     <> "<stop offset=\"0%\" stop-color=\"#38bdf8\" stop-opacity=\"0.8\"/>"
     <> "<stop offset=\"100%\" stop-color=\"#0284c7\" stop-opacity=\"0.1\"/>"
@@ -100,7 +100,8 @@ pub fn uc_ext01_ggdist_slab_interval_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-02: ggraph / geomnet Force-Directed Network & Node-Edge Topology
 // -----------------------------------------------------------------------------
 pub fn uc_ext02_ggraph_force_directed_network_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"28\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ggraph / geomnet: Force-Directed Topological Mesh</text>"
     // Edges
     <> "<path d=\"M 140 70 Q 185 80, 240 100\" stroke=\"#334155\" stroke-width=\"1.5\" fill=\"none\"/>"
@@ -153,7 +154,8 @@ pub fn uc_ext02_ggraph_force_directed_network_test() -> ExtensionTestCaseResult 
 // USE CASE EXT-03: ggalluvial / ggsankeyfier Multi-Stage Stream Flow Ribbon
 // -----------------------------------------------------------------------------
 pub fn uc_ext03_ggalluvial_stream_flow_ribbon_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"28\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ggalluvial / ggsankeyfier: Multi-Stage Flow Ribbons</text>"
     // Alluvial Ribbons (Cubic Bezier Streams)
     // Flow 1: Intake -> Active -> Admitted
@@ -198,7 +200,8 @@ pub fn uc_ext03_ggalluvial_stream_flow_ribbon_test() -> ExtensionTestCaseResult 
 // USE CASE EXT-04: treemapify Hierarchical Nested Rectangle Voronoi/Treemap
 // -----------------------------------------------------------------------------
 pub fn uc_ext04_treemapify_nested_hierarchical_rect_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"28\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">treemapify: Hierarchical Space-Filling Treemap</text>"
     // Canvas border: x=40, y=40, w=400, h=135
     // Apps (45%): w=180, h=135
@@ -244,7 +247,8 @@ pub fn uc_ext04_treemapify_nested_hierarchical_rect_test() -> ExtensionTestCaseR
 // USE CASE EXT-05: ComplexUpset / ggupset Intersecting Set Combination Matrix
 // -----------------------------------------------------------------------------
 pub fn uc_ext05_complex_upset_combination_matrix_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"24\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ComplexUpset / ggupset: Combination Set Matrix</text>"
     // Upper Bar Chart (Intersection Sizes)
     <> "<rect x=\"160\" y=\"35\" width=\"24\" height=\"65\" fill=\"#38bdf8\" rx=\"2\"/>"
@@ -308,7 +312,8 @@ pub fn uc_ext05_complex_upset_combination_matrix_test() -> ExtensionTestCaseResu
 // USE CASE EXT-06: ggquiver / ggfields 2D Vector Directional Fluid Field
 // -----------------------------------------------------------------------------
 pub fn uc_ext06_ggquiver_vector_fluid_field_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"26\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ggquiver / ggfields: 2D Directional Vector Fluid Grid</text>"
     // Defs for arrow marker
     <> "<defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">"
@@ -349,7 +354,7 @@ pub fn uc_ext06_ggquiver_vector_fluid_field_test() -> ExtensionTestCaseResult {
     rendered_svg: svg,
     passed: True,
     duration_us: 76,
-    shannon_entropy_bits: 2.80,
+    shannon_entropy_bits: 2.8,
     tags: ["quiver", "ggquiver", "ggfields", "vectors", "spatial"],
   )
 }
@@ -358,7 +363,8 @@ pub fn uc_ext06_ggquiver_vector_fluid_field_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-07: ggQC / xmrr Statistical Process Control (SPC) XmR Chart
 // -----------------------------------------------------------------------------
 pub fn uc_ext07_ggqc_spc_control_chart_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"24\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ggQC / xmrr: Statistical Process Control (XmR Chart)</text>"
     // UCL line (y=50)
     <> "<line x1=\"60\" y1=\"50\" x2=\"440\" y2=\"50\" stroke=\"#ef4444\" stroke-width=\"1.5\" stroke-dasharray=\"4,4\"/>"
@@ -409,7 +415,8 @@ pub fn uc_ext07_ggqc_spc_control_chart_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-08: survminer / ggsurvfit Kaplan-Meier Survival Step-Function
 // -----------------------------------------------------------------------------
 pub fn uc_ext08_survminer_kaplan_meier_step_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"24\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">survminer / ggsurvfit: Kaplan-Meier Survival Curve</text>"
     // Axes: origin (60, 140)
     <> "<line x1=\"60\" y1=\"35\" x2=\"60\" y2=\"140\" stroke=\"#334155\" stroke-width=\"1\"/>"
@@ -451,7 +458,13 @@ pub fn uc_ext08_survminer_kaplan_meier_step_test() -> ExtensionTestCaseResult {
     passed: True,
     duration_us: 92,
     shannon_entropy_bits: 2.87,
-    tags: ["survival", "survminer", "ggsurvfit", "kaplan-meier", "bioinformatics"],
+    tags: [
+      "survival",
+      "survminer",
+      "ggsurvfit",
+      "kaplan-meier",
+      "bioinformatics",
+    ],
   )
 }
 
@@ -459,7 +472,8 @@ pub fn uc_ext08_survminer_kaplan_meier_step_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-09: ggtree / ggdendro Circular Phylogeny Radial Cladogram
 // -----------------------------------------------------------------------------
 pub fn uc_ext09_ggtree_circular_cladogram_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"24\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ggtree / ggdendro: Circular Phylogenetic Cladogram</text>"
     // Center: (240, 110)
     // Concentric guide rings
@@ -511,7 +525,8 @@ pub fn uc_ext09_ggtree_circular_cladogram_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-10: geomtextpath / ggrepel Curved Geodesic Text Along Path
 // -----------------------------------------------------------------------------
 pub fn uc_ext10_geomtextpath_curved_geodesic_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"24\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">geomtextpath / ggrepel: Curved Text Along Geodesic Path</text>"
     // Path def
     <> "<defs><path id=\"textCurve\" d=\"M 50 130 C 130 50, 210 170, 290 90 C 350 30, 410 130, 450 90\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.5\" stroke-dasharray=\"3,3\"/></defs>"
@@ -552,7 +567,8 @@ pub fn uc_ext10_geomtextpath_curved_geodesic_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-11: ggHoriPlot Horizon Graph for High-Density Telemetry
 // -----------------------------------------------------------------------------
 pub fn uc_ext11_gghoriplot_folded_horizon_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"22\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ggHoriPlot: 2-Band Folded Telemetry Horizon Plot</text>"
     // Channel 1: BEAM Run Queue
     <> "<rect x=\"50\" y=\"35\" width=\"400\" height=\"35\" fill=\"#0f172a\" stroke=\"#1e293b\" stroke-width=\"1\" rx=\"2\"/>"
@@ -596,7 +612,8 @@ pub fn uc_ext11_gghoriplot_folded_horizon_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-12: patchwork / cowplot Multi-Panel Layout Assembly Monoid
 // -----------------------------------------------------------------------------
 pub fn uc_ext12_patchwork_inset_multipanel_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"22\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">patchwork / cowplot: Declarative Inset &amp; Multi-Panel Assembly</text>"
     // Panel A: Main Scatter (Left, Top)
     <> "<rect x=\"40\" y=\"35\" width=\"190\" height=\"80\" fill=\"#0f172a\" stroke=\"#38bdf8\" stroke-width=\"1\" rx=\"3\"/>"
@@ -643,7 +660,8 @@ pub fn uc_ext12_patchwork_inset_multipanel_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-13: ggnewscale Multi-Scale Invertible Adjunction & Decoupling
 // -----------------------------------------------------------------------------
 pub fn uc_ext13_ggnewscale_dual_palette_adjunction_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"22\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">ggnewscale: Dual Independent Aesthetic Scales</text>"
     // Layer 1: Background Density Heatmap (Scale 1: Viridis)
     <> "<rect x=\"50\" y=\"40\" width=\"320\" height=\"110\" fill=\"#1e1b4b\" rx=\"4\"/>"
@@ -690,7 +708,8 @@ pub fn uc_ext13_ggnewscale_dual_palette_adjunction_test() -> ExtensionTestCaseRe
 // USE CASE EXT-14: ggfx / ggblend Shading Filter Perturbation & Extreme Fuzz Robustness
 // -----------------------------------------------------------------------------
 pub fn uc_ext14_ggfx_glow_filter_fuzz_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     // SVG Filter definitions for neon glow
     <> "<defs><filter id=\"neonGlow\" x=\"-30%\" y=\"-30%\" width=\"160%\" height=\"160%\">"
     <> "<feGaussianBlur stdDeviation=\"4\" result=\"blur\"/>"
@@ -735,7 +754,8 @@ pub fn uc_ext14_ggfx_glow_filter_fuzz_test() -> ExtensionTestCaseResult {
 // USE CASE EXT-15: gginnards Dynamic Graph Introspection & Storage Safety Interlock
 // -----------------------------------------------------------------------------
 pub fn uc_ext15_gginnards_ast_inspect_storage_defense_test() -> ExtensionTestCaseResult {
-  let svg = "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
+  let svg =
+    "<svg viewBox=\"0 0 480 200\" width=\"100%\" height=\"200\" style=\"background:#020617; border-radius:6px;\">"
     <> "<text x=\"20\" y=\"24\" fill=\"#94a3b8\" font-size=\"11\" font-family=\"monospace\" font-weight=\"bold\">gginnards: AST Layer Introspection &amp; Storage Safety Veto</text>"
     // Layer Pipeline AST Diagram
     <> "<rect x=\"40\" y=\"40\" width=\"105\" height=\"35\" fill=\"#0f172a\" stroke=\"#38bdf8\" stroke-width=\"1.2\" rx=\"3\"/>"
@@ -772,7 +792,14 @@ pub fn uc_ext15_gginnards_ast_inspect_storage_defense_test() -> ExtensionTestCas
     passed: True,
     duration_us: 91,
     shannon_entropy_bits: 2.81,
-    tags: ["gginnards", "ast", "introspection", "chaos", "security", "interlock"],
+    tags: [
+      "gginnards",
+      "ast",
+      "introspection",
+      "chaos",
+      "security",
+      "interlock",
+    ],
   )
 }
 
@@ -828,22 +855,32 @@ pub fn run_all_167_extension_test_cases() -> List(ExtensionTestCaseResult) {
     }
     let gherkin = case deep_dive.bdd_scenarios {
       [first_scen, ..] ->
-        "Given empirical dataset '" <> deep_dive.dataset_name <> "' with " <> int.to_string(deep_dive.dataset_record_count) <> " observations\n"
-        <> "When " <> ext.name <> " processes the visual graph pipeline\n"
-        <> "Then " <> first_scen
+        "Given empirical dataset '"
+        <> deep_dive.dataset_name
+        <> "' with "
+        <> int.to_string(deep_dive.dataset_record_count)
+        <> " observations\n"
+        <> "When "
+        <> ext.name
+        <> " processes the visual graph pipeline\n"
+        <> "Then "
+        <> first_scen
       [] ->
-        "Given valid observations for " <> ext.name <> "\n"
+        "Given valid observations for "
+        <> ext.name
+        <> "\n"
         <> "When visual geometry is constructed\n"
         <> "Then zero client JavaScript is used and output renders properly."
     }
     let duration = 50 + { index % 45 } * 2
     let entropy = 2.75 +. { int.to_float(index % 25) /. 100.0 }
-    let tags = list.append(ext.tags, [
-      ext.name,
-      string.lowercase(category_to_string(ext.category)),
-      "c3i-sil6",
-      "extension-test",
-    ])
+    let tags =
+      list.append(ext.tags, [
+        ext.name,
+        string.lowercase(category_to_string(ext.category)),
+        "c3i-sil6",
+        "extension-test",
+      ])
 
     ExtensionTestCaseResult(
       use_case_id: "UC-EXT-" <> string.pad_start(int.to_string(index), 3, "0"),
@@ -853,8 +890,16 @@ pub fn run_all_167_extension_test_cases() -> List(ExtensionTestCaseResult) {
       feature_name: feature_name,
       specification: deep_dive.dataset_schema_summary,
       gherkin_scenario: gherkin,
-      inputs_description: "Dataset: " <> deep_dive.dataset_name <> " (" <> int.to_string(deep_dive.dataset_record_count) <> " records, dimensions: " <> string.join(deep_dive.dataset_dimensions, ", ") <> ")",
-      assertion_description: "Visual geometry for " <> ext.name <> " renders with 0 client JS, non-empty SVG, and valid domain boundaries.",
+      inputs_description: "Dataset: "
+        <> deep_dive.dataset_name
+        <> " ("
+        <> int.to_string(deep_dive.dataset_record_count)
+        <> " records, dimensions: "
+        <> string.join(deep_dive.dataset_dimensions, ", ")
+        <> ")",
+      assertion_description: "Visual geometry for "
+        <> ext.name
+        <> " renders with 0 client JS, non-empty SVG, and valid domain boundaries.",
       rendered_svg: deep_dive.svg_rich_aspect,
       passed: True,
       duration_us: duration,
@@ -865,8 +910,11 @@ pub fn run_all_167_extension_test_cases() -> List(ExtensionTestCaseResult) {
 }
 
 /// Lookup a specific test case by extension name.
-pub fn get_test_case_for_extension(name: String) -> Option(ExtensionTestCaseResult) {
-  list.find(run_all_167_extension_test_cases(), fn(tc) { tc.extension_name == name })
+pub fn get_test_case_for_extension(
+  name: String,
+) -> Option(ExtensionTestCaseResult) {
+  list.find(run_all_167_extension_test_cases(), fn(tc) {
+    tc.extension_name == name
+  })
   |> option.from_result
 }
-

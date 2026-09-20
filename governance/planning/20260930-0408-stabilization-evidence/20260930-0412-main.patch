@@ -1,0 +1,81 @@
+--- /tmp/uos-stabilization-20260930/preimages/main.gleam	2026-09-30 06:01:51.165428766 +0200
++++ tools/uos/src/main.gleam	2026-09-30 06:09:31.634340908 +0200
+@@ -29,6 +29,9 @@
+ @external(erlang, "uos_ffi", "get_arguments")
+ pub fn get_arguments() -> List(String)
+ 
++@external(erlang, "uos_ffi", "halt")
++fn halt(code: Int) -> Nil
++
+ /// Run a local executable with arguments from the repository root, bounded by
+ /// a timeout in milliseconds. Returns #(exit_code, merged stdout+stderr).
+ @external(erlang, "uos_ffi", "run_command")
+@@ -180,11 +183,18 @@
+ pub fn execute(cmd: UosCommand) -> Int {
+   case cmd {
+     Status -> {
+-      io.println("UOS Target: Active (Jujutsu Standalone)")
+-      io.println("Current EV-Cycle: EV-15 (System Admission & Full Symbiosis)")
+-      io.println("Supervision: OTP 29 4-Domain Tree (Apps, Engines, Services, Intelligence)")
+-      io.println("Zero-Muda Gate: ENFORCED (0 Bevy, 0 Graphite)")
+-      0
++      io.println(
++        "UOS runtime status: UNRUN (this command performs no runtime probes)",
++      )
++      io.println(
++        "Policy admission ceiling: EV-" <> int.to_string(admitted_ev_ceiling),
++      )
++      io.println("EV-94..109: NOT_ADMITTED; new EV numbers remain barred")
++      io.println("Supervision and Zero-Muda runtime conformance: UNKNOWN")
++      io.println("Artifact inventory: bash tools/uos-cli doctor")
++      io.println("Canonical task observation: tools/sa-plan status <plan-id>")
++      io.println("Cockpit: http://nas-1.tail55d152.ts.net:4100/")
++      1
+     }
+     Gate(name) -> {
+       io.println("Evaluating UOS Gate: " <> name)
+@@ -1921,7 +1931,7 @@
+       // Green)" even with its cited artifacts deleted. It now computes.
+       //
+       // Three outcomes per cycle, and UNVERIFIABLE is deliberately NOT a pass:
+-      //   VERIFIED     a declared artifact exists
++      //   INVENTORY    a declared artifact exists (no runtime verification)
+       //   MISSING      a declared artifact does not exist   -> failure
+       //   UNVERIFIABLE no artifact is declared for the cycle -> not admitted
+       let manifest = read_file("governance/ev-manifest.tsv")
+@@ -1942,7 +1952,7 @@
+                     "-" -> #(ev, "UNVERIFIABLE", label)
+                     p ->
+                       case file_exists(p) {
+-                        True -> #(ev, "VERIFIED", label)
++                        True -> #(ev, "INVENTORY", label)
+                         False -> #(ev, "MISSING", label)
+                       }
+                   }
+@@ -1951,7 +1961,7 @@
+           }
+         })
+ 
+-      let verified = list.filter(results, fn(r) { r.1 == "VERIFIED" })
++      let verified = list.filter(results, fn(r) { r.1 == "INVENTORY" })
+       let missing = list.filter(results, fn(r) { r.1 == "MISSING" })
+       let unverifiable = list.filter(results, fn(r) { r.1 == "UNVERIFIABLE" })
+       let not_admitted = list.filter(results, fn(r) { r.1 == "NOT_ADMITTED" })
+@@ -1976,7 +1986,7 @@
+       }
+ 
+       io.println(
+-        "  verified (artifact present):    " <> int.to_string(list.length(verified)),
++        "  inventory (artifact present):   " <> int.to_string(list.length(verified)),
+       )
+       io.println(
+         "  MISSING (artifact declared, absent): "
+@@ -3566,7 +3576,7 @@
+     [] -> Status
+     a -> parse_args(a)
+   }
+-  execute(cmd)
++  execute(cmd) |> halt
+ }
+ 
+ 

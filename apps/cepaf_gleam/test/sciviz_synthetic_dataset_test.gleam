@@ -1,18 +1,18 @@
 // sciviz_synthetic_dataset_test.gleam — Test suite for SciViz Synthetic Datasets and Feature Envelopes
 // Validates mathematical invariants, bounds, and properties across all 15 visual envelopes.
 
+import cepaf_gleam/sciviz/synthetic_dataset.{
+  generate_composite_envelope, generate_correlation_envelope,
+  generate_flow_envelope, generate_genomic_envelope,
+  generate_geospatial_envelope, generate_hierarchy_envelope,
+  generate_marginal_envelope, generate_mosaic_envelope,
+  generate_network_envelope, generate_ridge_envelope, generate_spline_envelope,
+  generate_survival_envelope, generate_ternary_envelope,
+  generate_timeseries_envelope, generate_uncertainty_envelope,
+  get_all_feature_envelopes,
+}
 import gleam/list
 import gleeunit/should
-import cepaf_gleam/sciviz/synthetic_dataset.{
-  generate_composite_envelope,
-  generate_correlation_envelope, generate_flow_envelope,
-  generate_genomic_envelope, generate_geospatial_envelope,
-  generate_hierarchy_envelope, generate_marginal_envelope,
-  generate_mosaic_envelope, generate_network_envelope, generate_ridge_envelope,
-  generate_spline_envelope, generate_survival_envelope,
-  generate_ternary_envelope, generate_timeseries_envelope,
-  generate_uncertainty_envelope, get_all_feature_envelopes,
-}
 
 pub fn all_envelopes_count_test() {
   let envelopes = get_all_feature_envelopes()
@@ -43,7 +43,7 @@ pub fn flow_envelope_test() {
   let flow = generate_flow_envelope()
   flow.total_inflow |> should.equal(100.0)
   flow.total_outflow |> should.equal(70.0)
-  flow.retention_rate |> should.equal(0.70)
+  flow.retention_rate |> should.equal(0.7)
   list.length(flow.strata) |> should.equal(6)
   list.length(flow.flows) |> should.equal(5)
 }
@@ -124,7 +124,7 @@ pub fn mosaic_envelope_test() {
 pub fn marginal_envelope_test() {
   let marg = generate_marginal_envelope()
   list.length(marg.sample_points) |> should.equal(9)
-  should.be_true(marg.pearson_r <. -0.90)
+  should.be_true(marg.pearson_r <. -0.9)
 }
 
 pub fn composite_envelope_test() {

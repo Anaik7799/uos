@@ -41,6 +41,10 @@ CREATE TRIGGER IF NOT EXISTS cycle_no_update BEFORE UPDATE ON cycle
 BEGIN SELECT RAISE(ABORT, 'cycle rows are append-only'); END;
 CREATE TRIGGER IF NOT EXISTS cycle_no_delete BEFORE DELETE ON cycle
 BEGIN SELECT RAISE(ABORT, 'cycle rows are append-only'); END;
+CREATE TRIGGER IF NOT EXISTS cycle_no_replace BEFORE INSERT ON cycle
+WHEN EXISTS (SELECT 1 FROM cycle
+  WHERE sequence=NEW.sequence OR cycle_id=NEW.cycle_id OR digest=NEW.digest)
+BEGIN SELECT RAISE(ABORT, 'cycle rows are append-only: identity reuse refused'); END;
 CREATE TRIGGER IF NOT EXISTS cycle_chain BEFORE INSERT ON cycle
 WHEN NOT (
   NEW.sequence = (SELECT COALESCE(MAX(sequence),0)+1 FROM cycle)
@@ -140,7 +144,7 @@ let canonical ~seq ~cycle_id ~plan_id ~task_id ~kind ~title ~body ~observed ~evi
     [ "uos-km-cycle/v1"; string_of_int seq; cycle_id; plan_id; task_id; kind;
       title; body; observed; evidence; prev ]
 
-let append db ~cycle_id ~plan_id ~task_id ~kind ~title ~body ~observed ~evidence =
+let append_row db ~cycle_id ~plan_id ~task_id ~kind ~title ~body ~observed ~evidence =
   let seq = head db + 1 in
   let prev = digest_at db (seq - 1) in
   let digest = sha256 (canonical ~seq ~cycle_id ~plan_id ~task_id ~kind ~title ~body
@@ -180,5 +184,21 @@ let verify db =
       | Sqlite3.Rc.DONE -> (n, List.rev bad)
       | _ -> raise (Invalid "cycle scan failed") in
     loop 0 1 "" [])
+
+(* Validate the entire existing chain while holding the same writer transaction
+   that chooses the head and inserts. Otherwise a valid new digest can extend
+   known corrupt evidence, or a concurrent writer can invalidate the checked head. *)
+let append db ~cycle_id ~plan_id ~task_id ~kind ~title ~body ~observed ~evidence =
+  ok (Sqlite3.exec db "BEGIN IMMEDIATE");
+  let committed = ref false in
+  Fun.protect ~finally:(fun () ->
+    if not !committed then ignore (Sqlite3.exec db "ROLLBACK")) (fun () ->
+      let _, defects = verify db in
+      require (defects = []) "cycle append refused: existing chain is corrupt";
+      let result = append_row db ~cycle_id ~plan_id ~task_id ~kind ~title ~body
+        ~observed ~evidence in
+      ok (Sqlite3.exec db "COMMIT");
+      committed := true;
+      result)
 
 let close db = ignore (Sqlite3.db_close db)

@@ -193,7 +193,9 @@ pub fn start() -> AppState {
   let _ = beam_cache.set_config("ha:federation_mode", "full")
   let _ = beam_cache.set_config("ha:peer_node", "vm-1")
   let _ = beam_cache.set_config("ha:peer_endpoint", "tcp/100.78.98.18:7447")
-  io.println("[C3I] Zenoh federation initialised (Tailnet mesh: nas-1 <-> vm-1)")
+  io.println(
+    "[C3I] Zenoh federation initialised (Tailnet mesh: nas-1 <-> vm-1)",
+  )
 
   // 9. CRDT — initialise version vector for this node
   let _vv = crdt.vv_increment(crdt.vv_new(), "c3i-primary")

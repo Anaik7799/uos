@@ -1,0 +1,738 @@
+{
+  "schema": "uos.development-evidence.v1",
+  "created_at": "2026-09-21T06:18:24Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1-tracker",
+  "attempt": 1,
+  "worker": "codex-01a0ba74-feature-tracker",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-census/20260921-0513",
+  "scope": "Pure compiled declaration census and private lossless Sa-plan transport; source-level bounded native lifecycle repairs",
+  "candidate": "d913c4475ffe56661fe4b1c9456ca5477d60281da0b203464344a8f69f1ad6c7",
+  "candidate_scope": "33 exact working-tree source/test/catalog bindings in census preimage, not authenticated revision or admission",
+  "reconciliation": {
+    "path": "governance/capability-inventory/20260921-0513-system-feature-census.json",
+    "sha256": "4f7e51543af1aeef6d6d4805c268469bbee238ea7268add44a027109e0e8213d",
+    "source_sets": 9,
+    "raw_records": 98,
+    "compiled_records": 718,
+    "total_records": 816,
+    "catalog_shards": 12,
+    "selected_sets_complete": true,
+    "semantic_feature_count": null,
+    "global_complete": false,
+    "canonical_import": false
+  },
+  "source_binding": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "78cb9d9c708ce38b3d8383a995ce75371d1ac7ab2028e21cd511243fefadfe72",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "sha256": "eeecf5597182f8c4b5d46896e185cb2ce4df5837656cbea36a7313d0d8daff97",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+      "sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam",
+      "sha256": "ad7e47c25fd3ca3f7d782bf02e74c39a3a64d0b5246526a981940e86bb55bbb6",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam",
+      "sha256": "5e634c84bafcd1d6eb39bcb6070984041b09ce7c30b49b613c22c71a29ea528d",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam",
+      "sha256": "73fc378b8294650a77cdafd74c3f88386f37b39a37503f775ddebab33794b974",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_tracker_test.gleam",
+      "sha256": "29779bff2e33fc7bfe90e0a58aba4005175fc819ed0d3e37317357cfcb60c803",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_store_test.gleam",
+      "sha256": "11e9ff0dcdd31b7b8c15ff484967becf9b1f7dfe33d7451932a374c387e245cf",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_api_test.gleam",
+      "sha256": "4698e747580eb29997543d92d4eca18c710ca8430ea73c243c64cc93bc08d993",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "governance/capability-inventory/20260907-1837-agentic-product-manifest.json",
+      "sha256": "e8818cb2b6bd9f418890f1738fdf8bf8945f23e371fa360346ca9afe56c9f394",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_sources.gleam",
+      "sha256": "532ad10cc1ff2e4ea2adb4fb5edc9d80d70a61729d8e8469da7faf06be51a7c3",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_sources_test.gleam",
+      "sha256": "34f0e45298043f0dc9d61709a3dc7f45c9c2876b74c43c5463eb16b4d63e87f0",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+      "sha256": "bb4448eca340fc7c130b2e47ba100bd45705b34a26a8fd8343236f7784ccf2af",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
+      "sha256": "7415b762c8bfafae63ea5d949f5cdf94b5638dacbc8094261d6864edbb8c4405",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "sha256": "0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_port.gleam",
+      "sha256": "b24e44e5dc01e44eb992a694fafee41bf3a3110df8675e5c3bb5922390e6560e",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/autonomous_capabilities.gleam",
+      "sha256": "1b10bec20543a03156192c601fb96ba12db503f5f320f256a3ba4020a6836090",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_catalog.gleam",
+      "sha256": "5cda13ee5e7077005cbc31e12e72e4a73b298e2e7f16e78adcd28c606ef97958",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/zigvm_feature_tracker.gleam",
+      "sha256": "64a3e51444c5f2ce2eee31c8971918abff91d1e82c2c8a4d357c145702fdc918",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/catalog.gleam",
+      "sha256": "5533dfea2c892d3941a84ebe8e9ee630889e4ffaba5c3c2ba32c72403b2a39a9",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/core_catalog.gleam",
+      "sha256": "b46484b211c81ef891b8b1b2e085621f5954aa47cb1bd8802fa4583979b2c0e6",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/wave1_catalog.gleam",
+      "sha256": "edc1a2174c6f9cbd76d190058acdc96f785d0f477063156997d3f7a58f69f60d",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/wave2_catalog.gleam",
+      "sha256": "caa5c7be17b12bbcf572728589a968446bfacb8f6516ee44acc6d51ca6db434f",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/schema.gleam",
+      "sha256": "fc5778489e8cd7843d391dc49d535c4989a1b46d9566a7b2367043ea895c44fa",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/manifest.toml",
+      "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_census.gleam",
+      "sha256": "cf46cb189a5c7618726d1e603b4676bc38b7467968d6881b817263c7c63d6923",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_census_test.gleam",
+      "sha256": "6a06239ba9443a194cab3b61541f5e4e4e14449e966afc7033dcbc50410f85db",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "81a25c4632f17111d1f34214a9d0c7a0605bb7215fbeab3c5a74829f5ac20338",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/bounded_process_utf8_test.gleam",
+      "sha256": "afbd4f34ba0ee8e01821a04f1d6faa9cd3b5f84a3065839709987144379181e7",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "tools/validation/ecology_process_fixture.ml",
+      "sha256": "e7f4ccd466600fd06fc785e90e5664f36f7b297fc5d17de3c6397bf70dafc34f",
+      "observed_at": "2026-09-21T06:13:50Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/bounded_process_lifecycle_test.gleam",
+      "sha256": "f12168ec67b58ab85d5567a8003600289dd460921faf547e66006090fca4bcde",
+      "observed_at": "2026-09-21T06:13:50Z"
+    }
+  ],
+  "tests": [
+    {
+      "kind": "RED",
+      "check": "Compiled census implementation",
+      "passed": 2,
+      "failed": 6
+    },
+    {
+      "kind": "RED",
+      "check": "Cross-shard schema/effect consistency",
+      "passed": 8,
+      "failed": 1
+    },
+    {
+      "kind": "PASS",
+      "check": "Census and core",
+      "passed": 29,
+      "failed": 0
+    },
+    {
+      "kind": "RED",
+      "check": "Strict lossless Unicode argv",
+      "passed": 1,
+      "failed": 3
+    },
+    {
+      "kind": "RED",
+      "check": "Actual55MCP private persistence",
+      "result": "feature_record_readback_conflict",
+      "preserved_database": "/tmp/uos-feature-store-45A461EACBC65D06F517428A0A71581F.sqlite3",
+      "record": "mcp.vault_policy_get",
+      "cause": "UTF8 em dash double-encoded by binary_to_list before Erlang open_port"
+    },
+    {
+      "kind": "PASS",
+      "check": "Actual55MCP private persistence after UTF8 repair",
+      "records": 55,
+      "elapsed_seconds": 31.259
+    },
+    {
+      "kind": "FAIL",
+      "check": "Initial full regression",
+      "passed": 11955,
+      "failed": 1,
+      "exit_code": 1,
+      "log": "/tmp/uos-census-regression.Vixn93",
+      "sha256": "dc6cfcc275bac47f56d8e054f217ec31aea836ef40ded25bed3836f2b340684d",
+      "failure": "bounded_process_utf8_test line25: backend_output_or_process_failure (guardian125); original invocation not syscall-traced"
+    },
+    {
+      "kind": "RED",
+      "check": "Early-output-close lifecycle controls",
+      "passed": 1,
+      "failed": 2,
+      "cause": "EOF conflated with child exit; premature group SIGKILL"
+    },
+    {
+      "kind": "PASS",
+      "check": "Intermediate EOF-only candidate full regression",
+      "candidate": "8d3558b398f4d98a01642da78927a2c357e759da583a7fd12c3ff5f6acd83cf7",
+      "passed": 11964,
+      "failed": 0,
+      "exit_code": 0,
+      "log": "/tmp/uos-census-fixed-regression.DZG9NY",
+      "sha256": "105ff402ab3ba3a31ae4e250c0abf39481a73d7c39d18536322ea3eb66913754"
+    },
+    {
+      "kind": "RED",
+      "check": "Private-copy exception after reap",
+      "failed": 1,
+      "cause": "Unsafe numeric kill attempt after ownership ended; intercepted marker only, no actual post-reap kill performed"
+    },
+    {
+      "kind": "PASS",
+      "check": "Intermediate state-split candidate full regression",
+      "candidate": "eac1e5e0b67ac9bd21716180bfe4f02471deb104492bea1b01665c3d226497b7",
+      "passed": 11965,
+      "failed": 0,
+      "exit_code": 0,
+      "log": "/tmp/uos-census-final-regression.WtIYO4",
+      "sha256": "c6576eba824569302f3138229c44b1cd2056849a6f64dbad3336d5c59b84e4c1"
+    },
+    {
+      "kind": "RED",
+      "check": "Private-copy exception after descriptor close",
+      "failed": 1,
+      "cause": "Repeated close raised EBADF, inner guardian exit2"
+    },
+    {
+      "kind": "PASS",
+      "check": "Final focused census/lifecycle/UTF8",
+      "passed": 23,
+      "failed": 0,
+      "groups": {
+        "census": 9,
+        "lifecycle": 10,
+        "utf8": 4
+      },
+      "fault_point_reached_required": true
+    },
+    {
+      "kind": "PASS",
+      "check": "Final reviewed candidate full regression",
+      "candidate": "d913c4475ffe56661fe4b1c9456ca5477d60281da0b203464344a8f69f1ad6c7",
+      "passed": 11966,
+      "failed": 0,
+      "exit_code": 0,
+      "timeout_seconds": 240,
+      "toolchain": "Gleam1.16.0 OTP29 +S4:4 +A4",
+      "log": "/tmp/uos-census-reviewed-regression.VymPu4",
+      "sha256": "5bdbf6ffc333eb19b127fba342d2fb551a51de4eac4c1a824bf70babf87d6c25"
+    },
+    {
+      "kind": "PASS",
+      "check": "Connected Gleam MCP read_file census",
+      "bytes": 223835,
+      "candidate": "d913c4475ffe56661fe4b1c9456ca5477d60281da0b203464344a8f69f1ad6c7",
+      "scope": "Artifact content only; not new tracker endpoint, import or runtime probe"
+    },
+    {
+      "kind": "PASS",
+      "check": "Risk checker --all",
+      "baseline": 375,
+      "adversarial": 32843,
+      "independent_dag_scenarios": 32768,
+      "authority": "REPORT_ONLY"
+    }
+  ],
+  "risk_receipt": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "observed_at": "2026-09-21T06:18:24Z",
+    "completed_at": "2026-09-21T06:18:24Z",
+    "elapsed_monotonic_seconds": 0.250877659,
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000156381,
+      "uncertainty_seconds": 0.018392475499999998,
+      "reference_age_seconds": 368.7278928756714,
+      "stratum": 3
+    },
+    "clock_end": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000156376,
+      "uncertainty_seconds": 0.0183926175,
+      "reference_age_seconds": 368.8659088611603,
+      "stratum": 3
+    },
+    "assessment_sha256": "b831f164935393a40733d4c9407c78aa695c6737eb674962c04781c311e41cb5",
+    "evidence_files_checked": 52,
+    "sa_plan": {
+      "plan_id": "uos/system-mcp-features/20260919-1642",
+      "snapshot_sha256": "935e02f7d7a8a9d7e7cc50c9365af48a9d85af8bba0b6b4a070f93a0dc4c4ebc",
+      "tasks": [
+        {
+          "task_id": "r01-store-gates",
+          "state": "completed",
+          "worker": "codex-01a0ba74-feature-tracker",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1789915365082882670",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "r02-recovery-candidate",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r01-store-gates"
+          ]
+        },
+        {
+          "task_id": "r03-harness-coordinator",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r02-recovery-candidate"
+          ]
+        },
+        {
+          "task_id": "r04-identity-enrollment",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r03-harness-coordinator"
+          ]
+        },
+        {
+          "task_id": "r05-mcp-data",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r03-harness-coordinator",
+            "t1-tracker"
+          ]
+        },
+        {
+          "task_id": "r06-mcp-control",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r04-identity-enrollment",
+            "t2-contracts"
+          ]
+        },
+        {
+          "task_id": "r07-hive-swarm",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r04-identity-enrollment",
+            "r06-mcp-control"
+          ]
+        },
+        {
+          "task_id": "r08-service-adapters",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r05-mcp-data",
+            "r06-mcp-control"
+          ]
+        },
+        {
+          "task_id": "r09-end-to-end",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r07-hive-swarm",
+            "r08-service-adapters",
+            "t0c-conformance"
+          ]
+        },
+        {
+          "task_id": "r10-artifact-sync",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r09-end-to-end",
+            "t3-evidence"
+          ]
+        },
+        {
+          "task_id": "r11-release-review",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r10-artifact-sync"
+          ]
+        },
+        {
+          "task_id": "r12-operational-acceptance",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "r11-release-review"
+          ]
+        },
+        {
+          "task_id": "r13-task-dashboard",
+          "state": "completed",
+          "worker": "codex-01a0ba74-feature-tracker",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1789964830092945462",
+          "result_present": true,
+          "dependencies": [
+            "r01-store-gates"
+          ]
+        },
+        {
+          "task_id": "t0-coordination",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        },
+        {
+          "task_id": "t0a-reconcile",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "t0-coordination"
+          ]
+        },
+        {
+          "task_id": "t0b-bindings",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "t0a-reconcile"
+          ]
+        },
+        {
+          "task_id": "t0c-conformance",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "t0b-bindings"
+          ]
+        },
+        {
+          "task_id": "t1-tracker",
+          "state": "executing",
+          "worker": "codex-01a0ba74-feature-tracker",
+          "lease_until_ns": "1789972441800136208",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        },
+        {
+          "task_id": "t2-contracts",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "t1-tracker"
+          ]
+        },
+        {
+          "task_id": "t3-evidence",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "t2-contracts"
+          ]
+        }
+      ],
+      "mode": "READONLY",
+      "lease_fencing_authority": "NOT_GRANTED"
+    },
+    "order": [],
+    "findings": [],
+    "limits": [
+      "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+      "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+      "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+      "Snapshot is confined to one complete plan; no global optimum is asserted."
+    ]
+  },
+  "dashboard": {
+    "status": "observed",
+    "task_snapshot_sha256": "b8996f553bc1185815dbc4fd02515aa5130882acbde6dcb018d25453cbd815f0",
+    "risk_snapshot_sha256": "b831f164935393a40733d4c9407c78aa695c6737eb674962c04781c311e41cb5",
+    "progress": {
+      "observed_at": "2026-09-21T06:18:24Z",
+      "total": 20,
+      "completed": 2,
+      "executing": 1,
+      "blocked": 17,
+      "unknown": 0,
+      "recommendations": []
+    }
+  },
+  "review": {
+    "agent": "root/dashboard_review",
+    "status": "NO_REMAINING_SCOPED_SOURCE_BLOCKER",
+    "independent_runtime_execution": false,
+    "sovereign_ack": false,
+    "release_authority": false
+  },
+  "next_source_frontier": {
+    "status": "READ_ONLY_SOURCE_REVIEW_NOT_YET_INGESTED",
+    "development_harness_tools": 19,
+    "successor_tools": 13,
+    "overlapping_names": 8,
+    "sources": [
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/peers.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+    ],
+    "development_names": [
+      "harness_execution_progress",
+      "harness_system_feature_catalog",
+      "harness_heartbeat",
+      "harness_status",
+      "harness_clock",
+      "harness_read_file",
+      "harness_write_file",
+      "harness_build",
+      "harness_test",
+      "harness_risk_refresh",
+      "harness_risk_check",
+      "harness_finish",
+      "harness_peers",
+      "harness_peer_read",
+      "harness_peer_review",
+      "harness_peer_note",
+      "harness_feature_initialize",
+      "harness_feature_sync",
+      "harness_feature_status"
+    ],
+    "successor_names": [
+      "harness_status",
+      "harness_clock",
+      "harness_heartbeat",
+      "harness_claim",
+      "harness_attach",
+      "harness_release",
+      "harness_read_file",
+      "harness_write_file",
+      "harness_build",
+      "harness_test",
+      "harness_assess",
+      "harness_finish",
+      "harness_reconcile"
+    ],
+    "dispatch_aliases": [
+      "planning_query",
+      "todo_status"
+    ],
+    "vault_declared_without_direct_dispatch_branches": 5,
+    "resources_and_prompts": "No registry/dispatch located in three inspected server modules; unsupported within inspected scope, not global absence.",
+    "warnings": [
+      "Distinct server identities required; harness_finish schemas differ",
+      "Reuse/export pure schema builders; do not invoke handlers/launchers",
+      "operational_tool_definitions/catalog_json/unavailable_reason can probe runtime",
+      "governance/capability-inventory/mcp.toml seven reference-only entries include duplicate zigvm-harness source names"
+    ]
+  },
+  "tooling_incidents": [
+    {
+      "check": "Dashboard observer invocation",
+      "status": "Initial shell quoting error in Erlang eval; corrected argv quoting and pipefail, subsequent observation succeeds",
+      "residual": "Local erl_crash.dump retained; not imported, hashed or treated as evidence of system failure"
+    }
+  ],
+  "remaining": [
+    "Production coordinator recovery remains blocked.",
+    "Full source inventory, trusted runtime probe receipts and deployed MCP success remain unverified.",
+    "Sa-plan workflow tables are not append-only/authenticated at SQL level; hashes and exact readback detect content drift only relative to expected snapshot.",
+    "Full regression transiently reported two unidentified failures; unchanged-source bounded rerun passed, but mechanism is not claimed repaired.",
+    "Nine source sets now reconcile816declarations in12shards; finite harness/successor dispatch, resource/prompt scope, actual services, native ABI and other system domains still require reconciliation.",
+    "Declaration input schemas now permit explicit null dependencies and layers. Known-edge acyclicity does not establish dependency completeness or execution readiness.",
+    "Selected JSON arrays reconcile52+46records only. Source records are not deduplicated semantic capabilities; live canonical import remains unperformed.",
+    "Compiled getters require externally trusted build/source binding; matching source bytes and declared output do not prove loaded artifact provenance. Larger catalogs need complete shard manifests.",
+    "Unrelated legacy Unicode-path conversions in release dependency resolution and MAX/probe helpers remain outside this fix; no universal pathname support claimed.",
+    "Guardian now requires Linux procfs owned-child state; unavailable/malformed state fails closed. Process-group isolation does not contain deliberate new-session escapes; cgroup authority remains separate.",
+    "SIGKILL plus blocking reap cannot guarantee bounded cleanup of an uninterruptible kernel task. Actual kernel PID-reuse stress and cgroup enforcement are not established by deterministic exception injection."
+  ],
+  "scope_limits": [
+    "No production runtime deployed or restarted",
+    "No canonical inventory import",
+    "No actual Claude/AGY identity or ACK fabricated",
+    "No all-system coverage or effect authority",
+    "Earlier two unidentified full-suite failures remain unexplained",
+    "Linux procfs required; unavailable state refuses",
+    "Process-group cleanup cannot contain deliberately escaped sessions; service cgroups remain required",
+    "Blocking reap of uninterruptible kernel task not proven hard-bounded",
+    "Test fault injection is private source instrumentation, not kernel PID-reuse stress"
+  ],
+  "task_complete": false,
+  "goal_complete": false,
+  "system_admission": false,
+  "navigation": {
+    "plan": "http://nas-1.tail55d152.ts.net:4100/files/docs/plans/20260920-1438-hive-swarm-mcp-recovery-plan.md",
+    "journal": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260921-0513-system-feature-census.md",
+    "planning": "http://nas-1.tail55d152.ts.net:4100/planning"
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l5",
+    "#fractal-l6",
+    "#fractal-l7",
+    "#fractal-l8",
+    "#fractal-l9",
+    "#zk-adr",
+    "#zero-muda"
+  ]
+}

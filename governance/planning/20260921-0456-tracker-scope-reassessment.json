@@ -1,0 +1,433 @@
+{
+  "schema": "uos.feature-tracker-scope-reassessment.v1",
+  "observed_at": "2026-09-21T04:32:56Z",
+  "previous": {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "system-mcp-t1-tracker-20260920-0329",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t1-tracker",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Implement system feature inventory in canonical Sa-plan database, separating declaration, exposure and runtime evidence.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T04:25:46Z",
+    "valid_until": "2026-09-21T16:00:00Z",
+    "task_state": "available",
+    "ready_since": "2026-09-20T14:27:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed current source bytes only; shared coordinator histories rejected, no authority granted",
+      "evidence": [
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611",
+          "observed_at": "2026-09-21T04:25:46Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+          "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+          "observed_at": "2026-09-21T04:25:46Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "observed_at": "2026-09-21T04:25:46Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "sha256": "d0a2fe78eb7d2ee44da51a9b3772bf273496a97e00cd43bc0eb56638b0585fba",
+          "observed_at": "2026-09-21T04:25:46Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+          "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+          "observed_at": "2026-09-21T04:25:46Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Broken coordination authority can misattribute work and enable conflicting effects; only read-only diagnosis is eligible.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Unsafe claims, absent registrations, stale evidence and effects beyond a hold must fail closed.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Evidence laundering or false identity is S5 O4 Det3, RPN60 with severity floor5; analyst estimates, not measured rates.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Identity and valid coordinator authority are prerequisites for safe all-system MCP operations.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One truthful inventory and common coordination boundary cover external agents, internal actors and system services.",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/uos_swarm/src/session_sync_cli.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COORD-AUTHORITY",
+        "cause": "Multiple incompatible histories and declarative participants mistaken for live authenticated membership.",
+        "effect": "Wrong-worker attribution, unsafe parallel effects and false all-systems-available claims.",
+        "controls": "Preserve evidence; separate identities and models; reject invalid replay; Sa-plan-only task operations; independent cutover review.",
+        "s": 5,
+        "o": 4,
+        "det": 3,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam harness and actual UOS agent sessions",
+      "control_action": "Coordinate and authorize a scoped task",
+      "losses": [
+        "L-UNAUTHORIZED-EFFECT",
+        "L-FALSE-EVIDENCE"
+      ],
+      "hazards": [
+        "H-INVALID-AUTHORITY",
+        "H-UNBOUND-ACTOR"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing peer or actor registration hides nonparticipation.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require a real identity, explicit membership and acknowledgement."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Bad history, false identity or model-only holon becomes authority.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Require semantic replay, verified identities and independent evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Expired heartbeat or candidate evidence reused at dispatch.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Reobserve clock, candidate, task attempt and scope before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Effects continue after hold or lease expiry.",
+          "hazard_ids": [
+            "H-INVALID-AUTHORITY",
+            "H-UNBOUND-ACTOR"
+          ],
+          "constraint": "Stop affected effects and reconcile unknown outcomes before retry."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Coordinator authority unresolved; affected effects remain held pending reconciliation and peer review."
+    ],
+    "dependencies": [],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Deferred until authority and dependencies are resolved; no effect permission.",
+      "alternatives": [
+        "Repair only the file tail and leave SQLite divergence unresolved",
+        "Reconcile one SQLite authority from independently verified history"
+      ],
+      "counterevidence": [
+        "Append-only triggers and contiguous sequences do not establish semantic validity.",
+        "The ecology provides real bounded local diagnostics but explicitly lacks external system bindings."
+      ],
+      "assumptions": [
+        "Operator continue request authorizes continuation of bounded diagnosis and planning, not admission or destructive repair."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this bounded review, the shared coordinator will remain in HOLD unless a separately authorized, verified recovery occurs.",
+      "falsifier": "A fresh, nonempty, semantically valid coordinator with real-session acknowledgements is observed.",
+      "acceptance": [
+        "Bind current source hashes and exact Sa-plan task identities.",
+        "Record factual peer ACKs separately from durable board ACKs.",
+        "Preserve all damaged histories and identify unbound holons.",
+        "Publish scoped findings without marking universal MCP availability or admission."
+      ],
+      "rollback": "Remove only new isolated report artifacts if needed; preserve live histories and all other writers.",
+      "reviewer": "Claude independently reviewed the diagnosis; recovery candidate review remains pending.",
+      "budget": "One-hour bounded planning packet, local deterministic tools and existing peers; no paid inference or production action.",
+      "residuals": [
+        "File-backed admission path and SQLite histories disagree.",
+        "All-system MCP feature tracker and real actor bindings remain unimplemented.",
+        "Risk checker is report-only and cannot grant runtime authority."
+      ],
+      "supersedes": null
+    }
+  },
+  "selected": {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "t1-tracker-development-20260921-0456",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "task_id": "t1-tracker",
+    "actor": "codex-01a0ba74-feature-tracker",
+    "scope": "Development of pure system feature/MCP coverage algebra and canonical Sa-plan workflow-backed declaration/observation storage; private fixture writes only until the fixed metadata path is independently reviewed. No production migration, coordinator mutation, identity enrollment, runtime start or admission. This foundation cannot close t1 until complete source reconciliation and real canonical persistence are verified.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-21T04:32:56Z",
+    "valid_until": "2026-09-21T16:00:00Z",
+    "task_state": "available",
+    "ready_since": "2026-09-21T04:32:56Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Existing harness tracker is a 52-feature declaration/task projection, not all-system MCP availability. Reuse Sa-plan durable workflow evidence storage; no new scheduler/database authority.",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+          "observed_at": "2026-09-21T04:32:56Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+          "sha256": "b95f5587781074268c1f29b6d3b88a708f32cb4e69bbd3819e25f127cfc446e6",
+          "observed_at": "2026-09-21T04:32:56Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "eeecf5597182f8c4b5d46896e185cb2ce4df5837656cbea36a7313d0d8daff97",
+          "observed_at": "2026-09-21T04:32:56Z"
+        },
+        {
+          "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+          "sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f",
+          "observed_at": "2026-09-21T04:32:56Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Truthful complete feature/MCP inventory is prerequisite to exposing missing capabilities; independently scoped development does not require production coordinator recovery.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "governance/capability-inventory/20260909-0412-harness-feature-catalog.json"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Missing, stale or self-declared MCP availability can falsely imply operational coverage; immutable declarations and typed contextual observations preserve unknown.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "governance/capability-inventory/20260909-0412-harness-feature-catalog.json"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "False availability has S5 O3 Det4 RPN60 severity floor5; analyst estimates, not empirical occurrence.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "governance/capability-inventory/20260909-0412-harness-feature-catalog.json"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "t2-contracts and r05-mcp-data require the inventory; urgency propagates without bypassing their authority prerequisites.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "governance/capability-inventory/20260909-0412-harness-feature-catalog.json"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One persistent evidence-backed feature model removes separate inconsistent inventory/availability claims across clients.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "governance/capability-inventory/20260909-0412-harness-feature-catalog.json"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-FALSE-MCP-COVERAGE",
+        "cause": "Declarations or stale/wrong-revision success presented as verified availability.",
+        "effect": "Incomplete system admitted or unsafe dispatch attempted.",
+        "controls": "Typed stage and observation separation, candidate/context/freshness binding, deny dominance, append-only canonical workflow evidence, private fixtures.",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam feature tracker",
+      "control_action": "Project feature MCP availability from catalog and bounded observations",
+      "losses": [
+        "L-FALSE-COVERAGE",
+        "L-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-AVAILABLE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "context": "Missing inventory entries hide services and gaps.",
+          "constraint": "Reconcile source declarations and endpoints in both directions.",
+          "applicability": "applicable",
+          "hazard_ids": [
+            "H-UNVERIFIED-AVAILABLE"
+          ]
+        },
+        {
+          "type": "provided_unsafe",
+          "context": "Declared or fixture success is promoted to real runtime availability.",
+          "constraint": "Keep declarations separate; trusted context and real probe evidence required.",
+          "applicability": "applicable",
+          "hazard_ids": [
+            "H-UNVERIFIED-AVAILABLE"
+          ]
+        },
+        {
+          "type": "wrong_timing",
+          "context": "Stale or wrong-candidate observations remain green.",
+          "constraint": "Expiry and exact candidate/context checks before observation.",
+          "applicability": "applicable",
+          "hazard_ids": [
+            "H-UNVERIFIED-AVAILABLE"
+          ]
+        },
+        {
+          "type": "duration",
+          "context": "Unbounded catalog traversal or persistent effects outlive lease.",
+          "constraint": "Finite size/depth/count bounds and per-call effect fence.",
+          "applicability": "applicable",
+          "hazard_ids": [
+            "H-UNVERIFIED-AVAILABLE"
+          ]
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 3125,
+    "score_interval": [
+      3125,
+      3125
+    ],
+    "decision": {
+      "summary": "Select safe t1 foundation development; current complete-plan dashboard has no other ready task. Separate this scope from held production recovery. Final t1 acceptance remains unchanged.",
+      "alternatives": [
+        "Unsafe live recovery/cutover without peer authority (rejected)",
+        "Pure tracker algebra and private canonical-store fixtures (selected)"
+      ],
+      "counterevidence": [
+        "Current connected MCP exposes only read_file and knowledge_search; no live tracker success is asserted.",
+        "Existing 52-feature catalog is scoped to harness and cannot establish all-system completeness."
+      ],
+      "assumptions": [
+        "Repeated operator repair mandate authorizes scoped development bootstrap, not production admission."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within one bounded development slice, typed catalog and stale/foreign/fixture refusal laws can be verified without touching live coordinator history.",
+      "falsifier": "A missing catalog is green; a declaration or fixture becomes runtime usable; store bypasses Sa-plan; any production service is restarted.",
+      "acceptance": [
+        "Pure catalog/observation types, finite input validation and bidirectional endpoint reconciliation.",
+        "Append-only declaration/evidence persistence via Sa-plan workflows, tested in private SQLite fixtures; no direct task SQL.",
+        "No declaration/fixture/stale/wrong-context evidence promotes usable; independent reference interpreter and law tests.",
+        "Full t1 remains incomplete until source coverage and canonical metadata path with review are observed."
+      ],
+      "rollback": "Preserve source evidence and private fixtures; no production runtime change to roll back.",
+      "reviewer": "Independent internal source review to be requested; not sovereign admission.",
+      "budget": "One source writer and one read-only reviewer; existing pinned Gleam/OTP; bounded private tests; no packages/paid inference/runtime actions.",
+      "residuals": [
+        "Production coordinator recovery remains blocked.",
+        "Full source inventory, trusted runtime probe receipts and deployed MCP success remain unverified."
+      ],
+      "supersedes": "governance/planning/20260921-0456-tracker-scope-reassessment.json"
+    }
+  },
+  "authority": "development_only; source and private tests, no production"
+}

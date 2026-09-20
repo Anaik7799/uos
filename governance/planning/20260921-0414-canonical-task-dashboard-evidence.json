@@ -1,0 +1,168 @@
+{
+  "schema": "uos.canonical-task-dashboard-evidence.v1",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r13-task-dashboard",
+  "worker": "codex-01a0ba74-feature-tracker",
+  "attempt": 1,
+  "observed_at": "2026-09-21T04:25:46Z",
+  "stage": "passed",
+  "scope": "development_only",
+  "system_admission": false,
+  "production_deployment": "NOT_PERFORMED",
+  "connected_mcp_success": "NOT_VERIFIED",
+  "browser_visual_verification": "UNRUN",
+  "source_hashes": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "sha256": "d0a2fe78eb7d2ee44da51a9b3772bf273496a97e00cd43bc0eb56638b0585fba",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/planning_page.gleam",
+      "sha256": "ca49deb3100e876f6f1dedec643934ed1e309ad8e2834e6450ddf31fe5255c8d",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha256": "9383f7e1bbbefdd966a4db81f56fa6a4241507b9276bf7188c170b7fa319bcac",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+      "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "b95f5587781074268c1f29b6d3b88a708f32cb4e69bbd3819e25f127cfc446e6",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_projection.gleam",
+      "sha256": "1beec226e6d92f622ec451006052a2782dadabae6dac9a6d2982e14500dca7e7",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_observer.gleam",
+      "sha256": "65b184fa2b362cd802c6fbf2a9834c83d43d12c23d641c2881b0c63795d3789a",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/execution_progress.gleam",
+      "sha256": "e5f6bac261823ffea2a6fc404de51260b8b1b192f6a5d8406c2c783240564b75",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/execution_projection_test.gleam",
+      "sha256": "ce27b8a25214bce999943e87c30fc6e0ea1987900f30fae4acdc29fa3964302a",
+      "observed_at": "2026-09-21T04:25:46Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/execution_observer_test.gleam",
+      "sha256": "5ba9cd1182adf9dc492a56113353a01876eb8eb1e66e62d6dca118f4f74dcc2d",
+      "observed_at": "2026-09-21T04:25:46Z"
+    }
+  ],
+  "tests": {
+    "toolchain_preflight": {
+      "passed": 31
+    },
+    "new_tests": {
+      "passed": 22,
+      "failed": 0
+    },
+    "priority_reference_combinations": 27,
+    "first_full_suite": {
+      "passed": 11888,
+      "failed": 4,
+      "failures": [
+        "webui_full_coverage_test.route_planning_contains_tasks_test",
+        "wisp_api_comprehensive_test.planning_json_has_summary_raw_test",
+        "wisp_api_comprehensive_test.planning_json_has_pending_raw_test",
+        "wisp_tui_content_test.planning_has_tasks_test"
+      ],
+      "cause": "Missing legacy summary/pending aliases after canonical API replacement"
+    },
+    "compatibility_followup": {
+      "passed": 402,
+      "failed": 0,
+      "scope": "Before final count/list semantic case and checklist addition"
+    },
+    "final_full_suite": {
+      "passed": 11894,
+      "failed": 0,
+      "exit_code": 0,
+      "toolchain": "Gleam 1.16.0 / OTP 29",
+      "command": "timeout 120s env PATH=\"$PWD/../../toolchains/nix-profile/bin:$PATH\" ERL_FLAGS='+S 4:4 +A 4' ../../toolchains/gleam-1.16.0/bin/gleam test",
+      "cwd": "apps/cepaf_gleam"
+    },
+    "format_check": "PASS scoped new/replaced modules/tests"
+  },
+  "review": {
+    "identity": "internal Codex dashboard_review under canonical root r13 task",
+    "method": "Gleam MCP source reads only",
+    "independent_runtime": false,
+    "findings": [
+      {
+        "finding": "MCP progress omitted per-call fence",
+        "resolution": "Real dev.fence before observer; denial and functional ordering tests pass"
+      },
+      {
+        "finding": "Legacy pending count/list represented different subsets",
+        "resolution": "Both use ReadyForPreflight; known/unknown semantic regression passes"
+      }
+    ],
+    "latest_verdict": "No further blocking source defect in reviewed development slice",
+    "sovereign_admission": false
+  },
+  "observation": {
+    "observed_at": "2026-09-21T04:08:13Z",
+    "total": 20,
+    "completed": 1,
+    "executing": 1,
+    "blocked": 18,
+    "unknown": 0,
+    "source": "canonical read-only Sa-plan SQLite single SELECT plus separately observed risk portfolio and clock"
+  },
+  "execution_optimization": {
+    "eligibility": "Safety/authority and dependencies before rank; no unknown/occupied/stale promotion",
+    "rank": "Safety class; C*T*F*Dep*I; inherited urgency; oldest ready; stable ID",
+    "resource_bounds": {
+      "tasks": 256,
+      "dependencies_per_task": 256,
+      "edges": 4096,
+      "subprocess_bytes": 1048576,
+      "sql_timeout_ms": 3000
+    },
+    "cost": "Not measured; no global optimum claimed",
+    "effect_authority": false
+  },
+  "residuals": [
+    "Existing historical finite MCP launcher grant and corrupted coordinator are not bypassed; connected positive invocation remains r03/r09.",
+    "Old planning SSE/secondary paths remain r05/r09 reconciliation work.",
+    "Full feature tracker, real actor enrollment, service MCP coverage, hive/swarm and operational release remain incomplete.",
+    "Source-bound risk preflight remains required before actual task claim; dashboard risk ranks are advisory.",
+    "Existing development bootstrap host sqlite3/chrony exceptions are disclosed, not production pins."
+  ],
+  "journal": "docs/journal/20260921-0414-canonical-task-dashboard.md",
+  "workflow": "uos/system-mcp-features/20260919-1642/r13-development/20260921-0414",
+  "closure_observation": {
+    "observed_at": "2026-09-21T04:31:11Z",
+    "task_completed_at": "2026-09-21T04:27:10Z",
+    "total": 20,
+    "completed": 2,
+    "executing": 0,
+    "blocked": 18,
+    "unknown": 0,
+    "task_snapshot_sha256": "14fbfccd537db25e6c990ecaf8cc5eed8e1372ca5f6f0484b6c0794767248d37",
+    "workflow_activity_errors": ["implementation and review activity commands rejected: hierarchical name requires at least two segments"],
+    "workflow_history": ["workflow_started", "workflow_completed"],
+    "correction": "No terminal history rewritten; actual tested development receipt remains in task result. Use success chaining and hierarchical activity names in future.",
+    "overall_goal_complete": false
+  }
+}

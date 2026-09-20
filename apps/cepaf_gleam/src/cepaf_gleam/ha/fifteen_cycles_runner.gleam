@@ -72,7 +72,10 @@ pub fn execute_cycle(
   // 2. Formulate evolutionary mutation from cycle specification
   let mutation =
     EvolutionaryMutation(
-      mutation_id: "mut-" <> cycle.ev_tag <> "-" <> int.to_string(cycle.cycle_num),
+      mutation_id: "mut-"
+        <> cycle.ev_tag
+        <> "-"
+        <> int.to_string(cycle.cycle_num),
       target_capability: cycle.title,
       description: cycle.focus,
       expected_gain_pct: cycle.expected_gain_pct,

@@ -1,0 +1,43 @@
+{
+  "schema": "uos.sa-plan-dashboard-integrity-aware-snapshot.v1",
+  "timestamp_utc": "2026-09-21T09:36:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "summary": {
+    "total": 20,
+    "completed": 2,
+    "ready": 3,
+    "executing": 0,
+    "blocked_or_dependency_held": 15,
+    "unknown_or_unverified": 0
+  },
+  "completion_rule": "Only Sa-plan completed tasks with non-empty receipts count; integrity failures, stale leases, report-only workflows, and unadmitted evidence never count.",
+  "critical_dependency_findings": [
+    {
+      "task": "r02-recovery-candidate",
+      "state": "available",
+      "finding": "live coordinator digest verification fails for events 66-117; typed replay fails because session is unregistered",
+      "receipt": "governance/planning/20260921-0930-live-coordinator-integrity-receipt.json"
+    },
+    {
+      "task": "t1-tracker",
+      "state": "available",
+      "finding": "canonical feature-store write remains fenced by the approved development grant scope",
+      "receipt": "governance/planning/20260921-0922-tracker-lease-recovery-and-fence-block.json"
+    },
+    {
+      "task": "t0-coordination",
+      "state": "available",
+      "finding": "no registered sessions, fresh ACKs, or authenticated holon enrollment",
+      "receipt": "governance/planning/20260921-0925-holon-coordination-refresh.json"
+    }
+  ],
+  "authority": "read_only_projection; Sa-plan alone owns execution",
+  "risk_gate": "PASS report-only; authority NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "source_sha256": {
+    "plan": "5fd4e7793cc3e532d20c724ba7c45918b2a2342185a47249377a8dece70c445b",
+    "integrity_receipt": "ebffcd7cf01177faa066cf7a3ab4da44a9ce88e952d3af0eb9e8d69a77a4729e",
+    "quarantine_diagnostic": "a9d8018ba1d0dbbc6235626dbf6a08490bd2dc5c828ce5aed5c36112a301d608"
+  },
+  "canonical_task_remains_open": true
+}

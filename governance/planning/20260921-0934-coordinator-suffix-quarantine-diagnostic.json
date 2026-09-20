@@ -1,0 +1,30 @@
+{
+  "schema": "uos.coordinator-suffix-quarantine-diagnostic.v1",
+  "timestamp_utc": "2026-09-21T09:34:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "source": "var/coordination/tri-agent/coordinator.sqlite3",
+  "scope": "read-only classification of events 66 through 117",
+  "suffix": {
+    "first_sequence": 66,
+    "last_sequence": 117,
+    "count": 52,
+    "operation": "ratify_cycle",
+    "actors": [
+      {"actor": "tri-agent-sovereignty", "count": 50, "range": "66-115"},
+      {"actor": "L0-codex-gpt-6-astra", "count": 2, "range": "116-117"}
+    ]
+  },
+  "shape_observation": {
+    "command_keys": ["action", "cycle", "ev"],
+    "body_keys": ["detail", "evidence", "summary"],
+    "canonical_session_event_body": false,
+    "classification": "foreign_or_noncanonical_ratification_payload"
+  },
+  "disposition": {
+    "quarantine": true,
+    "salvage": "not_attempted",
+    "live_store_modified": false,
+    "authority": "integrity_observation_only",
+    "admission": "NOT_ADMITTED"
+  }
+}

@@ -154,7 +154,8 @@ pub fn mr6_telemetry_span_additivity_test() {
   let batch2 = ["span-4", "span-5"]
 
   let combined = list.append(batch1, batch2)
-  list.length(combined) |> should.equal(list.length(batch1) + list.length(batch2))
+  list.length(combined)
+  |> should.equal(list.length(batch1) + list.length(batch2))
 }
 
 // -----------------------------------------------------------------------------
@@ -225,8 +226,8 @@ pub fn mr9_nif_error_trapping_isolation_test() {
 // -----------------------------------------------------------------------------
 
 pub fn lcg_step(seed: Int) -> Int {
-  let a = 1103515245
-  let c = 12345
+  let a = 1_103_515_245
+  let c = 12_345
   let m = 2_147_483_647
   { { seed * a } + c } % m
 }
@@ -280,7 +281,9 @@ pub fn mr11_conservative_fail_closed_test() {
 
 pub const hard_denied_serial_str: String = "25503L801736"
 
-pub fn verify_drive_safety_strict(dev_string: String) -> Result(String, String) {
+pub fn verify_drive_safety_strict(
+  dev_string: String,
+) -> Result(String, String) {
   case string.contains(dev_string, hard_denied_serial_str) {
     True -> Error("FAIL_CLOSED: Root NVMe serial locked")
     False -> Ok("SAFE_DEVICE")
@@ -309,13 +312,20 @@ pub fn mr12_storage_serial_lockout_invariance_test() {
 // If C2 > C1, then Utility(C2) > Utility(C1)
 // -----------------------------------------------------------------------------
 
-pub fn compute_simple_maut_5(criticality: Float, severity: Float, readiness: Float, fmea: Float, cost: Float) -> Float {
+pub fn compute_simple_maut_5(
+  criticality: Float,
+  severity: Float,
+  readiness: Float,
+  fmea: Float,
+  cost: Float,
+) -> Float {
   let wc = 0.35
   let ws = 0.25
-  let wd = 0.20
-  let wf = 0.10
-  let wi = 0.10
-  let positive = { wc *. criticality } +. { ws *. severity } +. { wd *. readiness }
+  let wd = 0.2
+  let wf = 0.1
+  let wi = 0.1
+  let positive =
+    { wc *. criticality } +. { ws *. severity } +. { wd *. readiness }
   let penalty = { wf *. fmea } +. { wi *. cost }
   positive -. penalty
 }
@@ -371,7 +381,10 @@ pub type LeaseToken {
   LeaseToken(token_id: Int, lease_until_ns: Int)
 }
 
-pub fn validate_fencing_token(current_highest: Int, candidate: LeaseToken) -> Result(Int, String) {
+pub fn validate_fencing_token(
+  current_highest: Int,
+  candidate: LeaseToken,
+) -> Result(Int, String) {
   case candidate.token_id > current_highest {
     True -> Ok(candidate.token_id)
     False -> Error("StaleFencingToken")
@@ -382,7 +395,7 @@ pub fn mr15_monotonic_fencing_token_test() {
   let mut_seq = [101, 102, 105, 110, 115]
   let final_token =
     list.fold(mut_seq, 100, fn(highest, next_tok) {
-      let cand = LeaseToken(next_tok, 1789800000 + next_tok)
+      let cand = LeaseToken(next_tok, 1_789_800_000 + next_tok)
       let res = validate_fencing_token(highest, cand)
       should.be_ok(res)
       let assert Ok(new_highest) = res
@@ -392,7 +405,7 @@ pub fn mr15_monotonic_fencing_token_test() {
   final_token |> should.equal(115)
 
   // Stale token (e.g. 104 <= 115) must be rejected
-  let stale = LeaseToken(104, 1789800104)
+  let stale = LeaseToken(104, 1_789_800_104)
   validate_fencing_token(final_token, stale) |> should.be_error
 }
 
@@ -468,18 +481,20 @@ pub type WorkerPool {
   WorkerPool(name: String, capacity: Int, current_load: Int)
 }
 
-pub fn dispatch_heijunka(pools: List(WorkerPool), task_cost: Int) -> Result(List(WorkerPool), String) {
+pub fn dispatch_heijunka(
+  pools: List(WorkerPool),
+  task_cost: Int,
+) -> Result(List(WorkerPool), String) {
   // Find pool with minimum current load that has capacity
   let sorted =
-    list.sort(pools, fn(a, b) {
-      int.compare(a.current_load, b.current_load)
-    })
+    list.sort(pools, fn(a, b) { int.compare(a.current_load, b.current_load) })
 
   case sorted {
     [head, ..tail] -> {
       case head.current_load + task_cost <= head.capacity {
         True -> {
-          let updated = WorkerPool(..head, current_load: head.current_load + task_cost)
+          let updated =
+            WorkerPool(..head, current_load: head.current_load + task_cost)
           Ok([updated, ..tail])
         }
         False -> Error("AllPoolsAtCapacity")
@@ -514,7 +529,11 @@ pub fn mr18_heijunka_leveling_test() {
 // Length is strictly 55 characters invariant
 // -----------------------------------------------------------------------------
 
-pub fn format_w3c_traceparent(trace_id: String, span_id: String, sampled: Bool) -> String {
+pub fn format_w3c_traceparent(
+  trace_id: String,
+  span_id: String,
+  sampled: Bool,
+) -> String {
   let flags = case sampled {
     True -> "01"
     False -> "00"
@@ -547,7 +566,9 @@ pub fn verify_zero_muda_purity(content: String) -> Result(String, String) {
 }
 
 pub fn mr20_zero_muda_purity_test() {
-  verify_zero_muda_purity("pure Erlang graphene_nif and Gleam/OTP state machine")
+  verify_zero_muda_purity(
+    "pure Erlang graphene_nif and Gleam/OTP state machine",
+  )
   |> should.be_ok
 
   verify_zero_muda_purity("import bevy::prelude::*;")

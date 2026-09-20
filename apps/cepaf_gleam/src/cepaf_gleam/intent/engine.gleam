@@ -155,7 +155,12 @@ pub fn evaluate_intent(
 ) -> IntentEvaluationResult {
   // 1. Verify capability token
   case
-    is_token_valid(token, current_time_us, intent.target_domain, intent.criticality)
+    is_token_valid(
+      token,
+      current_time_us,
+      intent.target_domain,
+      intent.criticality,
+    )
   {
     False ->
       IntentVetoed(
@@ -281,13 +286,10 @@ pub fn evaluation_result_to_json(res: IntentEvaluationResult) -> json.Json {
         #("status", json.string("vetoed")),
         #("intent_id", json.string(intent_id)),
         #("reason", json.string(reason)),
-        #(
-          "failing_condition",
-          case failing {
-            Some(f) -> json.string(f)
-            None -> json.null()
-          },
-        ),
+        #("failing_condition", case failing {
+          Some(f) -> json.string(f)
+          None -> json.null()
+        }),
       ])
   }
 }

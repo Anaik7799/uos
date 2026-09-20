@@ -51,7 +51,10 @@ pub fn init() -> SingularityModel {
   )
 }
 
-pub fn update(model: SingularityModel, msg: SingularityMsg) -> SingularityModel {
+pub fn update(
+  model: SingularityModel,
+  msg: SingularityMsg,
+) -> SingularityModel {
   case msg {
     EstimationLoaded(c, s, cap, caps, h) ->
       SingularityModel(

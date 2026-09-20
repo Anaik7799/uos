@@ -1,0 +1,22 @@
+{
+  "receipt_id": "20260921-1423-declarative-feature-mcp",
+  "observed_at": "2026-09-21T14:23:00+02:00",
+  "authority": "codex-development-observation",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "checks": {
+    "catalog_tool_registered": "PASS",
+    "observations_tool_registered": "PASS",
+    "intent_tool_registered": "PASS",
+    "task_bound_dispatch": "PASS",
+    "missing_binding_fails_closed": "PASS: role_binding_missing",
+    "gleam_regression": "PASS: 11988 passed, 0 failures",
+    "feature_runtime_admission": "HOLD: canonical task-bound binding and fresh feature probes remain unadmitted"
+  },
+  "runtime_output": "/tmp/declarative-feature-mcp-20260921.jsonl",
+  "implementation": [
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam"
+  ],
+  "admission": "NOT_ADMITTED"
+}

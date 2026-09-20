@@ -51,7 +51,10 @@ pub fn json_serialization_test() {
   should.be_true(string.contains(json_str, "\"sanskrit_title\":\"संविद् वज्रव्यूह\""))
   should.be_true(string.contains(json_str, "\"total_workloads\":42"))
   should.be_true(string.contains(json_str, "\"local_workloads\":39"))
-  should.be_true(string.contains(json_str, "\"gemma4_status\":\"BARE_METAL_ONLINE\""))
+  should.be_true(string.contains(
+    json_str,
+    "\"gemma4_status\":\"BARE_METAL_ONLINE\"",
+  ))
   should.be_true(string.contains(json_str, "\"razr15-1\""))
   should.be_true(string.contains(json_str, "\"has_gpu\":true"))
 }

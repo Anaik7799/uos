@@ -27,6 +27,7 @@ import gleam/result
 import gleam/string
 
 pub const max_message_length: Int = 4096
+
 pub const default_lookback_window: Int = 512
 
 pub type OutboundDeliveryResult {
@@ -96,7 +97,11 @@ pub fn chunk_text(text: String, max_len: Int) -> List(String) {
   }
 }
 
-fn do_chunk_text(remaining: String, max_len: Int, acc: List(String)) -> List(String) {
+fn do_chunk_text(
+  remaining: String,
+  max_len: Int,
+  acc: List(String),
+) -> List(String) {
   let len = string.length(remaining)
   case len <= max_len {
     True -> list.reverse([remaining, ..acc])
@@ -189,7 +194,15 @@ pub fn send_single_message(
           case parse_mode {
             Some(_) -> {
               let fallback_payload = build_send_payload(chat_id, text, None)
-              case ffi_http_post(url, headers, content_type, fallback_payload, 10_000) {
+              case
+                ffi_http_post(
+                  url,
+                  headers,
+                  content_type,
+                  fallback_payload,
+                  10_000,
+                )
+              {
                 Ok(#(200, fb_bytes)) -> parse_api_success(fb_bytes)
                 Ok(#(fb_status, fb_bytes)) ->
                   Error(
@@ -229,7 +242,11 @@ pub fn send_single_message(
 /// one may legitimately be ABOUT the storage interlock. The placeholder is
 /// visible in the delivered message, so an upstream leak is reported to the
 /// operator rather than silently swallowed.
-pub fn build_send_payload(chat_id: String, text: String, parse_mode: Option(String)) -> String {
+pub fn build_send_payload(
+  chat_id: String,
+  text: String,
+  parse_mode: Option(String),
+) -> String {
   let text = egress_redactor.redact_system_secrets(text)
   let base_fields = [
     #("chat_id", json.string(chat_id)),
@@ -243,7 +260,9 @@ pub fn build_send_payload(chat_id: String, text: String, parse_mode: Option(Stri
   |> json.to_string
 }
 
-fn parse_api_response(raw_bytes: BitArray) -> Result(TelegramApiResponse, String) {
+fn parse_api_response(
+  raw_bytes: BitArray,
+) -> Result(TelegramApiResponse, String) {
   case bit_array.to_string(raw_bytes) {
     Ok(json_str) ->
       json.parse(json_str, telegram_api_decoder())
@@ -258,7 +277,8 @@ fn parse_api_success(raw_bytes: BitArray) -> Result(Int, String) {
     Ok(TelegramApiResponse(ok: True, message_id: None, ..)) -> Ok(0)
     Ok(TelegramApiResponse(ok: False, error_description: Some(desc), ..)) ->
       Error("Telegram rejected: " <> desc)
-    Ok(TelegramApiResponse(ok: False, ..)) -> Error("Telegram rejected with ok=false")
+    Ok(TelegramApiResponse(ok: False, ..)) ->
+      Error("Telegram rejected with ok=false")
     Error(err) -> Error(err)
   }
 }

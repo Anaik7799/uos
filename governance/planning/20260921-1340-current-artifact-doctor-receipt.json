@@ -1,0 +1,14 @@
+{
+  "receipt_id": "current-artifact-doctor-20260921-1340",
+  "timestamp": "20260921-1340",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r10-artifact-sync",
+  "workflow_id": "artifacts/doctor-checklist-1340",
+  "commands": {
+    "tools/uos-cli doctor": {"exit": 0, "result": "HOLD", "checkable_artifacts": 20, "declared_cycles": 111, "unverifiable": 91},
+    "tools/uos-cli checklist": {"exit": 0, "result": "PASS", "checks": "18/18"}
+  },
+  "interpretation": "Checklist conformance does not establish artifact completeness or two-key admission; Doctor hold is preserved.",
+  "admission": "NOT_ADMITTED",
+  "next_action": "Reconcile current system feature inventory and generate only evidence-backed artifacts; do not synthesize missing EV evidence."
+}

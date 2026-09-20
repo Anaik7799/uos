@@ -134,25 +134,15 @@ pub fn simulate_15_worker_claim(
                   lease_until_ns: now_ns + lease_duration_ns,
                   attempt: t.attempt + 1,
                 )
-              #(
-                Some(updated_task),
-                [
-                  ClaimGranted(
-                    updated_task,
-                    worker,
-                    now_ns + lease_duration_ns,
-                  ),
-                  ..prev_results
-                ],
-              )
-            }
-            _ -> #(
-              Some(t),
-              [
-                ClaimRejected("Task already claimed by active lease"),
+              #(Some(updated_task), [
+                ClaimGranted(updated_task, worker, now_ns + lease_duration_ns),
                 ..prev_results
-              ],
-            )
+              ])
+            }
+            _ -> #(Some(t), [
+              ClaimRejected("Task already claimed by active lease"),
+              ..prev_results
+            ])
           }
         None -> #(None, [ClaimRejected("Task does not exist"), ..prev_results])
       }
@@ -166,15 +156,13 @@ pub fn simulate_15_worker_claim(
 
 /// Simulates a worker crash where virtual time advances past lease_until_ns.
 /// The zombie reaper detects expiration and resets the task to SimAvailable.
-pub fn simulate_zombie_lease_reaper(task: SimTask, current_time_ns: Int) -> SimTask {
+pub fn simulate_zombie_lease_reaper(
+  task: SimTask,
+  current_time_ns: Int,
+) -> SimTask {
   case task.state == SimExecuting && current_time_ns > task.lease_until_ns {
     True ->
-      SimTask(
-        ..task,
-        state: SimAvailable,
-        worker: None,
-        lease_until_ns: 0,
-      )
+      SimTask(..task, state: SimAvailable, worker: None, lease_until_ns: 0)
     False -> task
   }
 }
@@ -191,14 +179,12 @@ pub fn simulate_temporal_replay(
   let final_hash =
     list.fold(events, "GENESIS", fn(current_hash, event) {
       case event {
-        WfStart(id, ts) ->
-          "STATE-" <> id <> "-" <> int.to_string(ts)
+        WfStart(id, ts) -> "STATE-" <> id <> "-" <> int.to_string(ts)
         WfActivityScheduled(act_id, ts) ->
           current_hash <> "-ACT-" <> act_id <> "-" <> int.to_string(ts)
         WfActivityCompleted(act_id, r_hash, _) ->
           current_hash <> "-DONE-" <> act_id <> "-" <> r_hash
-        WfTerminated(receipt, _) ->
-          current_hash <> "-RECEIPT-" <> receipt
+        WfTerminated(receipt, _) -> current_hash <> "-RECEIPT-" <> receipt
       }
     })
   Ok(final_hash)
@@ -274,7 +260,8 @@ pub fn simulate_realtime_telemetry_stream(
 // =============================================================================
 
 pub const hard_denied_system_os_serial: String = "25503L801736"
-pub const jidoka_andon_halt_code: Int = -32002
+
+pub const jidoka_andon_halt_code: Int = -32_002
 
 /// Injects a malicious hardware modification attack against the protected OS drive.
 /// Asserts immediate fail-closed halt with error -32002 and zero bytes written.

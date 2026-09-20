@@ -32,9 +32,8 @@ import cepaf_gleam/agui/event_stream_widget
 import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ui/lustre/shell
 import cepaf_gleam/ui/state.{
-  type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient,
-  OodaVerify, ThreatCritical, ThreatSevere, cockpit_mode_to_string,
-  ooda_phase_to_string,
+  type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
+  ThreatCritical, ThreatSevere, cockpit_mode_to_string, ooda_phase_to_string,
 }
 import gleam/float
 import gleam/int
@@ -86,8 +85,7 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
     False -> "0"
   }
   let active_gap = case total_count > 0 {
-    True ->
-      int.to_string(circ - active_count * circ / int.max(total_count, 1))
+    True -> int.to_string(circ - active_count * circ / int.max(total_count, 1))
     False -> int.to_string(circ)
   }
   let blocked_dash = case total_count > 0 {
@@ -95,8 +93,7 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
     False -> "0"
   }
   let blocked_gap = case total_count > 0 {
-    True ->
-      int.to_string(circ - blocked_count * circ / int.max(total_count, 1))
+    True -> int.to_string(circ - blocked_count * circ / int.max(total_count, 1))
     False -> int.to_string(circ)
   }
   let completed_dash = case total_count > 0 {
@@ -117,9 +114,9 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
   let completion_pct = case total_count > 0 {
     True -> {
       let f =
-        int.to_float(completed_count) *. 100.0 /. int.to_float(
-          int.max(total_count, 1),
-        )
+        int.to_float(completed_count)
+        *. 100.0
+        /. int.to_float(int.max(total_count, 1))
       float.to_string(f) |> string.slice(0, 4)
     }
     False -> "0"
@@ -168,7 +165,10 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
     False -> -20
   }
   let layer_health = fn(offset: Int) -> Int {
-    int.max(0, int.min(100, base_health + offset + zenoh_bonus - threat_penalty))
+    int.max(
+      0,
+      int.min(100, base_health + offset + zenoh_bonus - threat_penalty),
+    )
   }
 
   html.div([attribute.class("w-full dashboard-evolutionary")], [
@@ -278,16 +278,24 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
           html.div([attribute.class("fractal-sidebar-title")], [
             element.text("Fractal Health L0-L7"),
           ]),
-          fractal_layer_health_bar("L0 Constitutional", layer_health(2), "#ff6b6b"),
-          fractal_layer_health_bar("L1 Atomic/Debug", layer_health(0), "#ffd93d"),
-          fractal_layer_health_bar("L2 Component", layer_health(3), "#6bcb77"),
-          fractal_layer_health_bar("L3 Transaction", layer_health(-2), "#4d96ff"),
-          fractal_layer_health_bar("L4 System", layer_health(-5), "#9b59b6"),
           fractal_layer_health_bar(
-            "L5 Cognitive",
-            layer_health(1),
-            "#00d4aa",
+            "L0 Constitutional",
+            layer_health(2),
+            "#ff6b6b",
           ),
+          fractal_layer_health_bar(
+            "L1 Atomic/Debug",
+            layer_health(0),
+            "#ffd93d",
+          ),
+          fractal_layer_health_bar("L2 Component", layer_health(3), "#6bcb77"),
+          fractal_layer_health_bar(
+            "L3 Transaction",
+            layer_health(-2),
+            "#4d96ff",
+          ),
+          fractal_layer_health_bar("L4 System", layer_health(-5), "#9b59b6"),
+          fractal_layer_health_bar("L5 Cognitive", layer_health(1), "#00d4aa"),
           fractal_layer_health_bar(
             "L6 Ecosystem",
             case state.zenoh_connected {
@@ -301,126 +309,124 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
       ),
     ]),
     // ── C7: Vega-Lite Health Sparkline Chart (Concept F Analytics) ──
-    shell.section("Health Trajectory — Vega-Lite Sparkline (Concept F Analytics)", [
-      html.p([attribute.class("sub")], [
-        element.text(
-          "Live health score trend. Vega-Lite chart preset: health-sparkline. Updates every 5s via WebSocket.",
+    shell.section(
+      "Health Trajectory — Vega-Lite Sparkline (Concept F Analytics)",
+      [
+        html.p([attribute.class("sub")], [
+          element.text(
+            "Live health score trend. Vega-Lite chart preset: health-sparkline. Updates every 5s via WebSocket.",
+          ),
+        ]),
+        html.div(
+          [
+            attribute.id("dash-vega-chart"),
+            attribute.class("dash-vega-container"),
+            attribute.attribute("data-vega-preset", "health-sparkline"),
+            attribute.attribute(
+              "data-vega-spec",
+              vega_health_sparkline_spec(health_score),
+            ),
+          ],
+          [
+            // Fallback ASCII sparkline while JS loads
+            html.div(
+              [
+                attribute.class("vega-fallback-sparkline"),
+                attribute.attribute("aria-label", "Health sparkline chart"),
+              ],
+              [
+                html.div([attribute.class("vega-sparkline-bar-row")], [
+                  html.div([attribute.class("vega-sparkline-label")], [
+                    element.text("Health Score"),
+                  ]),
+                  html.div([attribute.class("vega-sparkline-bar-outer")], [
+                    html.div(
+                      [
+                        attribute.class(
+                          "vega-sparkline-bar-fill"
+                          <> case health_score >= 80 {
+                            True -> " bar-healthy"
+                            False ->
+                              case health_score >= 60 {
+                                True -> " bar-degraded"
+                                False -> " bar-critical"
+                              }
+                          },
+                        ),
+                        attribute.attribute(
+                          "style",
+                          "width:" <> int.to_string(health_score) <> "%",
+                        ),
+                      ],
+                      [],
+                    ),
+                  ]),
+                  html.div([attribute.class("vega-sparkline-value")], [
+                    element.text(health_pct_str <> "%"),
+                  ]),
+                ]),
+                html.div([attribute.class("vega-sparkline-bar-row")], [
+                  html.div([attribute.class("vega-sparkline-label")], [
+                    element.text("Active Tasks"),
+                  ]),
+                  html.div([attribute.class("vega-sparkline-bar-outer")], [
+                    html.div(
+                      [
+                        attribute.class("vega-sparkline-bar-fill bar-active"),
+                        attribute.attribute(
+                          "style",
+                          "width:"
+                            <> int.to_string(
+                            active_count * 100 / int.max(total_count, 1),
+                          )
+                            <> "%",
+                        ),
+                      ],
+                      [],
+                    ),
+                  ]),
+                  html.div([attribute.class("vega-sparkline-value")], [
+                    element.text(int.to_string(active_count)),
+                  ]),
+                ]),
+                html.div([attribute.class("vega-sparkline-bar-row")], [
+                  html.div([attribute.class("vega-sparkline-label")], [
+                    element.text("Blocked Tasks"),
+                  ]),
+                  html.div([attribute.class("vega-sparkline-bar-outer")], [
+                    html.div(
+                      [
+                        attribute.class("vega-sparkline-bar-fill bar-critical"),
+                        attribute.attribute(
+                          "style",
+                          "width:"
+                            <> int.to_string(
+                            blocked_count * 100 / int.max(total_count, 1),
+                          )
+                            <> "%",
+                        ),
+                      ],
+                      [],
+                    ),
+                  ]),
+                  html.div([attribute.class("vega-sparkline-value")], [
+                    element.text(int.to_string(blocked_count)),
+                  ]),
+                ]),
+              ],
+            ),
+            // Vega-Lite render target (JS activates this)
+            html.div(
+              [
+                attribute.id("dash-vega-render-target"),
+                attribute.attribute("style", "min-height:120px"),
+              ],
+              [],
+            ),
+          ],
         ),
-      ]),
-      html.div(
-        [
-          attribute.id("dash-vega-chart"),
-          attribute.class("dash-vega-container"),
-          attribute.attribute(
-            "data-vega-preset",
-            "health-sparkline",
-          ),
-          attribute.attribute(
-            "data-vega-spec",
-            vega_health_sparkline_spec(health_score),
-          ),
-        ],
-        [
-          // Fallback ASCII sparkline while JS loads
-          html.div(
-            [
-              attribute.class("vega-fallback-sparkline"),
-              attribute.attribute("aria-label", "Health sparkline chart"),
-            ],
-            [
-              html.div([attribute.class("vega-sparkline-bar-row")], [
-                html.div([attribute.class("vega-sparkline-label")], [
-                  element.text("Health Score"),
-                ]),
-                html.div([attribute.class("vega-sparkline-bar-outer")], [
-                  html.div(
-                    [
-                      attribute.class(
-                        "vega-sparkline-bar-fill"
-                        <> case health_score >= 80 {
-                          True -> " bar-healthy"
-                          False ->
-                            case health_score >= 60 {
-                              True -> " bar-degraded"
-                              False -> " bar-critical"
-                            }
-                        },
-                      ),
-                      attribute.attribute(
-                        "style",
-                        "width:"
-                          <> int.to_string(health_score)
-                          <> "%",
-                      ),
-                    ],
-                    [],
-                  ),
-                ]),
-                html.div([attribute.class("vega-sparkline-value")], [
-                  element.text(health_pct_str <> "%"),
-                ]),
-              ]),
-              html.div([attribute.class("vega-sparkline-bar-row")], [
-                html.div([attribute.class("vega-sparkline-label")], [
-                  element.text("Active Tasks"),
-                ]),
-                html.div([attribute.class("vega-sparkline-bar-outer")], [
-                  html.div(
-                    [
-                      attribute.class("vega-sparkline-bar-fill bar-active"),
-                      attribute.attribute(
-                        "style",
-                        "width:"
-                          <> int.to_string(
-                          active_count * 100 / int.max(total_count, 1),
-                        )
-                          <> "%",
-                      ),
-                    ],
-                    [],
-                  ),
-                ]),
-                html.div([attribute.class("vega-sparkline-value")], [
-                  element.text(int.to_string(active_count)),
-                ]),
-              ]),
-              html.div([attribute.class("vega-sparkline-bar-row")], [
-                html.div([attribute.class("vega-sparkline-label")], [
-                  element.text("Blocked Tasks"),
-                ]),
-                html.div([attribute.class("vega-sparkline-bar-outer")], [
-                  html.div(
-                    [
-                      attribute.class("vega-sparkline-bar-fill bar-critical"),
-                      attribute.attribute(
-                        "style",
-                        "width:"
-                          <> int.to_string(
-                          blocked_count * 100 / int.max(total_count, 1),
-                        )
-                          <> "%",
-                      ),
-                    ],
-                    [],
-                  ),
-                ]),
-                html.div([attribute.class("vega-sparkline-value")], [
-                  element.text(int.to_string(blocked_count)),
-                ]),
-              ]),
-            ],
-          ),
-          // Vega-Lite render target (JS activates this)
-          html.div(
-            [
-              attribute.id("dash-vega-render-target"),
-              attribute.attribute("style", "min-height:120px"),
-            ],
-            [],
-          ),
-        ],
-      ),
-    ]),
+      ],
+    ),
     // --- SECTION 0: HMI & COGNITIVE CONTROL (existing) ---
     shell.section("HMI & Cognitive Load Controls", [
       html.div([attribute.class("card-grid")], [
@@ -1105,88 +1111,92 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
     // --- SECTION 7: SUPERVISOR TREE & THREAD MONITORING ---
     // कर्मण्येवाधिकारस्ते — Your right is to action alone (Gita 2.47)
     shell.section("Supervisor Tree & Thread Monitoring", [
-      html.div(
-        [attribute.id("supervisor-tree"), attribute.class("card-grid")],
-        [
-          shell.status_card(
-            "EXEC-001 Orchestrator",
-            "Healthy",
-            "Opus",
-            "Root supervisor — 25 agents, 2-layer",
-          ),
-          shell.status_card(
-            "Context Supervisor",
-            "Healthy",
-            "Sonnet",
-            "5 workers — compile, format, read",
-          ),
-          shell.status_card(
-            "Domain Supervisor",
-            "Healthy",
-            "Sonnet",
-            "5 workers — test, fix, doc",
-          ),
-          shell.status_card(
-            "Test Supervisor",
-            "Healthy",
-            "Sonnet",
-            "5 workers — unit, E2E, property",
-          ),
-          shell.status_card(
-            "Quality Supervisor",
-            "Healthy",
-            "Sonnet",
-            "5 workers — credo, STAMP, verify",
-          ),
-        ],
-      ),
-      html.div(
-        [attribute.id("thread-monitor"), attribute.class("card-grid")],
-        [
-          shell.status_card(
-            "BEAM Schedulers",
-            "Healthy",
-            "16+16",
-            "16 normal + 16 dirty IO threads",
-          ),
-          shell.status_card(
-            "Rust Tokio Runtime",
-            "Healthy",
-            "8 Threads",
-            "sa-plan-daemon async runtime",
-          ),
-          shell.status_card(
-            "Rust Modules",
-            "Healthy",
-            "31 Files",
-            "9,104 LOC — cortex, gateway, trace",
-          ),
-          shell.status_card(
-            "Zenoh Sessions",
-            bool_status(state.zenoh_connected),
-            "4 Routers",
-            "TCP 7447 — mesh transport",
-          ),
-          shell.status_card(
-            "Active OODA",
-            "Healthy",
-            "1 Cycle",
-            "Observe-Orient-Decide-Act-Verify",
-          ),
-          shell.status_card(
-            "WebSocket Conns",
-            "Healthy",
-            "Active",
-            "/ws/dashboard + /ws/planning",
-          ),
-        ],
-      ),
+      html.div([attribute.id("supervisor-tree"), attribute.class("card-grid")], [
+        shell.status_card(
+          "EXEC-001 Orchestrator",
+          "Healthy",
+          "Opus",
+          "Root supervisor — 25 agents, 2-layer",
+        ),
+        shell.status_card(
+          "Context Supervisor",
+          "Healthy",
+          "Sonnet",
+          "5 workers — compile, format, read",
+        ),
+        shell.status_card(
+          "Domain Supervisor",
+          "Healthy",
+          "Sonnet",
+          "5 workers — test, fix, doc",
+        ),
+        shell.status_card(
+          "Test Supervisor",
+          "Healthy",
+          "Sonnet",
+          "5 workers — unit, E2E, property",
+        ),
+        shell.status_card(
+          "Quality Supervisor",
+          "Healthy",
+          "Sonnet",
+          "5 workers — credo, STAMP, verify",
+        ),
+      ]),
+      html.div([attribute.id("thread-monitor"), attribute.class("card-grid")], [
+        shell.status_card(
+          "BEAM Schedulers",
+          "Healthy",
+          "16+16",
+          "16 normal + 16 dirty IO threads",
+        ),
+        shell.status_card(
+          "Rust Tokio Runtime",
+          "Healthy",
+          "8 Threads",
+          "sa-plan-daemon async runtime",
+        ),
+        shell.status_card(
+          "Rust Modules",
+          "Healthy",
+          "31 Files",
+          "9,104 LOC — cortex, gateway, trace",
+        ),
+        shell.status_card(
+          "Zenoh Sessions",
+          bool_status(state.zenoh_connected),
+          "4 Routers",
+          "TCP 7447 — mesh transport",
+        ),
+        shell.status_card(
+          "Active OODA",
+          "Healthy",
+          "1 Cycle",
+          "Observe-Orient-Decide-Act-Verify",
+        ),
+        shell.status_card(
+          "WebSocket Conns",
+          "Healthy",
+          "Active",
+          "/ws/dashboard + /ws/planning",
+        ),
+      ]),
     ]),
     // --- SECTION 8: QUICK LINKS + NAVIGATION ---
     shell.section("Quick Links", [
       html.div([attribute.class("card-grid-wide")], [
-        quick_link_card("Podman", "/podman", "Container lifecycle, genome health", "L4"),
-        quick_link_card("Zenoh Mesh", "/zenoh", "Pub/sub topology, router status", "L6"),
+        quick_link_card(
+          "Podman",
+          "/podman",
+          "Container lifecycle, genome health",
+          "L4",
+        ),
+        quick_link_card(
+          "Zenoh Mesh",
+          "/zenoh",
+          "Pub/sub topology, router status",
+          "L6",
+        ),
         quick_link_card(
           "Verification",
           "/verification",
@@ -1217,7 +1227,12 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
           "Zettelkasten brain, 2060+ holons",
           "L5",
         ),
-        quick_link_card("Cockpit", "/cockpit", "Dark cockpit, operator view", "L5"),
+        quick_link_card(
+          "Cockpit",
+          "/cockpit",
+          "Dark cockpit, operator view",
+          "L5",
+        ),
       ]),
     ]),
     // --- SECTION 9: OPERATIONAL CONTROLS ---
@@ -1310,15 +1325,15 @@ pub fn dashboard_view(state: SharedMeshState) -> Element(msg) {
       ),
       // Search bar (Ctrl+K)
       html.div(
-        [attribute.id("dash-search-bar"), attribute.attribute("style", "margin-bottom:12px")],
+        [
+          attribute.id("dash-search-bar"),
+          attribute.attribute("style", "margin-bottom:12px"),
+        ],
         [
           html.input([
             attribute.type_("text"),
             attribute.id("dash-search-input"),
-            attribute.attribute(
-              "placeholder",
-              "Search system... (Ctrl+K)",
-            ),
+            attribute.attribute("placeholder", "Search system... (Ctrl+K)"),
             attribute.attribute(
               "style",
               "width:100%;padding:10px 14px;background:#141922;border:1px solid #1e2a3a;border-radius:8px;color:#e0e6ed;font-size:0.9rem;min-height:44px",
@@ -1437,13 +1452,10 @@ pub fn cockpit_view(state: SharedMeshState) -> Element(msg) {
   let mode = cockpit_mode_from_state(state)
   let mode_color = cockpit_mode_color(mode)
   let health_pct =
-    int.to_string(
-      case state.healthy_count == 0 && state.container_count == 0 {
-        True -> 100
-        False ->
-          state.healthy_count * 100 / int.max(state.container_count, 1)
-      },
-    )
+    int.to_string(case state.healthy_count == 0 && state.container_count == 0 {
+      True -> 100
+      False -> state.healthy_count * 100 / int.max(state.container_count, 1)
+    })
   html.div(
     [
       attribute.class("w-full cockpit-page cockpit-mode-" <> mode),
@@ -1487,10 +1499,9 @@ pub fn cockpit_view(state: SharedMeshState) -> Element(msg) {
                 ],
                 [],
               ),
-              html.span(
-                [attribute.attribute("id", "cockpit-hb-label")],
-                [element.text("LIVE")],
-              ),
+              html.span([attribute.attribute("id", "cockpit-hb-label")], [
+                element.text("LIVE"),
+              ]),
             ],
           ),
         ]),
@@ -1564,12 +1575,7 @@ pub fn cockpit_view(state: SharedMeshState) -> Element(msg) {
             state.threat_level_to_string(state.threat_level),
             "immune system",
           ),
-          shell.status_card(
-            "Active Alarms",
-            "Healthy",
-            "0",
-            "all acknowledged",
-          ),
+          shell.status_card("Active Alarms", "Healthy", "0", "all acknowledged"),
         ]),
       ]),
       // ── Row 2: Alarm Panel (sorted Critical → Advisory) ─────────────────
@@ -1641,7 +1647,10 @@ pub fn cockpit_view(state: SharedMeshState) -> Element(msg) {
           shell.section("OODA Phase Ring (5-Tier)", [
             shell.ooda_5tier(ooda_phase_to_string(state.ooda_phase)),
             html.div([attribute.class("ooda-meta-row")], [
-              shell.kv_row("Current Phase", ooda_phase_to_string(state.ooda_phase)),
+              shell.kv_row(
+                "Current Phase",
+                ooda_phase_to_string(state.ooda_phase),
+              ),
               shell.kv_row("Cycle SLA", "< 100ms"),
               shell.kv_row("Budget Used", "42ms"),
             ]),
@@ -1669,35 +1678,65 @@ pub fn cockpit_view(state: SharedMeshState) -> Element(msg) {
         ]),
       ]),
       // ── Row 5: L0-L7 Fractal Layer Status (condensed for operator) ─────
-      shell.section(
-        "L0-L7 Fractal Layer Health (Operator View — Condensed)",
-        [
-          html.div([attribute.class("fractal-layer-strip")], [
-            fractal_layer_badge("L0", "Constitutional", "Healthy", "#ff6b6b"),
-            fractal_layer_badge("L1", "Atomic/Debug", "Healthy", "#ffd93d"),
-            fractal_layer_badge("L2", "Component", "Healthy", "#6bcb77"),
-            fractal_layer_badge("L3", "Transaction", "Healthy", "#4d96ff"),
-            fractal_layer_badge("L4", "System", "Healthy", "#9b59b6"),
-            fractal_layer_badge("L5", "Cognitive", "Healthy", "#00d4aa"),
-            fractal_layer_badge("L6", "Ecosystem", "Healthy", "#e74c3c"),
-            fractal_layer_badge("L7", "Federation", "Healthy", "#f39c12"),
-          ]),
-        ],
-      ),
+      shell.section("L0-L7 Fractal Layer Health (Operator View — Condensed)", [
+        html.div([attribute.class("fractal-layer-strip")], [
+          fractal_layer_badge("L0", "Constitutional", "Healthy", "#ff6b6b"),
+          fractal_layer_badge("L1", "Atomic/Debug", "Healthy", "#ffd93d"),
+          fractal_layer_badge("L2", "Component", "Healthy", "#6bcb77"),
+          fractal_layer_badge("L3", "Transaction", "Healthy", "#4d96ff"),
+          fractal_layer_badge("L4", "System", "Healthy", "#9b59b6"),
+          fractal_layer_badge("L5", "Cognitive", "Healthy", "#00d4aa"),
+          fractal_layer_badge("L6", "Ecosystem", "Healthy", "#e74c3c"),
+          fractal_layer_badge("L7", "Federation", "Healthy", "#f39c12"),
+        ]),
+      ]),
       // ── Row 6: AI Chat + View controls (JS-driven) ────────────────────
       html.div([attribute.class("cockpit-bottom-strip")], [
         html.div([attribute.class("cockpit-view-controls")], [
-          html.div([attribute.class("view-toggle"), attribute.attribute("id", "cockpit-view-toggle")], [
-            html.button([attribute.class("view-btn active"), attribute.attribute("data-view", "grid")], [element.text("Grid")]),
-            html.button([attribute.class("view-btn"), attribute.attribute("data-view", "alarms")], [element.text("Alarms")]),
-            html.button([attribute.class("view-btn"), attribute.attribute("data-view", "nodes")], [element.text("Nodes")]),
-            html.button([attribute.class("view-btn"), attribute.attribute("data-view", "genome")], [element.text("Genome")]),
-          ]),
+          html.div(
+            [
+              attribute.class("view-toggle"),
+              attribute.attribute("id", "cockpit-view-toggle"),
+            ],
+            [
+              html.button(
+                [
+                  attribute.class("view-btn active"),
+                  attribute.attribute("data-view", "grid"),
+                ],
+                [element.text("Grid")],
+              ),
+              html.button(
+                [
+                  attribute.class("view-btn"),
+                  attribute.attribute("data-view", "alarms"),
+                ],
+                [element.text("Alarms")],
+              ),
+              html.button(
+                [
+                  attribute.class("view-btn"),
+                  attribute.attribute("data-view", "nodes"),
+                ],
+                [element.text("Nodes")],
+              ),
+              html.button(
+                [
+                  attribute.class("view-btn"),
+                  attribute.attribute("data-view", "genome"),
+                ],
+                [element.text("Genome")],
+              ),
+            ],
+          ),
           html.div([attribute.class("cockpit-search-bar")], [
             html.input([
               attribute.class("cockpit-search-input"),
               attribute.attribute("id", "cockpit-search"),
-              attribute.attribute("placeholder", "Search alarms, nodes… (Ctrl+K)"),
+              attribute.attribute(
+                "placeholder",
+                "Search alarms, nodes… (Ctrl+K)",
+              ),
               attribute.attribute("type", "text"),
             ]),
           ]),
@@ -1739,7 +1778,10 @@ pub fn cockpit_view(state: SharedMeshState) -> Element(msg) {
                   html.input([
                     attribute.class("ai-input"),
                     attribute.attribute("id", "cockpit-ai-input"),
-                    attribute.attribute("placeholder", "Ask about alarms, nodes…"),
+                    attribute.attribute(
+                      "placeholder",
+                      "Ask about alarms, nodes…",
+                    ),
                     attribute.attribute("type", "text"),
                   ]),
                   html.button(
@@ -1981,19 +2023,9 @@ pub fn planning_dashboard_view(state: SharedMeshState) -> Element(msg) {
           "SC-ENFORCE-001",
         ),
         shell.status_card("Graph Verify", "Healthy", "active", p0_detail),
-        shell.status_card(
-          "Orch Mesh",
-          "Healthy",
-          "active",
-          "Prajna + Smriti",
-        ),
+        shell.status_card("Orch Mesh", "Healthy", "active", "Prajna + Smriti"),
         shell.status_card("Chaya Twin", "Healthy", "active", "digital twin"),
-        shell.status_card(
-          "Startup Optim",
-          "Healthy",
-          "active",
-          "< 60s target",
-        ),
+        shell.status_card("Startup Optim", "Healthy", "active", "< 60s target"),
       ]),
     ]),
     shell.section("AI Copilot", [
@@ -2134,14 +2166,8 @@ fn dash_progress_ring(
           attribute.attribute("stroke", color),
           attribute.attribute("stroke-width", "8"),
           attribute.attribute("stroke-linecap", "round"),
-          attribute.attribute(
-            "stroke-dasharray",
-            dash <> " " <> gap,
-          ),
-          attribute.attribute(
-            "transform",
-            "rotate(-90 50 50)",
-          ),
+          attribute.attribute("stroke-dasharray", dash <> " " <> gap),
+          attribute.attribute("transform", "rotate(-90 50 50)"),
         ],
         [],
       ),

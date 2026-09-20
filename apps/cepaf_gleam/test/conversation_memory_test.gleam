@@ -53,7 +53,9 @@ pub fn conversation_memory_lifecycle_test() {
       default_db_path,
       chat_id,
       "assistant",
-      "Root drive serial is " <> egress_redactor.denied_os_nvme_serial <> " and is locked.",
+      "Root drive serial is "
+        <> egress_redactor.denied_os_nvme_serial
+        <> " and is locked.",
       Some("tool_storage_inspect"),
       1_700_000_003_000,
     )
@@ -75,8 +77,14 @@ pub fn conversation_memory_lifecycle_test() {
 
       should.equal("assistant", m3.role)
       // Verify redaction took effect!
-      should.be_false(string.contains(m3.content, egress_redactor.denied_os_nvme_serial))
-      should.be_true(string.contains(m3.content, egress_redactor.redacted_serial_placeholder))
+      should.be_false(string.contains(
+        m3.content,
+        egress_redactor.denied_os_nvme_serial,
+      ))
+      should.be_true(string.contains(
+        m3.content,
+        egress_redactor.redacted_serial_placeholder,
+      ))
     }
     _ -> should.fail()
   }

@@ -1,0 +1,24 @@
+{
+  "schema": "uos.declarative-mcp-boundary-receipt.v1",
+  "recorded_at": "2026-09-21T17:45:00+02:00",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "command": "gleam run -m cepaf_gleam/mcp/server < /tmp/mcp-probe-1750.ndjson",
+  "log": "/tmp/mcp-probe-1750.log",
+  "log_sha256": "4290acba876a4c63f5c511f8a34b87160cdcdfdb1ea113e49c957b86b41cca20",
+  "observed": {
+    "tools": [
+      "harness_system_feature_catalog",
+      "harness_system_feature_observations",
+      "harness_system_feature_intent",
+      "harness_execution_progress"
+    ],
+    "requests": 5,
+    "responses": 5,
+    "authorization_mode": "audit_only",
+    "anonymous_result": "role_binding_missing",
+    "fail_closed": true
+  },
+  "interpretation": "Declarative MCP data/control interfaces are registered and reject unbound sessions before catalog, observation, intent, or progress evaluation. This is a boundary observation, not availability or admission evidence.",
+  "next_gate": "t0b-bindings then r05-mcp-data/r06-mcp-control",
+  "admission": "not_admitted"
+}

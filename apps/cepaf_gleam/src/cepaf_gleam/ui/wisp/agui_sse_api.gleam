@@ -62,14 +62,12 @@ pub fn sse_cockpit_push_frame(
   data_json: String,
   id: String,
 ) -> String {
-  sse_stream.format_sse_event(
-    SSEEvent(
-      id: id,
-      event_type: event_name,
-      data: data_json,
-      retry_ms: Some(3000),
-    ),
-  )
+  sse_stream.format_sse_event(SSEEvent(
+    id: id,
+    event_type: event_name,
+    data: data_json,
+    retry_ms: Some(3000),
+  ))
 }
 
 /// Emits the full 32-event AG-UI protocol sequence in canonical order.
@@ -118,7 +116,11 @@ pub fn sse_32_event_manifest_stream(config: AGUIStreamConfig) -> String {
     // 9. TEXT_MESSAGE_CONTENT
     events.new_text_message_content(message_id, "C3I Live Cockpit Connected"),
     // 10. TEXT_MESSAGE_CHUNK
-    events.new_text_message_chunk(message_id, "assistant", " [Telemetry Active]"),
+    events.new_text_message_chunk(
+      message_id,
+      "assistant",
+      " [Telemetry Active]",
+    ),
     // 11. TEXT_MESSAGE_END
     events.new_text_message_end(message_id),
     // 12. REASONING_START
@@ -126,7 +128,10 @@ pub fn sse_32_event_manifest_stream(config: AGUIStreamConfig) -> String {
     // 13. REASONING_MESSAGE_START
     events.new_reasoning_message_start(message_id),
     // 14. REASONING_MESSAGE_CONTENT
-    events.new_reasoning_message_content(message_id, "Analyzing OODA loop metrics..."),
+    events.new_reasoning_message_content(
+      message_id,
+      "Analyzing OODA loop metrics...",
+    ),
     // 15. REASONING_MESSAGE_CHUNK
     events.new_reasoning_message_chunk(message_id, " Lyapunov trend stable."),
     // 16. REASONING_MESSAGE_END
@@ -134,7 +139,11 @@ pub fn sse_32_event_manifest_stream(config: AGUIStreamConfig) -> String {
     // 17. REASONING_END
     events.new_reasoning_end(message_id),
     // 18. REASONING_ENCRYPTED_VALUE
-    events.new_reasoning_encrypted_value("opaque_proof", message_id, "enc:0x89abcdef"),
+    events.new_reasoning_encrypted_value(
+      "opaque_proof",
+      message_id,
+      "enc:0x89abcdef",
+    ),
     // 19. TOOL_CALL_START
     events.new_tool_call_start(tool_id, "audit_subsystems"),
     // 20. TOOL_CALL_ARGS
@@ -158,10 +167,7 @@ pub fn sse_32_event_manifest_stream(config: AGUIStreamConfig) -> String {
     // 27. APPROVAL_RESULT
     events.new_approval_result(approval_id, True),
     // 28. CUSTOM
-    events.new_custom(
-      "mesh_status",
-      json.object([#("peers", json.int(3))]),
-    ),
+    events.new_custom("mesh_status", json.object([#("peers", json.int(3))])),
     // 29. META_EVENT
     events.new_meta_event(
       "trace_sync",
@@ -187,15 +193,21 @@ pub fn agui_manifest_summary_json() -> String {
   json.object([
     #("protocol", json.string("AG-UI-v1")),
     #("event_count", json.int(32)),
-    #("categories", json.array([
-      json.string("Lifecycle"),
-      json.string("Text"),
-      json.string("Tool"),
-      json.string("State"),
-      json.string("Activity"),
-      json.string("Reasoning"),
-      json.string("Special"),
-    ], fn(x) { x })),
+    #(
+      "categories",
+      json.array(
+        [
+          json.string("Lifecycle"),
+          json.string("Text"),
+          json.string("Tool"),
+          json.string("State"),
+          json.string("Activity"),
+          json.string("Reasoning"),
+          json.string("Special"),
+        ],
+        fn(x) { x },
+      ),
+    ),
     #("sse_transport", json.string("W3C-EventSource")),
     #("status", json.string("compliant")),
   ])

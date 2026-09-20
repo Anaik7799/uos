@@ -1,0 +1,504 @@
+{
+  "schema_version": 1,
+  "scope": "Bountytek assessment artifacts; no global safety certification",
+  "deployment_authorized": false,
+  "decision": "HOLD_FOR_INDEPENDENT_SAFETY_REVIEW",
+  "expected_engine_sha256": "fc1aed0907ba587116d9ce5eead09d17395269f950377d397f5b933aaafffe7c",
+  "observed_provider_state": "historical trial: two usable of three; Claude access blocked",
+  "plugins": [
+    {
+      "name": "superpowers",
+      "version": "6.4.2",
+      "manifest": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.4.2/.codex-plugin/plugin.json",
+      "manifest_sha256": "c8832918c7212bcbfc1814a9918f090a2977548590f5ef8f23d294d581257752",
+      "state": "cached manifest observed; activation not attested; unchanged"
+    }
+  ],
+  "retired_paths": [
+    "verify_pharma_chemicals.mojo", "run_cycles_14_18.mojo",
+    "run_cycles_19_23.mojo", "run_cycles_24_28.mojo",
+    "build_presentation_deck.mojo"
+  ],
+  "files": [
+    {
+      "path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "source_path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "sha256": "97d35ec90937060eb64fa661fe04826f3d02241123fbfdc99d33c2b8c25f2a07",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "source_path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "sha256": "5780670c77515c8ecb820c36d4c889766238404c3c01521d0fb9ee0054dbd59d",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "source_path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "sha256": "4abfd160f32d7a6f60177bb70d6d22e38d699fa4f790c27899a5eb7c92d4f90b",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.md",
+      "source_path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.md",
+      "sha256": "850620f23188df976edd6bbfd9c8886b9f6c73b61706e42b6bdd088ad6a19714",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-links.json",
+      "source_path": "20260927-1133-2s-consulting-nordic-medtech-service-positioning-links.json",
+      "sha256": "404419e599a29a8fe76eb4ee9f28c9e4bb4a2c8970860dbd49c732298920474e",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "source_path": "20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "sha256": "98c99fbdd45fb44ec323f7fbd701573270c5269fda0f85ccfa83de147eb7c99a",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.md",
+      "source_path": "20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.md",
+      "sha256": "ed7833b8968a9eb629206430f29d2121d90972644c0b93b86dbb5c7ed6c89cc8",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "source_path": "20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "sha256": "85151616329adf2fa4ed55acb5706f78379995f9b20fb2260bf2cf6f8d2c3904",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md",
+      "source_path": "20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md",
+      "sha256": "4edbc93e56730af5a8c2ae83f8b0c5f089f134887f7a1c46ce8e005287dcee2e",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260928-0722-bountytek-nordic-agency-consolidation-and-verification-journal.html",
+      "source_path": "20260928-0722-bountytek-nordic-agency-consolidation-and-verification-journal.html",
+      "sha256": "8ceddf12c3460eb6813f61db8a1c66410a4b6c7c939de8658b2bb10286c6af08",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260928-0722-bountytek-nordic-agency-consolidation-and-verification-journal.md",
+      "source_path": "20260928-0722-bountytek-nordic-agency-consolidation-and-verification-journal.md",
+      "sha256": "9713ca2cf866263ebc169362d71868deb6e6e46c3f020edb1c68cf8dfd996036",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.html",
+      "source_path": "20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.html",
+      "sha256": "da225cb31a0873995504111922433bd083a1951342f0a4abbb3d74ef83674dd2",
+      "role": "current_documentation"
+    },
+    {
+      "path": "20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.md",
+      "source_path": "20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.md",
+      "sha256": "c021b3b93adea2033ea9584895227554723a6fb409eafbc20f50d8a79df935fd",
+      "role": "current_documentation"
+    },
+    {
+      "path": "20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.html",
+      "source_path": "20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.html",
+      "sha256": "aa762aa49c87068d224760eb3f1d6544cf51b46731fb2488666a373f06fbde87",
+      "role": "current_documentation"
+    },
+    {
+      "path": "20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.md",
+      "source_path": "20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.md",
+      "sha256": "8f398eeb3e21383f5021c8e6f6dfc20919b580fdb9c69a80a3182297deab4e54",
+      "role": "current_documentation"
+    },
+    {
+      "path": "2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "source_path": "2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "sha256": "796cb61350a2d167f106268b318caf6d3d028188bc2e57034338bc3bdde2fe1e",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_CONSULTING_COMPREHENSIVE_DOSSIER.md",
+      "source_path": "2S_CONSULTING_COMPREHENSIVE_DOSSIER.md",
+      "sha256": "17d7225eba9f989907ebfad1cbdd35cee941449f228f72e2cc8f2631dcff82f1",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html",
+      "source_path": "2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html",
+      "sha256": "8fed5efb5075661c81ef5a5258376f147be6a0675179d4ee67ef90f8d8567d3b",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.md",
+      "source_path": "2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.md",
+      "sha256": "2f7bde98c5545a227abf971b75a6d96e2d25c381a1618a2e31fef60f31a1428a",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_Consulting_Enterprise_Data.xlsx",
+      "source_path": "2S_Consulting_Enterprise_Data.xlsx",
+      "sha256": "bbddcea8611604c6ec8d9f295310ab2b7586e26cb3dbf41c83dd4902494e48ec",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html",
+      "source_path": "2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html",
+      "sha256": "cb25dab13894057234e89548c962330cb0372fefd598d42ae08d79ee8a9b092f",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.md",
+      "source_path": "2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.md",
+      "sha256": "5ce7c669f03205df622c970baf88a36d641760173b113f691d49bb0d2b422df4",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_NORDIC_OUTREACH_PRESENTATION.html",
+      "source_path": "2S_NORDIC_OUTREACH_PRESENTATION.html",
+      "sha256": "056e83049c24d5f3bfbe737085c6c32c1d53b8b2e82b070c387fb0471c1d986f",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_NORDIC_OUTREACH_PRESENTATION.md",
+      "source_path": "2S_NORDIC_OUTREACH_PRESENTATION.md",
+      "sha256": "b46a67e214948620c19a7f9bb9465b0aa662b59f6478245d59ea6154020398a1",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_NORDIC_OUTREACH_PRESENTATION_DOC.html",
+      "source_path": "2S_NORDIC_OUTREACH_PRESENTATION_DOC.html",
+      "sha256": "92ad2ddd335b43346b0d3b097a1a3b5b28ffac4404a1618115441a0a49c54ea4",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html",
+      "source_path": "2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html",
+      "sha256": "952ed0c4429bb313f3582d27a896c156d17dccae601011fb3f419c57440bb1a8",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md",
+      "source_path": "2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md",
+      "sha256": "29313d2f348002bcf0aa97ac5fd35d3404b2f7bbdd8c1a4db6bb25d0ec6da286",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html",
+      "source_path": "2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html",
+      "sha256": "1c28abf9a936e59771d3f901d9bef0093701fab723e2e4e21ed5d2b7c9ffe198",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md",
+      "source_path": "2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md",
+      "sha256": "eb8cd60a6f15b80cad8cfe4e11549c8fd24a8b236eea20123bb78196fadde3c0",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "ACH_ASSESSMENT.html",
+      "source_path": "ACH_ASSESSMENT.html",
+      "sha256": "906b3d39bdc1b7578baf325800ccb91ba13c6f0c805af88d9172eec46ad2e04c",
+      "role": "current_documentation"
+    },
+    {
+      "path": "ACH_ASSESSMENT.md",
+      "source_path": "ACH_ASSESSMENT.md",
+      "sha256": "52e137a943b68cea6723240d915fb51e51a487723baad1b7632ab172c6a07cea",
+      "role": "current_documentation"
+    },
+    {
+      "path": "ACH_ASSESSMENT_VALIDATION.html",
+      "source_path": "ACH_ASSESSMENT_VALIDATION.html",
+      "sha256": "5d1f8d7d02ef867ea9186f7c0bcdb8eced2f34fd927441039daee7898183f98e",
+      "role": "current_documentation"
+    },
+    {
+      "path": "ACH_ASSESSMENT_VALIDATION.md",
+      "source_path": "ACH_ASSESSMENT_VALIDATION.md",
+      "sha256": "de3792dce7ddfbaf51c06f1bca8a8aef52a7d124e774a93fdc0785ec9cbad7ad",
+      "role": "current_documentation"
+    },
+    {
+      "path": "ACH_SAFETY_ANALYSIS.html",
+      "source_path": "ACH_SAFETY_ANALYSIS.html",
+      "sha256": "b2e7ea3d203269787a93ea50ecdeebb3e2f87ac96724e66cfca1ef429f229a4f",
+      "role": "current_documentation"
+    },
+    {
+      "path": "ACH_SAFETY_ANALYSIS.md",
+      "source_path": "ACH_SAFETY_ANALYSIS.md",
+      "sha256": "eee0a6fd9e597996ac1b160a42cd2bc3c99d4124de8c09779a3fd638d5bbf778",
+      "role": "current_documentation"
+    },
+    {
+      "path": "CODEX_HANDOVER.html",
+      "source_path": "CODEX_HANDOVER.html",
+      "sha256": "e7024dc0997a4a07888f8573af38772b598e9ed32daaaedb510a46cbff32deb7",
+      "role": "current_documentation"
+    },
+    {
+      "path": "CODEX_HANDOVER.md",
+      "source_path": "CODEX_HANDOVER.md",
+      "sha256": "27b5a162bd02f33383e8f4865cabf5505cf159ca69d0ab75e33739365fe64e88",
+      "role": "current_documentation"
+    },
+    {
+      "path": "MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "source_path": "MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "sha256": "69b902964f017b303595c7ad2c4b1e01ea6385b6bdcac8bb29991267c22433c3",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "MEDICAL_NORDICS_FINANCIALS_DOSSIER.md",
+      "source_path": "MEDICAL_NORDICS_FINANCIALS_DOSSIER.md",
+      "sha256": "8f1bdfcc5bb1c4cc07b13f50469ee056191303b47ac57f57364d3ea8cdd0b60b",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "Medical-Nordics-1.xlsx",
+      "source_path": "versions/Medical-Nordics-1/Medical-Nordics-1_v0003_20260928T104752Z.xlsx",
+      "sha256": "15cdab8bb2580b5e1d9347fadb9b6a036a1a9406d20e5b138f79f5a117ff0851",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "NORDIC_COMPETITOR_BENCHMARK_DECK.html",
+      "source_path": "NORDIC_COMPETITOR_BENCHMARK_DECK.html",
+      "sha256": "faf1ad9e0a0fd7be059140cbff119d1993f2aaf1e0fc95d0afeeadd36f0d3dde",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "NORDIC_COMPETITOR_BENCHMARK_DECK.md",
+      "source_path": "NORDIC_COMPETITOR_BENCHMARK_DECK.md",
+      "sha256": "a534444daf3428dcc75d47e8004b8d37cd9dd20a0e440f09c07f285fc61965b6",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "NORDIC_COMPETITOR_BENCHMARK_DECK_DOC.html",
+      "source_path": "NORDIC_COMPETITOR_BENCHMARK_DECK_DOC.html",
+      "sha256": "8986161b77ed12d92510f95a5d4721fac7c2f7faa2f2eb535e6946f28add7963",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html",
+      "source_path": "NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html",
+      "sha256": "b0d138374c115d582d3f763f80c659637a6d382d1f22e95c5d1e38dee01c1dee",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.md",
+      "source_path": "NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.md",
+      "sha256": "2f5f01c283b8ac1982d413028c0b07bdb076a67dd6b508d72452bbfbf6ee70ad",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "PROJECTS_INDEX.html",
+      "source_path": "PROJECTS_INDEX.html",
+      "sha256": "08444ebac243a04e8ea43e686bf3bad8ecf351e9424b8965fd770026f039ba08",
+      "role": "current_documentation"
+    },
+    {
+      "path": "PROJECTS_INDEX.md",
+      "source_path": "PROJECTS_INDEX.md",
+      "sha256": "05552e32baafab731203616f424930340af0198f252e5ad919817b1a734b5d4c",
+      "role": "current_documentation"
+    },
+    {
+      "path": "README.md",
+      "source_path": "README.md",
+      "sha256": "152819900afbdca90d6922d7249b83599c6d90befc3b591e2355bf620b81f107",
+      "role": "current_documentation"
+    },
+    {
+      "path": "SKILLS_AND_SUPERPOWERS_CATALOG.html",
+      "source_path": "SKILLS_AND_SUPERPOWERS_CATALOG.html",
+      "sha256": "f8fba494c62cf9f9f5c923ca805184d440782dc7179996269b1df911665e0251",
+      "role": "current_documentation"
+    },
+    {
+      "path": "SKILLS_AND_SUPERPOWERS_CATALOG.md",
+      "source_path": "SKILLS_AND_SUPERPOWERS_CATALOG.md",
+      "sha256": "a60cf9b73e8464c087904d229d295d08b5203d233dd51f83494eb5f279cbb276",
+      "role": "current_documentation"
+    },
+    {
+      "path": "ach_admiralty_engine.ml",
+      "source_path": "ach_admiralty_engine.ml",
+      "sha256": "fc1aed0907ba587116d9ce5eead09d17395269f950377d397f5b933aaafffe7c",
+      "role": "automation"
+    },
+    {
+      "path": "ach_admiralty_engine.v2.1.recovery.ml",
+      "source_path": "ach_admiralty_engine.v2.1.recovery.ml",
+      "sha256": "fc1aed0907ba587116d9ce5eead09d17395269f950377d397f5b933aaafffe7c",
+      "role": "automation"
+    },
+    {
+      "path": "ach_safety_review.packet.json",
+      "source_path": "ach_safety_review.packet.json",
+      "sha256": "c056aaba50ecf5ad412d5687f48361ff2ef5c8d1c516082e64724736499cff16",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "assessment-artifacts-staged.plan.json",
+      "source_path": "assessment-artifacts-staged.plan.json",
+      "sha256": "365f1cdadb7a4cfe59998979e10c37c7e960895adda9756ddad8cf952e8dc1c6",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "assessment-guidance-install.receipt.json",
+      "source_path": "assessment-guidance-install.receipt.json",
+      "sha256": "9c3469ed44670d7788d76e7f992f99aa1c9c92eeb8c379c4a767c8e37778b558",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "diagram-quality-report.html",
+      "source_path": "diagram-quality-report.html",
+      "sha256": "0cc7260c31f09f7b0a7322dc0d606cea12a144a765927707297fd6d1a6fceec3",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "diagram-quality-report.md",
+      "source_path": "diagram-quality-report.md",
+      "sha256": "eee9f1298f3119410ab6250c5722eaac6d7470ffe59db9a31fcd0ce5b7df18e0",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "governance/agents/bountytek-assessment-reviewer.md",
+      "source_path": "governance/agents/bountytek-assessment-reviewer.md",
+      "sha256": "826ee9876d9db4cc9ff0234cbfcc7b7bdd9486d423de2a4b57801adab1a23e01",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "governance/plugins/bountytek-assessment-integrations.md",
+      "source_path": "governance/plugins/bountytek-assessment-integrations.md",
+      "sha256": "3947ccbd2eb01c91d284313e9d05a2218bbf4da13700666a531b39efc60453ef",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "governance/rules/bountytek-assessment.md",
+      "source_path": "governance/rules/bountytek-assessment.md",
+      "sha256": "8f398eeb3e21383f5021c8e6f6dfc20919b580fdb9c69a80a3182297deab4e54",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "maintain_assessment_artifacts.ml",
+      "source_path": "maintain_assessment_artifacts.ml",
+      "sha256": "6a797ffabeb1f43fe8325cc1a014c52f4485237d173f24c5e8f08fc45377e210",
+      "role": "automation"
+    },
+    {
+      "path": "markitdown.mojo",
+      "source_path": "markitdown.mojo",
+      "sha256": "7be33e9552363019627696234c50cb557002c75a84e1a957c5b1e44345ed88b4",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "master_financials.json",
+      "source_path": "master_financials.json",
+      "sha256": "704745214e0deccd9605660ebf58f29fc5b3b9fe4e8a6e3c26fb241754fc30a0",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "pdf_download_560FA178-AC4A-4542-ADE6-129EC92F3B47 (1).pdf",
+      "source_path": "pdf_download_560FA178-AC4A-4542-ADE6-129EC92F3B47 (1).pdf",
+      "sha256": "e02fdd59e7730d84373281f5a906194606d021b38ccbe90c39ebe79c4a489baf",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "pdf_download_converted.html",
+      "source_path": "pdf_download_converted.html",
+      "sha256": "1933378e32329bbcfbe0ad664fd86c578d433cd3b433b6f1ae0d5a83ebaac43a",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "pdf_download_converted.md",
+      "source_path": "pdf_download_converted.md",
+      "sha256": "cd198d4d627e0541b114ce957e2aca06e401d44c35abe9ce008a2147e994d991",
+      "role": "historical_unvalidated_research"
+    },
+    {
+      "path": "render_docs_wiki.ml",
+      "source_path": "render_docs_wiki.ml",
+      "sha256": "9de154a0438a490e38266f1aaa97fdfa23608239c5bf943ebbdb1b4b1c2fc232",
+      "role": "automation"
+    },
+    {
+      "path": "sa-plan",
+      "source_path": "sa-plan",
+      "sha256": "9cc3afb06ddb26fcdaffd3cfdabe20556afc47db88257eb03c45dc9b3172e0e3",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "skills/ach-admiralty-audit/SKILL.md",
+      "source_path": "skills/ach-admiralty-audit/SKILL.md",
+      "sha256": "df84bbcd8df4a55f8c9cad990c72364bdda0edb3a992561ee528dbce04353238",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "skills/agy-autonomous-orchestration/SKILL.md",
+      "source_path": "skills/agy-autonomous-orchestration/SKILL.md",
+      "sha256": "ada8df6da739f6a6a300c5adcd2f6aa569970fa520884fbc65e3fd69dbd2e559",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "skills/claude-extended-reasoning-audit/SKILL.md",
+      "source_path": "skills/claude-extended-reasoning-audit/SKILL.md",
+      "sha256": "08111317f4f9cbe4ed7bf70cf577e772d96b04bf243fe56743d7915ed8cff293",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "skills/codex-astra-sil6-invariant-guard/SKILL.md",
+      "source_path": "skills/codex-astra-sil6-invariant-guard/SKILL.md",
+      "sha256": "19518a60f90700b6596ebb65d881ab4e9e9a1ab5198a5d060bb795703724d9bd",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "skills/nordic-medtech-go-to-market/SKILL.md",
+      "source_path": "skills/nordic-medtech-go-to-market/SKILL.md",
+      "sha256": "ab416cf650219483e28c0b935e29b31bd4980a7a715e3909ae826810d54556c3",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "skills/nordic-procurement-tender-intel/SKILL.md",
+      "source_path": "skills/nordic-procurement-tender-intel/SKILL.md",
+      "sha256": "8b3eb56707b0bfd3183dce324ca513523a0dbab7c6a76996ae6a3f57bf2258ef",
+      "role": "assessment_guidance"
+    },
+    {
+      "path": "unique_companies.json",
+      "source_path": "unique_companies.json",
+      "sha256": "475380c3f6695d873b314b0da24840ade954fa7c23a1465ad8ba4c4c9ae6ff43",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "uos-cli",
+      "source_path": "uos-cli",
+      "sha256": "7f09cb836ef2f8e2d632ac8851067740b7779c59a05333270c8db5ca94c49693",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "uos-env.sh",
+      "source_path": "uos-env.sh",
+      "sha256": "44be196dd77c292bde0b22e438cc7b5a9793424cb2ebb05319f3152a92d86009",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "uos-services",
+      "source_path": "uos-services",
+      "sha256": "45cae4d3d627fe40147a31018674da714f8b47f073abcd9c417ab65313c2959d",
+      "role": "preserved_source_not_revalidated"
+    },
+    {
+      "path": "verify_assessment_system.ml",
+      "source_path": "verify_assessment_system.ml",
+      "sha256": "7d4e7ec13fd71a24fee5c33c5ed7cd8353a84f628af438dd076c565f15c0cf0b",
+      "role": "automation"
+    },
+    {
+      "path": "version_medical_nordics.ml",
+      "source_path": "version_medical_nordics.ml",
+      "sha256": "2ebd15acbab386c3516568bda1e0a7006c5b25016ae376f5b47e72312fc28147",
+      "role": "automation"
+    }
+  ]
+}

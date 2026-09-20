@@ -72,7 +72,9 @@ pub fn new(max_capacity: Int, similarity_threshold: Float) -> RagCacheMesh {
     True -> 100
     False -> max_capacity
   }
-  let bounded_thresh = case similarity_threshold <=. 0.0 || similarity_threshold >. 1.0 {
+  let bounded_thresh = case
+    similarity_threshold <=. 0.0 || similarity_threshold >. 1.0
+  {
     True -> 0.85
     False -> similarity_threshold
   }
@@ -130,17 +132,21 @@ pub fn cosine_similarity(v1: List(Float), v2: List(Float)) -> Float {
       let sim = dot /. { n1 *. n2 }
       case sim >. 1.0 {
         True -> 1.0
-        False -> case sim <. -1.0 {
-          True -> -1.0
-          False -> sim
-        }
+        False ->
+          case sim <. -1.0 {
+            True -> -1.0
+            False -> sim
+          }
       }
     }
   }
 }
 
 /// Exact match lookup by normalized query text.
-pub fn lookup_exact(mesh: RagCacheMesh, query: String) -> Result(CacheEntry, Nil) {
+pub fn lookup_exact(
+  mesh: RagCacheMesh,
+  query: String,
+) -> Result(CacheEntry, Nil) {
   let norm_q = string.trim(string.lowercase(query))
   list.find(mesh.entries, fn(e) {
     string.trim(string.lowercase(e.query_text)) == norm_q
@@ -295,11 +301,7 @@ pub fn refresh_vector(
     list.map(mesh.entries, fn(e) {
       case e.id == entry_id {
         True ->
-          CacheEntry(
-            ..e,
-            embedding: new_embedding,
-            last_accessed_ts: now_ts,
-          )
+          CacheEntry(..e, embedding: new_embedding, last_accessed_ts: now_ts)
         False -> e
       }
     })

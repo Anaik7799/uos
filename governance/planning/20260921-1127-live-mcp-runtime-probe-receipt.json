@@ -1,0 +1,36 @@
+{
+  "receipt_type": "live_mcp_runtime_probe",
+  "generated_at": "2026-09-21T11:27:00+02:00",
+  "authority": "read_only_http_probe",
+  "base_url": "http://nas-1.tail55d152.ts.net:4100",
+  "endpoints": {
+    "/api/v1/mcp": {
+      "method": "GET",
+      "http_status": 200,
+      "body": {"page":"MCP Server","status":"running","tools":[],"active_sessions":0},
+      "usable_tools_observed": 0
+    },
+    "/api/mcp/status": {
+      "method": "GET",
+      "http_status": 200,
+      "body": {"page":"MCP Server","status":"running","tools":[],"active_sessions":0},
+      "usable_tools_observed": 0
+    },
+    "/api/v1/mcp:post": {
+      "method": "POST",
+      "requests": ["initialize", "tools/list"],
+      "http_status": 200,
+      "body": {"error":"Unauthorized"},
+      "authorized_runtime": false
+    }
+  },
+  "interpretation": {
+    "static_ui_registry_is_not_runtime_evidence": true,
+    "mcp_usable_features_observed": 0,
+    "feature_tracker_status": "unknown",
+    "system_admission": false,
+    "release_authority": "not_granted"
+  },
+  "next_action": "obtain authorized MCP credentials through the Gleam harness and rerun initialize/tools-list probes under Sa-plan",
+  "admitted": false
+}

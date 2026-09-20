@@ -1,0 +1,39 @@
+{
+  "schema": "uos.feature-record.v1",
+  "timestamp": "20260921-1503",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "feature_id": "mcp.execution_progress",
+  "title": "Task-bound Sa-plan execution progress projection",
+  "service": "cepaf_gleam.mcp.server",
+  "interfaces": [
+    "tools/list",
+    "tools/call:harness_execution_progress"
+  ],
+  "source": {
+    "declaration": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+    "dispatch": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+  },
+  "mcp": {
+    "declared": true,
+    "advertised": true,
+    "dispatch_reached": true,
+    "availability": "PARTIAL_FAIL_CLOSED",
+    "runtime_observation": "journal sequence or digest mismatch; replay refused"
+  },
+  "database_tracking": {
+    "plan_status_observed_via_mcp": true,
+    "feature_tracker_status": "4 completed / 21 total",
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "completion": {
+    "metadata_recorded": true,
+    "feature_complete": false,
+    "task_completion_credit": false,
+    "effect_authority": false
+  },
+  "evidence": [
+    "governance/planning/20260921-1347-mcp-progress-regression-receipt.json",
+    "governance/planning/20260921-1345-mcp-inventory-progress-receipt.json",
+    "governance/planning/20260921-1454-coordination-integrity-receipt.json"
+  ]
+}

@@ -41,7 +41,10 @@ pub fn init_cycle(cycle_id: String) -> ExecutionCycle {
 }
 
 /// Advances a cycle through a POODAVR stage with fail-closed safety gating.
-pub fn step_stage(cycle: ExecutionCycle, stage: PoodavrStage) -> ExecutionCycle {
+pub fn step_stage(
+  cycle: ExecutionCycle,
+  stage: PoodavrStage,
+) -> ExecutionCycle {
   case cycle.andon_triggered {
     True -> cycle
     False -> {
@@ -79,7 +82,7 @@ pub fn evaluate_cycle(cycle: ExecutionCycle) -> CycleVerdict {
       CycleAndonHalt(
         cycle_id: cycle.cycle_id,
         stage_failed: "StageVerify",
-        code: -32002,
+        code: -32_002,
       )
     False -> {
       let count = list.length(cycle.stages_completed)
@@ -89,7 +92,7 @@ pub fn evaluate_cycle(cycle: ExecutionCycle) -> CycleVerdict {
           CycleAndonHalt(
             cycle_id: cycle.cycle_id,
             stage_failed: "IncompleteStages",
-            code: -32001,
+            code: -32_001,
           )
       }
     }

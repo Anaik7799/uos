@@ -1,0 +1,50 @@
+{
+  "receipt_type": "current_system_status_dashboard",
+  "generated_at": "2026-09-21T11:20:00+02:00",
+  "authority": "sa-plan_read_only_snapshot",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "plan_snapshot": {
+    "total": 20,
+    "completed": 3,
+    "ready": 3,
+    "executing": 0,
+    "observation_state": "selection_evidence_only",
+    "evidence_tasks": 4,
+    "unevidenced_tasks": 16,
+    "max_stpa": 5,
+    "max_fema": 5,
+    "snapshot_path": "/tmp/goal-1118.json"
+  },
+  "feature_coverage_store": {
+    "workflow_pattern": "uos-system-features/coverage/%",
+    "workflow_count": 11,
+    "completed_workflows": 11,
+    "failed_workflows": 0,
+    "declared_features": 848,
+    "mcp_usable_observed": 0,
+    "mcp_unknown": 848,
+    "system_admission": false
+  },
+  "evidence_workflows": [
+    {"name":"uos-system-mcp-features/recovery-candidate/20260921-1050","state":"completed","meaning":"evidence-only checkpoint"},
+    {"name":"uos-system-mcp-features/recovery-comparison/20260921-1103","state":"completed","meaning":"read-only comparison"},
+    {"name":"uos-system-mcp-features/swarm-regression/20260921-1108","state":"completed","meaning":"669/0 regression"},
+    {"name":"uos-system-mcp-features/cepaf-regression/20260921-1115","state":"completed","meaning":"11988/0 regression"}
+  ],
+  "coordination": {
+    "canonical_coordinator": "corrupt_and_unusable",
+    "candidate_store": "empty_evidence_only",
+    "independent_authority": "not_granted",
+    "release_acceptance": "not_granted"
+  },
+  "controls": {
+    "sa_plan_only": true,
+    "force_pass": false,
+    "blocked_counted_as_complete": false,
+    "unrun_counted_as_complete": false,
+    "stale_counted_as_complete": false,
+    "unadmitted_counted_as_complete": false
+  },
+  "next_action": "secure independent coordinator authority and replay-integrity repair, then rerun risk selection before any task claim",
+  "admitted": false
+}

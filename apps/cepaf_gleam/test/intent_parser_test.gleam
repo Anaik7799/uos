@@ -1,11 +1,9 @@
 //// apps/cepaf_gleam/test/intent_parser_test.gleam
 //// STAMP: SC-INTENT-ATLAS-001
 
-import gleeunit/should
-import cepaf_gleam/intent/parser.{
-  default_baseline, normalize_config
-}
+import cepaf_gleam/intent/parser.{default_baseline, normalize_config}
 import gleam/list
+import gleeunit/should
 
 pub fn default_baseline_structure_test() {
   let baseline = default_baseline()

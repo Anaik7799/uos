@@ -1,7 +1,7 @@
 import cepaf_gleam/ha/heijunka_dispatcher.{
-  AspectFormal, AspectInterface, AspectKernel, HeijunkaState,
-  WorkerAGY, WorkerClaude, WorkerCodex, complete_task, enqueue_task,
-  init_dispatcher, preferred_worker, pull_next_task, worker_to_string,
+  AspectFormal, AspectInterface, AspectKernel, HeijunkaState, WorkerAGY,
+  WorkerClaude, WorkerCodex, complete_task, enqueue_task, init_dispatcher,
+  preferred_worker, pull_next_task, worker_to_string,
 }
 import gleam/option.{Some}
 import gleeunit

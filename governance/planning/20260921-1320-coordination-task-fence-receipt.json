@@ -1,0 +1,20 @@
+{
+  "receipt_id": "coordination-task-fence-20260921-1320",
+  "timestamp": "20260921-1320",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t0-coordination",
+  "execution": {
+    "risk_selection": "recorded through sa-plan with priority 1000 and STPA/FMEA/dependency factors",
+    "claim_attempt": 4,
+    "worker": "codex-01a0ba74-coordination",
+    "observation": "canonical session observation refused replay: journal sequence or digest mismatch",
+    "decision": "released claim; completion intentionally not recorded"
+  },
+  "safety": {
+    "no_sessions_credited": true,
+    "no_leases_credited": true,
+    "no_holon_participation_credited": true,
+    "no_runtime_authority_granted": true
+  },
+  "admission": "NOT_ADMITTED"
+}

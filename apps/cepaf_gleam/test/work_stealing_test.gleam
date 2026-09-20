@@ -3,11 +3,10 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/work_stealing.{
-  HeaviestQueueFirst, LyapunovDivergentFirst, NodeQueueState,
-  StealableTask, apply_steal_response, enqueue_local_task,
-  generate_steal_request, handle_steal_request, init_work_stealing,
-  select_victim_node, should_initiate_steal, total_cluster_queued_tasks,
-  update_peer_queue,
+  HeaviestQueueFirst, LyapunovDivergentFirst, NodeQueueState, StealableTask,
+  apply_steal_response, enqueue_local_task, generate_steal_request,
+  handle_steal_request, init_work_stealing, select_victim_node,
+  should_initiate_steal, total_cluster_queued_tasks, update_peer_queue,
 }
 import gleam/option.{Some}
 import gleeunit
@@ -116,7 +115,8 @@ pub fn work_stealing_request_and_transfer_handshake_test() {
   let thief_engine = init_work_stealing("nas-1", 8)
 
   let steal_req = generate_steal_request(thief_engine, "vm-1", 1000)
-  let #(updated_donor, steal_resp) = handle_steal_request(donor_engine, steal_req, 1000)
+  let #(updated_donor, steal_resp) =
+    handle_steal_request(donor_engine, steal_req, 1000)
 
   // Half of donor queue stolen (4 / 2 = 2 tasks)
   list_len(steal_resp.stolen_tasks) |> should.equal(2)

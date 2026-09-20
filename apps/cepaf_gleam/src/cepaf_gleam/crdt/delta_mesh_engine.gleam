@@ -26,18 +26,16 @@
 //// =============================================================================
 
 import cepaf_gleam/crdt/delta_state.{
-  type MeshDeltaState, type NodeId,
-  increment_clock, new_mesh_delta_state, orset_add,
-  pncounter_increment,
+  type MeshDeltaState, type NodeId, increment_clock, new_mesh_delta_state,
+  orset_add, pncounter_increment,
 }
 import cepaf_gleam/crdt/health_bridge.{
   type ClusterHealthMap, empty_health_map, evaluate_quorum, record_health,
 }
 import cepaf_gleam/crdt/mesh_sync.{
-  type MeshSyncMessage, type PeerSyncEndpoint,
-  PeerSyncEndpoint, Reconciling, SyncAck, SyncDelta,
-  SyncDigest, Synchronized, generate_sync_digest, reconcile_remote_delta,
-  requires_delta_sync,
+  type MeshSyncMessage, type PeerSyncEndpoint, PeerSyncEndpoint, Reconciling,
+  SyncAck, SyncDelta, SyncDigest, Synchronized, generate_sync_digest,
+  reconcile_remote_delta, requires_delta_sync,
 }
 import gleam/list
 
@@ -55,7 +53,11 @@ pub type DeltaMeshEngine {
 }
 
 /// Initialize the Delta Mesh Engine for a local node.
-pub fn init_engine(node_id: NodeId, fqdn: String, now_us: Int) -> DeltaMeshEngine {
+pub fn init_engine(
+  node_id: NodeId,
+  fqdn: String,
+  now_us: Int,
+) -> DeltaMeshEngine {
   DeltaMeshEngine(
     local_node_id: node_id,
     local_fqdn: fqdn,
@@ -97,10 +99,17 @@ pub fn record_worker_active(
   worker_id: String,
   now_us: Int,
 ) -> DeltaMeshEngine {
-  let #(new_clock, dot) = increment_clock(engine.local_mesh_state.vector_clock, engine.local_node_id)
-  let new_workers = orset_add(engine.local_mesh_state.active_workers, worker_id, dot)
-  let new_tasks = pncounter_increment(engine.local_mesh_state.task_counters, engine.local_node_id, 1)
-  
+  let #(new_clock, dot) =
+    increment_clock(engine.local_mesh_state.vector_clock, engine.local_node_id)
+  let new_workers =
+    orset_add(engine.local_mesh_state.active_workers, worker_id, dot)
+  let new_tasks =
+    pncounter_increment(
+      engine.local_mesh_state.task_counters,
+      engine.local_node_id,
+      1,
+    )
+
   let old_state = engine.local_mesh_state
   let new_mesh =
     delta_state.MeshDeltaState(
@@ -142,7 +151,12 @@ pub fn generate_gossip_digest(
   engine: DeltaMeshEngine,
   epoch_us: Int,
 ) -> #(DeltaMeshEngine, MeshSyncMessage) {
-  let digest = generate_sync_digest(engine.local_node_id, engine.local_mesh_state, epoch_us)
+  let digest =
+    generate_sync_digest(
+      engine.local_node_id,
+      engine.local_mesh_state,
+      epoch_us,
+    )
   let updated_engine =
     DeltaMeshEngine(
       ..engine,
@@ -169,13 +183,18 @@ pub fn handle_incoming_message(
               health_map: engine.local_health_map,
               epoch_us: current_epoch_us,
             )
-          let updated_peers = mark_peer_status(engine.peers, from_node, Synchronized, current_epoch_us)
-          let updated_engine =
-            DeltaMeshEngine(
-              ..engine,
-              peers: updated_peers,
-              pending_outbound: [delta_msg, ..engine.pending_outbound],
+          let updated_peers =
+            mark_peer_status(
+              engine.peers,
+              from_node,
+              Synchronized,
+              current_epoch_us,
             )
+          let updated_engine =
+            DeltaMeshEngine(..engine, peers: updated_peers, pending_outbound: [
+              delta_msg,
+              ..engine.pending_outbound
+            ])
           #(updated_engine, [delta_msg])
         }
         False -> {
@@ -186,13 +205,18 @@ pub fn handle_incoming_message(
               status: "clock_in_sync",
               epoch_us: current_epoch_us,
             )
-          let updated_peers = mark_peer_status(engine.peers, from_node, Synchronized, current_epoch_us)
-          let updated_engine =
-            DeltaMeshEngine(
-              ..engine,
-              peers: updated_peers,
-              pending_outbound: [ack_msg, ..engine.pending_outbound],
+          let updated_peers =
+            mark_peer_status(
+              engine.peers,
+              from_node,
+              Synchronized,
+              current_epoch_us,
             )
+          let updated_engine =
+            DeltaMeshEngine(..engine, peers: updated_peers, pending_outbound: [
+              ack_msg,
+              ..engine.pending_outbound
+            ])
           #(updated_engine, [ack_msg])
         }
       }
@@ -206,7 +230,13 @@ pub fn handle_incoming_message(
           msg,
           current_epoch_us,
         )
-      let updated_peers = mark_peer_status(engine.peers, from_node, Synchronized, current_epoch_us)
+      let updated_peers =
+        mark_peer_status(
+          engine.peers,
+          from_node,
+          Synchronized,
+          current_epoch_us,
+        )
       let updated_engine =
         DeltaMeshEngine(
           ..engine,
@@ -218,7 +248,13 @@ pub fn handle_incoming_message(
       #(updated_engine, [ack])
     }
     SyncAck(from_node, _, _, _) -> {
-      let updated_peers = mark_peer_status(engine.peers, from_node, Synchronized, current_epoch_us)
+      let updated_peers =
+        mark_peer_status(
+          engine.peers,
+          from_node,
+          Synchronized,
+          current_epoch_us,
+        )
       let updated_engine = DeltaMeshEngine(..engine, peers: updated_peers)
       #(updated_engine, [])
     }
@@ -261,7 +297,8 @@ pub fn is_cluster_fully_synchronized(engine: DeltaMeshEngine) -> Bool {
 
 /// Compute aggregate cluster health score [0.0, 1.0].
 pub fn compute_cluster_aggregate_health(engine: DeltaMeshEngine) -> Float {
-  let #(_is_met, avg_health, _healthy_cnt, total_nodes) = evaluate_quorum(engine.local_health_map, 0.5)
+  let #(_is_met, avg_health, _healthy_cnt, total_nodes) =
+    evaluate_quorum(engine.local_health_map, 0.5)
   case total_nodes {
     0 -> 1.0
     _ -> avg_health

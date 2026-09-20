@@ -6,8 +6,8 @@
 import cepaf_gleam/harness/telegram.{
   InboundMessage, decode_inbound, encode_outbound, handle_message,
 }
-import gleeunit/should
 import gleam/string
+import gleeunit/should
 
 pub fn decode_inbound_valid_json_test() {
   let raw =
@@ -22,7 +22,7 @@ pub fn decode_inbound_valid_json_test() {
   msg.chat_id |> should.equal("6249174059")
   msg.from_user |> should.equal("Avi")
   msg.text |> should.equal("/status")
-  msg.timestamp_ms |> should.equal(1788954000000)
+  msg.timestamp_ms |> should.equal(1_788_954_000_000)
 }
 
 pub fn decode_inbound_invalid_json_test() {
@@ -39,7 +39,7 @@ pub fn handle_help_directive_test() {
       chat_id: "6249174059",
       from_user: "Avi",
       text: "/help",
-      timestamp_ms: 1788954000000,
+      timestamp_ms: 1_788_954_000_000,
     )
 
   let resp = handle_message(msg)
@@ -60,7 +60,7 @@ pub fn handle_cockpit_directive_test() {
       chat_id: "6249174059",
       from_user: "Avi",
       text: "/cockpit",
-      timestamp_ms: 1788954000000,
+      timestamp_ms: 1_788_954_000_000,
     )
 
   let resp = handle_message(msg)
@@ -84,7 +84,7 @@ pub fn handle_approval_directive_test() {
       chat_id: "6249174059",
       from_user: "Avi",
       text: "/approval uos/plan-01 task-0 Deploy Production Candidate",
-      timestamp_ms: 1788954000000,
+      timestamp_ms: 1_788_954_000_000,
     )
 
   let resp = handle_message(msg)
@@ -103,7 +103,7 @@ pub fn handle_identity_query_test() {
       chat_id: "6249174059",
       from_user: "Avi",
       text: "Which agent are you?",
-      timestamp_ms: 1788954000000,
+      timestamp_ms: 1_788_954_000_000,
     )
 
   let resp = handle_message(msg)
@@ -122,7 +122,7 @@ pub fn handle_chat_message_test() {
       chat_id: "6249174059",
       from_user: "Avi",
       text: "hello c3i system",
-      timestamp_ms: 1788954000000,
+      timestamp_ms: 1_788_954_000_000,
     )
 
   let resp = handle_message(msg)
@@ -140,7 +140,7 @@ pub fn handle_unknown_directive_test() {
       chat_id: "6249174059",
       from_user: "Avi",
       text: "/nonexistent_command",
-      timestamp_ms: 1788954000000,
+      timestamp_ms: 1_788_954_000_000,
     )
 
   let resp = handle_message(msg)
@@ -157,7 +157,7 @@ pub fn encode_outbound_test() {
       chat_id: "6249174059",
       from_user: "Avi",
       text: "/help",
-      timestamp_ms: 1788954000000,
+      timestamp_ms: 1_788_954_000_000,
     ))
 
   let json_str = encode_outbound(resp)

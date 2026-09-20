@@ -22,8 +22,8 @@ import cepaf_gleam/cortex/cortex_types.{
   Tier1GeminiDirect, Tier7StaticAck,
 }
 import cepaf_gleam/cortex/poodavr_actor.{
-  StageAct, StageHalt, StageObserve, StagePredict, StageReflect,
-  StageVerify, stage_to_string,
+  StageAct, StageHalt, StageObserve, StagePredict, StageReflect, StageVerify,
+  stage_to_string,
 }
 import cepaf_gleam/ha/cortex_saplan_coordinator.{
   ExecutionHaltAndon, ExecutionHardDenied, ExecutionSuccess, coordinate_intent,
@@ -279,7 +279,7 @@ pub fn cortex_property_jidoka_exclusivity_invariance_test() {
 pub fn cortex_tdd_os_serial_hard_denied_lock_test() {
   // Hardcoded constant assertion as required by SPEC-STORAGE-001
   hard_denied_system_os_serial |> should.equal("25503L801736")
-  jidoka_andon_halt_code |> should.equal(-32002)
+  jidoka_andon_halt_code |> should.equal(-32_002)
 }
 
 pub fn cortex_tdd_read_only_rejection_test() {
@@ -302,8 +302,7 @@ pub fn cortex_tdd_read_only_rejection_test() {
   let #(disposition, coord1) =
     coordinate_intent(coord0, intent, "worker-tdd", 5000)
   case disposition {
-    ExecutionHardDenied(serial) ->
-      serial |> should.equal("25503L801736")
+    ExecutionHardDenied(serial) -> serial |> should.equal("25503L801736")
     _ -> panic as "Filesystem formatting of root disk MUST be denied"
   }
   coord1.andon_active |> should.be_true()
@@ -370,7 +369,7 @@ pub fn cortex_bdd_unauthorized_agent_bypass_scenario_test() {
   // THEN an immediate fail-closed Andon Halt is triggered with code -32002
   case disposition {
     ExecutionHaltAndon(code, reason) -> {
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       string.contains(reason, "Fractal Jidoka Andon Halt") |> should.be_true()
     }
     _ -> panic as "Bypass MUST fail closed with Andon halt"
@@ -477,7 +476,8 @@ pub fn cortex_chaos_simulated_high_metabolic_spike_test() {
   // Simulating the Metabolic Governor under an acute load spike (>75%)
   let total_cpu_delta = 1000.0
   let idle_cpu_delta = 150.0
-  let cpu_usage = 1.0 -. { idle_cpu_delta /. total_cpu_delta } // 85% CPU load
+  let cpu_usage = 1.0 -. { idle_cpu_delta /. total_cpu_delta }
+  // 85% CPU load
 
   let is_critical = cpu_usage >. 0.75
   is_critical |> should.be_true()
@@ -566,7 +566,8 @@ pub fn cortex_realtime_usecase_malicious_wipe_defense_test() {
       id: "rt-attack-02",
       user_id: Some("adversary"),
       chat_id: Some("compromised-session"),
-      raw_text: "wipefs -a /dev/disk/by-id/nvme-eui." <> hard_denied_system_os_serial,
+      raw_text: "wipefs -a /dev/disk/by-id/nvme-eui."
+        <> hard_denied_system_os_serial,
       intent_type: "FormatVolume",
       source: SourceInternalAgent,
       stress_level: 0.99,
@@ -599,7 +600,7 @@ pub fn cortex_realtime_usecase_dynamic_cpu_surge_and_recovery_test() {
   let total2 = 1000.0
   let idle2 = 480.0
   let usage2 = 1.0 -. { idle2 /. total2 }
-  let is_recovered = usage2 <. 0.60
+  let is_recovered = usage2 <. 0.6
   is_recovered |> should.be_true()
 }
 

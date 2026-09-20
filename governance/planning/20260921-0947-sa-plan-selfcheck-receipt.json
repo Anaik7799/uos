@@ -1,0 +1,22 @@
+{
+  "schema": "uos.sa-plan-selfcheck-receipt.v1",
+  "timestamp_utc": "2026-09-21T09:47:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "command": "tools/uos-cli selfcheck-sa-plan",
+  "result": {"status": "PASS", "suites_executed": 19, "suites_failed": 0, "minimum_law_floor": 176},
+  "coverage": [
+    "task DAG and durable execution",
+    "leases and fenced claims",
+    "preflight and reconciliation",
+    "read-only observability projection",
+    "SC-JIDOKA-001 and SC-SA-PLAN-001 inventory controls"
+  ],
+  "log_sha256": "231dd65198d64e22ac8b7cee7ec53c538ee2e7def70ca273c9d6bbdccbc0b21c",
+  "limits": [
+    "self-check observes controls; it does not grant execution authority",
+    "does not repair the corrupted coordinator suffix",
+    "does not establish runtime MCP availability or holon enrollment",
+    "does not establish release or operational admission"
+  ],
+  "canonical_task_remains_open": true
+}

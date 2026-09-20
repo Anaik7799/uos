@@ -1,0 +1,15 @@
+{
+  "schema": "uos-mcp-native-mapping-risk.v1",
+  "generated_at_utc": "20260921-0723",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-mcp-native-audit/20260921-0715",
+  "authority": "development_only_report_only",
+  "criticality": 5,
+  "stpa": {"unsafe_control_actions":["declaring a native export available without runtime receipt","executing a legacy mutation outside Sa-plan","routing an MCP tool to an unverified handler","promoting a source mapping to authority"],"severity":10,"likelihood":4,"controllability":10},
+  "fmea": {"failure_mode":"MCP/native mapping is incomplete or falsely promoted","effect":"data/control coverage is overstated and an unsafe or unavailable path may be called","cause":"declaration-only evidence, aliases, untracked exports, and unobserved runtime state","detection":"source hash comparison, mapping census, endpoint receipt and independent gate","rpn":2000},
+  "dependency_readiness":"blocked_until_runtime_and_formal_evidence",
+  "evidence_age":"fresh_source_observation_only",
+  "residual_risks":["runtime_loaded state not observed","native ABI and database target not exercised","MAX and Wisp handlers remain separately unverified","no independently authorized release evidence"],
+  "decision":"HOLD",
+  "reason":"Source mapping is useful for planning but cannot establish MCP availability or execution authority.",
+  "completion":{"status":"development_checkpoint_only","admitted":false}
+}

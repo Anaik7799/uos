@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "receipt_type": "read_only_coordinator_prefix_comparison",
+  "generated_at": "2026-09-21T15:22:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "authority": "NONE",
+  "inputs": {
+    "canonical": {
+      "path": "var/coordination/tri-agent/coordinator.sqlite3",
+      "size_bytes": 204800,
+      "events": 117,
+      "rows_sha256": "a176a835049d93b58269e56c8cd1d6c1a39c7e14b3f48b1feb668eba9674c7fe",
+      "last_digest": "b9df6994ab1c687d2ecbbc87a361df78bcbdc0fab0dfaa4f27fff1c5c961b355"
+    },
+    "candidate": {
+      "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+      "size_bytes": 962560,
+      "events": 421,
+      "rows_sha256": "69de661c1d4515c3c9b2339c19f405bab7d7a0795a87b85ba26c83349c825c3f",
+      "last_digest": "c8523e1f6f9a5a7c14f94759fda1d188a45fe361cae0906dfd74964e4adfeb0b"
+    }
+  },
+  "comparison": {
+    "exact_common_prefix_events": 0,
+    "first_mismatch_sequence": 1,
+    "mismatch_fields": [
+      "operation_id",
+      "boot_id",
+      "tick_us",
+      "utc_us",
+      "actor",
+      "command_json",
+      "body_json",
+      "digest",
+      "inserted_utc_us"
+    ],
+    "interpretation": "The candidate is a distinct history, not an append-only continuation of the canonical ledger. No automatic prefix-based cutover is safe."
+  },
+  "decision": "HOLD",
+  "next_required_authority": [
+    "Explicit Sa-plan-authorized recovery policy selecting a source of truth",
+    "Independent semantic review of both histories and writer quiescence",
+    "Fresh session enrollment and ownership-bound cutover fence"
+  ],
+  "completion_claim": false
+}

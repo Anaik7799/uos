@@ -30,8 +30,8 @@
 import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ui/lustre/shell
 import cepaf_gleam/ui/state.{
-  type SharedMeshState, ThreatCritical, ThreatElevated, ThreatNominal, ThreatNone,
-  ThreatSevere,
+  type SharedMeshState, ThreatCritical, ThreatElevated, ThreatNominal,
+  ThreatNone, ThreatSevere,
 }
 import gleam/int
 import gleam/list
@@ -68,12 +68,27 @@ pub fn immune_view(state: SharedMeshState) -> Element(msg) {
         ),
         shell.status_card(
           "Mesh Nodes",
-          case state.quorum_healthy { True -> "Healthy" False -> "Degraded" },
-          int.to_string(state.healthy_count) <> "/" <> int.to_string(state.container_count),
+          case state.quorum_healthy {
+            True -> "Healthy"
+            False -> "Degraded"
+          },
+          int.to_string(state.healthy_count)
+            <> "/"
+            <> int.to_string(state.container_count),
           "protected by immune system",
         ),
-        shell.status_card("Attacks Blocked", "Healthy", "12", "since last reset"),
-        shell.status_card("Antibodies", "Healthy", "35", "deployed rules (GR-001..GR-035)"),
+        shell.status_card(
+          "Attacks Blocked",
+          "Healthy",
+          "12",
+          "since last reset",
+        ),
+        shell.status_card(
+          "Antibodies",
+          "Healthy",
+          "35",
+          "deployed rules (GR-001..GR-035)",
+        ),
       ]),
     ]),
     shell.section("Psi Invariants", [
@@ -174,7 +189,9 @@ pub fn verification_view(state: SharedMeshState) -> Element(msg) {
   let health_raw = c3i_nif.system_health()
   let container_count = count_in_json(health_raw, "container_count")
   let healthy_count = count_in_json(health_raw, "healthy_count")
-  let container_status = case healthy_count == container_count && container_count > 0 {
+  let container_status = case
+    healthy_count == container_count && container_count > 0
+  {
     True -> "Healthy"
     False -> "Degraded"
   }
@@ -192,9 +209,7 @@ pub fn verification_view(state: SharedMeshState) -> Element(msg) {
         shell.status_card(
           "Container Health",
           container_status,
-          int.to_string(healthy_count)
-            <> "/"
-            <> int.to_string(container_count),
+          int.to_string(healthy_count) <> "/" <> int.to_string(container_count),
           "live NIF data",
         ),
       ]),
@@ -267,8 +282,10 @@ pub fn substrate_view(_state: SharedMeshState) -> Element(msg) {
     True -> "Healthy"
     False -> "Degraded"
   }
-  let mesh_status = case string.contains(health_raw, "\"status\":\"active\"")
-    || string.contains(health_raw, "status: active") {
+  let mesh_status = case
+    string.contains(health_raw, "\"status\":\"active\"")
+    || string.contains(health_raw, "status: active")
+  {
     True -> "active"
     False -> "unknown"
   }
@@ -290,7 +307,12 @@ pub fn substrate_view(_state: SharedMeshState) -> Element(msg) {
           int.to_string(container_count),
           "live NIF count",
         ),
-        shell.status_card("Zenoh KV", "Healthy", mesh_status, "ephemeral mesh KV"),
+        shell.status_card(
+          "Zenoh KV",
+          "Healthy",
+          mesh_status,
+          "ephemeral mesh KV",
+        ),
       ]),
     ]),
     shell.section("Database Files", [
@@ -325,7 +347,9 @@ pub fn metabolic_view(_state: SharedMeshState) -> Element(msg) {
   let health_raw = c3i_nif.system_health()
   let container_count = count_in_json(health_raw, "container_count")
   let healthy_count = count_in_json(health_raw, "healthy_count")
-  let metabolic_status = case healthy_count == container_count && container_count > 0 {
+  let metabolic_status = case
+    healthy_count == container_count && container_count > 0
+  {
     True -> "Healthy"
     False -> "Degraded"
   }
@@ -341,9 +365,7 @@ pub fn metabolic_view(_state: SharedMeshState) -> Element(msg) {
         shell.status_card(
           "Active Containers",
           metabolic_status,
-          int.to_string(healthy_count)
-            <> "/"
-            <> int.to_string(container_count),
+          int.to_string(healthy_count) <> "/" <> int.to_string(container_count),
           "live NIF data",
         ),
         shell.status_card("Build Jobs", "Healthy", "16", "--jobs 16"),
@@ -579,7 +601,9 @@ pub fn telemetry_view(_state: SharedMeshState) -> Element(msg) {
   let health_raw = c3i_nif.system_health()
   let container_count = count_in_json(health_raw, "container_count")
   let healthy_count = count_in_json(health_raw, "healthy_count")
-  let pipeline_status = case healthy_count == container_count && container_count > 0 {
+  let pipeline_status = case
+    healthy_count == container_count && container_count > 0
+  {
     True -> "Healthy"
     False -> "Degraded"
   }

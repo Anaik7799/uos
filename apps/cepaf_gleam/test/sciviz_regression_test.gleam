@@ -10,17 +10,16 @@ import cepaf_gleam/sciviz/schema.{
   CursorModifier, DigitalBandSeries, FastBandSeries, FastBubbleSeries,
   FastCandlestickSeries, FastColumnSeries, FastHeatmapSeries, FastLineSeries,
   FastMountainSeries, GeoFeature, GeoJsonLayer, GeomArea, GeomBar, GeomBoxplot,
-  GeomContour, GeomDensity2D, GeomErrorBar, GeomHex, GeomLine,
-  GeomPhasePortrait, GeomPoint, GeomRibbon, GeomSegment, GeomStep, GeomText,
-  GeomViolin, GridLayer, H3HexagonLayer, HeatmapMatrixLayer, HexagonLayer,
-  IconData, IconLayer, LegendModifier, LineLayer, ParticleData, PathLayer,
-  Point2D, Point3D, PointCloudLayer, PolarGridModifier, Rect2D,
-  RolloverModifier, RubberBandZoomModifier, S2Layer, Scale2D, ScatterplotLayer,
-  ScreenGridLayer, SplineLineSeries, TextLabelData, TextLayer,
-  ThresholdCursor, TileLayer, TopologyGraphLayer, TripData, TripsLayer,
-  VisualCircle, VisualMesh, VisualNineSlicePlane, VisualParticleContainer,
-  VisualRect, VisualSprite, VisualText, VisualTilingSprite, new_fifo,
-  push_fifo,
+  GeomContour, GeomDensity2D, GeomErrorBar, GeomHex, GeomLine, GeomPhasePortrait,
+  GeomPoint, GeomRibbon, GeomSegment, GeomStep, GeomText, GeomViolin, GridLayer,
+  H3HexagonLayer, HeatmapMatrixLayer, HexagonLayer, IconData, IconLayer,
+  LegendModifier, LineLayer, ParticleData, PathLayer, Point2D, Point3D,
+  PointCloudLayer, PolarGridModifier, Rect2D, RolloverModifier,
+  RubberBandZoomModifier, S2Layer, Scale2D, ScatterplotLayer, ScreenGridLayer,
+  SplineLineSeries, TextLabelData, TextLayer, ThresholdCursor, TileLayer,
+  TopologyGraphLayer, TripData, TripsLayer, VisualCircle, VisualMesh,
+  VisualNineSlicePlane, VisualParticleContainer, VisualRect, VisualSprite,
+  VisualText, VisualTilingSprite, new_fifo, push_fifo,
 }
 import gleam/list
 import gleeunit
@@ -53,7 +52,8 @@ pub fn c398_scichart_fast_series_test() {
   let p2 = Point2D(10.0, 50.0)
   let s_line = FastLineSeries("s1", [p1, p2], 2.0, "#38bdf8")
   let s_mount = FastMountainSeries("s2", [p1, p2], 0.0, "#38bdf8", "#0284c7")
-  let candle = CandleData(open: 10.0, high: 15.0, low: 8.0, close: 12.0, timestamp: 1.0)
+  let candle =
+    CandleData(open: 10.0, high: 15.0, low: 8.0, close: 12.0, timestamp: 1.0)
   let s_candle = FastCandlestickSeries("s3", [candle], "#10b981", "#ef4444")
   let s_band = FastBandSeries("s4", [p1, p2], [p1, p2], "#818cf8")
   let bubble = BubbleData(x: 5.0, y: 25.0, z: 10.0, label: "b1")
@@ -63,7 +63,17 @@ pub fn c398_scichart_fast_series_test() {
   let s_spline = SplineLineSeries("s8", [p1, p2], 0.5, "#ec4899")
   let s_digi = DigitalBandSeries("s9", [p1, p2], [p1, p2], "#14b8a6")
 
-  let series_list = [s_line, s_mount, s_candle, s_band, s_bubble, s_col, s_heat, s_spline, s_digi]
+  let series_list = [
+    s_line,
+    s_mount,
+    s_candle,
+    s_band,
+    s_bubble,
+    s_col,
+    s_heat,
+    s_spline,
+    s_digi,
+  ]
   list.length(series_list) |> should.equal(9)
 }
 
@@ -87,11 +97,18 @@ pub fn c400_deckgl_geospatial_layers_test() {
   let l_line = LineLayer("l1", [#(p1, p2)], 2.0, "#38bdf8")
   let l_bmp = BitmapLayer("l2", Rect2D(0.0, 0.0, 100.0, 100.0), "img.png", 0.8)
   let l_icon = IconLayer("l3", [IconData(p1, "node", 12.0, "#10b981")], 1.0)
-  let l_geo = GeoJsonLayer("l4", [GeoFeature("f1", [p1, p2], "Polygon")], "#38bdf8", "#0284c7")
+  let l_geo =
+    GeoJsonLayer(
+      "l4",
+      [GeoFeature("f1", [p1, p2], "Polygon")],
+      "#38bdf8",
+      "#0284c7",
+    )
   let l_grid = GridLayer("l5", [p1, p2], 25.0, 1.0)
   let l_hex = HexagonLayer("l6", [p1, p2], 15.0, 0.9)
   let l_col = ColumnLayer("l7", [ColumnData(p1, 50.0, "#f59e0b")], 12, 10.0)
-  let l_pcloud = PointCloudLayer("l8", [Point3D(10.0, 20.0, 30.0)], 4.0, "#818cf8")
+  let l_pcloud =
+    PointCloudLayer("l8", [Point3D(10.0, 20.0, 30.0)], 4.0, "#818cf8")
 
   let layers = [l_line, l_bmp, l_icon, l_geo, l_grid, l_hex, l_col, l_pcloud]
   list.length(layers) |> should.equal(8)
@@ -102,8 +119,15 @@ pub fn c401_deckgl_aggregation_layers_test() {
   let p1 = Point2D(10.0, 20.0)
   let p2 = Point2D(30.0, 40.0)
   let l_sgrid = ScreenGridLayer("a1", [p1, p2], 20.0)
-  let l_text = TextLayer("a2", [TextLabelData(p1, "Node Alpha", "middle", "#f8fafc")], 11)
-  let l_trips = TripsLayer("a3", [TripData("t1", [#(p1, 0.0), #(p2, 10.0)], "#38bdf8")], 5.0, 5.0)
+  let l_text =
+    TextLayer("a2", [TextLabelData(p1, "Node Alpha", "middle", "#f8fafc")], 11)
+  let l_trips =
+    TripsLayer(
+      "a3",
+      [TripData("t1", [#(p1, 0.0), #(p2, 10.0)], "#38bdf8")],
+      5.0,
+      5.0,
+    )
   let l_h3 = H3HexagonLayer("a4", ["8828308281fffff"], 1.0)
   let l_s2 = S2Layer("a5", ["1/2/3"], "#10b981")
   let l_tile = TileLayer("a6", "https://tile/{z}/{x}/{y}", 0, 18)
@@ -118,12 +142,32 @@ pub fn c402_pixijs_display_nodes_test() {
   let v_rect = VisualRect(0.0, 0.0, 40.0, 20.0, "#1e293b")
   let v_text = VisualText(5.0, 5.0, "UOS Label", 10, "#f8fafc")
   let v_sprite = VisualSprite(0.0, 0.0, 32.0, 32.0, "node_tex", "#38bdf8")
-  let v_nine = VisualNineSlicePlane(0.0, 0.0, 60.0, 40.0, 4.0, 4.0, 4.0, 4.0, "#020617")
+  let v_nine =
+    VisualNineSlicePlane(0.0, 0.0, 60.0, 40.0, 4.0, 4.0, 4.0, 4.0, "#020617")
   let v_tile = VisualTilingSprite(0.0, 0.0, 100.0, 100.0, 1.0, 1.0, "grid_pat")
-  let v_part = VisualParticleContainer([ParticleData(1.0, 2.0, 0.1, 0.2, 1.0, 0.8, "#10b981")], "normal")
-  let v_mesh = VisualMesh([Point2D(0.0, 0.0), Point2D(10.0, 0.0), Point2D(5.0, 10.0)], [], [0, 1, 2], "#818cf8")
+  let v_part =
+    VisualParticleContainer(
+      [ParticleData(1.0, 2.0, 0.1, 0.2, 1.0, 0.8, "#10b981")],
+      "normal",
+    )
+  let v_mesh =
+    VisualMesh(
+      [Point2D(0.0, 0.0), Point2D(10.0, 0.0), Point2D(5.0, 10.0)],
+      [],
+      [0, 1, 2],
+      "#818cf8",
+    )
 
-  let visuals = [v_circ, v_rect, v_text, v_sprite, v_nine, v_tile, v_part, v_mesh]
+  let visuals = [
+    v_circ,
+    v_rect,
+    v_text,
+    v_sprite,
+    v_nine,
+    v_tile,
+    v_part,
+    v_mesh,
+  ]
   list.length(visuals) |> should.equal(8)
 }
 
@@ -132,8 +176,10 @@ pub fn c403_pixijs_scene_graph_hierarchy_test() {
   let node_c = dsl.create_scene_circle("c1", 10.0, 10.0, 5.0, "#38bdf8")
   let node_r = dsl.create_scene_rect("r1", 20.0, 20.0, 30.0, 15.0, "#10b981")
   let node_t = dsl.create_scene_text("t1", 30.0, 30.0, "Label", 12, "#f8fafc")
-  let node_s = dsl.create_scene_sprite("s1", 40.0, 40.0, 24.0, 24.0, "tex", "#f59e0b")
-  let node_9 = dsl.create_scene_nine_slice("n1", 50.0, 50.0, 80.0, 40.0, "#020617")
+  let node_s =
+    dsl.create_scene_sprite("s1", 40.0, 40.0, 24.0, 24.0, "tex", "#f59e0b")
+  let node_9 =
+    dsl.create_scene_nine_slice("n1", 50.0, 50.0, 80.0, 40.0, "#020617")
 
   let plot =
     dsl.new_plot("Scene Graph Hierarchy", 400.0, 400.0)
@@ -158,11 +204,35 @@ pub fn c404_dsl_fluent_builder_exhaustiveness_test() {
     |> dsl.add_geom(GeomBar(10.0, "#f59e0b"))
     |> dsl.add_geom(GeomRibbon("#818cf8", 0.15))
     |> dsl.add_geom(GeomPhasePortrait(1.0, "#0284c7"))
-    |> dsl.add_deck_layer(ScatterplotLayer("l1", [Point2D(5.0, 5.0)], 4.0, "#38bdf8"))
-    |> dsl.add_deck_layer(PathLayer("l2", [Point2D(0.0, 0.0), Point2D(10.0, 10.0)], 1.5, "#fbbf24"))
-    |> dsl.add_deck_layer(ArcLayer("l3", Point2D(0.0, 0.0), Point2D(50.0, 50.0), 20.0, 2.0, "#818cf8"))
-    |> dsl.add_deck_layer(HeatmapMatrixLayer("l4", [[1.0, 0.0], [0.0, 1.0]], 0.0, 1.0))
-    |> dsl.add_deck_layer(TopologyGraphLayer("l5", [#("a", Point2D(0.0, 0.0))], []))
+    |> dsl.add_deck_layer(ScatterplotLayer(
+      "l1",
+      [Point2D(5.0, 5.0)],
+      4.0,
+      "#38bdf8",
+    ))
+    |> dsl.add_deck_layer(PathLayer(
+      "l2",
+      [Point2D(0.0, 0.0), Point2D(10.0, 10.0)],
+      1.5,
+      "#fbbf24",
+    ))
+    |> dsl.add_deck_layer(ArcLayer(
+      "l3",
+      Point2D(0.0, 0.0),
+      Point2D(50.0, 50.0),
+      20.0,
+      2.0,
+      "#818cf8",
+    ))
+    |> dsl.add_deck_layer(HeatmapMatrixLayer(
+      "l4",
+      [[1.0, 0.0], [0.0, 1.0]],
+      0.0,
+      1.0,
+    ))
+    |> dsl.add_deck_layer(
+      TopologyGraphLayer("l5", [#("a", Point2D(0.0, 0.0))], []),
+    )
 
   list.length(plot.geoms) |> should.equal(6)
   list.length(plot.layers) |> should.equal(5)
@@ -209,7 +279,13 @@ pub fn c407_pure_lustre_svg_ssr_rendering_test() {
     |> dsl.add_geom(GeomLine(2.0, "#38bdf8", False))
     |> dsl.add_geom(GeomBoxplot(15.0, "#10b981", "#059669"))
     |> dsl.add_deck_layer(HexagonLayer("h1", [Point2D(20.0, 20.0)], 10.0, 0.8))
-    |> dsl.add_scene_child(dsl.create_scene_circle("c1", 50.0, 50.0, 10.0, "#ef4444"))
+    |> dsl.add_scene_child(dsl.create_scene_circle(
+      "c1",
+      50.0,
+      50.0,
+      10.0,
+      "#ef4444",
+    ))
 
   let _el = renderer.render_plot(plot)
   True |> should.be_true()
@@ -221,13 +297,20 @@ pub fn c408_flight_instrument_lyapunov_test() {
     new_fifo(5)
     |> push_fifo(Point2D(0.1, 0.2))
     |> push_fifo(Point2D(0.2, 0.4))
-  let _el = instruments.render_lyapunov_phase_plane(fifo, Point2D(0.2, 0.4), 400.0, 300.0)
+  let _el =
+    instruments.render_lyapunov_phase_plane(
+      fifo,
+      Point2D(0.2, 0.4),
+      400.0,
+      300.0,
+    )
   True |> should.be_true()
 }
 
 // 13. C409: Flight Instrument Rocha Radar Test
 pub fn c409_flight_instrument_rocha_radar_test() {
-  let _el = instruments.render_rocha_semiotics_radar(0.92, 0.96, 0.89, 360.0, 360.0)
+  let _el =
+    instruments.render_rocha_semiotics_radar(0.92, 0.96, 0.89, 360.0, 360.0)
   True |> should.be_true()
 }
 

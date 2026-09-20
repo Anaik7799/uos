@@ -1,0 +1,7 @@
+{
+  "status": "artifact_files_installed_not_runtime_activated",
+  "scope": "C3I guidance only",
+  "changes": 36,
+  "plan_sha256": "365f1cdadb7a4cfe59998979e10c37c7e960895adda9756ddad8cf952e8dc1c6",
+  "deployment_authorized": false
+}

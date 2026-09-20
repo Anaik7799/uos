@@ -1,0 +1,18 @@
+{
+  "schema": "uos.artifact-provenance-correction.v1",
+  "timestamp_utc": "2026-09-21T09:40:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "artifact": "governance/planning/20260921-0936-dashboard-integrity-aware-snapshot.json",
+  "correction": {
+    "field": "source_sha256.plan",
+    "old_value": "6f697315740e288359923468a1368c2579e4d521954a21b518ae7493607e9201",
+    "new_value": "5fd4e7793cc3e532d20c724ba7c45918b2a2342185a47249377a8dece70c445b",
+    "reason": "plan received a subsequent timestamped checkpoint append"
+  },
+  "verification": {
+    "plan_hash_recomputed": true,
+    "artifact_updated": true,
+    "runtime_or_admission_effect": false,
+    "canonical_task_remains_open": true
+  }
+}

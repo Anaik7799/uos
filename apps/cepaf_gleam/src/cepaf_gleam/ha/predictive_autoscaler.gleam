@@ -102,8 +102,13 @@ pub fn refill_tokens(bucket: TokenBucket, now_us: Int) -> TokenBucket {
       let elapsed_sec = int.to_float(elapsed_us) /. 1_000_000.0
       let added_tokens =
         float.round(elapsed_sec *. int.to_float(bucket.refill_rate_per_sec))
-      let new_tokens = int.min(bucket.capacity, bucket.available_tokens + added_tokens)
-      TokenBucket(..bucket, available_tokens: new_tokens, last_refill_us: now_us)
+      let new_tokens =
+        int.min(bucket.capacity, bucket.available_tokens + added_tokens)
+      TokenBucket(
+        ..bucket,
+        available_tokens: new_tokens,
+        last_refill_us: now_us,
+      )
     }
   }
 }
@@ -118,7 +123,10 @@ pub fn consume_tokens(
   case bucket.available_tokens >= tokens {
     True -> {
       let updated_bucket =
-        TokenBucket(..bucket, available_tokens: bucket.available_tokens - tokens)
+        TokenBucket(
+          ..bucket,
+          available_tokens: bucket.available_tokens - tokens,
+        )
       Ok(
         AutoscalerState(
           ..state,
@@ -155,13 +163,22 @@ pub fn evaluate_scaling(
     False -> 0.0 -. { { 1.0 -. ratio } *. 2.0 }
   }
 
-  let in_cooldown = now_us - state.last_scale_timestamp_us < state.cooldown_period_us
+  let in_cooldown =
+    now_us - state.last_scale_timestamp_us < state.cooldown_period_us
 
   let #(new_workers, action, action_ts) = case in_cooldown {
-    True -> #(state.current_workers, ScaleHold("In cooldown period"), state.last_scale_timestamp_us)
+    True -> #(
+      state.current_workers,
+      ScaleHold("In cooldown period"),
+      state.last_scale_timestamp_us,
+    )
     False -> {
       // Scale UP trigger: high queue, positive derivative, or diverging Lyapunov
-      case new_queue_depth > state.current_workers * 5 || dq_dt >. 2.0 || lyapunov >. 0.5 {
+      case
+        new_queue_depth > state.current_workers * 5
+        || dq_dt >. 2.0
+        || lyapunov >. 0.5
+      {
         True -> {
           let target = int.min(state.max_workers, state.current_workers + 2)
           let delta = target - state.current_workers
@@ -171,25 +188,44 @@ pub fn evaluate_scaling(
               ScaleUp(delta, "Queue pressure d(Q)/dt > 2.0 or Lyapunov > 0.5"),
               now_us,
             )
-            False -> #(state.current_workers, ScaleHold("At maximum capacity"), state.last_scale_timestamp_us)
+            False -> #(
+              state.current_workers,
+              ScaleHold("At maximum capacity"),
+              state.last_scale_timestamp_us,
+            )
           }
         }
         False -> {
           // Scale DOWN trigger: low queue, non-positive derivative, negative Lyapunov
-          case new_queue_depth < state.current_workers && dq_dt <=. 0.0 && lyapunov <. -1.0 {
+          case
+            new_queue_depth < state.current_workers
+            && dq_dt <=. 0.0
+            && lyapunov <. -1.0
+          {
             True -> {
               let target = int.max(state.min_workers, state.current_workers - 1)
               let delta = state.current_workers - target
               case delta > 0 {
                 True -> #(
                   target,
-                  ScaleDown(delta, "Low queue depth and stable negative Lyapunov"),
+                  ScaleDown(
+                    delta,
+                    "Low queue depth and stable negative Lyapunov",
+                  ),
                   now_us,
                 )
-                False -> #(state.current_workers, ScaleHold("At minimum capacity"), state.last_scale_timestamp_us)
+                False -> #(
+                  state.current_workers,
+                  ScaleHold("At minimum capacity"),
+                  state.last_scale_timestamp_us,
+                )
               }
             }
-            False -> #(state.current_workers, ScaleHold("Workload within target envelope"), state.last_scale_timestamp_us)
+            False -> #(
+              state.current_workers,
+              ScaleHold("Workload within target envelope"),
+              state.last_scale_timestamp_us,
+            )
           }
         }
       }

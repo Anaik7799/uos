@@ -1,0 +1,26 @@
+{
+  "schema": "uos.goal-completion-matrix.v2",
+  "timestamp": "20260921-1751",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authoritative_status": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0,
+    "blocked": 17,
+    "unknown": 0,
+    "admission": "not_admitted"
+  },
+  "independent_review": "governance/planning/20260921-1750-independent-recovery-readiness-review.json",
+  "new_blocking_facts": [
+    "candidate receipt worker/attempt does not match the risk packet actor",
+    "canonical source equality is not reviewed",
+    "writer-quiescent ownership-bound fence is missing"
+  ],
+  "completion_rules": {
+    "blocked_unrun_stale_unadmitted_not_counted": true,
+    "two_key_runtime_and_formal_required": true,
+    "sa_plan_sole_execution_authority": true
+  },
+  "next_gate": "authorize acquisition scope through Sa-plan, then obtain matching lease, source review, and cutover fence"
+}

@@ -1,0 +1,12 @@
+{
+  "schema": "uos.sa-plan-workflow-history-orphan-observation.v1",
+  "observed_at": "2026-09-21T16:42:46Z",
+  "authority": "Sa-plan report-only workflow history",
+  "workflow": "mcp-canonical-routing-20260921-1403",
+  "history_path": "/tmp/sa-plan-workflow-history-20260921-1642.json",
+  "history_sha256": "1c2c78dc83960d38c89dc59cd1f4088384c7f983c76623a06b583875441d9d42",
+  "events": [{"sequence":0,"kind":"workflow_started","receipt":"governance/planning/20260921-1403-mcp-canonical-plan-routing-receipt.json"}],
+  "terminal_event_present": false,
+  "interpretation": "The workflow has no completion or failure event and cannot be treated as live execution or completion; reconciliation requires authorized Sa-plan workflow control.",
+  "completion_credit": false
+}

@@ -27,14 +27,11 @@
 //// ratify, and dispatch autonomous self-evolution cycles with fail-closed Andon stops.
 
 import cepaf_gleam/ha/multi_agent_quorum.{
-  type QuorumBallot, type SovereignAgent,
-  AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign,
-  ThreeOfFourSovereign, VerdictPending,
+  type QuorumBallot, type SovereignAgent, AgySovereign, ClaudeSovereign,
+  CodexSovereign, OpenRouterSovereign, ThreeOfFourSovereign, VerdictPending,
   VerdictRatified, VerdictRejected, cast_ballot_vote, create_ballot,
 }
-import cepaf_gleam/ha/pareto_fitness_evaluator.{
-  type CandidateEvaluation,
-}
+import cepaf_gleam/ha/pareto_fitness_evaluator.{type CandidateEvaluation}
 import cepaf_gleam/ha/physiological_homeostasis.{
   type PhysiologicalState, type PhysiologicalVariable,
 }
@@ -99,10 +96,11 @@ pub fn step_homeostasis(
   let raw_integral = prev.integral +. { error *. dt }
   let integral = case raw_integral >. config.integral_clamp {
     True -> config.integral_clamp
-    False -> case raw_integral <. -0.0 -. config.integral_clamp {
-      True -> -0.0 -. config.integral_clamp
-      False -> raw_integral
-    }
+    False ->
+      case raw_integral <. -0.0 -. config.integral_clamp {
+        True -> -0.0 -. config.integral_clamp
+        False -> raw_integral
+      }
   }
 
   let derivative = { error -. prev.error } /. dt
@@ -116,7 +114,8 @@ pub fn step_homeostasis(
   // dV/dt = e * de/dt
   let lyapunov_dot_v = error *. derivative
   // Stability condition: error is damped or zero
-  let is_stable = lyapunov_dot_v <=. 0.0001 || float.absolute_value(error) <=. 0.05
+  let is_stable =
+    lyapunov_dot_v <=. 0.0001 || float.absolute_value(error) <=. 0.05
 
   HomeostasisMetrics(
     measured_health: measured_health,
@@ -210,7 +209,13 @@ pub fn ingest_telemetry(
   now_us: Int,
 ) -> HomeostasisSystemState {
   let updated_metrics =
-    step_homeostasis(state.metrics, measured_health, dt_seconds, state.pid_config, now_us)
+    step_homeostasis(
+      state.metrics,
+      measured_health,
+      dt_seconds,
+      state.pid_config,
+      now_us,
+    )
 
   let abs_err = float.absolute_value(updated_metrics.error)
   let is_in_band = abs_err <=. 0.05 && updated_metrics.stable
@@ -222,17 +227,25 @@ pub fn ingest_telemetry(
 
   // Phase transition logic
   let new_phase = case True {
-    _ if abs_err >. 0.20 || !state.physiological.is_homeostatic ->
-      InstabilityIntervention("Critical divergence from homeostasis (error > 0.20 or physiological stress)")
+    _ if abs_err >. 0.2 || !state.physiological.is_homeostatic ->
+      InstabilityIntervention(
+        "Critical divergence from homeostasis (error > 0.20 or physiological stress)",
+      )
     _ if new_ticks >= 3 ->
       case state.phase {
         AutonomousEvolutionActive(cycle, gen) ->
           AutonomousEvolutionActive(cycle, gen)
         _ ->
-          HomeostaticEquilibrium(consecutive_cycles: new_ticks, mean_error: abs_err)
+          HomeostaticEquilibrium(
+            consecutive_cycles: new_ticks,
+            mean_error: abs_err,
+          )
       }
     _ ->
-      Converging(current_error: updated_metrics.error, lyapunov_v: updated_metrics.lyapunov_v)
+      Converging(
+        current_error: updated_metrics.error,
+        lyapunov_v: updated_metrics.lyapunov_v,
+      )
   }
 
   HomeostasisSystemState(
@@ -321,9 +334,17 @@ pub fn propose_evolution(
       }
     }
     Converging(err, _) ->
-      Error("Cannot initiate self-evolution: system converging toward homeostasis (error=" <> float.to_string(err) <> ")")
+      Error(
+        "Cannot initiate self-evolution: system converging toward homeostasis (error="
+        <> float.to_string(err)
+        <> ")",
+      )
     InstabilityIntervention(reason) ->
-      Error("Cannot initiate self-evolution: Andon stop triggered (" <> reason <> ")")
+      Error(
+        "Cannot initiate self-evolution: Andon stop triggered ("
+        <> reason
+        <> ")",
+      )
   }
 }
 
@@ -337,14 +358,7 @@ pub fn vote_on_evolution(
   now_us: Int,
 ) -> EvolutionProposal {
   let updated_ballot =
-    cast_ballot_vote(
-      proposal.ballot,
-      agent,
-      vote,
-      rationale,
-      digest,
-      now_us,
-    )
+    cast_ballot_vote(proposal.ballot, agent, vote, rationale, digest, now_us)
 
   EvolutionProposal(..proposal, ballot: updated_ballot)
 }
@@ -360,18 +374,30 @@ pub fn apply_ratified_evolution(
       Ok(
         HomeostasisSystemState(
           ..state,
-          phase: AutonomousEvolutionActive(proposal.mutation.mutation_id, proposal.generation),
+          phase: AutonomousEvolutionActive(
+            proposal.mutation.mutation_id,
+            proposal.generation,
+          ),
           generation: proposal.generation,
           ratified_evolutions: updated_evolutions,
         ),
       )
     }
     VerdictRejected(rejections, _) ->
-      Error("Evolution proposal rejected by 4-party quorum (" <> int.to_string(rejections) <> " rejections)")
-    VerdictPending ->
-      Error("Evolution proposal pending 4-party quorum votes")
+      Error(
+        "Evolution proposal rejected by 4-party quorum ("
+        <> int.to_string(rejections)
+        <> " rejections)",
+      )
+    VerdictPending -> Error("Evolution proposal pending 4-party quorum votes")
     multi_agent_quorum.VerdictByzantineFault(violator, reason) ->
-      Error("Evolution proposal halted: Byzantine fault by " <> violator <> " (" <> reason <> ")")
+      Error(
+        "Evolution proposal halted: Byzantine fault by "
+        <> violator
+        <> " ("
+        <> reason
+        <> ")",
+      )
   }
 }
 
@@ -441,7 +467,8 @@ pub fn handle_actor_message(
     }
 
     CastQuorumVote(proposal, agent, vote, rationale, digest, now_us, reply_to) -> {
-      let updated = vote_on_evolution(proposal, agent, vote, rationale, digest, now_us)
+      let updated =
+        vote_on_evolution(proposal, agent, vote, rationale, digest, now_us)
       process.send(reply_to, updated)
       actor.continue(state)
     }

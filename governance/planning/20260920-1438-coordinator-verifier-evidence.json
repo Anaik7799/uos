@@ -1,0 +1,100 @@
+{
+  "schema": "uos.development-verification.v1",
+  "observed_at": "2026-09-20T14:38:38Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r01-store-gates",
+  "worker": "codex-01a0ba74-feature-tracker",
+  "attempt": 2,
+  "stage": "passed",
+  "system_admission": false,
+  "runtime_deployment": false,
+  "live_coordinator_modified": false,
+  "source_evidence": [
+    {
+      "path": "apps/uos_swarm/src/session_store_cli.gleam",
+      "sha256": "10ecc48ca71a488a2c9afa416633cbf7f17d4249c13649d1a117a00a8fca1528"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "85d9fd2b2c8afed3ec5875ecc3df3aff6fd2addece3a353c75a29a89dc774611"
+    },
+    {
+      "path": "apps/uos_swarm/test/session_store_cli_test.gleam",
+      "sha256": "719ce5d0fafb7da73108848773164b9307aba3e101098909c3ef15e75ca6a63f"
+    }
+  ],
+  "observations": [
+    {
+      "check": "RED regression tests",
+      "result": "5 failed, 0 passed",
+      "exit_code": 1,
+      "interpretation": "Expected pre-fix failures reproduced false CLI success, absent replay validation and missing empty/readiness distinction."
+    },
+    {
+      "check": "Initial implementation compile",
+      "result": "Unknown result.then; corrected to existing result.try API",
+      "exit_code": 1
+    },
+    {
+      "check": "Targeted OTP 29 EUnit",
+      "result": "16 passed, 0 failed",
+      "exit_code": 0,
+      "modules": [
+        "session_store_cli_test",
+        "session_store_test"
+      ]
+    },
+    {
+      "check": "Actual CLI process, corrupt private database",
+      "result": "JSON ok=false and process exit=1",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "fixture": "/tmp/uos-r01-cli-exit.dQIevC/bad.sqlite3"
+    },
+    {
+      "check": "Actual CLI process, empty private database",
+      "result": "ok=true, checked=0, nonempty=false, authority=integrity_observation_only",
+      "exit_code": 0,
+      "fixture": "/tmp/uos-r01-cli-exit.dQIevC/empty.sqlite3"
+    },
+    {
+      "check": "Initial full suite",
+      "result": "81 passed then module-load failure; PATH selected /usr/bin/erl OTP 27 against OTP 29 cached modules",
+      "exit_code": 1
+    },
+    {
+      "check": "First pinned OTP 29 full suite",
+      "result": "653 passed, 1 failed in existing scratch-copy test: DROP TRIGGER events_no_update",
+      "exit_code": 1,
+      "interpretation": "Intermittent fixture failure retained; unrelated test code not altered."
+    },
+    {
+      "check": "Repeated pinned OTP 29 full suite",
+      "result": "654 passed, 0 failed",
+      "exit_code": 0
+    },
+    {
+      "check": "Gleam format --check",
+      "result": "Three changed Gleam files formatted",
+      "exit_code": 0
+    },
+    {
+      "check": "Risk active observation",
+      "result": "ACTIVE_OBSERVATION_PASS at 2026-09-20T14:35:48Z; 8 source files checked; current attempt 2",
+      "authority": "NONE"
+    }
+  ],
+  "reproduce": {
+    "cwd": "apps/uos_swarm",
+    "build": "PATH=\"$PWD/../../toolchains/nix-profile/bin:$PATH\" ERL_FLAGS='+S 4:4 +A 4' ../../toolchains/gleam-1.16.0/bin/gleam build",
+    "targeted": "../../toolchains/nix-profile/bin/erl +S 4:4 +A 4 -pa build/dev/erlang/*/ebin -noshell -eval 'case eunit:test([session_store_cli_test,session_store_test],[verbose]) of ok -> halt(0); _ -> halt(1) end.'",
+    "full": "timeout 120s env PATH=\"$PWD/../../toolchains/nix-profile/bin:$PATH\" ERL_FLAGS='+S 4:4 +A 4' ../../toolchains/gleam-1.16.0/bin/gleam test"
+  },
+  "limits": [
+    "Passing integrity and semantic replay do not authenticate historical writers or grant effect authority.",
+    "No coordinator recovery, harness cutover, actual identity enrollment, DB feature tracker or universal MCP availability is established.",
+    "Independent candidate review and invocation-specific formal verification remain UNRUN.",
+    "AGY review request encountered provider DNS failure; no new ACK observed. Claude's pending user draft was not overwritten.",
+    "The full-suite intermittent private-copy failure remains a reproducibility risk for r09-end-to-end."
+  ]
+}

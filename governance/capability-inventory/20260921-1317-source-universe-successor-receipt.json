@@ -1,0 +1,31 @@
+{
+  "schema": "uos.source-universe-successor-receipt.v1",
+  "timestamp": "20260921-1317Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1a-source-reconcile",
+  "worker": "codex-source-reconcile",
+  "attempt": 1,
+  "successor": "governance/capability-inventory/20260921-1316-source-universe-successor-ledger.json",
+  "successor_sha256": "f3edf6ed3c8f826490e20244b4105c50876cb5c3e9ab7632ede495deed6cbeba",
+  "checks": {
+    "record_count": 27,
+    "unique_record_ids": "PASS",
+    "all_edges_resolve": "PASS",
+    "all_source_pins_present": "PASS",
+    "test_records": 3,
+    "reference_only_records": 1,
+    "mcp_unknown_records": 27
+  },
+  "result": "SOURCE_UNIVERSE_SUCCESSOR_MATERIALIZED",
+  "completion": {
+    "task_complete": true,
+    "mcp_mapping_complete": false,
+    "runtime_admission": "NOT_GRANTED",
+    "goal_complete": false
+  },
+  "limits": [
+    "Bounded workspace source manifest only; external trees excluded.",
+    "MCP availability and runtime usability remain UNKNOWN pending fresh runtime evidence.",
+    "No release or operational authority granted."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "uos.sa-plan-running-workflow-staleness.v1",
+  "observed_at": "2026-09-21T16:41:54Z",
+  "authority": "read-only SQLite observation; no workflow completion/failure mutation",
+  "database": {
+    "path": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "sha256": "0d205a49991e64b2844991689b09a0850a76f7ccfde2e4a3ec5dd9512f9857ad"
+  },
+  "scope": "workflows whose input references plan uos/system-mcp-features/20260919-1642",
+  "running_count": 8,
+  "running": [
+    "mcp-canonical-routing-20260921-1403",
+    "feature-tracker-mcp-20260921-1411",
+    "risk-priority-execution-20260921-1415",
+    "current-system-status-20260921-1416",
+    "source-universe-reconciliation-20260921-1418",
+    "declarative-feature-mcp-20260921-1423",
+    "current-system-status-20260921-1424",
+    "dashboard-projection-20260921-1425"
+  ],
+  "interpretation": "These rows have no completion timestamp or result. Their historical start times predate the current observation by more than two hours; they must remain uncredited and require authorized reconciliation before dashboard execution counts can be trusted.",
+  "completion_credit": false
+}

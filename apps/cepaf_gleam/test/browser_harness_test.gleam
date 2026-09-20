@@ -95,10 +95,14 @@ pub fn execute_operator_journey_scenario_test() {
   let mock_router = fn(route: String) -> String {
     case route {
       "/" -> "<html><body>Cockpit nas-1.tail55d152.ts.net:4100</body></html>"
-      "/ag-ui/cockpit" -> "<html><body>AG-UI 32-Event Real-Time Cockpit SIL-6 FRACTAL LOCK: 25503L801736</body></html>"
-      "/ag-ui/manifest" -> "{\"protocol\":\"AG-UI-v1\",\"status\":\"compliant\"}"
-      "/checklist" -> "<html><body>Universal Comprehensive Verification Checklist CHK-01-TIME</body></html>"
-      "/planning" -> "<html><body>Planning nas-1.tail55d152.ts.net:4100</body></html>"
+      "/ag-ui/cockpit" ->
+        "<html><body>AG-UI 32-Event Real-Time Cockpit SIL-6 FRACTAL LOCK: 25503L801736</body></html>"
+      "/ag-ui/manifest" ->
+        "{\"protocol\":\"AG-UI-v1\",\"status\":\"compliant\"}"
+      "/checklist" ->
+        "<html><body>Universal Comprehensive Verification Checklist CHK-01-TIME</body></html>"
+      "/planning" ->
+        "<html><body>Planning nas-1.tail55d152.ts.net:4100</body></html>"
       "/mirage" -> "<html><body>MirageOS 25503L801736</body></html>"
       _ -> "404 Not Found"
     }
@@ -109,4 +113,3 @@ pub fn execute_operator_journey_scenario_test() {
   receipt.passed_steps |> should.equal(6)
   receipt.all_passed |> should.be_true
 }
-

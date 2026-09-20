@@ -1,0 +1,45 @@
+{
+  "schema": "uos.declarative-mcp-contract-evidence.v1",
+  "timestamp": "20260921-1510",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t2-contracts",
+  "interfaces": {
+    "catalog": "harness_system_feature_catalog",
+    "observations": "harness_system_feature_observations",
+    "intent": "harness_system_feature_intent",
+    "progress": "harness_execution_progress"
+  },
+  "algebraic_properties": [
+    "strict exact-argument validation",
+    "content-addressed catalog and ledger readback",
+    "paged deterministic queries",
+    "pure declarative intent decision",
+    "deny-by-default effect authority",
+    "idempotent replay and conflict refusal",
+    "task-bound fence before canonical reads"
+  ],
+  "source_hashes": {
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam": "7cef170c48633862ceb9d6f76a1dff1f84943e06ef093f826548e12ce4253d56",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_intent.gleam": "0e75c796dfbc6f6c136a7ce12c9e258894fcf19530ea7626fa30ddff7436538c",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam": "6d9871740438cb4ee3f845807811f1f1f0a30a1e11945de00e4189b5a9e2caa0",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam": "f17c4f66adefc761995a07080551a9539473f9fc0d83e8d492451fa9f36c46a1",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam": "aa2d3252c94e0162ed238a19da7aac125ad681be0bb2dd7f5c83656e10a44c76",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam": "a3a8562344c675d1f21124ae94efd66cac82d7a82061cc8327fc586a8d2b1320",
+    "apps/cepaf_gleam/test/system_feature_api_test.gleam": "b7065b8c505e907345a86f81f8fa3cddaac397d087a174c37a8603b796ad34ef",
+    "apps/cepaf_gleam/test/system_feature_interfaces_test.gleam": "9b7b44f7d831b303d0498ee4138d47119d773d574736daa7c6f69ed5ba9846e1"
+  },
+  "verification": {
+    "build": "PASS",
+    "format": "PASS",
+    "targeted_eunit": {"passed": 33, "failed": 0},
+    "mcp_discovery": "declared and advertised",
+    "runtime": "task-bound canonical binding unavailable for t2; fail closed",
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false
+  },
+  "completion": {
+    "contract_evidence": true,
+    "task_complete": false,
+    "reason": "independently authorized task binding and fresh successful runtime probe remain absent"
+  }
+}

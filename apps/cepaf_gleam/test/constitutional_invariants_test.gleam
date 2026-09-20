@@ -1,19 +1,18 @@
 import cepaf_gleam/agents/hive_mind_decider.{
-  AgentSignal, LongTerm24h, MediumTerm1h, ShortTerm10m,
-  compute_forecast, decision_to_json, ingest_signal, init_hive_mind,
-  predict_risk, synthesize_decision,
+  AgentSignal, LongTerm24h, MediumTerm1h, ShortTerm10m, compute_forecast,
+  decision_to_json, ingest_signal, init_hive_mind, predict_risk,
+  synthesize_decision,
 }
 import cepaf_gleam/fractal/l0_constitutional.{
-  Fail, Pass, Psi0Existence, Psi10CyberneticHomeostasis, Psi1Regeneration,
-  Psi2History, Psi3Verification, Psi4HumanAlignment, Psi5Truthfulness,
-  Psi6HardwareInviolability, Psi7ProvenanceCeiling, Psi8SubstratePurity,
-  Psi9SaPlanExclusivity, PsiCheck, VoteApprove, VoteReject,
-  Omega01FounderPrimacy, Omega02LineageProtection, Omega03EthicalBoundary,
-  Omega04HumanSurvival, Omega05MutualTermination,
-  Omega06RevisionBoundFreshness, Omega07ComputableDoctorAuthority,
-  Omega08TriSovereignQuorum, Omega09HiveMindResonance,
-  ReconfigurationProposal, ReconfigurationRatified, ReconfigurationRejected,
-  RollbackState, cast_vote, compute_constitutional_health, evaluate_reconfiguration,
+  Fail, Omega01FounderPrimacy, Omega02LineageProtection, Omega03EthicalBoundary,
+  Omega04HumanSurvival, Omega05MutualTermination, Omega06RevisionBoundFreshness,
+  Omega07ComputableDoctorAuthority, Omega08TriSovereignQuorum,
+  Omega09HiveMindResonance, Pass, Psi0Existence, Psi10CyberneticHomeostasis,
+  Psi1Regeneration, Psi2History, Psi3Verification, Psi4HumanAlignment,
+  Psi5Truthfulness, Psi6HardwareInviolability, Psi7ProvenanceCeiling,
+  Psi8SubstratePurity, Psi9SaPlanExclusivity, PsiCheck, ReconfigurationProposal,
+  ReconfigurationRatified, ReconfigurationRejected, RollbackState, VoteApprove,
+  VoteReject, cast_vote, compute_constitutional_health, evaluate_reconfiguration,
   is_zero_fenced_axiom, new_consensus, omega_directive_to_string,
   omega_mutual_termination, psi_invariant_to_string,
 }
@@ -52,15 +51,25 @@ pub fn omega_directive_strings_test() {
 
 pub fn omega_mutual_termination_test() {
   // Dual distinct guardian keys succeeds
-  let res1 = omega_mutual_termination("guardian-agy-key", "guardian-claude-key", 1788856500)
+  let res1 =
+    omega_mutual_termination(
+      "guardian-agy-key",
+      "guardian-claude-key",
+      1_788_856_500,
+    )
   res1 |> should.be_ok
 
   // Identical guardian keys fails closed
-  let res2 = omega_mutual_termination("guardian-agy-key", "guardian-agy-key", 1788856500)
+  let res2 =
+    omega_mutual_termination(
+      "guardian-agy-key",
+      "guardian-agy-key",
+      1_788_856_500,
+    )
   res2 |> should.be_error
 
   // Empty key fails closed
-  let res3 = omega_mutual_termination("", "guardian-claude-key", 1788856500)
+  let res3 = omega_mutual_termination("", "guardian-claude-key", 1_788_856_500)
   res3 |> should.be_error
 }
 
@@ -106,7 +115,11 @@ pub fn dcrp_reconfiguration_ratified_test() {
       target_subsystem: "subsystem-mesh",
       description: "Migrate Indrajaal Constitution to UOS",
       psi_checks: psi_checks,
-      rollback_state: Some(RollbackState("snap-001", "sha256-digest-state", True)),
+      rollback_state: Some(RollbackState(
+        "snap-001",
+        "sha256-digest-state",
+        True,
+      )),
       is_emergency_termination: False,
     )
 
@@ -153,7 +166,8 @@ pub fn dcrp_reconfiguration_unverified_rollback_test() {
     |> cast_vote("guardian-codex", VoteApprove)
 
   case evaluate_reconfiguration(prop1, consensus) {
-    ReconfigurationRatified(_, _) -> panic as "Should have failed without rollback state"
+    ReconfigurationRatified(_, _) ->
+      panic as "Should have failed without rollback state"
     ReconfigurationRejected(id, reason) -> {
       id |> should.equal("prop-dcrp-rb-none")
       reason |> should.equal("Rollback Path Unverified")
@@ -173,7 +187,8 @@ pub fn dcrp_reconfiguration_unverified_rollback_test() {
     )
 
   case evaluate_reconfiguration(prop2, consensus) {
-    ReconfigurationRatified(_, _) -> panic as "Should have failed with unverified rollback state"
+    ReconfigurationRatified(_, _) ->
+      panic as "Should have failed with unverified rollback state"
     ReconfigurationRejected(id, reason) -> {
       id |> should.equal("prop-dcrp-rb-unverified")
       reason |> should.equal("Rollback Path Unverified")
@@ -209,7 +224,8 @@ pub fn dcrp_reconfiguration_psi_violation_test() {
 
   let outcome = evaluate_reconfiguration(prop, consensus)
   case outcome {
-    ReconfigurationRatified(_, _) -> panic as "Should have failed due to Psi-1 violation"
+    ReconfigurationRatified(_, _) ->
+      panic as "Should have failed due to Psi-1 violation"
     ReconfigurationRejected(id, reason) -> {
       id |> should.equal("prop-dcrp-002")
       reason |> should.equal("Constitutional Psi Axiom Violation")
@@ -245,7 +261,8 @@ pub fn dcrp_reconfiguration_guardian_veto_test() {
 
   let outcome = evaluate_reconfiguration(prop, consensus)
   case outcome {
-    ReconfigurationRatified(_, _) -> panic as "Should have been rejected due to veto"
+    ReconfigurationRatified(_, _) ->
+      panic as "Should have been rejected due to veto"
     ReconfigurationRejected(id, reason) -> {
       id |> should.equal("prop-dcrp-003")
       reason |> should.equal("Guardian Veto Invoked")
@@ -340,7 +357,7 @@ pub fn hive_mind_decider_test() {
       sentiment: "harmonic",
       cognitive_narrative: "System converging rapidly to Lyapunov attractor",
       evidence_ref: "sha256-evidence-agy",
-      timestamp_us: 1788880000000,
+      timestamp_us: 1_788_880_000_000,
     )
 
   let hm2 = ingest_signal(hm, signal_agy)
@@ -399,4 +416,3 @@ pub fn hive_mind_decider_test() {
   let dec_json = decision_to_json(safe_dec)
   should.be_true(dec_json != json.null())
 }
-

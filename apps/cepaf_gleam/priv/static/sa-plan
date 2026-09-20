@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec /home/an/dev/ver/c3i/sa-plan "$@"

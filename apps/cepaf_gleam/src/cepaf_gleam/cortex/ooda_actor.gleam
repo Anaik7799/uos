@@ -16,9 +16,7 @@
 //// </uos-module>
 //// =============================================================================
 
-import cepaf_gleam/cortex/circuit_breaker_pool.{
-  type BreakerPool, init_pool,
-}
+import cepaf_gleam/cortex/circuit_breaker_pool.{type BreakerPool, init_pool}
 import cepaf_gleam/cortex/cortex_types.{
   type CortexDecision, type OodaPhase, type TaskIntent, CortexDecision,
   PhaseCompleted, PhaseObserve, source_to_string,
@@ -45,7 +43,11 @@ pub type OodaState {
 }
 
 pub type OodaMessage {
-  ProcessIntent(intent: TaskIntent, reply_to: Subject(CortexDecision), now_ms: Int)
+  ProcessIntent(
+    intent: TaskIntent,
+    reply_to: Subject(CortexDecision),
+    now_ms: Int,
+  )
   GetPhase(reply_to: Subject(OodaPhase))
   GetBreakers(reply_to: Subject(BreakerPool))
   ResetBreakers(reply_to: Subject(Nil))
@@ -61,7 +63,11 @@ pub fn execute_pure_ooda(
 ) -> #(CortexDecision, BreakerPool) {
   // ── Phase 1: OBSERVE ──
   let trace0 =
-    pipeline_tracer.new_trace(intent.id, source_to_string(intent.source), now_ms)
+    pipeline_tracer.new_trace(
+      intent.id,
+      source_to_string(intent.source),
+      now_ms,
+    )
   let trace1 =
     pipeline_tracer.add_stage(
       trace0,
@@ -146,7 +152,13 @@ pub fn execute_pure_ooda(
     }
     False -> {
       let is_authorized = !{ is_tool_call && is_unledgered_mutation }
-      case sa_plan_bridge.enforce_fractal_jidoka(source_to_string(intent.source), intent.intent_type, is_authorized) {
+      case
+        sa_plan_bridge.enforce_fractal_jidoka(
+          source_to_string(intent.source),
+          intent.intent_type,
+          is_authorized,
+        )
+      {
         Error(err) -> {
           // Immediate fail-closed Fractal Jidoka Andon Stop Line (SC-JIDOKA-001)
           let trace3 =
@@ -264,13 +276,15 @@ fn handle_message(
       let #(decision, new_pool) =
         execute_pure_ooda(intent, state.breaker_pool, now_ms)
       process.send(reply_to, decision)
-      actor.continue(OodaState(
-        ..state,
-        phase: PhaseCompleted,
-        breaker_pool: new_pool,
-        last_decision: Some(decision),
-        total_processed: state.total_processed + 1,
-      ))
+      actor.continue(
+        OodaState(
+          ..state,
+          phase: PhaseCompleted,
+          breaker_pool: new_pool,
+          last_decision: Some(decision),
+          total_processed: state.total_processed + 1,
+        ),
+      )
     }
     GetPhase(reply_to) -> {
       process.send(reply_to, state.phase)

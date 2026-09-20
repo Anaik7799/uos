@@ -86,7 +86,10 @@ pub fn stream_actor_start_and_query_test() {
 
       // Query single layer
       let reply_single = process.new_subject()
-      process.send(client, pzs.QueryForecast(LayerL0Constitutional, reply_single))
+      process.send(
+        client,
+        pzs.QueryForecast(LayerL0Constitutional, reply_single),
+      )
       let forecast = process.receive_forever(reply_single)
       forecast.layer |> should.equal(LayerL0Constitutional)
 

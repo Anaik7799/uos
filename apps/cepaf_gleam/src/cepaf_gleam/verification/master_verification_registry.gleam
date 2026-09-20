@@ -1168,7 +1168,11 @@ fn unrun_aggregate(total: Int) -> RegistryAggregate {
     passing_observations: 0,
     metrics_available: False,
     mean_efficacy: None,
-    missing_denominators: ["runtime_receipts", "formal_receipts", "metric_inputs"],
+    missing_denominators: [
+      "runtime_receipts",
+      "formal_receipts",
+      "metric_inputs",
+    ],
   )
 }
 

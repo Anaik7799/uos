@@ -1,0 +1,253 @@
+{
+  "schema_version": 2,
+  "updated_at": "2026-09-28",
+  "scope": "Bountytek artifact links, not safety assurance",
+  "gate_status": "HOLD_FOR_INDEPENDENT_SAFETY_REVIEW",
+  "deployment_authorized": false,
+  "current_references": [
+    {
+      "name": "CODEX_HANDOVER.html",
+      "relative_path": "./CODEX_HANDOVER.html",
+      "format": ".html",
+      "status": "current_reference_not_safety_approval",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/CODEX_HANDOVER.html"
+    },
+    {
+      "name": "ACH_ASSESSMENT.html",
+      "relative_path": "./ACH_ASSESSMENT.html",
+      "format": ".html",
+      "status": "current_reference_not_safety_approval",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/ACH_ASSESSMENT.html"
+    },
+    {
+      "name": "ACH_SAFETY_ANALYSIS.html",
+      "relative_path": "./ACH_SAFETY_ANALYSIS.html",
+      "format": ".html",
+      "status": "current_reference_not_safety_approval",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/ACH_SAFETY_ANALYSIS.html"
+    },
+    {
+      "name": "ACH_ASSESSMENT_VALIDATION.html",
+      "relative_path": "./ACH_ASSESSMENT_VALIDATION.html",
+      "format": ".html",
+      "status": "current_reference_not_safety_approval",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/ACH_ASSESSMENT_VALIDATION.html"
+    },
+    {
+      "name": "20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.html",
+      "relative_path": "./20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.html",
+      "format": ".html",
+      "status": "current_reference_not_safety_approval",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.html"
+    },
+    {
+      "name": "20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.html",
+      "relative_path": "./20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.html",
+      "format": ".html",
+      "status": "current_reference_not_safety_approval",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.html"
+    },
+    {
+      "name": "ASSESSMENT_SYSTEM_REGISTRY.json",
+      "relative_path": "./ASSESSMENT_SYSTEM_REGISTRY.json",
+      "format": ".json",
+      "status": "current_reference_not_safety_approval",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/ASSESSMENT_SYSTEM_REGISTRY.json"
+    }
+  ],
+  "historical_artifacts": [
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Nordic Pharma & Chemicals Sector Dossier Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html",
+      "relative_path": "./projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Nordic Pharma & Chemicals Sector Dossier Markdown Source",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md",
+      "relative_path": "./projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md",
+      "format": "md",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Pharma Three Pillars Operational Blueprint Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html",
+      "relative_path": "./projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Pharma Three Pillars Operational Blueprint Markdown Source",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md",
+      "relative_path": "./projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md",
+      "format": "md",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Master Projects Index Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/PROJECTS_INDEX.html",
+      "relative_path": "./projects/PROJECTS_INDEX.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "2S Consulting Enterprise Dossier Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "relative_path": "./projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Comprehensive 13-Section Journal Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "relative_path": "./projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Executive HTML Financial Analysis Report",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "relative_path": "./projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Executive Presentation Slide Deck HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "relative_path": "./projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "2S Strategic Vision Presentation HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/pdf_download_converted.html",
+      "relative_path": "./projects/pdf_download_converted.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/pdf_download_converted.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Codex Astra Sovereign Review & Ratification Certificate HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "relative_path": "./projects/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Nordic Life Sciences Financial Directory HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "relative_path": "./projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Zettelkasten Knowledge Note HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "relative_path": "./projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Authoritative OCaml GitBook Docs Generator Script",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/render_docs_wiki.ml",
+      "relative_path": "./projects/render_docs_wiki.ml",
+      "format": "ocaml",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/render_docs_wiki.ml"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Master Audited Financial Sheet (135 Facilities, 127 Entities)",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/Medical-Nordics-1.xlsx",
+      "relative_path": "./projects/Medical-Nordics-1.xlsx",
+      "google_sheet_id": "1s0pVuA2KPyIdOWL77IS8N2FFcZNPbZvS55Ys9Wkukfo",
+      "format": "xlsx",
+      "size_bytes": 26597,
+      "google_sheet_url": "https://docs.google.com/spreadsheets/d/1s0pVuA2KPyIdOWL77IS8N2FFcZNPbZvS55Ys9Wkukfo",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/Medical-Nordics-1.xlsx"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "2S Consulting 15-Tab Master Dataset",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_Consulting_Enterprise_Data.xlsx",
+      "relative_path": "./projects/2S_Consulting_Enterprise_Data.xlsx",
+      "format": "xlsx",
+      "size_bytes": 38535,
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_Consulting_Enterprise_Data.xlsx"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "2S Consulting Enterprise Dossier Markdown",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.md",
+      "relative_path": "./projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.md",
+      "format": "markdown",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_CONSULTING_COMPREHENSIVE_DOSSIER.md"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Comprehensive Financial Dossier Markdown",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.md",
+      "relative_path": "./projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.md",
+      "format": "markdown",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/MEDICAL_NORDICS_FINANCIALS_DOSSIER.md"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Master Financials Extracted JSON Database",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/master_financials.json",
+      "relative_path": "./projects/master_financials.json",
+      "format": "json",
+      "size_bytes": 33599,
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/master_financials.json"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Unique Normalized Company Entities List",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/unique_companies.json",
+      "relative_path": "./projects/unique_companies.json",
+      "format": "json",
+      "size_bytes": 2394,
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/unique_companies.json"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Zettelkasten Slip-Box Staged Note Markdown",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md",
+      "relative_path": "./projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md",
+      "format": "markdown",
+      "zk_uuid": "a5651de1-db82-1a52-3e07-09f4da9cb757",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "Skills & Superpowers Sovereign Catalog",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/SKILLS_AND_SUPERPOWERS_CATALOG.html",
+      "relative_path": "./SKILLS_AND_SUPERPOWERS_CATALOG.html",
+      "format": "html",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/SKILLS_AND_SUPERPOWERS_CATALOG.html"
+    },
+    {
+      "status": "historical_unvalidated_superseded",
+      "name": "OCaml Epistemic & Admiralty Engine",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/ach_admiralty_engine.ml",
+      "relative_path": "./ach_admiralty_engine.ml",
+      "format": "ml",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/ach_admiralty_engine.ml"
+    }
+  ],
+  "historical_manifest": "historical/20260928-pre-governance/20260927-1133-2s-consulting-nordic-medtech-service-positioning-links.json",
+  "note": "Original ratification, skill counts and verified flags are superseded. Consult the current registry and actual engine hash. No financial, procurement, clinical or operational certification."
+}

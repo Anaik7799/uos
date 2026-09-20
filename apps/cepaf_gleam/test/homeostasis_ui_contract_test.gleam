@@ -1,17 +1,18 @@
+import cepaf_gleam/fpp/homeostasis_fprime as fprime
 import cepaf_gleam/ha/homeostasis_evolution_engine as engine
 import cepaf_gleam/ui/lustre/homeostasis_evolution_hud as hud
+import cepaf_gleam/ui/lustre/widgets/homeostasis_control as controls
 import cepaf_gleam/ui/tui/homeostasis_evolution_view as terminal
 import cepaf_gleam/ui/wisp/agui_sse_api as sse
 import cepaf_gleam/ui/wisp/router
-import cepaf_gleam/fpp/homeostasis_fprime as fprime
-import cepaf_gleam/ui/lustre/widgets/homeostasis_control as controls
 import gleam/list
 import gleam/string
 import gleeunit/should
 import lustre/element
 
 pub fn initial_model_is_explicitly_simulated_in_hud_test() {
-  let rendered = hud.render_hud(engine.init_homeostasis_system(0)) |> element.to_string
+  let rendered =
+    hud.render_hud(engine.init_homeostasis_system(0)) |> element.to_string
   string.contains(rendered, "SIMULATED") |> should.be_true()
   string.contains(rendered, "Status: ONLINE") |> should.be_false()
   string.contains(rendered, "18/18 Checks Validated") |> should.be_false()
@@ -37,7 +38,8 @@ pub fn status_stream_does_not_fabricate_observations_test() {
 }
 
 pub fn browser_event_handler_is_safe_and_handles_disconnect_test() {
-  let rendered = hud.render_hud(engine.init_homeostasis_system(0)) |> element.to_string
+  let rendered =
+    hud.render_hud(engine.init_homeostasis_system(0)) |> element.to_string
   string.contains(rendered, "innerHTML") |> should.be_false()
   string.contains(rendered, "homeostasis_status") |> should.be_true()
   string.contains(rendered, "onerror") |> should.be_true()
@@ -45,9 +47,15 @@ pub fn browser_event_handler_is_safe_and_handles_disconnect_test() {
 
 fn context() {
   fprime.WiredContext(
-    cpu_pct: 45.0, memory_pct: 55.0, latency_ms: 12.5, error_rate_pct: 0.01,
-    heartbeat_age_ms: 650, fault_count: 0, lyapunov_v: 0.005,
-    lyapunov_lambda: -0.15, quorum_votes: 4,
+    cpu_pct: 45.0,
+    memory_pct: 55.0,
+    latency_ms: 12.5,
+    error_rate_pct: 0.01,
+    heartbeat_age_ms: 650,
+    fault_count: 0,
+    lyapunov_v: 0.005,
+    lyapunov_lambda: -0.15,
+    quorum_votes: 4,
   )
 }
 

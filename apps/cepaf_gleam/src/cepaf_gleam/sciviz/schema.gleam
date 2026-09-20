@@ -66,7 +66,13 @@ pub type DataSeries {
 // -----------------------------------------------------------------------------
 
 pub type CandleData {
-  CandleData(open: Float, high: Float, low: Float, close: Float, timestamp: Float)
+  CandleData(
+    open: Float,
+    high: Float,
+    low: Float,
+    close: Float,
+    timestamp: Float,
+  )
 }
 
 pub type BubbleData {
@@ -95,21 +101,70 @@ pub fn push_fifo(
 }
 
 pub type SciChartSeries {
-  FastLineSeries(name: String, points: List(Point2D), stroke_width: Float, color: String)
-  FastMountainSeries(name: String, points: List(Point2D), zero_line: Float, fill_color: String, stroke_color: String)
-  FastCandlestickSeries(name: String, candles: List(CandleData), up_color: String, down_color: String)
-  FastBandSeries(name: String, high_points: List(Point2D), low_points: List(Point2D), band_fill: String)
-  FastBubbleSeries(name: String, bubbles: List(BubbleData), min_radius: Float, max_radius: Float)
-  FastColumnSeries(name: String, points: List(Point2D), column_width: Float, fill_color: String)
+  FastLineSeries(
+    name: String,
+    points: List(Point2D),
+    stroke_width: Float,
+    color: String,
+  )
+  FastMountainSeries(
+    name: String,
+    points: List(Point2D),
+    zero_line: Float,
+    fill_color: String,
+    stroke_color: String,
+  )
+  FastCandlestickSeries(
+    name: String,
+    candles: List(CandleData),
+    up_color: String,
+    down_color: String,
+  )
+  FastBandSeries(
+    name: String,
+    high_points: List(Point2D),
+    low_points: List(Point2D),
+    band_fill: String,
+  )
+  FastBubbleSeries(
+    name: String,
+    bubbles: List(BubbleData),
+    min_radius: Float,
+    max_radius: Float,
+  )
+  FastColumnSeries(
+    name: String,
+    points: List(Point2D),
+    column_width: Float,
+    fill_color: String,
+  )
   FastHeatmapSeries(name: String, matrix: List(List(Float)), color_map: String)
-  SplineLineSeries(name: String, points: List(Point2D), tension: Float, color: String)
-  DigitalBandSeries(name: String, high_points: List(Point2D), low_points: List(Point2D), color: String)
+  SplineLineSeries(
+    name: String,
+    points: List(Point2D),
+    tension: Float,
+    color: String,
+  )
+  DigitalBandSeries(
+    name: String,
+    high_points: List(Point2D),
+    low_points: List(Point2D),
+    color: String,
+  )
 }
 
 pub type SciChartModifier {
   CursorModifier(axis_crosshair: Bool, show_tooltip: Bool, line_color: String)
-  RolloverModifier(snap_to_data: Bool, show_series_markers: Bool, line_color: String)
-  RubberBandZoomModifier(is_animated: Bool, fill_color: String, stroke_color: String)
+  RolloverModifier(
+    snap_to_data: Bool,
+    show_series_markers: Bool,
+    line_color: String,
+  )
+  RubberBandZoomModifier(
+    is_animated: Bool,
+    fill_color: String,
+    stroke_color: String,
+  )
   LegendModifier(show_checkboxes: Bool, orientation: String, position: String)
   ThresholdCursor(threshold: Float, label: String, alert_color: String)
   PolarGridModifier(radial_rings: Int, angular_sectors: Int, grid_color: String)
@@ -136,7 +191,11 @@ pub type TextLabelData {
 }
 
 pub type TripData {
-  TripData(id: String, path_with_timestamps: List(#(Point2D, Float)), color: String)
+  TripData(
+    id: String,
+    path_with_timestamps: List(#(Point2D, Float)),
+    color: String,
+  )
 }
 
 pub type DeckLayer {
@@ -146,12 +205,7 @@ pub type DeckLayer {
     radius: Float,
     color: String,
   )
-  PathLayer(
-    id: String,
-    path: List(Point2D),
-    stroke_width: Float,
-    color: String,
-  )
+  PathLayer(id: String, path: List(Point2D), stroke_width: Float, color: String)
   ArcLayer(
     id: String,
     source: Point2D,
@@ -171,17 +225,52 @@ pub type DeckLayer {
     nodes: List(#(String, Point2D)),
     edges: List(#(Int, Int)),
   )
-  LineLayer(id: String, lines: List(#(Point2D, Point2D)), stroke_width: Float, color: String)
+  LineLayer(
+    id: String,
+    lines: List(#(Point2D, Point2D)),
+    stroke_width: Float,
+    color: String,
+  )
   BitmapLayer(id: String, bounds: Rect2D, image_url: String, opacity: Float)
   IconLayer(id: String, icons: List(IconData), size_scale: Float)
-  GeoJsonLayer(id: String, features: List(GeoFeature), fill_color: String, stroke_color: String)
-  GridLayer(id: String, points: List(Point2D), cell_size: Float, elevation_scale: Float)
-  HexagonLayer(id: String, points: List(Point2D), radius: Float, coverage: Float)
-  ColumnLayer(id: String, columns: List(ColumnData), disk_resolution: Int, radius: Float)
-  PointCloudLayer(id: String, points: List(Point3D), point_size: Float, color: String)
+  GeoJsonLayer(
+    id: String,
+    features: List(GeoFeature),
+    fill_color: String,
+    stroke_color: String,
+  )
+  GridLayer(
+    id: String,
+    points: List(Point2D),
+    cell_size: Float,
+    elevation_scale: Float,
+  )
+  HexagonLayer(
+    id: String,
+    points: List(Point2D),
+    radius: Float,
+    coverage: Float,
+  )
+  ColumnLayer(
+    id: String,
+    columns: List(ColumnData),
+    disk_resolution: Int,
+    radius: Float,
+  )
+  PointCloudLayer(
+    id: String,
+    points: List(Point3D),
+    point_size: Float,
+    color: String,
+  )
   ScreenGridLayer(id: String, points: List(Point2D), cell_size_pixels: Float)
   TextLayer(id: String, labels: List(TextLabelData), font_size: Int)
-  TripsLayer(id: String, trips: List(TripData), trail_length: Float, current_time: Float)
+  TripsLayer(
+    id: String,
+    trips: List(TripData),
+    trail_length: Float,
+    current_time: Float,
+  )
   H3HexagonLayer(id: String, hex_ids: List(String), elevation_scale: Float)
   S2Layer(id: String, s2_tokens: List(String), fill_color: String)
   TileLayer(id: String, tile_url_template: String, min_zoom: Int, max_zoom: Int)
@@ -192,7 +281,15 @@ pub type DeckLayer {
 // -----------------------------------------------------------------------------
 
 pub type ParticleData {
-  ParticleData(x: Float, y: Float, vx: Float, vy: Float, scale: Float, alpha: Float, color: String)
+  ParticleData(
+    x: Float,
+    y: Float,
+    vx: Float,
+    vy: Float,
+    scale: Float,
+    alpha: Float,
+    color: String,
+  )
 }
 
 pub type PixiFilter {
@@ -204,11 +301,41 @@ pub type SceneVisual {
   VisualRect(x: Float, y: Float, w: Float, h: Float, fill: String)
   VisualText(x: Float, y: Float, content: String, size: Int, color: String)
   VisualComposite(geoms: List(GeomType))
-  VisualSprite(x: Float, y: Float, w: Float, h: Float, texture_id: String, tint: String)
-  VisualNineSlicePlane(x: Float, y: Float, w: Float, h: Float, left: Float, top: Float, right: Float, bottom: Float, fill: String)
-  VisualTilingSprite(x: Float, y: Float, w: Float, h: Float, tile_scale_x: Float, tile_scale_y: Float, pattern_id: String)
+  VisualSprite(
+    x: Float,
+    y: Float,
+    w: Float,
+    h: Float,
+    texture_id: String,
+    tint: String,
+  )
+  VisualNineSlicePlane(
+    x: Float,
+    y: Float,
+    w: Float,
+    h: Float,
+    left: Float,
+    top: Float,
+    right: Float,
+    bottom: Float,
+    fill: String,
+  )
+  VisualTilingSprite(
+    x: Float,
+    y: Float,
+    w: Float,
+    h: Float,
+    tile_scale_x: Float,
+    tile_scale_y: Float,
+    pattern_id: String,
+  )
   VisualParticleContainer(particles: List(ParticleData), blend_mode: String)
-  VisualMesh(vertices: List(Point2D), uvs: List(Point2D), indices: List(Int), color: String)
+  VisualMesh(
+    vertices: List(Point2D),
+    uvs: List(Point2D),
+    indices: List(Int),
+    color: String,
+  )
 }
 
 pub type SceneNode {

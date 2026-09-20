@@ -2,28 +2,27 @@
 //// Pure Gleam 30-Usecase Multi-Surface Runtime & Acceptance Verifier
 //// STAMP: SC-GLM-UI-001, SC-INTENT-ATLAS-001, SC-DENOTATIONAL-INTENT-001, SC-CHECKLIST-001
 
-import gleeunit/should
-import gleam/list
-import cepaf_gleam/intent/denotational.{
-  Intent, bottom, evaluate, initial_state, state_leq
+import cepaf_gleam/deployment/orchestrator.{
+  run_deployment_preflight, run_full_deployment_cycle,
 }
-import cepaf_gleam/semantics/sheaf_cohomology.{
-  transition_morphism, cech_coboundary, verify_h1_vanishing, glue_global_section
+import cepaf_gleam/intent/config.{ContainerIntent, IntentConfig}
+import cepaf_gleam/intent/denotational.{
+  Intent, bottom, evaluate, initial_state, state_leq,
 }
 import cepaf_gleam/intent/parser.{default_baseline, normalize_config}
-import cepaf_gleam/intent/config.{ContainerIntent, IntentConfig}
 import cepaf_gleam/intent/validator
+import cepaf_gleam/semantics/sheaf_cohomology.{
+  cech_coboundary, glue_global_section, transition_morphism, verify_h1_vanishing,
+}
 import cepaf_gleam/testing/tui_test_engine.{
-  all_canonical_screens, all_subsystem_views,
-  render_screen_buffer, render_subsystem_view_buffer, render_split_screen_buffer,
-  verify_frame_buffer
+  all_canonical_screens, all_subsystem_views, render_screen_buffer,
+  render_split_screen_buffer, render_subsystem_view_buffer, verify_frame_buffer,
 }
 import cepaf_gleam/testing/webui_test_engine.{
-  all_web_tabs, evaluate_c1_c8, evaluate_checklist_accordion
+  all_web_tabs, evaluate_c1_c8, evaluate_checklist_accordion,
 }
-import cepaf_gleam/deployment/orchestrator.{
-  run_deployment_preflight, run_full_deployment_cycle
-}
+import gleam/list
+import gleeunit/should
 
 pub fn usecase_01_to_07_algebraic_atlas_sheaf_test() {
   // USECASE-01..03: Morphism Identity, Inversion, and Cocycle Law across 10 charts
@@ -31,10 +30,7 @@ pub fn usecase_01_to_07_algebraic_atlas_sheaf_test() {
   let val = 42.0
 
   // 1. Identity law: phi_ii(x) = x
-  let id_ok =
-    list.all(indices, fn(i) {
-      transition_morphism(i, i, val) == val
-    })
+  let id_ok = list.all(indices, fn(i) { transition_morphism(i, i, val) == val })
   should.be_true(id_ok)
 
   // 2. Inversion law: phi_ji(phi_ij(x)) = x
@@ -44,7 +40,10 @@ pub fn usecase_01_to_07_algebraic_atlas_sheaf_test() {
         let forward = transition_morphism(i, j, val)
         let reverse = transition_morphism(j, i, forward)
         let diff = reverse -. val
-        let abs_diff = case diff <. 0.0 { True -> 0.0 -. diff False -> diff }
+        let abs_diff = case diff <. 0.0 {
+          True -> 0.0 -. diff
+          False -> diff
+        }
         abs_diff <. 0.0001
       })
     })
@@ -69,11 +68,15 @@ pub fn usecase_01_to_07_algebraic_atlas_sheaf_test() {
   }
 
   // 5. Sheaf Gluing H^0
-  let sections = list.map(indices, fn(i) { #(i, transition_morphism(0, i, 55.5)) })
+  let sections =
+    list.map(indices, fn(i) { #(i, transition_morphism(0, i, 55.5)) })
   case glue_global_section(sections) {
     Ok(recon) -> {
       let diff = recon -. 55.5
-      let abs_diff = case diff <. 0.0 { True -> 0.0 -. diff False -> diff }
+      let abs_diff = case diff <. 0.0 {
+        True -> 0.0 -. diff
+        False -> diff
+      }
       should.be_true(abs_diff <. 0.0001)
     }
     Error(_) -> should.fail()
@@ -84,15 +87,16 @@ pub fn usecase_08_to_13_denotational_intent_test() {
   let s0 = initial_state()
 
   // 8. Valid intent valuation
-  let valid_i = Intent(
-    authority: "sa-plan",
-    target_drive_serial: "SECONDARY_NVME",
-    criticality: "DAL-C",
-    guardian_approved: False,
-    delta_coord: 0.5,
-    add_containers: ["c3i-vector-cache"],
-    add_topics: ["indrajaal/l5/cog/**"],
-  )
+  let valid_i =
+    Intent(
+      authority: "sa-plan",
+      target_drive_serial: "SECONDARY_NVME",
+      criticality: "DAL-C",
+      guardian_approved: False,
+      delta_coord: 0.5,
+      add_containers: ["c3i-vector-cache"],
+      add_topics: ["indrajaal/l5/cog/**"],
+    )
   let s1 = evaluate(valid_i, s0)
   s1.is_bottom |> should.be_false
   s1.version |> should.equal(2)
@@ -125,19 +129,20 @@ pub fn usecase_14_to_17_poka_yoke_validator_test() {
   let baseline = default_baseline()
   normalize_config(baseline).authority |> should.equal("sa-plan")
 
-  let val_cfg = IntentConfig(
-    version: "1.0.0",
-    name: "baseline-test",
-    authority: "sa-plan",
-    target_drive_serial: "SAMSUNG_SECONDARY",
-    prajna_health_threshold: 0.85,
-    topology_nodes: ["nas-1.tail55d152.ts.net"],
-    containers: [
-      ContainerIntent("app-1", "app:v1", 4100, True),
-      ContainerIntent("broker", "zenoh:latest", 7447, True),
-    ],
-    zenoh_topics: ["indrajaal/l0/const/**", "uos/test/**"],
-  )
+  let val_cfg =
+    IntentConfig(
+      version: "1.0.0",
+      name: "baseline-test",
+      authority: "sa-plan",
+      target_drive_serial: "SAMSUNG_SECONDARY",
+      prajna_health_threshold: 0.85,
+      topology_nodes: ["nas-1.tail55d152.ts.net"],
+      containers: [
+        ContainerIntent("app-1", "app:v1", 4100, True),
+        ContainerIntent("broker", "zenoh:latest", 7447, True),
+      ],
+      zenoh_topics: ["indrajaal/l0/const/**", "uos/test/**"],
+    )
   validator.validate_intent_config(val_cfg) |> should.be_ok()
 
   // Failure 1: bad auth
@@ -149,7 +154,8 @@ pub fn usecase_14_to_17_poka_yoke_validator_test() {
   validator.validate_intent_config(bad_nvme) |> should.be_error()
 
   // Failure 3: priv port
-  let bad_port = IntentConfig(..val_cfg, containers: [ContainerIntent("bad", "bad", 0, True)])
+  let bad_port =
+    IntentConfig(..val_cfg, containers: [ContainerIntent("bad", "bad", 0, True)])
   validator.validate_intent_config(bad_port) |> should.be_error()
 }
 

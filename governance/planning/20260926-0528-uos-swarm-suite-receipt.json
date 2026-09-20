@@ -1,0 +1,15 @@
+{
+  "schema": "uos.verification-receipt.v1",
+  "receipt_id": "uos-swarm-suite-20260926-0528",
+  "observed_at": "2026-09-26T05:25:00Z",
+  "scope": "apps/uos_swarm",
+  "command": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam test",
+  "result": "PASS",
+  "passed": 669,
+  "failed": 0,
+  "exit_code": 0,
+  "log_path": "/tmp/uos-swarm-test-0525.log",
+  "log_sha256": "7a88a17fbe596ae6d0e55b781b3937884382d6777f89b765d58c55ba0036ea13",
+  "authority": "observed_runtime_evidence_only",
+  "admission": "not_admitted"
+}

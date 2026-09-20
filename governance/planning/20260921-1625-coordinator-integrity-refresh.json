@@ -1,0 +1,28 @@
+{
+  "schema": "uos.coordinator-integrity-refresh.v1",
+  "observed_at": "2026-09-21T16:25:00Z",
+  "authority": "read-only verification; no source selection or mutation",
+  "canonical": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "checked": 117,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": false,
+    "replay_ok": false,
+    "failure_summary": "stored digest mismatch sequences 66-117; typed replay failed: session is not registered"
+  },
+  "candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+    "checked": 421,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": true,
+    "replay_ok": true,
+    "authority": "integrity_observation_only"
+  },
+  "decision": "HOLD",
+  "completion_credit": false,
+  "next_gate": "independent source-of-truth adjudication, writer quiescence, and authorized session enrollment"
+}

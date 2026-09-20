@@ -76,9 +76,9 @@ pub fn init_tanpura_drone() -> TanpuraDroneState {
       PaString("Pancham (Pa)", pa_hz, 0.75),
       SaHigh1("Tar Sa 1", sa_high_hz, 0.65),
       SaHigh2("Tar Sa 2", sa_high_hz, 0.65),
-      SaBase("Mandra Sa", base_sa, 0.90),
+      SaBase("Mandra Sa", base_sa, 0.9),
     ],
-    drone_volume: 0.80,
+    drone_volume: 0.8,
   )
 }
 
@@ -189,12 +189,9 @@ pub fn compose_swarm_song(
 ) -> SwarmSong {
   let beats = teentaal_16_beats()
   let normalized_beat = { { beat_number - 1 } % 16 } + 1
-  let current_bol = case
-    list.find(beats, fn(b) { b.beat == normalized_beat })
-  {
+  let current_bol = case list.find(beats, fn(b) { b.beat == normalized_beat }) {
     Ok(b) -> b
-    Error(_) ->
-      raga_cybernetic_synthesis.Bol(1, "Dha", 1, True, False, 1.0)
+    Error(_) -> raga_cybernetic_synthesis.Bol(1, "Dha", 1, True, False, 1.0)
   }
 
   let tanpura = init_tanpura_drone()

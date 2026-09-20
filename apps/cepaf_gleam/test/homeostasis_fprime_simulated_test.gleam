@@ -100,8 +100,7 @@ pub fn deadman_watchdog_fail_closed_cascade_test() {
   s_warn.current |> should.equal("Warning")
 
   // 2. Age exceeds 5s -> Stale
-  let assert Ok(s_stale) =
-    step_simulated(machine, s_warn, "stale_timeout", [])
+  let assert Ok(s_stale) = step_simulated(machine, s_warn, "stale_timeout", [])
   s_stale.current |> should.equal("Stale")
 
   // 3. Age exceeds 10s -> Dead (Fail-Closed telemetry blanking)

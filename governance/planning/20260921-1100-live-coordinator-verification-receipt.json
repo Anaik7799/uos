@@ -1,0 +1,30 @@
+{
+  "receipt_type": "live_coordinator_integrity_observation",
+  "generated_at": "2026-09-21T11:00:00+02:00",
+  "authority": "session_store_cli_verify",
+  "database": "var/coordination/tri-agent/coordinator.sqlite3",
+  "database_sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+  "verification": {
+    "exit_code": 1,
+    "ok": false,
+    "checked": 117,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": false,
+    "replay_ok": false,
+    "nonempty": true,
+    "authority": "integrity_observation_only",
+    "triggers_present": true,
+    "unique_operations": true,
+    "digest_mismatch_sequences": "66-117",
+    "typed_replay_error": "session is not registered"
+  },
+  "safety_interpretation": {
+    "canonical_coordinator_usable": false,
+    "recovery_admitted": false,
+    "task_claim_authority": "not granted",
+    "release_authority": "not granted"
+  },
+  "next_action": "quarantine and independently reconcile the digest-mismatched suffix; do not mutate or activate canonical history",
+  "admitted": false
+}

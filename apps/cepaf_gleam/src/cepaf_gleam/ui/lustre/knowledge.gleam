@@ -59,6 +59,9 @@ pub fn filtered_nodes(model: KnowledgeModel) -> List(KnowledgeNode) {
   })
 }
 
-pub fn node_count_by_level(nodes: List(KnowledgeNode), level: HolonLevel) -> Int {
+pub fn node_count_by_level(
+  nodes: List(KnowledgeNode),
+  level: HolonLevel,
+) -> Int {
   list.filter(nodes, fn(n) { n.level == level }) |> list.length
 }

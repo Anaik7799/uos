@@ -1,10 +1,10 @@
 import cepaf_gleam/ui/tui/sysadmin_cockpit.{
   Bright, ContainersTab, Dark, Dim, DoctorTab, Emergency, EvolutionTab,
-  HomeostasisTab, MessageBoardTab, Normal, OverviewTab, SecurityTab,
-  StorageTab, StreamTab, SupervisorsTab, TasksTab, ZenohTab,
-  default_model, next_container, next_tab, prev_container, prev_tab, render,
-  restart_selected_container, select_tab, start_selected_container,
-  stop_selected_container, toggle_mode, trigger_garbage_collection,
+  HomeostasisTab, MessageBoardTab, Normal, OverviewTab, SecurityTab, StorageTab,
+  StreamTab, SupervisorsTab, TasksTab, ZenohTab, default_model, next_container,
+  next_tab, prev_container, prev_tab, render, restart_selected_container,
+  select_tab, start_selected_container, stop_selected_container, toggle_mode,
+  trigger_garbage_collection,
 }
 import gleam/list
 import gleam/string
@@ -106,7 +106,10 @@ pub fn render_all_9_tabs_test() {
   // Overview Tab
   let out_overview = render(model)
   should.equal(string.contains(out_overview, "SYSTEM OVERVIEW"), True)
-  should.equal(string.contains(out_overview, "nas-1.tail55d152.ts.net:4100"), True)
+  should.equal(
+    string.contains(out_overview, "nas-1.tail55d152.ts.net:4100"),
+    True,
+  )
   should.equal(string.contains(out_overview, "LOCKED (25503L801736)"), True)
 
   // Containers Tab
@@ -117,7 +120,10 @@ pub fn render_all_9_tabs_test() {
   // Storage Tab
   let out_storage = render(select_tab(model, StorageTab))
   should.equal(string.contains(out_storage, "HARDWARE STORAGE"), True)
-  should.equal(string.contains(out_storage, "HARD_DENIED_SYSTEM_OS_SERIAL"), True)
+  should.equal(
+    string.contains(out_storage, "HARD_DENIED_SYSTEM_OS_SERIAL"),
+    True,
+  )
   should.equal(string.contains(out_storage, "25503L801736"), True)
 
   // Zenoh Tab
@@ -151,7 +157,10 @@ pub fn render_all_9_tabs_test() {
 
   // Homeostasis Tab
   let out_homeo = render(select_tab(model, HomeostasisTab))
-  should.equal(string.contains(out_homeo, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"), True)
+  should.equal(
+    string.contains(out_homeo, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"),
+    True,
+  )
   should.equal(string.contains(out_homeo, "HOMEOSTATIC EQUILIBRIUM"), True)
 
   // Message Board Tab

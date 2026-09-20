@@ -1,0 +1,27 @@
+{
+  "receipt_type": "mcp_sa_plan_runtime_routing_probe",
+  "generated_at": "2026-09-21T11:34:00+02:00",
+  "authority": "authorized_stdio_mcp_tools_call",
+  "transport": "stdio_jsonrpc_2.0",
+  "requests": [
+    {"id": 1, "method": "initialize", "result": "success"},
+    {"id": 2, "method": "tools/call", "tool": "sa_plan_status", "result": "success"},
+    {"id": 3, "method": "tools/call", "tool": "sa_plan_list", "result": "success"}
+  ],
+  "observed_runtime_plan": {
+    "id": "infranodus-fractal-closure-20260804-0936",
+    "total": 18,
+    "completed": 0,
+    "ready": 0,
+    "executing": 1
+  },
+  "required_canonical_plan": "uos/system-mcp-features/20260919-1642",
+  "routing_gap": {
+    "canonical_plan_selected": false,
+    "mcp_status_is_authoritative_for_canonical_plan": false,
+    "system_admission": false,
+    "release_authority": "not_granted"
+  },
+  "next_action": "bind MCP Sa-plan tools to the canonical plan explicitly and re-probe status/list through the harness",
+  "admitted": false
+}

@@ -65,9 +65,8 @@ pub fn tab_to_url(tab: WebTab) -> String {
 
 pub fn all_web_tabs() -> List(WebTab) {
   [
-    WebDashboard, WebPlanning, WebImmune, WebKnowledge,
-    WebZenoh, WebCockpit, WebVerification, WebSubstrate,
-    WebMetabolic, WebPodman, WebMcp, WebKms,
+    WebDashboard, WebPlanning, WebImmune, WebKnowledge, WebZenoh, WebCockpit,
+    WebVerification, WebSubstrate, WebMetabolic, WebPodman, WebMcp, WebKms,
     WebTelemetry, WebFederation, WebHealthGrid,
   ]
 }
@@ -90,29 +89,62 @@ pub fn evaluate_c1_c8(tab: WebTab) -> C1C8Score {
 pub fn evaluate_checklist_accordion(tab: WebTab) -> Result(Int, String) {
   let _url = tab_to_url(tab)
   // Evaluates all 18 checks for this tab view
-  let chk_01 = True // TIME
-  let chk_02 = True // TAIL
-  let chk_03 = True // FRACT
-  let chk_04 = True // KM
-  let chk_05 = True // MUDA
-  let chk_06 = True // GRAPH
-  let chk_07 = True // DRIVE
-  let chk_08 = True // C1C8
-  let chk_09 = True // MATH
-  let chk_10 = True // 9MOD
-  let chk_11 = True // REGR
-  let chk_12 = True // GLEAM
-  let chk_13 = True // HERMES
-  let chk_14 = True // ZIGVM
-  let chk_15 = True // MAX
-  let chk_16 = True // OTEL
-  let chk_17 = True // SOV
-  let chk_18 = True // JJ
+  let chk_01 = True
+  // TIME
+  let chk_02 = True
+  // TAIL
+  let chk_03 = True
+  // FRACT
+  let chk_04 = True
+  // KM
+  let chk_05 = True
+  // MUDA
+  let chk_06 = True
+  // GRAPH
+  let chk_07 = True
+  // DRIVE
+  let chk_08 = True
+  // C1C8
+  let chk_09 = True
+  // MATH
+  let chk_10 = True
+  // 9MOD
+  let chk_11 = True
+  // REGR
+  let chk_12 = True
+  // GLEAM
+  let chk_13 = True
+  // HERMES
+  let chk_14 = True
+  // ZIGVM
+  let chk_15 = True
+  // MAX
+  let chk_16 = True
+  // OTEL
+  let chk_17 = True
+  // SOV
+  let chk_18 = True
+  // JJ
 
   case
-    chk_01 && chk_02 && chk_03 && chk_04 && chk_05 && chk_06 && chk_07
-    && chk_08 && chk_09 && chk_10 && chk_11 && chk_12 && chk_13 && chk_14
-    && chk_15 && chk_16 && chk_17 && chk_18
+    chk_01
+    && chk_02
+    && chk_03
+    && chk_04
+    && chk_05
+    && chk_06
+    && chk_07
+    && chk_08
+    && chk_09
+    && chk_10
+    && chk_11
+    && chk_12
+    && chk_13
+    && chk_14
+    && chk_15
+    && chk_16
+    && chk_17
+    && chk_18
   {
     True -> Ok(18)
     False -> Error("Checklist evaluation failed")

@@ -1,0 +1,46 @@
+{
+  "schema": "uos.dashboard-optimization-observation.v1",
+  "observed_at": "2026-09-21T16:10:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authority": "Sa-plan report-only projection; no task or effect mutation",
+  "snapshot": {
+    "path": "/tmp/sa-plan-dashboard-20260921-1610.json",
+    "sha256": "3e38f7291155a78aadf4e08a0846ce470f9378de0b28689cdadabcc354872574",
+    "read_only": true
+  },
+  "baseline": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0,
+    "blocked": 17,
+    "unknown": 0
+  },
+  "execution_order": [
+    "t0-coordination",
+    "t0a-reconcile",
+    "t0b-bindings",
+    "t0c-conformance",
+    "r02-recovery-candidate",
+    "r03-harness-coordinator",
+    "r04-identity-enrollment",
+    "r05-mcp-data",
+    "r06-mcp-control",
+    "r07-hive-swarm",
+    "r08-service-adapters",
+    "r09-end-to-end",
+    "r10-artifact-sync",
+    "r11-release-review",
+    "r12-operational-acceptance"
+  ],
+  "criteria": [
+    "authority",
+    "dependency readiness",
+    "evidence freshness",
+    "risk utility",
+    "throughput fairness",
+    "recovery cost"
+  ],
+  "hold": "Current session is not registered; coordinator source provenance is unresolved; no task claim or control-plane effect is authorized.",
+  "completion_credit": false
+}

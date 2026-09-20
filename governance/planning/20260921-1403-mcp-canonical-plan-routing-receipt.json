@@ -1,0 +1,28 @@
+{
+  "receipt_id": "20260921-1403-mcp-canonical-plan-routing",
+  "observed_at": "2026-09-21T14:03:00+02:00",
+  "authority": "codex-development-observation",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "checks": {
+    "stdio_initialize": "PASS",
+    "tools_list": "PASS",
+    "sa_plan_status_for_registered": "PASS",
+    "canonical_plan_status": "PASS",
+    "canonical_total": 20,
+    "canonical_completed": 3,
+    "canonical_ready": 3,
+    "canonical_executing": 0,
+    "gleam_regression": "PASS: 11988 passed, 0 failures",
+    "feature_mcp_runtime_coverage": "HOLD: declared feature tools are not yet admitted in runtime registry",
+    "coordinator_authority": "HOLD: live coordinator digest/replay verification remains failed"
+  },
+  "evidence": {
+    "runtime_output": "/tmp/mcp-canonical-status-20260921-1403.jsonl",
+    "implementation": [
+      "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+    ]
+  },
+  "admission": "NOT_ADMITTED"
+}

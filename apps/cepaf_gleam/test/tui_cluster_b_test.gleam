@@ -2,12 +2,12 @@
 //// System TUI Cluster B (Autonomous Engines & AI: Screens 9-16) Test Suite
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-004
 
-import gleeunit/should
 import cepaf_gleam/testing/tui_test_engine.{
-  MetabolicScreen, PodmanScreen, McpScreen, KmsScreen,
-  TelemetryScreen, FederationScreen, HealthGridScreen, PrajnaScreen,
-  render_screen_buffer, verify_frame_buffer
+  FederationScreen, HealthGridScreen, KmsScreen, McpScreen, MetabolicScreen,
+  PodmanScreen, PrajnaScreen, TelemetryScreen, render_screen_buffer,
+  verify_frame_buffer,
 }
+import gleeunit/should
 
 pub fn tui_cluster_b_metabolic_test() {
   let fb = render_screen_buffer(MetabolicScreen)

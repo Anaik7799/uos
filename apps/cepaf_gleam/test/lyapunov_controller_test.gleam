@@ -3,8 +3,8 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/lyapunov_controller.{
-  EmergencyHalt, NominalThroughput, ThrottledBackpressure,
-  compute_batch_size, init_controller, update_controller,
+  EmergencyHalt, NominalThroughput, ThrottledBackpressure, compute_batch_size,
+  init_controller, update_controller,
 }
 import gleeunit
 import gleeunit/should
@@ -26,7 +26,7 @@ pub fn controller_init_nominal_test() {
 pub fn controller_stable_trajectory_test() {
   let ctrl = init_controller(2, 32)
   let updated = update_controller(ctrl, -3.5)
-  
+
   updated.current_exponent |> should.equal(-3.5)
   updated.concurrency_limit |> should.equal(32)
   updated.publish_interval_ms |> should.equal(50)
@@ -37,7 +37,7 @@ pub fn controller_stable_trajectory_test() {
 pub fn controller_marginal_damping_test() {
   let ctrl = init_controller(2, 20)
   let updated = update_controller(ctrl, -0.6)
-  
+
   // lambda = -0.6 -> severity = 0.6 / 1.5 = 0.4 -> limit = round(20 * 0.4) = 8
   updated.current_exponent |> should.equal(-0.6)
   updated.concurrency_limit |> should.equal(8)
@@ -53,7 +53,7 @@ pub fn controller_marginal_damping_test() {
 pub fn controller_unstable_emergency_halt_test() {
   let ctrl = init_controller(1, 16)
   let updated = update_controller(ctrl, 0.45)
-  
+
   updated.concurrency_limit |> should.equal(1)
   updated.publish_interval_ms |> should.equal(1000)
   case updated.state {

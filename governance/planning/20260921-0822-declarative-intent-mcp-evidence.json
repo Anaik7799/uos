@@ -1,0 +1,27 @@
+{
+  "schema": "uos.declarative-intent-mcp-evidence.v1",
+  "recorded_at_utc": "2026-09-21T08:22:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t2-contracts",
+  "workflow": "t2/declarative-intent-development",
+  "scope": "development-only; dependency readiness not promoted",
+  "command": "gleam check && gleam test",
+  "result": {
+    "passed": 11987,
+    "failed": 0,
+    "log_sha256": "5e912a4d340e262d9f0788ff4337aff23cde89c80e93fddebd546dd6d48818be"
+  },
+  "interface": {
+    "tool": "harness_system_feature_intent",
+    "intents": ["catalog_read", "observations_read"],
+    "refusal": "feature_intent_unknown_or_denied",
+    "algebraic_laws": ["identity", "deny-dominance", "no-authority-amplification", "replay-idempotence", "conflicting-replay-refusal"]
+  },
+  "authority": {
+    "mcp_runtime_available": false,
+    "effect_authority": false,
+    "system_admission": false,
+    "production_deployment": false
+  },
+  "completion_semantics": "development receipt only; t2 remains dependency-held until t1 completion and independent contract/evidence review"
+}

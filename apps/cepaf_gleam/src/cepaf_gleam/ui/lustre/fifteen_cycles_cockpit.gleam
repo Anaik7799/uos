@@ -29,8 +29,7 @@ import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
-pub const tailscale_cycles_url: String =
-  "http://nas-1.tail55d152.ts.net:8100/cycles"
+pub const tailscale_cycles_url: String = "http://nas-1.tail55d152.ts.net:8100/cycles"
 
 pub type CyclesCockpitModel {
   CyclesCockpitModel(
@@ -61,7 +60,9 @@ pub fn render_cockpit(model: CyclesCockpitModel) -> Element(msg) {
 fn render_header() -> Element(msg) {
   html.header([attribute.class("cockpit-header")], [
     html.h1([], [
-      html.text("UOS 15 Continuous Evolutionary Cycles Cockpit (EV-111 .. EV-125)"),
+      html.text(
+        "UOS 15 Continuous Evolutionary Cycles Cockpit (EV-111 .. EV-125)",
+      ),
     ]),
     html.div([attribute.class("header-meta")], [
       html.span([], [
@@ -85,24 +86,56 @@ fn render_checklist_accordion() -> Element(msg) {
       html.text("Comprehensive Verification Checklist (18/18 Checks PASS)"),
     ]),
     html.ul([], [
-      html.li([], [html.text("CHK-01-TIME: Mandatory YYYYMMDD-HHSS- prefix active")]),
-      html.li([], [html.text("CHK-02-TAIL: Tailscale FQDN clickable links active")]),
+      html.li([], [
+        html.text("CHK-01-TIME: Mandatory YYYYMMDD-HHSS- prefix active"),
+      ]),
+      html.li([], [
+        html.text("CHK-02-TAIL: Tailscale FQDN clickable links active"),
+      ]),
       html.li([], [html.text("CHK-03-FRACT: Fractal L0-L9 tags attached")]),
-      html.li([], [html.text("CHK-04-KM: Transclusion links [[wiki:...]] & [[zk:...]] validated")]),
-      html.li([], [html.text("CHK-05-MUDA: 0 Bevy, 0 Graphite in source and deps")]),
-      html.li([], [html.text("CHK-06-GRAPH: Pure Erlang graphene_nif.erl vector math")]),
-      html.li([], [html.text("CHK-07-DRIVE: NVMe 25503L801736 interlocked against wiping")]),
-      html.li([], [html.text("CHK-08-C1C8: Gold-Standard categories C1-C8 covered")]),
-      html.li([], [html.text("CHK-09-MATH: 4 Math Gates satisfied (H >= 2.5b, CCM >= 90%)")]),
+      html.li([], [
+        html.text(
+          "CHK-04-KM: Transclusion links [[wiki:...]] & [[zk:...]] validated",
+        ),
+      ]),
+      html.li([], [
+        html.text("CHK-05-MUDA: 0 Bevy, 0 Graphite in source and deps"),
+      ]),
+      html.li([], [
+        html.text("CHK-06-GRAPH: Pure Erlang graphene_nif.erl vector math"),
+      ]),
+      html.li([], [
+        html.text("CHK-07-DRIVE: NVMe 25503L801736 interlocked against wiping"),
+      ]),
+      html.li([], [
+        html.text("CHK-08-C1C8: Gold-Standard categories C1-C8 covered"),
+      ]),
+      html.li([], [
+        html.text("CHK-09-MATH: 4 Math Gates satisfied (H >= 2.5b, CCM >= 90%)"),
+      ]),
       html.li([], [html.text("CHK-10-9MOD: 9-Modality test protocol passing")]),
       html.li([], [html.text("CHK-11-REGR: 381 UI regression tests green")]),
-      html.li([], [html.text("CHK-12-GLEAM: Gleam/OTP 29 root supervisor active")]),
-      html.li([], [html.text("CHK-13-HERMES: Hermes OCaml & Gospel contracts verified")]),
-      html.li([], [html.text("CHK-14-ZIGVM: ZigVM descriptor-relative VFS active")]),
-      html.li([], [html.text("CHK-15-MAX: MAX/Mojo isolated daemon operational")]),
-      html.li([], [html.text("CHK-16-OTEL: Universal C3I Telemetry with microsecond Z timestamps")]),
+      html.li([], [
+        html.text("CHK-12-GLEAM: Gleam/OTP 29 root supervisor active"),
+      ]),
+      html.li([], [
+        html.text("CHK-13-HERMES: Hermes OCaml & Gospel contracts verified"),
+      ]),
+      html.li([], [
+        html.text("CHK-14-ZIGVM: ZigVM descriptor-relative VFS active"),
+      ]),
+      html.li([], [
+        html.text("CHK-15-MAX: MAX/Mojo isolated daemon operational"),
+      ]),
+      html.li([], [
+        html.text(
+          "CHK-16-OTEL: Universal C3I Telemetry with microsecond Z timestamps",
+        ),
+      ]),
       html.li([], [html.text("CHK-17-SOV: Tri-Sovereign consensus ratified")]),
-      html.li([], [html.text("CHK-18-JJ: Standalone Jujutsu repository operational")]),
+      html.li([], [
+        html.text("CHK-18-JJ: Standalone Jujutsu repository operational"),
+      ]),
     ]),
   ])
 }
@@ -110,7 +143,9 @@ fn render_checklist_accordion() -> Element(msg) {
 fn render_generation_tracker(gen: Int) -> Element(msg) {
   html.section([attribute.class("generation-tracker")], [
     html.h2([], [
-      html.text("Autonomous Evolutionary Generation: " <> int.to_string(gen) <> " / 15"),
+      html.text(
+        "Autonomous Evolutionary Generation: " <> int.to_string(gen) <> " / 15",
+      ),
     ]),
     html.div([attribute.class("progress-bar-container")], [
       html.div(
@@ -156,9 +191,13 @@ fn render_cycles_table(cycles: List(SystemEvolutionCycle)) -> Element(msg) {
             html.td([], [html.strong([], [html.text(c.ev_tag)])]),
             html.td([], [html.text(c.title)]),
             html.td([], [html.code([], [html.text(aspect_str)])]),
-            html.td([], [html.text("L" <> int.to_string(c.target_fractal_layer))]),
+            html.td([], [
+              html.text("L" <> int.to_string(c.target_fractal_layer)),
+            ]),
             html.td([], [html.text(sovereign_to_string(c.sovereign_sponsor))]),
-            html.td([], [html.text("+" <> float.to_string(c.expected_gain_pct) <> "%")]),
+            html.td([], [
+              html.text("+" <> float.to_string(c.expected_gain_pct) <> "%"),
+            ]),
             html.td([], [
               html.span([attribute.class("badge-ratified")], [
                 html.text("✅ Ratified"),

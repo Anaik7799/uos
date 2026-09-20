@@ -1,0 +1,21 @@
+{
+  "schema": "uos.risk-preflight-hold-receipt.v1",
+  "timestamp": "20260921-1352",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r02-recovery-candidate",
+  "command": "bash tools/risk-priority-check --preflight governance/planning/20260921-0245-recovery-candidate-risk.json r02-recovery-candidate",
+  "result": "HOLD",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "assessment_sha256": "3b7c2b2c61b91e3094e182d7cb8184f6d3e9ddaecada83223d1db57eed46125f",
+  "findings": [
+    {"rule": "RP-EVIDENCE", "detail": "portfolio source digests for apps/uos_swarm/src/session_store_cli.gleam and apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam are stale"},
+    {"rule": "RP-SA-PLAN", "detail": "portfolio task set/order differs from canonical Sa-plan"},
+    {"rule": "RP-SELECTION", "detail": "r02 is not the first eligible candidate under the stale portfolio"}
+  ],
+  "interpretation": {
+    "recovery_stage": "observed separately in isolated candidate",
+    "task_completion_credit": false,
+    "next_action": "refresh risk portfolio against current source bytes and canonical 21-task plan before any further claim"
+  }
+}

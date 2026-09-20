@@ -1,0 +1,38 @@
+{
+  "schema": "uos.execution-optimization-receipt.v1",
+  "observed_at": "2026-09-21T15:16:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "workflow": "uos/system-mcp-features/20260919-1642/optimization-20260921-1715",
+  "workflow_state": "completed",
+  "authority": "sa-plan",
+  "artifact": "docs/plans/20260921-1715-execution-optimization-plan.md",
+  "artifact_sha256": "5f7f4614218e2a751e9603e7f2e47902fc999d523f0aca691130372b4e340ea8",
+  "criteria": [
+    "authority and safety before score",
+    "dependency readiness before dispatch",
+    "candidate-bound runtime and formal evidence freshness",
+    "criticality × STPA × FMEA × dependency × impact",
+    "longest ready frontier with fairness and contention control",
+    "shared-blocker removal and recovery cost"
+  ],
+  "dashboard_baseline": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0,
+    "blocked": 17,
+    "unknown": 0,
+    "admission": "not_admitted"
+  },
+  "open_gates": [
+    "canonical source provenance adjudication",
+    "independent authority selection",
+    "writer quiescence and cutover fence",
+    "fresh Claude/Codex/AGY enrollment",
+    "MCP control-plane acceptance",
+    "hive/swarm end-to-end acceptance",
+    "independent release review",
+    "operational acceptance"
+  ],
+  "completion_rule": "blocked, unrun, stale, quarantined, and unadmitted work is not complete"
+}

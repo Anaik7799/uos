@@ -29,7 +29,9 @@ pub fn pid_equilibrium_nominal_test() {
   actuation.recommended_concurrency |> should.equal(16)
   actuation.recommended_publish_interval_ms |> should.equal(50)
   actuation.recommended_batch_size |> should.equal(8)
-  should.be_true(actuation.control_output >=. 0.99 && actuation.control_output <=. 1.01)
+  should.be_true(
+    actuation.control_output >=. 0.99 && actuation.control_output <=. 1.01,
+  )
   updated.prev_error |> should.equal(0.0)
 }
 

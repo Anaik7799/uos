@@ -25,6 +25,7 @@ import gleam/int
 import gleam/list
 
 const tailscale_base_url = "http://nas-1.tail55d152.ts.net:4100"
+
 const peer_base_url = "http://vm-1.tail55d152.ts.net:8088"
 
 /// Sheaf Navigator visual model.

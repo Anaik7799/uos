@@ -1,0 +1,31 @@
+{
+  "schema": "uos.mcp-progress-regression-receipt.v1",
+  "timestamp": "20260921-1347",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "candidate": {
+    "files": [
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+    ],
+    "build": "PASS",
+    "format_check": "PASS"
+  },
+  "tests": {
+    "command": "erl -noshell -pa build/dev/erlang/*/ebin -eval 'eunit:test([mcp_catalog_truth_test,mcp_runtime_truth_test,system_feature_api_test,system_feature_interfaces_test],[verbose]), halt().'",
+    "passed": 33,
+    "failed": 0,
+    "status": "PASS"
+  },
+  "result": {
+    "harness_execution_progress": "advertised and dispatched by primary MCP server",
+    "coordinator_gate": "journal sequence or digest mismatch; replay refused",
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false,
+    "task_completion_credit": false
+  },
+  "limits": [
+    "Tests prove the adapter contract and fail-closed behavior, not coordinator repair.",
+    "The MCP capability remains unavailable for usable progress until journal integrity is repaired.",
+    "No release or production authorization is established."
+  ]
+}

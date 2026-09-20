@@ -17,7 +17,9 @@
 //// </c3i-module>
 //// =============================================================================
 
-import cepaf_gleam/knowledge/raga_cybernetic_synthesis.{type Shruti, all_22_shrutis}
+import cepaf_gleam/knowledge/raga_cybernetic_synthesis.{
+  type Shruti, all_22_shrutis,
+}
 import cepaf_gleam/ui/state.{
   type OodaPhase, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
 }
@@ -70,7 +72,7 @@ pub fn init_copilot() -> OodaCopilotState {
     anomalies: [],
     remediated_count: 0,
     is_andon_active: False,
-    timestamp_us: 1788808840000000,
+    timestamp_us: 1_788_808_840_000_000,
   )
 }
 
@@ -91,7 +93,8 @@ pub fn advance_ooda_phase(
       }
 
       let shruti = select_phase_shruti(next_phase)
-      let consonance = compute_shruti_consonance(shruti, state.lyapunov_exponent)
+      let consonance =
+        compute_shruti_consonance(shruti, state.lyapunov_exponent)
 
       OodaCopilotState(
         ..state,
@@ -142,10 +145,11 @@ pub fn compute_shruti_consonance(shruti: Shruti, lyapunov: Float) -> Float {
   let total = base_harmony +. lyap_factor
   case total >. 1.0 {
     True -> 1.0
-    False -> case total <. 0.0 {
-      True -> 0.0
-      False -> total
-    }
+    False ->
+      case total <. 0.0 {
+        True -> 0.0
+        False -> total
+      }
   }
 }
 

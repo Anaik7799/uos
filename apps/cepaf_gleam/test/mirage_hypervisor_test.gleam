@@ -39,13 +39,19 @@ pub fn validate_probe_report_positive_test() {
 
 pub fn validate_probe_report_stale_timestamp_negative_test() {
   let probe =
-    hyp.HypervisorProbeReport(..hyp.default_verified_probe(), timestamp_utc: "2000-01-01T00:00:00Z")
+    hyp.HypervisorProbeReport(
+      ..hyp.default_verified_probe(),
+      timestamp_utc: "2000-01-01T00:00:00Z",
+    )
   should.be_error(hyp.validate_probe_report(probe))
 }
 
 pub fn validate_probe_report_wrong_host_negative_test() {
   let probe =
-    hyp.HypervisorProbeReport(..hyp.default_verified_probe(), host: "untrusted-external-host")
+    hyp.HypervisorProbeReport(
+      ..hyp.default_verified_probe(),
+      host: "untrusted-external-host",
+    )
   should.be_error(hyp.validate_probe_report(probe))
 }
 
@@ -53,7 +59,10 @@ pub fn validate_probe_report_kvm_false_negative_test() {
   let probe =
     hyp.HypervisorProbeReport(
       ..hyp.default_verified_probe(),
-      kvm: hyp.KvmStatus(..hyp.default_verified_probe().kvm, dev_kvm_present: False),
+      kvm: hyp.KvmStatus(
+        ..hyp.default_verified_probe().kvm,
+        dev_kvm_present: False,
+      ),
     )
   should.be_error(hyp.validate_probe_report(probe))
 }
@@ -62,7 +71,10 @@ pub fn validate_probe_report_failed_tender_negative_test() {
   let probe =
     hyp.HypervisorProbeReport(
       ..hyp.default_verified_probe(),
-      solo5: hyp.Solo5Status(..hyp.default_verified_probe().solo5, hvt_execution: None),
+      solo5: hyp.Solo5Status(
+        ..hyp.default_verified_probe().solo5,
+        hvt_execution: None,
+      ),
     )
   should.be_error(hyp.validate_probe_report(probe))
 }
@@ -73,4 +85,3 @@ pub fn unverified_probe_invariants_test() {
   should.equal(unverified.overall_readiness, "unverified")
   should.be_error(hyp.validate_probe_report(unverified))
 }
-

@@ -50,13 +50,7 @@ pub fn canonical_l2_capabilities_test() {
 pub fn evidence_boundary_evaluation_test() {
   // Discovery only: missing runtime observation
   let v1 =
-    evaluate_evidence_boundary(
-      True,
-      False,
-      False,
-      "sha256-abc",
-      "sha256-abc",
-    )
+    evaluate_evidence_boundary(True, False, False, "sha256-abc", "sha256-abc")
   case v1 {
     DiscoveryOnlyEvidence(_) -> True
     _ -> False
@@ -65,13 +59,7 @@ pub fn evidence_boundary_evaluation_test() {
 
   // Discovery only: missing formal specification (Two-Key rule)
   let v2 =
-    evaluate_evidence_boundary(
-      True,
-      True,
-      False,
-      "sha256-abc",
-      "sha256-abc",
-    )
+    evaluate_evidence_boundary(True, True, False, "sha256-abc", "sha256-abc")
   case v2 {
     DiscoveryOnlyEvidence(_) -> True
     _ -> False

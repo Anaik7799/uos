@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "receipt_type": "dashboard_census_refresh",
+  "generated_at": "2026-09-21T15:24:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "snapshot": {
+    "path": "governance/planning/20260921-1523-sa-plan-dashboard-snapshot.json",
+    "sha256": "296fe4b4a2c89eb5f70494037bf100e33296958f85cb918713193ab91924573b",
+    "read_only": true
+  },
+  "current_counts": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0,
+    "blocked": 17,
+    "unknown": 0
+  },
+  "new_evidence": [
+    "governance/planning/20260921-1517-mcp-census-repair-test-receipt.json",
+    "governance/planning/20260921-1522-coordinator-prefix-comparison.json"
+  ],
+  "decision": "HOLD",
+  "transition": "No Sa-plan task state changed; no completion or admission claimed.",
+  "optimization_rule": "Prefer candidate-bound, read-only evidence repairs; do not select effectful work while coordinator authority is unresolved."
+}

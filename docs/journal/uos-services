@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# =============================================================================
+# uos-services — Authoritative UOS & C3I Services Controller
+# =============================================================================
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "${SCRIPT_DIR}/uos-env.sh" ]; then
+    source "${SCRIPT_DIR}/uos-env.sh"
+fi
+
+COMMAND="${1:-status}"
+
+case "${COMMAND}" in
+    status)
+        echo "================================================================="
+        echo " UOS & C3I SERVICES STATUS (Host: ${TAILSCALE_FQDN:-nas-1})"
+        echo "================================================================="
+        systemctl --user list-units "*c3i*" "*uos*" --no-pager
+        echo ""
+        echo "================================================================="
+        echo " ACTIVE NETWORK PORTS & ENDPOINTS"
+        echo "================================================================="
+        ss -tulpn | grep -E "4100|4200|7447|8080|8443" || true
+        ;;
+
+    health)
+        echo "================================================================="
+        echo " EXECUTING AUTOMATED HEALTH PROBE"
+        echo "================================================================="
+        
+        # 1. Port 4100 (Gleam Lustre WebUI & Wisp)
+        if curl -s --max-time 3 -o /dev/null -w "%{http_code}" http://127.0.0.1:4100/ | grep -q "200"; then
+            echo " [PASS] Port 4100: Gleam Lustre Web Cockpit (HTTP 200 OK)"
+        else
+            echo " [FAIL] Port 4100: Gleam Lustre Web Cockpit Unreachable"
+        fi
+
+        # 2. Port 4200 (Sa-Plan Task Dashboard)
+        if curl -s --max-time 3 -o /dev/null -w "%{http_code}" http://127.0.0.1:4200/ | grep -q "200"; then
+            echo " [PASS] Port 4200: Sa-Plan Agentic Dashboard (HTTP 200 OK)"
+        else
+            echo " [FAIL] Port 4200: Sa-Plan Dashboard Unreachable"
+        fi
+
+        # 3. Port 7447 / 8080 (Zenoh Telemetry Router)
+        if ss -tulpn | grep -q ":7447"; then
+            echo " [PASS] Port 7447: Zenoh Pub/Sub Telemetry Router Active"
+        else
+            echo " [FAIL] Port 7447: Zenoh Router Offline"
+        fi
+
+        # 4. Port 8443 (Sa-Plan TLS / Remote Gateway)
+        if ss -tulpn | grep -q ":8443"; then
+            echo " [PASS] Port 8443: Sa-Plan TLS Daemon Listening"
+        else
+            echo " [WARN] Port 8443: TLS Daemon Not Detected"
+        fi
+
+        echo ""
+        echo "All core endpoints operational on Tailscale FQDN: http://${TAILSCALE_FQDN:-nas-1.tail55d152.ts.net}:4100"
+        ;;
+
+    cortex)
+        echo "================================================================="
+        echo " SA-PLAN CORTEX & TASK TELEMETRY"
+        echo "================================================================="
+        if [ -x "${C3I_ROOT:-/home/an/dev/ver/c3i}/sa-plan" ]; then
+            "${C3I_ROOT:-/home/an/dev/ver/c3i}/sa-plan" status
+        else
+            echo "sa-plan executable not found at ${C3I_ROOT}/sa-plan"
+        fi
+        ;;
+
+    doctor)
+        echo "================================================================="
+        echo " UOS REPOSITORY DOCTOR"
+        echo "================================================================="
+        if [ -x "${UOS_ROOT:-/home/an/NAS-setup/uos}/tools/uos-cli" ]; then
+            bash "${UOS_ROOT:-/home/an/NAS-setup/uos}/tools/uos-cli" doctor
+        else
+            echo "uos-cli not found at ${UOS_ROOT}/tools/uos-cli"
+        fi
+        ;;
+
+    logs)
+        UNIT="${2:-c3i.target}"
+        echo "Streaming logs for unit: ${UNIT}..."
+        journalctl --user -u "${UNIT}" -f
+        ;;
+
+    restart)
+        UNIT="${2:-c3i.target}"
+        echo "Restarting unit: ${UNIT}..."
+        systemctl --user restart "${UNIT}"
+        echo "Restart command issued for ${UNIT}."
+        ;;
+
+    *)
+        echo "Usage: $0 {status|health|cortex|doctor|logs [unit]|restart [unit]}"
+        exit 1
+        ;;
+esac

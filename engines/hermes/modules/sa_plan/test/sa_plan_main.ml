@@ -92,7 +92,7 @@ let contextual_help = function
   | "workflow" | "temporal" -> print_endline "workflow|temporal start ID NAME KIND INPUT | activity WORKFLOW ACTIVITY NAME KEY RESULT | complete WORKFLOW RESULT | fail WORKFLOW ERROR | history WORKFLOW"
   | "work" -> print_endline "work path KIND NAME | materialize KIND ID NAME TITLE CONTENT_FILE"
   | "docs" -> print_endline "docs validate MARKDOWN | render MARKDOWN HTML | publish HTML DASHBOARD_PATH | verify URL"
-  | "ui" -> print_endline "ui tui | jobs | workflows | bonsai | snapshot PATH | parity PATH (read-only projections)"
+  | "ui" -> print_endline "ui tui | jobs | workflows | bonsai | snapshot PATH [PLAN_ID] | parity PATH (read-only projections)"
   | _ -> usage ()
 
 let emit format fields =
@@ -164,8 +164,8 @@ let print_tree () =
         (if List.is_empty node.dependencies then "└─" else "├─")
         (program_name node) node.title)
 
-let observe store =
-  or_fail (Observation.observe store ~plan_id:program_plan_id ~now_ns:(now_ns ()))
+let observe ?(plan_id = program_plan_id) store =
+  or_fail (Observation.observe store ~plan_id ~now_ns:(now_ns ()))
 
 let print_observation format snapshot =
   match format with
@@ -436,9 +436,10 @@ let dispatch store format argv =
   | "--bonsai" | "--bonsai-jobs" | "--bonsai-workflows" ->
       observe store |> print_observation format
   | "--snapshot" ->
-      let snapshot = observe store in
+      let plan_id = if Array.length argv > 3 then argv.(3) else program_plan_id in
+      let snapshot = observe ~plan_id store in
       or_fail (Observation.publish ~path:argv.(2) snapshot);
-      emit format [ "snapshot", argv.(2); "read_only", "true" ]
+      emit format [ "snapshot", argv.(2); "plan", plan_id; "read_only", "true" ]
   | "--c3i-parity" ->
       let path = Stdlib.Filename.temp_file "zigvm-sa-plan-c3i-" ".sqlite3" in
       Exn.protect

@@ -78,14 +78,9 @@ pub fn burst_batch_stealing_direct_test() {
 
 pub fn burst_100_tasks_test() {
   let tasks = generate_tasks(100, 50_000)
-  let total_load =
-    list.fold(tasks, 0, fn(acc, t) { acc + t.estimated_cost_ns })
+  let total_load = list.fold(tasks, 0, fn(acc, t) { acc + t.estimated_cost_ns })
   let q1 =
-    WorkerQueue(
-      worker_id: "worker-1",
-      tasks: tasks,
-      total_load_ns: total_load,
-    )
+    WorkerQueue(worker_id: "worker-1", tasks: tasks, total_load_ns: total_load)
   let q2 = WorkerQueue(worker_id: "worker-2", tasks: [], total_load_ns: 0)
   let q3 = WorkerQueue(worker_id: "worker-3", tasks: [], total_load_ns: 0)
   let q4 = WorkerQueue(worker_id: "worker-4", tasks: [], total_load_ns: 0)
@@ -101,21 +96,16 @@ pub fn burst_100_tasks_test() {
   { report.final_skew_ns > 0 } |> should.be_true
   { report.final_skew_ns < report.initial_skew_ns } |> should.be_true
   // Skew contraction should exceed 40%
-  { report.contraction_ratio >. 0.40 } |> should.be_true
+  { report.contraction_ratio >. 0.4 } |> should.be_true
 }
 
 pub fn burst_500_tasks_test() {
   let tasks = generate_tasks(500, 20_000)
-  let total_load =
-    list.fold(tasks, 0, fn(acc, t) { acc + t.estimated_cost_ns })
+  let total_load = list.fold(tasks, 0, fn(acc, t) { acc + t.estimated_cost_ns })
 
   // 1 overloaded worker, 7 idle workers
   let q1 =
-    WorkerQueue(
-      worker_id: "worker-1",
-      tasks: tasks,
-      total_load_ns: total_load,
-    )
+    WorkerQueue(worker_id: "worker-1", tasks: tasks, total_load_ns: total_load)
   let idle_workers =
     int_range(2, 8)
     |> list.map(fn(i) {
@@ -133,21 +123,16 @@ pub fn burst_500_tasks_test() {
   { report.total_thefts > 0 } |> should.be_true
   { report.final_skew_ns < report.initial_skew_ns } |> should.be_true
   // Skew contraction under high burst should exceed 50%
-  { report.contraction_ratio >. 0.50 } |> should.be_true
+  { report.contraction_ratio >. 0.5 } |> should.be_true
 }
 
 pub fn burst_1000_tasks_test() {
   let tasks = generate_tasks(1000, 10_000)
-  let total_load =
-    list.fold(tasks, 0, fn(acc, t) { acc + t.estimated_cost_ns })
+  let total_load = list.fold(tasks, 0, fn(acc, t) { acc + t.estimated_cost_ns })
 
   // 1 heavily overloaded worker, 15 idle workers (total 16 workers)
   let q1 =
-    WorkerQueue(
-      worker_id: "worker-1",
-      tasks: tasks,
-      total_load_ns: total_load,
-    )
+    WorkerQueue(worker_id: "worker-1", tasks: tasks, total_load_ns: total_load)
   let idle_workers =
     int_range(2, 16)
     |> list.map(fn(i) {
@@ -165,12 +150,10 @@ pub fn burst_1000_tasks_test() {
   { report.total_thefts > 0 } |> should.be_true
   { report.final_skew_ns < report.initial_skew_ns } |> should.be_true
   // Skew contraction under massive burst should exceed 60%
-  { report.contraction_ratio >. 0.60 } |> should.be_true
+  { report.contraction_ratio >. 0.6 } |> should.be_true
 }
 
 pub fn pareto_condition_invariance_test() {
   let tasks = generate_tasks(50, 100_000)
-  list.each(tasks, fn(t) {
-    is_pareto_favorable(t) |> should.be_true
-  })
+  list.each(tasks, fn(t) { is_pareto_favorable(t) |> should.be_true })
 }

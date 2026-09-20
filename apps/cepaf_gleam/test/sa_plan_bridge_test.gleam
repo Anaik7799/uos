@@ -50,16 +50,30 @@ pub fn actor_ecosystem_catalog_test() {
 }
 
 pub fn planning_task_claim_and_completion_test() {
-  let plan = sa_plan_bridge.create_plan("plan-01", "uos/plan", "UOS Sa-Plan Execution")
+  let plan =
+    sa_plan_bridge.create_plan("plan-01", "uos/plan", "UOS Sa-Plan Execution")
   plan.id |> should.equal("plan-01")
   plan.name |> should.equal("uos/plan")
 
-  let task = sa_plan_bridge.create_task("plan-01", "task-01", "uos/task", "Execute Task", [])
+  let task =
+    sa_plan_bridge.create_task(
+      "plan-01",
+      "task-01",
+      "uos/task",
+      "Execute Task",
+      [],
+    )
   task.state |> should.equal(sa_plan_bridge.Available)
   task.attempt |> should.equal(0)
 
   // Claim task
-  let claim_res = sa_plan_bridge.claim_task(task, "worker-alpha", 60_000_000_000, 1_000_000_000)
+  let claim_res =
+    sa_plan_bridge.claim_task(
+      task,
+      "worker-alpha",
+      60_000_000_000,
+      1_000_000_000,
+    )
   claim_res |> should.be_ok()
   let claimed_task = case claim_res {
     Ok(t) -> t
@@ -70,7 +84,13 @@ pub fn planning_task_claim_and_completion_test() {
   claimed_task.attempt |> should.equal(1)
 
   // Complete task
-  let comp_res = sa_plan_bridge.complete_task(claimed_task, "worker-alpha", "success: green", 1_005_000_000)
+  let comp_res =
+    sa_plan_bridge.complete_task(
+      claimed_task,
+      "worker-alpha",
+      "success: green",
+      1_005_000_000,
+    )
   comp_res |> should.be_ok()
   let completed_task = case comp_res {
     Ok(t) -> t
@@ -81,7 +101,13 @@ pub fn planning_task_claim_and_completion_test() {
 }
 
 pub fn oban_job_queue_and_lock_test() {
-  let job = sa_plan_bridge.enqueue_oban_job(101, "epoch_8", "PlanningWorker", "task_payload_101")
+  let job =
+    sa_plan_bridge.enqueue_oban_job(
+      101,
+      "epoch_8",
+      "PlanningWorker",
+      "task_payload_101",
+    )
   job.id |> should.equal(101)
   job.state |> should.equal(sa_plan_bridge.JobAvailable)
   job.attempt |> should.equal(0)
@@ -104,7 +130,12 @@ pub fn temporal_durable_execution_and_replay_test() {
 
   // Activity 1: DB setup
   let #(wf_step1, res1) =
-    sa_plan_bridge.execute_temporal_activity(wf, "act_db_init", fn() { "DB_INITIALIZED" }, 1_000_000)
+    sa_plan_bridge.execute_temporal_activity(
+      wf,
+      "act_db_init",
+      fn() { "DB_INITIALIZED" },
+      1_000_000,
+    )
   res1 |> should.equal("DB_INITIALIZED")
   list.length(wf_step1.history) |> should.equal(1)
 
@@ -120,7 +151,8 @@ pub fn temporal_durable_execution_and_replay_test() {
   list.length(wf_step2.history) |> should.equal(1)
 
   // Complete workflow
-  let final_wf = sa_plan_bridge.complete_temporal_workflow(wf_step2, "SUCCESS_COMPLETED")
+  let final_wf =
+    sa_plan_bridge.complete_temporal_workflow(wf_step2, "SUCCESS_COMPLETED")
   final_wf.state |> should.equal(sa_plan_bridge.WfCompleted)
   final_wf.result |> should.equal(Some("SUCCESS_COMPLETED"))
 }
@@ -146,7 +178,11 @@ pub fn fractal_jidoka_enforcement_test() {
 
   // Unauthorized non-sa-plan execution triggers Jidoka Andon Halt
   let halt_res =
-    sa_plan_bridge.enforce_fractal_jidoka("RogueAgent", "unledgered_task", False)
+    sa_plan_bridge.enforce_fractal_jidoka(
+      "RogueAgent",
+      "unledgered_task",
+      False,
+    )
 
   case halt_res {
     Ok(_) -> panic as "Should have triggered Jidoka Andon Halt"
@@ -185,11 +221,7 @@ pub fn tps_poka_yoke_validation_test() {
   |> should.equal(Ok(Nil))
 
   // Invalid Oban job (empty worker) fails Poka-Yoke
-  sa_plan_bridge.poka_yoke_validate_job(
-    "default",
-    "",
-    "{\"action\": \"run\"}",
-  )
+  sa_plan_bridge.poka_yoke_validate_job("default", "", "{\"action\": \"run\"}")
   |> should.be_error
 
   // Valid Temporal workflow passes Poka-Yoke
@@ -231,5 +263,3 @@ pub fn zenoh_jidoka_and_topic_test() {
   should.be_true(string.contains(event, "-32002"))
   should.be_true(string.contains(event, "SC-JIDOKA-001"))
 }
-
-

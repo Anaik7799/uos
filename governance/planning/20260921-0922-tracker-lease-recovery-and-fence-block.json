@@ -1,0 +1,35 @@
+{
+  "schema": "uos.sa-plan-tracker-recovery-evidence.v1",
+  "timestamp_utc": "2026-09-21T09:22:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "observed": {
+    "prior_state": "executing",
+    "prior_worker": "codex-01a0ba74-feature-tracker",
+    "prior_attempt": 2,
+    "prior_lease_expired": true,
+    "recovery_attempt": 4,
+    "recovery_worker": "codex-recovery-20260921",
+    "recovery_action": "claim_then_release_via_sa_plan",
+    "final_state": "available"
+  },
+  "fence_observation": {
+    "canonical_runtime_scope": "uos/system-mcp-features/20260919-1642:t1-tracker",
+    "approved_development_grant_scope": "uos/ecology/20260909-0146:HARNESSBOOT",
+    "result": "blocked_by_explicit_harness_grant_mismatch",
+    "effect_attempted": false,
+    "canonical_database_write": "not_performed"
+  },
+  "dashboard": {
+    "total": 20,
+    "completed": 2,
+    "ready": 3,
+    "executing": 0
+  },
+  "limits": [
+    "report-only Sa-plan implementation",
+    "no task completion asserted",
+    "no runtime MCP availability asserted",
+    "no release or admission authority"
+  ]
+}

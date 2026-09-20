@@ -13,7 +13,7 @@ pub fn century_hud_init_test() {
   let hud = init_century_hud()
   hud.milestone_id |> should.equal("EV-100")
   hud.cycle_name |> should.equal("Century Milestone Swarm Harmony")
-  hud.total_eunit_tests |> should.equal(10475)
+  hud.total_eunit_tests |> should.equal(10_475)
   hud.os_nvme_locked |> should.equal(True)
   hud.os_nvme_serial |> should.equal("25503L801736")
   hud.sovereigns.quorum_fraction |> should.equal("3/3")

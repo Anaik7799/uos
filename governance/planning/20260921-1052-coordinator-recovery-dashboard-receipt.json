@@ -1,0 +1,63 @@
+{
+  "receipt_type": "dashboard_completion_and_recovery_checkpoint",
+  "generated_at": "2026-09-21T10:52:00+02:00",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "authority": "sa-plan",
+  "read_only_observation": true,
+  "plan_snapshot": {
+    "total": 20,
+    "completed": 3,
+    "ready": 3,
+    "executing": 0,
+    "blocked_or_held": 14,
+    "observation_state": "selection_evidence_only",
+    "evidence_tasks": 4,
+    "unevidenced_tasks": 16,
+    "max_stpa": 5,
+    "max_fema": 5,
+    "snapshot_path": "/tmp/current-snapshot.json"
+  },
+  "completed": {
+    "t1-tracker": {
+      "status": "completed",
+      "attempt": 6,
+      "receipt": "governance/planning/20260921-1043-feature-tracker-completion-receipt.json"
+    }
+  },
+  "recovery": {
+    "task_id": "r02-recovery-candidate",
+    "status": "evidence_staged_hold",
+    "canonical_task_remains_open": true,
+    "candidate_receipt": "governance/planning/20260921-1050-recovery-candidate-evidence.json",
+    "candidate_db": "/home/an/uos-recovery-candidates/20260921-1048-coordinator-evidence/coordinator.sqlite3",
+    "candidate_digest": "2ba45409bcd888ed025dac430756d16fb52b7d1cc95320a412d72b9f0cdce46e",
+    "active_events": 0,
+    "quarantine_rows": 1,
+    "admitted": false,
+    "authority": "integrity_observation_only"
+  },
+  "risk_selection": {
+    "t0-coordination": "HOLD",
+    "r02-recovery-candidate": "HOLD",
+    "reason": "coordinator authority, writer quiescence, and replay integrity are unresolved; no force-pass",
+    "selection_policy": "criticality x STPA x FMEA x dependency x impact"
+  },
+  "feature_tracker": {
+    "source_inventory": "governance/capability-inventory/20260921-0633-system-feature-interface-census.json",
+    "source_groups": 11,
+    "declared_features": 848,
+    "mcp_unknown": 848,
+    "mcp_usable": 0,
+    "inventory_complete": false,
+    "system_admission": false
+  },
+  "verification": {
+    "gleam_uos_swarm_targeted_tests": {"passed": 669, "failed": 0},
+    "recovery_command": "gleam run -m session_store_cli -- recover-stage <event_directory> <new_candidate_directory>",
+    "sa_plan_workflow": "uos-system-mcp-features/recovery-candidate/20260921-1050",
+    "sa_plan_workflow_state": "completed",
+    "workflow_is_not_task_admission": true
+  },
+  "next_action": "repair and independently authorize canonical coordinator authority before claiming t0 or r02; continue only through sa-plan",
+  "admitted": false
+}

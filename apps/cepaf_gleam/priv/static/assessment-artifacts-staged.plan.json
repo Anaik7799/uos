@@ -1,0 +1,803 @@
+{
+  "scope": "Bountytek artifact publication and C3I guidance mirrors only",
+  "entries": [
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/0",
+      "before_sha256": "16e7b3def96d7d5a3f4cbac5ce9efc37a7a14ce02470d7a774e76f7d44c47165",
+      "after_sha256": "97d35ec90937060eb64fa661fe04826f3d02241123fbfdc99d33c2b8c25f2a07",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/0"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/1",
+      "before_sha256": "afb7b9564efcc813ee8c70284b63c6a972e6e3980793fdabff16a9231615610c",
+      "after_sha256": "5780670c77515c8ecb820c36d4c889766238404c3c01521d0fb9ee0054dbd59d",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/1"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/2",
+      "before_sha256": "4b9d04fd4032030a6b7a987dfbbc8153b3203e11ec017fbba3486959492d9bbb",
+      "after_sha256": "4abfd160f32d7a6f60177bb70d6d22e38d699fa4f790c27899a5eb7c92d4f90b",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/2"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/3",
+      "before_sha256": "28a11978845a51ca3516c05cd1f1df1ba68598be11e6ae19b36985ac3e6d07cb",
+      "after_sha256": "850620f23188df976edd6bbfd9c8886b9f6c73b61706e42b6bdd088ad6a19714",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/3"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-links.json",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/4",
+      "before_sha256": "3ab12d6e22ff0d6518472caa16115e15b49849732bd10b6833369b4e0a1c3ba1",
+      "after_sha256": "404419e599a29a8fe76eb4ee9f28c9e4bb4a2c8970860dbd49c732298920474e",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/4"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/5",
+      "before_sha256": "7427e9bdbf7654fd7e57aeb2b8af38a27ef5947240136ebf2822a322394475fc",
+      "after_sha256": "98c99fbdd45fb44ec323f7fbd701573270c5269fda0f85ccfa83de147eb7c99a",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/5"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/6",
+      "before_sha256": "486d8c7f7895fef4e10d6e726fecd6e03385795948f4e1731cd8c9b074f32e04",
+      "after_sha256": "ed7833b8968a9eb629206430f29d2121d90972644c0b93b86dbb5c7ed6c89cc8",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/6"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/7",
+      "before_sha256": "8f7823d4b62db250c88414c156b2f3485d92925b67004cf203cab5cef09c6125",
+      "after_sha256": "85151616329adf2fa4ed55acb5706f78379995f9b20fb2260bf2cf6f8d2c3904",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/7"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/8",
+      "before_sha256": "f3fa369a3d65100bf5995e7ed4437253f1928d80f87b6cfd3176f4cc8d51d63a",
+      "after_sha256": "4edbc93e56730af5a8c2ae83f8b0c5f089f134887f7a1c46ce8e005287dcee2e",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/8"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260928-0722-bountytek-nordic-agency-consolidation-and-verification-journal.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/9",
+      "before_sha256": "6d1b39906556273e6f1f061bf05fe8bd9e0dc17cc4a4831377e3a5657b36f553",
+      "after_sha256": "8ceddf12c3460eb6813f61db8a1c66410a4b6c7c939de8658b2bb10286c6af08",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/9"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260928-0722-bountytek-nordic-agency-consolidation-and-verification-journal.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/10",
+      "before_sha256": "462b5d01c6d4c6530fb7c4765a736caf8a2c24a646b7c2fb7e33679211a65adf",
+      "after_sha256": "9713ca2cf866263ebc169362d71868deb6e6e46c3f020edb1c68cf8dfd996036",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/10"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/11",
+      "before_sha256": null,
+      "after_sha256": "c178cb397ff1a20fea12f04d0edf85ff5003c431906fb88e1fa4360c2c659540",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260928-0934-ASSESSMENT_ARTIFACT_REVIEW.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/12",
+      "before_sha256": null,
+      "after_sha256": "6a04c63bb2af8084b8414a98f41036f5c73d8de5bb373148a3c5f2105a31a330",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/13",
+      "before_sha256": null,
+      "after_sha256": "cd7e31fa2c2ecc2d2dce3614e4d5894ae5b8344913401d054d287529047c7af2",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/20260928-0934-ASSESSMENT_SYSTEM_GOVERNANCE.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/14",
+      "before_sha256": null,
+      "after_sha256": "4a2fd9432678d6b29cfe81f0eec8a91c821c71943147848bcea34a7feba91003",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/15",
+      "before_sha256": "6699244ee974c1eb2677363fb812db83c6c7b3e818cf7014dddc18ea70a7bc46",
+      "after_sha256": "796cb61350a2d167f106268b318caf6d3d028188bc2e57034338bc3bdde2fe1e",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/15"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/16",
+      "before_sha256": "7389b3d467b327ff0e331e8586ee46877cfaae2f038536c3f8407d2ef7f6040b",
+      "after_sha256": "17d7225eba9f989907ebfad1cbdd35cee941449f228f72e2cc8f2631dcff82f1",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/16"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/17",
+      "before_sha256": "ab699fe0839b2bc8077c590f07ae278deff9c78701e8290596b8e0b98a59c986",
+      "after_sha256": "8fed5efb5075661c81ef5a5258376f147be6a0675179d4ee67ef90f8d8567d3b",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/17"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/18",
+      "before_sha256": "593285b7f10fee4965ac704a29f0360f4eb7998390349209a3c847229ea2b738",
+      "after_sha256": "2f7bde98c5545a227abf971b75a6d96e2d25c381a1618a2e31fef60f31a1428a",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/18"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_Consulting_Enterprise_Data.xlsx",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/19",
+      "before_sha256": "8b1e732ffee9f432e1fee14cb28e2d9cc9033df04af4f7cb191c1ce0cbe96572",
+      "after_sha256": "4996c5868d84c3f5e9654cc03dc6ffda524a861fa02190afd3bb4bc40fc906ce",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/19"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/20",
+      "before_sha256": "2aa62495a05fa5634d9f91cb8a65c45ef606c77b1677c61828f3f688e4c9e024",
+      "after_sha256": "cb25dab13894057234e89548c962330cb0372fefd598d42ae08d79ee8a9b092f",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/20"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/21",
+      "before_sha256": "3e343ed9a3b5b2625d8a092da7fff70bc36da78ef77e8f5d05d3378dafe64d2b",
+      "after_sha256": "5ce7c669f03205df622c970baf88a36d641760173b113f691d49bb0d2b422df4",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/21"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_NORDIC_OUTREACH_PRESENTATION.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/22",
+      "before_sha256": "daef45219ae9af2f2a26b76d0fa0bc1c74d968cc7ac8a1725b7538283b7774b5",
+      "after_sha256": "056e83049c24d5f3bfbe737085c6c32c1d53b8b2e82b070c387fb0471c1d986f",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/22"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_NORDIC_OUTREACH_PRESENTATION.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/23",
+      "before_sha256": "5175263c446a0b4e9b889156bfd3bace325ed6b4e61ab0f37faff400c007f27a",
+      "after_sha256": "b46a67e214948620c19a7f9bb9465b0aa662b59f6478245d59ea6154020398a1",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/23"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_NORDIC_OUTREACH_PRESENTATION_DOC.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/24",
+      "before_sha256": "fb1aab518327c276943c36a7b08904645f8edf03455a23587db0ae08c9dc5760",
+      "after_sha256": "92ad2ddd335b43346b0d3b097a1a3b5b28ffac4404a1618115441a0a49c54ea4",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/24"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/25",
+      "before_sha256": "cc54eb8d274817f4d16876de215995a202d14caf71e450d3b11713b9a87951c4",
+      "after_sha256": "952ed0c4429bb313f3582d27a896c156d17dccae601011fb3f419c57440bb1a8",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/25"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/26",
+      "before_sha256": "9bbbcf0947068688df6fc55b6808a6d57a764e535dacd860f2407a277fa043ed",
+      "after_sha256": "29313d2f348002bcf0aa97ac5fd35d3404b2f7bbdd8c1a4db6bb25d0ec6da286",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/26"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/27",
+      "before_sha256": "0cad9efa4d708b3f77ad765d8a093c5526982bd5de4119fceaf461d9b0876cbb",
+      "after_sha256": "1c28abf9a936e59771d3f901d9bef0093701fab723e2e4e21ed5d2b7c9ffe198",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/27"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/28",
+      "before_sha256": "25199e33805520a0bae56be498cfbd474892c28de46033f9ed4334e00cd3dc63",
+      "after_sha256": "eb8cd60a6f15b80cad8cfe4e11549c8fd24a8b236eea20123bb78196fadde3c0",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/28"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ACH_ASSESSMENT.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/29",
+      "before_sha256": null,
+      "after_sha256": "a3290e5f4fc9779e663f1c1495c7bbbb4470f66898c84315adbbbdadd84806a8",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ACH_ASSESSMENT.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/30",
+      "before_sha256": "bee805e9155c147cc568c2d966d3bc8153f268419ce9575f51d330a89ac7c7d4",
+      "after_sha256": "52977496de524cc14928c46233c766a0113d14c085443b3725d7a0e888d5a60b",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/30"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ACH_ASSESSMENT_VALIDATION.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/31",
+      "before_sha256": null,
+      "after_sha256": "275825fd07ad20345079162fb6ba742ab54aceed68b0dbfe75a81b98f122ad74",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ACH_ASSESSMENT_VALIDATION.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/32",
+      "before_sha256": "14f2a177a1b9a94a27bea4e39c12b88e9af0942a26eda310b2b012feeb148d89",
+      "after_sha256": "6b4f4224bada51c824fdffffc72ee108e0f684fd6595e9c56184f540d636dc0a",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/32"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ACH_SAFETY_ANALYSIS.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/33",
+      "before_sha256": null,
+      "after_sha256": "17134a8383177b42f2b5158af9bec934bd5f896ada8229e222a994a22656c310",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ACH_SAFETY_ANALYSIS.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/34",
+      "before_sha256": "4d3d90c5fb2440045d849167a2b692dff6b69654c543c7e9c3118149d00fc6fb",
+      "after_sha256": "628f554be4e4336739b395d40787ac5db76bcadd6328237cc8b9b37b4dc781fe",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/34"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/CODEX_HANDOVER.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/35",
+      "before_sha256": "ecfe0aa5830f60cfb762a4644287cd3053e7db75bd1452a3fd5a5f6fd7981edc",
+      "after_sha256": "008c3070973b754f24e68e7f6ed9b05757c3a17bbf70c669e91edb280b7e909d",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/35"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/CODEX_HANDOVER.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/36",
+      "before_sha256": "654027d5d06ca08309bb567a459e4d7406a22eb6c75805be464ef37006a17899",
+      "after_sha256": "7eb028f43bfbea2b873a0721aad0796b34390d629b7f275115428a4ca2be46cb",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/36"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/37",
+      "before_sha256": "6a708d772325a1ce2c282a04af317cd9a188a6b3bb850ea23d1d055e69cb7c19",
+      "after_sha256": "69b902964f017b303595c7ad2c4b1e01ea6385b6bdcac8bb29991267c22433c3",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/37"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/MEDICAL_NORDICS_FINANCIALS_DOSSIER.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/38",
+      "before_sha256": "65acf3b3fa4acfc292d8f17717df10fe2265a429899240ebefeb93c4f108f793",
+      "after_sha256": "8f1bdfcc5bb1c4cc07b13f50469ee056191303b47ac57f57364d3ea8cdd0b60b",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/38"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/Medical-Nordics-1.xlsx",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/39",
+      "before_sha256": "716657c79c356bbe68164ca9a624db9711bd84294a609d2ecff8dc652f36b13a",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/39"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/NORDIC_COMPETITOR_BENCHMARK_DECK.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/40",
+      "before_sha256": "838c599357266654f9a8cb98b90a94619a295f3dd1935ea84e7f5b11af1c0718",
+      "after_sha256": "faf1ad9e0a0fd7be059140cbff119d1993f2aaf1e0fc95d0afeeadd36f0d3dde",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/40"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/NORDIC_COMPETITOR_BENCHMARK_DECK.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/41",
+      "before_sha256": "ac8ecac5e751507aa48c82f2c74572d470bdd8036948bae18427099ec9f39d49",
+      "after_sha256": "a534444daf3428dcc75d47e8004b8d37cd9dd20a0e440f09c07f285fc61965b6",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/41"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/NORDIC_COMPETITOR_BENCHMARK_DECK_DOC.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/42",
+      "before_sha256": "57cbe5f0aecf794988bfbc95f6ac46d3d94c9acca614a9abf4c9b476f6658926",
+      "after_sha256": "8986161b77ed12d92510f95a5d4721fac7c2f7faa2f2eb535e6946f28add7963",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/42"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/43",
+      "before_sha256": "5cbff5d6bf794d51570d11c668259a9686ff753a0cfebb3c98499aa6f159879f",
+      "after_sha256": "b0d138374c115d582d3f763f80c659637a6d382d1f22e95c5d1e38dee01c1dee",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/43"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/44",
+      "before_sha256": "6d9be68704911c0a1df1eb4e920f98167275a10b98a0b74a095d2d92e8297641",
+      "after_sha256": "2f5f01c283b8ac1982d413028c0b07bdb076a67dd6b508d72452bbfbf6ee70ad",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/44"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/PROJECTS_INDEX.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/45",
+      "before_sha256": "054d7ee4b45ccf45c7baeb8d65bda9ae2614669b61d45ec0b63173cdc97892fb",
+      "after_sha256": "e87623023d67ae446abe1fd56b4dd348d188e976fda39d32b0349398080cdc71",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/45"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/PROJECTS_INDEX.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/46",
+      "before_sha256": "6a6a7948c32935fe165ca532b35984b982a148f439b2b9b34b9a038d09459b00",
+      "after_sha256": "4b18a3b231684ca49c4aead042dd8750471435c650099f90ba9254a0e71b8529",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/46"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/README.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/47",
+      "before_sha256": "6a6a7948c32935fe165ca532b35984b982a148f439b2b9b34b9a038d09459b00",
+      "after_sha256": "4b18a3b231684ca49c4aead042dd8750471435c650099f90ba9254a0e71b8529",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/47"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/SKILLS_AND_SUPERPOWERS_CATALOG.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/48",
+      "before_sha256": "ed3a971248b7bd6e845fcd9186871cf275776eb064254fea37bbac3ab1081db0",
+      "after_sha256": "f8fba494c62cf9f9f5c923ca805184d440782dc7179996269b1df911665e0251",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/48"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/SKILLS_AND_SUPERPOWERS_CATALOG.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/49",
+      "before_sha256": "5308836042b48a7c904d49965e423ce22e6eb8a71ebc6ccdd0c76bf42c7272bb",
+      "after_sha256": "a60cf9b73e8464c087904d229d295d08b5203d233dd51f83494eb5f279cbb276",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/49"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ach_admiralty_engine.v2.1.recovery.ml",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/51",
+      "before_sha256": null,
+      "after_sha256": "fc1aed0907ba587116d9ce5eead09d17395269f950377d397f5b933aaafffe7c",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/diagram-quality-report.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/53",
+      "before_sha256": null,
+      "after_sha256": "0cc7260c31f09f7b0a7322dc0d606cea12a144a765927707297fd6d1a6fceec3",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/diagram-quality-report.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/54",
+      "before_sha256": null,
+      "after_sha256": "eee9f1298f3119410ab6250c5722eaac6d7470ffe59db9a31fcd0ce5b7df18e0",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/governance/agents/bountytek-assessment-reviewer.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/55",
+      "before_sha256": null,
+      "after_sha256": "826ee9876d9db4cc9ff0234cbfcc7b7bdd9486d423de2a4b57801adab1a23e01",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/governance/plugins/bountytek-assessment-integrations.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/56",
+      "before_sha256": null,
+      "after_sha256": "3947ccbd2eb01c91d284313e9d05a2218bbf4da13700666a531b39efc60453ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/governance/rules/bountytek-assessment.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/57",
+      "before_sha256": null,
+      "after_sha256": "4a2fd9432678d6b29cfe81f0eec8a91c821c71943147848bcea34a7feba91003",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/maintain_assessment_artifacts.ml",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/58",
+      "before_sha256": null,
+      "after_sha256": "1d02cf6f34e23938e6d52c4288ffda168df23fa8b2279ee8798f634078dd1e55",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/markitdown.mojo",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/59",
+      "before_sha256": null,
+      "after_sha256": "7be33e9552363019627696234c50cb557002c75a84e1a957c5b1e44345ed88b4",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/master_financials.json",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/60",
+      "before_sha256": null,
+      "after_sha256": "704745214e0deccd9605660ebf58f29fc5b3b9fe4e8a6e3c26fb241754fc30a0",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/pdf_download_560FA178-AC4A-4542-ADE6-129EC92F3B47 (1).pdf",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/61",
+      "before_sha256": null,
+      "after_sha256": "e02fdd59e7730d84373281f5a906194606d021b38ccbe90c39ebe79c4a489baf",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/pdf_download_converted.html",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/62",
+      "before_sha256": "e15ca9620631429cea8d6c59ab275ff8b6b3087f4ffbd53c41e0a93fe9c3b6c7",
+      "after_sha256": "1933378e32329bbcfbe0ad664fd86c578d433cd3b433b6f1ae0d5a83ebaac43a",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/62"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/pdf_download_converted.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/63",
+      "before_sha256": null,
+      "after_sha256": "cd198d4d627e0541b114ce957e2aca06e401d44c35abe9ce008a2147e994d991",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/render_docs_wiki.ml",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/64",
+      "before_sha256": "7d5535e762048e7583413a37e8655eae76924b9fb3b0aa93f2de945a81fcf5e2",
+      "after_sha256": "8275d49a7f923d89173c0341130e7f3b268a717627adc9007e11ddb337783384",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/64"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/sa-plan",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/65",
+      "before_sha256": null,
+      "after_sha256": "9cc3afb06ddb26fcdaffd3cfdabe20556afc47db88257eb03c45dc9b3172e0e3",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/skills/ach-admiralty-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/66",
+      "before_sha256": null,
+      "after_sha256": "df84bbcd8df4a55f8c9cad990c72364bdda0edb3a992561ee528dbce04353238",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/skills/agy-autonomous-orchestration/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/67",
+      "before_sha256": null,
+      "after_sha256": "ada8df6da739f6a6a300c5adcd2f6aa569970fa520884fbc65e3fd69dbd2e559",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/skills/claude-extended-reasoning-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/68",
+      "before_sha256": null,
+      "after_sha256": "08111317f4f9cbe4ed7bf70cf577e772d96b04bf243fe56743d7915ed8cff293",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/skills/codex-astra-sil6-invariant-guard/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/69",
+      "before_sha256": null,
+      "after_sha256": "19518a60f90700b6596ebb65d881ab4e9e9a1ab5198a5d060bb795703724d9bd",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/skills/nordic-medtech-go-to-market/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/70",
+      "before_sha256": null,
+      "after_sha256": "ab416cf650219483e28c0b935e29b31bd4980a7a715e3909ae826810d54556c3",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/skills/nordic-procurement-tender-intel/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/71",
+      "before_sha256": null,
+      "after_sha256": "8b3eb56707b0bfd3183dce324ca513523a0dbab7c6a76996ae6a3f57bf2258ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/unique_companies.json",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/72",
+      "before_sha256": null,
+      "after_sha256": "475380c3f6695d873b314b0da24840ade954fa7c23a1465ad8ba4c4c9ae6ff43",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/uos-cli",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/73",
+      "before_sha256": null,
+      "after_sha256": "7f09cb836ef2f8e2d632ac8851067740b7779c59a05333270c8db5ca94c49693",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/uos-env.sh",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/74",
+      "before_sha256": null,
+      "after_sha256": "44be196dd77c292bde0b22e438cc7b5a9793424cb2ebb05319f3152a92d86009",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/uos-services",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/75",
+      "before_sha256": null,
+      "after_sha256": "45cae4d3d627fe40147a31018674da714f8b47f073abcd9c417ab65313c2959d",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/verify_assessment_system.ml",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/76",
+      "before_sha256": null,
+      "after_sha256": "5b9ac056ad7ecc904a997e37c4e7486fdcf0667a2b8eb107ce9ccae0e1819eb7",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/ASSESSMENT_SYSTEM_REGISTRY.json",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/77",
+      "before_sha256": null,
+      "after_sha256": "936a20c816a2946ee7f2d2e91453de649d8229d89dbf472690c98c5676085219",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/verify_pharma_chemicals.mojo",
+      "snapshot": null,
+      "before_sha256": "9ce10766c472797fbb9e21d5e62101e19f557408cb8a9300a43107e068f02839",
+      "after_sha256": null,
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/78"
+    },
+    {
+      "destination": "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/static/build_presentation_deck.mojo",
+      "snapshot": null,
+      "before_sha256": "9b1d18732c40a5d84db356e460caf95544cdb43d9af8eb8e4e4046687a67cf02",
+      "after_sha256": null,
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/82"
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/rules/bountytek-assessment.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/83",
+      "before_sha256": null,
+      "after_sha256": "4a2fd9432678d6b29cfe81f0eec8a91c821c71943147848bcea34a7feba91003",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/agents/bountytek-assessment-reviewer.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/84",
+      "before_sha256": null,
+      "after_sha256": "826ee9876d9db4cc9ff0234cbfcc7b7bdd9486d423de2a4b57801adab1a23e01",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/plugins/bountytek-assessment-integrations.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/85",
+      "before_sha256": null,
+      "after_sha256": "3947ccbd2eb01c91d284313e9d05a2218bbf4da13700666a531b39efc60453ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/skills/ach-admiralty-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/86",
+      "before_sha256": "a14c90388069af7e7461351fa8110a2a4660f2d5a5a9a925dfd75ae9a46c7959",
+      "after_sha256": "df84bbcd8df4a55f8c9cad990c72364bdda0edb3a992561ee528dbce04353238",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/86"
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/skills/claude-extended-reasoning-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/87",
+      "before_sha256": "744e03d5c8b42bb726a6cb190d47db7e81378186d6354e2d0954e9a50a99b0ef",
+      "after_sha256": "08111317f4f9cbe4ed7bf70cf577e772d96b04bf243fe56743d7915ed8cff293",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/87"
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/skills/agy-autonomous-orchestration/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/88",
+      "before_sha256": "f2b6c90a7069f7aba5916736d7661f231e00041a9a37fb0939b1ee509a969c65",
+      "after_sha256": "ada8df6da739f6a6a300c5adcd2f6aa569970fa520884fbc65e3fd69dbd2e559",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/88"
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/skills/codex-astra-sil6-invariant-guard/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/89",
+      "before_sha256": "e1cf572761d69f6c0df728cccbc86340cbdac24173f76e984ca178efe1b3b89a",
+      "after_sha256": "19518a60f90700b6596ebb65d881ab4e9e9a1ab5198a5d060bb795703724d9bd",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/89"
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/skills/nordic-medtech-go-to-market/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/90",
+      "before_sha256": "a067f9182aa6cb58294b61b3975ab7396b0aa1d68441af10453c961b588b8bbf",
+      "after_sha256": "ab416cf650219483e28c0b935e29b31bd4980a7a715e3909ae826810d54556c3",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/90"
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.agents/skills/nordic-procurement-tender-intel/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/91",
+      "before_sha256": "a557f2388013fe3ccd22c3ee6c8a80a84d03f013b1f8a5c14a69bff9df56b14a",
+      "after_sha256": "8b3eb56707b0bfd3183dce324ca513523a0dbab7c6a76996ae6a3f57bf2258ef",
+      "rollback": "/tmp/bountytek-governance-install-20260928/rollback/91"
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/rules/bountytek-assessment.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/92",
+      "before_sha256": null,
+      "after_sha256": "4a2fd9432678d6b29cfe81f0eec8a91c821c71943147848bcea34a7feba91003",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/agents/bountytek-assessment-reviewer.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/93",
+      "before_sha256": null,
+      "after_sha256": "826ee9876d9db4cc9ff0234cbfcc7b7bdd9486d423de2a4b57801adab1a23e01",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/plugins/bountytek-assessment-integrations.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/94",
+      "before_sha256": null,
+      "after_sha256": "3947ccbd2eb01c91d284313e9d05a2218bbf4da13700666a531b39efc60453ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/skills/ach-admiralty-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/95",
+      "before_sha256": null,
+      "after_sha256": "df84bbcd8df4a55f8c9cad990c72364bdda0edb3a992561ee528dbce04353238",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/skills/claude-extended-reasoning-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/96",
+      "before_sha256": null,
+      "after_sha256": "08111317f4f9cbe4ed7bf70cf577e772d96b04bf243fe56743d7915ed8cff293",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/skills/agy-autonomous-orchestration/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/97",
+      "before_sha256": null,
+      "after_sha256": "ada8df6da739f6a6a300c5adcd2f6aa569970fa520884fbc65e3fd69dbd2e559",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/skills/codex-astra-sil6-invariant-guard/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/98",
+      "before_sha256": null,
+      "after_sha256": "19518a60f90700b6596ebb65d881ab4e9e9a1ab5198a5d060bb795703724d9bd",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/skills/nordic-medtech-go-to-market/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/99",
+      "before_sha256": null,
+      "after_sha256": "ab416cf650219483e28c0b935e29b31bd4980a7a715e3909ae826810d54556c3",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.claude/skills/nordic-procurement-tender-intel/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/100",
+      "before_sha256": null,
+      "after_sha256": "8b3eb56707b0bfd3183dce324ca513523a0dbab7c6a76996ae6a3f57bf2258ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/rules/bountytek-assessment.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/101",
+      "before_sha256": null,
+      "after_sha256": "4a2fd9432678d6b29cfe81f0eec8a91c821c71943147848bcea34a7feba91003",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/agents/bountytek-assessment-reviewer.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/102",
+      "before_sha256": null,
+      "after_sha256": "826ee9876d9db4cc9ff0234cbfcc7b7bdd9486d423de2a4b57801adab1a23e01",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/plugins/bountytek-assessment-integrations.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/103",
+      "before_sha256": null,
+      "after_sha256": "3947ccbd2eb01c91d284313e9d05a2218bbf4da13700666a531b39efc60453ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/skills/ach-admiralty-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/104",
+      "before_sha256": null,
+      "after_sha256": "df84bbcd8df4a55f8c9cad990c72364bdda0edb3a992561ee528dbce04353238",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/skills/claude-extended-reasoning-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/105",
+      "before_sha256": null,
+      "after_sha256": "08111317f4f9cbe4ed7bf70cf577e772d96b04bf243fe56743d7915ed8cff293",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/skills/agy-autonomous-orchestration/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/106",
+      "before_sha256": null,
+      "after_sha256": "ada8df6da739f6a6a300c5adcd2f6aa569970fa520884fbc65e3fd69dbd2e559",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/skills/codex-astra-sil6-invariant-guard/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/107",
+      "before_sha256": null,
+      "after_sha256": "19518a60f90700b6596ebb65d881ab4e9e9a1ab5198a5d060bb795703724d9bd",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/skills/nordic-medtech-go-to-market/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/108",
+      "before_sha256": null,
+      "after_sha256": "ab416cf650219483e28c0b935e29b31bd4980a7a715e3909ae826810d54556c3",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.gemini/skills/nordic-procurement-tender-intel/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/109",
+      "before_sha256": null,
+      "after_sha256": "8b3eb56707b0bfd3183dce324ca513523a0dbab7c6a76996ae6a3f57bf2258ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/rules/bountytek-assessment.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/110",
+      "before_sha256": null,
+      "after_sha256": "4a2fd9432678d6b29cfe81f0eec8a91c821c71943147848bcea34a7feba91003",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/agents/bountytek-assessment-reviewer.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/111",
+      "before_sha256": null,
+      "after_sha256": "826ee9876d9db4cc9ff0234cbfcc7b7bdd9486d423de2a4b57801adab1a23e01",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/plugins/bountytek-assessment-integrations.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/112",
+      "before_sha256": null,
+      "after_sha256": "3947ccbd2eb01c91d284313e9d05a2218bbf4da13700666a531b39efc60453ef",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/skills/ach-admiralty-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/113",
+      "before_sha256": null,
+      "after_sha256": "df84bbcd8df4a55f8c9cad990c72364bdda0edb3a992561ee528dbce04353238",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/skills/claude-extended-reasoning-audit/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/114",
+      "before_sha256": null,
+      "after_sha256": "08111317f4f9cbe4ed7bf70cf577e772d96b04bf243fe56743d7915ed8cff293",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/skills/agy-autonomous-orchestration/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/115",
+      "before_sha256": null,
+      "after_sha256": "ada8df6da739f6a6a300c5adcd2f6aa569970fa520884fbc65e3fd69dbd2e559",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/skills/codex-astra-sil6-invariant-guard/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/116",
+      "before_sha256": null,
+      "after_sha256": "19518a60f90700b6596ebb65d881ab4e9e9a1ab5198a5d060bb795703724d9bd",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/skills/nordic-medtech-go-to-market/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/117",
+      "before_sha256": null,
+      "after_sha256": "ab416cf650219483e28c0b935e29b31bd4980a7a715e3909ae826810d54556c3",
+      "rollback": null
+    },
+    {
+      "destination": "/home/an/dev/ver/c3i/.codex/skills/nordic-procurement-tender-intel/SKILL.md",
+      "snapshot": "/tmp/bountytek-governance-install-20260928/payload/118",
+      "before_sha256": null,
+      "after_sha256": "8b3eb56707b0bfd3183dce324ca513523a0dbab7c6a76996ae6a3f57bf2258ef",
+      "rollback": null
+    }
+  ]
+}

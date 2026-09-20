@@ -40,11 +40,7 @@ pub type GateDecision {
     task_id: String,
     rpn: Int,
   )
-  AndonHaltTriggered(
-    code: Int,
-    reason: String,
-    remediation: String,
-  )
+  AndonHaltTriggered(code: Int, reason: String, remediation: String)
 }
 
 pub type PreflightEvidence {
@@ -70,8 +66,10 @@ pub type TaskContext {
 }
 
 pub const hard_denied_serial: String = "25503L801736"
-pub const andon_halt_unauthorized_code: Int = -32002
-pub const andon_halt_quorum_missing_code: Int = -32003
+
+pub const andon_halt_unauthorized_code: Int = -32_002
+
+pub const andon_halt_quorum_missing_code: Int = -32_003
 
 pub fn evaluate_admission(
   authority: RiskAuthority,
@@ -97,7 +95,9 @@ pub fn evaluate_admission(
           )
         False ->
           // 3. Preflight evidence freshness check
-          case ctx.current_time_ns - evidence.timestamp_ns > evidence.max_age_ns {
+          case
+            ctx.current_time_ns - evidence.timestamp_ns > evidence.max_age_ns
+          {
             True ->
               AndonHaltTriggered(
                 code: andon_halt_unauthorized_code,
@@ -119,7 +119,11 @@ pub fn evaluate_admission(
                     True ->
                       case ctx.quorum_count >= 2 {
                         True ->
-                          build_admission(authority, ctx.task_id, evidence.fmea_rpn)
+                          build_admission(
+                            authority,
+                            ctx.task_id,
+                            evidence.fmea_rpn,
+                          )
                         False ->
                           AndonHaltTriggered(
                             code: andon_halt_quorum_missing_code,

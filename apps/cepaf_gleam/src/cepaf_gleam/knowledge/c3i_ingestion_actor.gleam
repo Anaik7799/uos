@@ -75,7 +75,10 @@ pub fn start() -> Result(actor.Started(Subject(Message)), actor.StartError) {
 }
 
 /// Message handler for the Ingestion Actor
-pub fn handle_message(state: State, msg: Message) -> actor.Next(State, Message) {
+pub fn handle_message(
+  state: State,
+  msg: Message,
+) -> actor.Next(State, Message) {
   case msg {
     ValidatePayload(content, reply_to) -> {
       let violation = detect_zero_trust_ingress_violations(content)

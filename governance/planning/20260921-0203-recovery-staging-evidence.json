@@ -1,0 +1,106 @@
+{
+  "schema": "uos.recovery-staging-evidence.v1",
+  "observed_at": "2026-09-21T02:21:31Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r02-recovery-candidate",
+  "attempt": 1,
+  "worker": "codex-01a0ba74-feature-tracker",
+  "progress_workflow": "uos/system-mcp-features/20260919-1642/r02-development/20260921-0245",
+  "development_stage": "passed",
+  "overall_task_complete": false,
+  "system_admission": false,
+  "live_history_accessed": false,
+  "live_history_modified": false,
+  "scope": "Pure bounded classification and evidence-only private SQLite staging; not a captured historical authority or recovery cutover",
+  "sources": [
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_recovery.gleam",
+      "sha256": "13c3ebd4df81077a77d6ef86b84f1bf962f7c1b44cb80078e414d163d5de34a2"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_recovery_store.gleam",
+      "sha256": "899423a8744a24514fd8bb77a0dd0bcc650c98f9ec62246f142cf5abf98ec80c"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_store_ffi.erl",
+      "sha256": "f93dc29ebf8689242532f24608373cbf6f5250287e6ce890c01f96da83c42131"
+    },
+    {
+      "path": "apps/uos_swarm/test/session_recovery_test.gleam",
+      "sha256": "deca97d745ecebd30f6d1f30597de97026023be8937afc32a0fe8d5a2056ca51"
+    }
+  ],
+  "observations": [
+    {
+      "check": "Toolchain preflight",
+      "result": "31 checks PASS; pinned Gleam 1.16.0 / OTP 29; stale cached receipt rejected before fresh check"
+    },
+    {
+      "check": "Initial test-first build",
+      "result": "Failed because new recovery modules did not yet exist; not a behavioural pre-fix test pass"
+    },
+    {
+      "check": "Intermediate compiler checks",
+      "result": "Decoder arity, removed list.range API and piped comparison precedence errors corrected; no production execution"
+    },
+    {
+      "check": "Targeted EUnit",
+      "result": "31 passed, 0 failed; 15 recovery tests plus 16 existing store/CLI tests",
+      "exit_code": 0
+    },
+    {
+      "check": "Reference interpretation",
+      "result": "60 deterministic prefix/invalid-prefix variants agree with canonical replay acceptance"
+    },
+    {
+      "check": "Full swarm suite",
+      "result": "667 passed before filesystem hardening; final candidate 669 passed, 0 failed",
+      "exit_code": 0
+    },
+    {
+      "check": "Formatting",
+      "result": "Changed Gleam sources and test formatted; final check passed",
+      "exit_code": 0
+    },
+    {
+      "check": "Risk observation",
+      "result": "ACTIVE_OBSERVATION_PASS at 02:20:21Z; 12 source files checked, exact worker/attempt match"
+    },
+    {
+      "check": "Preserved intermediate HOLD",
+      "result": "02:16:09Z evidence timestamp postdated assessment; corrected assessment chronology then ACTIVE_OBSERVATION_PASS at 02:17:17Z"
+    },
+    {
+      "check": "Private SQLite observation",
+      "database": "/tmp/uos-recovery-test-b7101fee13b256c1a1651eaff8661157/candidate/coordinator.sqlite3",
+      "active_events": 0,
+      "archived_sources": 1,
+      "archived_records": 4,
+      "database_mode": "0600",
+      "directory_modes": [
+        "0700",
+        "0700"
+      ],
+      "authority": "evidence_only"
+    }
+  ],
+  "review": {
+    "reviewer": "/root/recovery_review",
+    "kind": "independent read-only internal Codex advisory via Gleam MCP",
+    "finding": "P2 pathname staging race",
+    "resolution": "Require owned private parent and protected real ancestors, then private child and exclusive 0600 file creation",
+    "final": "No remaining concrete defects within stated filesystem trust boundary",
+    "independently_executed_tests": false,
+    "external_sovereign_review": false
+  },
+  "limits": [
+    "No acquisition or grading of the actual live file/SQLite histories in this slice.",
+    "All valid replay records remain UNCORROBORATED; malformed records are REJECTED and later records BLOCKED.",
+    "Raw strings are preserved exactly; arbitrary non-UTF-8 byte inputs are not supported.",
+    "Linux /proc/self UID observation is required; missing metadata fails closed.",
+    "Hostile same-UID/root processes are outside the filesystem isolation boundary.",
+    "Existing quarantine is evidence storage, not an immutable authenticated authority; future readers must recheck candidate digest and provenance.",
+    "Actual agent enrollment, MCP wiring, feature tracker, invocation-specific formal verification and release/cutover remain incomplete.",
+    "AGY review request again encountered provider DNS failure; no fresh AGY ACK asserted."
+  ]
+}

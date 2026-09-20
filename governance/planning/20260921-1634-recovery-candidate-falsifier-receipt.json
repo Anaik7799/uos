@@ -1,0 +1,11 @@
+{
+  "schema": "uos.append-only-falsifier-receipt.v1",
+  "timestamp": "20260921-1634",
+  "candidate": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+  "raw_update": "refused: events are append-only (SQLite error 19)",
+  "raw_delete": "refused: events are append-only (SQLite error 19)",
+  "post_falsifier_verify": {"checked": 421, "sequence_ok": true, "chain_ok": true, "digest_ok": true, "replay_ok": true},
+  "candidate_hash_unchanged": true,
+  "authority": "integrity_observation_only",
+  "admission": "not_admitted"
+}

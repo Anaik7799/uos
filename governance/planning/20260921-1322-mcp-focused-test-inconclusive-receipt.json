@@ -1,0 +1,11 @@
+{
+  "schema": "uos.test-observation-receipt.v1",
+  "timestamp": "20260921-1321-53Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "gleam test mcp_catalog_truth_test mcp_runtime_truth_test system_feature_api_test system_feature_interfaces_test",
+  "result": "INCONCLUSIVE_TERMINATED",
+  "observation": "Gleam test runner executed the full suite despite file arguments; process remained live for more than three minutes and was terminated without a terminal summary.",
+  "log": "/tmp/uos-mcp-focused-20260921.log",
+  "completion": {"tests_passed": false, "tests_failed": false, "runtime_admission": "NOT_GRANTED", "goal_complete": false},
+  "policy": "Inconclusive or terminated tests are not counted as passing evidence."
+}

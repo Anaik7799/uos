@@ -7,17 +7,17 @@
 ////
 //// High-Dimensional 200-Tests-Per-Extension Verification Suite (33,400 Tests Total).
 
-import gleeunit/should
-import gleam/list
-import gleam/string
-import cepaf_gleam/sciviz/extension_catalog.{all_167_extensions}
 import cepaf_gleam/sciviz/extension_200_tensor_suite.{
   Dim1GeometricInvariants, Dim2AestheticScaleMappings, Dim3StatisticalTransforms,
   Dim4PropertyFuzzBounds, Dim5BddBehavioralScenarios, Dim6UiViewportContrast,
   Dim7CrossLayerFractalPsi, Dim8HardwareZeroMudaPurity,
-  run_200_tests_for_extension, summarize_extension_tensor,
-  run_global_33400_tensor_suite,
+  run_200_tests_for_extension, run_global_33400_tensor_suite,
+  summarize_extension_tensor,
 }
+import cepaf_gleam/sciviz/extension_catalog.{all_167_extensions}
+import gleam/list
+import gleam/string
+import gleeunit/should
 
 pub fn sample_extension_runs_exactly_200_tests_test() {
   let exts = all_167_extensions()
@@ -50,14 +50,20 @@ pub fn every_extension_has_eight_dimensions_of_25_checks_test() {
     let tests = run_200_tests_for_extension(ext)
     list.length(tests) |> should.equal(200)
 
-    let d1 = list.filter(tests, fn(t) { t.dimension == Dim1GeometricInvariants })
-    let d2 = list.filter(tests, fn(t) { t.dimension == Dim2AestheticScaleMappings })
-    let d3 = list.filter(tests, fn(t) { t.dimension == Dim3StatisticalTransforms })
+    let d1 =
+      list.filter(tests, fn(t) { t.dimension == Dim1GeometricInvariants })
+    let d2 =
+      list.filter(tests, fn(t) { t.dimension == Dim2AestheticScaleMappings })
+    let d3 =
+      list.filter(tests, fn(t) { t.dimension == Dim3StatisticalTransforms })
     let d4 = list.filter(tests, fn(t) { t.dimension == Dim4PropertyFuzzBounds })
-    let d5 = list.filter(tests, fn(t) { t.dimension == Dim5BddBehavioralScenarios })
+    let d5 =
+      list.filter(tests, fn(t) { t.dimension == Dim5BddBehavioralScenarios })
     let d6 = list.filter(tests, fn(t) { t.dimension == Dim6UiViewportContrast })
-    let d7 = list.filter(tests, fn(t) { t.dimension == Dim7CrossLayerFractalPsi })
-    let d8 = list.filter(tests, fn(t) { t.dimension == Dim8HardwareZeroMudaPurity })
+    let d7 =
+      list.filter(tests, fn(t) { t.dimension == Dim7CrossLayerFractalPsi })
+    let d8 =
+      list.filter(tests, fn(t) { t.dimension == Dim8HardwareZeroMudaPurity })
 
     list.length(d1) |> should.equal(25)
     list.length(d2) |> should.equal(25)
@@ -75,11 +81,13 @@ pub fn every_extension_has_eight_dimensions_of_25_checks_test() {
 pub fn global_33400_tests_summary_test() {
   let summary = run_global_33400_tensor_suite()
   summary.total_extensions |> should.equal(167)
-  summary.total_tests |> should.equal(33400)
-  summary.total_passed |> should.equal(33400)
+  summary.total_tests |> should.equal(33_400)
+  summary.total_passed |> should.equal(33_400)
   summary.total_failed |> should.equal(0)
   summary.pass_rate_percent |> should.equal(100.0)
   { summary.shannon_entropy_mean >=. 2.5 } |> should.be_true
-  string.contains(summary.zero_muda_status, "0 Bevy, 0 Graphite") |> should.be_true
-  string.contains(summary.storage_safety_status, "25503L801736") |> should.be_true
+  string.contains(summary.zero_muda_status, "0 Bevy, 0 Graphite")
+  |> should.be_true
+  string.contains(summary.storage_safety_status, "25503L801736")
+  |> should.be_true
 }

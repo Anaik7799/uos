@@ -13,9 +13,10 @@
 //// =============================================================================
 
 import cepaf_gleam/fpp/homeostasis_fprime.{
-  type WiredContext, WiredContext, deadman_watchdog_fprime, evaluate_wired_guards,
-  evolution_gate_fprime, ooda_swarm_fprime, prajna_breaker_fprime, step_wired,
-  tolerance_envelope_fprime, wired_envelope_signal, wired_watchdog_signal,
+  type WiredContext, WiredContext, deadman_watchdog_fprime,
+  evaluate_wired_guards, evolution_gate_fprime, ooda_swarm_fprime,
+  prajna_breaker_fprime, step_wired, tolerance_envelope_fprime,
+  wired_envelope_signal, wired_watchdog_signal,
 }
 import cepaf_gleam/fpp/interp.{init_machine}
 import gleam/list
@@ -75,17 +76,21 @@ fn critical_wired_context() -> WiredContext {
 pub fn evaluate_wired_guards_spectrum_test() {
   // Nominal: low faults, fresh handshake, supermajority quorum, negative lyapunov lambda
   let nom_guards = evaluate_wired_guards(nominal_wired_context())
-  list.key_find(nom_guards, "fault_threshold_exceeded") |> should.equal(Ok(False))
+  list.key_find(nom_guards, "fault_threshold_exceeded")
+  |> should.equal(Ok(False))
   list.key_find(nom_guards, "handshake_revalidated") |> should.equal(Ok(True))
   list.key_find(nom_guards, "supermajority_passed") |> should.equal(Ok(True))
-  list.key_find(nom_guards, "lyapunov_dissipative_and_quorum") |> should.equal(Ok(True))
+  list.key_find(nom_guards, "lyapunov_dissipative_and_quorum")
+  |> should.equal(Ok(True))
 
   // Degraded: fault threshold exceeded, stale handshake, no quorum, positive lambda
   let deg_guards = evaluate_wired_guards(degraded_wired_context())
-  list.key_find(deg_guards, "fault_threshold_exceeded") |> should.equal(Ok(True))
+  list.key_find(deg_guards, "fault_threshold_exceeded")
+  |> should.equal(Ok(True))
   list.key_find(deg_guards, "handshake_revalidated") |> should.equal(Ok(False))
   list.key_find(deg_guards, "supermajority_passed") |> should.equal(Ok(False))
-  list.key_find(deg_guards, "lyapunov_dissipative_and_quorum") |> should.equal(Ok(False))
+  list.key_find(deg_guards, "lyapunov_dissipative_and_quorum")
+  |> should.equal(Ok(False))
 }
 
 // -----------------------------------------------------------------------------
@@ -161,7 +166,8 @@ pub fn deadman_watchdog_wired_signal_derivation_test() {
   wired_watchdog_signal(degraded_wired_context())
   |> should.equal("warning_timeout")
 
-  let stale_ctx = WiredContext(..nominal_wired_context(), heartbeat_age_ms: 7200)
+  let stale_ctx =
+    WiredContext(..nominal_wired_context(), heartbeat_age_ms: 7200)
   wired_watchdog_signal(stale_ctx)
   |> should.equal("stale_timeout")
 
@@ -191,7 +197,8 @@ pub fn deadman_watchdog_wired_cascade_to_dead_test() {
   let sig3 = wired_watchdog_signal(crit_ctx)
   let assert Ok(s_dead) = step_wired(machine, s_stale, sig3, crit_ctx)
   s_dead.current |> should.equal("Dead")
-  list.contains(s_dead.log, "suppress_telemetry_fail_closed") |> should.equal(True)
+  list.contains(s_dead.log, "suppress_telemetry_fail_closed")
+  |> should.equal(True)
   list.contains(s_dead.log, "render_dead_banner_red") |> should.equal(True)
 }
 
@@ -214,8 +221,7 @@ pub fn deadman_watchdog_wired_fail_closed_handshake_guard_test() {
   s_blocked.current |> should.equal("Dead")
 
   // Now fresh handshake arrives (heartbeat_age_ms = 450 <= 1000): guard is True
-  let fresh_ctx =
-    WiredContext(..nominal_wired_context(), heartbeat_age_ms: 450)
+  let fresh_ctx = WiredContext(..nominal_wired_context(), heartbeat_age_ms: 450)
   let assert Ok(s_restored) =
     step_wired(machine, s_dead, "heartbeat_tick", fresh_ctx)
   s_restored.current |> should.equal("Fresh")
@@ -373,14 +379,12 @@ pub fn integrated_homeostasis_multi_machine_flight_loop_test() {
 
   // Flight Phase 1: Nominal cruise
   let nom_ctx = nominal_wired_context()
-  let assert Ok(s_brk1) =
-    step_wired(breaker, s_brk0, "fault_detected", nom_ctx)
+  let assert Ok(s_brk1) = step_wired(breaker, s_brk0, "fault_detected", nom_ctx)
   let assert Ok(s_wd1) =
     step_wired(watchdog, s_wd0, wired_watchdog_signal(nom_ctx), nom_ctx)
   let assert Ok(s_ooda1) =
     step_wired(ooda, s_ooda0, "telemetry_sampled", nom_ctx)
-  let assert Ok(s_gate1) =
-    step_wired(gate, s_gate0, "stability_check", nom_ctx)
+  let assert Ok(s_gate1) = step_wired(gate, s_gate0, "stability_check", nom_ctx)
   let assert Ok(s_env1) =
     step_wired(envelope, s_env0, wired_envelope_signal(0.01), nom_ctx)
 
@@ -392,8 +396,7 @@ pub fn integrated_homeostasis_multi_machine_flight_loop_test() {
 
   // Flight Phase 2: Storm disturbance (degraded state)
   let deg_ctx = degraded_wired_context()
-  let assert Ok(s_brk2) =
-    step_wired(breaker, s_brk1, "fault_detected", deg_ctx)
+  let assert Ok(s_brk2) = step_wired(breaker, s_brk1, "fault_detected", deg_ctx)
   let assert Ok(s_wd2) =
     step_wired(watchdog, s_wd1, wired_watchdog_signal(deg_ctx), deg_ctx)
   let assert Ok(s_env2) =
@@ -408,8 +411,7 @@ pub fn integrated_homeostasis_multi_machine_flight_loop_test() {
     step_wired(breaker, s_brk2, "cooldown_expired", nom_ctx)
   let assert Ok(s_brk3) =
     step_wired(breaker, s_brk3_half, "canary_success", nom_ctx)
-  let assert Ok(s_wd3) =
-    step_wired(watchdog, s_wd2, "heartbeat_tick", nom_ctx)
+  let assert Ok(s_wd3) = step_wired(watchdog, s_wd2, "heartbeat_tick", nom_ctx)
   let assert Ok(s_env3) =
     step_wired(envelope, s_env2, wired_envelope_signal(0.02), nom_ctx)
 

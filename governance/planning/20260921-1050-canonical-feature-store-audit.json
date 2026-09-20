@@ -1,0 +1,51 @@
+{
+  "schema": "uos.canonical-feature-store-audit.v1",
+  "created_at": "2026-09-21T10:50:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "authority": "sa_plan_sqlite_read_only_observation",
+  "database": "var/sa-plan/uos.sqlite3",
+  "canonical_store_query": {
+    "id_prefix": "uos/system-features/",
+    "rows": 0,
+    "interpretation": "canonical digest-addressed feature/catalog/ledger records are not persisted in the current plan database"
+  },
+  "legacy_store_query": {
+    "kind": "harness-feature-tracking",
+    "rows": 52,
+    "distinct_feature_ids": 52,
+    "states": {"running": 52},
+    "interpretation": "legacy metadata-only workflows; not interchangeable with canonical digest-addressed records"
+  },
+  "census_context": {
+    "declaration_records": 861,
+    "mcp_declared_tools": 87,
+    "inventory_complete": false,
+    "runtime_availability": "UNKNOWN"
+  },
+  "correction": {
+    "supersedes": "governance/planning/20260921-1040-feature-db-coverage-reconciliation.json interpretation of feature workflow persistence",
+    "canonical_database_population": "not_observed",
+    "dashboard_completion": "must show canonical store absent, legacy rows separate",
+    "availability": "unknown_without_authorized_context",
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "required_actions": [
+    "execute digest-addressed feature/catalog/ledger persistence through authorized Sa-plan task",
+    "read back canonical IDs and verify payload and digest equality",
+    "expose canonical readback through MCP with bounded pagination",
+    "retain legacy rows as evidence and never merge them into canonical coverage"
+  ],
+  "verification": {
+    "commands": [
+      "sqlite3 -readonly -json var/sa-plan/uos.sqlite3 SELECT ... WHERE id LIKE 'uos/system-features/%'",
+      "sqlite3 -readonly -json var/sa-plan/uos.sqlite3 SELECT ... WHERE kind='harness-feature-tracking'"
+    ],
+    "observed": true,
+    "fresh_runtime_behavior": false,
+    "formal_two_key_verification": false,
+    "state": "observed_not_verified"
+  },
+  "tags": ["#fractal-l0", "#fractal-l1", "#mcp", "#sa-plan", "#dashboard", "#zero-muda"]
+}

@@ -25,7 +25,9 @@ pub type MutationRequest {
 ///
 /// Expected JSON shape:
 ///   {"verb": "start", "container": "ex-app-1", "reason": "operator restart"}
-pub fn mutation_request_decode(body: String) -> Result(MutationRequest, String) {
+pub fn mutation_request_decode(
+  body: String,
+) -> Result(MutationRequest, String) {
   let decoder = {
     use verb <- decode.field("verb", decode.string)
     use container <- decode.field("container", decode.string)
@@ -58,7 +60,11 @@ pub fn mutation_response_json(
 
 /// Encode an error response as a JSON string.
 /// All fields produced via gleam/json — no raw string concatenation (SC-GLM-UI-003).
-pub fn error_response_json(error: String, code: String, stamp: String) -> String {
+pub fn error_response_json(
+  error: String,
+  code: String,
+  stamp: String,
+) -> String {
   json.object([
     #("error", json.string(error)),
     #("code", json.string(code)),

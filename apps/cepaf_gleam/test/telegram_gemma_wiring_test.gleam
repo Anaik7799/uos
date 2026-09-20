@@ -22,7 +22,9 @@ pub fn telegram_board_directive_test() {
 
   let detail = query_tri_agent_board_detail()
   detail |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
-  detail |> string.contains("var/coordination/tri-agent/events/") |> should.be_true
+  detail
+  |> string.contains("var/coordination/tri-agent/events/")
+  |> should.be_true
   detail |> string.contains("SC-TRI-AGENT-001") |> should.be_true
 
   let intent =
@@ -32,18 +34,24 @@ pub fn telegram_board_directive_test() {
       user: "Avi",
       chat_id: "test-chat-board",
       text: "/board",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
-  decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Tri-Agent Swarm Message Board")
+  |> should.be_true
   decision.ooda_phase |> should.equal("Completed")
 }
 
 pub fn telegram_peers_directive_test() {
   envoy.set("UOS_TEST_MODE", "1")
   let peers = query_tri_agent_peers()
-  peers |> string.contains("Tri-Agent Swarm Active Peer Registry") |> should.be_true
-  peers |> string.contains("AGY (Google DeepMind Antigravity)") |> should.be_true
+  peers
+  |> string.contains("Tri-Agent Swarm Active Peer Registry")
+  |> should.be_true
+  peers
+  |> string.contains("AGY (Google DeepMind Antigravity)")
+  |> should.be_true
   peers |> string.contains("Claude (Anthropic)") |> should.be_true
   peers |> string.contains("Codex (OpenAI)") |> should.be_true
 
@@ -54,16 +62,22 @@ pub fn telegram_peers_directive_test() {
       user: "Avi",
       chat_id: "test-chat-peers",
       text: "/peers",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
-  decision.reply_markdown |> string.contains("Tri-Agent Swarm Active Peer Registry") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Tri-Agent Swarm Active Peer Registry")
+  |> should.be_true
 }
 
 pub fn telegram_memory_lifecycle_test() {
   envoy.set("UOS_TEST_MODE", "1")
   let chat_id = "test-chat-mem-lifecycle"
-  let _ = conversation_memory.clear_history(conversation_memory.default_db_path, chat_id)
+  let _ =
+    conversation_memory.clear_history(
+      conversation_memory.default_db_path,
+      chat_id,
+    )
 
   let intent1 =
     CognitiveIntent(
@@ -72,7 +86,7 @@ pub fn telegram_memory_lifecycle_test() {
       user: "Avi",
       chat_id: chat_id,
       text: "hello uos system",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let _ = evaluate_intent(intent1)
 
@@ -83,10 +97,12 @@ pub fn telegram_memory_lifecycle_test() {
       user: "Avi",
       chat_id: chat_id,
       text: "/memory",
-      timestamp_ms: 1788978901000,
+      timestamp_ms: 1_788_978_901_000,
     )
   let decision2 = evaluate_intent(intent2)
-  decision2.reply_markdown |> string.contains("Conversation Memory State") |> should.be_true
+  decision2.reply_markdown
+  |> string.contains("Conversation Memory State")
+  |> should.be_true
 
   let intent3 =
     CognitiveIntent(
@@ -95,10 +111,12 @@ pub fn telegram_memory_lifecycle_test() {
       user: "Avi",
       chat_id: chat_id,
       text: "/memory clear",
-      timestamp_ms: 1788978902000,
+      timestamp_ms: 1_788_978_902_000,
     )
   let decision3 = evaluate_intent(intent3)
-  decision3.reply_markdown |> string.contains("Conversation Memory Reset") |> should.be_true
+  decision3.reply_markdown
+  |> string.contains("Conversation Memory Reset")
+  |> should.be_true
 }
 
 pub fn telegram_fenced_tool_read_test() {
@@ -110,11 +128,13 @@ pub fn telegram_fenced_tool_read_test() {
       user: "Avi",
       chat_id: "test-chat-tool-read",
       text: "/tool query_system_health",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed (`query_system_health`)") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Tool Executed (`query_system_health`)")
+  |> should.be_true
 }
 
 pub fn telegram_fenced_tool_mutating_quorum_halt_test() {
@@ -126,27 +146,39 @@ pub fn telegram_fenced_tool_mutating_quorum_halt_test() {
       user: "Avi",
       chat_id: "test-chat-tool-mut",
       text: "/tool resuscitate_node",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Halt")
-  decision.reply_markdown |> string.contains("Fractal Jidoka Andon Stop Line Triggered") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Fractal Jidoka Andon Stop Line Triggered")
+  |> should.be_true
   decision.reply_markdown |> string.contains("-32003") |> should.be_true
-  decision.reply_markdown |> string.contains("Constitutional Quorum Violation") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Constitutional Quorum Violation")
+  |> should.be_true
 }
 
 pub fn telegram_multimodal_rack_cv_redacted_test() {
   let output = telegram_creative.handle_rack_cv(["test-chassis-photo"])
-  output |> string.contains("Computer Vision Server Rack Diagnostic") |> should.be_true
+  output
+  |> string.contains("Computer Vision Server Rack Diagnostic")
+  |> should.be_true
   output |> string.contains("Multimodal Vector (SC-MM-001)") |> should.be_true
   output |> string.contains("vision_rack_inspection") |> should.be_true
-  output |> string.contains(egress_redactor.redacted_serial_placeholder) |> should.be_true
-  output |> string.contains(egress_redactor.denied_os_nvme_serial) |> should.be_false
+  output
+  |> string.contains(egress_redactor.redacted_serial_placeholder)
+  |> should.be_true
+  output
+  |> string.contains(egress_redactor.denied_os_nvme_serial)
+  |> should.be_false
 }
 
 pub fn telegram_multimodal_acoustic_fft_test() {
   let output = telegram_creative.handle_acoustic(["test-audio-sample"])
-  output |> string.contains("Acoustic Bearing Degradation Diagnostic") |> should.be_true
+  output
+  |> string.contains("Acoustic Bearing Degradation Diagnostic")
+  |> should.be_true
   output |> string.contains("Multimodal Vector (SC-MM-001)") |> should.be_true
   output |> string.contains("acoustic_vibration") |> should.be_true
   output |> string.contains("1240.0") |> should.be_true
@@ -164,18 +196,27 @@ pub fn telegram_directive_extractor_test() {
     <> "All systems are operating nominally."
 
   let dirs = extract_directives_from_response(text)
-  dirs |> should.equal(["/status", "/board", "/tool query_immune_status", "/storage"])
+  dirs
+  |> should.equal(["/status", "/board", "/tool query_immune_status", "/storage"])
 
   let stripped = strip_directive_lines(text)
   stripped |> string.contains("DIRECTIVE:") |> should.be_false
-  stripped |> string.contains("I have analyzed the UOS system state.") |> should.be_true
-  stripped |> string.contains("All systems are operating nominally.") |> should.be_true
+  stripped
+  |> string.contains("I have analyzed the UOS system state.")
+  |> should.be_true
+  stripped
+  |> string.contains("All systems are operating nominally.")
+  |> should.be_true
 }
 
 pub fn telegram_autonomous_offline_gateway_generic_query_test() {
   envoy.set("UOS_TEST_MODE", "1")
   let chat_id = "test-offline-generic-chat"
-  let _ = conversation_memory.clear_history(conversation_memory.default_db_path, chat_id)
+  let _ =
+    conversation_memory.clear_history(
+      conversation_memory.default_db_path,
+      chat_id,
+    )
 
   let intent =
     CognitiveIntent(
@@ -184,21 +225,34 @@ pub fn telegram_autonomous_offline_gateway_generic_query_test() {
       user: "Avi",
       chat_id: chat_id,
       text: "show me what is happening in the uos system",
-      timestamp_ms: 1788978910000,
+      timestamp_ms: 1_788_978_910_000,
     )
 
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
-  decision.reply_markdown |> string.contains("Deterministic Autonomous Directive Gateway") |> should.be_true
-  decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
-  decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Deterministic Autonomous Directive Gateway")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("UOS Cluster Telemetry")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Tri-Agent Swarm Message Board")
+  |> should.be_true
 
   // Verify direct gateway invocation
   let direct_decision = handle_conversational_offline_gateway("status", intent)
-  direct_decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
+  direct_decision.reply_markdown
+  |> string.contains("UOS Cluster Telemetry")
+  |> should.be_true
 
   // Verify memory persistence across turn
-  let history = conversation_memory.get_recent_history(conversation_memory.default_db_path, chat_id, 5)
+  let history =
+    conversation_memory.get_recent_history(
+      conversation_memory.default_db_path,
+      chat_id,
+      5,
+    )
   history |> should.not_equal([])
 }
 
@@ -211,14 +265,20 @@ pub fn telegram_autonomous_offline_gateway_storage_query_test() {
       user: "Avi",
       chat_id: "test-offline-storage-chat",
       text: "check storage nvme and disk pools",
-      timestamp_ms: 1788978911000,
+      timestamp_ms: 1_788_978_911_000,
     )
 
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
-  decision.reply_markdown |> string.contains("Deterministic Autonomous Directive Gateway: /storage") |> should.be_true
-  decision.reply_markdown |> string.contains(egress_redactor.redacted_serial_placeholder) |> should.be_true
-  decision.reply_markdown |> string.contains(egress_redactor.denied_os_nvme_serial) |> should.be_false
+  decision.reply_markdown
+  |> string.contains("Deterministic Autonomous Directive Gateway: /storage")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains(egress_redactor.redacted_serial_placeholder)
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains(egress_redactor.denied_os_nvme_serial)
+  |> should.be_false
 }
 
 pub fn telegram_execute_harness_tools_expanded_test() {
@@ -259,8 +319,12 @@ pub fn telegram_execute_harness_tools_expanded_test() {
   cv |> should.be_ok
   case cv {
     Ok(s) -> {
-      s |> string.contains(egress_redactor.redacted_serial_placeholder) |> should.be_true
-      s |> string.contains(egress_redactor.denied_os_nvme_serial) |> should.be_false
+      s
+      |> string.contains(egress_redactor.redacted_serial_placeholder)
+      |> should.be_true
+      s
+      |> string.contains(egress_redactor.denied_os_nvme_serial)
+      |> should.be_false
     }
     Error(_) -> panic as "expected ok"
   }
@@ -276,4 +340,3 @@ pub fn telegram_execute_harness_tools_expanded_test() {
     Error(_) -> panic as "expected ok"
   }
 }
-

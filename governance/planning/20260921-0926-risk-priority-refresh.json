@@ -1,0 +1,26 @@
+{
+  "schema": "uos.execution-risk-priority-receipt.v2",
+  "timestamp_utc": "2026-09-21T09:26:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/risk-priority-check --all",
+  "result": {
+    "status": "PASS",
+    "baseline_checks": 375,
+    "adversarial_checks": 32843,
+    "independent_dag_scenarios": 32768,
+    "local_paths_checked": 39
+  },
+  "execution_order": [
+    "canonical feature persistence and digest-bound readback",
+    "authorized MCP discovery and runtime probes",
+    "authenticated holon enrollment, heartbeat, and ACK",
+    "formal/runtime two-key verification",
+    "independent release and operational acceptance"
+  ],
+  "authority": "NONE",
+  "runtime_enforcement": "NOT_ASSERTED",
+  "runtime_admission": "NOT_GRANTED",
+  "live_agent_tests": "UNRUN",
+  "log_sha256": "8ae4d5edf26bcf975d4184cef6f4f4cf1225c1700a433cd6df560b81889c390f",
+  "canonical_task_remains_open": true
+}

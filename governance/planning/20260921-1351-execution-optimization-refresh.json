@@ -1,0 +1,22 @@
+{
+  "schema": "uos.execution-optimization-refresh.v1",
+  "timestamp": "20260921-1351",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "current_status": {"total": 21, "completed": 4, "ready": 3, "executing": 0},
+  "new_evidence": [
+    {"artifact": "governance/planning/20260921-1347-mcp-progress-regression-receipt.json", "effect": "primary MCP progress declaration and dispatch verified; coordinator gate still refuses replay"},
+    {"artifact": "governance/planning/20260921-1349-recovery-suite-receipt.json", "effect": "isolated recovery suite 669/0 pass; activation remains denied"}
+  ],
+  "optimized_order": [
+    {"rank": 1, "task": "t0-coordination", "condition": "repair or replace corrupt coordinator history through an independently authorized recovery path"},
+    {"rank": 2, "task": "t2-contracts", "condition": "issue task-bound harness grant for current Sa-plan attempt and candidate"},
+    {"rank": 3, "task": "r02-recovery-candidate", "condition": "independent release authority reviews the 669/0 recovery evidence"},
+    {"rank": 4, "task": "t3-evidence", "condition": "t2 and coordination observations are complete and fresh"}
+  ],
+  "policy": {
+    "mcp_unknown_tools": "fail_closed",
+    "blocked_states": "never complete",
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "uos.coordinator-session-status-observation.v1",
+  "observed_at": "2026-09-21T16:09:14Z",
+  "authority": "read-only observation; no registration or lease mutation",
+  "coordinator": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84"
+  },
+  "command": "gleam run -m session_store_cli -- /home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3 status",
+  "result": {
+    "ok": false,
+    "error": "corrupt: session is not registered"
+  },
+  "interpretation": "The coordinator refuses status/lease operations for the current unregistered session. This is fail-closed and blocks task claims until an independently authorized session registration is observed through Sa-plan/coordinator authority.",
+  "next_action": "Do not self-register or claim work; await authorized enrollment and preserve the hold."
+}

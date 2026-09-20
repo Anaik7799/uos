@@ -1,0 +1,35 @@
+--- /tmp/uos-stabilization-20260930/preimages/codex-config.toml	2026-09-30 06:01:51.117542037 +0200
++++ .codex/config.toml	2026-09-30 06:03:19.682942472 +0200
+@@ -1,5 +1,7 @@
+ # Project-local MCP registration. This does not grant task or runtime authority.
+ # Only observed read operations are enabled until control bindings are verified.
++# Canonical Sa-plan status and capability inventory were exercised via initialized
++# stdio MCP under uos/stabilization/20260930-0311. Neither admits task effects.
+ [mcp_servers.uos_gleam]
+ command = "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl"
+ args = [
+@@ -11,7 +13,10 @@
+ ]
+ startup_timeout_sec = 20
+ tool_timeout_sec = 30
+-enabled_tools = ["read_file", "knowledge_search"]
++enabled_tools = [
++  "read_file", "knowledge_search",
++  "sa_plan_status_for", "mcp_capability_inventory",
++]
+ 
+ [mcp_servers.uos_gleam.env]
+ ERL_CRASH_DUMP_SECONDS = "0"
+@@ -22,6 +27,12 @@
+ [mcp_servers.uos_gleam.tools.read_file]
+ approval_mode = "approve"
+ 
++[mcp_servers.uos_gleam.tools.sa_plan_status_for]
++approval_mode = "approve"
++
++[mcp_servers.uos_gleam.tools.mcp_capability_inventory]
++approval_mode = "approve"
++
+ # Full task-scoped interface. Enable only with a current reviewed launcher grant.
+ # Grant values are inherited from the launcher environment, never checked in.
+ [mcp_servers.uos_development]

@@ -27,6 +27,7 @@ import gleam/float
 import gleam/int
 
 const tailscale_base_url = "http://nas-1.tail55d152.ts.net:4100"
+
 const peer_base_url = "http://vm-1.tail55d152.ts.net:8088"
 
 /// Mathematical Gates descriptor.
@@ -125,8 +126,7 @@ fn verdict_to_string(verdict: QuorumVerdict) -> String {
       "RATIFIED (" <> int.to_string(app) <> "/" <> int.to_string(tot) <> ")"
     VerdictRejected(rej, tot) ->
       "REJECTED (" <> int.to_string(rej) <> "/" <> int.to_string(tot) <> ")"
-    VerdictByzantineFault(violator, _) ->
-      "BYZANTINE FAULT (" <> violator <> ")"
+    VerdictByzantineFault(violator, _) -> "BYZANTINE FAULT (" <> violator <> ")"
   }
 }
 
@@ -211,7 +211,9 @@ pub fn render_checklist_accordion() -> String {
   <> "</summary>"
   <> "<ul style=\"list-style:none; padding-left:10px; margin-top:10px; font-size:12px;\">"
   <> "<li>[x] CHK-01-TIME: Canonical YYYYMMDD-HHSS- timestamp synchronization verified.</li>"
-  <> "<li>[x] CHK-02-TAIL: Universal Tailscale FQDN links enforced (" <> tailscale_base_url <> ").</li>"
+  <> "<li>[x] CHK-02-TAIL: Universal Tailscale FQDN links enforced ("
+  <> tailscale_base_url
+  <> ").</li>"
   <> "<li>[x] CHK-03-FRACT: Fractal L0-L9 architecture classification active.</li>"
   <> "<li>[x] CHK-04-KM: Transclusion syntax [[wiki:...]] &amp; [[zk:...]] verified.</li>"
   <> "<li>[x] CHK-05-MUDA: Strict Zero-Muda Purity (0 Bevy, 0 Graphite).</li>"

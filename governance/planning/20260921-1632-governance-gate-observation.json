@@ -1,0 +1,23 @@
+{
+  "schema": "uos.governance-gate-observation.v1",
+  "observed_at": "2026-09-21T16:32:00Z",
+  "authority": "read-only repository gate execution",
+  "doctor": {
+    "log": "/tmp/uos-doctor-20260921-1632.log",
+    "sha256": "244af1d88b135c928204e0b4c3e24597662164958f3d6c6c0e4c805521ec3204",
+    "exit": 0,
+    "result": "HOLD",
+    "checkable_artifacts": 20,
+    "unverifiable_cycles": 91
+  },
+  "checklist": {
+    "log": "/tmp/uos-checklist-20260921-1632.log",
+    "sha256": "483564a3c1c2e3c87dbbcb162286695b6a9dcd6dd06e83c95aad7ac670ce635d",
+    "exit": 0,
+    "result": "18/18 structural checks passed"
+  },
+  "critical_finding": "Doctor reports EV-94..EV-111 as verified artifacts while repository policy pins admitted EV ceiling at EV-93 and marks that range NOT_ADMITTED. Existing artifacts do not constitute two-key admission.",
+  "decision": "HOLD",
+  "completion_credit": false,
+  "next_gate": "governance artifact reconciliation under EV-93 ceiling and two-key review"
+}

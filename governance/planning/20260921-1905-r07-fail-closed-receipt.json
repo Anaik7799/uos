@@ -1,0 +1,25 @@
+{
+  "schema": "uos.r07-fail-closed-receipt.v1",
+  "timestamp": "20260921-1905",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r07-hive-swarm",
+  "change": {
+    "source": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+    "sha256": "7224d79b7ba2dd40038a01cdead7d9899f7aafa103542bb6b6991d6576ced2e5",
+    "behavior": "rete_rule_conflict rejects malformed rules instead of silently evaluating an empty set"
+  },
+  "regression": {
+    "test": "tool_rete_rule_conflict_rejects_invalid_rules_test",
+    "test_source": "apps/cepaf_gleam/test/mcp_inference_models_test.gleam",
+    "test_source_sha256": "a2e985d7e70b74e045914e65af063bae8e3b1e32344d9041026483a3aefb19c9",
+    "command": "gleam test --target erlang",
+    "log": "/tmp/gleam-test-r07-failclosed-1859.log",
+    "log_sha256": "57f7538a6ab02e6d93df675479ab48d11a74c1c0115d4cb6e4220d617b8f52ca",
+    "result": "11993 passed, no failures"
+  },
+  "authority": "audit_only",
+  "effect_authority": false,
+  "admission": "not_admitted",
+  "completion_credit": false,
+  "next_gate": "candidate-bound Sa-plan execution and independent swarm acceptance"
+}

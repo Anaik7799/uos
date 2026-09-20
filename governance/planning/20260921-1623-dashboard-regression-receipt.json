@@ -1,0 +1,19 @@
+{
+  "schema": "uos.dashboard-regression-receipt.v1",
+  "observed_at": "2026-09-21T16:23:18Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r13-task-dashboard",
+  "authority": "development verification only; no Sa-plan claim or admission",
+  "change": {
+    "path": "apps/cepaf_gleam/test/execution_projection_test.gleam",
+    "sha256": "c5913eebea05cdde89380a042e339f47d309372d704a71bfb344eb1f08ac89e3",
+    "description": "Bound the child risk dependency to the completed parent so the regression test exercises real priority propagation rather than failing risk_current validation before the guard."
+  },
+  "test": {
+    "command": "gleam test --target erlang",
+    "log_sha256": "e1d499131e763c69cc0fc9a63ca02e56b0d051a5f2c9978cf64f447878ecc4d2",
+    "result": "11992 passed, no failures"
+  },
+  "interpretation": "The completed-dependency priority guard now has non-vacuous full-suite coverage. This does not establish runtime admission or Sa-plan task completion.",
+  "completion_credit": false
+}

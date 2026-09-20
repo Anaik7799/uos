@@ -1,0 +1,15 @@
+{
+  "schema": "uos.dashboard-current-observation.v1",
+  "timestamp": "20260921-1654",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "observer_output": "governance/planning/20260921-1641-execution-observer-output.json",
+  "observer_output_sha256": "4fcf67a4bddb7e1d057462fa4006e5b978afeff8fc0d5632f902373cc809dfec",
+  "risk_portfolio": "governance/planning/20260921-1640-risk-portfolio-current.json",
+  "risk_portfolio_sha256": "548c248c01a45b22c1b524788f883ac494447807dbaa400db90cf251d83150c5",
+  "counts": {"total": 21, "completed": 4, "blocked": 17, "executing": 0, "unknown": 0},
+  "graph": {"edges": 25, "cycles": 0, "missing_targets": 0, "recommendations": []},
+  "completed_priority_targets": {"r01-store-gates": null, "t1-tracker": null},
+  "authority": "read_only_projection",
+  "runtime_admission": "not_granted",
+  "admission": "not_admitted"
+}

@@ -14,7 +14,8 @@ import cepaf_gleam/cortex/cortex_denotational_bridge.{
 }
 import cepaf_gleam/cortex/cortex_types.{SourceWebCockpit, TaskIntent}
 import cepaf_gleam/cortex/poodavr_actor.{
-  StageHalt, StagePredict, StageReflect, execute_pure_poodavr, init_poodavr_state,
+  StageHalt, StagePredict, StageReflect, execute_pure_poodavr,
+  init_poodavr_state,
 }
 import cepaf_gleam/fpp/interp.{dispatch_signal, init_machine}
 import cepaf_gleam/fpp/poodavr_fprime.{poodavr_lifecycle_fprime}
@@ -27,9 +28,7 @@ import cepaf_gleam/semantics/algebraic_atlas.{
 }
 import cepaf_gleam/ui/lustre/fractal_atlas_cockpit.{init_model, render_cockpit}
 import cepaf_gleam/ui/tui/fractal_atlas_tui.{render_atlas_tui}
-import cepaf_gleam/verification/aspect_coverage_engine.{
-  evaluate_all_aspects,
-}
+import cepaf_gleam/verification/aspect_coverage_engine.{evaluate_all_aspects}
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
@@ -116,7 +115,7 @@ pub fn denotational_intent_fail_closed_on_unconstitutional_test() {
       lyapunov_energy: 0.5,
       cyclomatic_complexity: 90,
       divergence_ppm: 100,
-      itqs_quality: 0.90,
+      itqs_quality: 0.9,
       quarantine_flags: 0,
       worker_hash: "whash",
       plan_digest: "pdigest",
@@ -128,7 +127,7 @@ pub fn denotational_intent_fail_closed_on_unconstitutional_test() {
       chart: L5CognitiveOODA,
       coordinates: coords,
       payload_json: "{}",
-      constitutional_health: 0.90,
+      constitutional_health: 0.9,
     )
 
   let bad_intent =
@@ -172,8 +171,7 @@ pub fn atlas_sheaf_gluing_consistency_test() {
 pub fn atlas_morphism_cocycle_transitivity_test() {
   let phi_01 =
     TransitionMorphism(L0Constitutional, L1AtomicKernel, "phi_01", True)
-  let phi_12 =
-    TransitionMorphism(L1AtomicKernel, L2Homeostasis, "phi_12", True)
+  let phi_12 = TransitionMorphism(L1AtomicKernel, L2Homeostasis, "phi_12", True)
 
   let composed = compose_morphisms(phi_01, phi_12)
   composed |> should.be_ok()
@@ -258,7 +256,7 @@ pub fn poodavr_hardware_storage_lock_interlock_veto_test() {
 
   decision.is_halted |> should.be_true()
   decision.stage |> should.equal(StageHalt)
-  decision.halt_code |> should.equal(Some(-32002))
+  decision.halt_code |> should.equal(Some(-32_002))
   decision.denotational_status |> should.equal("VetoedByHardwareInterlock")
   next_state.current_stage |> should.equal(StageHalt)
 }
@@ -282,7 +280,7 @@ pub fn poodavr_sa_plan_jidoka_andon_halt_test() {
 
   decision.is_halted |> should.be_true()
   decision.stage |> should.equal(StageHalt)
-  decision.halt_code |> should.equal(Some(-32002))
+  decision.halt_code |> should.equal(Some(-32_002))
   decision.denotational_status |> should.equal("VetoedBySaPlanJidoka")
   next_state.current_stage |> should.equal(StageHalt)
 }
@@ -307,12 +305,22 @@ pub fn fprime_poodavr_full_lifecycle_test() {
 
   // Transition to Deciding (guard intent_is_safe = True)
   let assert Ok(s3) =
-    dispatch_signal(machine, [#("intent_is_safe", True)], s2, "orientation_cleared")
+    dispatch_signal(
+      machine,
+      [#("intent_is_safe", True)],
+      s2,
+      "orientation_cleared",
+    )
   s3.current |> should.equal("Deciding")
 
   // Transition to Acting (guard breakers_closed = True)
   let assert Ok(s4) =
-    dispatch_signal(machine, [#("breakers_closed", True)], s3, "decision_ratified")
+    dispatch_signal(
+      machine,
+      [#("breakers_closed", True)],
+      s3,
+      "decision_ratified",
+    )
   s4.current |> should.equal("Acting")
 
   // Transition to Verifying
@@ -321,7 +329,12 @@ pub fn fprime_poodavr_full_lifecycle_test() {
 
   // Transition to Reflecting (guard trace13_conserved = True)
   let assert Ok(s6) =
-    dispatch_signal(machine, [#("trace13_conserved", True)], s5, "verification_passed")
+    dispatch_signal(
+      machine,
+      [#("trace13_conserved", True)],
+      s5,
+      "verification_passed",
+    )
   s6.current |> should.equal("Reflecting")
 
   // Transition back to Predicting (cycle complete)
@@ -355,7 +368,8 @@ pub fn tripartite_atlas_cockpit_tui_render_test() {
   let tui_output = render_atlas_tui(None, report)
 
   string.contains(tui_output, "10-CHART FRACTAL ATLAS") |> should.be_true()
-  string.contains(tui_output, "POODAVR 7-STAGE CYBERNETIC LOOP") |> should.be_true()
+  string.contains(tui_output, "POODAVR 7-STAGE CYBERNETIC LOOP")
+  |> should.be_true()
   string.contains(tui_output, "17 CANONICAL SYSTEM ASPECTS") |> should.be_true()
   string.contains(tui_output, "25503L801736") |> should.be_true()
 }

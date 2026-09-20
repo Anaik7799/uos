@@ -232,7 +232,7 @@ pub fn ingest_c3i_knowledge_inventory() -> List(CitedKnowledgeItem) {
       category: SmritiFact,
       source_path: "sub-projects/c3i/lib/indrajaal/smriti/automation/knowledge_agent.ex",
       citation_text: "Entity-attribute-value semantic link graph with W3C OTel trace correlation",
-      initial_trust: 0.90,
+      initial_trust: 0.9,
       decayed_trust: 0.88,
       verified: True,
     ),
@@ -309,7 +309,10 @@ pub fn detect_anti_patterns(content: String) -> List(AntiPatternSpec) {
 }
 
 /// Queries cited recall with trust decay filtering and OCaml port receipt
-pub fn query_cited_recall(query: String, min_trust: Float) -> KnowledgeRecallResult {
+pub fn query_cited_recall(
+  query: String,
+  min_trust: Float,
+) -> KnowledgeRecallResult {
   let inventory = ingest_c3i_knowledge_inventory()
   let query_lower = string.lowercase(query)
   let matched_items =
@@ -416,7 +419,12 @@ pub fn get_c3i_knowledge_runtime_status() -> String {
       #("dry_run_errors", json.int(0)),
       #("zero_muda", json.string("0_BEVY_0_GRAPHITE_PURE_ERLANG")),
       #("storage_safety", json.string("HARD_DENIED_NVME_LOCKED_25503L801736")),
-      #("tailscale_fqdn", json.string("http://nas-1.tail55d152.ts.net:4100/api/verify/c3i-knowledge")),
+      #(
+        "tailscale_fqdn",
+        json.string(
+          "http://nas-1.tail55d152.ts.net:4100/api/verify/c3i-knowledge",
+        ),
+      ),
     ]),
   )
 }

@@ -1,0 +1,29 @@
+{
+  "schema": "uos.r07-retest-risk-preflight.v1",
+  "timestamp": "20260921-1853",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r07-hive-swarm",
+  "test": {
+    "command": "gleam test --target erlang",
+    "log": "/tmp/gleam-test-mcp-current.log",
+    "log_sha256": "cae12e12731fdf4b456e832516e4fcb77b2bddee87103967105cfb4f16daca09",
+    "result": "11992 passed, no failures",
+    "source_sha256": {
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam": "7ffe6f5432478492f69e275add4cabb5333d0f3cb804b532a5d955d6b32e03fb",
+      "apps/cepaf_gleam/test/mcp_inference_models_test.gleam": "6da952cf10696bf9b12f4dc4c7956e28c79d691db4599aa0a361e286c7cf639a"
+    },
+    "wrapper_note": "The shell wrapper attempted assignment to zsh read-only variable status after the test completed; test output is authoritative and reports no failures."
+  },
+  "risk_preflight": {
+    "portfolio": "governance/planning/20260921-1825-risk-portfolio-refresh.json",
+    "portfolio_sha256": "b59f35536bf45d93c7169b3e154f8dbaabd3c9fa2356e9182021ff7aaf2de673",
+    "result": "HOLD",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "finding": "RP-SELECTION",
+    "detail": "r07-hive-swarm is not the first eligible candidate; Sa-plan order and higher-priority work must be resolved before claim."
+  },
+  "completion_credit": false,
+  "admission": "not_admitted",
+  "next_gate": "execute the first eligible Sa-plan task through an admitted harness role, then rerun candidate-bound swarm acceptance"
+}

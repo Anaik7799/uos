@@ -9,6 +9,11 @@
 //// Grammar of Graphics (ggplot2) and Scientific Visualization in UOS.
 //// Corresponds to Lean 4 formal specification: formal/lean/GGPlot2_Denotational_Atlas.lean
 
+import cepaf_gleam/sciviz/schema.{
+  type DarkCockpitTheme, type GeomType, type Point2D, type SciVizPlot,
+  DataSeries, GeomArea, GeomBar, GeomBoxplot, GeomDensity2D, GeomLine, GeomPoint,
+  GeomViolin, Point2D, Scale2D, SciVizPlot,
+}
 import gleam/bit_array
 import gleam/crypto
 import gleam/float
@@ -16,27 +21,32 @@ import gleam/int
 import gleam/list
 import gleam/option.{type Option, None}
 import gleam/string
-import cepaf_gleam/sciviz/schema.{
-  type DarkCockpitTheme, type GeomType, type Point2D, type SciVizPlot,
-  DataSeries, GeomArea, GeomBar, GeomBoxplot, GeomDensity2D, GeomLine, GeomPoint,
-  GeomViolin, Point2D, Scale2D, SciVizPlot,
-}
 
 /// Hardware Storage Interlock — Denied Root OS NVMe Serial
 pub const hard_denied_system_os_serial: String = "25503L801736"
 
 /// The 10 Visual Atlas Charts corresponding to fractal layers L0 through L9.
 pub type VisualChart {
-  U0PhysicalCanvas      // Physical viewBox, display constraints, SIL-6 safety bounds
-  U1DataDomain          // Raw tabular relation and tensor observations
-  U2StatMeasure         // Statistical estimation, densities, histograms, quantiles
-  U3NormalizedUnit      // Unit space [0, 1] x [0, 1] device coordinate domain
-  U4CoordManifold       // Affine Cartesian, Polar, Fixed-ratio, Conformal map projections
-  U5FacetSubspaces      // Tessellated sub-panel manifold partitions (Grid/Wrap)
-  U6GeomGrob            // Concrete visual mark graphs (points, lines, polygons, glyphs)
-  U7GuideInverse        // Adjoint dual inverse-mappings (axes, legends, colorbars)
-  U8ThemedSurface       // Visual chromatic environment (Dark Cockpit ergonomics)
-  U9TelemetryStream     // Mission real-time telemetry stream and sovereign composite
+  U0PhysicalCanvas
+  // Physical viewBox, display constraints, SIL-6 safety bounds
+  U1DataDomain
+  // Raw tabular relation and tensor observations
+  U2StatMeasure
+  // Statistical estimation, densities, histograms, quantiles
+  U3NormalizedUnit
+  // Unit space [0, 1] x [0, 1] device coordinate domain
+  U4CoordManifold
+  // Affine Cartesian, Polar, Fixed-ratio, Conformal map projections
+  U5FacetSubspaces
+  // Tessellated sub-panel manifold partitions (Grid/Wrap)
+  U6GeomGrob
+  // Concrete visual mark graphs (points, lines, polygons, glyphs)
+  U7GuideInverse
+  // Adjoint dual inverse-mappings (axes, legends, colorbars)
+  U8ThemedSurface
+  // Visual chromatic environment (Dark Cockpit ergonomics)
+  U9TelemetryStream
+  // Mission real-time telemetry stream and sovereign composite
 }
 
 pub fn chart_to_int(chart: VisualChart) -> Int {
@@ -113,14 +123,12 @@ pub fn compose_morphisms(
 ) -> Result(AtlasMorphism, String) {
   case m1.target_chart == m2.source_chart {
     True ->
-      Ok(
-        AtlasMorphism(
-          source_chart: m1.source_chart,
-          target_chart: m2.target_chart,
-          morphism_name: m1.morphism_name <> " ∘ " <> m2.morphism_name,
-          is_bijective: m1.is_bijective && m2.is_bijective,
-        ),
-      )
+      Ok(AtlasMorphism(
+        source_chart: m1.source_chart,
+        target_chart: m2.target_chart,
+        morphism_name: m1.morphism_name <> " ∘ " <> m2.morphism_name,
+        is_bijective: m1.is_bijective && m2.is_bijective,
+      ))
     False ->
       Error(
         "MorphismCompositionMismatch: m1.target ("
@@ -239,33 +247,34 @@ pub fn default_aesthetic_intent(x: String, y: String) -> AestheticIntent {
 pub fn mark_to_geom(mark: MarkIntent) -> GeomType {
   case mark {
     MarkPoint(size, color) -> GeomPoint(size: size, color: color)
-    MarkLine(width, color) -> GeomLine(stroke_width: width, color: color, dashed: False)
+    MarkLine(width, color) ->
+      GeomLine(stroke_width: width, color: color, dashed: False)
     MarkArea(fill, opacity) -> GeomArea(fill_color: fill, opacity: opacity)
     MarkBar(width, fill) -> GeomBar(bar_width: width, fill_color: fill)
     MarkDensity(levels, color) -> GeomDensity2D(levels: levels, color: color)
-    MarkBoxplot(width, fill) -> GeomBoxplot(width: width, fill_color: fill, stroke_color: "#ffffff")
-    MarkViolin(bandwidth, fill) -> GeomViolin(bandwidth: bandwidth, fill_color: fill, opacity: 0.6)
+    MarkBoxplot(width, fill) ->
+      GeomBoxplot(width: width, fill_color: fill, stroke_color: "#ffffff")
+    MarkViolin(bandwidth, fill) ->
+      GeomViolin(bandwidth: bandwidth, fill_color: fill, opacity: 0.6)
   }
 }
 
 /// Calculates bounds of dataset for Scale Training.
-pub fn compute_data_bounds(points: List(Point2D)) -> #(Float, Float, Float, Float) {
+pub fn compute_data_bounds(
+  points: List(Point2D),
+) -> #(Float, Float, Float, Float) {
   case points {
     [] -> #(0.0, 100.0, 0.0, 100.0)
     [first, ..rest] -> {
-      list.fold(
-        rest,
-        #(first.x, first.x, first.y, first.y),
-        fn(acc, p) {
-          let #(min_x, max_x, min_y, max_y) = acc
-          #(
-            float.min(min_x, p.x),
-            float.max(max_x, p.x),
-            float.min(min_y, p.y),
-            float.max(max_y, p.y),
-          )
-        },
-      )
+      list.fold(rest, #(first.x, first.x, first.y, first.y), fn(acc, p) {
+        let #(min_x, max_x, min_y, max_y) = acc
+        #(
+          float.min(min_x, p.x),
+          float.max(max_x, p.x),
+          float.min(min_y, p.y),
+          float.max(max_y, p.y),
+        )
+      })
     }
   }
 }
@@ -332,7 +341,8 @@ pub fn evaluate_visual_intent(
                 )
 
               // Stage 5 & 6: Position & Coordinate Assembly
-              let series = DataSeries(name: intent.dataset_name, points: raw_points)
+              let series =
+                DataSeries(name: intent.dataset_name, points: raw_points)
               let compiled_plot =
                 SciVizPlot(
                   title: "SciViz Plot: " <> intent.intent_id,

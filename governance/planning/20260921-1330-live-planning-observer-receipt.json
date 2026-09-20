@@ -1,0 +1,18 @@
+{
+  "schema": "uos.live-planning-observer-receipt.v1",
+  "timestamp": "20260921-1330Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "gleam run -m cepaf_gleam/planning/execution_observer",
+  "result": "PASS_OBSERVED",
+  "authority": "read_only_projection; Sa-plan alone owns execution",
+  "database": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+  "task_snapshot_sha256": "cfd3a0a27fe242f180440d4bfed39c6b7fe1443b9fe032f1722435c6d8fef0cd",
+  "risk_snapshot_sha256": "d72c6f8560070e97a5e015e12b047394d2a5f048cb8054299d5b116818b30216",
+  "summary": {"total": 21, "completed": 4, "blocked": 14, "unknown": 3, "active": 0, "pending": 0},
+  "reconciliation": {
+    "sa_plan_status_ready": 3,
+    "observer_pending": 0,
+    "interpretation": "observer risk/dependency projection classifies ready work as blocked or unknown until all gates are observed; no work is promoted to complete"
+  },
+  "completion": {"dashboard_runtime_observed": true, "effect_authority": false, "runtime_admission": "NOT_GRANTED", "goal_complete": false}
+}

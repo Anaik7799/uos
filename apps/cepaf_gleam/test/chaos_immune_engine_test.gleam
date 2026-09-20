@@ -3,9 +3,9 @@
 //// =============================================================================
 
 import cepaf_gleam/immune/chaos_immune_engine.{
-  AntibodyNeutralized, AndonEmergencyHalt, HotReloadTriggered,
-  PacketLoss, WorkerOom, compute_metabolic_health, init_immune_engine,
-  inject_fault, is_containment_preserved, synthesize_antibody,
+  AndonEmergencyHalt, AntibodyNeutralized, HotReloadTriggered, PacketLoss,
+  WorkerOom, compute_metabolic_health, init_immune_engine, inject_fault,
+  is_containment_preserved, synthesize_antibody,
 }
 import gleam/list
 import gleeunit/should
@@ -51,7 +51,9 @@ pub fn immune_worker_oom_hot_reload_test() {
 pub fn immune_synthesize_antibody_test() {
   let engine = init_immune_engine()
   let updated = synthesize_antibody(engine, "packet_loss")
-  case list.find(updated.antibodies, fn(ab) { ab.target_fault == "packet_loss" }) {
+  case
+    list.find(updated.antibodies, fn(ab) { ab.target_fault == "packet_loss" })
+  {
     Ok(ab) -> {
       ab.generation |> should.equal(2)
       should.be_true(ab.potency >=. 0.95)

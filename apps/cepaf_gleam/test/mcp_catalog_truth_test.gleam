@@ -66,3 +66,15 @@ pub fn catalog_does_not_claim_live_server_or_fake_session_count_test() {
   body |> string.contains("\"active_sessions\":null") |> should.be_true
   body |> string.contains("UNAVAILABLE: no runtime binding") |> should.be_true
 }
+
+pub fn capability_inventory_preserves_unprobed_boundary_test() {
+  let request =
+    "{\"jsonrpc\":\"2.0\",\"id\":8,\"method\":\"tools/call\",\"params\":{\"name\":\"mcp_capability_inventory\",\"arguments\":{}}}"
+  let assert Some(response) = server.handle_request_raw(request)
+  response
+  |> string.contains("uos.mcp-capability-inventory.v1")
+  |> should.be_true
+  response |> string.contains("declared_unprobed_count") |> should.be_true
+  response |> string.contains("not_granted") |> should.be_true
+  response |> string.contains("declared_unprobed") |> should.be_true
+}

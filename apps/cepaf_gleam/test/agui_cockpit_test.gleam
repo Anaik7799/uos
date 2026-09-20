@@ -45,7 +45,10 @@ pub fn agui_cockpit_view_test() {
   // Verify Real-Time Lyapunov Sparkline SVG
   string.contains(html, "Real-Time Lyapunov &lambda;(t) Sparkline")
   |> should.be_true()
-  string.contains(html, "<svg width=\"100%\" height=\"48\" viewBox=\"0 0 240 48\"")
+  string.contains(
+    html,
+    "<svg width=\"100%\" height=\"48\" viewBox=\"0 0 240 48\"",
+  )
   |> should.be_true()
 }
 

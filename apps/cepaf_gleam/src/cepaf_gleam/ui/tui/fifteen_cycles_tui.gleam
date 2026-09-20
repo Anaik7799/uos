@@ -26,10 +26,15 @@ import gleam/list
 import gleam/string
 
 pub const ansi_reset: String = "\u{001b}[0m"
+
 pub const ansi_bold: String = "\u{001b}[1m"
+
 pub const ansi_green: String = "\u{001b}[32m"
+
 pub const ansi_yellow: String = "\u{001b}[33m"
+
 pub const ansi_blue: String = "\u{001b}[34m"
+
 pub const ansi_cyan: String = "\u{001b}[36m"
 
 pub fn render_fifteen_cycles_tui(
@@ -65,7 +70,8 @@ pub fn render_fifteen_cycles_tui(
 
   let cycles_rendered =
     list.map(cycles, fn(c) {
-      let is_completed = list.any(receipts, fn(r) { r.cycle_num == c.cycle_num })
+      let is_completed =
+        list.any(receipts, fn(r) { r.cycle_num == c.cycle_num })
       let status_badge = case is_completed {
         True -> ansi_green <> "[RATIFIED]" <> ansi_reset
         False -> ansi_cyan <> "[ACTIVE]" <> ansi_reset

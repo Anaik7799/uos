@@ -1,0 +1,32 @@
+{
+  "schema": "uos.mcp-task-scope-probe.v1",
+  "observed_at": "2026-09-21T14:44:41Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "tool": "harness_system_feature_catalog",
+  "transport": "Gleam MCP stdio",
+  "input_schema": {
+    "required": ["catalog_sha256", "offset"],
+    "types": {"catalog_sha256": "string", "offset": "string"},
+    "offset_bound": "decimal integer 0..128"
+  },
+  "probe": {
+    "catalog_sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f",
+    "offset": "0"
+  },
+  "runtime_context": {
+    "role": "development",
+    "bound_plan": "uos/ecology/20260909-0146",
+    "bound_task": "HARNESSBOOT",
+    "attempt": 2,
+    "session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+    "epoch": 1
+  },
+  "result": {
+    "is_error": true,
+    "reason": "feature_store_task_scope",
+    "interpretation": "The handler is reachable and rejects a binding outside the canonical feature-store task scope; no data or effect authority was granted."
+  },
+  "admission": "not_admitted",
+  "effect_authority": false,
+  "next_gate": "authorized t1-tracker binding plus canonical coordinator/provenance cutover"
+}

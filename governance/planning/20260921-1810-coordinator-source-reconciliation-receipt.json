@@ -1,0 +1,30 @@
+{
+  "schema": "uos.coordinator-source-reconciliation-receipt.v1",
+  "observed_at": "2026-09-21T18:10:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "method": "sqlite3 read-only attached comparison by sequence, operation_id, and body_json",
+  "canonical": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "rows": 117,
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "integrity": "digest_failed_replay_failed"
+  },
+  "recovery_candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "rows": 421,
+    "sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+    "integrity": "sequence_chain_digest_replay_pass"
+  },
+  "comparison": {
+    "prefix_examined": 65,
+    "matching_sequence_operation_and_body_rows": 0,
+    "first_sequence": 1,
+    "canonical_first_operation": "op-reg-claude-20260913-1200",
+    "candidate_first_operation": "codex-register-20260907-0730",
+    "byte_equal_source": false
+  },
+  "decision": "hold",
+  "reason": "The recovery candidate cannot be treated as a canonical continuation or promoted by prefix reconciliation; authority selection requires explicit independent review and writer-quiescent cutover fencing.",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

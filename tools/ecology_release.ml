@@ -8,7 +8,7 @@
    aborts before publication; dependency absence is not success; manifests are
    deterministic for identical input bytes. Owner permissions are not cryptographic
    immutability: verify again at runtime effects.
-   Usage: ecology_release.ml stage ROOT | verify RELEASE | selftest *)
+   Usage: ecology_release.ml stage ROOT | verify RELEASE | rebind RELEASE | selftest *)
 
 open Unix
 open Yojson.Safe.Util
@@ -100,7 +100,41 @@ let dependency root rel executable =
   need(inside(root^"/toolchains")path || String.starts_with ~prefix:"/nix/store/" path) "unowned toolchain target";
   let st=regular path in need(not executable || st.st_perm land 0o111<>0) "tool not executable";
   obj["path",s path;"sha256",s(sha path)]
-let runtime_dependencies root =
+(* A release must not depend on editable workspace metadata. Preserve the exact
+   manifest/lock pair in a content-addressed, read-only capsule. Pixi still uses
+   the already-realized environment, with --no-install --frozen; no package or
+   model is copied or installed. The environment's closure remains separately
+   bounded by the existing environment_python identity contract. *)
+let verify_metadata_capsule capsule manifest_hash lock_hash environment =
+  need(not(Filename.is_relative capsule) && realpath capsule=capsule) "metadata capsule must not be a symlink";
+  need(Array.to_list(Sys.readdir capsule)|>List.sort String.compare = [".pixi";"pixi.lock";"pixi.toml"]) "metadata capsule inventory";
+  need(sha(capsule^"/pixi.toml")=manifest_hash && sha(capsule^"/pixi.lock")=lock_hash) "metadata capsule changed";
+  need(readlink(capsule^"/.pixi")=environment && realpath(capsule^"/.pixi")=environment) "metadata environment changed";
+  let expected=digest(canonical(obj["manifest",s manifest_hash;"lock",s lock_hash;"environment",s environment])) in
+  need(Filename.basename capsule=expected) "metadata capsule identity";
+  List.iter(fun p->need((lstat p).st_perm land 0o222=0) "metadata capsule is writable")
+    [capsule;capsule^"/pixi.toml";capsule^"/pixi.lock"]
+let snapshot_max_metadata root =
+  let source=root^"/services/inference/max" in
+  let manifest=read(source^"/pixi.toml") and lock=read(source^"/pixi.lock") in
+  let environment=realpath(source^"/.pixi") in
+  need(inside root environment) "MAX environment escaped repository";
+  let id=digest(canonical(obj["manifest",s(digest manifest);"lock",s(digest lock);"environment",s environment])) in
+  let parent=root^"/var/releases/ecology-inputs" in mkdir parent;
+  need(realpath parent=parent) "metadata capsule parent must not be a symlink";
+  let capsule=parent^"/"^id in
+  if not(Sys.file_exists capsule) then (
+    let temporary=Filename.temp_file ~temp_dir:parent ".staging-" "" in
+    unlink temporary;mkdir temporary;
+    write(temporary^"/pixi.toml")manifest;write(temporary^"/pixi.lock")lock;
+    symlink environment (temporary^"/.pixi");
+    chmod(temporary^"/pixi.toml")0o444;chmod(temporary^"/pixi.lock")0o444;
+    chmod temporary 0o555;rename temporary capsule);
+  verify_metadata_capsule capsule (digest manifest) (digest lock) environment;
+  need(read(source^"/pixi.toml")=manifest && read(source^"/pixi.lock")=lock) "MAX metadata changed during snapshot";
+  capsule
+let runtime_dependencies ?(snapshot=false) root =
+  let metadata=if snapshot then snapshot_max_metadata root else root^"/services/inference/max" in
   let bound rel = let p=realpath(root^"/"^rel) in
     need(inside root p) "MAX metadata escaped repository";
     obj["path",s p;"sha256",s(sha p)] in
@@ -111,19 +145,36 @@ let runtime_dependencies root =
     "ocaml",dependency root "toolchains/opam-ocaml/bin/ocaml" true;
     "pixi",dependency root "toolchains/pixi/bin/pixi" true;
     "erl",dependency root "toolchains/nix-profile/bin/erl" true;
-    "max_manifest",bound "services/inference/max/pixi.toml";
-    "max_lock",bound "services/inference/max/pixi.lock";
+    "max_manifest",bound (String.sub metadata (String.length root+1) (String.length metadata-String.length root-1)^"/pixi.toml");
+    "max_lock",bound (String.sub metadata (String.length root+1) (String.length metadata-String.length root-1)^"/pixi.lock");
+    "metadata_binding",(if snapshot then obj["mode",s"immutable_capsule_v1";"capsule",s metadata;"environment_store",s(realpath(root^"/services/inference/max/.pixi"))] else `Null);
     "environment_locator",s environment;
     "environment_python",obj["path",s python;"sha256",s(sha python)];
     "environment_mode",s"existing --no-install --frozen; environment closure is not copied";
     "repository_resources",obj["path",s root;"mode",s"source/toolchain locator only; dedicated ecology listener does not publish repository files"]]
-let verify_dependencies doc =
+let verify_dependencies ?(allow_metadata_drift=false) doc =
   need(doc |> member "schema" |> to_string = "uos.ecology-runtime-dependencies.v1") "runtime dependency schema";
   List.iter(fun name -> let v=doc|>member name in
     let path=v|>member "path"|>to_string and expected=v|>member "sha256"|>to_string in
     need(not(Filename.is_relative path) && realpath path=path && hex 64 expected) "invalid realized dependency";
-    need(sha path=expected) ("runtime dependency changed: "^name))
-    ["ocaml";"pixi";"erl";"max_manifest";"max_lock";"environment_python"]
+    let actual=sha path in
+    if not(allow_metadata_drift && List.mem name ["max_manifest";"max_lock"]) then
+      need(actual=expected) ("runtime dependency changed: "^name))
+    ["ocaml";"pixi";"erl";"max_manifest";"max_lock";"environment_python"];
+  let environment=doc|>member "environment_locator"|>to_string in
+  need(realpath(environment^"/bin/python")=(doc|>member "environment_python"|>member "path"|>to_string)) "realized interpreter binding";
+  (match member "metadata_binding" doc with
+   | `Null -> () (* Legacy releases predate capsules and remain hash-checked. *)
+   | binding ->
+     need(binding|>member "mode"|>to_string="immutable_capsule_v1") "unknown metadata binding";
+     let capsule=binding|>member "capsule"|>to_string in
+     let environment=binding|>member "environment_store"|>to_string in
+     need(doc|>member "max_manifest"|>member "path"|>to_string=capsule^"/pixi.toml") "manifest capsule binding";
+     need(doc|>member "max_lock"|>member "path"|>to_string=capsule^"/pixi.lock") "lock capsule binding";
+     verify_metadata_capsule capsule
+       (doc|>member "max_manifest"|>member "sha256"|>to_string)
+       (doc|>member "max_lock"|>member "sha256"|>to_string) environment;
+     need(realpath(capsule^"/.pixi/envs/default")=(doc|>member "environment_locator"|>to_string)) "realized environment binding")
 let otp_identity root erl =
   let result=run root erl ["+S";"2:2";"-noshell";"-eval";
     "io:put_chars(json:encode(#{otp_release => list_to_binary(erlang:system_info(otp_release)), erts_version => list_to_binary(erlang:system_info(version)), root_dir => list_to_binary(code:root_dir())})),halt()."]
@@ -195,7 +246,7 @@ let disk_preflight root needed =
   need(List.length fields>=6) "disk observation unknown";
   let available=int_of_string(List.nth fields 3) in
   need(available>=needed+needed/5 && available-needed>=512*1024*1024) "disk headroom or 512MiB floor unavailable"
-let verify ?(staging=false) release =
+let verify ?(staging=false) ?(dependency_recovery=false) release =
   let root=realpath release in need(read(root^"/.uos-ecology-release")=marker) "release marker";
   let encoded=read(root^"/release-manifest.json") in let m=Yojson.Safe.from_string encoded in
   need(encoded=json m) "non-canonical release manifest encoding";
@@ -216,7 +267,8 @@ let verify ?(staging=false) release =
     permissions root);
   let source=read(root^"/source-manifest.json") in
   need(digest source=(m|>member "source_sha256"|>to_string)) "source manifest identity";
-  let deps=read(root^"/runtime-dependencies.json")|>Yojson.Safe.from_string in verify_dependencies deps;
+  let deps=read(root^"/runtime-dependencies.json")|>Yojson.Safe.from_string in
+  verify_dependencies ~allow_metadata_drift:dependency_recovery deps;
   let otp=m|>member "otp" in
   let erl=otp|>member "executable" in
   let executable=erl|>member "path"|>to_string in
@@ -234,7 +286,7 @@ let stage source =
   let root=realpath source in need(Sys.file_exists(root^"/.jj")) "standalone UOS root required";
   let erl=dependency root "toolchains/nix-profile/bin/erl" true in
   let exe=erl|>member "path"|>to_string in
-  let identity=otp_identity root exe and deps=runtime_dependencies root in
+  let identity=otp_identity root exe and deps=runtime_dependencies ~snapshot:true root in
   let apps=build_apps root in let closure=verify_app_closure root exe apps in
   let copied=payload root apps in let inputs=source_inputs root copied in
   let before=source_manifest root inputs in
@@ -274,6 +326,57 @@ let stage source =
   obj["status",s"PASS";"release",s final;"candidate_sha256",s candidate;"payload_sha256",s payload_hash;
     "source_sha256",s(digest(json before));"files",`Int(List.length content);
     "payload_bytes",`Int size;"otp",identity;"application_admitted",`Bool false]
+(* Repackage a byte-verified existing release with a new, explicit dependency
+   identity. Only MAX manifest/lock drift is tolerated in the parent, and only
+   while constructing this new, non-admitted candidate. Normal verify remains
+   strict. Runtime source/BEAM bytes are preserved, never silently rebuilt. *)
+let rebind release =
+  let source=realpath release in
+  let old=verify ~dependency_recovery:true source in
+  let old_dependencies=read(source^"/runtime-dependencies.json")|>Yojson.Safe.from_string in
+  let root=old_dependencies|>member "repository_resources"|>member "path"|>to_string|>realpath in
+  need(Sys.file_exists(root^"/.jj")) "standalone dependency source required";
+  let dependencies=runtime_dependencies ~snapshot:true root in
+  List.iter(fun key->need(same(member key old_dependencies)(member key dependencies))
+    ("rebind may only change MAX metadata: "^key))
+    ["ocaml";"pixi";"erl";"environment_locator";"environment_python"];
+  let parent=root^"/var/releases/ecology" in mkdir parent;
+  let temporary=Filename.temp_file ~temp_dir:parent ".rebind-" "" in
+  unlink temporary;mkdir temporary;
+  let expected=old|>member "files"|>to_list in
+  need(not(List.exists(fun v->v|>member "path"|>to_string="dependency-recovery.json")expected)) "parent already has a dependency recovery record";
+  List.iter(fun v->let rel=v|>member "path"|>to_string in
+    if rel<>"runtime-dependencies.json" then (
+      let bytes=read(source^"/"^rel) in
+      need(digest bytes=(v|>member "sha256"|>to_string)) "parent changed during recovery";
+      mkdir(Filename.dirname(temporary^"/"^rel));write(temporary^"/"^rel)bytes))expected;
+  write(temporary^"/runtime-dependencies.json")(json dependencies);
+  write(temporary^"/dependency-recovery.json")(json(obj[
+    "schema",s"uos.ecology-dependency-recovery.v1";
+    "parent_candidate",member "candidate_sha256" old;
+    "parent_release",s source;
+    "previous_dependencies",old_dependencies;
+    "new_dependencies",dependencies;
+    "packager_sha256",s(sha(realpath Sys.argv.(0)));
+    "scope",s"Identical runtime payload; explicit MAX metadata snapshot; environment not installed or copied";
+    "application_admitted",`Bool false]));
+  let content=inventory temporary in
+  let replace key value doc=obj((key,value)::List.remove_assoc key(to_assoc doc)) in
+  let manifest=obj(List.remove_assoc "candidate_sha256"(to_assoc old))
+    |>replace "files" (arr content)
+    |>replace "payload_sha256" (s(digest(canonical(arr content)))) in
+  let candidate=digest(canonical manifest) in
+  let manifest=replace "candidate_sha256" (s candidate) manifest in
+  write(temporary^"/release-manifest.json")(json manifest);
+  ignore(verify ~staging:true temporary);freeze temporary;
+  let now=gmtime(gettimeofday()) in
+  let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d"(now.tm_year+1900)(now.tm_mon+1)now.tm_mday now.tm_hour now.tm_sec in
+  let final=parent^"/"^stamp^"-"^candidate in
+  need(not(Sys.file_exists final)) "recovery target exists";
+  rename temporary final;
+  ignore(verify final);
+  obj["status",s"PASS";"release",s final;"candidate_sha256",s candidate;
+    "parent_candidate",member "candidate_sha256" old;"application_admitted",`Bool false]
 let selftest () =
   let count=ref 0 in let check name f=need(f())("selftest failed: "^name);incr count in
   let rejects f=try f();false with _ -> true in
@@ -294,12 +397,36 @@ let selftest () =
   check "symlink-refusal" (fun()->rejects(fun()->ignore(inventory dir)));
   unlink(dir^"/escape");
   let path=dir^"/one.beam" in let dep=obj["path",s path;"sha256",s(sha path)] in
-  let dependencies=obj(("schema",s"uos.ecology-runtime-dependencies.v1")::List.map(fun n->n,dep)["ocaml";"pixi";"erl";"max_manifest";"max_lock";"environment_python"]) in
+  mkdir(dir^"/bin");symlink path (dir^"/bin/python");
+  let dependencies=obj(("environment_locator",s dir)::("schema",s"uos.ecology-runtime-dependencies.v1")::List.map(fun n->n,dep)["ocaml";"pixi";"erl";"max_manifest";"max_lock";"environment_python"]) in
   verify_dependencies dependencies;
+  write(dir^"/other-python")"mutated";unlink(dir^"/bin/python");symlink(dir^"/other-python")(dir^"/bin/python");
+  check "interpreter-link-redirection" (fun()->rejects(fun()->verify_dependencies dependencies));
+  unlink(dir^"/bin/python");symlink path (dir^"/bin/python");unlink(dir^"/other-python");
   unlink path;write path "changed-dependency";
   check "dependency-tampering" (fun()->rejects(fun()->verify_dependencies dependencies));
   unlink path;
   check "missing-dependency" (fun()->rejects(fun()->verify_dependencies dependencies));
+  unlink(dir^"/bin/python");rmdir(dir^"/bin");
+  (* A frozen metadata capsule survives later workspace edits, while mutation
+     of that capsule is still rejected. Tests use disposable local fixtures. *)
+  let max_source=dir^"/services/inference/max" in mkdir(max_source^"/.pixi");
+  write(max_source^"/pixi.toml")"original-manifest";write(max_source^"/pixi.lock")"original-lock";
+  let capsule=snapshot_max_metadata dir in
+  check "capsule-idempotent" (fun()->snapshot_max_metadata dir=capsule);
+  chmod capsule 0o755;unlink(capsule^"/.pixi");symlink dir (capsule^"/.pixi");chmod capsule 0o555;
+  check "capsule-environment-tampering-refused" (fun()->rejects(fun()->verify_metadata_capsule capsule (digest "original-manifest") (digest "original-lock") (max_source^"/.pixi")));
+  chmod capsule 0o755;unlink(capsule^"/.pixi");symlink(max_source^"/.pixi")(capsule^"/.pixi");chmod capsule 0o555;
+  unlink(max_source^"/pixi.toml");write(max_source^"/pixi.toml")"workspace-edit";
+  check "workspace-drift-isolated" (fun()->read(capsule^"/pixi.toml")="original-manifest");
+  check "changed-metadata-new-candidate" (fun()->snapshot_max_metadata dir<>capsule);
+  let capsule2=snapshot_max_metadata dir in
+  chmod capsule2 0o755;unlink(capsule2^"/pixi.toml");write(capsule2^"/pixi.toml")"tampered";chmod(capsule2^"/pixi.toml")0o444;chmod capsule2 0o555;
+  check "capsule-tampering-refused" (fun()->rejects(fun()->ignore(snapshot_max_metadata dir)));
+  List.iter(fun c->chmod c 0o700;List.iter(fun n->unlink(c^"/"^n))["pixi.toml";"pixi.lock";".pixi"];rmdir c)[capsule;capsule2];
+  List.iter(fun p->rmdir(dir^p))["/var/releases/ecology-inputs";"/var/releases";"/var"];
+  unlink(max_source^"/pixi.toml");unlink(max_source^"/pixi.lock");
+  List.iter rmdir [max_source^"/.pixi";max_source;dir^"/services/inference";dir^"/services"];
   (* Exercise the public verifier's negative path, not just inventory helpers.
      No valid executable/dependency is supplied: failures must occur at the exact
      inventory boundary before any runtime dependency read or subprocess. *)
@@ -331,11 +458,12 @@ let selftest () =
   rmdir dir;
   obj["status",s"PASS";"checks",`Int !count;"scope",s"bounded filesystem and direct release-verifier falsifiers; no external subprocesses or admission"]
 let () = try
-  need(Array.length Sys.argv<=3 && Array.for_all(fun x->String.length x<=4096)Sys.argv) "usage: ecology_release.ml stage ROOT | verify RELEASE | selftest";
+  need(Array.length Sys.argv<=3 && Array.for_all(fun x->String.length x<=4096)Sys.argv) "usage: ecology_release.ml stage ROOT | verify RELEASE | rebind RELEASE | selftest";
   let result=match Array.to_list Sys.argv with
     | [_;"stage";root] -> stage root
+    | [_;"rebind";release] -> rebind release
     | [_;"verify";release] -> let m=verify release in obj["status",s"PASS";"release",s release;"payload_sha256",member "payload_sha256" m;"application_admitted",`Bool false]
     | [_;"selftest"] -> selftest()
-    | _ -> failwith "usage: ecology_release.ml stage ROOT | verify RELEASE | selftest" in
+    | _ -> failwith "usage: ecology_release.ml stage ROOT | verify RELEASE | rebind RELEASE | selftest" in
   print_string(json result)
 with e -> prerr_endline(Yojson.Safe.to_string(obj["status",s"FAIL";"error",s(Printexc.to_string e);"application_admitted",`Bool false]));exit 1

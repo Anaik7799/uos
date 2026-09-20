@@ -1,0 +1,18 @@
+{
+  "schema": "uos.coordinator-writer-quiescence-observation.v1",
+  "observed_at": "2026-09-21T18:18:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "method": "fuser read-only inspection of canonical and recovery SQLite paths",
+  "canonical": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "writers_observed": 0
+  },
+  "recovery_candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "writers_observed": 0
+  },
+  "interpretation": "No process held either database at observation time; this is not an ownership-bound quiescent cutover fence and does not authorize promotion or mutation.",
+  "decision": "hold",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

@@ -111,7 +111,8 @@ pub fn scan_html_content(
 
   // CHK-05-MUDA: Zero Bevy & Zero Graphite
   let has_muda =
-    string.contains(lower, "bevy_ecs") || string.contains(lower, "graphite_editor")
+    string.contains(lower, "bevy_ecs")
+    || string.contains(lower, "graphite_editor")
   let muda_pure = !has_muda
 
   // CHK-07-DRIVE: Hardware storage serial lock
@@ -134,7 +135,8 @@ pub fn scan_html_content(
   let button_count = count_substring(html, "<button")
   let a_count = count_substring(html, "<a ")
   let span_count = count_substring(html, "<span")
-  let table_count = count_substring(html, "<table") + count_substring(html, "<tr")
+  let table_count =
+    count_substring(html, "<table") + count_substring(html, "<tr")
 
   let element_count =
     div_count + section_count + p_count + button_count + a_count + span_count
@@ -229,9 +231,7 @@ fn estimate_html_entropy(text: String) -> Float {
 // 3. Aggregate Crawl & Report Generation
 // -----------------------------------------------------------------------------
 
-pub fn evaluate_crawl(
-  receipts: List(PageVerificationReceipt),
-) -> CrawlSummary {
+pub fn evaluate_crawl(receipts: List(PageVerificationReceipt)) -> CrawlSummary {
   let total = list.length(receipts)
   let passed = list.count(receipts, fn(r) { r.all_passed })
   let failed = total - passed
@@ -339,42 +339,31 @@ pub type E2EScenarioReceipt {
 
 pub fn standard_operator_journey_steps() -> List(E2EScenarioStep) {
   [
-    E2EScenarioStep(
-      1,
-      "Cockpit Inspection",
-      "/",
-      ["Cockpit", "nas-1.tail55d152.ts.net:4100"],
-    ),
-    E2EScenarioStep(
-      2,
-      "AG-UI Real-Time Cockpit",
-      "/ag-ui/cockpit",
-      ["AG-UI 32-Event Real-Time Cockpit", "SIL-6 FRACTAL", "LOCK: 25503L801736"],
-    ),
-    E2EScenarioStep(
-      3,
-      "AG-UI Protocol Manifest",
-      "/ag-ui/manifest",
-      ["AG-UI-v1", "compliant"],
-    ),
-    E2EScenarioStep(
-      4,
-      "Universal Verification Checklist",
-      "/checklist",
-      ["Universal Comprehensive Verification Checklist", "CHK-01-TIME"],
-    ),
-    E2EScenarioStep(
-      5,
-      "Sa-Plan Execution Authority",
-      "/planning",
-      ["Planning", "nas-1.tail55d152.ts.net:4100"],
-    ),
-    E2EScenarioStep(
-      6,
-      "MirageOS Unikernel Hub",
-      "/mirage",
-      ["MirageOS", "25503L801736"],
-    ),
+    E2EScenarioStep(1, "Cockpit Inspection", "/", [
+      "Cockpit",
+      "nas-1.tail55d152.ts.net:4100",
+    ]),
+    E2EScenarioStep(2, "AG-UI Real-Time Cockpit", "/ag-ui/cockpit", [
+      "AG-UI 32-Event Real-Time Cockpit",
+      "SIL-6 FRACTAL",
+      "LOCK: 25503L801736",
+    ]),
+    E2EScenarioStep(3, "AG-UI Protocol Manifest", "/ag-ui/manifest", [
+      "AG-UI-v1",
+      "compliant",
+    ]),
+    E2EScenarioStep(4, "Universal Verification Checklist", "/checklist", [
+      "Universal Comprehensive Verification Checklist",
+      "CHK-01-TIME",
+    ]),
+    E2EScenarioStep(5, "Sa-Plan Execution Authority", "/planning", [
+      "Planning",
+      "nas-1.tail55d152.ts.net:4100",
+    ]),
+    E2EScenarioStep(6, "MirageOS Unikernel Hub", "/mirage", [
+      "MirageOS",
+      "25503L801736",
+    ]),
   ]
 }
 
@@ -405,4 +394,3 @@ pub fn execute_operator_journey_scenario(
     all_passed: all_ok,
   )
 }
-

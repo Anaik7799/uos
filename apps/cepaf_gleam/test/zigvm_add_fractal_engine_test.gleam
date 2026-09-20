@@ -97,5 +97,8 @@ pub fn complete_add_engine_audit_verification_test() {
   summary.sublimation_verified |> should.be_true
 
   let str = add.audit_summary_string(summary)
-  str |> should.equal("Layers: 10 | Strata: 3 | Packets: 4 | All Green: TRUE (100% Green)")
+  str
+  |> should.equal(
+    "Layers: 10 | Strata: 3 | Packets: 4 | All Green: TRUE (100% Green)",
+  )
 }

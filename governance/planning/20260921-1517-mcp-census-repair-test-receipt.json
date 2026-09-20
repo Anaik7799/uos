@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "receipt_type": "candidate_bound_census_repair",
+  "generated_at": "2026-09-21T15:17:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "scope": "McpTools census pin and aggregate conservation fixture",
+  "changes": {
+    "mcp_tool_source_sha256": "a3a8562344c675d1f21124ae94efd66cac82d7a82061cc8327fc586a8d2b1320",
+    "fixture_sha256": "80e80c319c94124552cac0e2b9f7f507d531813cbb2c21005be510768130063b",
+    "tool_count": 65,
+    "identifier_fingerprint_sha256": "0241247b579e14ae6b1ee3d22ac289076d1790fa56aa1b0540a8e8307effde04",
+    "aggregate_census_records": 775
+  },
+  "verification": {
+    "format_check": "PASS",
+    "gleam_build": "PASS",
+    "gleam_test": {
+      "status": "PASS",
+      "passed": 11991,
+      "failed": 0,
+      "log_sha256": "80cc752c0cf2b4aa67445ae0953545e4bca70a21088c9817e98dbcdc3078c3b0"
+    }
+  },
+  "effect_authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "sa_plan_transition": "NOT_REQUESTED",
+  "remaining_gates": [
+    "Coordinator authority reconciliation and independently reviewed cutover",
+    "Task-scoped MCP contract behavior and live holon bindings",
+    "Independent release and operational acceptance"
+  ]
+}

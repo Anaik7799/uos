@@ -540,7 +540,8 @@ pub fn generate_canonical_tensor_nodes() -> List(TensorNode) {
 pub fn evaluate_fractal_triad_matrix() -> TriadEvaluationResult {
   let nodes = generate_canonical_tensor_nodes()
   let layers = canonical_layers()
-  let verified_count = list.count(nodes, fn(n) { n.verified && n.status == "OPERATIONAL" })
+  let verified_count =
+    list.count(nodes, fn(n) { n.verified && n.status == "OPERATIONAL" })
   let total_count = list.length(nodes)
 
   // Assert all 10 layers are covered
@@ -617,20 +618,21 @@ pub fn encode_triad_matrix_json() -> String {
       json.object([
         #(
           "matrix_api",
-          json.string("http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/fractal_triad"),
+          json.string(
+            "http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/fractal_triad",
+          ),
         ),
         #(
           "claude_verification_api",
-          json.string("http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/claude_verification"),
+          json.string(
+            "http://nas-1.tail55d152.ts.net:4100/api/v1/matrix/claude_verification",
+          ),
         ),
         #(
           "cockpit_testing",
           json.string("http://nas-1.tail55d152.ts.net:4100/testing"),
         ),
-        #(
-          "zenoh_mesh",
-          json.string("http://127.0.0.1:8080/c3i/a2a/ets/**"),
-        ),
+        #("zenoh_mesh", json.string("http://127.0.0.1:8080/c3i/a2a/ets/**")),
       ]),
     ),
   ])
@@ -793,5 +795,3 @@ pub fn publish_triad_to_ets_and_zenoh() -> Result(Nil, String) {
 
   Ok(Nil)
 }
-
-

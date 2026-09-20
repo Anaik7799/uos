@@ -1,0 +1,47 @@
+{
+  "schema": "uos.source-universe-reconciliation-hold.v1",
+  "timestamp": "20260921-1303-44Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1-tracker",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-source-universe-reconcile/20260921-1303",
+  "authority": "sa-plan",
+  "status": "HOLD",
+  "source_ledger": "governance/capability-inventory/20260921-0706-source-universe-ledger.json",
+  "observations": {
+    "record_count": 23,
+    "wrapper_records_without_source_sha256": [
+      "wrapper.sa_plan",
+      "wrapper.zigvm",
+      "wrapper.uos_cli",
+      "wrapper.uos_gleam_start"
+    ],
+    "dangling_or_unresolved_edges": [
+      "wrapper.tools.uos_cli",
+      "artifact.tools.uos_main",
+      "artifact.tool.uos_cli",
+      "engine.sa_plan",
+      "engine.zigvm"
+    ],
+    "misattribution": {
+      "record": "engine.hermes_ops",
+      "edge": "wrapper.tools.uos_cli",
+      "finding": "tools/uos-cli launches tools/uos Gleam main; it is not evidence of Hermes ops runtime"
+    },
+    "missing_classifications": ["test", "reference_only"],
+    "mcp_availability": "UNKNOWN"
+  },
+  "required_repairs": [
+    "hash every wrapper source at the candidate revision",
+    "split and resolve executable and artifact edges to canonical record IDs",
+    "remove or correct the engine.hermes_ops attribution using observed entrypoint evidence",
+    "add explicit test and reference_only records for bounded source universe",
+    "recompute ledger digest and reconcile dashboard projection",
+    "retain UNKNOWN MCP/runtime availability until fresh runtime evidence exists"
+  ],
+  "completion": {
+    "task_complete": false,
+    "goal_complete": false,
+    "runtime_admission": "NOT_GRANTED",
+    "next_authorized_action": "repair ledger through Sa-plan, then rerun source-universe and MCP coverage checks"
+  }
+}

@@ -1,0 +1,311 @@
+{
+  "schema": "uos.implementation-plan-proposal.v1",
+  "observed_at": "2026-09-27T05:26:26Z",
+  "timestamp_source": "date -u; chronyc tracking: stratum 3, leap normal, system offset 0.000327725 seconds fast",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "state": "proposal_pending_canonical_registration",
+  "execution_authority": "sa-plan-only; this packet grants none",
+  "coordinator": "Codex",
+  "executor": "Google AGY",
+  "reviewer": "Codex; independent peer for coordinator lineage and release",
+  "observed_task_total": 21,
+  "observed_completed": 4,
+  "proposed_new_task_count": 4,
+  "proposed_total_after_registration": 25,
+  "completed_preserved": [
+    "t1-tracker",
+    "r01-store-gates",
+    "r13-task-dashboard",
+    "t1a-source-reconcile"
+  ],
+  "tasks": [
+    {
+      "id": "t1-tracker",
+      "registration": "existing",
+      "proposed_dependencies": [],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r01-store-gates",
+      "registration": "existing",
+      "proposed_dependencies": [],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r13-task-dashboard",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r01-store-gates"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "t1a-source-reconcile",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "t1-tracker"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r14-agy-ingress",
+      "registration": "proposed_new",
+      "proposed_dependencies": [],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "t0-coordination",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r14-agy-ingress"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r02-recovery-candidate",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r01-store-gates",
+        "r14-agy-ingress"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "t0a-reconcile",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "t0-coordination",
+        "r02-recovery-candidate"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r03-harness-coordinator",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r02-recovery-candidate",
+        "t0a-reconcile"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r04-identity-enrollment",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r03-harness-coordinator"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "t0b-bindings",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "t0a-reconcile",
+        "r04-identity-enrollment"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "t0c-conformance",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "t0b-bindings"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "t2-contracts",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "t1-tracker",
+        "r14-agy-ingress"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r05-mcp-data",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r03-harness-coordinator",
+        "t1-tracker"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r06-mcp-control",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r04-identity-enrollment",
+        "t2-contracts",
+        "r05-mcp-data"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r07-hive-swarm",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r04-identity-enrollment",
+        "r06-mcp-control"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r08-service-adapters",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r05-mcp-data",
+        "r06-mcp-control"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r15-dashboard-freshness",
+      "registration": "proposed_new",
+      "proposed_dependencies": [
+        "r13-task-dashboard",
+        "r14-agy-ingress"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r16-evidence-verdicts",
+      "registration": "proposed_new",
+      "proposed_dependencies": [
+        "r14-agy-ingress"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r09-end-to-end",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r07-hive-swarm",
+        "r08-service-adapters",
+        "t0c-conformance",
+        "r15-dashboard-freshness",
+        "r16-evidence-verdicts"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "t3-evidence",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "t2-contracts",
+        "r09-end-to-end"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r17-candidate-integration",
+      "registration": "proposed_new",
+      "proposed_dependencies": [
+        "r09-end-to-end",
+        "t3-evidence"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r10-artifact-sync",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r09-end-to-end",
+        "t3-evidence",
+        "r17-candidate-integration"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r11-release-review",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r10-artifact-sync"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    },
+    {
+      "id": "r12-operational-acceptance",
+      "registration": "existing",
+      "proposed_dependencies": [
+        "r11-release-review"
+      ],
+      "implementation_owner": "Google AGY",
+      "acceptance_authority": "Codex review plus canonical Sa-plan fenced completion"
+    }
+  ],
+  "model_policy": {
+    "inventory_source": "local agy models and agy --help, observed 2026-09-27",
+    "google_models": [
+      "gemini-3.8-flash-high",
+      "gemini-3.8-flash-medium",
+      "gemini-3.8-flash-low",
+      "gemini-3.7-flash-high",
+      "gemini-3.7-flash-medium",
+      "gemini-3.7-flash-low",
+      "gemini-3.6-flash-high",
+      "gemini-3.6-flash-medium",
+      "gemini-3.6-flash-low",
+      "gemini-3.1-pro-high",
+      "gemini-3.1-pro-low"
+    ],
+    "modes": [
+      "plan",
+      "accept-edits"
+    ],
+    "efforts": [
+      "low",
+      "medium",
+      "high",
+      "max"
+    ],
+    "default": "gemini-3.8-flash-medium",
+    "mechanical": "gemini-3.8-flash-low after approved contracts",
+    "escalation": "gemini-3.8-flash-high, then gemini-3.1-pro-high only for unresolved correctness failures or lineage/formal review",
+    "prices": "unknown",
+    "measured_cost_optimum": false,
+    "concurrency": 1,
+    "maximum_implementation_concurrency_after_disjoint_scope_proof": 2,
+    "bounded_session_minutes": 15,
+    "maximum_retries_before_escalation": 1,
+    "accounting": "Record tokens and billed cost if provider returns them; otherwise UNKNOWN. Reassess before new runs; model ACK grants no authority."
+  },
+  "execution_gates": [
+    "Register proposal and dependency amendments through admitted Gleam MCP to canonical Sa-plan; verify DB readback.",
+    "Materialize reviewed launcher grant with actual agent/session identity, bounded paths, current source digests and operation scope; do not invent or reuse HARNESSBOOT authority.",
+    "Fresh complete risk assessment, preflight PASS, exact task claim and active-check with worker/attempt.",
+    "Tests and independently checked runtime/formal evidence bound to the actual integration candidate.",
+    "Unknown effect outcomes reconciled before retry; serialized integration and separately fenced operational cutover."
+  ],
+  "readiness_blockers": [
+    "Project-local UOS MCP exposes only read_file and knowledge_search; successor harness disabled pending reviewed grant.",
+    "Generic MCP mutation transport refuses -32003; no authenticated plan creation/amendment ingress observed.",
+    "AGY MCP inventory has no canonical UOS server registration.",
+    "Coordinator lineage, replay and digest reconciliation outstanding."
+  ],
+  "completion_rule": "No source execution, DB registration, new task, release, admission or completed action is implied by this proposal."
+}

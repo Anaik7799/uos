@@ -52,19 +52,22 @@ pub fn initial_state() -> StreamState {
   StreamState(
     l0_buffer: [0.98, 0.99, 0.97, 0.98, 0.99, 0.98, 0.99, 0.98],
     l1_buffer: [0.12, 0.14, 0.11, 0.13, 0.12, 0.15, 0.13, 0.12],
-    l2_buffer: [0.55, 0.58, 0.56, 0.60, 0.62, 0.61, 0.63, 0.62],
+    l2_buffer: [0.55, 0.58, 0.56, 0.6, 0.62, 0.61, 0.63, 0.62],
     l3_buffer: [0.05, 0.04, 0.06, 0.05, 0.04, 0.05, 0.05, 0.04],
     l4_buffer: [0.02, 0.01, 0.03, 0.02, 0.01, 0.02, 0.02, 0.01],
-    l5_buffer: [0.45, 0.48, 0.50, 0.47, 0.52, 0.49, 0.51, 0.50],
+    l5_buffer: [0.45, 0.48, 0.5, 0.47, 0.52, 0.49, 0.51, 0.5],
     l6_buffer: [0.15, 0.18, 0.16, 0.17, 0.19, 0.16, 0.18, 0.17],
-    l7_buffer: [0.08, 0.09, 0.07, 0.08, 0.10, 0.09, 0.08, 0.09],
+    l7_buffer: [0.08, 0.09, 0.07, 0.08, 0.1, 0.09, 0.08, 0.09],
     l8_buffer: [0.94, 0.95, 0.93, 0.96, 0.94, 0.95, 0.96, 0.95],
     l9_buffer: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
     total_messages: 0,
   )
 }
 
-pub fn start() -> Result(actor.Started(Subject(StreamMessage)), actor.StartError) {
+pub fn start() -> Result(
+  actor.Started(Subject(StreamMessage)),
+  actor.StartError,
+) {
   actor.new(initial_state())
   |> actor.on_message(handle_message)
   |> actor.start()
@@ -147,7 +150,9 @@ pub fn map_topic_to_layer(topic: String) -> Option(FractalLayer) {
   case string.contains(topic, "/l0/") || string.contains(topic, "/const/") {
     True -> Some(LayerL0Constitutional)
     False ->
-      case string.contains(topic, "/l1/") || string.contains(topic, "/atomic/") {
+      case
+        string.contains(topic, "/l1/") || string.contains(topic, "/atomic/")
+      {
         True -> Some(LayerL1Atomic)
         False ->
           case
@@ -158,7 +163,8 @@ pub fn map_topic_to_layer(topic: String) -> Option(FractalLayer) {
             True -> Some(LayerL2Component)
             False ->
               case
-                string.contains(topic, "/l3/") || string.contains(topic, "/vfs/")
+                string.contains(topic, "/l3/")
+                || string.contains(topic, "/vfs/")
               {
                 True -> Some(LayerL3Transaction)
                 False ->
@@ -218,10 +224,10 @@ pub fn extract_numeric_signal(payload: String) -> Float {
         Ok(i) -> clamp_signal(int.to_float(i))
         Error(_) ->
           case string.contains(payload, "CRITICAL") {
-            True -> 0.10
+            True -> 0.1
             False ->
               case string.contains(payload, "DEGRADED") {
-                True -> 0.50
+                True -> 0.5
                 False -> 0.95
               }
           }

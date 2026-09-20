@@ -118,17 +118,23 @@ env_present(Name) ->
 %% Returns {ok, {ExitCode, Output}} | {error, Reason}. Never blocks past TimeoutMs.
 run_bounded(Path, Args, TimeoutMs) -> run_guarded(Path,Args,TimeoutMs,none).
 
+utf8_chars(Bytes) when is_binary(Bytes) ->
+    case unicode:characters_to_list(Bytes,utf8) of
+        Chars when is_list(Chars) -> Chars;
+        _ -> error(invalid_utf8)
+    end.
+
 run_guarded(Path, Args, TimeoutMs, Input)
   when is_binary(Path), is_list(Args), is_integer(TimeoutMs),
        TimeoutMs>0, TimeoutMs=<60000 ->
     try
-        Root=binary_to_list(uos_root()),
+        Root=utf8_chars(uos_root()),
         Ocaml=dependency(Root,<<"ocaml">>,"toolchains/opam-ocaml/bin/ocaml"),
         Guardian=filename:join(Root,"tools/ecology_process.ml"),
         Mode=case Input of none->"merged";_->"framed" end,
         A=["-I","+unix",Guardian,integer_to_list(TimeoutMs),
-           integer_to_list(?OUTPUT_LIMIT),Mode,binary_to_list(Path)] ++
-          [binary_to_list(X)||X<-Args],
+           integer_to_list(?OUTPUT_LIMIT),Mode,utf8_chars(Path)] ++
+          [utf8_chars(Argument)||Argument<-Args],
         Port = erlang:open_port({spawn_executable, Ocaml},
                               [stream,use_stdio,exit_status,binary,{args,A}]),
         case Input of
@@ -239,7 +245,8 @@ max_request_checked(Input) ->
     RootPath=binary_to_list(Root),
     Pixi=list_to_binary(dependency(RootPath,<<"pixi">>,"toolchains/pixi/bin/pixi")),
     Manifest=list_to_binary(dependency(RootPath,<<"max_manifest">>,"services/inference/max/pixi.toml")),
-    _=dependency(RootPath,<<"max_lock">>,"services/inference/max/pixi.lock"),
+    Lock=dependency(RootPath,<<"max_lock">>,"services/inference/max/pixi.lock"),
+    ok=max_environment_binding(RootPath,binary_to_list(Manifest),Lock),
     Args=[<<"run">>,<<"--no-install">>,<<"--frozen">>,<<"--manifest-path">>,
           Manifest,<<"python">>,
           <<Root/binary,"/services/inference/max/ecology_max_worker.py">>],
@@ -254,3 +261,64 @@ max_request_checked(Input) ->
         {ok,{Code,_}} -> {error,<<"max_exit_or_framing_failure:",(integer_to_binary(Code))/binary>>};
         Error -> Error
     end.
+
+%% Recheck the release's realized environment immediately before the bounded
+%% invocation. Startup verification alone cannot detect later link replacement.
+%% This does not claim isolation from a hostile writer with the same OS uid.
+max_environment_binding(Root,Manifest,Lock) ->
+    case release_root(Root) of
+        false -> ok;
+        true ->
+            {ok,Body}=file:read_file(filename:join(Root,"runtime-dependencies.json")),
+            true=byte_size(Body)=<65536,
+            Doc=json:decode(Body),
+            #{<<"environment_locator">>:=Environment}=Doc,
+            Python=dependency(Root,<<"environment_python">>,"unused"),
+            {ok,PythonInfo}=file:read_file_info(Python),
+            {ok,ActualPythonInfo}=file:read_file_info(filename:join(Environment,"bin/python")),
+            true=same_file(PythonInfo,ActualPythonInfo),
+            case maps:get(<<"metadata_binding">>,Doc,null) of
+                null -> ok;
+                #{<<"mode">>:= <<"immutable_capsule_v1">>,
+                  <<"capsule">>:=Capsule,<<"environment_store">>:=Store} ->
+                    ok=absolute_directory_chain(Capsule),
+                    true=Manifest=:=binary_to_list(filename:join(Capsule,<<"pixi.toml">>)),
+                    true=Lock=:=binary_to_list(filename:join(Capsule,<<"pixi.lock">>)),
+                    {ok,Names}=file:list_dir(Capsule),
+                    true=lists:sort(Names)=:=[".pixi","pixi.lock","pixi.toml"],
+                    {ok,Link}=file:read_link(filename:join(Capsule,<<".pixi">>)),
+                    true=unicode:characters_to_binary(Link)=:=Store,
+                    #{<<"sha256">>:=ManifestHash}=maps:get(<<"max_manifest">>,Doc),
+                    #{<<"sha256">>:=LockHash}=maps:get(<<"max_lock">>,Doc),
+                    Identity=iolist_to_binary([<<"{\"environment\":" >>,json:encode(Store),
+                        <<",\"lock\":" >>,json:encode(LockHash),
+                        <<",\"manifest\":" >>,json:encode(ManifestHash),<<"}">>]),
+                    true=filename:basename(Capsule)=:=
+                        binary:encode_hex(crypto:hash(sha256,Identity),lowercase),
+                    lists:foreach(fun(P)->
+                        {ok,#file_info{type=Type,mode=Mode}}=file:read_link_info(P),
+                        true=(Type=:=directory orelse Type=:=regular),
+                        true=(Mode band 8#222)=:=0
+                    end,[Capsule,Manifest,Lock]),
+                    {ok,ExpectedInfo}=file:read_file_info(Environment),
+                    {ok,ActualInfo}=file:read_file_info(filename:join(Capsule,<<".pixi/envs/default">>)),
+                    true=same_file(ExpectedInfo,ActualInfo)
+            end,
+            ok
+    end.
+
+same_file(#file_info{inode=I,major_device=D,type=T},
+          #file_info{inode=I,major_device=D,type=T}) -> true;
+same_file(_,_) -> false.
+
+absolute_directory_chain(Path) ->
+    true=filename:pathtype(Path)=:=absolute,
+    Parts=filename:split(Path),
+    true=length(Parts)=<64,
+    _=lists:foldl(fun(Part,Parent)->
+        true=Part=/= <<"..">> andalso Part=/= <<".">>,
+        Current=filename:join(Parent,Part),
+        {ok,#file_info{type=directory}}=file:read_link_info(Current),
+        Current
+    end,<<>>,Parts),
+    ok.

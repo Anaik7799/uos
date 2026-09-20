@@ -88,13 +88,10 @@ pub fn bridge_view(state: SharedMeshState) -> Element(msg) {
   bridge_page.view(state)
 }
 
-
 /// Pass-27 Phase 3d: smriti_view body extracted to pages/smriti_page.gleam.
 pub fn smriti_view(state: SharedMeshState) -> Element(msg) {
   smriti_page.view(state)
 }
-
 // ---------------------------------------------------------------------------
 // Private helpers (duplicated from page_views — SC-MUDA-001 approved)
 // ---------------------------------------------------------------------------
-

@@ -1,0 +1,12 @@
+{
+  "schema": "uos.test-receipt.v1",
+  "timestamp": "20260921-1623",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "scope": "apps/uos_swarm",
+  "command": "gleam test --target erlang",
+  "result": "669 passed, 0 failures",
+  "timeout": 45,
+  "authority": "development_observation_only",
+  "runtime_admission": "not_granted",
+  "admission": "not_admitted"
+}

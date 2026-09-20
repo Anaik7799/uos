@@ -21,9 +21,9 @@
 //// Anti-pattern guarded: [zk-3346fc607a1ef9e6] Stub-That-Lies — every
 //// function body is a byte-equivalent move from the original.
 
+import cepaf_gleam/ui/lustre/shell
 import cepaf_gleam/ui/state.{
-  type SharedMeshState,
-  cockpit_mode_to_string, ooda_phase_to_string,
+  type SharedMeshState, cockpit_mode_to_string, ooda_phase_to_string,
 }
 import gleam/int
 import gleam/list
@@ -31,7 +31,6 @@ import gleam/string
 import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
-import cepaf_gleam/ui/lustre/shell
 
 // SC-MUDA-001 / audit-E3 — process-start nanosecond clock (Erlang FFI).
 // Used as static asset cache-bust suffix so each daemon restart serves a
@@ -64,9 +63,15 @@ pub fn state_kv_block(state: SharedMeshState) -> Element(msg) {
   html.div([attribute.class("card")], [
     shell.kv_row("Containers", int.to_string(state.container_count)),
     shell.kv_row("Healthy", int.to_string(state.healthy_count)),
-    shell.kv_row("Threat Level", state.threat_level_to_string(state.threat_level)),
+    shell.kv_row(
+      "Threat Level",
+      state.threat_level_to_string(state.threat_level),
+    ),
     shell.kv_row("OODA Phase", ooda_phase_to_string(state.ooda_phase)),
-    shell.kv_row("Dark Cockpit", cockpit_mode_to_string(state.dark_cockpit_mode)),
+    shell.kv_row(
+      "Dark Cockpit",
+      cockpit_mode_to_string(state.dark_cockpit_mode),
+    ),
     shell.kv_row("Zenoh", case state.zenoh_connected {
       True -> "connected"
       False -> "offline"

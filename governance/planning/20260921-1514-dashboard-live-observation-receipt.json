@@ -1,0 +1,28 @@
+{
+  "schema": "uos.dashboard-live-observation-receipt.v2",
+  "timestamp": "20260921-1514",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "gleam run -m cepaf_gleam/planning/execution_observer",
+  "runtime": "Gleam execution_observer",
+  "output_sha256": "448119c4c265a74795e76ab49a802ef4d30cbd510efa5393b7f07a0903849f4d",
+  "observation": {
+    "status": "observed",
+    "authority": "read_only_projection; Sa-plan alone owns execution",
+    "database": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "total": 21,
+    "completed": 4,
+    "executing": 0,
+    "blocked": 14,
+    "unknown": 3,
+    "pending": 0,
+    "task_snapshot_sha256": "36b65cf24dd6f70db2df8a6d6744116076a5124ef5d2c614c61f081cc0c270c4",
+    "risk_snapshot_sha256": "d72c6f8560070e97a5e015e12b047394d2a5f048cb8054299d5b116818b30216"
+  },
+  "safety": {
+    "effect_authority": false,
+    "system_admission": false,
+    "risk_source_binding": "NOT_VERIFIED_BY_DASHBOARD",
+    "completion_credit": false
+  },
+  "interpretation": "The dashboard reads current Sa-plan SQLite state directly and reports blocked/unknown tasks distinctly; it is not an execution authority."
+}

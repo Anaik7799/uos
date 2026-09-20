@@ -354,4 +354,3 @@ pub fn init_tailnet_node_mesh_test() {
   list.length(state.nodes) |> should.equal(2)
   state.quorum_size |> should.equal(2)
 }
-

@@ -38,8 +38,7 @@ pub fn dispatch_workload_gpu_offline_fallback_test() {
   // Instance 2 offline -> Fallback to Instance 0 CPU SIMD
   let peers_no_gpu = [Instance0Nas1, Instance1Vm1]
 
-  let #(target, reason) =
-    dispatch_workload(DeepGemma4Inference, peers_no_gpu)
+  let #(target, reason) = dispatch_workload(DeepGemma4Inference, peers_no_gpu)
   target
   |> should.equal(Instance0Nas1)
 
@@ -56,8 +55,8 @@ pub fn evaluate_fabric_health_test() {
       instance: Instance0Nas1,
       hostname: "nas-1",
       vcpus: 24,
-      ram_total_mb: 44738,
-      ram_available_mb: 30000,
+      ram_total_mb: 44_738,
+      ram_available_mb: 30_000,
       storage_total_gb: 1800,
       storage_available_gb: 789,
       has_npu: True,
@@ -73,8 +72,8 @@ pub fn evaluate_fabric_health_test() {
       instance: Instance1Vm1,
       hostname: "vm-1",
       vcpus: 10,
-      ram_total_mb: 47145,
-      ram_available_mb: 41000,
+      ram_total_mb: 47_145,
+      ram_available_mb: 41_000,
       storage_total_gb: 1228,
       storage_available_gb: 305,
       has_npu: False,
@@ -90,8 +89,8 @@ pub fn evaluate_fabric_health_test() {
       instance: Instance2Razr15,
       hostname: "razr15-1",
       vcpus: 12,
-      ram_total_mb: 16384,
-      ram_available_mb: 12000,
+      ram_total_mb: 16_384,
+      ram_available_mb: 12_000,
       storage_total_gb: 512,
       storage_available_gb: 256,
       has_npu: False,

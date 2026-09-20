@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "receipt_type": "declarative_intent_candidate_audit",
+  "generated_at": "2026-09-21T15:32:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "scope": "Pure declarative feature intent decision and algebraic replay surface",
+  "implementation": {
+    "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_intent.gleam",
+    "sha256": "0e75c796dfbc6f6c136a7ce12c9e258894fcf19530ea7626fa30ddff7436538c",
+    "operations": ["catalog_read", "observations_read"],
+    "effects": [],
+    "authority": false,
+    "laws": ["identity", "deny-dominance", "no-authority-amplification", "replay-idempotence", "conflicting-replay-refusal"]
+  },
+  "tests": {
+    "path": "apps/cepaf_gleam/test/system_feature_api_test.gleam",
+    "sha256": "b7065b8c505e907345a86f81f8fa3cddaac397d087a174c37a8603b796ad34ef",
+    "suite_receipt_log_sha256": "80cc752c0cf2b4aa67445ae0953545e4bca70a21088c9817e98dbcdc3078c3b0",
+    "suite_result": "11991 passed, 0 failures"
+  },
+  "status": "candidate_verified",
+  "not_established": [
+    "Coordinator authority",
+    "Database digest binding",
+    "Runtime system admission",
+    "Independent release acceptance"
+  ],
+  "completion_claim": false
+}

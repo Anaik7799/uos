@@ -130,7 +130,9 @@ pub fn authority_non_escalation_test() {
     )
   trace13.prevents_escalation(sandboxed_src, tgt_escalated) |> should.be_error
   trace13.validate_transition(sandboxed_src, tgt_escalated)
-  |> should.equal(Error(UnauthorizedEscalation(SandboxedWorker, RootSupervisor)))
+  |> should.equal(
+    Error(UnauthorizedEscalation(SandboxedWorker, RootSupervisor)),
+  )
 }
 
 pub fn uri_and_zenoh_topic_test() {

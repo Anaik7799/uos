@@ -1,0 +1,16 @@
+{
+  "schema": "uos.dashboard-cli-explicit-plan-contract.v1",
+  "timestamp_utc": "2026-09-21T10:03:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "source": {
+    "main_sha256": "bb58c2e040165ad5c983368b309cb44d03f209e378121928bf5bcbdee6998fdc",
+    "test_sha256": "eabd17a7a057866eb78a4fd32ec9903d430e5b6b7b6a691cc538918b1ff2d90b"
+  },
+  "command": "dune build modules/sa_plan/test/test_sa_plan_cli.exe && dune exec modules/sa_plan/test/test_sa_plan_cli.exe",
+  "result": {"status": "PASS", "explicit_plan_alias_test": "ok LAW CLI-UI-SNAPSHOT-EXPLICIT-PLAN", "all_cli_assertions": "PASS"},
+  "binary_sha256": "1c43d14e188d4dbc184f570c6ba79a1b784919cbe47e8ab5aa2fc52317a4b27e",
+  "authority": "development verification only",
+  "runtime_admission": "NOT_GRANTED",
+  "canonical_task_remains_open": true,
+  "admission": "NOT_ADMITTED"
+}

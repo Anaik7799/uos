@@ -21,6 +21,7 @@ import gleam/float
 import gleam/int
 
 const tailscale_base_url = "http://nas-1.tail55d152.ts.net:4100"
+
 const peer_base_url = "http://vm-1.tail55d152.ts.net:8088"
 
 /// Mathematical Gates status descriptor.
@@ -71,7 +72,7 @@ pub fn init_century_hud() -> CenturyHudState {
   CenturyHudState(
     milestone_id: "EV-100",
     cycle_name: "Century Milestone Swarm Harmony",
-    total_eunit_tests: 10475,
+    total_eunit_tests: 10_475,
     kp: 1.84,
     ki: 0.42,
     kd: 0.12,

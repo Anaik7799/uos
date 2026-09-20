@@ -267,6 +267,26 @@ pub fn workflow_requires_exact_nonduplicate_start_payload_test() {
   |> should.be_false
 }
 
+pub fn bound_workflow_registration_carries_catalog_and_ledger_digests_test() {
+  let #(current, feature) = sample()
+  let payload = t.workflow_identity(current, feature)
+  let assert Ok(decoded) = json.parse(payload, v.decoder())
+  v.get(decoded, "schema")
+  |> should.equal(Ok(v.Text("uos.harness.feature-workflow-identity.v2")))
+  v.get(decoded, "catalog_sha256")
+  |> should.equal(Ok(v.Text(current.source_sha256)))
+  v.get(decoded, "ledger_sha256")
+  |> should.be_ok
+  t.workflow_arguments_bound(current, feature)
+  |> list.contains(payload)
+  |> should.be_true
+  let assert Ok(changed_catalog) =
+    catalog([declaration("time.observe", "BUILT", [])])
+  let assert [changed_feature] = changed_catalog.features
+  t.workflow_identity(current, feature)
+  |> should.not_equal(t.workflow_identity(changed_catalog, changed_feature))
+}
+
 pub fn cached_activity_with_changed_result_does_not_count_as_current_progress_test() {
   let #(c, f) = sample()
   let payload = t.progress(c, f)

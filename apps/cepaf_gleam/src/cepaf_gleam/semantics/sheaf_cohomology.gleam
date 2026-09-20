@@ -2,9 +2,9 @@
 //// Pure Gleam Algebraic Atlas Sheaf Čech Cohomology (H^1 = 0) Engine
 //// Contract Reference: SC-INTENT-ATLAS-001
 
-import gleam/list
-import gleam/int
 import gleam/float
+import gleam/int
+import gleam/list
 
 fn int_range(from: Int, to: Int) -> List(Int) {
   case from > to {
@@ -29,7 +29,10 @@ pub fn cech_coboundary(i: Int, j: Int, k: Int, x: Float) -> Float {
   }
 }
 
-pub fn verify_h1_vanishing(charts_count: Int, test_x: Float) -> Result(Float, String) {
+pub fn verify_h1_vanishing(
+  charts_count: Int,
+  test_x: Float,
+) -> Result(Float, String) {
   let indices = int_range(0, charts_count - 1)
   let max_defect =
     list.fold(indices, 0.0, fn(acc_i, i) {
@@ -43,11 +46,14 @@ pub fn verify_h1_vanishing(charts_count: Int, test_x: Float) -> Result(Float, St
 
   case max_defect <. 0.0001 {
     True -> Ok(max_defect)
-    False -> Error("Sheaf cohomology obstruction non-zero: defect exceeds threshold")
+    False ->
+      Error("Sheaf cohomology obstruction non-zero: defect exceeds threshold")
   }
 }
 
-pub fn glue_global_section(local_sections: List(#(Int, Float))) -> Result(Float, String) {
+pub fn glue_global_section(
+  local_sections: List(#(Int, Float)),
+) -> Result(Float, String) {
   case local_sections {
     [] -> Error("Empty local sections")
     [#(first_chart, first_val), ..rest] -> {

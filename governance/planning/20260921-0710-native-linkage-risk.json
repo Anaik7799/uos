@@ -1,0 +1,39 @@
+{
+  "schema": "uos-native-linkage-risk.v1",
+  "assessment_id": "t1-native-linkage-20260921-0710",
+  "policy": "SC-RISK-PRIORITY-001",
+  "observed_at": "2026-09-21T07:10:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "authority": "DEVELOPMENT_ONLY",
+  "score": 2000,
+  "score_formula": "4*5*5*4*5",
+  "factors": {
+    "criticality": 4,
+    "stpa": 5,
+    "fmea": 5,
+    "dependency": 4,
+    "impact": 5
+  },
+  "ucas": [
+    "not_provided",
+    "provided_unsafe",
+    "wrong_timing",
+    "duration"
+  ],
+  "controls": [
+    "path/hash bind loaders and host artifacts",
+    "keep fallback/refusal unknown",
+    "never infer loaded runtime from .so presence",
+    "require ABI/build/runtime receipts"
+  ],
+  "runtime_admission": false,
+  "canonical_import": false,
+  "system_admission": false,
+  "residuals": [
+    "ABI/build provenance",
+    "runtime load behavior",
+    "MCP mappings",
+    "native root reconciliation"
+  ]
+}

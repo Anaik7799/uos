@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "receipt_type": "current_risk_preflight",
+  "generated_at": "2026-09-21T15:36:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t2-contracts",
+  "command": "bash tools/risk-priority-check --preflight governance/planning/20260921-1640-risk-portfolio-current.json t2-contracts",
+  "output_sha256": "ac5f31cd25863e9cc0cf60c86a5fd4416bd29d76e76a394de62eeacd9d7e607c",
+  "status": "HOLD",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "observed_at": "2026-09-21T15:31:25Z",
+  "assessment_sha256": "548c248c01a45b22c1b524788f883ac494447807dbaa400db90cf251d83150c5",
+  "sa_plan_snapshot_sha256": "c45a17ea48d6cb8769e0c58c31c97adba022e3f33070a815607d0b7104a45711",
+  "lease_fencing_authority": "NOT_GRANTED",
+  "finding_count": 43,
+  "primary_findings": [
+    "Requested task is not the first eligible candidate.",
+    "Risk evidence is stale or future-dated and must be re-observed before selection.",
+    "Assessment or source evidence expired during checks."
+  ],
+  "decision": "No task claim, execution, completion, release, or admission performed.",
+  "completion_claim": false
+}

@@ -23,6 +23,7 @@ import gleam/result
 import gleam/string
 
 pub const andon_halt_unauthorized_code: Int = -32_002
+
 pub const andon_halt_quorum_missing_code: Int = -32_003
 
 pub type ToolProposal {
@@ -130,7 +131,11 @@ pub fn dispatch_fenced_proposal(
                 _, _ -> {
                   case execution_fn(proposal.tool_name, proposal.args_json) {
                     Ok(output_json) ->
-                      Dispatched(proposal.call_id, proposal.tool_name, output_json)
+                      Dispatched(
+                        proposal.call_id,
+                        proposal.tool_name,
+                        output_json,
+                      )
                     Error(err) ->
                       FencedAndonHalt(
                         -32_000,

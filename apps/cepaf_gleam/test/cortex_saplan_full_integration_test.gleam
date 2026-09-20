@@ -81,7 +81,7 @@ pub fn cortex_saplan_jidoka_andon_halt_test() {
   case disposition {
     ExecutionHaltAndon(code, reason) -> {
       code |> should.equal(jidoka_andon_halt_code)
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       string.contains(reason, "Fractal Jidoka Andon Halt") |> should.be_true()
     }
     _ -> panic as "Expected ExecutionHaltAndon"
@@ -162,7 +162,8 @@ pub fn cortex_ui_cockpit_lustre_and_tui_test() {
   |> should.be_true()
   string.contains(rendered_html, "Storage Lock: 25503L801736 (PROTECTED)")
   |> should.be_true()
-  string.contains(rendered_html, "Jidoka Stop Line: NOMINAL") |> should.be_true()
+  string.contains(rendered_html, "Jidoka Stop Line: NOMINAL")
+  |> should.be_true()
   string.contains(rendered_html, "http://nas-1.tail55d152.ts.net:4100/cortex")
   |> should.be_true()
 }
@@ -174,11 +175,11 @@ pub fn four_math_gates_test() {
 
   // Gate 2: Cyclomatic Complexity CCM >= 90%
   let ccm = 0.95
-  { ccm >=. 0.90 } |> should.be_true()
+  { ccm >=. 0.9 } |> should.be_true()
 
   // Gate 3: Divergence D_EA <= 10%
   let d_ea = 0.03
-  { d_ea <=. 0.10 } |> should.be_true()
+  { d_ea <=. 0.1 } |> should.be_true()
 
   // Gate 4: Integrated Test Quality Score ITQS >= 0.85
   let itqs = 0.91

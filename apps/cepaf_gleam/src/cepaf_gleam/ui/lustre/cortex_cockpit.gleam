@@ -21,8 +21,7 @@ import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
-pub const tailscale_cortex_url: String =
-  "http://nas-1.tail55d152.ts.net:4100/cortex"
+pub const tailscale_cortex_url: String = "http://nas-1.tail55d152.ts.net:4100/cortex"
 
 pub type CoordinatorState {
   CoordinatorState(
@@ -83,7 +82,10 @@ fn render_top_nav() -> Element(msg) {
         [html.text("Planning Cockpit")],
       ),
       html.a(
-        [attribute.href(tailscale_cortex_url), attribute.class("nav-item active")],
+        [
+          attribute.href(tailscale_cortex_url),
+          attribute.class("nav-item active"),
+        ],
         [html.text("Cortex & Sa-Plan")],
       ),
       html.a(
@@ -102,9 +104,12 @@ fn render_header(model: CortexCockpitModel) -> Element(msg) {
     html.h1([], [html.text("UOS Cortex Cognitive Engine & Sa-Plan Authority")]),
     html.div([attribute.class("badges-container")], [
       html.span([attribute.class("badge badge-tailscale")], [
-        html.a([attribute.href(tailscale_cortex_url), attribute.target("_blank")], [
-          html.text("Tailscale: " <> tailscale_cortex_url),
-        ]),
+        html.a(
+          [attribute.href(tailscale_cortex_url), attribute.target("_blank")],
+          [
+            html.text("Tailscale: " <> tailscale_cortex_url),
+          ],
+        ),
       ]),
       html.span([attribute.class("badge badge-os-lock")], [
         html.text("Storage Lock: 25503L801736 (PROTECTED)"),
@@ -123,8 +128,16 @@ fn render_ooda_status(_model: CortexCockpitModel) -> Element(msg) {
   html.section([attribute.class("ooda-section")], [
     html.h2([], [html.text("Cognitive OODA Loop & POODAVR Stage Tracker")]),
     html.div([attribute.class("ooda-cards-grid")], [
-      render_phase_card("Perceive / Observe", "Sensory & Telemetry Ingestion", True),
-      render_phase_card("Orient", "Contextual Embedding & Smriti Retrieval", True),
+      render_phase_card(
+        "Perceive / Observe",
+        "Sensory & Telemetry Ingestion",
+        True,
+      ),
+      render_phase_card(
+        "Orient",
+        "Contextual Embedding & Smriti Retrieval",
+        True,
+      ),
       render_phase_card("Decide", "4-Party Sovereign Quorum Consensus", True),
       render_phase_card("Act", "Sa-Plan Fenced Execution & Leases", True),
       render_phase_card("Verify", "18/18 Checklist Invariant Validation", True),
@@ -133,7 +146,11 @@ fn render_ooda_status(_model: CortexCockpitModel) -> Element(msg) {
   ])
 }
 
-fn render_phase_card(title: String, desc: String, active: Bool) -> Element(msg) {
+fn render_phase_card(
+  title: String,
+  desc: String,
+  active: Bool,
+) -> Element(msg) {
   let status_class = case active {
     True -> "card-active"
     False -> "card-inactive"
@@ -183,10 +200,16 @@ fn render_hedged_cascade_panel() -> Element(msg) {
   html.section([attribute.class("hedged-cascade-section")], [
     html.h2([], [html.text("7-Tier Hedged Cascade & SIMD Scorer")]),
     html.ul([attribute.class("tier-list")], [
-      html.li([], [html.text("Tier 1: Semantic Cache (Smriti SQLite) - [0.1ms]")]),
-      html.li([], [html.text("Tier 2: MAX Mojo SIMD Scorer (AVX-512) - [1.2ms]")]),
+      html.li([], [
+        html.text("Tier 1: Semantic Cache (Smriti SQLite) - [0.1ms]"),
+      ]),
+      html.li([], [
+        html.text("Tier 2: MAX Mojo SIMD Scorer (AVX-512) - [1.2ms]"),
+      ]),
       html.li([], [html.text("Tier 3: Rust Bounded NIF Local Model - [12.0ms]")]),
-      html.li([], [html.text("Tier 4: Remote Free Advisory Sovereign - [320.0ms]")]),
+      html.li([], [
+        html.text("Tier 4: Remote Free Advisory Sovereign - [320.0ms]"),
+      ]),
     ]),
   ])
 }

@@ -1,0 +1,21 @@
+{
+  "schema": "uos.uos-doctor-governance-receipt.v1",
+  "timestamp_utc": "2026-09-21T09:49:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "command": "tools/uos-cli doctor",
+  "result": {
+    "status": "HOLD",
+    "cycles_checked": 111,
+    "artifact_present": 20,
+    "unverifiable": 91,
+    "missing": 0
+  },
+  "interpretation": {
+    "admission": "NOT_GRANTED",
+    "two_key_verification": "NOT_ESTABLISHED",
+    "provenance_conflict": "doctor output reports EV-94..EV-111 verified artifacts while repository policy pins EV-93 as the admitted ceiling; the higher claims remain non-admitted",
+    "action": "preserve the contradiction as evidence; do not rewrite historical claims or mint EV numbers"
+  },
+  "log_sha256": "244af1d88b135c928204e0b4c3e24597662164958f3d6c6c0e4c805521ec3204",
+  "canonical_task_remains_open": true
+}

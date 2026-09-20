@@ -54,19 +54,15 @@ pub type CandidateTask {
 }
 
 pub type ScoredTask {
-  ScoredTask(
-    task: CandidateTask,
-    utility_score: Float,
-    is_pareto_optimal: Bool,
-  )
+  ScoredTask(task: CandidateTask, utility_score: Float, is_pareto_optimal: Bool)
 }
 
 pub fn default_weights() -> UtilityWeights {
   UtilityWeights(
-    weight_priority: 0.40,
-    weight_dependency: 0.30,
-    weight_risk: 0.20,
-    weight_cost: 0.10,
+    weight_priority: 0.4,
+    weight_dependency: 0.3,
+    weight_risk: 0.2,
+    weight_cost: 0.1,
   )
 }
 
@@ -127,7 +123,10 @@ pub fn pull_highest_utility_task(
 
   let matching =
     list.filter(scored_queue, fn(st) {
-      { st.task.required_affinity == worker_affinity || st.task.required_affinity == "any" }
+      {
+        st.task.required_affinity == worker_affinity
+        || st.task.required_affinity == "any"
+      }
       && st.utility_score >. 0.0
     })
 
@@ -194,15 +193,18 @@ pub type FencedClaim {
 
 pub fn default_weights_5() -> UtilityWeights5 {
   UtilityWeights5(
-    weight_criticality: 0.30,
+    weight_criticality: 0.3,
     weight_stpa: 0.25,
     weight_dependency: 0.25,
-    weight_fmea: 0.10,
-    weight_impact_cost: 0.10,
+    weight_fmea: 0.1,
+    weight_impact_cost: 0.1,
   )
 }
 
-pub fn compute_utility_5(task: CandidateTask5, weights: UtilityWeights5) -> Float {
+pub fn compute_utility_5(
+  task: CandidateTask5,
+  weights: UtilityWeights5,
+) -> Float {
   case task.dependency_readiness <=. 0.0 {
     True -> 0.0
     False -> {
@@ -262,7 +264,10 @@ pub fn pull_highest_utility_task_5(
 
   let matching =
     list.filter(scored_queue, fn(st) {
-      { st.task.required_affinity == worker_affinity || st.task.required_affinity == "any" }
+      {
+        st.task.required_affinity == worker_affinity
+        || st.task.required_affinity == "any"
+      }
       && st.utility_score >. 0.0
     })
 

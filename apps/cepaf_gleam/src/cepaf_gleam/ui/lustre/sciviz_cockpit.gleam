@@ -58,17 +58,32 @@ fn render_breadcrumb() -> Element(msg) {
       ),
     ],
     [
-      html.a([attribute.href("/"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
-        element.text("UOS Cockpit"),
-      ]),
+      html.a(
+        [
+          attribute.href("/"),
+          attribute.attribute("style", "color: #38bdf8; text-decoration: none;"),
+        ],
+        [
+          element.text("UOS Cockpit"),
+        ],
+      ),
       element.text(" / "),
-      html.a([attribute.href("/components"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
-        element.text("Components"),
-      ]),
+      html.a(
+        [
+          attribute.href("/components"),
+          attribute.attribute("style", "color: #38bdf8; text-decoration: none;"),
+        ],
+        [
+          element.text("Components"),
+        ],
+      ),
       element.text(" / "),
-      html.span([attribute.attribute("style", "color: #f8fafc; font-weight: 600;")], [
-        element.text("SciViz Flight Cockpit"),
-      ]),
+      html.span(
+        [attribute.attribute("style", "color: #f8fafc; font-weight: 600;")],
+        [
+          element.text("SciViz Flight Cockpit"),
+        ],
+      ),
     ],
   )
 }
@@ -82,35 +97,64 @@ fn render_header() -> Element(msg) {
       ),
     ],
     [
-      html.div([attribute.attribute("style", "display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;")], [
-        html.div([], [
-          html.h1(
-            [
-              attribute.attribute(
-                "style",
-                "font-size: 1.85rem; font-weight: 700; color: #f8fafc; margin: 0 0 0.5rem 0; letter-spacing: -0.02em;",
-              ),
-            ],
-            [element.text("SciViz Scientific Visualization Cockpit")],
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;",
           ),
-          html.p(
-            [attribute.attribute("style", "color: #94a3b8; font-size: 0.95rem; margin: 0;")],
-            [
-              element.text(
-                "Unified Synthesis of ggplot2, SciChart, deck.gl & PixiJS — 356 UI Components, 15 Fractal Passes, Pure Lustre WebUI SSR",
-              ),
-            ],
-          ),
-        ]),
-        html.div([attribute.attribute("style", "text-align: right;")], [
-          html.div([attribute.attribute("style", "font-family: monospace; font-size: 0.8rem; color: #38bdf8;")], [
-            element.text("FQDN: http://nas-1.tail55d152.ts.net:4100/sciviz"),
+        ],
+        [
+          html.div([], [
+            html.h1(
+              [
+                attribute.attribute(
+                  "style",
+                  "font-size: 1.85rem; font-weight: 700; color: #f8fafc; margin: 0 0 0.5rem 0; letter-spacing: -0.02em;",
+                ),
+              ],
+              [element.text("SciViz Scientific Visualization Cockpit")],
+            ),
+            html.p(
+              [
+                attribute.attribute(
+                  "style",
+                  "color: #94a3b8; font-size: 0.95rem; margin: 0;",
+                ),
+              ],
+              [
+                element.text(
+                  "Unified Synthesis of ggplot2, SciChart, deck.gl & PixiJS — 356 UI Components, 15 Fractal Passes, Pure Lustre WebUI SSR",
+                ),
+              ],
+            ),
           ]),
-          html.div([attribute.attribute("style", "font-family: monospace; font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;")], [
-            element.text("MERKLE HEAD: a90542be2e775e9a... [SEQ: 426]"),
+          html.div([attribute.attribute("style", "text-align: right;")], [
+            html.div(
+              [
+                attribute.attribute(
+                  "style",
+                  "font-family: monospace; font-size: 0.8rem; color: #38bdf8;",
+                ),
+              ],
+              [
+                element.text("FQDN: http://nas-1.tail55d152.ts.net:4100/sciviz"),
+              ],
+            ),
+            html.div(
+              [
+                attribute.attribute(
+                  "style",
+                  "font-family: monospace; font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;",
+                ),
+              ],
+              [
+                element.text("MERKLE HEAD: a90542be2e775e9a... [SEQ: 426]"),
+              ],
+            ),
           ]),
-        ]),
-      ]),
+        ],
+      ),
     ],
   )
 }
@@ -209,106 +253,140 @@ fn render_flight_instruments_grid() -> Element(msg) {
     #("worker-codex", 50.0, 80.0),
   ]
 
-  html.section(
-    [attribute.attribute("style", "margin-bottom: 2.5rem;")],
-    [
-      html.h2(
-        [
-          attribute.attribute(
-            "style",
-            "font-size: 1.35rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.5rem;",
+  html.section([attribute.attribute("style", "margin-bottom: 2.5rem;")], [
+    html.h2(
+      [
+        attribute.attribute(
+          "style",
+          "font-size: 1.35rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.5rem;",
+        ),
+      ],
+      [element.text("1. Cybernetic Flight Instruments Suite (L0..L9)")],
+    ),
+    html.p(
+      [
+        attribute.attribute(
+          "style",
+          "color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.25rem;",
+        ),
+      ],
+      [
+        element.text(
+          "High-contrast, zero-latency dark cockpit instruments rendered server-side via pure Lustre SVG. Verified by formal Lean 4 theorems.",
+        ),
+      ],
+    ),
+    html.div(
+      [
+        attribute.attribute(
+          "style",
+          "display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.25rem;",
+        ),
+      ],
+      [
+        instrument_card(
+          "Pass 1: L0 Constitutional 2oo3 Interlock",
+          "Guardian triad consensus orbit (AGY, Claude, Codex) with fail-closed estop.",
+          instruments.render_constitutional_interlock(
+            True,
+            True,
+            False,
+            360.0,
+            220.0,
           ),
-        ],
-        [element.text("1. Cybernetic Flight Instruments Suite (L0..L9)")],
-      ),
-      html.p(
-        [attribute.attribute("style", "color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.25rem;")],
-        [
-          element.text(
-            "High-contrast, zero-latency dark cockpit instruments rendered server-side via pure Lustre SVG. Verified by formal Lean 4 theorems.",
+        ),
+        instrument_card(
+          "Pass 2: L1 Homotopy Geodesic Morph",
+          "Continuous state deformation H(x, t) with endpoint invariance at t=0.5.",
+          instruments.render_homotopy_deformation(
+            p_start,
+            p_end,
+            0.5,
+            360.0,
+            220.0,
           ),
-        ],
-      ),
-      html.div(
-        [
-          attribute.attribute(
-            "style",
-            "display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.25rem;",
+        ),
+        instrument_card(
+          "Pass 3: L2 Sheaf Cohomology Complex",
+          "Presheaf obstruction matrix demonstrating zero obstruction H^1=0 local gluing.",
+          instruments.render_sheaf_cohomology_heatmap(matrix, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 4: L3 Strange Attractor Lorenz Scope",
+          "Non-linear chaotic dynamical trajectory bounded within compact trapping volume.",
+          instruments.render_strange_attractor_scope(lorenz_pts, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 5: L4 Lyapunov Damping Funnel",
+          "Monotonic energy dissipation envelope V(x_{t+1}) <= V(x_t) for dark cockpit settling.",
+          instruments.render_lyapunov_damping_funnel(
+            funnel_pts,
+            22.5,
+            360.0,
+            220.0,
           ),
-        ],
-        [
-          instrument_card(
-            "Pass 1: L0 Constitutional 2oo3 Interlock",
-            "Guardian triad consensus orbit (AGY, Claude, Codex) with fail-closed estop.",
-            instruments.render_constitutional_interlock(True, True, False, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 6: L5 Quantum Bloch Sphere Scope",
+          "Qubit superposition projection with norm conservation |r|^2 <= 1 via BEAM math BIFs.",
+          instruments.render_bloch_sphere_scope(1.5708, 0.7854, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 7: L6 Peirce-Rocha Biosemiotic Radar",
+          "Dynamic semiotic triangle computing syntax, semantics, and pragmatics coherence area.",
+          instruments.render_rocha_semiotics_radar(
+            0.96,
+            0.94,
+            0.99,
+            360.0,
+            220.0,
           ),
-          instrument_card(
-            "Pass 2: L1 Homotopy Geodesic Morph",
-            "Continuous state deformation H(x, t) with endpoint invariance at t=0.5.",
-            instruments.render_homotopy_deformation(p_start, p_end, 0.5, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 8: L7 Ergodic Work-Stealing Mesh",
+          "Decentralized worker task deques with proved task conservation across stealing steps.",
+          instruments.render_work_stealing_mesh_flow(workers, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 9: L8 Byzantine Quorum Venn",
+          "3f+1 Byzantine quorum Venn intersection proving non-empty overlap of at least f+1 nodes.",
+          instruments.render_byzantine_quorum_venn(1, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 10: L9 Century Ephemeris Chrono-Map",
+          "Multi-scale logarithmic timeline spanning nanoseconds to multi-decade epochs.",
+          instruments.render_century_ephemeris_timeline(500.0, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 11: Dark Cockpit Contrast Ratio Meter",
+          "Photopic contrast ratio meter enforcing WCAG AAA >= 7:1 for operator eye relief.",
+          instruments.render_dark_cockpit_contrast_meter(7.8, 360.0, 180.0),
+        ),
+        instrument_card(
+          "Pass 12: Zero-GC Lockless Ring Buffer Scope",
+          "Circular buffer pointer gauge with deterministic modulo advance (p+1) mod N < N.",
+          instruments.render_lockless_ring_buffer_scope(5, 2, 16, 360.0, 220.0),
+        ),
+        instrument_card(
+          "Pass 15: Sovereign Merkle Provenance Ledger",
+          "Cryptographic block visualizer co-signed exclusively by Claude Fable (Block 426).",
+          instruments.render_sovereign_merkle_provenance(
+            426,
+            "a90542be2e77",
+            360.0,
+            180.0,
           ),
-          instrument_card(
-            "Pass 3: L2 Sheaf Cohomology Complex",
-            "Presheaf obstruction matrix demonstrating zero obstruction H^1=0 local gluing.",
-            instruments.render_sheaf_cohomology_heatmap(matrix, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 4: L3 Strange Attractor Lorenz Scope",
-            "Non-linear chaotic dynamical trajectory bounded within compact trapping volume.",
-            instruments.render_strange_attractor_scope(lorenz_pts, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 5: L4 Lyapunov Damping Funnel",
-            "Monotonic energy dissipation envelope V(x_{t+1}) <= V(x_t) for dark cockpit settling.",
-            instruments.render_lyapunov_damping_funnel(funnel_pts, 22.5, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 6: L5 Quantum Bloch Sphere Scope",
-            "Qubit superposition projection with norm conservation |r|^2 <= 1 via BEAM math BIFs.",
-            instruments.render_bloch_sphere_scope(1.5708, 0.7854, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 7: L6 Peirce-Rocha Biosemiotic Radar",
-            "Dynamic semiotic triangle computing syntax, semantics, and pragmatics coherence area.",
-            instruments.render_rocha_semiotics_radar(0.96, 0.94, 0.99, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 8: L7 Ergodic Work-Stealing Mesh",
-            "Decentralized worker task deques with proved task conservation across stealing steps.",
-            instruments.render_work_stealing_mesh_flow(workers, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 9: L8 Byzantine Quorum Venn",
-            "3f+1 Byzantine quorum Venn intersection proving non-empty overlap of at least f+1 nodes.",
-            instruments.render_byzantine_quorum_venn(1, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 10: L9 Century Ephemeris Chrono-Map",
-            "Multi-scale logarithmic timeline spanning nanoseconds to multi-decade epochs.",
-            instruments.render_century_ephemeris_timeline(500.0, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 11: Dark Cockpit Contrast Ratio Meter",
-            "Photopic contrast ratio meter enforcing WCAG AAA >= 7:1 for operator eye relief.",
-            instruments.render_dark_cockpit_contrast_meter(7.8, 360.0, 180.0),
-          ),
-          instrument_card(
-            "Pass 12: Zero-GC Lockless Ring Buffer Scope",
-            "Circular buffer pointer gauge with deterministic modulo advance (p+1) mod N < N.",
-            instruments.render_lockless_ring_buffer_scope(5, 2, 16, 360.0, 220.0),
-          ),
-          instrument_card(
-            "Pass 15: Sovereign Merkle Provenance Ledger",
-            "Cryptographic block visualizer co-signed exclusively by Claude Fable (Block 426).",
-            instruments.render_sovereign_merkle_provenance(426, "a90542be2e77", 360.0, 180.0),
-          ),
-        ],
-      ),
-    ],
-  )
+        ),
+      ],
+    ),
+  ])
 }
 
-fn instrument_card(title: String, description: String, chart: Element(msg)) -> Element(msg) {
+fn instrument_card(
+  title: String,
+  description: String,
+  chart: Element(msg),
+) -> Element(msg) {
   html.div(
     [
       attribute.attribute(
@@ -328,7 +406,12 @@ fn instrument_card(title: String, description: String, chart: Element(msg)) -> E
           [element.text(title)],
         ),
         html.p(
-          [attribute.attribute("style", "color: #94a3b8; font-size: 0.78rem; margin: 0;")],
+          [
+            attribute.attribute(
+              "style",
+              "color: #94a3b8; font-size: 0.78rem; margin: 0;",
+            ),
+          ],
           [element.text(description)],
         ),
       ]),
@@ -346,57 +429,59 @@ fn instrument_card(title: String, description: String, chart: Element(msg)) -> E
 }
 
 fn render_architecture_pillars() -> Element(msg) {
-  html.section(
-    [attribute.attribute("style", "margin-bottom: 2.5rem;")],
-    [
-      html.h2(
-        [
-          attribute.attribute(
-            "style",
-            "font-size: 1.35rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.5rem;",
-          ),
-        ],
-        [element.text("2. Four Synthesized Visualization Architecture Pillars")],
-      ),
-      html.div(
-        [
-          attribute.attribute(
-            "style",
-            "display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;",
-          ),
-        ],
-        [
-          pillar_card(
-            "1. ggplot2 / Plotly",
-            "Grammar of Graphics",
-            "#38bdf8",
-            "15 Statistical Geoms: GeomPoint, GeomLine, GeomArea, GeomBar, GeomRibbon, GeomPhasePortrait, GeomBoxplot, GeomViolin, GeomHex, GeomDensity2D, GeomErrorBar, GeomStep, GeomContour, GeomSegment, GeomText.",
-          ),
-          pillar_card(
-            "2. SciChart.js",
-            "High-Speed Streaming",
-            "#10b981",
-            "9 Renderable Series: FastLine, FastMountain, FastCandlestick, FastBand, FastBubble, FastColumn, FastHeatmap, SplineLine, DigitalBand. 6 Modifiers: Cursor, Rollover, Zoom, Legend, Threshold, PolarGrid.",
-          ),
-          pillar_card(
-            "3. deck.gl",
-            "Reactive Layer Pipeline",
-            "#f59e0b",
-            "19 Geospatial & Mesh Layers: Scatterplot, Path, Arc, HeatmapMatrix, TopologyGraph, Line, Bitmap, Icon, GeoJson, Grid, Hexagon, Column, PointCloud, ScreenGrid, Text, Trips, H3Hexagon, S2, Tile.",
-          ),
-          pillar_card(
-            "4. PixiJS",
-            "2D Hierarchical Scene Graph",
-            "#ec4899",
-            "9 Scene Visuals: VisualCircle, VisualRect, VisualText, VisualComposite, VisualSprite, VisualNineSlicePlane, VisualTilingSprite, VisualParticleContainer, VisualMesh. 7 Filters: Blur, ColorMatrix, CRT, Bloom.",
-          ),
-        ],
-      ),
-    ],
-  )
+  html.section([attribute.attribute("style", "margin-bottom: 2.5rem;")], [
+    html.h2(
+      [
+        attribute.attribute(
+          "style",
+          "font-size: 1.35rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.5rem;",
+        ),
+      ],
+      [element.text("2. Four Synthesized Visualization Architecture Pillars")],
+    ),
+    html.div(
+      [
+        attribute.attribute(
+          "style",
+          "display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;",
+        ),
+      ],
+      [
+        pillar_card(
+          "1. ggplot2 / Plotly",
+          "Grammar of Graphics",
+          "#38bdf8",
+          "15 Statistical Geoms: GeomPoint, GeomLine, GeomArea, GeomBar, GeomRibbon, GeomPhasePortrait, GeomBoxplot, GeomViolin, GeomHex, GeomDensity2D, GeomErrorBar, GeomStep, GeomContour, GeomSegment, GeomText.",
+        ),
+        pillar_card(
+          "2. SciChart.js",
+          "High-Speed Streaming",
+          "#10b981",
+          "9 Renderable Series: FastLine, FastMountain, FastCandlestick, FastBand, FastBubble, FastColumn, FastHeatmap, SplineLine, DigitalBand. 6 Modifiers: Cursor, Rollover, Zoom, Legend, Threshold, PolarGrid.",
+        ),
+        pillar_card(
+          "3. deck.gl",
+          "Reactive Layer Pipeline",
+          "#f59e0b",
+          "19 Geospatial & Mesh Layers: Scatterplot, Path, Arc, HeatmapMatrix, TopologyGraph, Line, Bitmap, Icon, GeoJson, Grid, Hexagon, Column, PointCloud, ScreenGrid, Text, Trips, H3Hexagon, S2, Tile.",
+        ),
+        pillar_card(
+          "4. PixiJS",
+          "2D Hierarchical Scene Graph",
+          "#ec4899",
+          "9 Scene Visuals: VisualCircle, VisualRect, VisualText, VisualComposite, VisualSprite, VisualNineSlicePlane, VisualTilingSprite, VisualParticleContainer, VisualMesh. 7 Filters: Blur, ColorMatrix, CRT, Bloom.",
+        ),
+      ],
+    ),
+  ])
 }
 
-fn pillar_card(title: String, subtitle: String, color: String, body: String) -> Element(msg) {
+fn pillar_card(
+  title: String,
+  subtitle: String,
+  color: String,
+  body: String,
+) -> Element(msg) {
   html.div(
     [
       attribute.attribute(
@@ -428,7 +513,12 @@ fn pillar_card(title: String, subtitle: String, color: String, body: String) -> 
         [element.text(subtitle)],
       ),
       html.p(
-        [attribute.attribute("style", "color: #94a3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;")],
+        [
+          attribute.attribute(
+            "style",
+            "color: #94a3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;",
+          ),
+        ],
         [element.text(body)],
       ),
     ],
@@ -454,7 +544,12 @@ fn render_master_catalog_summary() -> Element(msg) {
         [element.text("3. Master 356-Component Taxonomy Architecture")],
       ),
       html.p(
-        [attribute.attribute("style", "color: #94a3b8; font-size: 0.88rem; margin: 0 0 1rem 0;")],
+        [
+          attribute.attribute(
+            "style",
+            "color: #94a3b8; font-size: 0.88rem; margin: 0 0 1rem 0;",
+          ),
+        ],
         [
           element.text(
             "The 356 components are strictly categorized into 4 tiers with 100% test coverage and formal Lean 4 verification:",
@@ -469,18 +564,42 @@ fn render_master_catalog_summary() -> Element(msg) {
           ),
         ],
         [
-          catalog_stat_box("Tier 1: Flight Instruments", "13 Instruments", "Prajna / Dark Cockpit"),
-          catalog_stat_box("Tier 2: SciViz Foundations", "79 Components", "ggplot2, SciChart, deck.gl, PixiJS"),
-          catalog_stat_box("Tier 3: SRE Cockpit Widgets", "12 SRE Widgets", "SLO, Podman, Immune, Zenoh"),
-          catalog_stat_box("Tier 4: A2UI Schema Specs", "233 Component Specs", "Declarative JSON Agent Schema"),
-          catalog_stat_box("Semantic Primitives", "19 Constructors", "HTML5 Denotational Atoms"),
+          catalog_stat_box(
+            "Tier 1: Flight Instruments",
+            "13 Instruments",
+            "Prajna / Dark Cockpit",
+          ),
+          catalog_stat_box(
+            "Tier 2: SciViz Foundations",
+            "79 Components",
+            "ggplot2, SciChart, deck.gl, PixiJS",
+          ),
+          catalog_stat_box(
+            "Tier 3: SRE Cockpit Widgets",
+            "12 SRE Widgets",
+            "SLO, Podman, Immune, Zenoh",
+          ),
+          catalog_stat_box(
+            "Tier 4: A2UI Schema Specs",
+            "233 Component Specs",
+            "Declarative JSON Agent Schema",
+          ),
+          catalog_stat_box(
+            "Semantic Primitives",
+            "19 Constructors",
+            "HTML5 Denotational Atoms",
+          ),
         ],
       ),
     ],
   )
 }
 
-fn catalog_stat_box(title: String, count: String, detail: String) -> Element(msg) {
+fn catalog_stat_box(
+  title: String,
+  count: String,
+  detail: String,
+) -> Element(msg) {
   html.div(
     [
       attribute.attribute(
@@ -489,15 +608,39 @@ fn catalog_stat_box(title: String, count: String, detail: String) -> Element(msg
       ),
     ],
     [
-      html.div([attribute.attribute("style", "font-size: 0.75rem; color: #94a3b8; margin-bottom: 0.2rem;")], [
-        element.text(title),
-      ]),
-      html.div([attribute.attribute("style", "font-size: 1.2rem; font-weight: 700; color: #38bdf8; font-family: monospace;")], [
-        element.text(count),
-      ]),
-      html.div([attribute.attribute("style", "font-size: 0.72rem; color: #64748b; margin-top: 0.2rem;")], [
-        element.text(detail),
-      ]),
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.75rem; color: #94a3b8; margin-bottom: 0.2rem;",
+          ),
+        ],
+        [
+          element.text(title),
+        ],
+      ),
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 1.2rem; font-weight: 700; color: #38bdf8; font-family: monospace;",
+          ),
+        ],
+        [
+          element.text(count),
+        ],
+      ),
+      html.div(
+        [
+          attribute.attribute(
+            "style",
+            "font-size: 0.72rem; color: #64748b; margin-top: 0.2rem;",
+          ),
+        ],
+        [
+          element.text(detail),
+        ],
+      ),
     ],
   )
 }
@@ -512,24 +655,71 @@ fn render_navigation_footer() -> Element(msg) {
     ],
     [
       html.div([], [
-        element.text("UOS Unified Operational System — SIL-6 Cybernetic Command Cockpit"),
+        element.text(
+          "UOS Unified Operational System — SIL-6 Cybernetic Command Cockpit",
+        ),
       ]),
       html.div([attribute.attribute("style", "display: flex; gap: 1rem;")], [
-        html.a([attribute.href("/"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
-          element.text("Cockpit"),
-        ]),
-        html.a([attribute.href("/planning"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
-          element.text("Planning"),
-        ]),
-        html.a([attribute.href("/components"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
-          element.text("Components"),
-        ]),
-        html.a([attribute.href("/checklist"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
-          element.text("Checklist (18/18)"),
-        ]),
-        html.a([attribute.href("/ag-ui/events"), attribute.attribute("style", "color: #38bdf8; text-decoration: none;")], [
-          element.text("AG-UI Events"),
-        ]),
+        html.a(
+          [
+            attribute.href("/"),
+            attribute.attribute(
+              "style",
+              "color: #38bdf8; text-decoration: none;",
+            ),
+          ],
+          [
+            element.text("Cockpit"),
+          ],
+        ),
+        html.a(
+          [
+            attribute.href("/planning"),
+            attribute.attribute(
+              "style",
+              "color: #38bdf8; text-decoration: none;",
+            ),
+          ],
+          [
+            element.text("Planning"),
+          ],
+        ),
+        html.a(
+          [
+            attribute.href("/components"),
+            attribute.attribute(
+              "style",
+              "color: #38bdf8; text-decoration: none;",
+            ),
+          ],
+          [
+            element.text("Components"),
+          ],
+        ),
+        html.a(
+          [
+            attribute.href("/checklist"),
+            attribute.attribute(
+              "style",
+              "color: #38bdf8; text-decoration: none;",
+            ),
+          ],
+          [
+            element.text("Checklist (18/18)"),
+          ],
+        ),
+        html.a(
+          [
+            attribute.href("/ag-ui/events"),
+            attribute.attribute(
+              "style",
+              "color: #38bdf8; text-decoration: none;",
+            ),
+          ],
+          [
+            element.text("AG-UI Events"),
+          ],
+        ),
       ]),
     ],
   )

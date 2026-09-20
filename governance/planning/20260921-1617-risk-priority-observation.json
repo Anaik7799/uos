@@ -1,0 +1,17 @@
+{
+  "schema": "uos.risk-priority-observation.v1",
+  "timestamp": "20260921-1617",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/risk-priority-check --all",
+  "status": "PASS",
+  "authority": "NONE",
+  "baseline_checks": 375,
+  "adversarial_checks": 32843,
+  "independent_dag_scenarios": 32768,
+  "local_paths_checked": 39,
+  "runtime_enforcement": "NOT_ASSERTED",
+  "runtime_admission": "NOT_GRANTED",
+  "live_agent_tests": "UNRUN",
+  "interpretation": "risk package is internally consistent for report-only optimization; it does not authorize execution or admission",
+  "admission": "not_admitted"
+}

@@ -1,0 +1,20 @@
+{
+  "receipt_id": "20260921-1418-source-universe-reconciliation",
+  "observed_at": "2026-09-21T14:18:00+02:00",
+  "authority": "bounded-source-review",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "findings": {
+    "root_supervision_declared_children": 26,
+    "root_supervision_concrete_sup_add_calls": 5,
+    "mesh_container_declarations": 7,
+    "runtime_binding_status": "not equivalent to declaration counts",
+    "service_placeholders": "preserve as declared_entrypoint_unbound",
+    "wrapper_policy": "link wrappers to artifacts; do not count aliases as services"
+  },
+  "required_next": [
+    "pin source-universe ledger",
+    "reconcile executable artifacts to MCP interfaces",
+    "bind runtime observations before admission"
+  ],
+  "admission": "NOT_ADMITTED"
+}

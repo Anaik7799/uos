@@ -26,6 +26,7 @@ import gleam/list
 import gleam/string
 
 const tailscale_base_url = "http://nas-1.tail55d152.ts.net:4100"
+
 const peer_base_url = "http://vm-1.tail55d152.ts.net:8088"
 
 /// Mathematical Gates descriptor.
@@ -76,7 +77,7 @@ pub fn init_ooda_shruti_hud() -> OodaShrutiHudState {
   OodaShrutiHudState(
     cycle_id: "EV-104",
     cycle_name: "Autonomous OODA Agent Copilot & Shruti Synthesizer Pipeline",
-    total_eunit_tests: 10515,
+    total_eunit_tests: 10_515,
     current_phase_name: "OBSERVE",
     cycle_count: 1,
     active_swara: "Sa",
@@ -111,7 +112,9 @@ pub fn update_from_copilot(
 ) -> OodaShrutiHudState {
   OodaShrutiHudState(
     ..state,
-    current_phase_name: string.uppercase(ooda_phase_to_string(copilot.current_phase)),
+    current_phase_name: string.uppercase(ooda_phase_to_string(
+      copilot.current_phase,
+    )),
     cycle_count: copilot.cycle_count,
     active_swara: copilot.active_shruti.swara,
     active_shruti_name: copilot.active_shruti.name,

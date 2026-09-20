@@ -257,8 +257,7 @@ pub fn dispatch_workload(
   active_instances: List(TriadicInstance),
 ) -> #(TriadicInstance, String) {
   let placements = canonical_placements()
-  let maybe_placement =
-    list.find(placements, fn(p) { p.workload == workload })
+  let maybe_placement = list.find(placements, fn(p) { p.workload == workload })
 
   case maybe_placement {
     Error(_) -> #(
@@ -336,10 +335,7 @@ pub fn placement_to_json(p: WorkloadPlacement) -> json.Json {
     #("workload", json.string(workload_to_string(p.workload))),
     #("name", json.string(p.name)),
     #("primary_instance", json.string(instance_to_string(p.primary_instance))),
-    #(
-      "fallback_instance",
-      json.string(instance_to_string(p.fallback_instance)),
-    ),
+    #("fallback_instance", json.string(instance_to_string(p.fallback_instance))),
     #("hardware_affinity", json.string(p.hardware_affinity)),
     #("rationale", json.string(p.rationale)),
   ])

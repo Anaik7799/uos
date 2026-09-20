@@ -926,7 +926,12 @@ pub fn data_table(
       html.tr([], td_cells)
     })
   html.div(
-    [attribute.attribute("style", "overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%")],
+    [
+      attribute.attribute(
+        "style",
+        "overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%",
+      ),
+    ],
     [
       html.table([], [
         html.thead([], [html.tr([], th_cells)]),
@@ -1081,7 +1086,9 @@ pub fn render_a2ui_component(
   let validation = a2ui_validator.validate_proposal(cat, proposal)
   case validation {
     a2ui_validator.Valid -> {
-      let content = case a2ui_renderer.render(proposal, a2ui_renderer.HtmlTarget) {
+      let content = case
+        a2ui_renderer.render(proposal, a2ui_renderer.HtmlTarget)
+      {
         a2ui_renderer.HtmlOutput(h) -> h
         a2ui_renderer.JsonOutput(_) -> ""
         a2ui_renderer.AnsiOutput(t) -> t
@@ -1336,82 +1343,72 @@ pub fn task_create_form() -> Element(msg) {
       ),
     ],
     [
-      html.div(
-        [attribute.attribute("style", "flex:1;min-width:200px;")],
-        [
-          html.label(
-            [
-              attribute.attribute(
-                "style",
-                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-              ),
-            ],
-            [element.text("Task Description")],
-          ),
-          element.element(
-            "input",
-            [
-              attribute.attribute("type", "text"),
-              attribute.attribute("name", "title"),
-              // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
-              attribute.attribute("aria-label", "Task description"),
-              attribute.attribute("placeholder", "Enter task description..."),
-              attribute.attribute("required", "true"),
-              attribute.attribute(
-                "style",
-                "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;font-size:14px;",
-              ),
-            ],
-            [],
-          ),
-        ],
-      ),
-      html.div(
-        [attribute.attribute("style", "min-width:80px;")],
-        [
-          html.label(
-            [
-              attribute.attribute(
-                "style",
-                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-              ),
-            ],
-            [element.text("Priority")],
-          ),
-          element.element(
-            "select",
-            [
-              attribute.attribute("name", "priority"),
-              // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
-              attribute.attribute("aria-label", "Task priority (P0 to P3)"),
-              attribute.attribute(
-                "style",
-                "padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
-              ),
-            ],
-            [
-              element.element(
-                "option",
-                [attribute.attribute("value", "P1")],
-                [element.text("P1")],
-              ),
-              element.element(
-                "option",
-                [
-                  attribute.attribute("value", "P2"),
-                  attribute.attribute("selected", "true"),
-                ],
-                [element.text("P2")],
-              ),
-              element.element(
-                "option",
-                [attribute.attribute("value", "P3")],
-                [element.text("P3")],
-              ),
-            ],
-          ),
-        ],
-      ),
+      html.div([attribute.attribute("style", "flex:1;min-width:200px;")], [
+        html.label(
+          [
+            attribute.attribute(
+              "style",
+              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+            ),
+          ],
+          [element.text("Task Description")],
+        ),
+        element.element(
+          "input",
+          [
+            attribute.attribute("type", "text"),
+            attribute.attribute("name", "title"),
+            // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
+            attribute.attribute("aria-label", "Task description"),
+            attribute.attribute("placeholder", "Enter task description..."),
+            attribute.attribute("required", "true"),
+            attribute.attribute(
+              "style",
+              "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;font-size:14px;",
+            ),
+          ],
+          [],
+        ),
+      ]),
+      html.div([attribute.attribute("style", "min-width:80px;")], [
+        html.label(
+          [
+            attribute.attribute(
+              "style",
+              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+            ),
+          ],
+          [element.text("Priority")],
+        ),
+        element.element(
+          "select",
+          [
+            attribute.attribute("name", "priority"),
+            // SC-AGUI-UI-009 / WCAG 2.1 AA — aria-label for SR users.
+            attribute.attribute("aria-label", "Task priority (P0 to P3)"),
+            attribute.attribute(
+              "style",
+              "padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
+            ),
+          ],
+          [
+            element.element("option", [attribute.attribute("value", "P1")], [
+              element.text("P1"),
+            ]),
+            element.element(
+              "option",
+              [
+                attribute.attribute("value", "P2"),
+                attribute.attribute("selected", "true"),
+              ],
+              [element.text("P2")],
+            ),
+            element.element("option", [attribute.attribute("value", "P3")], [
+              element.text("P3"),
+            ]),
+          ],
+        ),
+      ]),
       html.button(
         [
           attribute.attribute("type", "submit"),
@@ -1483,61 +1480,55 @@ pub fn zenoh_publish_form() -> Element(msg) {
       ),
     ],
     [
-      html.div(
-        [attribute.attribute("style", "flex:1;min-width:200px;")],
-        [
-          html.label(
-            [
-              attribute.attribute(
-                "style",
-                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-              ),
-            ],
-            [element.text("Topic")],
-          ),
-          element.element(
-            "input",
-            [
-              attribute.attribute("type", "text"),
-              attribute.attribute("name", "topic"),
-              attribute.attribute("placeholder", "indrajaal/test/message"),
-              attribute.attribute("required", "true"),
-              attribute.attribute(
-                "style",
-                "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
-              ),
-            ],
-            [],
-          ),
-        ],
-      ),
-      html.div(
-        [attribute.attribute("style", "flex:1;min-width:150px;")],
-        [
-          html.label(
-            [
-              attribute.attribute(
-                "style",
-                "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
-              ),
-            ],
-            [element.text("Payload")],
-          ),
-          element.element(
-            "input",
-            [
-              attribute.attribute("type", "text"),
-              attribute.attribute("name", "payload"),
-              attribute.attribute("placeholder", "{\"test\":true}"),
-              attribute.attribute(
-                "style",
-                "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
-              ),
-            ],
-            [],
-          ),
-        ],
-      ),
+      html.div([attribute.attribute("style", "flex:1;min-width:200px;")], [
+        html.label(
+          [
+            attribute.attribute(
+              "style",
+              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+            ),
+          ],
+          [element.text("Topic")],
+        ),
+        element.element(
+          "input",
+          [
+            attribute.attribute("type", "text"),
+            attribute.attribute("name", "topic"),
+            attribute.attribute("placeholder", "indrajaal/test/message"),
+            attribute.attribute("required", "true"),
+            attribute.attribute(
+              "style",
+              "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
+            ),
+          ],
+          [],
+        ),
+      ]),
+      html.div([attribute.attribute("style", "flex:1;min-width:150px;")], [
+        html.label(
+          [
+            attribute.attribute(
+              "style",
+              "display:block;font-size:.75rem;color:#7a8fa6;margin-bottom:4px;",
+            ),
+          ],
+          [element.text("Payload")],
+        ),
+        element.element(
+          "input",
+          [
+            attribute.attribute("type", "text"),
+            attribute.attribute("name", "payload"),
+            attribute.attribute("placeholder", "{\"test\":true}"),
+            attribute.attribute(
+              "style",
+              "width:100%;padding:8px 12px;background:#141922;border:1px solid #1e2a3a;border-radius:6px;color:#e0e6ed;",
+            ),
+          ],
+          [],
+        ),
+      ]),
       html.button(
         [
           attribute.attribute("type", "submit"),
@@ -1779,14 +1770,11 @@ pub fn beam_scheduler_panel() -> Element(msg) {
         ],
         [element.text("BEAM Scheduler Metrics")],
       ),
-      html.p(
-        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
-        [
-          element.text(
-            "Schedulers: 16 | Dirty IO: 16 | Reduction count: live via /ws/telemetry",
-          ),
-        ],
-      ),
+      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
+        element.text(
+          "Schedulers: 16 | Dirty IO: 16 | Reduction count: live via /ws/telemetry",
+        ),
+      ]),
     ],
   )
 }
@@ -1811,14 +1799,11 @@ pub fn guard_grid_drilldown() -> Element(msg) {
         ],
         [element.text("Guard Grid \u{2014} 24 Cells \u{d7} 85 Rules")],
       ),
-      html.p(
-        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
-        [
-          element.text(
-            "Cell verdicts, Wolfram CA state, Shannon entropy, Lyapunov exponent \u{2014} live via /ws/health-grid",
-          ),
-        ],
-      ),
+      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
+        element.text(
+          "Cell verdicts, Wolfram CA state, Shannon entropy, Lyapunov exponent \u{2014} live via /ws/health-grid",
+        ),
+      ]),
     ],
   )
 }
@@ -1843,14 +1828,11 @@ pub fn ooda_trace_viewer() -> Element(msg) {
         ],
         [element.text("OODA Cycle Trace")],
       ),
-      html.p(
-        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
-        [
-          element.text(
-            "Observe \u{2192} Orient \u{2192} Decide \u{2192} Act timing per cycle \u{2014} live via /ws/agents",
-          ),
-        ],
-      ),
+      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
+        element.text(
+          "Observe \u{2192} Orient \u{2192} Decide \u{2192} Act timing per cycle \u{2014} live via /ws/agents",
+        ),
+      ]),
     ],
   )
 }
@@ -1875,14 +1857,11 @@ pub fn nif_latency_panel() -> Element(msg) {
         ],
         [element.text("NIF Call Latency")],
       ),
-      html.p(
-        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
-        [
-          element.text(
-            "plan_status, system_health, system_dashboard \u{2014} latency per call (ms)",
-          ),
-        ],
-      ),
+      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
+        element.text(
+          "plan_status, system_health, system_dashboard \u{2014} latency per call (ms)",
+        ),
+      ]),
     ],
   )
 }
@@ -1907,14 +1886,11 @@ pub fn zenoh_inspector_panel() -> Element(msg) {
         ],
         [element.text("Zenoh Message Inspector")],
       ),
-      html.p(
-        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
-        [
-          element.text(
-            "Live message feed from indrajaal/** topics \u{2014} via /ws/zenoh",
-          ),
-        ],
-      ),
+      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
+        element.text(
+          "Live message feed from indrajaal/** topics \u{2014} via /ws/zenoh",
+        ),
+      ]),
     ],
   )
 }
@@ -1939,14 +1915,11 @@ pub fn otel_span_viewer() -> Element(msg) {
         ],
         [element.text("OTel Span Viewer")],
       ),
-      html.p(
-        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
-        [
-          element.text(
-            "OpenTelemetry spans from indrajaal/otel/spans/** \u{2014} distributed tracing",
-          ),
-        ],
-      ),
+      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
+        element.text(
+          "OpenTelemetry spans from indrajaal/otel/spans/** \u{2014} distributed tracing",
+        ),
+      ]),
     ],
   )
 }
@@ -1971,14 +1944,11 @@ pub fn health_cascade_tree() -> Element(msg) {
         ],
         [element.text("Health Cascade Tree")],
       ),
-      html.p(
-        [attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")],
-        [
-          element.text(
-            "Hierarchical health rollup: container \u{2192} service \u{2192} layer \u{2192} system",
-          ),
-        ],
-      ),
+      html.p([attribute.attribute("style", "color:#7a8fa6;font-size:.8rem;")], [
+        element.text(
+          "Hierarchical health rollup: container \u{2192} service \u{2192} layer \u{2192} system",
+        ),
+      ]),
     ],
   )
 }
@@ -2003,10 +1973,7 @@ pub fn emergency_stop_button() -> Element(msg) {
     [
       html.span(
         [
-          attribute.attribute(
-            "style",
-            "font-size:.8rem;color:#ff8a94;flex:1;",
-          ),
+          attribute.attribute("style", "font-size:.8rem;color:#ff8a94;flex:1;"),
         ],
         [
           element.text(

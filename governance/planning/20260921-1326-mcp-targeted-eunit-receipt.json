@@ -1,0 +1,26 @@
+{
+  "schema": "uos.mcp-targeted-eunit-receipt.v1",
+  "timestamp": "20260921-1326Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "candidate": "working-tree-development-candidate",
+  "command": "erl -noshell -pa build/dev/erlang/*/ebin -eval eunit:test([mcp_catalog_truth_test,mcp_runtime_truth_test,system_feature_api_test,system_feature_interfaces_test])",
+  "modules": ["mcp_catalog_truth_test", "mcp_runtime_truth_test", "system_feature_api_test", "system_feature_interfaces_test"],
+  "result": "PASS",
+  "tests_passed": 33,
+  "tests_failed": 0,
+  "elapsed_seconds": 0.081,
+  "scope": [
+    "MCP unavailable-tool fail-closed behavior",
+    "capability inventory unprobed boundary",
+    "declarative feature query and intent purity",
+    "MCP schemas, IDs, listing and session fences"
+  ],
+  "completion": {
+    "observation_complete": true,
+    "t2_contracts_complete": false,
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false,
+    "goal_complete": false
+  },
+  "limits": ["EUnit tests do not establish canonical binding, live holon participation, deployment usability, or release authority."]
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "uos.km-gate-hold-receipt.v1",
+  "observed_at": "2026-09-21T19:04:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/km-gate --gate",
+  "log": "/tmp/km-gate-1903.log",
+  "log_sha256": "da0ec7f6fe2c025c2799643fe9838168b8a79a0f8099569fad0b8ff2648c6d53",
+  "exit_code": 1,
+  "result": "HOLD",
+  "interpretation": "Knowledge-management provenance gate remains non-passing; document observation does not establish runtime behavior or two-key admission.",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

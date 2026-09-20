@@ -44,20 +44,14 @@ pub fn multi_agent_claim_race_determinism_test() {
     list.fold(workers, initial_state, fn(acc, w) {
       let #(current_winner, history) = acc
       case current_winner {
-        None -> #(
-          Some(w.id),
-          [Winner(w.id, 3600_000), ..history],
-        )
-        Some(existing) -> #(
-          Some(existing),
-          [
-            ContentionRejected(
-              w.id,
-              "Task already claimed by active lease holder: " <> existing,
-            ),
-            ..history
-          ],
-        )
+        None -> #(Some(w.id), [Winner(w.id, 3_600_000), ..history])
+        Some(existing) -> #(Some(existing), [
+          ContentionRejected(
+            w.id,
+            "Task already claimed by active lease holder: " <> existing,
+          ),
+          ..history
+        ])
       }
     })
 
@@ -90,7 +84,11 @@ pub type SensorFreshness {
   SensorStale
 }
 
-pub fn evaluate_sensor_freshness(elapsed_ms: Int, warn_ms: Int, stale_ms: Int) -> SensorFreshness {
+pub fn evaluate_sensor_freshness(
+  elapsed_ms: Int,
+  warn_ms: Int,
+  stale_ms: Int,
+) -> SensorFreshness {
   case elapsed_ms > stale_ms {
     True -> SensorStale
     False ->
@@ -124,12 +122,15 @@ pub type ActuationVerdict {
   JidokaAndonHalt(exit_code: Int, error: String)
 }
 
-pub fn validate_actuation_order(task_state: String, is_claimed_by_caller: Bool) -> ActuationVerdict {
+pub fn validate_actuation_order(
+  task_state: String,
+  is_claimed_by_caller: Bool,
+) -> ActuationVerdict {
   case task_state == "executing" && is_claimed_by_caller {
     True -> ActuationAdmitted
     False ->
       JidokaAndonHalt(
-        -32002,
+        -32_002,
         "Fractal Jidoka Andon Halt: Non-sa-plan task execution attempted. SC-JIDOKA-001 forbids ad-hoc un-ledgered plan execution.",
       )
   }
@@ -140,7 +141,7 @@ pub fn out_of_order_actuation_fail_closed_test() {
   let res1 = validate_actuation_order("available", False)
   case res1 {
     JidokaAndonHalt(code, msg) -> {
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       string.contains(msg, "SC-JIDOKA-001") |> should.be_true
     }
     _ -> should.fail()
@@ -169,7 +170,10 @@ pub fn enqueue_telemetry_span(
   case total > max_capacity {
     True -> {
       let dropped = total - max_capacity
-      BufferOverflowBackpressure(dropped_count: dropped, max_capacity: max_capacity)
+      BufferOverflowBackpressure(
+        dropped_count: dropped,
+        max_capacity: max_capacity,
+      )
     }
     False -> BufferNominal(buffered_count: total)
   }
@@ -205,11 +209,18 @@ pub fn evaluate_lease_fencing(
   lease_expiry_ms: Int,
 ) -> FenceVerdict {
   case now_ms > lease_expiry_ms {
-    True -> LeaseFencingExpired("Lease expired: now=" <> int.to_string(now_ms) <> " > expiry=" <> int.to_string(lease_expiry_ms))
+    True ->
+      LeaseFencingExpired(
+        "Lease expired: now="
+        <> int.to_string(now_ms)
+        <> " > expiry="
+        <> int.to_string(lease_expiry_ms),
+      )
     False ->
       case lease_token == current_epoch_token {
         True -> FencingValid
-        False -> LeaseFencingExpired("Fencing token mismatch: stale worker attempt")
+        False ->
+          LeaseFencingExpired("Fencing token mismatch: stale worker attempt")
       }
   }
 }
@@ -221,14 +232,16 @@ pub fn expired_lease_actuation_fencing_test() {
   // Expired lease
   let res_expired = evaluate_lease_fencing(42, 42, 6000, 5000)
   case res_expired {
-    LeaseFencingExpired(msg) -> string.contains(msg, "Lease expired") |> should.be_true
+    LeaseFencingExpired(msg) ->
+      string.contains(msg, "Lease expired") |> should.be_true
     _ -> should.fail()
   }
 
   // Token mismatch (superseded lease)
   let res_mismatch = evaluate_lease_fencing(41, 42, 2000, 5000)
   case res_mismatch {
-    LeaseFencingExpired(msg) -> string.contains(msg, "token mismatch") |> should.be_true
+    LeaseFencingExpired(msg) ->
+      string.contains(msg, "token mismatch") |> should.be_true
     _ -> should.fail()
   }
 }
@@ -242,7 +255,11 @@ pub type ActuatorAckStatus {
   ActuatorUnresponsiveFallback(timeout_ms: Int, safe_mode_engaged: Bool)
 }
 
-pub fn await_actuator_ack(ack_received: Bool, elapsed_ms: Int, timeout_limit_ms: Int) -> ActuatorAckStatus {
+pub fn await_actuator_ack(
+  ack_received: Bool,
+  elapsed_ms: Int,
+  timeout_limit_ms: Int,
+) -> ActuatorAckStatus {
   case ack_received && elapsed_ms <= timeout_limit_ms {
     True -> AckReceived(elapsed_ms)
     False -> ActuatorUnresponsiveFallback(timeout_limit_ms, True)
@@ -316,24 +333,33 @@ pub fn evaluate_2oo3_consensus(
   let votes = [codex_vote, claude_vote, agy_vote]
   let approve_count = list.count(votes, fn(v) { v == "APPROVE" })
   case approve_count >= 2 {
-    True -> ConsensusRatified("2oo3 Constitutional Consensus Achieved: Action Ratified")
-    False -> ConsensusRefused("Consensus Floor Not Met: < 2 sovereign approvals")
+    True ->
+      ConsensusRatified(
+        "2oo3 Constitutional Consensus Achieved: Action Ratified",
+      )
+    False ->
+      ConsensusRefused("Consensus Floor Not Met: < 2 sovereign approvals")
   }
 }
 
 pub fn multi_controller_conflicting_actuation_consensus_test() {
   // 3-0 Unanimous
   evaluate_2oo3_consensus("APPROVE", "APPROVE", "APPROVE")
-  |> should.equal(ConsensusRatified("2oo3 Constitutional Consensus Achieved: Action Ratified"))
+  |> should.equal(ConsensusRatified(
+    "2oo3 Constitutional Consensus Achieved: Action Ratified",
+  ))
 
   // 2-1 Majority
   evaluate_2oo3_consensus("APPROVE", "APPROVE", "REJECT")
-  |> should.equal(ConsensusRatified("2oo3 Constitutional Consensus Achieved: Action Ratified"))
+  |> should.equal(ConsensusRatified(
+    "2oo3 Constitutional Consensus Achieved: Action Ratified",
+  ))
 
   // 1-2 Rejected
   let reject_res = evaluate_2oo3_consensus("APPROVE", "REJECT", "REJECT")
   case reject_res {
-    ConsensusRefused(reason) -> string.contains(reason, "Consensus Floor Not Met") |> should.be_true
+    ConsensusRefused(reason) ->
+      string.contains(reason, "Consensus Floor Not Met") |> should.be_true
     _ -> should.fail()
   }
 }

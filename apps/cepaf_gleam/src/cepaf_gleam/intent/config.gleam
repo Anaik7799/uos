@@ -15,12 +15,7 @@ import gleam/list
 
 /// Container Intent Specification within Declarative Configuration.
 pub type ContainerIntent {
-  ContainerIntent(
-    name: String,
-    image: String,
-    port: Int,
-    enabled: Bool,
-  )
+  ContainerIntent(name: String, image: String, port: Int, enabled: Bool)
 }
 
 /// Declarative Intent Configuration for UOS Subsystems.
@@ -113,7 +108,10 @@ pub fn config_to_json(cfg: IntentConfig) -> json.Json {
 }
 
 /// Computes configuration delta between current active config and target intent.
-pub fn compute_delta(current: IntentConfig, target: IntentConfig) -> ConfigDelta {
+pub fn compute_delta(
+  current: IntentConfig,
+  target: IntentConfig,
+) -> ConfigDelta {
   let cur_names = list.map(current.containers, fn(c) { c.name })
   let tgt_names = list.map(target.containers, fn(c) { c.name })
 
@@ -122,10 +120,7 @@ pub fn compute_delta(current: IntentConfig, target: IntentConfig) -> ConfigDelta
   let drift = target.prajna_health_threshold -. current.prajna_health_threshold
 
   let has_changes =
-    added != []
-    || removed != []
-    || drift >. 0.001
-    || drift <. -0.001
+    added != [] || removed != [] || drift >. 0.001 || drift <. -0.001
 
   ConfigDelta(
     added_containers: added,

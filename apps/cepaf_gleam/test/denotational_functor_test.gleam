@@ -1,11 +1,11 @@
 //// apps/cepaf_gleam/test/denotational_functor_test.gleam
 //// STAMP: SC-DENOTATIONAL-INTENT-001, SC-INTENT-ATLAS-001
 
-import gleeunit/should
 import cepaf_gleam/intent/denotational.{
-  Intent, LatticeState, bottom, evaluate, initial_state, pure, bind, state_leq
+  Intent, LatticeState, bind, bottom, evaluate, initial_state, pure, state_leq,
 }
 import gleam/list
+import gleeunit/should
 
 pub fn denotational_initial_state_test() {
   let s0 = initial_state()

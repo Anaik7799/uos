@@ -1,0 +1,20 @@
+{
+  "schema_version": "uos.mcp.intent-gate-observation.v1",
+  "observed_at": "2026-09-21T16:05:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "transport": "stdio",
+  "request": {
+    "tool": "harness_system_feature_intent",
+    "intent": "catalog_read",
+    "catalog_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "ledger_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "offset": "0"
+  },
+  "response": {
+    "result": "isError",
+    "error": "role_binding_missing",
+    "sha256": "9c716c2f35cd1612af5cab65aae3e2a52eec352b7cb5c64f7715ddfd50d369b"
+  },
+  "interpretation": "The declarative intent surface is present but refuses dispatch without an admitted Gleam harness role binding; no synthetic success or authority amplification occurred.",
+  "authority_boundary": "Read-only negative observation; no role enrollment, task claim, database mutation, workflow migration, release, or admission."
+}

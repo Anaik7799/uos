@@ -1,0 +1,16 @@
+{
+  "schema": "uos.dashboard-snapshot-refresh.v1",
+  "observed_at": "2026-09-21T16:35:00Z",
+  "authority": "Sa-plan read-only snapshot",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "snapshot": {
+    "path": "/tmp/sa-plan-dashboard-20260921-1635.json",
+    "sha256": "e167ad6e839d2f65f62343dbd9eb3f575cd87b579bbad461a1f11dcb067469f6",
+    "read_only": true
+  },
+  "summary": {"total":21,"completed":4,"dependency_ready":3,"executing":0,"blocked":17,"unknown":0},
+  "ready_frontier": ["t2-contracts","t0-coordination","r02-recovery-candidate"],
+  "metrics": {"evidence_tasks":6,"unevidenced_tasks":15,"dependency_edges":25,"active_workflows":86,"leased_tasks":0},
+  "safety": "selection_evidence_only; no execution authority",
+  "completion_credit": false
+}

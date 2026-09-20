@@ -23,9 +23,7 @@ import cepaf_gleam/cortex/poodavr_actor.{
 import cepaf_gleam/semantics/algebraic_atlas.{
   all_charts, chart_to_int, chart_to_string,
 }
-import cepaf_gleam/verification/aspect_coverage_engine.{
-  type AspectAuditReport,
-}
+import cepaf_gleam/verification/aspect_coverage_engine.{type AspectAuditReport}
 import gleam/float
 import gleam/int
 import gleam/list
@@ -33,11 +31,17 @@ import gleam/option.{type Option, None, Some}
 import gleam/string
 
 pub const ansi_reset: String = "\u{001b}[0m"
+
 pub const ansi_bold: String = "\u{001b}[1m"
+
 pub const ansi_green: String = "\u{001b}[32m"
+
 pub const ansi_yellow: String = "\u{001b}[33m"
+
 pub const ansi_blue: String = "\u{001b}[34m"
+
 pub const ansi_cyan: String = "\u{001b}[36m"
+
 pub const ansi_red: String = "\u{001b}[31m"
 
 pub fn render_atlas_tui(
@@ -53,7 +57,12 @@ pub fn render_atlas_tui(
     <> "╚═══════════════════════════════════════════════════════════════════════════════════════════════╝\n"
     <> ansi_reset
 
-  let left_title = ansi_bold <> ansi_green <> "--- 10-CHART FRACTAL ATLAS ---" <> ansi_reset <> "\n"
+  let left_title =
+    ansi_bold
+    <> ansi_green
+    <> "--- 10-CHART FRACTAL ATLAS ---"
+    <> ansi_reset
+    <> "\n"
   let charts_rendered =
     list.map(all_charts(), fn(c) {
       "  ["
@@ -83,10 +92,10 @@ pub fn render_atlas_tui(
   let stages = [
     #(StagePredict, "1. Predict  [Lyapunov Prior V(x)]"),
     #(StageObserve, "2. Observe  [Zenoh Pub/Sub Ingest]"),
-    #(StageOrient,  "3. Orient   [STAMP Hazard & OS Lock]"),
-    #(StageDecide,  "4. Decide   [Prajna Breakers & MAX]"),
-    #(StageAct,     "5. Act      [Sa-Plan & ZigVM VFS]"),
-    #(StageVerify,  "6. Verify   [Denotational [[ I ]]]"),
+    #(StageOrient, "3. Orient   [STAMP Hazard & OS Lock]"),
+    #(StageDecide, "4. Decide   [Prajna Breakers & MAX]"),
+    #(StageAct, "5. Act      [Sa-Plan & ZigVM VFS]"),
+    #(StageVerify, "6. Verify   [Denotational [[ I ]]]"),
     #(StageReflect, "7. Reflect  [Lyapunov & Antibodies]"),
   ]
 
@@ -95,9 +104,15 @@ pub fn render_atlas_tui(
       let #(st, desc) = pair
       case st == active_stage {
         True ->
-          "  " <> ansi_bold <> ansi_green <> "▶ " <> desc <> " (ACTIVE)" <> ansi_reset <> "\n"
-        False ->
-          "    " <> desc <> "\n"
+          "  "
+          <> ansi_bold
+          <> ansi_green
+          <> "▶ "
+          <> desc
+          <> " (ACTIVE)"
+          <> ansi_reset
+          <> "\n"
+        False -> "    " <> desc <> "\n"
       }
     })
     |> string.concat

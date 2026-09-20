@@ -1,0 +1,42 @@
+{
+  "schema": "uos.recovery-work-packet.v1",
+  "plan": "uos/full-restoration/20260930-0515",
+  "task": "AGY_EXEC",
+  "worker": "agy-full-restoration-20260930",
+  "operator_authorization": "User explicitly requests full recovery and restoration, full autonomy, execute until goal met; use Google AGY for task execution; merge all code with main. This authorizes scoped implementation and reviewed recovery, not fabricated historical provenance or removal of safeguards.",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+  "base": "4007968447ad60bd9b809f412659097878019aea",
+  "scope": "Implement and test production-capable typed Gleam recovery activation with narrow bounded native filesystem/SQLite adapters. Do not activate canonical stores or services yourself. Parent owns review and runtime effects.",
+  "owned_paths": [
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_activation.gleam",
+    "apps/cepaf_gleam/src/recovery_activation_cli.gleam",
+    "apps/cepaf_gleam/src/recovery_activation_ffi.erl",
+    "apps/cepaf_gleam/test/recovery_activation_test.gleam",
+    "apps/cepaf_gleam/test/recovery_activation_ffi_test.erl"
+  ],
+  "requirements": [
+    "Inspect existing harness/development TaskRecord lookup and current clock, session_store, session_recovery_store, session_sync clock rebasing, ecology_release and pinned process guardian before choosing reuse.",
+    "Use a finite typed intent validated by Gleam, with exact plan/task/worker/attempt, expiry, host/boot, intent ID, candidate/expected-target digests, independent review receipt digest, operator scope, backup path and allowed targets. Request JSON must not self-grant review or authority.",
+    "Local launcher filesystem trust is accepted explicitly, not cryptographic multiuser IAM. Bind authority to a separately supplied private reviewed grant, not booleans in request payload. Fresh canonical Sa-plan task/lease check at effect time is mandatory.",
+    "Limit activation targets to canonical coordinator SQLite and KM cycle SQLite and optionally legacy journal recovery selection, with explicit path/digest binding; no arbitrary shell/backend or external tree mutation.",
+    "Quiescence check for known open file descriptors and exclusive recovery lock (live/unknown lock owner refusal, no blind lock deletion); preserve originals including WAL/SHM and excluded legacy tail. Do not regenerate or truncate the shared journal.",
+    "Crash-safe staged swap with immutable per-operation recovery receipts. On partial failure retain HOLD and a deterministic resume/rollback path; stale task or changed candidate/target refuses before effects.",
+    "Choose validated legacy coordinator prefix1761 over invalid SQLite117 only as explicit reviewed operational continuity choice; alternatively a fresh coordinator epoch preserving history as evidence avoids resurrecting uncorroborated historical authority. Prefer fresh operational authority if needed. Do not claim historical identity or EV admission.",
+    "Cycle candidate332 preserves all24 holds, no releases or EV test evidence. Reverify cryptographic chain via existing bounded native oracle and ensure target is closed/checkpointed before swap.",
+    "Keep filesystem/data operations in bounded native facade; all command selection, policy/state machine and supervision in Gleam.",
+    "Provide CLI/stdio or MCP operational surface with typed status/prepare/activate/rollback, tested on isolated copies only. Export a clear narrow API parent can invoke through Gleam.",
+    "Negative tests: stale/foreign task, expired grant, missing review, changed candidate/target, existing lock/live writer, symlink path, invalid state, interrupted swap and rollback. Positive test requires actual disposable database replacement and reopened integrity verification, not constant true fixture.",
+    "No new dependencies/downloads, no network model calls, no production restart, no canonical journal append, no main mutation. Describe JJ change and return exact source hashes and invocation/test receipts. Ask parent promptly for ambiguities while doing independent work."
+  ],
+  "sources": [
+    "docs/journal/20260930-0451-fractal-rca-recovery.md",
+    "governance/planning/20260930-0451-fractal-recovery-evidence/20260930-0451-recovery-receipt.json",
+    "contracts/rules/20260907-0653-tri-agent-coordination.md",
+    "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+  ],
+  "commands": {
+    "preflight": "cd /home/an/NAS-setup/uos && bash tools/risk-priority-check --preflight governance/planning/20260930-0555-full-restoration-risk.json AGY_EXEC",
+    "claim": "/home/an/NAS-setup/uos/tools/sa-plan task claim agy-full-restoration-20260930 uos/full-restoration/20260930-0515 10800000000000 AGY_EXEC"
+  },
+  "coordination": "Send actual ACK in Herdr response first. Parent updates risk task state/hash inventory. No board write until canonical coordinator repaired. Claim only once PREPARE completed; parent will say ready."
+}

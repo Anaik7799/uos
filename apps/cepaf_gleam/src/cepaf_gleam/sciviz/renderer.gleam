@@ -6,11 +6,10 @@ import cepaf_gleam/sciviz/dsl
 import cepaf_gleam/sciviz/schema.{
   type GeomType, type Point2D, type SceneNode, type SciVizPlot, ArcLayer,
   BitmapLayer, ColumnLayer, GeoJsonLayer, GeomArea, GeomBar, GeomBoxplot,
-  GeomContour, GeomDensity2D, GeomErrorBar, GeomHex, GeomLine,
-  GeomPhasePortrait, GeomPoint, GeomRibbon, GeomSegment, GeomStep, GeomText,
-  Point2D,
-  GeomViolin, GridLayer, H3HexagonLayer, HeatmapMatrixLayer, HexagonLayer,
-  IconLayer, LineLayer, PathLayer, PointCloudLayer, S2Layer, ScatterplotLayer,
+  GeomContour, GeomDensity2D, GeomErrorBar, GeomHex, GeomLine, GeomPhasePortrait,
+  GeomPoint, GeomRibbon, GeomSegment, GeomStep, GeomText, GeomViolin, GridLayer,
+  H3HexagonLayer, HeatmapMatrixLayer, HexagonLayer, IconLayer, LineLayer,
+  PathLayer, Point2D, PointCloudLayer, S2Layer, ScatterplotLayer,
   ScreenGridLayer, TextLayer, TileLayer, TopologyGraphLayer, TripsLayer,
   VisualCircle, VisualComposite, VisualMesh, VisualNineSlicePlane,
   VisualParticleContainer, VisualRect, VisualSprite, VisualText,
@@ -140,17 +139,15 @@ fn render_single_geom(
         True -> [attribute.attribute("stroke-dasharray", "4 4")]
         False -> []
       }
-      svg.polyline(
-        list.append(
-          [
-            attribute.attribute("fill", "none"),
-            attribute.attribute("stroke", color),
-            attribute.attribute("stroke-width", float.to_string(stroke_width)),
-            attribute.attribute("points", points_str),
-          ],
-          dash_attr,
-        ),
-      )
+      svg.polyline(list.append(
+        [
+          attribute.attribute("fill", "none"),
+          attribute.attribute("stroke", color),
+          attribute.attribute("stroke-width", float.to_string(stroke_width)),
+          attribute.attribute("points", points_str),
+        ],
+        dash_attr,
+      ))
     }
 
     GeomPoint(size, color) -> {
@@ -210,7 +207,10 @@ fn render_single_geom(
         list.map(points, fn(p) {
           let h = plot.height -. p.y
           svg.rect([
-            attribute.attribute("x", float.to_string(p.x -. { bar_width /. 2.0 })),
+            attribute.attribute(
+              "x",
+              float.to_string(p.x -. { bar_width /. 2.0 }),
+            ),
             attribute.attribute("y", float.to_string(p.y)),
             attribute.attribute("width", float.to_string(bar_width)),
             attribute.attribute("height", float.to_string(h)),
@@ -238,7 +238,8 @@ fn render_single_geom(
       let vectors =
         list.map(points, fn(p) {
           let dx = { p.y -. { plot.height /. 2.0 } } *. 0.1 *. vector_scale
-          let dy = { 0.0 -. { p.x -. { plot.width /. 2.0 } } } *. 0.1 *. vector_scale
+          let dy =
+            { 0.0 -. { p.x -. { plot.width /. 2.0 } } } *. 0.1 *. vector_scale
           svg.line([
             attribute.attribute("x1", float.to_string(p.x)),
             attribute.attribute("y1", float.to_string(p.y)),
@@ -297,12 +298,25 @@ fn render_single_geom(
         list.map(points, fn(p) {
           let r = radius
           let p1 = float.to_string(p.x) <> "," <> float.to_string(p.y -. r)
-          let p2 = float.to_string(p.x +. r) <> "," <> float.to_string(p.y -. { r /. 2.0 })
-          let p3 = float.to_string(p.x +. r) <> "," <> float.to_string(p.y +. { r /. 2.0 })
+          let p2 =
+            float.to_string(p.x +. r)
+            <> ","
+            <> float.to_string(p.y -. { r /. 2.0 })
+          let p3 =
+            float.to_string(p.x +. r)
+            <> ","
+            <> float.to_string(p.y +. { r /. 2.0 })
           let p4 = float.to_string(p.x) <> "," <> float.to_string(p.y +. r)
-          let p5 = float.to_string(p.x -. r) <> "," <> float.to_string(p.y +. { r /. 2.0 })
-          let p6 = float.to_string(p.x -. r) <> "," <> float.to_string(p.y -. { r /. 2.0 })
-          let hex_pts = p1 <> " " <> p2 <> " " <> p3 <> " " <> p4 <> " " <> p5 <> " " <> p6
+          let p5 =
+            float.to_string(p.x -. r)
+            <> ","
+            <> float.to_string(p.y +. { r /. 2.0 })
+          let p6 =
+            float.to_string(p.x -. r)
+            <> ","
+            <> float.to_string(p.y -. { r /. 2.0 })
+          let hex_pts =
+            p1 <> " " <> p2 <> " " <> p3 <> " " <> p4 <> " " <> p5 <> " " <> p6
           svg.polygon([
             attribute.attribute("points", hex_pts),
             attribute.attribute("fill", "none"),
@@ -488,18 +502,22 @@ fn render_deck_layers(plot: SciVizPlot) -> Element(msg) {
 
         HeatmapMatrixLayer(_id, matrix, min_val, max_val) -> {
           let rows_count = list.length(matrix)
-          let cell_h = plot.height /. int.to_float(case rows_count == 0 {
-            True -> 1
-            False -> rows_count
-          })
+          let cell_h =
+            plot.height
+            /. int.to_float(case rows_count == 0 {
+              True -> 1
+              False -> rows_count
+            })
           let cells =
             matrix
             |> list.index_map(fn(row, r_idx) {
               let cols_count = list.length(row)
-              let cell_w = plot.width /. int.to_float(case cols_count == 0 {
-                True -> 1
-                False -> cols_count
-              })
+              let cell_w =
+                plot.width
+                /. int.to_float(case cols_count == 0 {
+                  True -> 1
+                  False -> cols_count
+                })
               list.index_map(row, fn(val, c_idx) {
                 let x_pos = int.to_float(c_idx) *. cell_w
                 let y_pos = int.to_float(r_idx) *. cell_h
@@ -607,7 +625,10 @@ fn render_deck_layers(plot: SciVizPlot) -> Element(msg) {
               svg.circle([
                 attribute.attribute("cx", float.to_string(sp.x)),
                 attribute.attribute("cy", float.to_string(sp.y)),
-                attribute.attribute("r", float.to_string(icon.size *. size_scale)),
+                attribute.attribute(
+                  "r",
+                  float.to_string(icon.size *. size_scale),
+                ),
                 attribute.attribute("fill", icon.color),
               ])
             })
@@ -847,8 +868,8 @@ fn render_scene_node(node: SceneNode) -> Element(msg) {
     <> float.to_string(node.scale)
     <> ")"
 
-  svg.g(
-    [attribute.attribute("transform", transform_attr)],
-    [visual_el, ..children_els],
-  )
+  svg.g([attribute.attribute("transform", transform_attr)], [
+    visual_el,
+    ..children_els
+  ])
 }

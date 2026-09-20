@@ -1,6 +1,9 @@
 import gleeunit
 import gleeunit/should
-import main.{Doctor, Gate, Help, Status, DmcCheck, TcmCheck, TimestampCheck, parse_args, matches_timestamp_format}
+import main.{
+  DmcCheck, Doctor, Gate, Help, Status, TcmCheck, TimestampCheck,
+  matches_timestamp_format, parse_args,
+}
 
 pub fn main() {
   gleeunit.main()

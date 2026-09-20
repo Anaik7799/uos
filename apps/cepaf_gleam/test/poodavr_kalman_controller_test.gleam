@@ -18,10 +18,14 @@ pub fn poodavr_nominal_convergence_test() {
   let observations = [85.0, 92.0, 97.0, 99.0, 100.2, 99.8, 100.0]
 
   let #(final_state, verdict) =
-    list.fold(observations, #(controller, ControllerNominal("init", 0.0, 0.0, 0.0)), fn(acc, obs) {
-      let #(c, _) = acc
-      execute_full_poodavr_cycle(c, obs, 0.5, 50.0)
-    })
+    list.fold(
+      observations,
+      #(controller, ControllerNominal("init", 0.0, 0.0, 0.0)),
+      fn(acc, obs) {
+        let #(c, _) = acc
+        execute_full_poodavr_cycle(c, obs, 0.5, 50.0)
+      },
+    )
 
   case verdict {
     ControllerNominal(_, filtered_estimate, energy, _action) -> {
@@ -53,7 +57,7 @@ pub fn poodavr_lyapunov_divergence_andon_halt_test() {
     ControllerAndonHalt(cid, stage, reason, code) -> {
       cid |> should.equal("cycle-002")
       stage |> should.equal("Verify")
-      code |> should.equal(-32002)
+      code |> should.equal(-32_002)
       should.be_true(reason != "")
     }
     ControllerNominal(_, _, _, _) -> should.fail()
@@ -72,7 +76,8 @@ pub fn poodavr_lyapunov_divergence_andon_halt_test() {
 
 pub fn poodavr_7_stages_recorded_test() {
   let controller = new_controller("cycle-003", 50.0, 48.0)
-  let #(final_state, _) = execute_full_poodavr_cycle(controller, 49.5, 0.2, 10.0)
+  let #(final_state, _) =
+    execute_full_poodavr_cycle(controller, 49.5, 0.2, 10.0)
 
   // Verify all 7 stages recorded in history
   should.be_true(list.contains(final_state.stage_history, "Predict"))

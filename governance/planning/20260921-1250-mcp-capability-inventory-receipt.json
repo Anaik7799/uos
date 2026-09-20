@@ -1,0 +1,24 @@
+{
+  "receipt_id": "mcp-capability-inventory-20260921-1250",
+  "timestamp": "20260921-1250",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r05-mcp-data",
+  "workflow_id": "mcp/data-inventory-1250",
+  "evidence": {
+    "tool": "mcp_capability_inventory",
+    "declared_count": 64,
+    "unavailable_count": 12,
+    "declared_unprobed_count": 52,
+    "runtime_admission": "not_granted",
+    "effect_authority": false,
+    "build": "PASS: gleam build",
+    "census": "64 MCP declarations and 774 conserved source records"
+  },
+  "interpretation": "Inventory distinguishes declaration from runtime availability; unprobed and unavailable states are not completion.",
+  "holds": [
+    "fresh invocation-specific probes for 52 declared tools",
+    "canonical task-bound harness binding",
+    "independent release and operational acceptance"
+  ],
+  "admission": "NOT_ADMITTED"
+}

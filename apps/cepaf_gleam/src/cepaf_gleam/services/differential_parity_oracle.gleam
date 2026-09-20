@@ -59,11 +59,10 @@ pub fn evaluate_differential_parity(
   max_divergence_pct: Float,
 ) -> DifferentialParityReport {
   let label_match = gleam_result.outcome_label == ocaml_result.outcome_label
-  let score_div =
-    case gleam_result.score >=. ocaml_result.score {
-      True -> gleam_result.score -. ocaml_result.score
-      False -> ocaml_result.score -. gleam_result.score
-    }
+  let score_div = case gleam_result.score >=. ocaml_result.score {
+    True -> gleam_result.score -. ocaml_result.score
+    False -> ocaml_result.score -. gleam_result.score
+  }
 
   let div_pct = case gleam_result.score == 0.0 && ocaml_result.score == 0.0 {
     True -> 0.0

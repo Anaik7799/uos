@@ -154,4 +154,3 @@ pub fn telemetry_json() -> json.Json {
   let state = mirage_telemetry.init_telemetry_state("nas-1")
   mirage_telemetry.state_to_json(state)
 }
-

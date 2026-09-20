@@ -1,0 +1,21 @@
+{
+  "receipt_id": "coordination-mcp-20260921-1435",
+  "timestamp": "20260921-1435",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "workflow_id": "mcp/coordination-1435",
+  "scope": "holon, swarm capability, and agent hierarchy observability",
+  "evidence": {
+    "holon_status": "PASS: MCP tools/call returned Holon Identity JSON",
+    "agent_hierarchy": "PASS: MCP tools/call returned Cybernetic Agents JSON",
+    "swarm_status": "PASS: MCP tools/call returned SC-HOLON-001 capability probe with explicit unavailable states",
+    "tool_count": 63,
+    "build": "PASS: gleam build",
+    "authority": "read-only observation; no admission or effect authority"
+  },
+  "holds": [
+    "fresh canonical task-bound harness binding required for declarative feature ledger calls",
+    "runtime service availability remains invocation-specific",
+    "independent release and operational authorization not present"
+  ],
+  "admission": "NOT_ADMITTED"
+}

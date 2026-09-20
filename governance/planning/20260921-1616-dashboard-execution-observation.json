@@ -1,0 +1,16 @@
+{
+  "schema": "uos.execution-progress-observation.v1",
+  "timestamp": "20260921-1616",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "source": "apps/cepaf_gleam/planning/execution_observer",
+  "authority": "read_only_projection; Sa-plan alone owns execution",
+  "task_snapshot_sha256": "efa76f43eeb4b52f24c346da58ee2d08fa77e5b0e67288f280f084fbbc115aa2",
+  "risk_snapshot_sha256": "4702e4bb81c156b16b790a764b0f51e3b96322f9d360e854114ef9eb8437c2fd",
+  "counts": {"total": 21, "completed": 4, "executing": 0, "blocked": 17, "unknown": 0},
+  "effect_authority": false,
+  "system_admission": false,
+  "optimization": "authority/dependency readiness, safety class, C*T*F*Dep*I, oldest ready, stable ID; cost tie unavailable",
+  "risk_source_binding": "NOT_VERIFIED_BY_DASHBOARD; canonical risk preflight required before claim",
+  "blocking_frontier": ["canonical coordinator digest/replay integrity", "independent authority selection", "runtime admission", "t2-contracts task evidence binding"],
+  "admission": "not_admitted"
+}

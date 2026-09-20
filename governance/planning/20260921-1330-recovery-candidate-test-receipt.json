@@ -1,0 +1,19 @@
+{
+  "receipt_id": "recovery-candidate-tests-20260921-1330",
+  "timestamp": "20260921-1330",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r02-recovery-candidate",
+  "workflow_id": "recovery/candidate-tests-1330",
+  "command": "gleam test --target erlang session_recovery_test session_store_cli_test",
+  "result": "PASS",
+  "passed": 669,
+  "failed": 0,
+  "authority": "candidate verification only",
+  "activation": "DENIED",
+  "admission": "NOT_ADMITTED",
+  "holds": [
+    "canonical coordinator remains corrupt",
+    "candidate is isolated evidence and cannot become runtime authority",
+    "independent sovereign review remains required"
+  ]
+}

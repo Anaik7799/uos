@@ -1,0 +1,21 @@
+{
+  "schema": "uos.mcp-execution-progress-receipt.v1",
+  "timestamp_utc": "2026-09-21T10:06:29Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "command": "gleam run -m cepaf_gleam/planning/execution_observer",
+  "raw_output_sha256": "0c654fe678d95bba23359e2928f394605ffbef6151fe06761630dc96f9e5372a",
+  "observation": {
+    "status": "observed",
+    "authority": "read_only_projection; Sa-plan alone owns execution",
+    "task_snapshot_sha256": "1aeda79bb7fb58d09b677f8959fb13db63a7519de7f147d000188198da4b54e0",
+    "risk_snapshot_sha256": "4a02d05f5cd692ab15c24d31d798aea31ea8f3cb3ab90b5c35912deb9b48a188",
+    "summary": {"total": 20, "completed": 2, "executing": 0, "blocked": 17, "unknown": 0},
+    "recommended_task": "t1-tracker",
+    "mcp_progress_schema": "uos.execution-progress.v1",
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "verification": "fresh BEAM execution observer output; canonical plan id and risk digest checked",
+  "canonical_task_remains_open": true,
+  "admission": "NOT_ADMITTED"
+}

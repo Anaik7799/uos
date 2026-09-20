@@ -7,7 +7,7 @@
 //// Unit tests for Declarative Intent Poka-Yoke Validator.
 
 import cepaf_gleam/intent/config.{
-  ContainerIntent, type IntentConfig, IntentConfig,
+  type IntentConfig, ContainerIntent, IntentConfig,
 }
 import cepaf_gleam/intent/validator
 import gleeunit/should
@@ -52,7 +52,7 @@ pub fn hard_denied_drive_fails_test() {
 
 pub fn invalid_health_threshold_fails_test() {
   let cfg =
-    IntentConfig(..valid_baseline_config(), prajna_health_threshold: 0.50)
+    IntentConfig(..valid_baseline_config(), prajna_health_threshold: 0.5)
   let res = validator.validate_intent_config(cfg)
   res |> should.be_error()
 }

@@ -16,12 +16,18 @@
 //// </uos-module>
 //// =============================================================================
 
-import cepaf_gleam/cortex/cortex_types.{type PipelineTrace, PipelineTrace, TraceStage}
+import cepaf_gleam/cortex/cortex_types.{
+  type PipelineTrace, PipelineTrace, TraceStage,
+}
 import gleam/int
 import gleam/list
 import gleam/string
 
-pub fn new_trace(id: String, source: String, started_at_ms: Int) -> PipelineTrace {
+pub fn new_trace(
+  id: String,
+  source: String,
+  started_at_ms: Int,
+) -> PipelineTrace {
   PipelineTrace(
     id: id,
     source: source,
@@ -40,7 +46,8 @@ pub fn add_stage(
   current_now_ms: Int,
 ) -> PipelineTrace {
   let elapsed = current_now_ms - trace.started_at_ms
-  let stage = TraceStage(name: name, detail: detail, status: status, elapsed_ms: elapsed)
+  let stage =
+    TraceStage(name: name, detail: detail, status: status, elapsed_ms: elapsed)
   PipelineTrace(
     ..trace,
     stages: list.append(trace.stages, [stage]),
@@ -48,7 +55,10 @@ pub fn add_stage(
   )
 }
 
-pub fn set_classification(trace: PipelineTrace, classification: String) -> PipelineTrace {
+pub fn set_classification(
+  trace: PipelineTrace,
+  classification: String,
+) -> PipelineTrace {
   PipelineTrace(..trace, classification: classification)
 }
 

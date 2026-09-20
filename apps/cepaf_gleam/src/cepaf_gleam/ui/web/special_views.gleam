@@ -343,8 +343,7 @@ pub fn biomorphic_view(state: SharedMeshState) -> Element(msg) {
             False -> "Degraded"
           },
           float.to_string(tensor.coverage *. 100.0) <> "%",
-          int.to_string(symbiosis_tensor.active_count(tensor))
-            <> " active / 56",
+          int.to_string(symbiosis_tensor.active_count(tensor)) <> " active / 56",
         ),
         shell.status_card(
           "Health",
@@ -457,7 +456,12 @@ pub fn homeostasis_view(state: SharedMeshState) -> Element(msg) {
     ),
     shell.section("State", [
       html.div([attribute.class("card-grid")], [
-        shell.status_card("Stability", stability_status, stability_label, "converged"),
+        shell.status_card(
+          "Stability",
+          stability_status,
+          stability_label,
+          "converged",
+        ),
         shell.status_card("Convergence", "Healthy", "98.5%", "of setpoint"),
         shell.status_card("Samples", "Healthy", "1024", "collected"),
       ]),
@@ -474,15 +478,12 @@ pub fn homeostasis_view(state: SharedMeshState) -> Element(msg) {
       ]),
     ]),
     shell.section("Homeostasis Metrics", [
-      shell.data_table(
-        ["Metric", "Value", "Threshold", "Status"],
-        [
-          ["Temperature", "0.985", "1.0", "OK"],
-          ["Pressure", "0.97", "1.0", "OK"],
-          ["Flow", "0.99", "1.0", "OK"],
-          ["Error", "0.015", "< 0.05", "OK"],
-        ],
-      ),
+      shell.data_table(["Metric", "Value", "Threshold", "Status"], [
+        ["Temperature", "0.985", "1.0", "OK"],
+        ["Pressure", "0.97", "1.0", "OK"],
+        ["Flow", "0.99", "1.0", "OK"],
+        ["Error", "0.015", "< 0.05", "OK"],
+      ]),
     ]),
     element.element(
       "script",
@@ -528,8 +529,13 @@ pub fn bicameral_view(state: SharedMeshState) -> Element(msg) {
         shell.status_card("Decisions", "Healthy", "156", "total"),
         shell.status_card(
           "Mesh",
-          case state.quorum_healthy { True -> "Healthy" False -> "Critical" },
-          int.to_string(state.healthy_count) <> "/" <> int.to_string(state.container_count),
+          case state.quorum_healthy {
+            True -> "Healthy"
+            False -> "Critical"
+          },
+          int.to_string(state.healthy_count)
+            <> "/"
+            <> int.to_string(state.container_count),
           "containers voting",
         ),
       ]),
@@ -597,14 +603,11 @@ pub fn singularity_view(state: SharedMeshState) -> Element(msg) {
       ]),
     ]),
     shell.section("Safety Boundaries", [
-      shell.data_table(
-        ["Boundary", "Current", "Limit", "Margin"],
-        [
-          ["CPU", "45%", "85%", "40%"],
-          ["Memory", "48 MB", "4096 MB", "safe"],
-          ["Entropy", "0.0", "2.5", "nominal"],
-        ],
-      ),
+      shell.data_table(["Boundary", "Current", "Limit", "Margin"], [
+        ["CPU", "45%", "85%", "40%"],
+        ["Memory", "48 MB", "4096 MB", "safe"],
+        ["Entropy", "0.0", "2.5", "nominal"],
+      ]),
     ]),
     element.element(
       "script",
@@ -759,35 +762,33 @@ pub fn health_grid_view(state: SharedMeshState) -> Element(msg) {
       ]),
     ]),
     shell.section("Layer Health Summary", [
-      shell.data_table(
-        ["Layer", "Modules", "Status", "Score"],
-        [
-          ["L0 Constitutional", "3", "Healthy", "1.00"],
-          ["L1 Atomic", "2", "Healthy", "0.98"],
-          ["L2 Component", "4", "Healthy", "0.97"],
-          ["L3 Transaction", "5", "Healthy", "0.95"],
-          ["L4 System", "4", "Healthy", "0.93"],
-          ["L5 Cognitive", "5", "Healthy", "0.96"],
-          ["L6 Ecosystem", "4", "Healthy", "0.94"],
-          ["L7 Federation", "3", "Degraded", "0.72"],
-        ],
-      ),
+      shell.data_table(["Layer", "Modules", "Status", "Score"], [
+        ["L0 Constitutional", "3", "Healthy", "1.00"],
+        ["L1 Atomic", "2", "Healthy", "0.98"],
+        ["L2 Component", "4", "Healthy", "0.97"],
+        ["L3 Transaction", "5", "Healthy", "0.95"],
+        ["L4 System", "4", "Healthy", "0.93"],
+        ["L5 Cognitive", "5", "Healthy", "0.96"],
+        ["L6 Ecosystem", "4", "Healthy", "0.94"],
+        ["L7 Federation", "3", "Degraded", "0.72"],
+      ]),
     ]),
     // RETE4: Ruliology State Evolution Visualization
     shell.section("Ruliology — Wolfram CA State Evolution", [
       html.div([attribute.class("card-grid")], [
         shell.status_card(
           "Rule 110",
-          case state.quorum_healthy { True -> "Healthy" False -> "Critical" },
-          case state.quorum_healthy { True -> "Stable" False -> "Cascade" },
+          case state.quorum_healthy {
+            True -> "Healthy"
+            False -> "Critical"
+          },
+          case state.quorum_healthy {
+            True -> "Stable"
+            False -> "Cascade"
+          },
           "universal computation",
         ),
-        shell.status_card(
-          "Rule 30",
-          "Healthy",
-          "Quiescent",
-          "chaos detection",
-        ),
+        shell.status_card("Rule 30", "Healthy", "Quiescent", "chaos detection"),
         shell.status_card(
           "Rule 184",
           "Healthy",
@@ -804,12 +805,42 @@ pub fn health_grid_view(state: SharedMeshState) -> Element(msg) {
       shell.data_table(
         ["Rule", "Classification", "Layer Pattern", "Health Signal"],
         [
-          ["R110", "Complex/Universal", "L0-L7 cascade propagation", "Primary stability indicator"],
-          ["R30", "Chaotic", "Entropy spike detection", "Randomness in failure spread"],
-          ["R184", "Traffic flow", "Backpressure analysis", "Queue depth / task flow"],
-          ["R90", "Fractal", "Sierpinski self-similarity", "Recursive failure patterns"],
-          ["R54", "Oscillator", "Periodic ping-pong", "Layer oscillation detection"],
-          ["R126", "Rapid growth", "Explosive activation", "Cascade urgency signal"],
+          [
+            "R110",
+            "Complex/Universal",
+            "L0-L7 cascade propagation",
+            "Primary stability indicator",
+          ],
+          [
+            "R30",
+            "Chaotic",
+            "Entropy spike detection",
+            "Randomness in failure spread",
+          ],
+          [
+            "R184",
+            "Traffic flow",
+            "Backpressure analysis",
+            "Queue depth / task flow",
+          ],
+          [
+            "R90",
+            "Fractal",
+            "Sierpinski self-similarity",
+            "Recursive failure patterns",
+          ],
+          [
+            "R54",
+            "Oscillator",
+            "Periodic ping-pong",
+            "Layer oscillation detection",
+          ],
+          [
+            "R126",
+            "Rapid growth",
+            "Explosive activation",
+            "Cascade urgency signal",
+          ],
         ],
       ),
     ]),
@@ -817,8 +848,14 @@ pub fn health_grid_view(state: SharedMeshState) -> Element(msg) {
       html.div([attribute.class("card-grid")], [
         shell.status_card(
           "Lyapunov λ",
-          case state.quorum_healthy { True -> "Healthy" False -> "Critical" },
-          case state.quorum_healthy { True -> "λ < 0 (stable)" False -> "λ > 0 (diverging)" },
+          case state.quorum_healthy {
+            True -> "Healthy"
+            False -> "Critical"
+          },
+          case state.quorum_healthy {
+            True -> "λ < 0 (stable)"
+            False -> "λ > 0 (diverging)"
+          },
           "stability exponent",
         ),
         shell.status_card(
@@ -1615,10 +1652,7 @@ pub fn component_demo_view(state: SharedMeshState) -> Element(msg) {
     element.element(
       "script",
       [
-        attribute.attribute(
-          "src",
-          "/static/component-demo-grid.js?v=22.10.1",
-        ),
+        attribute.attribute("src", "/static/component-demo-grid.js?v=22.10.1"),
       ],
       [],
     ),
@@ -1969,4 +2003,3 @@ fn health_bar_color(score: Float) -> String {
       }
   }
 }
-

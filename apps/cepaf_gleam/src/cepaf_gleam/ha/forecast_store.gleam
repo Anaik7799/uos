@@ -161,8 +161,7 @@ fn decode_number(value: Dynamic, field: String) -> Result(Float, String) {
     Error(_) ->
       case decode.run(value, decode.int) {
         Ok(i) -> Ok(int.to_float(i))
-        Error(_) ->
-          Error("forecast_ledger." <> field <> " is not a number")
+        Error(_) -> Error("forecast_ledger." <> field <> " is not a number")
       }
   }
 }
@@ -193,18 +192,22 @@ fn decode_row(row: List(Dynamic)) -> Result(StoredForecast, String) {
 /// `calculate_calibration` could only score a list held in memory, so nothing
 /// persisted could ever be scored.
 pub fn load_records(db: ForecastDb) -> Result(List(StoredForecast), String) {
-  use rows <- result.try(query(
-    db,
-    "SELECT prediction_id, predicted_prob, observed_outcome, resolved,
+  use rows <- result.try(
+    query(
+      db,
+      "SELECT prediction_id, predicted_prob, observed_outcome, resolved,
             timestamp_ns, aspect
      FROM forecast_ledger ORDER BY timestamp_ns ASC, prediction_id ASC;",
-    [],
-  ))
+      [],
+    ),
+  )
   list.try_map(rows, decode_row)
 }
 
 /// Calibration over what is actually stored, with its own denominator.
-pub fn calibration_from_db(db: ForecastDb) -> Result(CalibrationResult, String) {
+pub fn calibration_from_db(
+  db: ForecastDb,
+) -> Result(CalibrationResult, String) {
   use records <- result.try(load_records(db))
   Ok(calculate_calibration(records))
 }
@@ -213,12 +216,14 @@ pub fn calibration_from_db(db: ForecastDb) -> Result(CalibrationResult, String) 
 pub fn calculate_calibration(
   records: List(StoredForecast),
 ) -> CalibrationResult {
-  let resolved_records =
-    list.filter(records, fn(r) { r.resolved })
+  let resolved_records = list.filter(records, fn(r) { r.resolved })
 
   let count = list.length(resolved_records)
   case count {
-    0 -> Undetermined("No resolved forecast predictions in ledger (sample_count=0)")
+    0 ->
+      Undetermined(
+        "No resolved forecast predictions in ledger (sample_count=0)",
+      )
     _ -> {
       let total_squared_error =
         list.fold(resolved_records, 0.0, fn(acc, rec) {

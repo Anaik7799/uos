@@ -29,10 +29,7 @@ pub fn transcribe_audio_pcm16(
 ) -> Result(String, String)
 
 @external(erlang, "cortex_nif", "cortex_infer_local")
-pub fn infer_local(
-  prompt: String,
-  max_tokens: Int,
-) -> Result(String, String)
+pub fn infer_local(prompt: String, max_tokens: Int) -> Result(String, String)
 
 @external(erlang, "cortex_nif", "cortex_check_storage_safety")
 pub fn check_storage_safety(serial_query: String) -> Bool

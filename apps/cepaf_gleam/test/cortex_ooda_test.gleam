@@ -141,7 +141,8 @@ pub fn cortex_nif_ping_test() {
 }
 
 pub fn cortex_nif_pii_scrubbing_test() {
-  let dirty = "Operator token: sk-live1234567890abcdef123456 and email user@example.com"
+  let dirty =
+    "Operator token: sk-live1234567890abcdef123456 and email user@example.com"
   let clean = cortex_nif.scrub_pii(dirty)
   string.contains(clean, "sk-live") |> should.be_false()
   string.contains(clean, "user@example.com") |> should.be_false()

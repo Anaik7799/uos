@@ -1,0 +1,34 @@
+{
+  "receipt_type": "authorized_stdio_mcp_runtime_probe",
+  "generated_at": "2026-09-21T11:31:00+02:00",
+  "authority": "gleam_mcp_server_main",
+  "command": "gleam run -m cepaf_gleam/mcp/server",
+  "transport": "stdio_jsonrpc_2.0",
+  "initialize": {
+    "protocol_version": "2024-11-05",
+    "server_name": "c3i-planning-mcp",
+    "server_version": "1.0.0",
+    "tools_capability_present": true
+  },
+  "tools_list": {
+    "response_valid": true,
+    "tool_count": 43,
+    "feature_specific_tools": [],
+    "sa_plan_tools_present": [
+      "sa_plan_status",
+      "sa_plan_list",
+      "sa_task_claim",
+      "sa_task_complete",
+      "sa_workflow_start"
+    ]
+  },
+  "interpretation": {
+    "authorized_stdio_transport_observed": true,
+    "feature_mcp_tools_observed": 0,
+    "database_feature_coverage": "not_exposed_by_runtime_registry",
+    "system_admission": false,
+    "release_authority": "not_granted"
+  },
+  "next_action": "admit feature catalog and execution-progress tools into the authorized runtime registry, then probe them through Sa-plan",
+  "admitted": false
+}

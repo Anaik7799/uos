@@ -16,11 +16,11 @@
 ////   INV-7: Log-Scale Non-Positive Domain Protection (Epsilon Fallback)
 ////   INV-8: Adversarial Density Riemann Sum Mass Conservation (Integral == 1.0)
 
-import gleeunit/should
-import gleam/list
-import gleam/float
 import cepaf_gleam/sciviz/dsl
 import cepaf_gleam/sciviz/schema.{type Point2D, type Scale2D, Point2D, Scale2D}
+import gleam/float
+import gleam/list
+import gleeunit/should
 
 // -----------------------------------------------------------------------------
 // Helper: Unproject screen coordinates back to data domain
@@ -51,14 +51,15 @@ fn unproject_point(scale: Scale2D, screen_p: Point2D) -> Point2D {
 // For any point P in data domain, unproject(project(P)) == P within epsilon <= 10^-4
 // =============================================================================
 pub fn inv1_scale_invertibility_test() {
-  let scale = Scale2D(
-    x_min: -150.0,
-    x_max: 350.0,
-    y_min: 20.0,
-    y_max: 180.0,
-    target_w: 1280.0,
-    target_h: 720.0,
-  )
+  let scale =
+    Scale2D(
+      x_min: -150.0,
+      x_max: 350.0,
+      y_min: 20.0,
+      y_max: 180.0,
+      target_w: 1280.0,
+      target_h: 720.0,
+    )
 
   let test_points = [
     Point2D(x: -150.0, y: 20.0),
@@ -84,21 +85,24 @@ pub fn inv1_scale_invertibility_test() {
 // must never produce NaN or infinite values, thanks to safe_span fallbacks.
 // =============================================================================
 pub fn inv2_zero_variance_numerical_stability_test() {
-  let zero_span_scale = Scale2D(
-    x_min: 42.0,
-    x_max: 42.0,
-    y_min: 100.0,
-    y_max: 100.0,
-    target_w: 800.0,
-    target_h: 600.0,
-  )
+  let zero_span_scale =
+    Scale2D(
+      x_min: 42.0,
+      x_max: 42.0,
+      y_min: 100.0,
+      y_max: 100.0,
+      target_w: 800.0,
+      target_h: 600.0,
+    )
   let pt = Point2D(x: 42.0, y: 100.0)
 
   let screen = dsl.project_point(zero_span_scale, pt)
 
   // Must not be NaN or crash; safe_span evaluates to 1.0, norm = 0.0
-  { screen.x >=. 0.0 && screen.x <=. zero_span_scale.target_w } |> should.be_true
-  { screen.y >=. 0.0 && screen.y <=. zero_span_scale.target_h } |> should.be_true
+  { screen.x >=. 0.0 && screen.x <=. zero_span_scale.target_w }
+  |> should.be_true
+  { screen.y >=. 0.0 && screen.y <=. zero_span_scale.target_h }
+  |> should.be_true
 }
 
 // =============================================================================
@@ -111,14 +115,22 @@ pub fn inv2_zero_variance_numerical_stability_test() {
 // =============================================================================
 pub fn inv3_ternary_simplex_conservation_test() {
   let compositions = [
-    #(0.333333, 0.333333, 0.333334), // centroid
-    #(1.0, 0.0, 0.0),               // vertex A
-    #(0.0, 1.0, 0.0),               // vertex B
-    #(0.0, 0.0, 1.0),               // vertex C
-    #(0.5, 0.5, 0.0),               // edge AB midpoint
-    #(0.0, 0.5, 0.5),               // edge BC midpoint
-    #(0.5, 0.0, 0.5),               // edge AC midpoint
-    #(0.7, 0.2, 0.1),               // asymmetric interior
+    #(0.333333, 0.333333, 0.333334),
+    // centroid
+    #(1.0, 0.0, 0.0),
+    // vertex A
+    #(0.0, 1.0, 0.0),
+    // vertex B
+    #(0.0, 0.0, 1.0),
+    // vertex C
+    #(0.5, 0.5, 0.0),
+    // edge AB midpoint
+    #(0.0, 0.5, 0.5),
+    // edge BC midpoint
+    #(0.5, 0.0, 0.5),
+    // edge AC midpoint
+    #(0.7, 0.2, 0.1),
+    // asymmetric interior
   ]
 
   let sqrt3_over_2 = 0.86602540378
@@ -151,12 +163,14 @@ pub fn inv4_survival_step_monotonicity_test() {
     #(0.0, 1.0),
     #(5.0, 0.95),
     #(12.0, 0.88),
-    #(24.0, 0.88), // tied survival probability
+    #(24.0, 0.88),
+    // tied survival probability
     #(36.0, 0.75),
     #(48.0, 0.62),
-    #(60.0, 0.50), // median survival time
+    #(60.0, 0.5),
+    // median survival time
     #(72.0, 0.35),
-    #(84.0, 0.20),
+    #(84.0, 0.2),
     #(96.0, 0.05),
   ]
 
@@ -187,8 +201,10 @@ pub fn inv4_survival_step_monotonicity_test() {
 pub fn inv5_alluvial_mass_conservation_test() {
   // Stage 1 -> Stage 2 -> Stage 3 transitions
   // Node B in Stage 2 receives flows from A1, A2 and emits flows to C1, C2, C3
-  let inflows_to_b = [120.0, 80.0, 50.0] // total in = 250.0
-  let outflows_from_b = [100.0, 90.0, 60.0] // total out = 250.0
+  let inflows_to_b = [120.0, 80.0, 50.0]
+  // total in = 250.0
+  let outflows_from_b = [100.0, 90.0, 60.0]
+  // total out = 250.0
 
   let total_in = list.fold(inflows_to_b, 0.0, fn(acc, v) { acc +. v })
   let total_out = list.fold(outflows_from_b, 0.0, fn(acc, v) { acc +. v })
@@ -204,18 +220,21 @@ pub fn inv5_alluvial_mass_conservation_test() {
 // smoothly without floating-point underflow or denormal collapse.
 // =============================================================================
 pub fn inv6_high_dynamic_range_conditioning_test() {
-  let scale = Scale2D(
-    x_min: 0.000001,  // 10^-6
-    x_max: 1000000.0, // 10^6
-    y_min: 0.0,
-    y_max: 1.0,
-    target_w: 1000.0,
-    target_h: 500.0,
-  )
+  let scale =
+    Scale2D(
+      x_min: 0.000001,
+      // 10^-6
+      x_max: 1_000_000.0,
+      // 10^6
+      y_min: 0.0,
+      y_max: 1.0,
+      target_w: 1000.0,
+      target_h: 500.0,
+    )
 
   let p_min = Point2D(x: 0.000001, y: 0.0)
-  let p_mid = Point2D(x: 500000.0, y: 0.5)
-  let p_max = Point2D(x: 1000000.0, y: 1.0)
+  let p_mid = Point2D(x: 500_000.0, y: 0.5)
+  let p_max = Point2D(x: 1_000_000.0, y: 1.0)
 
   let s_min = dsl.project_point(scale, p_min)
   let s_mid = dsl.project_point(scale, p_mid)
@@ -270,25 +289,26 @@ pub fn inv8_density_mass_conservation_test() {
   // Values: f(x) = (1 / sqrt(2*pi)) * exp(-x^2 / 2)
   let dx = 0.5
   let densities = [
-    #( -3.0, 0.0044 ),
-    #( -2.5, 0.0175 ),
-    #( -2.0, 0.0540 ),
-    #( -1.5, 0.1295 ),
-    #( -1.0, 0.2420 ),
-    #( -0.5, 0.3521 ),
-    #(  0.0, 0.3989 ),
-    #(  0.5, 0.3521 ),
-    #(  1.0, 0.2420 ),
-    #(  1.5, 0.1295 ),
-    #(  2.0, 0.0540 ),
-    #(  2.5, 0.0175 ),
-    #(  3.0, 0.0044 ),
+    #(-3.0, 0.0044),
+    #(-2.5, 0.0175),
+    #(-2.0, 0.054),
+    #(-1.5, 0.1295),
+    #(-1.0, 0.242),
+    #(-0.5, 0.3521),
+    #(0.0, 0.3989),
+    #(0.5, 0.3521),
+    #(1.0, 0.242),
+    #(1.5, 0.1295),
+    #(2.0, 0.054),
+    #(2.5, 0.0175),
+    #(3.0, 0.0044),
   ]
 
-  let total_mass = list.fold(densities, 0.0, fn(acc, pt) {
-    let #(_x, p) = pt
-    acc +. { p *. dx }
-  })
+  let total_mass =
+    list.fold(densities, 0.0, fn(acc, pt) {
+      let #(_x, p) = pt
+      acc +. { p *. dx }
+    })
 
   // Covers ~99.7% of standard normal density, so Riemann sum ~ 0.997 +/- 0.02
   { total_mass >=. 0.95 && total_mass <=. 1.05 } |> should.be_true

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2S Consulting — Nordic MedTech Executive Presentation</title>
+<style>
+  :root {
+    --primary: #1F4E79;
+    --accent: #0EA5E9;
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --surface-border: #334155;
+    --text: #F8FAFC;
+    --text-muted: #94A3B8;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: #38BDF8; text-decoration: underline; }
+
+  /* Top Navigation */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 0.65rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+  }
+  .top-nav a {
+    color: var(--text-muted);
+    padding: 0.35rem 0.65rem;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .top-nav a:hover, .top-nav a.active {
+    color: #FFFFFF;
+    background: var(--surface);
+    text-decoration: none;
+  }
+  .top-nav .nav-brand {
+    font-weight: 700;
+    color: #38BDF8;
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+  }
+
+  /* Layout */
+  .layout-container {
+    display: flex;
+    max-width: 1500px;
+    margin: 0 auto;
+    min-height: calc(100vh - 50px);
+  }
+
+  /* Sidebar Slide Navigation */
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--surface-border);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 50px;
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+    font-size: 0.85rem;
+  }
+  .sidebar-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    padding-left: 0.5rem;
+  }
+  .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+  .sidebar-nav li { margin-bottom: 0.25rem; }
+  .sidebar-nav a {
+    display: block;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+  .sidebar-nav a:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+    text-decoration: none;
+  }
+
+  /* Main Slides Container */
+  .main-content {
+    flex: 1;
+    padding: 2rem 3rem;
+    max-width: 1150px;
+  }
+
+  .slide {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 1rem;
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .slide:last-of-type { border-bottom: none; }
+  .slide-content { width: 100%; }
+
+  h1 { font-size: 2.8rem; margin-bottom: 1rem; color: #60A5FA; font-weight: 800; }
+  h2 { font-size: 2rem; margin-bottom: 1.25rem; color: #38BDF8; font-weight: 700; }
+  p { font-size: 1.15rem; line-height: 1.7; color: #CBD5E1; }
+
+  .card-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .card { background: var(--surface); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--surface-border); }
+  .card h3 { color: #F1F5F9; margin-top: 0; font-size: 1.15rem; }
+  .card p { font-size: 0.95rem; color: var(--text-muted); }
+  .badge { display: inline-block; background: #2563EB; color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.82rem; font-weight: 600; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* Footer */
+  .doc-footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--surface-border);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 960px) {
+    .layout-container { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--surface-border); }
+    .main-content { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body><aside id="bountytek-superseded" style="position:fixed;bottom:0;left:0;right:0;z-index:2147483647;padding:12px;background:#fff3df;color:#172338;font:14px/1.4 system-ui;border-top:3px solid #b85b00"><strong>Historical, unvalidated material.</strong> Earlier ratification and safety claims are superseded. No deployment authorization. <a style="color:#125a98" href="CODEX_HANDOVER.html">Current handover</a> · <a style="color:#125a98" href="ACH_ASSESSMENT_VALIDATION.html">Validation record</a></aside>
+
+<nav class="top-nav">
+  <span class="nav-brand">⚡ 2S Consulting & Numantra</span>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html" class="">🏠 Projects Index</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html" class="">📄 Enterprise Dossier</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html" class="">📖 13-Sec Journal</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html">📊 Web Report</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html" class="active">🎯 Slide Deck</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/pdf_download_converted.html" class="">💡 Strategy Vision</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html" class="">📜 Codex Astra Cert</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html" class="">📗 Nordic Directory</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/Medical-Nordics-1.xlsx">📥 Download XLSX</a>
+</nav>
+
+<div class="layout-container">
+  <aside class="sidebar">
+    <div class="sidebar-title">On This Page / Slides</div>
+    <ul class="sidebar-nav">
+      <li><a href="#slide-1">1. Executive Title</a></li>
+      <li><a href="#slide-2">2. Nordic Paradox</a></li>
+      <li><a href="#slide-3">3. Five Service Packages</a></li>
+      <li><a href="#slide-4">4. Priority Targets (1-5)</a></li>
+      <li><a href="#slide-5">5. Priority Targets (6-10)</a></li>
+      <li><a href="#slide-6">6. Governance Matrix</a></li>
+      <li><a href="#slide-7">7. Sovereign Mesh Links</a></li>
+      <li><a href="#slide-8">8. Execution Tenets</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="slide" id="slide-1">
+      <div class="slide-content" style="text-align: center;">
+        <span class="badge">Strategic Advisory</span>
+        <h1>2S Consulting & Numantra Technologies</h1>
+        <p style="font-size: 1.4rem; color: #CBD5E1;">Unlocking High-Margin Value Across the Nordic Life Science Corridor</p>
+        <p style="color: #64748B;">Service Positioning & Target Account Rationalization for 135 Facilities in Medical-Nordics-1.xlsx</p>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-2">
+      <div class="slide-content">
+        <span class="badge">The Macro Challenge</span>
+        <h2>The Nordic Healthcare Paradox</h2>
+        <p>Nordic biopharma and medtech leaders generate world-leading clinical and engineering innovation, yet face intense margin compression from three converging macro-forces:</p>
+        <div class="card-row">
+          <div class="card">
+            <h3>1. Hardware Commoditization</h3>
+            <p>Hospital procurement caps squeeze standalone device margins, requiring an urgent pivot to <strong>Device-as-a-Service (DaaS)</strong>.</p>
+          </div>
+          <div class="card">
+            <h3>2. High-Burn Clinical Trials</h3>
+            <p>Biotechs burn hundreds of millions in R&D while patient recruitment stalls across fragmented European hospital clinics.</p>
+          </div>
+          <div class="card">
+            <h3>3. Regulatory Squeeze</h3>
+            <p>The <strong>EU AI Act</strong> and <strong>EU MDR</strong> impose unprecedented algorithmic audit and software compliance burdens.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-3">
+      <div class="slide-content">
+        <span class="badge">The Solution</span>
+        <h2>Five Positioned Service Packages</h2>
+        <div class="card-row">
+          <div class="card">
+            <h3>Package A: DaaS & HEOR</h3>
+            <p>IoT telemetry + interactive hospital CFO calculators proving ICU bed-day savings and NPV.</p>
+          </div>
+          <div class="card">
+            <h3>Package B: Clinical Governance</h3>
+            <p>HCare360 NLP patient screening + stage-gate NCE burn-rate tracking to protect cash runway.</p>
+          </div>
+          <div class="card">
+            <h3>Package C: Commercial S&OP</h3>
+            <p>Merck-proven sales portals connecting factory shipments, wholesalers, and clinic tender demand.</p>
+          </div>
+          <div class="card">
+            <h3>Package D: Plant Batch Flow</h3>
+            <p>Process engineering reducing cleanroom cycle times and rationalizing margin-dilutive CDMO contracts.</p>
+          </div>
+          <div class="card">
+            <h3>Package E: EU AI Act Audit</h3>
+            <p>Independent algorithmic verification, explainability, and GxP data governance on Finnish ISO cloud.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-4">
+      <div class="slide-content">
+        <span class="badge">Target Priority (Part 1)</span>
+        <h2>Top Enterprise Battlecards (1 to 5)</h2>
+        <div class="card-row">
+          <div class="card">
+            <h3>Getinge AB (SEK 34.8B)</h3>
+            <p>Package acute care hardware with HCare360 OR/CathLab benchmarking into managed service contracts.</p>
+          </div>
+          <div class="card">
+            <h3>Elekta AB (SEK 19.0B)</h3>
+            <p>Stochastic radiology pathway optimization boosting daily radiation patient throughput by 25% + EU AI Act pre-audit.</p>
+          </div>
+          <div class="card">
+            <h3>Sobi (Swedish Orphan Biovitrum) (SEK 26.0B)</h3>
+            <p>Multi-country commercial sales tracking and Real-World Evidence (RWE) payer pricing simulation.</p>
+          </div>
+          <div class="card">
+            <h3>Camurus AB (SEK 1.87B)</h3>
+            <p>Smart Financial Planning engine replacing 4-month Excel budgeting cycles for Buvidal clinic tracking.</p>
+          </div>
+          <div class="card">
+            <h3>Hansa Biopharma (SEK 399M R&D)</h3>
+            <p>NLP screening of European EHRs to identify HLA-sensitized kidney transplant patients before donor loss.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-5">
+      <div class="slide-content">
+        <span class="badge">Target Priority (Part 2)</span>
+        <h2>Top Enterprise Battlecards (6 to 10)</h2>
+        <div class="card-row">
+          <div class="card">
+            <h3>XVIVO Perfusion (SEK 822M)</h3>
+            <p>Interactive HEOR ROI calculators proving $45k+ hospital ICU bed-day savings per transplant to drive DaaS adoption.</p>
+          </div>
+          <div class="card">
+            <h3>Recipharm AB (SEK 12.4B)</h3>
+            <p>Chemical/pharma plant turnaround compressing batch cycle times and pruning margin-dilutive CDMO client contracts.</p>
+          </div>
+          <div class="card">
+            <h3>TFS HealthScience (SEK 1.22B)</h3>
+            <p>Machine-learning site accrual prediction preventing trial milestone delays + touchless investigator grant payments.</p>
+          </div>
+          <div class="card">
+            <h3>Devyser Diagnostics (SEK 217M)</h3>
+            <p>Direct sales enablement tools demonstrating 45% hands-on lab technician labor reduction and 24-hr NGS turnaround.</p>
+          </div>
+          <div class="card">
+            <h3>AMRA Medical (SEK 75M)</h3>
+            <p>High-risk EU AI Act algorithmic verification and integration into HCare360 radiology workflow on Finnish cloud.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-6">
+      <div class="slide-content">
+        <span class="badge">Institutional Governance</span>
+        <h2>UOS & C3I Operational Skills Matrix</h2>
+        <p>131 institutional skills governing the complete analytical and documentation lifecycle:</p>
+        <div class="card-row">
+          <div class="card">
+            <h3>Journal & Durability (13)</h3>
+            <p>Mandatory 13-section journal (<code>journal-protocol</code>), <code>stage-durability</code>, and ZK KMS memory persistence.</p>
+          </div>
+          <div class="card">
+            <h3>Analysis & Diagnostic (51)</h3>
+            <p>Root cause analysis (RCA), <code>business-analysis</code>, <code>competitive-intel</code>, and 13-control <code>sales-analyze</code>.</p>
+          </div>
+          <div class="card">
+            <h3>Decision Making (22)</h3>
+            <p><code>fractal-decision-calculus</code> under uncertainty, <code>uos-risk-prioritization</code>, and deal qualification gates.</p>
+          </div>
+          <div class="card">
+            <h3>Doc Generation (45)</h3>
+            <p>GitBook 2-way navigable docs (<code>docs-design</code>), <code>proposal-builder</code>, and formal specs (<code>allium</code>, <code>gospel</code>).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-7">
+      <div class="slide-content">
+        <span class="badge">Mesh Infrastructure</span>
+        <h2>Tailscale FQDN Sovereign Mesh Links</h2>
+        <p>Direct live browser access across the distributed Tailscale mesh for all engagement deliverables:</p>
+        <div class="card-row">
+          <div class="card">
+            <h3>Sovereign Ratification</h3>
+            <p><a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html">Codex Astra Certificate HTML</a></p>
+            <span style="font-size: 0.85rem; color: #94a3b8;">Port 4100 • Signed by Codex Astra</span>
+          </div>
+          <div class="card">
+            <h3>Institutional Journal</h3>
+            <p><a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html">13-Section Journal HTML</a></p>
+            <span style="font-size: 0.85rem; color: #94a3b8;">165 KB • 131 Skills Indexed</span>
+          </div>
+          <div class="card">
+            <h3>Executive HTML Report</h3>
+            <p><a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html">Financial Compendium HTML</a></p>
+            <span style="font-size: 0.85rem; color: #94a3b8;">Interactive Financial Compendium</span>
+          </div>
+          <div class="card">
+            <h3>Live Cockpit & Mesh</h3>
+            <p><a href="http://nas-1.tail55d152.ts.net:4100/" style="color: #34d399;">nas-1.tail55d152.ts.net:4100</a></p>
+            <span style="font-size: 0.85rem; color: #94a3b8;">Lustre MVU Cockpit & Sa-Plan Engine</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-8">
+      <div class="slide-content" style="text-align: center;">
+        <span class="badge">Execution</span>
+        <h2>Why 2S Consulting Wins</h2>
+        <p style="font-size: 1.35rem; color: #CBD5E1;">Founder immersion • Pre-built HCare360 IP • Nordic R&D in Helsinki • Swiss financial rigor</p>
+        <p style="color: #64748B; margin-top: 2rem;">Ready for immediate executive deployment across Sweden and the Nordics.</p>
+      </div>
+    </div>
+
+    <footer class="doc-footer">
+      <div>Governed by <strong>L0-codex-gpt-6-astra</strong> • Mesh Node: <code>nas-1.tail55d152.ts.net</code></div>
+      <div>UOS & C3I Sovereign Biomorphic Operations • Timestamp: 2026-09-27</div>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>

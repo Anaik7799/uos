@@ -1,0 +1,56 @@
+{
+  "schema": "uos.dashboard-task-snapshot.v1",
+  "created_at": "2026-09-21T10:25:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "authority": "sa_plan_sqlite_read_only_projection",
+  "database": "var/sa-plan/uos.sqlite3",
+  "task_snapshot": {
+    "source_sha256": "6a2e80d1e9668a78a79ef9dbc23dc758fb5b892d9072280c8b3794e6bc3e05cc",
+    "total": 20,
+    "by_state": {"completed": 2, "executing": 1, "available": 17},
+    "completed_with_receipt": 2,
+    "executing": [
+      {"id": "t1-tracker", "worker": "codex-01a0ba74-feature-tracker", "attempt": 2}
+    ],
+    "available_ids": [
+      "r02-recovery-candidate", "r03-harness-coordinator", "r04-identity-enrollment",
+      "r05-mcp-data", "r06-mcp-control", "r07-hive-swarm", "r08-service-adapters",
+      "r09-end-to-end", "r10-artifact-sync", "r11-release-review", "r12-operational-acceptance",
+      "t0-coordination", "t0a-reconcile", "t0b-bindings", "t0c-conformance",
+      "t2-contracts", "t3-evidence"
+    ]
+  },
+  "feature_store_snapshot": {
+    "canonical_id_prefix": "uos/system-features/",
+    "canonical_rows": 0,
+    "legacy_metadata_workflows": 52,
+    "source": "governance/planning/20260921-1050-canonical-feature-store-audit.json",
+    "coverage_state": "canonical_store_not_observed",
+    "must_not_merge_legacy_rows": true
+  },
+  "risk_snapshot": {
+    "path": "governance/planning/20260921-0338-execution-optimization-risk.json",
+    "sha256": "99f3b80eda1cf4baa63a749a94a9febd59615f70b93bedbb4c8e1154eadb543e",
+    "current_at_observation": "2026-09-21T10:25:00Z",
+    "readiness": {"ready": 3, "blocked": 17},
+    "ordering_rule": "risk and dependency readiness precede execution; blocked is never complete",
+    "freshness": "risk artifact valid_until 2026-09-21T16:00:00Z"
+  },
+  "dashboard_semantics": {
+    "completed_definition": "canonical Sa-plan state=completed AND non-empty completion receipt",
+    "executing_definition": "canonical state=executing with worker and attempt",
+    "blocked_definition": "risk readiness=blocked or missing/stale/inconsistent evidence",
+    "unknown_definition": "insufficient evidence; never coerced to zero or complete",
+    "runtime_admission": false,
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "verification": {
+    "observed": true,
+    "fresh_runtime_mcp_probe": false,
+    "formal_two_key_verification": false,
+    "release_authorization": false,
+    "state": "observed_not_verified"
+  },
+  "tags": ["#fractal-l0", "#fractal-l1", "#sa-plan", "#dashboard", "#zero-muda"]
+}

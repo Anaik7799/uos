@@ -1,7 +1,7 @@
 import cepaf_gleam/agui/events.{
   ReasoningEnd, ReasoningMessageContent, ReasoningStart, RunFinished, RunStarted,
-  TextMessageContent, TextMessageEnd, TextMessageStart, ToolCallArgs, ToolCallEnd,
-  ToolCallResult, ToolCallStart,
+  TextMessageContent, TextMessageEnd, TextMessageStart, ToolCallArgs,
+  ToolCallEnd, ToolCallResult, ToolCallStart,
 }
 import cepaf_gleam/harness/agy_agent.{
   type AgentDecision, AgentIntent, process_with_agy,
@@ -18,7 +18,7 @@ pub fn agy_agent_synthesis_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "Synthesize operational posture for all 10 fractal layers",
-      timestamp_ms: 1788979000000,
+      timestamp_ms: 1_788_979_000_000,
     )
 
   let decision: AgentDecision = process_with_agy(intent)
@@ -85,7 +85,7 @@ pub fn agy_agent_anonymous_user_test() {
       user: "",
       chat_id: "142270921",
       text: "hello",
-      timestamp_ms: 1788979000000,
+      timestamp_ms: 1_788_979_000_000,
     )
 
   let decision: AgentDecision = process_with_agy(intent)

@@ -48,7 +48,8 @@ pub fn reconciler_actor_flow_test() {
   let assert Ok(subj) = reconciler.start(cfg)
 
   // 1. Check initial status
-  let state1 = process.call(subj, 1000, fn(reply) { GetReconcilerStatus(reply) })
+  let state1 =
+    process.call(subj, 1000, fn(reply) { GetReconcilerStatus(reply) })
   state1.is_converged |> should.be_true()
 
   // 2. Submit new desired intent with extra container
@@ -74,7 +75,8 @@ pub fn reconciler_actor_flow_test() {
   tick_count |> should.equal(1)
 
   // 4. Verify converged state
-  let state2 = process.call(subj, 1000, fn(reply) { GetReconcilerStatus(reply) })
+  let state2 =
+    process.call(subj, 1000, fn(reply) { GetReconcilerStatus(reply) })
   state2.is_converged |> should.be_true()
   state2.current.containers |> should.equal(desired.containers)
 }

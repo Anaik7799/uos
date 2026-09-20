@@ -23,7 +23,9 @@
 //// </c3i-module>
 //// =============================================================================
 
-import cepaf_gleam/ha/lyapunov_controller.{type LyapunovController, compute_batch_size}
+import cepaf_gleam/ha/lyapunov_controller.{
+  type LyapunovController, compute_batch_size,
+}
 import gleam/int
 import gleam/list
 
@@ -71,7 +73,11 @@ pub fn enqueue_task(
   task: QueuedTask,
 ) -> Result(HeijunkaQueue, String) {
   case list.length(queue.pending_tasks) >= queue.max_queue_depth {
-    True -> Error("Heijunka queue depth exceeded: max " <> int.to_string(queue.max_queue_depth))
+    True ->
+      Error(
+        "Heijunka queue depth exceeded: max "
+        <> int.to_string(queue.max_queue_depth),
+      )
     False -> {
       let sorted_tasks =
         [task, ..queue.pending_tasks]
@@ -124,10 +130,7 @@ pub fn complete_task(queue: HeijunkaQueue, task_id: String) -> HeijunkaQueue {
 }
 
 /// Reclaim expired leases back into the pending task list.
-pub fn reclaim_expired(
-  queue: HeijunkaQueue,
-  now_us: Int,
-) -> HeijunkaQueue {
+pub fn reclaim_expired(queue: HeijunkaQueue, now_us: Int) -> HeijunkaQueue {
   let #(expired, active) =
     list.partition(queue.active_leases, fn(l) { now_us > l.lease_until_us })
 

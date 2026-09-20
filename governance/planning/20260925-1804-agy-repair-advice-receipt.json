@@ -1,0 +1,14 @@
+{
+  "schema": "uos.agy-repair-advice-receipt.v1",
+  "observed_at": "2026-09-25T18:04:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "model": "gemini-3.8-flash-low",
+  "effort": "low",
+  "resolver_workaround": "NODE_OPTIONS=--dns-result-order=ipv4first",
+  "log": "/tmp/agy-ipv4-1801.log",
+  "log_sha256": "6a9484178258d4a85be1345a650f97a412af0c4e026adb61b184fbdd5bcc2afe",
+  "advice": "Halt execution and trigger an immediate fail-closed Andon stop; do not promote or admit the recovery candidate due to divergence at sequence one; keep 17 risk-blocked tasks quarantined; isolate sequence-one divergence for root-cause analysis before any state transition or admission attempt.",
+  "interpretation": "AGY independently confirms the current hold and does not authorize promotion, task claims, or MCP admission.",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

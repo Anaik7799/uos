@@ -26,11 +26,7 @@ pub type StealableTask {
 }
 
 pub type WorkerQueue {
-  WorkerQueue(
-    worker_id: String,
-    tasks: List(StealableTask),
-    total_load_ns: Int,
-  )
+  WorkerQueue(worker_id: String, tasks: List(StealableTask), total_load_ns: Int)
 }
 
 pub type RebalanceVerdict {
@@ -182,10 +178,7 @@ pub fn compute_cluster_skew(queues: List(WorkerQueue)) -> Int {
     [] -> 0
     [first, ..rest] -> {
       let #(min_load, max_load) =
-        list.fold(rest, #(first.total_load_ns, first.total_load_ns), fn(
-          acc,
-          q,
-        ) {
+        list.fold(rest, #(first.total_load_ns, first.total_load_ns), fn(acc, q) {
           #(int.min(acc.0, q.total_load_ns), int.max(acc.1, q.total_load_ns))
         })
       max_load - min_load
@@ -235,7 +228,11 @@ pub fn rebalance_cluster_step(
                   total_load_ns: lightest.total_load_ns + transferred_load,
                 )
               let remaining_middle = list.reverse(rev_rest)
-              let result = [updated_heaviest, updated_lightest, ..remaining_middle]
+              let result = [
+                updated_heaviest,
+                updated_lightest,
+                ..remaining_middle
+              ]
               #(result, True)
             }
             BatchRebalanceBalanced -> #(queues, False)

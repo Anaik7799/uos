@@ -986,6 +986,11 @@ pub fn query_sa_plan_status() -> Result(String, String) {
   run_sa_plan_cli(["status"])
 }
 
+/// Queries status for an explicitly selected canonical plan.
+pub fn query_sa_plan_status_for(plan_id: String) -> Result(String, String) {
+  run_sa_plan_cli(["status", plan_id])
+}
+
 /// Lists all plans in the canonical sa-plan store.
 pub fn query_sa_plan_list() -> Result(String, String) {
   run_sa_plan_cli(["plan", "list"])

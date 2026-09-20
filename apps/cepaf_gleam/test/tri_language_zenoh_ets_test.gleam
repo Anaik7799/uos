@@ -42,13 +42,15 @@ pub fn ets_zenoh_sync_test() {
   // Sync from Zenoh to ETS
   case ets_zenoh_bridge.sync_zenoh_to_ets() {
     Ok(synced_count) -> should.be_true(synced_count >= 0)
-    Error(_) -> Nil // Zenoh might be quiet if offline during unit test
+    Error(_) -> Nil
+    // Zenoh might be quiet if offline during unit test
   }
 }
 
 pub fn tri_language_state_evaluation_test() {
   let _ = ets_zenoh_bridge.init_bridge()
-  let _ = ets_zenoh_bridge.put_state("gleam_state", "GLEAM_OTP29_SUPERVISOR_ACTIVE")
+  let _ =
+    ets_zenoh_bridge.put_state("gleam_state", "GLEAM_OTP29_SUPERVISOR_ACTIVE")
 
   let summary = ets_zenoh_bridge.evaluate_tri_language_state()
   should.equal(summary.gleam_state, "GLEAM_OTP29_SUPERVISOR_ACTIVE")

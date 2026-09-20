@@ -1,12 +1,12 @@
 //// Unit Test Suite for C3I Knowledge Runtime Vertical Slice Engine
 //// Verifies 5 pipeline stages + end-to-end execution
 
-import gleam/list
-import gleam/string
-import gleeunit/should
 import cepaf_gleam/knowledge/c3i_vertical_slice_engine.{
   ConformanceFailed, ConformancePassed,
 }
+import gleam/list
+import gleam/string
+import gleeunit/should
 
 pub fn journal_ingestion_test() {
   let record =
@@ -29,7 +29,8 @@ pub fn rust_ocaml_conformance_test() {
   let d2 = "sha256:abcd"
   let d3 = "sha256:different"
 
-  let verdict1 = c3i_vertical_slice_engine.evaluate_rust_ocaml_conformance(d1, d2)
+  let verdict1 =
+    c3i_vertical_slice_engine.evaluate_rust_ocaml_conformance(d1, d2)
   case verdict1 {
     ConformancePassed(rust_ver, ocaml_ver, contract, matched) -> {
       rust_ver |> should.equal("c3i_nif-1.9.0")
@@ -40,7 +41,8 @@ pub fn rust_ocaml_conformance_test() {
     ConformanceFailed(..) -> should.fail()
   }
 
-  let verdict2 = c3i_vertical_slice_engine.evaluate_rust_ocaml_conformance(d1, d3)
+  let verdict2 =
+    c3i_vertical_slice_engine.evaluate_rust_ocaml_conformance(d1, d3)
   case verdict2 {
     ConformancePassed(..) -> should.fail()
     ConformanceFailed(reason) ->

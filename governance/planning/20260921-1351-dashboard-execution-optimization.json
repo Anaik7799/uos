@@ -1,0 +1,66 @@
+{
+  "schema": "uos.dashboard-execution-optimization.v2",
+  "timestamp": "20260921-1351",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authority": "sa-plan-report-only",
+  "snapshot": "governance/planning/20260921-1350-sa-plan-dashboard-snapshot.json",
+  "status": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0,
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false
+  },
+  "optimization_criteria": [
+    "Respect Sa-plan dependency readiness before dispatch.",
+    "Prioritize safety and authority gates over nominal priority.",
+    "Prefer fresh observed MCP/runtime evidence over historical claims.",
+    "Minimize muda by avoiding retries that cannot satisfy the current binding contract.",
+    "Do not convert blocked, unknown, stale, or unadmitted states into completion."
+  ],
+  "execution_order": [
+    {
+      "rank": 1,
+      "task": "t0-coordination",
+      "action": "repair coordinator journal integrity, then obtain authenticated Claude/Codex/AGY session observations and peer ACKs",
+      "gate": "fresh sequence/digest-valid coordinator evidence",
+      "current_state": "ready-but-held",
+      "reason": "coordination is a prerequisite for holon/swarm acceptance"
+    },
+    {
+      "rank": 2,
+      "task": "t2-contracts",
+      "action": "obtain an independently reviewed task-bound harness grant for declarative catalog, observations, and intent probes",
+      "gate": "binding identity matches Sa-plan task/attempt and current candidate",
+      "current_state": "ready-but-held",
+      "reason": "development bootstrap is fixed to HARNESSBOOT and cannot authorize t2"
+    },
+    {
+      "rank": 3,
+      "task": "r02-recovery-candidate",
+      "action": "run candidate recovery tests through Sa-plan and bind independent release authorization",
+      "gate": "candidate-bound runtime recovery receipt plus authorization",
+      "current_state": "ready-but-held",
+      "reason": "isolated recovery evidence does not establish activation or admission"
+    },
+    {
+      "rank": 4,
+      "task": "t3-evidence",
+      "action": "reconcile tracker coverage and publish current-system review after t2 evidence",
+      "gate": "t2 completed and fresh MCP observations",
+      "current_state": "dependency-blocked",
+      "reason": "prevents stale coverage claims"
+    }
+  ],
+  "live_evidence": [
+    "governance/planning/20260921-1346-mcp-data-plane-receipt.json",
+    "governance/planning/20260921-1343-holon-swarm-stdio-receipt.json",
+    "governance/planning/20260921-1340-mcp-stdio-runtime-receipt.json"
+  ],
+  "completion_policy": {
+    "dashboard_completion_credit": "only Sa-plan completed tasks with fresh observed behavior and formal/current evidence",
+    "current_goal_complete": false,
+    "admission": "NOT_ADMITTED"
+  }
+}

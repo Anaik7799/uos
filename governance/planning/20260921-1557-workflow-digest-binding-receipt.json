@@ -1,0 +1,29 @@
+{
+  "schema_version": "uos.harness.workflow-digest-binding.v1",
+  "observed_at": "2026-09-21T15:57:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "development_change": {
+    "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+    "sha256": "b2f893348c2c6099db4a027f876c1e06bf5d9e867eca0e03e89ec9e35c8005b5",
+    "bound_schema": "uos.harness.feature-workflow-identity.v2",
+    "binding": ["catalog_sha256", "ledger_sha256"],
+    "ledger_definition": "sha256 of the canonical feature progress payload",
+    "task_and_job_identity": "unchanged",
+    "legacy_history_policy": "fail closed with tracking_workflow_identity_conflict"
+  },
+  "tests": {
+    "harness_tracking_test_sha256": "6e38c284c9a1205b3a80020a9217319fe0c5341a8f79fcd2147d0a5b53697cb9",
+    "system_feature_interfaces_test_sha256": "f6ce5f5b75b3d1a357c003b4cd6a32829f748f9add879ec84a1d2ef75988f88b",
+    "full_gleam_suite": "11992 passed, no failures",
+    "test_log_sha256": "a3bb4616cf7d171154b7fbdf1ff5cb2648a5e8002fb1a0c87bbb87f8e5a328fa"
+  },
+  "database_observation": {
+    "workflow_kind": "harness-feature-tracking",
+    "rows": 52,
+    "legacy_rows_missing_catalog_sha256": 52,
+    "legacy_rows_missing_ledger_sha256": 52,
+    "migration_status": "NOT_RUN",
+    "completion_status": "INCOMPLETE"
+  },
+  "authority_boundary": "Development source and test evidence only; no workflow migration, Sa-plan claim, completion, coordinator cutover, runtime admission, release or operational acceptance was performed."
+}

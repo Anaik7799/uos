@@ -1,0 +1,12 @@
+{
+  "schema": "uos.goal-completion-matrix.v2",
+  "timestamp": "20260921-1906",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authoritative_status": {"total": 21, "completed": 4, "ready": 3, "executing": 0, "blocked": 17, "unknown": 0, "admission": "not_admitted"},
+  "new_evidence": [
+    {"path": "governance/planning/20260921-1905-r07-fail-closed-receipt.json", "result": "rete_malformed_input_rejected_and_full_suite_green", "counts_as_completion": false}
+  ],
+  "selection": {"authority": "sa-plan", "risk_runtime_admission": "not_granted", "task_selection_changed": false},
+  "completion_rules": {"blocked_unrun_stale_unadmitted_not_counted": true, "two_key_runtime_and_formal_required": true, "sa_plan_sole_execution_authority": true},
+  "next_gate": "obtain authorized harness binding for the first risk/dependency-eligible Sa-plan task, then collect candidate-bound runtime, formal, and independent release receipts"
+}

@@ -1,0 +1,314 @@
+{
+  "task_id": "20260927-1145-codex-astra-sovereign-ratification-pass",
+  "generated_at": "2026-09-27T11:33:00+02:00",
+  "ratified_at": "2026-09-28T05:28:00+02:00",
+  "authority": "L0-codex-gpt-6-astra",
+  "nordic_commercial_agent": "Bountytek AB (Stockholm, Sweden)",
+  "principals": [
+    {
+      "name": "2S Consulting",
+      "url": "https://www.2sconsulting.com/"
+    },
+    {
+      "name": "Numantra Technologies",
+      "url": "https://www.numantratech.ai/"
+    }
+  ],
+  "gate_status": "PASS (G-CODEX-ASTRA-DEEP-COGNITIVE-11-SUPERPOWERS-RATIFIED)",
+  "project_location": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects",
+  "skills_indexed": {
+    "total_skills": 265,
+    "journal_durability_skills": 13,
+    "analysis_diagnostic_skills": 51,
+    "decision_making_governance_skills": 22,
+    "doc_generation_spec_skills": 45,
+    "newly_created_skills": [
+      "ach-admiralty-audit",
+      "nordic-medtech-go-to-market",
+      "claude-extended-reasoning-audit",
+      "agy-autonomous-orchestration",
+      "codex-astra-sil6-invariant-guard",
+      "nordic-procurement-tender-intel"
+    ]
+  },
+  "artifacts": [
+    {
+      "name": "Nordic Pharma & Chemicals Sector Dossier Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html",
+      "relative_path": "./projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.html"
+    },
+    {
+      "name": "Nordic Pharma & Chemicals Sector Dossier Markdown Source",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md",
+      "relative_path": "./projects/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md",
+      "format": "md",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_PHARMACEUTICALS_AND_CHEMICALS_SECTOR_DOSSIER.md"
+    },
+    {
+      "name": "Pharma Three Pillars Operational Blueprint Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html",
+      "relative_path": "./projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.html"
+    },
+    {
+      "name": "Pharma Three Pillars Operational Blueprint Markdown Source",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md",
+      "relative_path": "./projects/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md",
+      "format": "md",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_PHARMA_THREE_PILLARS_OPERATIONAL_BLUEPRINT.md"
+    },
+    {
+      "name": "Master Projects Index Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/PROJECTS_INDEX.html",
+      "relative_path": "./projects/PROJECTS_INDEX.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html"
+    },
+    {
+      "name": "2S Consulting Enterprise Dossier Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "relative_path": "./projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html"
+    },
+    {
+      "name": "Comprehensive 13-Section Journal Semantic Web App",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "relative_path": "./projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html"
+    },
+    {
+      "name": "Executive HTML Financial Analysis Report",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "relative_path": "./projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html"
+    },
+    {
+      "name": "Executive Presentation Slide Deck HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "relative_path": "./projects/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html"
+    },
+    {
+      "name": "2S Strategic Vision Presentation HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/pdf_download_converted.html",
+      "relative_path": "./projects/pdf_download_converted.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/pdf_download_converted.html"
+    },
+    {
+      "name": "Codex Astra Sovereign Review & Ratification Certificate HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "relative_path": "./projects/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html"
+    },
+    {
+      "name": "Nordic Life Sciences Financial Directory HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "relative_path": "./projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html"
+    },
+    {
+      "name": "Zettelkasten Knowledge Note HTML",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "relative_path": "./projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html"
+    },
+    {
+      "name": "Authoritative OCaml GitBook Docs Generator Script",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/render_docs_wiki.ml",
+      "relative_path": "./projects/render_docs_wiki.ml",
+      "format": "ocaml",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/render_docs_wiki.ml"
+    },
+    {
+      "name": "Master Audited Financial Sheet (135 Facilities, 127 Entities)",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/Medical-Nordics-1.xlsx",
+      "relative_path": "./projects/Medical-Nordics-1.xlsx",
+      "google_sheet_id": "1s0pVuA2KPyIdOWL77IS8N2FFcZNPbZvS55Ys9Wkukfo",
+      "format": "xlsx",
+      "size_bytes": 26597,
+      "status": "verified",
+      "google_sheet_url": "https://docs.google.com/spreadsheets/d/1s0pVuA2KPyIdOWL77IS8N2FFcZNPbZvS55Ys9Wkukfo",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/Medical-Nordics-1.xlsx"
+    },
+    {
+      "name": "2S Consulting 15-Tab Master Dataset",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_Consulting_Enterprise_Data.xlsx",
+      "relative_path": "./projects/2S_Consulting_Enterprise_Data.xlsx",
+      "format": "xlsx",
+      "size_bytes": 38535,
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_Consulting_Enterprise_Data.xlsx"
+    },
+    {
+      "name": "2S Consulting Enterprise Dossier Markdown",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.md",
+      "relative_path": "./projects/2S_CONSULTING_COMPREHENSIVE_DOSSIER.md",
+      "format": "markdown",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_CONSULTING_COMPREHENSIVE_DOSSIER.md"
+    },
+    {
+      "name": "Comprehensive Financial Dossier Markdown",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.md",
+      "relative_path": "./projects/MEDICAL_NORDICS_FINANCIALS_DOSSIER.md",
+      "format": "markdown",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/MEDICAL_NORDICS_FINANCIALS_DOSSIER.md"
+    },
+    {
+      "name": "Master Financials Extracted JSON Database",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/master_financials.json",
+      "relative_path": "./projects/master_financials.json",
+      "format": "json",
+      "size_bytes": 33599,
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/master_financials.json"
+    },
+    {
+      "name": "Unique Normalized Company Entities List",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/unique_companies.json",
+      "relative_path": "./projects/unique_companies.json",
+      "format": "json",
+      "size_bytes": 2394,
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/unique_companies.json"
+    },
+    {
+      "name": "Zettelkasten Slip-Box Staged Note Markdown",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md",
+      "relative_path": "./projects/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md",
+      "format": "markdown",
+      "status": "verified",
+      "zk_uuid": "a5651de1-db82-1a52-3e07-09f4da9cb757",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.md"
+    },
+    {
+      "name": "Skills & Superpowers Sovereign Catalog",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/SKILLS_AND_SUPERPOWERS_CATALOG.html",
+      "relative_path": "./SKILLS_AND_SUPERPOWERS_CATALOG.html",
+      "format": "html",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/SKILLS_AND_SUPERPOWERS_CATALOG.html"
+    },
+    {
+      "name": "OCaml Epistemic & Admiralty Engine",
+      "path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/ach_admiralty_engine.ml",
+      "relative_path": "./ach_admiralty_engine.ml",
+      "format": "ml",
+      "status": "verified",
+      "tailscale_fqdn_url": "http://nas-1.tail55d152.ts.net:4100/static/ach_admiralty_engine.ml"
+    }
+  ],
+  "tailscale_mesh": {
+    "host_node": "nas-1",
+    "fqdn": "nas-1.tail55d152.ts.net",
+    "ports": {
+      "webui_cockpit": 4100,
+      "saplan_dashboard": 4200,
+      "tls_daemon": 8443
+    },
+    "web_apps_fqdn": {
+      "projects_index": "http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html",
+      "outreach_presentation": "http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_OUTREACH_PRESENTATION.html",
+      "competitor_presentation": "http://nas-1.tail55d152.ts.net:4100/static/NORDIC_COMPETITOR_BENCHMARK_DECK.html",
+      "ecosystem_accelerator": "http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html",
+      "outreach_strategy": "http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html",
+      "competitor_dossier": "http://nas-1.tail55d152.ts.net:4100/static/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html",
+      "enterprise_dossier": "http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html",
+      "master_journal": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html",
+      "financial_analysis": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html",
+      "presentation_deck": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html",
+      "strategy_vision": "http://nas-1.tail55d152.ts.net:4100/static/pdf_download_converted.html",
+      "sovereign_certificate": "http://nas-1.tail55d152.ts.net:4100/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html",
+      "financial_directory": "http://nas-1.tail55d152.ts.net:4100/static/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html",
+      "zk_note": "http://nas-1.tail55d152.ts.net:4100/static/20260927-131534-2s-consulting-nordic-medtech-service-positioning-and-target-rationalization.html",
+      "ocaml_generator": "http://nas-1.tail55d152.ts.net:4100/static/render_docs_wiki.ml"
+    }
+  },
+  "documents": [
+    {
+      "filename": "2S_NORDIC_OUTREACH_PRESENTATION.html",
+      "title": "2S Consulting & Numantra \u2014 Nordic MedTech Outreach & Penetration Presentation",
+      "type": "interactive_slide_deck",
+      "scope": "Fullscreen interactive slide deck with keyboard controls, progress indicators, ICP battlecards, and wedge offers",
+      "tailscale_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_OUTREACH_PRESENTATION.html",
+      "markdown_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_NORDIC_OUTREACH_PRESENTATION.md",
+      "local_path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_NORDIC_OUTREACH_PRESENTATION.html"
+    },
+    {
+      "filename": "NORDIC_COMPETITOR_BENCHMARK_DECK.html",
+      "title": "Nordic MedTech Competitor Benchmark & Co-Opetition Presentation",
+      "type": "interactive_slide_deck",
+      "scope": "Fullscreen interactive deck profiling 12 Nordic peer consultancies, co-opetition models, and sales discovery landmines",
+      "tailscale_url": "http://nas-1.tail55d152.ts.net:4100/static/NORDIC_COMPETITOR_BENCHMARK_DECK.html",
+      "markdown_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/NORDIC_COMPETITOR_BENCHMARK_DECK.md",
+      "local_path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/NORDIC_COMPETITOR_BENCHMARK_DECK.html"
+    },
+    {
+      "filename": "2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html",
+      "title": "2S Consulting Nordic Market Penetration & Ecosystem Accelerator",
+      "type": "ecosystem_strategy",
+      "scope": "Actionable multi-channel strategy covering co-opetition with Semcon/Knightec, cluster infiltration (Medicon Village, GoCo), and hospital tenders",
+      "tailscale_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html",
+      "markdown_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.md",
+      "local_path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_NORDIC_MARKET_PENETRATION_AND_ECOSYSTEM_ACCELERATOR.html"
+    },
+    {
+      "filename": "2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html",
+      "title": "2S Consulting Nordic Life Sciences & MedTech Market Penetration Strategy",
+      "type": "outreach_playbook",
+      "scope": "Nordic MedTech market penetration, ICP account tiers, 10 target battlecards, multi-touch persona cadences, and wedge offers",
+      "tailscale_url": "http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html",
+      "markdown_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.md",
+      "local_path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/2S_CONSULTING_NORDIC_OUTREACH_STRATEGY.html"
+    },
+    {
+      "filename": "NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html",
+      "title": "Nordic MedTech Competitive Landscape & Peer Analysis",
+      "type": "competitive_intelligence",
+      "scope": "In-depth competitive benchmarking of 12 Nordic consultancies (Plantvision, Knightec, Qadvis, Prevas, Emergo, LINK Medical) + discovery landmines",
+      "tailscale_url": "http://nas-1.tail55d152.ts.net:4100/static/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html",
+      "markdown_url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.md",
+      "local_path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/NORDIC_MEDTECH_COMPETITIVE_LANDSCAPE_AND_PEER_DOSSIER.html"
+    },
+    {
+      "filename": "run_cycles_19_23.mojo",
+      "title": "Codex Astra Cycles 19-23 Mojo Verification Suite",
+      "type": "epistemic_verification_suite",
+      "scope": "Automated verification of ACH diagnostic matrices, NATO STANAG Admiralty protocol (>= B2), Devil's Advocate / 10th Man falsification, and live HTTP probing",
+      "tailscale_url": "http://nas-1.tail55d152.ts.net:4100/static/run_cycles_19_23.mojo",
+      "local_path": "/home/an/dev/ver/c3i/sub-projects/work/gdrive/4-Temp/1-Bountytek/projects/run_cycles_19_23.mojo"
+    }
+  ],
+  "epistemic_validation": {
+    "ach_diagnostic_matrix": "PASSED (H2 decisively supported, H1 refuted)",
+    "nato_stanag_admiralty": "PASSED (12/12 peers >= B2)",
+    "devils_advocate_protocol": "ARMED (30-day tripwires active)",
+    "ocaml_epistemic_engine": "http://nas-1.tail55d152.ts.net:4100/static/ach_admiralty_engine.ml"
+  }
+}

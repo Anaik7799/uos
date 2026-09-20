@@ -1,0 +1,24 @@
+{
+  "schema": "uos.system-feature-tracker-execution.v1",
+  "observed_at": "2026-09-21T10:35:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "worker": "codex-01a0ba74-feature-tracker",
+  "attempt": 6,
+  "status": "development_verified",
+  "store": {
+    "database": "var/sa-plan/uos.sqlite3",
+    "workflow_prefix": "uos-system-features/coverage/",
+    "coverage_workflows": 11,
+    "completed_workflows": 11,
+    "declared_features": 848,
+    "mcp_unknown": 848,
+    "mcp_usable": 0,
+    "inventory_complete": false,
+    "system_admission": false,
+    "coverage_payload_sha256": "1320cdf6c40d7906d0fcaeda07c06235ddb34fa3b9b60a9c31300da1ad6f5903"
+  },
+  "source": "governance/capability-inventory/20260921-0633-system-feature-interface-census.json",
+  "semantics": "Declaration records are persisted durably; MCP availability remains unknown until authorized runtime probes produce trusted receipts.",
+  "authority_boundary": "Sa-plan workflow completion records metadata only and grants no MCP effect authority or system admission."
+}

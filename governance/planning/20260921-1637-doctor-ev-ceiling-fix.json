@@ -1,0 +1,22 @@
+{
+  "schema": "uos.doctor-ev-ceiling-fix.v1",
+  "observed_at": "2026-09-21T16:37:27Z",
+  "scope": "Correct doctor classification without rewriting historical EV artifacts",
+  "source": {
+    "path": "tools/uos/src/main.gleam",
+    "sha256": "ba1a13cc585860dd47dc4d277fbd4c3789f608f978730c5862ed183f495a538f"
+  },
+  "change": "EV numbers above the pinned ceiling 93 are reported NOT_ADMITTED regardless of artifact presence.",
+  "validation": {
+    "gleam_check": "PASS",
+    "doctor_log": "/tmp/uos-doctor-ceiling-fix-20260921-1638.log",
+    "doctor_log_sha256": "695ea744ad06afc82fecd6b78f49cc5e857d4b515514fbcc37ffbfe570aced62",
+    "doctor_result": "HOLD",
+    "verified_artifacts": 2,
+    "not_admitted_above_ceiling": 18,
+    "unverifiable": 91,
+    "missing": 0
+  },
+  "limitation": "This corrects reporting semantics; provenance chain mismatches and two-key admission remain unresolved.",
+  "completion_credit": false
+}

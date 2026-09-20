@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2S Consulting — Nordic MedTech Service Positioning & Target Rationalization</title>
+<style>
+  :root {
+    --primary: #1F4E79;
+    --primary-light: #2A69A4;
+    --accent: #0EA5E9;
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --surface-border: #334155;
+    --text: #F8FAFC;
+    --text-muted: #94A3B8;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: #38BDF8; text-decoration: underline; }
+
+  /* Top Navigation */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 0.65rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+  }
+  .top-nav a {
+    color: var(--text-muted);
+    padding: 0.35rem 0.65rem;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .top-nav a:hover, .top-nav a.active {
+    color: #FFFFFF;
+    background: var(--surface);
+    text-decoration: none;
+  }
+  .top-nav .nav-brand {
+    font-weight: 700;
+    color: #38BDF8;
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+  }
+
+  /* Layout Container */
+  .layout-container {
+    display: flex;
+    max-width: 1500px;
+    margin: 0 auto;
+    min-height: calc(100vh - 50px);
+  }
+
+  /* Sidebar Table of Contents */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--surface-border);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 50px;
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+    font-size: 0.85rem;
+  }
+  .sidebar-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    padding-left: 0.5rem;
+  }
+  .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+  .sidebar-nav li { margin-bottom: 0.25rem; }
+  .sidebar-nav a {
+    display: block;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+  .sidebar-nav a:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+    text-decoration: none;
+  }
+
+  /* Main Content */
+  .main-content {
+    flex: 1;
+    padding: 2.5rem 3rem;
+    max-width: 1150px;
+  }
+  header {
+    background: linear-gradient(135deg, #152238 0%, #1F4E79 100%);
+    border: 1px solid var(--surface-border);
+    color: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  h1 { margin: 0 0 0.5rem 0; font-size: 2.2rem; font-weight: 800; color: #FFFFFF; }
+  .subtitle { opacity: 0.9; font-size: 1.1rem; margin-bottom: 1.5rem; color: #E2E8F0; }
+  .meta-badge { display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 0.35rem 0.8rem; border-radius: 6px; font-size: 0.85rem; margin-right: 0.5rem; }
+
+  /* KPI Grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+  .card { background: var(--surface); border: 1px solid var(--surface-border); border-radius: 10px; padding: 1.5rem; }
+  .card h3 { margin-top: 0; color: #38BDF8; font-size: 1.25rem; border-bottom: 1px solid var(--surface-border); padding-bottom: 0.5rem; }
+  .kpi { font-size: 2rem; font-weight: 800; color: #38BDF8; margin: 0.5rem 0; }
+  .kpi-label { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; font-weight: 600; }
+
+  /* Table */
+  .table-container { width: 100%; overflow-x: auto; margin: 1.5rem 0; border-radius: 8px; border: 1px solid var(--surface-border); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left; }
+  th { background: #152238; color: #38BDF8; padding: 12px 16px; font-weight: 600; border-bottom: 2px solid var(--surface-border); }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--surface-border); color: #CBD5E1; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255, 255, 255, 0.02); }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+  .tag-pkg { background: rgba(14, 165, 233, 0.15); color: #38BDF8; border: 1px solid rgba(14, 165, 233, 0.3); }
+
+  /* Skills Grid */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .skills-card { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--surface-border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .skills-val { font-size: 1.8rem; font-weight: 800; color: #10B981; }
+
+  /* Footer */
+  .doc-footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--surface-border);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 960px) {
+    .layout-container { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--surface-border); }
+    .main-content { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-brand">⚡ 2S Consulting & Numantra</span>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/PROJECTS_INDEX.html" class="">🏠 Projects Index</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/2S_CONSULTING_COMPREHENSIVE_DOSSIER.html" class="">📄 Enterprise Dossier</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-journal.html" class="">📖 13-Sec Journal</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-analysis.html" class="active">📊 Web Report</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1133-2s-consulting-nordic-medtech-service-positioning-deck.html" class="">🎯 Slide Deck</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/pdf_download_converted.html" class="">💡 Strategy Vision</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260927-1145-uos-c3i-codex-astra-sovereign-review-and-ratification-certificate.html" class="">📜 Codex Astra Cert</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/MEDICAL_NORDICS_FINANCIALS_DOSSIER.html" class="">📗 Nordic Directory</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/Medical-Nordics-1.xlsx">📥 Download XLSX</a>
+</nav>
+
+<div class="layout-container">
+  <aside class="sidebar">
+    <div class="sidebar-title">On This Page</div>
+    <ul class="sidebar-nav">
+      <li><a href="#executive-overview">Executive Overview</a></li>
+      <li><a href="#macro-kpis">Macro Market KPIs</a></li>
+      <li><a href="#causal-rationale">Causal Rationale</a></li>
+      <li><a href="#top-10-matrix">Top 10 Target Matrix</a></li>
+      <li><a href="#skills-governance">Skills & Governance</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <header id="executive-overview">
+      <h1>2S Consulting & Numantra Technologies</h1>
+      <div class="subtitle">Nordic Life Sciences & MedTech Strategic Service Positioning & Target Account Analysis</div>
+      <div>
+        <span class="meta-badge">135 Facilities Analyzed</span>
+        <span class="meta-badge">127 Unique Corporate Entities</span>
+        <span class="meta-badge">ISO 27001/17/18 R&D in Finland</span>
+        <span class="meta-badge">Zürich HQ & Basel Life Science Hub</span>
+      </div>
+    </header>
+
+    <div class="grid" id="macro-kpis">
+      <div class="card">
+        <div class="kpi-label">Analyzed Opportunity Space</div>
+        <div class="kpi">>SEK 850B</div>
+        <p>Total annual turnover represented across the 127 validated Nordic healthcare & life science corporations.</p>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Annual R&D Capital Intensity</div>
+        <div class="kpi">>SEK 180B</div>
+        <p>Annual research & development expenditures across oncology, rare diseases, medtech, and diagnostics.</p>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Core Positioned Service Suites</div>
+        <div class="kpi">5 Suites</div>
+        <p>DaaS/HEOR Calculators, Clinical Trial Governance, Commercial Sales Portals, Plant Turnaround, EU AI Act.</p>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Tier-1 Anchor Accounts</div>
+        <div class="kpi">10 Flagships</div>
+        <p>Prioritized accounts with immediate budget capacity and acute operational alignment with 2S IP.</p>
+      </div>
+    </div>
+
+    <div class="card" id="causal-rationale" style="margin-bottom: 2rem;">
+      <h3>Executive Causal Rationale: Why 2S Consulting in the Nordics?</h3>
+      <p>Nordic life science innovators face a structural squeeze: world-class clinical assets and precision hardware are constrained by hospital procurement freezes, clinical trial recruitment delays, and the regulatory deadlines of the EU MDR and EU AI Act. 2S Consulting provides pre-built accelerators (<strong>HCare360</strong>, <strong>ProcessPrints AI</strong>, and <strong>Interactive HEOR Models</strong>) deployed in 4–8 weeks by senior ex-Deloitte leaders, backed by Nordic-native ISO 27001 cloud R&D in <strong>Helsinki, Finland</strong>.</p>
+    </div>
+
+    <div class="card" id="top-10-matrix" style="margin-bottom: 2rem;">
+      <h3>Top 10 Target Account Decision Matrix</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Target Company</th>
+              <th>Location</th>
+              <th>Revenue (Latest)</th>
+              <th>R&D Spend</th>
+              <th>2S Service Package</th>
+              <th>C-Suite Buyer</th>
+              <th>Core "Why" Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Getinge AB</strong></td>
+              <td>Getinge / Solna</td>
+              <td>SEK 34.8B</td>
+              <td>SEK 1.75B</td>
+              <td><span class="tag tag-pkg">Pkg A & C: DaaS & OR Flow</span></td>
+              <td>Group CFO / Head of Commercial Excellence</td>
+              <td>Transition acute care hardware to recurring DaaS; eliminate post-merger ERP sprawl.</td>
+            </tr>
+            <tr>
+              <td><strong>Elekta AB</strong></td>
+              <td>Stockholm</td>
+              <td>SEK 19.0B</td>
+              <td>SEK 2.13B</td>
+              <td><span class="tag tag-pkg">Pkg A & E: Oncology & AI Audit</span></td>
+              <td>EVP Global Services / Head of Software</td>
+              <td>Optimize hospital radiation throughput by 25%; achieve EU AI Act high-risk certification.</td>
+            </tr>
+            <tr>
+              <td><strong>Swedish Orphan Biovitrum (Sobi)</strong></td>
+              <td>Stockholm</td>
+              <td>SEK 26.0B</td>
+              <td>SEK 3.65B</td>
+              <td><span class="tag tag-pkg">Pkg C & B: Merck Portal & RWE</span></td>
+              <td>Head of Commercial / Head of RWE</td>
+              <td>Merck-proven sales portal for multi-country tenders; simulate European payer pricing scenarios.</td>
+            </tr>
+            <tr>
+              <td><strong>Camurus AB</strong></td>
+              <td>Lund</td>
+              <td>SEK 1.87B</td>
+              <td>SEK 485M</td>
+              <td><span class="tag tag-pkg">Pkg C: Smart Planning & Field BI</span></td>
+              <td>CCO / CFO / VP European Commercial</td>
+              <td>Award-winning budgeting automation replacing Excel marathons; real-time Buvidal clinic tracking.</td>
+            </tr>
+            <tr>
+              <td><strong>Hansa Biopharma AB</strong></td>
+              <td>Lund</td>
+              <td>SEK 171M</td>
+              <td>SEK 399M</td>
+              <td><span class="tag tag-pkg">Pkg B: Patient Screening & Burn</span></td>
+              <td>Chief Medical Officer / Head Market Access</td>
+              <td>Surface HLA-sensitized kidney patients from hospital EHRs; stage-gate burn rate controls.</td>
+            </tr>
+            <tr>
+              <td><strong>XVIVO Perfusion AB</strong></td>
+              <td>Mölndal</td>
+              <td>SEK 822M</td>
+              <td>SEK 115M</td>
+              <td><span class="tag tag-pkg">Pkg A: DaaS & Transplant HEOR</span></td>
+              <td>CCO / Head of Global Marketing</td>
+              <td>Interactive HEOR models proving $45k+ hospital ICU savings per transplant to accelerate adoption.</td>
+            </tr>
+            <tr>
+              <td><strong>Recipharm AB</strong></td>
+              <td>Stockholm</td>
+              <td>~SEK 12.4B</td>
+              <td>~SEK 380M</td>
+              <td><span class="tag tag-pkg">Pkg D: Plant Batch Turnaround</span></td>
+              <td>EVP Operations / Head Operational Excellence</td>
+              <td>Proven plant turnaround shortening batch cycle times and pruning margin-dilutive client contracts.</td>
+            </tr>
+            <tr>
+              <td><strong>TFS HealthScience</strong></td>
+              <td>Lund</td>
+              <td>SEK 1.22B</td>
+              <td>~SEK 42M</td>
+              <td><span class="tag tag-pkg">Pkg B & D: Trial Accrual & P2P</span></td>
+              <td>CEO / COO / Head of Clinical Ops</td>
+              <td>Machine-learning site accrual prediction preventing trial delays; touchless investigator payments.</td>
+            </tr>
+            <tr>
+              <td><strong>Devyser Diagnostics AB</strong></td>
+              <td>Årsta</td>
+              <td>SEK 217M</td>
+              <td>SEK 45M</td>
+              <td><span class="tag tag-pkg">Pkg A & E: Diagnostic HEOR</span></td>
+              <td>CCO / VP Global Commercial Ops</td>
+              <td>Sales enablement software showing hospital lab directors a 45% labor reduction and 24-hr turnaround.</td>
+            </tr>
+            <tr>
+              <td><strong>AMRA Medical AB</strong></td>
+              <td>Linköping</td>
+              <td>~SEK 75M</td>
+              <td>~SEK 28M</td>
+              <td><span class="tag tag-pkg">Pkg E & A: EU AI Act & PACS</span></td>
+              <td>CEO / Head of Regulatory & QA</td>
+              <td>Independent algorithmic audit ensuring EU AI Act clearance; ISO-certified Nordic cloud hosting.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" id="skills-governance">
+      <h3>Cross-Repository Skills Matrix (UOS & C3I Parity)</h3>
+      <p>In total, <strong>259 unique skills</strong> were audited across <code>/home/an/dev/ver/c3i</code> and <code>/home/an/NAS-setup/uos</code>. The core governance framework indexes <strong>131 specialized skills</strong> across four SDLC & business execution pillars:</p>
+      <div class="skills-grid">
+        <div class="skills-card">
+          <div class="skills-val">13</div>
+          <div class="kpi-label">Journal & Durability</div>
+        </div>
+        <div class="skills-card">
+          <div class="skills-val">51</div>
+          <div class="kpi-label">Analysis & Diagnostic</div>
+        </div>
+        <div class="skills-card">
+          <div class="skills-val">22</div>
+          <div class="kpi-label">Decision & Governance</div>
+        </div>
+        <div class="skills-card">
+          <div class="skills-val">45</div>
+          <div class="kpi-label">Doc Generation & Spec</div>
+        </div>
+      </div>
+      <div style="margin-top: 1.25rem; font-size: 0.9rem; color: var(--text-muted);">
+        <strong>Core Anchor Skills:</strong> <code>journal-protocol</code> (13-section mandate), <code>stage-durability</code> (unprompted session landing), <code>fractal-decision-calculus</code> (OODA backlog ranking), <code>sales-analyze</code> (13-control analytical verification), <code>proposal-builder</code>, and <code>ui-report-quality</code>.
+      </div>
+    </div>
+
+    <footer class="doc-footer">
+      <div>Governed by <strong>L0-codex-gpt-6-astra</strong> • Mesh Node: <code>nas-1.tail55d152.ts.net</code></div>
+      <div>UOS & C3I Sovereign Biomorphic Operations • Timestamp: 2026-09-27</div>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>

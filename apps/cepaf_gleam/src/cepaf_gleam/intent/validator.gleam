@@ -61,8 +61,11 @@ fn check_target_drive(errors: List(String), serial: String) -> List(String) {
   }
 }
 
-fn check_health_threshold(errors: List(String), threshold: Float) -> List(String) {
-  case threshold >=. 0.80 && threshold <=. 1.0 {
+fn check_health_threshold(
+  errors: List(String),
+  threshold: Float,
+) -> List(String) {
+  case threshold >=. 0.8 && threshold <=. 1.0 {
     True -> errors
     False -> [
       "HealthThresholdError: prajna_health_threshold must be between 0.80 and 1.0",
@@ -86,12 +89,10 @@ fn check_containers(
   containers: List(ContainerIntent),
 ) -> List(String) {
   list.fold(containers, errors, fn(acc, c) {
-    let acc1 = case c.port >= 1 && c.port <= 65535 {
+    let acc1 = case c.port >= 1 && c.port <= 65_535 {
       True -> acc
       False -> [
-        "ContainerPortError: container '"
-          <> c.name
-          <> "' has invalid port",
+        "ContainerPortError: container '" <> c.name <> "' has invalid port",
         ..acc
       ]
     }

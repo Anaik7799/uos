@@ -30,12 +30,19 @@ import gleam/list
 import gleam/string
 
 pub const ansi_reset: String = "\u{001b}[0m"
+
 pub const ansi_bold: String = "\u{001b}[1m"
+
 pub const ansi_green: String = "\u{001b}[32m"
+
 pub const ansi_yellow: String = "\u{001b}[33m"
+
 pub const ansi_blue: String = "\u{001b}[34m"
+
 pub const ansi_cyan: String = "\u{001b}[36m"
+
 pub const ansi_red: String = "\u{001b}[31m"
+
 pub const ansi_magenta: String = "\u{001b}[35m"
 
 pub fn render_triad_matrix_tui() -> String {
@@ -243,13 +250,26 @@ fn render_nodes_table(nodes: List(TensorNode)) -> String {
   let rows =
     list.map(nodes, fn(node) {
       let l_pad = string.pad_end(node.layer_code, 5, " ")
-      let c_pad = string.pad_end(string.slice(node.component_name, 0, 27), 27, " ")
-      let p_pad = string.pad_end(string.slice(node.process_name, 0, 27), 27, " ")
+      let c_pad =
+        string.pad_end(string.slice(node.component_name, 0, 27), 27, " ")
+      let p_pad =
+        string.pad_end(string.slice(node.process_name, 0, 27), 27, " ")
       let lat_str = int.to_string(node.latency_bound_ms) <> "ms"
       let lat_pad = string.pad_end(lat_str, 8, " ")
-      let st_pad = ansi_green <> string.pad_end(node.status, 11, " ") <> ansi_reset
+      let st_pad =
+        ansi_green <> string.pad_end(node.status, 11, " ") <> ansi_reset
 
-      "│ " <> l_pad <> "│ " <> c_pad <> " │ " <> p_pad <> " │ " <> lat_pad <> " │ " <> st_pad <> " │\n"
+      "│ "
+      <> l_pad
+      <> "│ "
+      <> c_pad
+      <> " │ "
+      <> p_pad
+      <> " │ "
+      <> lat_pad
+      <> " │ "
+      <> st_pad
+      <> " │\n"
     })
     |> string.concat
 

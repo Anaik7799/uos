@@ -1,0 +1,742 @@
+{
+  "schema": "uos.system-feature-reconciliation.v1",
+  "created_at": "2026-09-21T05:26:08Z",
+  "origin_workflow": "uos/system-mcp-features/20260919-1642/t1-ingestion/20260921-0540",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1-tracker",
+  "worker": "codex-01a0ba74-feature-tracker",
+  "attempt": 1,
+  "status": "DEVELOPMENT_SOURCE_RECONCILIATION_ONLY",
+  "candidate": {
+    "kind": "working_tree_source_set",
+    "sha256": "6a2cbddd6cb97ebb67999c954ab36b2379817a8bc419aacc73caa5715406501a",
+    "digest_definition": "SHA-256 of the exact UTF-8 candidate_preimage string; not a JJ commit identity or authenticated provenance",
+    "candidate_preimage": "[{\"path\":\"apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam\",\"sha256\":\"eeecf5597182f8c4b5d46896e185cb2ce4df5837656cbea36a7313d0d8daff97\"},{\"path\":\"apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam\",\"sha256\":\"78cb9d9c708ce38b3d8383a995ce75371d1ac7ab2028e21cd511243fefadfe72\"},{\"path\":\"apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam\",\"sha256\":\"73fc378b8294650a77cdafd74c3f88386f37b39a37503f775ddebab33794b974\"},{\"path\":\"apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_sources.gleam\",\"sha256\":\"532ad10cc1ff2e4ea2adb4fb5edc9d80d70a61729d8e8469da7faf06be51a7c3\"},{\"path\":\"apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam\",\"sha256\":\"5e634c84bafcd1d6eb39bcb6070984041b09ce7c30b49b613c22c71a29ea528d\"},{\"path\":\"apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam\",\"sha256\":\"6dd478ea77ce10b26d591fd11a6fe39eb8411f0202192d49453ed8a555d669ca\"},{\"path\":\"apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam\",\"sha256\":\"3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7\"},{\"path\":\"apps/cepaf_gleam/test/system_feature_api_test.gleam\",\"sha256\":\"4698e747580eb29997543d92d4eca18c710ca8430ea73c243c64cc93bc08d993\"},{\"path\":\"apps/cepaf_gleam/test/system_feature_sources_test.gleam\",\"sha256\":\"34f0e45298043f0dc9d61709a3dc7f45c9c2876b74c43c5463eb16b4d63e87f0\"},{\"path\":\"apps/cepaf_gleam/test/system_feature_store_test.gleam\",\"sha256\":\"7df1bf37f103441d20b8da06756f9eb4dee3e0535f6141757385688885b981ad\"},{\"path\":\"apps/cepaf_gleam/test/system_feature_tracker_test.gleam\",\"sha256\":\"29779bff2e33fc7bfe90e0a58aba4005175fc819ed0d3e37317357cfcb60c803\"},{\"path\":\"governance/capability-inventory/20260907-1837-agentic-product-manifest.json\",\"sha256\":\"e8818cb2b6bd9f418890f1738fdf8bf8945f23e371fa360346ca9afe56c9f394\"},{\"path\":\"governance/capability-inventory/20260909-0412-harness-feature-catalog.json\",\"sha256\":\"387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f\"}]",
+    "bindings": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+        "sha256": "eeecf5597182f8c4b5d46896e185cb2ce4df5837656cbea36a7313d0d8daff97"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+        "sha256": "78cb9d9c708ce38b3d8383a995ce75371d1ac7ab2028e21cd511243fefadfe72"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam",
+        "sha256": "73fc378b8294650a77cdafd74c3f88386f37b39a37503f775ddebab33794b974"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_sources.gleam",
+        "sha256": "532ad10cc1ff2e4ea2adb4fb5edc9d80d70a61729d8e8469da7faf06be51a7c3"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam",
+        "sha256": "5e634c84bafcd1d6eb39bcb6070984041b09ce7c30b49b613c22c71a29ea528d"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam",
+        "sha256": "6dd478ea77ce10b26d591fd11a6fe39eb8411f0202192d49453ed8a555d669ca"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+        "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/system_feature_api_test.gleam",
+        "sha256": "4698e747580eb29997543d92d4eca18c710ca8430ea73c243c64cc93bc08d993"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/system_feature_sources_test.gleam",
+        "sha256": "34f0e45298043f0dc9d61709a3dc7f45c9c2876b74c43c5463eb16b4d63e87f0"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/system_feature_store_test.gleam",
+        "sha256": "7df1bf37f103441d20b8da06756f9eb4dee3e0535f6141757385688885b981ad"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/system_feature_tracker_test.gleam",
+        "sha256": "29779bff2e33fc7bfe90e0a58aba4005175fc819ed0d3e37317357cfcb60c803"
+      },
+      {
+        "path": "governance/capability-inventory/20260907-1837-agentic-product-manifest.json",
+        "sha256": "e8818cb2b6bd9f418890f1738fdf8bf8945f23e371fa360346ca9afe56c9f394"
+      },
+      {
+        "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+        "sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f"
+      }
+    ]
+  },
+  "scope": {
+    "selected_arrays": 2,
+    "source_feature_records": 98,
+    "distinct_semantic_system_features": "UNKNOWN: namespaces preserve overlaps instead of merging by title",
+    "selected_record_sets_complete": true,
+    "inventory_complete": false,
+    "canonical_inventory_imported": false,
+    "private_database_verification": "Separate development test receipts; no canonical population implied",
+    "mcp_availability": "UNKNOWN",
+    "effect_authority": false,
+    "system_admission": false
+  },
+  "sources": [
+    {
+      "schema": "uos.system-feature-source.v1",
+      "adapter": "raw-json-features.v1",
+      "candidate": "6a2cbddd6cb97ebb67999c954ab36b2379817a8bc419aacc73caa5715406501a",
+      "source": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+      "source_sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f",
+      "source_schema": "uos.harness-feature-catalog.v1",
+      "pointer": "/features",
+      "expected_count": 52,
+      "extracted_count": 52,
+      "source_ids_sha256": "0f367d6ecdca6fad2d9bf0258faa7d45eba84e3f1c3cec0d60b31bb065ab005c",
+      "catalog_sha256": "0a0c89185db0710d5805fec2c567458db91682a4e2a5777eefde365cd368e6a9",
+      "selected_feature_array_complete": true,
+      "inventory_complete": false,
+      "runtime_availability": "unknown",
+      "endpoint_knowledge": "unmapped; empty does not prove absence",
+      "owner_knowledge": "unknown; actor intent is not identity",
+      "effect_authority": false,
+      "system_admission": false,
+      "stage_semantics": "unverified source claim; not an execution stage",
+      "service_semantics": "source namespace; not observed service identity",
+      "aspect_semantics": "17 review obligations; not passing evidence",
+      "law_semantics": "inventory adapter laws; not feature verification",
+      "remediation_semantics": "inventory task; not source feature completion",
+      "dependency_knowledge": "source_declared",
+      "excluded": [
+        "other source arrays and documents",
+        "service specification bindings",
+        "oracles and imported/reference catalogs",
+        "implementation-file verification",
+        "runtime endpoint discovery and probes",
+        "global source census"
+      ],
+      "records": [
+        {
+          "source_id": "agents.superagents",
+          "feature_id": "harness.agents.superagents",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "clients.hooks",
+          "feature_id": "harness.clients.hooks",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "dashboard.completion",
+          "feature_id": "harness.dashboard.completion",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "dashboard.ecology",
+          "feature_id": "harness.dashboard.ecology",
+          "raw_stage": "EXECUTED"
+        },
+        {
+          "source_id": "deployment.roles",
+          "feature_id": "harness.deployment.roles",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "deployment.standby",
+          "feature_id": "harness.deployment.standby",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "development.build",
+          "feature_id": "harness.development.build",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "development.verify",
+          "feature_id": "harness.development.verify",
+          "raw_stage": "EXECUTED"
+        },
+        {
+          "source_id": "files.edit",
+          "feature_id": "harness.files.edit",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "files.read",
+          "feature_id": "harness.files.read",
+          "raw_stage": "EXECUTED"
+        },
+        {
+          "source_id": "flight.f_prime",
+          "feature_id": "harness.flight.f_prime",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "formal.algebraic_atlas",
+          "feature_id": "harness.formal.algebraic_atlas",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "formal.lean",
+          "feature_id": "harness.formal.lean",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "formal.quint",
+          "feature_id": "harness.formal.quint",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "formal.specification",
+          "feature_id": "harness.formal.specification",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "identity.grants",
+          "feature_id": "harness.identity.grants",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "knowledge.triad",
+          "feature_id": "harness.knowledge.triad",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "ml.max",
+          "feature_id": "harness.ml.max",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "models.coding",
+          "feature_id": "harness.models.coding",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "models.daily_budget",
+          "feature_id": "harness.models.daily_budget",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "models.decision",
+          "feature_id": "harness.models.decision",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "models.routing",
+          "feature_id": "harness.models.routing",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "native.mojo_generated",
+          "feature_id": "harness.native.mojo_generated",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "native.ocaml",
+          "feature_id": "harness.native.ocaml",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "observability.tracing",
+          "feature_id": "harness.observability.tracing",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "otp.catalog",
+          "feature_id": "harness.otp.catalog",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "otp.supervision",
+          "feature_id": "harness.otp.supervision",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "peers.review",
+          "feature_id": "harness.peers.review",
+          "raw_stage": "EXECUTED"
+        },
+        {
+          "source_id": "probability.bayesian",
+          "feature_id": "harness.probability.bayesian",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "provenance.vm1",
+          "feature_id": "harness.provenance.vm1",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "release.dynamic",
+          "feature_id": "harness.release.dynamic",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "release.recovery",
+          "feature_id": "harness.release.recovery",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "replication.failover",
+          "feature_id": "harness.replication.failover",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "review.independent",
+          "feature_id": "harness.review.independent",
+          "raw_stage": "EXECUTED"
+        },
+        {
+          "source_id": "rules.rete_ul",
+          "feature_id": "harness.rules.rete_ul",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "ruliad.explore",
+          "feature_id": "harness.ruliad.explore",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "safety.fractal_tps",
+          "feature_id": "harness.safety.fractal_tps",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "safety.stpa_fmea",
+          "feature_id": "harness.safety.stpa_fmea",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "state.ets",
+          "feature_id": "harness.state.ets",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "state.replication",
+          "feature_id": "harness.state.replication",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "state.stm",
+          "feature_id": "harness.state.stm",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "supervision.fractal",
+          "feature_id": "harness.supervision.fractal",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "task.lifecycle",
+          "feature_id": "harness.task.lifecycle",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "time.observe",
+          "feature_id": "harness.time.observe",
+          "raw_stage": "EXECUTED"
+        },
+        {
+          "source_id": "toolchain.pins",
+          "feature_id": "harness.toolchain.pins",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "tracking.jobs",
+          "feature_id": "harness.tracking.jobs",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "tracking.sa_plan",
+          "feature_id": "harness.tracking.sa_plan",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "tracking.temporal",
+          "feature_id": "harness.tracking.temporal",
+          "raw_stage": "IMPLEMENTED"
+        },
+        {
+          "source_id": "transport.zenoh",
+          "feature_id": "harness.transport.zenoh",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "twins.model",
+          "feature_id": "harness.twins.model",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "ucon.binding",
+          "feature_id": "harness.ucon.binding",
+          "raw_stage": "PLANNED"
+        },
+        {
+          "source_id": "verification.environment",
+          "feature_id": "harness.verification.environment",
+          "raw_stage": "EXECUTED"
+        }
+      ]
+    },
+    {
+      "schema": "uos.system-feature-source.v1",
+      "adapter": "raw-json-features.v1",
+      "candidate": "6a2cbddd6cb97ebb67999c954ab36b2379817a8bc419aacc73caa5715406501a",
+      "source": "governance/capability-inventory/20260907-1837-agentic-product-manifest.json",
+      "source_sha256": "e8818cb2b6bd9f418890f1738fdf8bf8945f23e371fa360346ca9afe56c9f394",
+      "source_schema": "uos.product-catalog/v1",
+      "pointer": "/features",
+      "expected_count": 46,
+      "extracted_count": 46,
+      "source_ids_sha256": "893d641e541a3f8ac82dc63d59603e5b3622ad1554c7e989d636a30fb7d3d332",
+      "catalog_sha256": "224f3ac3c8ab9296e8cc9326a8643d1f157430d87cfbe191988ab63f28ba3886",
+      "selected_feature_array_complete": true,
+      "inventory_complete": false,
+      "runtime_availability": "unknown",
+      "endpoint_knowledge": "unmapped; empty does not prove absence",
+      "owner_knowledge": "unknown; actor intent is not identity",
+      "effect_authority": false,
+      "system_admission": false,
+      "stage_semantics": "unverified source claim; not an execution stage",
+      "service_semantics": "source namespace; not observed service identity",
+      "aspect_semantics": "17 review obligations; not passing evidence",
+      "law_semantics": "inventory adapter laws; not feature verification",
+      "remediation_semantics": "inventory task; not source feature completion",
+      "dependency_knowledge": "unknown",
+      "excluded": [
+        "other source arrays and documents",
+        "service specification bindings",
+        "oracles and imported/reference catalogs",
+        "implementation-file verification",
+        "runtime endpoint discovery and probes",
+        "global source census"
+      ],
+      "records": [
+        {
+          "source_id": "AINF-S01",
+          "feature_id": "product.ainf-s01",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S02",
+          "feature_id": "product.ainf-s02",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S03",
+          "feature_id": "product.ainf-s03",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S04",
+          "feature_id": "product.ainf-s04",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S05",
+          "feature_id": "product.ainf-s05",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S06",
+          "feature_id": "product.ainf-s06",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S07",
+          "feature_id": "product.ainf-s07",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S08",
+          "feature_id": "product.ainf-s08",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S09",
+          "feature_id": "product.ainf-s09",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S10",
+          "feature_id": "product.ainf-s10",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S11",
+          "feature_id": "product.ainf-s11",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S12",
+          "feature_id": "product.ainf-s12",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S13",
+          "feature_id": "product.ainf-s13",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S14",
+          "feature_id": "product.ainf-s14",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S15",
+          "feature_id": "product.ainf-s15",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S16",
+          "feature_id": "product.ainf-s16",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S17",
+          "feature_id": "product.ainf-s17",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S18",
+          "feature_id": "product.ainf-s18",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S19",
+          "feature_id": "product.ainf-s19",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S20",
+          "feature_id": "product.ainf-s20",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "AINF-S21",
+          "feature_id": "product.ainf-s21",
+          "raw_stage": "MAPPED"
+        },
+        {
+          "source_id": "PM-01",
+          "feature_id": "product.pm-01",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-02",
+          "feature_id": "product.pm-02",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-03",
+          "feature_id": "product.pm-03",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-04",
+          "feature_id": "product.pm-04",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-05",
+          "feature_id": "product.pm-05",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-06",
+          "feature_id": "product.pm-06",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-07",
+          "feature_id": "product.pm-07",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-08",
+          "feature_id": "product.pm-08",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-09",
+          "feature_id": "product.pm-09",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-10",
+          "feature_id": "product.pm-10",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-11",
+          "feature_id": "product.pm-11",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-12",
+          "feature_id": "product.pm-12",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-13",
+          "feature_id": "product.pm-13",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-14",
+          "feature_id": "product.pm-14",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-15",
+          "feature_id": "product.pm-15",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-16",
+          "feature_id": "product.pm-16",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-17",
+          "feature_id": "product.pm-17",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-18",
+          "feature_id": "product.pm-18",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-19",
+          "feature_id": "product.pm-19",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-20",
+          "feature_id": "product.pm-20",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-21",
+          "feature_id": "product.pm-21",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-22",
+          "feature_id": "product.pm-22",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-23",
+          "feature_id": "product.pm-23",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-24",
+          "feature_id": "product.pm-24",
+          "raw_stage": "REVIEWED"
+        },
+        {
+          "source_id": "PM-25",
+          "feature_id": "product.pm-25",
+          "raw_stage": "REVIEWED"
+        }
+      ]
+    }
+  ],
+  "census_frontier": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+      "kind": "compiled_tool_declarations",
+      "observed_count": 55,
+      "state": "NOT_INGESTED",
+      "gap": "Input schemas only; no current output/refusal schemas or probes"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "kind": "declared_supervision_children",
+      "observed_count": 26,
+      "state": "NOT_INGESTED",
+      "gap": "Actual startup wires five children; declarations are not runtime census"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_port.gleam",
+      "kind": "backend_capability_declarations",
+      "observed_count": 11,
+      "state": "NOT_INGESTED"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/autonomous_capabilities.gleam",
+      "kind": "historical_capability_declarations",
+      "observed_count": 75,
+      "state": "NOT_INGESTED"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_catalog.gleam",
+      "kind": "external_extension_metadata",
+      "observed_count": 167,
+      "state": "NOT_INGESTED",
+      "gap": "Not independent implemented UOS renderers; needs explicit bounded shards"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/zigvm_feature_tracker.gleam",
+      "kind": "historical_knowledge_records",
+      "observed_count": 145,
+      "state": "NOT_INGESTED",
+      "gap": "Unsafe old maturity strings are not admission"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/catalog.gleam",
+      "kind": "delegated_component_tuples",
+      "observed_count": 239,
+      "state": "NOT_INGESTED",
+      "gap": "Complete source set spans core, wave1 and wave2; header count233 is stale"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness",
+      "kind": "frozen_reference_catalog",
+      "observed_count": 95,
+      "state": "REFERENCE_ONLY_NOT_INGESTED",
+      "gap": "18 reference families /95slices do not establish implemented UOS capabilities"
+    },
+    {
+      "path": "governance/capability-inventory/20260907-1837-agentic-product-manifest.json",
+      "kind": "other_arrays",
+      "state": "EXCLUDED_FROM_SELECTED_ARRAY_RECONCILIATION",
+      "gap": "21 service specs,17aspects,80bindings,27oracles require their own adapters; do not count overlapping references as new system features"
+    },
+    {
+      "path": "native; other apps; engines; ops; formal; tools; contracts; governance",
+      "kind": "candidate_wide_source_universe",
+      "state": "CENSUS_INCOMPLETE"
+    }
+  ],
+  "limits": [
+    "Source-set equality is not global coverage, source originality, authorization, runtime readiness, or feature completion.",
+    "Raw PLANNED/MAPPED/IMPLEMENTED/EXECUTED/REVIEWED claims stay Declaration strings. Missing ownership, layers, dependencies and schemas remain null.",
+    "Empty endpoints means unmapped, not absent. All17aspect IDs and adapter law labels are obligations, not verified feature evidence.",
+    "Product extraction validates selected identity/status/layer fields, not every nested product specification.",
+    "Caller-supplied candidate and source pins need independently trusted interpretation before live import; exact equality alone does not authenticate them.",
+    "Existing JSON value decoder collapses duplicate object keys. Strict duplicate-key admission is not established; no such incident observed in the pinned source arrays.",
+    "1MiB source/128record bounds refuse oversized inputs; large code catalogs require complete reviewed shard manifests rather than truncation.",
+    "Historical EV claims above93 remain NOT_ADMITTED; this artifact mints no EV number."
+  ],
+  "navigation": {
+    "plan": "http://nas-1.tail55d152.ts.net:4100/files/docs/plans/20260920-1438-hive-swarm-mcp-recovery-plan.md",
+    "planning": "http://nas-1.tail55d152.ts.net:4100/planning",
+    "source": "http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20260921-0540-system-feature-source-reconciliation.json"
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l5",
+    "#fractal-l6",
+    "#fractal-l7",
+    "#fractal-l8",
+    "#fractal-l9",
+    "#zk-adr",
+    "#zero-muda"
+  ]
+}

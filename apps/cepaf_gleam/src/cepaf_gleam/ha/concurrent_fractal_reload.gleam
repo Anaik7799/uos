@@ -75,36 +75,86 @@ pub fn layer_to_level(layer: FractalLayer) -> Int {
 /// Classify any Gleam module name into its governing fractal layer
 pub fn classify_module_layer(name: String) -> FractalLayer {
   let lower = string.lowercase(name)
-  case string.contains(lower, "l0_constitutional") || string.contains(lower, "hsm_vault") || string.contains(lower, "truth_audit") {
+  case
+    string.contains(lower, "l0_constitutional")
+    || string.contains(lower, "hsm_vault")
+    || string.contains(lower, "truth_audit")
+  {
     True -> L0Constitutional
-    False -> case string.contains(lower, "l1_atomic") || string.contains(lower, "graphene_nif") || string.contains(lower, "ffi") {
-      True -> L1AtomicDebug
-      False -> case string.contains(lower, "l2_component") || string.contains(lower, "health_product") || string.contains(lower, "pid_") {
-        True -> L2ComponentHealth
-        False -> case string.contains(lower, "l3_transaction") || string.contains(lower, "crdt") || string.contains(lower, "checkpoint") {
-          True -> L3TransactionState
-          False -> case string.contains(lower, "l4_system") || string.contains(lower, "supervisor") || string.contains(lower, "podman") {
-            True -> L4SystemSupervision
-            False -> case string.contains(lower, "l5_cognitive") || string.contains(lower, "ooda") || string.contains(lower, "guard_rules") {
-              True -> L5CognitiveOoda
-              False -> case string.contains(lower, "l6_ecosystem") || string.contains(lower, "swarm") || string.contains(lower, "work_stealing") {
-                True -> L6EcosystemSwarm
-                False -> case string.contains(lower, "l7_federation") || string.contains(lower, "zenoh") {
-                  True -> L7FederationZenoh
-                  False -> case string.contains(lower, "evolution") || string.contains(lower, "homeostasis") || string.contains(lower, "immune") {
-                    True -> L8EvolutionImmune
-                    False -> case string.contains(lower, "singularity") || string.contains(lower, "century_harmony") {
-                      True -> L9SingularityHarmonic
-                      False -> L4SystemSupervision
-                    }
+    False ->
+      case
+        string.contains(lower, "l1_atomic")
+        || string.contains(lower, "graphene_nif")
+        || string.contains(lower, "ffi")
+      {
+        True -> L1AtomicDebug
+        False ->
+          case
+            string.contains(lower, "l2_component")
+            || string.contains(lower, "health_product")
+            || string.contains(lower, "pid_")
+          {
+            True -> L2ComponentHealth
+            False ->
+              case
+                string.contains(lower, "l3_transaction")
+                || string.contains(lower, "crdt")
+                || string.contains(lower, "checkpoint")
+              {
+                True -> L3TransactionState
+                False ->
+                  case
+                    string.contains(lower, "l4_system")
+                    || string.contains(lower, "supervisor")
+                    || string.contains(lower, "podman")
+                  {
+                    True -> L4SystemSupervision
+                    False ->
+                      case
+                        string.contains(lower, "l5_cognitive")
+                        || string.contains(lower, "ooda")
+                        || string.contains(lower, "guard_rules")
+                      {
+                        True -> L5CognitiveOoda
+                        False ->
+                          case
+                            string.contains(lower, "l6_ecosystem")
+                            || string.contains(lower, "swarm")
+                            || string.contains(lower, "work_stealing")
+                          {
+                            True -> L6EcosystemSwarm
+                            False ->
+                              case
+                                string.contains(lower, "l7_federation")
+                                || string.contains(lower, "zenoh")
+                              {
+                                True -> L7FederationZenoh
+                                False ->
+                                  case
+                                    string.contains(lower, "evolution")
+                                    || string.contains(lower, "homeostasis")
+                                    || string.contains(lower, "immune")
+                                  {
+                                    True -> L8EvolutionImmune
+                                    False ->
+                                      case
+                                        string.contains(lower, "singularity")
+                                        || string.contains(
+                                          lower,
+                                          "century_harmony",
+                                        )
+                                      {
+                                        True -> L9SingularityHarmonic
+                                        False -> L4SystemSupervision
+                                      }
+                                  }
+                              }
+                          }
+                      }
                   }
-                }
               }
-            }
           }
-        }
       }
-    }
   }
 }
 
@@ -117,18 +167,20 @@ pub type ConcurrentReloadResult {
     reloaded_modules: List(String),
     concurrency_mode: String,
   )
-  ConcurrentReloadBlocked(
-    reason: String,
-    layer: FractalLayer,
-    duration_us: Int,
-  )
+  ConcurrentReloadBlocked(reason: String, layer: FractalLayer, duration_us: Int)
 }
 
 /// Execute concurrent fractal chain hot reload across BEAM worker pools
 pub fn concurrent_reload() -> ConcurrentReloadResult {
   case do_concurrent_reload() {
     Ok(#(scanned, reloaded, dur, mods)) ->
-      ConcurrentReloadSuccess(scanned, reloaded, dur, mods, "concurrent_fractal_mesh")
+      ConcurrentReloadSuccess(
+        scanned,
+        reloaded,
+        dur,
+        mods,
+        "concurrent_fractal_mesh",
+      )
     Error(#("l0_constitutional_barrier_failed", reason, dur)) ->
       ConcurrentReloadBlocked(reason, L0Constitutional, dur)
     Error(#(reason, _, dur)) ->
@@ -140,9 +192,14 @@ pub fn concurrent_reload() -> ConcurrentReloadResult {
 pub fn sequential_reload() -> ConcurrentReloadResult {
   case do_sequential_reload() {
     Ok(#(scanned, reloaded, dur, mods)) ->
-      ConcurrentReloadSuccess(scanned, reloaded, dur, mods, "sequential_baseline")
-    Error(reason) ->
-      ConcurrentReloadBlocked(reason, L4SystemSupervision, 0)
+      ConcurrentReloadSuccess(
+        scanned,
+        reloaded,
+        dur,
+        mods,
+        "sequential_baseline",
+      )
+    Error(reason) -> ConcurrentReloadBlocked(reason, L4SystemSupervision, 0)
   }
 }
 
@@ -152,7 +209,11 @@ pub fn parallel_scan_changed() -> List(String) {
 }
 
 /// Benchmark concurrent vs sequential reload and compute performance speedup
-pub fn compare_concurrency() -> #(ConcurrentReloadResult, ConcurrentReloadResult, Float) {
+pub fn compare_concurrency() -> #(
+  ConcurrentReloadResult,
+  ConcurrentReloadResult,
+  Float,
+) {
   let seq = sequential_reload()
   let conc = concurrent_reload()
   let seq_us = case seq {
@@ -186,7 +247,10 @@ pub fn compare_concurrency() -> #(ConcurrentReloadResult, ConcurrentReloadResult
 // ---------------------------------------------------------------------------
 
 @external(erlang, "hot_reload_ffi", "concurrent_fractal_reload_ffi")
-fn do_concurrent_reload() -> Result(#(Int, Int, Int, List(String)), #(String, String, Int))
+fn do_concurrent_reload() -> Result(
+  #(Int, Int, Int, List(String)),
+  #(String, String, Int),
+)
 
 @external(erlang, "hot_reload_ffi", "sequential_fractal_reload_ffi")
 fn do_sequential_reload() -> Result(#(Int, Int, Int, List(String)), String)

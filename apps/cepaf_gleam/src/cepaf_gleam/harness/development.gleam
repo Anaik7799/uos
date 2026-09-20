@@ -65,7 +65,10 @@ pub fn adapter_scope() -> json.Json {
     #("build_path", json.string(build_path)),
     #(
       "bootstrap_host_exceptions",
-      json.array([bootstrap_sqlite3, bootstrap_bash, "/usr/bin/chronyc"], json.string),
+      json.array(
+        [bootstrap_sqlite3, bootstrap_bash, "/usr/bin/chronyc"],
+        json.string,
+      ),
     ),
     #("all_adapters_pinned", json.bool(False)),
     #("production_admission", json.bool(False)),
@@ -393,11 +396,20 @@ fn validate_task_record(
 
 /// Successor coordination keys include the plan to prevent cross-plan aliasing.
 pub fn task_resource(binding: Binding) -> String {
-  case binding.plan == "uos/ecology/20260909-0146" && binding.task == "HARNESSBOOT" {
+  case
+    binding.plan == "uos/ecology/20260909-0146" && binding.task == "HARNESSBOOT"
+  {
     True -> "task:HARNESSBOOT"
-    False -> "task:" <> files.digest(json.to_string(json.object([
-      #("plan", json.string(binding.plan)), #("task", json.string(binding.task)),
-    ])))
+    False ->
+      "task:"
+      <> files.digest(
+        json.to_string(
+          json.object([
+            #("plan", json.string(binding.plan)),
+            #("task", json.string(binding.task)),
+          ]),
+        ),
+      )
   }
 }
 
@@ -589,27 +601,33 @@ fn heartbeat(binding: Binding) -> Result(json.Json, String) {
   ))
   let op =
     "harness-heartbeat-" <> int.to_string(proof.clock.sample.observed.utc_us)
-  use beat <- result.try(
-    bounded_observation(fn() { session_sync_cli.run([
-      root <> "/var/coordination/tri-agent",
-      "heartbeat",
-      binding.session,
-      string.trim(revision),
-      "task:HARNESSBOOT,gleam-mcp-development-bootstrap",
-      op,
-    ]) }, 2000),
-  )
-  use renewed <- result.try(
-    bounded_observation(fn() { session_sync_cli.run([
-      root <> "/var/coordination/tri-agent",
-      "renew",
-      binding.session,
-      "task:" <> binding.task,
-      int.to_string(binding.epoch),
-      "3600",
-      op <> "-renew",
-    ]) }, 2000),
-  )
+  use beat <- result.try(bounded_observation(
+    fn() {
+      session_sync_cli.run([
+        root <> "/var/coordination/tri-agent",
+        "heartbeat",
+        binding.session,
+        string.trim(revision),
+        "task:HARNESSBOOT,gleam-mcp-development-bootstrap",
+        op,
+      ])
+    },
+    2000,
+  ))
+  use renewed <- result.try(bounded_observation(
+    fn() {
+      session_sync_cli.run([
+        root <> "/var/coordination/tri-agent",
+        "renew",
+        binding.session,
+        "task:" <> binding.task,
+        int.to_string(binding.epoch),
+        "3600",
+        op <> "-renew",
+      ])
+    },
+    2000,
+  ))
   Ok(
     json.object([
       #("heartbeat", json.string(beat)),
@@ -620,20 +638,21 @@ fn heartbeat(binding: Binding) -> Result(json.Json, String) {
 }
 
 pub fn source_allowed(path: String) -> Bool {
-  list.contains(bootstrap_source_paths(), path) && {
-  string.starts_with(path, "apps/cepaf_gleam/src/cepaf_gleam/harness/")
-  && string.ends_with(path, ".gleam")
-  || list.contains(
-    [
-      "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
-      "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
-      "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
-      "apps/cepaf_gleam/test/mcp_runtime_truth_test.gleam",
-    ],
-    path,
-  )
-  || string.starts_with(path, "apps/cepaf_gleam/test/harness_")
-  && string.ends_with(path, ".gleam")
+  list.contains(bootstrap_source_paths(), path)
+  && {
+    string.starts_with(path, "apps/cepaf_gleam/src/cepaf_gleam/harness/")
+    && string.ends_with(path, ".gleam")
+    || list.contains(
+      [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "apps/cepaf_gleam/test/mcp_runtime_truth_test.gleam",
+      ],
+      path,
+    )
+    || string.starts_with(path, "apps/cepaf_gleam/test/harness_")
+    && string.ends_with(path, ".gleam")
   }
 }
 
@@ -1244,7 +1263,8 @@ pub fn journal_sections_valid(journal: String) -> Bool {
     |> list.map(string.trim)
     |> list.filter(fn(line) { string.starts_with(line, "## ") })
   actual == expected
-  || actual == list.append(expected, ["## Comprehensive verification checklist"])
+  || actual
+  == list.append(expected, ["## Comprehensive verification checklist"])
 }
 
 fn require(condition: Bool, reason: String) -> Result(Nil, String) {

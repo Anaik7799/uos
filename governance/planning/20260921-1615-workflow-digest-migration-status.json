@@ -1,0 +1,18 @@
+{
+  "schema": "uos.workflow-digest-migration-status.v1",
+  "observed_at": "2026-09-21T16:15:54Z",
+  "authority": "read-only SQLite observation; no workflow mutation",
+  "database": {
+    "path": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "sha256": "0d205a49991e64b2844991689b09a0850a76f7ccfde2e4a3ec5dd9512f9857ad"
+  },
+  "query": "select count(*), sum(json_extract(input,'$.catalog_sha256') is null), sum(json_extract(input,'$.ledger_sha256') is null) from sa_plan_workflow where kind='harness-feature-tracking'",
+  "result": {
+    "workflows": 52,
+    "missing_catalog_digest": 52,
+    "missing_ledger_digest": 52
+  },
+  "status": "migration_not_started",
+  "completion_credit": false,
+  "next_gate": "authorized Sa-plan migration after coordinator provenance and role enrollment gates pass"
+}

@@ -139,10 +139,7 @@ pub fn run_transaction_3() -> TransactionRecord {
   let cmds = [
     #("/plan", "operator"),
     #("/voice-roll-call verify prop-drain", "an"),
-    #(
-      "/approval uos/tg-feature-suite T01 Verified-Storage-Safe",
-      "operator_jp",
-    ),
+    #("/approval uos/tg-feature-suite T01 Verified-Storage-Safe", "operator_jp"),
     #("/commitments list", "sre_lead"),
     #("/andon confirm T01", "guardian"),
   ]
@@ -247,9 +244,7 @@ pub fn run_all_sustained_transactions() -> TransactionSuiteReport {
   let records = [tx1, tx2, tx3, tx4, tx5]
   let passed_count =
     list.count(records, fn(tx) {
-      tx.is_at_least_10s
-      && tx.total_messages >= 5
-      && tx.hardware_lock_asserted
+      tx.is_at_least_10s && tx.total_messages >= 5 && tx.hardware_lock_asserted
     })
 
   let total_msgs =

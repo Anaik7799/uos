@@ -1,0 +1,17 @@
+{
+  "receipt_id": "coordination-observation-hold-20260921-1310",
+  "timestamp": "20260921-1310",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t0-coordination",
+  "workflow_id": "coordination/live-observation-1310",
+  "command": "gleam run -m session_observation_cli -- export /home/an/NAS-setup/uos/var/coordination/tri-agent contracts/rules/20260907-0653-tri-agent-coordination.md",
+  "observed": {
+    "result": "REFUSED",
+    "reason": "journal sequence or digest mismatch; replay refused",
+    "exit_code": 1,
+    "authority": "read-only observation"
+  },
+  "interpretation": "Canonical coordination journal cannot currently produce a live observation; no session, lease, ACK, or holon participation is credited.",
+  "next_action": "Independent coordinator reconciliation and writer-quiescence review; preserve damaged history and do not activate candidate.",
+  "admission": "NOT_ADMITTED"
+}

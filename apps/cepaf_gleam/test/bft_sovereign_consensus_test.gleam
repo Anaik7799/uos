@@ -4,14 +4,14 @@
 // =============================================================================
 
 import cepaf_gleam/fractal/l0_constitutional.{
-  Approved, AgyHarness, BftConsensusApproved, BftConsensusPending,
+  AgyHarness, Approved, BftConsensusApproved, BftConsensusPending,
   BftConsensusRejected, BftVote, ClaudeSonnet, CodexAstra, Rejected,
   cast_bft_vote, evaluate_bft_consensus, new_bft_consensus,
 }
 import gleeunit/should
 
 pub fn bft_nominal_2_out_of_3_ratification_test() {
-  let epoch = 1789809000
+  let epoch = 1_789_809_000
   let payload = "SHA256:7e8b8c8d9e0f1a2b"
   let c0 = new_bft_consensus("req-001", payload, epoch)
 
@@ -37,7 +37,7 @@ pub fn bft_nominal_2_out_of_3_ratification_test() {
       signature_token: "SIG_CLAUDE_" <> payload,
     )
   let c2 = cast_bft_vote(c1, v2)
-  
+
   // 2oo3 threshold met!
   case evaluate_bft_consensus(c2) {
     BftConsensusApproved(approvers) -> {
@@ -48,8 +48,8 @@ pub fn bft_nominal_2_out_of_3_ratification_test() {
 }
 
 pub fn bft_stale_nonce_replay_attack_rejected_test() {
-  let epoch = 1789809000
-  let stale_epoch = 1789808000
+  let epoch = 1_789_809_000
+  let stale_epoch = 1_789_808_000
   let payload = "SHA256:7e8b8c8d9e0f1a2b"
   let c0 = new_bft_consensus("req-002", payload, epoch)
 
@@ -71,7 +71,7 @@ pub fn bft_stale_nonce_replay_attack_rejected_test() {
 }
 
 pub fn bft_forged_signature_attack_rejected_test() {
-  let epoch = 1789809000
+  let epoch = 1_789_809_000
   let payload = "SHA256:7e8b8c8d9e0f1a2b"
   let c0 = new_bft_consensus("req-003", payload, epoch)
 
@@ -91,7 +91,7 @@ pub fn bft_forged_signature_attack_rejected_test() {
 }
 
 pub fn bft_byzantine_equivocation_detected_test() {
-  let epoch = 1789809000
+  let epoch = 1_789_809_000
   let payload = "SHA256:7e8b8c8d9e0f1a2b"
   let c0 = new_bft_consensus("req-004", payload, epoch)
 
@@ -124,7 +124,7 @@ pub fn bft_byzantine_equivocation_detected_test() {
 }
 
 pub fn bft_two_sovereigns_reject_consensus_test() {
-  let epoch = 1789809000
+  let epoch = 1_789_809_000
   let payload = "SHA256:7e8b8c8d9e0f1a2b"
   let c0 = new_bft_consensus("req-005", payload, epoch)
 
@@ -151,4 +151,3 @@ pub fn bft_two_sovereigns_reject_consensus_test() {
   evaluate_bft_consensus(c2)
   |> should.equal(BftConsensusRejected("QuorumRejectedByTwoSovereigns"))
 }
-

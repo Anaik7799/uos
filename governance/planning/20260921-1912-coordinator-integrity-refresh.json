@@ -1,0 +1,36 @@
+{
+  "schema": "uos.coordinator-integrity-refresh.v1",
+  "timestamp": "20260921-1912",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authority": "integrity_observation_only",
+  "canonical": {
+    "path": "var/coordination/tri-agent/coordinator.sqlite3",
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "verify_log_sha256": "cf51614e3be641faf9ef83d71d3dc62aa83cacd38b04850977d46844bfb9fe93",
+    "result": "HOLD",
+    "checked": 117,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": false,
+    "replay_ok": false,
+    "failures": ["digest mismatch sequences 66-117", "typed replay failed: session is not registered"]
+  },
+  "recovery_candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+    "verify_log_sha256": "1c548ea3d3d4aa2dc4d6b63ae7fbb9940a96fb38227447168d5dcf10700624e6",
+    "result": "OBSERVED_VALID",
+    "checked": 421,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": true,
+    "replay_ok": true,
+    "authority": "integrity_observation_only"
+  },
+  "common_prefix": "unresolved",
+  "writer_quiescence": "unproven",
+  "source_of_truth": "unselected",
+  "admission": "not_admitted",
+  "completion_credit": false,
+  "next_gate": "independent sovereign selection of canonical coordinator and authorized cutover through Sa-plan"
+}

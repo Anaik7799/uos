@@ -1,0 +1,29 @@
+{
+  "receipt_type": "recovery_candidate_stability_observation",
+  "generated_at": "2026-09-21T11:23:00+02:00",
+  "authority": "read_only_verify_and_hash",
+  "candidate_db": "/home/an/uos-recovery-candidates/20260921-1048-coordinator-evidence/coordinator.sqlite3",
+  "digest_before": "7d5d2f2efe8797f1f39b0ae69f2ef0ddb9594bc5a47cfa4252d409801a319216",
+  "digest_after": "7d5d2f2efe8797f1f39b0ae69f2ef0ddb9594bc5a47cfa4252d409801a319216",
+  "stable_across_verification": true,
+  "verification": {
+    "ok": true,
+    "checked": 0,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": true,
+    "replay_ok": true,
+    "nonempty": false,
+    "authority": "integrity_observation_only",
+    "triggers_present": true,
+    "unique_operations": true
+  },
+  "interpretation": {
+    "candidate_mutated": false,
+    "candidate_activated": false,
+    "independent_authority": "not_granted",
+    "system_admission": false
+  },
+  "next_action": "independent sovereign review and explicit cutover authorization; retain candidate as evidence-only until then",
+  "admitted": false
+}

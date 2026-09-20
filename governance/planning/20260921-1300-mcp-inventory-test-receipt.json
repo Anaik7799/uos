@@ -1,0 +1,19 @@
+{
+  "receipt_id": "mcp-inventory-test-20260921-1300",
+  "timestamp": "20260921-1300",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "r05-mcp-data",
+  "workflow_id": "mcp/data-inventory-test-1300",
+  "tests": {
+    "mcp_catalog_truth_test": "PASS: inventory response preserves declared_unprobed and not_granted boundary",
+    "gleam_build": "PASS"
+  },
+  "observed_inventory": {
+    "declared": 64,
+    "unavailable": 12,
+    "declared_unprobed": 52,
+    "admission": "NOT_GRANTED"
+  },
+  "completion_semantics": "Evidence only; r05 remains uncompleted until authorized invocation-specific probes and admission receipts exist.",
+  "admission": "NOT_ADMITTED"
+}

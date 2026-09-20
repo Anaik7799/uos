@@ -1,0 +1,29 @@
+{
+  "schema": "uos.rete-mcp-numeric-decoder-fix.v1",
+  "observed_at": "2026-09-21T15:01:07Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "r07-hive-swarm",
+  "change": {
+    "source": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+    "sha256": "7ffe6f5432478492f69e275add4cabb5333d0f3cb804b532a5d955d6b32e03fb",
+    "behavior": "Rete score and salience accept JSON integers and floats"
+  },
+  "regression_test": {
+    "path": "apps/cepaf_gleam/test/mcp_inference_models_test.gleam",
+    "sha256": "6da952cf10696bf9b12f4dc4c7956e28c79d691db4599aa0a361e286c7cf639a",
+    "name": "tool_rete_rule_conflict_accepts_integer_numbers_test"
+  },
+  "build": "gleam format --check and gleam build passed",
+  "live_probe": {
+    "rules_evaluated": 2,
+    "winner": "r1",
+    "suppressed": ["r2"],
+    "constitutional_layer": "L0",
+    "status": "ok"
+  },
+  "authority": "audit_only",
+  "effect_authority": false,
+  "admission": "not_admitted",
+  "completion_credit": false,
+  "next_gate": "run candidate-bound regression through Sa-plan and complete independent swarm acceptance"
+}

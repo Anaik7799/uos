@@ -20,10 +20,15 @@ import cepaf_gleam/ha/cortex_saplan_coordinator.{type CoordinatorState}
 import gleam/int
 
 pub const ansi_reset: String = "\u{001b}[0m"
+
 pub const ansi_bold: String = "\u{001b}[1m"
+
 pub const ansi_green: String = "\u{001b}[32m"
+
 pub const ansi_yellow: String = "\u{001b}[33m"
+
 pub const ansi_cyan: String = "\u{001b}[36m"
+
 pub const ansi_red: String = "\u{001b}[31m"
 
 pub fn render_cortex_tui(coord: CoordinatorState) -> String {

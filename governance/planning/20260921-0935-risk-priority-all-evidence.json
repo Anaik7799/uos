@@ -1,0 +1,14 @@
+{
+  "schema": "uos-risk-priority-all-evidence.v1",
+  "generated_at_utc": "20260921-0935",
+  "command": "bash tools/risk-priority-check --all",
+  "status": "PASS",
+  "authority": "NONE",
+  "baseline_checks": 375,
+  "adversarial_checks": 32843,
+  "independent_dag_scenarios": 32768,
+  "package": {"status":"PASS","local_paths_checked":39,"authority":"REPORT_ONLY","runtime_enforcement":"NOT_ASSERTED","global_skill_dependency":false},
+  "runtime_admission": "NOT_GRANTED",
+  "live_agent_tests": "UNRUN",
+  "completion": {"execution_optimization_evidence":true,"system_admission":false}
+}

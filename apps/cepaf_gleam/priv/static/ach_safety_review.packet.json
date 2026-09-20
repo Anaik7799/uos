@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "question": "What evidence and controls are missing before using this multi-model assessment engine to inform a loss-of-life deployment decision? Assess the tool as an advisory research aid, not an actual clinical or industrial system. The operational system and its safety authority have not yet been specified. Do not infer production readiness.",
+  "safety_context": {
+    "system": "Bountytek ACH/Admiralty/devil's-advocate assessment engine v2; operational application unspecified",
+    "deployment_decision": "Whether this prototype can inform safety review, and which controls require independent verification before real use",
+    "operational_domain": "Loss-of-life use cases reported by operator; concrete clinical/industrial domain not supplied",
+    "system_boundary": "Evidence JSON -> three local model CLIs -> validated advisory JSON/Markdown; no actuator or deployment integration",
+    "integrity_basis": "Operator designation SIL-6; governing internal definition and sector standard not supplied. No IEC 61508 SIL-6 claim is made.",
+    "accountable_reviewer": "UNASSIGNED: operator must nominate competent independent safety authority",
+    "safe_state": "Do not use this prototype as deployment authorization; retain established independent engineering review",
+    "hazards": [
+      {
+        "id": "HZ1",
+        "loss": "Death or serious injury from an unsafe deployment authorized on misleading model assessments",
+        "scenario": "A human or downstream automation mistakes three agreeing models, valid JSON, or successful execution for verified safety",
+        "severity": "Catastrophic worst case; no numerical failure rate established",
+        "safety_constraint": "No assessment output may authorize deployment or claim certified integrity",
+        "verification_required": "Independent negative tests against all output paths and downstream consumers; human review of the operational safety case",
+        "acceptance_criterion": "Every generated report denies deployment authorization; downstream release requires separate authenticated authority and verified evidence"
+      },
+      {
+        "id": "HZ2",
+        "loss": "Death or serious injury from stale, fabricated or correlated evidence supporting an unsafe judgment",
+        "scenario": "Assessors repeat the same unsupported claim, rate it A1, and obscure a missing control or a critical dissent",
+        "severity": "Catastrophic worst case; no numerical failure rate established",
+        "safety_constraint": "Preserve provenance, evidence gaps and dissent; exclude stale/unverified evidence from quantitative ranking",
+        "verification_required": "Independent source authentication, applicability review, uncertainty analysis, domain hazard analysis and model failure injection",
+        "acceptance_criterion": "Evidence is traced to reviewed primary records and operational tests; model agreement is never counted as independent corroboration"
+      }
+    ]
+  },
+  "hypotheses": [
+    {"id":"H1","statement":"The current prototype and supplied evidence are sufficient to support an operational safety deployment decision"},
+    {"id":"H2","statement":"The prototype is useful only as a supervised research aid while operational safety evidence and independent validation are developed"},
+    {"id":"H3","statement":"The prototype should be withheld even from supervised research pending redesign of its evidence and model execution boundaries"}
+  ],
+  "evidence": [
+    {
+      "id":"E1","claim":"The implementation explicitly denies deployment authorization, excludes stale/unverified evidence from scoring and requires complete ACH, Admiralty and hazard response coverage. These are implementation claims, not independent safety validation.",
+      "diagnosticity":2,"max_age_days":7,
+      "sources":[{"uri":"ach_admiralty_engine.ml","excerpt":"report emits deployment_authorized=false and safety_disposition=HOLD_FOR_INDEPENDENT_SAFETY_REVIEW. score requires admitted grade plus independently_verified and fresh flags. decode_assessment checks complete hypothesis x evidence cells and all supplied hazard IDs. Source verification_record is currently an operator-supplied string, not an authenticated attestation.","observed_at":"2026-09-28T00:00:00Z","independence_group":"implementation-author","verification_status":"unverified"}]
+    },
+    {
+      "id":"E2","claim":"Local synthetic tests exercise arithmetic laws, parser rejections and deployment-hold behavior; they do not establish domain completeness, model accuracy or a safety integrity level.",
+      "diagnosticity":1,"max_age_days":7,
+      "sources":[{"uri":"ach_admiralty_engine.ml --self-test","excerpt":"Seed 20260928, 1000 arithmetic iterations. Tests cover nonpositive disconfirmation, unknown scores, stale/unverified exclusion, missing response dimensions and hazards, duplicate grades, correlated grade-1 rejection, NaN confidence rejection and unanimous assessments retaining a deployment hold. This is an author-reported synthetic test summary; no independent validation or calibration supplied.","observed_at":"2026-09-28T00:00:00Z","independence_group":"implementation-author","verification_status":"unverified"}]
+    },
+    {
+      "id":"E3","claim":"The operator identifies loss-of-life potential but the actual system, integrity standard definition, hazard inventory and risk acceptance authority remain unspecified.",
+      "diagnosticity":3,"max_age_days":30,
+      "sources":[{"uri":"user-requirement-2026-09-28","excerpt":"User states these are SIL-6 safety-critical use cases and deployments and assessments can cause loss of life. No concrete system boundary, deployment architecture, sector standard, independent safety case, incident data, measured failure rate, signed approval or SIL-6 definition accompanies that statement.","observed_at":"2026-09-28T00:00:00Z","independence_group":"operator-scope","verification_status":"unverified"}]
+    }
+  ]
+}

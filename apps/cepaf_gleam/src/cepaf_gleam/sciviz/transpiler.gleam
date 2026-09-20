@@ -15,13 +15,7 @@ import gleam/list
 import gleam/string
 
 pub type SpatialToken {
-  SpatialToken(
-    line: Int,
-    x: Float,
-    y: Float,
-    text: String,
-    token_type: String,
-  )
+  SpatialToken(line: Int, x: Float, y: Float, text: String, token_type: String)
 }
 
 pub type BoundingBox {
@@ -59,9 +53,21 @@ pub fn transpile_diamonds_scatter() -> TranspileOutput {
   let tokens = [
     SpatialToken(1, 10.0, 24.0, "library(ggplot2)", "import"),
     SpatialToken(2, 10.0, 48.0, "library(ggram)", "import"),
-    SpatialToken(3, 10.0, 72.0, "ggplot(diamonds, aes(carat, price, color=cut)) +", "call"),
+    SpatialToken(
+      3,
+      10.0,
+      72.0,
+      "ggplot(diamonds, aes(carat, price, color=cut)) +",
+      "call",
+    ),
     SpatialToken(4, 30.0, 96.0, "geom_point(alpha=0.4, size=1.5) +", "geom"),
-    SpatialToken(5, 30.0, 120.0, "geom_smooth(method='lm', color='#f43f5e') #<< FOCUS REGRESSION", "focus_geom"),
+    SpatialToken(
+      5,
+      30.0,
+      120.0,
+      "geom_smooth(method='lm', color='#f43f5e') #<< FOCUS REGRESSION",
+      "focus_geom",
+    ),
   ]
 
   let focus_box = BoundingBox(28.0, 108.0, 235.0, 18.0)
@@ -88,9 +94,21 @@ pub fn transpile_tcga_volcano() -> TranspileOutput {
   let tokens = [
     SpatialToken(1, 10.0, 24.0, "library(ggplot2)", "import"),
     SpatialToken(2, 10.0, 48.0, "library(ggram)", "import"),
-    SpatialToken(3, 10.0, 72.0, "ggplot(tcga_pancan, aes(log2FC, minusLog10Pval, color=status)) +", "call"),
+    SpatialToken(
+      3,
+      10.0,
+      72.0,
+      "ggplot(tcga_pancan, aes(log2FC, minusLog10Pval, color=status)) +",
+      "call",
+    ),
     SpatialToken(4, 30.0, 96.0, "geom_point(alpha=0.5, size=1.2) +", "geom"),
-    SpatialToken(5, 30.0, 120.0, "geom_vline(xintercept=c(-1, 1), linetype='dashed') #<< FOCUS THRESHOLD", "focus_geom"),
+    SpatialToken(
+      5,
+      30.0,
+      120.0,
+      "geom_vline(xintercept=c(-1, 1), linetype='dashed') #<< FOCUS THRESHOLD",
+      "focus_geom",
+    ),
   ]
 
   let focus_box = BoundingBox(28.0, 108.0, 235.0, 18.0)
@@ -117,9 +135,21 @@ pub fn transpile_swarm_mesh() -> TranspileOutput {
   let tokens = [
     SpatialToken(1, 10.0, 24.0, "library(ggplot2)", "import"),
     SpatialToken(2, 10.0, 48.0, "library(ggram)", "import"),
-    SpatialToken(3, 10.0, 72.0, "ggplot(swarm_mesh, aes(node_x, node_y, color=load_tier)) +", "call"),
+    SpatialToken(
+      3,
+      10.0,
+      72.0,
+      "ggplot(swarm_mesh, aes(node_x, node_y, color=load_tier)) +",
+      "call",
+    ),
     SpatialToken(4, 30.0, 96.0, "geom_node_point(size=3.0) +", "geom"),
-    SpatialToken(5, 30.0, 120.0, "geom_edge_link(aes(alpha=steal_rate), color='#38bdf8') #<< FOCUS WORK_STEAL", "focus_geom"),
+    SpatialToken(
+      5,
+      30.0,
+      120.0,
+      "geom_edge_link(aes(alpha=steal_rate), color='#38bdf8') #<< FOCUS WORK_STEAL",
+      "focus_geom",
+    ),
   ]
 
   let focus_box = BoundingBox(28.0, 108.0, 235.0, 18.0)
@@ -165,8 +195,14 @@ pub fn render_dual_panel_svg(
   <> "<circle cx=\"16\" cy=\"100\" r=\"4\" fill=\"#e2e8f0\" stroke=\"#94a3b8\" stroke-width=\"1\"/>"
   <> "<circle cx=\"16\" cy=\"165\" r=\"4\" fill=\"#e2e8f0\" stroke=\"#94a3b8\" stroke-width=\"1\"/>"
   // Focus Bounding Box on code
-  <> "<rect x=\"" <> float.to_string(focus_box.x) <> "\" y=\"" <> float.to_string(focus_box.y)
-  <> "\" width=\"" <> float.to_string(focus_box.width) <> "\" height=\"" <> float.to_string(focus_box.height)
+  <> "<rect x=\""
+  <> float.to_string(focus_box.x)
+  <> "\" y=\""
+  <> float.to_string(focus_box.y)
+  <> "\" width=\""
+  <> float.to_string(focus_box.width)
+  <> "\" height=\""
+  <> float.to_string(focus_box.height)
   <> "\" rx=\"2\" fill=\"#fef08a\" fill-opacity=\"0.4\" stroke=\"#eab308\" stroke-dasharray=\"2 2\" stroke-width=\"1\"/>"
   // Render text tokens
   <> render_tokens_svg(tokens)

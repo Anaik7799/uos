@@ -3,14 +3,14 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/defense_situation_assessment.{
-  assessment_to_json, evaluate_defense_posture, posture_level,
-  posture_to_string, render_ansi_banner,
+  assessment_to_json, evaluate_defense_posture, posture_level, posture_to_string,
+  render_ansi_banner,
 }
 import cepaf_gleam/ha/health_derivative.{HealthSample}
 import cepaf_gleam/ha/lyapunov_proof.{Stable, Unstable}
 import cepaf_gleam/ha/tri_agent_monitor.{
-  ClaudeAgent, PlanMutationProposal,
-  intercept_activity, new_monitor, set_degradation_mode,
+  ClaudeAgent, PlanMutationProposal, intercept_activity, new_monitor,
+  set_degradation_mode,
 }
 import gleam/json
 import gleam/string
@@ -19,9 +19,9 @@ import gleeunit/should
 pub fn defcon4_nominal_test() {
   let monitor = new_monitor(False)
   let samples = [
-    HealthSample(1_000, 1.0),
-    HealthSample(2_000, 1.0),
-    HealthSample(3_000, 1.0),
+    HealthSample(1000, 1.0),
+    HealthSample(2000, 1.0),
+    HealthSample(3000, 1.0),
   ]
 
   let assessment =
@@ -58,8 +58,8 @@ pub fn defcon3_elevated_test() {
       True,
     )
   let samples = [
-    HealthSample(1_000, 0.82),
-    HealthSample(2_000, 0.82),
+    HealthSample(1000, 0.82),
+    HealthSample(2000, 0.82),
   ]
 
   let assessment =
@@ -75,8 +75,8 @@ pub fn defcon3_elevated_test() {
 pub fn defcon2_warning_test() {
   let monitor = new_monitor(False)
   let samples = [
-    HealthSample(1_000, 0.95),
-    HealthSample(2_000, 0.90),
+    HealthSample(1000, 0.95),
+    HealthSample(2000, 0.9),
   ]
 
   let assessment =
@@ -105,9 +105,8 @@ pub fn defcon1_emergency_test() {
       False,
     )
 
-  let samples = [HealthSample(1_000, 0.70)]
-  let assessment =
-    evaluate_defense_posture(1_000_000_000, mon1, samples, 0.12)
+  let samples = [HealthSample(1000, 0.7)]
+  let assessment = evaluate_defense_posture(1_000_000_000, mon1, samples, 0.12)
 
   should.equal(posture_level(assessment.posture), 1)
   should.equal(assessment.lyapunov_verdict, Unstable)

@@ -1,0 +1,22 @@
+{
+  "schema": "uos.sa-plan-task-receipt.v1",
+  "timestamp": "20260921-1615",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t2-contracts",
+  "attempt": 4,
+  "worker": "codex-01a083d2-contracts",
+  "title": "Expose declarative algebraic feature queries and intents through MCP",
+  "state": "released_evidence_only",
+  "evidence": {
+    "format_check": "pass",
+    "gleam_build": "pass",
+    "focused_feature_suite": "33/33 pass (prior receipt 20260921-1510)",
+    "live_mcp_reads": "pass: feature_tracker_status and sa_plan_status_for",
+    "runtime_admission": "not_granted",
+    "effect_authority": false,
+    "execution_progress": "fail_closed: journal sequence or digest mismatch; replay refused"
+  },
+  "release_reason": "Source and focused tests are green, but two-key runtime admission and coordinator replay integrity are not satisfied.",
+  "next_gate": "repair canonical coordinator integrity, bind task evidence, then rerun live declarative MCP acceptance",
+  "admission": "not_admitted"
+}

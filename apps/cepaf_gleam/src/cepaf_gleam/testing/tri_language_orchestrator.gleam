@@ -88,10 +88,11 @@ pub fn run_gleam_subsystem_tests() -> SubsystemTestResult {
   }
 
   // Record telemetry hook into ETS
-  let _ = beam_cache.put("test:gleam:status", case passed {
-    True -> "PASSED"
-    False -> "FAILED"
-  })
+  let _ =
+    beam_cache.put("test:gleam:status", case passed {
+      True -> "PASSED"
+      False -> "FAILED"
+    })
 
   SubsystemTestResult(
     subsystem: "BEAM_OTP29",
@@ -123,7 +124,10 @@ pub fn run_ocaml_subsystem_tests() -> SubsystemTestResult {
         [first, ..] -> first
         _ -> "Execution finished"
       }
-      #(contains_pass, first_line <> " | Output len: " <> int.to_string(string.length(out)))
+      #(
+        contains_pass,
+        first_line <> " | Output len: " <> int.to_string(string.length(out)),
+      )
     }
     Error(err) -> #(False, "OCaml execution failed: " <> err)
   }
@@ -134,10 +138,11 @@ pub fn run_ocaml_subsystem_tests() -> SubsystemTestResult {
     _ -> False
   }
 
-  let _ = ets_zenoh_bridge.put_state("test:ocaml:status", case passed {
-    True -> "PASSED"
-    False -> "FAILED"
-  })
+  let _ =
+    ets_zenoh_bridge.put_state("test:ocaml:status", case passed {
+      True -> "PASSED"
+      False -> "FAILED"
+    })
 
   SubsystemTestResult(
     subsystem: "Hermes_Engine",
@@ -163,8 +168,13 @@ pub fn run_mojo_subsystem_tests() -> SubsystemTestResult {
 
   let #(passed, summary) = case res {
     Ok(out) -> {
-      let contains_conv = string.contains(out, "FULL TRI-LANGUAGE CONVERGENCE VERIFIED")
-      #(contains_conv, "Modular MAX SIMD runner verified | Output len: " <> int.to_string(string.length(out)))
+      let contains_conv =
+        string.contains(out, "FULL TRI-LANGUAGE CONVERGENCE VERIFIED")
+      #(
+        contains_conv,
+        "Modular MAX SIMD runner verified | Output len: "
+          <> int.to_string(string.length(out)),
+      )
     }
     Error(err) -> #(False, "Mojo execution failed: " <> err)
   }
@@ -175,10 +185,11 @@ pub fn run_mojo_subsystem_tests() -> SubsystemTestResult {
     _ -> False
   }
 
-  let _ = ets_zenoh_bridge.put_state("test:mojo:status", case passed {
-    True -> "PASSED"
-    False -> "FAILED"
-  })
+  let _ =
+    ets_zenoh_bridge.put_state("test:mojo:status", case passed {
+      True -> "PASSED"
+      False -> "FAILED"
+    })
 
   SubsystemTestResult(
     subsystem: "Modular_MAX",
@@ -235,10 +246,11 @@ pub fn run_all_tests() -> MasterTestReport {
     |> json.to_string()
 
   let _ = beam_cache.put("test:master_report", report_json_str)
-  let _ = beam_cache.put("test:global:verdict", case all_passed {
-    True -> "ALL_PASSED_CONVERGED"
-    False -> "DEGRADED"
-  })
+  let _ =
+    beam_cache.put("test:global:verdict", case all_passed {
+      True -> "ALL_PASSED_CONVERGED"
+      False -> "DEGRADED"
+    })
   let _ = beam_cache.put("test:telemetry:trace_id", trace.trace_id)
 
   // Publish to Zenoh
@@ -367,10 +379,14 @@ pub fn global_test_observability_snapshot() -> json.Json {
     #("scope", json.string("uos_c3i_global_test_observability")),
     #(
       "verdict",
-      json.string(case gleam_st == "PASSED" && ocaml_st == "PASSED" && mojo_st == "PASSED" {
-        True -> "100%_CONVERGED_GREEN"
-        False -> global_vd
-      }),
+      json.string(
+        case
+          gleam_st == "PASSED" && ocaml_st == "PASSED" && mojo_st == "PASSED"
+        {
+          True -> "100%_CONVERGED_GREEN"
+          False -> global_vd
+        },
+      ),
     ),
     #(
       "subsystems",

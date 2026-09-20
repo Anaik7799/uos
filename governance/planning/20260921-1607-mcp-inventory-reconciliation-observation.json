@@ -1,0 +1,26 @@
+{
+  "schema_version": "uos.mcp.inventory-reconciliation.v1",
+  "observed_at": "2026-09-21T16:07:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "inventory_call": {
+    "tool": "mcp_capability_inventory",
+    "schema": "uos.mcp-capability-inventory.v1",
+    "declared_count": 65,
+    "unavailable_count": 12,
+    "declared_unprobed_count": 53,
+    "runtime_admission": "not_granted",
+    "effect_authority": false,
+    "response_sha256": "a6970d6405b486923191e792750a70178d14228a0ca461befa54c14dbe34a554"
+  },
+  "live_tools_list": {
+    "server": "c3i-planning-mcp",
+    "tools_count": 53,
+    "response_sha256": "9588562a647915c12e469725090dd86e4a7ce7f692de093394e3603cbe7e6f4f"
+  },
+  "reconciliation": {
+    "count_difference": 12,
+    "status": "OPEN_GAP",
+    "interpretation": "The declared inventory and live legacy MCP server expose different surfaces; no parity or full-system availability claim is valid until the surfaces are reconciled under Sa-plan authority."
+  },
+  "authority_boundary": "Read-only MCP observations; no tool activation, adapter wiring, task claim, completion, deployment, or admission."
+}

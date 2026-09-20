@@ -1,0 +1,32 @@
+{
+  "schema": "uos.coordinator-integrity-refresh.v1",
+  "observed_at": "2026-09-21T14:47:00Z",
+  "authority": "integrity_observation_only",
+  "candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "checked": 421,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": true,
+    "replay_ok": true,
+    "nonempty": true,
+    "triggers_present": true,
+    "unique_operations": true,
+    "admission": "not_admitted"
+  },
+  "canonical": {
+    "path": "var/coordination/tri-agent/coordinator.sqlite3",
+    "checked": 117,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": false,
+    "replay_ok": false,
+    "nonempty": true,
+    "triggers_present": true,
+    "unique_operations": true,
+    "first_digest_failure": 66,
+    "replay_failure": "session is not registered"
+  },
+  "decision": "hold",
+  "next_gate": "independent authority selection and writer-quiescent cutover fence"
+}

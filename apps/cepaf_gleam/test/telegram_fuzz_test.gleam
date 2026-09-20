@@ -86,12 +86,14 @@ pub fn fuzz_f2_malformed_directives_and_injection_test() {
         user: "Attacker",
         chat_id: "fuzz-chat",
         text: cmd,
-        timestamp_ms: 1789184000000,
+        timestamp_ms: 1_789_184_000_000,
       )
     // Directive evaluator must handle safely and return a valid decision
     let decision = handle_directive(cmd, intent)
     decision.intent_id |> should.equal(intent.intent_id)
-    string.length(decision.reply_markdown) |> fn(len) { len > 0 } |> should.be_true
+    string.length(decision.reply_markdown)
+    |> fn(len) { len > 0 }
+    |> should.be_true
   })
 }
 
@@ -101,7 +103,7 @@ pub fn fuzz_f2_malformed_directives_and_injection_test() {
 pub fn fuzz_f3_extreme_string_lengths_test() {
   envoy.set("UOS_TEST_MODE", "1")
   // 1. Extreme 50,000 continuous characters
-  let giant_token = string.repeat("X", 50000)
+  let giant_token = string.repeat("X", 50_000)
   let intent1 =
     CognitiveIntent(
       intent_id: "fuzz-len-1",
@@ -109,10 +111,12 @@ pub fn fuzz_f3_extreme_string_lengths_test() {
       user: "Avi",
       chat_id: "6249174059",
       text: giant_token,
-      timestamp_ms: 1789184000000,
+      timestamp_ms: 1_789_184_000_000,
     )
   let decision1 = evaluate_intent(intent1)
-  string.length(decision1.reply_markdown) |> fn(len) { len > 0 } |> should.be_true
+  string.length(decision1.reply_markdown)
+  |> fn(len) { len > 0 }
+  |> should.be_true
 
   // 2. Extreme 5,000 newlines
   let giant_newlines = string.repeat("\n", 5000)
@@ -123,10 +127,12 @@ pub fn fuzz_f3_extreme_string_lengths_test() {
       user: "Avi",
       chat_id: "6249174059",
       text: giant_newlines,
-      timestamp_ms: 1789184000000,
+      timestamp_ms: 1_789_184_000_000,
     )
   let decision2 = evaluate_intent(intent2)
-  string.length(decision2.reply_markdown) |> fn(len) { len > 0 } |> should.be_true
+  string.length(decision2.reply_markdown)
+  |> fn(len) { len > 0 }
+  |> should.be_true
 
   // 3. Telegram chunking of 30,000 characters
   let chunks = telegram_outbound.chunk_text(giant_token, 4096)
@@ -159,10 +165,12 @@ pub fn fuzz_f4_unicode_and_control_chars_test() {
         user: "Avi",
         chat_id: "6249174059",
         text: txt,
-        timestamp_ms: 1789184000000,
+        timestamp_ms: 1_789_184_000_000,
       )
     let decision = evaluate_intent(intent)
-    string.length(decision.reply_markdown) |> fn(len) { len > 0 } |> should.be_true
+    string.length(decision.reply_markdown)
+    |> fn(len) { len > 0 }
+    |> should.be_true
   })
 }
 
@@ -189,11 +197,13 @@ pub fn fuzz_f5_boundary_numeric_args_test() {
         user: "Avi",
         chat_id: "fuzz-chat",
         text: "/messages " <> lim,
-        timestamp_ms: 1789184000000,
+        timestamp_ms: 1_789_184_000_000,
       )
     let decision = handle_directive("/messages " <> lim, intent)
     decision.ooda_phase |> should.equal("Completed")
-    string.length(decision.reply_markdown) |> fn(len) { len > 0 } |> should.be_true
+    string.length(decision.reply_markdown)
+    |> fn(len) { len > 0 }
+    |> should.be_true
   })
 }
 
@@ -207,9 +217,9 @@ pub fn fuzz_f6_extreme_timestamps_test() {
     -1,
     0,
     1,
-    1000000,
-    1789184000000,
-    999999999999999,
+    1_000_000,
+    1_789_184_000_000,
+    999_999_999_999_999,
   ]
 
   list.each(extreme_ts, fn(ts) {
@@ -224,6 +234,8 @@ pub fn fuzz_f6_extreme_timestamps_test() {
       )
     let decision = evaluate_intent(intent)
     decision.intent_id |> should.equal("fuzz-ts")
-    string.length(decision.reply_markdown) |> fn(len) { len > 0 } |> should.be_true
+    string.length(decision.reply_markdown)
+    |> fn(len) { len > 0 }
+    |> should.be_true
   })
 }

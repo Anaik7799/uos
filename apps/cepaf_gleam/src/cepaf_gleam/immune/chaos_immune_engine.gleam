@@ -97,7 +97,7 @@ pub fn init_immune_engine() -> ImmuneEngineState {
     ImmuneAntibody(
       id: "AB-LAT-01",
       target_fault: "queue_latency",
-      potency: 0.90,
+      potency: 0.9,
       generation: 1,
       neutralized_count: 0,
     ),

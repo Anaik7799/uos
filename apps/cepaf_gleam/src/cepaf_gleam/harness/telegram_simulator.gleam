@@ -7,7 +7,9 @@
 //// Simulates inbound messages, voice memos, rack photos, whiteboard photos,
 //// ambient telemetry, and runs comprehensive sweep across all 48 directives.
 
-import cepaf_gleam/harness/telegram.{type InboundMessage, type OutboundResponse, InboundMessage}
+import cepaf_gleam/harness/telegram.{
+  type InboundMessage, type OutboundResponse, InboundMessage,
+}
 import gleam/bit_array
 import gleam/list
 import gleam/string
@@ -161,8 +163,8 @@ pub fn run_full_simulation_sweep() -> SimulationReport {
 
   let domain_c_cmds = [
     "/pacing nap", "/whatif drain nas-1 worker pool", "/rack-cv chassis-01",
-    "/acoustic fan-bearing-02", "/rewind 15m", "/postmortem inc-5501",
-    "/finops", "/eco-schedule run", "/radar", "/canvas", "/lockbox engage",
+    "/acoustic fan-bearing-02", "/rewind 15m", "/postmortem inc-5501", "/finops",
+    "/eco-schedule run", "/radar", "/canvas", "/lockbox engage",
     "/export-audit SOC2-TypeII",
   ]
 
@@ -170,9 +172,9 @@ pub fn run_full_simulation_sweep() -> SimulationReport {
     "/sidecar listen", "/voice-roll-call verify prop-drain",
     "/babel start ja en", "/whiteboard session-fsm",
     "/socratic packet drop root cause", "/handover generate",
-    "/pair-voice start", "/exec-brief inc-active",
-    "/commitments list", "/acoustic-hud engage",
-    "/retro export retro-incident-99", "/gameday start partition-nas1",
+    "/pair-voice start", "/exec-brief inc-active", "/commitments list",
+    "/acoustic-hud engage", "/retro export retro-incident-99",
+    "/gameday start partition-nas1",
   ]
 
   let multimodal_cmds = [
@@ -213,10 +215,8 @@ pub fn run_full_simulation_sweep() -> SimulationReport {
       }
     })
 
-  let total_passed =
-    passed_a + passed_b + passed_c + passed_d + passed_multi
-  let total_failed =
-    failed_a + failed_b + failed_c + failed_d + failed_multi
+  let total_passed = passed_a + passed_b + passed_c + passed_d + passed_multi
+  let total_failed = failed_a + failed_b + failed_c + failed_d + failed_multi
   let total_sim = total_passed + total_failed
 
   // Hardware lock validation

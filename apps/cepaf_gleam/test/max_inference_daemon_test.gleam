@@ -43,14 +43,19 @@ pub fn max_metrics_request_build_and_decode_test() {
   let res = max.decode_metrics_response(raw)
   res |> should.be_ok
   let assert Ok(m) = res
-  m.total_requests |> should.equal(45000)
+  m.total_requests |> should.equal(45_000)
   m.avg_latency_us |> should.equal(20)
   m.cache_hit_rate |> should.equal(0.942)
 }
 
 pub fn max_infer_text_request_and_decode_test() {
   let req =
-    max.build_infer_text_request("t-1", "analyze plan conflicts", "max-v26", 256)
+    max.build_infer_text_request(
+      "t-1",
+      "analyze plan conflicts",
+      "max-v26",
+      256,
+    )
   req |> string.contains("\"method\":\"infer_text\"") |> should.be_true
   req |> string.contains("analyze plan conflicts") |> should.be_true
 
@@ -134,7 +139,9 @@ pub fn max_zk_transclusion_request_and_decode_test() {
       3,
       Some("L0"),
     )
-  req |> string.contains("\"method\":\"match_zk_transclusion\"") |> should.be_true
+  req
+  |> string.contains("\"method\":\"match_zk_transclusion\"")
+  |> should.be_true
   req |> string.contains("\"layer_filter\":\"L0\"") |> should.be_true
 
   let raw =

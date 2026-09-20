@@ -3,6 +3,8 @@ import gleam/io
 import gleam/list
 import gleam/string
 
+const admitted_ev_ceiling = 93
+
 @external(erlang, "uos_ffi", "file_exists")
 pub fn file_exists(path: String) -> Bool
 
@@ -26,6 +28,9 @@ pub fn matches_timestamp_format(filename: String) -> Bool
 
 @external(erlang, "uos_ffi", "get_arguments")
 pub fn get_arguments() -> List(String)
+
+@external(erlang, "uos_ffi", "halt")
+fn halt(code: Int) -> Nil
 
 /// Run a local executable with arguments from the repository root, bounded by
 /// a timeout in milliseconds. Returns #(exit_code, merged stdout+stderr).
@@ -178,11 +183,18 @@ pub fn parse_args(args: List(String)) -> UosCommand {
 pub fn execute(cmd: UosCommand) -> Int {
   case cmd {
     Status -> {
-      io.println("UOS Target: Active (Jujutsu Standalone)")
-      io.println("Current EV-Cycle: EV-15 (System Admission & Full Symbiosis)")
-      io.println("Supervision: OTP 29 4-Domain Tree (Apps, Engines, Services, Intelligence)")
-      io.println("Zero-Muda Gate: ENFORCED (0 Bevy, 0 Graphite)")
-      0
+      io.println(
+        "UOS runtime status: UNRUN (this command performs no runtime probes)",
+      )
+      io.println(
+        "Policy admission ceiling: EV-" <> int.to_string(admitted_ev_ceiling),
+      )
+      io.println("EV-94..109: NOT_ADMITTED; new EV numbers remain barred")
+      io.println("Supervision and Zero-Muda runtime conformance: UNKNOWN")
+      io.println("Artifact inventory: bash tools/uos-cli doctor")
+      io.println("Canonical task observation: tools/sa-plan status <plan-id>")
+      io.println("Cockpit: http://nas-1.tail55d152.ts.net:4100/")
+      1
     }
     Gate(name) -> {
       io.println("Evaluating UOS Gate: " <> name)
@@ -1919,7 +1931,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       // Green)" even with its cited artifacts deleted. It now computes.
       //
       // Three outcomes per cycle, and UNVERIFIABLE is deliberately NOT a pass:
-      //   VERIFIED     a declared artifact exists
+      //   INVENTORY    a declared artifact exists (no runtime verification)
       //   MISSING      a declared artifact does not exist   -> failure
       //   UNVERIFIABLE no artifact is declared for the cycle -> not admitted
       let manifest = read_file("governance/ev-manifest.tsv")
@@ -1932,21 +1944,27 @@ pub fn execute(cmd: UosCommand) -> Int {
         list.map(rows, fn(line) {
           case string.split(line, "\t") {
             [ev, artifact, label] ->
-              case artifact {
-                "-" -> #(ev, "UNVERIFIABLE", label)
-                p ->
-                  case file_exists(p) {
-                    True -> #(ev, "VERIFIED", label)
-                    False -> #(ev, "MISSING", label)
+              case int.parse(ev) {
+                Ok(number) if number > admitted_ev_ceiling ->
+                  #(ev, "NOT_ADMITTED", label)
+                _ ->
+                  case artifact {
+                    "-" -> #(ev, "UNVERIFIABLE", label)
+                    p ->
+                      case file_exists(p) {
+                        True -> #(ev, "INVENTORY", label)
+                        False -> #(ev, "MISSING", label)
+                      }
                   }
               }
             _ -> #("?", "MALFORMED", line)
           }
         })
 
-      let verified = list.filter(results, fn(r) { r.1 == "VERIFIED" })
+      let verified = list.filter(results, fn(r) { r.1 == "INVENTORY" })
       let missing = list.filter(results, fn(r) { r.1 == "MISSING" })
       let unverifiable = list.filter(results, fn(r) { r.1 == "UNVERIFIABLE" })
+      let not_admitted = list.filter(results, fn(r) { r.1 == "NOT_ADMITTED" })
       let total = list.length(results)
 
       case total {
@@ -1968,7 +1986,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
 
       io.println(
-        "  verified (artifact present):    " <> int.to_string(list.length(verified)),
+        "  inventory (artifact present):   " <> int.to_string(list.length(verified)),
       )
       io.println(
         "  MISSING (artifact declared, absent): "
@@ -1977,6 +1995,12 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println(
         "  unverifiable (no artifact declared): "
         <> int.to_string(list.length(unverifiable)),
+      )
+      io.println(
+        "  not admitted (above EV-"
+        <> int.to_string(admitted_ev_ceiling)
+        <> " ceiling): "
+        <> int.to_string(list.length(not_admitted)),
       )
       io.println("")
       io.println(
@@ -1990,7 +2014,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       )
       io.println("")
 
-      case missing != [], list.length(verified) == total {
+      case missing != [], list.length(verified) == total && not_admitted == [] {
         True, _ -> {
           io.println(
             "UOS Doctor result: FAIL - "
@@ -3552,7 +3576,7 @@ pub fn main() {
     [] -> Status
     a -> parse_args(a)
   }
-  execute(cmd)
+  execute(cmd) |> halt
 }
 
 

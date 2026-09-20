@@ -1,0 +1,18 @@
+{
+  "schema": "uos.focused-feature-test-receipt.v1",
+  "observed_at": "2026-09-21T14:49:24Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "gleam test --target erlang -- --module system_feature_api_test --module system_feature_interfaces_test --module system_feature_store_test --module system_feature_tracker_test",
+  "result": "nonpassing_inconclusive",
+  "observations": [
+    "The CLI module selector was not honored; the full test runner continued beyond the focused modules.",
+    "system_feature_census_test failed with census_source_digest_or_bound at test/system_feature_census_test.gleam:185.",
+    "The failure is consistent with stale pinned source digests after current source changes; no completion credit is granted."
+  ],
+  "policy": {
+    "blocked_unrun_stale_unadmitted_not_counted": true,
+    "runtime_admission": "not_granted",
+    "task_completion": false
+  },
+  "next_action": "refresh source pins through the canonical Sa-plan task and rerun bounded focused tests"
+}

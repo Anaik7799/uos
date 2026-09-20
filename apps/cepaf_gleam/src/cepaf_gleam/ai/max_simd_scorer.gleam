@@ -46,18 +46,18 @@ pub fn score_patch(
   let cyc_delta = current_cyclomatic - previous_cyclomatic
   let has_forbidden_bevy = string.contains(code, "bevy")
   let has_forbidden_graphite = string.contains(code, "graphite")
-  let has_panic = string.contains(code, "panic!") || string.contains(code, "unwrap(")
-  let has_os_drive_wipe = string.contains(code, "25503L801736") && string.contains(code, "wipe")
+  let has_panic =
+    string.contains(code, "panic!") || string.contains(code, "unwrap(")
+  let has_os_drive_wipe =
+    string.contains(code, "25503L801736") && string.contains(code, "wipe")
 
   let verdict = case True {
     _ if has_os_drive_wipe ->
       PatchBlocked("Hard denied root NVMe 25503L801736 safety violation")
     _ if has_forbidden_bevy || has_forbidden_graphite ->
       PatchBlocked("Zero-Muda purity violation: Bevy/Graphite barred")
-    _ if has_panic ->
-      PatchWarning("Unsafe panic/unwrap path detected")
-    _ if cyc_delta > 15 ->
-      PatchWarning("High cyclomatic complexity spike")
+    _ if has_panic -> PatchWarning("Unsafe panic/unwrap path detected")
+    _ if cyc_delta > 15 -> PatchWarning("High cyclomatic complexity spike")
     _ -> PatchNominal
   }
 

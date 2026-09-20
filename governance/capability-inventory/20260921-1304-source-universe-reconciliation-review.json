@@ -1,0 +1,40 @@
+{
+  "schema": "uos.source-universe-reconciliation-review.v1",
+  "receipt_id": "20260921-1304-source-universe-reconciliation-review",
+  "host_reference_time": "2026-09-21T13:00:13Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "workflow_id": "uos/system-mcp-features/20260919-1642/mcp/source-universe-reconcile",
+  "authority": "NONE_REPORT_ONLY",
+  "result": "HOLD_SOURCE_UNIVERSE_RECONCILIATION",
+  "task_completion": false,
+  "admission": "NOT_ADMITTED",
+  "ledger": {
+    "path": "governance/capability-inventory/20260921-0706-source-universe-ledger.json",
+    "observed_text_utf8_sha256": "0960ff30f9d68e79b2293405e65aad78051cffae5a9134e0bd6dc86031698640",
+    "records": 23,
+    "recorded_pins": 19,
+    "matching_recorded_pins": 19,
+    "missing_pins": 4,
+    "dangling_edges": 5,
+    "mcp_availability": "UNKNOWN"
+  },
+  "findings": {
+    "missing_pins": ["wrapper.sa_plan", "wrapper.zigvm", "wrapper.uos_cli", "wrapper.uos_gleam_start"],
+    "unsupported_edge": "engine.hermes_ops -> wrapper.tools.uos_cli",
+    "missing_classifications": ["test", "reference_only"],
+    "target_conservation": "incomplete"
+  },
+  "required_repairs": [
+    "Create successor ledger with four wrapper source pins and preserved historical correction.",
+    "Resolve typed edges to existing IDs and remove unsupported Hermes attribution.",
+    "Split manifest targets and add explicit test/reference_only records.",
+    "Reconcile nested Dune, alternate application CLIs, native bridges and wrappers under Sa-plan.",
+    "Keep source coverage, MCP mapping and runtime usability independent."
+  ],
+  "completion": {
+    "source_universe_complete": false,
+    "mcp_mapping_complete": false,
+    "runtime_usable": "UNKNOWN",
+    "system_admission": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "uos.mcp-observation-receipt.v1",
+  "timestamp": "20260921-1742",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "tool": "feature_tracker_status",
+  "transport": "stdio",
+  "observed": {"total": 21, "completed": 4, "ready": 3, "executing": 0, "log": "/tmp/mcp-feature-tracker-1742.log", "log_sha256": "d422a60214c2257d994d1ce1a0d73ff5e7f060196a26d22933ae14fa2afbdd2d"},
+  "result": "live_read_only_dashboard_projection_matches_sa_plan",
+  "boundary": {"authorization_mode": "audit_only", "runtime_admission": "not_granted", "effect_authority": false, "counts_as_completion": false}
+}

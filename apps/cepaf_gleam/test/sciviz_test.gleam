@@ -6,10 +6,9 @@ import cepaf_gleam/sciviz/dsl
 import cepaf_gleam/sciviz/instruments
 import cepaf_gleam/sciviz/renderer
 import cepaf_gleam/sciviz/schema.{
-  ArcLayer, GeomArea, GeomLine, GeomPhasePortrait, GeomPoint,
-  HeatmapMatrixLayer, PathLayer, Point2D, Scale2D, ScatterplotLayer,
-  SceneNode, TopologyGraphLayer, VisualCircle, VisualRect, VisualText,
-  new_fifo, push_fifo,
+  ArcLayer, GeomArea, GeomLine, GeomPhasePortrait, GeomPoint, HeatmapMatrixLayer,
+  PathLayer, Point2D, Scale2D, ScatterplotLayer, SceneNode, TopologyGraphLayer,
+  VisualCircle, VisualRect, VisualText, new_fifo, push_fifo,
 }
 import gleam/list
 import gleeunit
@@ -125,18 +124,22 @@ pub fn deck_gl_and_pixi_scene_graph_test() {
 
   let plot =
     dsl.new_plot("Integrated Composite Display", 600.0, 400.0)
-    |> dsl.add_deck_layer(ScatterplotLayer("scatter-1", [p1, p2], 5.0, "#38bdf8"))
+    |> dsl.add_deck_layer(ScatterplotLayer(
+      "scatter-1",
+      [p1, p2],
+      5.0,
+      "#38bdf8",
+    ))
     |> dsl.add_deck_layer(PathLayer("path-1", [p1, p2], 2.0, "#fbbf24"))
     |> dsl.add_deck_layer(ArcLayer("arc-1", p1, p2, 25.0, 2.0, "#818cf8"))
+    |> dsl.add_deck_layer(HeatmapMatrixLayer(
+      "heat-1",
+      [[1.0, 0.5], [0.2, 0.9]],
+      0.0,
+      1.0,
+    ))
     |> dsl.add_deck_layer(
-      HeatmapMatrixLayer("heat-1", [[1.0, 0.5], [0.2, 0.9]], 0.0, 1.0),
-    )
-    |> dsl.add_deck_layer(
-      TopologyGraphLayer(
-        "topo-1",
-        [#("nas-1", p1), #("vm-1", p2)],
-        [#(0, 1)],
-      ),
+      TopologyGraphLayer("topo-1", [#("nas-1", p1), #("vm-1", p2)], [#(0, 1)]),
     )
     |> dsl.add_scene_child(node_circle)
     |> dsl.add_scene_child(node_rect)

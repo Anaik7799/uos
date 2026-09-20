@@ -10,8 +10,8 @@ import cepaf_gleam/harness/agent_ecology.{
   A10MeshTelemetryObservability, A11AgentEventBusProtocol,
   A12DeclarativeUIComponentCatalog, A13MultiInterfaceAccessibility,
   A14UniversalTailscaleWebNavigation, A15ComprehensiveVerificationChecklist,
-  A16KnowledgeManagementTriad, A17DurableExecutionWorkflow,
-  all_agent_profiles, all_system_aspects, andon_halt_quorum_missing_code,
+  A16KnowledgeManagementTriad, A17DurableExecutionWorkflow, all_agent_profiles,
+  all_system_aspects, andon_halt_quorum_missing_code,
   andon_halt_unauthorized_code, aspect_from_code, aspect_to_code,
   can_execute_capability, can_invoke_tool, evaluate_agent_intent,
   format_aspect_detail, format_aspects_summary, format_ecology_summary,
@@ -68,8 +68,14 @@ pub fn rich_agent_profiles_enumeration_test() {
 
 pub fn capability_and_tool_allowlist_test() {
   let assert Ok(sec_profile) = get_agent_profile("security_hardware_guardian")
-  should.be_true(can_execute_capability(sec_profile, "drive_serial_enclave_lock"))
-  should.be_false(can_execute_capability(sec_profile, "lean4_theorem_validation"))
+  should.be_true(can_execute_capability(
+    sec_profile,
+    "drive_serial_enclave_lock",
+  ))
+  should.be_false(can_execute_capability(
+    sec_profile,
+    "lean4_theorem_validation",
+  ))
 
   should.be_true(can_invoke_tool(sec_profile, "storage_status"))
   should.be_false(can_invoke_tool(sec_profile, "drop_table_users"))
@@ -107,15 +113,21 @@ pub fn aspects_markdown_formatters_test() {
   string.contains(summary, "Substrate & Hardware Safety") |> should.be_true
 
   let detail_a01 = format_aspect_detail("A01")
-  string.contains(detail_a01, "Aspect A01: Substrate & Hardware Safety Enclave") |> should.be_true
+  string.contains(detail_a01, "Aspect A01: Substrate & Hardware Safety Enclave")
+  |> should.be_true
   string.contains(detail_a01, "[REDACTED_SYSTEM_OS_SERIAL]") |> should.be_true
 
   let detail_a17 = format_aspect_detail("17")
-  string.contains(detail_a17, "Aspect A17: Durable Execution & Workflow (Sa-Plan)") |> should.be_true
+  string.contains(
+    detail_a17,
+    "Aspect A17: Durable Execution & Workflow (Sa-Plan)",
+  )
+  |> should.be_true
   string.contains(detail_a17, "SC-JIDOKA-001") |> should.be_true
 
   let detail_unknown = format_aspect_detail("invalid_code")
-  string.contains(detail_unknown, "Unknown System Aspect code") |> should.be_true
+  string.contains(detail_unknown, "Unknown System Aspect code")
+  |> should.be_true
 }
 
 pub fn ecology_markdown_formatters_test() {
@@ -130,7 +142,8 @@ pub fn ecology_markdown_formatters_test() {
   string.contains(detail_agy, "plan_status") |> should.be_true
 
   let detail_sec = format_profile_detail("security_hardware_guardian")
-  string.contains(detail_sec, "2oo3 Constitutional Quorum Required") |> should.be_true
+  string.contains(detail_sec, "2oo3 Constitutional Quorum Required")
+  |> should.be_true
 
   let detail_unknown = format_profile_detail("unknown_agent")
   string.contains(detail_unknown, "Unknown agent profile ID") |> should.be_true

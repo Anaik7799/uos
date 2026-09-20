@@ -3,8 +3,8 @@
 //// =============================================================================
 
 import cepaf_gleam/harness/cognitive_worker.{
-  CognitiveIntent, GetWorkerStatus, ProcessIntent, decode_intent, encode_decision,
-  evaluate_intent, handle_message, init_worker,
+  CognitiveIntent, GetWorkerStatus, ProcessIntent, decode_intent,
+  encode_decision, evaluate_intent, handle_message, init_worker,
 }
 import envoy
 import gleam/erlang/process
@@ -25,7 +25,7 @@ pub fn decode_standard_intent_test() {
   intent.user |> should.equal("Avi")
   intent.chat_id |> should.equal("142270921")
   intent.text |> should.equal("cluster health report")
-  intent.timestamp_ms |> should.equal(1788978900000)
+  intent.timestamp_ms |> should.equal(1_788_978_900_000)
 }
 
 pub fn decode_edge_telegram_intent_test() {
@@ -52,13 +52,15 @@ pub fn encode_decision_test() {
       actions: ["action1", "action2"],
       reply_markdown: "Markdown reply",
       confidence: 0.98,
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
 
   let json_str = encode_decision(decision)
   json_str |> string.contains("\"intent_id\":\"cog-102\"") |> should.be_true
   json_str |> string.contains("\"ooda_phase\":\"Completed\"") |> should.be_true
-  json_str |> string.contains("\"worker\":\"uos-gleam-cognitive-worker-1\"") |> should.be_true
+  json_str
+  |> string.contains("\"worker\":\"uos-gleam-cognitive-worker-1\"")
+  |> should.be_true
 }
 
 pub fn evaluate_cluster_health_intent_test() {
@@ -70,7 +72,7 @@ pub fn evaluate_cluster_health_intent_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "analyze cluster load and health",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
 
   let decision = evaluate_intent(intent)
@@ -89,7 +91,7 @@ pub fn evaluate_saplan_intent_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "what is the current task in sa-plan",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
 
   let decision = evaluate_intent(intent)
@@ -107,13 +109,17 @@ pub fn evaluate_formal_math_intent_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "explain lean 4 proof and mathematical gates",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
 
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-105")
-  decision.reply_markdown |> string.contains("Traceability.lean") |> should.be_true
-  decision.reply_markdown |> string.contains("Shannon Entropy Gate") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Traceability.lean")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Shannon Entropy Gate")
+  |> should.be_true
 }
 
 pub fn evaluate_zigvm_intent_test() {
@@ -125,7 +131,7 @@ pub fn evaluate_zigvm_intent_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "run deterministic zigvm calc",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
 
   let decision = evaluate_intent(intent)
@@ -142,13 +148,17 @@ pub fn evaluate_general_intent_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "good morning system",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
 
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-107")
-  decision.reply_markdown |> string.contains("Deterministic Autonomous Directive Gateway") |> should.be_true
-  decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Deterministic Autonomous Directive Gateway")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("UOS Cluster Telemetry")
+  |> should.be_true
 }
 
 pub fn actor_message_handling_test() {
@@ -163,7 +173,7 @@ pub fn actor_message_handling_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "status check",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
 
   let sub = process.new_subject()
@@ -204,12 +214,16 @@ pub fn evaluate_directive_help_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "/help",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-help-1")
-  decision.reply_markdown |> string.contains("Available Operator Directives") |> should.be_true
-  decision.actions |> list.contains("show_directive_reference") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Available Operator Directives")
+  |> should.be_true
+  decision.actions
+  |> list.contains("show_directive_reference")
+  |> should.be_true
 }
 
 pub fn evaluate_directive_status_test() {
@@ -220,11 +234,13 @@ pub fn evaluate_directive_status_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "/status",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-status-1")
-  decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("UOS Cluster Telemetry")
+  |> should.be_true
   decision.actions |> list.contains("query_zenoh") |> should.be_true
 }
 
@@ -236,11 +252,13 @@ pub fn evaluate_directive_cockpit_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "/cockpit",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-cockpit-1")
-  decision.reply_markdown |> string.contains("nas-1.tail55d152.ts.net:4100") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("nas-1.tail55d152.ts.net:4100")
+  |> should.be_true
 }
 
 pub fn evaluate_identity_query_test() {
@@ -251,11 +269,13 @@ pub fn evaluate_identity_query_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "who are you?",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-id-1")
-  decision.reply_markdown |> string.contains("UOS Sovereign Cybernetic Harness") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("UOS Sovereign Cybernetic Harness")
+  |> should.be_true
   decision.actions |> list.contains("respond_identity") |> should.be_true
 }
 
@@ -274,13 +294,17 @@ pub fn evaluate_cognitive_architecture_query_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "what does the sovereign cognitive architect do — show processing path",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-arch-1")
-  decision.reply_markdown |> string.contains("5-Stage OODA Processing Path") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("5-Stage OODA Processing Path")
+  |> should.be_true
   decision.reply_markdown |> string.contains("Robot C3I") |> should.be_true
-  decision.actions |> list.contains("explain_cognitive_architecture") |> should.be_true
+  decision.actions
+  |> list.contains("explain_cognitive_architecture")
+  |> should.be_true
 }
 
 pub fn evaluate_telegram_history_query_test() {
@@ -292,11 +316,13 @@ pub fn evaluate_telegram_history_query_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "show last 10 telegram messages",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-hist-1")
-  decision.reply_markdown |> string.contains("Recent Telegram Conversation Stream") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Recent Telegram Conversation Stream")
+  |> should.be_true
   decision.actions |> list.contains("query_telegram_history") |> should.be_true
 }
 
@@ -308,10 +334,12 @@ pub fn evaluate_directive_messages_test() {
       user: "Avi",
       chat_id: "142270921",
       text: "/messages 5",
-      timestamp_ms: 1788978900000,
+      timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-msg-dir-1")
-  decision.reply_markdown |> string.contains("Recent Telegram Conversation Stream") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Recent Telegram Conversation Stream")
+  |> should.be_true
   decision.actions |> list.contains("query_telegram_history") |> should.be_true
 }

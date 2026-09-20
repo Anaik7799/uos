@@ -152,7 +152,8 @@ pub fn bdd_feature3_scenario2_inter_node_communication_flow_arcs_test() {
 pub fn bdd_feature4_scenario1_cascading_affine_transforms_test() {
   // Given: parent scene node with translate and rotation
   let child_circle = dsl.create_scene_circle("c1", 0.0, 0.0, 10.0, "#38bdf8")
-  let child_rect = dsl.create_scene_rect("r1", 10.0, 10.0, 40.0, 20.0, "#10b981")
+  let child_rect =
+    dsl.create_scene_rect("r1", 10.0, 10.0, 40.0, 20.0, "#10b981")
 
   let parent =
     SceneNode(
@@ -170,7 +171,8 @@ pub fn bdd_feature4_scenario1_cascading_affine_transforms_test() {
 
 pub fn bdd_feature4_scenario2_nine_slice_panel_geometry_test() {
   // Given: VisualNineSlicePlane with border insets 4.0
-  let panel = VisualNineSlicePlane(0.0, 0.0, 120.0, 80.0, 4.0, 4.0, 4.0, 4.0, "#020617")
+  let panel =
+    VisualNineSlicePlane(0.0, 0.0, 120.0, 80.0, 4.0, 4.0, 4.0, 4.0, "#020617")
 
   // Then: panel parameters preserved
   panel.w |> should.equal(120.0)
@@ -185,7 +187,8 @@ pub fn bdd_feature4_scenario2_nine_slice_panel_geometry_test() {
 
 pub fn bdd_feature5_scenario1_constitutional_2oo3_interlock_test() {
   // Given: Tri-sovereign votes AGY=True, Claude=True, Codex=False (2oo3)
-  let _el = instruments.render_constitutional_interlock(True, True, False, 400.0, 300.0)
+  let _el =
+    instruments.render_constitutional_interlock(True, True, False, 400.0, 300.0)
 
   // Then: 2 of 3 is majority True, consensus holds
   let majority = { 1 + 1 + 0 } >= 2
@@ -203,7 +206,8 @@ pub fn bdd_feature5_scenario2_lyapunov_damping_decay_test() {
   ]
 
   // When: rendering damping funnel
-  let _el = instruments.render_lyapunov_damping_funnel(envelope, 22.5, 500.0, 300.0)
+  let _el =
+    instruments.render_lyapunov_damping_funnel(envelope, 22.5, 500.0, 300.0)
 
   // Then: energy derivative satisfies dV/dt <= 0
   let v0 = 100.0

@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260930-0408-346e2b85ebdb3aac7e01fce61342b7db1edfae123df47200b621dd3175274a39",
+  "payload_sha256": "d056f875a50fa82d8a591f8f63592b8328c41f41aa177b38c8973a3edeacc5f3",
+  "application_admitted": false
+}

@@ -14,12 +14,12 @@
 ////   - Supervised OCaml Worker Port: BEAM reduction budget protected
 //// =============================================================================
 
-import gleam/int
-import gleam/json
-import gleam/list
 import cepaf_gleam/knowledge/c3i_knowledge_runtime.{
   type CitedKnowledgeItem, type CrossLanguageReceipt,
 }
+import gleam/int
+import gleam/json
+import gleam/list
 
 // -----------------------------------------------------------------------------
 // §1.0 Types & Structures
@@ -48,11 +48,7 @@ pub type ConformanceVerdict {
 }
 
 pub type TripartitePresentation {
-  TripartitePresentation(
-    ssr_html: String,
-    api_json: String,
-    tui_ansi: String,
-  )
+  TripartitePresentation(ssr_html: String, api_json: String, tui_ansi: String)
 }
 
 pub type VerticalSliceResult {
@@ -78,8 +74,9 @@ pub fn ingest_journal_entry(journal_path: String) -> JournalIngestionRecord {
   let title = "UOS Master Session Handover & C3I Integration Journal"
   let timestamp = "20260906-2000-"
   let sections_count = 13
-  let digest = "sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
-  
+  let digest =
+    "sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
+
   JournalIngestionRecord(
     journal_id: "JRN-20260906-2000-HANDOVER",
     title: title,
@@ -117,7 +114,9 @@ pub fn evaluate_rust_ocaml_conformance(
         parity_matched: True,
       )
     False ->
-      ConformanceFailed("Digest mismatch between Rust NIF and Hermes OCaml oracle")
+      ConformanceFailed(
+        "Digest mismatch between Rust NIF and Hermes OCaml oracle",
+      )
   }
 }
 
@@ -134,7 +133,9 @@ pub fn execute_callable_ocaml_lookup(
       "4bf92f3577b34da6a3ce929d0e0e4736",
       "c3i_vertical_slice_actor",
       "callable_ocaml_lookup",
-      "{\"query\":\"" <> query <> "\",\"port_protocol\":\"stdio_pipe_supervised\"}",
+      "{\"query\":\""
+        <> query
+        <> "\",\"port_protocol\":\"stdio_pipe_supervised\"}",
       idempotency_key,
     )
   c3i_knowledge_runtime.execute_ocaml_worker_port_call(envelope)
@@ -158,9 +159,17 @@ pub fn render_tripartite_display(
   // 1. SSR HTML for Lustre Web
   let ssr_html =
     "<div class=\"c3i-vertical-slice\">\n"
-    <> "  <h3>Vertical Slice: " <> journal.title <> "</h3>\n"
-    <> "  <p>Sections: " <> int.to_string(journal.sections_count) <> "/13 | Parity: " <> parity_str <> "</p>\n"
-    <> "  <p>Cited Items Retrieved: " <> int.to_string(count) <> "</p>\n"
+    <> "  <h3>Vertical Slice: "
+    <> journal.title
+    <> "</h3>\n"
+    <> "  <p>Sections: "
+    <> int.to_string(journal.sections_count)
+    <> "/13 | Parity: "
+    <> parity_str
+    <> "</p>\n"
+    <> "  <p>Cited Items Retrieved: "
+    <> int.to_string(count)
+    <> "</p>\n"
     <> "  <a href=\"http://nas-1.tail55d152.ts.net:4100/api/knowledge/vertical-slice\">Live API</a>\n"
     <> "</div>"
 
@@ -173,7 +182,12 @@ pub fn render_tripartite_display(
       #("all_13_sections_present", json.bool(journal.all_13_sections_present)),
       #("conformance", json.string(parity_str)),
       #("cited_items_count", json.int(count)),
-      #("tailscale_fqdn", json.string("http://nas-1.tail55d152.ts.net:4100/api/knowledge/vertical-slice")),
+      #(
+        "tailscale_fqdn",
+        json.string(
+          "http://nas-1.tail55d152.ts.net:4100/api/knowledge/vertical-slice",
+        ),
+      ),
     ])
     |> json.to_string
 
@@ -198,12 +212,17 @@ pub fn render_tripartite_display(
 // -----------------------------------------------------------------------------
 
 pub fn run_knowledge_vertical_slice(query: String) -> VerticalSliceResult {
-  let journal = ingest_journal_entry("docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md")
+  let journal =
+    ingest_journal_entry(
+      "docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md",
+    )
   let cited_items = retrieve_cited_knowledge(query)
   let shared_digest = "sha256:d8e8fca2dc0f896fd7cb4cb0031ba249"
-  let conformance = evaluate_rust_ocaml_conformance(shared_digest, shared_digest)
+  let conformance =
+    evaluate_rust_ocaml_conformance(shared_digest, shared_digest)
   let ocaml_receipt = execute_callable_ocaml_lookup(query, "IDEMP-SLICE-001")
-  let presentation = render_tripartite_display(journal, cited_items, conformance)
+  let presentation =
+    render_tripartite_display(journal, cited_items, conformance)
 
   let is_conformance_ok = case conformance {
     ConformancePassed(..) -> True
@@ -263,7 +282,10 @@ pub fn encode_vertical_slice_json(result: VerticalSliceResult) -> String {
           #("id", json.string(result.journal.journal_id)),
           #("title", json.string(result.journal.title)),
           #("sections_count", json.int(result.journal.sections_count)),
-          #("all_13_sections_present", json.bool(result.journal.all_13_sections_present)),
+          #(
+            "all_13_sections_present",
+            json.bool(result.journal.all_13_sections_present),
+          ),
           #("content_digest", json.string(result.journal.content_digest)),
         ]),
       ),
@@ -279,7 +301,12 @@ pub fn encode_vertical_slice_json(result: VerticalSliceResult) -> String {
       ),
       #("cited_items_count", json.int(list.length(result.cited_items))),
       #("cited_items", json.array(items_json, fn(x) { x })),
-      #("tailscale_fqdn", json.string("http://nas-1.tail55d152.ts.net:4100/api/knowledge/vertical-slice")),
+      #(
+        "tailscale_fqdn",
+        json.string(
+          "http://nas-1.tail55d152.ts.net:4100/api/knowledge/vertical-slice",
+        ),
+      ),
     ]),
   )
 }

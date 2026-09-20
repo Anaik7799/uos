@@ -21,10 +21,7 @@ pub fn model_spec_json(model: ModelSpec) -> Json {
     #("name", json.string(model.name)),
     #("tier", json.string(tier_to_string(model.tier))),
     #("prompt_usd_per_token", json.float(model.prompt_usd_per_token)),
-    #(
-      "completion_usd_per_token",
-      json.float(model.completion_usd_per_token),
-    ),
+    #("completion_usd_per_token", json.float(model.completion_usd_per_token)),
     #("max_tokens_ceiling", json.int(model.max_tokens_ceiling)),
     #("description", json.string(model.description)),
   ])

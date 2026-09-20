@@ -62,7 +62,7 @@ pub fn chaos_c1_sqlite_storage_failure_injection_test() {
       "user",
       "test message",
       None,
-      1789184000000,
+      1_789_184_000_000,
     )
   {
     Ok(_) -> should.fail()
@@ -83,7 +83,7 @@ pub fn chaos_c1_sqlite_storage_failure_injection_test() {
       user: "Avi",
       chat_id: "chaos-c1-chat",
       text: "/status",
-      timestamp_ms: 1789184000000,
+      timestamp_ms: 1_789_184_000_000,
     )
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("chaos-c1-intent")
@@ -116,7 +116,7 @@ pub fn chaos_c2_openrouter_outage_failover_test() {
         user: "Avi",
         chat_id: "6249174059",
         text: query,
-        timestamp_ms: 1789184000000,
+        timestamp_ms: 1_789_184_000_000,
       )
     let decision = handle_conversational(query, intent)
 
@@ -175,7 +175,7 @@ pub fn chaos_c4_worker_actor_lifecycle_and_fault_resilience_test() {
       user: "Avi",
       chat_id: "6249174059",
       text: "/status",
-      timestamp_ms: 1789184000000,
+      timestamp_ms: 1_789_184_000_000,
     )
   let decision1 =
     process.call(worker_subj, 5000, fn(reply_to) {
@@ -192,7 +192,7 @@ pub fn chaos_c4_worker_actor_lifecycle_and_fault_resilience_test() {
       user: "Avi",
       chat_id: "6249174059",
       text: "what does the sovereign cognitive architect do — show processing path",
-      timestamp_ms: 1789184001000,
+      timestamp_ms: 1_789_184_001_000,
     )
   let decision2 =
     process.call(worker_subj, 5000, fn(reply_to) {
@@ -202,9 +202,7 @@ pub fn chaos_c4_worker_actor_lifecycle_and_fault_resilience_test() {
 
   // Query worker status
   let status =
-    process.call(worker_subj, 5000, fn(reply_to) {
-      GetWorkerStatus(reply_to)
-    })
+    process.call(worker_subj, 5000, fn(reply_to) { GetWorkerStatus(reply_to) })
   status.intents_processed |> should.equal(2)
   status.tick_count |> should.equal(3)
   status.active |> should.be_true
@@ -226,7 +224,7 @@ pub fn chaos_c5_fractal_jidoka_andon_stop_line_on_tampered_mutation_test() {
       user: "Attacker",
       chat_id: "6249174059",
       text: "/tool chaos_inject",
-      timestamp_ms: 1789184000000,
+      timestamp_ms: 1_789_184_000_000,
     )
 
   let mutating_tools = [
@@ -304,7 +302,11 @@ pub fn chaos_c6_outbound_payload_tamper_defense_test() {
 
   list.each(attack_payloads, fn(raw_text) {
     let json_payload =
-      telegram_outbound.build_send_payload("6249174059", raw_text, Some("Markdown"))
+      telegram_outbound.build_send_payload(
+        "6249174059",
+        raw_text,
+        Some("Markdown"),
+      )
 
     // Denied serial must be 100% purged from the outbound JSON
     string.contains(json_payload, denied_serial) |> should.be_false
@@ -332,7 +334,7 @@ pub fn chaos_c7_burst_flood_and_history_boundedness_test() {
         user: "BurstTester",
         chat_id: "chaos-c7-chat",
         text: "burst test message " <> int.to_string(idx),
-        timestamp_ms: 1789184000000 + idx * 100,
+        timestamp_ms: 1_789_184_000_000 + idx * 100,
       )
     let decision = evaluate_intent(intent)
     decision.intent_id |> should.equal("burst-" <> int.to_string(idx))
@@ -348,7 +350,7 @@ pub fn chaos_c7_burst_flood_and_history_boundedness_test() {
           False -> "assistant"
         },
         content: "turn " <> int.to_string(i),
-        timestamp_ms: 1789184000000 + i * 1000,
+        timestamp_ms: 1_789_184_000_000 + i * 1000,
       )
     })
 

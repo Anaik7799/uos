@@ -1,0 +1,20 @@
+{
+  "schema": "uos.coordinator-registration-comparison.v1",
+  "observed_at": "2026-09-21T16:43:45Z",
+  "authority": "read-only SQLite comparison; no candidate promotion",
+  "canonical": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "register_events": 1,
+    "actors": ["claude-sovereign-fable-l0"]
+  },
+  "candidate": {
+    "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3",
+    "sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891",
+    "register_events": 5,
+    "actors": ["01a07a68-b3b7-70f3-9e64-fac68a156c21","L0-fable","6e132c1c-7436-43ef-abb6-f3468e7fe87f","656f0d2c-6019-4d9e-b0ce-b9e39b240047","e7bd3330-0401-4845-8510-78beeaca7b0d"]
+  },
+  "decision": "HOLD",
+  "interpretation": "Candidate identity density is evidence only; it does not establish source authority, common-prefix continuity, writer quiescence, or admission.",
+  "completion_credit": false
+}

@@ -1,0 +1,341 @@
+{
+  "schema": "uos.system-coordination-observation.v1",
+  "observed_at": "2026-09-20T03:32:43Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t0-coordination",
+  "worker": "codex-01a0ba74-feature-tracker",
+  "attempt": 1,
+  "status": "HOLD",
+  "authority": "observation_only",
+  "system_admission": false,
+  "scope": "Coordinator diagnosis and runtime participation sample; not a complete system feature inventory or deployed tracker",
+  "source_evidence": [
+    {
+      "sha256": "cecaf4d8e9e4c33991c1412164b6c9dcfe77b736fac7de5dc7b46aa3e54440c0",
+      "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "observed_at": "2026-09-20T03:29:04Z"
+    },
+    {
+      "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335",
+      "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+      "observed_at": "2026-09-20T03:29:04Z"
+    },
+    {
+      "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "observed_at": "2026-09-20T03:29:04Z"
+    },
+    {
+      "sha256": "d0a2fe78eb7d2ee44da51a9b3772bf273496a97e00cd43bc0eb56638b0585fba",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "observed_at": "2026-09-20T03:29:04Z"
+    },
+    {
+      "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+      "observed_at": "2026-09-20T03:29:04Z"
+    }
+  ],
+  "coordinator": {
+    "file": {
+      "ok": false,
+      "healthy_events": 1761,
+      "head_digest": "ff5bb0f8a0067863291b4cff2f9d55bc9655873c239d572b0c2a9dd046ca26a4",
+      "first_failure_sequence": 1762,
+      "failure": "digest does not recompute from the event body",
+      "evidence_grade": "Measured"
+    },
+    "sqlite": {
+      "ok": false,
+      "checked": 117,
+      "sequence_ok": true,
+      "chain_ok": true,
+      "digest_ok": false,
+      "triggers_present": true,
+      "unique_operations": true,
+      "failures": [
+        "sequence 66: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 67: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 68: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 69: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 70: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 71: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 72: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 73: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 74: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 75: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 76: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 77: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 78: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 79: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 80: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 81: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 82: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 83: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 84: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 85: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 86: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 87: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 88: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 89: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 90: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 91: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 92: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 93: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 94: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 95: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 96: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 97: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 98: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 99: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 100: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 101: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 102: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 103: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 104: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 105: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 106: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 107: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 108: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 109: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 110: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 111: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 112: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 113: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 114: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 115: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 116: stored digest does not recompute from body_json (sha256 mismatch)",
+        "sequence 117: stored digest does not recompute from body_json (sha256 mismatch)"
+      ]
+    },
+    "semantic_replay_error": "corrupt: session is not registered",
+    "alternate_database": {
+      "path": "var/coordination/tri-agent/events.sqlite3",
+      "last_observed_date": "2026-09-19",
+      "checked": 0,
+      "status": "EMPTY_STALE_OBSERVATION"
+    },
+    "selected_recovery_target": "PENDING_OPERATOR_CHOICE",
+    "coordinator_lease_held": false
+  },
+  "ecology": {
+    "epoch_us": 1789875163640901,
+    "cycle_counter": 30192,
+    "total_holons": 26,
+    "participant_kind": "local_agentic_model",
+    "hosting": "one_shared_ecology_actor",
+    "external_system_binding": false,
+    "invocation_sequence": 30192,
+    "service_andon": [
+      {
+        "capability": "modular_max",
+        "phase": "stopped",
+        "reason": "startup_recovery_required",
+        "failure_count": 0,
+        "recovery_attempts": 0,
+        "recovery_count": 0,
+        "last_failure": null,
+        "last_recovery": null,
+        "scope": "all participant models in this ecology actor; recovery required after every restart"
+      },
+      {
+        "capability": "openrouter_free",
+        "phase": "stopped",
+        "reason": "startup_recovery_required",
+        "failure_count": 0,
+        "recovery_attempts": 0,
+        "recovery_count": 0,
+        "last_failure": null,
+        "last_recovery": null,
+        "scope": "all participant models in this ecology actor; recovery required after every restart"
+      }
+    ],
+    "participant_ids": [
+      "ucon",
+      "indrajaal",
+      "hive-mind-decider",
+      "hermes-rete-ul",
+      "lean4-oracle",
+      "openrouter-advisory",
+      "max-simd-tensor",
+      "prajna-homeostasis",
+      "lyapunov-monitor",
+      "freshness-bayan",
+      "circuit-breaker",
+      "zenoh-mesh",
+      "coordination-board",
+      "agui-event-stream",
+      "constitution",
+      "km-gate",
+      "coord",
+      "km-corpus",
+      "sa-plan-db",
+      "events-store",
+      "max-inference-daemon",
+      "solo5-sandbox",
+      "work-stealing-pool",
+      "agy-agent",
+      "claude-agent",
+      "codex-agent"
+    ],
+    "receipt_count": 128
+  },
+  "external_agents": [
+    {
+      "provider": "codex",
+      "session": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+      "task_worker": "codex-01a0ba74-feature-tracker",
+      "coordination": "actual local session; Sa-plan claim observed",
+      "board_ack": false
+    },
+    {
+      "provider": "claude",
+      "session": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+      "coordination": "independent read-only review and delta ACK observed via session-checked Herdr; recovery not performed",
+      "board_ack": false
+    },
+    {
+      "provider": "agy",
+      "session": "78478741-67b5-4c1e-8857-7a6dc948d10f",
+      "coordination": "initial HOLD ACK observed via session-checked Herdr; future worker identity correction requested, not yet acknowledged",
+      "board_ack": false
+    },
+    {
+      "provider": "agy",
+      "session": "eb7a42c0-03e5-4814-9e55-4414c7c4eb28",
+      "coordination": "additional idle parent-workspace session discovered; participation not established",
+      "board_ack": false
+    }
+  ],
+  "mcp": {
+    "observed_connected_tools": [
+      "read_file",
+      "knowledge_search"
+    ],
+    "all_capabilities_available": false,
+    "inventory_complete": false,
+    "feature_tracker_implemented": false
+  },
+  "aspects": [
+    {
+      "id": "A01",
+      "title": "Substrate & Hardware Storage Interlock",
+      "status": "NOT_EXERCISED",
+      "evidence": "No storage recovery, allocation or destructive operations authorized."
+    },
+    {
+      "id": "A02",
+      "title": "Standalone Jujutsu Monorepo Discipline",
+      "status": "OBSERVED",
+      "evidence": "Clean initial working copy; isolated report additions only; no VCS mutation by this session."
+    },
+    {
+      "id": "A03",
+      "title": "Zero-Muda Purity & Waste Elimination",
+      "status": "SCOPED",
+      "evidence": "No dependencies or new runtime introduced; fleet exclusion scan not executed."
+    },
+    {
+      "id": "A04",
+      "title": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "status": "PARTIAL",
+      "evidence": "Live ecology is one shared actor, not evidence that all named systems are individually supervised."
+    },
+    {
+      "id": "A05",
+      "title": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "status": "UNRUN",
+      "evidence": "No new runtime-kernel evidence."
+    },
+    {
+      "id": "A06",
+      "title": "Hermes Formal Evidence, Gospel & Z3",
+      "status": "PARTIAL",
+      "evidence": "Sa-plan SQLite records observed; bounded formal refinement not run."
+    },
+    {
+      "id": "A07",
+      "title": "Mathematical Authority & Conservation",
+      "status": "UNRUN",
+      "evidence": "No admission or new formal proof claimed."
+    },
+    {
+      "id": "A08",
+      "title": "Biosemiotic Cybernetics & Rocha Cut",
+      "status": "GAP",
+      "evidence": "Declarations, named models and hash chains must not be mistaken for authority."
+    },
+    {
+      "id": "A09",
+      "title": "Quarantined Modular MAX/Mojo Inference",
+      "status": "HOLD",
+      "evidence": "Ecology reports modular_max and openrouter_free stopped; no activation attempted."
+    },
+    {
+      "id": "A10",
+      "title": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "status": "UNVERIFIED",
+      "evidence": "No durable shared board ACK or end-to-end authenticated actor binding established."
+    },
+    {
+      "id": "A11",
+      "title": "AG-UI 32-Event SSE Stream Protocol",
+      "status": "UNRUN",
+      "evidence": "No event-protocol conformance run."
+    },
+    {
+      "id": "A12",
+      "title": "A2UI 233-Component Declarative Catalog",
+      "status": "UNRUN",
+      "evidence": "No UI/catalog runtime conformance run."
+    },
+    {
+      "id": "A13",
+      "title": "Penta-Stack Multi-Interface Accessibility",
+      "status": "GAP",
+      "evidence": "MCP all-capability exposure not established; connected discovery only shows two UOS tools."
+    },
+    {
+      "id": "A14",
+      "title": "Universal Tailscale FQDN Web Navigation",
+      "status": "OBSERVED",
+      "evidence": "Fresh bounded ecology GET succeeded over canonical Tailnet FQDN after sandbox DNS refusal."
+    },
+    {
+      "id": "A15",
+      "title": "Comprehensive Verification Checklist",
+      "status": "SCOPED",
+      "evidence": "Review includes 18 checkpoints and provenance extension, not universal passing states."
+    },
+    {
+      "id": "A16",
+      "title": "Knowledge Management Triad",
+      "status": "PARTIAL",
+      "evidence": "Current overlay references historical review and specifications; full corpus synchronization deferred."
+    },
+    {
+      "id": "A17",
+      "title": "Sa-Plan & Bionic Durable Workflows",
+      "status": "PARTIAL",
+      "evidence": "Exact task claimed via Sa-plan and active risk check passed; coordinator-dependent effects held."
+    }
+  ],
+  "fractal_layers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "limits": [
+    "Local ecology model names are not external process identities.",
+    "Digest validity, semantic replay and authenticated provenance are separate obligations.",
+    "No mutations to coordinator histories, no production restart or admission.",
+    "Report-only risk checks do not create effect-time authority."
+  ]
+}

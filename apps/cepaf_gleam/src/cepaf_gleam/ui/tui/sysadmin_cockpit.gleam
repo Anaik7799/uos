@@ -36,16 +36,16 @@
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-004, SC-GLM-UI-007, SC-MUDA-001
 
 import cepaf_gleam/cockpit/visuals
-import cepaf_gleam/ui/homeostasis_data as homeostasis_data
-import cepaf_gleam/ui/homeostasis_status as homeostasis_status
-import gleam/float
-import gleam/int
-import gleam/list
-import gleam/string
 import cepaf_gleam/ha/homeostasis_evolution_engine.{
   type HomeostasisSystemState, init_homeostasis_system,
 }
 import cepaf_gleam/ha/physiological_homeostasis
+import cepaf_gleam/ui/homeostasis_data
+import cepaf_gleam/ui/homeostasis_status
+import gleam/float
+import gleam/int
+import gleam/list
+import gleam/string
 
 // =============================================================================
 // Domain Types & Enums
@@ -389,7 +389,14 @@ pub fn default_model() -> SysadminModel {
       "ACTIVE (Ceph OSD.1)",
       False,
     ),
-    StorageItem("sda", "WDC-WD40EFAX-01", 4000, 1450, "ACTIVE (ZFS Backup)", False),
+    StorageItem(
+      "sda",
+      "WDC-WD40EFAX-01",
+      4000,
+      1450,
+      "ACTIVE (ZFS Backup)",
+      False,
+    ),
   ]
 
   let topics = [
@@ -417,7 +424,13 @@ pub fn default_model() -> SysadminModel {
       "P0",
       "completed",
     ),
-    TaskItem("TASK-02", "Run 381 Regression Tests", "Testing", "P1", "completed"),
+    TaskItem(
+      "TASK-02",
+      "Run 381 Regression Tests",
+      "Testing",
+      "P1",
+      "completed",
+    ),
     TaskItem(
       "TASK-03",
       "Poll Zenoh Mesh Spans",
@@ -597,14 +610,54 @@ fn default_message_board() -> List(MessageBoardItem) {
 
 fn default_agent_activities() -> List(AgentActivityItem) {
   [
-    AgentActivityItem("EXEC-001 (Orchestrator)", "Executive L5", "Coordinating multi-agent swarm OODA loop", "active"),
-    AgentActivityItem("SUP-CTX (Context)", "Supervisor L5", "Aggregating 13D trace coordinates & ZK ADRs", "active"),
-    AgentActivityItem("SUP-DOM (Domain)", "Supervisor L2", "Evaluating Pareto frontier & non-dominated candidates", "active"),
-    AgentActivityItem("SUP-TST (Testing)", "Supervisor L4", "Monitoring 381 regression tests & 9 modalities", "active"),
-    AgentActivityItem("SUP-QUA (Quality)", "Supervisor L0", "Enforcing Zero-Muda (0 Bevy, 0 Graphite) & NVMe lock", "active"),
-    AgentActivityItem("Cortex Engine", "Cognitive L5", "Biomorphic PID tuning & stress trend Lyapunov damping", "active"),
-    AgentActivityItem("Prajna Breaker", "Safety L0", "14 Circuit breakers active, 0 tripped, 50ms recovery", "active"),
-    AgentActivityItem("Zenoh Mesh Router", "Network L6", "Routing OTel spans and A2A messages over 100.87.7.78", "active"),
+    AgentActivityItem(
+      "EXEC-001 (Orchestrator)",
+      "Executive L5",
+      "Coordinating multi-agent swarm OODA loop",
+      "active",
+    ),
+    AgentActivityItem(
+      "SUP-CTX (Context)",
+      "Supervisor L5",
+      "Aggregating 13D trace coordinates & ZK ADRs",
+      "active",
+    ),
+    AgentActivityItem(
+      "SUP-DOM (Domain)",
+      "Supervisor L2",
+      "Evaluating Pareto frontier & non-dominated candidates",
+      "active",
+    ),
+    AgentActivityItem(
+      "SUP-TST (Testing)",
+      "Supervisor L4",
+      "Monitoring 381 regression tests & 9 modalities",
+      "active",
+    ),
+    AgentActivityItem(
+      "SUP-QUA (Quality)",
+      "Supervisor L0",
+      "Enforcing Zero-Muda (0 Bevy, 0 Graphite) & NVMe lock",
+      "active",
+    ),
+    AgentActivityItem(
+      "Cortex Engine",
+      "Cognitive L5",
+      "Biomorphic PID tuning & stress trend Lyapunov damping",
+      "active",
+    ),
+    AgentActivityItem(
+      "Prajna Breaker",
+      "Safety L0",
+      "14 Circuit breakers active, 0 tripped, 50ms recovery",
+      "active",
+    ),
+    AgentActivityItem(
+      "Zenoh Mesh Router",
+      "Network L6",
+      "Routing OTel spans and A2A messages over 100.87.7.78",
+      "active",
+    ),
   ]
 }
 
@@ -614,7 +667,11 @@ fn default_agent_activities() -> List(AgentActivityItem) {
 
 /// Switch active tab
 pub fn select_tab(model: SysadminModel, tab: Tab) -> SysadminModel {
-  SysadminModel(..model, active_tab: tab, status_msg: "Switched to " <> tab_to_string(tab))
+  SysadminModel(
+    ..model,
+    active_tab: tab,
+    status_msg: "Switched to " <> tab_to_string(tab),
+  )
 }
 
 /// Cycle to next tab
@@ -676,7 +733,12 @@ pub fn restart_selected_container(model: SysadminModel) -> SysadminModel {
       let updated =
         list.map(model.containers, fn(item) {
           case item.name == c.name {
-            True -> ContainerItem(..item, status: "running", restarts: item.restarts + 1)
+            True ->
+              ContainerItem(
+                ..item,
+                status: "running",
+                restarts: item.restarts + 1,
+              )
             False -> item
           }
         })
@@ -776,7 +838,9 @@ pub fn render_header(model: SysadminModel) -> String {
 
   let bar = string.repeat("═", 102)
   let line1 =
-    "╔" <> bar <> "╗\n"
+    "╔"
+    <> bar
+    <> "╗\n"
     <> "║ "
     <> visuals.with_color(
       "UOS C3I SOVEREIGN REMOTE SYSADMIN COCKPIT — AGY (L0-L7 ACCESS)",
@@ -796,7 +860,9 @@ pub fn render_header(model: SysadminModel) -> String {
     <> " │ "
     <> visuals.with_color("[" <> mode_str <> "]", mode_color)
     <> " ║\n"
-    <> "╚" <> bar <> "╝"
+    <> "╚"
+    <> bar
+    <> "╝"
   line1
 }
 
@@ -887,7 +953,17 @@ fn render_overview_tab(model: SysadminModel) -> String {
     ])
 
   string.join(
-    [title, srv_line, ooda, health_strip, threat, schedulers, memory, "", heatmap],
+    [
+      title,
+      srv_line,
+      ooda,
+      health_strip,
+      threat,
+      schedulers,
+      memory,
+      "",
+      heatmap,
+    ],
     "\n",
   )
 }
@@ -897,7 +973,11 @@ fn render_overview_tab(model: SysadminModel) -> String {
 // -----------------------------------------------------------------------------
 
 fn render_containers_tab(model: SysadminModel) -> String {
-  let header = visuals.with_color("  === PODMAN CONTAINER GENOME (16 SIL-6 CONTAINERS) ===", "cyan")
+  let header =
+    visuals.with_color(
+      "  === PODMAN CONTAINER GENOME (16 SIL-6 CONTAINERS) ===",
+      "cyan",
+    )
   let summary =
     "  Total: "
     <> int.to_string(list.length(model.containers))
@@ -958,16 +1038,24 @@ fn render_containers_tab(model: SysadminModel) -> String {
 // -----------------------------------------------------------------------------
 
 fn render_storage_tab(model: SysadminModel) -> String {
-  let title = visuals.with_color("  === HARDWARE STORAGE & DRIVE INTERLOCK AUDIT ===", "cyan")
+  let title =
+    visuals.with_color(
+      "  === HARDWARE STORAGE & DRIVE INTERLOCK AUDIT ===",
+      "cyan",
+    )
   let lock_alert =
     "  ROOT OS INTERLOCK: "
     <> visuals.with_color(
-      "HARD_DENIED_SYSTEM_OS_SERIAL = \"" <> model.nvme_root_serial <> "\" STRICTLY LOCKED",
+      "HARD_DENIED_SYSTEM_OS_SERIAL = \""
+        <> model.nvme_root_serial
+        <> "\" STRICTLY LOCKED",
       "green",
     )
     <> "\n  ENFORCEMENT SITE : ops/kubernetes/nas-k8s-lab/src/spec.rs:192 (WIPE IMPOSSIBLE)"
 
-  let ceph_title = "  Ceph Cluster Status : " <> visuals.with_color("HEALTH_OK (2 OSDs UP, 0 DOWN)", "green")
+  let ceph_title =
+    "  Ceph Cluster Status : "
+    <> visuals.with_color("HEALTH_OK (2 OSDs UP, 0 DOWN)", "green")
 
   let rows =
     list.map(model.storage_items, fn(item) {
@@ -982,7 +1070,13 @@ fn render_storage_tab(model: SysadminModel) -> String {
       <> " "
       <> pad_right(item.serial, 18)
       <> " "
-      <> pad_right(int.to_string(item.used_gb) <> "/" <> int.to_string(item.size_gb) <> "GB", 14)
+      <> pad_right(
+        int.to_string(item.used_gb)
+          <> "/"
+          <> int.to_string(item.size_gb)
+          <> "GB",
+        14,
+      )
       <> " "
       <> bar
       <> "  "
@@ -990,7 +1084,8 @@ fn render_storage_tab(model: SysadminModel) -> String {
     })
     |> string.join("\n")
 
-  let vfs = "  ZigVM Descriptor-Relative VFS: 48 open descriptors / 1024 max (4.6% utilization)"
+  let vfs =
+    "  ZigVM Descriptor-Relative VFS: 48 open descriptors / 1024 max (4.6% utilization)"
 
   string.join([title, "", lock_alert, "", ceph_title, "", rows, "", vfs], "\n")
 }
@@ -1000,10 +1095,19 @@ fn render_storage_tab(model: SysadminModel) -> String {
 // -----------------------------------------------------------------------------
 
 fn render_zenoh_tab(model: SysadminModel) -> String {
-  let title = visuals.with_color("  === ZENOH MESH & TAILSCALE NETWORK TOPOLOGY ===", "cyan")
-  let endpoint = "  Zenoh Router : tcp/100.87.7.78:7447 (" <> visuals.with_color("CONNECTED", "green") <> ")"
-  let peer = "  Peer Node    : vm-1.tail55d152.ts.net (100.78.98.18:8088) — Latency: 0.8ms"
-  let throughput = "  Throughput   : 1,840 msgs/sec (In: 1.2 MB/s, Out: 1.8 MB/s)"
+  let title =
+    visuals.with_color(
+      "  === ZENOH MESH & TAILSCALE NETWORK TOPOLOGY ===",
+      "cyan",
+    )
+  let endpoint =
+    "  Zenoh Router : tcp/100.87.7.78:7447 ("
+    <> visuals.with_color("CONNECTED", "green")
+    <> ")"
+  let peer =
+    "  Peer Node    : vm-1.tail55d152.ts.net (100.78.98.18:8088) — Latency: 0.8ms"
+  let throughput =
+    "  Throughput   : 1,840 msgs/sec (In: 1.2 MB/s, Out: 1.8 MB/s)"
 
   let topic_header = "  Active Zenoh Pub/Sub Topics (indrajaal/**):"
   let rows =
@@ -1018,7 +1122,10 @@ fn render_zenoh_tab(model: SysadminModel) -> String {
     })
     |> string.join("\n")
 
-  string.join([title, "", endpoint, peer, throughput, "", topic_header, rows], "\n")
+  string.join(
+    [title, "", endpoint, peer, throughput, "", topic_header, rows],
+    "\n",
+  )
 }
 
 // -----------------------------------------------------------------------------
@@ -1026,9 +1133,15 @@ fn render_zenoh_tab(model: SysadminModel) -> String {
 // -----------------------------------------------------------------------------
 
 fn render_supervisors_tab(model: SysadminModel) -> String {
-  let title = visuals.with_color("  === OTP 29 SUPERVISOR TREE & PROCESS REGISTRY ===", "cyan")
-  let sched = "  BEAM Schedulers: 16 Normal + 16 Dirty I/O Schedulers (100% responsive)"
-  let root = "  Root Supervisor: uos_sup.gleam (Restart Strategy: one_for_one, max 5 in 10s)"
+  let title =
+    visuals.with_color(
+      "  === OTP 29 SUPERVISOR TREE & PROCESS REGISTRY ===",
+      "cyan",
+    )
+  let sched =
+    "  BEAM Schedulers: 16 Normal + 16 Dirty I/O Schedulers (100% responsive)"
+  let root =
+    "  Root Supervisor: uos_sup.gleam (Restart Strategy: one_for_one, max 5 in 10s)"
 
   let rows =
     list.map(model.supervisors, fn(s) {
@@ -1045,7 +1158,8 @@ fn render_supervisors_tab(model: SysadminModel) -> String {
     })
     |> string.join("\n")
 
-  let agent_summary = "  Agent Swarm    : 25 Supervised Agents (Orchestrator, Context, Domain, Quality, Testing)"
+  let agent_summary =
+    "  Agent Swarm    : 25 Supervised Agents (Orchestrator, Context, Domain, Quality, Testing)"
 
   string.join([title, "", sched, root, "", rows, "", agent_summary], "\n")
 }
@@ -1055,8 +1169,13 @@ fn render_supervisors_tab(model: SysadminModel) -> String {
 // -----------------------------------------------------------------------------
 
 fn render_tasks_tab(model: SysadminModel) -> String {
-  let title = visuals.with_color("  === SIL-6 TASK BOARD & CONSTITUTIONAL CONSENSUS ===", "cyan")
-  let consensus = "  Constitutional Consensus: 2oo3 REACHED (Guardian: Approve, Sentinel: Approve, Cortex: Approve)"
+  let title =
+    visuals.with_color(
+      "  === SIL-6 TASK BOARD & CONSTITUTIONAL CONSENSUS ===",
+      "cyan",
+    )
+  let consensus =
+    "  Constitutional Consensus: 2oo3 REACHED (Guardian: Approve, Sentinel: Approve, Cortex: Approve)"
 
   let rows =
     list.map(model.tasks, fn(t) {
@@ -1078,7 +1197,8 @@ fn render_tasks_tab(model: SysadminModel) -> String {
     })
     |> string.join("\n")
 
-  let circuit_breakers = "  Prajna Circuit Breakers: 0 Tripped, 14 Active, Sub-50ms Half-Open Recovery"
+  let circuit_breakers =
+    "  Prajna Circuit Breakers: 0 Tripped, 14 Active, Sub-50ms Half-Open Recovery"
 
   string.join([title, "", consensus, "", rows, "", circuit_breakers], "\n")
 }
@@ -1088,7 +1208,11 @@ fn render_tasks_tab(model: SysadminModel) -> String {
 // -----------------------------------------------------------------------------
 
 fn render_security_tab(model: SysadminModel) -> String {
-  let title = visuals.with_color("  === ZERO-TRUST SECURITY & SOVEREIGN IAM AUDIT ===", "cyan")
+  let title =
+    visuals.with_color(
+      "  === ZERO-TRUST SECURITY & SOVEREIGN IAM AUDIT ===",
+      "cyan",
+    )
   let auth_info =
     "  Authenticated User: "
     <> visuals.with_color("agy", "cyan")
@@ -1122,8 +1246,13 @@ fn render_security_tab(model: SysadminModel) -> String {
 
 fn render_stream_tab(model: SysadminModel) -> String {
   let title =
-    visuals.with_color("  === AG-UI 32-EVENT REAL-TIME TELEMETRY STREAM ===", "cyan")
-  let meta = "  Active Host: nas-1.tail55d152.ts.net:4100 | Last Tick: " <> model.last_refresh_utc
+    visuals.with_color(
+      "  === AG-UI 32-EVENT REAL-TIME TELEMETRY STREAM ===",
+      "cyan",
+    )
+  let meta =
+    "  Active Host: nas-1.tail55d152.ts.net:4100 | Last Tick: "
+    <> model.last_refresh_utc
   let events = [
     "18:44:59.102 [Lifecycle] StepFinished        step_id: step-842   duration: 12ms",
     "18:44:59.090 [Tool]      ToolCallResult      tool: system_health status: ok",
@@ -1145,7 +1274,11 @@ fn render_stream_tab(model: SysadminModel) -> String {
 // -----------------------------------------------------------------------------
 
 fn render_doctor_tab(model: SysadminModel) -> String {
-  let title = visuals.with_color("  === SYSTEM DOCTOR & PREFLIGHT DIAGNOSTICS ===", "cyan")
+  let title =
+    visuals.with_color(
+      "  === SYSTEM DOCTOR & PREFLIGHT DIAGNOSTICS ===",
+      "cyan",
+    )
   let summary =
     "  Status: "
     <> visuals.with_color("100% ALL CHECKS PASS — UOS RATIFIED", "green")
@@ -1176,26 +1309,27 @@ fn render_doctor_tab(model: SysadminModel) -> String {
 
 pub fn render_homeostasis_tab(model: SysadminModel) -> String {
   let title =
-    visuals.with_color("  === SIMULATED: BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS (C3I / INDRAJAAL) ===", "cyan")
+    visuals.with_color(
+      "  === SIMULATED: BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS (C3I / INDRAJAAL) ===",
+      "cyan",
+    )
   let s = model.homeostasis_state
   let p = s.physiological
   let m = s.metrics
 
   let eq_badge = case p.is_homeostatic {
-    True -> visuals.with_color("HOMEOSTATIC EQUILIBRIUM (Composite Stress <= 0.70)", "green")
+    True ->
+      visuals.with_color(
+        "HOMEOSTATIC EQUILIBRIUM (Composite Stress <= 0.70)",
+        "green",
+      )
     False -> visuals.with_color("STRESS THRESHOLD EXCEEDED", "red")
   }
 
-  let summary =
-    "  System State     : "
-    <> eq_badge
-    <> "
-  Composite Stress : "
-    <> float.to_string(p.composite_stress)
-    <> "  |  Stress Trend: "
-    <> physiological_homeostasis.trend_to_string(p.stress_trend)
-    <> "  |  Stable Cycles: "
-    <> int.to_string(s.consecutive_stable_ticks)
+  let summary = "  System State     : " <> eq_badge <> "
+  Composite Stress : " <> float.to_string(p.composite_stress) <> "  |  Stress Trend: " <> physiological_homeostasis.trend_to_string(
+      p.stress_trend,
+    ) <> "  |  Stable Cycles: " <> int.to_string(s.consecutive_stable_ticks)
 
   let pid_header = "  Convergence PID & Lyapunov Stability:"
   let pid_status = case m.stable {
@@ -1233,11 +1367,17 @@ pub fn render_homeostasis_tab(model: SysadminModel) -> String {
       <> "  PID Control: "
       <> pad_right(float.to_string(v.control_signal), 8)
       <> "  Stress: "
-      <> visuals.with_color("[" <> physiological_homeostasis.stress_to_string(v.stress) <> "]", stress_color)
+      <> visuals.with_color(
+        "[" <> physiological_homeostasis.stress_to_string(v.stress) <> "]",
+        stress_color,
+      )
     })
     |> string.join("\n")
 
-  string.join([title, "", summary, "", pid_header, pid_line, "", var_header, var_rows], "\n")
+  string.join(
+    [title, "", summary, "", pid_header, pid_line, "", var_header, var_rows],
+    "\n",
+  )
 }
 
 // -----------------------------------------------------------------------------
@@ -1246,7 +1386,10 @@ pub fn render_homeostasis_tab(model: SysadminModel) -> String {
 
 fn render_message_board_tab(model: SysadminModel) -> String {
   let title =
-    visuals.with_color("  === SIMULATED: SWARM MESSAGE DASHBOARD & A2A INTER-AGENT BUS ===", "cyan")
+    visuals.with_color(
+      "  === SIMULATED: SWARM MESSAGE DASHBOARD & A2A INTER-AGENT BUS ===",
+      "cyan",
+    )
   let bus_info =
     "  Transport Plane  : Zenoh Pub/Sub (indrajaal/a2a/**) + SQLite Chained Ledger\n"
     <> "  Active Agents    : 25 OTP Supervised Agents  |  Quorum: 4-Party Sovereign Consensus"
@@ -1290,7 +1433,10 @@ fn render_message_board_tab(model: SysadminModel) -> String {
     })
     |> string.join("\n")
 
-  string.join([title, "", bus_info, "", act_header, act_rows, "", msg_header, msg_rows], "\n")
+  string.join(
+    [title, "", bus_info, "", act_header, act_rows, "", msg_header, msg_rows],
+    "\n",
+  )
 }
 
 // -----------------------------------------------------------------------------
@@ -1299,12 +1445,20 @@ fn render_message_board_tab(model: SysadminModel) -> String {
 
 pub fn render_evolution_tab(model: SysadminModel) -> String {
   let title =
-    visuals.with_color("  === SIMULATED: AUTONOMOUS SYSTEM EVOLUTION & PARETO FRONTIERS ===", "cyan")
+    visuals.with_color(
+      "  === SIMULATED: AUTONOMOUS SYSTEM EVOLUTION & PARETO FRONTIERS ===",
+      "cyan",
+    )
   let s = model.homeostasis_state
 
   let gate_badge = case s.physiological.is_homeostatic && s.metrics.stable {
-    True -> visuals.with_color("EVOLUTION GATE OPEN (System in Equilibrium)", "green")
-    False -> visuals.with_color("EVOLUTION GATE BLOCKED (Homeostatic Divergence)", "red")
+    True ->
+      visuals.with_color("EVOLUTION GATE OPEN (System in Equilibrium)", "green")
+    False ->
+      visuals.with_color(
+        "EVOLUTION GATE BLOCKED (Homeostatic Divergence)",
+        "red",
+      )
   }
 
   let gen_info =
@@ -1314,7 +1468,8 @@ pub fn render_evolution_tab(model: SysadminModel) -> String {
     <> gate_badge
     <> "\n  4-Party Quorum   : 3-of-4 Supermajority Ratification Required"
 
-  let pareto_header = "  Multi-Objective Evolutionary Pareto Landscape (Indrajaal):"
+  let pareto_header =
+    "  Multi-Objective Evolutionary Pareto Landscape (Indrajaal):"
   let pareto_rows =
     list.map(s.pareto_candidates, fn(c) {
       let opt_badge = case c.is_pareto_optimal {
@@ -1346,7 +1501,20 @@ pub fn render_evolution_tab(model: SysadminModel) -> String {
     <> "    * Codex Sovereign      : [UNKNOWN] Reference role: sandbox verification\n"
     <> "    * OpenRouter Advisory  : [UNKNOWN] Reference role: bounded advice"
 
-  string.join([title, "", gen_info, "", pareto_header, pareto_rows, "", quorum_header, quorum_info], "\n")
+  string.join(
+    [
+      title,
+      "",
+      gen_info,
+      "",
+      pareto_header,
+      pareto_rows,
+      "",
+      quorum_header,
+      quorum_info,
+    ],
+    "\n",
+  )
 }
 
 // -----------------------------------------------------------------------------
@@ -1369,7 +1537,8 @@ pub fn render_footer(model: SysadminModel) -> String {
     <> visuals.with_color("(q)", "cyan")
     <> " Quit"
 
-  let status_line = "  STATUS: " <> visuals.with_color(model.status_msg, "green")
+  let status_line =
+    "  STATUS: " <> visuals.with_color(model.status_msg, "green")
   action_bar <> "\n" <> status_line
 }
 
@@ -1448,7 +1617,15 @@ fn pad_right(text: String, width: Int) -> String {
 }
 
 /// Explicit effect boundary; tab renderers consume the resulting immutable model.
-pub fn refresh_homeostasis(model: SysadminModel, selection: homeostasis_data.Selection) -> SysadminModel {
-  let #(snapshot,now) = homeostasis_data.read(selection)
-  SysadminModel(..model,homeostasis_snapshot: snapshot,homeostasis_observed_at: now,homeostasis_selection: selection)
+pub fn refresh_homeostasis(
+  model: SysadminModel,
+  selection: homeostasis_data.Selection,
+) -> SysadminModel {
+  let #(snapshot, now) = homeostasis_data.read(selection)
+  SysadminModel(
+    ..model,
+    homeostasis_snapshot: snapshot,
+    homeostasis_observed_at: now,
+    homeostasis_selection: selection,
+  )
 }

@@ -12,10 +12,9 @@
 //// =============================================================================
 
 import cepaf_gleam/ui/tui/sysadmin_cockpit.{
-  ContainersTab, Dark, DoctorTab, EvolutionTab, HomeostasisTab,
-  MessageBoardTab, OverviewTab, SecurityTab, StorageTab, StreamTab,
-  SupervisorsTab, TasksTab, ZenohTab, default_model, next_tab, prev_tab, render,
-  select_tab,
+  ContainersTab, Dark, DoctorTab, EvolutionTab, HomeostasisTab, MessageBoardTab,
+  OverviewTab, SecurityTab, StorageTab, StreamTab, SupervisorsTab, TasksTab,
+  ZenohTab, default_model, next_tab, prev_tab, render, select_tab,
 }
 import gleam/list
 import gleam/regexp
@@ -97,7 +96,10 @@ pub fn given_homeostasis_tab_when_rendered_then_displays_equilibrium_and_factors
   let clean_text = strip_ansi(frame)
 
   // THEN: The header announces Biomorphic Homeostasis
-  should.equal(string.contains(clean_text, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"), True)
+  should.equal(
+    string.contains(clean_text, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"),
+    True,
+  )
 
   // AND: The equilibrium status is stable
   should.equal(string.contains(clean_text, "HOMEOSTATIC EQUILIBRIUM"), True)
@@ -158,10 +160,19 @@ pub fn given_evolution_tab_when_rendered_then_displays_pareto_and_4party_quorum_
   should.equal(string.contains(clean_text, "EVOLUTION GATE OPEN"), True)
 
   // AND: Pareto frontier candidates are listed
-  should.equal(string.contains(clean_text, "MAX SIMD Scorer Optimization"), True)
+  should.equal(
+    string.contains(clean_text, "MAX SIMD Scorer Optimization"),
+    True,
+  )
 
   // AND: Constitutional 4-party quorum consensus is displayed
-  should.equal(string.contains(clean_text, "4-Party Quorum   : 3-of-4 Supermajority Ratification Required"), True)
+  should.equal(
+    string.contains(
+      clean_text,
+      "4-Party Quorum   : 3-of-4 Supermajority Ratification Required",
+    ),
+    True,
+  )
   should.equal(string.contains(clean_text, "Codex Sovereign"), True)
   should.equal(string.contains(clean_text, "AGY Sovereign"), True)
   should.equal(string.contains(clean_text, "Claude Sovereign"), True)
@@ -225,6 +236,9 @@ pub fn given_ansi_output_when_stripped_then_clean_semantic_text_isolated_test() 
 
   // AND: The semantic text remains completely intact
   should.equal(string.contains(clean_frame, "SYSTEM OVERVIEW"), True)
-  should.equal(string.contains(clean_frame, "nas-1.tail55d152.ts.net:4100"), True)
+  should.equal(
+    string.contains(clean_frame, "nas-1.tail55d152.ts.net:4100"),
+    True,
+  )
   should.equal(string.contains(clean_frame, "LOCKED (25503L801736)"), True)
 }

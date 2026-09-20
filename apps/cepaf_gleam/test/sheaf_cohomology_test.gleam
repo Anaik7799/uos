@@ -1,10 +1,10 @@
 //// apps/cepaf_gleam/test/sheaf_cohomology_test.gleam
 //// STAMP: SC-INTENT-ATLAS-001
 
-import gleeunit/should
 import cepaf_gleam/semantics/sheaf_cohomology.{
-  transition_morphism, cech_coboundary, verify_h1_vanishing, glue_global_section
+  cech_coboundary, glue_global_section, transition_morphism, verify_h1_vanishing,
 }
+import gleeunit/should
 
 pub fn transition_morphism_identity_test() {
   let x = 42.0

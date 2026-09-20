@@ -1,0 +1,19 @@
+{
+  "schema": "uos.risk-preflight-hold-receipt.v1",
+  "observed_at": "2026-09-21T17:51:17Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "portfolio": "governance/planning/20260921-1735-risk-portfolio-refresh.json",
+  "task": "t0-coordination",
+  "status": "HOLD",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "assessment_sha256": "e4c492b7ad8c8f08c68e02a4e55e0d21da229bcb1dd376049ace34cf1a626aae",
+  "selection": {
+    "ranked_tasks": [],
+    "finding": "RP-SELECTION",
+    "detail": "Requested task is not the first eligible candidate."
+  },
+  "reason": "The task remains readiness=blocked because coordinator authority, recovery target, and harness-mediated closure are unresolved.",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

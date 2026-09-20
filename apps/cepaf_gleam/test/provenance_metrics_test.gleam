@@ -44,7 +44,9 @@ pub fn conformance_none_marked_is_zero_test() {
 /// Length mismatch is caught in Gleam before the kernel is reached.
 pub fn conformance_rejects_length_mismatch_test() {
   pm.conformance([1.0, 1.0], [1.0])
-  |> should.equal(Error(pm.InvalidInput("features and weights differ in length")))
+  |> should.equal(
+    Error(pm.InvalidInput("features and weights differ in length")),
+  )
 }
 
 /// Identical vectors are at distance zero: no surface has drifted.
@@ -82,8 +84,10 @@ pub fn fmea_band_boundaries_test() {
 }
 
 pub fn fmea_band_rejects_out_of_range_test() {
-  pm.fmea_band(0, 1, 1) |> should.equal(Error(pm.KernelRejected("rejected_by_kernel")))
-  pm.fmea_band(1, 1, 6) |> should.equal(Error(pm.KernelRejected("rejected_by_kernel")))
+  pm.fmea_band(0, 1, 1)
+  |> should.equal(Error(pm.KernelRejected("rejected_by_kernel")))
+  pm.fmea_band(1, 1, 6)
+  |> should.equal(Error(pm.KernelRejected("rejected_by_kernel")))
 }
 
 /// A corpus that is complete, diverse and fully marked passes.

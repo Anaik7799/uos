@@ -102,12 +102,9 @@ pub fn classify_topic(topic: String) -> Result(ZMOFTrafficClass, Nil) {
       Ok(OoZSpan(layer: layer, entity_id: entity_id))
     ["indrajaal", "mcp", "req", tool, req_id] ->
       Ok(MoZRequest(tool: tool, req_id: req_id))
-    ["indrajaal", "mcp", "res", req_id] ->
-      Ok(MoZResponse(req_id: req_id))
-    ["indrajaal", "crdt", "sync", node_id] ->
-      Ok(CrdtMeshSync(node_id: node_id))
-    ["indrajaal", "l0", "const", ..] ->
-      Ok(ConstitutionalStream(topic: topic))
+    ["indrajaal", "mcp", "res", req_id] -> Ok(MoZResponse(req_id: req_id))
+    ["indrajaal", "crdt", "sync", node_id] -> Ok(CrdtMeshSync(node_id: node_id))
+    ["indrajaal", "l0", "const", ..] -> Ok(ConstitutionalStream(topic: topic))
     _ -> Error(Nil)
   }
 }

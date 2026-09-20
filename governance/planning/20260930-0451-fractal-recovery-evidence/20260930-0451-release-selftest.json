@@ -1,0 +1,5 @@
+{
+  "status": "PASS",
+  "checks": 23,
+  "scope": "bounded filesystem and direct release-verifier falsifiers; no external subprocesses or admission"
+}

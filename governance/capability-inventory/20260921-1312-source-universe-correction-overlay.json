@@ -1,0 +1,39 @@
+{
+  "schema": "uos.source-universe-correction-overlay.v1",
+  "timestamp": "20260921-1312Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "supersedes": "governance/capability-inventory/20260921-0706-source-universe-ledger.json",
+  "superseded_sha256": "0960ff30f9d68e79b2293405e65aad78051cffae5a9134e0bd6dc86031698640",
+  "mode": "append_only_successor_inputs",
+  "wrapper_repairs": [
+    {"id":"wrapper.sa_plan","path":"tools/sa-plan","source_sha256":"325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4","target":"engine.sa_plan"},
+    {"id":"wrapper.zigvm","path":"tools/zigvm","source_sha256":"e25de1d423c292a2a11259988045bc8d9a5f3aad05c875968747f613bc7e7602","target":"engine.zigvm"},
+    {"id":"wrapper.uos_cli","path":"tools/uos-cli","source_sha256":"3f48be71a04b82ba6a4d18fa6b47089591975963d65f0aa26f214ab382524c06","target":"tool.uos_main"},
+    {"id":"wrapper.uos_gleam_start","path":"tools/uos-gleam-start","source_sha256":"2f1aede7df074cf13ce6a65f8963a0181b9834ef42ca9c104b7d48a9704df02f","target":"app.cepaf_gleam"}
+  ],
+  "edge_repairs": [
+    {"from":"engine.zigvm","to":"wrapper.zigvm","relationship":"invokes_wrapper"},
+    {"from":"engine.sa_plan","to":"wrapper.sa_plan","relationship":"invokes_wrapper"},
+    {"from":"tool.uos_cli","to":"tool.uos_main","relationship":"package_entrypoint"},
+    {"from":"wrapper.uos_cli","to":"tool.uos_main","relationship":"invokes_entrypoint"},
+    {"from":"wrapper.uos_gleam_start","to":"app.cepaf_gleam","relationship":"starts_package"}
+  ],
+  "removed_edges": [
+    {"from":"engine.hermes_ops","to":"wrapper.uos_cli","reason":"tools/uos-cli launches tools/uos Gleam main; no Hermes ops evidence"},
+    {"from":"tool.uos_main","to":"tool.uos_cli","reason":"reverse artifact edge was not a typed source relationship"}
+  ],
+  "classification_additions": [
+    {"id":"test.cepaf_gleam","kind":"test","path":"apps/cepaf_gleam/test","source_binding":"directory_manifest_required","status":"DECLARED_TEST_SET"},
+    {"id":"test.uos_swarm","kind":"test","path":"apps/uos_swarm/test","source_binding":"directory_manifest_required","status":"DECLARED_TEST_SET"},
+    {"id":"test.hermes_sa_plan","kind":"test","path":"engines/hermes/modules/sa_plan/test","source_binding":"dune_target_manifest_required","status":"DECLARED_TEST_SET"},
+    {"id":"reference.uos_rules","kind":"reference_only","path":"contracts/rules","source_binding":"bounded_rule_index_required","status":"REFERENCE_ONLY"}
+  ],
+  "acceptance": {
+    "historical_ledger_rewritten": false,
+    "all_wrapper_pins_observed": true,
+    "all_repaired_edges_target_existing_ids": true,
+    "mcp_availability": "UNKNOWN",
+    "runtime_admission": "NOT_GRANTED",
+    "next_step": "Materialize successor ledger under Sa-plan and rerun bounded source census"
+  }
+}

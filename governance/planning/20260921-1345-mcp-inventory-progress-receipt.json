@@ -1,0 +1,27 @@
+{
+  "schema": "uos.mcp-inventory-progress-receipt.v1",
+  "timestamp": "20260921-1345",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "runtime": "gleam-mcp-stdio-development",
+  "observed": {
+    "mcp_capability_inventory": {
+      "declared_count": 65,
+      "unavailable_count": 12,
+      "declared_unprobed_count": 53,
+      "runtime_admission": "not_granted",
+      "effect_authority": false,
+      "new_capability": "harness_execution_progress"
+    },
+    "harness_execution_progress": {
+      "dispatch": "reached task-bound handler",
+      "result": "journal sequence or digest mismatch; replay refused",
+      "status": "fail_closed_runtime_observed"
+    }
+  },
+  "log_sha256": "d2c71ea17a7cf2a324a447b888282a0a473698d6ffa30c22af986e7099180c09",
+  "interpretation": {
+    "mcp_coverage": "declaration and dispatch are present; runtime projection remains blocked by coordinator integrity",
+    "completion_credit": false,
+    "admission": "NOT_ADMITTED"
+  }
+}

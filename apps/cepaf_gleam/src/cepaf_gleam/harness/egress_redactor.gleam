@@ -33,7 +33,8 @@ pub type EgressVerdict {
 
 /// Redact known system hardware secrets and credentials from outbound text.
 pub fn redact_system_secrets(text: String) -> String {
-  let text1 = string.replace(text, denied_os_nvme_serial, redacted_serial_placeholder)
+  let text1 =
+    string.replace(text, denied_os_nvme_serial, redacted_serial_placeholder)
   let text2 = case regexp.from_string("sk-or-v1-[A-Za-z0-9_\\-]+") {
     Ok(re) -> regexp.replace(re, text1, redacted_token_placeholder)
     Error(_) -> text1
@@ -69,7 +70,9 @@ pub fn sanitize_outbound_prompt(prompt: String) -> Result(String, String) {
 
   case has_destructive {
     True ->
-      Error("egress_safety_violation: destructive_action_veto: attempt to wipe hardware storage blocked by Prajna gate")
+      Error(
+        "egress_safety_violation: destructive_action_veto: attempt to wipe hardware storage blocked by Prajna gate",
+      )
     False -> {
       let sanitized = redact_system_secrets(prompt)
       Ok(sanitized)

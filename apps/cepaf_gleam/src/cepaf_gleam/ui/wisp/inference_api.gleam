@@ -126,7 +126,8 @@ pub fn evaluate_ast_anomaly(
     || string.contains(code_lower, "adhoc_task")
     || string.contains(code_lower, "skip_sa_plan")
   let zero_muda =
-    string.contains(code_lower, "bevy") || string.contains(code_lower, "graphite")
+    string.contains(code_lower, "bevy")
+    || string.contains(code_lower, "graphite")
   let storage_locked = string.contains(code, "25503L801736")
 
   let rust_panic = case lang {
@@ -138,7 +139,8 @@ pub fn evaluate_ast_anomaly(
   }
 
   let gleam_panic = case lang {
-    "gleam" -> string.contains(code, "panic as") || string.contains(code, "todo")
+    "gleam" ->
+      string.contains(code, "panic as") || string.contains(code, "todo")
     _ -> False
   }
 
@@ -204,7 +206,8 @@ pub fn evaluate_ast_anomaly(
             "HARD_DENIED_SYSTEM_OS_SERIAL: Host root NVMe 25503L801736 is locked against allocation."
           "RUST_UNHANDLED_PANIC" ->
             "Replace unwrap/panic with Result/Option handling (SRXS-001)."
-          "GLEAM_UNHANDLED_PANIC" -> "Replace panic/todo with explicit error types."
+          "GLEAM_UNHANDLED_PANIC" ->
+            "Replace panic/todo with explicit error types."
           "PYTHON_UNSAFE_EVAL_EXEC" ->
             "Eliminate dynamic evaluation; use typed RPC schemas."
           _ -> "Enforce typed structural contracts."
@@ -443,13 +446,13 @@ pub fn evaluate_lyapunov_trend(
     False -> -0.35
   }
 
-  let #(stability, phase, cert_pass) = case lambda <=. -0.30 {
+  let #(stability, phase, cert_pass) = case lambda <=. -0.3 {
     True -> #("strongly_stable", "ACT", True)
     False ->
       case lambda <=. 0.05 {
         True -> #("marginally_stable", "OBSERVE", True)
         False ->
-          case lambda <=. 0.50 {
+          case lambda <=. 0.5 {
             True -> #("unstable_divergent", "DECIDE", False)
             False -> #("chaotic_cascade", "STOP_ANDON", False)
           }
@@ -474,7 +477,7 @@ pub fn evaluate_lyapunov_trend(
   let preflight_status = case cert_pass {
     True -> "PASSED"
     False ->
-      case lambda <=. 0.30 {
+      case lambda <=. 0.3 {
         True -> "CONDITIONAL"
         False -> "FAILED"
       }
@@ -524,7 +527,9 @@ pub fn parse_ast_anomaly_body(
   |> result.map_error(fn(_) { "failed_to_parse_ast_anomaly_request" })
 }
 
-pub fn parse_zk_transclude_body(body: String) -> Result(#(String, Int), String) {
+pub fn parse_zk_transclude_body(
+  body: String,
+) -> Result(#(String, Int), String) {
   let decoder = {
     use query <- decode.field("query", decode.string)
     use limit <- decode.optional_field("limit", 3, decode.int)
@@ -712,20 +717,17 @@ pub fn evaluate_ruliad_branch(
     })
 
   let #(dist, sim, status, prob, path) = case is_divergent {
-    True -> #(
-      1.25,
-      0.22,
-      "HIGH_DIVERGENCE_REBASE_REQUIRED",
-      0.85,
-      ["quiesce_agents", "two_key_review", "rebase_clean", "merge_gate"],
-    )
-    False -> #(
-      0.15,
-      0.98,
-      "NOMINAL_MERGE_READY",
-      0.10,
-      ["review_diff", "run_eunit", "fast_forward_merge"],
-    )
+    True -> #(1.25, 0.22, "HIGH_DIVERGENCE_REBASE_REQUIRED", 0.85, [
+      "quiesce_agents",
+      "two_key_review",
+      "rebase_clean",
+      "merge_gate",
+    ])
+    False -> #(0.15, 0.98, "NOMINAL_MERGE_READY", 0.1, [
+      "review_diff",
+      "run_eunit",
+      "fast_forward_merge",
+    ])
   }
 
   max_daemon.RuliadBranchReport(
@@ -780,7 +782,11 @@ pub fn parse_stpa_fmea_body(
 ) -> Result(#(String, String, String, Int, String, Int), String) {
   let decoder = {
     use action <- decode.field("action", decode.string)
-    use component <- decode.optional_field("component", "general", decode.string)
+    use component <- decode.optional_field(
+      "component",
+      "general",
+      decode.string,
+    )
     use context <- decode.optional_field("context", "", decode.string)
     use criticality <- decode.optional_field("criticality", 3, decode.int)
     use dependency_readiness <- decode.optional_field(

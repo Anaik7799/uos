@@ -147,6 +147,7 @@ pub type VerifyReport {
     sequence_ok: Bool,
     chain_ok: Bool,
     digest_ok: Bool,
+    replay_ok: Bool,
     triggers_present: Bool,
     unique_operations: Bool,
     failures: List(String),
@@ -160,6 +161,9 @@ pub fn verify_report_json(report: VerifyReport) -> Json {
     #("sequence_ok", json.bool(report.sequence_ok)),
     #("chain_ok", json.bool(report.chain_ok)),
     #("digest_ok", json.bool(report.digest_ok)),
+    #("replay_ok", json.bool(report.replay_ok)),
+    #("nonempty", json.bool(report.checked > 0)),
+    #("authority", json.string("integrity_observation_only")),
     #("triggers_present", json.bool(report.triggers_present)),
     #("unique_operations", json.bool(report.unique_operations)),
     #("failures", json.array(report.failures, json.string)),
@@ -238,6 +242,51 @@ WHEN EXISTS (
 )
 BEGIN
   SELECT RAISE(ABORT, 'events are append-only: an insert may not reuse a stored sequence, operation_id or digest');
+END;
+
+-- Reject foreign payloads before they enter the append-only ledger. A chain
+-- link alone does not prove a typed event, and an unregistered sender is not
+-- made authoritative by supplying a correctly shaped digest. Full digest and
+-- state-machine verification still belongs to the typed transactional writer.
+CREATE TRIGGER IF NOT EXISTS events_payload
+BEFORE INSERT ON events
+WHEN COALESCE(CASE
+  WHEN json_valid(NEW.body_json) AND json_valid(NEW.command_json) THEN
+    json_extract(NEW.body_json, '$.schema') = '" <> sync.genesis <> "'
+    AND json_type(NEW.body_json, '$.sequence') = 'integer'
+    AND json_type(NEW.body_json, '$.tick_us') = 'integer'
+    AND json_type(NEW.body_json, '$.utc_us') = 'integer'
+    AND json_extract(NEW.body_json, '$.sequence') = NEW.sequence
+    AND json_extract(NEW.body_json, '$.operation_id') = NEW.operation_id
+    AND json_extract(NEW.body_json, '$.host_id') = NEW.host_id
+    AND json_extract(NEW.body_json, '$.boot_id') = NEW.boot_id
+    AND json_extract(NEW.body_json, '$.tick_us') = NEW.tick_us
+    AND json_extract(NEW.body_json, '$.utc_us') = NEW.utc_us
+    AND json_extract(NEW.body_json, '$.previous_digest') = NEW.previous_digest
+    AND json_extract(NEW.command_json, '$.operation') = NEW.operation
+    AND json_extract(NEW.command_json, '$.session') = NEW.actor
+    AND json_type(NEW.command_json, '$.a') = 'text'
+    AND json_type(NEW.command_json, '$.b') = 'text'
+    AND json_type(NEW.command_json, '$.c') = 'text'
+    AND json_type(NEW.command_json, '$.refs') = 'array'
+    AND NOT EXISTS (SELECT 1 FROM json_each(NEW.command_json, '$.refs') WHERE type <> 'text')
+    AND json_type(NEW.command_json, '$.epoch') = 'integer'
+    AND json_type(NEW.command_json, '$.ttl_us') = 'integer'
+    AND json(NEW.command_json) = json(json_extract(NEW.body_json, '$.command'))
+    AND NEW.operation IN ('register','heartbeat','claim','renew','release','send','ack','retire')
+    AND length(NEW.digest) = 64 AND NEW.digest NOT GLOB '*[^0-9a-f]*'
+    AND ((NEW.operation = 'register'
+      AND json_extract(NEW.command_json, '$.a') IN ('claude','codex','agy')
+      AND substr(json_extract(NEW.command_json, '$.b'),1,1) = '/'
+      AND NOT EXISTS (SELECT 1 FROM events WHERE actor=NEW.actor AND operation='register')) OR (
+      NEW.operation <> 'register' AND (
+      SELECT operation = 'register' FROM events
+      WHERE actor = NEW.actor AND operation IN ('register','retire')
+      ORDER BY sequence DESC LIMIT 1
+    )))
+  ELSE 0 END, 0) = 0
+BEGIN
+  SELECT RAISE(ABORT, 'events payload invalid: typed envelope, column binding and registered actor required');
 END;
 
 CREATE TABLE IF NOT EXISTS quarantine (
@@ -558,11 +607,11 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   use trigger_rows <- result.try(
     run(
       store,
-      "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain', 'events_no_replace')",
+      "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain', 'events_no_replace', 'events_payload')",
       [],
     ),
   )
-  let triggers_present = list.length(trigger_rows) == 4
+  let triggers_present = list.length(trigger_rows) == 5
   let #(_, _, failures, _) =
     list.fold(rows, #(0, sync.genesis, [], set.new()), fn(acc, row) {
       let #(expected_sequence, expected_previous, fails, seen_ops) = acc
@@ -622,8 +671,30 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
     False -> [
       #(
         "triggers",
-        "append-only triggers are missing (events_no_update, events_no_delete, events_chain, events_no_replace)",
+        "store guards are missing (events_no_update, events_no_delete, events_chain, events_no_replace, events_payload)",
       ),
+      ..failures
+    ]
+  }
+  let replay_result =
+    list.try_map(rows, fn(row) {
+      case row {
+        [_, _, _, CellText(digest), CellText(body)] ->
+          Ok(
+            "{\"body\":"
+            <> body
+            <> ",\"digest\":"
+            <> json.to_string(json.string(digest))
+            <> "}",
+          )
+        _ -> Error("malformed events row")
+      }
+    })
+    |> result.try(fn(lines) { sync.replay(string.join(lines, "\n")) })
+  let failures = case replay_result {
+    Ok(_) -> failures
+    Error(reason) -> [
+      #("replay", "typed replay failed: " <> reason),
       ..failures
     ]
   }
@@ -637,6 +708,7 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
     sequence_ok: !failed("sequence") && !failed("malformed"),
     chain_ok: !failed("chain") && !failed("malformed"),
     digest_ok: !failed("digest") && !failed("malformed"),
+    replay_ok: !failed("replay"),
     triggers_present: triggers_present,
     unique_operations: !failed("duplicate"),
     failures: list.map(failures, fn(entry) { entry.1 }),

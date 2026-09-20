@@ -1,5 +1,5 @@
-import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/clock
+import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/mcp
 import cepaf_gleam/harness/value
@@ -17,13 +17,13 @@ fn binding() {
 
 pub fn clock_reference_and_fresh_receipt_are_independent_test() {
   // A valid five-minute-old NTP reference cannot make a stale receipt fresh.
-  clock.reference_and_delivery_valid(600_000_000, 300_000_000, 1_000)
+  clock.reference_and_delivery_valid(600_000_000, 300_000_000, 1000)
   |> should.be_true
   clock.reference_and_delivery_valid(600_000_000, 300_000_000, 3_000_001)
   |> should.be_false
-  clock.reference_and_delivery_valid(3_600_000_001, 0, 1_000)
+  clock.reference_and_delivery_valid(3_600_000_001, 0, 1000)
   |> should.be_false
-  clock.reference_and_delivery_valid(600_000_000, 600_000_001, 1_000)
+  clock.reference_and_delivery_valid(600_000_000, 600_000_001, 1000)
   |> should.be_false
   clock.reference_and_delivery_valid(600_000_000, 300_000_000, -1)
   |> should.be_false
@@ -40,13 +40,32 @@ pub fn frame_deadline_is_absolute_and_supports_signed_monotonic_instants_test() 
 }
 
 pub fn replay_preserves_failure_and_rejects_corrupt_or_unbound_receipts_test() {
-  let fields = [#("schema", json.string("uos.harness-effect.v1")), #("intent_id", json.string("one")),
-    #("tool", json.string("harness_test")), #("signature", json.string("digest"))]
-  let failed = json.object([#("status", json.string("FAILED_OR_UNVERIFIED")), #("verification", json.string("backend_exit:1")), ..fields]) |> json.to_string
-  dev.replay_receipt(failed, "one", "harness_test", "digest") |> should.equal(Error("saved_effect_failed_or_unverified_no_retry"))
-  dev.replay_receipt("broken json", "one", "harness_test", "digest") |> should.be_error
-  let success = json.object([#("status", json.string("EXECUTED")), #("verification", json.string("passed")), ..fields]) |> json.to_string
-  dev.replay_receipt(success, "other", "harness_test", "digest") |> should.equal(Error("saved_receipt_binding_mismatch"))
+  let fields = [
+    #("schema", json.string("uos.harness-effect.v1")),
+    #("intent_id", json.string("one")),
+    #("tool", json.string("harness_test")),
+    #("signature", json.string("digest")),
+  ]
+  let failed =
+    json.object([
+      #("status", json.string("FAILED_OR_UNVERIFIED")),
+      #("verification", json.string("backend_exit:1")),
+      ..fields
+    ])
+    |> json.to_string
+  dev.replay_receipt(failed, "one", "harness_test", "digest")
+  |> should.equal(Error("saved_effect_failed_or_unverified_no_retry"))
+  dev.replay_receipt("broken json", "one", "harness_test", "digest")
+  |> should.be_error
+  let success =
+    json.object([
+      #("status", json.string("EXECUTED")),
+      #("verification", json.string("passed")),
+      ..fields
+    ])
+    |> json.to_string
+  dev.replay_receipt(success, "other", "harness_test", "digest")
+  |> should.equal(Error("saved_receipt_binding_mismatch"))
   dev.replay_receipt(success, "one", "harness_test", "digest") |> should.be_ok
 }
 

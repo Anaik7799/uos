@@ -279,8 +279,7 @@ pub fn init_vajravyuha(degradation_active: Bool) -> VajravyuhaState {
 pub fn local_processing_ratio(state: VajravyuhaState) -> Float {
   case state.total_workloads > 0 {
     True ->
-      int.to_float(state.local_workloads)
-      /. int.to_float(state.total_workloads)
+      int.to_float(state.local_workloads) /. int.to_float(state.total_workloads)
     False -> 1.0
   }
 }
@@ -321,7 +320,10 @@ pub fn state_to_json(state: VajravyuhaState) -> json.Json {
     #("degradation_active", json.bool(state.degradation_active)),
     #("gemma4_status", json.string("BARE_METAL_ONLINE")),
     #("gemma4_architecture", json.string("GQA_ROPE500K_SLIDING_WINDOW")),
-    #("instances", json.array(from: canonical_instances(), of: instance_to_json)),
+    #(
+      "instances",
+      json.array(from: canonical_instances(), of: instance_to_json),
+    ),
     #("holons", json.array(from: state.holons, of: holon_to_json)),
   ])
 }

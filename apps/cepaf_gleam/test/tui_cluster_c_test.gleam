@@ -2,12 +2,12 @@
 //// System TUI Cluster C (Mesh, Distributed Data & Governance: Screens 17-24) Test Suite
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-004
 
-import gleeunit/should
 import cepaf_gleam/testing/tui_test_engine.{
-  AgentsScreen, HolonScreen, ConfigScreen, GitScreen,
-  DatabaseScreen, BridgeScreen, SmritiScreen, PlanningDashScreen,
-  render_screen_buffer, verify_frame_buffer
+  AgentsScreen, BridgeScreen, ConfigScreen, DatabaseScreen, GitScreen,
+  HolonScreen, PlanningDashScreen, SmritiScreen, render_screen_buffer,
+  verify_frame_buffer,
 }
+import gleeunit/should
 
 pub fn tui_cluster_c_agents_test() {
   let fb = render_screen_buffer(AgentsScreen)

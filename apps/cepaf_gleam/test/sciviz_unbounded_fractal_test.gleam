@@ -13,7 +13,8 @@ pub fn main() {
 
 // 1. C412: L0 Constitutional 2oo3 Interlock
 pub fn c412_constitutional_2oo3_interlock_test() {
-  let _el = instruments.render_constitutional_interlock(True, True, False, 400.0, 300.0)
+  let _el =
+    instruments.render_constitutional_interlock(True, True, False, 400.0, 300.0)
   True |> should.be_true()
 }
 
@@ -21,7 +22,8 @@ pub fn c412_constitutional_2oo3_interlock_test() {
 pub fn c413_homotopy_deformation_test() {
   let p_start = [Point2D(0.0, 0.0), Point2D(50.0, 20.0), Point2D(100.0, 100.0)]
   let p_end = [Point2D(0.0, 0.0), Point2D(20.0, 80.0), Point2D(100.0, 100.0)]
-  let _el = instruments.render_homotopy_deformation(p_start, p_end, 0.5, 500.0, 400.0)
+  let _el =
+    instruments.render_homotopy_deformation(p_start, p_end, 0.5, 500.0, 400.0)
   True |> should.be_true()
 }
 
@@ -58,7 +60,8 @@ pub fn c416_lyapunov_damping_funnel_test() {
     Point2D(75.0, 10.0),
     Point2D(100.0, 2.0),
   ]
-  let _el = instruments.render_lyapunov_damping_funnel(envelope, 22.5, 500.0, 300.0)
+  let _el =
+    instruments.render_lyapunov_damping_funnel(envelope, 22.5, 500.0, 300.0)
   True |> should.be_true()
 }
 
@@ -70,7 +73,8 @@ pub fn c417_bloch_sphere_scope_test() {
 
 // 7. C418: L6 Peirce-Rocha Biosemiotic Triad Radar
 pub fn c418_rocha_biosemiotic_radar_test() {
-  let _el = instruments.render_rocha_semiotics_radar(0.96, 0.94, 0.99, 380.0, 380.0)
+  let _el =
+    instruments.render_rocha_semiotics_radar(0.96, 0.94, 0.99, 380.0, 380.0)
   True |> should.be_true()
 }
 
@@ -105,7 +109,8 @@ pub fn c422_dark_cockpit_contrast_meter_test() {
 
 // 12. C423: Zero-GC Lockless Ring Buffer Scope
 pub fn c423_lockless_ring_buffer_scope_test() {
-  let _el = instruments.render_lockless_ring_buffer_scope(5, 2, 16, 400.0, 400.0)
+  let _el =
+    instruments.render_lockless_ring_buffer_scope(5, 2, 16, 400.0, 400.0)
   True |> should.be_true()
 }
 
@@ -128,6 +133,12 @@ pub fn c425_two_lattice_stm_grid_test() {
 
 // 15. C426: Sovereign Merkle Provenance Ledger Visualizer
 pub fn c426_sovereign_merkle_provenance_test() {
-  let _el = instruments.render_sovereign_merkle_provenance(426, "49fe5d7d0039", 400.0, 200.0)
+  let _el =
+    instruments.render_sovereign_merkle_provenance(
+      426,
+      "49fe5d7d0039",
+      400.0,
+      200.0,
+    )
   True |> should.be_true()
 }

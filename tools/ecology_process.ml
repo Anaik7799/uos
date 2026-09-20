@@ -7,6 +7,24 @@
    this helper alone does not contain deliberately escaping executables. *)
 open Unix
 let require c m = if not c then failwith m
+let child_exited_unreaped child_pid =
+  let channel=open_in_bin(Printf.sprintf "/proc/%d/stat" child_pid) in
+  Fun.protect ~finally:(fun()->close_in_noerr channel) (fun()->
+    let buffer=Bytes.create 4096 in
+    let length=input channel buffer 0 (Bytes.length buffer) in
+    require(length>0 && length<Bytes.length buffer) "invalid child state size";
+    let state=Bytes.sub_string buffer 0 length in
+    require(String.starts_with ~prefix:(string_of_int child_pid^" (") state) "child identity mismatch";
+    let boundary=String.rindex state ')' in
+    require(boundary+2<String.length state && state.[boundary+1]=' ') "invalid child state";
+    let fields=String.sub state (boundary+2) (String.length state-boundary-2)
+      |> String.split_on_char ' ' in
+    match fields with
+    | status::parent::_ ->
+      require(int_of_string parent=getpid()) "child parent mismatch";
+      require(String.length status=1) "invalid child status";
+      status="Z"
+    | _ -> failwith "incomplete child state")
 let () =
   let args=Array.to_list Sys.argv |> List.tl in
   match args with
@@ -27,14 +45,21 @@ let () =
       with _ -> _exit 127
     );
     close output;
-    let killed=ref false in
-    let cleanup() = if not !killed then (
-      killed:=true;
+    let group_cleaned=ref false in
+    let stop_group() = if not !group_cleaned then (
       (try kill (-pid) Sys.sigkill with Unix_error(ESRCH,_,_)->());
       (try kill pid Sys.sigkill with Unix_error(ESRCH,_,_)->());
-      ignore(waitpid [] pid);
-      close input
+      group_cleaned:=true
     ) in
+    let rec reap_cleanup() =
+      try ignore(waitpid [] pid) with
+      | Unix_error(EINTR,_,_) -> reap_cleanup()
+      | Unix_error(ECHILD,_,_) -> () in
+    let cleanup() =
+      ignore(sigprocmask SIG_BLOCK [Sys.sigalrm;Sys.sigterm;Sys.sighup]);
+      ignore(setitimer ITIMER_REAL {it_interval=0.;it_value=0.});
+      stop_group();reap_cleanup();
+      (try close input with Unix_error(EBADF,_,_)->()) in
     (* One-shot elapsed-time OS alarm; no output resets it. *)
     Sys.set_signal Sys.sigalrm (Sys.Signal_handle(fun _->raise Exit));
     Sys.set_signal Sys.sigterm (Sys.Signal_handle(fun _->raise Exit));
@@ -50,9 +75,10 @@ let () =
           emit 0; pump()
         ) in
       pump();
+      while not(child_exited_unreaped pid) do sleepf 0.002 done;
       (* Keep child unreaped until its process group is cleaned. *)
-      (try kill (-pid) Sys.sigkill with Unix_error(ESRCH,_,_)->());
-      let _,status=waitpid [] pid in killed:=true;close input;
+      stop_group();
+      let _,status=waitpid [] pid in close input;
       ignore(setitimer ITIMER_REAL {it_interval=0.;it_value=0.});
       exit(match status with WEXITED n->n|WSIGNALED _|WSTOPPED _->125)
     with

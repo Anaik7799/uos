@@ -1,0 +1,73 @@
+{
+  "schema": "uos-mcp-native-mapping-audit.v1",
+  "generated_at_utc": "20260921-0723",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-mcp-native-audit/20260921-0715",
+  "authority": "development_only_report_only",
+  "runtime_observation": "UNKNOWN_NOT_PROBED",
+  "canonical_import": false,
+  "native_load_or_tools_call": false,
+  "source_hashes": {
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam": "bb4448eca304fc7c130b2e47ba100bd45705b34a26a8fd8343236f7784ccf2af",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam": "6ae874665d65aaaf3d8ebaa3c59d4b7ef975a57c53f45110aa7bd7d9c511d7cc",
+    "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam": "fb4076baacbbaa6f85534fa0a1a6cd89a4e6b77892ff9055667a0e043ff6c7b0",
+    "apps/cepaf_gleam/src/c3i_nif.erl": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+    "apps/cepaf_gleam/priv/c3i_nif.so": "c6b6cd061c3e7b6201689f81a866db95e3b3ab2a7c1987060dae3e27f1c55f"
+  },
+  "tool_mappings": [
+    {"tool":"plan_status","handler":"c3i_nif.plan_status","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"plan_list_pending","handler":"c3i_nif.plan_list_pending","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"plan_list","handler":"c3i_nif.plan_list_by_status","kind":"direct_nif_alias","runtime":"UNKNOWN"},
+    {"tool":"plan_get","handler":"c3i_nif.plan_get_task","kind":"direct_nif_alias","runtime":"UNKNOWN"},
+    {"tool":"plan_add","handler":"c3i_nif.plan_add_task","kind":"direct_nif_alias","runtime":"UNKNOWN"},
+    {"tool":"plan_update","handler":"c3i_nif.plan_update_task","kind":"direct_nif_alias","runtime":"UNKNOWN"},
+    {"tool":"plan_search","handler":"c3i_nif.plan_search","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"system_health","handler":"c3i_nif.system_health","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"system_dashboard","handler":"c3i_nif.system_dashboard","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"system_immune","handler":"c3i_nif.system_immune","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"system_zenoh","handler":"c3i_nif.system_zenoh","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"system_verification","handler":"c3i_nif.system_verification","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"planning_query","handler":"tool_plan_list_pending -> c3i_nif.plan_list_pending","kind":"legacy_alias","runtime":"UNKNOWN"},
+    {"tool":"todo_status","handler":"tool_plan_status -> c3i_nif.plan_status","kind":"legacy_alias","runtime":"UNKNOWN"},
+    {"tool":"knowledge_search","handler":"c3i_nif.knowledge_search","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"verification_run","handler":"c3i_nif.verification_run","kind":"direct_nif","runtime":"UNKNOWN"},
+    {"tool":"dark_cockpit_mode","handler":"c3i_nif.system_dashboard","kind":"legacy_alias","runtime":"UNKNOWN"},
+    {"tool":"mesh_topology","handler":"c3i_nif.system_zenoh","kind":"legacy_alias","runtime":"UNKNOWN"}
+  ],
+  "unavailable_declarations": [
+    {"tool":"control_loop","reason":"no runtime binding"},
+    {"tool":"safety_status","reason":"no runtime binding"},
+    {"tool":"registry_status","reason":"no runtime binding"},
+    {"tool":"run_selfcheck","reason":"no runtime binding"},
+    {"tool":"run_gate","reason":"no runtime binding"},
+    {"tool":"zk_search","reason":"no runtime binding"},
+    {"tool":"sa_bridge_submit","reason":"no runtime binding"},
+    {"tool":"vault_status","reason":"no runtime binding"},
+    {"tool":"vault_list_secrets","reason":"no runtime binding"},
+    {"tool":"vault_policy_get","reason":"no runtime binding"},
+    {"tool":"vault_audit_tail","reason":"no runtime binding"},
+    {"tool":"vault_health","reason":"no runtime binding"}
+  ],
+  "non_nif_handlers": [
+    {"tool":"rete_rule_conflict","handler":"inference_api.evaluate_rete_conflict / MAX typed API","runtime":"UNKNOWN","note":"not c3i NIF"},
+    {"tool":"stpa_fmea_hazard","handler":"MAX typed API","runtime":"UNKNOWN"},
+    {"tool":"ruliad_branch_eval","handler":"MAX typed API","runtime":"UNKNOWN"},
+    {"tool":"shruti_harmonics","handler":"MAX typed API","runtime":"UNKNOWN"},
+    {"tool":"podman_containers","handler":"wisp_router /api/v1/podman","runtime":"UNKNOWN"},
+    {"tool":"metabolic_state","handler":"wisp_router /api/v1/metabolic","runtime":"UNKNOWN"},
+    {"tool":"ooda_phase","handler":"wisp_router /api/v1/ooda","runtime":"UNKNOWN"},
+    {"tool":"fractal_status","handler":"wisp_router /api/v1/verification","runtime":"UNKNOWN"}
+  ],
+  "native_exports_without_direct_mcp_mapping": [
+    "inference_status", "trace_recent", "conversation_history", "cache_stats", "fmea_report", "ha_status", "voice_status",
+    "ruliology_automaton", "ruliology_multiway", "ruliology_causal", "ooda_phase", "zenoh_open", "zenoh_put", "zenoh_get",
+    "zenoh_status", "zenoh_close", "runtime_loaded"
+  ],
+  "findings": [
+    "A source declaration or NIF export is not runtime availability evidence.",
+    "All mappings require fresh endpoint, worker, authorization, and receipt observations before promotion.",
+    "The legacy mutation path is refused by the server boundary and is not counted as executable control.",
+    "No MCP tool is proven to expose every native export; unmapped exports remain UNKNOWN, not unavailable or complete."
+  ],
+  "completion": {"status":"development_checkpoint_only","admitted":false}
+}

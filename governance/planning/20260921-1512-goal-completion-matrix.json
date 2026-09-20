@@ -1,0 +1,65 @@
+{
+  "schema": "uos.goal-completion-matrix.v1",
+  "timestamp": "20260921-1512",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authority": "sa-plan-report-only",
+  "task_summary": {"total": 21, "completed": 4, "ready": 3, "executing": 0},
+  "requirements": [
+    {
+      "id": "database_feature_mcp_coverage",
+      "status": "PARTIAL",
+      "evidence": ["governance/capability-inventory/20260921-1334-feature-record-registration-receipt.json", "governance/planning/20260921-1345-mcp-inventory-progress-receipt.json", "governance/planning/20260921-1503-mcp-progress-feature-record.json"],
+      "gap": "declared and metadata-tracked capabilities still include unprobed/unknown runtime states",
+      "next": "authorized per-capability runtime probes"
+    },
+    {
+      "id": "declarative_functional_algebraic_mcp",
+      "status": "PARTIAL_FAIL_CLOSED",
+      "evidence": ["governance/planning/20260921-1510-declarative-contract-evidence.json", "governance/planning/20260921-1347-mcp-progress-regression-receipt.json"],
+      "gap": "fresh t2 task-bound grant is absent; canonical reads refuse coordinator replay",
+      "next": "independently authorized t2 binding and successful runtime probe"
+    },
+    {
+      "id": "real_holonic_coordination_hive_swarm",
+      "status": "HOLD",
+      "evidence": ["governance/planning/20260921-1343-holon-swarm-stdio-receipt.json", "governance/planning/20260921-1454-coordination-integrity-receipt.json"],
+      "gap": "canonical journal digest corruption prevents authenticated replay and peer ACK credit",
+      "next": "independent recovery authorization and authenticated participation"
+    },
+    {
+      "id": "dashboard_completion_tracking",
+      "status": "OBSERVED",
+      "evidence": ["governance/planning/20260921-1511-sa-plan-dashboard-snapshot.json", "governance/planning/20260921-1351-dashboard-execution-optimization.json"],
+      "gap": "dashboard is read-only and cannot grant completion or admission",
+      "next": "refresh after each authorized task transition"
+    },
+    {
+      "id": "risk_dependency_optimization",
+      "status": "PARTIAL_HOLD",
+      "evidence": ["governance/planning/20260921-1455-risk-refresh-receipt.json", "governance/planning/20260921-1456-risk-current-receipt.json"],
+      "gap": "risk checker is report-only; selection holds when no authorized effect fence exists",
+      "next": "re-run preflight and active-check on every authorized claim"
+    },
+    {
+      "id": "current_artifacts",
+      "status": "OBSERVED",
+      "evidence": ["governance/planning/20260921-1510-declarative-contract-evidence.json", "governance/planning/20260921-1457-recovery-candidate-verify-receipt.json"],
+      "gap": "artifacts document current state but do not establish system admission",
+      "next": "publish successor artifacts only from fresh observations"
+    },
+    {
+      "id": "independent_release_operational_acceptance",
+      "status": "NOT_ADMITTED",
+      "evidence": ["governance/planning/20260921-1457-recovery-candidate-verify-receipt.json"],
+      "gap": "no current independent sovereign authorization or release receipt exists",
+      "next": "obtain independent review and authorized operational acceptance"
+    }
+  ],
+  "completion_policy": {
+    "complete_only_when": "all requirements are VERIFIED or ADMITTED with fresh observed runtime behavior and formal/current evidence",
+    "blocked_unknown_unrun_stale_unadmitted_count_as_complete": false,
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false,
+    "goal_complete": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "uos.risk-portfolio-refresh-receipt.v1",
+  "observed_at": "2026-09-26T05:15:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "portfolio": "governance/planning/20260926-0510-risk-portfolio-refresh.json",
+  "snapshot": "governance/planning/20260921-1810-sa-plan-dashboard-snapshot.json",
+  "rank_result": "no_eligible_tasks",
+  "preflight": {
+    "task": "t0-coordination",
+    "status": "HOLD",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "assessment_sha256": "2932a5fb3b922d805f606fb1a90fd16fd75437b967fc06e6dd54d12be6bb9016",
+    "rule": "RP-SELECTION"
+  },
+  "decision": "hold",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

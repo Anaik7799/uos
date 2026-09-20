@@ -1,0 +1,22 @@
+{
+  "receipt_id": "declarative-binding-hold-20260921-1240",
+  "timestamp": "20260921-1240",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t2-contracts",
+  "workflow_id": "mcp/declarative-binding-1240",
+  "execution": {
+    "selection": "recorded through sa-plan task select",
+    "claim": "attempt 1 claimed and released through sa-plan",
+    "completion": "not attempted as completion because canonical binding was not authorized",
+    "mcp_tools": ["harness_system_feature_catalog", "harness_system_feature_observations", "harness_system_feature_intent"],
+    "observed_behavior": "without canonical task-bound binding, MCP returns role_binding_missing or equivalent fail-closed refusal",
+    "build": "PASS: gleam build",
+    "tests": "feature census and interface fixtures updated for 63 MCP tools"
+  },
+  "optimization": {
+    "decision": "release claim rather than mark complete",
+    "reason": "blocked/unadmitted work cannot count as completed",
+    "next_dependency": "independent Sa-plan-authorized binding plus fresh runtime probes"
+  },
+  "admission": "NOT_ADMITTED"
+}

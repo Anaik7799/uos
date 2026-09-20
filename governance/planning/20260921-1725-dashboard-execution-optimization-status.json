@@ -1,0 +1,64 @@
+{
+  "schema": "uos.dashboard-execution-optimization-status.v1",
+  "timestamp": "20260921-1725",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "authority": "sa-plan",
+  "dashboard_projection": {
+    "total": 21,
+    "completed": 4,
+    "ready": 3,
+    "executing": 0,
+    "blocked": 17,
+    "unknown": 0,
+    "admission": "not_admitted"
+  },
+  "optimization_policy": {
+    "ordering": "risk_then_dependency_then_criticality_then_agent_fit",
+    "effect_fence": "sa-plan-only",
+    "hold_on": ["risk_preflight_hold", "missing_runtime_admission", "missing_two_key_evidence", "coordinator_integrity_unresolved"],
+    "completion_rule": "blocked_unrun_stale_unadmitted_not_counted"
+  },
+  "observations": [
+    {
+      "kind": "registry_projection",
+      "result": "reverted",
+      "reason": "changing the declared MCP boundary invalidated pinned feature-census digests and caused regressions; no availability was credited"
+    },
+    {
+      "kind": "gleam_suite",
+      "result": "fail",
+      "passed": 11990,
+      "failed": 3,
+      "log": "/tmp/gleam-test-registry-rollback-1924.log",
+      "log_sha256": "56fb3418821a24063845f5ba4658e0fc675190ce05637e6daea7aa6a762511ef",
+      "failure_class": "stale feature-census source pin; no runtime admission inferred"
+    },
+    {
+      "kind": "risk_preflight",
+      "result": "hold",
+      "authority": "none",
+      "runtime_admission": "not_granted",
+      "reason": "risk-priority selection has no eligible first candidate while coordinator authority is unresolved"
+    }
+  ],
+  "next_execution_order": [
+    "t0-coordination",
+    "t0a-reconcile",
+    "t0b-bindings",
+    "t0c-conformance",
+    "r02-recovery-candidate",
+    "t2-contracts",
+    "r03-harness-coordinator",
+    "r04-identity-enrollment",
+    "r05-mcp-data",
+    "r06-mcp-control",
+    "r07-hive-swarm",
+    "r08-service-adapters",
+    "r09-end-to-end",
+    "t3-evidence",
+    "r10-artifact-sync",
+    "r11-release-review",
+    "r12-operational-acceptance"
+  ],
+  "safety": "This is a dashboard/status projection only; it grants no execution, deployment, MCP effect authority, or admission."
+}

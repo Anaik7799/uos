@@ -7,6 +7,7 @@
 ////     <stamp-controls>SC-OODA-001, SC-ORCH-004</stamp-controls></compliance>
 //// </c3i-module>
 
+import cepaf_gleam/ha/fractal_forecast.{type LayerForecast}
 import gleam/dict.{type Dict}
 import gleam/float
 import gleam/int
@@ -15,7 +16,6 @@ import gleam/json
 import gleam/list
 import gleam/result
 import gleam/string
-import cepaf_gleam/ha/fractal_forecast.{type LayerForecast}
 
 // =============================================================================
 // Type Definitions — OODA Cybernetic Control Loop
@@ -111,7 +111,7 @@ pub fn run_predictive_cycle(
   let assessment = orient(observations)
   let base_decision = decide(assessment)
   let adjusted_score = base_decision.score *. { 1.0 -. forecast.risk_score }
-  let adjusted_decision = case forecast.risk_score >. 0.30 {
+  let adjusted_decision = case forecast.risk_score >. 0.3 {
     True ->
       Decision(
         action: Alert("Predictive mitigation: " <> forecast.recommendation),
@@ -122,7 +122,10 @@ pub fn run_predictive_cycle(
       Decision(
         action: base_decision.action,
         score: adjusted_score,
-        reason: base_decision.reason <> " [Forecast: " <> forecast.risk_band <> "]",
+        reason: base_decision.reason
+          <> " [Forecast: "
+          <> forecast.risk_band
+          <> "]",
       )
   }
   let _ = act(adjusted_decision)

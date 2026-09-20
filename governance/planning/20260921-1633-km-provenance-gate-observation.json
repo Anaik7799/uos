@@ -1,0 +1,17 @@
+{
+  "schema": "uos.km-provenance-gate-observation.v1",
+  "observed_at": "2026-09-21T16:32:01Z",
+  "authority": "read-only provenance gate",
+  "command": "bash tools/km-gate --gate",
+  "output_path": "/tmp/km-gate-20260921-1633.json",
+  "output_sha256": "ffc29dec9857befe745c9bf750822d926c78d99c011fdbcf6f96a8759cd96a54",
+  "exit": 1,
+  "status": "HOLD",
+  "admitted_ev_ceiling": 93,
+  "findings": [
+    "CHAIN_BROKEN: 71 of 550 cycle rows fail content-digest recomputation; first mismatch at 333",
+    "KMP-NOMINT: ev-manifest.tsv lists EV-111 above ceiling 93 while INV-PROV-05 bars minting"
+  ],
+  "runtime_admission": "NOT_GRANTED",
+  "completion_credit": false
+}

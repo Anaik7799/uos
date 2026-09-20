@@ -1,0 +1,20 @@
+{
+  "schema": "uos.artifact-consistency-observation.v1",
+  "observed_at": "2026-09-21T16:34:00Z",
+  "authority": "read-only repository validators",
+  "timestamp_check": {
+    "command": "tools/uos-cli timestamp-check",
+    "output": "/tmp/uos-timestamp-20260921-1634.log",
+    "sha256": "3c7af85219a8128d966410cf9c0e55a8e61d9ba29263d178d6017917e7397af5",
+    "result": "PASS"
+  },
+  "journal_check": {
+    "command": "tools/journal_linter --latest",
+    "target": "docs/journal/20260921-0743-holon-runtime-observation.md",
+    "output": "/tmp/uos-journal-linter-20260921-1634.log",
+    "sha256": "17d7d05c147ea51b929da34ed6ee711c596c045815ab02fb90ed7f388c0e47e5",
+    "result": "10/10 PASS"
+  },
+  "limitation": "Validator passes establish formatting and journal structure only; they do not establish coordinator authority, MCP admission, or release acceptance.",
+  "completion_credit": false
+}

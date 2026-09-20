@@ -46,7 +46,8 @@ pub fn fmea_guardian_lost_replay_test() {
   }
 
   // Unrecorded crash fails closed
-  let res_unrecorded = simulate_guardian_crash_recovery("tx-999", "Unknown", log)
+  let res_unrecorded =
+    simulate_guardian_crash_recovery("tx-999", "Unknown", log)
   case res_unrecorded {
     TxCrashed(id) -> id |> should.equal("tx-999")
     _ -> should.fail()
@@ -67,7 +68,8 @@ pub fn check_psi_invariant_and_render(
   healthy_containers: Int,
 ) -> RenderElement {
   case total_containers >= healthy_containers {
-    True -> NominalView("Cluster Healthy: " <> int.to_string(healthy_containers))
+    True ->
+      NominalView("Cluster Healthy: " <> int.to_string(healthy_containers))
     False ->
       SafeFallbackView(
         "Psi Invariant I-01 Violated: healthy ("
@@ -82,7 +84,8 @@ pub fn check_psi_invariant_and_render(
 pub fn fmea_psi_invariant_guard_test() {
   let ok_view = check_psi_invariant_and_render(16, 16)
   case ok_view {
-    NominalView(msg) -> string.contains(msg, "Cluster Healthy") |> should.be_true
+    NominalView(msg) ->
+      string.contains(msg, "Cluster Healthy") |> should.be_true
     _ -> should.fail()
   }
 
@@ -117,7 +120,8 @@ pub fn fmea_nif_reload_empty_fallback_test() {
   let fresh = read_nif_with_cache_fallback(NifReady("metric:42"), "metric:0")
   fresh |> should.equal("metric:42")
 
-  let fallback = read_nif_with_cache_fallback(NifReloading, "metric:cached_prev")
+  let fallback =
+    read_nif_with_cache_fallback(NifReloading, "metric:cached_prev")
   fallback |> should.equal("metric:cached_prev")
 }
 
@@ -168,7 +172,8 @@ pub fn publish_with_100ms_budget(
 ) -> ZenohPubResult {
   case router_reachable && simulated_delay_ms <= 100 {
     True -> PubSuccess(simulated_delay_ms)
-    False -> PubBudgetExceededFallback(elapsed_ms: 100, dropped_or_buffered: True)
+    False ->
+      PubBudgetExceededFallback(elapsed_ms: 100, dropped_or_buffered: True)
   }
 }
 
@@ -240,7 +245,12 @@ pub type WalLockResult {
   LockBusyExhausted(attempts: Int, elapsed_ms: Int)
 }
 
-fn do_wal_retry(attempt: Int, elapsed: Int, max: Int, depth: Int) -> WalLockResult {
+fn do_wal_retry(
+  attempt: Int,
+  elapsed: Int,
+  max: Int,
+  depth: Int,
+) -> WalLockResult {
   case attempt >= max {
     True -> LockBusyExhausted(attempts: attempt, elapsed_ms: elapsed)
     False ->
@@ -254,7 +264,10 @@ fn do_wal_retry(attempt: Int, elapsed: Int, max: Int, depth: Int) -> WalLockResu
   }
 }
 
-pub fn simulate_wal_retry(max_retries: Int, contention_depth: Int) -> WalLockResult {
+pub fn simulate_wal_retry(
+  max_retries: Int,
+  contention_depth: Int,
+) -> WalLockResult {
   do_wal_retry(0, 0, max_retries, contention_depth)
 }
 
@@ -284,7 +297,10 @@ pub type SmritiAccessMode {
   ReadOnlyReplica
 }
 
-pub fn arbitrate_smriti_access(lease_holder: Option(String), requested_by: String) -> SmritiAccessMode {
+pub fn arbitrate_smriti_access(
+  lease_holder: Option(String),
+  requested_by: String,
+) -> SmritiAccessMode {
   case lease_holder {
     Some(holder) if holder == requested_by -> ExclusiveWriter(holder)
     _ -> ReadOnlyReplica
@@ -308,7 +324,10 @@ pub type ContainerRecovery {
   UncleanDyingGaspReplay(wal_events_replayed: Int)
 }
 
-pub fn recover_container_state(dying_gasp_logged: Bool, wal_event_count: Int) -> ContainerRecovery {
+pub fn recover_container_state(
+  dying_gasp_logged: Bool,
+  wal_event_count: Int,
+) -> ContainerRecovery {
   case dying_gasp_logged {
     True -> CleanApoptosis
     False -> UncleanDyingGaspReplay(wal_events_replayed: wal_event_count)
@@ -394,7 +413,10 @@ pub type SchedulerThrottle {
   SchedulersThrottled(count: Int, ooda_sla_preserved: Bool)
 }
 
-pub fn govern_cpu_load(cpu_pct: Int, total_schedulers: Int) -> SchedulerThrottle {
+pub fn govern_cpu_load(
+  cpu_pct: Int,
+  total_schedulers: Int,
+) -> SchedulerThrottle {
   case cpu_pct > 85 {
     True -> SchedulersThrottled(count: 6, ooda_sla_preserved: True)
     False -> SchedulersFull(count: total_schedulers)
@@ -415,7 +437,10 @@ pub type MemorySupervisorAction {
   TriggerSelfHealingRestart(pid_leak: String, ema_growth_mb: Float)
 }
 
-pub fn monitor_beam_memory_growth(ema_growth_mb: Float, threshold_mb: Float) -> MemorySupervisorAction {
+pub fn monitor_beam_memory_growth(
+  ema_growth_mb: Float,
+  threshold_mb: Float,
+) -> MemorySupervisorAction {
   case ema_growth_mb >. threshold_mb {
     True -> TriggerSelfHealingRestart("<0.1234.0>", ema_growth_mb)
     False -> MemoryHealthy
@@ -443,7 +468,10 @@ pub type OodaCycleResult {
   OodaRuleOnlyFallback(reason: String)
 }
 
-pub fn execute_ooda_step(elapsed_ms: Int, hard_budget_ms: Int) -> OodaCycleResult {
+pub fn execute_ooda_step(
+  elapsed_ms: Int,
+  hard_budget_ms: Int,
+) -> OodaCycleResult {
   case elapsed_ms <= hard_budget_ms {
     True -> OodaLLMSuccess(elapsed_ms)
     False ->
@@ -477,7 +505,10 @@ pub type InferenceEngine {
   NifKeywordSearchFallback
 }
 
-pub fn dispatch_inference(primary_alive: Bool, secondary_alive: Bool) -> InferenceEngine {
+pub fn dispatch_inference(
+  primary_alive: Bool,
+  secondary_alive: Bool,
+) -> InferenceEngine {
   case primary_alive {
     True -> Gemma3
     False ->
@@ -504,7 +535,10 @@ pub type McpDispatchStatus {
   McpEscalatedHITL
 }
 
-pub fn dispatch_mcp_tool(failures: Int, timeout_exceeded: Bool) -> McpDispatchStatus {
+pub fn dispatch_mcp_tool(
+  failures: Int,
+  timeout_exceeded: Bool,
+) -> McpDispatchStatus {
   case timeout_exceeded {
     False -> McpCompleted("Tool Execution Nominal")
     True ->
@@ -516,7 +550,8 @@ pub fn dispatch_mcp_tool(failures: Int, timeout_exceeded: Bool) -> McpDispatchSt
 }
 
 pub fn fmea_mcp_tool_hang_cooldown_test() {
-  dispatch_mcp_tool(0, False) |> should.equal(McpCompleted("Tool Execution Nominal"))
+  dispatch_mcp_tool(0, False)
+  |> should.equal(McpCompleted("Tool Execution Nominal"))
   dispatch_mcp_tool(1, True) |> should.equal(McpCircuitOpenCooldown(60))
   dispatch_mcp_tool(3, True) |> should.equal(McpEscalatedHITL)
 }
@@ -530,7 +565,10 @@ pub type MeshPartitionQuorum {
   QuorumLostPartitioned(active_routers: Int)
 }
 
-pub fn evaluate_mesh_quorum(active_routers: Int, total_routers: Int) -> MeshPartitionQuorum {
+pub fn evaluate_mesh_quorum(
+  active_routers: Int,
+  total_routers: Int,
+) -> MeshPartitionQuorum {
   let threshold = { total_routers / 2 } + 1
   case active_routers >= threshold {
     True -> QuorumMaintained(active_routers)
@@ -554,7 +592,10 @@ pub type WsConnectionStatus {
   WsReconnecting(attempt: Int, delay_ms: Int)
 }
 
-pub fn handle_websocket_drop(dropped: Bool, retry_attempt: Int) -> WsConnectionStatus {
+pub fn handle_websocket_drop(
+  dropped: Bool,
+  retry_attempt: Int,
+) -> WsConnectionStatus {
   case dropped {
     False -> WsConnected
     True -> {
@@ -579,7 +620,10 @@ pub type NodeLeaseVerdict {
   ApoptosisTriggered(reason: String)
 }
 
-pub fn verify_lease_authority(has_zenoh_lease: Bool, dual_leader_observed: Bool) -> NodeLeaseVerdict {
+pub fn verify_lease_authority(
+  has_zenoh_lease: Bool,
+  dual_leader_observed: Bool,
+) -> NodeLeaseVerdict {
   case dual_leader_observed && !has_zenoh_lease {
     True ->
       ApoptosisTriggered(
@@ -608,7 +652,10 @@ pub type SupervisorDecision {
   SupervisorEscalated(restarts: Int, reason: String)
 }
 
-pub fn simulate_supervisor_crash(crash_count: Int, max_restarts: Int) -> SupervisorDecision {
+pub fn simulate_supervisor_crash(
+  crash_count: Int,
+  max_restarts: Int,
+) -> SupervisorDecision {
   case crash_count > max_restarts {
     True ->
       SupervisorEscalated(
@@ -642,7 +689,9 @@ pub fn fmea_supervisor_restart_storm_escalation_test() {
 
 pub const hard_denied_serial: String = "25503L801736"
 
-pub fn verify_device_safe_for_write(device_serial: String) -> Result(String, String) {
+pub fn verify_device_safe_for_write(
+  device_serial: String,
+) -> Result(String, String) {
   case string.contains(device_serial, hard_denied_serial) {
     True -> Error("FAIL_CLOSED: OS NVMe serial locked from write operations")
     False -> Ok("SAFE_DEVICE")

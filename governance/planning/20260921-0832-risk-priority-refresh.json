@@ -1,0 +1,19 @@
+{
+  "schema": "uos.risk-priority-refresh.v1",
+  "recorded_at_utc": "2026-09-21T08:32:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/risk-priority-check --all",
+  "result": {
+    "status": "PASS",
+    "authority": "NONE",
+    "baseline_checks": 375,
+    "adversarial_checks": 32843,
+    "independent_dag_scenarios": 32768,
+    "local_paths_checked": 39,
+    "runtime_enforcement": "NOT_ASSERTED",
+    "runtime_admission": "NOT_GRANTED",
+    "live_agent_tests": "UNRUN"
+  },
+  "log_sha256": "8ae4d5edf26bcf975d4184cef6f4f4cf1225c1700a433cd6df560b81889c390f",
+  "completion_semantics": "prioritization machinery passed; no task completion or authority inferred"
+}

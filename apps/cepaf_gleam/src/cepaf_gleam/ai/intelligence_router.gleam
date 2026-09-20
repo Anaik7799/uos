@@ -219,70 +219,82 @@ pub fn route(
       let local =
         list.find(catalog, fn(m) { m.tier == LocalRuleOracle })
         |> or_first(catalog)
-      Ok(build_decision(
-        request,
-        local,
-        prompt_tokens,
-        completion_tokens,
-        "Local Rete rule oracle selected for sub-millisecond deterministic evaluation",
-        [
-          "google/gemma-4-31b-it:free",
-          "nvidia/nemotron-3.5-lightning:free",
-        ],
-      ))
+      Ok(
+        build_decision(
+          request,
+          local,
+          prompt_tokens,
+          completion_tokens,
+          "Local Rete rule oracle selected for sub-millisecond deterministic evaluation",
+          [
+            "google/gemma-4-31b-it:free",
+            "nvidia/nemotron-3.5-lightning:free",
+          ],
+        ),
+      )
     }
     SovereignOnly -> {
       let sovereign =
         list.find(catalog, fn(m) { m.tier == SovereignMax })
         |> or_first(catalog)
-      Ok(build_decision(
-        request,
-        sovereign,
-        prompt_tokens,
-        completion_tokens,
-        "Modular MAX isolated daemon selected for sovereign offline execution",
-        ["hermes/rete-local"],
-      ))
+      Ok(
+        build_decision(
+          request,
+          sovereign,
+          prompt_tokens,
+          completion_tokens,
+          "Modular MAX isolated daemon selected for sovereign offline execution",
+          ["hermes/rete-local"],
+        ),
+      )
     }
     ZeroCostPreferFree -> {
       let free_model =
         list.find(catalog, fn(m) { m.tier == FreeOpenRouter })
         |> or_first(catalog)
-      Ok(build_decision(
-        request,
-        free_model,
-        prompt_tokens,
-        completion_tokens,
-        "Zero-cost OpenRouter free tier model selected adhering to SC-ROUTING-001",
-        [
-          "nvidia/nemotron-3.5-lightning:free",
-          "minimax/minimax-m3:free",
-          "hermes/rete-local",
-        ],
-      ))
+      Ok(
+        build_decision(
+          request,
+          free_model,
+          prompt_tokens,
+          completion_tokens,
+          "Zero-cost OpenRouter free tier model selected adhering to SC-ROUTING-001",
+          [
+            "nvidia/nemotron-3.5-lightning:free",
+            "minimax/minimax-m3:free",
+            "hermes/rete-local",
+          ],
+        ),
+      )
     }
     CostBoundedPaid -> {
       case request.allow_paid {
         False ->
-          Error("Paid models requested under CostBoundedPaid without explicit allow_paid=true flag")
+          Error(
+            "Paid models requested under CostBoundedPaid without explicit allow_paid=true flag",
+          )
         True -> {
           let paid_model =
             list.find(catalog, fn(m) { m.tier == PaidOpenRouter })
             |> or_first(catalog)
           let est_cost =
-            int.to_float(prompt_tokens) *. paid_model.prompt_usd_per_token
-            +. int.to_float(completion_tokens) *. paid_model.completion_usd_per_token
+            int.to_float(prompt_tokens)
+            *. paid_model.prompt_usd_per_token
+            +. int.to_float(completion_tokens)
+            *. paid_model.completion_usd_per_token
 
           case est_cost <=. fence.max_usd_per_request {
             True ->
-              Ok(build_decision(
-                request,
-                paid_model,
-                prompt_tokens,
-                completion_tokens,
-                "Cost-bounded paid model approved within layer USD limit",
-                ["google/gemma-4-31b-it:free", "hermes/rete-local"],
-              ))
+              Ok(
+                build_decision(
+                  request,
+                  paid_model,
+                  prompt_tokens,
+                  completion_tokens,
+                  "Cost-bounded paid model approved within layer USD limit",
+                  ["google/gemma-4-31b-it:free", "hermes/rete-local"],
+                ),
+              )
             False ->
               Error(
                 "Estimated cost "
@@ -297,7 +309,10 @@ pub fn route(
   }
 }
 
-fn or_first(res: Result(ModelSpec, Nil), catalog: List(ModelSpec)) -> ModelSpec {
+fn or_first(
+  res: Result(ModelSpec, Nil),
+  catalog: List(ModelSpec),
+) -> ModelSpec {
   case res {
     Ok(m) -> m
     Error(_) ->
@@ -326,8 +341,10 @@ fn build_decision(
   fallback_chain: List(String),
 ) -> RoutingDecision {
   let cost =
-    int.to_float(prompt_tokens) *. model.prompt_usd_per_token
-    +. int.to_float(completion_tokens) *. model.completion_usd_per_token
+    int.to_float(prompt_tokens)
+    *. model.prompt_usd_per_token
+    +. int.to_float(completion_tokens)
+    *. model.completion_usd_per_token
 
   RoutingDecision(
     task_id: request.task_id,
@@ -368,10 +385,7 @@ pub fn decision_to_json(decision: RoutingDecision) -> Json {
     #("estimated_cost_usd", json.float(decision.estimated_cost_usd)),
     #("budget_approved", json.bool(decision.budget_approved)),
     #("reasoning", json.string(decision.reasoning)),
-    #(
-      "fallback_chain",
-      json.array(decision.fallback_chain, of: json.string),
-    ),
+    #("fallback_chain", json.array(decision.fallback_chain, of: json.string)),
   ])
 }
 

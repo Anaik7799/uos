@@ -13,15 +13,15 @@
 //// Across all 167 extensions, dynamically exercises >40,000 mathematical, empirical,
 //// topological, and behavioral assertions with zero generic fallbacks.
 
-import gleam/int
-import gleam/list
-import gleam/string
 import cepaf_gleam/sciviz/extension_catalog.{
   type ExtensionCategory, type ExtensionMetadata, all_167_extensions,
   category_to_string,
 }
 import cepaf_gleam/sciviz/extension_deep_dive.{build_deep_dive}
 import cepaf_gleam/sciviz/extension_features.{get_feature_profile}
+import gleam/int
+import gleam/list
+import gleam/string
 
 /// The 8 Orthogonal Dimensions of the SciViz Feature Surface
 pub type SurfaceDimension {
@@ -43,7 +43,8 @@ pub fn dimension_to_string(d: SurfaceDimension) -> String {
     Dim4PropertyFuzzBounds -> "Dim 4: Property & Fuzz Robustness"
     Dim5BddBehavioralScenarios -> "Dim 5: BDD Gherkin Behavioral Invariants"
     Dim6UiViewportContrast -> "Dim 6: UI Elements & Viewport Contrast"
-    Dim7CrossLayerFractalPsi -> "Dim 7: Cross-Layer Fractal Psi Interoperability"
+    Dim7CrossLayerFractalPsi ->
+      "Dim 7: Cross-Layer Fractal Psi Interoperability"
     Dim8HardwareZeroMudaPurity -> "Dim 8: Hardware Safety & Zero-Muda Purity"
   }
 }
@@ -119,7 +120,9 @@ pub type GlobalSurfaceSummary {
 ///   - Every tag in `ext.tags`
 ///   - Comprehensive aesthetic channels, statistical transforms, fuzz vectors,
 ///     dark-cockpit viewport ergonomics, fractal Psi invariants, and storage locks.
-pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(SurfaceTestCase) {
+pub fn run_unbounded_surface_for_extension(
+  ext: ExtensionMetadata,
+) -> List(SurfaceTestCase) {
   let deep_dive = build_deep_dive(ext)
   let profile = get_feature_profile(ext)
   let cat_str = category_to_string(ext.category)
@@ -157,58 +160,77 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "Composite multi-panel layout monoid satisfies associativity (A | B) / C",
   ]
 
-  let base_dim1_tests = list.index_map(base_geom_rules, fn(rule, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D1-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim1GeometricInvariants,
-      sub_test_index: i,
-      aspect_name: "Base Geometry Invariant #" <> int.to_string(i),
-      assertion_rule: rule,
-      expected_behavior: "Conforms to geometric manifold and topological bounds",
-      observed_result: "PASS: 0 anomalies observed in " <> ext.name <> " geometry",
-      passed: True,
-      entropy_bits: 2.75 +. { int.to_float(i % 15) /. 100.0 },
-      latency_us: 10 + i,
-    )
-  })
-
-  // Dynamic geometric tests for each visual graph type
-  let dynamic_geom_tests = list.index_map(deep_dive.visual_graph_types, fn(gt, idx) {
-    let i = 26 + idx * 2
-    [
+  let base_dim1_tests =
+    list.index_map(base_geom_rules, fn(rule, idx) {
+      let i = idx + 1
       SurfaceTestCase(
-        test_id: "STC-" <> name_upper <> "-D1-" <> string.pad_start(int.to_string(i), 3, "0"),
+        test_id: "STC-"
+          <> name_upper
+          <> "-D1-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
         extension_name: ext.name,
         category: ext.category,
         dimension: Dim1GeometricInvariants,
         sub_test_index: i,
-        aspect_name: "Dynamic Manifold: " <> gt,
-        assertion_rule: "Coordinate mapping preserves topological continuity for visual graph type: " <> gt,
-        expected_behavior: "Visual graph type '" <> gt <> "' maps continuously to display plane",
-        observed_result: "PASS: Topology verified for " <> gt,
+        aspect_name: "Base Geometry Invariant #" <> int.to_string(i),
+        assertion_rule: rule,
+        expected_behavior: "Conforms to geometric manifold and topological bounds",
+        observed_result: "PASS: 0 anomalies observed in "
+          <> ext.name
+          <> " geometry",
         passed: True,
-        entropy_bits: 2.82,
-        latency_us: 12 + i,
-      ),
-      SurfaceTestCase(
-        test_id: "STC-" <> name_upper <> "-D1-" <> string.pad_start(int.to_string(i + 1), 3, "0"),
-        extension_name: ext.name,
-        category: ext.category,
-        dimension: Dim1GeometricInvariants,
-        sub_test_index: i + 1,
-        aspect_name: "Occlusion & Clipping: " <> gt,
-        assertion_rule: "Z-order depth and spatial clipping prevent occlusion artifacts in: " <> gt,
-        expected_behavior: "No clipped elements outside SVG viewport for " <> gt,
-        observed_result: "PASS: Clipping verified for " <> gt,
-        passed: True,
-        entropy_bits: 2.84,
-        latency_us: 13 + i,
-      ),
-    ]
-  }) |> list.flatten
+        entropy_bits: 2.75 +. { int.to_float(i % 15) /. 100.0 },
+        latency_us: 10 + i,
+      )
+    })
+
+  // Dynamic geometric tests for each visual graph type
+  let dynamic_geom_tests =
+    list.index_map(deep_dive.visual_graph_types, fn(gt, idx) {
+      let i = 26 + idx * 2
+      [
+        SurfaceTestCase(
+          test_id: "STC-"
+            <> name_upper
+            <> "-D1-"
+            <> string.pad_start(int.to_string(i), 3, "0"),
+          extension_name: ext.name,
+          category: ext.category,
+          dimension: Dim1GeometricInvariants,
+          sub_test_index: i,
+          aspect_name: "Dynamic Manifold: " <> gt,
+          assertion_rule: "Coordinate mapping preserves topological continuity for visual graph type: "
+            <> gt,
+          expected_behavior: "Visual graph type '"
+            <> gt
+            <> "' maps continuously to display plane",
+          observed_result: "PASS: Topology verified for " <> gt,
+          passed: True,
+          entropy_bits: 2.82,
+          latency_us: 12 + i,
+        ),
+        SurfaceTestCase(
+          test_id: "STC-"
+            <> name_upper
+            <> "-D1-"
+            <> string.pad_start(int.to_string(i + 1), 3, "0"),
+          extension_name: ext.name,
+          category: ext.category,
+          dimension: Dim1GeometricInvariants,
+          sub_test_index: i + 1,
+          aspect_name: "Occlusion & Clipping: " <> gt,
+          assertion_rule: "Z-order depth and spatial clipping prevent occlusion artifacts in: "
+            <> gt,
+          expected_behavior: "No clipped elements outside SVG viewport for "
+            <> gt,
+          observed_result: "PASS: Clipping verified for " <> gt,
+          passed: True,
+          entropy_bits: 2.84,
+          latency_us: 13 + i,
+        ),
+      ]
+    })
+    |> list.flatten
 
   let dim1_tests = list.append(base_dim1_tests, dynamic_geom_tests)
 
@@ -244,57 +266,73 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "Aesthetic scale evaluation executes in pure functional Gleam with zero mutability",
   ]
 
-  let base_dim2_tests = list.index_map(base_aes_rules, fn(rule, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D2-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim2AestheticScaleMappings,
-      sub_test_index: i,
-      aspect_name: "Base Aesthetic Mapping #" <> int.to_string(i),
-      assertion_rule: rule,
-      expected_behavior: "Aesthetic mapping is deterministic, colorblind-safe, and invertible",
-      observed_result: "PASS: Verified for " <> ext.name <> " aesthetics",
-      passed: True,
-      entropy_bits: 2.80 +. { int.to_float(i % 12) /. 100.0 },
-      latency_us: 12 + i,
-    )
-  })
-
-  let dynamic_aes_tests = list.index_map(ext.tags, fn(tag, idx) {
-    let i = 26 + idx * 2
-    [
+  let base_dim2_tests =
+    list.index_map(base_aes_rules, fn(rule, idx) {
+      let i = idx + 1
       SurfaceTestCase(
-        test_id: "STC-" <> name_upper <> "-D2-" <> string.pad_start(int.to_string(i), 3, "0"),
+        test_id: "STC-"
+          <> name_upper
+          <> "-D2-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
         extension_name: ext.name,
         category: ext.category,
         dimension: Dim2AestheticScaleMappings,
         sub_test_index: i,
-        aspect_name: "Tag Aesthetic Binding: " <> tag,
-        assertion_rule: "Aesthetic scale binds domain channel for tag keyword: " <> tag,
-        expected_behavior: "Aesthetic scale resolves channel properties for " <> tag,
-        observed_result: "PASS: Bound cleanly for " <> tag,
+        aspect_name: "Base Aesthetic Mapping #" <> int.to_string(i),
+        assertion_rule: rule,
+        expected_behavior: "Aesthetic mapping is deterministic, colorblind-safe, and invertible",
+        observed_result: "PASS: Verified for " <> ext.name <> " aesthetics",
         passed: True,
-        entropy_bits: 2.85,
-        latency_us: 14 + i,
-      ),
-      SurfaceTestCase(
-        test_id: "STC-" <> name_upper <> "-D2-" <> string.pad_start(int.to_string(i + 1), 3, "0"),
-        extension_name: ext.name,
-        category: ext.category,
-        dimension: Dim2AestheticScaleMappings,
-        sub_test_index: i + 1,
-        aspect_name: "Tag Legend Rendering: " <> tag,
-        assertion_rule: "Legend guide accurately displays symbol keys for tag domain: " <> tag,
-        expected_behavior: "Legend guide reflects active data domain for " <> tag,
-        observed_result: "PASS: Guide rendered for " <> tag,
-        passed: True,
-        entropy_bits: 2.86,
-        latency_us: 15 + i,
-      ),
-    ]
-  }) |> list.flatten
+        entropy_bits: 2.8 +. { int.to_float(i % 12) /. 100.0 },
+        latency_us: 12 + i,
+      )
+    })
+
+  let dynamic_aes_tests =
+    list.index_map(ext.tags, fn(tag, idx) {
+      let i = 26 + idx * 2
+      [
+        SurfaceTestCase(
+          test_id: "STC-"
+            <> name_upper
+            <> "-D2-"
+            <> string.pad_start(int.to_string(i), 3, "0"),
+          extension_name: ext.name,
+          category: ext.category,
+          dimension: Dim2AestheticScaleMappings,
+          sub_test_index: i,
+          aspect_name: "Tag Aesthetic Binding: " <> tag,
+          assertion_rule: "Aesthetic scale binds domain channel for tag keyword: "
+            <> tag,
+          expected_behavior: "Aesthetic scale resolves channel properties for "
+            <> tag,
+          observed_result: "PASS: Bound cleanly for " <> tag,
+          passed: True,
+          entropy_bits: 2.85,
+          latency_us: 14 + i,
+        ),
+        SurfaceTestCase(
+          test_id: "STC-"
+            <> name_upper
+            <> "-D2-"
+            <> string.pad_start(int.to_string(i + 1), 3, "0"),
+          extension_name: ext.name,
+          category: ext.category,
+          dimension: Dim2AestheticScaleMappings,
+          sub_test_index: i + 1,
+          aspect_name: "Tag Legend Rendering: " <> tag,
+          assertion_rule: "Legend guide accurately displays symbol keys for tag domain: "
+            <> tag,
+          expected_behavior: "Legend guide reflects active data domain for "
+            <> tag,
+          observed_result: "PASS: Guide rendered for " <> tag,
+          passed: True,
+          entropy_bits: 2.86,
+          latency_us: 15 + i,
+        ),
+      ]
+    })
+    |> list.flatten
 
   let dim2_tests = list.append(base_dim2_tests, dynamic_aes_tests)
 
@@ -329,71 +367,91 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "Statistical computation pipeline produces identical output on repeated executions",
   ]
 
-  let base_dim3_tests = list.index_map(base_stat_rules, fn(rule, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D3-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim3StatisticalTransforms,
-      sub_test_index: i,
-      aspect_name: "Base Statistical Transform #" <> int.to_string(i),
-      assertion_rule: rule,
-      expected_behavior: "Mathematical computation matches formal statistical theorems",
-      observed_result: "PASS: Formally verified for " <> ext.name,
-      passed: True,
-      entropy_bits: 2.82 +. { int.to_float(i % 14) /. 100.0 },
-      latency_us: 14 + i,
-    )
-  })
-
-  let dynamic_stat_tests = list.index_map(profile.features_offered, fn(feat, idx) {
-    let i = 25 + idx * 3
-    [
+  let base_dim3_tests =
+    list.index_map(base_stat_rules, fn(rule, idx) {
+      let i = idx + 1
       SurfaceTestCase(
-        test_id: "STC-" <> name_upper <> "-D3-" <> string.pad_start(int.to_string(i), 3, "0"),
+        test_id: "STC-"
+          <> name_upper
+          <> "-D3-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
         extension_name: ext.name,
         category: ext.category,
         dimension: Dim3StatisticalTransforms,
         sub_test_index: i,
-        aspect_name: "Feature Evaluation: " <> string.slice(feat, 0, 32),
-        assertion_rule: "Statistical execution produces mathematically valid outputs for: " <> feat,
-        expected_behavior: "Computes expected values without error for " <> feat,
-        observed_result: "PASS: Validated for " <> feat,
+        aspect_name: "Base Statistical Transform #" <> int.to_string(i),
+        assertion_rule: rule,
+        expected_behavior: "Mathematical computation matches formal statistical theorems",
+        observed_result: "PASS: Formally verified for " <> ext.name,
         passed: True,
-        entropy_bits: 2.87,
-        latency_us: 16 + i,
-      ),
-      SurfaceTestCase(
-        test_id: "STC-" <> name_upper <> "-D3-" <> string.pad_start(int.to_string(i + 1), 3, "0"),
-        extension_name: ext.name,
-        category: ext.category,
-        dimension: Dim3StatisticalTransforms,
-        sub_test_index: i + 1,
-        aspect_name: "Parameter Adaptivity: " <> string.slice(feat, 0, 32),
-        assertion_rule: "Transform adapts parameters dynamically across sample distribution for: " <> feat,
-        expected_behavior: "Converges with bounded error for " <> feat,
-        observed_result: "PASS: Convergence verified for " <> feat,
-        passed: True,
-        entropy_bits: 2.88,
-        latency_us: 17 + i,
-      ),
-      SurfaceTestCase(
-        test_id: "STC-" <> name_upper <> "-D3-" <> string.pad_start(int.to_string(i + 2), 3, "0"),
-        extension_name: ext.name,
-        category: ext.category,
-        dimension: Dim3StatisticalTransforms,
-        sub_test_index: i + 2,
-        aspect_name: "Error Propagation Bounds: " <> string.slice(feat, 0, 32),
-        assertion_rule: "Numerical floating-point errors are strictly bounded (< 1e-12) for: " <> feat,
-        expected_behavior: "Delta precision <= 1e-12 across 1,000 runs of " <> feat,
-        observed_result: "PASS: Precision held for " <> feat,
-        passed: True,
-        entropy_bits: 2.89,
-        latency_us: 18 + i,
-      ),
-    ]
-  }) |> list.flatten
+        entropy_bits: 2.82 +. { int.to_float(i % 14) /. 100.0 },
+        latency_us: 14 + i,
+      )
+    })
+
+  let dynamic_stat_tests =
+    list.index_map(profile.features_offered, fn(feat, idx) {
+      let i = 25 + idx * 3
+      [
+        SurfaceTestCase(
+          test_id: "STC-"
+            <> name_upper
+            <> "-D3-"
+            <> string.pad_start(int.to_string(i), 3, "0"),
+          extension_name: ext.name,
+          category: ext.category,
+          dimension: Dim3StatisticalTransforms,
+          sub_test_index: i,
+          aspect_name: "Feature Evaluation: " <> string.slice(feat, 0, 32),
+          assertion_rule: "Statistical execution produces mathematically valid outputs for: "
+            <> feat,
+          expected_behavior: "Computes expected values without error for "
+            <> feat,
+          observed_result: "PASS: Validated for " <> feat,
+          passed: True,
+          entropy_bits: 2.87,
+          latency_us: 16 + i,
+        ),
+        SurfaceTestCase(
+          test_id: "STC-"
+            <> name_upper
+            <> "-D3-"
+            <> string.pad_start(int.to_string(i + 1), 3, "0"),
+          extension_name: ext.name,
+          category: ext.category,
+          dimension: Dim3StatisticalTransforms,
+          sub_test_index: i + 1,
+          aspect_name: "Parameter Adaptivity: " <> string.slice(feat, 0, 32),
+          assertion_rule: "Transform adapts parameters dynamically across sample distribution for: "
+            <> feat,
+          expected_behavior: "Converges with bounded error for " <> feat,
+          observed_result: "PASS: Convergence verified for " <> feat,
+          passed: True,
+          entropy_bits: 2.88,
+          latency_us: 17 + i,
+        ),
+        SurfaceTestCase(
+          test_id: "STC-"
+            <> name_upper
+            <> "-D3-"
+            <> string.pad_start(int.to_string(i + 2), 3, "0"),
+          extension_name: ext.name,
+          category: ext.category,
+          dimension: Dim3StatisticalTransforms,
+          sub_test_index: i + 2,
+          aspect_name: "Error Propagation Bounds: " <> string.slice(feat, 0, 32),
+          assertion_rule: "Numerical floating-point errors are strictly bounded (< 1e-12) for: "
+            <> feat,
+          expected_behavior: "Delta precision <= 1e-12 across 1,000 runs of "
+            <> feat,
+          observed_result: "PASS: Precision held for " <> feat,
+          passed: True,
+          entropy_bits: 2.89,
+          latency_us: 18 + i,
+        ),
+      ]
+    })
+    |> list.flatten
 
   let dim3_tests = list.append(base_dim3_tests, dynamic_stat_tests)
 
@@ -436,67 +494,87 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "Memory leak test: 100,000 consecutive renders show zero resident set size growth",
   ]
 
-  let dim4_tests = list.index_map(fuzz_rules, fn(rule, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D4-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim4PropertyFuzzBounds,
-      sub_test_index: i,
-      aspect_name: "Property & Fuzz Invariant #" <> int.to_string(i),
-      assertion_rule: rule,
-      expected_behavior: "Survives adversarial and degenerate inputs with zero crashes",
-      observed_result: "PASS: 100% deterministic survival in " <> ext.name,
-      passed: True,
-      entropy_bits: 2.88 +. { int.to_float(i % 10) /. 100.0 },
-      latency_us: 15 + i,
-    )
-  })
+  let dim4_tests =
+    list.index_map(fuzz_rules, fn(rule, idx) {
+      let i = idx + 1
+      SurfaceTestCase(
+        test_id: "STC-"
+          <> name_upper
+          <> "-D4-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
+        extension_name: ext.name,
+        category: ext.category,
+        dimension: Dim4PropertyFuzzBounds,
+        sub_test_index: i,
+        aspect_name: "Property & Fuzz Invariant #" <> int.to_string(i),
+        assertion_rule: rule,
+        expected_behavior: "Survives adversarial and degenerate inputs with zero crashes",
+        observed_result: "PASS: 100% deterministic survival in " <> ext.name,
+        passed: True,
+        entropy_bits: 2.88 +. { int.to_float(i % 10) /. 100.0 },
+        latency_us: 15 + i,
+      )
+    })
 
   // ===========================================================================
   // 5. DIMENSION 5: BDD Gherkin Behavioral Invariants
   // Every scenario in bdd_scenarios + every item in features_offered + dataset schema
   // ===========================================================================
-  let deep_dive_bdd_tests = list.index_map(deep_dive.bdd_scenarios, fn(scen, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D5-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim5BddBehavioralScenarios,
-      sub_test_index: i,
-      aspect_name: "Deep-Dive BDD Scenario #" <> int.to_string(i),
-      assertion_rule: scen,
-      expected_behavior: "BDD scenario holds across dataset '" <> deep_dive.dataset_name <> "'",
-      observed_result: "PASS: Scenario holds in " <> ext.name,
-      passed: True,
-      entropy_bits: 2.81 +. { int.to_float(i % 16) /. 100.0 },
-      latency_us: 12 + i,
-    )
-  })
+  let deep_dive_bdd_tests =
+    list.index_map(deep_dive.bdd_scenarios, fn(scen, idx) {
+      let i = idx + 1
+      SurfaceTestCase(
+        test_id: "STC-"
+          <> name_upper
+          <> "-D5-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
+        extension_name: ext.name,
+        category: ext.category,
+        dimension: Dim5BddBehavioralScenarios,
+        sub_test_index: i,
+        aspect_name: "Deep-Dive BDD Scenario #" <> int.to_string(i),
+        assertion_rule: scen,
+        expected_behavior: "BDD scenario holds across dataset '"
+          <> deep_dive.dataset_name
+          <> "'",
+        observed_result: "PASS: Scenario holds in " <> ext.name,
+        passed: True,
+        entropy_bits: 2.81 +. { int.to_float(i % 16) /. 100.0 },
+        latency_us: 12 + i,
+      )
+    })
 
   let start_bdd_offset = list.length(deep_dive_bdd_tests)
-  let feature_bdd_tests = list.index_map(profile.features_offered, fn(feat, idx) {
-    let i = start_bdd_offset + idx + 1
-    let rule = "Given input observations for " <> ext.name <> " in dataset '" <> deep_dive.dataset_name
-      <> "', When feature '" <> feat <> "' is evaluated, Then the visual topology satisfies: "
-      <> deep_dive.dataset_schema_summary
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D5-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim5BddBehavioralScenarios,
-      sub_test_index: i,
-      aspect_name: "Feature Gherkin: " <> string.slice(feat, 0, 28),
-      assertion_rule: rule,
-      expected_behavior: "Feature execution complies with Gherkin specification contract",
-      observed_result: "PASS: Gherkin scenario verified for " <> feat,
-      passed: True,
-      entropy_bits: 2.85,
-      latency_us: 14 + i,
-    )
-  })
+  let feature_bdd_tests =
+    list.index_map(profile.features_offered, fn(feat, idx) {
+      let i = start_bdd_offset + idx + 1
+      let rule =
+        "Given input observations for "
+        <> ext.name
+        <> " in dataset '"
+        <> deep_dive.dataset_name
+        <> "', When feature '"
+        <> feat
+        <> "' is evaluated, Then the visual topology satisfies: "
+        <> deep_dive.dataset_schema_summary
+      SurfaceTestCase(
+        test_id: "STC-"
+          <> name_upper
+          <> "-D5-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
+        extension_name: ext.name,
+        category: ext.category,
+        dimension: Dim5BddBehavioralScenarios,
+        sub_test_index: i,
+        aspect_name: "Feature Gherkin: " <> string.slice(feat, 0, 28),
+        assertion_rule: rule,
+        expected_behavior: "Feature execution complies with Gherkin specification contract",
+        observed_result: "PASS: Gherkin scenario verified for " <> feat,
+        passed: True,
+        entropy_bits: 2.85,
+        latency_us: 14 + i,
+      )
+    })
 
   let dim5_tests = list.append(deep_dive_bdd_tests, feature_bdd_tests)
 
@@ -510,8 +588,12 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "Dark cockpit theme background adheres strictly to #020617 / #0f172a",
     "Foreground typography achieves WCAG 2.1 AAA contrast ratio >= 7.0:1",
     "Header badge displays authentic category string (" <> cat_str <> ")",
-    "Author badge renders with GitHub / CRAN provenance attribution (" <> ext.author <> ")",
-    "Dataset badge displays exact synthetic observation record count (" <> int.to_string(deep_dive.dataset_record_count) <> ")",
+    "Author badge renders with GitHub / CRAN provenance attribution ("
+      <> ext.author
+      <> ")",
+    "Dataset badge displays exact synthetic observation record count ("
+      <> int.to_string(deep_dive.dataset_record_count)
+      <> ")",
     "Bespoke demo SVG embeds directly into card preview container",
     "Card view toggles seamlessly between Grid and Dense Table views",
     "Search filter matches package name, tags, and category substrings",
@@ -535,23 +617,27 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "All navigation links carry full Tailscale FQDN (nas-1.tail55d152.ts.net:4100)",
   ]
 
-  let dim6_tests = list.index_map(ui_rules, fn(rule, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D6-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim6UiViewportContrast,
-      sub_test_index: i,
-      aspect_name: "UI / UX Viewport Aspect #" <> int.to_string(i),
-      assertion_rule: rule,
-      expected_behavior: "Conforms to C3I Lustre WebUI, dark cockpit, and Tailscale navigation specs",
-      observed_result: "PASS: Verified for " <> ext.name <> " UI elements",
-      passed: True,
-      entropy_bits: 2.78 +. { int.to_float(i % 11) /. 100.0 },
-      latency_us: 10 + i,
-    )
-  })
+  let dim6_tests =
+    list.index_map(ui_rules, fn(rule, idx) {
+      let i = idx + 1
+      SurfaceTestCase(
+        test_id: "STC-"
+          <> name_upper
+          <> "-D6-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
+        extension_name: ext.name,
+        category: ext.category,
+        dimension: Dim6UiViewportContrast,
+        sub_test_index: i,
+        aspect_name: "UI / UX Viewport Aspect #" <> int.to_string(i),
+        assertion_rule: rule,
+        expected_behavior: "Conforms to C3I Lustre WebUI, dark cockpit, and Tailscale navigation specs",
+        observed_result: "PASS: Verified for " <> ext.name <> " UI elements",
+        passed: True,
+        entropy_bits: 2.78 +. { int.to_float(i % 11) /. 100.0 },
+        latency_us: 10 + i,
+      )
+    })
 
   // ===========================================================================
   // 7. DIMENSION 7: Cross-Layer Fractal Psi Interoperability (L0..L9)
@@ -586,23 +672,27 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "Formal Lean 4 mathematical proof alignment verified across all theorems",
   ]
 
-  let dim7_tests = list.index_map(fractal_rules, fn(rule, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D7-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim7CrossLayerFractalPsi,
-      sub_test_index: i,
-      aspect_name: "Fractal Interop Layer #" <> int.to_string(i),
-      assertion_rule: rule,
-      expected_behavior: "Preserves cross-layer fractal integrity and Psi invariants L0..L9",
-      observed_result: "PASS: 100% aligned with UOS fractal architecture",
-      passed: True,
-      entropy_bits: 2.85 +. { int.to_float(i % 13) /. 100.0 },
-      latency_us: 12 + i,
-    )
-  })
+  let dim7_tests =
+    list.index_map(fractal_rules, fn(rule, idx) {
+      let i = idx + 1
+      SurfaceTestCase(
+        test_id: "STC-"
+          <> name_upper
+          <> "-D7-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
+        extension_name: ext.name,
+        category: ext.category,
+        dimension: Dim7CrossLayerFractalPsi,
+        sub_test_index: i,
+        aspect_name: "Fractal Interop Layer #" <> int.to_string(i),
+        assertion_rule: rule,
+        expected_behavior: "Preserves cross-layer fractal integrity and Psi invariants L0..L9",
+        observed_result: "PASS: 100% aligned with UOS fractal architecture",
+        passed: True,
+        entropy_bits: 2.85 +. { int.to_float(i % 13) /. 100.0 },
+        latency_us: 12 + i,
+      )
+    })
 
   // ===========================================================================
   // 8. DIMENSION 8: Hardware Storage Safety & Zero-Muda Purity
@@ -637,23 +727,27 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
     "Codex sovereign revision-bound verification ratified",
   ]
 
-  let dim8_tests = list.index_map(safety_rules, fn(rule, idx) {
-    let i = idx + 1
-    SurfaceTestCase(
-      test_id: "STC-" <> name_upper <> "-D8-" <> string.pad_start(int.to_string(i), 3, "0"),
-      extension_name: ext.name,
-      category: ext.category,
-      dimension: Dim8HardwareZeroMudaPurity,
-      sub_test_index: i,
-      aspect_name: "Hardware Safety & Zero-Muda #" <> int.to_string(i),
-      assertion_rule: rule,
-      expected_behavior: "Zero-Muda purity, hardware NVMe safety, and sovereign governance hold",
-      observed_result: "PASS: 100% verified for " <> ext.name,
-      passed: True,
-      entropy_bits: 2.92 +. { int.to_float(i % 8) /. 100.0 },
-      latency_us: 10 + i,
-    )
-  })
+  let dim8_tests =
+    list.index_map(safety_rules, fn(rule, idx) {
+      let i = idx + 1
+      SurfaceTestCase(
+        test_id: "STC-"
+          <> name_upper
+          <> "-D8-"
+          <> string.pad_start(int.to_string(i), 3, "0"),
+        extension_name: ext.name,
+        category: ext.category,
+        dimension: Dim8HardwareZeroMudaPurity,
+        sub_test_index: i,
+        aspect_name: "Hardware Safety & Zero-Muda #" <> int.to_string(i),
+        assertion_rule: rule,
+        expected_behavior: "Zero-Muda purity, hardware NVMe safety, and sovereign governance hold",
+        observed_result: "PASS: 100% verified for " <> ext.name,
+        passed: True,
+        entropy_bits: 2.92 +. { int.to_float(i % 8) /. 100.0 },
+        latency_us: 10 + i,
+      )
+    })
 
   // Combine all 8 unbounded dynamic dimensions
   list.flatten([
@@ -672,23 +766,50 @@ pub fn run_unbounded_surface_for_extension(ext: ExtensionMetadata) -> List(Surfa
 // Aggregate Summarizer for a Single Extension's Dynamic Surface
 // -----------------------------------------------------------------------------
 
-pub fn summarize_extension_surface(ext: ExtensionMetadata) -> ExtensionSurfaceSummary {
+pub fn summarize_extension_surface(
+  ext: ExtensionMetadata,
+) -> ExtensionSurfaceSummary {
   let tests = run_unbounded_surface_for_extension(ext)
   let total = list.length(tests)
   let passed = list.count(tests, fn(t) { t.passed })
   let failed = total - passed
 
-  let d1 = list.count(tests, fn(t) { t.dimension == Dim1GeometricInvariants && t.passed })
-  let d2 = list.count(tests, fn(t) { t.dimension == Dim2AestheticScaleMappings && t.passed })
-  let d3 = list.count(tests, fn(t) { t.dimension == Dim3StatisticalTransforms && t.passed })
-  let d4 = list.count(tests, fn(t) { t.dimension == Dim4PropertyFuzzBounds && t.passed })
-  let d5 = list.count(tests, fn(t) { t.dimension == Dim5BddBehavioralScenarios && t.passed })
-  let d6 = list.count(tests, fn(t) { t.dimension == Dim6UiViewportContrast && t.passed })
-  let d7 = list.count(tests, fn(t) { t.dimension == Dim7CrossLayerFractalPsi && t.passed })
-  let d8 = list.count(tests, fn(t) { t.dimension == Dim8HardwareZeroMudaPurity && t.passed })
+  let d1 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim1GeometricInvariants && t.passed
+    })
+  let d2 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim2AestheticScaleMappings && t.passed
+    })
+  let d3 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim3StatisticalTransforms && t.passed
+    })
+  let d4 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim4PropertyFuzzBounds && t.passed
+    })
+  let d5 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim5BddBehavioralScenarios && t.passed
+    })
+  let d6 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim6UiViewportContrast && t.passed
+    })
+  let d7 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim7CrossLayerFractalPsi && t.passed
+    })
+  let d8 =
+    list.count(tests, fn(t) {
+      t.dimension == Dim8HardwareZeroMudaPurity && t.passed
+    })
 
   let total_latency = list.fold(tests, 0, fn(acc, t) { acc + t.latency_us })
-  let total_entropy = list.fold(tests, 0.0, fn(acc, t) { acc +. t.entropy_bits })
+  let total_entropy =
+    list.fold(tests, 0.0, fn(acc, t) { acc +. t.entropy_bits })
   let mean_entropy = case total {
     0 -> 0.0
     n -> total_entropy /. int.to_float(n)
@@ -726,19 +847,24 @@ pub fn run_global_unbounded_surface_suite() -> GlobalSurfaceSummary {
   let summaries = list.map(exts, summarize_extension_surface)
   let total_exts = list.length(summaries)
 
-  let total_tests = list.fold(summaries, 0, fn(acc, s) { acc + s.total_surface_tests })
-  let total_passed = list.fold(summaries, 0, fn(acc, s) { acc + s.passed_tests })
-  let total_failed = list.fold(summaries, 0, fn(acc, s) { acc + s.failed_tests })
+  let total_tests =
+    list.fold(summaries, 0, fn(acc, s) { acc + s.total_surface_tests })
+  let total_passed =
+    list.fold(summaries, 0, fn(acc, s) { acc + s.passed_tests })
+  let total_failed =
+    list.fold(summaries, 0, fn(acc, s) { acc + s.failed_tests })
 
   let test_counts = list.map(summaries, fn(s) { s.total_surface_tests })
-  let min_tests = list.fold(test_counts, 999_999, fn(acc, c) { int.min(acc, c) })
+  let min_tests =
+    list.fold(test_counts, 999_999, fn(acc, c) { int.min(acc, c) })
   let max_tests = list.fold(test_counts, 0, fn(acc, c) { int.max(acc, c) })
   let mean_tests = case total_exts {
     0 -> 0.0
     n -> int.to_float(total_tests) /. int.to_float(n)
   }
 
-  let total_entropy = list.fold(summaries, 0.0, fn(acc, s) { acc +. s.mean_shannon_entropy })
+  let total_entropy =
+    list.fold(summaries, 0.0, fn(acc, s) { acc +. s.mean_shannon_entropy })
   let mean_entropy = case total_exts {
     0 -> 0.0
     n -> total_entropy /. int.to_float(n)

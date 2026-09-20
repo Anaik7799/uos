@@ -1,0 +1,17 @@
+{
+  "schema": "uos.feature-record-registration-receipt.v1",
+  "timestamp": "20260921-1334Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "workflow": "uos/system-features/source-universe-successor/f3edf6ed3c8f826490e20244b4105c50876cb5c3e9ab7632ede495deed6cbeba",
+  "feature_id": "source-universe.successor",
+  "source_ledger": "governance/capability-inventory/20260921-1316-source-universe-successor-ledger.json",
+  "source_ledger_sha256": "f3edf6ed3c8f826490e20244b4105c50876cb5c3e9ab7632ede495deed6cbeba",
+  "source_records": 27,
+  "database": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+  "result": "METADATA_RECORD_REGISTERED",
+  "mcp_availability": "UNKNOWN",
+  "runtime_admission": "NOT_GRANTED",
+  "effect_authority": false,
+  "completion": {"database_recorded": true, "feature_runtime_complete": false, "goal_complete": false},
+  "limits": ["Sa-plan metadata history proves registration only; it does not prove MCP reachability or deployment usability."]
+}

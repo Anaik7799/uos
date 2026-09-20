@@ -8,12 +8,12 @@
 // Storage Safety: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" enforced
 // ==============================================================================
 
-import gleam/int
-import gleam/list
-import gleam/string
 import cepaf_gleam/ha/fractal_forecast.{
   type LayerForecast, type SdlcPreflightVerdict, type SreSopVerdict,
 }
+import gleam/int
+import gleam/list
+import gleam/string
 
 // ------------------------------------------------------------------------------
 // 1. 5-Tier Fractal Lifecycle
@@ -696,6 +696,8 @@ pub fn run_sre_predictive_sop(forecast: LayerForecast) -> SreSopVerdict {
   fractal_forecast.evaluate_sre_capacity_sop(forecast)
 }
 
-pub fn run_sdlc_predictive_sop(forecast: LayerForecast) -> SdlcPreflightVerdict {
+pub fn run_sdlc_predictive_sop(
+  forecast: LayerForecast,
+) -> SdlcPreflightVerdict {
   fractal_forecast.evaluate_sdlc_mutation_sop(forecast)
 }

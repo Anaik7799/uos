@@ -1,0 +1,38 @@
+{
+  "receipt_type": "execution_optimization_assessment",
+  "generated_at": "2026-09-21T10:58:00+02:00",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "authority": "risk-priority-check",
+  "runtime_admission": "NOT_GRANTED",
+  "assessment": {
+    "status": "HOLD",
+    "assessment_sha256": "d72c6f8560070e97a5e015e12b047394d2a5f048cb8054299d5b116818b30216",
+    "evidence_files_checked": 65,
+    "source_hashes_refreshed": true,
+    "freshness_findings": 0,
+    "selection_findings": [
+      "requested t2-contracts is not first eligible candidate",
+      "requested t0-coordination is not first eligible candidate",
+      "requested r02-recovery-candidate is not first eligible candidate"
+    ],
+    "order": [],
+    "lease_fencing_authority": "NOT_GRANTED"
+  },
+  "plan_snapshot": {
+    "total": 20,
+    "completed": 3,
+    "ready": 3,
+    "executing": 0,
+    "blocked_or_held": 14,
+    "admitted": 0
+  },
+  "interpretation": {
+    "source_observation": "current",
+    "coordinator_authority": "unresolved",
+    "replay_integrity": "unresolved",
+    "task_claim_allowed": false,
+    "force_pass_allowed": false
+  },
+  "next_action": "obtain an independently authorized coordinator selection order and replay-integrity observation before claiming any remaining task",
+  "admitted": false
+}

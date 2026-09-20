@@ -1,0 +1,17 @@
+{
+  "receipt_id": "20260921-1415-risk-priority-execution",
+  "observed_at": "2026-09-21T14:15:00+02:00",
+  "authority": "repository-risk-check-report",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "checks": {
+    "risk_priority_check": "PASS",
+    "baseline_checks": 375,
+    "adversarial_checks": 32843,
+    "independent_dag_scenarios": 32768,
+    "local_paths_checked": 39,
+    "runtime_admission": "NOT_GRANTED",
+    "live_agent_tests": "UNRUN"
+  },
+  "execution_rule": "Use risk/dependency order for claims; this report does not authorize side effects or completion",
+  "admission": "NOT_ADMITTED"
+}

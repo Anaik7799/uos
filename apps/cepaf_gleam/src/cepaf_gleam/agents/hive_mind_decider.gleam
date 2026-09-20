@@ -131,14 +131,14 @@ pub fn compute_forecast(
 ) -> TrajectoryProjection {
   let horizon_factor = case horizon {
     ShortTerm10m -> 0.005
-    MediumTerm1h -> 0.020
-    LongTerm24h -> 0.050
+    MediumTerm1h -> 0.02
+    LongTerm24h -> 0.05
   }
   // If health is high and convergence is strong, derivative is strictly negative (stable)
   let lyapunov_dot = -0.015 -. horizon_factor
   let projected_health =
     float.max(0.0, float.min(1.0, state.current_health -. lyapunov_dot *. 0.1))
-  let is_convergent = lyapunov_dot <=. 0.0 && projected_health >=. 0.90
+  let is_convergent = lyapunov_dot <=. 0.0 && projected_health >=. 0.9
   let bottlenecks = case projected_health <. 0.95 {
     True -> ["Memory ring buffer saturation", "Zenoh peer latency jitter"]
     False -> []
@@ -218,7 +218,9 @@ pub fn synthesize_decision(
     PsiCheck(Psi5Truthfulness, Pass, "Correlated OTel telemetry verified"),
     PsiCheck(
       Psi6HardwareInviolability,
-      case risk.zero_fence_violation_risk && target_drive_serial == "25503L801736" {
+      case
+        risk.zero_fence_violation_risk && target_drive_serial == "25503L801736"
+      {
         True -> Fail
         False -> Pass
       },
@@ -286,12 +288,9 @@ pub fn decision_to_json(d: HiveDecision) -> json.Json {
     #("cognitive_resonance", json.string(d.cognitive_resonance)),
     #("consensus_score", json.float(d.consensus_score)),
     #("is_ratified", json.bool(d.is_ratified)),
-    #(
-      "sa_plan_task_ref",
-      case d.sa_plan_task_ref {
-        Some(t) -> json.string(t)
-        None -> json.null()
-      },
-    ),
+    #("sa_plan_task_ref", case d.sa_plan_task_ref {
+      Some(t) -> json.string(t)
+      None -> json.null()
+    }),
   ])
 }

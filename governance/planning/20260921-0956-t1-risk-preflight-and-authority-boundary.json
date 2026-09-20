@@ -1,0 +1,35 @@
+{
+  "schema": "uos.t1-risk-preflight-authority-boundary.v1",
+  "timestamp_utc": "2026-09-21T09:56:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "task_id": "t1-tracker",
+  "risk": {
+    "portfolio": "governance/planning/20260921-0338-execution-optimization-risk.json",
+    "portfolio_sha256": "4a02d05f5cd692ab15c24d31d798aea31ea8f3cb3ab90b5c35912deb9b48a188",
+    "command": "bash tools/risk-priority-check --preflight governance/planning/20260921-0338-execution-optimization-risk.json t1-tracker",
+    "status": "PREFLIGHT_PASS",
+    "assessment_sha256": "4a02d05f5cd692ab15c24d31d798aea31ea8f3cb3ab90b5c35912deb9b48a188",
+    "evidence_files_checked": 65,
+    "findings": [],
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "raw_log_sha256": "049e3f4ac8352936c1629d958e4ba8c50f83dcdeff43730a58d0023bb3969c44"
+  },
+  "sa_plan": {
+    "claim": {"worker": "codex-01a0ba74-feature-tracker", "attempt": 5, "result": "claimed_then_released"},
+    "release": "Sa-plan task release succeeded; no completion receipt was issued"
+  },
+  "database_observation": {
+    "database": "var/sa-plan/uos.sqlite3",
+    "feature_workflow_rows": 0,
+    "canonical_feature_persistence": "NOT_OBSERVED"
+  },
+  "boundary": {
+    "approved_development_grant": "uos/ecology/20260909-0146:HARNESSBOOT",
+    "required_task_scope": "uos/system-mcp-features/20260919-1642:t1-tracker",
+    "scope_match": false,
+    "next_authorized_action": "obtain independently reviewed successor grant, then execute through Gleam harness",
+    "canonical_task_remains_open": true
+  },
+  "admission": "NOT_ADMITTED"
+}

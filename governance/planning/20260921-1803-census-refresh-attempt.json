@@ -1,0 +1,18 @@
+{
+  "schema": "uos.census-refresh-attempt.v1",
+  "observed_at": "2026-09-21T15:03:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "action": "bounded source-pin refresh investigation",
+  "observed_tool_count": 65,
+  "fixture_expected_tool_count": 64,
+  "observed_tools_sha256": "a3a8562344c675d1f21124ae94efd66cac82d7a82061cc8327fc586a8d2b1320",
+  "attempt": {
+    "hash_only_edit": "reverted because expected count and ID fingerprint were not recomputed",
+    "test_runner": "gleam test",
+    "bounded_result": "timeout_or_inconclusive",
+    "runner_filter": "not supported by generated gleeunit main"
+  },
+  "decision": "hold",
+  "completion_credit": false,
+  "next_action": "create a dedicated Sa-plan-authorized census refresh task that computes count and ID fingerprints atomically"
+}

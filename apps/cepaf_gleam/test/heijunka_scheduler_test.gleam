@@ -3,7 +3,8 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/heijunka_scheduler.{
-  QueuedTask, complete_task, enqueue_task, init_queue, pull_batch, reclaim_expired,
+  QueuedTask, complete_task, enqueue_task, init_queue, pull_batch,
+  reclaim_expired,
 }
 import cepaf_gleam/ha/lyapunov_controller.{init_controller, update_controller}
 import gleam/list
@@ -39,7 +40,7 @@ pub fn pull_batch_nominal_controller_test() {
   let assert Ok(q3) = enqueue_task(q2, t3)
 
   let ctrl = init_controller(1, 10)
-  let #(q4, pulled) = pull_batch(q3, ctrl, "worker-1", 5000000, 1000000)
+  let #(q4, pulled) = pull_batch(q3, ctrl, "worker-1", 5_000_000, 1_000_000)
 
   // ctrl concurrency = 10 -> batch size = max(1, 10 / 2) = 5 -> takes all 3
   list.length(pulled) |> should.equal(3)
@@ -56,8 +57,10 @@ pub fn pull_batch_throttled_controller_test() {
   let assert Ok(q2) = enqueue_task(q1, t2)
 
   let ctrl = init_controller(1, 10)
-  let throttled_ctrl = update_controller(ctrl, -0.5) // Marginal -> batch size 1
-  let #(q3, pulled) = pull_batch(q2, throttled_ctrl, "worker-1", 5000000, 1000000)
+  let throttled_ctrl = update_controller(ctrl, -0.5)
+  // Marginal -> batch size 1
+  let #(q3, pulled) =
+    pull_batch(q2, throttled_ctrl, "worker-1", 5_000_000, 1_000_000)
 
   list.length(pulled) |> should.equal(1)
   list.length(q3.pending_tasks) |> should.equal(1)
@@ -70,8 +73,10 @@ pub fn pull_batch_halted_controller_test() {
   let assert Ok(q1) = enqueue_task(q0, t1)
 
   let ctrl = init_controller(1, 10)
-  let halted_ctrl = update_controller(ctrl, 0.8) // Emergency halt -> batch size 0
-  let #(q2, pulled) = pull_batch(q1, halted_ctrl, "worker-1", 5000000, 1000000)
+  let halted_ctrl = update_controller(ctrl, 0.8)
+  // Emergency halt -> batch size 0
+  let #(q2, pulled) =
+    pull_batch(q1, halted_ctrl, "worker-1", 5_000_000, 1_000_000)
 
   list.length(pulled) |> should.equal(0)
   list.length(q2.pending_tasks) |> should.equal(1)

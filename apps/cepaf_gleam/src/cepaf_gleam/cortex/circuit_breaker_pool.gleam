@@ -25,9 +25,10 @@ import cepaf_gleam/prajna/circuit_breaker.{
   record_success,
 }
 
-
 pub const failure_threshold: Int = 3
+
 pub const cooldown_seconds: Int = 60
+
 pub const cooldown_ms: Int = 60_000
 
 pub type BreakerPool {
@@ -45,9 +46,19 @@ pub fn init_pool() -> BreakerPool {
   BreakerPool(
     breaker1_gemini: create("gemini_direct", failure_threshold, 1, cooldown_ms),
     breaker2_openrouter: create("openrouter", failure_threshold, 1, cooldown_ms),
-    breaker3_mistral: create("mistral_gemma4", failure_threshold, 1, cooldown_ms),
+    breaker3_mistral: create(
+      "mistral_gemma4",
+      failure_threshold,
+      1,
+      cooldown_ms,
+    ),
     breaker4_ollama: create("ollama_shared", failure_threshold, 1, cooldown_ms),
-    breaker5_rules: create("rules_static_shared", failure_threshold, 1, cooldown_ms),
+    breaker5_rules: create(
+      "rules_static_shared",
+      failure_threshold,
+      1,
+      cooldown_ms,
+    ),
   )
 }
 
@@ -65,43 +76,80 @@ pub fn tier_to_breaker_id(tier: InferenceTierId) -> Int {
 }
 
 /// Query whether a specific inference tier is permitted to execute.
-pub fn is_tier_allowed(pool: BreakerPool, tier: InferenceTierId, now_ms: Int) -> Bool {
+pub fn is_tier_allowed(
+  pool: BreakerPool,
+  tier: InferenceTierId,
+  now_ms: Int,
+) -> Bool {
   case tier {
-    Tier7StaticAck -> True // Static ACK is always available (no-blackhole anchor)
-    Tier1GeminiDirect -> is_allowed(attempt_half_open(pool.breaker1_gemini, now_ms))
-    Tier2OpenRouter -> is_allowed(attempt_half_open(pool.breaker2_openrouter, now_ms))
-    Tier3MistralRsGemma4 -> is_allowed(attempt_half_open(pool.breaker3_mistral, now_ms))
+    Tier7StaticAck -> True
+    // Static ACK is always available (no-blackhole anchor)
+    Tier1GeminiDirect ->
+      is_allowed(attempt_half_open(pool.breaker1_gemini, now_ms))
+    Tier2OpenRouter ->
+      is_allowed(attempt_half_open(pool.breaker2_openrouter, now_ms))
+    Tier3MistralRsGemma4 ->
+      is_allowed(attempt_half_open(pool.breaker3_mistral, now_ms))
     Tier4OllamaGemma4 | Tier5OllamaGemma3 ->
       is_allowed(attempt_half_open(pool.breaker4_ollama, now_ms))
-    Tier6ReteUlRules -> is_allowed(attempt_half_open(pool.breaker5_rules, now_ms))
+    Tier6ReteUlRules ->
+      is_allowed(attempt_half_open(pool.breaker5_rules, now_ms))
   }
 }
 
 /// Record a failure for a specific inference tier.
-pub fn record_tier_failure(pool: BreakerPool, tier: InferenceTierId, now_ms: Int) -> BreakerPool {
+pub fn record_tier_failure(
+  pool: BreakerPool,
+  tier: InferenceTierId,
+  now_ms: Int,
+) -> BreakerPool {
   case tier {
     Tier1GeminiDirect ->
-      BreakerPool(..pool, breaker1_gemini: record_failure(pool.breaker1_gemini, now_ms))
+      BreakerPool(
+        ..pool,
+        breaker1_gemini: record_failure(pool.breaker1_gemini, now_ms),
+      )
     Tier2OpenRouter ->
-      BreakerPool(..pool, breaker2_openrouter: record_failure(pool.breaker2_openrouter, now_ms))
+      BreakerPool(
+        ..pool,
+        breaker2_openrouter: record_failure(pool.breaker2_openrouter, now_ms),
+      )
     Tier3MistralRsGemma4 ->
-      BreakerPool(..pool, breaker3_mistral: record_failure(pool.breaker3_mistral, now_ms))
+      BreakerPool(
+        ..pool,
+        breaker3_mistral: record_failure(pool.breaker3_mistral, now_ms),
+      )
     Tier4OllamaGemma4 | Tier5OllamaGemma3 ->
-      BreakerPool(..pool, breaker4_ollama: record_failure(pool.breaker4_ollama, now_ms))
+      BreakerPool(
+        ..pool,
+        breaker4_ollama: record_failure(pool.breaker4_ollama, now_ms),
+      )
     Tier6ReteUlRules | Tier7StaticAck ->
-      BreakerPool(..pool, breaker5_rules: record_failure(pool.breaker5_rules, now_ms))
+      BreakerPool(
+        ..pool,
+        breaker5_rules: record_failure(pool.breaker5_rules, now_ms),
+      )
   }
 }
 
 /// Record a success for a specific inference tier.
-pub fn record_tier_success(pool: BreakerPool, tier: InferenceTierId) -> BreakerPool {
+pub fn record_tier_success(
+  pool: BreakerPool,
+  tier: InferenceTierId,
+) -> BreakerPool {
   case tier {
     Tier1GeminiDirect ->
       BreakerPool(..pool, breaker1_gemini: record_success(pool.breaker1_gemini))
     Tier2OpenRouter ->
-      BreakerPool(..pool, breaker2_openrouter: record_success(pool.breaker2_openrouter))
+      BreakerPool(
+        ..pool,
+        breaker2_openrouter: record_success(pool.breaker2_openrouter),
+      )
     Tier3MistralRsGemma4 ->
-      BreakerPool(..pool, breaker3_mistral: record_success(pool.breaker3_mistral))
+      BreakerPool(
+        ..pool,
+        breaker3_mistral: record_success(pool.breaker3_mistral),
+      )
     Tier4OllamaGemma4 | Tier5OllamaGemma3 ->
       BreakerPool(..pool, breaker4_ollama: record_success(pool.breaker4_ollama))
     Tier6ReteUlRules | Tier7StaticAck ->
@@ -112,11 +160,31 @@ pub fn record_tier_success(pool: BreakerPool, tier: InferenceTierId) -> BreakerP
 /// Get a list of all 5 breaker statuses.
 pub fn pool_status(pool: BreakerPool) -> List(#(String, String, Int)) {
   [
-    #(pool.breaker1_gemini.name, breaker_state_str(pool.breaker1_gemini), pool.breaker1_gemini.failure_count),
-    #(pool.breaker2_openrouter.name, breaker_state_str(pool.breaker2_openrouter), pool.breaker2_openrouter.failure_count),
-    #(pool.breaker3_mistral.name, breaker_state_str(pool.breaker3_mistral), pool.breaker3_mistral.failure_count),
-    #(pool.breaker4_ollama.name, breaker_state_str(pool.breaker4_ollama), pool.breaker4_ollama.failure_count),
-    #(pool.breaker5_rules.name, breaker_state_str(pool.breaker5_rules), pool.breaker5_rules.failure_count),
+    #(
+      pool.breaker1_gemini.name,
+      breaker_state_str(pool.breaker1_gemini),
+      pool.breaker1_gemini.failure_count,
+    ),
+    #(
+      pool.breaker2_openrouter.name,
+      breaker_state_str(pool.breaker2_openrouter),
+      pool.breaker2_openrouter.failure_count,
+    ),
+    #(
+      pool.breaker3_mistral.name,
+      breaker_state_str(pool.breaker3_mistral),
+      pool.breaker3_mistral.failure_count,
+    ),
+    #(
+      pool.breaker4_ollama.name,
+      breaker_state_str(pool.breaker4_ollama),
+      pool.breaker4_ollama.failure_count,
+    ),
+    #(
+      pool.breaker5_rules.name,
+      breaker_state_str(pool.breaker5_rules),
+      pool.breaker5_rules.failure_count,
+    ),
   ]
 }
 

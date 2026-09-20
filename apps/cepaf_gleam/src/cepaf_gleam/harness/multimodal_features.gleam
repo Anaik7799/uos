@@ -75,7 +75,9 @@ pub fn encode_acoustic_profile(profile: AcousticProfile) -> String {
     #("tanpura_drift", json.float(profile.tanpura_drift)),
     #(
       "equilibrium_nominal",
-      json.bool(profile.tanpura_drift <=. 0.01 && profile.tanpura_drift >=. -0.01),
+      json.bool(
+        profile.tanpura_drift <=. 0.01 && profile.tanpura_drift >=. -0.01,
+      ),
     ),
   ])
   |> json.to_string
@@ -131,7 +133,7 @@ pub fn encode_voice_quorum(biometrics: List(VoiceQuorumBiometric)) -> String {
       "quorum_satisfied",
       json.bool(
         list.length(biometrics) >= 2
-        && list.all(biometrics, fn(b) { b.confidence_score >=. 0.90 }),
+        && list.all(biometrics, fn(b) { b.confidence_score >=. 0.9 }),
       ),
     ),
   ])

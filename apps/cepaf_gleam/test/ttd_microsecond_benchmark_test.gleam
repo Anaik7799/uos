@@ -3,9 +3,7 @@
 // STAMP: SC-SIL6-001, SC-SRE-001, SC-PERF-001
 // =============================================================================
 
-import cepaf_gleam/prajna/circuit_breaker.{
-  BreakerOpen, create, record_failure,
-}
+import cepaf_gleam/prajna/circuit_breaker.{BreakerOpen, create, record_failure}
 import gleam/list
 import gleeunit/should
 
@@ -62,7 +60,7 @@ pub fn stale_lease_ttd_benchmark_test() {
   is_expired |> should.be_true
 
   let simulated_ttd_us = 5
-  let threshold_us = 1_000
+  let threshold_us = 1000
   let m =
     TtdMeasurement(
       failure_mode: "FM-10-StaleLeaseExpiration",
@@ -85,6 +83,9 @@ pub fn aggregate_ttd_suite_test() {
     TtdMeasurement("FM-16-Drive-Serial-Lockout", 12, 100, True),
   ]
 
-  let all_passed = list.all(benchmarks, fn(b) { b.passed && b.detection_duration_us < b.threshold_us })
+  let all_passed =
+    list.all(benchmarks, fn(b) {
+      b.passed && b.detection_duration_us < b.threshold_us
+    })
   all_passed |> should.be_true
 }

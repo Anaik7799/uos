@@ -1,0 +1,50 @@
+{
+  "schema_version": "uos.dashboard-risk-refresh.v1",
+  "observed_at": "2026-09-21T15:36:00Z",
+  "plan_id": "uos/system-mcp-features/20260919-1642",
+  "dashboard_source": {
+    "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_observer.gleam",
+    "sha256": "1910475081d29d5c645e53273ce8a71b833d426aa9ff83cef4faaeeaa92a4dd4",
+    "risk_path": "governance/planning/20260921-1535-risk-portfolio-refresh.json"
+  },
+  "task_snapshot": {
+    "path": "/tmp/sa-plan-task-snapshot-20260921.json",
+    "sha256": "bcf8cd3d3180c4c73a435506e2a72586b143b0fa610ece37d413a983d2d5b61a",
+    "total": 21,
+    "completed": 4,
+    "available": 17,
+    "executing": 0
+  },
+  "risk_portfolio": {
+    "path": "governance/planning/20260921-1535-risk-portfolio-refresh.json",
+    "sha256": "7191310faa7cb6f02661a88eb8121e5cff0141c029a2fc506da832cb11440e06",
+    "observed_at": "2026-09-21T15:35:10Z",
+    "valid_until": "2026-09-21T16:35:10Z"
+  },
+  "optimization_preflight": {
+    "task_id": "t0-coordination",
+    "result": "HOLD",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "assessment_sha256": "7191310faa7cb6f02661a88eb8121e5cff0141c029a2fc506da832cb11440e06",
+    "output_sha256": "d74d1284cd89dd532c0cfd944a881808ed6eae40ab589f5f2c282ed518661a79",
+    "reason": "Requested task is not the first eligible candidate; coordinator authority and dependency readiness remain unresolved."
+  },
+  "verification": {
+    "format": "pass",
+    "build": "pass",
+    "gleam_test": "11991 passed, no failures",
+    "test_log_sha256": "7aa209295c90c90094b523032ddf7c1482ba04ddc67ae0b52593e4537ab92fca"
+  },
+  "authority_boundary": "Read-only dashboard projection and risk observation only; no Sa-plan claim, completion, coordinator cutover, or runtime admission was performed.",
+  "next_execution_order": [
+    "t0-coordination",
+    "t0a-reconcile",
+    "t0b-bindings",
+    "t0c-conformance",
+    "r02-recovery-candidate",
+    "r03-harness-coordinator",
+    "t2-contracts",
+    "t3-evidence"
+  ]
+}

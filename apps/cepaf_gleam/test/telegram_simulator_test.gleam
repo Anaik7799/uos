@@ -20,10 +20,14 @@ pub fn telegram_domain_a_simulation_test() {
 
   let help_msg = telegram_simulator.simulate_text_directive(3, "/help")
   let help_resp = telegram.handle_message(help_msg)
-  string.contains(help_resp.text, "Domain A: Foundational SRE") |> should.equal(True)
-  string.contains(help_resp.text, "Domain B: Advanced SRE") |> should.equal(True)
-  string.contains(help_resp.text, "Domain C: Creative Cybernetics") |> should.equal(True)
-  string.contains(help_resp.text, "Domain D: Team Collaboration") |> should.equal(True)
+  string.contains(help_resp.text, "Domain A: Foundational SRE")
+  |> should.equal(True)
+  string.contains(help_resp.text, "Domain B: Advanced SRE")
+  |> should.equal(True)
+  string.contains(help_resp.text, "Domain C: Creative Cybernetics")
+  |> should.equal(True)
+  string.contains(help_resp.text, "Domain D: Team Collaboration")
+  |> should.equal(True)
 }
 
 pub fn telegram_domain_b_simulation_test() {
@@ -32,7 +36,8 @@ pub fn telegram_domain_b_simulation_test() {
   let resp = telegram.handle_message(resuscitate_msg)
   string.contains(resp.text, "Disaster Recovery Resuscitation")
   |> should.equal(True)
-  string.contains(resp.text, "[REDACTED_SYSTEM_OS_SERIAL]") |> should.equal(True)
+  string.contains(resp.text, "[REDACTED_SYSTEM_OS_SERIAL]")
+  |> should.equal(True)
 
   let chaos_msg =
     telegram_simulator.simulate_text_directive(12, "/chaos inject zenoh-peer")
@@ -66,8 +71,7 @@ pub fn telegram_domain_b_simulation_test() {
 }
 
 pub fn telegram_domain_c_simulation_test() {
-  let pacing_msg =
-    telegram_simulator.simulate_text_directive(21, "/pacing nap")
+  let pacing_msg = telegram_simulator.simulate_text_directive(21, "/pacing nap")
   let resp1 = telegram.handle_message(pacing_msg)
   string.contains(resp1.text, "Autonomous Operator Guard Engaged")
   |> should.equal(True)
@@ -83,7 +87,8 @@ pub fn telegram_domain_c_simulation_test() {
   let resp3 = telegram.handle_message(rack_msg)
   string.contains(resp3.text, "Computer Vision Server Rack Diagnostic")
   |> should.equal(True)
-  string.contains(resp3.text, "[REDACTED_SYSTEM_OS_SERIAL]") |> should.equal(True)
+  string.contains(resp3.text, "[REDACTED_SYSTEM_OS_SERIAL]")
+  |> should.equal(True)
 
   let acoustic_msg =
     telegram_simulator.simulate_text_directive(24, "/acoustic fan-02")
@@ -91,14 +96,12 @@ pub fn telegram_domain_c_simulation_test() {
   string.contains(resp4.text, "Acoustic Bearing Degradation Diagnostic")
   |> should.equal(True)
 
-  let rewind_msg =
-    telegram_simulator.simulate_text_directive(25, "/rewind 10m")
+  let rewind_msg = telegram_simulator.simulate_text_directive(25, "/rewind 10m")
   let resp5 = telegram.handle_message(rewind_msg)
   string.contains(resp5.text, "Time-Machine Historical State Scrubbing")
   |> should.equal(True)
 
-  let radar_msg =
-    telegram_simulator.simulate_text_directive(26, "/radar")
+  let radar_msg = telegram_simulator.simulate_text_directive(26, "/radar")
   let resp6 = telegram.handle_message(radar_msg)
   string.contains(resp6.text, "ASCII Heatmap Radar")
   |> should.equal(True)
@@ -118,7 +121,10 @@ pub fn telegram_domain_d_simulation_test() {
   |> should.equal(True)
 
   let voice_msg =
-    telegram_simulator.simulate_text_directive(32, "/voice-roll-call verify prop-drain")
+    telegram_simulator.simulate_text_directive(
+      32,
+      "/voice-roll-call verify prop-drain",
+    )
   let resp2 = telegram.handle_message(voice_msg)
   string.contains(resp2.text, "Multi-Party Voice Biometric Quorum Roll Call")
   |> should.equal(True)
@@ -149,7 +155,10 @@ pub fn telegram_domain_d_simulation_test() {
   |> should.equal(True)
 
   let gameday_msg =
-    telegram_simulator.simulate_text_directive(37, "/gameday start partition-nas1")
+    telegram_simulator.simulate_text_directive(
+      37,
+      "/gameday start partition-nas1",
+    )
   let resp7 = telegram.handle_message(gameday_msg)
   string.contains(resp7.text, "Synthetic Adversary GameDay Chaos Drill")
   |> should.equal(True)
@@ -169,12 +178,14 @@ pub fn telegram_multimodal_vision_and_audio_simulation_test() {
 
   // Computer Vision Rack test
   let raw_img = bit_array.from_string("simulated-jpeg-bay-image-bytes")
-  let inspection_bay3 = telegram_simulator.simulate_vision_inspection(raw_img, 3)
+  let inspection_bay3 =
+    telegram_simulator.simulate_vision_inspection(raw_img, 3)
   inspection_bay3.amber_led |> should.equal(True)
   inspection_bay3.safe_to_pull |> should.equal(True)
   inspection_bay3.serial_number |> should.equal("S439NX0M819234")
 
-  let inspection_bay0 = telegram_simulator.simulate_vision_inspection(raw_img, 0)
+  let inspection_bay0 =
+    telegram_simulator.simulate_vision_inspection(raw_img, 0)
   inspection_bay0.safe_to_pull |> should.equal(False)
   inspection_bay0.serial_number
   |> should.equal(telegram_simulator.hard_denied_system_os_serial)

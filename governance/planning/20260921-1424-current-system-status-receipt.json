@@ -1,0 +1,23 @@
+{
+  "receipt_id": "20260921-1424-current-system-status",
+  "observed_at": "2026-09-21T14:24:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "dashboard": {
+    "tasks_total": 20,
+    "tasks_completed": 3,
+    "tasks_ready": 3,
+    "tasks_executing": 0,
+    "mcp_tools_registered": 60,
+    "feature_tracker_status_mcp": "PASS",
+    "declarative_feature_catalog_mcp": "REGISTERED_FAIL_CLOSED",
+    "gleam_tests": "11988 passed, 0 failures",
+    "risk_priority": "PASS"
+  },
+  "holds": [
+    "canonical task-bound feature binding is not currently admitted",
+    "fresh feature runtime probes are not complete",
+    "coordinator digest/replay authority remains failed",
+    "release and operational acceptance remain ungranted"
+  ],
+  "admission": "NOT_ADMITTED"
+}

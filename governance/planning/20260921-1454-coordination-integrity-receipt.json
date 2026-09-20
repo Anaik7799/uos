@@ -1,0 +1,36 @@
+{
+  "schema": "uos.coordination-integrity-observation.v2",
+  "timestamp": "20260921-1454",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t0-coordination",
+  "worker": "codex-01a083d2-coordination",
+  "attempt": 5,
+  "command": "gleam run -m session_store_cli -- verify /home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+  "result": {
+    "exit_code": 1,
+    "ok": false,
+    "checked": 117,
+    "sequence_ok": true,
+    "chain_ok": true,
+    "digest_ok": false,
+    "replay_ok": false,
+    "triggers_present": true,
+    "unique_operations": true,
+    "first_corrupt_sequence": 66,
+    "last_corrupt_sequence": 117,
+    "replay_error": "session is not registered"
+  },
+  "source_digests": {
+    "var/coordination/tri-agent/coordinator.sqlite3": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84",
+    "apps/uos_swarm/src/session_store_cli.gleam": "5a96933fb3682a21b1036c34f2b04606b56de57fa1c9fc33f31fed74731a7b0d",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam": "6ed48bbf86aaba78703fd0b322a06f489a769eeabb4213905e37e67b39a246af"
+  },
+  "interpretation": {
+    "coordination": "canonical journal remains corrupt; runtime replay is correctly refused",
+    "holon_swarm_acceptance": "not established",
+    "task_completion_credit": false,
+    "runtime_admission": "NOT_GRANTED",
+    "effect_authority": false
+  },
+  "next_gate": "independent recovery authorization and coordinator cutover review"
+}

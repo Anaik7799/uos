@@ -1,0 +1,12 @@
+{
+  "schema": "uos.coordinator-writer-observation.v1",
+  "timestamp": "20260921-1651",
+  "paths": ["var/coordination/tri-agent/events", "var/coordination/tri-agent/coordinator.sqlite3"],
+  "lsof_events_directory": "no_open_writer_handles_observed",
+  "event_tail_mtime": "2026-09-10T14:13:55.256862349+02:00",
+  "canonical_db_mtime": "2026-09-19T18:43:29.176689193+02:00",
+  "active_writer_process": "not_observed",
+  "interpretation": "point-in-time observation only; does not establish exclusive lease, writer quiescence authorization, or cutover authority",
+  "authority": "observation_only",
+  "admission": "not_admitted"
+}

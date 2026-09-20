@@ -104,8 +104,7 @@ pub fn error_to_string(err: ValidationError) -> String {
       "PortMismatch [" <> id <> "]: " <> f <> " -> " <> t <> " (" <> r <> ")"
     UnsatisfiedRequirement(id, name) ->
       "UnsatisfiedRequirement [" <> id <> "]: " <> name
-    UnconnectedPort(part, port) ->
-      "UnconnectedPort in " <> part <> ": " <> port
+    UnconnectedPort(part, port) -> "UnconnectedPort in " <> part <> ": " <> port
     DanglingPartRef(id, part) ->
       "DanglingPartRef [" <> id <> "]: missing part " <> part
   }

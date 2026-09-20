@@ -1,0 +1,11 @@
+{
+  "schema": "uos.mcp-execution-progress-role-gate.v1",
+  "observed_at": "2026-09-21T16:30:00Z",
+  "authority": "read-only MCP probe; no effect attempted",
+  "tool": "harness_execution_progress",
+  "response_path": "/tmp/mcp-execution-progress-refresh-20260921-1630.json",
+  "response_sha256": "baefb917c5893e6248cb30e742e2aacd6ff3b3199e951ef5913b74959d0bbd0e",
+  "result": {"isError": true,"error":"role_binding_missing"},
+  "interpretation": "The task-bound progress surface is implemented but correctly refuses access without an admitted harness role binding.",
+  "completion_credit": false
+}

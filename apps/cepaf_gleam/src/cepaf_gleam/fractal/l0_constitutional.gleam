@@ -372,10 +372,7 @@ pub fn evaluate_reconfiguration(
     False -> {
       case reject_count(consensus) > 0 {
         True ->
-          ReconfigurationRejected(
-            proposal.proposal_id,
-            "Guardian Veto Invoked",
-          )
+          ReconfigurationRejected(proposal.proposal_id, "Guardian Veto Invoked")
         False -> {
           case all_psi_pass(proposal.psi_checks) {
             False ->
@@ -554,26 +551,26 @@ pub fn cast_bft_vote(
   // Check 1: Session Nonce Staleness / Replay Attack
   case vote.session_nonce == state.expected_epoch_nonce {
     False ->
-      BftConsensusState(
-        ..state,
-        byzantine_nodes: [vote.sovereign, ..state.byzantine_nodes],
-      )
+      BftConsensusState(..state, byzantine_nodes: [
+        vote.sovereign,
+        ..state.byzantine_nodes
+      ])
     True -> {
       // Check 2: Payload Hash Mismatch
       case vote.payload_hash == state.expected_payload_hash {
         False ->
-          BftConsensusState(
-            ..state,
-            byzantine_nodes: [vote.sovereign, ..state.byzantine_nodes],
-          )
+          BftConsensusState(..state, byzantine_nodes: [
+            vote.sovereign,
+            ..state.byzantine_nodes
+          ])
         True -> {
           // Check 3: Cryptographic Signature Validity
           case verify_sovereign_signature(vote) {
             False ->
-              BftConsensusState(
-                ..state,
-                byzantine_nodes: [vote.sovereign, ..state.byzantine_nodes],
-              )
+              BftConsensusState(..state, byzantine_nodes: [
+                vote.sovereign,
+                ..state.byzantine_nodes
+              ])
             True -> {
               // Check 4: Equivocation Detection (Did node already vote differently?)
               let prior_vote =
@@ -598,10 +595,10 @@ pub fn cast_bft_vote(
                   }
                 }
                 Error(Nil) ->
-                  BftConsensusState(
-                    ..state,
-                    valid_votes: [vote, ..state.valid_votes],
-                  )
+                  BftConsensusState(..state, valid_votes: [
+                    vote,
+                    ..state.valid_votes
+                  ])
               }
             }
           }
@@ -634,4 +631,3 @@ pub fn evaluate_bft_consensus(state: BftConsensusState) -> BftConsensusOutcome {
     }
   }
 }
-

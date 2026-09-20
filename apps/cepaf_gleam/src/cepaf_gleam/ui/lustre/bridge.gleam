@@ -5,7 +5,12 @@ import gleam/int
 import gleam/list
 
 pub type GatewayDispatch {
-  GatewayDispatch(channel: String, text: String, timestamp: String, status: String)
+  GatewayDispatch(
+    channel: String,
+    text: String,
+    timestamp: String,
+    status: String,
+  )
 }
 
 pub type BridgeModel {

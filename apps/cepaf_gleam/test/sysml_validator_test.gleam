@@ -18,9 +18,14 @@ pub fn canonical_uos_sysml_validation_test() {
 
 pub fn dangling_connection_test() {
   let p1 =
-    SysMLPart("p1", "Part 1", [SysMLPort("out_p", OutPort, "Sig", "[1]")], [], [])
-  let conn =
-    SysMLConnection("c1", "p1", "out_p", "missing_p", "in_p", "Direct")
+    SysMLPart(
+      "p1",
+      "Part 1",
+      [SysMLPort("out_p", OutPort, "Sig", "[1]")],
+      [],
+      [],
+    )
+  let conn = SysMLConnection("c1", "p1", "out_p", "missing_p", "in_p", "Direct")
   let pkg = SysMLPackage("TestPkg", [p1], [conn], [])
   let rep = validate_package(pkg)
   rep.valid |> should.equal(False)
@@ -34,8 +39,7 @@ pub fn dangling_connection_test() {
 }
 
 pub fn unsatisfied_requirement_test() {
-  let req =
-    SysMLRequirement("REQ-1", "Safety", "Fail closed", [], [])
+  let req = SysMLRequirement("REQ-1", "Safety", "Fail closed", [], [])
   let pkg = SysMLPackage("TestPkg", [], [], [req])
   let rep = validate_package(pkg)
   rep.valid |> should.equal(False)
@@ -48,11 +52,22 @@ pub fn unsatisfied_requirement_test() {
 
 pub fn port_type_mismatch_test() {
   let p1 =
-    SysMLPart("p1", "Part 1", [SysMLPort("p1_port", OutPort, "TypeA", "[1]")], [], [])
+    SysMLPart(
+      "p1",
+      "Part 1",
+      [SysMLPort("p1_port", OutPort, "TypeA", "[1]")],
+      [],
+      [],
+    )
   let p2 =
-    SysMLPart("p2", "Part 2", [SysMLPort("p2_port", InPort, "TypeB", "[1]")], [], [])
-  let conn =
-    SysMLConnection("c1", "p1", "p1_port", "p2", "p2_port", "Direct")
+    SysMLPart(
+      "p2",
+      "Part 2",
+      [SysMLPort("p2_port", InPort, "TypeB", "[1]")],
+      [],
+      [],
+    )
+  let conn = SysMLConnection("c1", "p1", "p1_port", "p2", "p2_port", "Direct")
   let pkg = SysMLPackage("TestPkg", [p1, p2], [conn], [])
   let rep = validate_package(pkg)
   rep.valid |> should.equal(False)

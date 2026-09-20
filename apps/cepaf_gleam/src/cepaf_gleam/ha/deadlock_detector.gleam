@@ -21,11 +21,17 @@ pub fn new_wfg() -> WaitForGraph {
   WaitForGraph(edges: [])
 }
 
-pub fn add_wait_edge(wfg: WaitForGraph, waiter: String, holder: String) -> WaitForGraph {
+pub fn add_wait_edge(
+  wfg: WaitForGraph,
+  waiter: String,
+  holder: String,
+) -> WaitForGraph {
   case waiter == holder {
-    True -> wfg // Self-wait is ignored or immediate cycle
+    True -> wfg
+    // Self-wait is ignored or immediate cycle
     False -> {
-      let exists = list.any(wfg.edges, fn(e) { e.waiter == waiter && e.holder == holder })
+      let exists =
+        list.any(wfg.edges, fn(e) { e.waiter == waiter && e.holder == holder })
       case exists {
         True -> wfg
         False -> WaitForGraph(edges: [WaitEdge(waiter, holder), ..wfg.edges])
@@ -34,12 +40,24 @@ pub fn add_wait_edge(wfg: WaitForGraph, waiter: String, holder: String) -> WaitF
   }
 }
 
-pub fn remove_wait_edge(wfg: WaitForGraph, waiter: String, holder: String) -> WaitForGraph {
-  WaitForGraph(edges: list.filter(wfg.edges, fn(e) { e.waiter != waiter || e.holder != holder }))
+pub fn remove_wait_edge(
+  wfg: WaitForGraph,
+  waiter: String,
+  holder: String,
+) -> WaitForGraph {
+  WaitForGraph(
+    edges: list.filter(wfg.edges, fn(e) {
+      e.waiter != waiter || e.holder != holder
+    }),
+  )
 }
 
 pub fn remove_all_for_tx(wfg: WaitForGraph, tx_id: String) -> WaitForGraph {
-  WaitForGraph(edges: list.filter(wfg.edges, fn(e) { e.waiter != tx_id && e.holder != tx_id }))
+  WaitForGraph(
+    edges: list.filter(wfg.edges, fn(e) {
+      e.waiter != tx_id && e.holder != tx_id
+    }),
+  )
 }
 
 // DFS cycle detection
@@ -61,7 +79,9 @@ fn dfs_find_cycle(
 
           let next_path = [current, ..path]
           list.fold_until(outgoing, None, fn(_acc, next_node) {
-            case dfs_find_cycle(next_node, edges, [current, ..visited], next_path) {
+            case
+              dfs_find_cycle(next_node, edges, [current, ..visited], next_path)
+            {
               Some(cycle) -> list.Stop(Some(cycle))
               None -> list.Continue(None)
             }
@@ -87,12 +107,13 @@ pub fn select_deadlock_victim(cycle: List(String)) -> Option(String) {
   case cycle {
     [] -> None
     [head, ..tail] -> {
-      let victim = list.fold(tail, head, fn(acc, node) {
-        case string.compare(node, acc) {
-          order.Gt -> node
-          _ -> acc
-        }
-      })
+      let victim =
+        list.fold(tail, head, fn(acc, node) {
+          case string.compare(node, acc) {
+            order.Gt -> node
+            _ -> acc
+          }
+        })
       Some(victim)
     }
   }

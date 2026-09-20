@@ -49,7 +49,9 @@ pub fn render_fast_ooda_hud(metrics: FastOodaMetrics) -> Element(msg) {
         html.a([attribute.href("http://nas-1.tail55d152.ts.net:4100/ooda")], [
           html.text("http://nas-1.tail55d152.ts.net:4100/ooda"),
         ]),
-        html.span([], [html.text(" | OS NVMe Lock: 25503L801736 | Zero-Muda: Pure BEAM")]),
+        html.span([], [
+          html.text(" | OS NVMe Lock: 25503L801736 | Zero-Muda: Pure BEAM"),
+        ]),
       ]),
     ]),
 
@@ -143,26 +145,52 @@ fn render_ooda_svg(metrics: FastOodaMetrics) -> Element(msg) {
 
 fn render_checklist_accordion() -> Element(msg) {
   html.details([], [
-    html.summary([], [html.text("Comprehensive Verification Checklist (18/18 Checks Validated)")]),
+    html.summary([], [
+      html.text("Comprehensive Verification Checklist (18/18 Checks Validated)"),
+    ]),
     html.ul([], [
-      html.li([], [html.text("CHK-01-TIME: Canonical YYYYMMDD-HHSS- prefix verified")]),
-      html.li([], [html.text("CHK-02-TAIL: Universal Tailscale FQDN links verified")]),
+      html.li([], [
+        html.text("CHK-01-TIME: Canonical YYYYMMDD-HHSS- prefix verified"),
+      ]),
+      html.li([], [
+        html.text("CHK-02-TAIL: Universal Tailscale FQDN links verified"),
+      ]),
       html.li([], [html.text("CHK-03-FRACT: L0-L5 Fractal layers registered")]),
       html.li([], [html.text("CHK-04-KM: Transclusion [[zk:...]] verified")]),
-      html.li([], [html.text("CHK-05-MUDA: Zero Bevy, Zero Graphite strictly verified")]),
-      html.li([], [html.text("CHK-06-GRAPH: Pure Erlang/Gleam vector rendering")]),
+      html.li([], [
+        html.text("CHK-05-MUDA: Zero Bevy, Zero Graphite strictly verified"),
+      ]),
+      html.li([], [
+        html.text("CHK-06-GRAPH: Pure Erlang/Gleam vector rendering"),
+      ]),
       html.li([], [html.text("CHK-07-DRIVE: Host NVMe 25503L801736 locked")]),
-      html.li([], [html.text("CHK-08-C1C8: Testing Gold Standard 8-category satisfied")]),
-      html.li([], [html.text("CHK-09-MATH: H >= 2.50b, CCM >= 90%, D_EA <= 10%, ITQS >= 0.85")]),
+      html.li([], [
+        html.text("CHK-08-C1C8: Testing Gold Standard 8-category satisfied"),
+      ]),
+      html.li([], [
+        html.text(
+          "CHK-09-MATH: H >= 2.50b, CCM >= 90%, D_EA <= 10%, ITQS >= 0.85",
+        ),
+      ]),
       html.li([], [html.text("CHK-10-9MOD: Full 9-modality protocol passed")]),
       html.li([], [html.text("CHK-11-REGR: 100% regression tests green")]),
-      html.li([], [html.text("CHK-12-GLEAM: Gleam/OTP 29 root supervisor operational")]),
-      html.li([], [html.text("CHK-13-HERMES: Hermes OCaml Gospel contracts active")]),
-      html.li([], [html.text("CHK-14-ZIGVM: ZigVM deterministic engine operational")]),
-      html.li([], [html.text("CHK-15-MAX: Python quarantined to MAX inference daemon")]),
+      html.li([], [
+        html.text("CHK-12-GLEAM: Gleam/OTP 29 root supervisor operational"),
+      ]),
+      html.li([], [
+        html.text("CHK-13-HERMES: Hermes OCaml Gospel contracts active"),
+      ]),
+      html.li([], [
+        html.text("CHK-14-ZIGVM: ZigVM deterministic engine operational"),
+      ]),
+      html.li([], [
+        html.text("CHK-15-MAX: Python quarantined to MAX inference daemon"),
+      ]),
       html.li([], [html.text("CHK-16-OTEL: Universal C3I Telemetry active")]),
       html.li([], [html.text("CHK-17-SOV: Tri-Sovereign Governance Quorum 3/3")]),
-      html.li([], [html.text("CHK-18-JJ: Standalone Jujutsu monorepo with 0 Git mutations")]),
+      html.li([], [
+        html.text("CHK-18-JJ: Standalone Jujutsu monorepo with 0 Git mutations"),
+      ]),
     ]),
   ])
 }

@@ -50,10 +50,7 @@ pub fn dispatch_gospel_success_test() {
 pub fn dispatch_z3_bounded_test() {
   let pool = init_pool("hermes-primary", 2)
   let #(updated, resp) =
-    dispatch_request(
-      pool,
-      SolveZ3Bounded("(assert (> x 0))", 1000),
-    )
+    dispatch_request(pool, SolveZ3Bounded("(assert (> x 0))", 1000))
   updated.successful_dispatches_total |> should.equal(1)
   case resp {
     OcamlSuccess(_, verdict, _, _) -> verdict |> should.equal("z3_sat_provable")
@@ -64,10 +61,7 @@ pub fn dispatch_z3_bounded_test() {
 pub fn dispatch_z3_timeout_test() {
   let pool = init_pool("hermes-primary", 2)
   let #(updated, resp) =
-    dispatch_request(
-      pool,
-      SolveZ3Bounded("(assert (> x 0))", 0),
-    )
+    dispatch_request(pool, SolveZ3Bounded("(assert (> x 0))", 0))
   updated.successful_dispatches_total |> should.equal(0)
   case resp {
     OcamlTimeout(t) -> t |> should.equal(0)

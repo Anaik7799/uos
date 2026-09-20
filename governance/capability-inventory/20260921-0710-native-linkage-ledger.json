@@ -1,0 +1,318 @@
+{
+  "schema": "uos.native-linkage-ledger.v1",
+  "created_at": "2026-09-21T07:10:00Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t1-tracker",
+  "workflow": "uos/system-mcp-features/20260919-1642/t1-native-linkage/20260921-0710",
+  "candidate": {
+    "sha256": "230abfa79f901fb45fe99e45a8ab48ed99d457ea2318f3d8f53a47b436cb2be8",
+    "not_authenticated_revision": true
+  },
+  "records": [
+    {
+      "id": "native.app.c3i",
+      "kind": "cdylib_source",
+      "path": "apps/cepaf_gleam/native/c3i_nif/Cargo.toml",
+      "sha256": "1876aa4f2fe840726462cd8b2b6ef47f9068b59bb0454baee1030f23129f2a8e",
+      "status": "DECLARED_CDylib",
+      "notes": "Rustler crate; loader and host artifact are separate records.",
+      "edges": [
+        "loader.c3i",
+        "artifact.c3i"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "native.app.ferriskey",
+      "kind": "cdylib_source",
+      "path": "apps/cepaf_gleam/native/ferriskey_nif/Cargo.toml",
+      "sha256": "2865cec138daa989fa5c44a3c08c54db265ee8e2efaebc2b1de4fbd470b094b7",
+      "status": "DECLARED_CDylib",
+      "notes": "Rustler crate; source is duplicated under native/nifs and is not deduplicated.",
+      "edges": [
+        "loader.ferriskey",
+        "artifact.ferriskey"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "native.app.planning",
+      "kind": "cdylib_source",
+      "path": "apps/cepaf_gleam/native/planning_nif/Cargo.toml",
+      "sha256": "0dfa6d84ddb170adfa94bbb4e8e90266a2cb1be67ffee620a492b0a01f02e1cf",
+      "status": "DECLARED_CDylib",
+      "notes": "Planning SQLite NIF source; loader includes fallback stub response.",
+      "edges": [
+        "loader.planning",
+        "artifact.planning"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "native.app.rule_engine",
+      "kind": "cdylib_source",
+      "path": "apps/cepaf_gleam/native/rule_engine_nif/Cargo.toml",
+      "sha256": "d166f345b8c7a819844a9fa685176e7cfb426f5e010e0136071454af54075b3a",
+      "status": "DECLARED_CDylib",
+      "notes": "Rule-engine NIF source; runtime loading unobserved.",
+      "edges": [
+        "loader.rule_engine",
+        "artifact.rule_engine"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "native.app.rusty_vault",
+      "kind": "cdylib_source",
+      "path": "apps/cepaf_gleam/native/rusty_vault_nif/Cargo.toml",
+      "sha256": "081e0e0465e04c204adb5966f1073816b6a60200fb4af54acb040bf254861b5a",
+      "status": "DECLARED_CDylib",
+      "notes": "Vault NIF source; on_load path present, runtime loading unobserved.",
+      "edges": [
+        "loader.rusty_vault",
+        "artifact.rusty_vault"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.c3i",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+      "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+      "status": "DECLARED_LOADER",
+      "notes": "on_load/load_nif source; no invocation.",
+      "edges": [
+        "native.app.c3i",
+        "artifact.c3i"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.c3i_ocaml",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/c3i_ocaml_nif.erl",
+      "sha256": "b54a620420359e7c407f7affd7d5c614d4df051323059d2a650170ffc971dce3",
+      "status": "DECLARED_LOADER",
+      "notes": "OCaml NIF loader; no invocation.",
+      "edges": [
+        "artifact.c3i_ocaml"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.cortex",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/cortex_nif.erl",
+      "sha256": "75cfb664030c7143d4bb611a4eccf33d2a2963738efd393422e3ff5abd25440b",
+      "status": "DECLARED_LOADER",
+      "notes": "Cortex NIF loader; no invocation.",
+      "edges": [
+        "artifact.cortex"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.ferriskey",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/ferriskey_nif.erl",
+      "sha256": "a0f2785f39e83431759e15de95fa7add9063c58004a1279c35f99d83343886db",
+      "status": "DECLARED_LOADER",
+      "notes": "Ferriskey loader; no invocation.",
+      "edges": [
+        "native.app.ferriskey",
+        "artifact.ferriskey"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.planning",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/planning_nif.erl",
+      "sha256": "042920a6145d84b23fc9f3b0d0ac702a7e3a858c91521e040d274a6409f241dc",
+      "status": "DECLARED_LOADER_WITH_FALLBACK",
+      "notes": "Fallback returns NIF-not-loaded response; current artifact presence does not prove loaded runtime.",
+      "edges": [
+        "native.app.planning",
+        "artifact.planning"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.rule_engine",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/rule_engine_nif.erl",
+      "sha256": "7eca8bf81aa3bb5d053070babebb6c1ca745569b9e94906d5c5a84cd5354c4d0",
+      "status": "DECLARED_LOADER_WITH_FALLBACK",
+      "notes": "Fallback/refusal behavior visible; no invocation.",
+      "edges": [
+        "native.app.rule_engine",
+        "artifact.rule_engine"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.rusty_vault",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/rusty_vault_nif.erl",
+      "sha256": "41616450c757a9c92251721689dd7662b7f4c84aceaade65eb0efe4513a8cc0c",
+      "status": "DECLARED_LOADER",
+      "notes": "on_load/load_nif source; no invocation.",
+      "edges": [
+        "native.app.rusty_vault",
+        "artifact.rusty_vault"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "loader.uos_km",
+      "kind": "nif_loader",
+      "path": "apps/cepaf_gleam/src/uos_km_nif.erl",
+      "sha256": "ae9e68bdebd264095313d90a4ea82dd4ee7ce5cd87ad0ef9e0dbb66a9f1bbe77",
+      "status": "DECLARED_LOADER",
+      "notes": "UOS KM loader; source crate/linkage remains separate.",
+      "edges": [
+        "artifact.uos_km"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "native.ocaml.bridge",
+      "kind": "native_source",
+      "path": "apps/cepaf_gleam/native/ocaml_nif/c3i_ocaml_nif.c",
+      "sha256": "b61da4a75d331995a0aa604e41aa3a4e05e03cb07a4025cf51cde4ebc04c918f",
+      "status": "DECLARED_NATIVE_SOURCE",
+      "notes": "C bridge source; compiled artifact present but runtime linkage unverified.",
+      "edges": [
+        "artifact.c3i_ocaml"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "native.ocaml.bridge_ml",
+      "kind": "native_source",
+      "path": "apps/cepaf_gleam/native/ocaml_nif/c3i_ocaml_bridge.ml",
+      "sha256": "1d42fedce015c7bfb125fe3db948b9b95a70ebfad40e3eff3a55644defaea3c8",
+      "status": "DECLARED_NATIVE_SOURCE",
+      "notes": "OCaml bridge source; compiled artifact present but runtime linkage unverified.",
+      "edges": [
+        "artifact.c3i_ocaml"
+      ],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.planning_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/planning_nif.so",
+      "sha256": "726e305a58f7c895f88fb55962cbc3206d84930b5225e31cb6e864300abce75f",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.c3i_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/c3i_nif.so",
+      "sha256": "c6b6cd061c3e7b2b6201689f81a866db95e3b3ab2a7c1987060dae3e27f1c55f",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.c3i_ocaml_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/c3i_ocaml_nif.so",
+      "sha256": "cfa6ab0be38bc23dc288e8a017d66ffa767bf1fa18ccfb2d9e374a071072df30",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.cortex_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/cortex_nif.so",
+      "sha256": "e86999a0918404c6a8f44cd9e04d1b20af2b239380f924702233f655b86d544c",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.ferriskey_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/ferriskey_nif.so",
+      "sha256": "16969091909227c73ee24ddbe9fca3dd7495779c75fab025188fed54af617ed4",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.rule_engine_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/rule_engine_nif.so",
+      "sha256": "ff52628df5a5dbc4c1e821a968067e94a267e79db6432a028132fbb4e5eec5ec",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.rusty_vault_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/rusty_vault_nif.so",
+      "sha256": "c00d91574f351ff0712ad396b928c84b957145fbcf739e115085ad6a8a80c777",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    },
+    {
+      "id": "artifact.uos_km_nif",
+      "kind": "host_artifact",
+      "path": "apps/cepaf_gleam/priv/uos_km_nif.so",
+      "sha256": "cdd4b91eb510d346d9670d6b5659ab2da37cd7273e945e143c816d7c69212f22",
+      "status": "HOST_ARTIFACT_PRESENT_UNVERIFIED",
+      "notes": "Binary hash recorded; no loading or behavior probe.",
+      "edges": [],
+      "mcp_availability": "UNKNOWN"
+    }
+  ],
+  "laws": [
+    "source loader artifact edges are explicit",
+    "source and binary hashes are distinct",
+    "artifact presence never implies loaded runtime",
+    "fallback output remains refusal/unknown evidence",
+    "MCP mapping remains independent"
+  ],
+  "counts": {
+    "source_crates": 5,
+    "loaders": 8,
+    "native_bridge_sources": 2,
+    "host_artifacts": 8,
+    "known_runtime_loaded": 0,
+    "known_mcp_mappings": 0
+  },
+  "coverage": {
+    "complete": false,
+    "canonical_import": false,
+    "effect_authority": false,
+    "runtime_availability": "UNKNOWN",
+    "mcp_availability": "UNKNOWN"
+  },
+  "unresolved": [
+    "NIF ABI/build provenance and candidate binding",
+    "runtime loading and behavior probes",
+    "MCP schemas/effect fences for native capabilities",
+    "native/nifs duplicate roots and linkage reconciliation",
+    "host artifact admission and release authority"
+  ],
+  "limitations": [
+    "Binary hashes are presence evidence, not trusted build provenance.",
+    "No NIF was loaded or invoked; no production state changed.",
+    "Private key and certificate files were excluded from inventory and not read.",
+    "Current filesystem artifact presence supersedes older historical fixture claims only for this observation; historical claims remain preserved."
+  ]
+}

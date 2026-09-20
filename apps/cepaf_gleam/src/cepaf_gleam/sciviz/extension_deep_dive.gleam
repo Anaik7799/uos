@@ -70,8 +70,7 @@ pub fn ggram_deep_dive() -> ExtensionDeepDive {
       "clarity (IF-I1)", "depth (float)", "table (float)",
       "price (USD $326-$18,823)", "x, y, z (dimensions in mm)",
     ],
-    dataset_schema_summary:
-      "High-dimensional retail diamond pricing dataset evaluating non-linear price curves against carat weights, grouped by cut quality and color grades.",
+    dataset_schema_summary: "High-dimensional retail diamond pricing dataset evaluating non-linear price curves against carat weights, grouped by cut quality and color grades.",
     bdd_scenarios: [
       "Scenario: Parse multi-line ggplot pipeline into StatCode character grid",
       "Scenario: Detect #<< syntax tokens and compute is_highlighted boolean tile tags",
@@ -80,8 +79,7 @@ pub fn ggram_deep_dive() -> ExtensionDeepDive {
       "Scenario: Stitch code plot and evaluated ggplot into patchwork meta-plot",
       "Scenario: Benchmark 500-line code parsing under 50ms without client JavaScript",
     ],
-    svg_rich_aspect:
-      "<svg viewBox=\"0 0 480 200\" class=\"w-full h-auto rounded-lg shadow-xl bg-slate-950 border border-slate-800\">"
+    svg_rich_aspect: "<svg viewBox=\"0 0 480 200\" class=\"w-full h-auto rounded-lg shadow-xl bg-slate-950 border border-slate-800\">"
       <> "<rect x=\"10\" y=\"10\" width=\"460\" height=\"180\" rx=\"8\" fill=\"#020617\" stroke=\"#1e293b\" stroke-width=\"1.5\"/>"
       // Left Code Notebook Panel
       <> "<rect x=\"20\" y=\"20\" width=\"215\" height=\"160\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1\"/>"
@@ -326,17 +324,19 @@ fn ggupset_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Kaggle E-Commerce UpSet & Multi-Label Corpus (upset_orders_95k)",
     dataset_record_count: 95_000,
     dataset_dimensions: [
-      "order_id", "product_categories (list)", "intersection_size", "order_total_usd",
-      "device_tier", "is_member",
+      "order_id", "product_categories (list)", "intersection_size",
+      "order_total_usd", "device_tier", "is_member",
     ],
-    dataset_schema_summary:
-      "95,000 multi-category e-commerce transactions evaluating overlapping basket sets across electronics, fashion, home, and health items.",
+    dataset_schema_summary: "95,000 multi-category e-commerce transactions evaluating overlapping basket sets across electronics, fashion, home, and health items.",
     bdd_scenarios: [
       "Scenario: Compute intersection cardinality for 16 binary power-set combinations",
       "Scenario: Render vertical combination matrix with filled dots and connecting links",
       "Scenario: Verify intersection size bar heights sum to distinct subset unions",
     ],
-    svg_rich_aspect: generate_hierarchical_svg(ext.name, "Hierarchical Partition"),
+    svg_rich_aspect: generate_hierarchical_svg(
+      ext.name,
+      "Hierarchical Partition",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -364,17 +364,19 @@ fn ggrepel_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "PubMed Scientific Bio-Entity Citation Corpus (pubmed_repel_110k)",
     dataset_record_count: 110_000,
     dataset_dimensions: [
-      "pmid", "entity_name", "entity_type", "x_pos", "y_pos", "repulsion_priority",
-      "leader_length_px",
+      "pmid", "entity_name", "entity_type", "x_pos", "y_pos",
+      "repulsion_priority", "leader_length_px",
     ],
-    dataset_schema_summary:
-      "110,000 biomedical entities mapped across high-density transcriptomic volcano plots with collision-free force-directed text label placement.",
+    dataset_schema_summary: "110,000 biomedical entities mapped across high-density transcriptomic volcano plots with collision-free force-directed text label placement.",
     bdd_scenarios: [
       "Scenario: Calculate repulsive spring forces for 50 colliding label bounding boxes",
       "Scenario: Clamp repelled labels within canvas boundaries without truncation",
       "Scenario: Draw dashed elbow leader lines from anchor points to repelled text boxes",
     ],
-    svg_rich_aspect: generate_typography_svg(ext.name, "Typography & Text Repel"),
+    svg_rich_aspect: generate_typography_svg(
+      ext.name,
+      "Typography & Text Repel",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -402,16 +404,19 @@ fn ggdist_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "MCMC Posterior Trace & Sensor Uncertainty Calibration (mcmc_150k)",
     dataset_record_count: 150_000,
     dataset_dimensions: [
-      "chain_id", "iteration", "parameter_name", "sample_value", "divergent", "energy_score",
+      "chain_id", "iteration", "parameter_name", "sample_value", "divergent",
+      "energy_score",
     ],
-    dataset_schema_summary:
-      "150,000 Monte Carlo Markov Chain samples measuring dynamic parameter drift across 4 parallel chains with Bayesian convergence diagnostics.",
+    dataset_schema_summary: "150,000 Monte Carlo Markov Chain samples measuring dynamic parameter drift across 4 parallel chains with Bayesian convergence diagnostics.",
     bdd_scenarios: [
       "Scenario: Compute 50%, 80%, and 95% Bayesian credible interval ribbons",
       "Scenario: Render raincloud slab-interval with non-overlapping quantile dot arrays",
       "Scenario: Verify probability density integral sums to 1.0 within 0.1% tolerance",
     ],
-    svg_rich_aspect: generate_uncertainty_svg(ext.name, "Uncertainty & Distribution"),
+    svg_rich_aspect: generate_uncertainty_svg(
+      ext.name,
+      "Uncertainty & Distribution",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -439,11 +444,10 @@ fn xmrr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Semiconductor Fab Statistical Process Control Corpus (semi_spc_85k)",
     dataset_record_count: 85_000,
     dataset_dimensions: [
-      "wafer_id", "lot_id", "step_timestamp_ms", "film_thickness_nm", "ucl_bound",
-      "lcl_bound", "out_of_control_flag", "tool_id",
+      "wafer_id", "lot_id", "step_timestamp_ms", "film_thickness_nm",
+      "ucl_bound", "lcl_bound", "out_of_control_flag", "tool_id",
     ],
-    dataset_schema_summary:
-      "85,000 wafer fabrication measurements tracking thin-film deposition uniformity with 3-sigma control limits and real-time Western Electric alarms.",
+    dataset_schema_summary: "85,000 wafer fabrication measurements tracking thin-film deposition uniformity with 3-sigma control limits and real-time Western Electric alarms.",
     bdd_scenarios: [
       "Scenario: Calculate 3-sigma UCL = mu + 2.66 * mR_bar and LCL bounds",
       "Scenario: Highlight out-of-control points exceeding 3-sigma with warning diamonds",
@@ -480,8 +484,7 @@ fn gg3d_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "atom_id", "residue_name", "chain_id", "coord_x", "coord_y", "coord_z",
       "temp_factor", "occupancy",
     ],
-    dataset_schema_summary:
-      "45,000 atomic coordinates from cryo-EM protein structures projected onto isometric 2D viewports with depth-sorted shading.",
+    dataset_schema_summary: "45,000 atomic coordinates from cryo-EM protein structures projected onto isometric 2D viewports with depth-sorted shading.",
     bdd_scenarios: [
       "Scenario: Project 3D Cartesian coordinates (X, Y, Z) to 2D screen viewport",
       "Scenario: Depth-sort isometric cubes from back to front for proper occlusion",
@@ -518,14 +521,16 @@ fn ggbreak_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "target_id", "time_bjd", "relative_flux_ppm", "phase_folded_time",
       "secondary_flux", "error_bar_ppm",
     ],
-    dataset_schema_summary:
-      "180,000 photometric flux measurements with deep stellar transit dips requiring broken y-axes to display both baseline flux and milliphotometric transits.",
+    dataset_schema_summary: "180,000 photometric flux measurements with deep stellar transit dips requiring broken y-axes to display both baseline flux and milliphotometric transits.",
     bdd_scenarios: [
       "Scenario: Insert discontinuous axis break interval hiding inactive ranges",
       "Scenario: Render dual independent sub-scales with distinct tick marks and scaling",
       "Scenario: Draw zigzag break glyphs on axis lines to denote coordinate discontinuity",
     ],
-    svg_rich_aspect: generate_multiscale_svg(ext.name, "Multi-Scale & Coordinates"),
+    svg_rich_aspect: generate_multiscale_svg(
+      ext.name,
+      "Multi-Scale & Coordinates",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -556,8 +561,7 @@ fn ggalluvial_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "patient_id", "baseline_status", "stage1_response", "stage2_outcome",
       "adverse_event", "dosage_mg",
     ],
-    dataset_schema_summary:
-      "65,000 patient clinical records tracking treatment efficacy, state transitions, and adverse event pathways across four observational phases.",
+    dataset_schema_summary: "65,000 patient clinical records tracking treatment efficacy, state transitions, and adverse event pathways across four observational phases.",
     bdd_scenarios: [
       "Scenario: Verify flow conservation across all intermediate stratum nodes",
       "Scenario: Render cubic bezier ribbons with variable width matching flow volume",
@@ -594,14 +598,16 @@ fn ggtree_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "sample_id", "chr", "start_pos", "end_pos", "gene_symbol", "log2_fc",
       "adj_p_val", "mutation_type",
     ],
-    dataset_schema_summary:
-      "240,000 genomic intervals linking somatic mutations and expression fold changes with evolutionary lineage trees across 33 tumor cohorts.",
+    dataset_schema_summary: "240,000 genomic intervals linking somatic mutations and expression fold changes with evolutionary lineage trees across 33 tumor cohorts.",
     bdd_scenarios: [
       "Scenario: Compute radial branch coordinates from Newick phylogenetic tree string",
       "Scenario: Highlight significant gene clades with adjusted p-value < 0.01",
       "Scenario: Align multiple sequence alignment residue bars to phylogenetic tree tips",
     ],
-    svg_rich_aspect: generate_genomics_svg(ext.name, "Bioinformatics & Genomics"),
+    svg_rich_aspect: generate_genomics_svg(
+      ext.name,
+      "Bioinformatics & Genomics",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l6",
   )
 }
@@ -629,17 +635,19 @@ fn geomtextpath_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "PubMed Scientific Bio-Entity Citation Corpus (pubmed_repel_110k)",
     dataset_record_count: 110_000,
     dataset_dimensions: [
-      "pmid", "entity_name", "entity_type", "x_pos", "y_pos", "repulsion_priority",
-      "leader_length_px",
+      "pmid", "entity_name", "entity_type", "x_pos", "y_pos",
+      "repulsion_priority", "leader_length_px",
     ],
-    dataset_schema_summary:
-      "110,000 biomedical citations and entity trajectories with smooth text labels following curved mathematical geodesic paths.",
+    dataset_schema_summary: "110,000 biomedical citations and entity trajectories with smooth text labels following curved mathematical geodesic paths.",
     bdd_scenarios: [
       "Scenario: Calculate tangent angle theta = atan2(dy, dx) for each character",
       "Scenario: Render SVG textPath element bound to smooth cubic bezier curve",
       "Scenario: Verify letter kerning preserves readability without overlapping glyphs",
     ],
-    svg_rich_aspect: generate_typography_svg(ext.name, "Typography & Text Repel"),
+    svg_rich_aspect: generate_typography_svg(
+      ext.name,
+      "Typography & Text Repel",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -670,14 +678,16 @@ fn plotroc_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "loan_id", "risk_score", "default_observed", "pred_prob", "sensitivity",
       "specificity", "auc_partial",
     ],
-    dataset_schema_summary:
-      "250,000 credit applications evaluating default probability classifier accuracy with empirical ROC curves and AUC = 0.92.",
+    dataset_schema_summary: "250,000 credit applications evaluating default probability classifier accuracy with empirical ROC curves and AUC = 0.92.",
     bdd_scenarios: [
       "Scenario: Compute empirical True Positive and False Positive rates across thresholds",
       "Scenario: Calculate Area Under the ROC Curve (AUC) via trapezoidal rule",
       "Scenario: Render diagonal 45-degree chance baseline and highlight optimal cutpoint",
     ],
-    svg_rich_aspect: generate_statistical_svg(ext.name, "Statistical Diagnosis & Inference"),
+    svg_rich_aspect: generate_statistical_svg(
+      ext.name,
+      "Statistical Diagnosis & Inference",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l5",
   )
 }
@@ -705,11 +715,10 @@ fn ggfx_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Accessible Tactile Pattern Masks Corpus (tactile_masks_60k)",
     dataset_record_count: 60_000,
     dataset_dimensions: [
-      "element_id", "pattern_type", "stroke_width", "fill_density", "glow_radius_px",
-      "luminance_contrast",
+      "element_id", "pattern_type", "stroke_width", "fill_density",
+      "glow_radius_px", "luminance_contrast",
     ],
-    dataset_schema_summary:
-      "60,000 graphical components rendered with accessible tactile pattern fills and glowing drop-shadow shaders compliant with WCAG 2.1 AAA.",
+    dataset_schema_summary: "60,000 graphical components rendered with accessible tactile pattern fills and glowing drop-shadow shaders compliant with WCAG 2.1 AAA.",
     bdd_scenarios: [
       "Scenario: Apply SVG gaussian blur and color blend drop-shadow to highlight critical series",
       "Scenario: Render distinct pattern textures (stripes, dots, hatch) on categorical bars",
@@ -746,8 +755,7 @@ fn ggpca_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "vector_id", "pc1_val", "pc2_val", "cluster_label", "var_explained_ratio",
       "loading_alpha", "loading_beta",
     ],
-    dataset_schema_summary:
-      "128,000 512-dimensional multimodal latent embeddings projected to 2D principal component space with 95% confidence cluster ellipses.",
+    dataset_schema_summary: "128,000 512-dimensional multimodal latent embeddings projected to 2D principal component space with 95% confidence cluster ellipses.",
     bdd_scenarios: [
       "Scenario: Project 512-dimensional embeddings into 2D PCA coordinate space",
       "Scenario: Draw 95% confidence covariance ellipses around latent clusters",
@@ -784,14 +792,16 @@ fn ggforce_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "swatch_id", "cielab_l", "cielab_a", "cielab_b", "hex_code",
       "contrast_ratio_wcag", "delta_e",
     ],
-    dataset_schema_summary:
-      "50,000 perceptual calibration steps verifying Delaunay triangulation, Voronoi cell boundaries, and monotonic lightness gradients.",
+    dataset_schema_summary: "50,000 perceptual calibration steps verifying Delaunay triangulation, Voronoi cell boundaries, and monotonic lightness gradients.",
     bdd_scenarios: [
       "Scenario: Compute Voronoi polygon cell boundaries around discrete point seeds",
       "Scenario: Render faceted zoom panel showing magnified detail of selected region",
       "Scenario: Verify smooth bezier links preserve boundary continuity across nodes",
     ],
-    svg_rich_aspect: generate_theming_svg(ext.name, "Theming, Palettes & Aesthetics"),
+    svg_rich_aspect: generate_theming_svg(
+      ext.name,
+      "Theming, Palettes & Aesthetics",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -819,10 +829,10 @@ fn patchwork_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Tidyverse Diamond Pricing Corpus (diamonds_50k)",
     dataset_record_count: 53_940,
     dataset_dimensions: [
-      "carat", "cut", "color", "clarity", "depth", "table", "price", "x", "y", "z",
+      "carat", "cut", "color", "clarity", "depth", "table", "price", "x", "y",
+      "z",
     ],
-    dataset_schema_summary:
-      "53,940 diamond appraisals evaluated across multiple coordinated sub-panels using declarative patchwork layout operators.",
+    dataset_schema_summary: "53,940 diamond appraisals evaluated across multiple coordinated sub-panels using declarative patchwork layout operators.",
     bdd_scenarios: [
       "Scenario: Combine three plots with expression (p1 | p2) / p3 with aligned axes",
       "Scenario: Collect shared color legends into unified right-hand margin guide",
@@ -856,16 +866,19 @@ fn survminer_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Clinical Longitudinal Survival Registry (survival_75k)",
     dataset_record_count: 75_000,
     dataset_dimensions: [
-      "patient_id", "follow_up_months", "event_observed", "hazard_ratio", "arm_id",
+      "patient_id", "follow_up_months", "event_observed", "hazard_ratio",
+      "arm_id",
     ],
-    dataset_schema_summary:
-      "75,000 patient-years evaluating overall and progression-free survival across oncology clinical trial arms with log-rank p < 0.001.",
+    dataset_schema_summary: "75,000 patient-years evaluating overall and progression-free survival across oncology clinical trial arms with log-rank p < 0.001.",
     bdd_scenarios: [
       "Scenario: Compute Kaplan-Meier survival step curve with Greenwood variance formula",
       "Scenario: Render number-at-risk data table synchronized below time axis",
       "Scenario: Calculate and display log-rank test p-value and 95% confidence ribbon",
     ],
-    svg_rich_aspect: generate_genomics_svg(ext.name, "Bioinformatics & Genomics"),
+    svg_rich_aspect: generate_genomics_svg(
+      ext.name,
+      "Bioinformatics & Genomics",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l5",
   )
 }
@@ -896,8 +909,7 @@ fn ggcorrplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "vector_id", "pc1_val", "pc2_val", "cluster_label", "var_explained_ratio",
       "loading_alpha", "loading_beta",
     ],
-    dataset_schema_summary:
-      "128,000 multimodal feature vectors with pairwise correlation matrix reordered by hierarchical clustering.",
+    dataset_schema_summary: "128,000 multimodal feature vectors with pairwise correlation matrix reordered by hierarchical clustering.",
     bdd_scenarios: [
       "Scenario: Reorder correlation matrix using Ward hierarchical clustering",
       "Scenario: Mask non-significant correlations with p > 0.05",
@@ -907,12 +919,6 @@ fn ggcorrplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
-
-
-
-
-
-
 
 fn ggbeeswarm_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
   ExtensionDeepDive(
@@ -937,23 +943,22 @@ fn ggbeeswarm_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "MCMC Posterior Trace & Sensor Uncertainty Calibration (mcmc_150k)",
     dataset_record_count: 150_000,
     dataset_dimensions: [
-      "chain_id", "iteration", "parameter_name", "sample_value", "divergent", "energy_score",
+      "chain_id", "iteration", "parameter_name", "sample_value", "divergent",
+      "energy_score",
     ],
-    dataset_schema_summary:
-      "150,000 observations arranged in non-overlapping beeswarm columns displaying individual subject distributions.",
+    dataset_schema_summary: "150,000 observations arranged in non-overlapping beeswarm columns displaying individual subject distributions.",
     bdd_scenarios: [
       "Scenario: Displace points along perpendicular axis to eliminate point collision",
       "Scenario: Preserve exact vertical coordinate value without random jitter error",
       "Scenario: Pack points tightly around group center line",
     ],
-    svg_rich_aspect: generate_uncertainty_svg(ext.name, "Uncertainty & Distribution"),
+    svg_rich_aspect: generate_uncertainty_svg(
+      ext.name,
+      "Uncertainty & Distribution",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
-
-
-
-
 
 fn ggqc_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
   ExtensionDeepDive(
@@ -978,11 +983,10 @@ fn ggqc_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Semiconductor Fab Statistical Process Control Corpus (semi_spc_85k)",
     dataset_record_count: 85_000,
     dataset_dimensions: [
-      "wafer_id", "lot_id", "step_timestamp_ms", "film_thickness_nm", "ucl_bound",
-      "lcl_bound", "out_of_control_flag", "tool_id",
+      "wafer_id", "lot_id", "step_timestamp_ms", "film_thickness_nm",
+      "ucl_bound", "lcl_bound", "out_of_control_flag", "tool_id",
     ],
-    dataset_schema_summary:
-      "85,000 semiconductor wafer process measurements with automated Nelson rule checks and capability indices.",
+    dataset_schema_summary: "85,000 semiconductor wafer process measurements with automated Nelson rule checks and capability indices.",
     bdd_scenarios: [
       "Scenario: Calculate 3-sigma control limits: UCL = X_bar + A2 * R_bar",
       "Scenario: Flag Nelson Rule 1 violations (points outside 3-sigma limits) in red",
@@ -1016,10 +1020,10 @@ fn cowplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Tidyverse Diamond Pricing Corpus (diamonds_50k)",
     dataset_record_count: 53_940,
     dataset_dimensions: [
-      "carat", "cut", "color", "clarity", "depth", "table", "price", "x", "y", "z",
+      "carat", "cut", "color", "clarity", "depth", "table", "price", "x", "y",
+      "z",
     ],
-    dataset_schema_summary:
-      "53,940 diamond records aligned across publication-grade 2x2 grid panels with shared extracted legends.",
+    dataset_schema_summary: "53,940 diamond records aligned across publication-grade 2x2 grid panels with shared extracted legends.",
     bdd_scenarios: [
       "Scenario: Align plot margins and axes across a 2x2 multi-panel layout",
       "Scenario: Extract shared legend and place in separate dedicated column",
@@ -1056,14 +1060,16 @@ fn ggmosaic_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "order_id", "product_categories", "intersection_size", "order_total_usd",
       "device_tier", "is_member",
     ],
-    dataset_schema_summary:
-      "95,000 multi-category consumer transactions rendered as area-proportional mosaic rectangles with contingency residuals.",
+    dataset_schema_summary: "95,000 multi-category consumer transactions rendered as area-proportional mosaic rectangles with contingency residuals.",
     bdd_scenarios: [
       "Scenario: Partition total canvas area proportionally to multi-way category frequencies",
       "Scenario: Shade mosaic tiles with diverging blue/red palette based on Pearson residuals",
       "Scenario: Verify total area of mosaic rectangles sums to 100% of plot bounds",
     ],
-    svg_rich_aspect: generate_hierarchical_svg(ext.name, "Hierarchical Partition"),
+    svg_rich_aspect: generate_hierarchical_svg(
+      ext.name,
+      "Hierarchical Partition",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -1094,8 +1100,7 @@ fn ggradar_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "sensor_id", "latitude", "longitude", "altitude_m", "vector_u", "vector_v",
       "pressure_hpa", "temp_c",
     ],
-    dataset_schema_summary:
-      "320,000 multi-metric telemetry samples mapped to equi-angular polar radar axes for rapid multivariate system health diagnosis.",
+    dataset_schema_summary: "320,000 multi-metric telemetry samples mapped to equi-angular polar radar axes for rapid multivariate system health diagnosis.",
     bdd_scenarios: [
       "Scenario: Map N normalized variables to equi-angular radial coordinates (theta_i = 2*pi*i/N)",
       "Scenario: Draw filled polygon connecting metric coordinates with translucent color",
@@ -1132,8 +1137,7 @@ fn ggbump_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "patient_id", "baseline_status", "stage1_response", "stage2_outcome",
       "adverse_event", "dosage_mg",
     ],
-    dataset_schema_summary:
-      "65,000 cohort ranking events tracked across time steps using smooth sigmoid bump trajectories.",
+    dataset_schema_summary: "65,000 cohort ranking events tracked across time steps using smooth sigmoid bump trajectories.",
     bdd_scenarios: [
       "Scenario: Interpolate ranking transitions with sigmoid curves preserving smoothness",
       "Scenario: Invert y-axis so Rank 1 appears at top of chart",
@@ -1170,14 +1174,16 @@ fn treemapify_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "event_id", "timestamp_us", "metric_alpha", "metric_beta", "category_id",
       "status_flag",
     ],
-    dataset_schema_summary:
-      "100,000 system telemetry records partitioned into squarified treemap tiles showing memory, CPU, and disk consumption.",
+    dataset_schema_summary: "100,000 system telemetry records partitioned into squarified treemap tiles showing memory, CPU, and disk consumption.",
     bdd_scenarios: [
       "Scenario: Compute squarified treemap aspect ratios preserving rect bounds <= 2.0",
       "Scenario: Verify area conservation across all nested parent-child partitions",
       "Scenario: Render text labels dynamically fitted inside enclosing bounding rectangles",
     ],
-    svg_rich_aspect: generate_hierarchical_svg(ext.name, "Hierarchical Partition"),
+    svg_rich_aspect: generate_hierarchical_svg(
+      ext.name,
+      "Hierarchical Partition",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -1208,14 +1214,16 @@ fn ggstatsplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "loan_id", "risk_score", "default_observed", "pred_prob", "sensitivity",
       "specificity", "auc_partial",
     ],
-    dataset_schema_summary:
-      "250,000 credit risk evaluations annotated with real-time Student's t-test, ANOVA, and Bayes factor statistical test summaries.",
+    dataset_schema_summary: "250,000 credit risk evaluations annotated with real-time Student's t-test, ANOVA, and Bayes factor statistical test summaries.",
     bdd_scenarios: [
       "Scenario: Compute statistical test subtitle: t(df) = 4.21, p < 0.001, log(BF10) = 5.32",
       "Scenario: Render violin density curve overlaid with boxplot and jittered observations",
       "Scenario: Calculate effect size confidence interval and display as error bar",
     ],
-    svg_rich_aspect: generate_statistical_svg(ext.name, "Statistical Diagnosis & Inference"),
+    svg_rich_aspect: generate_statistical_svg(
+      ext.name,
+      "Statistical Diagnosis & Inference",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l5",
   )
 }
@@ -1244,7 +1252,7 @@ fn pkg_ggqqunif_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggQQunif Frontier",
     ],
     dataset_name: "ggqqunif_empirical_series",
-    dataset_record_count: 32301,
+    dataset_record_count: 32_301,
     dataset_dimensions: [
       "ggqqunif_id",
       "observation_value",
@@ -1260,7 +1268,11 @@ fn pkg_ggqqunif_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggQQunif scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggQQunif rendering performance on 32301 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1285,7 +1297,7 @@ fn pkg_ggedit_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggedit Frontier",
     ],
     dataset_name: "ggedit_empirical_series",
-    dataset_record_count: 322752,
+    dataset_record_count: 322_752,
     dataset_dimensions: [
       "ggedit_id",
       "observation_value",
@@ -1301,7 +1313,11 @@ fn pkg_ggedit_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggedit scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggedit rendering performance on 322752 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1326,7 +1342,7 @@ fn pkg_ggpage_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpage Frontier",
     ],
     dataset_name: "ggpage_empirical_series",
-    dataset_record_count: 176139,
+    dataset_record_count: 176_139,
     dataset_dimensions: [
       "ggpage_id",
       "observation_value",
@@ -1342,7 +1358,11 @@ fn pkg_ggpage_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpage scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpage rendering performance on 176139 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1367,7 +1387,7 @@ fn pkg_ggimg_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggimg Frontier",
     ],
     dataset_name: "ggimg_empirical_series",
-    dataset_record_count: 157720,
+    dataset_record_count: 157_720,
     dataset_dimensions: [
       "ggimg_id",
       "observation_value",
@@ -1383,7 +1403,11 @@ fn pkg_ggimg_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggimg scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggimg rendering performance on 157720 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1408,7 +1432,7 @@ fn pkg_ggalt_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggalt Frontier",
     ],
     dataset_name: "ggalt_empirical_series",
-    dataset_record_count: 313242,
+    dataset_record_count: 313_242,
     dataset_dimensions: [
       "ggalt_id",
       "observation_value",
@@ -1424,7 +1448,11 @@ fn pkg_ggalt_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggalt scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggalt rendering performance on 313242 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1449,7 +1477,7 @@ fn pkg_ggiraph_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggiraph Frontier",
     ],
     dataset_name: "ggiraph_empirical_series",
-    dataset_record_count: 315396,
+    dataset_record_count: 315_396,
     dataset_dimensions: [
       "ggiraph_id",
       "observation_value",
@@ -1465,7 +1493,11 @@ fn pkg_ggiraph_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggiraph scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggiraph rendering performance on 315396 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1490,7 +1522,7 @@ fn pkg_ggmuller_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggmuller Frontier",
     ],
     dataset_name: "ggmuller_empirical_series",
-    dataset_record_count: 164289,
+    dataset_record_count: 164_289,
     dataset_dimensions: [
       "ggmuller_id",
       "observation_value",
@@ -1506,7 +1538,11 @@ fn pkg_ggmuller_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggmuller scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggmuller rendering performance on 164289 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1531,7 +1567,7 @@ fn pkg_ggstance_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggstance Frontier",
     ],
     dataset_name: "ggstance_empirical_series",
-    dataset_record_count: 326057,
+    dataset_record_count: 326_057,
     dataset_dimensions: [
       "ggstance_id",
       "observation_value",
@@ -1547,7 +1583,11 @@ fn pkg_ggstance_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggstance scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggstance rendering performance on 326057 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1572,7 +1612,7 @@ fn pkg_ggpp_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpp Frontier",
     ],
     dataset_name: "ggpp_empirical_series",
-    dataset_record_count: 48618,
+    dataset_record_count: 48_618,
     dataset_dimensions: [
       "ggpp_id",
       "observation_value",
@@ -1588,7 +1628,11 @@ fn pkg_ggpp_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpp scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpp rendering performance on 48618 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1613,7 +1657,7 @@ fn pkg_ggpmisc_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpmisc Frontier",
     ],
     dataset_name: "ggpmisc_empirical_series",
-    dataset_record_count: 326831,
+    dataset_record_count: 326_831,
     dataset_dimensions: [
       "ggpmisc_id",
       "observation_value",
@@ -1629,7 +1673,11 @@ fn pkg_ggpmisc_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpmisc scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpmisc rendering performance on 326831 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1654,7 +1702,7 @@ fn pkg_geomnet_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical geomnet Frontier",
     ],
     dataset_name: "geomnet_empirical_series",
-    dataset_record_count: 342180,
+    dataset_record_count: 342_180,
     dataset_dimensions: [
       "geomnet_id",
       "observation_value",
@@ -1670,7 +1718,11 @@ fn pkg_geomnet_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify geomnet scale transformations and coordinate boundary clipping",
       "Scenario: Validate geomnet rendering performance on 342180 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1695,7 +1747,7 @@ fn pkg_ggextra_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggExtra Frontier",
     ],
     dataset_name: "ggextra_empirical_series",
-    dataset_record_count: 37318,
+    dataset_record_count: 37_318,
     dataset_dimensions: [
       "ggextra_id",
       "observation_value",
@@ -1711,7 +1763,11 @@ fn pkg_ggextra_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggExtra scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggExtra rendering performance on 37318 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1736,7 +1792,7 @@ fn pkg_ggfortify_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggfortify Frontier",
     ],
     dataset_name: "ggfortify_empirical_series",
-    dataset_record_count: 350697,
+    dataset_record_count: 350_697,
     dataset_dimensions: [
       "ggfortify_id",
       "observation_value",
@@ -1752,7 +1808,11 @@ fn pkg_ggfortify_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggfortify scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggfortify rendering performance on 350697 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1777,7 +1837,7 @@ fn pkg_autoplotly_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical autoplotly Frontier",
     ],
     dataset_name: "autoplotly_empirical_series",
-    dataset_record_count: 138510,
+    dataset_record_count: 138_510,
     dataset_dimensions: [
       "autoplotly_id",
       "observation_value",
@@ -1793,7 +1853,11 @@ fn pkg_autoplotly_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify autoplotly scale transformations and coordinate boundary clipping",
       "Scenario: Validate autoplotly rendering performance on 138510 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1818,7 +1882,7 @@ fn pkg_ggthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggthemes Frontier",
     ],
     dataset_name: "ggthemes_empirical_series",
-    dataset_record_count: 313784,
+    dataset_record_count: 313_784,
     dataset_dimensions: [
       "ggthemes_id",
       "observation_value",
@@ -1834,7 +1898,11 @@ fn pkg_ggthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggthemes scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggthemes rendering performance on 313784 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1859,7 +1927,7 @@ fn pkg_ggspectra_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggspectra Frontier",
     ],
     dataset_name: "ggspectra_empirical_series",
-    dataset_record_count: 222230,
+    dataset_record_count: 222_230,
     dataset_dimensions: [
       "ggspectra_id",
       "observation_value",
@@ -1875,7 +1943,11 @@ fn pkg_ggspectra_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggspectra scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggspectra rendering performance on 222230 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1900,7 +1972,7 @@ fn pkg_ggtech_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggtech Frontier",
     ],
     dataset_name: "ggtech_empirical_series",
-    dataset_record_count: 317161,
+    dataset_record_count: 317_161,
     dataset_dimensions: [
       "ggtech_id",
       "observation_value",
@@ -1916,7 +1988,11 @@ fn pkg_ggtech_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggtech scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggtech rendering performance on 317161 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1941,7 +2017,7 @@ fn pkg_ggx_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggx Frontier",
     ],
     dataset_name: "ggx_empirical_series",
-    dataset_record_count: 199200,
+    dataset_record_count: 199_200,
     dataset_dimensions: [
       "ggx_id",
       "observation_value",
@@ -1957,7 +2033,11 @@ fn pkg_ggx_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggx scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggx rendering performance on 199200 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -1982,7 +2062,7 @@ fn pkg_ggseas_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggseas Frontier",
     ],
     dataset_name: "ggseas_empirical_series",
-    dataset_record_count: 280028,
+    dataset_record_count: 280_028,
     dataset_dimensions: [
       "ggseas_id",
       "observation_value",
@@ -1998,7 +2078,11 @@ fn pkg_ggseas_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggseas scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggseas rendering performance on 280028 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2023,7 +2107,7 @@ fn pkg_ggsci_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsci Frontier",
     ],
     dataset_name: "ggsci_empirical_series",
-    dataset_record_count: 310070,
+    dataset_record_count: 310_070,
     dataset_dimensions: [
       "ggsci_id",
       "observation_value",
@@ -2039,7 +2123,11 @@ fn pkg_ggsci_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsci scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsci rendering performance on 310070 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2064,7 +2152,7 @@ fn pkg_ggeasy_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggeasy Frontier",
     ],
     dataset_name: "ggeasy_empirical_series",
-    dataset_record_count: 320447,
+    dataset_record_count: 320_447,
     dataset_dimensions: [
       "ggeasy_id",
       "observation_value",
@@ -2080,7 +2168,11 @@ fn pkg_ggeasy_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggeasy scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggeasy rendering performance on 320447 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2105,7 +2197,7 @@ fn pkg_ggside_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggside Frontier",
     ],
     dataset_name: "ggside_empirical_series",
-    dataset_record_count: 218403,
+    dataset_record_count: 218_403,
     dataset_dimensions: [
       "ggside_id",
       "observation_value",
@@ -2121,7 +2213,11 @@ fn pkg_ggside_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggside scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggside rendering performance on 218403 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2146,7 +2242,7 @@ fn pkg_ggthemr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggthemr Frontier",
     ],
     dataset_name: "ggthemr_empirical_series",
-    dataset_record_count: 175694,
+    dataset_record_count: 175_694,
     dataset_dimensions: [
       "ggthemr_id",
       "observation_value",
@@ -2162,7 +2258,11 @@ fn pkg_ggthemr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggthemr scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggthemr rendering performance on 175694 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2187,7 +2287,7 @@ fn pkg_ggally_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical GGally Frontier",
     ],
     dataset_name: "ggally_empirical_series",
-    dataset_record_count: 321720,
+    dataset_record_count: 321_720,
     dataset_dimensions: [
       "ggally_id",
       "observation_value",
@@ -2203,7 +2303,11 @@ fn pkg_ggally_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify GGally scale transformations and coordinate boundary clipping",
       "Scenario: Validate GGally rendering performance on 321720 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2228,7 +2332,7 @@ fn pkg_ggseqlogo_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggseqlogo Frontier",
     ],
     dataset_name: "ggseqlogo_empirical_series",
-    dataset_record_count: 312690,
+    dataset_record_count: 312_690,
     dataset_dimensions: [
       "ggseqlogo_id",
       "observation_value",
@@ -2244,7 +2348,11 @@ fn pkg_ggseqlogo_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggseqlogo scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggseqlogo rendering performance on 312690 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2269,7 +2377,7 @@ fn pkg_lemon_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical lemon Frontier",
     ],
     dataset_name: "lemon_empirical_series",
-    dataset_record_count: 301260,
+    dataset_record_count: 301_260,
     dataset_dimensions: [
       "lemon_id",
       "observation_value",
@@ -2285,7 +2393,11 @@ fn pkg_lemon_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify lemon scale transformations and coordinate boundary clipping",
       "Scenario: Validate lemon rendering performance on 301260 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2310,7 +2422,7 @@ fn pkg_qqplotr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical qqplotr Frontier",
     ],
     dataset_name: "qqplotr_empirical_series",
-    dataset_record_count: 55730,
+    dataset_record_count: 55_730,
     dataset_dimensions: [
       "qqplotr_id",
       "observation_value",
@@ -2326,7 +2438,11 @@ fn pkg_qqplotr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify qqplotr scale transformations and coordinate boundary clipping",
       "Scenario: Validate qqplotr rendering performance on 55730 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2351,7 +2467,7 @@ fn pkg_ggquiver_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggquiver Frontier",
     ],
     dataset_name: "ggquiver_empirical_series",
-    dataset_record_count: 220559,
+    dataset_record_count: 220_559,
     dataset_dimensions: [
       "ggquiver_id",
       "observation_value",
@@ -2367,7 +2483,11 @@ fn pkg_ggquiver_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggquiver scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggquiver rendering performance on 220559 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2392,7 +2512,7 @@ fn pkg_ggsignif_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsignif Frontier",
     ],
     dataset_name: "ggsignif_empirical_series",
-    dataset_record_count: 330473,
+    dataset_record_count: 330_473,
     dataset_dimensions: [
       "ggsignif_id",
       "observation_value",
@@ -2408,7 +2528,11 @@ fn pkg_ggsignif_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsignif scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsignif rendering performance on 330473 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2433,7 +2557,7 @@ fn pkg_ggformula_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggformula Frontier",
     ],
     dataset_name: "ggformula_empirical_series",
-    dataset_record_count: 149299,
+    dataset_record_count: 149_299,
     dataset_dimensions: [
       "ggformula_id",
       "observation_value",
@@ -2449,7 +2573,11 @@ fn pkg_ggformula_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggformula scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggformula rendering performance on 149299 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2474,7 +2602,7 @@ fn pkg_ggperiodic_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggperiodic Frontier",
     ],
     dataset_name: "ggperiodic_empirical_series",
-    dataset_record_count: 205834,
+    dataset_record_count: 205_834,
     dataset_dimensions: [
       "ggperiodic_id",
       "observation_value",
@@ -2490,7 +2618,11 @@ fn pkg_ggperiodic_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggperiodic scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggperiodic rendering performance on 205834 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2515,7 +2647,7 @@ fn pkg_ggpol_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpol Frontier",
     ],
     dataset_name: "ggpol_empirical_series",
-    dataset_record_count: 171355,
+    dataset_record_count: 171_355,
     dataset_dimensions: [
       "ggpol_id",
       "observation_value",
@@ -2531,7 +2663,11 @@ fn pkg_ggpol_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpol scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpol rendering performance on 171355 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2556,7 +2692,7 @@ fn pkg_ggpirate_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpirate Frontier",
     ],
     dataset_name: "ggpirate_empirical_series",
-    dataset_record_count: 331609,
+    dataset_record_count: 331_609,
     dataset_dimensions: [
       "ggpirate_id",
       "observation_value",
@@ -2572,7 +2708,11 @@ fn pkg_ggpirate_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpirate scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpirate rendering performance on 331609 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2597,7 +2737,7 @@ fn pkg_esquisse_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical esquisse Frontier",
     ],
     dataset_name: "esquisse_empirical_series",
-    dataset_record_count: 149897,
+    dataset_record_count: 149_897,
     dataset_dimensions: [
       "esquisse_id",
       "observation_value",
@@ -2613,7 +2753,11 @@ fn pkg_esquisse_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify esquisse scale transformations and coordinate boundary clipping",
       "Scenario: Validate esquisse rendering performance on 149897 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2638,7 +2782,7 @@ fn pkg_ggerror_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggerror Frontier",
     ],
     dataset_name: "ggerror_empirical_series",
-    dataset_record_count: 159113,
+    dataset_record_count: 159_113,
     dataset_dimensions: [
       "ggerror_id",
       "observation_value",
@@ -2654,7 +2798,11 @@ fn pkg_ggerror_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggerror scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggerror rendering performance on 159113 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2679,7 +2827,7 @@ fn pkg_ggdark_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggdark Frontier",
     ],
     dataset_name: "ggdark_empirical_series",
-    dataset_record_count: 173485,
+    dataset_record_count: 173_485,
     dataset_dimensions: [
       "ggdark_id",
       "observation_value",
@@ -2695,7 +2843,11 @@ fn pkg_ggdark_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggdark scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggdark rendering performance on 173485 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2720,7 +2872,7 @@ fn pkg_sugrrants_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical sugrrants Frontier",
     ],
     dataset_name: "sugrrants_empirical_series",
-    dataset_record_count: 345203,
+    dataset_record_count: 345_203,
     dataset_dimensions: [
       "sugrrants_id",
       "observation_value",
@@ -2736,7 +2888,11 @@ fn pkg_sugrrants_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify sugrrants scale transformations and coordinate boundary clipping",
       "Scenario: Validate sugrrants rendering performance on 345203 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2761,7 +2917,7 @@ fn pkg_tvthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical tvthemes Frontier",
     ],
     dataset_name: "tvthemes_empirical_series",
-    dataset_record_count: 50156,
+    dataset_record_count: 50_156,
     dataset_dimensions: [
       "tvthemes_id",
       "observation_value",
@@ -2777,7 +2933,11 @@ fn pkg_tvthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify tvthemes scale transformations and coordinate boundary clipping",
       "Scenario: Validate tvthemes rendering performance on 50156 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2802,7 +2962,7 @@ fn pkg_ggfittext_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggfittext Frontier",
     ],
     dataset_name: "ggfittext_empirical_series",
-    dataset_record_count: 183952,
+    dataset_record_count: 183_952,
     dataset_dimensions: [
       "ggfittext_id",
       "observation_value",
@@ -2818,7 +2978,11 @@ fn pkg_ggfittext_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggfittext scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggfittext rendering performance on 183952 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2843,7 +3007,7 @@ fn pkg_gggenomes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical gggenomes Frontier",
     ],
     dataset_name: "gggenomes_empirical_series",
-    dataset_record_count: 121098,
+    dataset_record_count: 121_098,
     dataset_dimensions: [
       "gggenomes_id",
       "observation_value",
@@ -2859,7 +3023,11 @@ fn pkg_gggenomes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify gggenomes scale transformations and coordinate boundary clipping",
       "Scenario: Validate gggenomes rendering performance on 121098 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2884,7 +3052,7 @@ fn pkg_lindia_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical lindia Frontier",
     ],
     dataset_name: "lindia_empirical_series",
-    dataset_record_count: 140093,
+    dataset_record_count: 140_093,
     dataset_dimensions: [
       "lindia_id",
       "observation_value",
@@ -2900,7 +3068,11 @@ fn pkg_lindia_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify lindia scale transformations and coordinate boundary clipping",
       "Scenario: Validate lindia rendering performance on 140093 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2925,7 +3097,7 @@ fn pkg_ggrastr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggrastr Frontier",
     ],
     dataset_name: "ggrastr_empirical_series",
-    dataset_record_count: 27073,
+    dataset_record_count: 27_073,
     dataset_dimensions: [
       "ggrastr_id",
       "observation_value",
@@ -2941,7 +3113,11 @@ fn pkg_ggrastr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggrastr scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggrastr rendering performance on 27073 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -2966,7 +3142,7 @@ fn pkg_ggpointdensity_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpointdensity Frontier",
     ],
     dataset_name: "ggpointdensity_empirical_series",
-    dataset_record_count: 180906,
+    dataset_record_count: 180_906,
     dataset_dimensions: [
       "ggpointdensity_id",
       "observation_value",
@@ -2982,7 +3158,11 @@ fn pkg_ggpointdensity_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpointdensity scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpointdensity rendering performance on 180906 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3007,7 +3187,7 @@ fn pkg_ggsom_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsom Frontier",
     ],
     dataset_name: "ggsom_empirical_series",
-    dataset_record_count: 121432,
+    dataset_record_count: 121_432,
     dataset_dimensions: [
       "ggsom_id",
       "observation_value",
@@ -3023,7 +3203,11 @@ fn pkg_ggsom_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsom scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsom rendering performance on 121432 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3048,7 +3232,7 @@ fn pkg_ggarrow_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggarrow Frontier",
     ],
     dataset_name: "ggarrow_empirical_series",
-    dataset_record_count: 254477,
+    dataset_record_count: 254_477,
     dataset_dimensions: [
       "ggarrow_id",
       "observation_value",
@@ -3064,7 +3248,11 @@ fn pkg_ggarrow_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggarrow scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggarrow rendering performance on 254477 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3089,7 +3277,7 @@ fn pkg_legendry_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical legendry Frontier",
     ],
     dataset_name: "legendry_empirical_series",
-    dataset_record_count: 339031,
+    dataset_record_count: 339_031,
     dataset_dimensions: [
       "legendry_id",
       "observation_value",
@@ -3105,7 +3293,11 @@ fn pkg_legendry_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify legendry scale transformations and coordinate boundary clipping",
       "Scenario: Validate legendry rendering performance on 339031 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3130,7 +3322,7 @@ fn pkg_ggcharts_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggcharts Frontier",
     ],
     dataset_name: "ggcharts_empirical_series",
-    dataset_record_count: 322031,
+    dataset_record_count: 322_031,
     dataset_dimensions: [
       "ggcharts_id",
       "observation_value",
@@ -3146,7 +3338,11 @@ fn pkg_ggcharts_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggcharts scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggcharts rendering performance on 322031 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3171,7 +3367,7 @@ fn pkg_humapr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical humapr Frontier",
     ],
     dataset_name: "humapr_empirical_series",
-    dataset_record_count: 27432,
+    dataset_record_count: 27_432,
     dataset_dimensions: [
       "humapr_id",
       "observation_value",
@@ -3187,7 +3383,11 @@ fn pkg_humapr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify humapr scale transformations and coordinate boundary clipping",
       "Scenario: Validate humapr rendering performance on 27432 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3212,7 +3412,7 @@ fn pkg_ggshadow_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggshadow Frontier",
     ],
     dataset_name: "ggshadow_empirical_series",
-    dataset_record_count: 343295,
+    dataset_record_count: 343_295,
     dataset_dimensions: [
       "ggshadow_id",
       "observation_value",
@@ -3228,7 +3428,11 @@ fn pkg_ggshadow_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggshadow scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggshadow rendering performance on 343295 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3253,7 +3457,7 @@ fn pkg_ggseg_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggseg Frontier",
     ],
     dataset_name: "ggseg_empirical_series",
-    dataset_record_count: 224210,
+    dataset_record_count: 224_210,
     dataset_dimensions: [
       "ggseg_id",
       "observation_value",
@@ -3269,7 +3473,11 @@ fn pkg_ggseg_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggseg scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggseg rendering performance on 224210 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3294,7 +3502,7 @@ fn pkg_mdthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical mdthemes Frontier",
     ],
     dataset_name: "mdthemes_empirical_series",
-    dataset_record_count: 194133,
+    dataset_record_count: 194_133,
     dataset_dimensions: [
       "mdthemes_id",
       "observation_value",
@@ -3310,7 +3518,11 @@ fn pkg_mdthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify mdthemes scale transformations and coordinate boundary clipping",
       "Scenario: Validate mdthemes rendering performance on 194133 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3335,7 +3547,7 @@ fn pkg_ggwordcloud_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggwordcloud Frontier",
     ],
     dataset_name: "ggwordcloud_empirical_series",
-    dataset_record_count: 114027,
+    dataset_record_count: 114_027,
     dataset_dimensions: [
       "ggwordcloud_id",
       "observation_value",
@@ -3351,7 +3563,11 @@ fn pkg_ggwordcloud_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggwordcloud scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggwordcloud rendering performance on 114027 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3376,7 +3592,7 @@ fn pkg_ggasym_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggasym Frontier",
     ],
     dataset_name: "ggasym_empirical_series",
-    dataset_record_count: 243043,
+    dataset_record_count: 243_043,
     dataset_dimensions: [
       "ggasym_id",
       "observation_value",
@@ -3392,7 +3608,11 @@ fn pkg_ggasym_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggasym scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggasym rendering performance on 243043 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3417,7 +3637,7 @@ fn pkg_gglorenz_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical gglorenz Frontier",
     ],
     dataset_name: "gglorenz_empirical_series",
-    dataset_record_count: 227018,
+    dataset_record_count: 227_018,
     dataset_dimensions: [
       "gglorenz_id",
       "observation_value",
@@ -3433,7 +3653,11 @@ fn pkg_gglorenz_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify gglorenz scale transformations and coordinate boundary clipping",
       "Scenario: Validate gglorenz rendering performance on 227018 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3458,7 +3682,7 @@ fn pkg_hrbrthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical hrbrthemes Frontier",
     ],
     dataset_name: "hrbrthemes_empirical_series",
-    dataset_record_count: 280659,
+    dataset_record_count: 280_659,
     dataset_dimensions: [
       "hrbrthemes_id",
       "observation_value",
@@ -3474,7 +3698,11 @@ fn pkg_hrbrthemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify hrbrthemes scale transformations and coordinate boundary clipping",
       "Scenario: Validate hrbrthemes rendering performance on 280659 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3499,7 +3727,7 @@ fn pkg_ggpattern_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpattern Frontier",
     ],
     dataset_name: "ggpattern_empirical_series",
-    dataset_record_count: 88467,
+    dataset_record_count: 88_467,
     dataset_dimensions: [
       "ggpattern_id",
       "observation_value",
@@ -3515,7 +3743,11 @@ fn pkg_ggpattern_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpattern scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpattern rendering performance on 88467 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3540,7 +3772,7 @@ fn pkg_ggtext_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggtext Frontier",
     ],
     dataset_name: "ggtext_empirical_series",
-    dataset_record_count: 31363,
+    dataset_record_count: 31_363,
     dataset_dimensions: [
       "ggtext_id",
       "observation_value",
@@ -3556,7 +3788,11 @@ fn pkg_ggtext_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggtext scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggtext rendering performance on 31363 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3581,7 +3817,7 @@ fn pkg_calendr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical calendR Frontier",
     ],
     dataset_name: "calendr_empirical_series",
-    dataset_record_count: 358673,
+    dataset_record_count: 358_673,
     dataset_dimensions: [
       "calendr_id",
       "observation_value",
@@ -3597,7 +3833,11 @@ fn pkg_calendr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify calendR scale transformations and coordinate boundary clipping",
       "Scenario: Validate calendR rendering performance on 358673 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3622,7 +3862,7 @@ fn pkg_ggip_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggip Frontier",
     ],
     dataset_name: "ggip_empirical_series",
-    dataset_record_count: 264259,
+    dataset_record_count: 264_259,
     dataset_dimensions: [
       "ggip_id",
       "observation_value",
@@ -3638,7 +3878,11 @@ fn pkg_ggip_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggip scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggip rendering performance on 264259 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3663,7 +3907,7 @@ fn pkg_gglm_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical gglm Frontier",
     ],
     dataset_name: "gglm_empirical_series",
-    dataset_record_count: 228310,
+    dataset_record_count: 228_310,
     dataset_dimensions: [
       "gglm_id",
       "observation_value",
@@ -3679,7 +3923,11 @@ fn pkg_gglm_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify gglm scale transformations and coordinate boundary clipping",
       "Scenario: Validate gglm rendering performance on 228310 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3704,7 +3952,7 @@ fn pkg_econocharts_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical econocharts Frontier",
     ],
     dataset_name: "econocharts_empirical_series",
-    dataset_record_count: 238197,
+    dataset_record_count: 238_197,
     dataset_dimensions: [
       "econocharts_id",
       "observation_value",
@@ -3720,7 +3968,11 @@ fn pkg_econocharts_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify econocharts scale transformations and coordinate boundary clipping",
       "Scenario: Validate econocharts rendering performance on 238197 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3745,7 +3997,7 @@ fn pkg_complexupset_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ComplexUpset Frontier",
     ],
     dataset_name: "complexupset_empirical_series",
-    dataset_record_count: 212275,
+    dataset_record_count: 212_275,
     dataset_dimensions: [
       "complexupset_id",
       "observation_value",
@@ -3761,7 +4013,11 @@ fn pkg_complexupset_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ComplexUpset scale transformations and coordinate boundary clipping",
       "Scenario: Validate ComplexUpset rendering performance on 212275 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3786,7 +4042,7 @@ fn pkg_ggchromatic_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggchromatic Frontier",
     ],
     dataset_name: "ggchromatic_empirical_series",
-    dataset_record_count: 344653,
+    dataset_record_count: 344_653,
     dataset_dimensions: [
       "ggchromatic_id",
       "observation_value",
@@ -3802,7 +4058,11 @@ fn pkg_ggchromatic_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggchromatic scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggchromatic rendering performance on 344653 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3827,7 +4087,7 @@ fn pkg_ggheatmap_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggheatmap Frontier",
     ],
     dataset_name: "ggheatmap_empirical_series",
-    dataset_record_count: 224673,
+    dataset_record_count: 224_673,
     dataset_dimensions: [
       "ggheatmap_id",
       "observation_value",
@@ -3843,7 +4103,11 @@ fn pkg_ggheatmap_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggheatmap scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggheatmap rendering performance on 224673 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3868,7 +4132,7 @@ fn pkg_directlabels_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical directlabels Frontier",
     ],
     dataset_name: "directlabels_empirical_series",
-    dataset_record_count: 361545,
+    dataset_record_count: 361_545,
     dataset_dimensions: [
       "directlabels_id",
       "observation_value",
@@ -3884,7 +4148,11 @@ fn pkg_directlabels_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify directlabels scale transformations and coordinate boundary clipping",
       "Scenario: Validate directlabels rendering performance on 361545 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3909,7 +4177,7 @@ fn pkg_gghoriplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggHoriPlot Frontier",
     ],
     dataset_name: "gghoriplot_empirical_series",
-    dataset_record_count: 45597,
+    dataset_record_count: 45_597,
     dataset_dimensions: [
       "gghoriplot_id",
       "observation_value",
@@ -3925,7 +4193,11 @@ fn pkg_gghoriplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggHoriPlot scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggHoriPlot rendering performance on 45597 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3950,7 +4222,7 @@ fn pkg_ggtrace_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggtrace Frontier",
     ],
     dataset_name: "ggtrace_empirical_series",
-    dataset_record_count: 274782,
+    dataset_record_count: 274_782,
     dataset_dimensions: [
       "ggtrace_id",
       "observation_value",
@@ -3966,7 +4238,11 @@ fn pkg_ggtrace_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggtrace scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggtrace rendering performance on 274782 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -3991,7 +4267,7 @@ fn pkg_ggesda_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggESDA Frontier",
     ],
     dataset_name: "ggesda_empirical_series",
-    dataset_record_count: 93029,
+    dataset_record_count: 93_029,
     dataset_dimensions: [
       "ggesda_id",
       "observation_value",
@@ -4007,7 +4283,11 @@ fn pkg_ggesda_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggESDA scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggESDA rendering performance on 93029 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4032,7 +4312,7 @@ fn pkg_ggdensity_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggdensity Frontier",
     ],
     dataset_name: "ggdensity_empirical_series",
-    dataset_record_count: 193684,
+    dataset_record_count: 193_684,
     dataset_dimensions: [
       "ggdensity_id",
       "observation_value",
@@ -4048,7 +4328,11 @@ fn pkg_ggdensity_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggdensity scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggdensity rendering performance on 193684 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4073,7 +4357,7 @@ fn pkg_ggtranscript_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggtranscript Frontier",
     ],
     dataset_name: "ggtranscript_empirical_series",
-    dataset_record_count: 258246,
+    dataset_record_count: 258_246,
     dataset_dimensions: [
       "ggtranscript_id",
       "observation_value",
@@ -4089,7 +4373,11 @@ fn pkg_ggtranscript_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggtranscript scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggtranscript rendering performance on 258246 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4114,7 +4402,7 @@ fn pkg_piecepackr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical piecepackr Frontier",
     ],
     dataset_name: "piecepackr_empirical_series",
-    dataset_record_count: 219919,
+    dataset_record_count: 219_919,
     dataset_dimensions: [
       "piecepackr_id",
       "observation_value",
@@ -4130,7 +4418,11 @@ fn pkg_piecepackr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify piecepackr scale transformations and coordinate boundary clipping",
       "Scenario: Validate piecepackr rendering performance on 219919 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4155,7 +4447,7 @@ fn pkg_oblicubes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical oblicubes Frontier",
     ],
     dataset_name: "oblicubes_empirical_series",
-    dataset_record_count: 221233,
+    dataset_record_count: 221_233,
     dataset_dimensions: [
       "oblicubes_id",
       "observation_value",
@@ -4171,7 +4463,11 @@ fn pkg_oblicubes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify oblicubes scale transformations and coordinate boundary clipping",
       "Scenario: Validate oblicubes rendering performance on 221233 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4196,7 +4492,7 @@ fn pkg_ggdoubleheat_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggDoubleHeat Frontier",
     ],
     dataset_name: "ggdoubleheat_empirical_series",
-    dataset_record_count: 80865,
+    dataset_record_count: 80_865,
     dataset_dimensions: [
       "ggdoubleheat_id",
       "observation_value",
@@ -4212,7 +4508,11 @@ fn pkg_ggdoubleheat_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggDoubleHeat scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggDoubleHeat rendering performance on 80865 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4237,7 +4537,7 @@ fn pkg_nflplotr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical nflplotR Frontier",
     ],
     dataset_name: "nflplotr_empirical_series",
-    dataset_record_count: 201506,
+    dataset_record_count: 201_506,
     dataset_dimensions: [
       "nflplotr_id",
       "observation_value",
@@ -4253,7 +4553,11 @@ fn pkg_nflplotr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify nflplotR scale transformations and coordinate boundary clipping",
       "Scenario: Validate nflplotR rendering performance on 201506 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4278,7 +4582,7 @@ fn pkg_ggbraid_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggbraid Frontier",
     ],
     dataset_name: "ggbraid_empirical_series",
-    dataset_record_count: 340998,
+    dataset_record_count: 340_998,
     dataset_dimensions: [
       "ggbraid_id",
       "observation_value",
@@ -4294,7 +4598,11 @@ fn pkg_ggbraid_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggbraid scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggbraid rendering performance on 340998 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4319,7 +4627,7 @@ fn pkg_ggpie_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpie Frontier",
     ],
     dataset_name: "ggpie_empirical_series",
-    dataset_record_count: 216386,
+    dataset_record_count: 216_386,
     dataset_dimensions: [
       "ggpie_id",
       "observation_value",
@@ -4335,7 +4643,11 @@ fn pkg_ggpie_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpie scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpie rendering performance on 216386 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4360,7 +4672,7 @@ fn pkg_ggstar_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggstar Frontier",
     ],
     dataset_name: "ggstar_empirical_series",
-    dataset_record_count: 206647,
+    dataset_record_count: 206_647,
     dataset_dimensions: [
       "ggstar_id",
       "observation_value",
@@ -4376,7 +4688,11 @@ fn pkg_ggstar_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggstar scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggstar rendering performance on 206647 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4401,7 +4717,7 @@ fn pkg_ggarchery_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggarchery Frontier",
     ],
     dataset_name: "ggarchery_empirical_series",
-    dataset_record_count: 100208,
+    dataset_record_count: 100_208,
     dataset_dimensions: [
       "ggarchery_id",
       "observation_value",
@@ -4417,7 +4733,11 @@ fn pkg_ggarchery_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggarchery scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggarchery rendering performance on 100208 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4442,7 +4762,7 @@ fn pkg_tidyterra_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical tidyterra Frontier",
     ],
     dataset_name: "tidyterra_empirical_series",
-    dataset_record_count: 68702,
+    dataset_record_count: 68_702,
     dataset_dimensions: [
       "tidyterra_id",
       "observation_value",
@@ -4458,7 +4778,11 @@ fn pkg_tidyterra_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify tidyterra scale transformations and coordinate boundary clipping",
       "Scenario: Validate tidyterra rendering performance on 68702 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4483,7 +4807,7 @@ fn pkg_ggseqplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggseqplot Frontier",
     ],
     dataset_name: "ggseqplot_empirical_series",
-    dataset_record_count: 100523,
+    dataset_record_count: 100_523,
     dataset_dimensions: [
       "ggseqplot_id",
       "observation_value",
@@ -4499,7 +4823,11 @@ fn pkg_ggseqplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggseqplot scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggseqplot rendering performance on 100523 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4524,7 +4852,7 @@ fn pkg_ggsurvfit_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsurvfit Frontier",
     ],
     dataset_name: "ggsurvfit_empirical_series",
-    dataset_record_count: 224697,
+    dataset_record_count: 224_697,
     dataset_dimensions: [
       "ggsurvfit_id",
       "observation_value",
@@ -4540,7 +4868,11 @@ fn pkg_ggsurvfit_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsurvfit scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsurvfit rendering performance on 224697 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4565,7 +4897,7 @@ fn pkg_ggsector_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsector Frontier",
     ],
     dataset_name: "ggsector_empirical_series",
-    dataset_record_count: 40622,
+    dataset_record_count: 40_622,
     dataset_dimensions: [
       "ggsector_id",
       "observation_value",
@@ -4581,7 +4913,11 @@ fn pkg_ggsector_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsector scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsector rendering performance on 40622 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4606,7 +4942,7 @@ fn pkg_ggterror_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggterror Frontier",
     ],
     dataset_name: "ggterror_empirical_series",
-    dataset_record_count: 346960,
+    dataset_record_count: 346_960,
     dataset_dimensions: [
       "ggterror_id",
       "observation_value",
@@ -4622,7 +4958,11 @@ fn pkg_ggterror_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggterror scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggterror rendering performance on 346960 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4647,7 +4987,7 @@ fn pkg_ggragged_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggragged Frontier",
     ],
     dataset_name: "ggragged_empirical_series",
-    dataset_record_count: 207285,
+    dataset_record_count: 207_285,
     dataset_dimensions: [
       "ggragged_id",
       "observation_value",
@@ -4663,7 +5003,11 @@ fn pkg_ggragged_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggragged scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggragged rendering performance on 207285 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4688,7 +5032,7 @@ fn pkg_ggmapinset_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggmapinset Frontier",
     ],
     dataset_name: "ggmapinset_empirical_series",
-    dataset_record_count: 346173,
+    dataset_record_count: 346_173,
     dataset_dimensions: [
       "ggmapinset_id",
       "observation_value",
@@ -4704,7 +5048,11 @@ fn pkg_ggmapinset_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggmapinset scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggmapinset rendering performance on 346173 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4729,7 +5077,7 @@ fn pkg_ggblend_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggblend Frontier",
     ],
     dataset_name: "ggblend_empirical_series",
-    dataset_record_count: 162232,
+    dataset_record_count: 162_232,
     dataset_dimensions: [
       "ggblend_id",
       "observation_value",
@@ -4745,7 +5093,11 @@ fn pkg_ggblend_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggblend scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggblend rendering performance on 162232 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4770,7 +5122,7 @@ fn pkg_ggflowchart_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggflowchart Frontier",
     ],
     dataset_name: "ggflowchart_empirical_series",
-    dataset_record_count: 229135,
+    dataset_record_count: 229_135,
     dataset_dimensions: [
       "ggflowchart_id",
       "observation_value",
@@ -4786,7 +5138,11 @@ fn pkg_ggflowchart_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggflowchart scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggflowchart rendering performance on 229135 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4811,7 +5167,7 @@ fn pkg_ggrain_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggrain Frontier",
     ],
     dataset_name: "ggrain_empirical_series",
-    dataset_record_count: 225430,
+    dataset_record_count: 225_430,
     dataset_dimensions: [
       "ggrain_id",
       "observation_value",
@@ -4827,12 +5183,18 @@ fn pkg_ggrain_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggrain scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggrain rendering performance on 225430 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
 
-fn pkg_ggoutlierscatterplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
+fn pkg_ggoutlierscatterplot_deep_dive(
+  ext: ExtensionMetadata,
+) -> ExtensionDeepDive {
   ExtensionDeepDive(
     name: ext.name,
     author: ext.author,
@@ -4852,7 +5214,7 @@ fn pkg_ggoutlierscatterplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDi
       "Empirical ggoutlierscatterplot Frontier",
     ],
     dataset_name: "ggoutlierscatterplot_empirical_series",
-    dataset_record_count: 204798,
+    dataset_record_count: 204_798,
     dataset_dimensions: [
       "ggoutlierscatterplot_id",
       "observation_value",
@@ -4868,7 +5230,11 @@ fn pkg_ggoutlierscatterplot_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDi
       "Scenario: Verify ggoutlierscatterplot scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggoutlierscatterplot rendering performance on 204798 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4893,7 +5259,7 @@ fn pkg_ggautothemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggautothemes Frontier",
     ],
     dataset_name: "ggautothemes_empirical_series",
-    dataset_record_count: 217740,
+    dataset_record_count: 217_740,
     dataset_dimensions: [
       "ggautothemes_id",
       "observation_value",
@@ -4909,7 +5275,11 @@ fn pkg_ggautothemes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggautothemes scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggautothemes rendering performance on 217740 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4934,7 +5304,7 @@ fn pkg_amr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical AMR Frontier",
     ],
     dataset_name: "amr_empirical_series",
-    dataset_record_count: 45897,
+    dataset_record_count: 45_897,
     dataset_dimensions: [
       "amr_id",
       "observation_value",
@@ -4950,7 +5320,11 @@ fn pkg_amr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify AMR scale transformations and coordinate boundary clipping",
       "Scenario: Validate AMR rendering performance on 45897 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -4975,7 +5349,7 @@ fn pkg_ichimoku_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ichimoku Frontier",
     ],
     dataset_name: "ichimoku_empirical_series",
-    dataset_record_count: 153506,
+    dataset_record_count: 153_506,
     dataset_dimensions: [
       "ichimoku_id",
       "observation_value",
@@ -4991,7 +5365,11 @@ fn pkg_ichimoku_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ichimoku scale transformations and coordinate boundary clipping",
       "Scenario: Validate ichimoku rendering performance on 153506 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5016,7 +5394,7 @@ fn pkg_eheat_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical eheat Frontier",
     ],
     dataset_name: "eheat_empirical_series",
-    dataset_record_count: 61970,
+    dataset_record_count: 61_970,
     dataset_dimensions: [
       "eheat_id",
       "observation_value",
@@ -5032,7 +5410,11 @@ fn pkg_eheat_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify eheat scale transformations and coordinate boundary clipping",
       "Scenario: Validate eheat rendering performance on 61970 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5057,7 +5439,7 @@ fn pkg_ggstats_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggstats Frontier",
     ],
     dataset_name: "ggstats_empirical_series",
-    dataset_record_count: 190886,
+    dataset_record_count: 190_886,
     dataset_dimensions: [
       "ggstats_id",
       "observation_value",
@@ -5073,7 +5455,11 @@ fn pkg_ggstats_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggstats scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggstats rendering performance on 190886 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5098,7 +5484,7 @@ fn pkg_ggfoundry_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggfoundry Frontier",
     ],
     dataset_name: "ggfoundry_empirical_series",
-    dataset_record_count: 250719,
+    dataset_record_count: 250_719,
     dataset_dimensions: [
       "ggfoundry_id",
       "observation_value",
@@ -5114,7 +5500,11 @@ fn pkg_ggfoundry_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggfoundry scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggfoundry rendering performance on 250719 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5139,7 +5529,7 @@ fn pkg_ggreveal_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggreveal Frontier",
     ],
     dataset_name: "ggreveal_empirical_series",
-    dataset_record_count: 163114,
+    dataset_record_count: 163_114,
     dataset_dimensions: [
       "ggreveal_id",
       "observation_value",
@@ -5155,7 +5545,11 @@ fn pkg_ggreveal_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggreveal scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggreveal rendering performance on 163114 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5180,7 +5574,7 @@ fn pkg_geofacet_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical geofacet Frontier",
     ],
     dataset_name: "geofacet_empirical_series",
-    dataset_record_count: 87349,
+    dataset_record_count: 87_349,
     dataset_dimensions: [
       "geofacet_id",
       "observation_value",
@@ -5196,7 +5590,11 @@ fn pkg_geofacet_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify geofacet scale transformations and coordinate boundary clipping",
       "Scenario: Validate geofacet rendering performance on 87349 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5221,7 +5619,7 @@ fn pkg_tidyplots_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical tidyplots Frontier",
     ],
     dataset_name: "tidyplots_empirical_series",
-    dataset_record_count: 314159,
+    dataset_record_count: 314_159,
     dataset_dimensions: [
       "tidyplots_id",
       "observation_value",
@@ -5237,7 +5635,11 @@ fn pkg_tidyplots_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify tidyplots scale transformations and coordinate boundary clipping",
       "Scenario: Validate tidyplots rendering performance on 314159 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5262,7 +5664,7 @@ fn pkg_rphylopic_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical rphylopic Frontier",
     ],
     dataset_name: "rphylopic_empirical_series",
-    dataset_record_count: 17480,
+    dataset_record_count: 17_480,
     dataset_dimensions: [
       "rphylopic_id",
       "observation_value",
@@ -5278,7 +5680,11 @@ fn pkg_rphylopic_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify rphylopic scale transformations and coordinate boundary clipping",
       "Scenario: Validate rphylopic rendering performance on 17480 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5303,7 +5709,7 @@ fn pkg_deeptime_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical deeptime Frontier",
     ],
     dataset_name: "deeptime_empirical_series",
-    dataset_record_count: 311352,
+    dataset_record_count: 311_352,
     dataset_dimensions: [
       "deeptime_id",
       "observation_value",
@@ -5319,7 +5725,11 @@ fn pkg_deeptime_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify deeptime scale transformations and coordinate boundary clipping",
       "Scenario: Validate deeptime rendering performance on 311352 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5344,7 +5754,7 @@ fn pkg_ggpcp_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpcp Frontier",
     ],
     dataset_name: "ggpcp_empirical_series",
-    dataset_record_count: 164044,
+    dataset_record_count: 164_044,
     dataset_dimensions: [
       "ggpcp_id",
       "observation_value",
@@ -5360,7 +5770,11 @@ fn pkg_ggpcp_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpcp scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpcp rendering performance on 164044 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5385,7 +5799,7 @@ fn pkg_ggvolcano_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggvolcano Frontier",
     ],
     dataset_name: "ggvolcano_empirical_series",
-    dataset_record_count: 327436,
+    dataset_record_count: 327_436,
     dataset_dimensions: [
       "ggvolcano_id",
       "observation_value",
@@ -5401,7 +5815,11 @@ fn pkg_ggvolcano_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggvolcano scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggvolcano rendering performance on 327436 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5426,7 +5844,7 @@ fn pkg_ggfootball_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggfootball Frontier",
     ],
     dataset_name: "ggfootball_empirical_series",
-    dataset_record_count: 359524,
+    dataset_record_count: 359_524,
     dataset_dimensions: [
       "ggfootball_id",
       "observation_value",
@@ -5442,7 +5860,11 @@ fn pkg_ggfootball_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggfootball scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggfootball rendering performance on 359524 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5467,7 +5889,7 @@ fn pkg_ggfields_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggfields Frontier",
     ],
     dataset_name: "ggfields_empirical_series",
-    dataset_record_count: 250942,
+    dataset_record_count: 250_942,
     dataset_dimensions: [
       "ggfields_id",
       "observation_value",
@@ -5483,7 +5905,11 @@ fn pkg_ggfields_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggfields scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggfields rendering performance on 250942 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5508,7 +5934,7 @@ fn pkg_ggsankeyfier_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsankeyfier Frontier",
     ],
     dataset_name: "ggsankeyfier_empirical_series",
-    dataset_record_count: 72332,
+    dataset_record_count: 72_332,
     dataset_dimensions: [
       "ggsankeyfier_id",
       "observation_value",
@@ -5524,7 +5950,11 @@ fn pkg_ggsankeyfier_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsankeyfier scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsankeyfier rendering performance on 72332 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5549,7 +5979,7 @@ fn pkg_ggpath_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpath Frontier",
     ],
     dataset_name: "ggpath_empirical_series",
-    dataset_record_count: 330063,
+    dataset_record_count: 330_063,
     dataset_dimensions: [
       "ggpath_id",
       "observation_value",
@@ -5565,7 +5995,11 @@ fn pkg_ggpath_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpath scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpath rendering performance on 330063 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5590,7 +6024,7 @@ fn pkg_gglinedensity_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical gglinedensity Frontier",
     ],
     dataset_name: "gglinedensity_empirical_series",
-    dataset_record_count: 142106,
+    dataset_record_count: 142_106,
     dataset_dimensions: [
       "gglinedensity_id",
       "observation_value",
@@ -5606,7 +6040,11 @@ fn pkg_gglinedensity_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify gglinedensity scale transformations and coordinate boundary clipping",
       "Scenario: Validate gglinedensity rendering performance on 142106 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5631,7 +6069,7 @@ fn pkg_ggsurveillance_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsurveillance Frontier",
     ],
     dataset_name: "ggsurveillance_empirical_series",
-    dataset_record_count: 67394,
+    dataset_record_count: 67_394,
     dataset_dimensions: [
       "ggsurveillance_id",
       "observation_value",
@@ -5647,7 +6085,11 @@ fn pkg_ggsurveillance_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsurveillance scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsurveillance rendering performance on 67394 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5672,7 +6114,7 @@ fn pkg_gguapo_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical gguapo Frontier",
     ],
     dataset_name: "gguapo_empirical_series",
-    dataset_record_count: 108008,
+    dataset_record_count: 108_008,
     dataset_dimensions: [
       "gguapo_id",
       "observation_value",
@@ -5688,7 +6130,11 @@ fn pkg_gguapo_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify gguapo scale transformations and coordinate boundary clipping",
       "Scenario: Validate gguapo rendering performance on 108008 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5713,7 +6159,7 @@ fn pkg_ggdnavis_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggDNAvis Frontier",
     ],
     dataset_name: "ggdnavis_empirical_series",
-    dataset_record_count: 298243,
+    dataset_record_count: 298_243,
     dataset_dimensions: [
       "ggdnavis_id",
       "observation_value",
@@ -5729,7 +6175,11 @@ fn pkg_ggdnavis_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggDNAvis scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggDNAvis rendering performance on 298243 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5754,7 +6204,7 @@ fn pkg_ggdibbler_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggdibbler Frontier",
     ],
     dataset_name: "ggdibbler_empirical_series",
-    dataset_record_count: 356752,
+    dataset_record_count: 356_752,
     dataset_dimensions: [
       "ggdibbler_id",
       "observation_value",
@@ -5770,7 +6220,11 @@ fn pkg_ggdibbler_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggdibbler scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggdibbler rendering performance on 356752 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5795,7 +6249,7 @@ fn pkg_ggprop_test_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggprop.test Frontier",
     ],
     dataset_name: "ggprop_test_empirical_series",
-    dataset_record_count: 359381,
+    dataset_record_count: 359_381,
     dataset_dimensions: [
       "ggprop_test_id",
       "observation_value",
@@ -5811,7 +6265,11 @@ fn pkg_ggprop_test_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggprop.test scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggprop.test rendering performance on 359381 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5836,7 +6294,7 @@ fn pkg_ggsky_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggsky Frontier",
     ],
     dataset_name: "ggsky_empirical_series",
-    dataset_record_count: 244213,
+    dataset_record_count: 244_213,
     dataset_dimensions: [
       "ggsky_id",
       "observation_value",
@@ -5852,7 +6310,11 @@ fn pkg_ggsky_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggsky scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggsky rendering performance on 244213 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5877,7 +6339,7 @@ fn pkg_ggpop_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpop Frontier",
     ],
     dataset_name: "ggpop_empirical_series",
-    dataset_record_count: 262773,
+    dataset_record_count: 262_773,
     dataset_dimensions: [
       "ggpop_id",
       "observation_value",
@@ -5893,7 +6355,11 @@ fn pkg_ggpop_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpop scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpop rendering performance on 262773 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5918,7 +6384,7 @@ fn pkg_ggpointless_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggpointless Frontier",
     ],
     dataset_name: "ggpointless_empirical_series",
-    dataset_record_count: 279459,
+    dataset_record_count: 279_459,
     dataset_dimensions: [
       "ggpointless_id",
       "observation_value",
@@ -5934,7 +6400,11 @@ fn pkg_ggpointless_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggpointless scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggpointless rendering performance on 279459 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -5959,7 +6429,7 @@ fn pkg_ggincerta_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggincerta Frontier",
     ],
     dataset_name: "ggincerta_empirical_series",
-    dataset_record_count: 297362,
+    dataset_record_count: 297_362,
     dataset_dimensions: [
       "ggincerta_id",
       "observation_value",
@@ -5975,7 +6445,11 @@ fn pkg_ggincerta_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggincerta scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggincerta rendering performance on 297362 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6000,7 +6474,7 @@ fn pkg_ggrandomforests_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggRandomForests Frontier",
     ],
     dataset_name: "ggrandomforests_empirical_series",
-    dataset_record_count: 169533,
+    dataset_record_count: 169_533,
     dataset_dimensions: [
       "ggrandomforests_id",
       "observation_value",
@@ -6016,7 +6490,11 @@ fn pkg_ggrandomforests_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggRandomForests scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggRandomForests rendering performance on 169533 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6041,7 +6519,7 @@ fn pkg_ggcube_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggcube Frontier",
     ],
     dataset_name: "ggcube_empirical_series",
-    dataset_record_count: 96116,
+    dataset_record_count: 96_116,
     dataset_dimensions: [
       "ggcube_id",
       "observation_value",
@@ -6057,7 +6535,11 @@ fn pkg_ggcube_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggcube scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggcube rendering performance on 96116 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6082,7 +6564,7 @@ fn pkg_ggtaichi_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggtaichi Frontier",
     ],
     dataset_name: "ggtaichi_empirical_series",
-    dataset_record_count: 312298,
+    dataset_record_count: 312_298,
     dataset_dimensions: [
       "ggtaichi_id",
       "observation_value",
@@ -6098,7 +6580,11 @@ fn pkg_ggtaichi_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggtaichi scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggtaichi rendering performance on 312298 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6123,7 +6609,7 @@ fn pkg_ggchord2_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggchord2 Frontier",
     ],
     dataset_name: "ggchord2_empirical_series",
-    dataset_record_count: 269768,
+    dataset_record_count: 269_768,
     dataset_dimensions: [
       "ggchord2_id",
       "observation_value",
@@ -6139,7 +6625,11 @@ fn pkg_ggchord2_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggchord2 scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggchord2 rendering performance on 269768 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6164,7 +6654,7 @@ fn pkg_ggtintshade_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggtintshade Frontier",
     ],
     dataset_name: "ggtintshade_empirical_series",
-    dataset_record_count: 241628,
+    dataset_record_count: 241_628,
     dataset_dimensions: [
       "ggtintshade_id",
       "observation_value",
@@ -6180,7 +6670,11 @@ fn pkg_ggtintshade_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggtintshade scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggtintshade rendering performance on 241628 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6205,7 +6699,7 @@ fn pkg_glydraw_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical glydraw Frontier",
     ],
     dataset_name: "glydraw_empirical_series",
-    dataset_record_count: 109900,
+    dataset_record_count: 109_900,
     dataset_dimensions: [
       "glydraw_id",
       "observation_value",
@@ -6221,7 +6715,11 @@ fn pkg_glydraw_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify glydraw scale transformations and coordinate boundary clipping",
       "Scenario: Validate glydraw rendering performance on 109900 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6246,7 +6744,7 @@ fn pkg_ggmultiglyph_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Empirical ggmultiglyph Frontier",
     ],
     dataset_name: "ggmultiglyph_empirical_series",
-    dataset_record_count: 108430,
+    dataset_record_count: 108_430,
     dataset_dimensions: [
       "ggmultiglyph_id",
       "observation_value",
@@ -6262,7 +6760,11 @@ fn pkg_ggmultiglyph_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Scenario: Verify ggmultiglyph scale transformations and coordinate boundary clipping",
       "Scenario: Validate ggmultiglyph rendering performance on 108430 dataset records",
     ],
-    svg_rich_aspect: generate_category_rich_svg(ext.name, ext.category, category_to_string(ext.category)),
+    svg_rich_aspect: generate_category_rich_svg(
+      ext.name,
+      ext.category,
+      category_to_string(ext.category),
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l4",
   )
 }
@@ -6293,14 +6795,16 @@ fn ggridges_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_dimensions: [
       "station_id", "month", "temp_celsius", "elevation_m", "quantile_bracket",
     ],
-    dataset_schema_summary:
-      "120,000 global weather station temperature distributions evaluated across 12 monthly overlapping ridgeline tracks.",
+    dataset_schema_summary: "120,000 global weather station temperature distributions evaluated across 12 monthly overlapping ridgeline tracks.",
     bdd_scenarios: [
       "Scenario: Calculate kernel density estimates across 12 overlapping monthly elevation ridges",
       "Scenario: Apply quantile shading gradient across 25th, 50th, and 75th percentiles",
       "Scenario: Verify overlap scaling factor maintains label readability on high-density peaks",
     ],
-    svg_rich_aspect: generate_uncertainty_svg(ext.name, "Uncertainty & Distribution"),
+    svg_rich_aspect: generate_uncertainty_svg(
+      ext.name,
+      "Uncertainty & Distribution",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -6328,10 +6832,10 @@ fn ggraph_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Autonomous Agent Mesh Topology & Link Telemetry (uos_mesh_85k)",
     dataset_record_count: 85_000,
     dataset_dimensions: [
-      "source_node", "target_node", "link_type", "weight", "latency_us", "cluster_id",
+      "source_node", "target_node", "link_type", "weight", "latency_us",
+      "cluster_id",
     ],
-    dataset_schema_summary:
-      "85,000 peer-to-peer telemetry links mapped to circular concentric and force-directed graph representations.",
+    dataset_schema_summary: "85,000 peer-to-peer telemetry links mapped to circular concentric and force-directed graph representations.",
     bdd_scenarios: [
       "Scenario: Compute circular chord coordinates for 128 distributed peer nodes",
       "Scenario: Bundle edges connecting high-degree cluster hubs to reduce visual clutter",
@@ -6365,10 +6869,10 @@ fn gganimate_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "High-Frequency Kinematic Telemetry Stream (kinematics_140k)",
     dataset_record_count: 140_000,
     dataset_dimensions: [
-      "timestamp_ms", "frame_idx", "coord_x", "coord_y", "velocity", "acceleration",
+      "timestamp_ms", "frame_idx", "coord_x", "coord_y", "velocity",
+      "acceleration",
     ],
-    dataset_schema_summary:
-      "140,000 sub-millisecond kinematic states evaluating particle trajectories with fading wake trails.",
+    dataset_schema_summary: "140,000 sub-millisecond kinematic states evaluating particle trajectories with fading wake trails.",
     bdd_scenarios: [
       "Scenario: Interpolate intermediate particle positions using cubic spline easing",
       "Scenario: Render fading wake shadow with decaying alpha across 10 previous frames",
@@ -6404,14 +6908,16 @@ fn gghalves_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_dimensions: [
       "subject_id", "vital_metric", "reading_val", "cohort_group", "is_outlier",
     ],
-    dataset_schema_summary:
-      "110,000 patient vital measurements displayed as asymmetric half-violins and half-boxplots.",
+    dataset_schema_summary: "110,000 patient vital measurements displayed as asymmetric half-violins and half-boxplots.",
     bdd_scenarios: [
       "Scenario: Render left half-violin with kernel density bandwidth = 1.2",
       "Scenario: Render right half-boxplot aligned along central grouping coordinate",
       "Scenario: Offset raw scatter points to avoid occlusion with distribution envelope",
     ],
-    svg_rich_aspect: generate_uncertainty_svg(ext.name, "Uncertainty & Distribution"),
+    svg_rich_aspect: generate_uncertainty_svg(
+      ext.name,
+      "Uncertainty & Distribution",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -6441,14 +6947,16 @@ fn ggnewscale_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_dimensions: [
       "sensor_id", "temperature_c", "humidity_pct", "co2_ppm", "battery_v",
     ],
-    dataset_schema_summary:
-      "90,000 multi-variable sensor readings mapped simultaneously to independent color and fill scales.",
+    dataset_schema_summary: "90,000 multi-variable sensor readings mapped simultaneously to independent color and fill scales.",
     bdd_scenarios: [
       "Scenario: Reset fill scale aesthetic using new_scale_fill() between layers",
       "Scenario: Render distinct legends for temperature (Plasma) and humidity (Viridis)",
       "Scenario: Verify zero aesthetic bleed between successive geom declarations",
     ],
-    svg_rich_aspect: generate_theming_svg(ext.name, "Theming, Palettes & Aesthetics"),
+    svg_rich_aspect: generate_theming_svg(
+      ext.name,
+      "Theming, Palettes & Aesthetics",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -6476,16 +6984,19 @@ fn gginnards_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Grammar of Graphics AST Scene Graph Mutations (ast_mutations_40k)",
     dataset_record_count: 40_000,
     dataset_dimensions: [
-      "plot_id", "layer_index", "geom_class", "stat_class", "data_rows", "mapping_keys",
+      "plot_id", "layer_index", "geom_class", "stat_class", "data_rows",
+      "mapping_keys",
     ],
-    dataset_schema_summary:
-      "40,000 plot layer modifications evaluating runtime scene graph manipulation and computed stat extraction.",
+    dataset_schema_summary: "40,000 plot layer modifications evaluating runtime scene graph manipulation and computed stat extraction.",
     bdd_scenarios: [
       "Scenario: Inspect plot layers and extract computed stat data at index 1",
       "Scenario: Substitute geom_point with geom_smooth dynamically without full rebuild",
       "Scenario: Audit aesthetic mappings to ensure required X and Y keys are present",
     ],
-    svg_rich_aspect: generate_introspection_svg(ext.name, "Introspection & Layer Editing"),
+    svg_rich_aspect: generate_introspection_svg(
+      ext.name,
+      "Introspection & Layer Editing",
+    ),
     fractal_coordinates: "#fractal-l3 #fractal-l5",
   )
 }
@@ -6513,21 +7024,22 @@ fn ggpubr_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Oncology Drug Efficacy Comparative Cohort (drug_trials_80k)",
     dataset_record_count: 80_000,
     dataset_dimensions: [
-      "patient_id", "treatment_arm", "biomarker_level", "tumor_reduction_pct", "p_value",
+      "patient_id", "treatment_arm", "biomarker_level", "tumor_reduction_pct",
+      "p_value",
     ],
-    dataset_schema_summary:
-      "80,000 clinical observation rows comparing therapeutic response across treatment arms with automated statistical tests.",
+    dataset_schema_summary: "80,000 clinical observation rows comparing therapeutic response across treatment arms with automated statistical tests.",
     bdd_scenarios: [
       "Scenario: Compute Wilcoxon rank-sum test between control and treatment groups",
       "Scenario: Render comparison brackets with significance stars above boxplot whiskers",
       "Scenario: Export multi-panel publication figure formatted for Lancet submission",
     ],
-    svg_rich_aspect: generate_statistical_svg(ext.name, "Statistical Diagnosis & Inference"),
+    svg_rich_aspect: generate_statistical_svg(
+      ext.name,
+      "Statistical Diagnosis & Inference",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3 #fractal-l5",
   )
 }
-
-
 
 fn ggh4x_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
   ExtensionDeepDive(
@@ -6552,16 +7064,19 @@ fn ggh4x_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Semiconductor Multi-Chamber Fab Metrology (semifab_160k)",
     dataset_record_count: 160_000,
     dataset_dimensions: [
-      "wafer_id", "chamber_tier1", "chamber_tier2", "etch_rate_nm_s", "uniformity",
+      "wafer_id", "chamber_tier1", "chamber_tier2", "etch_rate_nm_s",
+      "uniformity",
     ],
-    dataset_schema_summary:
-      "160,000 wafer processing records displayed across nested multi-tier facet strips with per-chamber scales.",
+    dataset_schema_summary: "160,000 wafer processing records displayed across nested multi-tier facet strips with per-chamber scales.",
     bdd_scenarios: [
       "Scenario: Render nested facet strip headers with shared upper-tier category spanning",
       "Scenario: Apply independent logarithmic y-scale to individual facet sub-panels",
       "Scenario: Truncate axis line to exact data range avoiding empty tick mark extensions",
     ],
-    svg_rich_aspect: generate_multiscale_svg(ext.name, "Multi-Scale & Coordinates"),
+    svg_rich_aspect: generate_multiscale_svg(
+      ext.name,
+      "Multi-Scale & Coordinates",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -6589,16 +7104,19 @@ fn ggmagnify_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Deep Space Astrometry & Star Cluster Survey (astrometry_130k)",
     dataset_record_count: 130_000,
     dataset_dimensions: [
-      "star_id", "ra_deg", "dec_deg", "flux_mag", "parallax_mas", "is_dense_core",
+      "star_id", "ra_deg", "dec_deg", "flux_mag", "parallax_mas",
+      "is_dense_core",
     ],
-    dataset_schema_summary:
-      "130,000 stellar coordinates with magnified insets detailing dense globular cluster cores.",
+    dataset_schema_summary: "130,000 stellar coordinates with magnified insets detailing dense globular cluster cores.",
     bdd_scenarios: [
       "Scenario: Define target zoom bounding box [X1, Y1, X2, Y2] and loupe placement",
       "Scenario: Project leader lines from source bounding box corners to magnified inset",
       "Scenario: Render high-resolution star points inside loupe with 5x magnification",
     ],
-    svg_rich_aspect: generate_multiscale_svg(ext.name, "Multi-Scale & Coordinates"),
+    svg_rich_aspect: generate_multiscale_svg(
+      ext.name,
+      "Multi-Scale & Coordinates",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l4",
   )
 }
@@ -6628,8 +7146,7 @@ fn gganatogram_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_dimensions: [
       "gene_id", "organ_system", "tissue_name", "expression_tpm", "cell_type",
     ],
-    dataset_schema_summary:
-      "95,000 gene expression observations mapped directly to modular human organ silhouettes.",
+    dataset_schema_summary: "95,000 gene expression observations mapped directly to modular human organ silhouettes.",
     bdd_scenarios: [
       "Scenario: Map expression levels to human body organ SVG polygon fills",
       "Scenario: Highlight target brain, liver, and kidney tissues with high-contrast palette",
@@ -6663,10 +7180,10 @@ fn ggtimeseries_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Server Infrastructure 365-Day Incident Telemetry (server_incidents_105k)",
     dataset_record_count: 105_000,
     dataset_dimensions: [
-      "timestamp", "day_of_year", "hour", "incident_count", "severity", "cpu_peak_pct",
+      "timestamp", "day_of_year", "hour", "incident_count", "severity",
+      "cpu_peak_pct",
     ],
-    dataset_schema_summary:
-      "105,000 incident events represented as calendar heatmaps and water-level time-series.",
+    dataset_schema_summary: "105,000 incident events represented as calendar heatmaps and water-level time-series.",
     bdd_scenarios: [
       "Scenario: Map daily incident counts to 52-week calendar grid with month separators",
       "Scenario: Shade water-level time series area above 90% CPU threshold in warning red",
@@ -6700,16 +7217,19 @@ fn ggchernoff_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Autonomous Agent Holistic Health States (chernoff_agent_45k)",
     dataset_record_count: 45_000,
     dataset_dimensions: [
-      "agent_id", "smile_happiness", "eye_alertness", "face_stress", "eyebrow_slant",
+      "agent_id", "smile_happiness", "eye_alertness", "face_stress",
+      "eyebrow_slant",
     ],
-    dataset_schema_summary:
-      "45,000 agent health evaluations mapped to Chernoff face features for rapid cognitive assessment.",
+    dataset_schema_summary: "45,000 agent health evaluations mapped to Chernoff face features for rapid cognitive assessment.",
     bdd_scenarios: [
       "Scenario: Map agent memory load to face height and queue length to smile curvature",
       "Scenario: Render facial feature SVG arcs with smooth bezier curves",
       "Scenario: Verify extreme stress states trigger visible frown and narrow eye glyphs",
     ],
-    svg_rich_aspect: generate_theming_svg(ext.name, "Theming, Palettes & Aesthetics"),
+    svg_rich_aspect: generate_theming_svg(
+      ext.name,
+      "Theming, Palettes & Aesthetics",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l5",
   )
 }
@@ -6739,8 +7259,7 @@ fn ggnetwork_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_dimensions: [
       "node_a", "node_b", "bandwidth_mbps", "is_bidirectional", "link_status",
     ],
-    dataset_schema_summary:
-      "80,000 peer communication events evaluating curved directional edges and vertex properties.",
+    dataset_schema_summary: "80,000 peer communication events evaluating curved directional edges and vertex properties.",
     bdd_scenarios: [
       "Scenario: Compute quadratic bezier curve offsets for bidirectional edge pairs",
       "Scenario: Scale edge linewidth continuously based on observed bandwidth throughput",
@@ -6774,10 +7293,10 @@ fn ggdag_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Epidemiological Causal Inference Pathway Corpus (causal_dag_60k)",
     dataset_record_count: 60_000,
     dataset_dimensions: [
-      "variable_id", "node_role", "path_type", "is_confounder", "adjustment_status",
+      "variable_id", "node_role", "path_type", "is_confounder",
+      "adjustment_status",
     ],
-    dataset_schema_summary:
-      "60,000 causal DAG path evaluations isolating confounding bias and identifying minimal adjustment sets.",
+    dataset_schema_summary: "60,000 causal DAG path evaluations isolating confounding bias and identifying minimal adjustment sets.",
     bdd_scenarios: [
       "Scenario: Identify backdoor confounding paths connecting exposure to outcome",
       "Scenario: Color minimal adjustment set nodes in warning amber with thick borders",
@@ -6811,23 +7330,22 @@ fn see_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Bayesian Multi-Level Regression Diagnostics (easystats_75k)",
     dataset_record_count: 75_000,
     dataset_dimensions: [
-      "model_id", "param_name", "median_est", "ci_low", "ci_high", "rope_percentage",
+      "model_id", "param_name", "median_est", "ci_low", "ci_high",
+      "rope_percentage",
     ],
-    dataset_schema_summary:
-      "75,000 model evaluation metrics displaying posterior parameter distributions and diagnostic checks.",
+    dataset_schema_summary: "75,000 model evaluation metrics displaying posterior parameter distributions and diagnostic checks.",
     bdd_scenarios: [
       "Scenario: Compute 95% Highest Density Interval (HDI) for model regression coefficients",
       "Scenario: Highlight Region of Practical Equivalence (ROPE) with shaded vertical band",
       "Scenario: Render multi-panel diagnostic figure checking collinearity and residual variance",
     ],
-    svg_rich_aspect: generate_statistical_svg(ext.name, "Statistical Diagnosis & Inference"),
+    svg_rich_aspect: generate_statistical_svg(
+      ext.name,
+      "Statistical Diagnosis & Inference",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l5",
   )
 }
-
-
-
-
 
 fn ggparty_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
   ExtensionDeepDive(
@@ -6854,14 +7372,16 @@ fn ggparty_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_dimensions: [
       "node_id", "split_var", "split_val", "p_val", "is_terminal", "sample_n",
     ],
-    dataset_schema_summary:
-      "65,000 clinical decision rows evaluating recursive partitioning trees with leaf distributions.",
+    dataset_schema_summary: "65,000 clinical decision rows evaluating recursive partitioning trees with leaf distributions.",
     bdd_scenarios: [
       "Scenario: Render recursive decision tree branches with split threshold labels",
       "Scenario: Embed miniature boxplots inside terminal leaf nodes displaying subgroup response",
       "Scenario: Calculate p-value for split significance and format above branch connector",
     ],
-    svg_rich_aspect: generate_hierarchical_svg(ext.name, "Hierarchical Partition"),
+    svg_rich_aspect: generate_hierarchical_svg(
+      ext.name,
+      "Hierarchical Partition",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -6889,16 +7409,19 @@ fn gggenes_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Comparative Microbial Genomic Synteny Tracks (synteny_genes_70k)",
     dataset_record_count: 70_000,
     dataset_dimensions: [
-      "genome_id", "gene_id", "start_bp", "end_bp", "strand", "feature_type", "color_code",
+      "genome_id", "gene_id", "start_bp", "end_bp", "strand", "feature_type",
+      "color_code",
     ],
-    dataset_schema_summary:
-      "70,000 gene coordinate features displayed as directional arrows with exon/intron annotations.",
+    dataset_schema_summary: "70,000 gene coordinate features displayed as directional arrows with exon/intron annotations.",
     bdd_scenarios: [
       "Scenario: Render gene arrow polygon pointing right for positive strand (+) features",
       "Scenario: Render gene arrow polygon pointing left for negative strand (-) features",
       "Scenario: Align gene cluster synteny across 4 bacterial genomes to reference locus",
     ],
-    svg_rich_aspect: generate_genomics_svg(ext.name, "Bioinformatics & Genomics"),
+    svg_rich_aspect: generate_genomics_svg(
+      ext.name,
+      "Bioinformatics & Genomics",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -6926,10 +7449,10 @@ fn ggalign_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Multi-Omics Integrated Cancer Epigenome Matrix (multiomics_135k)",
     dataset_record_count: 135_000,
     dataset_dimensions: [
-      "patient_id", "gene_symbol", "methylation_beta", "copy_number", "expression_log2",
+      "patient_id", "gene_symbol", "methylation_beta", "copy_number",
+      "expression_log2",
     ],
-    dataset_schema_summary:
-      "135,000 multi-omics observations aligned across central heatmap, dendrogram, and side tracks.",
+    dataset_schema_summary: "135,000 multi-omics observations aligned across central heatmap, dendrogram, and side tracks.",
     bdd_scenarios: [
       "Scenario: Synchronize X-axis coordinates between top dendrogram and central heatmap",
       "Scenario: Align right-side clinical covariate bar charts with matching matrix rows",
@@ -6963,16 +7486,19 @@ fn ggblanket_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
     dataset_name: "Rapid Scientific Prototyping Benchmark Corpus (prototyping_50k)",
     dataset_record_count: 50_000,
     dataset_dimensions: [
-      "benchmark_id", "geom_type", "arg_count", "compilation_ms", "visual_clarity_score",
+      "benchmark_id", "geom_type", "arg_count", "compilation_ms",
+      "visual_clarity_score",
     ],
-    dataset_schema_summary:
-      "50,000 rapid prototyping evaluations measuring figure readability and ergonomic speed.",
+    dataset_schema_summary: "50,000 rapid prototyping evaluations measuring figure readability and ergonomic speed.",
     bdd_scenarios: [
       "Scenario: Generate publication-ready scatter plot using single gg_point() wrapper call",
       "Scenario: Automatically assign high-contrast color palette based on factor level count",
       "Scenario: Apply minimalist theme with calibrated font hierarchy and subtle gridlines",
     ],
-    svg_rich_aspect: generate_theming_svg(ext.name, "Theming, Palettes & Aesthetics"),
+    svg_rich_aspect: generate_theming_svg(
+      ext.name,
+      "Theming, Palettes & Aesthetics",
+    ),
     fractal_coordinates: "#fractal-l2 #fractal-l3",
   )
 }
@@ -7259,7 +7785,8 @@ fn build_category_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Tidyverse Diamond Pricing Corpus (diamonds_50k)",
       53_940,
       [
-        "carat", "cut", "color", "clarity", "depth", "table", "price", "x", "y", "z",
+        "carat", "cut", "color", "clarity", "depth", "table", "price", "x", "y",
+        "z",
       ],
       "53,940 diamond appraisals evaluated across multiple coordinated sub-panels using declarative layout arithmetic.",
       [
@@ -7370,8 +7897,8 @@ fn build_category_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
       "Deep Learning CLIP Latent Embedding Manifolds (clip_latent_128k)",
       128_000,
       [
-        "vector_id", "pc1_val", "pc2_val", "cluster_label", "var_explained_ratio",
-        "loading_alpha", "loading_beta",
+        "vector_id", "pc1_val", "pc2_val", "cluster_label",
+        "var_explained_ratio", "loading_alpha", "loading_beta",
       ],
       "128,000 multimodal latent embeddings projected to 2D principal component space with 95% confidence cluster ellipses.",
       [
@@ -7459,7 +7986,6 @@ fn build_category_deep_dive(ext: ExtensionMetadata) -> ExtensionDeepDive {
 // ---------------------------------------------------------------------------
 // Category-Tailored Rich SVG Geometry Generators (Distinct Visuals)
 // ---------------------------------------------------------------------------
-
 
 fn generate_pie_donut_svg(name: String, cat_str: String) -> String {
   let inner =
@@ -7975,48 +8501,101 @@ fn generate_category_rich_svg(
     "ggvolcano" -> generate_volcano_svg(name, cat_str)
     "AMR" -> generate_amr_mic_svg(name, cat_str)
     "ggflowchart" | "ggdag" -> generate_flowchart_svg(name, cat_str)
-    "ggchord2" | "circlize" | "chorddiag" | "migest" -> generate_chord_svg(name, cat_str)
+    "ggchord2" | "circlize" | "chorddiag" | "migest" ->
+      generate_chord_svg(name, cat_str)
     "ggtern" -> generate_ternary_svg(name, cat_str)
     "ggradar" | "ggiraphExtra" -> generate_radar_web_svg(name, cat_str)
     "ggrain" | "gghalves" -> generate_raincloud_svg(name, cat_str)
     "ggridges" -> generate_ridgeline_svg(name, cat_str)
-    "ggpointdensity" | "gglinedensity" -> generate_pointdensity_svg(name, cat_str)
+    "ggpointdensity" | "gglinedensity" ->
+      generate_pointdensity_svg(name, cat_str)
     "ggmagnify" | "ggmapinset" -> generate_magnify_inset_svg(name, cat_str)
     "ichimoku" -> generate_ichimoku_svg(name, cat_str)
-    "calendR" | "ggweekly" | "sugrrants" -> generate_calendar_heatmap_svg(name, cat_str)
+    "calendR" | "ggweekly" | "sugrrants" ->
+      generate_calendar_heatmap_svg(name, cat_str)
     "deeptime" -> generate_deeptime_timescale_svg(name, cat_str)
     "ggfootball" -> generate_football_pitch_svg(name, cat_str)
     "ggbraid" -> generate_braid_svg(name, cat_str)
     "ggtaichi" -> generate_taichi_svg(name, cat_str)
     "ggcube" | "oblicubes" -> generate_cube_3d_svg(name, cat_str)
     "glydraw" -> generate_glycan_svg(name, cat_str)
-    "gggenes" | "gggenomes" | "ggtranscript" | "ggDNAvis" -> generate_gene_arrow_svg(name, cat_str)
-    "dendextend" | "ape" | "phytools" | "treeio" | "tidytree" | "castor" | "phangorn" | "ips" -> generate_dendrogram_tree_svg(name, cat_str)
-    "ComplexHeatmap" | "pheatmap" | "heatmaply" | "superheat" | "tidyHeatmap" | "iheatmapr" | "d3heatmap" | "heatmap3" | "eheat" | "ggDoubleHeat" | "ggheatmap" -> generate_clustered_heatmap_svg(name, cat_str)
+    "gggenes" | "gggenomes" | "ggtranscript" | "ggDNAvis" ->
+      generate_gene_arrow_svg(name, cat_str)
+    "dendextend"
+    | "ape"
+    | "phytools"
+    | "treeio"
+    | "tidytree"
+    | "castor"
+    | "phangorn"
+    | "ips" -> generate_dendrogram_tree_svg(name, cat_str)
+    "ComplexHeatmap"
+    | "pheatmap"
+    | "heatmaply"
+    | "superheat"
+    | "tidyHeatmap"
+    | "iheatmapr"
+    | "d3heatmap"
+    | "heatmap3"
+    | "eheat"
+    | "ggDoubleHeat"
+    | "ggheatmap" -> generate_clustered_heatmap_svg(name, cat_str)
     "ggwordcloud" -> generate_wordcloud_svg(name, cat_str)
     "statebins" -> generate_statebins_svg(name, cat_str)
     "geofacet" -> generate_geofacet_svg(name, cat_str)
-    "ggspatial" | "tidyterra" | "sf" | "tmap" | "leaflet" | "mapview" | "rasterVis" | "OpenStreetMap" | "ggmap" | "rnaturalearth" | "rworldmap" | "ozmaps" | "cancache" | "cancensus" | "tigris" | "tidycensus" | "wbggeo" -> generate_gis_map_svg(name, cat_str)
+    "ggspatial"
+    | "tidyterra"
+    | "sf"
+    | "tmap"
+    | "leaflet"
+    | "mapview"
+    | "rasterVis"
+    | "OpenStreetMap"
+    | "ggmap"
+    | "rnaturalearth"
+    | "rworldmap"
+    | "ozmaps"
+    | "cancache"
+    | "cancensus"
+    | "tigris"
+    | "tidycensus"
+    | "wbggeo" -> generate_gis_map_svg(name, cat_str)
     "ggpcp" -> generate_pcp_parallel_svg(name, cat_str)
     "ggstats" -> generate_forest_plot_svg(name, cat_str)
     _ ->
       case cat {
-        extension_catalog.BioinformaticsGenomics -> generate_genomics_svg(name, cat_str)
-        extension_catalog.UncertaintyDistribution -> generate_uncertainty_svg(name, cat_str)
-        extension_catalog.NetworkGraphTopology -> generate_network_svg(name, cat_str)
-        extension_catalog.FlowAlluvialSankey -> generate_alluvial_svg(name, cat_str)
-        extension_catalog.SpatialVectorField -> generate_spatial_svg(name, cat_str)
-        extension_catalog.QualityControlTimeSeries -> generate_qc_svg(name, cat_str)
-        extension_catalog.HierarchicalPartition -> generate_hierarchical_svg(name, cat_str)
-        extension_catalog.TypographyTextRepel -> generate_typography_svg(name, cat_str)
-        extension_catalog.MultiScaleCoordinate -> generate_multiscale_svg(name, cat_str)
-        extension_catalog.CompositeMultiPanel -> generate_composite_svg(name, cat_str)
-        extension_catalog.ThreeDimensionalProjection -> generate_3d_svg(name, cat_str)
-        extension_catalog.StatisticalDiagnosisInference -> generate_statistical_svg(name, cat_str)
-        extension_catalog.PatternFilterShader -> generate_pattern_svg(name, cat_str)
-        extension_catalog.DimensionalityReduction -> generate_dimred_svg(name, cat_str)
-        extension_catalog.ThemingPaletteAesthetic -> generate_theming_svg(name, cat_str)
-        extension_catalog.IntrospectionLayerEditing -> generate_introspection_svg(name, cat_str)
+        extension_catalog.BioinformaticsGenomics ->
+          generate_genomics_svg(name, cat_str)
+        extension_catalog.UncertaintyDistribution ->
+          generate_uncertainty_svg(name, cat_str)
+        extension_catalog.NetworkGraphTopology ->
+          generate_network_svg(name, cat_str)
+        extension_catalog.FlowAlluvialSankey ->
+          generate_alluvial_svg(name, cat_str)
+        extension_catalog.SpatialVectorField ->
+          generate_spatial_svg(name, cat_str)
+        extension_catalog.QualityControlTimeSeries ->
+          generate_qc_svg(name, cat_str)
+        extension_catalog.HierarchicalPartition ->
+          generate_hierarchical_svg(name, cat_str)
+        extension_catalog.TypographyTextRepel ->
+          generate_typography_svg(name, cat_str)
+        extension_catalog.MultiScaleCoordinate ->
+          generate_multiscale_svg(name, cat_str)
+        extension_catalog.CompositeMultiPanel ->
+          generate_composite_svg(name, cat_str)
+        extension_catalog.ThreeDimensionalProjection ->
+          generate_3d_svg(name, cat_str)
+        extension_catalog.StatisticalDiagnosisInference ->
+          generate_statistical_svg(name, cat_str)
+        extension_catalog.PatternFilterShader ->
+          generate_pattern_svg(name, cat_str)
+        extension_catalog.DimensionalityReduction ->
+          generate_dimred_svg(name, cat_str)
+        extension_catalog.ThemingPaletteAesthetic ->
+          generate_theming_svg(name, cat_str)
+        extension_catalog.IntrospectionLayerEditing ->
+          generate_introspection_svg(name, cat_str)
       }
   }
 }
@@ -8083,8 +8662,12 @@ fn generate_hierarchical_svg(name: String, cat_str: String) -> String {
 fn generate_typography_svg(name: String, cat_str: String) -> String {
   let inner =
     // Geodesic curve
-    "<path id=\"curve-" <> name <> "\" d=\"M 30 95 Q 110 50, 190 90 T 330 65\" fill=\"none\" stroke=\"#0284c7\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\"/>"
-    <> "<text font-size=\"8.5\" font-family=\"monospace\" fill=\"#38bdf8\" font-weight=\"bold\"><textPath href=\"#curve-" <> name <> "\" startOffset=\"10%\">GEODESIC REPEL CURVATURE</textPath></text>"
+    "<path id=\"curve-"
+    <> name
+    <> "\" d=\"M 30 95 Q 110 50, 190 90 T 330 65\" fill=\"none\" stroke=\"#0284c7\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\"/>"
+    <> "<text font-size=\"8.5\" font-family=\"monospace\" fill=\"#38bdf8\" font-weight=\"bold\"><textPath href=\"#curve-"
+    <> name
+    <> "\" startOffset=\"10%\">GEODESIC REPEL CURVATURE</textPath></text>"
     // Repelled label boxes
     <> "<circle cx=\"80\" cy=\"85\" r=\"3\" fill=\"#f59e0b\"/>"
     <> "<line x1=\"80\" y1=\"85\" x2=\"60\" y2=\"55\" stroke=\"#94a3b8\" stroke-width=\"1\" stroke-dasharray=\"2,2\"/>"
@@ -8174,16 +8757,24 @@ fn generate_statistical_svg(name: String, cat_str: String) -> String {
 
 fn generate_pattern_svg(name: String, cat_str: String) -> String {
   let inner =
-    "<defs><pattern id=\"patStripes-" <> name <> "\" width=\"6\" height=\"6\" patternTransform=\"rotate(45 0 0)\" patternUnits=\"userSpaceOnUse\"><line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"6\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/></pattern></defs>"
-    <> "<defs><pattern id=\"patDots-" <> name <> "\" width=\"8\" height=\"8\" patternUnits=\"userSpaceOnUse\"><circle cx=\"4\" cy=\"4\" r=\"1.8\" fill=\"#34d399\"/></pattern></defs>"
+    "<defs><pattern id=\"patStripes-"
+    <> name
+    <> "\" width=\"6\" height=\"6\" patternTransform=\"rotate(45 0 0)\" patternUnits=\"userSpaceOnUse\"><line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"6\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/></pattern></defs>"
+    <> "<defs><pattern id=\"patDots-"
+    <> name
+    <> "\" width=\"8\" height=\"8\" patternUnits=\"userSpaceOnUse\"><circle cx=\"4\" cy=\"4\" r=\"1.8\" fill=\"#34d399\"/></pattern></defs>"
     // Pattern Bar 1: Stripes
-    <> "<rect x=\"60\" y=\"52\" width=\"40\" height=\"58\" fill=\"url(#patStripes-" <> name <> ")\" stroke=\"#38bdf8\" stroke-width=\"1.2\" rx=\"2\"/>"
+    <> "<rect x=\"60\" y=\"52\" width=\"40\" height=\"58\" fill=\"url(#patStripes-"
+    <> name
+    <> ")\" stroke=\"#38bdf8\" stroke-width=\"1.2\" rx=\"2\"/>"
     <> "<text x=\"68\" y=\"118\" fill=\"#94a3b8\" font-size=\"7\" font-family=\"monospace\">Stripes</text>"
     // Pattern Bar 2: Solid Neon Glow
     <> "<rect x=\"130\" y=\"42\" width=\"40\" height=\"68\" fill=\"#818cf8\" fill-opacity=\"0.3\" stroke=\"#818cf8\" stroke-width=\"2\" rx=\"2\"/>"
     <> "<text x=\"138\" y=\"118\" fill=\"#818cf8\" font-size=\"7\" font-family=\"monospace\">Glow</text>"
     // Pattern Bar 3: Dots
-    <> "<rect x=\"200\" y=\"60\" width=\"40\" height=\"50\" fill=\"url(#patDots-" <> name <> ")\" stroke=\"#34d399\" stroke-width=\"1.2\" rx=\"2\"/>"
+    <> "<rect x=\"200\" y=\"60\" width=\"40\" height=\"50\" fill=\"url(#patDots-"
+    <> name
+    <> ")\" stroke=\"#34d399\" stroke-width=\"1.2\" rx=\"2\"/>"
     <> "<text x=\"210\" y=\"118\" fill=\"#34d399\" font-size=\"7\" font-family=\"monospace\">Dots</text>"
     // Pattern Bar 4: Crosshatch
     <> "<rect x=\"270\" y=\"48\" width=\"40\" height=\"62\" fill=\"#f59e0b\" fill-opacity=\"0.3\" stroke=\"#f59e0b\" stroke-width=\"1.5\" rx=\"2\"/>"
@@ -8339,7 +8930,9 @@ pub fn get_deep_dive(name: String) -> Option(ExtensionDeepDive) {
 
 /// Calculates the aggregate count of BDD scenarios across all deep dive profiles.
 pub fn total_bdd_scenarios() -> Int {
-  list.fold(all_deep_dives(), 0, fn(acc, d) { acc + list.length(d.bdd_scenarios) })
+  list.fold(all_deep_dives(), 0, fn(acc, d) {
+    acc + list.length(d.bdd_scenarios)
+  })
 }
 
 /// Calculates the aggregate total of records across all high-dimensional datasets.

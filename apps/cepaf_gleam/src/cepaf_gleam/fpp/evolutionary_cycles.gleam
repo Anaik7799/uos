@@ -707,11 +707,19 @@ pub fn get_60_evolutionary_cycles() -> List(EvolutionCycleRecord) {
 // Historical cycle narratives remain above as non-authoritative claims.
 // Production verification requires the shared candidate-bound evidence evaluator.
 pub fn verify_cycle(cycle_num: Int) -> Result(EvolutionCycleRecord, String) {
-  case list.find(get_60_evolutionary_cycles(), fn(c) { c.cycle_num == cycle_num }) {
-    Ok(_) -> Error("UNRUN: cycle " <> int.to_string(cycle_num) <> " has historical claims but no fresh candidate-bound receipt")
+  case
+    list.find(get_60_evolutionary_cycles(), fn(c) { c.cycle_num == cycle_num })
+  {
+    Ok(_) ->
+      Error(
+        "UNRUN: cycle "
+        <> int.to_string(cycle_num)
+        <> " has historical claims but no fresh candidate-bound receipt",
+      )
     Error(_) -> Error("Cycle " <> int.to_string(cycle_num) <> " not found")
   }
 }
+
 pub fn calculate_metrics(
   _cycles: List(EvolutionCycleRecord),
 ) -> MathematicalMetrics {
@@ -721,7 +729,12 @@ pub fn calculate_metrics(
     divergence_d_ea: None,
     itqs: None,
     metrics_available: False,
-    missing_denominators: ["shannon_entropy", "cyclomatic_complexity", "divergence_d_ea", "itqs"],
+    missing_denominators: [
+      "shannon_entropy",
+      "cyclomatic_complexity",
+      "divergence_d_ea",
+      "itqs",
+    ],
     all_gates_pass: False,
   )
 }
@@ -830,7 +843,10 @@ pub fn encode_cycles_json(
       #("status", json.string("UNRUN")),
       #("all_passed", json.bool(metrics.all_gates_pass)),
       #("metrics_available", json.bool(metrics.metrics_available)),
-      #("missing_denominators", json.array(metrics.missing_denominators, json.string)),
+      #(
+        "missing_denominators",
+        json.array(metrics.missing_denominators, json.string),
+      ),
       #("shannon_entropy", json.null()),
       #("cyclomatic_complexity", json.null()),
       #("divergence_d_ea", json.null()),

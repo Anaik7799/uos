@@ -1,0 +1,14 @@
+{
+  "schema": "uos.coordinator-integrity-observation.v1",
+  "timestamp": "20260921-1741",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "task": "t0-coordination",
+  "authority": "integrity_observation_only",
+  "observations": [
+    {"name": "canonical", "path": "var/coordination/tri-agent/coordinator.sqlite3", "sha256": "84a2dbb278b7339c5102a519d61a84ace0db42fa57d6951cd0cb01352b910a84", "checked": 117, "sequence_ok": true, "chain_ok": true, "digest_ok": false, "replay_ok": false, "result": "corrupt"},
+    {"name": "recovery_candidate", "path": "/home/an/uos-recovery-candidates/20260921-1620-prefix421/coordinator.sqlite3", "sha256": "7eebafbd65927c3ca9a7d9552818e8780b3bb3ae4746099df553f5ee562a6891", "checked": 421, "sequence_ok": true, "chain_ok": true, "digest_ok": true, "replay_ok": true, "result": "integrity_valid_candidate"}
+  ],
+  "logs": {"canonical_sha256": "fa2497ecd3afdf32cd609855b1b340cb61cc565312dcc463a3f54163907fa6c0", "candidate_sha256": "fc56d74deb0884de9c1b79fb37a71e0e561fc691a59fa3bc5a71030794494b1c"},
+  "decision": "No authority promotion or cutover; common-prefix, writer-quiescence, source-of-truth selection, and independent authorization remain unresolved.",
+  "counts_as_completion": false
+}

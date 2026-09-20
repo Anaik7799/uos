@@ -3,9 +3,8 @@ import cepaf_gleam/crdt/delta_state.{
 }
 import cepaf_gleam/crdt/health_bridge.{empty_health_map, record_health}
 import cepaf_gleam/crdt/mesh_sync.{
-  SyncAck, SyncDelta, SyncDigest, default_cluster_topology,
-  generate_sync_digest, reconcile_remote_delta, requires_delta_sync,
-  sync_message_to_json,
+  SyncAck, SyncDelta, SyncDigest, default_cluster_topology, generate_sync_digest,
+  reconcile_remote_delta, requires_delta_sync, sync_message_to_json,
 }
 import gleeunit/should
 

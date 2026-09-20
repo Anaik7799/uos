@@ -43,7 +43,7 @@ pub fn raga_durga_scale_and_invariants_test() {
   durga.samvadi |> should.equal("Re (Shuddha Rishabh, 9/8)")
 
   // Math gates
-  should.be_true(durga.shannon_entropy >=. 2.50)
+  should.be_true(durga.shannon_entropy >=. 2.5)
   should.be_true(durga.lyapunov_exponent <. 0.0)
 }
 

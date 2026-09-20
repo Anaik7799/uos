@@ -1,0 +1,20 @@
+{
+  "schema": "uos.execution-frontier-observation.v1",
+  "timestamp": "20260921-1622",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "observer": "apps/cepaf_gleam/planning/execution_observer",
+  "observer_output": "governance/planning/20260921-1631-execution-observer-output.json",
+  "observer_output_sha256": "d76fa32485b47e6dad51717dab5078a7f474124a6933ea583eed4f611f9f6e23",
+  "observed_at": "2026-09-21T14:22:16Z",
+  "task_snapshot_sha256": "8fd1e57d0e24eb0e58b70908c8541c145b2219323e8afa237a7d465f2df2a66c",
+  "risk_snapshot_sha256": "4702e4bb81c156b16b790a764b0f51e3b96322f9d360e854114ef9eb8437c2fd",
+  "counts": {"total": 21, "completed": 4, "executing": 0, "blocked": 17, "unknown": 0},
+  "critical_path": {"one_of_two_equal_longest_chains": ["r02-recovery-candidate", "r03-harness-coordinator", "r04-identity-enrollment", "r06-mcp-control", "r07-hive-swarm", "r09-end-to-end", "r10-artifact-sync", "r11-release-review", "r12-operational-acceptance"], "alternate": "same length with r08-service-adapters replacing r07-hive-swarm; unweighted DAG only, not duration-unique"},
+  "new_evidence": "non-empty prefix candidate sequences 1..421 verified for sequence, chain, digest and replay; candidate remains unselected",
+  "optimization": "risk/dependency readiness first; P0 coordination and authority gates precede MCP control, hive/swarm, artifact sync, release and operational acceptance",
+  "dag": {"edges": 25, "missing_ids": 0, "cycles": 0, "recommendations": [], "policy_blocked_ready_roots": ["t0-coordination", "r02-recovery-candidate", "t2-contracts"], "tie_break_order_if_unblocked": ["t0-coordination", "t2-contracts", "r02-recovery-candidate"]},
+  "authority": "read_only_projection",
+  "effect_authority": false,
+  "system_admission": false,
+  "admission": "not_admitted"
+}

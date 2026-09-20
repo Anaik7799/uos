@@ -22,8 +22,8 @@ pub fn downstream_ooz_span_encoding_test() {
       span_id: "span-123",
       name: "prajna.step",
       layer: "l5_cognitive",
-      start_time_us: 1725720000000000,
-      end_time_us: 1725720000001000,
+      start_time_us: 1_725_720_000_000_000,
+      end_time_us: 1_725_720_000_001_000,
       status: "OK",
     )
   let frame = WsOoZSpan(span)
@@ -40,7 +40,7 @@ pub fn downstream_moz_request_encoding_test() {
       tool: "plan_status",
       arguments_json: "{}",
       caller_id: "agent-1",
-      timestamp_us: 1725720000000000,
+      timestamp_us: 1_725_720_000_000_000,
     )
   let frame = WsMoZReq(req)
   let encoded = encode_downstream_frame(frame)
@@ -50,7 +50,7 @@ pub fn downstream_moz_request_encoding_test() {
 }
 
 pub fn downstream_heartbeat_encoding_test() {
-  let frame = WsHeartbeat(timestamp_us: 1725720000000000, peer_count: 3)
+  let frame = WsHeartbeat(timestamp_us: 1_725_720_000_000_000, peer_count: 3)
   let encoded = encode_downstream_frame(frame)
 
   string.contains(encoded, "\"type\":\"heartbeat\"") |> should.be_true()
@@ -76,7 +76,7 @@ pub fn upstream_ping_command_decoding_test() {
   let json_str = "{\"type\":\"ping\",\"client_time_us\":1725720000000000}"
   let decoded = decode_upstream_command(json_str)
 
-  decoded |> should.equal(Ok(WsPing(client_time_us: 1725720000000000)))
+  decoded |> should.equal(Ok(WsPing(client_time_us: 1_725_720_000_000_000)))
 }
 
 pub fn upstream_invalid_command_decoding_test() {

@@ -1,0 +1,23 @@
+{
+  "schema": "uos.source-universe-overlay-validation.v1",
+  "timestamp": "20260921-1313Z",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "overlay": "governance/capability-inventory/20260921-1312-source-universe-correction-overlay.json",
+  "historical_ledger": "governance/capability-inventory/20260921-0706-source-universe-ledger.json",
+  "checks": {
+    "json_parse": "PASS",
+    "target_ids_exist_in_historical_ledger": "PASS",
+    "wrapper_sa_plan_sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+    "wrapper_zigvm_sha256": "e25de1d423c292a2a11259988045bc8d9a5f3aad05c875968747f613bc7e7602",
+    "wrapper_uos_cli_sha256": "3f48be71a04b82ba6a4d18fa6b47089591975963d65f0aa26f214ab382524c06",
+    "wrapper_uos_gleam_start_sha256": "2f1aede7df074cf13ce6a65f8963a0181b9834ef42ca9c104b7d48a9704df02f"
+  },
+  "result": "REPAIR_INPUTS_VALIDATED",
+  "completion": {
+    "t1_tracker_complete": false,
+    "source_universe_complete": false,
+    "mcp_mapping_complete": false,
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "next_authorized_action": "Materialize successor ledger through Sa-plan task t1-tracker and rerun bounded census"
+}

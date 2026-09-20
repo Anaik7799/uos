@@ -13,17 +13,16 @@ import cepaf_gleam/ha/homeostasis_evolution_engine.{
 }
 import cepaf_gleam/ha/pareto_fitness_evaluator.{type CandidateEvaluation}
 import cepaf_gleam/ha/physiological_homeostasis.{
-  type PhysiologicalState,
-  stress_to_string, trend_to_string, variable_to_string,
+  type PhysiologicalState, stress_to_string, trend_to_string, variable_to_string,
 }
-import cepaf_gleam/ui/homeostasis_status as status
 import cepaf_gleam/ui/homeostasis_data as data
-import gleam/result
-import gleam/option.{None, Some}
+import cepaf_gleam/ui/homeostasis_status as status
 import gleam/float
-import gleam/io
 import gleam/int
+import gleam/io
 import gleam/list
+import gleam/option.{None, Some}
+import gleam/result
 import gleam/string
 
 /// Reachable one-shot, plain-text entrypoint. Full-screen input ownership belongs
@@ -34,13 +33,15 @@ fn arguments() -> List(String)
 pub fn main() -> Nil {
   let args = arguments()
   let mode = list.first(args) |> result.unwrap("real")
-  let scenario = list.first(list.drop(args,1)) |> result.unwrap("nominal")
-  let cycle = list.first(list.drop(args,2)) |> result.unwrap("1")
-  case data.parse([#("mode",mode),#("scenario",scenario),#("cycle",cycle)]) {
+  let scenario = list.first(list.drop(args, 1)) |> result.unwrap("nominal")
+  let cycle = list.first(list.drop(args, 2)) |> result.unwrap("1")
+  case
+    data.parse([#("mode", mode), #("scenario", scenario), #("cycle", cycle)])
+  {
     Error(reason) -> io.println("INVALID: " <> reason)
     Ok(selection) -> {
-      let #(snapshot,now) = data.read(selection)
-      render_snapshot(snapshot,now,120,100) |> io.println()
+      let #(snapshot, now) = data.read(selection)
+      render_snapshot(snapshot, now, 120, 100) |> io.println()
     }
   }
 }
@@ -81,11 +82,19 @@ fn render_phase(phase: HomeostasisPhase, gen: Int) -> String {
       "yellow",
     )
     HomeostaticEquilibrium(cycles, err) -> #(
-      "HOMEOSTATIC EQUILIBRIUM (" <> int.to_string(cycles) <> " cycles, e=" <> float.to_string(err) <> ")",
+      "HOMEOSTATIC EQUILIBRIUM ("
+        <> int.to_string(cycles)
+        <> " cycles, e="
+        <> float.to_string(err)
+        <> ")",
       "green",
     )
     AutonomousEvolutionActive(cycle, g) -> #(
-      "AUTONOMOUS EVOLUTION ACTIVE [Gen " <> int.to_string(g) <> ": " <> safe_text(cycle) <> "]",
+      "AUTONOMOUS EVOLUTION ACTIVE [Gen "
+        <> int.to_string(g)
+        <> ": "
+        <> safe_text(cycle)
+        <> "]",
       "cyan",
     )
     InstabilityIntervention(reason) -> #(
@@ -221,16 +230,23 @@ pub fn render_snapshot(
     None -> "UNKNOWN"
   }
   let width = int.clamp(columns, 0, 240)
-  let lines = list.flatten([[
-    "HOMEOSTASIS | " <> state_label,
-    "Source: " <> origin,
-    "Source UTC us: " <> time,
-  ], list.map(status.fields(snapshot,now_us),fn(f) { safe_text(f.1 <> ": " <> f.2) }), [
-    "Peer presence: UNKNOWN",
-    "Control authority: NONE",
-    "Verification: UNRUN / candidate receipts required",
-    "http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution",
-  ]])
+  let lines =
+    list.flatten([
+      [
+        "HOMEOSTASIS | " <> state_label,
+        "Source: " <> origin,
+        "Source UTC us: " <> time,
+      ],
+      list.map(status.fields(snapshot, now_us), fn(f) {
+        safe_text(f.1 <> ": " <> f.2)
+      }),
+      [
+        "Peer presence: UNKNOWN",
+        "Control authority: NONE",
+        "Verification: UNRUN / candidate receipts required",
+        "http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution",
+      ],
+    ])
   case width == 0 {
     True -> ""
     False ->

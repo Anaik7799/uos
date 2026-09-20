@@ -1,0 +1,20 @@
+{
+  "schema": "uos.current-system-doctor-receipt.v1",
+  "observed_at": "2026-09-21T19:01:00+02:00",
+  "plan": "uos/system-mcp-features/20260919-1642",
+  "command": "bash tools/uos-cli doctor",
+  "log": "/tmp/uos-doctor-1900.log",
+  "log_sha256": "133d55f8b06ff9d36e3ab80cb33871f2a556a68d5fc74cb5d3669fa72ce6db3e",
+  "result": "HOLD",
+  "ev_checks": {
+    "total": 111,
+    "verified_artifact_present": 2,
+    "missing_declared_artifact": 0,
+    "unverifiable": 91,
+    "not_admitted_above_ceiling": 18,
+    "admitted_ceiling": "EV-93"
+  },
+  "interpretation": "Current-system artifact review does not establish two-key admission; unverifiable and above-ceiling claims remain excluded.",
+  "completion_credit": false,
+  "admission": "not_admitted"
+}

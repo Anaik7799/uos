@@ -64,7 +64,8 @@ pub fn equilibrium_transition_test() {
 
   case s3.phase {
     HomeostaticEquilibrium(cycles, _) -> cycles |> should.equal(3)
-    _ -> panic as "Expected HomeostaticEquilibrium after 3 consecutive stable ticks"
+    _ ->
+      panic as "Expected HomeostaticEquilibrium after 3 consecutive stable ticks"
   }
 }
 
@@ -85,7 +86,8 @@ pub fn propose_evolution_blocked_before_homeostasis_test() {
       // Must state that system is converging
       True |> should.equal(True)
     }
-    Ok(_) -> panic as "Expected self-evolution proposal to be blocked before homeostasis"
+    Ok(_) ->
+      panic as "Expected self-evolution proposal to be blocked before homeostasis"
   }
 }
 
@@ -111,15 +113,39 @@ pub fn three_of_four_evolution_ratification_test() {
   prop0.ballot.verdict |> should.equal(VerdictPending)
 
   // Vote 1: AGY Approves
-  let prop1 = vote_on_evolution(prop0, AgySovereign, QuorumApprove, "Lean 4 proofs verified", "sha-agy", 4200)
+  let prop1 =
+    vote_on_evolution(
+      prop0,
+      AgySovereign,
+      QuorumApprove,
+      "Lean 4 proofs verified",
+      "sha-agy",
+      4200,
+    )
   prop1.ballot.verdict |> should.equal(VerdictPending)
 
   // Vote 2: Claude Approves
-  let prop2 = vote_on_evolution(prop1, ClaudeSovereign, QuorumApprove, "Architecture deconflicted", "sha-claude", 4300)
+  let prop2 =
+    vote_on_evolution(
+      prop1,
+      ClaudeSovereign,
+      QuorumApprove,
+      "Architecture deconflicted",
+      "sha-claude",
+      4300,
+    )
   prop2.ballot.verdict |> should.equal(VerdictPending)
 
   // Vote 3: OpenRouter Approves (via local free-tier router)
-  let prop3 = vote_on_evolution(prop2, OpenRouterSovereign, QuorumApprove, "Cross-model heuristic verified", "sha-or", 4400)
+  let prop3 =
+    vote_on_evolution(
+      prop2,
+      OpenRouterSovereign,
+      QuorumApprove,
+      "Cross-model heuristic verified",
+      "sha-or",
+      4400,
+    )
   case prop3.ballot.verdict {
     VerdictRatified(approvals, total) -> {
       approvals |> should.equal(3)
@@ -143,7 +169,7 @@ pub fn three_of_four_evolution_ratification_test() {
 pub fn instability_intervention_test() {
   let s0 = init_homeostasis_system(1000)
   // Sudden health drop to 0.70 (error 0.30 > 0.20 threshold)
-  let s1 = ingest_telemetry(s0, 0.70, 1.0, 2000)
+  let s1 = ingest_telemetry(s0, 0.7, 1.0, 2000)
   case s1.phase {
     InstabilityIntervention(_reason) -> {
       // Andon stop active
@@ -171,8 +197,24 @@ pub fn three_of_four_evolution_rejection_test() {
   let assert Ok(prop0) = propose_evolution(s3, mut, 4100)
 
   // 2 Rejections out of 4 makes 3 approvals impossible
-  let prop1 = vote_on_evolution(prop0, AgySovereign, QuorumReject, "Formal proof absent", "sha-agy", 4200)
-  let prop2 = vote_on_evolution(prop1, ClaudeSovereign, QuorumReject, "Violates Zero-Muda", "sha-claude", 4300)
+  let prop1 =
+    vote_on_evolution(
+      prop0,
+      AgySovereign,
+      QuorumReject,
+      "Formal proof absent",
+      "sha-agy",
+      4200,
+    )
+  let prop2 =
+    vote_on_evolution(
+      prop1,
+      ClaudeSovereign,
+      QuorumReject,
+      "Violates Zero-Muda",
+      "sha-claude",
+      4300,
+    )
 
   case prop2.ballot.verdict {
     multi_agent_quorum.VerdictRejected(rejections, total) -> {
@@ -193,12 +235,22 @@ pub fn homeostasis_actor_lifecycle_test() {
   let subj = started.data
 
   // Send 3 observations of health 1.0 (driving towards homeostasis)
-  actor.send(subj, homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 2000))
-  actor.send(subj, homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 3000))
-  actor.send(subj, homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 4000))
+  actor.send(
+    subj,
+    homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 2000),
+  )
+  actor.send(
+    subj,
+    homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 3000),
+  )
+  actor.send(
+    subj,
+    homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 4000),
+  )
 
   // Query state
-  let s3 = actor.call(subj, 1000, homeostasis_evolution_engine.GetHomeostasisState)
+  let s3 =
+    actor.call(subj, 1000, homeostasis_evolution_engine.GetHomeostasisState)
   case s3.phase {
     HomeostaticEquilibrium(cycles, _) -> cycles |> should.equal(3)
     _ -> panic as "Expected HomeostaticEquilibrium in actor"
@@ -215,71 +267,55 @@ pub fn homeostasis_actor_lifecycle_test() {
     )
 
   let assert Ok(prop0) =
-    actor.call(
-      subj,
-      1000,
-      fn(reply) { homeostasis_evolution_engine.SubmitMutationProposal(mut, 4100, reply) },
-    )
+    actor.call(subj, 1000, fn(reply) {
+      homeostasis_evolution_engine.SubmitMutationProposal(mut, 4100, reply)
+    })
 
   // Cast 3 approvals (AGY, Claude, OpenRouter)
   let prop1 =
-    actor.call(
-      subj,
-      1000,
-      fn(reply) {
-        homeostasis_evolution_engine.CastQuorumVote(
-          prop0,
-          AgySovereign,
-          QuorumApprove,
-          "Energy verified",
-          "sha-a",
-          4200,
-          reply,
-        )
-      },
-    )
+    actor.call(subj, 1000, fn(reply) {
+      homeostasis_evolution_engine.CastQuorumVote(
+        prop0,
+        AgySovereign,
+        QuorumApprove,
+        "Energy verified",
+        "sha-a",
+        4200,
+        reply,
+      )
+    })
 
   let prop2 =
-    actor.call(
-      subj,
-      1000,
-      fn(reply) {
-        homeostasis_evolution_engine.CastQuorumVote(
-          prop1,
-          ClaudeSovereign,
-          QuorumApprove,
-          "Zero-Muda verified",
-          "sha-c",
-          4300,
-          reply,
-        )
-      },
-    )
+    actor.call(subj, 1000, fn(reply) {
+      homeostasis_evolution_engine.CastQuorumVote(
+        prop1,
+        ClaudeSovereign,
+        QuorumApprove,
+        "Zero-Muda verified",
+        "sha-c",
+        4300,
+        reply,
+      )
+    })
 
   let prop3 =
-    actor.call(
-      subj,
-      1000,
-      fn(reply) {
-        homeostasis_evolution_engine.CastQuorumVote(
-          prop2,
-          OpenRouterSovereign,
-          QuorumApprove,
-          "Consensus complete",
-          "sha-or",
-          4400,
-          reply,
-        )
-      },
-    )
+    actor.call(subj, 1000, fn(reply) {
+      homeostasis_evolution_engine.CastQuorumVote(
+        prop2,
+        OpenRouterSovereign,
+        QuorumApprove,
+        "Consensus complete",
+        "sha-or",
+        4400,
+        reply,
+      )
+    })
 
   // Apply ratified mutation
   let assert Ok(evolved) =
-    actor.call(
-      subj,
-      1000,
-      fn(reply) { homeostasis_evolution_engine.ApplyMutationEvolution(prop3, reply) },
-    )
+    actor.call(subj, 1000, fn(reply) {
+      homeostasis_evolution_engine.ApplyMutationEvolution(prop3, reply)
+    })
 
   evolved.generation |> should.equal(1)
   case evolved.phase {
@@ -310,7 +346,8 @@ pub fn physiological_homeostasis_gating_test() {
   // System should fail closed into InstabilityIntervention Andon stop
   case s4.phase {
     InstabilityIntervention(_) -> True |> should.equal(True)
-    _ -> panic as "Expected InstabilityIntervention on critical physiological stress"
+    _ ->
+      panic as "Expected InstabilityIntervention on critical physiological stress"
   }
 
   // Evolutionary proposal must be blocked
@@ -325,7 +362,7 @@ pub fn physiological_homeostasis_gating_test() {
 
   case propose_evolution(s4, mut, 5100) {
     Error(_) -> True |> should.equal(True)
-    Ok(_) -> panic as "Expected propose_evolution to fail closed under critical stress"
+    Ok(_) ->
+      panic as "Expected propose_evolution to fail closed under critical stress"
   }
 }
-
