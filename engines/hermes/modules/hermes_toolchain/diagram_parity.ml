@@ -72,6 +72,10 @@ type verdict =
       (** arrow-list ASCII and mermaid agree on the edge set; count *)
   | Edges_differ of { only_ascii : string list; only_mermaid : string list }
       (** arrow-list ASCII and mermaid disagree. A real failure. *)
+  | Unverifiable_kind of { kinds : string list }
+      (** the mermaid block is not a flowchart -- sequenceDiagram,
+          stateDiagram, quadrantChart and friends are different languages
+          whose arrows are not graph edges. NONPASSING. *)
   | Unverifiable_naming of { ascii_edges : int; mermaid_edges : int }
       (** both sides are arrow lists, but their node vocabularies do not
           overlap, so no alignment exists. NOT a topology mismatch --
@@ -233,7 +237,46 @@ let split_on_arrow l =
 (* Mermaid edges. Declaration-only lines and `subgraph`/`end`/`style`/
    `classDef` directives carry no edge and are skipped rather than
    guessed at. A labelled edge `A -->|why| B` keeps its endpoints. *)
+(* MEASURED 2026-09-28, the third defect this checker's own corpus run found.
+   `docs/design/20260908-0050-...-sdlc-synthesis.md` was reported as a topology
+   MISMATCH. It is not: it carries a `quadrantChart`, whose syntax uses arrows
+   to label AXES --
+
+     x-axis "Concrete / Executable" --> "Abstract / Normative"
+
+   -- and the edge extractor, which assumes flowchart syntax, read those as
+   graph edges. Corpus exposure at the time: 60 sequenceDiagram, 57
+   stateDiagram-v2, 2 mindmap, 1 quadrantChart, 1 erDiagram = 117 diagrams in
+   a language this parser does not speak.
+
+   Mermaid's diagram type is declared by the first meaningful line. Anything
+   that is not `flowchart`/`graph` is reported as a KIND we cannot compare,
+   never parsed for arrows. Guessing edges out of another language is exactly
+   the manufacture-a-false-verdict failure this module exists to avoid. *)
+let graphlike_kinds = [ "flowchart"; "graph" ]
+
+let mermaid_kind block =
+  let rec first = function
+    | [] -> ""
+    | l :: rest ->
+      let t = String.trim l in
+      if t = "" || starts_with "%%" t then first rest
+      else
+        (* leading token up to whitespace *)
+        let n = String.length t in
+        let rec cut i =
+          if i >= n then t
+          else match t.[i] with ' ' | '\t' -> String.sub t 0 i | _ -> cut (i + 1)
+        in
+        cut 0
+  in
+  first (lines block)
+
+let is_graphlike block = List.mem (mermaid_kind block) graphlike_kinds
+
 let mermaid_edges block =
+  if not (is_graphlike block) then []
+  else
   lines block
   |> List.filter_map (fun l ->
       let t = String.trim l in
@@ -389,6 +432,15 @@ let check (body : string) : verdict =
     | Table_only -> Table_mistaken_for_diagram
     | Box_art -> Unverifiable_box_art { mermaid_edges = List.length m_edges }
     | Arrow_list ->
+      (* An edge comparison is only meaningful if every mermaid block in the
+         document is a graph. One sequenceDiagram alongside a flowchart makes
+         the document's edge SET incomparable, so report the kinds rather than
+         compare a partial set against a complete ASCII one. *)
+      let non_graph = List.filter (fun b -> not (is_graphlike b)) mers in
+      if non_graph <> [] then
+        Unverifiable_kind
+          { kinds = uniq_sorted (List.map mermaid_kind non_graph) }
+      else
       let a_edges = List.concat_map arrow_list_edges (ascii_blocks body) in
       (* Project the mermaid edges into LABEL space, which is the only
          vocabulary the two forms share. A node with no label keeps its id. *)
@@ -438,6 +490,12 @@ let describe = function
     Printf.sprintf
       "FAIL: edge sets differ. ASCII only: [%s]. Mermaid only: [%s]."
       (String.concat "; " only_ascii) (String.concat "; " only_mermaid)
+  | Unverifiable_kind { kinds } ->
+    Printf.sprintf
+      "UNVERIFIED: mermaid diagram kind(s) [%s] are not flowcharts; their \
+       arrows are not graph edges, so topology is not mechanically comparable \
+       (INV-JRN-06). Co-presence holds. Nonpassing."
+      (String.concat "; " kinds)
   | Unverifiable_naming { ascii_edges; mermaid_edges } ->
     Printf.sprintf
       "UNVERIFIED: both forms are arrow lists (%d ASCII edges, %d mermaid) but \

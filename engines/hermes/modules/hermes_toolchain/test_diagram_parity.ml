@@ -135,7 +135,7 @@ let () =
   law "L17 node identity is the ID, not the label: this corpus writes \
          different WORDING in the two forms while the graph is the same"
     (fun () ->
-       mermaid_edges "A[\"long prose here\"] --> B[\"other prose\"]"
+       mermaid_edges "flowchart TD\n  A[\"long prose here\"] --> B[\"other prose\"]"
        = [ ("A", "B") ]);
   law "L18 declarations, directives and subgraph lines carry no edge"
     (fun () ->
@@ -144,14 +144,14 @@ let () =
           \  classDef c fill:#000\n  %% comment"
        = []);
   law "L19 a labelled edge keeps its endpoints" (fun () ->
-      mermaid_edges "A -->|because| B" = [ ("A", "B") ]);
+      mermaid_edges "flowchart TD\n  A -->|because| B" = [ ("A", "B") ]);
   law "L20 the other arrow forms are recognised" (fun () ->
       List.for_all
-        (fun l -> mermaid_edges l = [ ("A", "B") ])
+        (fun l -> mermaid_edges ("flowchart TD\n" ^ l) = [ ("A", "B") ])
         [ "A --> B"; "A ==> B"; "A -.-> B"; "A --- B" ]);
   law "L21 round and brace node shapes reduce to their id" (fun () ->
       List.for_all
-        (fun l -> mermaid_edges l = [ ("A", "B") ])
+        (fun l -> mermaid_edges ("flowchart TD\n" ^ l) = [ ("A", "B") ])
         [ "A(a) --> B(b)"; "A{a} --> B{b}"; "A((a)) --> B((b))" ]);
 
   (* --- fence discipline --------------------------------------------- *)
@@ -206,6 +206,56 @@ let () =
          and which carries no box glyph is never Missing_ascii" (fun () ->
       v (mermaid ^ "\n```text\n[Models] -> [Record] -> [Validation]\n```\n")
       <> Missing_ascii);
+
+  (* --- diagram KIND: measured 2026-09-28 on the real corpus ----------- *)
+  law "L34 REGRESSION: a quadrantChart's axis arrows are NOT graph edges \
+         (this exact document was reported as a topology mismatch)" (fun () ->
+      mermaid_edges
+        "quadrantChart\n    title T\n    x-axis \"Concrete\" --> \"Abstract\"\n\
+         \    y-axis \"Structural\" --> \"Behavioral\""
+      = []);
+  law "L35 non-flowchart kinds yield no edges at all" (fun () ->
+      List.for_all
+        (fun k -> mermaid_edges (k ^ "\n  A --> B") = [])
+        [ "sequenceDiagram"; "stateDiagram-v2"; "erDiagram"; "mindmap";
+          "gantt"; "journey"; "pie"; "timeline"; "classDiagram" ]);
+  law "L36 flowchart and graph ARE graphlike, so edges still extract"
+    (fun () ->
+       List.for_all
+         (fun k -> mermaid_edges (k ^ "\n  A --> B") = [ ("A", "B") ])
+         [ "flowchart TD"; "graph LR"; "flowchart"; "graph" ]);
+  law "L37 a non-flowchart mermaid beside an arrow-list ASCII reports the \
+         KIND, never a mismatch -- guessing edges out of another language \
+         manufactures exactly the false verdict this module exists to avoid"
+    (fun () ->
+       match
+         v ("```mermaid\nsequenceDiagram\n  A --> B\n```\n"
+            ^ ascii_of [ ("A", "B") ])
+       with
+       | Unverifiable_kind { kinds = [ "sequenceDiagram" ] } -> true
+       | _ -> false);
+  law "L38 the kind verdict is neither passing nor a failure" (fun () ->
+      let k = Unverifiable_kind { kinds = [ "gantt" ] } in
+      (not (is_passing k)) && not (is_failure k));
+  law "L39 ONE non-flowchart block among flowcharts makes the document's \
+         edge set incomparable" (fun () ->
+      match
+        v (mermaid_of [ ("A", "B") ]
+           ^ "```mermaid\nstateDiagram-v2\n  A --> B\n```\n"
+           ^ ascii_of [ ("A", "B") ])
+      with
+      | Unverifiable_kind _ -> true
+      | _ -> false);
+  law "L40 a missing ASCII is STILL a failure whatever the mermaid kind: \
+         SC-DIAGRAM-001 requires both forms regardless of type" (fun () ->
+      List.for_all
+        (fun k -> v ("```mermaid\n" ^ k ^ "\n  A --> B\n```\n") = Missing_ascii)
+        [ "sequenceDiagram"; "quadrantChart"; "flowchart TD" ]);
+
+  law "L41 a block with NO type declaration is not treated as a flowchart. \
+         Real mermaid always declares its type; assuming one would be the \
+         same guess this fix removes. Fail-safe: UNVERIFIED, never a verdict"
+    (fun () -> mermaid_edges "A --> B" = []);
 
   law "L30 multiple mermaid blocks contribute all their edges" (fun () ->
       match
