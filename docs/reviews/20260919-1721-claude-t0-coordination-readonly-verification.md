@@ -162,3 +162,105 @@ and is undiscoverable. `resign` and `compact` are likewise unlisted.
 ---
 
 **UOS footer:** [nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100/) · Sa-plan is the sole execution authority; this verification grants no admission and completes no task.
+
+---
+
+# Addendum — 2026-09-28: corrections, and a writer-signature boundary at sequence 66
+
+Observed `2026-09-28T06:42:31Z`. Read-only; all SQLite `mode=ro`. No writes, no
+quarantine, no lease, no task claimed. Added at Codex's request for the
+source-bound risk and diagnosis artifact under `uos/system-mcp-features/20260919-1642`.
+
+## A1. Two corrections I owe, both mine
+
+**A1.1 — Codex's HOLD does not override an operator instruction.** On 2026-09-19 the
+operator directed "quarantine event 1762 and restore replay" and Codex's advisory
+hold arrived in the same turn. I described the hold as countermanding the operator.
+It does not: Codex holds no coordination-ownership lease while replay fails, and an
+advisory hold from a peer agent never supersedes a direct operator instruction in
+this session. **The quarantine was correctly not performed, but for only one of the
+two reasons I gave.** The sound reason stands on its own: both planes were by then
+known digest-broken, so restoring replay on the flat plane would have made it *look*
+authoritative — the entrenchment risk that prerequisite §6.2 exists to prevent.
+The unsound reason — treating a peer's hold as authority — is withdrawn.
+
+**A1.2 — Rows 116/117 are not Codex's session.** I wrote that "Codex's own
+coordination writes are landing on a plane `status` does not read," inferring Codex
+from the substring `codex-astra` inside `operation_id`. An `operation_id` is
+author-chosen free text. **I read identity out of a payload field.** That is
+`INV-WS-06` ("attribution is carried by `plan_id`, never inferred from adjacency")
+generalised to the event body, and it is the exact hazard any reconciliation must not
+inherit: an event's own `session` field is a claim by whoever wrote the row, not an
+identity. Codex confirms writing no coordinator events — only Sa-plan registrations
+and selection evidence.
+
+**What survives A1.2:** *an* active writer existed on the SQLite plane (116 → 117
+observed twelve minutes apart, 2026-09-19), and the flat plane did not move. The
+divergence finding stands; the attribution does not.
+
+## A2. A writer-signature boundary at sequence 66 — and a retraction
+
+`inserted_utc_us` is assigned by the store, `utc_us` by the event author, so their
+relationship is a writer signature the author does not control.
+
+**Measured 2026-09-28 over all 117 rows:**
+
+```text
+  identical clocks (inserted_utc_us == utc_us) : 107 rows
+  differing clocks (inserted_utc_us >  utc_us) :  10 rows  <- sequences 66..75 ONLY
+  distinct inserted_utc_us values              : 117       <- no single-burst bulk write
+```
+
+**RETRACTION.** In my 2026-09-19 message to Codex I reported that "rows 66..116 carry
+the live-append signature (two distinct clock reads)". **That was wrong.** I sampled
+sequences 60..70, saw the signature change at 66, and extrapolated it across the whole
+of Codex's reported digest-failure band. The anomaly is **ten rows, 66..75**, and the
+signature reverts to identical-clock at 76. Sampling a window and generalising to a
+band is the same error class this review keeps documenting in others; recorded here
+rather than quietly fixed.
+
+**What the corrected measurement supports:**
+
+| Claim | Status |
+|---|---|
+| Something changed at sequence **66** | Supported — both the clock signature and (per Codex) `digest_ok` change there |
+| The change persists to 116 | **Not supported** — clock signature reverts at 76 |
+| 66..116 were bulk-imported in one burst | **Refuted** — 117 distinct `inserted_utc_us` |
+| 66..75 and 66..116 are the same anomaly | **Unknown** — they share a start, not an extent |
+
+So: a ten-row window with a distinct writer signature sits at the head of a fifty-one
+row digest-failure band. Two overlapping, non-coextensive anomalies with a common
+origin point. Whether one caused the other is **not determined here**.
+
+**Not verified by me:** Codex's `digest_ok=false` for 66..116 is Codex's measurement
+via `session_store_cli verify`; I did not recompute digests. My independent checks
+covered clock signatures, `inserted_utc_us` distinctness, sequence continuity, chain
+linkage and operation-id uniqueness.
+
+## A3. The schema cannot express the distinction the reconciliation needs
+
+`coordinator.sqlite3.events` carries one `digest TEXT NOT NULL UNIQUE` column and no
+field recording whether that digest was **as emitted by the original writer** or
+**recomputed at import**. `meta` holds a single `schema = uos-session-sync/v1` with no
+writer-version row, so the sequence-66 change is invisible to the store itself.
+
+Consequence: any reconciliation writing into this schema destroys the evidence needed
+to audit it. The schema must gain the distinction — `origin_digest` (nullable,
+as-received), `chain_digest` (recomputed), and `evidence_grade NOT NULL` with **no
+default** so an importer cannot silently omit it — **before** any migration, not after.
+
+## A4. State at 2026-09-28T06:42Z
+
+| Plane | Rows | Last movement |
+|---|---|---|
+| `events/` (flat, read by `admission.gleam:347`) | 1762 | unchanged since 2026-09-10 |
+| `coordinator.sqlite3` | 117 | unchanged since 2026-09-19 |
+| `events.sqlite3` | 0 | failed-cutover artifact; evidence, not authority |
+
+Both status paths still refuse. Event 1762 remains in place, unquarantined,
+sha256 `3f3b3c1322330dbe812fdd790471954e7160ebe8236686768c8988f0005b59bb`.
+
+---
+
+**UOS footer:** advisory addendum; `REPORT_ONLY`. No admission, no task completed, no
+recovery performed.
