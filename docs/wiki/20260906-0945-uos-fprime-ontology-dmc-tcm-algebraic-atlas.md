@@ -20,6 +20,21 @@ In UOS, historical dependencies on external C++ code and non-deterministic runti
 - **OTP 29 Supervision**: Every active and queued component is hosted in a supervised BEAM actor with isolated mailboxes, bounded queue policies (`Assert`, `Block`, `Drop`), and deterministic message handling.
 - **Multi-Modal Synchronization**: Components communicate synchronously via request-reply pattern or asynchronously via isolated Erlang process queues.
 
+```text
+[FPP AST Metamodel] --> [HermesHarness Topology 11 Instances]
+[HermesHarness Topology 11 Instances] --> [Supervised Actor Grid fpp/actor.gleam]
+[Hierarchical State Machine Spec] --> [HSM Interpreter fpp/interp.gleam]
+[Supervised Actor Grid fpp/actor.gleam] --> [Svc::PrmDb Parameter Actor fpp/prm_db.gleam]
+[Supervised Actor Grid fpp/actor.gleam] --> [CCSDS Telemetry Packetizer fpp/packetizer.gleam]
+[Supervised Actor Grid fpp/actor.gleam] --> [DMC Base-ID Windows fpp/dmc_tcm.gleam]
+[DMC Base-ID Windows fpp/dmc_tcm.gleam] --> [13D Coordinate Conservation Delta T_13 = 0]
+[HermesHarness Topology 11 Instances] --> [5-Tier Category Atlas fpp/algebraic_atlas.gleam]
+[Supervised Actor Grid fpp/actor.gleam] --> [Denotational Flight Intent Gatekeeper fpp/intent.gleam]
+[HermesHarness Topology 11 Instances] --> [Living Biomorphic Ontology 50 Nodes, 59 Edges]
+[HermesHarness Topology 11 Instances] --> [Topology Cockpit /fpp-topology]
+[5-Tier Category Atlas fpp/algebraic_atlas.gleam] --> [Atlas & Ontology Cockpit /fpp-atlas]
+```
+
 ```mermaid
 graph TD
     subgraph FPP_SPEC["FPP Flight Specification"]
@@ -159,3 +174,4 @@ The FPP implementation is verified across the complete testing hierarchy:
 | **Total UOS Gleam System Tests** | **78 Suites** | **10,016** | **PASS (100%)** |
 
 All tests compile with **0 compiler warnings** (`SC-MUDA-001`) and adhere to the **18/18 Comprehensive Verification Checklist** (`SC-CHECKLIST-001`).
+

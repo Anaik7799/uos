@@ -34,6 +34,16 @@
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[curl ...:8999/holon | bash] --> [OTP 29 Nix Closure 78MB]
+[curl ...:8999/holon | bash] --> [OODA Homeostasis Engine]
+[OODA Homeostasis Engine] --> [Port 8088 Gateway & Evolution API]
+[Port 8088 Gateway & Evolution API] --> [Substrate & Toolchain Sensory Engine]
+[Substrate & Toolchain Sensory Engine] --> [5 Sovereign Evolution Pillars]
+[hydrate-evolution-stack.sh] --> [Pre-built Toolchains on Port 8100]
+[hydrate-evolution-stack.sh] --> [5 Sovereign Evolution Pillars]
+```
+
 ```mermaid
 flowchart TD
     subgraph Controller[Controller: nas-1 port 8999 & 8100]
@@ -145,3 +155,4 @@ flowchart TD
 
 ## 13. Conclusion
 The UOS Autonomous Intelligent Holon Node is fully equipped with the complete development, evolution, and operational stack. The operator can deploy and activate the full stack using `curl -fsSL http://192.168.1.220:8999/holon | bash`.
+

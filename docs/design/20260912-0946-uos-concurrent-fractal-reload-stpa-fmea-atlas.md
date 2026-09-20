@@ -74,6 +74,18 @@ Following the STAMP/STPA safety framework (Leveson):
        └─────────────────────────────────────────────────────────────┘
 ```
 
+```text
+[L0 Constitutional Authority Fail-Closed Consensus Gate] --> [Concurrent Fractal Reload Controller cepaf_gleam/ha/concurrent_fractal_reload]
+[L0 Constitutional Authority Fail-Closed Consensus Gate] --> [Concurrent Fractal Reload Controller cepaf_gleam/ha/concurrent_fractal_reload]
+[Concurrent Fractal Reload Controller cepaf_gleam/ha/concurrent_fractal_reload] --> [Substrate Reloader Actor Tiers L1, L2, L3, L4]
+[Concurrent Fractal Reload Controller cepaf_gleam/ha/concurrent_fractal_reload] --> [Cognitive Reloader Actor Tiers L5, L6, L7, L8, L9]
+[Substrate Reloader Actor Tiers L1, L2, L3, L4] --> [BEAM Code Server & Process Memory Two-Generation Bytecode Store]
+[Cognitive Reloader Actor Tiers L5, L6, L7, L8, L9] --> [BEAM Code Server & Process Memory Two-Generation Bytecode Store]
+[BEAM Code Server & Process Memory Two-Generation Bytecode Store] --> [Concurrent Fractal Reload Controller cepaf_gleam/ha/concurrent_fractal_reload]
+[BEAM Code Server & Process Memory Two-Generation Bytecode Store] --> [Concurrent Fractal Reload Controller cepaf_gleam/ha/concurrent_fractal_reload]
+[Concurrent Fractal Reload Controller cepaf_gleam/ha/concurrent_fractal_reload] --> [L0 Constitutional Authority Fail-Closed Consensus Gate]
+```
+
 ```mermaid
 flowchart TD
     subgraph ControlHierarchy["STPA Hierarchical Control Structure"]
@@ -180,6 +192,12 @@ The monoidal diagram commutes, establishing **strong diamond confluence** (Churc
                (State Vectors & AG-UI Bus)
 ```
 
+```text
+[Substrate Sheaf: FU_sub Tiers L0, L1, L2, L3, L4] --> [Intersection U_sub ∩ U_cog State Vectors, AG-UI Events, Zenoh Spans]
+[Cognitive Sheaf: FU_cog Tiers L5, L6, L7, L8, L9] --> [Intersection U_sub ∩ U_cog State Vectors, AG-UI Events, Zenoh Spans]
+[Intersection U_sub ∩ U_cog State Vectors, AG-UI Events, Zenoh Spans] --> [Global Section: FX Unified Port 4100 BEAM Cockpit]
+```
+
 ```mermaid
 flowchart TD
     GLOBAL["Global Section: F(X)<br/>(Unified Port 4100 BEAM Cockpit)"]
@@ -232,3 +250,4 @@ Per `SC-CHECKLIST-001` and `SPEC-CHECKLIST-NAV-001`:
 - [x] **CHK-16-OTEL**: Universal structured telemetry active.
 - [x] **CHK-17-SOV**: Tri-Sovereign consensus ratified.
 - [x] **CHK-18-JJ**: Standalone Jujutsu monorepo (`.jj/`) preserved.
+

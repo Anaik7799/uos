@@ -43,6 +43,20 @@ In the legacy VM-1 C3I and Indrajaal deployments (`/home/an/dev/ver/c3i`), the *
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[User Intent / Stimulus\nProcessIntent] --> [Orient\nContext & Persona]
+[Orient\nContext & Persona] --> [Decide\nClassify & Plan]
+[Decide\nClassify & Plan] --> [Act\nDispatch MCP Tool]
+[Act\nDispatch MCP Tool] --> [Observe\nTool Result]
+[Observe\nTool Result] --> [Orient\nContext & Persona]
+[Decide\nClassify & Plan] --> [HITL Approval Interceptor\nL0 Emergency Stop]
+[HITL Approval Interceptor\nL0 Emergency Stop] --> [sa-plan Execution Authority\nvar/sa-plan/uos.sqlite3]
+[HITL Approval Interceptor\nL0 Emergency Stop] --> [Jidoka Andon Halt\nCode -32002 on Unledgered Action]
+[sa-plan Execution Authority\nvar/sa-plan/uos.sqlite3] --> [Act\nDispatch MCP Tool]
+[Prefrontal Cortex Complex Plane - Zero Trust] --> [Dead-Man's Freshness\n100ms Heartbeat]
+[Dead-Man's Freshness\n100ms Heartbeat] --> [SIL-6 Formal Guardian\nOS Lock 25503L801736]
+```
+
 ```mermaid
 graph TD
     subgraph Cognitive["Prefrontal Cortex (Complex Plane - Zero Trust)"]
@@ -123,6 +137,19 @@ To achieve optimal performance, formal safety, and Zero-Muda compliance, Cortex 
 |      - engines/zigvm/src/vfs.zig (atomic descriptor-relative task ledger snapshots)                 |
 |                                                                                                    |
 +----------------------------------------------------------------------------------------------------+
+```
+
+```text
+[uos_sup.gleam\nRoot Supervisor] --> [cortex_actor.gleam\nOODA ReAct Loop]
+[cortex_actor.gleam\nOODA ReAct Loop] --> [sa_plan_coordinator.gleam\nLease & Job Pull]
+[cortex_actor.gleam\nOODA ReAct Loop] --> [cortex_cockpit.gleam\nLustre MVU Port 8100]
+[cortex_actor.gleam\nOODA ReAct Loop] --> [Zero-Trust Interceptor\nCryptokit SHA-256]
+[Zero-Trust Interceptor\nCryptokit SHA-256] --> [Gospel Contracts\ncortex_contract.mli]
+[cortex_actor.gleam\nOODA ReAct Loop] --> [native/cortex_accel\nFast Cosine & Scoring]
+[sa_plan_coordinator.gleam\nLease & Job Pull] --> [sa_plan_nif.rs\nWAL SQLite Driver]
+[sa_plan_nif.rs\nWAL SQLite Driver] --> [spec.rs\nOS NVMe Lock 25503L801736]
+[cortex_actor.gleam\nOODA ReAct Loop] --> [cortex_scorer.py\nQuarantined Daemon]
+[cortex_scorer.py\nQuarantined Daemon] --> [mojo_vector_engine.mojo\nSIMD AVX-512 Scorer]
 ```
 
 ```mermaid
@@ -252,3 +279,4 @@ graph LR
 
 > [!TIP]
 > **SIMD Acceleration**: By default, MAX Mojo SIMD scoring will run on host CPU using AVX-512/AVX2 instructions. If the laptop GPU (RTX 3080 Ti) is hydrated, it will automatically leverage CUDA acceleration.
+

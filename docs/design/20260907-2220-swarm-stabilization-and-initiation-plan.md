@@ -61,6 +61,15 @@ This document formalizes the canonical operational plan to:
 
 ### 2.2 Mermaid Architecture Diagram
 
+```text
+[AGY Gemini Formal Proofs, Gospel, MAX/Mojo] --> [sa-plan Heijunka Dispatcher var/sa-plan/uos.sqlite3 SC-JIDOKA-001 / SC-SA-PLAN-001]
+[Claude Anthropic Gleam/OTP, Lustre UI, Wisp REST] --> [sa-plan Heijunka Dispatcher var/sa-plan/uos.sqlite3 SC-JIDOKA-001 / SC-SA-PLAN-001]
+[Codex OpenAI ZigVM Kernel, VFS, Solo5 Sandboxing] --> [sa-plan Heijunka Dispatcher var/sa-plan/uos.sqlite3 SC-JIDOKA-001 / SC-SA-PLAN-001]
+[sa-plan Heijunka Dispatcher var/sa-plan/uos.sqlite3 SC-JIDOKA-001 / SC-SA-PLAN-001] --> [Coordination Message Board var/coordination/tri-agent/ Zenoh Pub/Sub: c3i/a2a/**]
+[Coordination Message Board var/coordination/tri-agent/ Zenoh Pub/Sub: c3i/a2a/**] --> [2oo3 BFT Quorum Consensus Lean 4 Proven Soundness]
+[2oo3 BFT Quorum Consensus Lean 4 Proven Soundness] --> [Hardware Interlock NVMe Lock: 25503L801736 Zero-Muda Purity]
+```
+
 ```mermaid
 graph TD
     subgraph Agents["Sovereign Agent Triad"]
@@ -163,3 +172,4 @@ Per `contracts/rules/20260907-0653-tri-agent-coordination.md`, assign strict own
 - **Hermes Wiki Master Index:** [http://nas-1.tail55d152.ts.net:4100/wiki](http://nas-1.tail55d152.ts.net:4100/wiki)
 - **ZigVM ZK Master MOC:** [http://nas-1.tail55d152.ts.net:4100/zk](http://nas-1.tail55d152.ts.net:4100/zk)
 - **Peer Runtime Host:** [http://vm-1.tail55d152.ts.net:8088](http://vm-1.tail55d152.ts.net:8088)
+

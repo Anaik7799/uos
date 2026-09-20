@@ -71,6 +71,32 @@ Prior to this implementation:
 ```
 
 #### Mermaid Representation
+```text
+[Human Operator Query Telegram / API / CLI] --> [evaluate_intent / handle_conversational]
+[evaluate_intent / handle_conversational] --> [Hierarchical Intent Disambiguation Router]
+[Hierarchical Intent Disambiguation Router] --> [Category 1: Architecture & Core Principles 001-020]
+[Hierarchical Intent Disambiguation Router] --> [Category 2: Zero-Muda Purity & Discipline 021-040]
+[Hierarchical Intent Disambiguation Router] --> [Category 3: Hardware Storage & Drive Interlocks 041-060]
+[Hierarchical Intent Disambiguation Router] --> [Category 4: Version Control & Jujutsu 061-080]
+[Hierarchical Intent Disambiguation Router] --> [Category 5: Supervision & Homeostasis 081-100]
+[Hierarchical Intent Disambiguation Router] --> [Category 6: ZigVM Runtime & Hermes Evidence 101-120]
+[Hierarchical Intent Disambiguation Router] --> [Category 7: Lean 4 Proofs & Math Gates 121-140]
+[Hierarchical Intent Disambiguation Router] --> [Category 8: Multi-Agent Ecology & Governance 141-160]
+[Hierarchical Intent Disambiguation Router] --> [Category 9: Telemetry & Multimodal Ingest 161-180]
+[Hierarchical Intent Disambiguation Router] --> [Category 10: Directives, Tailscale & Sa-Plan 181-200]
+[Category 1: Architecture & Core Principles 001-020] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 2: Zero-Muda Purity & Discipline 021-040] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 3: Hardware Storage & Drive Interlocks 041-060] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 4: Version Control & Jujutsu 061-080] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 5: Supervision & Homeostasis 081-100] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 6: ZigVM Runtime & Hermes Evidence 101-120] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 7: Lean 4 Proofs & Math Gates 121-140] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 8: Multi-Agent Ecology & Governance 141-160] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 9: Telemetry & Multimodal Ingest 161-180] --> [OODA Decision Synthesis & Egress Redactor]
+[Category 10: Directives, Tailscale & Sa-Plan 181-200] --> [OODA Decision Synthesis & Egress Redactor]
+[OODA Decision Synthesis & Egress Redactor] --> [BEAM OTP 29 EUnit Test Suite 200/200 Tests 100% Green]
+```
+
 ```mermaid
 flowchart TD
     UserQuery["Human Operator Query<br/>(Telegram / API / CLI)"] --> EvalIntent["evaluate_intent / handle_conversational"]
@@ -277,6 +303,12 @@ The following diagrams illustrate the strict boundary between permitted sovereig
 ```
 
 #### Mermaid Representation
+```text
+[Supported Sovereign Capabilities] --> [Fail-Closed Interceptor & Redactor OS Serial Redacted: REDACTED_SYSTEM_OS_SERIAL]
+[Fail-Closed Interceptor & Redactor OS Serial Redacted: REDACTED_SYSTEM_OS_SERIAL] --> [Sovereign Execution Core]
+[Barred / Excluded Capabilities] --> [Security & Safety Perimeter]
+```
+
 ```mermaid
 flowchart TD
     subgraph TelegramGateway["UOS Telegram Gateway Boundary"]
@@ -359,3 +391,4 @@ flowchart TD
 ## 13. Conclusion
 
 The 200 natural language user query test cases have been successfully implemented, verified, and admitted into the Unified Operational System (UOS). The cognitive evaluator accurately routes diverse human inquiries across all 17 System Aspects ($\mathbb{A}_{17}$), proving the robustness, safety, and conversational intelligence of the UOS sovereign command harness under BEAM OTP 29. All gates are 100% green.
+

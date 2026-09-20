@@ -60,6 +60,37 @@ In direct adherence to `SC-SA-PLAN-001` and `SC-JIDOKA-001`, canonical Sa-Plan `
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Operator: execute all the tasks, full zenoh integration] --> [Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t1: Zenoh Mesh Connectivity]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t2: Gleam ETS-Zenoh Bridge]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t3: OCaml Hermes Runner]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t4: Mojo MAX SIMD Runner]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t5: Lean 4 Invariants]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t6: Cross-Tier API]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t7: 24-Core Test Mesh]
+[Sa-Plan: uos-zenoh-ocaml-mojo-max-integration-20260913] --> [t8: Epistemic Journal & JJ VCS]
+[t2: Gleam ETS-Zenoh Bridge] --> [Gleam / OTP 29 Supervisor & Wisp 4100]
+[t3: OCaml Hermes Runner] --> [Hermes OCaml 5.5 Bounded Analysis]
+[t4: Mojo MAX SIMD Runner] --> [Modular MAX / Mojo SIMD Cognitive Engine]
+[Gleam / OTP 29 Supervisor & Wisp 4100] --> [BEAM ETS Cache :c3i_cache]
+[BEAM ETS Cache :c3i_cache] --> [Gleam / OTP 29 Supervisor & Wisp 4100]
+[Hermes OCaml 5.5 Bounded Analysis] --> [BEAM ETS Cache :c3i_cache]
+[BEAM ETS Cache :c3i_cache] --> [Hermes OCaml 5.5 Bounded Analysis]
+[Modular MAX / Mojo SIMD Cognitive Engine] --> [BEAM ETS Cache :c3i_cache]
+[BEAM ETS Cache :c3i_cache] --> [Modular MAX / Mojo SIMD Cognitive Engine]
+[Gleam / OTP 29 Supervisor & Wisp 4100] --> [Zenoh Router Ports 8080 & 7447: c3i/a2a/ets/**]
+[Zenoh Router Ports 8080 & 7447: c3i/a2a/ets/**] --> [Gleam / OTP 29 Supervisor & Wisp 4100]
+[Hermes OCaml 5.5 Bounded Analysis] --> [Zenoh Router Ports 8080 & 7447: c3i/a2a/ets/**]
+[Zenoh Router Ports 8080 & 7447: c3i/a2a/ets/**] --> [Hermes OCaml 5.5 Bounded Analysis]
+[Modular MAX / Mojo SIMD Cognitive Engine] --> [Zenoh Router Ports 8080 & 7447: c3i/a2a/ets/**]
+[Zenoh Router Ports 8080 & 7447: c3i/a2a/ets/**] --> [Modular MAX / Mojo SIMD Cognitive Engine]
+[t5: Lean 4 Invariants] --> [Lean 4 Invariants Proof 0 sorry]
+[t6: Cross-Tier API] --> [Wisp API: /api/v1/state/tri_language is_converged: true]
+[t7: 24-Core Test Mesh] --> [24-Core 9-Modality Saturated Test Mesh]
+[t8: Epistemic Journal & JJ VCS] --> [Jujutsu VCS Admission Ratified]
+```
+
 ```mermaid
 flowchart TD
     subgraph S_GOV ["Canonical Sa-Plan Governance (SC-SA-PLAN-001)"]
@@ -313,3 +344,4 @@ All 8 tasks of Sa-Plan `uos-zenoh-ocaml-mojo-max-integration-20260913` have been
 - **Target Horizon Epoch**: 2026-09-19.
 - **Hypothesis**: Unified Operational System maintains cross-language state consensus across Gleam, OCaml, and Mojo/MAX with zero state divergence under continuous multi-agent operations.
 - **Admission Gate**: Granted. All gates (`G-CHECKLIST`, `G-PREFLIGHT`, `G-JOURNAL`) pass.
+

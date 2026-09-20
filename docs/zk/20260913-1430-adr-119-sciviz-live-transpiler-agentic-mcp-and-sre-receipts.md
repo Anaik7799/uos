@@ -52,6 +52,21 @@ We formalize the architecture of the **SciViz Live Transpiler & Agentic Control 
 +-------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[AI Agents Cortex / AGY] --> [MCP Stdio Server]
+[Operator Browser / Curl] --> [Wisp REST Router]
+[MCP Stdio Server] --> [sciviz/transpiler.gleam]
+[Wisp REST Router] --> [sciviz/transpiler.gleam]
+[sciviz/transpiler.gleam] --> [Spatial Tokens: line, x, y, type]
+[sciviz/transpiler.gleam] --> [Focus Bounding Box X, Y, W, H]
+[sciviz/transpiler.gleam] --> [Dual-Panel Pure SVG Patchwork]
+[Dual-Panel Pure SVG Patchwork] --> [Zenoh Bus indrajaal/l2/sciviz/...]
+[Dual-Panel Pure SVG Patchwork] --> [Native OCaml CDP Runner 569 BDD Scenarios]
+[sciviz/transpiler.gleam] --> [Lean 4 Theorem 21: ggram_transpiler_determinism]
+[Native OCaml CDP Runner 569 BDD Scenarios] --> [var/sciviz/deep_dive_receipt.json]
+[Lean 4 Theorem 21: ggram_transpiler_determinism] --> [UOS Gates: G-SCIVIZ-BDD & G-SCIVIZ-5DOMAINS]
+```
+
 ```mermaid
 flowchart TD
     subgraph Agentic_Control ["Agentic & Ingress Tier"]
@@ -153,3 +168,4 @@ Combined with Theorems 16 through 20:
 - `var/sciviz/deep_dive_receipt.json`
 - `apps/cepaf_gleam/src/cepaf_gleam/sciviz/transpiler.gleam`
 - `test/features/20_sciviz_comprehensive_deep_dive.feature`
+

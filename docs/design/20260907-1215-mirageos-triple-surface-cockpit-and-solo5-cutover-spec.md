@@ -31,6 +31,12 @@ This specification details the full system cutover, triple-surface cockpit integ
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Host Linux Kernel Bare-Metal NAS-1] --> [Seccomp-BPF Sandbox Filter Allow: 6 Syscalls Only]
+[Seccomp-BPF Sandbox Filter Allow: 6 Syscalls Only] --> [Solo5-SPT Micro-Appliance Sandbox <20MB RAM]
+[Solo5-SPT Micro-Appliance Sandbox <20MB RAM] --> [BEAM OTP 29 Supervision Tier Port 4100]
+```
+
 ```mermaid
 graph TD
     subgraph HostKernel["Host Linux Kernel (Bare-Metal NAS-1)"]
@@ -153,3 +159,4 @@ Located in `apps/cepaf_gleam/src/cepaf_gleam/ui/tui/mirage_view.gleam`.
 - **Live Cockpit Ingress**: [http://nas-1.tail55d152.ts.net:4100/mirage](http://nas-1.tail55d152.ts.net:4100/mirage)
 - **Live Candidates API**: [http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates](http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates)
 - **Live Unikernel Status API**: [http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status](http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status)
+

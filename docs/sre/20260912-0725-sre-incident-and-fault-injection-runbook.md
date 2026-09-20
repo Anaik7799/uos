@@ -72,6 +72,15 @@
        +---------------------------+       +-------------------------+
 ```
 
+```text
+[Physical Fault Injected WAL Lock / SIGKILL / Partition] --> [Continuous Detection Engine TTD < 15ms Asserted Breakers / Freshness / Lyapunov]
+[Continuous Detection Engine TTD < 15ms Asserted Breakers / Freshness / Lyapunov] --> [Can Auto-Recover? Within Intensity Budget?]
+[Can Auto-Recover? Within Intensity Budget?] --> [Automated Recovery Backoff / Restart / Drain]
+[Can Auto-Recover? Within Intensity Budget?] --> [Escalate to Andon Stop Line Fail-Closed SIL-6 Protection]
+[Automated Recovery Backoff / Restart / Drain] --> [State Restored & Stabilized Cycle Latency < 30ms]
+[Escalate to Andon Stop Line Fail-Closed SIL-6 Protection] --> [Dark Cockpit Mode Active Human-in-the-Loop Interlock]
+```
+
 ```mermaid
 graph TD
     Fault["Physical Fault Injected<br/>(WAL Lock / SIGKILL / Partition)"] --> Detect["Continuous Detection Engine<br/>TTD < 15ms Asserted<br/>(Breakers / Freshness / Lyapunov)"]
@@ -112,3 +121,4 @@ graph TD
 1. **SEV-1 (Critical / Catastrophic)**: Hardware safety violation, corrupted ledger, or uncontained multi-supervisor crash. Triggers immediate automated Dark Cockpit shutdown and physical Andon alarm.
 2. **SEV-2 (Major / Degraded)**: Subprocess failure exceeding restart budget or persistent partition lasting $> 30\text{s}$. Auto-isolates affected domain and alerts SRE.
 3. **SEV-3 (Minor / Transient)**: Single crash recovered by supervisor, transient WAL retry, or telemetry drop. Logged to OTel span with zero customer-facing impact.
+

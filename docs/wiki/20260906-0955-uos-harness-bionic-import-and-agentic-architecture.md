@@ -89,6 +89,13 @@ By transmuting Harness-Bionic's capabilities into pure **Gleam / BEAM OTP 29** b
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[1. Functionality] --> [2. Code Boundaries]
+[2. Code Boundaries] --> [3. SOP Engine]
+[3. SOP Engine] --> [4. Skills Ecosystem]
+[4. Skills Ecosystem] --> [5. Superpowers]
+```
+
 ```mermaid
 graph TD
     subgraph D1["1. Functionality"]
@@ -260,3 +267,4 @@ All imported capabilities and mapping structures were submitted to comprehensive
 - **Comprehensive Checklist**: **18/18 checkpoints 100% Green** (`tools/uos checklist`).
 - **System Doctor**: **All 20 EV-cycles operational** (`tools/uos doctor`).
 - **Tri-Sovereign Ratification**: Unanimously approved by Google DeepMind Antigravity (AGY), Anthropic Claude Fable 5.1, and OpenAI Codex Astra.
+

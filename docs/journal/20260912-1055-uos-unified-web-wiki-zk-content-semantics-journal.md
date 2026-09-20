@@ -122,6 +122,23 @@ Prior to this execution:
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Unified Web & Knowledge Client Browser / AG-UI / Operator Cockpit] --> [Gleam Lustre Unified Cockpit link_tracker_view.gleam]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Route & Web Sink 47 Endpoints]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Knowledge Sink wiki:...]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [A2UI Component Sink 239 Declarative Comps]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Semantic & Content Sink Timestamps & Metadata]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Operational Health Sink Latencies, Ports, Breakers]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [REST API Endpoint /api/v1/links/status]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Native OCaml Deep Verifier tools/link_tracker_verifier.exe]
+[Native OCaml Deep Verifier tools/link_tracker_verifier.exe] --> [Lean 4 Mathematical Authority formal/lean/UnifiedWebSemantics.lean]
+[Lean 4 Mathematical Authority formal/lean/UnifiedWebSemantics.lean] --> [Theorems Proved: 1. Multi-Domain SCC=1 2. Zero Dead Ends 3. Fail-Closed Gate Soundness]
+[Native OCaml Deep Verifier tools/link_tracker_verifier.exe] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Theorems Proved: 1. Multi-Domain SCC=1 2. Zero Dead Ends 3. Fail-Closed Gate Soundness] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ADMISSION GRANTED Ratified by Codex & Claude]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ANDON STOP LINE Fail-Closed Halt -32002]
+```
+
 ```mermaid
 graph TD
     Client["Unified Web & Knowledge Client<br/>(Browser / AG-UI / Operator Cockpit)"] -->|"HTTP GET /links"| Collator["Gleam Lustre Unified Cockpit<br/>(link_tracker_view.gleam)"]
@@ -273,3 +290,4 @@ The fragmentation of web pages, documentation, and components into uncoordinated
 ## 13. Conclusion
 
 The Unified Web, Wiki, ZK, Content, Semantics, Components, and Link Verification Subsystem is fully realized, mathematically proved in Lean 4, verified live across 47 endpoints and 1,494 links, and ratified into the canonical UOS operational baseline under standalone Jujutsu version control.
+

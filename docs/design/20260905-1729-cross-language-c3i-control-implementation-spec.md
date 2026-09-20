@@ -17,6 +17,27 @@
 
 This specification establishes the canonical cross-language architecture for the Unified Operational System (UOS), codifying how the Command, Control, Communications, and Intelligence (C3I) control plane functions are partitioned and coordinated across five distinct language runtimes and two formal verification systems.
 
+```text
+[uos_sup.gleam 4-Domain Root Supervisor] --> [Holon Swarm Actor State Machines]
+[Holon Swarm Actor State Machines] --> [Prajna Circuit Breakers circuit_breaker.gleam]
+[Holon Swarm Actor State Machines] --> [Lyapunov Detectors lyapunov_proof.gleam]
+[Holon Swarm Actor State Machines] --> [2oo3 Guardian Consensus l0_constitutional.gleam]
+[Zero-Trust Dispatch Hook run_agent_dispatch_hook.exe] --> [Evidence Store SQLite WAL Ledger]
+[Rete-UL Rule Engine Forward Chaining] --> [Evidence Store SQLite WAL Ledger]
+[Z3 Bounded Worker Satisfiable Solver] --> [Evidence Store SQLite WAL Ledger]
+[Deterministic VM Kernel Bytecode Engine] --> [Descriptor-Relative VFS No Race Paths]
+[Deterministic VM Kernel Bytecode Engine] --> [Lockless Ring Buffers Shared Memory]
+[LabSpec Safety Controller Hardware Denial Guard] --> [Host OS NVMe 25503L801736]
+[Holon Swarm Actor State Machines] --> [Zero-Trust Dispatch Hook run_agent_dispatch_hook.exe]
+[Zero-Trust Dispatch Hook run_agent_dispatch_hook.exe] --> [Holon Swarm Actor State Machines]
+[Holon Swarm Actor State Machines] --> [Deterministic VM Kernel Bytecode Engine]
+[Deterministic VM Kernel Bytecode Engine] --> [Holon Swarm Actor State Machines]
+[Holon Swarm Actor State Machines] --> [max_worker.py JSON-RPC Daemon]
+[max_worker.py JSON-RPC Daemon] --> [Holon Swarm Actor State Machines]
+[Holon Swarm Actor State Machines] --> [Bounded C-ABI Kernels Short Execution]
+[Bounded C-ABI Kernels Short Execution] --> [Holon Swarm Actor State Machines]
+```
+
 ```mermaid
 graph TB
     subgraph Layer_Supervision["Supervision & Intent: Gleam/OTP"]
@@ -155,3 +176,4 @@ The Unified Operational System establishes non-overlapping, strictly enforced la
    Total absence of Bevy and Graphite across all language trees ($N_{\text{Bevy}} = 0$, $N_{\text{Graphite}} = 0$).
 3. **Mandatory Timestamp Rule**:
    All newly generated documents must carry `YYYYMMDD-HHSS-` prefix.
+

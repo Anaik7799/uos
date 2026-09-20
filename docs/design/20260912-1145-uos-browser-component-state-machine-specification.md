@@ -157,6 +157,23 @@ Embedded on `/components`, `/jobs`, `/planning`:
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Native OCaml Browser Suite tools/webui_browser_suite.ml] --> [Headless Google Chrome --remote-debugging-port=9222]
+[Native OCaml Browser Suite tools/webui_browser_suite.ml] --> [Headless Google Chrome --remote-debugging-port=9222]
+[Headless Google Chrome --remote-debugging-port=9222] --> [1. Semantic DOM Audit Meta, Header, Nav, Main, Headings, ARIA]
+[Headless Google Chrome --remote-debugging-port=9222] --> [2. Theme Switcher FSM Dark ⇄ Amber ⇄ Light]
+[Headless Google Chrome --remote-debugging-port=9222] --> [3. Accordion / Details FSM Open ⇄ Closed]
+[Headless Google Chrome --remote-debugging-port=9222] --> [4. Canonical Nav Shell FSM 32 Pages Active Highlighting]
+[Headless Google Chrome --remote-debugging-port=9222] --> [5. Multi-Sink Cockpit FSM /links Expansion & Dynamic Reload]
+[Headless Google Chrome --remote-debugging-port=9222] --> [6. Zero JS Exceptions Runtime.exceptionThrown Trapping]
+[Native OCaml Browser Suite tools/webui_browser_suite.ml] --> [Lean 4 Mathematical Authority formal/lean/BrowserStateMachineInvariants.lean]
+[Lean 4 Mathematical Authority formal/lean/BrowserStateMachineInvariants.lean] --> [Theorems Proved: - FSM Determinism & Totality - Theme Cycle Symmetry - Accordion Involution - Fail-Closed Gate Soundness]
+[Native OCaml Browser Suite tools/webui_browser_suite.ml] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Theorems Proved: - FSM Determinism & Totality - Theme Cycle Symmetry - Accordion Involution - Fail-Closed Gate Soundness] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [SOVEREIGN ADMISSION RATIFIED]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ANDON STOP LINE HALT -32002]
+```
+
 ```mermaid
 graph TD
     Suite["Native OCaml Browser Suite<br/>(tools/webui_browser_suite.ml)"] -->|"Fork / Execvp"| Chrome["Headless Google Chrome<br/>(--remote-debugging-port=9222)"]
@@ -204,3 +221,4 @@ This equivalence guarantees that server-side state machines rendered in Lustre S
 3. **Runtime Purity**: Zero unhandled JavaScript exceptions during full browser traversal.
 4. **Lean 4 Proof Soundness**: 0 `sorry`, 0 warnings in `BrowserStateMachineInvariants.lean`.
 5. **Zero-Muda Compliance**: 0 Node.js, 0 Playwright, 0 Chromium npm dependencies.
+

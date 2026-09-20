@@ -36,6 +36,16 @@
 +-----------------------------------------------------------------------------------------+
 ```
 
+```text
+[tools/uos-cli Gleam Dispatcher] --> [tools/webui_browser_suite Native OCaml Binary]
+[tools/webui_browser_suite Native OCaml Binary] --> [Google Chrome --headless=new, port 9222]
+[tools/webui_browser_suite Native OCaml Binary] --> [Chrome DevTools Protocol Page / Runtime / DOM]
+[Chrome DevTools Protocol Page / Runtime / DOM] --> [C3I Gleam/OTP Server Port 4100]
+[C3I Gleam/OTP Server Port 4100] --> [Chrome DevTools Protocol Page / Runtime / DOM]
+[Chrome DevTools Protocol Page / Runtime / DOM] --> [tools/webui_browser_suite Native OCaml Binary]
+[tools/webui_browser_suite Native OCaml Binary] --> [tools/uos-cli Gleam Dispatcher]
+```
+
 ```mermaid
 flowchart TD
     CLI["tools/uos-cli<br/>(Gleam Dispatcher)"] -->|executes| OCAML["tools/webui_browser_suite<br/>(Native OCaml Binary)"]
@@ -126,3 +136,4 @@ flowchart TD
 
 ## 13. Conclusion
 The WebUI browser verification toolchain has been fully migrated to pure native OCaml (`tools/webui_browser_suite`), completely eliminating Node.js. All 7 Tailscale endpoints pass with 0 exceptions and sub-second latencies, verified via `tools/uos-cli webui-browser-check`.
+

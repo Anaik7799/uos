@@ -47,6 +47,21 @@ The system scales the sovereign aerospace agent ecology to **96 Sovereign Agent 
 +-----------------------------------------------------------------------------------------------+
 ```
 
+```text
+[LlmAgent & BaseAgent Chat, Task, Auto] --> [C3I SDLC Pillar 32 Agents 0x1000, 0x1800]
+[StateGraph & Nodes Fork-Join, Cycles] --> [C3I SDLC Pillar 32 Agents 0x1000, 0x1800]
+[Runner & Hooks 6 Before/After] --> [C3I SRE Pillar 32 Agents 0x1800, 0x2000]
+[Session & Memory RFC-6902, Vectors] --> [C3I SRE Pillar 32 Agents 0x1800, 0x2000]
+[Protocols MCP Tools, A2A Mesh] --> [C3I SDLC Pillar 32 Agents 0x1000, 0x1800]
+[Protocols MCP Tools, A2A Mesh] --> [C3I SRE Pillar 32 Agents 0x1800, 0x2000]
+[Evaluations & Evals Trajectory, D_EA] --> [C3I Verification Pillar 32 Agents 0x2000, 0x2800]
+[Plugins & Quotas Sanitizer, Limits] --> [C3I SRE Pillar 32 Agents 0x1800, 0x2000]
+[C3I SDLC Pillar 32 Agents 0x1000, 0x1800] --> [DMC Memory Windows 6144 Disjoint Channels]
+[C3I SRE Pillar 32 Agents 0x1800, 0x2000] --> [Root OS NVMe Lock 25503L801736]
+[C3I Verification Pillar 32 Agents 0x2000, 0x2800] --> [Zero-Muda Standard 0 Bevy, 0 Graphite]
+[C3I Verification Pillar 32 Agents 0x2000, 0x2800] --> [Lean 4 / Quint Oracles Delta T_13 = 0]
+```
+
 ```mermaid
 graph TB
     subgraph "Google ADK Substrate in BEAM"
@@ -154,3 +169,4 @@ The entire substrate is verified by:
 3. **UOS Checklist**: 5 domains, 18/18 checks 100% green (`tools/uos checklist`).
 4. **Timestamp Mandate**: Mandatory `YYYYMMDD-HHSS-` prefix enforced (`tools/uos timestamp-check`).
 5. **Hardware Safety**: Permanent DAL-A interlock locking OS NVMe serial `25503L801736`.
+

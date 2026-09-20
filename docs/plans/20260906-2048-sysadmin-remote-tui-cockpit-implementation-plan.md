@@ -78,6 +78,20 @@ The Unified Operational System (UOS) employs a **Penta-Stack** HMI architecture 
 +-------------------------------------------------------------------------+
 ```
 
+```text
+[SysAdmin ANSI TUI Remote Terminal / tmux] --> [ui/domain.gleam Canonical 32 Pages]
+[Lustre SSR Web Port 4100] --> [ui/domain.gleam Canonical 32 Pages]
+[Wisp REST API /api/*] --> [ui/domain.gleam Canonical 32 Pages]
+[ui/domain.gleam Canonical 32 Pages] --> [ui/state.gleam SharedMeshState]
+[ui/state.gleam SharedMeshState] --> [uos_sup.gleam Root Supervisor]
+[uos_sup.gleam Root Supervisor] --> [prajna/circuit_breaker.gleam Trip & Recovery]
+[uos_sup.gleam Root Supervisor] --> [l0_constitutional.gleam 2oo3 Consensus]
+[uos_sup.gleam Root Supervisor] --> [ZigVM Kernel Descriptor-Relative VFS]
+[uos_sup.gleam Root Supervisor] --> [Hermes OCaml Gospel Contracts & Z3]
+[uos_sup.gleam Root Supervisor] --> [Rook-Ceph / NVMe Locked 25503L801736]
+[uos_sup.gleam Root Supervisor] --> [Podman / K8s 16 Containers Genome]
+```
+
 ```mermaid
 graph TD
     subgraph ClientSurfaces["Triple-Interface Client Surfaces"]
@@ -241,3 +255,4 @@ The enhanced SysAdmin Remote TUI organizes all 53 subsystems into 9 high-efficie
 - [x] Record ADR in `docs/zk/20260906-2048-adr-057-sysadmin-remote-tui-cockpit-architecture.md`.
 - [x] Record completion journal in `docs/journal/20260906-2048-sysadmin-remote-tui-cockpit-journal.md`.
 - [x] Commit changes using standalone Jujutsu (`jj describe` / `jj new`).
+

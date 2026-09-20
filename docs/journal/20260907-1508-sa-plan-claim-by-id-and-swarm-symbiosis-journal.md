@@ -73,6 +73,17 @@ Per operator directive ("whot should be done enxt, plan next steps based on what
 +--------------------------------------------------------------------------------+
 ```
 
+```text
+[Worker Task Claim] --> [Explicit Task ID/Name Given?]
+[Explicit Task ID/Name Given?] --> [select_specific_claimable: id = ? OR name = ?]
+[Explicit Task ID/Name Given?] --> [select_next_claimable: topological order]
+[select_specific_claimable: id = ? OR name = ?] --> [Available or Lease Expired?]
+[select_next_claimable: topological order] --> [Available or Lease Expired?]
+[Available or Lease Expired?] --> [Atomically update state=executing, worker, lease_until_ns]
+[Available or Lease Expired?] --> [Fail-closed error: Task not claimable]
+[Atomically update state=executing, worker, lease_until_ns] --> [Emit JSON/Text receipt with task_id, attempt, lease_until_ns]
+```
+
 ```mermaid
 flowchart TD
     A[Worker Task Claim] --> B{Explicit Task ID/Name Given?}
@@ -170,3 +181,4 @@ flowchart TD
 ## 13. Conclusion
 
 The `sa-plan` task claim by ID/Name and typed CLI argument validation enhancements have been fully implemented, tested, and committed in Jujutsu (`18fe908b`). All 20 canonical governance rules are synchronized across all mirrors. System is 100% green and ready for swarm handoff.
+

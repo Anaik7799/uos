@@ -96,6 +96,21 @@ Every document and webpage in UOS verifies against the 5-domain standard:
  FMEA SIL-6 Scoring   Tanpura Jawari       Cosine Similarity    Anomaly Detection
 ```
 
+```text
+[Gleam/OTP 29 Root Supervisor] --> [ServicesDomain Supervisor]
+[ServicesDomain Supervisor] --> [max_isolated_worker Port]
+[max_isolated_worker Port] --> [max_worker.py Isolated Daemon]
+[max_worker.py Isolated Daemon] --> [Mojo SIMD Kernel max_kernel.mojo]
+[Mojo SIMD Kernel max_kernel.mojo] --> [health & metrics]
+[Mojo SIMD Kernel max_kernel.mojo] --> [infer_text: Cognitive LLM & FMEA]
+[Mojo SIMD Kernel max_kernel.mojo] --> [infer_audio: Raga Durga S-Curve Meend]
+[Mojo SIMD Kernel max_kernel.mojo] --> [embed: Dense Vector Cosine Similarity]
+[Mojo SIMD Kernel max_kernel.mojo] --> [infer_image & infer_video]
+[infer_audio: Raga Durga S-Curve Meend] --> [Audio Synthesis Engine]
+[embed: Dense Vector Cosine Similarity] --> [Hermes Wiki & ZK Semantic Search]
+[infer_text: Cognitive LLM & FMEA] --> [Sa-Plan Task FMEA Interlock]
+```
+
 ```mermaid
 graph TD
     A[Gleam/OTP 29 Root Supervisor] -->|RestForOne| B[ServicesDomain Supervisor]
@@ -210,3 +225,4 @@ In `apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/inference_tier.gleam`, Modular MA
 - **ZigVM ZK Master MOC**: [http://nas-1.tail55d152.ts.net:4100/zk](http://nas-1.tail55d152.ts.net:4100/zk)
 - **Grand Synthesis Review Tome**: [http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-2020-uos-grand-synthesis-review-tome-wiki-zk-km.md](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-2020-uos-grand-synthesis-review-tome-wiki-zk-km.md)
 - **Modular MAX / Mojo Studio**: [http://nas-1.tail55d152.ts.net:4100/api/v1/inference/status](http://nas-1.tail55d152.ts.net:4100/api/v1/inference/status)
+

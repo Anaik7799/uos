@@ -55,6 +55,22 @@ Full implementation, kernel acceleration, and cross-stack integration of three h
 +──────────────────────────────────────────────────────────────────────────────────────────+
 ```
 
+```text
+[max_inference_daemon.gleam] --> [Pipe Stdio]
+[Wisp Router /api/v1/inference/*] --> [max_inference_daemon.gleam]
+[Lustre Inference Dashboard] --> [Wisp Router /api/v1/inference/*]
+[Pipe Stdio] --> [dispatch_request]
+[dispatch_request] --> [ASTAnomalyDetector]
+[dispatch_request] --> [ZKKnowledgeTransclusion]
+[dispatch_request] --> [LyapunovTrendPredictor]
+[ASTAnomalyDetector] --> [Mojo SIMD simd_ast_anomaly_distance]
+[ZKKnowledgeTransclusion] --> [Mojo SIMD simd_zk_transclusion_score]
+[LyapunovTrendPredictor] --> [Mojo SIMD compute_finite_time_lyapunov_exponent]
+[ASTAnomalyDetector] --> [Pass/Fail + Risk Level + Invariant Report]
+[ZKKnowledgeTransclusion] --> [Transclusion Tags zk:...]
+[LyapunovTrendPredictor] --> [Lyapunov Exponent + T_cascade + SEU Cert]
+```
+
 ```mermaid
 flowchart TD
     subgraph Client [Gleam Client Tier]
@@ -199,3 +215,4 @@ flowchart TD
 ## 13. Conclusion
 
 The three high-utility AI models (AST Structural Anomaly Detector, ZK Knowledge Transclusion Model, and Anticipatory Lyapunov Trend Predictor) are fully implemented, verified, and sealed into UOS. The system is operating at 100% green health with zero warnings.
+

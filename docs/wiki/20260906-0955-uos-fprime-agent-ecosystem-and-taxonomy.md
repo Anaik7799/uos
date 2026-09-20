@@ -63,6 +63,13 @@ This Wiki Tome provides the authoritative architectural reference for:
 
 ## 2. Theoretical Foundations: The Category-Theoretic Aerospace Substrate
 
+```text
+[FppAST Nodes] --> [HermesHarness Topology]
+[HermesHarness Topology] --> [Supervised OTP GenServer Actors]
+[Supervised OTP GenServer Actors] --> [Restriction Maps & Boundary Gluing]
+[Restriction Maps & Boundary Gluing] --> [Decoupled Semiotics & DAL-A Hardware Lock]
+```
+
 ```mermaid
 graph TD
     subgraph Tier1["Tier 1: AST Syntactic Domain"]
@@ -379,3 +386,4 @@ All 16 agents and supporting FPP engines were submitted to rigorous verification
 - **Total Test Protocol**: **10,023 passing Gleam tests** across the entire workspace (0 failures, 0 compiler warnings).
 - **Persistent Evidence**: Recorded in SQLite table `verification_runs` as run `RUN-20260906-0955-FPP-AGENTS` and feature entries `FEAT-AGT-001` through `FEAT-AGT-016`.
 - **Tri-Sovereign Consensus**: Ratified unanimously by Google DeepMind Antigravity (AGY), Anthropic Claude Fable 5.1, and OpenAI Codex Astra.
+

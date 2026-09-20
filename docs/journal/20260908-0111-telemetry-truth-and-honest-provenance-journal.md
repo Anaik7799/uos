@@ -58,6 +58,14 @@ This work packet executes Task `TRUTH` (`uos/stabilization/telemetry-truth`) in 
 +-------------------------------------------------------------------------------+
 ```
 
+```text
+[HTTP Client / Tailscale Ingress] --> [Wisp Router router.gleam]
+[Wisp Router router.gleam] --> [/api/v1/forecast/health]
+[Wisp Router router.gleam] --> [/api/v1/inference/status]
+[/api/v1/forecast/health] --> [fractal_forecast.forecast_health_json • data_mode: demonstration_baseline • live_ledger_calibrated: false • live_ledger_sample_count: 0]
+[/api/v1/inference/status] --> [inference_api.status_json • engine: Modular MAX 26.5.0 / Mojo 1.0.0 • runtime_installed: true • model_weights_loaded: false • data_mode: toolchain_ready_unloaded_weights]
+```
+
 ```mermaid
 graph TD
     Client["HTTP Client / Tailscale Ingress"] --> Router["Wisp Router (router.gleam)"]
@@ -164,3 +172,4 @@ Historically, UI endpoints in early evolutionary cycles incorporated prototype m
 ## 13. Conclusion
 
 Task `TRUTH` is complete in `sa-plan` and verified against the entire test fleet. Misleading static assertions have been replaced by honest data provenance descriptors across the REST interface. The 4-party swarm continues in stable homeostasis, coordinated through Sa-plan and the session sync bus.
+

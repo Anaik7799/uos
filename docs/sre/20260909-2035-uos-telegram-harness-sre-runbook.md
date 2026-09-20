@@ -75,6 +75,13 @@ All code changes touching the UOS Telegram integration must adhere to the standa
 +---------------------------------------------------------------------------------------+
 ```
 
+```text
+[Systemd Supervisor PID 1] --> [OCaml Edge Bridge Daemon tools/telegram_client.exe]
+[OCaml Edge Bridge Daemon tools/telegram_client.exe] --> [Health Monitor RSS: 1.7MB]
+[OCaml Edge Bridge Daemon tools/telegram_client.exe] --> [BEAM Ephemeral Runner tools/telegram-harness-dispatch]
+[BEAM Ephemeral Runner tools/telegram-harness-dispatch] --> [Circuit Breaker & Degraded Mode]
+```
+
 ```mermaid
 graph TD
     Systemd[Systemd Supervisor PID 1] -->|Supervises & Restarts| Daemon[OCaml Edge Bridge Daemon tools/telegram_client.exe]
@@ -158,3 +165,4 @@ echo '{"message_id": 3, "chat_id": 142270921, "user_id": 142270921, "username": 
   * *Action*: Run diagnostic script manually, verify `apps/cepaf_gleam/build/dev/erlang` bytecode validity.
 - **Sev-3 (Formatting Anomaly)**: Messages arriving in plaintext fallback mode rather than formatted Markdown.
   * *Action*: Inspect journal logs for `MarkdownV2 send failed, retrying plain text`, patch unescaped characters in Gleam string composer.
+

@@ -180,6 +180,22 @@ Integrating MirageOS into the Unified Operational System delivers six transforma
 ```
 
 #### Mermaid Diagram
+```text
+[Gleam / BEAM OTP 29 Root Supervisor] --> [mirage_unikernel_daemon.gleam]
+[mirage_unikernel_daemon.gleam] --> [Unikernel Instances Registry]
+[mirage_unikernel_daemon.gleam] --> [Zero-Trust Payload Interceptor]
+[Zero-Trust Payload Interceptor] --> [Trapped: Fail-Closed Exit]
+[Zero-Trust Payload Interceptor] --> [Trapped: SQL Injection Block]
+[Zero-Trust Payload Interceptor] --> [Hermes OCaml Mirage Engine]
+[Hermes OCaml Mirage Engine] --> [mirage_signatures.ml BLOCK, KV, FLOW, CLOCK]
+[Hermes OCaml Mirage Engine] --> [mirage_memory_block.ml Sector-Level Block I/O]
+[Hermes OCaml Mirage Engine] --> [mirage_merkle_kv.ml Irmin Merkle DAG & 3-Way Merge]
+[Hermes OCaml Mirage Engine] --> [mirage_solo5_tender.ml Solo5 Tender Sandboxing]
+[Hermes OCaml Mirage Engine] --> [mirage_interceptor.ml Ed25519 mirage-crypto-ec]
+[mirage_solo5_tender.ml Solo5 Tender Sandboxing] --> [Solo5 Unikernel Sandbox Memory: 16MB | Cold Start: 10.9ms | Shell: NONE]
+[mirage_interceptor.ml Ed25519 mirage-crypto-ec] --> [Cryptographic Admission Receipt]
+```
+
 ```mermaid
 graph TD
     A[Gleam / BEAM OTP 29 Root Supervisor] --> B[mirage_unikernel_daemon.gleam]
@@ -238,3 +254,4 @@ graph TD
 - **Main Cockpit**: [http://nas-1.tail55d152.ts.net:4100/](http://nas-1.tail55d152.ts.net:4100/)
 - **Zettelkasten Master MOC**: [http://nas-1.tail55d152.ts.net:4100/zk](http://nas-1.tail55d152.ts.net:4100/zk)
 - **Hermes Wiki Master Index**: [http://nas-1.tail55d152.ts.net:4100/wiki](http://nas-1.tail55d152.ts.net:4100/wiki)
+

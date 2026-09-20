@@ -134,6 +134,18 @@ All execution was ledgered strictly under `sa-plan` in accordance with `SC-JIDOK
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Gleam/OTP 29 Supervision] --> [Hermes OCaml Rete-UL Engine]
+[Hermes OCaml Rete-UL Engine] --> [ZigVM Kernel & VFS Engine]
+[ZigVM OS Port Driver os_port.zig] --> [RMS & SWI & ROPE & ATT & TCN]
+[Tri-Sovereign Quorum: AGY + Claude + Codex] --> [Comms Blackout? SYNC-14]
+[Raw Telemetry / Sensor Stream] --> [Tier 1: Deterministic Sovereignty Zero-Stall / Air-Gapped]
+[Tier 1: Deterministic Sovereignty Zero-Stall / Air-Gapped] --> [Tier 2: Bare-Metal Mojo/MAX AI-ML Fabric]
+[Tier 2: Bare-Metal Mojo/MAX AI-ML Fabric] --> [Tier 3: Strategic Frontier Swarm]
+[Comms Blackout? SYNC-14] --> [Tier 2: Bare-Metal Mojo/MAX AI-ML Fabric]
+[Comms Blackout? SYNC-14] --> [Tier 1: Deterministic Sovereignty Zero-Stall / Air-Gapped]
+```
+
 ```mermaid
 flowchart TD
     subgraph SENSORS["Tactical Sensor Telemetry & Ingress"]
@@ -292,3 +304,4 @@ the system achieves mathematically guaranteed liveness and safety even during to
 ## 13. Conclusion
 
 The Safety-Critical Multi-Tier Defense Cybernetics architecture and Bare-Metal Mojo/MAX AI-ML Execution Fabric have been successfully implemented, formally specified, and comprehensively verified. The system is resilient against frontier AI outages, comms jamming, and resource degradation, maintaining sovereign autonomous operation on bare metal at all times.
+

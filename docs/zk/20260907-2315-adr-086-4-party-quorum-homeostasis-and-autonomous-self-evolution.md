@@ -93,6 +93,19 @@ Formally ratify the **4-Party Sovereign Quorum Homeostasis & Cybernetic Self-Evo
 
 ### 3.2 Mermaid Architecture Diagram
 
+```text
+[Health Sensors] --> [PID Controller ut = Kp·e + Ki·∫e + Kd·de/dt]
+[PID Controller ut = Kp·e + Ki·∫e + Kd·de/dt] --> [Lyapunov Function Ve = 0.5·e²]
+[Lyapunov Function Ve = 0.5·e²] --> [|e| ≤ 0.05 and stable ≥ 3 ticks?]
+[|e| ≤ 0.05 and stable ≥ 3 ticks?] --> [Converging State Mutations BLOCKED]
+[|e| ≤ 0.05 and stable ≥ 3 ticks?] --> [Homeostatic Equilibrium Evolution UNLOCKED]
+[Homeostatic Equilibrium Evolution UNLOCKED] --> [Propose Mutation]
+[Propose Mutation] --> [4-Party Quorum Ballots AGY ⊕ Claude ⊕ Codex ⊕ OpenRouter]
+[4-Party Quorum Ballots AGY ⊕ Claude ⊕ Codex ⊕ OpenRouter] --> [Approvals ≥ 3?]
+[Approvals ≥ 3?] --> [Mutation Ratified Generation Incremented]
+[Approvals ≥ 3?] --> [Mutation Rejected Safety Invariant Intact]
+```
+
 ```mermaid
 graph TD
     subgraph Telemetry["System Observation"]
@@ -153,3 +166,4 @@ graph TD
 - **Lean 4 Proofs**: `formal/lean/Homeostasis_Evolution.lean` — 4 theorems verified
 - **Full Gleam Test Suite**: 10,572 passed, 0 failures
 - **4-Party Sovereign Quorum**: Ratified by AGY, Claude, Codex, OpenRouter (3/4 supermajority)
+

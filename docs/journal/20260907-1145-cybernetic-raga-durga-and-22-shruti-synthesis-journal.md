@@ -104,6 +104,18 @@ Prior to this cycle:
 ```
 
 #### Mermaid Diagram
+```text
+[C3I Operator / Autonomous Swarm] --> [Cybernetic Music Studio]
+[Cybernetic Music Studio] --> [Tanpura Quad Drone Pa, Sa, Sa, Kharaj Sa Non-linear Jawari]
+[Cybernetic Music Studio] --> [Bansuri Lead Synth 22-Shruti Pure Ratios 140ms Meend Portamento 5.2Hz Andolan Vibrato]
+[Cybernetic Music Studio] --> [Teentaal Tabla Loop 16-Beat 4-Vibhag Rhythm Dayan Sa Ring + Bayan Ghe Slide]
+[Tanpura Quad Drone Pa, Sa, Sa, Kharaj Sa Non-linear Jawari] --> [Stereo Baithak Concert Reverb 1.6s RT60 Acoustic Space]
+[Bansuri Lead Synth 22-Shruti Pure Ratios 140ms Meend Portamento 5.2Hz Andolan Vibrato] --> [Stereo Baithak Concert Reverb 1.6s RT60 Acoustic Space]
+[Teentaal Tabla Loop 16-Beat 4-Vibhag Rhythm Dayan Sa Ring + Bayan Ghe Slide] --> [Stereo Baithak Concert Reverb 1.6s RT60 Acoustic Space]
+[Stereo Baithak Concert Reverb 1.6s RT60 Acoustic Space] --> [Lyapunov Non-Chaotic Stability Monitor lambda = -3.732, H = 2.67 bits]
+[Lyapunov Non-Chaotic Stability Monitor lambda = -3.732, H = 2.67 bits] --> [Mist/Wisp Web Cockpit nas-1.tail55d152.ts.net:4100]
+```
+
 ```mermaid
 graph TD
     A[C3I Operator / Autonomous Swarm] -->|Interact / Audition| B[Cybernetic Music Studio]
@@ -225,3 +237,4 @@ The Cybernetic Rāga Durgā & 22-Shruti Microtonal Synthesis Studio is fully imp
 - **Main Cockpit**: [http://nas-1.tail55d152.ts.net:4100/](http://nas-1.tail55d152.ts.net:4100/)
 - **Zettelkasten Master MOC**: [http://nas-1.tail55d152.ts.net:4100/zk](http://nas-1.tail55d152.ts.net:4100/zk)
 - **Hermes Wiki Master Index**: [http://nas-1.tail55d152.ts.net:4100/wiki](http://nas-1.tail55d152.ts.net:4100/wiki)
+

@@ -45,6 +45,18 @@ Over the preceding evolutionary epochs, the **Unified Operational System (UOS)**
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[L0_Substrate] --> [L1_Kernel]
+[L1_Kernel] --> [L2_Runtime]
+[L2_Runtime] --> [L3_Telemetry]
+[L3_Telemetry] --> [L4: Cortex & Sa-Plan Authority]
+[L4: Cortex & Sa-Plan Authority] --> [L5: POODAVR & F Prime]
+[L5: POODAVR & F Prime] --> [L6: Knowledge Management Triad]
+[L6: Knowledge Management Triad] --> [L7: Formal Verification & Authority]
+[L7: Formal Verification & Authority] --> [L8: Evolutionary Engine]
+[L8: Evolutionary Engine] --> [L9: Sovereignty & Quorum]
+```
+
 ```mermaid
 graph TD
     subgraph L9_Sovereignty["L9: Sovereignty & Quorum"]
@@ -214,3 +226,4 @@ graph TD
 1. **Option A: Autonomous Swarm Multi-Node Benchmark**: Execute multi-agent workloads distributed between NAS-1 and laptop instance Razr15 over the port 8999 hydration channel and Zenoh mesh.
 2. **Option B: MAX Mojo GPU-Accelerated Local Inference Expansion**: Wire the local RTX 3080 Ti laptop node into the MAX Mojo daemon pipeline for low-latency embedding and priority scoring.
 3. **Option C: Interactive Cockpit Enhancement**: Expand the Lustre MVU web cockpit on Port 8100 with live SSE WebSocket event streaming from the AG-UI event bus.
+

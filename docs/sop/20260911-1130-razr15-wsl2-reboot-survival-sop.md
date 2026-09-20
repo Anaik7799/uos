@@ -56,6 +56,23 @@ In defense and mission-critical cybernetics, a computational node must be comple
 +-------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Laptop Reboots / Windows Starts] --> [Scheduled Task: UOS_WSL2_ColdBoot_Autostart NT AUTHORITY\\SYSTEM, AtStartup]
+[.wslconfig vmIdleTimeout=-1, 12GB RAM] --> [WSL2 VM Starts Headless]
+[Scheduled Task: UOS_WSL2_ColdBoot_Autostart NT AUTHORITY\\SYSTEM, AtStartup] --> [WSL2 VM Starts Headless]
+[WSL2 VM Starts Headless] --> [/etc/wsl.conf boot]
+[/etc/wsl.conf boot] --> [/usr/local/bin/uos-boot-entrypoint.sh]
+[/usr/local/bin/uos-boot-entrypoint.sh] --> [mknod /dev/net/tun c 10 200]
+[/usr/local/bin/uos-boot-entrypoint.sh] --> [OpenSSH Daemon :22 & :2222]
+[/usr/local/bin/uos-boot-entrypoint.sh] --> [Tailscale Daemon razr15-wsl2 --ssh]
+[/usr/local/bin/uos-boot-entrypoint.sh] --> [Modular MAX GPU Worker :8088]
+[/usr/local/bin/uos-boot-entrypoint.sh] --> [uos-network-watchdog 30s Cycle]
+[uos-network-watchdog 30s Cycle] --> [Ping nas-1 100.87.7.78?]
+[PING -- Failed] --> [Heal Network: Recreate TUN, Restart Tailscale & SSH]
+[Heal Network: Recreate TUN, Restart Tailscale & SSH] --> [Tailscale Daemon razr15-wsl2 --ssh]
+[PING -- OK] --> [uos-network-watchdog 30s Cycle]
+```
+
 ```mermaid
 graph TD
     subgraph Tier1 ["Tier 1: Windows Host Boot Layer"]
@@ -148,3 +165,4 @@ To test full cold-boot survival:
 | `CHK-15-MAX` | NVIDIA GPU pass-through path `/dev/dxg` preserved | **PASS** |
 | `CHK-17-SOV` | Tracked in Sa-Plan under plan `uos/razr15-wsl2-reboot-survival` | **PASS** |
 | `CHK-18-JJ` | Standalone Jujutsu monorepo with 0 native Git mutations | **PASS** |
+

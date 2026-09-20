@@ -82,6 +82,18 @@ Implement **Fractal Jidoka (`SC-JIDOKA-001`)** and **Fractal TPS (`SC-SA-PLAN-00
 ```
 
 #### Mermaid Diagram
+```text
+[Antigravity AGY] --> [MCP Jidoka Interceptor check_fractal_jidoka_violation]
+[Claude Agent] --> [MCP Jidoka Interceptor check_fractal_jidoka_violation]
+[Codex Agent] --> [MCP Jidoka Interceptor check_fractal_jidoka_violation]
+[BEAM Swarm Actors] --> [MCP Jidoka Interceptor check_fractal_jidoka_violation]
+[INTERCEPT -- "Bypass / Shadow Task"] --> [🛑 ANDON STOP LINE Code: -32002 Execution Halted]
+[INTERCEPT -- "Valid sa-plan Tool Call"] --> [Poka-Yoke Parameter Check Task / Job / Workflow]
+[Poka-Yoke Parameter Check Task / Job / Workflow] --> [Gleam Sa-Plan Bridge sa_plan_bridge.gleam]
+[Gleam Sa-Plan Bridge sa_plan_bridge.gleam] --> [tools/sa-plan CLI Hermes OCaml Core]
+[tools/sa-plan CLI Hermes OCaml Core] --> [Authoritative SQLite WAL var/sa-plan/uos.sqlite3]
+```
+
 ```mermaid
 flowchart TD
     subgraph AgenticPlane ["Agentic Swarm Plane"]
@@ -175,3 +187,4 @@ flowchart TD
 - [Wiki Corpus Index](http://nas-1.tail55d152.ts.net:4100/wiki): `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
 - [Sa-Plan Mandate Contract](http://nas-1.tail55d152.ts.net:4100/docs/contracts/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md)
 - [Main Cockpit Dashboard](http://nas-1.tail55d152.ts.net:4100/)
+

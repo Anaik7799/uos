@@ -101,6 +101,23 @@ This Standard Operating Procedure (SOP) governs the mandatory verification, audi
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Unified Web & Knowledge Client Browser / AG-UI / Operator Cockpit] --> [Gleam Lustre Unified Cockpit link_tracker_view.gleam]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Route & Web Sink 44 Endpoints]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Knowledge Sink wiki:...]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [A2UI Component Sink 233 Declarative Comps]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Semantic & Content Sink Timestamps & Metadata]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Operational Health Sink Latencies, Ports, Breakers]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [REST API Endpoint /api/v1/links/status]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Native OCaml Deep Verifier tools/link_tracker_verifier.exe]
+[Native OCaml Deep Verifier tools/link_tracker_verifier.exe] --> [Lean 4 Mathematical Authority formal/lean/UnifiedWebSemantics.lean]
+[Lean 4 Mathematical Authority formal/lean/UnifiedWebSemantics.lean] --> [Theorems Proved: 1. Multi-Domain SCC=1 2. Zero Dead Ends 3. Fail-Closed Gate Soundness]
+[Native OCaml Deep Verifier tools/link_tracker_verifier.exe] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Theorems Proved: 1. Multi-Domain SCC=1 2. Zero Dead Ends 3. Fail-Closed Gate Soundness] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ADMISSION GRANTED Ratified by Codex & Claude]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ANDON STOP LINE Fail-Closed Halt -32002]
+```
+
 ```mermaid
 graph TD
     Client["Unified Web & Knowledge Client<br/>(Browser / AG-UI / Operator Cockpit)"] -->|"HTTP GET /links"| Collator["Gleam Lustre Unified Cockpit<br/>(link_tracker_view.gleam)"]
@@ -197,3 +214,4 @@ If any of the 44 endpoints returns an HTTP status $\ne 200$, any transclusion is
 | **Antigravity (AGY)** | Lead Systems Architect | **RATIFIED** | `sig:agy-20260912-unified-web-wiki-zk-sop-v1` |
 | **Claude Fable 5.1** | Formal Methods & Safety Sovereign | **RATIFIED** | `sig:claude-fable-20260912-unified-sop-cert-v1` |
 | **Codex GPT-6 Astra**| SDLC & SRE Execution Sovereign | **RATIFIED** | `sig:codex-astra-20260912-unified-sop-cert-v1` |
+

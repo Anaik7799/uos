@@ -107,6 +107,17 @@ Where:
 ```
 
 ### Mermaid Diagram
+```text
+[Layers] --> [Surfaces]
+[Surfaces] --> [Layers]
+[Surfaces] --> [TPS]
+[TPS] --> [Surfaces]
+[S6 Swarm Action Boundary] --> [P2 Jidoka: Fail-Closed Andon -32002]
+[P2 Jidoka: Fail-Closed Andon -32002] --> [L0 Constitutional Andon Stop Line]
+[S4 tools/sa-plan CLI Engine] --> [S7 SQLite WAL Ledger var/sa-plan/uos.sqlite3]
+[S7 SQLite WAL Ledger var/sa-plan/uos.sqlite3] --> [L9 Autonomy EV-91 Doctor Verification]
+```
+
 ```mermaid
 flowchart TD
     subgraph Layers ["10 Fractal Layers (L0-L9)"]
@@ -183,3 +194,4 @@ flowchart TD
 - [ADR-067 Sa-Plan Sublimation](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md)
 - [ADR-066 Universal Execution Authority](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md)
 - [Main Cockpit Dashboard](http://nas-1.tail55d152.ts.net:4100/)
+

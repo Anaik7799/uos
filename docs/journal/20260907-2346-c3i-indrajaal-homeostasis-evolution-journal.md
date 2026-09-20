@@ -79,6 +79,19 @@ Under `sa-plan` plan `c3i/homeostasis-evolution`, executed four structured tasks
 ```
 
 #### Mermaid Architecture Diagram
+```text
+[System Metrics CPU, Mem, Latency, Err] --> [Ziegler-Nichols PID Anti-Windup Clamping]
+[Ziegler-Nichols PID Anti-Windup Clamping] --> [Composite Stress Index S_sys in 0.0, 1.0]
+[Composite Stress Index S_sys in 0.0, 1.0] --> [S_sys <= 0.70 & Stable >= 3 ticks?]
+[S_sys <= 0.70 & Stable >= 3 ticks?] --> [Converging / Andon Stop Mutations BLOCKED]
+[S_sys <= 0.70 & Stable >= 3 ticks?] --> [Homeostatic Equilibrium Evolution UNLOCKED]
+[Homeostatic Equilibrium Evolution UNLOCKED] --> [Generate Mutation Candidates]
+[Generate Mutation Candidates] --> [Multi-Objective Pareto Evaluator Latency, Tput, Err, Resource]
+[Multi-Objective Pareto Evaluator Latency, Tput, Err, Resource] --> [Extract Non-Dominated Frontier]
+[Extract Non-Dominated Frontier] --> [4-Party Sovereign Quorum AGY, Claude, Codex, OpenRouter]
+[4-Party Sovereign Quorum AGY, Claude, Codex, OpenRouter] --> [Ratified Evolution Generation Advanced]
+```
+
 ```mermaid
 graph TD
     subgraph Physiological["C3I Physiological Regulation"]
@@ -157,3 +170,4 @@ Zero-Muda purity is rigorously maintained: all 2D vector transformations, Pareto
 
 ## 13. Conclusion
 The biomorphic synthesis of C3I physiological homeostasis and Indrajaal multi-objective Pareto evolutionary adaptation is operational across all three Gleam interfaces (Web UI, REST API, TUI), ratified and verified with zero defects.
+

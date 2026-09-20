@@ -142,6 +142,23 @@ This specification establishes the authoritative cross-disciplinary synthesis co
 +-----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Client & Mesh Presentation Tier Operator Cockpit / AG-UI / Tailscale] --> [Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam]
+[Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam] --> [Route & Web Sink 47 Endpoints HTTP 200]
+[Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam] --> [SOTA Graph Centrality PageRank & HITS Scores]
+[Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam] --> [Knowledge Graph Sink 1,539 Resolved Wiki/ZK Links]
+[Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam] --> [A2UI Component Sink 239 Declarative Components]
+[Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam] --> [Operational Enclave Sink Ports 4100/4200 & NVMe Lock]
+[Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam] --> [REST API Endpoint /api/v1/links/status]
+[Gleam Lustre 5.6 MVU Cockpit link_tracker_view.gleam] --> [Native OCaml SOTA Engine tools/link_tracker_verifier.exe]
+[Native OCaml SOTA Engine tools/link_tracker_verifier.exe] --> [Lean 4 Mathematical Authority KnowledgeGraphTopology.lean]
+[Lean 4 Mathematical Authority KnowledgeGraphTopology.lean] --> [Proved Theorems: 1. Markov Convergence 2. Unified Graph SCC=1 3. Fail-Closed Gate Soundness]
+[Native OCaml SOTA Engine tools/link_tracker_verifier.exe] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Proved Theorems: 1. Markov Convergence 2. Unified Graph SCC=1 3. Fail-Closed Gate Soundness] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ADMISSION GRANTED Ratified by Codex & Claude]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ANDON STOP LINE Fail-Closed Abort -32002]
+```
+
 ```mermaid
 graph TD
     Client["Client & Mesh Presentation Tier<br/>(Operator Cockpit / AG-UI / Tailscale)"] -->|"HTTP GET /links"| Cockpit["Gleam Lustre 5.6 MVU Cockpit<br/>(link_tracker_view.gleam)"]
@@ -203,3 +220,4 @@ To obtain sovereign ratification and system admission:
 7. Lean 4 formal proofs must check cleanly with 0 `sorry` and 0 compiler warnings.
 8. `tools/verify_website_sop.sh` must exit with status code 0.
 9. Review certificates must be ratified by Codex GPT-6 Astra and Claude Fable 5.1.
+

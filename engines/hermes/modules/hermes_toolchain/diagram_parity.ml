@@ -274,22 +274,57 @@ let mermaid_kind block =
 
 let is_graphlike block = List.mem (mermaid_kind block) graphlike_kinds
 
+(* MEASURED 2026-09-28 during the corpus sweep: three `graph` blocks yielded
+   NO edges. They use mermaid's BIDIRECTIONAL arrow, `A <--> B`, which the
+   one-directional splitter cannot see (the `<` sits where a space must be).
+   Corpus: 219 `<-->` and 14 `<==>`.
+
+   A bidirectional arrow denotes BOTH directions, so it expands to two edges.
+   Generator and checker share this function, so an expanded pair is rendered
+   and re-read identically -- consistency by construction rather than by two
+   implementations agreeing. *)
+let bidi_markers = [ " <--> "; " <==> "; " <-.-> " ]
+
+let split_bidi l =
+  (* `A <-->|Read / Write| B` has no space after the arrow, so the label must
+     come off first -- exactly as the one-directional path already does. *)
+  let l = strip_edge_label l in
+  let rec try_m = function
+    | [] -> None
+    | m :: rest ->
+      let hl = String.length l and ml = String.length m in
+      let rec find i =
+        if i + ml > hl then None
+        else if String.sub l i ml = m then Some i
+        else find (i + 1)
+      in
+      (match find 0 with
+       | Some i -> Some (String.sub l 0 i, String.sub l (i + ml) (hl - i - ml))
+       | None -> try_m rest)
+  in
+  try_m bidi_markers
+
 let mermaid_edges block =
   if not (is_graphlike block) then []
   else
   lines block
-  |> List.filter_map (fun l ->
+  |> List.concat_map (fun l ->
       let t = String.trim l in
       if t = "" || starts_with "%%" t || starts_with "style " t
          || starts_with "classDef " t || starts_with "subgraph " t
          || t = "end" || starts_with "graph " t || starts_with "flowchart " t
-      then None
+      then []
       else
-        match split_on_arrow t with
-        | None -> None
+        match split_bidi t with
         | Some (a, b) ->
           let a = node_id a and b = node_id b in
-          if a = "" || b = "" then None else Some (a, b))
+          if a = "" || b = "" then [] else [ (a, b); (b, a) ]
+        | None ->
+          (match split_on_arrow t with
+           | None -> []
+           | Some (a, b) ->
+             let a = node_id a and b = node_id b in
+             if a = "" || b = "" then [] else [ (a, b) ]))
 
 (* Arrow-list ASCII edges: `[A label] --> [B label]`. Identity is the
    FIRST token inside the bracket, matching the generator's convention in
@@ -409,7 +444,7 @@ let mermaid_labels block =
               let raw = String.sub l (i + 1) (j - i - 1) in
               (* strip quotes, nested brackets and <br/> line breaks *)
               let raw = strip_decorations raw in
-              if id <> "" then acc := (id, norm_label raw) :: !acc;
+              if id <> "" then acc := (id, raw) :: !acc;
               go (j + 1)
             | None -> ())
          end
@@ -418,6 +453,12 @@ let mermaid_labels block =
        go 0)
     (lines block);
   !acc
+
+(* Raw labels feed the ASCII GENERATOR (readable text in documents);
+   normalised labels feed the COMPARISON. One extractor, two views -- a second
+   extractor would be a copy free to drift from the checker it must agree with. *)
+let mermaid_labels_norm block =
+  List.map (fun (id, raw) -> (id, norm_label raw)) (mermaid_labels block)
 
 let show_edge (a, b) = a ^ " --> " ^ b
 let uniq_sorted l = List.sort_uniq String.compare l
@@ -444,12 +485,24 @@ let check (body : string) : verdict =
       let a_edges = List.concat_map arrow_list_edges (ascii_blocks body) in
       (* Project the mermaid edges into LABEL space, which is the only
          vocabulary the two forms share. A node with no label keeps its id. *)
-      let labels = List.concat_map mermaid_labels mers in
-      let lbl id = match List.assoc_opt id labels with
-        | Some l when l <> "" -> l
-        | _ -> norm_label id
+      (* Labels resolve PER BLOCK. Mermaid node ids are block-scoped: two
+         diagrams in one document both using `A` mean different nodes. A
+         global lookup returns whichever block declared it first and silently
+         relabels the other diagram's edges -- measured 2026-09-28, it made a
+         document whose ASCII was GENERATED from its own mermaid report a
+         mismatch against itself. *)
+      let m_lbl =
+        List.concat_map
+          (fun b ->
+             let labels = mermaid_labels_norm b in
+             let lbl id =
+               match List.assoc_opt id labels with
+               | Some l when l <> "" -> l
+               | _ -> norm_label id
+             in
+             List.map (fun (x, y) -> (lbl x, lbl y)) (mermaid_edges b))
+          mers
       in
-      let m_lbl = List.map (fun (x, y) -> (lbl x, lbl y)) m_edges in
       let a = uniq_sorted (List.map show_edge a_edges) in
       let m = uniq_sorted (List.map show_edge m_lbl) in
       let nodes es = uniq_sorted (List.concat_map (fun (x, y) -> [ x; y ]) es) in

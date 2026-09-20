@@ -119,6 +119,19 @@ Prior to this implementation:
 +-----------------------------------------------------------------------------+
 ```
 
+```text
+[Universal Client Navigation Browser / AG-UI / Operator Cockpit] --> [Gleam Lustre Link Collator link_tracker_view.gleam]
+[Gleam Lustre Link Collator link_tracker_view.gleam] --> [REST API Endpoint /api/v1/links/status]
+[Gleam Lustre Link Collator link_tracker_view.gleam] --> [Native OCaml Verifier link_tracker_verifier.exe]
+[Native OCaml Verifier link_tracker_verifier.exe] --> [44 Live System Endpoints Core, Specialized, REST, Docs, Fallback]
+[Native OCaml Verifier link_tracker_verifier.exe] --> [Lean 4 Formal Proofs LinkGraphInvariants.lean]
+[Lean 4 Formal Proofs LinkGraphInvariants.lean] --> [Topological Invariants SCC=1, Universal Reachability, Zero Dead Ends]
+[44 Live System Endpoints Core, Specialized, REST, Docs, Fallback] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Topological Invariants SCC=1, Universal Reachability, Zero Dead Ends] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ADMISSION GRANTED 100% Endpoints Green]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ANDON STOP LINE Fail-Closed Halt -32002]
+```
+
 ```mermaid
 graph TD
     Client["Universal Client Navigation<br/>(Browser / AG-UI / Operator Cockpit)"] -->|"HTTP GET /links"| Collator["Gleam Lustre Link Collator<br/>(link_tracker_view.gleam)"]
@@ -266,3 +279,4 @@ Before this implementation, UI regressions and link drift occurred due to three 
 ## 13. Conclusion
 
 The Universal Link Tracker, Graph Invariant Analyser, Single-Page Collator View (`/links`), and Website Verification SOP have been fully engineered, proved in Lean 4, verified live across all 44 system endpoints, and ratified by all three sovereign authorities (AGY, Codex GPT-6 Astra, and Claude Fable 5.1). The entire system satisfies 18/18 checkpoints with 100% green verification.
+

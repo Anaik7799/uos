@@ -94,3 +94,8 @@
  (name diagram_check)
  (modules diagram_check)
  (libraries diagram_parity))
+
+(executable
+ (name diagram_ascii_gen)
+ (modules diagram_ascii_gen)
+ (libraries diagram_parity))

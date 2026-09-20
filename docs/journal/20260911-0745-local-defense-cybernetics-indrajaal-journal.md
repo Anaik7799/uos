@@ -42,6 +42,15 @@ Operator directive mandating safety-critical defense operational readiness:
 +---------------------------------------------------------------------------------------+
 ```
 
+```text
+[Modular MAX / Mojo Engine] --> [Gemma Transformer Block + Q4/Q8 SIMD]
+[Claude / Codex / OpenRouter] --> [Tri-Agent Surveillance Engine Psi-12]
+[Tri-Agent Surveillance Engine Psi-12] --> [Modular MAX / Mojo Engine]
+[Tri-Agent Surveillance Engine Psi-12] --> [Gleam/OTP 29 Root Supervisor]
+[ZigVM Kernel & Subprocess Supervisor] --> [Modular MAX / Mojo Engine]
+[Gleam/OTP 29 Root Supervisor] --> [Rete-UL Rules & Prajna Breakers]
+```
+
 ```mermaid
 flowchart TD
     subgraph Tier3["Tier 3: External Advisory Swarm (Cloud)"]
@@ -236,3 +245,4 @@ M  docs/journal/20260911-0745-local-defense-cybernetics-indrajaal-journal.md (Ne
 ## 13. Conclusion
 
 The Safety-Critical Defense Cybernetics mandate has been fully designed, formalized, implemented, and verified across all four primary language domains (Lean 4, Gleam, Zig, and Mojo). The system guarantees complete operational sovereignty on bare-metal hardware, local AI/ML inference via Modular MAX and Gemma, comprehensive surveillance over external agents, and mathematical safety closure under the Unified Operational System.
+

@@ -108,6 +108,21 @@ We decide:
 +-------------------------------------------------------------------------+
 ```
 
+```text
+[Super-Agent Holon cepaf_gleam/ecology/super_agent] --> [Selective Capability Mask Reflex / Delib / Auto / Sovereign]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [1. F Prime Component-Port FSM]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [2. Bayesian Belief Updating]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [3. Hermes Rete-UL Token Engine]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [4. ETS Lockless Term Table]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [5. Two-Lattice STM Leased Mutex]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [6. Modular MAX/Mojo SIMD Tensors]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [7. OpenRouter Free LLM Dialectic]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [8. Ruliad Multiway Branchial Space]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [9. Lean 4 / Quint Digital Twin]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [10. Denotational 17-Aspect Prism]
+[Selective Capability Mask Reflex / Delib / Auto / Sovereign] --> [11. Algebraic Sheaf Atlas Gluing]
+```
+
 ```mermaid
 graph TD
     Holon["Super-Agent Holon<br/>(cepaf_gleam/ecology/super_agent)"] --> Mask["Selective Capability Mask<br/>(Reflex / Delib / Auto / Sovereign)"]
@@ -166,3 +181,4 @@ graph TD
 - **Positive**: UCON holons can now operate as autonomous, self-balancing living agents in continuous harmony with Indrajaal.
 - **Controlled Resource Consumption**: Selective activation ensures that high-computation engines (Mojo SIMD, OpenRouter, Ruliad) are only invoked when demanded by cognitive stress or strategic reflection.
 - **Fail-Closed Safety**: Even when fully evolved, Super-Agents remain bounded by the $L_0$ constitutional invariants ($\Psi_0 \dots \Psi_{10}$).
+

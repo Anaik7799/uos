@@ -78,6 +78,20 @@
 ```
 
 #### Mermaid Diagram
+```text
+[User / Stimulus Intent] --> [Cortex OODA ReAct Actor\napps/cepaf_gleam]
+[Cortex OODA ReAct Actor\napps/cepaf_gleam] --> [Rust Bounded NIF\ncortex_nif/src/lib.rs]
+[Cortex OODA ReAct Actor\napps/cepaf_gleam] --> [MAX/Mojo Scorer\ncortex_scorer.py]
+[Cortex OODA ReAct Actor\napps/cepaf_gleam] --> [cortex_saplan_coordinator.gleam]
+[cortex_saplan_coordinator.gleam] --> [ExecutionHardDenied\nRoot OS Lock]
+[cortex_saplan_coordinator.gleam] --> [ExecutionHaltAndon\nCode -32002 Jidoka Stop Line]
+[cortex_saplan_coordinator.gleam] --> [sa_plan_bridge.gleam\nTask & ObanJob Registration]
+[sa_plan_bridge.gleam\nTask & ObanJob Registration] --> [Cryptographic SHA-256 Receipt]
+[Cryptographic SHA-256 Receipt] --> [Lustre Web Cockpit\nPort 8100 /cortex]
+[Cryptographic SHA-256 Receipt] --> [Split-Screen ANSI TUI]
+[Cryptographic SHA-256 Receipt] --> [Hermes Gospel Contract\ncortex_saplan_contract.ml]
+```
+
 ```mermaid
 flowchart TD
     US["User / Stimulus Intent"] --> CA["Cortex OODA ReAct Actor\n(apps/cepaf_gleam)"]
@@ -189,3 +203,4 @@ During implementation, two minor compiler/type discrepancies were addressed:
 ## 13. Conclusion
 
 The full Cortex Cognitive Engine and Sa-Plan Execution Authority integration is ratified, complete across all 5 phases, and verified across all test modalities.
+

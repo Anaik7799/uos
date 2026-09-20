@@ -37,6 +37,11 @@ This review evaluates the automated Behavior-Driven Development (BDD) verificati
 +-----------------------------------------------------------------------------+
 ```
 
+```text
+[TestRunner] --> [BrowserEngine]
+[BrowserEngine] --> [BEAMServer]
+```
+
 ```mermaid
 graph LR
     subgraph TestRunner ["Native OCaml CDP Runner (tools/webui_bdd_runner.exe)"]
@@ -323,4 +328,5 @@ The SciViz BDD verification harness represents a state-of-the-art implementation
 - **100% of 167 ggplot2 extensions** verified across visual layout, technical features, algorithmic details, and 1x1 fractal specifications.
 - **18/18 canonical domain checkpoints** 100% green.
 - **Zero Node.js, Zero Playwright, Zero client JS**, operating purely via native OCaml 5.5 and Chrome CDP WebSocket over BEAM Gleam Lustre server-side rendering.
+
 

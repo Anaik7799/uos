@@ -85,6 +85,13 @@ This contract establishes the **Constitutional Rules of Sovereign Autonomy**:
 +-------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[P11 & P12 & P13] --> [formal/lean/Constitutional_Invariants.lean • Proved Soundness & Precedence Theorems]
+[P11 & P12 & P13] --> [apps/cepaf_gleam/src/fractal/l0_constitutional.gleam • Zero-Fenced Health & 2oo3 Guardian Consensus]
+[apps/cepaf_gleam/src/fractal/l0_constitutional.gleam • Zero-Fenced Health & 2oo3 Guardian Consensus] --> [engines/hermes/modules/hermes_harness/hermes_rete.ml • Microsecond Rule Conflict Resolution]
+[apps/cepaf_gleam/src/fractal/l0_constitutional.gleam • Zero-Fenced Health & 2oo3 Guardian Consensus] --> [engines/zigvm/src/os_port.zig • Fuel-Bounded Subprocess Isolation]
+```
+
 ```mermaid
 graph TD
     subgraph CONSTITUTION["L0 Constitutional Invariant Core"]
@@ -171,3 +178,4 @@ graph TD
 - `apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam` — Gleam L0 Constitutional Actor
 - `contracts/rules/20260907-0653-tri-agent-coordination.md` — Shared Agent Coordination Contract (`SYNC-14`)
 - `docs/design/20260911-0715-indrajaal-local-intelligence-maximization-spec.md` — Indrajaal Local AI Spec
+

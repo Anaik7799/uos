@@ -87,6 +87,20 @@ The external authority **C3I / Indrajaal** (`/home/an/dev/ver/c3i`) defines a ma
 +---------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[ZMOF Backplane Zenoh] --> [cepaf_gleam/zenoh/zmof_transport.gleam]
+[AG-UI 32 Events] --> [cepaf_gleam/agui/events.gleam]
+[A2UI 233 Components] --> [cepaf_gleam/a2ui/catalog.gleam]
+[Homeostasis PID |e| < 0.05] --> [cepaf_gleam/ha/lyapunov_proof.gleam]
+[Auto-FMEA Risk Engine] --> [cepaf_gleam/ha/fmea_generator.gleam]
+[cepaf_gleam/zenoh/zmof_transport.gleam] --> [sa-plan: Oban Queues & Temporal Workflows]
+[cepaf_gleam/agui/events.gleam] --> [sa-plan: Oban Queues & Temporal Workflows]
+[cepaf_gleam/a2ui/catalog.gleam] --> [apps/indrajaal_gleam_web: Port 4100 Cockpit]
+[cepaf_gleam/ha/lyapunov_proof.gleam] --> [sa-plan: Oban Queues & Temporal Workflows]
+[cepaf_gleam/ha/fmea_generator.gleam] --> [var/sa-plan/uos.sqlite3: Telemetry & Cadence]
+[sa-plan: Oban Queues & Temporal Workflows] --> [var/sa-plan/uos.sqlite3: Telemetry & Cadence]
+```
+
 ```mermaid
 graph TD
     subgraph C3I_External ["C3I External Source Authority"]
@@ -144,3 +158,4 @@ graph TD
 - **Provenance Gate**: `bash tools/km-gate --gate` (`SC-PROVENANCE-001`).
 - **Telemetry Verification**: `sqlite3 var/sa-plan/uos.sqlite3 "SELECT count(*) FROM sa_plan_fractal_log;"`.
 - **Zenoh Mesh Reachability**: `zenoh_ping` via MCP bridge.
+

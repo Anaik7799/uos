@@ -37,6 +37,14 @@ Unlike passive enterprise dashboards, a **mission-critical cybernetic control ce
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Top Status HUD SIL-6, Storage Lock, Checklist 18/18]
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Right Telemetry & OODA Inspector]
+[Sa-Plan SQLite Ledger var/sa-plan/uos.sqlite3] --> [Bottom Andon Stop Line & Event Ticker]
+[Gleam / BEAM OTP 29 Root Supervisor] --> [Center Tactical Canvas Lustre MVU SSR]
+[Hermes OCaml Gospel/Z3 Engine] --> [Center Tactical Canvas Lustre MVU SSR]
+```
+
 ```mermaid
 flowchart TD
     subgraph S_SHELL ["Universal 5-Pane Control Center Shell"]
@@ -567,6 +575,11 @@ Per operator mandate (`SC-CHECKLIST-001` & `SPEC-CHECKLIST-NAV-001`), all 40+ pa
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[S_ACCORDION] --> [S_CANVAS]
+[S_CANVAS] --> [Live Cybernetic Cockpit: http://nas-1.tail55d152.ts.net:4100]
+```
+
 ```mermaid
 graph TD
     subgraph S_ACCORDION ["SC-CHECKLIST-001 Verification Accordion (On Every Page)"]
@@ -597,3 +610,4 @@ All proposed components strictly adhere to UOS core principles:
 1. **Zero-Muda Purity**: 0 Node.js, 0 npm, 0 Playwright, 0 Bevy, 0 Graphite. All 2D graphics and vector transformations run in pure Erlang/Gleam (`graphene_nif.erl`) and Hermes OCaml.
 2. **Deterministic Fail-Closed Operation**: Hazardous actions, un-ledgered tasks, or corrupted capability tokens trigger immediate fail-closed Andon stops.
 3. **Live Accessibility**: Every component is served over Tailnet port 4100 with full clickable FQDN URLs and accessible terminal TUI representations.
+

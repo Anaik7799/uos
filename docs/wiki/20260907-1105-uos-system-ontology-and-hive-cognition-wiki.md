@@ -215,6 +215,17 @@ From [http://nas-1.tail55d152.ts.net:4100/docs/generated/20260907-1030-uos-holon
 
 ### Mermaid Diagram: Dream ↔ Evolve Cycle
 
+```text
+[Board Line IDLE khālī] --> [Dream Module svapna.gleam]
+[Dream Module svapna.gleam] --> [Eight Hypothesis Kinds Rete, Bayes, Analogy, ...]
+[Eight Hypothesis Kinds Rete, Bayes, Analogy, ...] --> [Board: Hypothesize Message ACL utterance]
+[Board: Hypothesize Message ACL utterance] --> [Evolve Module evolve.gleam]
+[Evolve Module evolve.gleam] --> [Thompson Sampler Beta-Binomial]
+[Thompson Sampler Beta-Binomial] --> [Trialled → Adopted or Rejected ≤0.2]
+[Trialled → Adopted or Rejected ≤0.2] --> [Harmony Index Maintained evolution never decreases harmony]
+[Harmony Index Maintained evolution never decreases harmony] --> [Board Line IDLE khālī]
+```
+
 ```mermaid
 graph TD
     A["Board Line IDLE<br/>(khālī)"] -->|start svapna cycle| B["Dream Module<br/>(svapna.gleam)"]
@@ -304,3 +315,4 @@ graph TD
 - **Hermes Wiki Corpus Index**: [http://nas-1.tail55d152.ts.net:4100/wiki](http://nas-1.tail55d152.ts.net:4100/wiki)
 - **Round O Ontology Journal**: `[[wiki:20260907-1105-uos-ontology-sutra-sangita-hive-cognition-round-journal]]`
 - **Global Intelligence Routing Design**: `docs/design/20260907-0925-uos-global-intelligence-routing-design.md`
+

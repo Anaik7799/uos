@@ -80,6 +80,18 @@ Execute three comprehensive passes of systemic sublimation:
 ```
 
 #### Mermaid Diagram
+```text
+[Swarm Actors apps/uos_swarm] --> [Action Boundary action_boundary.gleam]
+[Action Boundary action_boundary.gleam] --> [Jidoka Task Validation SC-JIDOKA-001]
+[JIDOKA_CHECK -- "Bypass / Shadow Task"] --> [🛑 ANDON STOP LINE Error: -32002 Execution Terminated]
+[JIDOKA_CHECK -- "Authorized Task"] --> [Poka-Yoke Parameter Check]
+[Poka-Yoke Parameter Check] --> [Gleam Sa-Plan Bridge]
+[Gleam Sa-Plan Bridge] --> [Heijunka Leveled Pull Queue Monotonic Leases]
+[Heijunka Leveled Pull Queue Monotonic Leases] --> [tools/sa-plan Engine]
+[tools/sa-plan Engine] --> [SQLite WAL Ledger var/sa-plan/uos.sqlite3]
+[SQLite WAL Ledger var/sa-plan/uos.sqlite3] --> [tools/uos doctor EV-91 PASS 91/91 Green]
+```
+
 ```mermaid
 flowchart TD
     subgraph SwarmPlane ["Swarm & Coordination Plane"]
@@ -156,3 +168,4 @@ flowchart TD
 - [ADR-066 Universal Authority](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md)
 - [Sa-Plan Operational Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1530-uos-sa-plan-fractal-jidoka-tps-guide.md)
 - [Main Cockpit Dashboard](http://nas-1.tail55d152.ts.net:4100/)
+

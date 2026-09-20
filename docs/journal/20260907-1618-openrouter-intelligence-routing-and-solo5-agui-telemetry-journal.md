@@ -61,6 +61,20 @@ Per operator request to execute both strategic streams:
 +──────────────────────────────────────────────────────────────────────────────────────────+
 ```
 
+```text
+[Task Request] --> [Routing Strategy]
+[Routing Strategy] --> [Free OpenRouter Allowlist]
+[Routing Strategy] --> [Hermes Rete Oracle]
+[Routing Strategy] --> [Modular MAX GPU Daemon]
+[Routing Strategy] --> [allow_paid && est <= cap?]
+[allow_paid && est <= cap?] --> [Paid OpenRouter Model]
+[allow_paid && est <= cap?] --> [Fail-Closed Refusal]
+[Solo5 0.13.0 Runner] --> [Unikernel Metric Receipt]
+[Unikernel Metric Receipt] --> [Mirage Telemetry Accumulator]
+[Mirage Telemetry Accumulator] --> [AG-UI 32-Event SSE Stream]
+[Mirage Telemetry Accumulator] --> [Lustre Web Cockpit & ANSI TUI]
+```
+
 ```mermaid
 flowchart TD
     subgraph StreamA [Stream A: Intelligence Routing]
@@ -160,3 +174,4 @@ flowchart TD
 ## 13. Conclusion
 
 Both Stream A and Stream B have been implemented, tested, and committed in Jujutsu (`4b2c8edc`). The system is 100% green and ready for swarm broadcast.
+

@@ -73,6 +73,15 @@ It confirms that all applicable capabilities, protocols, schemas, and safety law
 +---------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[EX_P & EX_F & EX_C & EX_R & EX_D] --> [Normalization_Engine]
+[Normalization_Engine] --> [apps/cepaf_gleam & apps/indrajaal_gleam_web • Pure Gleam/OTP 29 Root Supervisor • Port 4100 Lustre SSR Cockpit • Living 21-Holon Swarm & Cybernetic Singing]
+[Normalization_Engine] --> [engines/zigvm • Pure Zig Deterministic BEAM Kernel • Descriptor-Relative VFS]
+[Normalization_Engine] --> [engines/hermes • Hermes OCaml Gospel Contracts • Bounded Z3 SMT Solver & TyXML Wiki]
+[Normalization_Engine] --> [services/inference/max • Isolated Modular MAX/Mojo Daemon • Hardware SIMD Tensor Kernel]
+[Normalization_Engine] --> [formal/lean & formal/quint • Lean 4 Proofs & Quint Parity Twin]
+```
+
 ```mermaid
 graph TD
     subgraph External_C3I_Sprawl ["External C3I / Indrajaal Sprawl (/home/an/dev/ver/c3i)"]
@@ -141,6 +150,10 @@ graph TD
 | Diagram Standards          | Flat PNG/SVG raster images             | Mandatory ASCII + Mermaid source rule   |
 | KM Verification Gate       | None                                   | tools/km-gate machine verification      |
 +---------------------------------------------------------------------------------------------------------------+
+```
+
+```text
+[D1 & D2 & D3 & D4] --> [UOS_Canonical_KM_Triad]
 ```
 
 ```mermaid
@@ -212,3 +225,4 @@ The latest current state of code and docs demonstrates that **UOS has completely
 - **Pure Gleam/OTP 29, ZigVM kernel, Hermes OCaml, and Modular MAX** provide deterministic, type-safe execution.
 - **The Living Swarm Ecology & Cybernetic Singing Engine** ensures the system is not merely a static database, but an actively breathing, homeostatically balanced cybernetic intelligence.
 - **Zero-Muda Purity, NVMe Storage Safety (`25503L801736`), and Standalone Jujutsu Monorepo Discipline** are strictly verified and enforced.
+

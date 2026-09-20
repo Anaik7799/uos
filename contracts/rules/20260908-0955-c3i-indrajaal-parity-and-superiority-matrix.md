@@ -76,6 +76,13 @@ UOS achieves **100% baseline parity** on all functional interfaces while achievi
 +------------------------------------+--------+--------------------+---------------------+--------+------------------+
 ```
 
+```text
+[ZMOF Backplane 100%] --> [Pure BEAM Erlang Zero-Muda Math 150%]
+[AG-UI 32-Events 100%] --> [Sa-Plan Oban + Temporal Jidoka 135%]
+[A2UI 233-Components 100%] --> [Cybernetic Orchestra Multi-Rate 150%]
+[Lustre/Wisp/TUI 31 Tabs 100%] --> [Hardware NVMe Safety Lock 150%]
+```
+
 ```mermaid
 graph TD
     subgraph Baseline ["C3I / Indrajaal Baseline (100% Parity)"]
@@ -134,3 +141,4 @@ graph TD
 - **Contract Invariant**: $\mathcal{P}_{\text{total}} \ge 100\%$ across all releases.
 - **Automated Gate**: `tools/uos checklist` (18/18 PASS).
 - **Provenance Limit**: `admitted_ev_ceiling = 93` strictly pinned.
+

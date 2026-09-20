@@ -107,6 +107,14 @@ To transform standard web views into mission-critical control center instruments
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Top Status HUD SIL-6, Storage Lock, Checklist 18/18]
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Right Telemetry & OODA Inspector]
+[Sa-Plan SQLite Ledger var/sa-plan/uos.sqlite3] --> [Bottom Andon Stop Line & Event Ticker]
+[Gleam / BEAM OTP 29 Root Supervisor] --> [Center Tactical Canvas Lustre MVU SSR]
+[Hermes OCaml Gospel/Z3 Engine] --> [Center Tactical Canvas Lustre MVU SSR]
+```
+
 ```mermaid
 flowchart TD
     subgraph S_SHELL ["Universal 5-Pane Control Center Shell"]
@@ -310,3 +318,4 @@ Components were mapped across all 40+ endpoints in 6 operational domains:
 ## 13. Conclusion
 
 The comprehensive widget review and control center component architecture has been successfully completed, verified, and recorded under `sa-plan` authority. All 48 operational web endpoints are equipped with tactile, high-density, and fail-closed components adhering to the Dark Cockpit standard (`SC-HMI-010`) and Universal 5-Pane Shell topology. All verification gates and checklist checkpoints stand at 100% green.
+

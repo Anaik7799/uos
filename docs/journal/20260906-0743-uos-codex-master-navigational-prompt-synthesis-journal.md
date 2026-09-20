@@ -73,6 +73,22 @@
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Operator / Autonomous Trigger] --> [codex-run with Master Prompt]
+[codex-run with Master Prompt] --> [Verify Invariants .jj/, Zero-Muda, Storage Lock, SC-TIME]
+[Verify Invariants .jj/, Zero-Muda, Storage Lock, SC-TIME] --> [Domain 1: OCaml Test Preservation 71 Suites]
+[Verify Invariants .jj/, Zero-Muda, Storage Lock, SC-TIME] --> [Domain 2: Navigational Quality & Link Reachability]
+[Verify Invariants .jj/, Zero-Muda, Storage Lock, SC-TIME] --> [Domain 3: Category Route & Graph SCC=1 Algebra]
+[Verify Invariants .jj/, Zero-Muda, Storage Lock, SC-TIME] --> [Domain 4: Industry Standards Google, Parsoid, ZK]
+[Verify Invariants .jj/, Zero-Muda, Storage Lock, SC-TIME] --> [Domain 5: 4-Cycle Recursive Page Patrol]
+[DOM1 & DOM2 & DOM3 & DOM4 & DOM5] --> [18/18 Comprehensive Verification Checklist]
+[18/18 Comprehensive Verification Checklist] --> [9,932 Gleam Tests Green]
+[18/18 Comprehensive Verification Checklist] --> [data/sqlite/uos_verification_tracking.sqlite3]
+[18/18 Comprehensive Verification Checklist] --> [governance/capability-inventory/verification-tracking.toml]
+[18/18 Comprehensive Verification Checklist] --> [SC-JOURNAL Canonical Record]
+[18/18 Comprehensive Verification Checklist] --> [Standalone Jujutsu Commit Zero Git]
+```
+
 ```mermaid
 flowchart TD
     subgraph Trigger["Operator Dispatch"]
@@ -344,4 +360,5 @@ Historically, when complex testing requirements are conveyed in conversational c
 ### 13. Conclusion
 
 The Codex Sovereign Master Prompt is now formally codified in `governance/prompts/`, mirrored in `.codex/prompts/` and `docs/design/`, tracked in SQLite, and verified green across all gates. It provides a permanent, reusable standard for all future web navigational testing and verification cycles.
+
 

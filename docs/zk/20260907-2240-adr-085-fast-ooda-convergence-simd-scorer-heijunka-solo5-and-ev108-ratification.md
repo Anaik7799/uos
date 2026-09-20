@@ -57,6 +57,13 @@ Formally ratify the **Ultra-Fast OODA Convergence Triad** under `EV-108`:
 
 ### 3.2 Mermaid Architecture Diagram
 
+```text
+[1. OBSERVE Solo5 MicroVM Sandbox Cold Start: 10.9 ms] --> [2. ORIENT Modular MAX SIMD Latency: 1.7 ms]
+[2. ORIENT Modular MAX SIMD Latency: 1.7 ms] --> [3. DECIDE 2oo3 BFT Quorum Latency: 12.0 ms]
+[3. DECIDE 2oo3 BFT Quorum Latency: 12.0 ms] --> [4. ACT Sa-Plan Heijunka Latency: 4.0 ms]
+[4. ACT Sa-Plan Heijunka Latency: 4.0 ms] --> [1. OBSERVE Solo5 MicroVM Sandbox Cold Start: 10.9 ms]
+```
+
 ```mermaid
 graph LR
     subgraph OODA["Fast Cybernetic OODA Loop (28.6 ms)"]
@@ -111,3 +118,4 @@ graph LR
 - **Lean 4 Proofs**: `formal/lean/Fast_OODA_Convergence.lean` — 3 theorems verified
 - **Sa-Plan Tasks**: `t1-max-inference`, `t2-heijunka-dispatcher`, `t3-solo5-sandbox`, `t4-fast-ooda-hud`, `t5-lean4-proofs` — ALL COMPLETED
 - **Tri-Sovereign Quorum**: 3/3 Approved (AGY, Claude, Codex)
+

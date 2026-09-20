@@ -88,6 +88,21 @@ Authored [`formal/lean/Five_Component_Inventory_And_Requirements_Cycles.lean`](f
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Operator Directive] --> [Formal SRS/ERD 105 REQ IDs]
+[Formal SRS/ERD 105 REQ IDs] --> [Master Usable Prompt Template]
+[Master Usable Prompt Template] --> [4-Tier Component Taxonomy]
+[4-Tier Component Taxonomy] --> [Tier 1: 8 Tactile Flight Instruments]
+[4-Tier Component Taxonomy] --> [Tier 2: 233 A2UI Declarative Specs]
+[4-Tier Component Taxonomy] --> [Tier 3: 12 SRE Cockpit Widgets]
+[4-Tier Component Taxonomy] --> [Tier 4: 18 Semantic HTML5 Constructors]
+[Tier 1: 8 Tactile Flight Instruments] --> [Pure Lustre WebUI SSR Engine]
+[Tier 2: 233 A2UI Declarative Specs] --> [Pure Lustre WebUI SSR Engine]
+[Tier 3: 12 SRE Cockpit Widgets] --> [Pure Lustre WebUI SSR Engine]
+[Tier 4: 18 Semantic HTML5 Constructors] --> [Pure Lustre WebUI SSR Engine]
+[Pure Lustre WebUI SSR Engine] --> [BEAM OTP 29 Supervisor 0 Client JS]
+```
+
 ```mermaid
 graph TD
     A["Operator Directive"] --> B["Formal SRS/ERD (105 REQ IDs)"]
@@ -209,3 +224,4 @@ The implementation enforces STAMP/STPA safety constraints:
 ## 13. Conclusion
 
 Cycles `C387`..`C391` (`EV-C139`..`EV-C143`) have been formally proved in Lean 4, verified via EUnit tests, demonstrated in pure Gleam Lustre WebUI SSR with zero client JavaScript, cryptographically ledgered in `var/km/provenance-cycles.sqlite3` with Merkle Head `3329e2b36630e30cea478ff5bdc3eaa29ec4915ab5a5bd2cd2cc93c93036054f`, and co-signed under tri-sovereign authority in `var/sa-plan/uos.sqlite3`. All 18 checkpoints of `SC-CHECKLIST-001` remain 100% Green.
+

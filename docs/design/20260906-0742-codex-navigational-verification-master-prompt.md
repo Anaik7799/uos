@@ -51,6 +51,27 @@
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[OCaml Test Oracle engines/hermes, zigvm] --> [Gleam Differential Oracle ocaml_differential_oracle.gleam]
+[Gleam Differential Oracle ocaml_differential_oracle.gleam] --> [Parity Verdict Match / Mismatch]
+[Category Theory: Cat Route, Functor F_UI] --> [Sheaf Gluing Condition]
+[Graph Theory: Directed Nav Graph G=V,E] --> [Strongly Connected Component SCC=1]
+[Graph Theory: Directed Nav Graph G=V,E] --> [Betweenness Centrality <= 0.35]
+[Industry Algorithms: Google CWV, Parsoid, ZK, InfraNodus] --> [Sheaf Gluing Condition]
+[Browser Engines Playwright, Wallaby, CDP] --> [4-Cycle Recursive Protocol per Page]
+[4-Cycle Recursive Protocol per Page] --> [Cycle 1: Structural & AST DOM]
+[4-Cycle Recursive Protocol per Page] --> [Cycle 2: Visual, Layout, WCAG & Assets]
+[4-Cycle Recursive Protocol per Page] --> [Cycle 3: Interactive Events & AG-UI OTel]
+[4-Cycle Recursive Protocol per Page] --> [Cycle 4: Formal Invariants & Sheaf Gluing]
+[P1 & SCC & CY4] --> [18/18 Comprehensive Checklist SC-CHECKLIST-001]
+[18/18 Comprehensive Checklist SC-CHECKLIST-001] --> [Hardware OS NVMe Lock 25503L801736]
+[Hardware OS NVMe Lock 25503L801736] --> [Zero-Muda Audit 0 Bevy, 0 Graphite]
+[Zero-Muda Audit 0 Bevy, 0 Graphite] --> [SQLite3 uos_verification_tracking.sqlite3]
+[SQLite3 uos_verification_tracking.sqlite3] --> [governance/capability-inventory/verification-tracking.toml]
+[governance/capability-inventory/verification-tracking.toml] --> [SC-JOURNAL Ledger YYYYMMDD-HHSS-]
+[SC-JOURNAL Ledger YYYYMMDD-HHSS-] --> [Standalone Jujutsu .jj/ Commit]
+```
+
 ```mermaid
 flowchart TD
     subgraph S1["1. Differential Verification & Oracles"]
@@ -252,4 +273,5 @@ codex-run \
 | **Zero-Muda Purity** | 0 Bevy, 0 Graphite, pure Erlang | Zero-muda gate & code scan | **100% PASS** |
 | **Live Web Cockpit** | HTTP 200 on port 4100 | Tailscale FQDN curl validation | **100% PASS** |
 | **VCS Purity** | Standalone Jujutsu (`.jj/`) | `jj status` & `jj describe` | **100% PASS** |
+
 

@@ -86,6 +86,15 @@ This converts the module from a punitive linter into a **two-way architectural r
 
 A useful MVU fits within **~200 lines of pure OCaml** in `km_layers.ml`:
 
+```text
+[Raw Markdown ADR] --> [Markdown Section Splitter]
+[Markdown Section Splitter] --> [Drop Nav/Checklist/Transclusions]
+[Drop Nav/Checklist/Transclusions] --> [Tokenize & Lemma Normalization]
+[Tokenize & Lemma Normalization] --> [10 Independent Layer Evaluators]
+[Referenced File Paths & Contracts] --> [10 Independent Layer Evaluators]
+[10 Independent Layer Evaluators] --> [Ternary Verdict per Layer: Verified / Unsupported / Candidate / Abstain]
+```
+
 ```mermaid
 flowchart LR
     Raw[Raw Markdown ADR] --> Split[Markdown Section Splitter]
@@ -201,3 +210,4 @@ Admission of the rebuilt module requires satisfying four empirical criteria:
    Combine markdown section stripping, corpus IDF weighting, and topological path/contract extraction into pure OCaml.
 3. **Preserve Advisory Status.**  
    Keep `km_layers.ml` as an authorship aid and diagnostic reporter (`--audit-layers`). Never wire it as a blocking pre-commit gate that incentivizes keyword laundering.
+

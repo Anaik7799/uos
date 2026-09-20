@@ -120,6 +120,18 @@ Prior to this implementation:
 ```
 
 #### Mermaid Diagram
+```text
+[Antigravity AGY] --> [MCP Server Dispatch server.gleam]
+[Claude Agent] --> [MCP Server Dispatch server.gleam]
+[Codex Agent] --> [MCP Server Dispatch server.gleam]
+[MCP Server Dispatch server.gleam] --> [Fractal Jidoka Inspection SC-JIDOKA-001]
+[JIDOKA -- "Bypass / Shadow Task"] --> [ANDON STOP LINE Code: -32002 Execution Halted]
+[JIDOKA -- "Authorized sa-plan Call"] --> [Poka-Yoke Validation Task / Job / Workflow]
+[Poka-Yoke Validation Task / Job / Workflow] --> [Gleam Sa-Plan Bridge sa_plan_bridge.gleam]
+[Gleam Sa-Plan Bridge sa_plan_bridge.gleam] --> [tools/sa-plan Hermes OCaml CLI]
+[tools/sa-plan Hermes OCaml CLI] --> [SQLite WAL Ledger var/sa-plan/uos.sqlite3 - Tasks & DAGs - Oban Jobs - Temporal Workflows]
+```
+
 ```mermaid
 flowchart TD
     subgraph Agents ["Autonomous Agent Layer"]
@@ -318,3 +330,4 @@ The directive has been fully implemented, verified, and admitted into the Unifie
 - [Wiki Corpus Index](http://nas-1.tail55d152.ts.net:4100/wiki): `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
 - [Sa-Plan Mandate Contract](http://nas-1.tail55d152.ts.net:4100/docs/contracts/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md)
 - [Main Cockpit Dashboard](http://nas-1.tail55d152.ts.net:4100/)
+

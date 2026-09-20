@@ -288,6 +288,22 @@ uos_jj_cli integrate-chain <change-id>...
 
 #### Mermaid Diagram
 
+```text
+[Operator Intent Design Authority] --> [Create Fresh Child Change]
+[Create Fresh Child Change] --> [Worker Workspace on new revision]
+[Worker Workspace on new revision] --> [Work in Progress]
+[Work in Progress] --> [Observer Readers]
+[Work in Progress] --> [integrate_chain in order]
+[integrate_chain in order] --> [Check]
+[Check] --> [Stop & Report Forget Workspace]
+[Check] --> [Pass Gate Verify Slice]
+[Pass Gate Verify Slice] --> [Lease Proof epoch > 0]
+[Lease Proof epoch > 0] --> [move_main with Lease + Ref]
+[move_main with Lease + Ref] --> [Main Advanced Bookmark Set]
+[Stop & Report Forget Workspace] --> [Rework or Abandon]
+[Main Advanced Bookmark Set] --> [Integration Complete]
+```
+
 ```mermaid
 graph TD
     A["Operator Intent<br/>(Design Authority)"] -->|"Plan"| B["Create Fresh<br/>Child Change"]
@@ -334,3 +350,4 @@ graph TD
 ---
 
 **Bottom navigation**: [← ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/zk) | [Hermes Wiki Corpus Index →](http://nas-1.tail55d152.ts.net:4100/wiki)
+

@@ -92,6 +92,24 @@ This specification formalizes the mathematical and architectural transformation 
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Synthesizer] --> [GroundGateway L7]
+[Cybernetic_Navigator] --> [CognitiveOodaIntent L5]
+[Knowledge_Conservator] --> [ParameterDatabase L2]
+[Bayesian_Critic] --> [PayloadScience L3]
+[Neural_Weaver] --> [LivingMetaEvolution L9]
+[Conductor] --> [MissionPhaseHsm L3]
+[Topologist] --> [CyberneticImmune L4]
+[Sensorium] --> [AvionicsTelemetry L2]
+[Byzantine_Sentinel] --> [ConstitutionalGuardian L0]
+[Chrono_Arbiter] --> [SreSentinel L4]
+[Cryptographic_Sentinel] --> [StorageCustodian L1]
+[Quantum_Arbiter] --> [FormalOracle L0]
+[Kinematic_Weaver] --> [DeterministicFlightController L1]
+[Fluidic_Controller] --> [DeterministicFlightController L1]
+[Swarm_Hive_Mind] --> [SwarmMesh L6]
+```
+
 ```mermaid
 graph LR
     subgraph Bionic["Harness-Bionic Council"]
@@ -221,3 +239,4 @@ The 57.6 KB OCaml SOP engine from `harness-bionic/modules/swarm/sop_execution.ml
 - **Google DeepMind Antigravity (AGY)**: *Approved & Ratified* — Verified Gleam implementation, 10,030 passing tests, and homomorphic mapping.
 - **Anthropic Claude Fable 5.1**: *Approved & Ratified* — STPA safety verification, SOP containment, and 18/18 checklist compliance.
 - **OpenAI Codex Astra**: *Approved & Ratified* — DMC interval disjointness, TCM coordinate conservation, and DAL-A hardware lock.
+

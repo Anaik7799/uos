@@ -150,6 +150,20 @@ Every tier of the SDLC verification lifecycle defined in `contracts/rules/sdlc-s
 ```
 
 ### Mermaid Diagram
+```text
+[Autonomous Agents AGY, Claude, Codex] --> [Sa-Plan Task Check SC-JIDOKA-001]
+[Swarm Actors apps/uos_swarm] --> [Sa-Plan Task Check SC-JIDOKA-001]
+[CHECK -- "Shadow / Bypass / Unledgered"] --> [🛑 ANDON STOP LINE Error Code: -32002 Fail-Closed Execution Halt]
+[🛑 ANDON STOP LINE Error Code: -32002 Fail-Closed Execution Halt] --> [Zenoh Telemetry indrajaal/l0/const/jidoka/andon]
+[CHECK -- "Legitimate Task Claim"] --> [tools/sa-plan CLI]
+[tools/sa-plan CLI] --> [Hermes OCaml Core 235 Laws, 12 Suites]
+[Hermes OCaml Core 235 Laws, 12 Suites] --> [SQLite WAL Ledger var/sa-plan/uos.sqlite3]
+[SQLite WAL Ledger var/sa-plan/uos.sqlite3] --> [S1: Lustre WebUI :4100]
+[SQLite WAL Ledger var/sa-plan/uos.sqlite3] --> [S2: Wisp REST /planning/jidoka]
+[SQLite WAL Ledger var/sa-plan/uos.sqlite3] --> [S3: ANSI Split-Screen TUI]
+[SQLite WAL Ledger var/sa-plan/uos.sqlite3] --> [EV-91 Doctor Verification 91/91 Admitted & 100% Green]
+```
+
 ```mermaid
 flowchart TD
     subgraph Agents ["Agent & Actor Plane"]
@@ -234,3 +248,4 @@ This specification mandates compliance with all four UOS Mathematical Gates:
 - [ADR-067 Sa-Plan Sublimation](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md)
 - [ADR-066 Universal Authority](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md)
 - [Main Cockpit Dashboard](http://nas-1.tail55d152.ts.net:4100/)
+

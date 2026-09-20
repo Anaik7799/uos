@@ -88,6 +88,24 @@ Prior to this intervention:
 +--------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Inbound Message: 'What is happening in the system?'] --> [Starts with '/'?]
+[B -- Yes] --> [Direct Slash Command Handler: handle_directive]
+[B -- No] --> [handle_conversational]
+[handle_conversational] --> [OpenRouter Online?]
+[E -- Yes] --> [telegram_openrouter: Gemma 4 Reasoning]
+[E -- No] --> [handle_conversational_offline_gateway]
+[telegram_openrouter: Gemma 4 Reasoning] --> [Directive Token Output: DIRECTIVE: /status]
+[Directive Token Output: DIRECTIVE: /status] --> [cognitive_worker: extract_directives_from_response]
+[cognitive_worker: extract_directives_from_response] --> [Execute Authoritative Directive: /status]
+[Execute Authoritative Directive: /status] --> [Merge Live State with Gemma 4 Reasoning]
+[handle_conversational_offline_gateway] --> [Autonomous Deterministic Mapping: /status, /board, /plan]
+[Autonomous Deterministic Mapping: /status, /board, /plan] --> [Execute Authoritative Directive]
+[Merge Live State with Gemma 4 Reasoning] --> [Egress Redactor: SC-DRIVE-001]
+[Execute Authoritative Directive] --> [Egress Redactor: SC-DRIVE-001]
+[Egress Redactor: SC-DRIVE-001] --> [Deliver Outbound Telegram Message]
+```
+
 ```mermaid
 flowchart TD
     A[Inbound Message: 'What is happening in the system?'] --> B{Starts with '/'?}
@@ -240,3 +258,4 @@ flowchart TD
 ## 13. Conclusion
 
 The UOS Telegram agent is now fully capable of handling generic natural language queries, such as "show me what is happening in the UOS system." Gemma 4 via OpenRouter reasons over user context, converts generic requests into canonical `/directives`, and the Gleam harness executes them against live authoritative system services. When offline or unconfigured, the system fails cleanly to an autonomous deterministic gateway rather than generating canned mock text. All 16 foundational system services are fully wired, tested, and verified under BEAM OTP 29 with Zero-Muda compliance.
+

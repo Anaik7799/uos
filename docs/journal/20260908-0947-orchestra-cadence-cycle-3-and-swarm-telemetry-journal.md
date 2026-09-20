@@ -104,6 +104,17 @@ Prior to Cycle 3 execution:
 +-----------------------------------------------------------------------------------+
 ```
 
+```text
+[Oban Queue: hive-monitoring] --> [Job Cycle 3 Executing]
+[Job Cycle 3 Executing] --> [Homeostasis PID: e = 0.015]
+[Homeostasis PID: e = 0.015] --> [Lyapunov Stability: dV/dt <= 0]
+[Lyapunov Stability: dV/dt <= 0] --> [Temporal Workflow: wf-orchestra-20260908-0946]
+[Temporal Workflow: wf-orchestra-20260908-0946] --> [SQLite Telemetry: sa_plan_fractal_log]
+[SQLite Telemetry: sa_plan_fractal_log] --> [Zenoh Mesh: indrajaal/l6/swarm/orchestra_heartbeat]
+[SQLite Telemetry: sa_plan_fractal_log] --> [Coordinator Board: Sequence 601]
+[Job Cycle 3 Executing] --> [Oban Queue: job-hive-monitor-cycle-4]
+```
+
 ```mermaid
 graph TD
     A["Oban Queue: hive-monitoring"] -->|"claim"| B["Job Cycle 3 Executing"]
@@ -199,3 +210,4 @@ The division of labor across the 7 orchestral sections provides an elegant cyber
 ## 13. Conclusion
 
 Cycle 3 of the Cybernetic Orchestra cadence was successfully executed, audited, and recorded in accordance with `SC-MONITOR-001`, `SC-HIVE-SYNC-001`, `SC-FRACTAL-CADENCE-001`, and `SC-ORCHESTRA-001`. The swarm is fully aligned, in tune, and operating under the admitted `EV-93` ceiling with zero un-ledgered actions.
+

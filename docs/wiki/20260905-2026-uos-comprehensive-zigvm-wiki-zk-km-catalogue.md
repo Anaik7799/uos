@@ -132,6 +132,29 @@ Every artifact is mapped to:
 
 The 347 episodic notes residing in external ZigVM research trees have been classified into 10 cohesive thematic clusters and fully represented in the UOS knowledge plane:
 
+```text
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 1: S-Epoch SMP Lockless Core]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 2: Production-Axis Fractals & Parity]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 3: Stan Probabilistic Decision Calculus]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 4: SMT-ML & Z3 Formal BMC]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 5: Dung Argumentation & Graph Sheaves]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 6: Infranodus Topological Analysis]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 7: Sa_plan & C3I Orchestration]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 8: HTTP Cowboy & Gen_Statem Parity]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 9: Lossless AST & Tag Laundering]
+[zk:20260905-1801-moc-uos-unified-master] --> [Cluster 10: Raven Telemetry & Vector Visualization]
+[Cluster 1: S-Epoch SMP Lockless Core] --> [engines/zigvm/ Pure Zig Kernel]
+[Cluster 2: Production-Axis Fractals & Parity] --> [apps/cepaf_gleam/ OTP 29 Supervision]
+[Cluster 3: Stan Probabilistic Decision Calculus] --> [engines/hermes/ OCaml Statistical Oracles]
+[Cluster 4: SMT-ML & Z3 Formal BMC] --> [formal/lean/ & formal/quint/]
+[Cluster 5: Dung Argumentation & Graph Sheaves] --> [engines/hermes/modules/hermes_wiki/]
+[Cluster 6: Infranodus Topological Analysis] --> [apps/indrajaal_gleam_web/ Port 4100]
+[Cluster 7: Sa_plan & C3I Orchestration] --> [services/inference/max/ Quarantined MAX]
+[Cluster 8: HTTP Cowboy & Gen_Statem Parity] --> [native/ Pure Erlang graphene_nif]
+[Cluster 9: Lossless AST & Tag Laundering] --> [contracts/rules/ Zero-Muda, Storage Lock]
+[Cluster 10: Raven Telemetry & Vector Visualization] --> [tools/uos/ verify-all, rocha-check]
+```
+
 ```mermaid
 graph TD
     MasterMOC["[[zk:20260905-1801-moc-uos-unified-master]]"] --> C1["Cluster 1: S-Epoch SMP Lockless Core"]
@@ -231,3 +254,4 @@ All documents in this catalogue are reachable via Tailscale web navigation:
 
 ---
 *Certified by the UOS Architecture Board: Antigravity AGY, Anthropic Claude Sovereign Authority, and OpenAI Codex Sovereign Authority.*
+

@@ -103,6 +103,17 @@ Prior to Cycle 5:
 +-----------------------------------------------------------------------------------+
 ```
 
+```text
+[Inbox: 65 Pending Messages] --> [Inbox Cleared: 0 Unread INV-MON-02]
+[Inbox Cleared: 0 Unread INV-MON-02] --> [Oban: job-hive-monitor-cycle-5]
+[Oban: job-hive-monitor-cycle-5] --> [Homeostasis PID: e = 0.015 < 0.05]
+[Homeostasis PID: e = 0.015 < 0.05] --> [Temporal Workflow: wf-orchestra-cycle-5]
+[Temporal Workflow: wf-orchestra-cycle-5] --> [SQLite: sa_plan_fractal_log]
+[SQLite: sa_plan_fractal_log] --> [Zenoh Mesh: indrajaal/l6/swarm/orchestra_heartbeat]
+[SQLite: sa_plan_fractal_log] --> [Coordinator Board: Sequence 804]
+[Oban: job-hive-monitor-cycle-5] --> [Oban: job-hive-monitor-cycle-6 120s]
+```
+
 ```mermaid
 graph TD
     A["Inbox: 65 Pending Messages"] -->|"Batch ACK via Erlang"| B["Inbox Cleared: 0 Unread (INV-MON-02)"]
@@ -198,3 +209,4 @@ The 120-second cadence provides rapid operational feedback while remaining synch
 ## 13. Conclusion
 
 Cycle 5 of the Cybernetic Orchestra cadence was successfully completed. All 65 pending peer messages were acknowledged, the 120-second status rhythm was established, and the system continues to operate in complete harmony under the admitted `EV-93` ceiling.
+

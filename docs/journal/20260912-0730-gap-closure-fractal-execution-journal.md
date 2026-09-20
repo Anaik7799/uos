@@ -109,6 +109,14 @@ Prior to this execution:
        +---------------------------+       +-------------------------+
 ```
 
+```text
+[Candidate Work Stream Task Requests, Agent Claims] --> [MAUT Pull Scheduler U = 0.4P + 0.3D - 0.2R - 0.1C Pareto Frontier Tagging]
+[MAUT Pull Scheduler U = 0.4P + 0.3D - 0.2R - 0.1C Pareto Frontier Tagging] --> [BEAM Runtime Risk Gatekeeper runtime_risk_gatekeeper.gleam]
+[BEAM Runtime Risk Gatekeeper runtime_risk_gatekeeper.gleam] --> [Preflight Fresh? Lease Active? RPN < 120 or 2oo3 Quorum? Drive Serial Safe?]
+[Preflight Fresh? Lease Active? RPN < 120 or 2oo3 Quorum? Drive Serial Safe?] --> [ADMISSION GRANTED enforcement: ASSERTED status: GRANTED]
+[Preflight Fresh? Lease Active? RPN < 120 or 2oo3 Quorum? Drive Serial Safe?] --> [ANDON STOP LINE Code: -32002 / -32003 Immediate Fail-Closed Halt]
+```
+
 ```mermaid
 graph TD
     Work["Candidate Work Stream<br/>(Task Requests, Agent Claims)"] --> MAUT["MAUT Pull Scheduler<br/>(U = 0.4P + 0.3D - 0.2R - 0.1C)<br/>Pareto Frontier Tagging"]
@@ -223,3 +231,4 @@ The UOS control plane now forms a closed, self-defending feedback loop. By unify
 ## 13. Conclusion
 
 The Tri-Sovereign Gap Closure is complete and ratified. All 5 critical gaps in STPA, FMEA, Utility Analysis, and Runtime Enforcement have been implemented, tested, and documented under canonical `sa-plan` plan `gap-closure-20260912`.
+

@@ -104,6 +104,23 @@ This specification establishes the unified architectural contract integrating **
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Unified Web & Knowledge Client Browser / AG-UI / Operator Cockpit] --> [Gleam Lustre Unified Cockpit link_tracker_view.gleam]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Route & Web Sink 44 Endpoints]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Knowledge Sink wiki:...]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [A2UI Component Sink 233 Declarative Comps]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Semantic & Content Sink Timestamps & Metadata]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Operational Health Sink Latencies, Ports, Breakers]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [REST API Endpoint /api/v1/links/status]
+[Gleam Lustre Unified Cockpit link_tracker_view.gleam] --> [Native OCaml Deep Verifier tools/link_tracker_verifier.exe]
+[Native OCaml Deep Verifier tools/link_tracker_verifier.exe] --> [Lean 4 Mathematical Authority formal/lean/LinkGraphInvariants.lean]
+[Lean 4 Mathematical Authority formal/lean/LinkGraphInvariants.lean] --> [Theorems Proved: 1. Multi-Domain SCC=1 2. Zero Dead Ends 3. Fail-Closed Gate Soundness]
+[Native OCaml Deep Verifier tools/link_tracker_verifier.exe] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Theorems Proved: 1. Multi-Domain SCC=1 2. Zero Dead Ends 3. Fail-Closed Gate Soundness] --> [Automated SOP Gatekeeper tools/verify_website_sop.sh]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ADMISSION GRANTED Ratified by Codex & Claude]
+[Automated SOP Gatekeeper tools/verify_website_sop.sh] --> [ANDON STOP LINE Fail-Closed Halt -32002]
+```
+
 ```mermaid
 graph TD
     Client["Unified Web & Knowledge Client<br/>(Browser / AG-UI / Operator Cockpit)"] -->|"HTTP GET /links"| Collator["Gleam Lustre Unified Cockpit<br/>(link_tracker_view.gleam)"]
@@ -215,3 +232,4 @@ To achieve **ADMISSION GRANTED**, the automated SOP gatekeeper (`tools/verify_we
 8. A2UI component catalog (233 components) verified without errors.
 9. Lean 4 formal proofs verified with 0 `sorry` and 0 warnings.
 10. Tri-sovereign consensus signatures ratified by AGY, Codex GPT-6 Astra, and Claude Fable 5.1.
+

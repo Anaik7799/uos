@@ -80,6 +80,20 @@ This Standard Operating Procedure establishes the mandatory runtime gating contr
        +---------------------------+       +-------------------------+
 ```
 
+```text
+[Autonomous Agent Claude / Codex / AGY] --> [BEAM Runtime Risk Gatekeeper runtime_risk_gatekeeper.gleam]
+[BEAM Runtime Risk Gatekeeper runtime_risk_gatekeeper.gleam] --> [Preflight Fresh? RPN < 120 or Quorum? Lease Unexpired? Device Safe?]
+[Preflight Fresh? RPN < 120 or Quorum? Lease Unexpired? Device Safe?] --> [ADMISSION GRANTED enforcement: ASSERTED status: GRANTED]
+[Preflight Fresh? RPN < 120 or Quorum? Lease Unexpired? Device Safe?] --> [ANDON STOP LINE Code: -32002 / -32003 Immediate Fail-Closed Halt]
+```
+
+```text
+[Autonomous Agent Claude / Codex / AGY] --> [BEAM Runtime Risk Gatekeeper runtime_risk_gatekeeper.gleam]
+[BEAM Runtime Risk Gatekeeper runtime_risk_gatekeeper.gleam] --> [Preflight Fresh? RPN < 120 or Quorum? Lease Unexpired? Device Safe?]
+[Preflight Fresh? RPN < 120 or Quorum? Lease Unexpired? Device Safe?] --> [ADMISSION GRANTED enforcement: ASSERTED status: GRANTED]
+[Preflight Fresh? RPN < 120 or Quorum? Lease Unexpired? Device Safe?] --> [ANDON STOP LINE Code: -32002 / -32003 Immediate Fail-Closed Halt]
+```
+
 ```mermaid
 graph TD
     Agent["Autonomous Agent<br/>(Claude / Codex / AGY)"] -->|"sa-plan task claim"| Gate["BEAM Runtime Risk Gatekeeper<br/>(runtime_risk_gatekeeper.gleam)"]
@@ -97,3 +111,5 @@ graph TD
 3. **Rule 3 (2oo3 Quorum Threshold)**: Any task with FMEA RPN $\ge 120$ or severity $\ge 8$ requires explicit consensus signatures from at least two sovereign agents.
 4. **Rule 4 (Hardware Drive Enclave Lock)**: Any operation referencing root OS NVMe serial `25503L801736` triggers an un-overrideable system abort.
 5. **Rule 5 (STPA UCA Interception)**: Unsafe Control Actions identified during hazard analysis are blocked before dispatch.
+
+

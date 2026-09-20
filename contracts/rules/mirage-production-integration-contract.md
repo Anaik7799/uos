@@ -54,6 +54,20 @@ This contract ratifies **EV-89 (MirageOS Triple-Surface Cockpit & End-to-End Sol
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Lustre Web UI Port 4100 mirage_cockpit.gleam] --> [Wisp Router router.gleam]
+[Wisp REST API /api/v1/mirage/candidates] --> [Wisp Router router.gleam]
+[Wisp Router router.gleam] --> [Mirage Migration Engine mirage_migration_engine.gleam]
+[Wisp Router router.gleam] --> [Unikernel Daemon Actor mirage_unikernel_daemon.gleam]
+[TUI ANSI Terminal mirage_view.gleam] --> [Mirage Migration Engine mirage_migration_engine.gleam]
+[Mirage Migration Engine mirage_migration_engine.gleam] --> [CLI Runner hermes_mirage_runner.exe]
+[Unikernel Daemon Actor mirage_unikernel_daemon.gleam] --> [CLI Runner hermes_mirage_runner.exe]
+[CLI Runner hermes_mirage_runner.exe] --> [Pure OCaml DNS Resolver mirage_dns_resolver.ml]
+[CLI Runner hermes_mirage_runner.exe] --> [TLS 1.3 Ingress Proxy mirage_tls_ingress.ml]
+[CLI Runner hermes_mirage_runner.exe] --> [Solo5 Tender Manifest mirage_solo5_tender.ml]
+[CLI Runner hermes_mirage_runner.exe] --> [Irmin Merkle KV Store mirage_merkle_kv.ml]
+```
+
 ```mermaid
 graph TD
     subgraph TripleInterface["Triple Presentation Surfaces (SC-GLM-UI-001)"]
@@ -168,3 +182,4 @@ The following 4 architectural foundations are permanently barred from migration:
 - **Live Cockpit Ingress**: [http://nas-1.tail55d152.ts.net:4100/mirage](http://nas-1.tail55d152.ts.net:4100/mirage)
 - **Live Candidates API**: [http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates](http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates)
 - **Live Unikernel Status API**: [http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status](http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status)
+

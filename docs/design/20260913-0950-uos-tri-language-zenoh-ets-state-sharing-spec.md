@@ -52,6 +52,23 @@ To ensure seamless coordination without point-to-point coupling, the three tiers
 +-----------------------------------------------------------------------------------+
 ```
 
+```text
+[Gleam OTP 29 Supervisor Wisp REST API] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Erlang Term Storage ETS table 'c3i_cache'] --> [Gleam OTP 29 Supervisor Wisp REST API]
+[Erlang Term Storage ETS table 'c3i_cache'] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Gleam OTP 29 Supervisor Wisp REST API] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [Gleam OTP 29 Supervisor Wisp REST API]
+[OCaml Native State Runner tri_language_state_runner.ml] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [OCaml Native State Runner tri_language_state_runner.ml]
+[OCaml Native State Runner tri_language_state_runner.ml] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Erlang Term Storage ETS table 'c3i_cache'] --> [OCaml Native State Runner tri_language_state_runner.ml]
+[Mojo / Python Runner tri_language_state_runner.py] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [Mojo / Python Runner tri_language_state_runner.py]
+[Mojo / Python Runner tri_language_state_runner.py] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Erlang Term Storage ETS table 'c3i_cache'] --> [Mojo / Python Runner tri_language_state_runner.py]
+```
+
 ```mermaid
 graph TD
     subgraph BEAM["BEAM Substrate (Port 4100)"]
@@ -216,3 +233,4 @@ Formally proved in `formal/lean/TriLanguage_Zenoh_ETS_Invariants.lean` (machine-
 | `CHK-16-OTEL` | Universal C3I Telemetry| Microsecond UTC ISO 8601 timestamps | PASS |
 | `CHK-17-SOV`  | Tri-Sovereign Consensus| Consensus across AGY, Claude, Codex | PASS |
 | `CHK-18-JJ`   | VCS Purity | Standalone Jujutsu (`.jj/`) | PASS (0 Git mutations) |
+

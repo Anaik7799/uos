@@ -114,6 +114,16 @@ where:
                 (Port 4100 BEAM Runtime)
 ```
 
+```text
+[Open Set U_c3i c3i/lib/cepaf_gleam/src] --> [Overlap Region: U_c3i ∩ U_uos Shared Domain Types & ASTs]
+[Open Set U_uos uos/apps/cepaf_gleam/src] --> [Overlap Region: U_c3i ∩ U_uos Shared Domain Types & ASTs]
+[Overlap Region: U_c3i ∩ U_uos Shared Domain Types & ASTs] --> [Global Sheaf Section: FX Unified Port 4100 BEAM Runtime]
+[Pure Zig 0.16.0 Kernel c3i_watcher_kernel.zig] --> [Mojo 1.0.0 Watcher tools/c3i_page_watcher_mojo.exe 21 KB ELF]
+[Pure Zig 0.16.0 Kernel c3i_watcher_kernel.zig] --> [OCaml 5.5 Watcher tools/c3i_page_watcher.exe 1.7 MB RSS]
+[OCaml 5.5 Watcher tools/c3i_page_watcher.exe 1.7 MB RSS] --> [Global Sheaf Section: FX Unified Port 4100 BEAM Runtime]
+[Mojo 1.0.0 Watcher tools/c3i_page_watcher_mojo.exe 21 KB ELF] --> [Global Sheaf Section: FX Unified Port 4100 BEAM Runtime]
+```
+
 ```mermaid
 flowchart TD
     subgraph SheafAtlas["Sheaf Atlas of Workspace Topologies"]
@@ -268,3 +278,4 @@ Per `SC-CHECKLIST-001` and `SPEC-CHECKLIST-NAV-001`:
 - [x] **CHK-16-OTEL**: Universal structured telemetry active.
 - [x] **CHK-17-SOV**: Tri-Sovereign consensus ratified.
 - [x] **CHK-18-JJ**: Standalone Jujutsu monorepo (`.jj/`) preserved.
+

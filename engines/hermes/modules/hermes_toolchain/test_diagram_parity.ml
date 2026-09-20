@@ -257,6 +257,41 @@ let () =
          same guess this fix removes. Fail-safe: UNVERIFIED, never a verdict"
     (fun () -> mermaid_edges "A --> B" = []);
 
+  (* --- bidirectional arrows: measured during the 2026-09-28 sweep ------ *)
+  law "L42 REGRESSION: `A <--> B` is BOTH directions, not zero edges. Three \
+         `graph` blocks yielded nothing because the `<` sits where the \
+         one-directional splitter needs a space" (fun () ->
+      uniq_sorted (List.map show_edge (mermaid_edges "flowchart TD\n  A <--> B"))
+      = [ "A --> B"; "B --> A" ]);
+  law "L43 the other bidirectional spellings expand too" (fun () ->
+      List.for_all
+        (fun m ->
+           uniq_sorted
+             (List.map show_edge (mermaid_edges ("flowchart TD\n  A " ^ m ^ " B")))
+           = [ "A --> B"; "B --> A" ])
+        [ "<-->"; "<==>"; "<-.->" ]);
+  law "L44 a bidirectional edge carrying a label keeps its endpoints"
+    (fun () ->
+       uniq_sorted
+         (List.map show_edge
+            (mermaid_edges "flowchart TD\n  A[\"a\"] <-->|Read / Write| B[\"b\"]"))
+       = [ "A --> B"; "B --> A" ]);
+  law "L45 a one-directional arrow is still ONE edge -- expansion must not \
+         leak into the ordinary case" (fun () ->
+      mermaid_edges "flowchart TD\n  A --> B" = [ ("A", "B") ]);
+
+  law "L46 REGRESSION: node ids are BLOCK-scoped. Two diagrams in one \
+         document both using `A` are different nodes; a global label lookup \
+         relabelled one diagram's edges with the other's names and made a \
+         document mismatch against ASCII generated from its own mermaid"
+    (fun () ->
+       let doc2 =
+         "```mermaid\nflowchart TD\n  A[\"one\"] --> B[\"two\"]\n```\n"
+         ^ "```mermaid\nflowchart TD\n  A[\"three\"] --> B[\"four\"]\n```\n"
+         ^ "```text\n[one] --> [two]\n[three] --> [four]\n```\n"
+       in
+       match v doc2 with Edges_match 2 -> true | _ -> false);
+
   law "L30 multiple mermaid blocks contribute all their edges" (fun () ->
       match
         v (mermaid_of [ ("A", "B") ] ^ mermaid_of [ ("C", "D") ]

@@ -79,6 +79,20 @@ Prior to execution:
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[Lustre Web Studio ui/lustre/inference.gleam 15-Method Grid] --> [Client Protocol Engine max_inference_daemon.gleam Typed Encoders & Decoders]
+[Wisp REST API ui/wisp/inference_api.gleam 15 GET/POST Routes] --> [Client Protocol Engine max_inference_daemon.gleam Typed Encoders & Decoders]
+[Client Protocol Engine max_inference_daemon.gleam Typed Encoders & Decoders] --> [Supervised Isolated Worker services/inference/max/max_worker.py]
+[Supervised Isolated Worker services/inference/max/max_worker.py] --> [Model 4: STPA-FMEA Scorer UCA-1..4 & RPN Bands]
+[Supervised Isolated Worker services/inference/max/max_worker.py] --> [Model 5: Rete-UL Resolver L0 Constitutional Dominance]
+[Supervised Isolated Worker services/inference/max/max_worker.py] --> [Model 6: Ruliad Branch Evaluator Branchial Distance & Entropy]
+[Supervised Isolated Worker services/inference/max/max_worker.py] --> [Model 7: Shruti Acoustic Inverter 22-Shruti Harmony & Jawari]
+[Model 4: STPA-FMEA Scorer UCA-1..4 & RPN Bands] --> [simd_stpa_fmea_hazard_eval 15 µs Latency]
+[Model 5: Rete-UL Resolver L0 Constitutional Dominance] --> [simd_rete_conflict_resolution 16 µs Latency]
+[Model 6: Ruliad Branch Evaluator Branchial Distance & Entropy] --> [simd_ruliad_branchial_distance 685 µs Multiway]
+[Model 7: Shruti Acoustic Inverter 22-Shruti Harmony & Jawari] --> [simd_shruti_harmonic_synthesis 42 µs Synthesis]
+```
+
 ```mermaid
 flowchart TD
     subgraph BEAM["Gleam / OTP 29 Root Supervisor (uos_sup.gleam)"]
@@ -220,3 +234,4 @@ None. All 7 high-utility models, 12 modalities, and 15 methods are fully impleme
 
 ## 13. Conclusion
 The Modular MAX and Mojo inference operations studio is fully sublimated, deploying all 7 high-utility AI models across STPA, FMEA, Rete-UL, Ruliad, and Shruti harmonics. Full triple-interface integration, Zero-Muda compliance, and 100% green test results confirm that UOS has achieved maximum utilization of its inference tier.
+

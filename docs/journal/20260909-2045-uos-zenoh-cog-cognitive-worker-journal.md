@@ -163,6 +163,19 @@ The lack of a cognitive worker on the BEAM harness left a critical gap in the cy
 +---------------------------------------------------------------------------------------+
 ```
 
+```text
+[Telegram Operator Avi] --> [OCaml Edge Transport]
+[OCaml Edge Transport] --> [Zenoh: indrajaal/l5/cog/intent/req]
+[OCaml Edge Transport] --> [Visual Reaction 👍]
+[Zenoh: indrajaal/l5/cog/intent/req] --> [Gleam Cognitive Worker uos_sup]
+[Gleam Cognitive Worker uos_sup] --> [Evaluate Sa-Plan, Health, Math, ZigVM]
+[Evaluate Sa-Plan, Health, Math, ZigVM] --> [Zenoh: c3i/a2a/telegram/outbound]
+[Evaluate Sa-Plan, Health, Math, ZigVM] --> [Zenoh: indrajaal/l5/cog/intent/res]
+[Evaluate Sa-Plan, Health, Math, ZigVM] --> [Zenoh: indrajaal/otel/spans/cog/worker]
+[Zenoh: c3i/a2a/telegram/outbound] --> [OCaml Edge Transport]
+[OCaml Edge Transport] --> [Telegram Operator Avi]
+```
+
 ```mermaid
 graph TD
     User[Telegram Operator Avi] -->|1. Sends message| Edge[OCaml Edge Transport]
@@ -230,3 +243,4 @@ The **Zenoh Cog Bus** and **Gleam Cognitive Worker** are fully operational, test
 | | `CHK-16-OTEL` | Structured C3I JSON logging with microsecond UTC ending in `Z` | **PASS** |
 | **Domain 5** | `CHK-17-SOV` | Tri-sovereign consensus respected (AGY, Claude, Codex) | **PASS** |
 | | `CHK-18-JJ` | Standalone Jujutsu monorepo used; 0 native git mutations | **PASS** |
+

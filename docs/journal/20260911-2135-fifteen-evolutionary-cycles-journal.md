@@ -86,6 +86,26 @@
 ```
 
 #### Mermaid Diagram
+```text
+[Gen 0: Homeostasis Baseline\nV_0 = 100.0 mU] --> [EV-111: Substrate Armor\nAspects {1, 3} | AGY\nV_1 = 70.0 mU]
+[EV-111: Substrate Armor\nAspects {1, 3} | AGY\nV_1 = 70.0 mU] --> [EV-112: Standalone Jujutsu\nAspect {2} | Tri-Sov\nV_2 = 49.0 mU]
+[EV-112: Standalone Jujutsu\nAspect {2} | Tri-Sov\nV_2 = 49.0 mU] --> [EV-113: Deterministic ZigVM\nAspect {5} | Codex\nV_3 = 34.3 mU]
+[EV-113: Deterministic ZigVM\nAspect {5} | Codex\nV_3 = 34.3 mU] --> [EV-114: OTP Root Supervision\nAspect {4} | Claude\nV_4 = 24.0 mU]
+[EV-114: OTP Root Supervision\nAspect {4} | Claude\nV_4 = 24.0 mU] --> [EV-115: Sa-Plan Execution\nAspect {17} | AGY\nV_5 = 16.8 mU]
+[EV-115: Sa-Plan Execution\nAspect {17} | AGY\nV_5 = 16.8 mU] --> [EV-116: Isolated MAX Daemon\nAspect {9} | Codex\nV_6 = 11.7 mU]
+[EV-116: Isolated MAX Daemon\nAspect {9} | Codex\nV_6 = 11.7 mU] --> [EV-117: Zenoh Mesh & OTel\nAspect {10} | Claude\nV_7 = 8.2 mU]
+[EV-117: Zenoh Mesh & OTel\nAspect {10} | Claude\nV_7 = 8.2 mU] --> [EV-118: AG-UI Event Bus\nAspect {11} | AGY\nV_8 = 5.7 mU]
+[EV-118: AG-UI Event Bus\nAspect {11} | AGY\nV_8 = 5.7 mU] --> [EV-119: A2UI Schema Catalog\nAspect {12} | Claude\nV_9 = 4.0 mU]
+[EV-119: A2UI Schema Catalog\nAspect {12} | Claude\nV_9 = 4.0 mU] --> [EV-120: Tri-Sovereign Quorum\nAspects {7, 8} | Tri-Sov\nV_10 = 2.8 mU]
+[EV-120: Tri-Sovereign Quorum\nAspects {7, 8} | Tri-Sov\nV_10 = 2.8 mU] --> [EV-121: POODAVR 7-Stage FSM\nAspects {4, 6, 8} | AGY\nV_11 = 1.9 mU]
+[EV-121: POODAVR 7-Stage FSM\nAspects {4, 6, 8} | AGY\nV_11 = 1.9 mU] --> [EV-122: Penta-Stack Cockpit\nAspect {13} | Claude\nV_12 = 1.3 mU]
+[EV-122: Penta-Stack Cockpit\nAspect {13} | Claude\nV_12 = 1.3 mU] --> [EV-123: Tailscale FQDN Mesh\nAspect {14} | Codex\nV_13 = 0.9 mU]
+[EV-123: Tailscale FQDN Mesh\nAspect {14} | Codex\nV_13 = 0.9 mU] --> [EV-124: Knowledge Triad KM\nAspect {16} | Claude\nV_14 = 0.6 mU]
+[EV-124: Knowledge Triad KM\nAspect {16} | Claude\nV_14 = 0.6 mU] --> [EV-125: Formal Seal & Audit\nAspects {6, 7, 15} | Tri-Sov\nV_15 = 0.4 mU]
+[Q1 & Q2 & Q3 & Q4] --> [VerdictRatified]
+[EV-125: Formal Seal & Audit\nAspects {6, 7, 15} | Tri-Sov\nV_15 = 0.4 mU] --> [VerdictRatified]
+```
+
 ```mermaid
 flowchart TD
     G0["Gen 0: Homeostasis Baseline\nV_0 = 100.0 mU"] --> C1["EV-111: Substrate Armor\nAspects {1, 3} | AGY\nV_1 = 70.0 mU"]
@@ -220,3 +240,4 @@ During implementation, four technical discrepancies were identified and resolved
 ## 13. Conclusion
 
 The 15 continuous evolutionary cycles (EV-111 through EV-125) have been systematically specified, implemented, tested, and formally verified. Generation 15 is ratified with 100% aspect exhaustiveness across all 17 UOS dimensions, sealed under Lean 4 theorem authority, Gospel contracts, and OTP supervision.
+

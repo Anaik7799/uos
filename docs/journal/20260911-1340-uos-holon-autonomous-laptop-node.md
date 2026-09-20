@@ -37,6 +37,19 @@
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+[curl ...:8999/holon | bash] --> [Port 8999 Web Ingress]
+[Port 8999 Web Ingress] --> [OTP 29 Nix Closure 78MB]
+[Port 8999 Web Ingress] --> [Holon BEAM Bytecode]
+[curl ...:8999/holon | bash] --> [Substrate Sensory Engine]
+[Substrate Sensory Engine] --> [Homeostatic OODA Loop]
+[Homeostatic OODA Loop] --> [Port 8088 Gateway]
+[Homeostatic OODA Loop] --> [BEAM Distribution net_adm:ping]
+[BEAM Distribution net_adm:ping] --> [Saṁvid Vajravyūha Mesh]
+[Saṁvid Vajravyūha Mesh] --> [BEAM Distribution net_adm:ping]
+[Saṁvid Vajravyūha Mesh] --> [Work-Stealing Executor]
+```
+
 ```mermaid
 flowchart TD
     subgraph NAS1[Controller: nas-1 port 8999]
@@ -144,3 +157,4 @@ flowchart TD
 
 ## 13. Conclusion
 The UOS Autonomous Intelligent Holon Node package is complete, compiled, verified, and active on web access port 8999. The operator can run `curl -fsSL http://192.168.1.220:8999/holon | bash` on the laptop to instantiate the holon.
+

@@ -102,6 +102,19 @@ The **UOS Telegram Gleam Harness** is the sovereign command, control, and conver
 ```
 
 ### 2.2 Mermaid Diagram
+```text
+[Telegram User] --> [OCaml Edge Client tools/telegram_client.exe]
+[OCaml Edge Client tools/telegram_client.exe] --> [Telegram User]
+[OCaml Edge Client tools/telegram_client.exe] --> [SIMD ASCII Sanitizer]
+[OCaml Edge Client tools/telegram_client.exe] --> [Deduplication Table processed_updates]
+[OCaml Edge Client tools/telegram_client.exe] --> [UOS Gleam Harness apps/cepaf_gleam]
+[UOS Gleam Harness apps/cepaf_gleam] --> [OCaml Edge Client tools/telegram_client.exe]
+[UOS Gleam Harness apps/cepaf_gleam] --> [Sa-Plan SQLite var/sa-plan/uos.sqlite3]
+[UOS Gleam Harness apps/cepaf_gleam] --> [ZigVM Kernel engines/zigvm]
+[UOS Gleam Harness apps/cepaf_gleam] --> [Zenoh Bus indrajaal/otel/spans]
+[Zenoh Bus indrajaal/otel/spans] --> [OCaml Edge Client tools/telegram_client.exe]
+```
+
 ```mermaid
 graph TD
     User[Telegram User] <-->|HTTPS API| Edge[OCaml Edge Client tools/telegram_client.exe]
@@ -137,3 +150,4 @@ All updates to the UOS Telegram Gleam Harness are subject to the **Full 9-Modali
 2. Standalone Jujutsu version control with zero native git commands.
 3. Zero-Muda compliance: 0 Bevy, 0 Graphite, 0 compiler warnings.
 4. Permanent hardware lock on system drive `HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"`.
+

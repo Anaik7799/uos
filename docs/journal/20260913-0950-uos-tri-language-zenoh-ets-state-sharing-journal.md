@@ -65,6 +65,23 @@ Ensure that all three architectural language tiers in UOS—**Gleam (BEAM Substr
 +-----------------------------------------------------------------------------------+
 ```
 
+```text
+[Gleam OTP 29 Supervisor Wisp REST API] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Erlang Term Storage ETS table 'c3i_cache'] --> [Gleam OTP 29 Supervisor Wisp REST API]
+[Erlang Term Storage ETS table 'c3i_cache'] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Gleam OTP 29 Supervisor Wisp REST API] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [Gleam OTP 29 Supervisor Wisp REST API]
+[OCaml Native State Runner tri_language_state_runner.ml] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [OCaml Native State Runner tri_language_state_runner.ml]
+[OCaml Native State Runner tri_language_state_runner.ml] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Erlang Term Storage ETS table 'c3i_cache'] --> [OCaml Native State Runner tri_language_state_runner.ml]
+[Mojo / Python Runner tri_language_state_runner.py] --> [Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage]
+[Zenoh Router c3i/a2a/ets/** In-Memory Shared Storage] --> [Mojo / Python Runner tri_language_state_runner.py]
+[Mojo / Python Runner tri_language_state_runner.py] --> [Erlang Term Storage ETS table 'c3i_cache']
+[Erlang Term Storage ETS table 'c3i_cache'] --> [Mojo / Python Runner tri_language_state_runner.py]
+```
+
 ```mermaid
 graph TD
     subgraph BEAM["BEAM Substrate (Port 4100)"]
@@ -224,3 +241,4 @@ None. All subsystems are orchestrated by Gleam, share state via Zenoh and ETS, p
 ## 13. Conclusion
 
 The directive *"make sure all part of the test system gleam and ocaml, mojo code can fully share state and talk to each other when running via zenoh, ets, all tests must be run by gleam, all subsystems and tests must have zenoh, ets hooks so that full global state, fractal logging and observability of all tests and code being run in any part of the system is available to uos c3i in gleam"* is 100% completed, verified across live HTTP and EUnit tests, mathematically proved in Lean 4, and admitted into UOS under Cycle `C435` / `EV-C187`.
+
