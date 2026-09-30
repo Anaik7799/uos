@@ -1,0 +1,144 @@
+{
+  "schema": "uos.final-restoration-acceptance.v1",
+  "observed_at": "2026-09-30T11:37:41Z",
+  "source_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+  "integrated_source_hashes": [
+    {
+      "sha256": "c5d34b2b7876ba3a91bafb8916d98635229c7fcc2690659a056a0aadf32d5718",
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/music_files.gleam"
+    },
+    {
+      "sha256": "ecba10dd6d59076773f542fe4ffba8ba1b1b1913d02771308b280fffc67689e9",
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+    },
+    {
+      "sha256": "3e5ee323fc1dff9ee05d1153c0b751e9f10c1f246c907b835f486f5b2f1d06d3",
+      "path": "apps/indrajaal_gleam_web/test/music_files_test.gleam"
+    },
+    {
+      "sha256": "370098b0ba95c05a236f9cce6c75565e380408f9bce04f4fb5d05c3bf17a2001",
+      "path": "apps/indrajaal_gleam_web/test/music_http_probe.gleam"
+    },
+    {
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025",
+      "path": "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+    },
+    {
+      "sha256": "2078a6b36fb3c6352a9e4d059c35da7b836a1b9e8889df1f4f18d5829df5e616",
+      "path": "tools/ev02_governance/census_helper.ml"
+    },
+    {
+      "sha256": "14062781f06e0d99b2458df5c8d432a2da991eec61e1c1faa037f45a4d4747ad",
+      "path": "tools/ev02_governance/directive_mapping_gate.ml"
+    },
+    {
+      "sha256": "6a711fb10f0d5310fd99e9d6c210dfd25ed6cff5c62fa0d527aa884f2bf5046e",
+      "path": "tools/ev02_governance/policy_surface_gate.ml"
+    },
+    {
+      "sha256": "8b02ad7e1c83a272221ddc6bbe9033ef1b5b2f597f4ebd652b3ac13d046eec39",
+      "path": "tools/ev02_governance/run_checks.ml"
+    },
+    {
+      "sha256": "2dd8512b488fdbfea277c9182a42ab4a0bdd6bba62db877508134206e6eb363d",
+      "path": "tools/ev02_governance/write_evidence.ml"
+    },
+    {
+      "sha256": "56c0ec51534a17f073c30510270a67bb790353ff637bcf29d923e3534856929d",
+      "path": "tools/ev02_governance/write_manifest.ml"
+    },
+    {
+      "sha256": "6ae937619c91c7d364e7bf6d4afcdd44342e2cabce8bc630a05eb02dd22d707b",
+      "path": "tools/ev86_music_fixtures.ml"
+    },
+    {
+      "sha256": "c3539d4864a34f78b57d0c916ba8540860a4b1cfcfd23a0fb2819b1fd75cf591",
+      "path": "tools/ev86_music_http.ml"
+    },
+    {
+      "sha256": "a680c5a22f0fcbb9d4b60517c6ac16e578546a2443bf636b811c71b34d62ac06",
+      "path": "tools/ev86_music_stage.ml"
+    },
+    {
+      "sha256": "b346d43f4fa68064adb0a904c023a2e8ed9ade51379799af2a617ce89c67a415",
+      "path": "tools/test_ev86_capture.ml"
+    },
+    {
+      "sha256": "9805f332edf1b8ddb565688a91e86ba6e59c11a60c6ca6bdc499f6a671916c83",
+      "path": "tools/uos/src/main.gleam"
+    },
+    {
+      "sha256": "6eb13bb4215fa0d984e69aa8767be347bcae4de8915864254eefb5831b739f46",
+      "path": "tools/uos/test/exit_status_test.gleam"
+    },
+    {
+      "sha256": "192ed4480b9b0f06ef1ff6f289c11cfba23be5f2db3e276e32fb4d8c25b4d881",
+      "path": "tools/uos/test/mirage_gates_truth_test.gleam"
+    }
+  ],
+  "source_review": "20260930-1134-independent-superset-pass.json",
+  "runtime_release": "20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "3b37a8",
+        "wall_time_seconds": 0.00001045,
+        "exit_code": 0,
+        "original_token_count": 30,
+        "output": "{\"status\":\"running\",\"cycle\":10823,\"application_admitted\":false,\"scope\":\"shared ecology actor and observed OTP identity\"}"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "0eaae5",
+        "wall_time_seconds": 0.000012905,
+        "exit_code": 0,
+        "original_token_count": 136,
+        "output": "Id=c3i-gleam-server.service\nActiveState=active\nSubState=running\nUnitFileState=enabled\nMainPID=293276\nNRestarts=0\n\nId=uos-clock-guard@primary.service\nActiveState=active\nSubState=running\nUnitFileState=enabled\nMainPID=224485\nNRestarts=0\n\nId=uos-clock-guard@backup.service\nActiveState=active\nSubState=running\nUnitFileState=enabled\nMainPID=224803\nNRestarts=0\n\nId=uos-ecology@20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872.service\nActiveState=active\nSubState=running\nUnitFileState=enabled\nMainPID=292729\nNRestarts=0\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "adedc6",
+        "wall_time_seconds": 0.000011261,
+        "exit_code": 0,
+        "original_token_count": 198,
+        "output": "{\"schema\":\"uos-clock-guard/v1\",\"sequence\":545,\"healthy\":true,\"source\":\"chronyc:-c-tracking:reference-utc\",\"host_id\":\"nas-1\",\"boot_id\":\"b0cc84fb-12ae-40ae-a5be-6d488272efb3\",\"observed_utc_us\":1790768247404527,\"observed_boot_us\":33346269999,\"offset_us\":756,\"uncertainty_us\":17421,\"reference_age_us\":156178822,\"lamport_floor\":316,\"fault_count\":0,\"faults_returned\":0,\"faults_omitted\":0,\"faults\":[]}\n{\"schema\":\"uos-clock-guard/v1\",\"sequence\":545,\"healthy\":true,\"source\":\"chronyc:-c-tracking:reference-utc\",\"host_id\":\"nas-1\",\"boot_id\":\"b0cc84fb-12ae-40ae-a5be-6d488272efb3\",\"observed_utc_us\":1790768257505831,\"observed_boot_us\":33356379999,\"offset_us\":752,\"uncertainty_us\":17433,\"reference_age_us\":166280126,\"lamport_floor\":316,\"fault_count\":0,\"faults_returned\":0,\"faults_omitted\":0,\"faults\":[]}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "ea55a6",
+        "wall_time_seconds": 0.000014247,
+        "exit_code": 0,
+        "original_token_count": 12,
+        "output": "{\"ok\":true,\"rows\":332,\"holds\":24,\"releases\":0}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "a5438d",
+        "wall_time_seconds": 0.048687761,
+        "exit_code": 0,
+        "original_token_count": 62,
+        "output": "{\"ok\":true,\"checked\":133,\"sequence_ok\":true,\"chain_ok\":true,\"digest_ok\":true,\"replay_ok\":true,\"nonempty\":true,\"authority\":\"integrity_observation_only\",\"triggers_present\":true,\"trigger_definitions_ok\":true,\"unique_operations\":true,\"failures\":[]}\n"
+      }
+    }
+  ],
+  "canonical_tests": {
+    "web": 43,
+    "uos_cli": 41
+  },
+  "preserved_failure": "Initial canonical web command had incorrect relative toolchain path and exited127; preserved original transcript, absolute pinned path corrected and43passed.",
+  "scope": "Usable restored runtime and independently reviewed applicable source consolidation; no new EV or global admission.",
+  "verdict": "PASS_SCOPED_RECOVERY",
+  "preserved_counterevidence": "1137first observation recorded stale recovery actor after board heartbeat gap; typed heartbeat134 delivered, both guards recovered to healthy/fault0. Original receipt retained.",
+  "main_change": "tnmlrlyk",
+  "historical_lineages": 19,
+  "historical_scope": "Applicable source safely consolidated; original19 historical heads remain preserved, intentionally not replayed."
+}

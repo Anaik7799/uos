@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "observed_at": "2026-09-30 11:40:25 UTC",
+  "scope": "Actual dashboard script with minimal DOM/fetch adapters; live Tailnet served data",
+  "progress": "14 / 14",
+  "live": "Verified",
+  "main": "Integrated",
+  "tasks": 14,
+  "completed": 14,
+  "risks": 11,
+  "served_html_exact": true,
+  "served_json_exact": true,
+  "limits": "No browser visual, clipboard or accessibility acceptance claimed."
+}

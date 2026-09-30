@@ -1,6 +1,6 @@
 # 20260930-0829 Capability recovery and stabilization
 
-Status: OPERATIONAL ACCEPTANCE PASS; FINAL HISTORICAL SOURCE RECONCILIATION IN PROGRESS. Independently verified source0131154f1b02e78e4b5067476c9d75cac672a381 merged into main after live stabilization. Historical development repairs and lifecycle closure remain pending.
+Status: SCOPED RECOVERY AND SOURCE CONSOLIDATION PASS. All14canonical tasks completed. Main change tnmlrlyk integrates accepted runtime0131154f and independently reviewed historical source1a816aeb after stabilization. Completion cleanup releases integration ownership and retires this recovery session; the final read-only post-retirement observation is retained in the recovery evidence plane.
 #fractal-l0 #fractal-l2 #fractal-l4 #fractal-l8 #zk-adr #zero-muda
 
 [Dashboard](http://nas-1.tail55d152.ts.net:4100/static/20260930-0633-restoration-dashboard.html) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20260930-0754-capability-evidence/new-release-stage.json)
@@ -51,6 +51,10 @@ At10:14UTC a post-context-transition coordinator check refused a stale parent he
 At11:19UTC, the four managed services remained active/enabled with zero restarts and ecology cycle9756. Both clock guards truthfully flagged this recovery actor stale after a communication gap. A fresh typed board heartbeat at11:19:46 was delivered to both ledger and Zenoh; fresh11:20 observations returned healthy=true/fault_count0 with Lamportfloor316. No service restart or stale-state suppression was used. Parent review of helper draftfaf762ba found output-flood descriptor leakage and a remaining truncating fixture-scope metadata write; AGY is repairing both before final independent acceptance.
 
 AGY froze helper successor1a816aeb0dd2b4266cda28d40728ce968a70b10a with a clean empty child after repairing descriptor closure, exclusive fixture and capture metadata, source ancestor validation, and regression controls. At11:29UTC all47previous source hashes were unchanged; two frozen helper bindings brought the portfolio to49. Fresh helper active PASS at11:30:32 preceded canonical HISTORY_HELPERS attempt1 completion. Portfolio task state was synchronized before independent SUPERSET_REVIEW active PASS at11:31:11. AGY reports12fixture-safety,11capture-safety and13static-response checks PASS; canonical transcript copies retain local13:28source provenance as11:28UTC. Final independent acceptance remains required.
+
+Final independent review passed on1a816aeb:12fixture-safety,11capture-safety,13exact-source static captures,17explicit Gleam fixture groups and4actual capture CLI refusal cases. The reviewer retained earlier unchanged6aa safe-path evidence and accepted the scoped19-lineage reconciliation, completing SUPERSET_REVIEW at11:35:50UTC. Parent merged via standalone JJ with no conflicts; all18restored source hashes matched. Canonical43web and41CLI tests passed. The initial parent web test invocation used an incorrect relative toolchain path and exited127; its transcript remains preserved, and the corrected absolute pinned invocation passed. Main advanced only after source acceptance and integration tests.
+
+Final11:37–11:38 observations found ecology cycle10823, four active/enabled services with zero restarts, coordinator133events passing all integrity checks, and cycles332/24/0. A second own-board heartbeat gap was detected by both clock guards; the typed heartbeat restored healthy=true/fault_count0 without restart. Both the initial refusal and subsequent accepted observation are retained. Capsule payload935bf0f0 remained exact. ACCEPT attempt3 completed at11:38:29UTC after fresh49-binding active PASS; the dashboard and portfolio are projections of the completed14-task canonical plan. Session retirement is completion cleanup, not a new runtime release.
 
 ## 4. Root Cause Analysis
 
@@ -120,13 +124,14 @@ Engine2 Admiralty evidence quality is assessed B2 for directly observed and inde
 | Actual free advisory |Initial429 preserved; one reviewed recovery returned109/256tokens,actual/reported0.0,2334/12000ms |
 | Managed services |Four running/enabled/NRestarts0; new ecology on5fdb capsule,old ecology inactive/disabled; clocks unchanged healthy |
 | Coordinator / cycle |Initial independent35event integrity PASS; fresh parent124event chain/digest/replay/trigger check PASS at11:21UTC;332rows/24holds/0releases PASS |
-| Main |Stable source0131154f merged only after live acceptance; all bookmarked source heads are ancestors |
-| Historical source |19original lineages classified; safe paths of6aa independently PASS, helper child review HOLD; original failures retained |
-| Dashboard |Earlier8task/9risk and later13task/11risk script-data observations PASS; current14task projection awaits final closure check; visual/manual acceptance UNRUN |
+| Main |JJ change tnmlrlyk integrates runtime0131154f and reviewed1a816aeb;18restored source hashes exact, no conflicts;19original historical lineages safely reconciled |
+| Historical source |Independent scoped PASS on1a816aeb;12fixture/11capture-safety/13static/17Gleam groups/4CLI negatives; original HOLD/UNKNOWN/UNRUN evidence retained |
+| Canonical integration |43web and41CLI PASS; initial wrong-path invocation127 retained separately |
+| Dashboard |14completed tasks and11risks; final script/data and served-byte verification recorded separately; visual/manual acceptance UNRUN |
 
 ## 8. Files Modified
 
-Source0131154f integrates AGY8823c08a and transport/reclaim eec94435 with prior main ancestry. Changes concern OpenRouter policy/defaults/tests, REST/client/FFI/main/consumer refusal propagation, finite release workflow binding, risk reclaim checker and tests, plus timestamped contract/journal. Configuration proposals are ops/release/20260930-0855-capability-cockpit.service and20260930-0855-capability-ecology.env. Current child contains review/release evidence, dashboard/risk updates and this journal. Private credentials and live databases are excluded from source control; original history remains preserved.
+Source0131154f integrates AGY8823c08a and transport/reclaim eec94435 with prior main ancestry. Changes concern OpenRouter policy/defaults/tests, REST/client/FFI/main/consumer refusal propagation, finite release workflow binding, risk reclaim checker and tests, plus timestamped contract/journal. Configuration proposals are ops/release/20260930-0855-capability-cockpit.service and20260930-0855-capability-ecology.env. Main additionally contains18restored source paths, the19-lineage classification, final helper and source reviews, canonical integration-test transcripts, dashboard/risk projections and this journal. Private credentials and live databases are excluded from source control; original history remains preserved.
 
 ## 9. Architectural Observations
 
@@ -157,11 +162,11 @@ flowchart LR
 
 ## 10. Remaining Gaps
 
-Live managed MAX/OpenRouter invocation, cockpit REST startup, durable service configuration, independent scoped integrity acceptance and stable recovery-source main advancement passed. Historical source reconciliation, its independent review, lifecycle retirement and final evidence closure remain underway. Native subscriptions remain explicitly unsupported; a separate legacy cockpit component still logs its absent broad c3i_nif. No native-feature restoration is claimed. External free-provider capacity is not guaranteed and never triggers paid fallback. Browser automation is unavailable, so no visual/manual UI acceptance is claimed. Global EV/formal admission, cross-host failover and long-duration reliability remain separate obligations.
+Live managed MAX/OpenRouter invocation, cockpit REST startup, durable service configuration, independent scoped integrity acceptance and stable recovery-source main advancement passed. Historical source reconciliation and independent review passed; all14tasks completed and applicable reviewed code is on main. Typed session retirement and post-retirement read-only observation close the coordination lifecycle. Native subscriptions remain explicitly unsupported; a separate legacy cockpit component still logs its absent broad c3i_nif. No native-feature restoration is claimed. External free-provider capacity is not guaranteed and never triggers paid fallback. Browser automation is unavailable, so no visual/manual UI acceptance is claimed. Global EV/formal admission, cross-host failover and long-duration reliability remain separate obligations.
 
 ## 11. Metrics Summary
 
-Engine3: measured test results and short runtime observations are retained without fabricated Bayesian posterior, half-life decay or Lyapunov derivative. Failures were classified and structurally contained. Eleven of fourteen canonical recovery tasks completed. HISTORY_SUPERSET is frozen/completed; HISTORY_HELPERS repairs two remaining companion drivers; SUPERSET_REVIEW retains an overall HOLD while safe-path tests passed; ACCEPT attempt3 owns final integration/lifecycle/evidence closure. No test count substitutes for runtime evidence. One explicit provider retry is distinct from service NRestarts0, which counts automatic restarts on the current invocation.
+Engine3: measured test results and short runtime observations are retained without fabricated Bayesian posterior, half-life decay or Lyapunov derivative. Failures were classified and structurally contained. Fourteen of fourteen canonical recovery tasks completed. HISTORY_SUPERSET and HISTORY_HELPERS froze reviewed source; SUPERSET_REVIEW passed; ACCEPT attempt3 closed observed integration and operational acceptance. Original HOLD receipts remain preserved and are superseded only for their explicitly repaired source scope. No test count substitutes for runtime evidence. One explicit provider retry is distinct from service NRestarts0, which counts automatic restarts on the current invocation.
 
 ## 12. STAMP & Constitutional Alignment
 

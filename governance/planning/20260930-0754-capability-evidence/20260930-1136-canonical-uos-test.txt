@@ -1,0 +1,352 @@
+   Compiled in 0.01s
+    Running uos_test.main
+Evaluating UOS Gate: UNKNOWN_GATE_FOR_TEST
+Gate Result: FAIL (unknown gate identifier: UNKNOWN_GATE_FOR_TEST)
+[32m.[39mEvaluating UOS Gate: G-CHECKLIST
+  [PASS] Comprehensive Verification Checklist contract, specification, and agent rules active
+[32m.[39mUOS Doctor: checking 93 EV cycles against governance/ev-manifest.tsv
+  [UNVERIFIABLE] EV-1: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-2: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-3: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-4: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-5: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-6: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-7: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-8: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-9: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-10: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-11: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-12: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-13: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-14: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-15: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-16: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-17: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-18: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-19: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-20: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-21: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-22: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-23: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-24: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-25: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-26: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-27: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-28: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-29: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-30: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-31: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-32: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-33: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-34: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-35: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-36: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-37: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-38: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-39: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-40: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-41: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-42: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-43: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-44: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-45: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-46: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-47: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-48: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-49: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-50: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-51: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-52: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-53: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-54: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-55: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-56: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-57: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-58: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-59: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-60: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-61: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-62: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-63: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-64: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-65: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-66: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-67: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-68: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-69: no ADR record claims this cycle
+  [INVENTORY] EV-70: C3I Knowledge Runtime Vertical Slice & 15 Wave 4 Evolutionary Cycles (EV-70..EV-84) Ratification
+  [UNVERIFIABLE] EV-71: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-72: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-73: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-74: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-75: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-76: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-77: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-78: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-79: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-80: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-81: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-82: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-83: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-84: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-85: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-86: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-87: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-88: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-89: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-90: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-91: no ADR record claims this cycle
+  [UNVERIFIABLE] EV-92: no ADR record claims this cycle
+  [INVENTORY] EV-93: Multi-Host CRDT Mesh Synchronization, Prajna Health Homeostasis & EV-93 Monorepo Ratification
+
+  inventory (artifact present):   2
+  MISSING (artifact declared, absent): 0
+  unverifiable (no artifact declared): 91
+  not admitted (above EV-93 ceiling): 0
+
+NOTE: an existing artifact is NOT two-key admission. It shows a record is present,
+      not that runtime behaviour and a formal specification were verified at a
+      revision. For computed admission run: bash tools/km-gate --ev-admission <rev>
+
+UOS Doctor result: HOLD - 2/93 cycles have a checkable artifact; 91 declare none and are NOT admitted.
+[32m.[39mEvaluating UOS Gate: G-MIRAGE
+  [INVENTORY] G-MIRAGE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE remains unverified and unadmitted (file presence alone does not grant admission)
+Evaluating UOS Gate: G-MIRAGE-MIGRATE
+  [INVENTORY] G-MIRAGE-MIGRATE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-MIGRATE remains unverified and unadmitted (file presence alone does not grant admission)
+Evaluating UOS Gate: mirage-migration
+  [INVENTORY] G-MIRAGE-MIGRATE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-MIGRATE remains unverified and unadmitted (file presence alone does not grant admission)
+Evaluating UOS Gate: G-MIRAGE-PROD
+  [INVENTORY] G-MIRAGE-PROD source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-PROD remains unverified and unadmitted (file presence alone does not grant admission)
+Evaluating UOS Gate: mirage-prod
+  [INVENTORY] G-MIRAGE-PROD source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-PROD remains unverified and unadmitted (file presence alone does not grant admission)
+Evaluating UOS Gate: G-MIRAGE-TENDERS
+Gate Result: FAIL (G-MIRAGE-TENDERS missing probe, invalid unikernels, or failed execution receipt)
+[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39mEvaluating UOS Comprehensive Verification Checklist (SC-CHECKLIST-001):
+Domain 1: Metadata, Timestamp & Tailscale Navigation
+  [PASS] CHK-01-TIME: Mandatory YYYYMMDD-HHSS- prefix active
+  [PASS] CHK-02-TAIL: Universal Tailscale FQDN web navigation active
+  [PASS] CHK-03-FRACT: Fractal layer tags standard active
+  [PASS] CHK-04-KM: KM transclusions [[wiki:...]] / [[zk:...]] active
+Domain 2: Zero-Muda Purity & Hardware Storage Safety
+  [PASS] CHK-05-MUDA: Zero Bevy & Zero Graphite verified
+  [PASS] CHK-06-GRAPH: Pure Erlang graphene_nif.erl verified (0 foreign NIFs)
+  [PASS] CHK-07-DRIVE: Root OS NVMe 25503L801736 locked in spec.rs
+Domain 3: Testing Gold Standard & Mathematical Gates
+  [PASS] CHK-08-C1C8: C1-C8 Gold Standard verified
+  [PASS] CHK-09-MATH: 4 Math Gates (H>=2.5b, CCM>=90%, D_EA<=10%, ITQS>=0.85)
+  [PASS] CHK-10-9MOD: 9-Modality test suite present
+  [PASS] CHK-11-REGR: 381 UI regression tests present
+Domain 4: Cross-Language Control & Observability
+  [PASS] CHK-12-GLEAM: Gleam/OTP 29 root supervisor uos_sup.gleam active
+  [PASS] CHK-13-HERMES: Hermes OCaml Zero-Trust dispatch hook active
+  [PASS] CHK-14-ZIGVM: ZigVM deterministic engine active
+  [PASS] CHK-15-MAX: Modular MAX inference worker quarantined
+  [PASS] CHK-16-OTEL: Universal C3I Telemetry contract active
+Domain 5: Tri-Sovereign Governance & VCS Purity
+  [PASS] CHK-17-SOV: Tri-sovereign governance superset ratified
+  [PASS] CHK-18-JJ: Standalone Jujutsu monorepo active
+
+Summary: 18/18 Checks Passed (PASS)
+[32m.[39mEvaluating 15 Evolutionary Cycles EV-25..EV-39 (--selfcheck-15-cycles): INVENTORY of ratification records only; runtime evidence is not re-run here
+  [INVENTORY] EV-25: Fractal Layers & Surfaces (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-26: System Components (record: docs/journal/20260906-1830-uos-master-prompt-history-and-15-evolutionary-cycles-journal.md)
+  [INVENTORY] EV-27: Control Flows (Prajna Breakers) (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-28: Data Flows (VFS openat & WAL) (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-29: Evidence Flows (Two-Key Rule) (record: docs/journal/20260906-1830-uos-master-prompt-history-and-15-evolutionary-cycles-journal.md)
+  [INVENTORY] EV-30: Fast OODA Loop (record: docs/journal/20260906-1830-uos-master-prompt-history-and-15-evolutionary-cycles-journal.md)
+  [INVENTORY] EV-31: Fractal SDLC (record: docs/journal/20260906-1830-uos-master-prompt-history-and-15-evolutionary-cycles-journal.md)
+  [INVENTORY] EV-32: Fractal SRE (record: docs/journal/20260906-1830-uos-master-prompt-history-and-15-evolutionary-cycles-journal.md)
+  [INVENTORY] EV-33: Skills Inventory (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-34: Policy & AGENTS.md Governance (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-35: Superpowers SDD (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-36: MCP Tooling (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-37: Agentic Symbiosis (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-38: 17 Aspect Processes (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-39: Cartesian Tensor Closure (record: docs/journal/20260906-1900-uos-c3i-integrated-knowledge-runtime-and-15-cycles-journal.md)
+
+Summary: 15/15 Ratification Records Present (PASS) (inventory; not fresh admission evidence)
+[32m.[39mEvaluating VFS Selfcheck (--selfcheck-vfs, 8 Laws; each row states what was observed):
+  [PASS] LAW-VFS-01: Descriptor-relative resolution: prim_file.zig takes `root: Dir` handles
+  [PASS] LAW-VFS-02: Symlink-traversal defense: AT_SYMLINK_NOFOLLOW present in prim_file.zig
+  [PASS] LAW-VFS-03: Rename primitive present in prim_file.zig (atomicity law itself not re-run)
+  [PASS] LAW-VFS-04: Zero-Muda purity: build.zig present and free of bevy/graphite
+  [PASS] LAW-VFS-05: Reads return caller-owned bounded copies (readFileAlloc with .limited) and positional preads (readPositionalAll) independent of the shared offset; concurrent-writer isolation itself is not re-run
+  [PASS] LAW-VFS-06: Exclusive lease mutex: fencing_token lease column in sa_plan_store.ml
+  [PASS] LAW-VFS-07: Fail-closed typed errors: PrimError present in prim_file.zig
+  [UNRUN] LAW-VFS-08: NOT IMPLEMENTED: operations are dirfd-relative (root: Dir) but no path jail exists; no RESOLVE_BENEATH or openat2 and no `..` or absolute-path rejection in prim_file.zig or bifs/file.zig (the VFS wiki and ADR-046 mark this law PASS; that record is nonconformant)
+  [PASS] ORACLE-SPEC: hermes_vfs_oracle law suite executed [exit 0, ok-lines 12; jail law green in the oracle, open in ZigVM]
+
+Summary: 8/9 VFS Laws Observed (8 ZigVM predicates + oracle suite) (FAIL) (source: engines/zigvm/src/prim_file.zig; an [UNRUN] row has no passing evidence: the predicate is absent or the mechanism is not implemented)
+[32m.[39mEvaluating Modular MAX / Mojo inference tier (--selfcheck-inference): executes the worker selfcheck, then binds each row to an observation
+  [PASS] MAX-01: Mojo kernel source present (services/inference/max/max_kernel.mojo); compilation not re-run
+  [PASS] MAX-02: Worker selfcheck executed: exit 0, 15 inference methods reported green (supervision by uos_sup is not claimed here)
+  [PASS] MAX-03: Model 1 ast_anomaly reported [PASS] by the worker
+  [PASS] MAX-04: Model 2 zk_transclude reported [PASS] by the worker
+  [PASS] MAX-05: Model 3 lyapunov_trend reported [PASS] by the worker
+  [PASS] MAX-06: Model 4 stpa_hazard reported [PASS] by the worker
+  [PASS] MAX-07: Model 5 rete_conflict reported [PASS] by the worker
+  [PASS] MAX-08: Model 6 ruliad_branch reported [PASS] by the worker
+  [PASS] MAX-09: Model 7 shruti_harmonics reported [PASS] by the worker
+  [PASS] MAX-10: MCP tool definitions for all 7 models present in mcp/tools.gleam
+  [PASS] MAX-11: Mutating preflight interlock present: verify_mutating_action_preflight in mcp/server.gleam
+  [PASS] MAX-12: Zero-Muda: apps/cepaf_gleam/manifest.toml free of bevy/graphite
+  [PASS] MAX-13: Storage safety serial 25503L801736 present in ops/kubernetes/nas-k8s-lab/src/spec.rs
+
+Summary: 13/13 Modular MAX / Mojo Inference Checks (PASS)
+[32m.[39m[32m.[39m[32m.[39m[32m.[39mEvaluating Sa-Plan OCaml Engine Selfcheck (--selfcheck-sa-plan): executes every test executable with a bounded timeout; rows bind to exit code and observed ok-lines
+  [PASS] SUITE-01: sa_plan_test (Task DAG, Oban queue, Temporal recovery) [exit 0, ok-lines 0]
+  [PASS] SUITE-02: test_sa_plan_control_plane (seeded oracles and Quint invariants) [exit 0, ok-lines 108]
+  [PASS] SUITE-03: test_sa_plan_durable (durable execution and migration laws) [exit 0, ok-lines 50]
+  [PASS] SUITE-04: test_sa_plan_observability (pipeline and observation laws) [exit 0, ok-lines 7]
+  [PASS] SUITE-05: test_sa_plan_c3i_reference (C3I parity and normalization laws) [exit 0, ok-lines 10]
+  [PASS] SUITE-06: test_sa_plan_leases (fenced claims and single-writer laws) [exit 0, ok-lines 2963]
+  [PASS] SUITE-07: test_sa_plan_cli (flag normalization and validation laws) [exit 0, ok-lines 36]
+  [PASS] SUITE-08: test_sa_plan_safety (STPA safety packet algebra laws) [exit 0, ok-lines 7]
+  [PASS] SUITE-09: test_sa_plan_preflight (multi-coordinate provenance laws) [exit 0, ok-lines 12]
+  [PASS] SUITE-10: test_sa_plan_materialize (receipt materialization laws) [exit 0, ok-lines 3]
+  [PASS] SUITE-11: test_sa_plan_reconcile (close-loop reconciliation laws) [exit 0, ok-lines 5]
+  [PASS] SUITE-12: test_sa_plan_observability_kpi (read-only projection laws) [exit 0, ok-lines 6]
+  [PASS] SUITE-13: test_sa_plan_observation (idempotent replay reconciliation laws) [exit 0, ok-lines 17]
+  [PASS] CLI-TOOL: tools/sa-plan status executed against var/sa-plan/uos.sqlite3 [exit 0]
+  [PASS] FRACTAL-JIDOKA: SC-JIDOKA-001 stop line: enforce_fractal_jidoka in sa_plan_bridge.gleam and error -32002 in mcp/server.gleam
+  [INVENTORY] FRACTAL-TPS: SC-SA-PLAN-001 mandate record present
+  [INVENTORY] ADR-066: ZK decision record present
+  [INVENTORY] WIKI-GUIDE: Hermes wiki operational guide present
+  [INVENTORY] SDLC-SRE: SC-SDLC-SRE-001 contract present
+
+Summary: 19/19 Sa-Plan Suites Executed, Controls Observed and Records Present (PASS) (minimum law floor across suites: 176)
+[32m.[39m[32m.[39mEvaluating 15 Wave 3 Evolutionary Cycles (--selfcheck-wave3-cycles, EV-55..EV-69): INVENTORY of ratification records only; runtime evidence is not re-run here
+  [INVENTORY] EV-55: C3I Agentic Ingestion & Sanitization Engine (record: docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md)
+  [INVENTORY] EV-56: Supervised OCaml Port Pool & Reductions Protection (record: docs/journal/20260907-1841-ocaml-worker-pool-sysml-validator-and-ui-manifest-journal.md)
+  [INVENTORY] EV-57: Dynamic Trust Decay & Negative Knowledge Actor Swarm (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-58: Real-Time Tripartite Knowledge Presentation & SSE Mesh (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-59: Tri-Sovereign Autonomic Governance & Self-Healing Closure (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-60: Distributed Knowledge Cache & In-Memory Sheaf Harmonizer (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-61: Zero-Trust Cryptographic Signature Verification & Trace Lineage (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-62: Automated Anti-Pattern Mitigation & Regression Interceptor (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-63: Bounded Gospel Verification Oracle & Z3 Solver Process Tree (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-64: Descriptor-Relative VFS Journal Sync & WAL Durability (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-65: Lyapunov-Windowed Telemetry Freshness & Dead-Man Swarm (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-66: 17-Aspect Cross-Language Homomorphism & ABI Invariants (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-67: Elastic Multi-Tenant Agent Swarm Concurrency Scaling (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-68: Universal Tailscale FQDN Tripartite Presentation & Nav Graph (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+  [INVENTORY] EV-69: Sovereign Synthesis Ratification & Mainline Monorepo Closure (record: docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md)
+
+Summary: 15/15 Wave 3 Ratification Records Present (PASS) (inventory; not fresh admission evidence)
+Evaluating 15 Wave 4 Evolutionary Cycles (--selfcheck-wave4-cycles, EV-70..EV-84): INVENTORY of ratification records only; runtime evidence is not re-run here
+  [INVENTORY] EV-70: Vertical Slice Journal Ingestion to Cited Retrieval Pipeline (record: docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md)
+  [INVENTORY] EV-71: Supervised OCaml Worker Port Protocol & Subprocess Reductions (record: docs/design/20260906-2200-uos-tri-sovereign-master-session-handover-to-codex.md)
+  [INVENTORY] EV-72: Rust NIF & OCaml Differential Conformance Oracle (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-73: Callable OCaml Knowledge Lookup & Cited Recall Service (record: docs/design/20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-tome.md)
+  [INVENTORY] EV-74: Tripartite Tri-Surface SSR/API/TUI Knowledge Display (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-75: 17-Aspect C3I VM-1 Artifacts Comprehensive Synthesis (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-76: Dynamic Agentic Knowledge Mesh & Autonomous Swarm Topology (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-77: Biosemiotic Semantic Invariant Verification & Rocha Decoupling (record: docs/design/20260906-2200-uos-tri-sovereign-master-session-handover-to-codex.md)
+  [INVENTORY] EV-78: 13D TCM Coordinate Conservation & Fail-Closed Gatekeeper (record: docs/design/20260906-2200-uos-tri-sovereign-master-session-handover-to-codex.md)
+  [INVENTORY] EV-79: Lyapunov-Bounded Trust Decay & Negative Knowledge Eviction (record: docs/design/20260906-2200-uos-tri-sovereign-master-session-handover-to-codex.md)
+  [INVENTORY] EV-80: Zero-Trust Payload Interceptor & Cryptographic Receipt Ledger (record: docs/journal/20260907-1110-modular-mojo-max-ai-ml-integration-journal.md)
+  [INVENTORY] EV-81: Multi-Tenant Elastic BEAM Swarm Scaling Invariant (record: docs/design/20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-tome.md)
+  [INVENTORY] EV-82: Universal Tailscale FQDN Web/API/WebSocket Routing Matrix (record: docs/design/20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-tome.md)
+  [INVENTORY] EV-83: Formal Gospel Specification & Bounded Z3 Oracle Pipeline (record: docs/design/20260906-1649-codex-master-session-handover.md)
+  [INVENTORY] EV-84: Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure (record: docs/journal/20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md)
+
+Summary: 15/15 Wave 4 Ratification Records Present (PASS) (inventory; not fresh admission evidence)
+[32m.[39m[32m.[39m[32m.[39m[32m.[39mEvaluating MirageOS library-OS selfcheck (--selfcheck-mirage): source presence plus the executed Hermes host-library suite
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_signatures.ml
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_memory_block.ml
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_merkle_kv.ml
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_solo5_tender.ml
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_interceptor.ml
+  [PASS] SOURCE: apps/cepaf_gleam/src/cepaf_gleam/services/mirage_unikernel_daemon.gleam
+  [PASS] SOURCE: apps/cepaf_gleam/test/mirage_unikernel_daemon_test.gleam
+  [PASS] SOURCE: contracts/rules/mirage-unikernel-contract.md
+  [PASS] SOURCE: docs/design/20260907-1150-mirageos-unikernel-architecture-and-uos-integration-spec.md
+  [PASS] SUITE: test_mirage_core (block device, Merkle KV, tender manifest, interceptor) [exit 0, PASS-lines 4]
+  [SUITE-VERDICT] === Host library checks passed; Solo5 deployment remains NOT_VERIFIED ===
+
+Summary: 10/10 MirageOS Library-OS Sources and Executed Suite (PASS) (the suite's own verdict line above states what remains unverified)
+Evaluating MirageOS subsystem migration selfcheck (--selfcheck-mirage-migration): source presence plus the executed migration-model suite
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_migration_catalog.ml
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_dns_resolver.ml
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_tls_ingress.ml
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/test_mirage_migration.ml
+  [PASS] SOURCE: apps/cepaf_gleam/src/cepaf_gleam/services/mirage_migration_engine.gleam
+  [PASS] SOURCE: apps/cepaf_gleam/test/mirage_migration_engine_test.gleam
+  [PASS] SOURCE: contracts/rules/mirage-migration-policy.md
+  [PASS] SOURCE: docs/design/20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md
+  [PASS] SOURCE: docs/journal/20260907-1120-mirageos-comprehensive-migration-and-subsystem-journal.md
+  [PASS] SUITE: test_mirage_migration (catalog, DNS resolver, TLS ingress models) [exit 0, PASS-lines 15]
+  [SUITE-VERDICT] Host migration model checks passed; deployment NOT_VERIFIED.
+
+Summary: 10/10 MirageOS Migration Sources and Executed Suite (PASS) (the suite's own verdict line above states what remains unverified)
+Evaluating MirageOS triple-surface cockpit selfcheck (--selfcheck-mirage-prod): source presence plus the executed runner self-test
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml
+  [PASS] SOURCE: apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam
+  [PASS] SOURCE: apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam
+  [PASS] SOURCE: apps/cepaf_gleam/src/cepaf_gleam/ui/tui/mirage_view.gleam
+  [PASS] SOURCE: apps/cepaf_gleam/test/mirage_cockpit_test.gleam
+  [PASS] SOURCE: contracts/rules/mirage-production-integration-contract.md
+  [PASS] SOURCE: docs/design/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md
+  [PASS] SOURCE: docs/journal/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md
+  [PASS] SUITE: hermes_mirage_runner selftest (host models behind the triple surface) [exit 0, PASS-lines 6]
+  [SUITE-VERDICT] === 6 HOST MODEL CHECKS PASSED; UNIKERNEL DEPLOYMENT NOT VERIFIED ===
+
+Summary: 9/9 MirageOS Cockpit Sources and Executed Runner Self-Test (PASS) (the suite's own verdict line above states what remains unverified)
+Evaluating Solo5 tender selfcheck (--selfcheck-mirage-tenders): source presence plus the executed hypervisor probe suite
+  [PASS] SOURCE: engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml
+  [PASS] SOURCE: apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam
+  [PASS] SOURCE: apps/cepaf_gleam/test/mirage_hypervisor_test.gleam
+  [PASS] SOURCE: docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md
+  [PASS] SUITE: test_mirage_hypervisor (KVM probe, pinned tenders, negative controls) [exit 0, PASS-lines 11]
+  [SUITE-VERDICT] === ALL HYPERVISOR PROBE CHECKS & NEGATIVE CONTROLS PASSED ===
+
+Summary: 5/5 Solo5 Tender Sources and Executed Probe Suite (PASS) (the suite's own verdict line above states what remains unverified)
+[32m.[39mEvaluating UOS Gate: G-MIRAGE
+  [INVENTORY] G-MIRAGE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE remains unverified and unadmitted (file presence alone does not grant admission)
+[32m.[39mEvaluating UOS Gate: G-MIRAGE-MIGRATE
+  [INVENTORY] G-MIRAGE-MIGRATE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-MIGRATE remains unverified and unadmitted (file presence alone does not grant admission)
+Evaluating UOS Gate: mirage-migration
+  [INVENTORY] G-MIRAGE-MIGRATE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-MIGRATE remains unverified and unadmitted (file presence alone does not grant admission)
+[32m.[39mEvaluating UOS Gate: G-MIRAGE-PROD
+  [INVENTORY] G-MIRAGE-PROD source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-PROD remains unverified and unadmitted (file presence alone does not grant admission)
+Evaluating UOS Gate: mirage-prod
+  [INVENTORY] G-MIRAGE-PROD source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-PROD remains unverified and unadmitted (file presence alone does not grant admission)
+[32m.[39mUOS runtime status: UNRUN (this command performs no runtime probes)
+Policy admission ceiling: EV-93
+EV-94..109: NOT_ADMITTED; new EV numbers remain barred
+Supervision and Zero-Muda runtime conformance: UNKNOWN
+Artifact inventory: bash tools/uos-cli doctor
+Canonical task observation: tools/sa-plan status <plan-id>
+Cockpit: http://nas-1.tail55d152.ts.net:4100/
+[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m
+41 passed, no failures[39m
