@@ -1,13 +1,22 @@
 import cepaf_gleam/c3i/nif as c3i_nif
+import cepaf_gleam/zenoh/rest
 import gleam/erlang/process.{type Pid}
+import gleam/result
 import gleam/string
 
-pub type Session
+pub opaque type Session {
+  RestSession
+}
 
-/// Open a Zenoh session via native NIF (SC-ZENOH-001).
-/// Falls back to the Elixir bridge FFI if NIF not available.
-@external(erlang, "cepaf_gleam_ffi", "zenoh_open")
-pub fn open(config_json: String) -> Result(Session, String)
+/// Observe bounded REST endpoint reachability. This does not open a native
+/// session or confer subscription/effect authority.
+pub fn open(config_json: String) -> Result(Session, String) {
+  rest.probe(config_json) |> result.map(fn(_) { RestSession })
+}
+
+pub fn backend(_session: Session) -> String { rest.backend }
+
+pub fn supports_subscriptions(_session: Session) -> Bool { False }
 
 /// Publish via native NIF — does not require Session (uses global session).
 pub fn put_nif(key: String, payload: String) -> Result(String, String) {
@@ -46,15 +55,18 @@ pub fn close_nif() -> String {
   c3i_nif.zenoh_close()
 }
 
-@external(erlang, "cepaf_gleam_ffi", "zenoh_put")
 pub fn put(
-  session: Session,
+  _session: Session,
   key: String,
   payload: String,
-) -> Result(Nil, String)
+) -> Result(Nil, String) {
+  rest.put(key, payload)
+}
 
-@external(erlang, "cepaf_gleam_ffi", "zenoh_get")
-pub fn get(session: Session, key: String) -> Result(String, String)
+pub fn get(_session: Session, key: String) -> Result(String, String) {
+  rest.get(key)
+}
 
-@external(erlang, "cepaf_gleam_ffi", "zenoh_subscribe")
-pub fn subscribe(session: Session, key: String, pid: Pid) -> Result(Nil, String)
+pub fn subscribe(_session: Session, _key: String, _pid: Pid) -> Result(Nil, String) {
+  Error("zenoh_rest_subscriptions_unsupported")
+}

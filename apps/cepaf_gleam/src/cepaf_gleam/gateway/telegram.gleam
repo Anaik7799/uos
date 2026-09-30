@@ -32,10 +32,13 @@ pub fn start(bot_token: String, chat_id: String) {
       // Subscribe to critical OTel spans via Zenoh
       let topic = "indrajaal/otel/span/critical"
       let self = process.self()
-      let _ = zenoh.subscribe(session, topic, self)
-
-      io.println("  [ok] Listening for critical spans on: " <> topic)
-      listen_loop(state)
+      case zenoh.subscribe(session, topic, self) {
+        Ok(Nil) -> {
+          io.println("  [ok] Listening for critical spans on: " <> topic)
+          listen_loop(state)
+        }
+        Error(reason) -> io.println("  [!] Gateway subscription unavailable: " <> reason)
+      }
     }
     Error(e) -> {
       io.println("  [!] Failed to open Zenoh for Gateway: " <> e)
