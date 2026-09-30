@@ -26,20 +26,24 @@ let bounded_error label = raise (Failure ("invalid-input:" ^ label))
 let attempt thunk = try Ok (thunk ()) with Failure detail -> Error detail
 let regular stat = stat.Unix.st_kind = Unix.S_REG
 let same_file a b = a.Unix.st_dev = b.Unix.st_dev && a.Unix.st_ino = b.Unix.st_ino
+let same_stat a b =
+  same_file a b &&
+  a.Unix.st_size = b.Unix.st_size &&
+  a.Unix.st_mtime = b.Unix.st_mtime &&
+  a.Unix.st_ctime = b.Unix.st_ctime
 
 let read_regular ~budget path =
-  let listed = try Unix.lstat path with Unix.Unix_error _ -> bounded_error "missing-or-unreadable" in
+  let listed = try Unix.lstat path with Unix.Unix_error _ -> bounded_error ("missing-or-unreadable:" ^ path) in
+  if listed.Unix.st_kind = Unix.S_LNK then bounded_error ("symlink-forbidden:" ^ path);
   if not (regular listed) then bounded_error ("not-regular:" ^ path);
   if listed.Unix.st_size < 0 || listed.Unix.st_size > max_bytes then bounded_error "file-size";
   if !budget + listed.Unix.st_size > max_total_bytes then bounded_error "aggregate-size";
-  (* This OCaml runtime lacks O_NOFOLLOW.  We lstat, open without reading,
-     fstat the descriptor, and refuse any identity change before Unix.read. *)
   let fd = try Unix.openfile path [Unix.O_RDONLY; Unix.O_NONBLOCK; Unix.O_CLOEXEC] 0
-    with Unix.Unix_error _ -> bounded_error "open-refused" in
+    with Unix.Unix_error _ -> bounded_error ("open-refused:" ^ path) in
   Fun.protect ~finally:(fun () -> Unix.close fd) (fun () ->
     let opened = Unix.fstat fd in
-    if not (regular opened) || not (same_file listed opened) || opened.Unix.st_size <> listed.Unix.st_size then
-      bounded_error "file-identity";
+    if not (regular opened) || not (same_stat listed opened) then
+      bounded_error ("file-identity-changed-at-open:" ^ path);
     let bytes = Bytes.create opened.Unix.st_size in
     let rec read_at offset =
       if offset = Bytes.length bytes then () else
@@ -48,24 +52,39 @@ let read_regular ~budget path =
     in
     read_at 0;
     let closed = Unix.fstat fd in
-    if not (same_file opened closed) || closed.Unix.st_size <> opened.Unix.st_size then bounded_error "file-changed";
+    if not (regular closed) || not (same_stat opened closed) then
+      bounded_error ("file-mutated-during-read:" ^ path);
+    let final_listed = try Unix.lstat path with Unix.Unix_error _ -> bounded_error ("final-stat-failed:" ^ path) in
+    if final_listed.Unix.st_kind = Unix.S_LNK then bounded_error ("final-symlink-forbidden:" ^ path);
+    if not (regular final_listed) || not (same_stat opened final_listed) then
+      bounded_error ("path-substituted-or-mutated:" ^ path);
     budget := !budget + Bytes.length bytes;
     Bytes.to_string bytes)
 
 let list_rule_names path =
-  let stat = try Unix.lstat path with Unix.Unix_error _ -> bounded_error "missing-rule-directory" in
-  if stat.Unix.st_kind <> Unix.S_DIR then bounded_error "rule-directory-not-directory";
-  let directory = try Unix.opendir path with Unix.Unix_error _ -> bounded_error "rule-directory-open" in
+  let stat = try Unix.lstat path with Unix.Unix_error _ -> bounded_error ("missing-rule-directory:" ^ path) in
+  if stat.Unix.st_kind = Unix.S_LNK then bounded_error ("rule-directory-symlink:" ^ path);
+  if stat.Unix.st_kind <> Unix.S_DIR then bounded_error ("rule-directory-not-directory:" ^ path);
+  let directory = try Unix.opendir path with Unix.Unix_error _ -> bounded_error ("rule-directory-open:" ^ path) in
   Fun.protect ~finally:(fun () -> Unix.closedir directory) (fun () ->
     let rec loop names seen entries =
       match Unix.readdir directory with
       | entry when entries >= max_rules * 4 -> bounded_error "rule-directory-entry-count"
       | entry ->
-          if entry = "." || entry = ".." then loop names seen entries
-          else if Filename.check_suffix entry ".md" && entry <> "README.md" then
-            if seen >= max_rules then bounded_error "rule-directory-count"
-            else loop (entry :: names) (seen + 1) (entries + 1)
-          else loop names seen (entries + 1)
+          if entry = "." || entry = ".." then loop names seen (entries + 1)
+          else if String.contains entry '/' || String.contains entry '\000' then
+            bounded_error ("invalid-entry-name:" ^ entry)
+          else
+            let entry_path = Filename.concat path entry in
+            let entry_stat = try Unix.lstat entry_path with Unix.Unix_error _ -> bounded_error ("stat-failed:" ^ entry_path) in
+            if entry_stat.Unix.st_kind = Unix.S_LNK then
+              bounded_error ("rule-symlink-forbidden:" ^ entry_path)
+            else if not (regular entry_stat) then
+              bounded_error ("unsupported-entry-not-regular:" ^ entry_path)
+            else if Filename.check_suffix entry ".md" && entry <> "README.md" then
+              if seen >= max_rules then bounded_error "rule-directory-count"
+              else loop (entry :: names) (seen + 1) (entries + 1)
+            else loop names seen (entries + 1)
       | exception End_of_file -> sort_unique names
     in loop [] 0 0)
 
@@ -243,7 +262,12 @@ let print observation =
 let write path text =
   let channel = open_out_bin path in
   Fun.protect ~finally:(fun () -> close_out_noerr channel) (fun () -> output_string channel text)
-let make_dir path = if not (Sys.file_exists path) then Unix.mkdir path 0o700
+let rec make_dir path =
+  if not (Sys.file_exists path) then begin
+    let parent = Filename.dirname path in
+    if parent <> path && not (Sys.file_exists parent) then make_dir parent;
+    try Unix.mkdir path 0o700 with Unix.Unix_error (Unix.EEXIST, _, _) -> ()
+  end
 let private_root label =
   let path = Filename.temp_file ("ev02-" ^ label ^ "-") "" in
   Sys.remove path;
@@ -310,7 +334,42 @@ let fixture_selftest () =
   let budget_map = Filename.concat budget_root "mapping.json" in
   write budget_map (mapping_text rows);
   expect_mapping_hold "aggregate-budget" (fun () -> observe budget_root budget_map);
-  print_endline "PASS directive-mapping fixture selftest: valid/duplicate/unknown/traversal/symlink/missing/budget"
+  let nonreg_root = private_root "mapping-nonreg" in
+  build_fixture nonreg_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  make_dir (Filename.concat nonreg_root ".agents/rules/fake.md");
+  let nonreg_map = Filename.concat nonreg_root "mapping.json" in
+  write nonreg_map (mapping_text rows);
+  expect_refusal "non-regular-rule-entry" (fun () -> observe nonreg_root nonreg_map);
+  let oversize_root = private_root "mapping-oversize" in
+  build_fixture oversize_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat oversize_root ".agents/rules/rule.md") (String.make (max_bytes + 1) 'a');
+  let oversize_map = Filename.concat oversize_root "mapping.json" in
+  write oversize_map (mapping_text rows);
+  expect_mapping_hold "oversize-rule-file" (fun () -> observe oversize_root oversize_map);
+  let entries_root = private_root "mapping-entries" in
+  build_fixture entries_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  for i = 1 to 260 do
+    write (Filename.concat entries_root (Printf.sprintf ".agents/rules/extra_%03d.txt" i)) "x"
+  done;
+  let entries_map = Filename.concat entries_root "mapping.json" in
+  write entries_map (mapping_text rows);
+  expect_refusal "entry-limit-rule-dir" (fun () -> observe entries_root entries_map);
+  let sym_root = private_root "mapping-sym" in
+  build_fixture sym_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  let real_file = Filename.concat sym_root "real.md" in
+  write real_file "# Anchor\n";
+  Unix.symlink real_file (Filename.concat sym_root ".agents/rules/symlink.md");
+  let sym_map = Filename.concat sym_root "mapping.json" in
+  write sym_map (mapping_text rows);
+  expect_refusal "symlink-rule-file-refused" (fun () -> observe sym_root sym_map);
+  let s_stat = Unix.lstat valid in
+  let mutated_mtime = { s_stat with Unix.st_mtime = s_stat.Unix.st_mtime +. 1.0 } in
+  if same_stat s_stat mutated_mtime then failwith "same_stat accepted mutated mtime";
+  let mutated_ctime = { s_stat with Unix.st_ctime = s_stat.Unix.st_ctime +. 1.0 } in
+  if same_stat s_stat mutated_ctime then failwith "same_stat accepted mutated ctime";
+  let substituted_ino = { s_stat with Unix.st_ino = s_stat.Unix.st_ino + 1 } in
+  if same_stat s_stat substituted_ino then failwith "same_stat accepted substituted inode";
+  print_endline "PASS directive-mapping fixture selftest: valid/duplicate/unknown/traversal/symlink/missing/budget/nonreg/oversize/entry-limit/metadata"
 
 let selftest () =
   let check label actual = if not actual then failwith ("selftest failed: " ^ label) in
