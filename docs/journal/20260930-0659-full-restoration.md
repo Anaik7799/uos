@@ -1,6 +1,6 @@
 # 20260930-0659 Restoration and operating baseline
 
-Observed from 2026-09-30T05:15Z through07:05:39UTC. Status: LIVE RESTORATION VERIFIED; main integration and final acceptance pending.
+Observed from 2026-09-30T05:15Z through07:10:26UTC. Status: OPERATIONAL RESTORATION VERIFIED; reviewed source integrated into main.
 Tags: #fractal-l0 #fractal-l2 #fractal-l4 #fractal-l8 #zk-adr #zero-muda
 Sa-plan: `uos/full-restoration/20260930-0515`.
 [Dashboard](http://nas-1.tail55d152.ts.net:4100/static/20260930-0633-restoration-dashboard.html) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Ecology](http://nas-1.tail55d152.ts.net:4110/ecology)
@@ -64,13 +64,14 @@ Engine2 Admiralty/STANAG assessment: direct local observations with independentl
 | Clock / cockpit | Exact-command rehearsals and corrected managed startup PASS; both clocks healthy/fault0, cockpit HTTP200 |
 | Startup durability | New ecology, cockpit and both clocks enabled; old failed ecology disabled; c3i.target enabled |
 | KM provenance gate | Canonical gate PASS, CHAIN_INTACT, no findings, EV ceiling93 |
-| Main / final acceptance | Pending; no completion claim yet |
+| Main / final acceptance | Independently reviewed source7f7b38264fbce8f09117517723fae591101898f2 integrated into main; all bookmarked source heads included, no conflicts |
+| Final live observation | Four services active/running/enabled with zero restarts; ecology cycle1073; fresh clock audit healthy/fault0 at07:10:26UTC |
 
 Evidence: [release and recovery receipts](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20260930-0657-restoration-evidence/20260930-0657-release.json). Earlier failed/HOLD evidence remains unchanged.
 
 ## 8. Files Modified
 
-Integration changepvvonvlm includes preserved multi-parent source history and AGY handoff. Recovery-specific changes include session store/authority/clock consumers, cycle ledger/oracle, strict recovery controller/native primitives, runtime controller and tests, ecology packaging, current HTTP/model conflict resolutions, quarantined EV claim provenance, risk portfolio, dashboard and reviewed deployment configurations under ops/release. Exact JJ diff accounting and final main identity will be recorded on acceptance. Live databases and private original backups are not imported into source control.
+Integration changepvvonvlm, reviewed commit7f7b38264fbce8f09117517723fae591101898f2, includes preserved multi-parent source history and AGY handoff and was moved to main. Recovery-specific changes include session store/authority/clock consumers, cycle ledger/oracle, strict recovery controller/native primitives, runtime controller and tests, ecology packaging, current HTTP/model conflict resolutions, quarantined EV claim provenance, risk portfolio, dashboard and reviewed deployment configurations under ops/release. Its final task-owned diff contains22files,1009insertions and268deletions atop the preserved integration parents; this is not a count of all merged historical files. Closing evidence/dashboard updates are a documentation-only descendant. Live databases and private original backups are not imported into source control.
 
 ## 9. Architectural Observations
 
@@ -78,7 +79,9 @@ Engine5 consistency is enforced at explicit boundaries: Gleam owns policy and st
 
 ## 10. Remaining Gaps
 
-Main advancement and final acceptance are still pending at this journal revision. Managed cockpit/clock cutover and durable startup enablement passed. Optional OpenRouter reports unavailable when live free pricing is unknown; no paid fallback is authorized. Embedded cockpit Zenoh NIF is not packaged/loaded; the separately observed board HTTP transport works. Full cross-node failover, all UI accessibility paths, global formal gates and long-duration reliability are not established by this recovery.
+The requested database repair, live ecology/cockpit/clock restoration, durable startup configuration and source integration passed their bounded acceptance checks. Optional OpenRouter reports unavailable when live free pricing is unknown; no paid fallback is authorized. Embedded cockpit Zenoh NIF is not packaged/loaded; the separately observed board HTTP transport works. Full cross-node failover, all UI accessibility paths, global formal gates and long-duration reliability are not established by this recovery.
+
+The clock correctly detected the temporary recovery worker as stale during review gaps; later genuine heartbeat observations cleared that finding. Recovery lifecycle closure releases all owned leases and uses typed retirement once work is complete, so an ended worker is not left as an expected active actor. Retirement never deletes historical board keys. The coordinator ledger is the durable receipt for that closing action.
 
 Devil's Advocate: valid current databases do not authenticate excluded historical events. The private-file review model assumes the cooperating local account boundary, not multi-user cryptographic IAM. MAX's full environment closure beyond pinned interpreter/metadata dependencies is not exhaustively hashed. These limits remain visible.
 
@@ -95,7 +98,7 @@ All17 release aspects are considered explicitly:
 | Aspect | Bounded recovery evidence and scope |
 |---|---|
 | A01 storage | Private regular-file preservation/rollback; hardware interlock not exercised, drives untouched |
-| A02 JJ | All bookmarked ancestors composed; main advancement pending |
+| A02 JJ | All bookmarked source ancestors integrated into reviewed main; originals preserved |
 | A03 Zero-Muda | Existing pinned tools and no new prohibited runtime; exhaustive historical scan not claimed |
 | A04 OTP | Actual OTP29 and root supervisor rehearsal; cluster failover outside this recovery |
 | A05 ZigVM VFS | Kernel unchanged; no eight-law proof invocation in this run |
@@ -120,14 +123,14 @@ All17 release aspects are considered explicitly:
 |2purity/storage|CHK-05-MUDA no new prohibited dependency; CHK-06-GRAPH no graph NIF added; CHK-07-DRIVE drives untouched|
 |3testing|CHK-08-C1C8 scoped tests; CHK-09-MATH global gates UNRUN; CHK-10-9MOD negative/integration checks; CHK-11-REGR scoped PASS|
 |4language/observability|CHK-12-GLEAM actual OTP; CHK-13-HERMES oracle PASS; CHK-14-ZIGVM unchanged/UNRUN; CHK-15-MAX actual PASS; CHK-16-OTEL end-to-end trace not claimed|
-|5governance/JJ|CHK-17-SOV independent finite reviews; CHK-18-JJ preserved integration, main pending|
+|5governance/JJ|CHK-17-SOV independent finite reviews; CHK-18-JJ reviewed integration on main|
 |6provenance|EV93 ceiling retained; no re-signing, no new EV, originals preserved|
 
 </details>
 
 ## 13. Conclusion
 
-Engine7 precommitted Forecast at2026-09-30T06:59UTC, Horizon07:15UTC: with unchanged dependencies and reviewed corrected units, cockpit and both clock services should become managed/running and return usable HTTP plus a healthy clock observation before07:15UTC. This bounded forecast resolved true at07:05:39UTC through actual managed-service and HTTP observations. Probability was uncalibrated; no numerical Brier score is invented. Final recovery acceptance and main integration remain pending.
+Engine7 precommitted Forecast at2026-09-30T06:59UTC, Horizon07:15UTC: with unchanged dependencies and reviewed corrected units, cockpit and both clock services should become managed/running and return usable HTTP plus a healthy clock observation before07:15UTC. This bounded forecast resolved true at07:05:39UTC through actual managed-service and HTTP observations and was rechecked at07:10:26UTC. Probability was uncalibrated; no numerical Brier score is invented. The requested bounded operational restoration and reviewed source integration are verified. Global system/EV admission remains a separate authority decision.
 
 [Previous RCA](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260930-0451-fractal-rca-recovery.md) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20260930-0633-restoration-dashboard.html) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk)
 

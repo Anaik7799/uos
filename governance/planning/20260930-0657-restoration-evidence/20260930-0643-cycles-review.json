@@ -1,0 +1,16 @@
+{
+  "schema": "uos.recovery-strict-review.v1",
+  "verdict": "PASS",
+  "reviewer": "codex-fractal-review-20260930",
+  "grant_sha256": "be4924a5661f02a85c32fc4790ff4c39599bb05b8b3e284ae7e59646d3c584ea",
+  "scope": "Finite cycle-ledger restoration through reviewed recovery_strict controller only; byte-exact valid prefix332 and all24 original holds; no historical release replay",
+  "review_plan": "uos/full-restoration/20260930-0515",
+  "review_task": "REVIEW",
+  "review_attempt": 1,
+  "candidate_sha256": "d6d11068329f2f1b24736e3f1180cc391ea401ce100a2a4c92bdc738890e92b8",
+  "release_candidate_sha256": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
+  "checks": ["full grant bytes reviewed", "loaded controls matched", "native dependency hashes matched", "main/WAL/SHM preimages matched", "no open handles observed", "canonical read-only cryptographic oracle passed332rows/24holds/0releases", "bidirectional SQL EXCEPT found zero prefix or hold differences against preserved original550", "exclusive preservation and failure HOLD reviewed"],
+  "conditions": ["RESTORE must be claimed as the exact reviewed attempt", "effect-time clock, lease, preimage, candidate and control checks remain mandatory", "all originals and quarantined tail remain preserved", "chain integrity is not EV or provenance admission"],
+  "application_admitted": false,
+  "provenance_admission": "NOT_GRANTED"
+}

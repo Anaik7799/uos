@@ -1,9 +1,9 @@
 {
   "schema": "uos.restoration-dashboard.v1",
-  "updated_at": "2026-09-30T07:05:39Z",
+  "updated_at": "2026-09-30T07:12:00Z",
   "plan": "uos/full-restoration/20260930-0515",
-  "overall": "RECOVERY IN PROGRESS",
-  "goal_met": false,
+  "overall": "OPERATIONAL RESTORATION VERIFIED",
+  "goal_met": true,
   "as_is": [
     [
       "Cockpit",
@@ -23,7 +23,7 @@
     ],
     [
       "Code integration",
-      "Outstanding branch code and Google AGY handoff assembled in canonical integration candidate. main has not moved."
+      "All bookmarked source branches and Google AGY handoff integrated into main. Closing dashboard/evidence is a documentation-only descendant."
     ],
     [
       "Google AGY",
@@ -81,14 +81,14 @@
     {
       "id": "MERGE",
       "title": "Advance main to reviewed integration",
-      "state": "executing",
-      "detail": "Awaiting restoration evidence; no Git operations."
+      "state": "completed",
+      "detail": "Independently accepted source7f7b3826 on main; all bookmarked source heads included, no conflicts."
     },
     {
       "id": "ACCEPT",
       "title": "Verify usability and close recovery",
-      "state": "available",
-      "detail": "Live health, restart recovery, navigation, main ancestry and final journal pending."
+      "state": "completed",
+      "detail": "Live data, services, startup persistence and key routes verified. Canonical Sa-plan task completed; scoped residuals retained in journal."
     }
   ],
   "risks": [
@@ -119,13 +119,13 @@
     {
       "name": "Loss during branch reconciliation",
       "criticality": "P1 · high",
-      "status": "Preserved; final review pending",
+      "status": "All bookmarked source ancestors integrated; originals retained",
       "mitigation": "Standalone JJ multi-parent integration and pre-restoration bookmark. Preserve current routes, stronger controls and historical evidence."
     },
     {
       "name": "Premature completion claim",
       "criticality": "P1 · high",
-      "status": "Controlled",
+      "status": "Bounded live acceptance verified; global admission explicitly excluded",
       "mitigation": "Final acceptance requires live observations and reviewed candidate identity. Test counts do not grant admission."
     }
   ],
@@ -140,13 +140,14 @@
     "agy_reported": 44,
     "counts_note": "Scoped suites overlap. These counts are not additive reliability or system-admission evidence.",
     "cycle_candidate": "332 rows ·24 holds ·0 releases",
-    "coordinator_candidate": "1 fresh registration ·full digest/replay/trigger checks pass",
+    "coordinator_candidate": "Activated fresh epoch; subsequent actual events pass integrity",
     "risk": "Raw FMEA S4 × O3 × Det3 =36; constrained priority score960.",
-    "main": "806c27397fd74a5b59e6ac4b7f57bfddefec88d7",
-    "integration": "40ea63f5 (working candidate; ongoing corrections)",
+    "main": "7f7b38264fbce8f09117517723fae591101898f2 (reviewed source; final evidence-only descendant follows)",
+    "integration": "pvvonvlm, independently source-reviewed and merged",
     "strict_runtime_native": 30,
     "release": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
-    "private_runtime": "OTP29 / ERTS17.0.5; MAX26.5; cockpit and dashboard HTTP200"
+    "private_runtime": "OTP29 / ERTS17.0.5; MAX26.5; cockpit and dashboard HTTP200",
+    "residuals": "Optional cockpit Zenoh NIF unavailable; OpenRouter safely unavailable when free pricing is unknown; global system/EV admission not claimed."
   },
   "checks": [
     "CHK-01 TIME · synchronized host observed",
@@ -159,13 +160,13 @@
     "CHK-08 C1–C8 · scoped regression evidence; broad suite pending",
     "CHK-09 MATH · bounded oracle evidence; global proofs not claimed",
     "CHK-10 TEST MODES · unit/integration/negative controls observed",
-    "CHK-11 REGRESSION · scoped suites passing; activation corrections pending",
-    "CHK-12 GLEAM/OTP · typed control; live cutover pending",
+    "CHK-11 REGRESSION · scoped suites and activation PASS",
+    "CHK-12 GLEAM/OTP · typed control; live cutover PASS",
     "CHK-13 HERMES · canonical cycle oracle passes candidate",
     "CHK-14 ZIGVM · unchanged; broad kernel verification not claimed",
-    "CHK-15 MAX · real private inference observed; production pending",
+    "CHK-15 MAX · real production inference observed",
     "CHK-16 OTEL · full propagation acceptance pending",
-    "CHK-17 SOVEREIGN · independent reviews active; final release pending",
-    "CHK-18 JUJUTSU · history preserved; main integration pending"
+    "CHK-17 SOVEREIGN · independent source/data/runtime reviews PASS",
+    "CHK-18 JUJUTSU · history preserved; main integration complete"
   ]
 }

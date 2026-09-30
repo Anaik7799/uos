@@ -1,0 +1,16 @@
+{
+  "schema": "uos.recovery-strict-review.v1",
+  "verdict": "PASS",
+  "reviewer": "codex-fractal-review-20260930",
+  "grant_sha256": "24059303ecb71bf58812cbb5511025970613444bfa6c8faccc9639c3aae4e6e8",
+  "scope": "Finite coordinator restoration through reviewed recovery_strict controller only; fresh one-registration epoch, no historical authority imported",
+  "review_plan": "uos/full-restoration/20260930-0515",
+  "review_task": "REVIEW",
+  "review_attempt": 1,
+  "candidate_sha256": "790215c06bfb5a921d959121a75345fef0092bef6cdbe05d5c10bacba3eda515",
+  "release_candidate_sha256": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
+  "checks": ["full grant bytes reviewed", "loaded controls matched", "native dependency hashes matched", "main/WAL/SHM preimages matched", "no open handles observed", "typed read-only verifier passed all checks for one registration", "exclusive preservation and failure HOLD reviewed"],
+  "conditions": ["RESTORE must be claimed as the exact reviewed attempt", "effect-time clock, lease, preimage, candidate and control checks remain mandatory", "runtime configuration and service actions require separate reviewed grants"],
+  "application_admitted": false,
+  "provenance_admission": "NOT_GRANTED"
+}
