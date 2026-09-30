@@ -1,0 +1,43 @@
+======================== EUnit ========================
+module 'zenoh_rest_test'
+  zenoh_rest_test: exact_text_reply_test...[0.005 s] ok
+  zenoh_rest_test: json_reply_is_serialized_as_payload_test...ok
+  zenoh_rest_test: missing_reply_is_not_query_success_test...ok
+  zenoh_rest_test: wrong_key_is_not_query_success_test...ok
+  zenoh_rest_test: malformed_or_incomplete_envelope_rejected_test...ok
+  zenoh_rest_test: unknown_encoding_rejected_test...ok
+  zenoh_rest_test: duplicate_reply_rejected_test...ok
+  zenoh_rest_test: text_value_type_checked_test...ok
+  zenoh_rest_test: path_injection_and_wildcards_rejected_before_network_test...[0.012 s] ok
+  zenoh_rest_test: arbitrary_native_or_remote_config_rejected_before_network_test...ok
+  zenoh_rest_test: redirects_and_publication_failures_never_pass_test...ok
+  [done in 0.050 s]
+module 'restoration_runtime_test'
+  restoration_runtime_test: arbitrary_effects_are_refused_test...[0.002 s] ok
+  restoration_runtime_test: release_instance_path_injection_is_refused_test...[0.002 s] ok
+  restoration_runtime_test: service_authority_is_separated_by_resource_test...ok
+  restoration_runtime_test: missing_private_review_cannot_execute_test...[0.001 s] ok
+  restoration_runtime_test: runtime_control_set_must_match_exactly_test...ok
+  restoration_runtime_test: authority_window_covers_effect_and_cleanup_test...ok
+  restoration_runtime_test: capability_workflow_is_exact_and_prior_completed_plan_is_refused_test...ok
+  [done in 0.026 s]
+module 'ecology_openrouter_transport_test'
+  ecology_openrouter_transport_test: fixed_body_all_statuses_and_fragment_sizes_test...[0.002 s] ok
+  ecology_openrouter_transport_test: chunked_fragmentation_test...ok
+  ecology_openrouter_transport_test: close_delimited_error_body_is_supported_test...ok
+  ecology_openrouter_transport_test: redirect_is_returned_without_following_location_test...ok
+  ecology_openrouter_transport_test: exact_endpoint_and_header_injection_test...ok
+  ecology_openrouter_transport_test: oversize_content_length_rejected_before_body_test...ok
+  ecology_openrouter_transport_test: wire_limit_applies_to_unframed_errors_test...[0.050 s] ok
+  ecology_openrouter_transport_test: header_and_field_count_bounds_test...ok
+  ecology_openrouter_transport_test: ambiguous_and_invalid_headers_test...ok
+  ecology_openrouter_transport_test: truncated_and_extra_fixed_body_test...ok
+  ecology_openrouter_transport_test: invalid_and_oversize_chunked_framing_test...ok
+  ecology_openrouter_transport_test: compressed_interim_and_no_body_responses_test...ok
+  ecology_openrouter_transport_test: absolute_deadline_kills_even_an_uncooperative_receiver_test...[0.051 s] ok
+  ecology_openrouter_transport_test: continuous_output_never_resets_deadline_test...[0.060 s] ok
+  ecology_openrouter_transport_test: transport_error_does_not_echo_request_or_credentials_test...ok
+  ecology_openrouter_transport_test: caller_death_stops_socket_owner_test...ok
+  [done in 0.211 s]
+=======================================================
+  All 34 tests passed.

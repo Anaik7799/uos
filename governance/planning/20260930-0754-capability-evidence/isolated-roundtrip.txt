@@ -1,0 +1,4 @@
+put={ok,nil}
+wire={ok,{200,
+          <<"[{\"key\":\"c3i/agui/events/recovery-capability-20260930/roundtrip\",\"value\":\"bounded-rest-recovery-observed\",\"encoding\":\"text/plain\",\"timestamp\":\"7691232202948617936/63007918cc8c1111de03240db9faf6a1\"}]">>}}
+get={ok,<<"bounded-rest-recovery-observed">>}

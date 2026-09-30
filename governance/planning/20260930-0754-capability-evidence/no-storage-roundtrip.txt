@@ -1,0 +1,4 @@
+open={ok,rest_session}
+put={ok,nil}
+wire={ok,{200,<<"[]">>}}
+get={error,<<"zenoh_no_reply">>}

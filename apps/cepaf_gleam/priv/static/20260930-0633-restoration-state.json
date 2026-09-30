@@ -1,9 +1,9 @@
 {
   "schema": "uos.restoration-dashboard.v1",
-  "updated_at": "2026-09-30T07:12:00Z",
-  "plan": "uos/full-restoration/20260930-0515",
-  "overall": "OPERATIONAL RESTORATION VERIFIED",
-  "goal_met": true,
+  "updated_at": "2026-09-30T08:10:24.346Z",
+  "plan": "uos/capability-restoration/20260930-0734",
+  "overall": "CORE RESTORED · CANDIDATE AND AUTHORITY REVIEW",
+  "goal_met": false,
   "as_is": [
     [
       "Cockpit",
@@ -23,15 +23,19 @@
     ],
     [
       "Code integration",
-      "All bookmarked source branches and Google AGY handoff integrated into main. Closing dashboard/evidence is a documentation-only descendant."
+      "Restored baseline main9d905802 remains live; new capability and reclaim work is isolated pending final integration."
     ],
     [
       "Google AGY",
-      "Actual Google AGY completed scoped implementation. Independent review and corrected transition rehearsal passed."
+      "Default-model repair completed; actual Google AGY is now repairing shared free-cost/token and catalog guards under a fresh one-hour task lease."
     ],
     [
       "Clock consumers",
-      "Both ACTIVE/ENABLED; healthy=true, fault_count=0; original Lamport floor316 preserved."
+      "Both ACTIVE/ENABLED, healthy=true and fault_count=0 in fresh observations; Lamport floor316 preserved."
+    ],
+    [
+      "Remaining capabilities",
+      "OpenRouter fixed free ID absent; cockpit native fallback unavailable. Repairs underway in isolated workspaces."
     ]
   ],
   "to_be": [
@@ -39,56 +43,58 @@
     "Ecology runs on pinned OTP29 with real MAX inference, advancing cycles and no restart loop.",
     "Clock consumers use recovered canonical SQLite state and exact released artifacts.",
     "All applicable branch code is integrated into main, with independently reviewed release evidence.",
-    "Task authority, rollback evidence, service health and usable Tailnet interfaces meet final acceptance."
+    "Task authority, rollback evidence, service health and usable Tailnet interfaces meet final acceptance.",
+    "Free advisory selects a live allowlisted zero-price model with no paid fallback.",
+    "Cockpit publication/query uses an observed bounded backend, with unsupported operations explicit."
   ],
   "tasks": [
     {
-      "id": "PREPARE",
-      "title": "Preserve originals and establish recovery plan",
+      "id": "AUDIT",
+      "title": "Observe recovered baseline and classify remaining backend failures",
       "state": "completed",
-      "detail": "Original source/history saved; isolated candidates and tasks established."
+      "detail": "Healthy baseline confirmed; actual absent model and missing native fallback traced."
     },
     {
-      "id": "AGY_EXEC",
-      "title": "Google AGY recovery implementation",
+      "id": "AGY_FREE",
+      "title": "Google AGY repairs bounded free OpenRouter selection and tests refusals",
       "state": "completed",
-      "detail": "Actual Google AGY handoff frozen and canonical task completed; independently reviewed corrections integrated."
+      "detail": "Actual Google AGY frozen default-model repair verified under reclaimed attempt2."
     },
     {
-      "id": "CONTROL",
-      "title": "Recovery fencing and service cutover controls",
-      "state": "completed",
-      "detail": "Strict activation and service controls independently accepted; 30 focused checks pass. New immutable package verified and private runtime observed."
+      "id": "AGY_GUARD",
+      "title": "Enforce free cost/token receipts and actual catalog prices",
+      "state": "executing",
+      "detail": "Independent adversarial review found pre-existing generic free-path gap; Google AGY implementing scoped fix."
     },
     {
-      "id": "SOURCE_INTEGRATION",
-      "title": "Reconcile outstanding branch code",
+      "id": "TRANSPORT",
+      "title": "Restore cockpit Zenoh transport through admitted bounded supervision",
       "state": "completed",
-      "detail": "All bookmarked source heads are ancestors of canonical integration; selected regression suites pass."
+      "detail": "Independent source review PASS; 34 tests and isolated live REST roundtrip PASS. Raw board probe incident preserved, contained and structurally prevented."
+    },
+    {
+      "id": "INTEGRATE",
+      "title": "Integrate sources and stage immutable release",
+      "state": "available",
+      "detail": "Waiting on final free guard repair."
     },
     {
       "id": "REVIEW",
-      "title": "Independent exact-candidate review",
-      "state": "completed",
-      "detail": "Independent exact DB grants and immutable release accepted; later service/config grants individually reviewed."
+      "title": "Independently review exact capability candidate and release evidence",
+      "state": "available",
+      "detail": "Waiting on canonical prerequisites."
     },
     {
-      "id": "RESTORE",
-      "title": "Activate data and restore live services",
-      "state": "completed",
-      "detail": "Canonical stores verified, ecology/cockpit/clocks active enabled zero restarts; both clocks healthy; seven routes HTTP200; old ecology disabled."
-    },
-    {
-      "id": "MERGE",
-      "title": "Advance main to reviewed integration",
-      "state": "completed",
-      "detail": "Independently accepted source7f7b3826 on main; all bookmarked source heads included, no conflicts."
+      "id": "RELEASE",
+      "title": "Activate reviewed capability release and verify recovery",
+      "state": "available",
+      "detail": "Waiting on canonical prerequisites."
     },
     {
       "id": "ACCEPT",
-      "title": "Verify usability and close recovery",
-      "state": "completed",
-      "detail": "Live data, services, startup persistence and key routes verified. Canonical Sa-plan task completed; scoped residuals retained in journal."
+      "title": "Verify full operational scope, dashboard, main integration and lifecycle closure",
+      "state": "available",
+      "detail": "Waiting on canonical prerequisites."
     }
   ],
   "risks": [
@@ -127,6 +133,18 @@
       "criticality": "P1 · high",
       "status": "Bounded live acceptance verified; global admission explicitly excluded",
       "mitigation": "Final acceptance requires live observations and reviewed candidate identity. Test counts do not grant admission."
+    },
+    {
+      "name": "Unsafe capability shortcut",
+      "criticality": "P1 · high",
+      "status": "Contained; implementation and design review underway",
+      "mitigation": "No paid fallback or broad NIF activation; exact free pricing, bounded OTP transport, reviewed immutable release."
+    },
+    {
+      "name": "Expired development task claim",
+      "criticality": "P1 · high",
+      "status": "Contained: source frozen; integration/release held",
+      "mitigation": "Separately authorized narrow reclaim-preflight implementation; exact previous owner/attempt/deadline, independent review, fresh active check before further work."
     }
   ],
   "evidence": {
@@ -142,12 +160,15 @@
     "cycle_candidate": "332 rows ·24 holds ·0 releases",
     "coordinator_candidate": "Activated fresh epoch; subsequent actual events pass integrity",
     "risk": "Raw FMEA S4 × O3 × Det3 =36; constrained priority score960.",
-    "main": "7f7b38264fbce8f09117517723fae591101898f2 (reviewed source; final evidence-only descendant follows)",
+    "main": "9d905802f2f42ee93dcadfe25ec65743307e0d5a",
     "integration": "pvvonvlm, independently source-reviewed and merged",
     "strict_runtime_native": 30,
     "release": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
     "private_runtime": "OTP29 / ERTS17.0.5; MAX26.5; cockpit and dashboard HTTP200",
-    "residuals": "Optional cockpit Zenoh NIF unavailable; OpenRouter safely unavailable when free pricing is unknown; global system/EV admission not claimed."
+    "residuals": "Resolving free advisory and bounded cockpit transport. Core recovery accepted; global system/EV admission not claimed.",
+    "reclaim_plan": "uos/claim-recovery/20260930-0758",
+    "transport_tests": 34,
+    "reclaim_checker": "Independent source review PASS, exact AGY reclaim attempt2 and active-check PASS. Separate REPAIR task completed; journal10/10."
   },
   "checks": [
     "CHK-01 TIME · synchronized host observed",
@@ -168,5 +189,10 @@
     "CHK-16 OTEL · full propagation acceptance pending",
     "CHK-17 SOVEREIGN · independent source/data/runtime reviews PASS",
     "CHK-18 JUJUTSU · history preserved; main integration complete"
-  ]
+  ],
+  "prior_restoration": {
+    "plan": "uos/full-restoration/20260930-0515",
+    "state": "8/8 completed; independent bounded acceptance PASS",
+    "main": "9d905802f2f42ee93dcadfe25ec65743307e0d5a"
+  }
 }
