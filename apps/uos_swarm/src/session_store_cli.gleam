@@ -23,6 +23,34 @@ import uos_swarm/session_sync as sync
 @external(erlang, "session_store_ffi", "halt")
 fn halt(status: Int) -> Nil
 
+@external(erlang, "session_sync_ffi", "canonical_workspace")
+fn canonical_directory(path: String) -> Result(String, String)
+
+fn exact_database_path(path: String) -> Result(Nil, String) {
+  use parts <- result.try(case string.split(path, "/") {
+    ["", ..parts] -> Ok(parts)
+    _ -> Error("database path must be absolute")
+  })
+  use _ <- result.try(case list.any(parts, fn(p) { p == "" || p == "." || p == ".." }) {
+    True -> Error("database path aliases are refused")
+    False -> Ok(Nil)
+  })
+  let parent = "/" <> { parts |> list.reverse |> list.drop(1) |> list.reverse |> string.join("/") }
+  use actual <- result.try(canonical_directory(parent))
+  use _ <- result.try(case actual == parent {
+    True -> Ok(Nil)
+    False -> Error("database parent aliases are refused")
+  })
+  case simplifile.link_info(path) {
+    Error(simplifile.Enoent) -> Ok(Nil)
+    Ok(info) -> case simplifile.file_info_type(info) == simplifile.File {
+      True -> Ok(Nil)
+      False -> Error("database must be a regular file")
+    }
+    Error(_) -> Error("database path cannot be observed")
+  }
+}
+
 fn refs(value: String) -> List(String) {
   case value {
     "-" -> []
@@ -34,20 +62,37 @@ fn number(value: String) -> Result(Int, String) {
   int.parse(value) |> result.replace_error("expected an integer")
 }
 
-fn respond(outcome: Result(String, String)) -> Nil {
+pub type CliError {
+  CommandFailed(String)
+  VerificationFailed(store.VerifyReport)
+}
+
+/// The exit status and JSON are derived from the same typed command outcome.
+pub fn response(outcome: Result(String, CliError)) -> #(Int, String) {
   case outcome {
-    Ok(text) -> io.println(text)
-    Error(error) -> {
-      io.println(
-        json.to_string(
-          json.object([
-            #("ok", json.bool(False)),
-            #("error", json.string(error)),
-          ]),
-        ),
-      )
-      halt(1)
-    }
+    Ok(text) -> #(0, text)
+    Error(VerificationFailed(report)) -> #(
+      1,
+      json.to_string(store.verify_report_json(report)),
+    )
+    Error(CommandFailed(error)) -> #(
+      1,
+      json.to_string(
+        json.object([
+          #("ok", json.bool(False)),
+          #("error", json.string(error)),
+        ]),
+      ),
+    )
+  }
+}
+
+fn respond(outcome: Result(String, CliError)) -> Nil {
+  let #(status, text) = response(outcome)
+  io.println(text)
+  case status {
+    0 -> Nil
+    _ -> halt(status)
   }
 }
 
@@ -58,6 +103,7 @@ fn with_store(
   db: String,
   f: fn(store.Store) -> Result(String, store.StoreError),
 ) -> Result(String, String) {
+  use _ <- result.try(exact_database_path(db))
   use opened <- result.try(
     { case db == "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3" {
       True -> store.open_existing(db)
@@ -127,18 +173,27 @@ fn stage_recovery(
   )
 }
 
-pub fn run(args: List(String)) -> Result(String, String) {
+pub fn run(args: List(String)) -> Result(String, CliError) {
+  case args {
+    ["verify", db] -> {
+      use report <- result.try(
+        store.verify_file(db)
+        |> result.map_error(fn(error) {
+          CommandFailed(store.error_to_string(error))
+        }),
+      )
+      case report.ok {
+        True -> Ok(json.to_string(store.verify_report_json(report)))
+        False -> Error(VerificationFailed(report))
+      }
+    }
+    _ -> run_other(args) |> result.map_error(CommandFailed)
+  }
+}
+
+fn run_other(args: List(String)) -> Result(String, String) {
   case args {
     ["schema"] -> Ok(store.schema_sql())
-    ["verify", db] ->
-      with_store(db, fn(opened) {
-        use report <- result.try(store.verify(opened))
-        let rendered = json.to_string(store.verify_report_json(report))
-        case report.ok {
-          True -> Ok(rendered)
-          False -> Error(store.CorruptError(rendered))
-        }
-      })
     ["migrate", events_dir, db] ->
       with_store(db, fn(opened) {
         store.migrate_from_journal(events_dir, opened)

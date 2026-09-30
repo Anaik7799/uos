@@ -1,0 +1,94 @@
+{
+  "schema": "uos.sa-help-incident-repair.v1",
+  "observed_at": "2026-09-09T06:11:56Z",
+  "candidate": "32d2770110cd78e50429d8214377c4c02e4cde14",
+  "authority": "NONE",
+  "plan": "uos/ev-admission/20260909-0210",
+  "task": "PROGRAM",
+  "incident": {
+    "plan": "infranodus-fractal-closure-20260804-0936",
+    "task": "task-0",
+    "worker": "--help",
+    "attempt": 2,
+    "contained_state": "available",
+    "original_claim": "Reported by delegate, request sa-plan-1788933300667873955; no raw native receipt was requested for the original invocation. Exact current ownership was independently observed before release.",
+    "coordination_event": 1279
+  },
+  "process_checks_passed": 27,
+  "argument_assertions_passed": 48,
+  "adapter_regressions_passed": 7,
+  "generator_controls_passed": 6,
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-claim-before.json",
+      "sha256": "310cda2d905198721613e776094cb3dc17fc2e767d8d223f689b275d54232047",
+      "observed_source": "/tmp/ev-accidental-help-claim-before.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-claim-release.json",
+      "sha256": "ced473e7d58aaa3dd68261eff55a69db7a16010232a31183d37698f4ad3719e7",
+      "observed_source": "/tmp/ev-accidental-help-claim-release.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-claim-after.json",
+      "sha256": "857c89d5d67decee8b7057b67cc93a78d27acc7c4b07282dff656429e998f8c3",
+      "observed_source": "/tmp/ev-accidental-help-claim-after.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-source-observation.json",
+      "sha256": "aefde9cc399f43d6c3a4e96e28858ba3f2824c8be79924a3c2ece41d8eaac135",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/source-observation.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-unit-tests.json",
+      "sha256": "024740b7a1cd94ba8a5077147aebbd9ccfd8a26a8db768c42eaa3552c4da34ec",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/unit.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-private-build.json",
+      "sha256": "1f95b15dab9519ecc9a6cb0d5ca7ded6846d804d07f5be5802c4872e9f0b3e63",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/build.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-missing-store.json",
+      "sha256": "00da32bb6ab5cc8af9722112a5339904db14f1bf634893b5b349115aa2a2bb2d",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/missing-00.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-existing-store.json",
+      "sha256": "0beed55b8d2bb5a2abfd054f4fabfc88b57bda73f25ebf090a7e155c702c3e79",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/existing-00.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-private-state.json",
+      "sha256": "8428d4c348a0fb4f710d24f6c4c9f3b9cfbd3f1e876e67b28bd2718d91ce435d",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/available.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-private-positive-claim.json",
+      "sha256": "1e3966b0c7326b4cc010b1d509384f28f77aaf8bd612696eb241b1ae8a261cf2",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/positive-claim.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-sa-help-private-positive-release.json",
+      "sha256": "d800f449c6c735400cc2414e01a5d4762db6170eb99a9957e456db4257d4733f",
+      "observed_source": "/tmp/uos-sa-plan-help-573b1c/positive-release.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-generator-independent-initial-hold.json",
+      "sha256": "917d2b5226978161ef86861d380d71628130e58c04fa020cc7684c8724ac284e",
+      "observed_source": "/tmp/ev-generator-independent-review-20260909/20260909-0600-generator-review.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0656-generator-repair-controls.json",
+      "sha256": "4d4b6d7a1b99a37062069f3565df3fee19d884dd454bd5bf12af20369a5b5a8d",
+      "observed_source": "/tmp/uos-ev-generator-repair-2ee9be/result.json"
+    }
+  ],
+  "limits": [
+    "Private CLI candidate executed; canonical live binary is unchanged and integration review is pending.",
+    "The native EV adapter refuses option-style Sa-plan help before child execution immediately in this sibling.",
+    "Generator checks assume a cooperative checkout; a hostile concurrent parent-directory swap is not proven safe.",
+    "No EV, runtime or integration admission follows from containment."
+  ]
+}

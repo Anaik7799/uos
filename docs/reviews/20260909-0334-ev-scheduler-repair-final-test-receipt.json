@@ -1,0 +1,16 @@
+{
+  "receipt_id": "ev-scheduler-repair-20260909-0334-final",
+  "status": "PASS_AT_SCOPED_COMPILED_GLEAM_TEST_SCOPE",
+  "candidate_parent": "337f99137673d7866b958a38bd490fb876b2880f",
+  "source_sha256": {
+    "heijunka_scheduler": "846f657eea5f2666748625b227d1b63f282c1b2108155286aa2502ac11315428",
+    "work_stealing": "46f320ebaf19e77cf3aa0597aaeffb8112387243063bcec83bb97da35dad9307",
+    "heijunka_scheduler_test": "50b4d6e54c520c642094345bc45e7584562e26069daaedf340bd4a84f0b4cdf4",
+    "work_stealing_test": "1de148c96f713d97e8ad892116201171d491bfb3fbca076bf16a521564bcfd77"
+  },
+  "toolchains": {"gleam": "1.16.0 /home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "otp": "29 /nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl", "erl_flags": "+S 2:2"},
+  "realized_dependency_inputs": {"manifest_lock": {"path": "apps/cepaf_gleam/manifest.toml", "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169"}, "package_identities": {"path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/packages/packages.toml", "sha256": "1994a51f5880a49ef32df7dd23797f4d350824f991ea74f37d9c24eeee8c35c2"}, "gleeunit_app_sha256": "2edcb0c547c8cc82edc03e59e8f4adbce7dde35c2a77d8988c5ac3400d026a4c", "gleam_stdlib_app_sha256": "564f6680ff5714b74a507b0daa249eb12959218a3d409997a1b85b8f71ab9388"},
+  "red_observed": ["capacity exceeded after repeated pull", "reclaim metadata replacement", "replay duplicates", "single-response duplicate acceptance", "cross-plan task-ID collision/duplicate mix", "replay after consumed work", "pending depth overflow", "unfenced completion"],
+  "green": {"compile": "gleam compile-package --target erlang --package . --out /tmp/ev-scheduler-repair-compile-final-0334 --lib /home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang: PASS", "tests": "19 direct compiled Gleam tests (9 Heijunka, 10 work-stealing): PASS", "format": "four scoped Gleam files: PASS"},
+  "limitations": ["Normal gleam test is UNRUN because resolution attempted repo.hex.pm for glisten and was stopped before download.", "The direct compiler route uses read-only realized root dependency artifacts.", "Transfer receipt durability is only in-memory model state; network, disk, formal proof, runtime deployment, integration, Sa-plan completion, and EV admission remain UNRUN or out of scope."]
+}

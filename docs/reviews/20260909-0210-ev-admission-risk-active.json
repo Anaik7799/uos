@@ -1,0 +1,217 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-admission-program-20260909-0210-active",
+    "plan_id": "uos/ev-admission/20260909-0210",
+    "task_id": "PROGRAM",
+    "actor": "codex-ev-admission-01a08017",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "scope": "Complete EV-01..EV-109 through isolated source repairs, bounded candidate-bound runtime/formal evidence, independent review and supported admission. Historical ledgers are preserved; integration and runtime replacement require their separate current fences.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T02:47:52Z",
+    "ready_since": "2026-09-09T02:47:52Z",
+    "valid_until": "2026-09-09T03:47:52Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace at immutable base 337f9913; current scoped bytes observed directly.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          "sha256": "eb443c8d81bfae96272786d639b045c13170d1097c505221950777c37f1c6a8c",
+          "observed_at": "2026-09-09T02:47:52Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          "sha256": "0c55a3733512ce7339fe49fae61f3b7c94df3f5d28428afdd980339684ec5713",
+          "observed_at": "2026-09-09T02:47:52Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          "sha256": "2e801a89658f399e72ca31416458928782e020880a9bb390d2158b633855a26d",
+          "observed_at": "2026-09-09T02:47:52Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          "sha256": "ca722d9614e1efe34eb0aeec785ce8ada462b1ea9c09b1820b70f52b4b90b0c8",
+          "observed_at": "2026-09-09T02:47:52Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+          "observed_at": "2026-09-09T02:47:52Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "Requested admission is blocked by observed provenance and false-positive verification gaps.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md"
+        ]
+      },
+      "stpa": {
+        "rationale": "Observed printed deployment PASS and file-presence admission can assert safe completion without required behavior.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md"
+        ]
+      },
+      "fmea": {
+        "rationale": "S5 O3 Det4 RPN60; severity floor makes F5 for false system admission.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md"
+        ]
+      },
+      "dependency": {
+        "rationale": "Evidence and authority repairs gate all requested EV admissions.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md"
+        ]
+      },
+      "impact": {
+        "rationale": "Correct admission protects the shared fleet-wide control and evidence boundary.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md"
+        ]
+      }
+    },
+    "score": 2500,
+    "score_interval": [
+      2500,
+      2500
+    ],
+    "fmea_modes": [
+      {
+        "id": "FM-FALSE-ADMISSION",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Noncanonical writers and unobserved fixed-positive checks can be mistaken for runtime and formal evidence.",
+        "effect": "False system admission or unsafe downstream release.",
+        "controls": "Preserve history, use canonical Sa-plan, immutable candidates, negative controls, independent sovereign review and effect-time fencing."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "EV admission programme owner and independent sovereign reviewers",
+      "control_action": "Repair and verify candidate capabilities, then record admission only for satisfied obligations",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required runtime or formal checks are omitted before admission.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Every EV has explicit acceptance obligations and executed receipts."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Printouts, stale files, fabricated reviewers or quarantined claims grant admission.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Validate evidence content, digests, scope, candidate and independent review; no ceiling changes before review."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A candidate or owner changes after observation.",
+          "hazard_ids": [
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Use immutable JJ revisions and current task/workspace/integration/runtime fences at each effect."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Tests or workers outlive resource or ownership bounds.",
+          "hazard_ids": [
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound subprocesses, outputs and lease durations; recheck before effects."
+        }
+      ]
+    },
+    "decision": {
+      "summary": "Repair and verify the existing EV programme under canonical authority, beginning with the admission evidence substrate.",
+      "alternatives": [
+        "Promote recorded historical counts",
+        "Repair gaps and execute revision-bound checks"
+      ],
+      "assumptions": [
+        "User authorizes completing and admitting existing EVs; evidence requirements remain in force."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Only synthetic EV999 exists in the legacy evidence table; actual EV evidence must be obtained."
+      ],
+      "forecast": "Negative tests will expose unsupported admission and fixed-positive verification; genuine runtime/formal obligations may require additional scoped work.",
+      "falsifier": "Any missing, tampered, stale, wrong-candidate or nonpassing evidence is accepted for admission.",
+      "acceptance": [
+        "All existing EV-01..EV-109 have explicit source, runtime and formal obligations",
+        "Candidate-bound checks and negative controls execute successfully",
+        "Codex and AGY review is recorded for the candidate",
+        "Admission records and policy change only after all required gates pass"
+      ],
+      "rollback": "Preserve failed receipts and immutable work. Do not rewrite shared journal/cycle history or replace runtime without its own checked fence and recovery path.",
+      "budget": "Existing realized tools only; no package downloads or paid inference. Two build jobs, two BEAM schedulers per probe, bounded subprocess timeouts; stage-specific execution ceilings recorded with receipts.",
+      "reviewer": "Independent code review and actual Codex/AGY sovereign review; no model impersonation.",
+      "residuals": [
+        "Same-UID host mutation remains outside cooperative fences.",
+        "Historical broken chain remains evidence; it cannot be rewritten into a pass.",
+        "A complete source inventory alone does not establish runtime conformance."
+      ],
+      "supersedes": "20260909-0210-ev-admission-risk-v2.json: task claimed as worker codex-ev-admission-01a08017, attempt 1."
+    }
+  }
+]

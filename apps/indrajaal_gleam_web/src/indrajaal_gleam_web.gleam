@@ -63,6 +63,16 @@ import cepaf_gleam/ecology/living_swarm_actor
 import lustre/element
 import mist.{type Connection, type ResponseData}
 
+const maximum_request_body_bytes = 65_536
+
+const request_body_read_timeout_milliseconds = 5000
+
+pub type FixedBodyReadError {
+  FixedBodyMalformed
+  FixedBodyReadTimeout
+  FixedBodyUnsupported
+}
+
 @external(erlang, "indrajaal_web_ffi", "read_repo_file")
 fn erl_read_repo_file(path: String) -> Result(BitArray, String)
 
@@ -71,6 +81,14 @@ fn listen_port(default: Int) -> Int
 
 @external(erlang, "indrajaal_web_ffi", "listen_host")
 fn listen_host() -> String
+
+@external(erlang, "indrajaal_web_ffi", "read_fixed_request_body")
+fn read_fixed_request_body(
+  req: Request(Connection),
+  content_length: Int,
+  maximum_bytes: Int,
+  timeout_milliseconds: Int,
+) -> Result(Request(BitArray), FixedBodyReadError)
 
 pub fn main() {
   case runtime_identity.startup_check(runtime_identity.observe()) {
@@ -95,39 +113,21 @@ fn serve() {
     "Starting isolated-capable listener on port " <> int.to_string(port),
   )
 
-  let router = fn(req: Request(Connection)) -> Response(ResponseData) {
-    let path = "/" <> string.join(request.path_segments(req), "/")
+  let router = fn(connection_req: Request(Connection)) -> Response(ResponseData) {
+    let bounded_router = fn(req: Request(BitArray)) -> Response(ResponseData) {
 
     case request.path_segments(req) {
       ["homeostasis"] | ["homeostasis", "evolution"]
       | ["homeostasis", "components"] | ["homeostasis", "terminal"]
       | ["homeostasis", "evolution", "hud"] | ["homeostasis", "stream"]
       | ["api", "v1", "homeostasis"] | ["api", "v1", "homeostasis", "evolution"]
-      | ["api", "v1", "homeostasis", "stream"] -> homeostasis_http.handle(req)
-      ["api", "v1", "homeostasis", "review"] | ["api", "v1", "homeostasis", "terminal"] -> homeostasis_http.handle(req)
+      | ["api", "v1", "homeostasis", "stream"] -> homeostasis_http.handle(connection_req)
+      ["api", "v1", "homeostasis", "review"] | ["api", "v1", "homeostasis", "terminal"] -> homeostasis_http.handle(connection_req)
       // Living Swarm Ecology & Cybernetic Singing routes
       ["ecology"] | ["ecology", ..] | ["api", "v1", "ecology", ..] ->
-        ecology_http.handle(req, ecology_runtime)
+        ecology_http.handle(connection_req, ecology_runtime)
       // AG-UI protocol routes (SSE event streams + health)
-      ["ag-ui", ..] -> {
-        let json_body = c3i_router.route(path)
-        case string.contains(path, "events") || string.contains(path, "run") {
-          True -> {
-            response.new(200)
-            |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-            |> response.prepend_header("content-type", "text/event-stream")
-            |> response.prepend_header("cache-control", "no-cache")
-            |> response.prepend_header("connection", "keep-alive")
-            |> response.prepend_header("access-control-allow-origin", "*")
-          }
-          False -> {
-            response.new(200)
-            |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-            |> response.prepend_header("content-type", "application/json")
-            |> response.prepend_header("access-control-allow-origin", "*")
-          }
-        }
-      }
+      ["ag-ui", ..] -> handle_c3i_http_request(req)
       ["api", "verify", "patrol"] -> {
         let report = unified_verification_supervisor.run_verification_patrol()
         let is_healthy = unified_verification_supervisor.patrol_healthy(report)
@@ -544,13 +544,7 @@ fn serve() {
         peer_health.observe(peer_health.CurrentPeer)
         |> peer_health_response()
       }
-      ["api", ..] -> {
-        let json_body = c3i_router.route(path)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
+      ["api", ..] -> handle_c3i_http_request(req)
       ["peer"] -> {
         let page =
           peer_health.observe(peer_health.CurrentPeer)
@@ -1045,6 +1039,8 @@ fn serve() {
         |> response.prepend_header("content-type", "text/html")
       }
     }
+    }
+    handle_bounded_connection_request(connection_req, bounded_router)
   }
 
   let assert Ok(_) =
@@ -1131,6 +1127,144 @@ fn render_raw_file_response(file_path: String) -> Response(ResponseData) {
       |> response.prepend_header("access-control-allow-origin", "*")
     }
   }
+}
+
+pub type RequestBodyFraming {
+  EmptyRequestBody
+  FixedRequestBody(Int)
+}
+
+pub type RequestBodyFramingError {
+  AmbiguousContentLength
+  InvalidContentLength
+  RequestBodyTooLarge
+  UnsupportedExpectation
+  UnsupportedTransferEncoding
+}
+
+/// Classify request framing before Mist reads from the socket. Only an absent
+/// body or one exact decimal Content-Length up to 64 KiB is admitted. This
+/// prevents Mist 6.0.2's unbounded chunk accumulator from being reached.
+pub fn classify_request_body(
+  req: Request(body),
+) -> Result(RequestBodyFraming, RequestBodyFramingError) {
+  let transfer_encodings =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "transfer-encoding"
+    })
+  let content_lengths =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "content-length"
+    })
+  let expectations =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "expect"
+    })
+
+  case transfer_encodings, expectations, content_lengths {
+    [_, ..], _, _ -> Error(UnsupportedTransferEncoding)
+    [], [_, ..], _ -> Error(UnsupportedExpectation)
+    [], [], [] -> Ok(EmptyRequestBody)
+    [], [], [#(_, value)] -> classify_content_length(value)
+    [], [], [_, _, ..] -> Error(AmbiguousContentLength)
+  }
+}
+
+fn classify_content_length(
+  value: String,
+) -> Result(RequestBodyFraming, RequestBodyFramingError) {
+  let decimal_digits = string.to_utf_codepoints(value)
+  case
+    decimal_digits != []
+    && list.all(decimal_digits, fn(codepoint) {
+      let ordinal = string.utf_codepoint_to_int(codepoint)
+      ordinal >= 48 && ordinal <= 57
+    })
+  {
+    False -> Error(InvalidContentLength)
+    True ->
+      case int.parse(value) {
+        Error(_) -> Error(InvalidContentLength)
+        Ok(length) if length > maximum_request_body_bytes ->
+          Error(RequestBodyTooLarge)
+        Ok(length) -> Ok(FixedRequestBody(length))
+      }
+  }
+}
+
+/// Validate framing before reading, then use the fixed-length reader. It checks
+/// already-buffered bytes, caps reads to the declared remainder, and applies
+/// one deadline to the complete read. No chunked request reaches the reader.
+pub fn handle_bounded_connection_request(
+  req: Request(Connection),
+  next: fn(Request(BitArray)) -> Response(ResponseData),
+) -> Response(ResponseData) {
+  case classify_request_body(req) {
+    Error(RequestBodyTooLarge) ->
+      request_body_error_response(413, "request_body_too_large")
+    Error(UnsupportedTransferEncoding) ->
+      request_body_error_response(400, "request_transfer_encoding_unsupported")
+    Error(UnsupportedExpectation) ->
+      request_body_error_response(417, "request_expectation_unsupported")
+    Error(AmbiguousContentLength) ->
+      request_body_error_response(400, "request_content_length_ambiguous")
+    Error(InvalidContentLength) ->
+      request_body_error_response(400, "request_content_length_invalid")
+    Ok(EmptyRequestBody) -> next(request.set_body(req, <<>>))
+    Ok(FixedRequestBody(content_length)) ->
+      case
+        read_fixed_request_body(
+          req,
+          content_length,
+          maximum_request_body_bytes,
+          request_body_read_timeout_milliseconds,
+        )
+      {
+        Ok(req) -> next(req)
+        Error(FixedBodyMalformed) ->
+          request_body_error_response(400, "request_body_malformed")
+        Error(FixedBodyReadTimeout) ->
+          request_body_error_response(408, "request_body_read_timeout")
+        Error(FixedBodyUnsupported) ->
+          request_body_error_response(400, "request_body_transport_unsupported")
+      }
+  }
+}
+
+/// Adapt a body-bounded Mist request to the canonical method-aware Wisp
+/// router. Request metadata is retained by `request.set_body`; the response
+/// adapter preserves the canonical status, headers, and body.
+pub fn handle_c3i_http_request(
+  req: Request(BitArray),
+) -> Response(ResponseData) {
+  case bit_array.byte_size(req.body) > maximum_request_body_bytes {
+    True -> request_body_error_response(413, "request_body_too_large")
+    False ->
+      case bit_array.to_string(req.body) {
+        Error(_) -> request_body_error_response(400, "request_body_not_utf8")
+        Ok(body) -> {
+          let routed = c3i_router.handle_request(request.set_body(req, body))
+          routed
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(routed.body)))
+        }
+      }
+  }
+}
+
+fn request_body_error_response(
+  status: Int,
+  reason: String,
+) -> Response(ResponseData) {
+  response.new(status)
+  |> response.set_body(
+    mist.Bytes(bytes_tree.from_string(
+      json.object([#("error", json.string(reason))])
+      |> json.to_string(),
+    )),
+  )
+  |> response.set_header("content-type", "application/json; charset=utf-8")
+  |> response.set_header("cache-control", "no-store")
+  |> response.set_header("x-content-type-options", "nosniff")
 }
 
 fn render_repo_file_response(

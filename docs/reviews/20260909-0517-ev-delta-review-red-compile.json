@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/ev-delta-review-red-20260909-0517", "--out",
+    "/tmp/ev-delta-review-red-20260909-0517/compiled", "--lib",
+    "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang"
+  ],
+  "utc_started": 1788930956.631469,
+  "utc_finished": 1788930956.806814,
+  "elapsed_seconds": 0.17534630299999998,
+  "deadline_seconds": 30.0,
+  "exit_code": 1,
+  "output": "warning: Unused function argument\n    ┌─ /tmp/ev-delta-review-red-20260909-0517/src/delta_mesh_engine_test.gleam:248:17\n    │\n248 │ fn health_delta(engine) {\n    │                 ^^^^^^ This argument is never used\n\nHint: You can ignore it with an underscore: `_engine`.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev-delta-review-red-20260909-0517/src/delta_mesh_engine_test.gleam:249:13\n    │\n249 │   SyncDelta(engine.local_node_id, engine.local_mesh_state, engine.local_health_map, engine.local_mesh_state.epoch_us)\n    │             ^^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev-delta-review-red-20260909-0517/src/delta_mesh_engine_test.gleam:249:35\n    │\n249 │   SyncDelta(engine.local_node_id, engine.local_mesh_state, engine.local_health_map, engine.local_mesh_state.epoch_us)\n    │                                   ^^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev-delta-review-red-20260909-0517/src/delta_mesh_engine_test.gleam:249:60\n    │\n249 │   SyncDelta(engine.local_node_id, engine.local_mesh_state, engine.local_health_map, engine.local_mesh_state.epoch_us)\n    │                                                            ^^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev-delta-review-red-20260909-0517/src/delta_mesh_engine_test.gleam:249:85\n    │\n249 │   SyncDelta(engine.local_node_id, engine.local_mesh_state, engine.local_health_map, engine.local_mesh_state.epoch_us)\n    │                                                                                     ^^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev-delta-review-red-20260909-0517/src/delta_mesh_engine_test.gleam:249:85\n    │\n249 │   SyncDelta(engine.local_node_id, engine.local_mesh_state, engine.local_health_map, engine.local_mesh_state.epoch_us)\n    │                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\n",
+  "output_sha256": "41d402862d2c0807100a32aac020bcc396653373d91f4fd38c7dfdf21c01bbb7",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

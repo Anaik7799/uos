@@ -1,0 +1,1 @@
+let () = let payload = "\000" in let expected = Gospel_dispatch_contracts.sha256_digest payload in match Gospel_dispatch_contracts.bounded_differential_oracle payload expected with Error _ -> print_endline "DESIGNATED_DISAGREEMENT_REFUSED" | Ok _ -> failwith "DESIGNATED_DISAGREEMENT_ACCEPTED"

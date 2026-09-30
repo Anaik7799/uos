@@ -1,0 +1,1507 @@
+1230203 execve("/tmp/uos-campaign-direct-build/default/campaign_test.exe", ["/tmp/uos-campaign-direct-build/default/campaign_test.exe", "/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53"], 0x7ffdd4d16e70 /* 81 vars */) = 0
+1230204 execve("/tmp/uos-campaign-direct-build/default/ev_receipt.exe", ["/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "98", "b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230205 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7fff6e90f098 /* 81 vars */) = 0
+1230205 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230205, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230249 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x6517dc597e20 /* 15 vars */) = 0
+1230251 execve("/tmp/uos-ev98-campaign-469371.reserve.d/native-bin/tput", ["tput", "cols"], 0x7ffe1af1a5a8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230251 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffe1af1a5a8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230251 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffe1af1a5a8 /* 15 vars */) = 0
+1230251 +++ exited with 2 +++
+1230249 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230251, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1230252 execve("/tmp/uos-ev98-campaign-469371.reserve.d/native-bin/tput", ["tput", "lines"], 0x7ffe1af1a5a8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230252 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffe1af1a5a8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230252 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffe1af1a5a8 /* 15 vars */) = 0
+1230252 +++ exited with 2 +++
+1230249 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230252, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1230250 +++ exited with 0 +++
+1230249 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230249, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230253 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x6517dc596f00 /* 15 vars */) = 0
+1230254 +++ exited with 0 +++
+1230253 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230253, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230255 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x6517dc5970d0 /* 15 vars */) = 0
+1230256 +++ exited with 0 +++
+1230255 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230255, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230257 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x6517dc597260 /* 15 vars */) = 0
+1230258 +++ exited with 0 +++
+1230257 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230257, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230259 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x6517dc58f6a0 /* 15 vars */) = 0
+1230260 +++ exited with 0 +++
+1230259 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230259, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230261 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x6517dc58f830 /* 15 vars */) = 0
+1230262 +++ exited with 0 +++
+1230261 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230261, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230263 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x6517dc597140 /* 15 vars */) = 0
+1230264 +++ exited with 0 +++
+1230263 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230263, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230265 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x6517dc5972d0 /* 15 vars */) = 0
+1230266 +++ exited with 0 +++
+1230265 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230265, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230267 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x6517dc5974a0 /* 15 vars */) = 0
+1230268 +++ exited with 0 +++
+1230267 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230267, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230269 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x6517dc597630 /* 15 vars */) = 0
+1230270 +++ exited with 0 +++
+1230269 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230269, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230271 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x6517dc597800 /* 15 vars */) = 0
+1230272 +++ exited with 0 +++
+1230271 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230271, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230273 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x6517dc58f400 /* 15 vars */) = 0
+1230274 +++ exited with 0 +++
+1230273 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230273, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230275 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x6517dc596fe0 /* 15 vars */) = 0
+1230276 +++ exited with 0 +++
+1230275 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230275, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230277 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x6517dc596e30 /* 15 vars */) = 0
+1230278 +++ exited with 0 +++
+1230277 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230277, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230279 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x6517dc596c80 /* 15 vars */) = 0
+1230280 +++ exited with 0 +++
+1230279 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230279, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230281 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x6517dc5d4e50 /* 15 vars */) = 0
+1230282 +++ exited with 0 +++
+1230281 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230281, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230283 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x6517dc597ba0 /* 15 vars */) = 0
+1230284 +++ exited with 0 +++
+1230283 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230283, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230285 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x6517dc597bd0 /* 15 vars */) = 0
+1230286 +++ exited with 0 +++
+1230285 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230285, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230287 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x6517dc58f7d0 /* 15 vars */) = 0
+1230288 +++ exited with 0 +++
+1230287 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230287, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230291 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x6517dc58f0c0 /* 15 vars */) = 0
+1230292 +++ exited with 0 +++
+1230291 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230291, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230293 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x6517dc5b2240 /* 15 vars */) = 0
+1230294 +++ exited with 0 +++
+1230293 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230293, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230295 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x6517dc5b23c0 /* 15 vars */) = 0
+1230296 +++ exited with 0 +++
+1230295 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230295, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230297 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x6517dc5c9070 /* 15 vars */) = 0
+1230298 +++ exited with 0 +++
+1230297 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230297, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230299 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x6517dc5c9250 /* 15 vars */) = 0
+1230300 +++ exited with 0 +++
+1230299 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230299, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230303 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x6517dc596da0 /* 15 vars */) = 0
+1230304 +++ exited with 0 +++
+1230303 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230303, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230305 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x6517dc596f50 /* 15 vars */) = 0
+1230306 +++ exited with 0 +++
+1230305 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230305, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230307 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x6517dc58f370 /* 15 vars */) = 0
+1230308 +++ exited with 0 +++
+1230307 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230307, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230309 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "--version"], 0x6517dc597bc0 /* 15 vars */) = 0
+1230309 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230309, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230310 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "-version"], 0x6517dc5b2260 /* 15 vars */) = 0
+1230310 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-V", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "--"], 0x7ffd1307a4f0 /* 15 vars */) = 0
+1230311 +++ exited with 0 +++
+1230310 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230310, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230312 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-469371.reserve.d/positive", "--out", "/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled", "--lib", "/tmp/uos-ev98-campaign-469371.reserve.d/lib"], 0x6517dc5809a0 /* 15 vars */) = 0
+1230313 execve("/tmp/uos-ev98-campaign-469371.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffda8b6f070 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230313 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffda8b6f070 /* 15 vars */) = 0
+1230313 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x64839c532500 /* 16 vars */) = 0
+1230313 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffe22a11610 /* 16 vars */) = 0
+1230317 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7fff16647b58 /* 16 vars */) = 0
+1230378 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5bf6c5410940 /* 16 vars */) = 0
+1230379 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230378, si_uid=1000} ---
+1230378 +++ exited with 0 +++
+1230379 +++ killed by SIGUSR1 +++
+1230317 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230378, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230316 +++ exited with 0 +++
+1230328 ???( <unfinished ...>
+1230327 ???( <unfinished ...>
+1230326 ???( <unfinished ...>
+1230325 ???( <unfinished ...>
+1230324 ???( <unfinished ...>
+1230321 ???( <unfinished ...>
+1230320 ???( <unfinished ...>
+1230377 +++ exited with 0 +++
+1230376 +++ exited with 0 +++
+1230375 +++ exited with 0 +++
+1230374 +++ exited with 0 +++
+1230373 +++ exited with 0 +++
+1230372 +++ exited with 0 +++
+1230371 +++ exited with 0 +++
+1230370 +++ exited with 0 +++
+1230369 +++ exited with 0 +++
+1230368 +++ exited with 0 +++
+1230367 +++ exited with 0 +++
+1230366 +++ exited with 0 +++
+1230365 +++ exited with 0 +++
+1230364 +++ exited with 0 +++
+1230363 +++ exited with 0 +++
+1230362 +++ exited with 0 +++
+1230361 +++ exited with 0 +++
+1230360 +++ exited with 0 +++
+1230359 +++ exited with 0 +++
+1230358 +++ exited with 0 +++
+1230357 +++ exited with 0 +++
+1230356 +++ exited with 0 +++
+1230355 +++ exited with 0 +++
+1230354 +++ exited with 0 +++
+1230353 +++ exited with 0 +++
+1230352 +++ exited with 0 +++
+1230351 +++ exited with 0 +++
+1230350 +++ exited with 0 +++
+1230349 +++ exited with 0 +++
+1230348 +++ exited with 0 +++
+1230347 +++ exited with 0 +++
+1230346 +++ exited with 0 +++
+1230345 +++ exited with 0 +++
+1230344 +++ exited with 0 +++
+1230343 +++ exited with 0 +++
+1230342 +++ exited with 0 +++
+1230341 +++ exited with 0 +++
+1230340 +++ exited with 0 +++
+1230339 +++ exited with 0 +++
+1230338 +++ exited with 0 +++
+1230337 +++ exited with 0 +++
+1230336 +++ exited with 0 +++
+1230335 +++ exited with 0 +++
+1230334 +++ exited with 0 +++
+1230333 +++ exited with 0 +++
+1230332 +++ exited with 0 +++
+1230331 +++ exited with 0 +++
+1230330 +++ exited with 0 +++
+1230329 +++ exited with 0 +++
+1230328 +++ exited with 0 +++
+1230327 +++ exited with 0 +++
+1230326 +++ exited with 0 +++
+1230325 +++ exited with 0 +++
+1230324 +++ exited with 0 +++
+1230323 +++ exited with 0 +++
+1230322 +++ exited with 0 +++
+1230321 +++ exited with 0 +++
+1230320 +++ exited with 0 +++
+1230319 +++ exited with 0 +++
+1230318 +++ exited with 0 +++
+1230315 +++ exited with 0 +++
+1230317 +++ exited with 0 +++
+1230314 +++ exited with 0 +++
+1230313 +++ exited with 0 +++
+1230312 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230313, si_uid=1000, si_status=0, si_utime=87 /* 0.87 s */, si_stime=73 /* 0.73 s */} ---
+1230312 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230312, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=1 /* 0.01 s */} ---
+1230383 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x6517dc58f400 /* 15 vars */) = 0
+1230383 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/positive/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7ffed8675940 /* 15 vars */) = 0
+1230387 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffd53352868 /* 15 vars */) = 0
+1230405 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5d2487dd38d0 /* 15 vars */) = 0
+1230406 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230405, si_uid=1000} ---
+1230406 +++ killed by SIGUSR1 +++
+1230405 +++ exited with 0 +++
+1230387 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230405, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230386 +++ exited with 0 +++
+1230403 +++ exited with 0 +++
+1230402 +++ exited with 0 +++
+1230401 +++ exited with 0 +++
+1230400 +++ exited with 0 +++
+1230399 +++ exited with 0 +++
+1230398 +++ exited with 0 +++
+1230397 +++ exited with 0 +++
+1230396 +++ exited with 0 +++
+1230395 +++ exited with 0 +++
+1230394 +++ exited with 0 +++
+1230393 +++ exited with 0 +++
+1230392 +++ exited with 0 +++
+1230391 +++ exited with 0 +++
+1230390 +++ exited with 0 +++
+1230389 +++ exited with 0 +++
+1230388 +++ exited with 0 +++
+1230385 +++ exited with 0 +++
+1230384 +++ exited with 0 +++
+1230383 +++ exited with 0 +++
+1230387 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230383, si_uid=1000, si_status=0, si_utime=16 /* 0.16 s */, si_stime=9 /* 0.09 s */} ---
+1230407 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity", "--out", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled", "--lib", "/tmp/uos-ev98-campaign-469371.reserve.d/lib"], 0x6517dc597e20 /* 15 vars */) = 0
+1230408 execve("/tmp/uos-ev98-campaign-469371.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffec58ca330 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230408 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffec58ca330 /* 15 vars */) = 0
+1230408 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x63856fa78500 /* 16 vars */) = 0
+1230408 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fffb09d5070 /* 16 vars */) = 0
+1230413 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffd479ef0d8 /* 16 vars */) = 0
+1230514 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x599f7e6ff940 /* 16 vars */) = 0
+1230522 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230514, si_uid=1000} ---
+1230522 +++ killed by SIGUSR1 +++
+1230514 +++ exited with 0 +++
+1230413 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230514, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230412 +++ exited with 0 +++
+1230475 ???( <unfinished ...>
+1230439 +++ exited with 0 +++
+1230438 +++ exited with 0 +++
+1230481 +++ exited with 0 +++
+1230480 +++ exited with 0 +++
+1230479 +++ exited with 0 +++
+1230478 +++ exited with 0 +++
+1230477 +++ exited with 0 +++
+1230475 +++ exited with 0 +++
+1230474 +++ exited with 0 +++
+1230473 +++ exited with 0 +++
+1230472 +++ exited with 0 +++
+1230471 +++ exited with 0 +++
+1230470 +++ exited with 0 +++
+1230469 +++ exited with 0 +++
+1230468 +++ exited with 0 +++
+1230467 +++ exited with 0 +++
+1230466 +++ exited with 0 +++
+1230465 +++ exited with 0 +++
+1230463 +++ exited with 0 +++
+1230462 +++ exited with 0 +++
+1230461 +++ exited with 0 +++
+1230460 +++ exited with 0 +++
+1230458 +++ exited with 0 +++
+1230457 +++ exited with 0 +++
+1230456 +++ exited with 0 +++
+1230454 +++ exited with 0 +++
+1230453 +++ exited with 0 +++
+1230452 +++ exited with 0 +++
+1230451 +++ exited with 0 +++
+1230450 +++ exited with 0 +++
+1230449 +++ exited with 0 +++
+1230448 +++ exited with 0 +++
+1230447 +++ exited with 0 +++
+1230446 +++ exited with 0 +++
+1230445 +++ exited with 0 +++
+1230444 +++ exited with 0 +++
+1230443 +++ exited with 0 +++
+1230442 +++ exited with 0 +++
+1230441 +++ exited with 0 +++
+1230440 +++ exited with 0 +++
+1230437 +++ exited with 0 +++
+1230436 +++ exited with 0 +++
+1230435 +++ exited with 0 +++
+1230434 +++ exited with 0 +++
+1230433 +++ exited with 0 +++
+1230431 +++ exited with 0 +++
+1230430 +++ exited with 0 +++
+1230429 +++ exited with 0 +++
+1230428 +++ exited with 0 +++
+1230427 +++ exited with 0 +++
+1230426 +++ exited with 0 +++
+1230425 +++ exited with 0 +++
+1230424 +++ exited with 0 +++
+1230423 +++ exited with 0 +++
+1230422 +++ exited with 0 +++
+1230421 +++ exited with 0 +++
+1230420 +++ exited with 0 +++
+1230419 +++ exited with 0 +++
+1230418 +++ exited with 0 +++
+1230417 +++ exited with 0 +++
+1230411 +++ exited with 0 +++
+1230410 +++ exited with 0 +++
+1230413 +++ exited with 0 +++
+1230408 +++ exited with 0 +++
+1230407 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230408, si_uid=1000, si_status=0, si_utime=70 /* 0.70 s */, si_stime=58 /* 0.58 s */} ---
+1230407 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230407, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=1 /* 0.01 s */} ---
+1230540 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x6517dc597e20 /* 15 vars */) = 0
+1230540 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/queue-capacity/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7ffef8421630 /* 15 vars */) = 0
+1230560 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7fff9c6a9158 /* 15 vars */) = 0
+1230577 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x58dc874a88d0 /* 15 vars */) = 0
+1230578 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230577, si_uid=1000} ---
+1230578 +++ killed by SIGUSR1 +++
+1230577 +++ exited with 0 +++
+1230560 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230577, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230576 +++ exited with 1 +++
+1230575 +++ exited with 1 +++
+1230574 +++ exited with 1 +++
+1230573 +++ exited with 1 +++
+1230572 +++ exited with 1 +++
+1230571 +++ exited with 1 +++
+1230570 +++ exited with 1 +++
+1230569 +++ exited with 1 +++
+1230568 +++ exited with 1 +++
+1230567 +++ exited with 1 +++
+1230566 +++ exited with 1 +++
+1230565 +++ exited with 1 +++
+1230564 +++ exited with 1 +++
+1230563 +++ exited with 1 +++
+1230562 +++ exited with 1 +++
+1230561 +++ exited with 1 +++
+1230559 +++ exited with 1 +++
+1230558 +++ exited with 1 +++
+1230556 +++ exited with 1 +++
+1230540 +++ exited with 1 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230540, si_uid=1000, si_status=1, si_utime=16 /* 0.16 s */, si_stime=15 /* 0.15 s */} ---
+1230560 +++ exited with 0 +++
+1230597 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order", "--out", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled", "--lib", "/tmp/uos-ev98-campaign-469371.reserve.d/lib"], 0x6517dc596fe0 /* 15 vars */) = 0
+1230598 execve("/tmp/uos-ev98-campaign-469371.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffeb6118620 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230598 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffeb6118620 /* 15 vars */) = 0
+1230598 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x5b8dd7288500 /* 16 vars */) = 0
+1230598 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fff3ddc1ac0 /* 16 vars */) = 0
+1230603 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7fff4379baf8 /* 16 vars */) = 0
+1230667 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x63f446665950 /* 16 vars */) = 0
+1230668 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230667, si_uid=1000} ---
+1230668 +++ killed by SIGUSR1 +++
+1230667 +++ exited with 0 +++
+1230603 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230667, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230602 +++ exited with 0 +++
+1230623 ???( <unfinished ...>
+1230622 ???( <unfinished ...>
+1230621 ???( <unfinished ...>
+1230618 ???( <unfinished ...>
+1230617 ???( <unfinished ...>
+1230616 ???( <unfinished ...>
+1230614 ???( <unfinished ...>
+1230613 ???( <unfinished ...>
+1230615 +++ exited with 0 +++
+1230612 +++ exited with 0 +++
+1230611 +++ exited with 0 +++
+1230610 +++ exited with 0 +++
+1230609 +++ exited with 0 +++
+1230608 +++ exited with 0 +++
+1230607 +++ exited with 0 +++
+1230606 +++ exited with 0 +++
+1230605 +++ exited with 0 +++
+1230604 +++ exited with 0 +++
+1230664 +++ exited with 0 +++
+1230663 +++ exited with 0 +++
+1230662 +++ exited with 0 +++
+1230661 +++ exited with 0 +++
+1230660 +++ exited with 0 +++
+1230659 +++ exited with 0 +++
+1230658 +++ exited with 0 +++
+1230657 +++ exited with 0 +++
+1230656 +++ exited with 0 +++
+1230655 +++ exited with 0 +++
+1230654 +++ exited with 0 +++
+1230653 +++ exited with 0 +++
+1230652 +++ exited with 0 +++
+1230651 +++ exited with 0 +++
+1230650 +++ exited with 0 +++
+1230649 +++ exited with 0 +++
+1230648 +++ exited with 0 +++
+1230647 +++ exited with 0 +++
+1230646 +++ exited with 0 +++
+1230645 +++ exited with 0 +++
+1230644 +++ exited with 0 +++
+1230643 +++ exited with 0 +++
+1230641 +++ exited with 0 +++
+1230640 +++ exited with 0 +++
+1230639 +++ exited with 0 +++
+1230638 +++ exited with 0 +++
+1230637 +++ exited with 0 +++
+1230636 +++ exited with 0 +++
+1230635 +++ exited with 0 +++
+1230634 +++ exited with 0 +++
+1230633 +++ exited with 0 +++
+1230632 +++ exited with 0 +++
+1230631 +++ exited with 0 +++
+1230630 +++ exited with 0 +++
+1230629 +++ exited with 0 +++
+1230628 +++ exited with 0 +++
+1230627 +++ exited with 0 +++
+1230626 +++ exited with 0 +++
+1230625 +++ exited with 0 +++
+1230624 +++ exited with 0 +++
+1230623 +++ exited with 0 +++
+1230622 +++ exited with 0 +++
+1230621 +++ exited with 0 +++
+1230620 +++ exited with 0 +++
+1230619 +++ exited with 0 +++
+1230618 +++ exited with 0 +++
+1230617 +++ exited with 0 +++
+1230616 +++ exited with 0 +++
+1230614 +++ exited with 0 +++
+1230613 +++ exited with 0 +++
+1230601 +++ exited with 0 +++
+1230600 +++ exited with 0 +++
+1230603 +++ exited with 0 +++
+1230598 +++ exited with 0 +++
+1230597 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230598, si_uid=1000, si_status=0, si_utime=87 /* 0.87 s */, si_stime=56 /* 0.56 s */} ---
+1230597 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230597, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230669 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x6517dc58f400 /* 15 vars */) = 0
+1230669 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/physical-health-order/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7ffc3a71fc70 /* 15 vars */) = 0
+1230673 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffd01369a48 /* 15 vars */) = 0
+1230690 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x626e064ed8d0 /* 15 vars */) = 0
+1230691 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230690, si_uid=1000} ---
+1230690 +++ exited with 0 +++
+1230673 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230690, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230691 +++ killed by SIGUSR1 +++
+1230689 +++ exited with 1 +++
+1230688 +++ exited with 1 +++
+1230687 +++ exited with 1 +++
+1230686 +++ exited with 1 +++
+1230685 +++ exited with 1 +++
+1230684 +++ exited with 1 +++
+1230683 +++ exited with 1 +++
+1230682 +++ exited with 1 +++
+1230681 +++ exited with 1 +++
+1230680 +++ exited with 1 +++
+1230679 +++ exited with 1 +++
+1230678 +++ exited with 1 +++
+1230677 +++ exited with 1 +++
+1230676 +++ exited with 1 +++
+1230675 +++ exited with 1 +++
+1230674 +++ exited with 1 +++
+1230672 +++ exited with 1 +++
+1230671 +++ exited with 1 +++
+1230670 +++ exited with 1 +++
+1230673 +++ exited with 0 +++
+1230669 +++ exited with 1 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230669, si_uid=1000, si_status=1, si_utime=11 /* 0.11 s */, si_stime=7 /* 0.07 s */} ---
+1230693 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time", "--out", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled", "--lib", "/tmp/uos-ev98-campaign-469371.reserve.d/lib"], 0x6517dc597d90 /* 15 vars */) = 0
+1230694 execve("/tmp/uos-ev98-campaign-469371.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffdbca2cde0 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230694 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffdbca2cde0 /* 15 vars */) = 0
+1230694 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x55c24ab58510 /* 16 vars */) = 0
+1230694 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffe83870f70 /* 16 vars */) = 0
+1230698 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffd8dd62448 /* 16 vars */) = 0
+1230759 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5fab61bfd950 /* 16 vars */) = 0
+1230760 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230759, si_uid=1000} ---
+1230760 +++ killed by SIGUSR1 +++
+1230759 +++ exited with 0 +++
+1230698 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230759, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230697 +++ exited with 0 +++
+1230699 ???( <unfinished ...>
+1230758 +++ exited with 0 +++
+1230757 +++ exited with 0 +++
+1230756 +++ exited with 0 +++
+1230755 +++ exited with 0 +++
+1230754 +++ exited with 0 +++
+1230753 +++ exited with 0 +++
+1230752 +++ exited with 0 +++
+1230751 +++ exited with 0 +++
+1230750 +++ exited with 0 +++
+1230749 +++ exited with 0 +++
+1230748 +++ exited with 0 +++
+1230747 +++ exited with 0 +++
+1230746 +++ exited with 0 +++
+1230745 +++ exited with 0 +++
+1230744 +++ exited with 0 +++
+1230743 +++ exited with 0 +++
+1230742 +++ exited with 0 +++
+1230741 +++ exited with 0 +++
+1230740 +++ exited with 0 +++
+1230739 +++ exited with 0 +++
+1230738 +++ exited with 0 +++
+1230737 +++ exited with 0 +++
+1230736 +++ exited with 0 +++
+1230735 +++ exited with 0 +++
+1230734 +++ exited with 0 +++
+1230733 +++ exited with 0 +++
+1230732 +++ exited with 0 +++
+1230731 +++ exited with 0 +++
+1230730 +++ exited with 0 +++
+1230729 +++ exited with 0 +++
+1230728 +++ exited with 0 +++
+1230727 +++ exited with 0 +++
+1230726 +++ exited with 0 +++
+1230725 +++ exited with 0 +++
+1230724 +++ exited with 0 +++
+1230723 +++ exited with 0 +++
+1230722 +++ exited with 0 +++
+1230721 +++ exited with 0 +++
+1230720 +++ exited with 0 +++
+1230719 +++ exited with 0 +++
+1230718 +++ exited with 0 +++
+1230717 +++ exited with 0 +++
+1230716 +++ exited with 0 +++
+1230715 +++ exited with 0 +++
+1230714 +++ exited with 0 +++
+1230713 +++ exited with 0 +++
+1230712 +++ exited with 0 +++
+1230711 +++ exited with 0 +++
+1230710 +++ exited with 0 +++
+1230709 +++ exited with 0 +++
+1230708 +++ exited with 0 +++
+1230707 +++ exited with 0 +++
+1230706 +++ exited with 0 +++
+1230705 +++ exited with 0 +++
+1230704 +++ exited with 0 +++
+1230703 +++ exited with 0 +++
+1230702 +++ exited with 0 +++
+1230701 +++ exited with 0 +++
+1230700 +++ exited with 0 +++
+1230699 +++ exited with 0 +++
+1230696 +++ exited with 0 +++
+1230698 +++ exited with 0 +++
+1230695 +++ exited with 0 +++
+1230694 +++ exited with 0 +++
+1230693 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230694, si_uid=1000, si_status=0, si_utime=77 /* 0.77 s */, si_stime=41 /* 0.41 s */} ---
+1230693 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230693, si_uid=1000, si_status=0, si_utime=2 /* 0.02 s */, si_stime=0} ---
+1230763 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x6517dc597e20 /* 15 vars */) = 0
+1230763 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-469371.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-469371.reserve.d/nonforward-deadman-time/compiled/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-469371.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7fff9d4d7d30 /* 15 vars */) = 0
+1230767 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7fff662fed28 /* 15 vars */) = 0
+1230784 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5ed6cb16b8d0 /* 15 vars */) = 0
+1230785 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1230784, si_uid=1000} ---
+1230785 +++ killed by SIGUSR1 +++
+1230784 +++ exited with 0 +++
+1230767 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230784, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230783 +++ exited with 1 +++
+1230782 +++ exited with 1 +++
+1230781 +++ exited with 1 +++
+1230780 +++ exited with 1 +++
+1230779 +++ exited with 1 +++
+1230778 +++ exited with 1 +++
+1230777 +++ exited with 1 +++
+1230776 +++ exited with 1 +++
+1230775 +++ exited with 1 +++
+1230774 +++ exited with 1 +++
+1230773 +++ exited with 1 +++
+1230772 +++ exited with 1 +++
+1230769 +++ exited with 1 +++
+1230768 +++ exited with 1 +++
+1230766 +++ exited with 1 +++
+1230764 +++ exited with 1 +++
+1230771 +++ exited with 1 +++
+1230770 +++ exited with 1 +++
+1230767 +++ exited with 0 +++
+1230765 +++ exited with 1 +++
+1230763 +++ exited with 1 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230763, si_uid=1000, si_status=1, si_utime=13 /* 0.13 s */, si_stime=7 /* 0.07 s */} ---
+1230795 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7fff6e90f098 /* 81 vars */) = 0
+1230795 +++ exited with 0 +++
+1230204 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230795, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230204 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230204, si_uid=1000, si_status=0, si_utime=72 /* 0.72 s */, si_stime=21 /* 0.21 s */} ---
+1230838 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230840 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/usr/sbin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230840 execve("/usr/bin/tput", ["tput", "cols"], 0x7fff5f599ca8 /* 81 vars */) = 0
+1230840 +++ exited with 0 +++
+1230838 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230840, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230841 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/usr/sbin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230841 execve("/usr/bin/tput", ["tput", "lines"], 0x7fff5f599ca8 /* 81 vars */) = 0
+1230841 +++ exited with 0 +++
+1230838 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230841, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230839 +++ exited with 0 +++
+1230838 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230838, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230842 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230843 +++ exited with 0 +++
+1230842 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230842, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230844 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230845 +++ exited with 0 +++
+1230844 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230844, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230846 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230848 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230848 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffca59b1938 /* 81 vars */) = 0
+1230848 +++ exited with 0 +++
+1230846 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230848, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230849 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230849 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffca59b1938 /* 81 vars */) = 0
+1230849 +++ exited with 0 +++
+1230846 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230849, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230847 +++ exited with 0 +++
+1230846 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230846, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230850 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230851 +++ exited with 0 +++
+1230850 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230850, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230853 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230854 +++ exited with 0 +++
+1230853 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230853, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230855 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230857 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230857 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffd12ecc568 /* 81 vars */) = 0
+1230857 +++ exited with 0 +++
+1230855 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230857, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230858 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230858 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffd12ecc568 /* 81 vars */) = 0
+1230858 +++ exited with 0 +++
+1230855 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230858, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230856 +++ exited with 0 +++
+1230855 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230855, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230859 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230860 +++ exited with 0 +++
+1230859 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230859, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230877 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230878 +++ exited with 0 +++
+1230877 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230877, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230879 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230881 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230881 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffe951689a8 /* 81 vars */) = 0
+1230881 +++ exited with 0 +++
+1230879 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230881, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230882 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230882 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffe951689a8 /* 81 vars */) = 0
+1230882 +++ exited with 0 +++
+1230879 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230882, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230880 +++ exited with 0 +++
+1230879 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230879, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230883 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230884 +++ exited with 0 +++
+1230883 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230883, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230885 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230886 +++ exited with 0 +++
+1230885 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230885, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230887 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230889 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230889 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffc80100038 /* 81 vars */) = 0
+1230889 +++ exited with 0 +++
+1230887 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230889, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230890 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230890 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffc80100038 /* 81 vars */) = 0
+1230890 +++ exited with 0 +++
+1230887 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230890, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230888 +++ exited with 0 +++
+1230887 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230887, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230891 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230892 +++ exited with 0 +++
+1230891 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230891, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230893 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230894 +++ exited with 0 +++
+1230893 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230893, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230895 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230897 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/usr/sbin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230897 execve("/usr/bin/tput", ["tput", "cols"], 0x7fffd14ddbf8 /* 81 vars */) = 0
+1230897 +++ exited with 0 +++
+1230895 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230897, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230898 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/usr/sbin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230898 execve("/usr/bin/tput", ["tput", "lines"], 0x7fffd14ddbf8 /* 81 vars */) = 0
+1230898 +++ exited with 0 +++
+1230895 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230898, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230896 +++ exited with 0 +++
+1230895 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230895, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230899 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230900 +++ exited with 0 +++
+1230899 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230899, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230901 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230902 +++ exited with 0 +++
+1230901 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230901, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230903 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230905 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230905 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffdfaa1b058 /* 81 vars */) = 0
+1230905 +++ exited with 0 +++
+1230903 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230905, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230906 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230906 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffdfaa1b058 /* 81 vars */) = 0
+1230906 +++ exited with 0 +++
+1230903 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230906, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230904 +++ exited with 0 +++
+1230903 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230903, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230907 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230908 +++ exited with 0 +++
+1230907 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230907, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230910 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230911 +++ exited with 0 +++
+1230910 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230910, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230912 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230914 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230914 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffd67bd9648 /* 81 vars */) = 0
+1230914 +++ exited with 0 +++
+1230912 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230914, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230915 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230915 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffd67bd9648 /* 81 vars */) = 0
+1230915 +++ exited with 0 +++
+1230912 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230915, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230913 +++ exited with 0 +++
+1230912 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230912, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230916 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230917 +++ exited with 0 +++
+1230916 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230916, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230918 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230919 +++ exited with 0 +++
+1230918 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230918, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+1230920 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230922 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230922 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffd396c94e8 /* 81 vars */) = 0
+1230922 +++ exited with 0 +++
+1230920 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230922, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230923 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230923 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffd396c94e8 /* 81 vars */) = 0
+1230923 +++ exited with 0 +++
+1230920 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230923, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230921 +++ exited with 0 +++
+1230920 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230920, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+1230924 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230925 +++ exited with 0 +++
+1230924 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230924, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230926 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230927 +++ exited with 0 +++
+1230926 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230926, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230928 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230930 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/usr/sbin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230930 execve("/usr/bin/tput", ["tput", "cols"], 0x7fff66f024a8 /* 81 vars */) = 0
+1230930 +++ exited with 0 +++
+1230929 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230930, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230931 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/usr/sbin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230931 execve("/usr/bin/tput", ["tput", "lines"], 0x7fff66f024a8 /* 81 vars */) = 0
+1230931 +++ exited with 0 +++
+1230928 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230931, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230929 +++ exited with 0 +++
+1230928 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230928, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+1230932 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230933 +++ exited with 0 +++
+1230932 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230932, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230934 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230935 +++ exited with 0 +++
+1230934 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230934, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+1230936 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230939 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230939 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffe5ab95128 /* 81 vars */) = 0
+1230939 +++ exited with 0 +++
+1230936 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230939, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230940 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230940 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffe5ab95128 /* 81 vars */) = 0
+1230940 +++ exited with 0 +++
+1230936 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230940, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230938 +++ exited with 0 +++
+1230936 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230936, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230943 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230944 +++ exited with 0 +++
+1230943 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230943, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230945 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230946 +++ exited with 0 +++
+1230945 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230945, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230947 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230949 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230949 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffdde15f208 /* 81 vars */) = 0
+1230949 +++ exited with 0 +++
+1230947 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230949, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230950 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230950 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffdde15f208 /* 81 vars */) = 0
+1230950 +++ exited with 0 +++
+1230947 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230950, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230948 +++ exited with 0 +++
+1230947 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230947, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230951 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230952 +++ exited with 0 +++
+1230951 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230951, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230953 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230954 +++ exited with 0 +++
+1230953 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230953, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230955 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230957 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.local/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.nix-profile/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/home/an/.cargo/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/usr/local/sbin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/usr/local/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/usr/sbin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230957 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffd36ac4b98 /* 81 vars */) = 0
+1230957 +++ exited with 0 +++
+1230955 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230957, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230958 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/dev/ver/zigvm/_opam/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.codex/tmp/arg0/codex-arg03ozftG/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.local/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.nix-profile/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/nix/var/nix/profiles/default/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/home/an/.cargo/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/usr/local/sbin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/usr/local/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/usr/sbin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = -1 ENOENT (No such file or directory)
+1230958 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffd36ac4b98 /* 81 vars */) = 0
+1230958 +++ exited with 0 +++
+1230955 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230958, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230956 +++ exited with 0 +++
+1230955 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230955, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230959 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230960 +++ exited with 0 +++
+1230959 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230959, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230961 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "-T", "\"\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230962 +++ exited with 0 +++
+1230961 +++ exited with 0 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230961, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230963 execve("/tmp/uos-campaign-direct-build/default/ev_receipt.exe", ["/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "99", "b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230963 +++ exited with 1 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230963, si_uid=1000, si_status=1, si_utime=0, si_stime=0} ---
+1230964 execve("/tmp/uos-campaign-direct-build/default/ev_receipt.exe", ["/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "98", "@"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230964 +++ exited with 1 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230964, si_uid=1000, si_status=1, si_utime=0, si_stime=0} ---
+1230965 execve("/tmp/uos-campaign-direct-build/default/ev_receipt.exe", ["/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "98", "0000000000000000000000000000000000000000"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230966 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7fff1f0f4cb8 /* 81 vars */) = 0
+1230966 +++ exited with 0 +++
+1230965 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230966, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230969 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"0000000000000000000000000000000000000000\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x5b5da75d7e20 /* 15 vars */) = 0
+1230971 execve("/tmp/uos-ev98-campaign-70baf4.reserve.d/native-bin/tput", ["tput", "cols"], 0x7ffe51d98768 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230971 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffe51d98768 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230971 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffe51d98768 /* 15 vars */) = 0
+1230971 +++ exited with 2 +++
+1230969 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230971, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1230972 execve("/tmp/uos-ev98-campaign-70baf4.reserve.d/native-bin/tput", ["tput", "lines"], 0x7ffe51d98768 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230972 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffe51d98768 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230972 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffe51d98768 /* 15 vars */) = 0
+1230972 +++ exited with 2 +++
+1230969 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230972, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1230970 +++ exited with 0 +++
+1230969 +++ exited with 0 +++
+1230965 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230969, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230973 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"0000000000000000000000000000000000000000\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x5b5da75d6f00 /* 15 vars */) = 0
+1230974 +++ exited with 0 +++
+1230973 +++ exited with 0 +++
+1230965 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230973, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230965 +++ exited with 1 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230965, si_uid=1000, si_status=1, si_utime=41 /* 0.41 s */, si_stime=5 /* 0.05 s */} ---
+1230975 execve("/tmp/uos-campaign-direct-build/default/ev_receipt.exe", ["/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "98", "b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53", "arbitrary-policy.json"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230975 +++ exited with 1 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230975, si_uid=1000, si_status=1, si_utime=0, si_stime=0} ---
+1230976 execve("/tmp/uos-campaign-direct-build/default/ev_receipt.exe", ["/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "98", "337f99137673d7866b958a38bd490fb876b2880f"], 0x7ffc19eb3c60 /* 81 vars */) = 0
+1230977 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7ffe3f5618d8 /* 81 vars */) = 0
+1230977 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230977, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230980 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "log", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x59b820025e20 /* 15 vars */) = 0
+1230982 execve("/tmp/uos-ev98-campaign-9589c0.reserve.d/native-bin/tput", ["tput", "cols"], 0x7ffdadeb6938 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230982 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffdadeb6938 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230982 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffdadeb6938 /* 15 vars */) = 0
+1230982 +++ exited with 2 +++
+1230980 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230982, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1230983 execve("/tmp/uos-ev98-campaign-9589c0.reserve.d/native-bin/tput", ["tput", "lines"], 0x7ffdadeb6938 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230983 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffdadeb6938 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1230983 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffdadeb6938 /* 15 vars */) = 0
+1230983 +++ exited with 2 +++
+1230980 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230983, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1230981 +++ exited with 0 +++
+1230980 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230980, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230984 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x59b820024f00 /* 15 vars */) = 0
+1230985 +++ exited with 0 +++
+1230984 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230984, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230986 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x59b8200250d0 /* 15 vars */) = 0
+1230987 +++ exited with 0 +++
+1230986 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230986, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230988 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x59b820025260 /* 15 vars */) = 0
+1230989 +++ exited with 0 +++
+1230988 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230988, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230990 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x59b82001d6a0 /* 15 vars */) = 0
+1230991 +++ exited with 0 +++
+1230990 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230990, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230992 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x59b82001d830 /* 15 vars */) = 0
+1230993 +++ exited with 0 +++
+1230992 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230992, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230994 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x59b820025140 /* 15 vars */) = 0
+1230995 +++ exited with 0 +++
+1230994 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230994, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230997 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x59b8200252d0 /* 15 vars */) = 0
+1230998 +++ exited with 0 +++
+1230997 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230997, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1230999 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x59b8200254a0 /* 15 vars */) = 0
+1231000 +++ exited with 0 +++
+1230999 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230999, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1231001 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x59b820025630 /* 15 vars */) = 0
+1231002 +++ exited with 0 +++
+1231001 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1231001, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1231003 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x59b820025800 /* 15 vars */) = 0
+1231004 +++ exited with 0 +++
+1231003 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1231003, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1231005 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x59b820025610 /* 15 vars */) = 0
+1231006 +++ exited with 0 +++
+1231005 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1231005, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1231012 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x59b820025760 /* 15 vars */) = 0
+1231015 +++ exited with 0 +++
+1231012 +++ exited with 0 +++
+1230976 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1231012, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1230976 +++ exited with 1 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1230976, si_uid=1000, si_status=1, si_utime=37 /* 0.37 s */, si_stime=5 /* 0.05 s */} ---
+1231024 execve("/tmp/uos-campaign-direct-build/default/ev_receipt.exe", ["/tmp/uos-campaign-direct-build/default/ev_receipt.exe", "observe", "/tmp/uos-ev98-campaign-14042a.reserve.d", "98", "b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53"], 0x5568f7d89f50 /* 82 vars */) = 0
+1231027 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7fff0099cd38 /* 82 vars */) = 0
+1231027 +++ exited with 0 +++
+1231024 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1231027, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1231069 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/tmp/uos-ev98-campaign-14042a.reserve.d", "log", "-r", "commit_id(\"b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x60f0922c0dc0 /* 15 vars */) = 0
+1231070 +++ exited with 255 +++
+1231069 +++ exited with 255 +++
+1231024 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1231069, si_uid=1000, si_status=255, si_utime=0, si_stime=0} ---
+1231024 +++ exited with 1 +++
+1230203 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1231024, si_uid=1000, si_status=1, si_utime=38 /* 0.38 s */, si_stime=3 /* 0.03 s */} ---
+1230203 +++ exited with 0 +++

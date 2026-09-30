@@ -1,0 +1,53 @@
+{
+  "schema": "uos.ev01-source-and-side-effect-audit.v1",
+  "candidate": "0a8c03c55f91cdf4279ff14503651227c9bb6010",
+  "upstream_sources": [
+    {
+      "path": "/home/an/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jj-lib-0.44.0/src/secure_config.rs",
+      "sha256": "7c6229029fc6af6309dc6b34e8776de22b59dd30c164a59173709ef380f4ca17"
+    },
+    {
+      "path": "/home/an/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jj-lib-0.44.0/src/protos/secure_config.proto",
+      "sha256": "46e8a530d3582e916248f96358bb6698af40943326cd523fe27b677bbe205c48"
+    },
+    {
+      "path": "/home/an/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jj-lib-0.44.0/src/file_util.rs",
+      "sha256": "1ab45b4aa45bc5bfe2b40d9930d686eca4970a62a291e6a12bd5d2e9512b19c5"
+    },
+    {
+      "path": "/home/an/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jj-cli-0.44.0/src/config.rs",
+      "sha256": "b9f981c223d29a649d1609985d2d504ca603ccc181ca1ac9af804e3786d21ab6"
+    },
+    {
+      "path": "/home/an/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jj-cli-0.44.0/docs/design/secure-config.md",
+      "sha256": "7c55e646032b1ec89ad93c003d4651ffe220cd456233bd38c684f6a33c2dc5e9"
+    }
+  ],
+  "upstream_lineage_limit": "Read-only realized registry source0.44.0 and pinned binary behavior; full binary build/release closure not established",
+  "rules": [
+    "secure_config.rs:357-402: maybe_load_config initializes missing metadata and migrates legacy config",
+    "secure_config.rs:179-200: generate_config atomically rewrites repo config-id",
+    "secure_config.rs:214-284: nonmatching metadata path can move/copy config and create temporary file",
+    "secure_config.proto:21-25: one optional bytes path field, Unix absolute directory bytes",
+    "config.rs:285-286: root config dir is platform user_config_dir/jj independent of JJ_CONFIG"
+  ],
+  "prior_incident": "Initial observer using private XDG caused JJ to rewrite canonical .jj/repo/config-id. No claim of complete read-only behavior survives for source805 and earlier. Revision remained8647567e490de0f36e921b0798ba0b045f162ba8 during diagnosed observation. Later observer refuses all initialization/relocation states before JJ; preserves inherited config context.",
+  "final_trace": "/tmp/ev01-bootstrap-canonical-final-1742.trace",
+  "trace_sha256": "8e77fe30c84e905bab3c8dfc4c1c6406473287cdd811d67c0dc3fac1e3d53c1a",
+  "selected_write_syscalls_observed": 0,
+  "limits": "Selected write-open/rename/unlink/mkdir syscalls audited; cooperative filesystem pre/post metadata checks, not kernel sandbox or hostile concurrent writer defense. Prior file-trace diagnostic omitted outer ocamlrun and is wrapper-dependent. No canonical user config repair was performed.",
+  "audit_helpers": [
+    {
+      "path": "/tmp/ev01-trace-audit.ml",
+      "sha256": "7f96ff325416ed123e799a8e27b8026379d230c958716abd0524f1a929db59db"
+    },
+    {
+      "path": "/tmp/ev01-finalmeta.ml",
+      "sha256": "29dd3ccc7ef980ef73747e0cd553ad3bbc6e3e21d9582c65e041b24daf5f71a9"
+    },
+    {
+      "path": "/tmp/ev01-dossier.ml",
+      "sha256": "205548a47f5e71722f685e4821ccb28ee961ffe3b8fd1a8f11d5474c6d1c5c0e"
+    }
+  ]
+}

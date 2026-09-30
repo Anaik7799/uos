@@ -1,0 +1,21 @@
+{
+  "schema": "uos.ev98.transport-completion.v1",
+  "source_candidate": "14057e08112c1cd5d44297eac6a9c853e8287b7a",
+  "execution_evidence_candidate": "743f9f1b07e31647ef50d9bcc9f3548282ee97c0",
+  "state": "CANONICALLY_COMPLETED_BOUNDED_COMPONENT",
+  "observed_utc_seconds": 1788967087.573708,
+  "plan": "uos/ev98-peer-loop/20260909",
+  "task": "TRANSPORT",
+  "worker": "codex-ev98-transport",
+  "attempt": 2,
+  "approval_sha256": "068e95c6b856f7870de0d40c11f8b87fef2d7c0fc9e6ee79c216afe1814af399",
+  "scope": "Bounded cooperative transport component only; no EV admission, authentication, crash durability, cross-host or production integration claim",
+  "authority": "NONE",
+  "artifacts": [
+    {
+      "kind": "completion-receipt",
+      "path": "docs/reviews/20260909-1516-transport-completion-receipt.json",
+      "sha256": "a445542991e7ddecd82cc9be298dfdc1a4bcc7b79f7ebb305db6189bf074cd9e"
+    }
+  ]
+}

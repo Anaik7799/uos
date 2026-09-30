@@ -1,0 +1,238 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os,str";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+let workspace="/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210"
+let peer="/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909"
+let candidate="79a4ab732ec7af350db3e3eb66fcb8cde6f03d5f"
+let review_candidate="73949644a04dbc5d86fef18acd3140f40d6c2f77"
+let review_path="docs/reviews/20260909-1909-component-independent-approval.json"
+let session="01a08017-fd72-7b20-9d32-4df53154bcc8"
+let require=Receipt_validator.require
+let sha=Receipt_validator.sha
+let field=Yojson.Basic.Util.member
+let text=Yojson.Basic.Util.to_string
+let items=Yojson.Basic.Util.to_list
+let budget=Receipt_validator.make_budget ~seconds:90. ~bytes:67_108_864 ()
+let read=Ev_campaign.read_file budget
+let contains value needle=try ignore(Str.search_forward(Str.regexp_string needle)value 0);true with Not_found->false
+let ()=require(Sys.getcwd()=workspace)"wrong recorder cwd"
+let review_bytes=Receipt_validator.candidate_bytes peer review_candidate review_path
+let ()=require(sha review_bytes="49d1d4386b47e2c5ae441e407622911a73a6250cdf661b657759a6694801bc6d")"independent approval changed"
+let review=Yojson.Basic.from_string review_bytes
+let ()=require(field "source_candidate" review=`String candidate && field "verdict" review=`String "APPROVED_BOUNDED_COMPONENT_COMPOSITION" && field "authority" review=`String "NONE")"review scope differs"
+let bindings_bytes=read "/tmp/ev-component-composition-1854/bindings.json"
+let bindings=Yojson.Basic.from_string bindings_bytes
+let ()=require(field "candidate" bindings=`String candidate)"staging candidate differs"
+let source_rows=items(field "sources" bindings)
+let ()=require(List.length source_rows=13)"source count differs";
+ List.iter(fun row->let b=field "binding" row in let source=text(field "source" b) in
+  require(String.starts_with ~prefix:"candidate:" source)"noncandidate source";
+  let path=String.sub source 10(String.length source-10) in let expected=text(field "sha256" b) in
+  List.iter(fun bytes->require(sha bytes=expected)("source parity changed: "^path))[
+   Receipt_validator.candidate_bytes workspace candidate path;
+   Receipt_validator.candidate_bytes workspace(text(field "reviewed_candidate" row))path;
+   read(workspace^"/"^path);read(text(field "staged" b))])source_rows
+let dependencies=items(field "dependencies" bindings)
+let ()=require(List.length dependencies=168)"dependency count differs";
+ List.iter(fun b->let expected=text(field "sha256" b) in require(sha(read(text(field "staged" b)))=expected && sha(read(text(field "source" b)))=expected)"dependency changed")dependencies;
+ List.iter(fun b->require(sha(read(text(field "path" b)))=text(field "sha256" b))"runtime artifact changed")(items(field "runtime_artifact_bindings" review))
+let native path expected=
+ let bytes=read path in let j=Yojson.Basic.from_string bytes in
+ require(field "exit_code" j=`Int expected && field "failure" j=`Null)("abnormal native receipt "^path);
+ require(sha(text(field "output" j))=text(field "output_sha256" j))("native output hash differs "^path);j
+let gleam=native "/tmp/ev-composition-gleam-runtime-1859.json" 0
+let digest=native "/tmp/ev-composition-digest-runtime-1859.json" 0
+let ()=require(contains(text(field "output" gleam))"All 53 tests passed.")"Gleam completion absent";
+ require(contains(text(field "output" digest))"SUMMARY total=18 failed=0")"OCaml completion absent";
+ List.iter(fun p->require(field "output"(native p 0)=`String "")"compiler emitted diagnostics")
+ ["/tmp/ev-composition-gleam-compile-permitted-1856.json";"/tmp/ev-composition-digest-compile-permitted-1856.json"];
+ List.iter(fun t->require(sha(read(text(field "path" t)))=text(field "sha256" t))"trace changed")(items(field "trace_audits" review))
+let completion=native "/tmp/ev-composition-review-completed.json" 0
+let ()=let row=text(field "output" completion)|>String.split_on_char '\n'|>List.hd in
+ require(row="completed=true plan_id=uos/component-composition-review/20260909 task=REVIEW attempt=1")"canonical independent review completion absent";
+ let args=items(field "argv" completion)|>List.map text in
+ require(List.mem "codex-component-review" args && List.exists(fun s->contains s "approvalSHA49d1d4386b47e2c5ae441e407622911a73a6250cdf661b657759a6694801bc6d")args)"completion reviewer/result binding differs"
+let raw_sources=[
+ "stage-path-refusal.json","/tmp/ev-component-composition-stage-1849.json";
+ "stage.json","/tmp/ev-component-composition-stage-1854.json";
+ "bindings.json","/tmp/ev-component-composition-1854/bindings.json";
+ "gleam-sandbox-trace-refusal.json","/tmp/ev-composition-gleam-traced-1855.json";
+ "ocaml-sandbox-trace-refusal.json","/tmp/ev-composition-digest-traced-1855.json";
+ "gleam-traced-build.json","/tmp/ev-composition-gleam-traced-permitted-1856.json";
+ "ocaml-traced-build.json","/tmp/ev-composition-digest-traced-permitted-1856.json";
+ "gleam-build.json","/tmp/ev-composition-gleam-compile-permitted-1856.json";
+ "ocaml-build.json","/tmp/ev-composition-digest-compile-permitted-1856.json";
+ "gleam-execve.log","/tmp/ev-composition-gleam-permitted-1856.execve.log";
+ "ocaml-execve.log","/tmp/ev-composition-digest-permitted-1856.execve.log";
+ "gleam-runtime.json","/tmp/ev-composition-gleam-runtime-1859.json";
+ "ocaml-runtime.json","/tmp/ev-composition-digest-runtime-1859.json";
+ "review-completed.json","/tmp/ev-composition-review-completed.json";
+ "wrong-workspace-renew-refusal.json","/tmp/ev-workspace-renew-codec-1913.json";
+ "agy-capture-sandbox-refusal.json","/tmp/ev-root-agy-route-harness-record-1917.json";
+ "agy-capture-environment-refusal.json","/tmp/ev-root-agy-route-harness-record-permitted-1918.json";
+ "agy-socket-diagnostic.json","/tmp/ev-root-herdr-get-diagnostic-permitted-1920.json";
+ "recorder.ml.txt","/tmp/ev_record_component_composition_1929.ml"]
+let pending=List.map(fun(label,path)->label,path,read path)raw_sources
+let pending=List.fold_left(fun acc entry->let path=text(field "durable" entry) in
+ let bytes=Receipt_validator.candidate_bytes peer review_candidate path in
+ require(sha bytes=text(field "sha256" entry))("review evidence changed "^path);
+ ("review-"^Filename.basename path,review_candidate^":"^path,bytes)::acc)pending(items(field "records" review))
+let pending=("independent-approval.json",review_candidate^":"^review_path,review_bytes)::pending
+let advice_path="docs/reviews/20260909-1922-agy-music-and-ev02-advice-observation.json"
+let advice=Yojson.Basic.from_string(read(workspace^"/"^advice_path))
+let prior_fence=Yojson.Basic.from_string(read "/tmp/ev-root-advice-record-fence-1917.json")
+let number=function `Float f->f|`Int i->float_of_int i|_->failwith"expected number"
+let advice_fence_age=number(field "observed_at_epoch" advice)-.number(field "utc_finished" prior_fence)
+let ocamlrun="/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun"
+let ocaml="/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml"
+let native_tool=workspace^"/tools/ev_native.ml"
+let invoke args=Receipt_validator.run ~seconds:30. ~limit:1_048_576 ocamlrun(ocaml::native_tool::"--"::args)
+let risk_path=".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1842-ev-admission-native-risk-1788979962.json"
+let active=invoke["risk";"--active-check";risk_path;"PROGRAM";"codex-ev-admission-01a08017";"6"]
+let ()=require(field "status"(Yojson.Basic.from_string active)=`String "ACTIVE_OBSERVATION_PASS")"active authority observation did not pass"
+let op="ev-composition-record-"^Printf.sprintf "%.0f"(Unix.gettimeofday()*.1_000_000.)
+let heartbeat=invoke["coordinator";"heartbeat";session;candidate;"task:PROGRAM-attempt6,source:"^candidate;op]
+let ()=require(field "ok"(Yojson.Basic.from_string heartbeat)=`Bool true)"heartbeat refused"
+let fence=invoke["coordinator";"check";session;"workspace:"^workspace;"3"]
+let ()=require(field "ok"(Yojson.Basic.from_string fence)=`Bool true)"workspace fence refused"
+let now=Unix.gettimeofday()
+let g=Unix.gmtime now
+let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_sec
+let utc=Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_min g.tm_sec
+let prefix="docs/reviews/"^stamp^"-component-composition"
+let save(label,source,bytes)=let path=prefix^"-"^label in Ev_campaign.write(workspace^"/"^path)bytes;
+ `Assoc["source",`String source;"path",`String path;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]
+let artifacts=List.map save (("active-observation.json","fresh canonical risk observer stdout",active)::("heartbeat-observation.json","fresh coordinator heartbeat stdout",heartbeat)::("fence-observation.json","fresh coordinator fence stdout",fence)::pending)
+let manifest=prefix^"-verification.json"
+let journal="docs/journal/"^stamp^"-component-composition-verification.md"
+let record=`Assoc[
+ "schema",`String "uos.component-composition-verification.v1";"observed_at",`String utc;
+ "source_candidate",`String candidate;"review_completion_candidate",`String review_candidate;
+ "status",`String "VERIFIED_BOUNDED_COMPOSITION";"authority",`String "NONE";"new_ev_admissions",`Int 0;"policy_ceiling",`Int 93;
+ "programme",`Assoc["plan",`String "uos/ev-admission/20260909-0210";"task",`String "PROGRAM";"worker",`String "codex-ev-admission-01a08017";"attempt",`Int 6;"state",`String "executing"];
+ "source_parity_files",`Int 13;"private_dependencies",`Int 168;"gleam_tests",`Int 53;"ocaml_tests",`Int 18;
+ "independent_path_controls",`Int 19;"independent_driver_refusals",`Int 3;
+ "compile_trace_successful_execve",`Int 21;"compile_trace_failed_lookup",`Int 1;
+ "advice_capture_fence_observation_age_seconds",`Float advice_fence_age;
+ "artifacts",`List artifacts;"limits",field "limits" review;
+ "preserved_failures",`List(List.map(fun s->`String s)[
+  "Initial8dd staging refused dependency @ basenames; source79a4 narrows the exception to immutable approved dependency basenames.";
+  "Initial build tracing was blocked by sandbox ptrace restrictions. Fresh permitted traces and warning-free compiler outputs are distinct positive observations.";
+  "Independent finalizer initially rejected valid zero-duration EUnit formatting. Corrected parser evidence is preserved in the independent record; runtime was not rerun for that parser correction.";
+  "Wrong codec workspace spelling was refused ENOENT. Subsequent explicit correct-resource renew passed, without changing workspace ownership.";
+  "AGY advice capture failed inside sandbox and then in the adapter with its filtered environment. Diagnostic exposed the missing configured Herdr socket; direct permitted OCaml capture with inherited session context succeeded. These failures do not alter component test results.";
+  "The successful advice-record capture followed approval delays without refreshing its earlier workspace-fence observation. The measured observation age is retained here; it is not relabeled as a fresh effect-time check. Only private advisory evidence files were written, with programme and workspace leases still unexpired. This recorder rechecks active task evidence, renews the heartbeat and checks the workspace fence immediately before its writes.";
+  "The first root composition recorder assumed JSON for the completion response first line; the actual canonical response is text. It refused before any output file write with Invalid token completed=true. Exact text and argv/result checks now match the observed canonical response."])]
+let body="# "^stamp^" Component composition verification\n\nObserved UTC: "^utc^". #fractal-l0 #fractal-l5 #zk-adr #zero-muda\n\n[Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [Evidence](http://nas-1.tail55d152.ts.net:4100/files/"^manifest^"). Private candidate evidence; live publication is unverified.\n\n"^{|
+## 1. Scope & Trigger
+
+Continue the existing EV programme with Gleam and OCaml and no Bash. Verify that the independently repaired graph, forward-chaining, remediation and payload-digest components work together at one immutable candidate.
+
+## 2. Pre-State Assessment
+
+The component repairs had separate observed tests and independent reviews. Moving shared dependency builds and shell-launching native OCaml recipes prevented assuming that a combined package invocation would reproduce those observations.
+
+## 3. Execution Detail
+
+The staging driver checks thirteen immutable source pairs and copies a fixed inventory of168 reviewed dependency artifacts. Its explicit Gleam runner selects five EUnit modules concurrently. The digest recipe produces raw OCaml bytecode with -without-runtime and invokes it through native ocamlrun. The independent reviewer recreated staging, checked the actual built artifacts and replayed the bound tests.
+
+## 4. Root Cause Analysis
+
+Separate passing components did not establish composition. Initial dependency-path validation refused valid BEAM basenames containing @; the correction permits that character only in private dependency paths drawn from the fixed approved inventory. Sandbox ptrace refusals were preserved before fresh permitted traces were taken. The independent report preserves its first parser refusal for zero-duration EUnit formatting.
+
+## 5. Fix Taxonomy
+
+Immutable source parity, isolated dependency staging, explicit nonempty test discovery, raw bytecode launch, observed process tracing and independent composition review. No production process was replaced.
+
+## 6. Patterns & Anti-Patterns Discovered
+
+Current shared build bytes cannot silently substitute for reviewed dependency bytes. A successful build trace observes executed paths; it does not prove all possible transitive executions or authenticate the producer. A test-output parser must accept the actual documented output variants without accepting empty discovery.
+
+## 7. Verification Matrix
+
+| Observation | Result | Scope |
+|---|---|---|
+| Candidate parity |13 files equal prior reviewed revisions | Production and tests selected by the driver |
+| Private dependencies |168 artifacts equal the approved inventory | Fixed cooperative cache |
+| Gleam composition |53 unique tests passed | Five explicitly selected concurrent modules |
+| OCaml digest |18 named cases passed | Bound raw bytecode artifact |
+| Build traces |21 successful ELF execs; one failed lookup | Observed compile invocations only |
+| Independent controls |19 path controls and3 driver refusals passed | Selected path grammar and invocation guards |
+| Independent REVIEW |Canonically completed attempt1 | Exact79a4 bounded composition |
+| Whole EV admission |Not established | Programme remains executing |
+
+## 8. Files Modified
+
+The source change adds tools/ev_component_composition.ml and test/ev_component_composition_runner.gleam. All thirteen selected production/test files retain their reviewed bytes. This manifest and journal preserve source bindings, compiler/runtime records, traces, independent approval, completion and failed attempts.
+
+## 9. Architectural Observations
+
+Gleam owns pure control-state transitions; OCaml supplies digest checks and evidence processing. Tests run on actual native ERTS and ocamlrun. Existing automation archives and interpreter support remain declared dependencies, without an authenticated dynamic-library or full release closure claim.
+
+## 10. Remaining Gaps
+
+This does not establish global-suite success, live music playback, UI behavior, full EV101/104/107 acceptance, hostile-filesystem confinement or deployment readiness. EV1 Bootstrap retains lineage and sovereign acceptance gaps. EV2 evidence capture and EV86 music routes continue under separate tasks. No new EV number or admission was created.
+
+## 11. Metrics Summary
+
+Thirteen source pairs,168 private dependencies,53 Gleam tests,18 OCaml cases and22 independent controls were checked. The scopes overlap and are not combined into an assurance score. New EV admissions: zero; policy ceiling:93.
+
+## 12. STAMP & Constitutional Alignment
+
+Explicit source/dependency selection prevents substitution; nonempty test records constrain omitted execution evidence. Native deadlines and private stages bound these observations. Sa-plan task authority, workspace ownership and report-only risk observations remain distinct from runtime deployment and sovereign admission authority.
+
+## 13. Conclusion
+
+The selected component composition is executed and independently verified at79a4. The all-EV programme remains active with its admission ceiling unchanged.
+
+## Comprehensive verification checklist
+
+<details><summary>Domain1 — Metadata and navigation</summary>
+
+- [x] CHK-01-TIME — Host UTC and fresh active observation retained.
+- [x] CHK-02-TAIL — Full Tailnet links supplied; publication unverified.
+- [x] CHK-03-FRACT — Fractal tags supplied.
+- [x] CHK-04-KM — Immutable source and evidence references supplied.
+
+</details>
+<details><summary>Domain2 — Purity and storage</summary>
+
+- [x] CHK-05-MUDA — New code uses Gleam and OCaml without Bash.
+- [ ] CHK-06-GRAPH — Fleet-wide dependency purity remains outside this observation.
+- [ ] CHK-07-DRIVE — No hardware interlock test in this task.
+
+</details>
+<details><summary>Domain3 — Tests and mathematics</summary>
+
+- [ ] CHK-08-C1C8 — Full release categories remain open.
+- [ ] CHK-09-MATH — General formal refinement remains open.
+- [ ] CHK-10-9MOD — Whole-EV acceptance remains open.
+- [x] CHK-11-REGR — Retained runtime and independent controls executed.
+
+</details>
+<details><summary>Domain4 — Runtime and observability</summary>
+
+- [x] CHK-12-GLEAM — Actual ERTS test observations retained.
+- [x] CHK-13-HERMES — Actual native OCaml bytecode tests retained.
+- [ ] CHK-14-ZIGVM — Kernel acceptance outside this task.
+- [ ] CHK-15-MAX — Inference acceptance outside this task.
+- [ ] CHK-16-OTEL — No production trace correlation established.
+
+</details>
+<details><summary>Domain5 — Governance and VCS</summary>
+
+- [ ] CHK-17-SOV — No whole-EV sovereign admission claimed.
+- [x] CHK-18-JJ — Immutable standalone JJ source and independent evidence.
+
+</details>
+<details><summary>Domain6 — Provenance</summary>
+
+Failed staging, sandbox tracing and parser attempts remain failures. A completed independent review is bound to its exact scope and candidate; it does not grant system admission.
+
+</details>
+
+[Previous component](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-1715-ev107-rete-completion.md) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning). UOS footer: bounded composition verified; whole-EV admission pending.
+|}
+let ()=Ev_campaign.write(workspace^"/"^manifest)(Yojson.Basic.pretty_to_string record^"\n"); Ev_campaign.write(workspace^"/"^journal)body;
+ Printf.printf "%s\n%s\n%d artifacts preserved;13 source pairs and168 dependencies rechecked;53+18 actual tests verified\n"manifest journal(List.length artifacts)

@@ -1,0 +1,179 @@
+{
+  "schema": "uos.codex-merge.mirage.v1",
+  "recorded_utc": "2026-09-08T20:23:30Z",
+  "plan": "uos/codex-mainline-merge/20260908-1925",
+  "task": "M5",
+  "source_candidate": "5bb3af799ae69dd56b39b1b702cc565276e61467",
+  "sources": [
+    "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+    "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+    "b9d486170af9c3a0d12a6ae7db03836287f2b65a",
+    "7621d5dfebe92ed8de7684e392b92c983b3acf36"
+  ],
+  "scope": "Existing UOS JJ source, compatibility patch and historical provenance retained. Fresh checks concern the admission reference model only. No installed toolchain changes, physical tender execution, application migration or runtime admission.",
+  "source_delta": {
+    "new_files": 19,
+    "modified_existing_files": 0,
+    "tool_implementations": "Current main solo5_toolchain.ml and mirage_guest_toolchain.ml retained; byte-identical to e081c209."
+  },
+  "checks": [
+    {
+      "name": "Lean reference",
+      "exit_code": 0,
+      "outcome": "PASSED",
+      "version": "4.33.0",
+      "executable_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "theorems": 13,
+      "examples": 25,
+      "ad_hoc_axioms_or_sorry": false,
+      "standard_axioms": "propext; see retained source print commands",
+      "csv_sha256": "356d0ee333034e2b23ec059338c2622ec3b8290d24b6102a26a214dfafb3189e",
+      "csv_bytes": 1363687,
+      "csv_retained": false
+    },
+    {
+      "name": "Independent finite OCaml reference",
+      "exit_code": 0,
+      "outcome": "PASSED",
+      "cases": 31104,
+      "accepted": 18,
+      "rejected": 31086,
+      "disagreements": 0,
+      "evidence": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-finite-oracle.jsonl"
+    },
+    {
+      "name": "Quint typecheck",
+      "exit_code": 0,
+      "outcome": "PASSED",
+      "evidence": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-typecheck.log"
+    },
+    {
+      "name": "Quint lifecycle tests",
+      "exit_code": 0,
+      "outcome": "PASSED",
+      "tests": 7,
+      "evidence": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-lifecycle.log"
+    },
+    {
+      "name": "Quint normal initializer",
+      "exit_code": 0,
+      "outcome": "NO_VIOLATION_IN_BOUNDED_SAMPLE",
+      "traces": 1000,
+      "max_transitions": 25,
+      "admission_witnesses": 0,
+      "evidence": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-normal.log"
+    },
+    {
+      "name": "Quint valid initializer",
+      "exit_code": 0,
+      "outcome": "NO_VIOLATION_IN_BOUNDED_SAMPLE",
+      "traces": 1000,
+      "max_transitions": 25,
+      "admission_witnesses": 517,
+      "evidence": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-valid.log"
+    },
+    {
+      "name": "Sticky freshness mutant",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "outcome": "REJECTED_BY_INVARIANT_AS_EXPECTED",
+      "evidence": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-sticky-mutant.log",
+      "counterexample": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-sticky-mutant.itf.json"
+    },
+    {
+      "name": "Omitted virtio mutant",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "outcome": "REJECTED_BY_INVARIANT_AS_EXPECTED",
+      "evidence": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-omitted-mutant.log",
+      "counterexample": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-omitted-mutant.itf.json"
+    }
+  ],
+  "quint": {
+    "version": "0.32.0",
+    "cli_sha256": "ac12595b1cb7253feec93c79417615c6eb20fc3b6a3df35c5e3530b24e90a501",
+    "backend": "typescript",
+    "seed": 20260907,
+    "timeout_seconds": 30,
+    "kill_grace_seconds": 2
+  },
+  "reproduction": {
+    "lean_argv": [
+      "timeout",
+      "--kill-after=2s",
+      "30s",
+      "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+      "--run",
+      "formal/lean/MirageReceiptAdmission.lean"
+    ],
+    "lean_stdout": "var/merge-checks/M5-lean-admission.csv",
+    "finite_argv": [
+      "timeout",
+      "--kill-after=2s",
+      "30s",
+      "/home/an/dev/ver/zigvm/_opam/bin/ocaml",
+      "tools/verification/mirage/admission_reference_check.ml",
+      "var/merge-checks/M5-lean-admission.csv"
+    ],
+    "quint_runner": [
+      "timeout",
+      "--kill-after=2s",
+      "30s",
+      "/usr/bin/node",
+      "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js"
+    ],
+    "quint_typecheck": [
+      "typecheck",
+      "formal/quint/mirage_receipt_admission.qnt"
+    ],
+    "quint_tests": [
+      "test",
+      "formal/quint/mirage_receipt_admission.qnt",
+      "--backend",
+      "typescript",
+      "--seed",
+      "20260907",
+      "--max-samples",
+      "1"
+    ],
+    "quint_run_common": [
+      "run",
+      "formal/quint/mirage_receipt_admission.qnt",
+      "--backend",
+      "typescript",
+      "--seed",
+      "20260907",
+      "--invariant",
+      "inv_current_complete_fresh"
+    ],
+    "quint_run_arguments": [
+      {
+        "name": "normal_temporal_simulation",
+        "arguments": "--init init --step step --max-samples 1000 --max-steps 25 --witnesses witness_verified"
+      },
+      {
+        "name": "initially_valid_temporal_simulation",
+        "arguments": "--init validInit --step step --max-samples 1000 --max-steps 25 --witnesses witness_verified"
+      },
+      {
+        "name": "sticky_freshness_mutant",
+        "arguments": "--init validInit --step stickyTickMutant --max-samples 1 --max-steps 1 --out-itf var/merge-checks/M5-sticky-mutant.itf.json"
+      },
+      {
+        "name": "omitted_virtio_mutant",
+        "arguments": "--init validInit --step omittedTargetMutant --max-samples 1 --max-steps 1 --out-itf var/merge-checks/M5-omitted-mutant.itf.json"
+      }
+    ],
+    "environment_limit": "Cached executables were reused without installation. Verify hashes or provision equivalent pinned tools through Nix/devenv before reproducing elsewhere."
+  },
+  "historical_evidence": "Preserved byte-for-byte; old pass counts, model correspondence and source review claims are not re-labelled as current implementation approval.",
+  "remaining": [
+    "No theorem refining OCaml/Gleam implementation to this reference",
+    "No new physical hypervisor or tender receipt",
+    "Historical implementation review blockers not independently rechecked against the composed implementation",
+    "No application migration or measured RAM saving established"
+  ],
+  "admission": "HOLD",
+  "main_moved": false,
+  "runtime_mutated": false
+}

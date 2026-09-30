@@ -1,0 +1,89 @@
+{
+  "schema": "uos.ev-rag-independent-review.v1",
+  "status": "HOLD",
+  "authority": "NONE",
+  "observed_utc_seconds": 1788931538.328905,
+  "tested_source_commit": "cfd3afbae74f996d42321843cc48248cd3aaf956",
+  "original_passed": 15,
+  "original_failed": 0,
+  "prior_independent_passed": 7,
+  "prior_independent_failed": 0,
+  "new_boundary_passed": 1,
+  "new_boundary_failed": 1,
+  "artifacts": [
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam",
+      "sha256": "41410d4871b00a58f2e93f69cd4daa51f75000d79d1a06f9e9a755d98ea31f72"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/src/rag_cache_mesh_test.gleam",
+      "sha256": "c14458a77766f64d9378a742c4d41a882cba5730781174ec6287a3ab61b68b2b"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/src/ev_rag_freshness_runner.gleam",
+      "sha256": "3f05eac42b6b213e1caef2b7dda92f29f31549a692ce5fe27c8701cde9112360"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/src/ev_rag_adverse_test.gleam",
+      "sha256": "dfeed0527740539f11e04fd6349445fa690c85583314c427b617f0b390adf78f"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/src/ev_rag_boundary_test.gleam",
+      "sha256": "924f03acb2119251399d93bee0fa751d776e9d3fac3ea81b28d985ea7895b5ca"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/compiled/ebin/cepaf_gleam@knowledge@rag_cache_mesh.beam",
+      "sha256": "f87a5d8f397cfd726f061af7affd2e7448c371088e27a819afca7cb8fb4d9452"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/boundary-compiled/ebin/cepaf_gleam@knowledge@rag_cache_mesh.beam",
+      "sha256": "e469e5fec949a228eaafc1e9b68ee086345f8d8283608370d586318df355bca1"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/compiled/ebin/rag_cache_mesh_test.beam",
+      "sha256": "f5e7a335f3825fd55eb18a9c0eebea5d3300782b38b3c2230bd26a01b7a83cc5"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/compiled/ebin/ev_rag_adverse_test.beam",
+      "sha256": "35b5c4abb60ad0675fcd307a239301cadf5719c66b318161f05e5858813e4f16"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/boundary-compiled/ebin/ev_rag_boundary_test.beam",
+      "sha256": "288f60dc6ae9f68046e35064ffcd1c766f848c5b9cdb83c2627e45d6ab83b27a"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/compile.json",
+      "sha256": "1f44489ac8099f343e0921407851f1556d27c662474369cb66c7c23c38cce38b"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/original-tests.json",
+      "sha256": "62afe09e57895c9e55b9906bcda149ee0eba1cb56c40d294b8c1f9e239c2354f"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/adverse-tests.json",
+      "sha256": "934db2d14e8455b9458be270925cdd33fa7e4cd032759c0ebb856394d6247b86"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/boundary-compile.json",
+      "sha256": "12d1d0c42cee5e9ef1d2efe26e0eb59cd573cce407cda816ba1c736ad7a2d1b0"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/boundary-tests.json",
+      "sha256": "613b86ae3f4df313d267826770c9068f2757c32e3e5ab2a68cc1def5eb4ea731"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-rereview-20260909/source-manifest.json",
+      "sha256": "33cee145c376c54732e3358e90b1fafcab21815f7b2032915a59730468c158e4"
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P1",
+      "source_line": 470,
+      "finding": "Accepted embedding [1.0e100] still raises Badarith in lookup. At vector_norm lines142-147 the ten Newton iterations leave an enormous approximation; multiplying two norms at line170 overflows. Bounding coordinates alone did not establish safe intermediates. Reproduce with put(...,[1.0e100],...1000,100), then lookup_semantic different query [1.0e100] at1050. Require stable arithmetic or justified accepted bounds and boundary regressions."
+    }
+  ],
+  "repaired_cases": "All original seven probes pass unchanged: future content is stale, older embedding refresh unchanged, vector-only refresh does not renew content, dimension mismatch does not match,1.0e200 refused without arithmetic, invalid writes unchanged, negative lookup refused.",
+  "additional_control": "Future embedding observation1080 is not used by semantic lookup at1050, while exact content observed1000 is fresh until1100; separate clocks retained correctly.",
+  "limits": "Source extracted from immutable candidate with explicit commit_id and compiled privately using realized dependencies; stale cepaf/uos_swarm outputs excluded. Original probes unchanged. This bounded review does not authenticate producer identity, establish a reproducible release closure or prove all constructor states safe. No source/task/live mutations; no admission."
+}

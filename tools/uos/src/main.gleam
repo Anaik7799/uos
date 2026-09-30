@@ -200,16 +200,16 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println("Evaluating UOS Gate: " <> name)
       case name {
         "G-BOOT1" -> {
-          case file_exists(".jj") {
-            True -> {
-              io.println("  [PASS] Standalone Jujutsu monorepo initialized")
-              0
-            }
-            False -> {
-              io.println("  [FAIL] .jj not found")
-              1
-            }
-          }
+          let #(code, observation) = run_command(
+            "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+            [
+              "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+              "tools/bootstrap/bootstrap_check.ml",
+            ],
+            10000,
+          )
+          io.println(observation)
+          code
         }
         // Same discipline as G-PREFLIGHT: EXECUTE the checker, do not stat the
         // atlas. The defect this gate exists for was invisible to every check

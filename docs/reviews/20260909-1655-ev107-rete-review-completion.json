@@ -1,0 +1,30 @@
+{
+  "schema": "uos.review-completion.v1",
+  "plan": "uos/ev107-rete-review/20260909",
+  "task": "REVIEW",
+  "worker": "codex-ev107-rete-review",
+  "attempt": 1,
+  "state": "completed",
+  "source_candidate": "168c31943c90b0c494b60ca0baff9f25c8cc702c",
+  "review_evidence": "67e1140ea958c7456cab283cba9539a8547a6060",
+  "verdict_sha256": "027c90ec501ef915d89860d6215fe896f193ae84d2569aff320e533e96cae7f0",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "records": [
+    {
+      "original": "/tmp/ev107-rete-review-final-active.json",
+      "durable": "docs/reviews/20260909-1655-ev107-rete-review-final-active.json",
+      "sha256": "8b2ef6e8ff457dc3bf2c3716ab68a5e0297b4b57f02264274e38373267b2a508"
+    },
+    {
+      "original": "/tmp/ev107-rete-review-completion-active.json",
+      "durable": "docs/reviews/20260909-1655-ev107-rete-review-completion-active.json",
+      "sha256": "908d8996b5c9a820452bfd4992f0805000137b696ba47a00656a679c8732927e"
+    },
+    {
+      "original": "/tmp/ev107-rete-review-completed.json",
+      "durable": "docs/reviews/20260909-1655-ev107-rete-review-completed.json",
+      "sha256": "78d2e28c5b69b8b51c3ffe39c2e77a8846311fc486c2fcf0854edf7c03c96895"
+    }
+  ]
+}

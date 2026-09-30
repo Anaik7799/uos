@@ -1,0 +1,34 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+let root="/home/an/NAS-setup/uos"
+let ws=root^"/.uos-workspaces/ev98-wire-codec-20260909"
+let rev="3c13ba3b3e210e98c289147a2041aadcdcc72ebd"
+let evidence="23722b50c4436d37ccad6bbd986fa2619741216a"
+let stage="/tmp/ev01-bootstrap-independent-1843"
+let budget=Receipt_validator.make_budget ~seconds:60. ~bytes:67108864 ()
+let read=Ev_campaign.read_file budget
+let require=Receipt_validator.require
+let write=Ev_campaign.write
+let sha=Receipt_validator.sha
+let exists p=try Some(Unix.lstat p)with Unix.Unix_error(Unix.ENOENT,_,_)->None
+let decode_path bytes=
+ require(String.length bytes>=2 && bytes.[0]='\010')"secure metadata field";
+ let rec length i shift n=require(i<String.length bytes && shift<=28)"secure metadata varint";let c=Char.code bytes.[i]in let n=n lor((c land 127)lsl shift)in if c land 128=0 then i+1,n else length(i+1)(shift+7)n in
+ let offset,count=length 1 0 0 in require(offset+count=String.length bytes)"secure metadata size";String.sub bytes offset count
+let ()=
+ let base=match Sys.getenv_opt "XDG_CONFIG_HOME"with Some x when x<>""->x|_->Sys.getenv "HOME"^"/.config"in
+ let pointer=read(ws^"/.jj/repo")in let repo=Unix.realpath(if Filename.is_relative pointer then ws^"/.jj/"^pointer else pointer)in
+ let checks=List.map(fun(dir,idname,legacy,kind)->let idpath=dir^"/"^idname in
+ match exists idpath with
+ |None->require(exists(dir^"/"^legacy)=None)"source extraction would migrate legacy config";`Assoc["directory",`String dir;"state",`String "NO_CONFIG"]
+ |Some _->let id=read idpath in require(String.length id=20 && String.for_all(function 'a'..'f'|'A'..'F'|'0'..'9'->true|_->false)id)"source extraction config ID";
+ let path=base^"/jj/"^kind^"/"^id^"/metadata.binpb"in let b=read path in require(decode_path b=dir)"source extraction secure metadata mismatch";
+ `Assoc["directory",`String dir;"config_id_sha256",`String(sha id);"metadata_sha256",`String(sha b);"state",`String "EXISTING_MATCHING_PATH"])[repo,"config-id","config.toml","repos";ws^"/.jj","workspace-config-id","workspace-config.toml","workspaces"]in
+ write(stage^"/source-read-preflight.json")(Yojson.Basic.pretty_to_string(`List checks));
+ let paths=List.map(fun p->"tools/bootstrap/"^p)["bootstrap_model.ml";"bootstrap_model.mli";"bootstrap_observer.ml";"bootstrap_observer.mli";"bootstrap_check.ml";"test_bootstrap_model.ml";"dune";"dune-project"]@["tools/uos/src/main.gleam";"tools/uos/src/uos.gleam";"tools/uos/src/uos_ffi.erl";"tools/uos/gleam.toml";"tools/uos/manifest.toml";"tools/test_ev01_bootstrap.ml";"tools/test_ev01_bootstrap_cwd.ml"]in
+ let sources=List.map(fun p->let b=Receipt_validator.candidate_bytes ws rev p in require(b=read(ws^"/"^p))"source worktree binding";let dest=stage^"/source/"^p in write dest b;`Assoc["source",`String p;"staged",`String dest;"sha256",`String(sha b)])paths in
+ let p="docs/reviews/20260909-1720-ev01-bootstrap-final-dossier.json"in let b=Receipt_validator.candidate_bytes ws evidence p in
+ require(sha b="481004715e01e87e6e1526059fd29b7376e45c3ed520d675b8636f61f08e8fcf")"dossier hash";write(stage^"/author-dossier.json")b;
+ write(stage^"/bindings.json")(Yojson.Basic.pretty_to_string(`List sources));print_endline stage

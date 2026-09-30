@@ -1,0 +1,97 @@
+Pinned JJ operation: 3f75a63b43a634c3c3c7a09e90937fb187eabf3a126f6673d75a8668ae28d27544820b13673e5958cac431279445c77050938745109f09bb29329fe083d455aa
+Pinned main: 1be8029d72bc9530b1937564a37c555bd0b4b938
+
+candidate/auth-ingress: vwpypxzt 6b033f37 fix(auth): route real HTTP ingress through authenticated Wisp handler
+candidate/auth-ingress-framing: rksvvryu 5b1146ea fix(auth): bound HTTP request framing before body ingestion
+candidate/auth-ingress-framing-v2: ltzunpsx acfe752c fix(auth): reject unsupported request expectations before read
+candidate/auth-oidc-ed25519: kozsqvqt 91933857 feat(auth): verify bounded FerrisKey Ed25519 JWTs without fallback
+candidate/mirage-metrics-prep: vxwxuqul 8cf4cbec feat(mirage): add honest bounded one-shot metrics snapshot
+candidate/runtime-loopback: outswoyk dc12e531 fix(web): default staged listeners to loopback and exclude crash dumps
+candidate/runtime-staging-evidence: wptpvvzn 607aa506 docs(runtime): record OTP 29 primary backup component staging and scoped recovery
+candidate/solo5-0.13.0: tqxwqrsp aea32296 feat(mirage): pin Solo5 0.13.0 and verify current host toolchain
+docs/final-audit-closure: kyrqpvmp bcfafbfa docs(audit): seal 9-dimension test protocol, Zero-Muda Graphene eradication, and KM Triad closure
+docs/km-triad-journal: mrlrkrsu c1c7a9b6 docs(journal): add 13-section audit journal for Codex findings resolution and KM triad
+feature/ocaml-gleam-tests: wszrruuu f28b1526 docs(test): bind reviewed migration slice and SA-Plan handoff evidence
+integration/autonomous-execution-20260906-1803: olzvpvsk 05cfb07d execution: close reviewed E01, record 17 aspects and start E02 harness work
+integration/bootstrap: mslzqvuo 1fe852f2 feat(bootstrap): initialize standalone non-colocated UOS Jujutsu repository
+integration/c3i-cross-language-control: ltvtvloz fb14d336 feat(c3i-control): integrate cross-language C3I control plane implementation across Gleam, OCaml, Zig, Rust, and MAX with formal spec and G-CROSS-LANG gate
+integration/codex-ainf-reuse-design: mmxxqxww/0 614ffbd9 (divergent) docs(ainf): map 21 infrastructure services and 17 aspects to verified reuse and native UOS placement; record AGY design review and remaining runtime gaps
+integration/codex-mirage-audit: lpkpxryy b04e4cd9 docs(mirage): record final sovereign audit and scoped verification receipt
+integration/codex-mirage-tenders-review: rrvlmott 4ddc56b5 docs(mirage): independent Solo5 review with physical and negative evidence
+integration/codex-session-handover-adr-017: pykpkupl 520f96c1 (empty) merge: unify 10D tensor evolution manifold (EV-TENSOR-01..10, ADR-017) with reviewed migration slice and SA-Plan evidence
+integration/codex-verified-timestamp-mandate: pxosxkmp c7173316 feat(timestamp): enforce mandatory YYYYMMDD-HHSS- prefix, real disk-backed DMC/TCM validation, authentic Cryptokit SHA-256 interceptor, and storage safety invariants
+integration/codex-web-runtime-identity: ywxmsuuz f734f8fb feat(runtime): expose observed VM identity and pin managed web instances to OTP29
+integration/comprehensive-testing-protocol: nxtlurxq 342598fc feat(test): C3I/Indrajaal comprehensive testing protocol specification and semantic web verification on Tailnet
+integration/consolidation: vkwptkyv d1255477 refactor: consolidate native, formal, worker and contract boundaries
+integration/core-orchestrator: lxyrzrvl ddb3138d refactor(migration): relocate C3I Gleam control plane into UOS
+integration/dmc-tcm-completion: llxmwons 05fb836e feat(dmc-tcm): complete full DMC and TCM functionality, Lean 4 Traceability algebra, Zero-Trust dispatch interceptor, and mandate enforcement
+integration/fprime-fpp-beam-transmutation: swkopktm 9b0b857c feat(c3i): archive Prompt 25, seal ADR-045, and author master 25-prompt history journal (JRN-20260906-1545-MASTER-PROMPTS-ANALYSIS)
+integration/fractal-observability-dependability: utqtlqqx dcc3e643 feat(observability): fractal check of gleam/nif/rust/ocaml code, dependability suites admission, and universal C3I fractal logging contract
+integration/full-implementation-plan: wrwnokpz a6c9c24e merge: integrate full UOS implementation plan into main
+integration/full-protocol-admitted: trzyzppq 6062b63d feat(testing): full protocol admission across unit, system, bdd, property, fuzz, chaos, and vision pipelines (100% green)
+integration/governance: npvumlto 4e90e2cc feat(governance): create root governance skeleton and source manifests
+integration/hermes-oracle: xvsxsyqv 16acfede refactor(migration): relocate Harness-Bionic into Hermes evidence and oracle engine
+integration/hermes-parity: tuuuspsn a515ae44 feat(parity): execute Hermes parity harness and ZigVM differential oracle suites (EV-14)
+integration/km-corpus-9d-tests: opmywoky 6dc790cf feat(km-test): integrate full 16 ZK ADRs, master MOC, wiki corpus index, and 9-dimension test protocol
+integration/km-wiki-zk-hardening: nsxkqnkx daef8aaf feat(km): integrate knowledge management triad, wiki, ZK, and harden safety invariants
+integration/kubernetes: vwmqyrku b8a94ea1 refactor(migration): relocate NAS-1 Kubernetes controller with hardware serial invariants
+integration/pre-tri-agent-sync-20260907: wozwmxyy bdeacf06 merge: unify uos-tui swarm, hive mind, and fast OODA synchronization into main
+integration/sa-plan-execution-20260906-1655: yupqvvln c5c048dd plan: register complete UOS execution programme in sa-plan
+integration/source-freeze: ovmkpkmm 30137ec1 chore(migration): import sanitized UOS source snapshots and external ancestry receipts
+integration/symbiosis-orchestrator: ztymlvvv 2b71c667 feat(orchestrator): implement full symbiosis, unified MCP control loop, MAX worker, and multilayer OTP supervisor (EV-10..EV-12)
+integration/system-admission: tykqoztw 5647456a feat(admission): final system admission, cutover runbook, and storage hardware guard verification (EV-15)
+integration/tailscale-web-fqdn: kxowkoxr 1a0ce808 feat(web): universal Tailscale FQDN web navigation on nas-1.tail55d152.ts.net:4100 with live wiki, ZK ADRs, and file viewers
+integration/tensor-space-evolution-wave-2: pykpkupl 520f96c1 (empty) merge: unify 10D tensor evolution manifold (EV-TENSOR-01..10, ADR-017) with reviewed migration slice and SA-Plan evidence
+integration/uos-agent-design-20260907: ylqokqll ce69e9ef docs: complete Astra max 17-aspect agent infrastructure design and cheaper implementation handoff; runtime admission unchanged
+integration/uos-swarm: sxooprlw 9e2f8417 receipt: MAX kernel wiring finding — Andon events 558-561; sa-plan MAX-KERNEL-WIRING and MAX-KERNEL-LOG-BASE open; main ornkquxq/6958fe128343
+integration/uos-tui: tmwpokqm f07d7c3c tui: apps/uos_tui is the pure TUI library (Textual-referenced): 21 modules incl. new gallery demo app; features.sheet(bindings) decoupled from the cockpit; CLI snapshot/dictionary/features/live only; FFI trimmed to terminal, clock, file_read, list_dir; swarm/hive-mind code and artifacts moved out; 198 tests, 0 warnings
+integration/uos-tui-swarm: uxwmloqm 71aafd51 tui swarm + hive mind: 15-agent swarm (11 slices), signed message board on Zenoh (HMAC envelopes, ETS+JSONL, per-sender chains, inbox/ack/retry/dead-letter/replay, live proof + forgery probe refused), coord (fable-only design authority, policy+signature on absorb, fenced leases + claim epochs, heartbeats, reconcile, usage), F´ manager, system-wide 17-aspect audit 62/74/0, Sanskrit-English ACL, 33-holon holarchy, agent cognition kernel, controls 22/22, C3I Zenoh infra, AGY sovereign review HOLD->hardened; 366 tests, 0 warnings
+integration/wiki-zk-km-synthesis-and-comprehensive-checklist: xtqzummo a6d60dfc feat(km,zk,lustre): 5 evolutionary cycles, master diagram tome, pi startup visualizer, and 145-feature tracker
+integration/zero-muda: oozzntnp 7cbc755d refactor: remove Bevy and Graphite from UOS architecture
+integration/zigvm-runtime: mrlxlwpu 444b2604 refactor(migration): relocate ZigVM deterministic runtime into UOS
+main: tywtmvls 1be8029d docs(journal): 13-section completion journal for mainline merge and swarm coordination
+review/codex-homeostasis-release-20260908-0551: zluqqwsl/0 83d5a7ca (divergent) fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance
+review/codex-manual-ui: zosuwowv/0 c5a0d3e6 (divergent) docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts
+review/codex-manual-ui-executable: tqqpqwnn/0 2be0d18d (divergent) feat(testing): add restricted Tailnet manual UI listener and keep navigation on its origin
+review/codex-side-hive-fencing-20260907-1854: pnmksopx 311d2b12 fix(sa-plan): fence completion by original claim attempt
+review/codex-side-homeostasis-20260908-0045: lopzuptq bf136217 fix(homeostasis): wire test and observed UI modes with bounded verification evidence
+review/codex-side-interface-skills-20260907-2312: ylnmkoss efbaea22 skills(ui): add repository-local GUI TUI rules and verification workflows
+review/codex-side-resource-controls-20260907-1906: lyytwtur c502fbd2 fix(resource): validate exact capacity and preserve observation authority
+review/codex-unification-20260908-0753: prkplrtv 9bbc5217 feat(assurance): record thirty risk-ranked cycles with lossless board/Zenoh evidence and native SDLC checks
+review/codex-unification-50: rvuxyuxy 6d15a6d3 docs(assurance): close fifty verified focuses with explicit ABI and integration holds
+review/codex-unification-50-merge-held: nounuxql 8b320ef9 (empty) merge: prepare fifty-cycle assurance integration; broad native gates held
+review/codex-unification-50-tested: rvllmwyn/4 c65ad8e2 (divergent) fix(guard): enforce JSON key contracts and add fifty-focus release assurance
+review/codex-unification-merge-20260908-0835: nxmnkqqt cd503010 (empty) merge(assurance): preserve latest main receipt with verified unification changes; production held
+tag/20260906-0836-tensor-evolution-wave-2-ratified: pykpkupl 520f96c1 (empty) merge: unify 10D tensor evolution manifold (EV-TENSOR-01..10, ADR-017) with reviewed migration slice and SA-Plan evidence
+tag/20260906-0925-fprime-fpp-beam-transmutation: nkotsltu 72558672 feat(fpp): evaluate NASA JPL F Prime and map full harness-bionic FPP topology into native Gleam/BEAM OTP 29
+tag/20260906-0935-fprime-fpp-full-features-beam-ratified: kqmwqltt 00a6897e feat(fpp): implement full NASA JPL F Prime feature set with Hierarchical State Machines, PrmDb, Packetizer, Ground Dictionary, and Lustre Web View in pure Gleam
+tag/20260906-0945-fprime-ontology-atlas-ratified: pqyovlpo f72396fc feat(fpp): integrate NASA JPL F Prime living biomorphic ontology, DMC+TCM, 5-tier algebraic atlas, and denotational flight intent into UOS BEAM substrate (JRN-20260906-0945-FPP)
+tag/20260906-0950-all-prompt-history-and-analysis-ratified: qskvopxk f898df95 docs(journal): archive definitive master prompt history, multi-phase deep analysis, and aerospace taxonomy ledger (JRN-20260906-0950-ALL-PROMPTS-AND-ANALYSIS)
+tag/20260906-0955-fprime-agents-taxonomy-ratified: qwpnnskv 7ad01329 feat(fpp): implement NASA JPL F Prime aerospace agent factory, 6D systemic matrix, and 16 canonical agent taxonomy (JRN-20260906-0955-FPP-AGENTS)
+tag/20260906-0955-harness-bionic-agentic-mapping-ratified: nursokmr f55f864c feat(fpp): implement Harness-Bionic MIQ intelligence services, swarm role homomorphism, and agentic ecosystem mapping (JRN-20260906-0955-HB)
+tag/20260906-1015-15-cycles-codex-claude-ratified: knnsqvkk 316d5530 feat(fpp): complete 15 analysis and evolutionary cycles alternating between Codex Astra and Claude Fable 5.1 (JRN-20260906-1015-15CYCLES)
+tag/20260906-1034-30-cycles-codex-claude-zigvm-ratified: nnponvsu 34e0271c feat(fpp): complete 30 analysis and evolutionary cycles incorporating ZigVM deterministic engine (JRN-20260906-1034-30CYCLES)
+tag/20260906-1045-60-cycles-codex-claude-full-zigvm-ratified: tzolyryr 3b59b512 feat(fpp): complete 60 analysis and evolutionary cycles incorporating full ZigVM functionality (JRN-20260906-1045-60CYCLES)
+tag/20260906-1055-mainline-merge-32-agent-ecology-ratified: kmtpzqlk 9a921cda feat(fpp): absorb remaining ZigVM surfaces, generate 32-agent aerospace ecology, and merge canonical mainline (JRN-20260906-1055-MAINLINE-MERGE-32-AGENTS)
+tag/20260906-1139-c3i-48-agent-ecology-ratified: ozmsxutn f4a84d3e feat(c3i): expand to 48-agent sovereign ecology unified across SDLC, SRE and verification systems (JRN-20260906-1139-C3I-48-AGENTS)
+tag/20260906-1215-c3i-72-agent-ecology-adk-ratified: mmnmuvtw a7e24eb8 feat(c3i): expand to 72-agent sovereign ecology, absorb Google ADK engine, and replicate ZigVM complete lifecycle (JRN-20260906-1215-C3I-72-AGENTS-ADK)
+tag/20260906-1424-fractal-system-reference-map-ratified: lsqowvos aa0ef772 docs(hermes): author fractal system reference map across 10 layers and 5 surfaces (JRN-20260906-1424-FRACTAL-MAP)
+tag/20260906-1545-mainline-merge-25-prompts-ratified: wllzozss 483f3c94 (empty) merge: unify 25-prompt C3I aerospace agent ecosystem into main (JRN-20260906-1545-MAINLINE-MERGE)
+tag/20260906-1605-vfs-single-journal-expansion-ratified: pnqtuoyw e0fdf9bc docs(journal): update single VFS journal with repeated prompt, source map, feature review, use cases, and prompt lineage (JRN-20260906-112237-VFS-EXPANSION)
+tag/20260906-1615-vfs-continuity-and-diagrams-ratified: pkuylntu c7aac591 feat(vfs): fully integrate descriptor-relative VFS 8 laws, continuity reconciliation, and architectural diagrams (EV-21)
+tag/20260906-1620-master-prompts-history-and-vfs-journal-ratified: zqlrumzz 69a30cb4 docs(journal): save prompts history and deep analysis in master journal and ratify ADR-046 (JRN-20260906-1620-PROMPTS-VFS)
+tag/20260906-1635-sa-plan-ocaml-engine-and-actor-ecosystem-ratified: zmtmkztx dfcd0bcd feat(sa-plan): integrate Hermes Sa-Plan OCaml engine, 12 test suites, EV-22, 17 aspects, and multidimensional actor ecosystem
+tag/20260906-1649-single-file-session-handover-to-codex-ratified: zxzmropt bd7ddf4d fix(handover): restore EV-36 and renumber all 84 EV cycles in single-file handover tome
+tag/20260906-1700-hermes-bionic-full-integration-ratified: vulyksut 059b7c05 feat(hermes-bionic): full systemic integration via 17 aspects, 18 L1 families, L0-L6 evidence, LX control plane, FPP, and actor ecosystem (EV-23)
+tag/20260906-1730-omni-fractal-symbiosis-ratified: yrqprrml 52b3b28c feat(omni-matrix): operationalize omni-fractal systemic symbiosis across 14 vectors, 17 aspects, 10 use cases, and formal verification (EV-24)
+tag/20260906-1745-mainline-merge-omni-fractal-ratified: qyokuqon 86546aaf merge: ratify omni-fractal systemic symbiosis and 17-aspect closure into main (JRN-20260906-1745-MAINLINE-MERGE)
+tag/20260906-1755-omni-fractal-full-generation-ratified: nkrkomrk 7fdf06e8 feat(omni-matrix): generate all systems, components, agents, features, scalability profiles, and formal aspects (EV-24)
+tag/20260906-1800-omni-fractal-tensor-closure-ratified: ukzvoyqk 65ff426f feat(omni-matrix): ratify Cartesian tensor generation across all systems, components, agents, and features (EV-24, JRN-20260906-1800-CARTESIAN-TENSOR)
+tag/20260906-1800-session-handover-to-codex-ratified: kuwwospy 0a662510 chore(handover): master tri-sovereign session handover to OpenAI Codex (ADR-053, EV-24 complete)
+tag/20260906-1830-15-evolutionary-cycles-ratified: vyxuzwps 74bbf3ea feat(evolution): operationalize and ratify 15 evolutionary cycles EV-25..EV-39 (JRN-20260906-1830-15-CYCLES)
+tag/20260906-1900-c3i-knowledge-runtime-15-cycles-ratified: xmulwkpk 844e6d2e feat(knowledge): operationalize c3i knowledge runtime and ratify 15 evolutionary cycles EV-40..EV-54 (JRN-20260906-1900-C3I-KNOWLEDGE)
+tag/20260906-1930-c3i-artifacts-ingestion-15-cycles-ratified: rpuzmokv 91003447 feat(knowledge): ingest c3i artifacts, operationalize gleam actors, and ratify 15 evolutionary cycles EV-55..EV-69 (JRN-20260906-1930-C3I-INGESTION)
+tag/20260906-2000-session-handover-to-codex-ratified: nlqspmyv 2b5a153b chore(handover): establish full documentation set for master session handover to codex (DOC-20260906-2000-CODEX-HANDOVER, ADR-057)
+tag/20260906-2100-c3i-vertical-slice-and-wave4-ratified: svtmsvqs 4305b821 feat(knowledge): implement c3i vertical slice, 17-aspect synthesis, and ratify 15 evolutionary cycles EV-70..EV-84 (DOC-20260906-2100-, ADR-058)
+tag/20260906-2200-session-handover-to-codex-ratified: kqmmxvmm 372bc0cc chore(handover): establish full documentation set for master session handover to codex (DOC-20260906-2200-CODEX-HANDOVER, ADR-059)
+

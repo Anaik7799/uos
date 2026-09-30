@@ -1,0 +1,42 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+    "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/tools/ev107_rete_reference.ml",
+    "--self-test"
+  ],
+  "utc_started": 1788972115.261181,
+  "utc_finished": 1788972115.746775,
+  "elapsed_seconds": 0.485593946,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "ORACLE_FIXTURE PASS synthetic-complete-independent-walk\nORACLE_FIXTURE PASS omission\nORACLE_FIXTURE PASS duplicate\nORACLE_FIXTURE PASS duplicate-replaces-missing\nORACLE_FIXTURE PASS false-closure\nORACLE_FIXTURE PASS false-fired-count\nORACLE_FIXTURE PASS noncanonical-number\nORACLE_FIXTURE PASS malformed-row\nORACLE_FIXTURE PASS wrong-order\nORACLE_FIXTURE PASS digest-tamper\nORACLE_FIXTURE PASS failed-exit\nORACLE_FIXTURE PASS timeout\nORACLE_FIXTURE PASS killed\nORACLE_FIXTURE PASS unbounded-child\nORACLE_FIXTURE PASS elapsed-overrun\nORACLE_FIXTURE PASS regressing-time\nORACLE_FIXTURE PASS nonfinite-time\nORACLE_FIXTURE PASS output-oversize\nORACLE_FIXTURE PASS duplicate-key\nORACLE_FIXTURE PASS escaped-duplicate-key\nORACLE_FIXTURE PASS nested-duplicate-key\nORACLE_FIXTURE PASS malformed-json\nORACLE_FIXTURE PASS oversize-json\nORACLE_FIXTURE PASS depth-limit\nORACLE_FIXTURE PASS regular-file-read\nORACLE_FIXTURE PASS symlink-file-refusal\nORACLE_FIXTURE PASS directory-refusal\nORACLE_FIXTURE PASS fifo-refusal\nORACLE_FIXTURE PASS relative-path-refusal\nORACLE_FIXTURE SUMMARY synthetic_only=true checks=29 PASS\n",
+  "output_sha256": "aaaa9dba5668c2102b74960df6d1014f7975fcb60825ad1ad4abcf8fc9d77fc7",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-fbe514:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

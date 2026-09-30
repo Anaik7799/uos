@@ -1,0 +1,48 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit";;
+open Yojson.Safe.Util
+let root = "/home/an/NAS-setup/uos"
+let ws = ".uos-workspaces/ev98-wire-codec-20260909"
+let read p = let c = open_in_bin p in Fun.protect ~finally:(fun () -> close_in_noerr c) (fun () -> really_input_string c (in_channel_length c))
+let sha b = Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) b |> Cryptokit.transform_string (Cryptokit.Hexa.encode ())
+let now = Unix.gettimeofday ()
+let iso t = let x = Unix.gmtime t in Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ" (x.tm_year+1900) (x.tm_mon+1) x.tm_mday x.tm_hour x.tm_min x.tm_sec
+let stamp = let x = Unix.gmtime now in Printf.sprintf "%04d%02d%02d-%02d%02d" (x.tm_year+1900) (x.tm_mon+1) x.tm_mday x.tm_hour x.tm_sec
+let strings xs = `List (List.map (fun s -> `String s) xs)
+let files = ["engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml"; "engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli"; "engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml"; "engines/hermes/modules/system_engg/dune"; "tools/ev_native.ml"; "tools/test_ev107_digest.ml"]
+let paths = List.map (fun p -> ws^"/"^p) files
+let scope = "Repair EV107 expected-digest validation only: canonical lowercase SHA256 must match exact payload and both passing oracle digests; retain matching rejection parity without granting payload authorization. Isolated native OCaml tests, designated mismatch mutants, immutable byte binding and independent review. No Rete changes, solver, deployment or admission."
+let factors = List.map (fun (key,value,rationale) -> key, `Assoc ["value",`Int value;"low",`Int value;"high",`Int value;"rationale",`String rationale;"evidence_refs",strings paths]) ["criticality",4,"Ignored expected digest permits false consistency evidence";"stpa",4,"Unsafe positive comparison exists; no observed runtime authority use";"fmea",4,"S4 O3 Det3 RPN36 F4: repeatable false evidence, currently confined to tests";"dependency",3,"Required before component differential evidence can be trusted";"impact",3,"Bounded common comparison correctness, no release authority"]
+let rec adapt = function
+| `Assoc xs -> `Assoc (List.map (fun (k,v) -> k,(match k with
+| "plan_id" -> `String "uos/ev107-digest/20260909"
+| "task_id" -> `String "DIGEST"
+| "task_state" -> `String Sys.argv.(1)
+| "assessment_id" -> `String ("ev107-digest-"^stamp)
+| "actor" -> `String "codex-ev107-digest"
+| "scope" -> `String scope
+| "class" -> `String "P1"
+| "score" -> `Int 576 | "score_interval" -> `List [`Int 576;`Int 576]
+| "dependencies" | "blockers" -> strings []
+| "readiness" -> `String "ready"
+| "observed_at" | "ready_since" -> `String (iso now)
+| "valid_until" -> `String (iso (now+.3600.))
+| "evidence_refs" -> strings paths
+| "factors" -> `Assoc factors
+| "snapshot" -> `Assoc ["kind",`String "working_tree";"reference",`String "Owned JJ child of immutable 52e013cfe8c32d6c8d4353c27cfdf0a23f225124";"evidence",`List (List.map (fun p -> `Assoc ["path",`String p;"sha256",`String (sha (read (root^"/"^p)));"observed_at",`String (iso now)]) paths)]
+| "cause" -> `String "Expected digest ignored and passing reference digest not compared"
+| "effect" -> `String "False positive differential evidence for unrelated payload bytes"
+| "controls" -> `String "Exact digest comparison, canonical encoding, real mismatch negatives and independent review"
+| "severity" -> `Int 4 | "occurrence" -> `Int 3 | "detection" -> `Int 3 | "rpn" -> `Int 36
+| "s" | "band" -> `Int 4 | "o" | "det" -> `Int 3
+| "stpa_analysis" -> `Assoc ["controller",`String "OCaml differential oracle";"control_action",`String "Report exact payload digest and oracle agreement";"losses",strings ["L-RISK-UNAUTHORIZED-EFFECT"];"hazards",strings ["H-RISK-FALSE-CLEARANCE"];"ucas",`List (List.map (fun (kind,context,constraint_) -> `Assoc ["type",`String kind;"applicability",`String "applicable";"context",`String context;"hazard_ids",strings ["H-RISK-FALSE-CLEARANCE"];"constraint",`String constraint_]) ["not_provided","Digest validation omitted","Compare supplied digest to exact payload";"provided_unsafe","Wrong same-length digest earns positive parity","Reject malformed, wrong or disagreeing digest";"wrong_timing","Candidate changes after observation","Pin source and output bytes";"duration","Unbounded verification child","Bound process time and capture"])]
+| "decision" -> `Assoc ["summary",`String scope;"alternatives",strings ["Keep ignored expected digest";"Require canonical exact digest and meaningful parity"];"assumptions",strings ["Only direct tests call current API; parent explicitly authorizes bounded task"];"confidence",`String "analyst_estimate";"counterevidence",strings ["No actual authenticated dispatch or formal admission is established"];"forecast",`String "Wrong expected digest fails before repair, exact matching positive and refusal parity remain after repair";"falsifier",`String "Wrong, empty, malformed or disagreeing digest receives Ok true";"acceptance",strings ["Designated assertion RED with current source";"Known SHA256 positive and empty payload";"Same-length wrong, empty, nonhex, uppercase and wrong-length expectations refused";"Primary/reference digest and verdict disagreement refused";"Immutable candidate and native artifacts bound";"Independent review"];"rollback",`String "Retain old source and failed receipts; no live effect changes";"budget",`String "One isolated native Dune build at a time, 60 second children, no network or packages";"reviewer",`String "Parent-arranged independent review";"residuals",strings ["No Rete semantics, real formal proof, producer authentication or admission"];"supersedes",`String "Separate bounded DIGEST task"]
+| _ -> adapt v)) xs)
+| `List xs -> `List (List.map adapt xs) | v -> v
+let () =
+ let template = root^"/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-0548-ev-admission-native-risk-1788931608.json" in
+ let old = Yojson.Safe.from_file template |> to_list |> List.hd in
+ let result = adapt old in
+ let path = root^"/"^ws^"/docs/reviews/"^stamp^"-ev107-digest-risk-"^string_of_int (int_of_float now)^".json" in
+ Yojson.Safe.to_file path (`List [result]); print_endline path;
+ List.iter (fun (k,v) -> if not (List.mem k ["snapshot";"factors";"decision";"stpa_analysis"]) then Printf.printf "%s=%s\n" k (Yojson.Safe.to_string v)) (to_assoc result)

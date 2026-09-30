@@ -1,0 +1,601 @@
+{
+  "authority": "NONE",
+  "candidate": "e2bb27072c55128420d529533686a86e896dec62",
+  "source_manifest": [
+    {
+      "path": "apps/uos_swarm/test/session_store_verification_test.gleam",
+      "sha256": "e2f83d24bd05b616a942d228ea0a63e5292ab75f936e9a8cdaed8cf44691d034"
+    },
+    {
+      "path": "apps/uos_swarm/test/session_store_test_ffi.erl",
+      "sha256": "d0d5acb2ac0c9630658f81b43acdca54505ef2147d4e1e0f8f37c5691fd8d005"
+    },
+    {
+      "path": "apps/uos_swarm/test/session_store_test.gleam",
+      "sha256": "a070733e611429f8ae68c77e9900fcc1028e0f58d22e865d4e36c1edfc1cbdaf"
+    },
+    {
+      "path": "apps/uos_swarm/gleam.toml",
+      "sha256": "6e6f15e555dcc101d420902fc2a3b1cc4b27d0bc2f1edff1cf42513eed6b57ab"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm_ffi.erl",
+      "sha256": "35d10385f9de8f69244b42bf985577b28ebe05beaf000bd0623c2f74ea78bd3c"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm.gleam",
+      "sha256": "593ea92753d6d5b5deae5da99c8d0cd39e2a959ac33da95d0d67fd9fc343f99d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/tps.gleam",
+      "sha256": "b1d7436f92f0282ba67de1ff58c07601ffae0d33e7b7952ab270a9c31cd8d961"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/system_ontology.gleam",
+      "sha256": "fcc156dcfd40b0ea142d8521cf55065a947bfa5f06ed3ef92eb5c489cf71f2b7"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/system_audit.gleam",
+      "sha256": "01462a4ec10157a4cf3743d27933945c50f4dd3a302a0dea54452f08475e9223"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/swarm.gleam",
+      "sha256": "d7b9fe1d920a200313dda44362f6a0089ce13c8bac84d5d8fc8fb48bbb067d9a"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/sutra.gleam",
+      "sha256": "c91b945c59063ad1bc384bf99f584e0c3ff8562d7a687ca6c9d20c71243ecb70"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/sup_generator.gleam",
+      "sha256": "9895aafc2c7ed96bd745c95865c5a92f3e72e5a0aa2f9247f956ead26313be6c"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/stpa.gleam",
+      "sha256": "c7c0c6862f49ae21f11a65c4cd67cbda538dfed6f51423ef95f7710fe134db54"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+      "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "e2d5ba9ee4854cf3228299137e904cb4126ea569d1a933a793c1bfb2cd35cf5b"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_observation.gleam",
+      "sha256": "a2d33ec0264fbcbc0a87f85b3e2b822a4d1267c8d20fc709ec491adff76ffc11"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_binding.gleam",
+      "sha256": "39322a8039c7ea3fc6464571a856bebde3d2506ad4247bed73c3e2268f4e96ae"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/sangita.gleam",
+      "sha256": "0ab7b66eeb5e29940f14d11ca13058014c3277dcfded070db6092a704e6a61ad"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/route.gleam",
+      "sha256": "4c858b2c3ad22dbc49aefb175c4f87aa32e633f4123a470c5d171c430ff652e5"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/raga.gleam",
+      "sha256": "d509cbd0180650a6c8586ead88a7906a5f9cdda411f33ffa710cdc373986a23d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/provenance_panel.gleam",
+      "sha256": "015ec799f04384ac03b400c246fb5c4484c62965070086570545720ef9e0b7c1"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+      "sha256": "63e7c0042118a42b3d285e9db9ed608ac032e7ad5834d33ae148802115d2f3bf"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/ooda.gleam",
+      "sha256": "08c0615ff4d36a33c7e84a1985de22f875ac539c28f7299621129a5331aa6be4"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/manager.gleam",
+      "sha256": "eb1fa8ee09405dfe2910d8753e2f1f9fb9b80a534bc2b238f4bd300d75e9c551"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/live_evolution.gleam",
+      "sha256": "00ef9bffe4e32ef88d25a96d99d8161bf964aecc186f104c3766a0c6a3234286"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/jj.gleam",
+      "sha256": "f549303034741dd1ee63ad2631a4a84e40740cafcd406f798b337b4ad8014473"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/holon_km.gleam",
+      "sha256": "62bddfb1a685d19075726d7d300dbbdf39b4cbae231a59707b9ab3f56d17ab35"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/holon.gleam",
+      "sha256": "33459fa6ae7ae1c8b7809d90a6977ef8e3f868e8ff0c494f496f83fde9bd204d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/hive_projection.gleam",
+      "sha256": "c8670794d8ab3598d5b2b659b7730c0238c99787531b8663b63392d1fd88b682"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/hive_kpi.gleam",
+      "sha256": "d8e05d8835feef7925dff0921467160e82f15b754ec4a6fbb7ddd1d505bfe2a7"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/herdr.gleam",
+      "sha256": "6eba710b1265f6ebb15700fb70a5296ab518314676c06eb4aa1c760c8097274a"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/gita.gleam",
+      "sha256": "25d1852d2aa3e5c9bfd50543a135a5deddcf679e23bb6e17ce6917af8b9f652a"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/fmea.gleam",
+      "sha256": "3e8fd81cb974a7f592669822f04cb0f2ae1ea9202dfb15391c1e92ed116a9951"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/evolve.gleam",
+      "sha256": "2b8c2be346de72e422a5a781961e606766e414e385989ccf2e6fb0c5e0974b49"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/dream.gleam",
+      "sha256": "6183c940be2eaf0e8c89ec61f2f6f228c532526dfd3b8e44eb650682c180d27d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/decision_record_cli.gleam",
+      "sha256": "d775a5e5592a183be8044d6f74b949809f89a9331b2e1139c5a353a2b6b65cd8"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/decision_record.gleam",
+      "sha256": "259798f58fdb5d605ea8a09e660e0f9edb952f7db0d642f201bff36c57d8bdc2"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/coord.gleam",
+      "sha256": "dbe42fb21ccc674b3f36621c456c9831a466819387a1901e820f3f4904df3dd1"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/cockpit.gleam",
+      "sha256": "b4f28c91daf7716fc8b194ea077da3e17d6b3b0960dfd0eeb59f50a0c1dd2751"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+      "sha256": "520b58feafa08310f3bde5c83db1cd2813f0f6c161d011b07d73778923780380"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+      "sha256": "38987ae4ff5d16752aacfc070b4781ef095560a5d8480e4ac3c6e5a55700f9a4"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+      "sha256": "516c0d769cb3f5f8dc827d09fa62aef724686ca1565096ba1c55b5a912df311e"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/board_reader.gleam",
+      "sha256": "d44dc115d851b5cbb1b04822123fc9375c23becce6166b3f4d4c4d4bfe3afe97"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/board_insights.gleam",
+      "sha256": "1c5ac002e489de27103f9fe22367342aa69886023ab2bad65a445d5643621939"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/board.gleam",
+      "sha256": "758505ee41c30f73bdc118b326d86137749ade1aa2b45a54d8e6b0a00632f2bc"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/agent_runtime.gleam",
+      "sha256": "3df41436954e98d063d113ae0ee61d8a6940d05e181e1547ea3e9b7ce19d6e24"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/action_boundary.gleam",
+      "sha256": "36ce18964906ee1b8c6d012a72430250bb97936bf24a2eeeee6898341bfd6154"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/acl.gleam",
+      "sha256": "2477d4df87689b846b31574a513600d9c430a70242d8ee71901aab86d33daf60"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_sangita_cli.gleam",
+      "sha256": "b1eb723567fef5998adec9ddb31f2c528f7206643e4cee129a3f3b9a01ec7082"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_route_cli.gleam",
+      "sha256": "6049b0ac8a0ca9735eed5e5b33761a96d5fc0f8f5cefdad5e8599bef25aefc3f"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+      "sha256": "0fac69889267296abfb35a975a7d90081ee58c833c52634c36a1d8571e7cb552"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_jj_ffi.erl",
+      "sha256": "77e4792e3d282faeb2274c888975fcfa5f8dd3ead63379fb2ea64c6cc1dd8aa1"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_jj_cli.gleam",
+      "sha256": "bfa3547cac2161efa5d7fa5dca3caf28de85d06ac4c53a2cad2dc1752f41ba59"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_hive_cli.gleam",
+      "sha256": "55dcfc372202d4e3c6b00bea736b8db85f276fa5e726bf6711b4f1cc03be6b46"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_herdr_ffi.erl",
+      "sha256": "cb1e6349c1be4fa224816b7c7933d58cb9ad58b5282dec05dbd65316c9dbf5c8"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_sync_ffi.erl",
+      "sha256": "41b33e65025c5e9ea68b5fbde62186a08a6524822bc6bf78e902d998559650fe"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+      "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_store_ffi.erl",
+      "sha256": "72630cf09783dd4e78c855fd8411594a362b72a43901d5ebafba489846a44b20"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_store_cli.gleam",
+      "sha256": "e4cca142da1d8dfa8a7cad63e36a2d9d83390d8141201e0ecb55518e3539814e"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_observation_cli.gleam",
+      "sha256": "d2e873da03de4bdbfe8eeed3567356415a96068b5d4c69ad027f4a03a241bbf6"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_binding_cli.gleam",
+      "sha256": "95ac7bf7ed75215ab9514c5dc7ba2f033c555d2cc6ee99787022d28857493a49"
+    },
+    {
+      "path": "apps/uos_swarm/src/openrouter_worker_cli.gleam",
+      "sha256": "59bebbf64c1f63ca9c9953484fee2130be3748a35bbc699a26f65023c3b1b2f6"
+    },
+    {
+      "path": "apps/uos_swarm/src/live_evolution_ffi.erl",
+      "sha256": "c36ad7e01ee19edc8492333e42b245da8ad2029ad9f1f55b8b05baac91174a4c"
+    },
+    {
+      "path": "apps/uos_swarm/src/live_evolution_cli.gleam",
+      "sha256": "ac0b77427ae84df1740d77e491527e82e95a062080594601ff4dc6c8673ea854"
+    },
+    {
+      "path": "apps/uos_swarm/src/herdr_sync_cli.gleam",
+      "sha256": "fbd87eb98be6d8f3ae305c19d9179849c35155d8fb4b78d436fe6f7b75468bfe"
+    },
+    {
+      "path": "apps/uos_swarm/src/clock_guard_ffi.erl",
+      "sha256": "cc7d1771d8976dc036fbd5011cb2a15746a324a22da8b6a1437b6016fa336251"
+    },
+    {
+      "path": "apps/uos_swarm/src/clock_guard_cli.gleam",
+      "sha256": "a9d9537d5cd78277ead755161ee65cadabce007653a6a2b48fd3dcf57ebf3e6d"
+    },
+    {
+      "path": "apps/uos_swarm/src/board_reader_ffi.erl",
+      "sha256": "4440701291af49876ba2e9ad1e3b83522bda364c08e8db791a0081c8b59fe00d"
+    },
+    {
+      "path": "apps/uos_swarm/src/board_insights_cli.gleam",
+      "sha256": "b7f4e8ff298021e1a93f99020d6deb9d76b23a43c35ef37890474d2c2c43ae56"
+    },
+    {
+      "path": "apps/uos_swarm/src/action_boundary_cli.gleam",
+      "sha256": "cc3f7447ad8f79fb6bc03b56461791f09bdf5c400a2134c275d8005859a01ebc"
+    }
+  ],
+  "driver_manifest": [
+    {
+      "path": "tools/ev_native.ml",
+      "sha256": "f44349d131202ad18e6d5becf0bedf601dc91bacf5a773369dd576accc13df14"
+    },
+    {
+      "path": "tools/test_ev_native.ml",
+      "sha256": "38392ae72278177275c6d8f4eb2ba1b4b7ab656feacda66f845ac5f922cff7e0"
+    },
+    {
+      "path": "tools/ev_native_test_child.ml",
+      "sha256": "07849d3b8e95220000c4f261e6288b72fb2a6f4e83a5b1ee50b68f747edc41bd"
+    },
+    {
+      "path": "tools/test_session_store_verification.ml",
+      "sha256": "1697cbc08106c3287afdcf569b4df7b5fb007408227d0702fc6a157ca9385d57"
+    }
+  ],
+  "compiled_artifacts": [
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/action_boundary_cli.beam",
+      "sha256": "61349b3359a200e3483bf859928a9ec0572cab2d1535311e2b9826642b0774dd"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/board_insights_cli.beam",
+      "sha256": "56004f5a4d385d166e584a72a4c6c643ce3a6ac7a9f3995ab7181eb616f986bc"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/board_reader_ffi.beam",
+      "sha256": "009b5036dd13ccddcecaddf7b4c27756d2a2c49041b617be97bdbbb26a2176c7"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/clock_guard_cli.beam",
+      "sha256": "06e804a5233d797fa32cff6bab62832ea4c49afa1d8974021ba1d5c87475443c"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/clock_guard_ffi.beam",
+      "sha256": "69d2d9e055fc2189e386c88021e8f649405eea14a70088cccb53c03cab56b2cd"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/ev_store_verification_runner.beam",
+      "sha256": "da8987c57e48d9239f2e3ca7a23a5cf5664afa4fb6df73016b8b89df135c14b4"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/herdr_sync_cli.beam",
+      "sha256": "41a088b513c421fa5f48e49b36e375a63e76ca95bdf5290ebb266c93c9629a98"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/live_evolution_cli.beam",
+      "sha256": "245c1aeea63679104744c69c971f6396f71e9bf810a322f8dee726c17405dbc6"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/live_evolution_ffi.beam",
+      "sha256": "5ad36f068b5827d09549d595764f2bbdc3b71a8684aa45175af54381021d88c8"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/openrouter_worker_cli.beam",
+      "sha256": "6496299b0f83a1ed3108d52f77ab4d404e074607d79d5a6f6ce3ae2cef413ae7"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_binding_cli.beam",
+      "sha256": "eaa1f028b79bdf530d599629bc221ad79ed9d851d9fb7ffc85f0499d970fdb5a"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_observation_cli.beam",
+      "sha256": "ba90dc671fad9e5eca8f2c8919b79a053ee79d59e58f2dc4f8b6689060e2b97b"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_store_cli.beam",
+      "sha256": "73fcebdd371a68f81ce0c65978dd4bb78c76afb4f282ef39d4c469171a21a310"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_store_ffi.beam",
+      "sha256": "7b021709102858146f66588eed6c9665833a124717c8028e1e9c2eeb8667e4f7"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_store_test.beam",
+      "sha256": "540fc3bb6f4b9c36e736ddd6784ad4459b08cbc2fc7a9ca25dc11ad549084ba0"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_store_test_ffi.beam",
+      "sha256": "7a69b214f5a1347d10fc4db731db48c859bb06dd7b0d6e76b82a17c3e8eb2c92"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_store_verification_test.beam",
+      "sha256": "b85824f448eda7eca452799834340314fc39e74d26a47452209075dc300ee0d9"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_sync_cli.beam",
+      "sha256": "5036d4dc8bdc1a19678ad134686ae264aaa7f057a2d7f9aee4d32f04da27e4f7"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/session_sync_ffi.beam",
+      "sha256": "61c0216ff6481a30489ccf45b549666486a18e65621591c109e3d1da9b31f49c"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_herdr_ffi.beam",
+      "sha256": "b7a267aeceb61077efe2ef47a1dc58d8573edb47584568ff48dd30309c13de29"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_hive_cli.beam",
+      "sha256": "1f13373343670a82891cc93d4e1dc3373c006eb7c80574ee1c05ca58e4c33a4d"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_jj_cli.beam",
+      "sha256": "6917344e92da87ebde0a70c06a8fb88e14acb18a00436b13ac3bb73df19dbd69"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_jj_ffi.beam",
+      "sha256": "8693abe7f9f4def920d7d4182ea0000739a801488253444f559152cd68c33017"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_openrouter_ffi.beam",
+      "sha256": "d443ce1d1efc48de1cd5ea82510ca01bee59dcd4fd27f8baf0843385a9e07c93"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_route_cli.beam",
+      "sha256": "1dce0ddb663f6560a483b655fa540082bc454bfa4975b1d1cc9b206813ba52dc"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_sangita_cli.beam",
+      "sha256": "624e68b1cc694063353b3984179ff7c74eb042404684449e478fbc924acc080c"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm.beam",
+      "sha256": "83c6612f335a866fcd346791c0126d11b62417701f16654b590bf94a07f7e712"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@acl.beam",
+      "sha256": "66ecc9c08bd421e61c79faece1772c0e0baaf9ac535fdb742b80e5a01129ca15"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@action_boundary.beam",
+      "sha256": "b5c8a148d8d4c36b0ec7b9b3d6314243dd6dee2795fe4735636201bd8f331729"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@agent_runtime.beam",
+      "sha256": "eb0cb260665295cdadfc5610be7b4895c642dd3f7920b52cc18a62900bf3a502"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@board.beam",
+      "sha256": "a9b0302d72f5dde2138bbaa1b3f5513eaa07a2b1077b097d669e9ff32b65f250"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@board_insights.beam",
+      "sha256": "49986bbbad9da0ea6e90cbc416522111fc77636aff82056ce42a2f36746e5263"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@board_reader.beam",
+      "sha256": "9cbc7e765d8e41a57927a50e4bb17ef8b35b0d1908d1c03d82b120e62c025c50"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@clock_contract.beam",
+      "sha256": "340db21b1dfe040985afd9a6f2c646c12de54ff390ed42966cba52824dfbf224"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@clock_guard.beam",
+      "sha256": "4d64ceecf1d10ecbac628a9fc5d2dcbca17713ea0ec758dce6b128a3d4feedb7"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@clock_guard_fetch.beam",
+      "sha256": "66854af18cb5c662103e8f3918df8a0203fea637a681f93d77d075985c3aa701"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@cockpit.beam",
+      "sha256": "a05f1892fa3a4cacbb861c732f2394b8b392725026aa68ae55fd2415f1601124"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@coord.beam",
+      "sha256": "eb2ef0fb818fe49d247d67eb2225acb4faf1322d6b15eb2334012060e106626d"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@decision_record.beam",
+      "sha256": "3e0599468acdbea45f1b3326e6ab89629375d23f87e4da71a86dde4076a86b84"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@decision_record_cli.beam",
+      "sha256": "4289431bf499e86c66eeb7e5c5e21ed8339b52bb7cb78f792e9eb92711467a0d"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@dream.beam",
+      "sha256": "c22709a2322f68d66e4b9a623f998973f64ce4bd7330b42bd9a004e41cf12654"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@evolve.beam",
+      "sha256": "6d885f7af45dd139ec549126b1855b2f21a3280904b6c48826d3eb24d486b695"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@fmea.beam",
+      "sha256": "73bc8ff502a8ad49929539fc6e824d7e6b8ccd946bc1b37739d3e2783067497d"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@gita.beam",
+      "sha256": "052fcfeab7e22b4667437702335b84149651bba07ad148e3d809696e3ec4eff4"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@herdr.beam",
+      "sha256": "1c24f258b6bd69bc120d97042bbb19fd7a5807fbad6d2ee0d8da9ef60742518e"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@hive_kpi.beam",
+      "sha256": "54583a2a781c94e208fa52017e26323377afeee29227630118c144f5b551e4c6"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@hive_projection.beam",
+      "sha256": "6677747a3b9180d878d4a2f0190c43c463259cfc7e8a733a7457d1b50f61b7f1"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@holon.beam",
+      "sha256": "029bd2e40c8f6b4b85d15d6d69f60eb2acb5f3b9d287e216f4f36db8fae5d60f"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@holon_km.beam",
+      "sha256": "5f7eae1be81fbf0861b8b1869ac69eeecd9356afb522f7091086d8de70c6aa1c"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@jj.beam",
+      "sha256": "6ad9d024e1bcb79731beec081d8ded92d4396ca580ac45cf356da9a71b8010f7"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@live_evolution.beam",
+      "sha256": "2746b075a1862b0df4f6ac544413123d1a43b693a4c173d3f0bb550939058ecb"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@manager.beam",
+      "sha256": "97e8d2b8968429888c58669893ef1676492b1bdb3a8b416bea0719e75aba4e6e"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@ooda.beam",
+      "sha256": "875fb1ccfa0a63480702792dda343911032b7fa6fa9e586f541abce6595df4ba"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@openrouter_worker.beam",
+      "sha256": "e368438995e1196e29308a0a133232ef8be0a750775e6ff7ebe3eef5f6449802"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@provenance_panel.beam",
+      "sha256": "745ea55c8c59c042eec88a47b01188328fcda5714573b7f780b2524cb6b161d4"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@raga.beam",
+      "sha256": "2d958524906c0223f556decc1c8c475fc9145e5dadc5e522cae722ae6dc15cab"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@route.beam",
+      "sha256": "099e3e531a0807ce18fb4ae0e900983490568ea433652c7c9386a61b727a254c"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@sangita.beam",
+      "sha256": "e198f61e8e11b85881dd11d9a1df788c246050c2fabcf3f823f8a439107f5079"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@session_binding.beam",
+      "sha256": "e57363700e32169d59e5aaf2690873f11df48e608ea580f7a727e2fde528d790"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@session_observation.beam",
+      "sha256": "7a0b6464d0a22928b516e2501b3bb9aff5b56d4a541b50d4d3d5da7f8cd8c757"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@session_store.beam",
+      "sha256": "c978d169dc9e6e292d14643ec85f3a3ea1c8cf0b23846b4380e244543f7ba640"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@session_sync.beam",
+      "sha256": "a3202a1461a5ee093332582eafc6d11610076c15a5ddc1ca170770c09826c09a"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@stpa.beam",
+      "sha256": "0b445dd30a6ca6991bda064cc6d18c27ba2c0215e433927972b8d85cf3b82078"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@sup_generator.beam",
+      "sha256": "bdf205821a5250b5d6b6c5de7a327803f94721b0fdc4469aeba74407840d0932"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@sutra.beam",
+      "sha256": "2ffa6c93e691d92d4a0d1e20e7e05cd247fb436ab56ef74537d43cc196381c58"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@swarm.beam",
+      "sha256": "ff903f1592a21ae9e8c31b26cd63a8a61b3c707b50d0b28b34d8ec53c22c6097"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@system_audit.beam",
+      "sha256": "bfcd336f458676dc6eb199b0057ffd61cb8e816438bf4df337150fa1dca1a158"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@system_ontology.beam",
+      "sha256": "153d806b2d56dbdf097b616f151b54cec18610e37a2bdf1c44689405215e1cbe"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm@tps.beam",
+      "sha256": "fb0f6dfce21b2e104a8d40a9a3ef2e78f30a1b8f992b6b5c0e8fe8bf9f57642b"
+    },
+    {
+      "path": "/tmp/uos-store-verification-run-119ce5/compiled/ebin/uos_swarm_ffi.beam",
+      "sha256": "b08d5fbd26baefdcf2ae049d8cadfbba57ce0c09eae4e68c382e7aaffe1bc76a"
+    }
+  ],
+  "esqlite_artifacts": [
+    {
+      "path": "/home/an/NAS-setup/uos/apps/uos_swarm/build/dev/erlang/esqlite/ebin/esqlite3.beam",
+      "sha256": "7c04cc402edc8a511b3e20ca933844da04e706487f39acbd46dc60d84302ad58"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/apps/uos_swarm/build/dev/erlang/esqlite/ebin/esqlite3_nif.beam",
+      "sha256": "16cbc50c472301601997a980f69e1df37e3f810ff96e23c42039187d3e53cc89"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/apps/uos_swarm/build/dev/erlang/esqlite/priv/esqlite3_nif.so",
+      "sha256": "a3e2d8c6e915e7f9b0c2430ea2f6795932039c0ef72565187203d1724e0cbecc"
+    }
+  ],
+  "extra_cli_checks_passed": 3
+}

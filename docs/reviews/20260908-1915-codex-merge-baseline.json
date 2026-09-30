@@ -1,0 +1,122 @@
+{
+  "schema": "uos.codex-merge.baseline.v1",
+  "observed_utc": "2026-09-08T19:47:56Z",
+  "plan": "uos/codex-mainline-merge/20260908-1925",
+  "task": "M1",
+  "base": "1be8029d72bc9530b1937564a37c555bd0b4b938",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-merge-execute-20260908-1925",
+  "source_admission": "HOLD",
+  "main_moved": false,
+  "runtime_mutated": false,
+  "checks": [
+    {
+      "name": "sa-plan exact-source build",
+      "outcome": "PASSED",
+      "version": "0.4.0",
+      "executable_sha256": "82ad9f3c820c0f3326eb96fda6f8233785fa791c9ef2f7ceb56c1722e32bec9d"
+    },
+    {
+      "name": "sa-plan CLI",
+      "outcome": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "name": "sa-plan lease fencing",
+      "outcome": "PASSED",
+      "exit_code": 0,
+      "assertions": 2955,
+      "failures": 0,
+      "bounded_oracle_traces": 729
+    },
+    {
+      "name": "sa-plan durability",
+      "outcome": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "name": "cepaf_gleam source build",
+      "outcome": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "name": "indrajaal_gleam_web source build",
+      "outcome": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "name": "uos_swarm source build",
+      "outcome": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "name": "c3i_ocaml_nif baseline",
+      "outcome": "FAILED",
+      "exit_code": 1,
+      "passed": 1,
+      "failed": 12,
+      "skipped": 0,
+      "reason": "Current artifact requires GLIBC_2.42; selected OTP 29.0.6 / ERTS 17.0.6 uses GLIBC 2.40."
+    },
+    {
+      "name": "read-only live runtime identity",
+      "outcome": "NOT_READY",
+      "http_status": 503,
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/v1/runtime/identity",
+      "runtime_ready": false,
+      "application_admitted": false,
+      "erts": "17.0.6",
+      "os_pid": "3108525"
+    }
+  ],
+  "provisioning": {
+    "new_packages_installed": 0,
+    "hex_archives_verified": 31,
+    "third_party_build_cache_reused": true,
+    "product_source_compiled_in_owned_workspace": true,
+    "network_namespace_isolation": "UNAVAILABLE: uid_map permission denied; not retried",
+    "initial_build_failure": "Offline rebar pc plugin resolution failed; existing compiled third-party cache reused. This is not a hermetic dependency rebuild.",
+    "nif": "Copied only identified OCaml NIF into own ignored priv for ABI positive-control failure; no canonical native file changed."
+  },
+  "authority": {
+    "task_completion_means": "Baseline assessment completed with failures recorded, not a passing system or source admission.",
+    "remaining_gates": [
+      "M6/M7 blocked on native ABI repair and fresh exact-candidate tests",
+      "Owner acknowledgements and dirty/untracked-source reconciliation",
+      "Independent review and exact main/lease checks"
+    ]
+  },
+  "logs": [
+    {
+      "path": "var/merge-checks/sa-plan/test_sa_plan_cli.log",
+      "sha256": "3ca032095466cf49573ea78b0c893274ff1f24bf76b52c6e8f857d56582bd8ed"
+    },
+    {
+      "path": "var/merge-checks/sa-plan/test_sa_plan_leases.log",
+      "sha256": "0a369e420944646c4e09f59ad224ba0f5d5892f119fdceb945e4f5a7ddb41e3c"
+    },
+    {
+      "path": "var/merge-checks/sa-plan/test_sa_plan_durable.log",
+      "sha256": "38bf5d3129df21183033d3ee5fde61fab5a4f4047e9e0032a745649ec08a40e1"
+    },
+    {
+      "path": "var/merge-checks/baseline-cepaf-build-provisioned.log",
+      "sha256": "744374a3a0c27a64f5dfa574cdb382ef2c23c743f83c3709e781a96e75a69fdc"
+    },
+    {
+      "path": "var/merge-checks/baseline-web-build.log",
+      "sha256": "d0ea2ee11b2dc88d080236f39fb2213e4ded0af11837af10d25b8627a56de8d9"
+    },
+    {
+      "path": "var/merge-checks/baseline-swarm-build.log",
+      "sha256": "1b819864fcb341a5348390a722f599bcfd1193b22e96ca5abf501473baa7abca"
+    },
+    {
+      "path": "var/merge-checks/baseline-c3i-ocaml-nif-test.log",
+      "sha256": "9d473c27717345999f1b3c89c0c62c2557ba19eb636731cd423d3c81545e9daf"
+    },
+    {
+      "path": "apps/cepaf_gleam/priv/c3i_ocaml_nif.so",
+      "sha256": "cfa6ab0be38bc23dc288e8a017d66ffa767bf1fa18ccfb2d9e374a071072df30"
+    }
+  ]
+}

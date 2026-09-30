@@ -143,6 +143,8 @@ pub fn raw_payload_and_unregistered_actor_are_refused_at_insert_test() {
 
 pub fn empty_store_is_integrity_only_not_operational_readiness_test() {
   let db = fixture_root() <> "/events.sqlite3"
+  let assert Ok(empty) = store.open(db)
+  let assert Ok(_) = store.close(empty)
   let assert Ok(report) = cli.run(["verify", db])
   string.contains(report, "\"ok\":true") |> should.be_true
   string.contains(report, "\"nonempty\":false") |> should.be_true
@@ -157,6 +159,16 @@ pub fn canonical_registered_store_verifies_with_semantic_replay_test() {
   string.contains(report, "\"replay_ok\":true") |> should.be_true
 }
 
+pub fn writable_database_paths_refuse_lexical_aliases_test() {
+  let root = fixture_root()
+  [root <> "/./events.sqlite3", root <> "//events.sqlite3", root <> "/../events.sqlite3"]
+  |> list.each(fn(path) {
+    let assert Error(error) = cli.run([path, "register", "codex", "codex", root, "revision", "-", "alias-register"])
+    string.contains(cli.response(Error(error)).1, "aliases are refused") |> should.be_true
+  })
+  simplifile.is_file(root <> "/events.sqlite3") |> should.equal(Ok(False))
+}
+
 pub fn digest_failure_is_a_cli_error_not_success_test() {
   let db = registered_store()
   let assert Ok(_) =
@@ -165,7 +177,7 @@ pub fn digest_failure_is_a_cli_error_not_success_test() {
       "DROP TRIGGER events_no_update; UPDATE events SET body_json = '{}' WHERE sequence = 1",
     )
   let assert Error(error) = cli.run(["verify", db])
-  string.contains(error, "sha256 mismatch") |> should.be_true
+  string.contains(cli.response(Error(error)).1, "sha256 mismatch") |> should.be_true
 }
 
 pub fn correct_digest_cannot_admit_an_unregistered_actor_test() {

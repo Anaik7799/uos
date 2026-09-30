@@ -1,0 +1,255 @@
+[
+  {
+    "fmea_modes": [
+      {
+        "id": "FM-BOOTSTRAP-OBSERVATION",
+        "s": 3,
+        "o": 4,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "JJ read paths can initialize secure config or migrate metadata; existence-only topology is weak.",
+        "effect": "Unintended mutation or false bootstrap readiness.",
+        "controls": "Secure config preflight, native topology checks and private before/after falsifiers."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Independent bootstrap component reviewer",
+      "control_action": "Assess observer topology/config preflight and G-BOOT1 dispatch",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Config migration checks omitted before read-only JJ.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Inspect actual secure-config code and test missing/legacy/relocated refusal."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Observer writes config or empty marker is mistaken for full lineage.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Private fixtures and before/after fingerprints; narrow topology claim and unresolved lineage retained."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Mutable source or expired task reused.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Fresh task/source assessment, immutable extraction and exact candidate binding."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Compiler/subprocess uses shell or unbounded resource path.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Raw-bytecode explicit targets, pinned ocamlrun, bounded children/output and realized toolchain only."
+        }
+      ]
+    },
+    "decision": {
+      "falsifier": "Observer accepts malformed topology or changes selected/config paths during an ostensibly read-only observation.",
+      "forecast": "Missing/legacy/relocated secure metadata refuses before JJ can initialize config IDs; accepted private topology remains unchanged.",
+      "supersedes": "New bootstrap REVIEW; all prior component tasks completed",
+      "residuals": [
+        "Cooperative filesystem, not hostile mutation or effect-time fence",
+        "Missing original EV1 lineage/full sovereign evidence bars whole-EV approval",
+        "Native dependency trace does not imply complete dynamic-library release closure"
+      ],
+      "assumptions": [
+        "Parent authorizes own canonical review and epoch2 peer workspace; no production changes",
+        "Private fixtures may initialize JJ only under isolated fresh tmp paths",
+        "Canonical observer not executed unless read-only safeguards are independently established"
+      ],
+      "acceptance": [
+        "Verify immutable source/candidate pinning and actual JJ topology",
+        "Inspect secure-config preflight against realized JJ behavior",
+        "Independent marker/config/topology and malformed refusal tests",
+        "Only explicit raw-bytecode Dune targets and pinned ocamlrun; no native/default launcher",
+        "Bind artifacts and narrow verdict; missing lineage/sovereign dossier remains unresolved"
+      ],
+      "summary": "Independent bounded observer/G-BOOT1 review of0a8c03c immutable source; private native raw-bytecode tests only.",
+      "alternatives": [
+        "Keep heuristic metrics and merely adjust displayed count",
+        "Bound and validate graph operations, then compare with independent finite edge-set oracle"
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Existing five tests do not challenge edge idempotence, missing endpoints or reciprocity",
+        "Public constructors permit arbitrary externally assembled graph values"
+      ],
+      "rollback": "Preserve immutable base and failures; isolate child and do not integrate or rewrite history.",
+      "budget": "Pure Gleam only; native OCaml staging; realized Gleam/directERTS; private stages; <=2 schedulers and <=30second bounded native child; no network/package downloads.",
+      "reviewer": "Parent independent bounded source review; no admission from this component."
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "Bootstrap observer could mutate configuration or falsely advertise standalone topology; isolated falsifiers and preserved read-side mutation history constrain component approval.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_check.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/test_bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune-project",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/uos/src/main.gleam",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev01_bootstrap.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "stpa": {
+        "rationale": "Bootstrap observer could mutate configuration or falsely advertise standalone topology; isolated falsifiers and preserved read-side mutation history constrain component approval.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_check.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/test_bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune-project",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/uos/src/main.gleam",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev01_bootstrap.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "fmea": {
+        "rationale": "Bootstrap observer could mutate configuration or falsely advertise standalone topology; isolated falsifiers and preserved read-side mutation history constrain component approval.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_check.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/test_bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune-project",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/uos/src/main.gleam",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev01_bootstrap.ml"
+        ],
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "dependency": {
+        "rationale": "Bootstrap observer could mutate configuration or falsely advertise standalone topology; isolated falsifiers and preserved read-side mutation history constrain component approval.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_check.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/test_bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune-project",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/uos/src/main.gleam",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev01_bootstrap.ml"
+        ],
+        "value": 2,
+        "low": 2,
+        "high": 2
+      },
+      "impact": {
+        "rationale": "Bootstrap observer could mutate configuration or falsely advertise standalone topology; isolated falsifiers and preserved read-side mutation history constrain component approval.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_check.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/test_bootstrap_model.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune-project",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/uos/src/main.gleam",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev01_bootstrap.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen author0a8c03c source paths; exact immutable bytes independently checked before execution",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.ml",
+          "sha256": "e1c516755a943d4ae476049616dfc5f0fa545f2a9f8d13fbd74066f0fe188dbd",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_model.mli",
+          "sha256": "86f1045c884a02acc1a22d0a529c3b7fa008d7ebf3ed9344b4b3053b94848c14",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.ml",
+          "sha256": "1dab60d28a6e036b302371937190a6f79fd8c6e22c7bedcd0f7f44edb0937167",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_observer.mli",
+          "sha256": "aec6201a6d3e26a559051160b4d33dc9861007b0ab7c49cc098cefc431e9fbcb",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/bootstrap_check.ml",
+          "sha256": "4624f051e5fca17a6744ce9ac37c7e1a1b52e50138e036e077cb2d233f0f0a5d",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/test_bootstrap_model.ml",
+          "sha256": "1e38745279b3b72ca7cf5c6c298a9cb2bb3f78a2e8448f2827a07c9fedf2687f",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune",
+          "sha256": "b9cee66d7069673a08e6e382584992f2fa8d14d2f0ec7cb7e7a1111e23b08b0d",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/bootstrap/dune-project",
+          "sha256": "f8c72e5e3eec3b0ea37e620a36cfbb3a7dc21acb2dd4726afb27f05cfe3d9728",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/uos/src/main.gleam",
+          "sha256": "db90cdce767bd100ef02197f481617c04884ae653fb2ea4f00c38bcc4a27495e",
+          "observed_at": "2026-09-09T17:52:45Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev01_bootstrap.ml",
+          "sha256": "fc9487343964e6824d9eadc22a95e1dfe2ecbe0ad311aa8eb3587d8ce2e09a1c",
+          "observed_at": "2026-09-09T17:52:45Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T18:52:45Z",
+    "ready_since": "2026-09-09T17:52:45Z",
+    "observed_at": "2026-09-09T17:52:45Z",
+    "scope": "Independent source0a8c03c observer/G-BOOT1 and private raw-bytecode tests; own review records only; no wholeEV admission",
+    "task_state": "executing",
+    "actor": "codex-ev01-bootstrap-review",
+    "plan_id": "uos/ev01-bootstrap-review/20260909",
+    "assessment_id": "ev01-bootstrap-review-1788976366",
+    "phase": "review",
+    "task_id": "REVIEW",
+    "score_interval": [ 216, 216 ],
+    "score": 216,
+    "class": "P2",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": []
+  }
+]

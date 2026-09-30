@@ -1,0 +1,72 @@
+[
+  {
+    "source": "tools/bootstrap/bootstrap_model.ml",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_model.ml",
+    "sha256": "e1c516755a943d4ae476049616dfc5f0fa545f2a9f8d13fbd74066f0fe188dbd"
+  },
+  {
+    "source": "tools/bootstrap/bootstrap_model.mli",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_model.mli",
+    "sha256": "86f1045c884a02acc1a22d0a529c3b7fa008d7ebf3ed9344b4b3053b94848c14"
+  },
+  {
+    "source": "tools/bootstrap/bootstrap_observer.ml",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_observer.ml",
+    "sha256": "1dab60d28a6e036b302371937190a6f79fd8c6e22c7bedcd0f7f44edb0937167"
+  },
+  {
+    "source": "tools/bootstrap/bootstrap_observer.mli",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_observer.mli",
+    "sha256": "aec6201a6d3e26a559051160b4d33dc9861007b0ab7c49cc098cefc431e9fbcb"
+  },
+  {
+    "source": "tools/bootstrap/bootstrap_check.ml",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_check.ml",
+    "sha256": "4624f051e5fca17a6744ce9ac37c7e1a1b52e50138e036e077cb2d233f0f0a5d"
+  },
+  {
+    "source": "tools/bootstrap/test_bootstrap_model.ml",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/test_bootstrap_model.ml",
+    "sha256": "1e38745279b3b72ca7cf5c6c298a9cb2bb3f78a2e8448f2827a07c9fedf2687f"
+  },
+  {
+    "source": "tools/bootstrap/dune",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/dune",
+    "sha256": "b9cee66d7069673a08e6e382584992f2fa8d14d2f0ec7cb7e7a1111e23b08b0d"
+  },
+  {
+    "source": "tools/bootstrap/dune-project",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/dune-project",
+    "sha256": "f8c72e5e3eec3b0ea37e620a36cfbb3a7dc21acb2dd4726afb27f05cfe3d9728"
+  },
+  {
+    "source": "tools/uos/src/main.gleam",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/uos/src/main.gleam",
+    "sha256": "db90cdce767bd100ef02197f481617c04884ae653fb2ea4f00c38bcc4a27495e"
+  },
+  {
+    "source": "tools/uos/src/uos.gleam",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/uos/src/uos.gleam",
+    "sha256": "1a775132572344d10babd28c337256cfa385dd1d7767d28212678116f6246f11"
+  },
+  {
+    "source": "tools/uos/src/uos_ffi.erl",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/uos/src/uos_ffi.erl",
+    "sha256": "4b82bf32b65abcfee62586d12afc26615e921918f19fed963630ed0d5096433b"
+  },
+  {
+    "source": "tools/uos/gleam.toml",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/uos/gleam.toml",
+    "sha256": "9bbc8985a6adcc96d85960da8985e5a7c239779ed73d7899d059bdb51531bce4"
+  },
+  {
+    "source": "tools/uos/manifest.toml",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/uos/manifest.toml",
+    "sha256": "31d4230acb254c521dc5c316de82f97afce7c3755f720a9f215a09088b97dd20"
+  },
+  {
+    "source": "tools/test_ev01_bootstrap.ml",
+    "staged": "/tmp/ev01-bootstrap-independent-1756/source/tools/test_ev01_bootstrap.ml",
+    "sha256": "fc9487343964e6824d9eadc22a95e1dfe2ecbe0ad311aa8eb3587d8ce2e09a1c"
+  }
+]

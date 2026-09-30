@@ -1,0 +1,93 @@
+{
+  "schema": "uos-mirage-independent-adversarial/v1",
+  "candidate": "a1e700517dbff56f05a88baad9ebce89c1d6f4a2",
+  "observed_utc": "2026-09-07T13:19:04Z",
+  "status": "FAILED",
+  "scope": "independent runtime controls against actual frozen probe, CLI gate/selfcheck and Gleam receipt projection; not system admission",
+  "probe": [
+    {
+      "control": "empty-guest",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "db869f",
+        "wall_time_seconds": 0.00001601,
+        "exit_code": 1,
+        "original_token_count": 100,
+        "output": "{\n  \"control\": \"empty-guest\",\n  \"expected_passed\": false,\n  \"elapsed_seconds\": 0.0029201507568359375,\n  \"observed\": {\n    \"tender\": \"/usr/bin/true\",\n    \"unikernel\": \"/home/an/NAS-setup/uos/.uos-workspaces/codex-mirage-verification/var/mirage-verification/probe-build/fixtures/empty-guest/var/mirage/unikernels/test_hello.hvt\",\n    \"exit_code\": 0,\n    \"output_snippet\": \"\",\n    \"passed\": true\n  }\n}\n"
+      }
+    },
+    {
+      "control": "pwd-injection",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "c75d6b",
+        "wall_time_seconds": 0.000005049,
+        "exit_code": 1,
+        "original_token_count": 102,
+        "output": "{\n  \"control\": \"pwd-injection\",\n  \"expected_passed\": false,\n  \"elapsed_seconds\": 0.00531005859375,\n  \"observed\": {\n    \"tender\": \"/usr/bin/false\",\n    \"unikernel\": \"/home/an/NAS-setup/uos/.uos-workspaces/codex-mirage-verification/var/mirage-verification/probe-build/fixtures/pwd-injection; true #/var/mirage/unikernels/test_hello.hvt\",\n    \"exit_code\": 0,\n    \"output_snippet\": \"\",\n    \"passed\": true\n  }\n}\n"
+      }
+    },
+    {
+      "control": "silent-timeout",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "13f1d0",
+        "wall_time_seconds": 1.92322691,
+        "exit_code": 124,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "control": "late-abort",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "00bcc8",
+        "wall_time_seconds": 0.000004629,
+        "exit_code": 1,
+        "original_token_count": 175,
+        "output": "{\n  \"control\": \"late-abort\",\n  \"expected_passed\": false,\n  \"elapsed_seconds\": 0.0049610137939453125,\n  \"observed\": {\n    \"tender\": \"/home/an/NAS-setup/uos/.uos-workspaces/codex-mirage-verification/var/mirage-verification/probe-build/probe-fixture\",\n    \"unikernel\": \"/home/an/NAS-setup/uos/.uos-workspaces/codex-mirage-verification/var/mirage-verification/probe-build/fixtures/late-abort/var/mirage/unikernels/test_hello.hvt\",\n    \"exit_code\": 0,\n    \"output_snippet\": \"SUCCESS: solo5_exit(0) xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\n    \"passed\": true\n  }\n}\n"
+      }
+    },
+    {
+      "control": "large-line",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "d8d2ee",
+        "wall_time_seconds": 0.000004349,
+        "exit_code": 1,
+        "original_token_count": 175,
+        "output": "{\n  \"control\": \"large-line\",\n  \"expected_passed\": false,\n  \"elapsed_seconds\": 0.009124040603637695,\n  \"observed\": {\n    \"tender\": \"/home/an/NAS-setup/uos/.uos-workspaces/codex-mirage-verification/var/mirage-verification/probe-build/probe-fixture\",\n    \"unikernel\": \"/home/an/NAS-setup/uos/.uos-workspaces/codex-mirage-verification/var/mirage-verification/probe-build/fixtures/large-line/var/mirage/unikernels/test_hello.hvt\",\n    \"exit_code\": 0,\n    \"output_snippet\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\n    \"passed\": true\n  }\n}\n"
+      }
+    }
+  ],
+  "gate": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "df1a0b",
+        "wall_time_seconds": 0.100511658,
+        "exit_code": 0,
+        "original_token_count": 95,
+        "output": "Evaluating UOS Gate: G-MIRAGE-TENDERS\n  [PASS] Solo5 Tenders Physical Execution: solo5-hvt, solo5-spt, solo5-virtio verified\n  [PASS] Hardware Virtualization (/dev/kvm) & seccomp-bpf sandboxing verified\n  [PASS] Dynamic hypervisor probe receipt validated (exit codes 0, 83 & guest banners)\n  [PASS] Unikernel test binaries validated (non-empty ELF images >= 10KB, including SSP)\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "ff984b",
+        "wall_time_seconds": 0.038834689,
+        "exit_code": 0,
+        "original_token_count": 174,
+        "output": "Evaluating MirageOS Solo5 Tenders & Hardware Virtualization (--selfcheck-mirage-tenders):\n  [PASS] solo5-hvt: Hardware Virtualized Tender (/dev/kvm) executed (exit 0, 'SUCCESS')\n  [PASS] solo5-spt: Sandboxed Process Tender (seccomp-bpf) executed (exit 0, 'SUCCESS')\n  [PASS] solo5-virtio: Direct Kernel Boot Tender (QEMU KVM) executed (exit 83, 'SUCCESS')\n  [PASS] Dynamic hypervisor probe receipt validated (exit codes 0, 83 & guest banners)\n  [PASS] Unikernel test binaries validated (non-empty ELF images >= 10KB, including SSP)\n  [PASS] Hermes OCaml & Gleam hypervisor probes updated with authentic execution receipts\n\nSummary: 3/3 Solo5 Tenders Verified via Physical Execution (100% Green)\n"
+      }
+    }
+  ],
+  "projection": {
+    "chunk_id": "2eda1f",
+    "wall_time_seconds": 0.135425296,
+    "exit_code": 1,
+    "original_token_count": 163,
+    "output": "{\"schema\":\"uos-mirage-hypervisor-probe/v1\",\"timestamp_utc\":\"2000-01-01T00:00:00Z\",\"host\":\"wrong-host\",\"overall_readiness\":\"solo5_hardware_virtualized_and_spt_verified\",\"execution_policy\":\"two_key_receipt_required_before_admission\",\"evidence_scope\":\"host_hypervisor_hardware_probe\",\"deployment_admission\":\"TENDERS_VERIFIED_PHYSICAL_EXECUTION\",\"kvm\":{\"dev_kvm_present\":false,\"dev_kvm_rw_accessible\":false,\"api_version\":null},\"qemu\":{\"binary_path\":null,\"microvm_supported\":false,\"kvm_accel_supported\":false},\"solo5\":{\"solo5_hvt_path\":null,\"solo5_spt_path\":null,\"solo5_virtio_path\":null,\"hvt_execution\":null,\"spt_execution\":null,\"virtio_execution\":null}}\n"
+  }
+}

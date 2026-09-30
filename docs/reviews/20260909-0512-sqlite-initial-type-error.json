@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/tmp/uos-store-verification-run-2536c2",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/uos-store-verification-run-2536c2/package", "--out",
+    "/tmp/uos-store-verification-run-2536c2/compiled", "--lib",
+    "/home/an/NAS-setup/uos/apps/uos_swarm/build/dev/erlang"
+  ],
+  "utc_started": 1788931212.838136,
+  "utc_finished": 1788931213.132563,
+  "elapsed_seconds": 0.294427555,
+  "deadline_seconds": 60.0,
+  "exit_code": 1,
+  "output": "error: Type mismatch\n   ┌─ /tmp/uos-store-verification-run-2536c2/package/src/session_store_verification_test.gleam:37:3\n   │\n37 │   let assert Ok(_) = store.close(opened)\n   │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nThe type of this returned value doesn't match the return type\nannotation of this function.\n\nExpected type:\n\n    Nil\n\nFound type:\n\n    Result(Nil, store.StoreError)\n\n",
+  "output_sha256": "5823aaa670495211c7779859cf2076703cd26653bda4e989895e88a2187b0dcc",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

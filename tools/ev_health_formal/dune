@@ -1,0 +1,25 @@
+(library
+ (name ev98_health_formal)
+ (wrapped false)
+ (modules ev98_health_model ev98_health_smt)
+ (libraries smtml yojson cryptokit))
+
+(executable
+ (name test_ev98_health_formal)
+ (modules test_ev98_health_formal)
+ (libraries ev98_health_formal))
+
+(executable
+ (name ev98_health_smt_child)
+ (modules ev98_health_smt_child)
+ (libraries ev98_health_formal))
+
+(executable
+ (name ev98_health_projection_verify)
+ (modules ev98_health_projection_verify)
+ (libraries ev98_health_formal yojson cryptokit))
+
+(executable
+ (name test_ev98_health_projection_verify)
+ (modules test_ev98_health_projection_verify)
+ (libraries ev98_health_formal yojson unix cryptokit))

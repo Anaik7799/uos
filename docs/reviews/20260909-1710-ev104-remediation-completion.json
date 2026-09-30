@@ -1,0 +1,48 @@
+{
+  "schema": "uos.ev104-remediation-completion.v1",
+  "source_commit": "7375a867c5e86d020805976fb64d014009fac870",
+  "prior_evidence_commit": "1a29ee88eaf6eb677f573824a7925c6908018712",
+  "approval": {
+    "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1710-ev104-independent-approval.json",
+    "sha256": "ccb1995fbeee765a8bd267b3727946666dc23e6356007c4668e3d4d5807bb2f3",
+    "bytes": 80801
+  },
+  "approval_expected_sha256": "ccb1995fbeee765a8bd267b3727946666dc23e6356007c4668e3d4d5807bb2f3",
+  "receipts": [
+    {
+      "path": "/tmp/ev104-remediation-final-active-attempt1-20260909-1650.json",
+      "sha256": "0ceb09184abf23dd77182a369d3994e73676e700d273c209ac170e05459c49ab",
+      "bytes": 4014
+    },
+    {
+      "path": "/tmp/ev104-remediation-reclaim-20260909-1701.json",
+      "sha256": "e4a03a36d338ee95535a56dff36a68de21dedd2348d3ea6c4c3edc2ab9cf53c0",
+      "bytes": 3051
+    },
+    {
+      "path": "/tmp/ev104-remediation-active-attempt2-20260909-1702.json",
+      "sha256": "1ada0e48a616ce69c671a76da7588eeef3aebaadddaafedd30a4efb594609295",
+      "bytes": 3768
+    },
+    {
+      "path": "/tmp/ev104-remediation-completed-20260909-1703.json",
+      "sha256": "a4e48121986d11f042a538d152f12f9e8709b1a8f8c626de9ef4a7e7e371dc41",
+      "bytes": 3083
+    },
+    {
+      "path": "/tmp/ev104-remediation-red-run-20260909-1618.json",
+      "sha256": "21e4a04a0b233f6e532ee9df50253afb5804c344b26809d350331f15e26b008d",
+      "bytes": 7749
+    },
+    {
+      "path": "/tmp/ev104-remediation-green-run-20260909-1630.json",
+      "sha256": "f3875abe22261914c293d82d80d852b5a244efefa1aee13c55d57f55b3fab1e4",
+      "bytes": 5036
+    }
+  ],
+  "lookup_observation": "Approval was absent at a changed current workspace path after reviewer moved to a new child; immutable JJ retrieval succeeded and is authoritative.",
+  "limits": [
+    "Pure remediation state repair only.",
+    "No patch execution, audio, deployment, or EV104 admission."
+  ]
+}

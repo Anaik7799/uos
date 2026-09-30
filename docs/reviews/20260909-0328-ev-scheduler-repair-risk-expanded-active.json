@@ -1,0 +1,45 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-scheduler-repair-20260909-0328-expanded-active",
+    "plan_id": "uos/ev-scheduler-repair/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-scheduler",
+    "fractal_layer": 3,
+    "phase": "implementation",
+    "scope": "Bounded extension: explicit model-level transfer/recipient receipts, composite plan/task identity, attempt-fenced lease completion, and capacity-accounted deferred reclamation in the two scheduler modules and direct tests. No runtime deployment, admission record, historical-record mutation, completion, or integration is authorized.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T03:28:23Z",
+    "ready_since": "2026-09-09T03:11:19Z",
+    "valid_until": "2026-09-09T04:28:23Z",
+    "snapshot": {"kind": "working_tree", "reference": "Isolated JJ workspace with immutable parent 337f99137673d7866b958a38bd490fb876b2880f; current scoped candidate bytes observed directly.", "evidence": [
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", "sha256": "4618bb5374e713300f6ae411821f8ee21b9349e8fa57940c5dafc88cab6446af", "observed_at": "2026-09-09T03:28:23Z"},
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam", "sha256": "cbf14040381cccd68efbed4f46a902f111f98352ec26f67359f7dbb29d9e0499", "observed_at": "2026-09-09T03:28:23Z"},
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam", "sha256": "f508ce39df76a74620ba363d97d5873f4ae9725c6f44c22f4424209c127b8ffb", "observed_at": "2026-09-09T03:28:23Z"},
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam", "sha256": "e1b4cc39d7acfefcfc6bb646c6bafbf4758a50f97e8cad6e248309d111b925e4", "observed_at": "2026-09-09T03:28:23Z"},
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/manifest.toml", "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169", "observed_at": "2026-09-09T03:28:23Z"}
+    ]},
+    "factors": {
+      "criticality": {"rationale": "Unbounded retained work, non-fenced completion, or replay can corrupt scheduling control before candidate review.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam"]},
+      "stpa": {"rationale": "Unsafe actions include unbounded intake, releasing another worker's lease, accepting a response for another recipient, and replaying a consumed transfer.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]},
+      "fmea": {"rationale": "FM-SCHEDULER-FENCING S5 O2 Det3 RPN30; severity floor produces F5.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam", ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam"]},
+      "dependency": {"rationale": "These negative paths remain prerequisites for EV97/EV99 scheduler evidence.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam"]},
+      "impact": {"rationale": "The repair protects shared work identity and bounded intake in the in-memory control model.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [{"id": "FM-SCHEDULER-FENCING", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Transfer receipts were not retained, identity used task ID alone, expiry could exceed visible capacity, and completion identified a task without owner/attempt.", "effect": "Duplicated, dropped, unbounded, or incorrectly released work.", "controls": "Negative tests and typed state constrain transfer identity, receipt replay, queue accounting, and owner/attempt completion."}],
+    "stpa_analysis": {"controller": "Heijunka scheduler and work-stealing receiver", "control_action": "Admit, reclaim, complete, and transfer work", "losses": ["L-SCHEDULER-DUPLICATE-WORK", "L-SCHEDULER-IDENTITY-LOSS"], "hazards": ["H-CONCURRENCY-EXCEEDED", "H-UNBOUNDED-DEFERRED-WORK", "H-WRONG-LEASE-RELEASE", "H-REPLAY-DUPLICATES-WORK"], "ucas": [
+      {"type": "not_provided", "applicability": "applicable", "context": "No receipt prevents a replay after accepted work leaves the active queue.", "hazard_ids": ["H-REPLAY-DUPLICATES-WORK"], "constraint": "Accepted transfer identities remain in the model for its lifetime."},
+      {"type": "provided_unsafe", "applicability": "applicable", "context": "A completion removes a peer lease or reclaimed work exceeds total retained capacity.", "hazard_ids": ["H-WRONG-LEASE-RELEASE", "H-UNBOUNDED-DEFERRED-WORK"], "constraint": "Completion matches task, worker, and attempt; intake counts pending plus deferred work."},
+      {"type": "wrong_timing", "applicability": "applicable", "context": "A response is applied to the wrong receiver or after the original transfer has been consumed.", "hazard_ids": ["H-REPLAY-DUPLICATES-WORK"], "constraint": "Response identity binds donor, recipient, and explicit transfer ID."},
+      {"type": "duration", "applicability": "applicable", "context": "Expired work is retained without backpressure.", "hazard_ids": ["H-UNBOUNDED-DEFERRED-WORK"], "constraint": "Deferred reclamation is bounded by intake admission and drained by pulls."}
+    ]},
+    "decision": {"summary": "Extend test-first source-local repair for the reviewed negative paths.", "alternatives": ["Leave the gaps for a later EV", "Repair bounded state and tests now"], "assumptions": ["The source search found no direct callers beyond direct tests at this base.", "Acceptance receipt durability is in-memory only."], "confidence": "analyst_estimate", "counterevidence": ["This cannot prove multi-node durable transport or disk persistence."], "forecast": "New negative tests fail before typed state changes and pass afterward.", "falsifier": "A duplicate response task, a consumed replay, a shared task ID across plans, an overfull reclaim, or a mismatched worker/attempt changes work incorrectly.", "acceptance": ["All existing and new targeted compiled Gleam tests pass", "Visible and admitted retained queue work stays capacity-accounted", "Parent reviews an immutable candidate"], "rollback": "No integration, deployment, completion, or admission; preserve base and receipts.", "budget": "Realized Gleam/OTP inputs only; +S 2:2; isolated temporary compiler outputs; no downloads.", "reviewer": "Parent EV admission coordinator and independent reviewer.", "residuals": ["In-memory receipts are not durable across process restart.", "Network fencing and runtime deployment remain unrun."], "supersedes": "20260909-0323-ev-scheduler-repair-risk-active-candidate.json after the review-directed test extension."}
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "new", "@",
+    "d52eb0f9ed922b0bb666c4aa6ed31902e9198af3",
+    "da9dc0013ea2d504f08f809fbbb10dc5e006a4f3",
+    "3b55f9ef54b119bbf0dfa1a73a33bf7954a24fea", "-m",
+    "Compose independently reviewed graph digest remediation and bounded Rete repairs"
+  ],
+  "utc_started": 1788976336.852492,
+  "utc_finished": 1788976336.967191,
+  "elapsed_seconds": 0.114699438,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "Working copy  (@) now at: urvklwpw e16cd382 (empty) Compose independently reviewed graph digest remediation and bounded Rete repairs\nParent commit (@-)      : pktpqpul d368470a Preserve EV107 bounded forward-chaining evidence and compose completed repairs\nParent commit (@-)      : zwytspul d52eb0f9 Record canonical completion of independent bounded Rete review; source unchanged\nParent commit (@-)      : sokowmzy da9dc001 docs(ev104): preserve canonical independent review completion\nParent commit (@-)      : tyqwxwmw 3b55f9ef Bind EV104 remediation approval and completion evidence\nAdded 294 files, modified 6 files, removed 0 files\n",
+  "output_sha256": "b8616024ec1924f3499963c4487ba49e33042680647892c89714456bf7184d63",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-9a54ae:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

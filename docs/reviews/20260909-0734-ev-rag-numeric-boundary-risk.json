@@ -1,0 +1,69 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-rag-numeric-boundary-20260909-0734",
+    "plan_id": "uos/ev-rag-freshness/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-rag-freshness",
+    "fractal_layer": 5,
+    "phase": "implementation",
+    "scope": "Bounded pure-Gleam repair of an independently observed numeric overflow in accepted RAG cache semantic input. Scale-normalize norm and cosine intermediates while retaining the established 1.0e100 accepted embedding boundary. This excludes retrieval, inference, persistence, network, deployment, task completion, and admission.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T05:28:30Z",
+    "ready_since": "2026-09-09T05:28:30Z",
+    "valid_until": "2026-09-09T06:28:30Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "7d577676120e61c32c3901e56e82a36984f3a763; descendant of cfd3afbae74f996d42321843cc48248cd3aaf956 and immutable base 337f99137673d7866b958a38bd490fb876b2880f",
+      "evidence": [
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam", "sha256": "85a3efa6b0f39d26c25b70b1aa344b6c67cdd94f827ac05c09fab2ec8c2865dc", "observed_at": "2026-09-09T05:28:30Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam", "sha256": "76768e06b2933aae0a0b15bdc4c47149e73242979c7766d045bdee9357e57c4d", "observed_at": "2026-09-09T05:28:30Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam", "sha256": "ab13d45b4d77ac77d776d983247a09ad0fb172d9dbfebcdde1160aa8f68fb402", "observed_at": "2026-09-09T05:28:30Z"}
+      ]
+    },
+    "factors": {
+      "criticality": {"rationale": "An accepted cache input can terminate the BEAM runtime rather than return a typed result.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]},
+      "stpa": {"rationale": "Unsafe control is evaluating valid high-magnitude embeddings with unbounded squared and denominator intermediates.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam"]},
+      "fmea": {"rationale": "FM-RAG-NUMERIC-BOUNDARY is S5 O2 Det3, RPN30.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam"]},
+      "dependency": {"rationale": "The fault and control execute in the pure local model with realized Gleam and OTP toolchains.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam"]},
+      "impact": {"rationale": "Stable similarity preserves the accepted resource policy instead of hiding the defect by shrinking it.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [
+      {"id": "FM-RAG-NUMERIC-BOUNDARY", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Newton iteration begins at sum-of-squares/2 and the resulting norm product overflows for accepted vectors.", "effect": "Semantic lookup raises BEAM Badarith.", "controls": "Normalize by each vector's maximum magnitude before norm and cosine products, constraining intermediate magnitudes by vector length."}
+    ],
+    "stpa_analysis": {
+      "controller": "Pure RAG cache mesh",
+      "control_action": "Compute semantic cosine similarity",
+      "losses": ["L-RUNTIME-ARITHMETIC-FAILURE"],
+      "hazards": ["H-ACCEPTED-NUMERIC-OVERFLOW"],
+      "ucas": [
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "An accepted 1.0e100 embedding reaches raw norm and denominator arithmetic.", "hazard_ids": ["H-ACCEPTED-NUMERIC-OVERFLOW"], "constraint": "Cosine inputs are normalized before products and iterative square-root work."},
+        {"type": "not_provided", "applicability": "applicable", "context": "The model lacks a control that bounds arithmetic intermediates while retaining the accepted input policy.", "hazard_ids": ["H-ACCEPTED-NUMERIC-OVERFLOW"], "constraint": "Vector scale controls every intermediate used by norm and cosine."},
+        {"type": "wrong_timing", "applicability": "not_applicable", "context": "The pure arithmetic operation has no timing transition.", "hazard_ids": [], "constraint": "Not applicable."},
+        {"type": "duration", "applicability": "applicable", "context": "Fixed Newton iterations must operate over a bounded normalized sum rather than magnitude-dependent values.", "hazard_ids": ["H-ACCEPTED-NUMERIC-OVERFLOW"], "constraint": "The normalized sum lies between 1 and the bounded embedding dimension."}
+      ]
+    },
+    "decision": {
+      "summary": "Use scale-normalized norm and cosine calculations; keep the accepted 1.0e100 limit and verify it produces a high similarity score.",
+      "alternatives": ["Arbitrarily lower the accepted input bound", "Normalize mathematical intermediates while preserving valid input policy"],
+      "assumptions": ["Cache embedding length is already capped at 1024 and accepted magnitudes at 1.0e100."],
+      "confidence": "analyst_estimate",
+      "counterevidence": ["The previous candidate accepted the boundary but raised Badarith during lookup."],
+      "forecast": "Exact accepted-boundary semantic lookup returns CacheFresh with score at least 0.99; existing normal vector controls still pass.",
+      "falsifier": "The accepted boundary raises Badarith, returns non-fresh, or normal analytic cosine regression fails.",
+      "acceptance": ["Focused runner reproduces red failure before repair and passes after repair", "Final hashes equal the risk evidence", "Native active check passes for executing REPAIR attempt 1"],
+      "rollback": "Preserve immutable candidate history; do not integrate, complete, deploy, or admit.",
+      "budget": "Existing realized Gleam 1.16.0 and OTP 29 only; no downloads.",
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": ["No retrieval, model inference, persistence, network, or formal proof is exercised."],
+      "supersedes": "The numeric boundary gap remaining after cfd3afbae74f996d42321843cc48248cd3aaf956."
+    }
+  }
+]

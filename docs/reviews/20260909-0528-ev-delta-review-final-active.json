@@ -1,0 +1,27 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-native-risk-20260909/default/validate.exe",
+    "--active-check",
+    ".uos-workspaces/ev-delta-freshness-20260909/docs/reviews/20260909-0429-ev-delta-freshness-risk-health-review-final.json",
+    "REPAIR", "codex-ev-delta-freshness", "1"
+  ],
+  "utc_started": 1788931274.045001,
+  "utc_finished": 1788931274.120686,
+  "elapsed_seconds": 0.075683664,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "{\"status\":\"ACTIVE_OBSERVATION_PASS\",\"authority\":\"NONE\",\"runtime_admission\":\"NOT_GRANTED\",\"observed_at\":\"2026-09-09T05:21:14Z\",\"completed_at\":\"2026-09-09T05:21:14Z\",\"elapsed_monotonic_seconds\":0.016905815,\"clock_start\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":4.5559e-05,\"uncertainty_seconds\":0.016927016,\"reference_age_seconds\":65.28292608261108,\"stratum\":3},\"clock_end\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":4.5558e-05,\"uncertainty_seconds\":0.016927027,\"reference_age_seconds\":65.29239106178284,\"stratum\":3},\"assessment_sha256\":\"f11f4827373101138292c861085319ccb726ece49b9ca2d5deba84984418cfe8\",\"evidence_files_checked\":6,\"sa_plan\":{\"plan_id\":\"uos/ev-delta-freshness/20260909\",\"snapshot_sha256\":\"ac5bd2e6175fb7a778f16395aa989c23d042455e995fc6924ecc0f2cdcdedeb1\",\"tasks\":[{\"task_id\":\"REPAIR\",\"state\":\"executing\",\"worker\":\"codex-ev-delta-freshness\",\"lease_until_ns\":\"1788942678786527457\",\"attempt\":1,\"completed_at_ns\":null,\"result_present\":false,\"dependencies\":[]}],\"mode\":\"READONLY\",\"lease_fencing_authority\":\"NOT_GRANTED\"},\"order\":[],\"findings\":[],\"limits\":[\"Listed byte equality does not prove source completeness, runtime behavior or signed provenance.\",\"Analysis prose, class judgments, cost ties and control effectiveness require qualified review.\",\"Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.\",\"Snapshot is confined to one complete plan; no global optimum is asserted.\"]}\n",
+  "output_sha256": "b0217eab45bcbf520e4860263afb72c8ec9fccc1ad5eef3204b0626e2c43a9f0",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

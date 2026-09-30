@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "candidate": "c6c4bc3b6a3bda9c43ae6864335f91617a43ca35",
+  "base": "164aaff78c0e168e8936ea385581c5f78e0e889b",
+  "task": {"plan_id":"uos/ev98-health-formal/20260909","id":"FORMAL","worker":"codex-ev98-health-formal","attempt":1,"state":"executing"},
+  "source_sha256": {
+    "tools/ev_health_formal/ev98_health_model.ml":"d1793af75c4b438b4fafb06a4d167df6db19e5e28894b9c19cf8d3a24165d405",
+    "tools/ev_health_formal/ev98_health_smt.ml":"5c881f02379faa18cc8084f23a8988a8a21abf34b948aa11a9ab1e7560d501d5",
+    "tools/ev_health_formal/test_ev98_health_formal.ml":"f99212ba5fe8d360718e532b1ce653941271c85c5e3cfe88479e3b87ac805e51",
+    "apps/cepaf_gleam/test/ev98_health_projection_runner.gleam":"1a320a256005ad7811662b8e1afc2ce7725b3add85764eca3bdd61dcddf0c527",
+    "apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam":"8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+    "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam":"76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1"
+  },
+  "checks":{"finite_reference":"PASS","smtml_child":"PASS","gleam_projection":"PASS","laws":{"unsat":6,"sat_witnesses":1,"sat_mutants":2}},
+  "risk":{"status":"ACTIVE_OBSERVATION_PASS","assessment_sha256":"98d3f70f337fc004c5841b42d6029a8d1ab2b58eb7452637ae2686cec2a57f9a","authority":"NONE","runtime_admission":"NOT_GRANTED","receipt":"/tmp/ev98-health-formal-active-risk-final2-20260909-0606.json"},
+  "limits":["Finite rank algebra and four projections only.","No transport, telemetry authenticity, multi-host runtime, task completion, or EV admission claim."]
+}

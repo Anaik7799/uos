@@ -1,0 +1,83 @@
+{
+  "schema": "uos.independent-help-generator-review.v1",
+  "revision": "32d2770110cd78e50429d8214377c4c02e4cde14",
+  "status": "HOLD_JOB_CLAIM_WORKER_GUARD",
+  "generator": "BOUNDED_APPROVAL",
+  "authority": "NONE",
+  "observed_at": 1788934728.6857,
+  "source_file_count": 54,
+  "tool_bindings": [
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun-a100",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlfind",
+      "sha256": "dab744b5c3e30b25567ffc8871b9e0ed33f4a874e2f58d2d90ad1e045c17058d"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlopt",
+      "sha256": "46277032bdb87755ce4bd9f20de18a7217f320fbb9b6129e7edd15571f7ee1a2"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+      "sha256": "9b0a4d43cecade7d25cf0d524834bc4063d4c23497872d3d47c983f76d52170a"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    }
+  ],
+  "artifact_bindings": [
+    {
+      "path": "/tmp/uos-help-generator-review-32d2770/source-binding.json",
+      "sha256": "fb77ddfc1513f63025aff80dd8c925c3d78ef93a7b073c031309c66a341952f9"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-f27002/source-observation.json",
+      "sha256": "aefde9cc399f43d6c3a4e96e28858ba3f2824c8be79924a3c2ece41d8eaac135"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-f27002/_build/default/cli/sa_plan_main.exe",
+      "sha256": "7d6ad9ad26b97cb5b0060a35b0db49403d9593833adf6d8ac977a808a0c80fad"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-f27002/unit.txt",
+      "sha256": "d550a637562f27f19981db8f4f229ad721a40edba13d415b61257c716335afc0"
+    },
+    {
+      "path": "/tmp/uos-help-generator-review-32d2770/generator-independent.json",
+      "sha256": "996fdff6ac88e3c15e0aca7c00fd3efe12f0474bcaffab51719d84a454ee4476"
+    },
+    {
+      "path": "/tmp/uos-help-generator-review-32d2770/job-worker-probe.json",
+      "sha256": "652ed5bae320e001d3e5afab4c36f7264c4cd2817c3d5d84b1b099d48406218d"
+    }
+  ],
+  "actual_executed": {
+    "help_private_db_checks": 27,
+    "argument_assertions": 48,
+    "native_adapter_checks": 7,
+    "generator_controls": 10,
+    "extra_private_job_worker_probes": 3
+  },
+  "finding": "P1 sa_plan_cli.ml:144 restricts invalid-worker checking to --claim; --job-claim accepts --version and --unknown and actually leases a private job to those identities. Empty worker opens the store before refusal. Exact help incident and generator symlink preservation are repaired.",
+  "failure_preservation": [
+    "Initial native adapter refused running OCaml bytecode as ELF, before execution",
+    "First review staging omitted library files due cwd-sensitive list display; corrected explicit path template, failure left in private test directory"
+  ],
+  "limits": [
+    "No live store or task queried/mutated; only supplied incident receipts read",
+    "No deployed binary replacement or EV admission",
+    "Cooperative local filesystem controls; hostile concurrent parent-directory replacement and crash durability not established",
+    "Generator remains lexical enumeration, not authenticated acceptance selection"
+  ]
+}

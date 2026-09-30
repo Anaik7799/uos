@@ -1,0 +1,11 @@
+{
+  "candidate": "52e013cfe8c32d6c8d4353c27cfdf0a23f225124",
+  "authority": "NONE",
+  "probe": {
+    "source": "/tmp/ev_transport_test_discovery.gleam",
+    "staged": "/tmp/ev-transport-discovery-green-1539/package/test/ev_transport_test_discovery.gleam",
+    "sha256": "1c9490a113a44f724b2fe82b2fe0bbdc27241f8f17e34f94042282acaacf3330",
+    "bytes": 362
+  },
+  "stager_sha256": "5ce14d06c5cd30ff808555968eb258e791c08f371219db2aa58f3f3804c16764"
+}

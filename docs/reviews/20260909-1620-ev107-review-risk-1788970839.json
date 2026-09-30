@@ -1,0 +1,195 @@
+[
+  {
+    "fmea_modes": [
+      {
+        "id": "FM-DIGEST-COMPARISON",
+        "s": 3,
+        "o": 4,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "Ignored expectation or shallow outcome comparison can falsely report agreement.",
+        "effect": "Misleading component correctness evidence.",
+        "controls": "Known independent vectors, wrong expectation and private mismatch controls; bounded source-specific review."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Independent digest component reviewer",
+      "control_action": "Assess exact digest and refusal agreement at immutable source",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing negative controls conceal ignored digest expectations.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Run immutable known digest/refusal and mutated disagreement probes."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Agreement is described as dispatch approval or formal proof.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Report comparison-only semantics and actual caller limits; no admission."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Mutable source or stale authority substitutes reviewed bytes.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Explicit commit_id extraction, source digests and current review task active check."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "A test child or evidence read exceeds review scope.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Private files, direct native argv, bounded child deadline and output, no runtime/task mutation beyond own review records."
+        }
+      ]
+    },
+    "decision": {
+      "assumptions": [
+        "Parent authorizes independent bounded review and renewed epoch2 peer workspace through17:18",
+        "Candidate remains immutable; only own docs and private probes may be written"
+      ],
+      "falsifier": "Mismatching expected digest or primary/reference result is returned as successful comparison.",
+      "forecast": "Exact expectation and result comparison should refuse altered digest/rejection outcomes; tests cannot authenticate a producer.",
+      "supersedes": "New independent REVIEW task under PROGRAM attempt5; EV101 source frozen and its REPAIR task stays separate",
+      "residuals": [
+        "Comparison agreement may mean both filters reject",
+        "Shared SQL/digest helpers are not independent proofs",
+        "No runtime dispatch/Rete/crosshost/formal solver observation",
+        "Cooperative filesystem/local compilation, not hermetic release or producer authentication"
+      ],
+      "acceptance": [
+        "Verify four immutable source files and actual callers",
+        "Fresh native compiled known-digest and expectation-refusal probes",
+        "Actual private primary/reference digest and rejection disagreement controls",
+        "Author evidence artifact rehash and launch inspection",
+        "Machine-readable bounded verdict; no full EV/admission"
+      ],
+      "summary": "Read-only independent review of immutable EV107 digest11eeca9; compile and probe in private directories only, with own review records in peer workspace.",
+      "alternatives": [
+        "Keep heuristic metrics and merely adjust displayed count",
+        "Bound and validate graph operations, then compare with independent finite edge-set oracle"
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Existing five tests do not challenge edge idempotence, missing endpoints or reciprocity",
+        "Public constructors permit arbitrary externally assembled graph values"
+      ],
+      "rollback": "Preserve immutable base and failures; isolate child and do not integrate or rewrite history.",
+      "budget": "Pure Gleam only; native OCaml staging; realized Gleam/directERTS; private stages; <=2 schedulers and <=30second bounded native child; no network/package downloads.",
+      "reviewer": "Parent independent bounded source review; no admission from this component."
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "Independent component review must distinguish exact payload digest equality and matching rejections from actual dispatch or formal authority; finite native probes constrain misleading parity evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev107_digest.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "stpa": {
+        "rationale": "Independent component review must distinguish exact payload digest equality and matching rejections from actual dispatch or formal authority; finite native probes constrain misleading parity evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev107_digest.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "fmea": {
+        "rationale": "Independent component review must distinguish exact payload digest equality and matching rejections from actual dispatch or formal authority; finite native probes constrain misleading parity evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev107_digest.ml"
+        ],
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "dependency": {
+        "rationale": "Independent component review must distinguish exact payload digest equality and matching rejections from actual dispatch or formal authority; finite native probes constrain misleading parity evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev107_digest.ml"
+        ],
+        "value": 2,
+        "low": 2,
+        "high": 2
+      },
+      "impact": {
+        "rationale": "Independent component review must distinguish exact payload digest equality and matching rejections from actual dispatch or formal authority; finite native probes constrain misleading parity evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli",
+          ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml",
+          ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev107_digest.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Author frozen candidate11eeca9 source paths; immutable extraction will independently verify these hashes before compilation",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml",
+          "sha256": "c3c2255a6e2cdaf725a54f12181142e0072e1c988abf1a77a25fb6dd82193d94",
+          "observed_at": "2026-09-09T16:20:39Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli",
+          "sha256": "2387d51d4dbb5ea032c50d918c1dfa776473996d7f58a74780c97232b2da7274",
+          "observed_at": "2026-09-09T16:20:39Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml",
+          "sha256": "d2c3135eb0d92f203fc1688c48019e1dd2138909dc05c291f27dc0ec348e81f1",
+          "observed_at": "2026-09-09T16:20:39Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-wire-codec-20260909/tools/test_ev107_digest.ml",
+          "sha256": "35b5180833a205bbea6dae8cce39837d06a3c09b6091f7256f80bcc4ad2313c0",
+          "observed_at": "2026-09-09T16:20:39Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T17:20:39Z",
+    "ready_since": "2026-09-09T16:20:39Z",
+    "observed_at": "2026-09-09T16:20:39Z",
+    "scope": "Read-only four-file EV107 digest candidate11eeca9; private OCaml fixtures and own peer-workspace review docs only; EV101 source unchanged",
+    "task_state": "available",
+    "phase": "review",
+    "actor": "codex-ev107-digest-review",
+    "task_id": "REVIEW",
+    "plan_id": "uos/ev107-digest-review/20260909",
+    "assessment_id": "ev107-review-1788970839",
+    "score_interval": [ 216, 216 ],
+    "score": 216,
+    "class": "P2",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": []
+  }
+]

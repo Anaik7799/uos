@@ -1,0 +1,24 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-campaign-candidate-build/default/campaign_test.exe", "unit"
+  ],
+  "utc_started": 1788933943.787131,
+  "utc_finished": 1788933944.023432,
+  "elapsed_seconds": 0.23630156600000002,
+  "deadline_seconds": 20.0,
+  "exit_code": 0,
+  "output": "PASS complete execution\nPASS empty coverage\nPASS omitted case\nPASS duplicate case\nPASS reordered cases\nPASS extra output\nPASS nonzero despite markers\nPASS start without return\nPASS unique mutation\nPASS missing mutation anchor\nPASS ambiguous mutation anchor\nPASS actual nonzero child\nPASS stdout and stderr stay separate\nPASS actual silent timeout\nPASS actual output quota\nPASS actual signal termination\nPASS descendant holding pipe is terminated\nPASS global deadline overrides child allowance\nPASS 18 campaign unit/process cases\n",
+  "output_sha256": "bb1daede39b1e0e7452cbd801a66ea0910388cbeef60846ec3cb2ecef23a4020",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

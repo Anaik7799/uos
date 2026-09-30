@@ -1,0 +1,459 @@
+{
+  "schema": "uos.independent-help-worker-rereview.v1",
+  "revision": "83b06fc8c6bd7cce13f1bfcda4aaba7f6706ea0b",
+  "status": "BOUNDED_APPROVAL",
+  "authority": "NONE",
+  "observed_at": 1788935070.699751,
+  "prior_hold": {
+    "path": "/tmp/uos-help-generator-review-32d2770/review-binding.json",
+    "sha256": "f058605b1d664cd7eab712ee0755f920f62fb06acc9dbe52ff5055ac8605daa4"
+  },
+  "closed_finding": "P1 task-only worker guard: all five task/job alias-normalization paths now refuse option/empty job workers before store opening; twenty actual invalid private claims preserved the queued-job DB bytes, ordinary positive claim succeeded",
+  "source_file_count": 54,
+  "source_binding": {
+    "path": "/tmp/uos-help-rereview-83b06fc8/source-binding.json",
+    "sha256": "b16556b937a1db6e7f03e74bcea0240d5d0bf9dbb899646d8fda1e4a309d58a7"
+  },
+  "tool_bindings": [
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun-a100",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlfind",
+      "sha256": "dab744b5c3e30b25567ffc8871b9e0ed33f4a874e2f58d2d90ad1e045c17058d"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlopt",
+      "sha256": "46277032bdb87755ce4bd9f20de18a7217f320fbb9b6129e7edd15571f7ee1a2"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+      "sha256": "9b0a4d43cecade7d25cf0d524834bc4063d4c23497872d3d47c983f76d52170a"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    }
+  ],
+  "executable": {
+    "path": "/tmp/uos-sa-plan-help-54ab1f/_build/default/cli/sa_plan_main.exe",
+    "sha256": "6cb20747bb80ae221ad3e472590ad1d7faf041b74194771773c6de8ea4aeb51b"
+  },
+  "actual_executed": {
+    "private_cli_checks": 34,
+    "argument_assertions": 70,
+    "native_adapter_checks": 11,
+    "independent_existing_job_refusals": 20,
+    "independent_positive_job_claim": 1
+  },
+  "observations": [
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/available.json",
+      "sha256": "99a39c2d02e736dc2dde3d3565064f2d090895a18ddbd90e2c83094a1c6db1a8"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/available.txt",
+      "sha256": "105ab0e278bd2fa12b1ab2c23067f9d60fa24061779a19a7b3ce5121df889c57"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/build.json",
+      "sha256": "a37d2f2f566e9e2cc2f8b5d829cf0f8d60617d225d9125e4a48ebc21e95201e6"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/build.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/create-plan.json",
+      "sha256": "e6a94889b39cfcf9e964fc2c1ad4dad6128e395d0c9544723a43802ddd0da0db"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/create-plan.txt",
+      "sha256": "f2c59b87d4670a485b2c4397ab6b88ad2c60a9b38e9dd7d71eafcc1add835b73"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/create-task.json",
+      "sha256": "39cdc684ab21d7d7143baecd5450adb89d59a70bea4899b4b38d91a1f16c645e"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/create-task.txt",
+      "sha256": "67f40a9687b9b24c08723a0ad40aae66cd169d00407a70c8e2b57948c7cdf113"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/enqueue-private-job.json",
+      "sha256": "e2556d2264a84fe839428b5b9593f19e00c25681343796486604991b2b9ae4f0"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/enqueue-private-job.txt",
+      "sha256": "3f3f7bd603b2fcabe38c1fb1348b22ec484b4569104acaf948702c42623960fc"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-00.json",
+      "sha256": "5431207e1ba6fc907e9ad39a1b34f957e670cd0d7a230774705ddac097322963"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-00.txt",
+      "sha256": "bfa9d88c24ca6b90ffc1fc56cf2c338b44a9038df7c46a7d0f82eed1b19b5196"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-01.json",
+      "sha256": "c91c91b170c14e6e73281ef511eafd242561ad72ad528ca08b8e027e410fac8a"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-01.txt",
+      "sha256": "bafc719e454d66815bb84aaaeb5f2121ded07ceb39e36f16d502e8054c3816ec"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-02.json",
+      "sha256": "e5da75eaea1f22fca6370a9434651d136981849903bac5f4f5ac41c524a04cda"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-02.txt",
+      "sha256": "5c61c8a74da6e3efc03bbc830c466e7c63b640c48ba0bc8a4eddf1ffb1573046"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-03.json",
+      "sha256": "8d4f5f9b3baa6206554735c1b626a9f429a187afb890383a588a065c91a334b5"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-03.txt",
+      "sha256": "5bbbe65cd3343c6d7463196903193c929e301c83e356b677dfced5dd7f0d9415"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-04.json",
+      "sha256": "ed97efaae4e34719e4c36009d3598e8a02e1948cf12354076aa2f747c0799631"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-04.txt",
+      "sha256": "dfa568aca19b091ddaf9b5b321ecb9b8049515ac2a2d50d0b450b81855291c02"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-05.json",
+      "sha256": "7a63e8c7e7492399b2c06c32d1b150665e4277187f2de7f020a1f5c1c0813074"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-05.txt",
+      "sha256": "1f7aec7b71c7dc9c02b4376d8409884f51deadf8f27a68435c11af242707612e"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-06.json",
+      "sha256": "74b8e4f447690b755a500af0d4d54101bf2fe523df88e5f5de90759e47a79fe2"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-06.txt",
+      "sha256": "9fa8c4e3c752ac8322798ec292e97169a38db0e875a730119f92ed7369cf2008"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-07.json",
+      "sha256": "04a9e4e8170fdd7e380231cfa9b04ae47524b8bdae8347e0cb3b1d80d46ec343"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-07.txt",
+      "sha256": "73742741e7ddd6ecf49d21200f3b2fb024202fdc6875f74dc8d9877ad0894b46"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-08.json",
+      "sha256": "9453b04cad91e87bb5bf2cb9bd465c7651f21f0643f8c29469278b6c374a40e1"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-08.txt",
+      "sha256": "3e86aae633f20794e37a374650e03038714d7a27aaed75d8418adf887bad75fc"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-09.json",
+      "sha256": "b89b2846f0147e1e0b4a28df81e9ba3fb2ed08f0073ba2ad9d333b3a0345b37a"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-09.txt",
+      "sha256": "8f369e5ff9b7f9a07b8095147a6bf16c1059fe09e93bcdf0032a2386faace18e"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-10.json",
+      "sha256": "72457feb9f00258151e569de912e7b1454a44c8318d8a8406705f1c80d1096e8"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-10.txt",
+      "sha256": "766d54c2f8b5f3eb805fb1c74221d28f8b8fecf68cd47d9b939097c68f610849"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-job-invalid.json",
+      "sha256": "52f174e123750d593b2be099f986a15c60fa106611fb4d15f682d34d42ca8174"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/existing-job-invalid.txt",
+      "sha256": "f75a3158badb21d81417a95280fae72f1eb9f895b60a043b126fe836600db29f"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/invalid-worker.json",
+      "sha256": "10b336be5417344b1af2ab63c5d802158f1b8c6cca2e8f1da1c088269ceb61f1"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/invalid-worker.txt",
+      "sha256": "7d20b0ab082ff358097e192d7bc800e4e9533404d37865864bc35a7208d99a59"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-00.json",
+      "sha256": "45b6f014268bee1e9c1e8be14a8932acf5fba5cc0840f5e8cd9b4a9fd026246f"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-00.txt",
+      "sha256": "f16b3db96230d8888d08b3cd75faa8e010b768aa7acde8b1ab7f05c876e04519"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-01.json",
+      "sha256": "6192bdcd648116ef9ea4b55bb746610158fedde3a406df7596a8666dc13f486a"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-01.txt",
+      "sha256": "7b11091358c816acd25c1e097f1b495230d07c378fa01c2981fdfc4e530dea50"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-02.json",
+      "sha256": "ab1f033d041603dac17813e2d523fb4491d22e3a599075c5c394cabc59766fcf"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-02.txt",
+      "sha256": "c865259a2b5a3cf5e470a7406d563310570b40187470dc0be6f0819b0a7d6ec4"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-03.json",
+      "sha256": "61930b090f531449f8706f52072fc2050f4c2ce72e7795558cce74cc1491131b"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-03.txt",
+      "sha256": "ba97d0ace55b07b87db55a946dc97e11cb1eb73365570cc218de8066dca310eb"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-04.json",
+      "sha256": "02de55aca2e0f7e7f32d1044f8ba6a772eabe7d1c18cc9f2c1a26393baf3368f"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/job-invalid-04.txt",
+      "sha256": "5b0dbb801cf10468816c46ef9f3e1d6880ebe420edbd070348ec24e7a47bbe1f"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-00.json",
+      "sha256": "c392761370c8833fd2a4c35f72de86b153a2ccc7e37bb0823d2d8dd5ebc5873d"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-00.txt",
+      "sha256": "c863b7368c8dee5385533de815e1864d91de96b24f1d25ff1772b779bd500a2d"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-01.json",
+      "sha256": "7b64614ca4e377eca5103b87b5bc242ffa0bc4b4734f70afc6a35573ad61da95"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-01.txt",
+      "sha256": "7cfaa6cb05f425a931a8bda9df6b5541b0d6798a3f4f287c80a70dd6ed9d743f"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-02.json",
+      "sha256": "0d463b0d22e2729ed1a0f7822cf6938f4957b8e3d88eae73ab9df46d3913d38a"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-02.txt",
+      "sha256": "ec2a7f02960624fd2b7c4e27e22f71feeced4679f1e76eb8d634ece4eaa61393"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-03.json",
+      "sha256": "0b8e65ccb30ca9105f96b9fb184d5cb83c0a5df3f4469ac8f6e9701590655eac"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-03.txt",
+      "sha256": "fef528d1aa35f92d479efc18789027eb714695f5271e7ed59ddd17107a225acb"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-04.json",
+      "sha256": "b26eb547ca417fa5c2c36704aec2f460861ed5173fa778744421188537366102"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-04.txt",
+      "sha256": "6bdc13af3eb140c0053d333fdede4ad52291d17612f4307a207bd76f93e6fbfa"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-05.json",
+      "sha256": "c95d78be65fe5cf6e6d25935846402be893dcb3985a36fc06d86e9971ec02bf6"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-05.txt",
+      "sha256": "8a32eef0c17a39f621a55f33293cce39d4a0780f1d6006d5f97cc56f59c755ee"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-06.json",
+      "sha256": "a4318269627266f7dc2d78520a4449a4042a6210abf6a4e4ce6fb26d6064c5b3"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-06.txt",
+      "sha256": "a6128929b38451c67aaa6cc9f82f560abde9ec52eded57691ad3ca15900afba2"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-07.json",
+      "sha256": "cc31a8b5f995de89f574072c31974cc0d74542d7591e1832fb391f472693767d"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-07.txt",
+      "sha256": "d332c52281801783a1b389b14534c9cfd0c7dfc776b7a08b572b8c29c4c0e17b"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-08.json",
+      "sha256": "f2787d59802e205768502a1dbb2f45e9d6aefc8d6a7618f87a61bb00cddd5316"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-08.txt",
+      "sha256": "0b5e8db1f8ec90d9e8cebe41e805ebaeb42f5d9947bfe73a25d3bc6ba49ff7fa"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-09.json",
+      "sha256": "d06e2238ec90137b433501a72aed94fb9e6a9f4aeb5360e006163c71efc0493e"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-09.txt",
+      "sha256": "c9b736ddbf70de014e666d62b98661f66de61cb313e4dde6afa356b8306bdfe2"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-10.json",
+      "sha256": "afe7413e382f0bf25872e18a72b5742595314098feb27c6680dea6861c648d36"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/missing-10.txt",
+      "sha256": "aed8c8fefc9c433ffbd522751bf176d1c6e0c89053199ea4f6797479daab6a4f"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/positive-claim.json",
+      "sha256": "ff24942e76cb36e9a09b08430bbc1e4658b0faa19aed29374c4f0fabd3048568"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/positive-claim.txt",
+      "sha256": "9587c0ad54ad55c26f4a9fbf9a9ef88bae0612ecccb4e49768635eec0586da5d"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/positive-job-claim.json",
+      "sha256": "797ec8cf4ea3afcb143441d9d1214dc0ea723091771047ed3e74e629e9648258"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/positive-job-claim.txt",
+      "sha256": "5f652a8bb4d749cdc7d3e5a479ab84458a825a78855357257a5437f0d5fdb144"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/positive-release.json",
+      "sha256": "83f34d86f60867f40e014d5fc2183dc4221adf4652dd58160a14a3b22605ba30"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/positive-release.txt",
+      "sha256": "1f6ed9ab54cc78c1c38dc7bd6ce969fd3f2eb592ba8b10b517f8c27e230a9be5"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/released.json",
+      "sha256": "dc289da79e0811b453db8cbd685e15848ad7bc37030bc7effd0fce6c2b07f7eb"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/released.txt",
+      "sha256": "cd415baf88a095e13e7b7c1ec4efaa266804d747b553e8cc4baa1faec21341ca"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/source-observation.json",
+      "sha256": "0346c203aebd3903bec9abac641555aca44693e716b84b0c9668332ead2b20d5"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/unit.json",
+      "sha256": "6177d36fd358ee1362bbf236a3eb8052c7d5784210356ad6d1a6420774b2fcb3"
+    },
+    {
+      "path": "/tmp/uos-sa-plan-help-54ab1f/unit.txt",
+      "sha256": "1c88fca02c091735a954ed3cdcca14ba4a59dbee42d6a0dc007b0a74249fd31d"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/closed-output.json",
+      "sha256": "9cad09bbfe4451b904fb3fae2ba1081dc5d3a0cff5b8d8d2e1b4ec8c7c970f89"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/deadline.json",
+      "sha256": "91ce503006ec8f1508dcf117bdeda3b83d5fb39081b202942652dd2d39622295"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/occupied.json",
+      "sha256": "ad3869fa31b946631aeaf5a1aeb31e83cc5495ca7a60d223d25636c120028dfa"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/overflow.json",
+      "sha256": "eb7bf0941dbe3c2ce97cbd294e0cd883ae71077195faf82ba15dd81d7172cd77"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-01.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-02.txt",
+      "sha256": "bd4214d3edf0f88709bb90c9f6abc9ce339150cd6af71cbe41680d1331259ad6"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-03.txt",
+      "sha256": "b0ff5f66eba89ccd04c97a3052196a58b72da922d2aaaf617f124f5ad58ddb00"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-04.txt",
+      "sha256": "b0ff5f66eba89ccd04c97a3052196a58b72da922d2aaaf617f124f5ad58ddb00"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-05.txt",
+      "sha256": "b0ff5f66eba89ccd04c97a3052196a58b72da922d2aaaf617f124f5ad58ddb00"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-06.txt",
+      "sha256": "b0ff5f66eba89ccd04c97a3052196a58b72da922d2aaaf617f124f5ad58ddb00"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-07.txt",
+      "sha256": "65b8d88f78b5047d8cd605170f1f912fd280152a7a7e2e53383bdad3f7b29f20"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-08.txt",
+      "sha256": "cf09fb637e9a03bc797b9c7633c5aff360a3bc35193433c1bd40961c86442863"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-09.txt",
+      "sha256": "31429c1f0ce17d91c3ca27ad02220ab17f43345e6d6de5be42a05bc6008607b3"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-10.txt",
+      "sha256": "6847afffb45d506f517ef572b0b8d459770d70bd7acb4d11276049e92f6ccdad"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-11.txt",
+      "sha256": "f72a7516fece18a1c718a7a9d0af0fe1ceba954fc1886bd3c85540880eb7c895"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/process-12.txt",
+      "sha256": "4820782eee4d800ebf5dcd499eb744cbed1480175a8582fa6b39da818f871676"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/signal.json",
+      "sha256": "2905a354389c80a1c2e325a8b5adc100223c7eb4bfe839c5ea374cf1c89913c9"
+    },
+    {
+      "path": "/tmp/uos-ev-native-tests-59a462/success.json",
+      "sha256": "5e8adc13bb3dd05b1e7c3ba3de7ff9542fea79ac96e2e929679b4ffa518d52ee"
+    },
+    {
+      "path": "/tmp/uos-help-rereview-83b06fc8/independent-worker-controls.json",
+      "sha256": "7029091534181817f1aa4ef26e4a96ee352b4babb3edb853a42afa8d57bcdb8d"
+    }
+  ],
+  "generator": "Unchanged from prior ten-control bounded approval; not rerun",
+  "limits": [
+    "No live DB/task operations or deployed binary replacement",
+    "Exact -h/--help tokens remain reserved as controls rather than literal argument data",
+    "Native executable/library closure is locally observed, not authenticated release admission",
+    "Prior HOLD and counterexample records preserved"
+  ]
+}

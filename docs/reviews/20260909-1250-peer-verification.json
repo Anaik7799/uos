@@ -1,0 +1,193 @@
+{
+  "schema": "uos.ev98.peer-loop-verification.v1",
+  "source_candidate": "ee6037cc8b2ce7f8eb0cda58a3e21f2ffbd66335",
+  "base": "ef62623e847b515b6c58fd1ee7f02a94219c4276",
+  "status": "EXECUTED_PASS_AWAITING_INDEPENDENT_REVIEW",
+  "authority": "NONE",
+  "observed_at_utc_seconds": 1788958220.346536,
+  "task": {
+    "plan": "uos/ev98-peer-loop/20260909",
+    "task": "PEER_LOOP",
+    "worker": "codex-ev98-peer-loop",
+    "attempt": 1,
+    "state": "executing"
+  },
+  "workspace_fence": {
+    "holder": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+    "epoch": 1,
+    "root_reported_sequence": 1579,
+    "expiry": "approximately13:19UTC; root coordinator owns authoritative receipt"
+  },
+  "counts": {
+    "pure_groups": 10,
+    "actual_otp_groups": 3,
+    "existing_regressions": 72,
+    "compiler_inputs": 19,
+    "unchanged_dependency_files": 211
+  },
+  "durable_receipts": [
+    {
+      "kind": "source-manifest",
+      "path": "docs/reviews/20260909-1250-peer-source-manifest.json",
+      "sha256": "7ec93044e3f8ed06d89b7df4e6bf226bb563d3e56a90f3308b001f158211d19e"
+    },
+    {
+      "kind": "build",
+      "path": "docs/reviews/20260909-1250-peer-build.json",
+      "sha256": "497035a828ee4c8f9d53afa397588c80aa3fce77284c364a1900c030acac3457"
+    },
+    {
+      "kind": "pure",
+      "path": "docs/reviews/20260909-1250-peer-pure.json",
+      "sha256": "35502d6381a14b7cdfbca13c8962c8e5a6e8da3eca8aaa28199d3fa02760cf0f"
+    },
+    {
+      "kind": "actor",
+      "path": "docs/reviews/20260909-1250-peer-actor.json",
+      "sha256": "cced94e6a6525b849c223b2e633d1f684eb28e4122f56bec9d13808b7f99d86d"
+    },
+    {
+      "kind": "regressions",
+      "path": "docs/reviews/20260909-1250-peer-regressions.json",
+      "sha256": "d65e4d3c06e390c0173a75514035f2d70e607a37bcddc8f6f45d8fe786ad5037"
+    },
+    {
+      "kind": "format",
+      "path": "docs/reviews/20260909-1250-peer-format.json",
+      "sha256": "1381bd2b7043b31fdcc1685080433c31f8e5875cd68d4cc054dbf15a3670efe9"
+    },
+    {
+      "kind": "erts",
+      "path": "docs/reviews/20260909-1250-peer-erts.json",
+      "sha256": "8994315dd09211de4cc14d29cb4bafb70eb1434f4bfaead124ff19fd85c559a3"
+    },
+    {
+      "kind": "red-configuration",
+      "path": "docs/reviews/20260909-1250-peer-red-configuration.json",
+      "sha256": "40729c2245e6f87fcb8ff2b750c6dc96436681bf41cf44fb09c66052c217eb97"
+    },
+    {
+      "kind": "red-timer",
+      "path": "docs/reviews/20260909-1250-peer-red-timer.json",
+      "sha256": "d6493e6fa5ee4351f51a5a1860bc6a53fd2ba2cac7d33be19c0f3863c7daff2b"
+    },
+    {
+      "kind": "red-utc",
+      "path": "docs/reviews/20260909-1250-peer-red-utc.json",
+      "sha256": "29c498c613c7c181468d08c6c9d844eaccf2813adb4b4cd24572ce4758ba6e04"
+    },
+    {
+      "kind": "preflight-refused-state",
+      "path": "docs/reviews/20260909-1250-peer-preflight-refused-state.json",
+      "sha256": "50f28f957701962df66090209e171392732751937eedcec3a44befe899322d96"
+    },
+    {
+      "kind": "preflight",
+      "path": "docs/reviews/20260909-1250-peer-preflight.json",
+      "sha256": "9462ec114c7ed73f10db961eec9fef5e953ce5320935d65edb898d3dcd7b105e"
+    },
+    {
+      "kind": "claim",
+      "path": "docs/reviews/20260909-1250-peer-claim.json",
+      "sha256": "beb25b7cab965236573776477febb58dc82fd2c9da83e9891b5b386f5b140bdb"
+    },
+    {
+      "kind": "active",
+      "path": "docs/reviews/20260909-1250-peer-active.json",
+      "sha256": "d37a8b26194780aaa798ff447e77f26f10028a7ade0c907ceda32d4bc50d3dda"
+    }
+  ],
+  "actual_beam_hashes": [
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "1b8d92de63c4a70ee102bce4828310878cceb9016bd43de3baab068f5d023da3"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "cbf47f4fc7cb1bf1ea48edab1328519339703dc70b109b176a98a2dba54abdd8"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "e0ba4d478e36fc32f017fc5c74e4d058dcb6f129286d7f98b1c543875ab187b6"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "dbbd50770f8eaef62b065fd7862db9b1817a0b790a78d2099de43818b04f5f0f"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "b3ca8b2d5fe6c924d7659c9bca039f8ea34132c267a77411d9ae076672e933ee"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "f86cfedbedda1756192ed25501d6c59d1f052c869d889245792b32e2d899c3f9"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "087df9fcbc82f93aac5497813dd671616128ca02a23a6d5c9d3ad8f303c36553"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "87c9542434f0e8eb9beef9b225cbbc271a2436ddf8e1c76a0197459cca4fa41c"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/crdt_delta_state_test.beam",
+      "sha256": "c14d0349364b644fdb1a36f3383861d96a5a7c0e30a3294698a4606d28c3c969"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/crdt_health_bridge_test.beam",
+      "sha256": "bdc3b7338135311c1b122973b855a6dd9c397b5a69900dbacd40f82a5f874bca"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "6c2d9dee92f462d41677ac61a4a427bea774bbb6c0fe7a739c8e10013e83e55c"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/deadman_freshness_test.beam",
+      "sha256": "79dd9b388e8b66c0880edebee5b44655fb964b18c86407e697da9e9ac344c91b"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/delta_mesh_engine_test.beam",
+      "sha256": "d3d583e191ca31f8c5d66b6c9e40c650d3d51b3365fc3a829dd4d493d0ea51bc"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/ev98_codec_runner.beam",
+      "sha256": "a3aa1808ac7f1149645ab45ba624c7613d1d376351944a422615b16948a4b193"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/mesh_peer_actor_test.beam",
+      "sha256": "2cff1865c6ec73c398f8dfc7876c9b8b808e81a1fcc9d97a9a2a829e658fefcb"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/mesh_peer_test.beam",
+      "sha256": "830f0048a7c98ed70502055c11438db4931990d05899b88ddd55bf4ffac98e4f"
+    },
+    {
+      "path": "/tmp/ev-peer-final-20260909/beam/ebin/mesh_sync_codec_test.beam",
+      "sha256": "505aee77f9f0143585e74d0a831fe246f7b069d7a7b87e2016e8a6d4995d185e"
+    }
+  ],
+  "bounds": {
+    "configured_peers": 16,
+    "routed_frames": 256,
+    "aggregate_wire_bytes": 1048576,
+    "per_frame_wire_bytes": 131072,
+    "advisories": 64,
+    "advisory_overflow": "explicit saturating count; current registry remains retained",
+    "actor_call_deadline_ms": 1000,
+    "tick_interval_ms": "1..60000",
+    "heartbeat_interval_ms": "tick_interval..60000",
+    "max_missed": "1..100"
+  },
+  "limits": [
+    "Only local process/OTP exchange; no network I/O, remote transport, authentication or admission.",
+    "Configured routing identity equality is not sender authentication.",
+    "TransportAccepted means caller-reported transport custody, not remote application delivery.",
+    "Retained state is volatile; abnormal/VM crash durability is not implemented. Restart frame lifetimes are unique within this ERTS VM.",
+    "Controlled shutdown returns retained state for explicit caller handoff; caller failure can lose that handoff.",
+    "ActorUnavailable includes timeout with unknown operation outcome. Callers must bound mailbox demand; late replies and untrusted raw Erlang messages are outside opaque-state bounds.",
+    "Advisory overflow is counted, not silently presented as complete history; no advisory effect dispatch.",
+    "No formal refinement, hard real-time scheduling or complete reproducible OTP/shared-library closure claim.",
+    "SYNC_STATUS follow-up integration remains parent-coordinated; new peer modules do not branch on its status labels."
+  ]
+}

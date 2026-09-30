@@ -1,0 +1,66 @@
+{
+  "revision": "32d2770110cd78e50429d8214377c4c02e4cde14",
+  "private_invocations": [
+    {
+      "argv": [
+        "/tmp/uos-sa-plan-help-f27002/_build/default/cli/sa_plan_main.exe",
+        "job", "enqueue", "j", "private/job", "q", "intended-worker", "{}"
+      ],
+      "database": "/tmp/uos-help-generator-review-32d2770/private-job-worker-0.sqlite3",
+      "status": "EXITED 0",
+      "output": "id=j name=private/job queue=q worker=intended-worker state=available attempt=0 max_attempts=3 available_at_ns=1788934646026576455 lease_owner=- lease_until_ns=- result=-\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788934646023748634\",\"command\":\"--job-enqueue\",\"authority\":\"report_only\",\"total_ns\":3202445,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.002, validate;dur=0.001, store_open;dur=2.805, dispatch;dur=0.113, store_close;dur=0.262, total;dur=3.202\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":3336,\"duration_ms\":0.003336},{\"name\":\"normalize\",\"duration_ns\":1513,\"duration_ms\":0.001513},{\"name\":\"validate\",\"duration_ns\":1032,\"duration_ms\":0.001032},{\"name\":\"store_open\",\"duration_ns\":2805228,\"duration_ms\":2.805228},{\"name\":\"dispatch\",\"duration_ns\":112862,\"duration_ms\":0.112862},{\"name\":\"store_close\",\"duration_ns\":262294,\"duration_ms\":0.262294}]}\n",
+      "output_sha256": "0c01be664dc14fc3e4b28af2be6cd1314ed6cdf134bcb514aba95543d53fffb7"
+    },
+    {
+      "argv": [
+        "/tmp/uos-sa-plan-help-f27002/_build/default/cli/sa_plan_main.exe",
+        "job", "claim", "q", "--version"
+      ],
+      "database": "/tmp/uos-help-generator-review-32d2770/private-job-worker-0.sqlite3",
+      "status": "EXITED 0",
+      "output": "id=j name=private/job queue=q worker=intended-worker state=executing attempt=1 max_attempts=3 available_at_ns=1788934646026576455 lease_owner=--version lease_until_ns=1788934706041124575 result=-\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788934646040524486\",\"command\":\"--job-claim\",\"authority\":\"report_only\",\"total_ns\":826114,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.001, validate;dur=0.001, store_open;dur=0.582, dispatch;dur=0.159, store_close;dur=0.067, total;dur=0.826\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":2846,\"duration_ms\":0.002846},{\"name\":\"normalize\",\"duration_ns\":992,\"duration_ms\":0.000992},{\"name\":\"validate\",\"duration_ns\":722,\"duration_ms\":0.000722},{\"name\":\"store_open\",\"duration_ns\":582195,\"duration_ms\":0.582195},{\"name\":\"dispatch\",\"duration_ns\":158849,\"duration_ms\":0.158849},{\"name\":\"store_close\",\"duration_ns\":67407,\"duration_ms\":0.06740699999999999}]}\n",
+      "output_sha256": "7083ecbbf8da84772ae3a74627e98ff68c8f0f532c59ade06114ead0970d2d8c"
+    },
+    {
+      "argv": [
+        "/tmp/uos-sa-plan-help-f27002/_build/default/cli/sa_plan_main.exe",
+        "job", "enqueue", "j", "private/job", "q", "intended-worker", "{}"
+      ],
+      "database": "/tmp/uos-help-generator-review-32d2770/private-job-worker-1.sqlite3",
+      "status": "EXITED 0",
+      "output": "id=j name=private/job queue=q worker=intended-worker state=available attempt=0 max_attempts=3 available_at_ns=1788934646058491738 lease_owner=- lease_until_ns=- result=-\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788934646055692542\",\"command\":\"--job-enqueue\",\"authority\":\"report_only\",\"total_ns\":3152531,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.001, validate;dur=0.001, store_open;dur=2.779, dispatch;dur=0.112, store_close;dur=0.242, total;dur=3.153\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":3326,\"duration_ms\":0.003326},{\"name\":\"normalize\",\"duration_ns\":1273,\"duration_ms\":0.001273},{\"name\":\"validate\",\"duration_ns\":1333,\"duration_ms\":0.001333},{\"name\":\"store_open\",\"duration_ns\":2778628,\"duration_ms\":2.778628},{\"name\":\"dispatch\",\"duration_ns\":111860,\"duration_ms\":0.11186},{\"name\":\"store_close\",\"duration_ns\":241976,\"duration_ms\":0.241976}]}\n",
+      "output_sha256": "d963c6bf40a504fe2fa3ec7064b602f44b1cb2f741749761d185ed74a5ce6743"
+    },
+    {
+      "argv": [
+        "/tmp/uos-sa-plan-help-f27002/_build/default/cli/sa_plan_main.exe",
+        "job", "claim", "q", "--unknown"
+      ],
+      "database": "/tmp/uos-help-generator-review-32d2770/private-job-worker-1.sqlite3",
+      "status": "EXITED 0",
+      "output": "id=j name=private/job queue=q worker=intended-worker state=executing attempt=1 max_attempts=3 available_at_ns=1788934646058491738 lease_owner=--unknown lease_until_ns=1788934706069819860 result=-\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788934646069264325\",\"command\":\"--job-claim\",\"authority\":\"report_only\",\"total_ns\":784256,\"server_timing\":\"decode;dur=0.002, normalize;dur=0.001, validate;dur=0.001, store_open;dur=0.540, dispatch;dur=0.169, store_close;dur=0.060, total;dur=0.784\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":2094,\"duration_ms\":0.002094},{\"name\":\"normalize\",\"duration_ns\":862,\"duration_ms\":0.000862},{\"name\":\"validate\",\"duration_ns\":801,\"duration_ms\":0.000801},{\"name\":\"store_open\",\"duration_ns\":540457,\"duration_ms\":0.540457},{\"name\":\"dispatch\",\"duration_ns\":169399,\"duration_ms\":0.169399},{\"name\":\"store_close\",\"duration_ns\":59512,\"duration_ms\":0.059512}]}\n",
+      "output_sha256": "ded87150606b2946992ce234cc6dfdf8143e5d7f80c9aacd1f0d034170c01182"
+    },
+    {
+      "argv": [
+        "/tmp/uos-sa-plan-help-f27002/_build/default/cli/sa_plan_main.exe",
+        "job", "enqueue", "j", "private/job", "q", "intended-worker", "{}"
+      ],
+      "database": "/tmp/uos-help-generator-review-32d2770/private-job-worker-2.sqlite3",
+      "status": "EXITED 0",
+      "output": "id=j name=private/job queue=q worker=intended-worker state=available attempt=0 max_attempts=3 available_at_ns=1788934646087517967 lease_owner=- lease_until_ns=- result=-\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788934646084612400\",\"command\":\"--job-enqueue\",\"authority\":\"report_only\",\"total_ns\":3339764,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.002, validate;dur=0.001, store_open;dur=2.882, dispatch;dur=0.117, store_close;dur=0.317, total;dur=3.340\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":3346,\"duration_ms\":0.003346},{\"name\":\"normalize\",\"duration_ns\":1513,\"duration_ms\":0.001513},{\"name\":\"validate\",\"duration_ns\":1052,\"duration_ms\":0.001052},{\"name\":\"store_open\",\"duration_ns\":2881632,\"duration_ms\":2.881632},{\"name\":\"dispatch\",\"duration_ns\":117251,\"duration_ms\":0.117251},{\"name\":\"store_close\",\"duration_ns\":317257,\"duration_ms\":0.317257}]}\n",
+      "output_sha256": "eb7246b686ce0826eb0eca95c08e24f4e3a67c59e23c928db55910db14de27e8"
+    },
+    {
+      "argv": [
+        "/tmp/uos-sa-plan-help-f27002/_build/default/cli/sa_plan_main.exe",
+        "job", "claim", "q", ""
+      ],
+      "database": "/tmp/uos-help-generator-review-32d2770/private-job-worker-2.sqlite3",
+      "status": "EXITED 1",
+      "output": "sa-plan-pipeline {\"request_id\":\"sa-plan-1788934646101474864\",\"command\":\"--job-claim\",\"authority\":\"report_only\",\"total_ns\":1105921,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.001, validate;dur=0.001, store_open;dur=0.990, store_close;dur=0.091, total;dur=1.106\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":3156,\"duration_ms\":0.003156},{\"name\":\"normalize\",\"duration_ns\":1332,\"duration_ms\":0.001332},{\"name\":\"validate\",\"duration_ns\":1062,\"duration_ms\":0.001062},{\"name\":\"store_open\",\"duration_ns\":990143,\"duration_ms\":0.990143},{\"name\":\"store_close\",\"duration_ns\":91381,\"duration_ms\":0.091381}]}\nsa-plan: lease worker must be non-empty\n",
+      "output_sha256": "762a28e39eeb9efc16a14e6ea425c0b61982522f82b227723ccb0ff64453e990"
+    }
+  ],
+  "authority": "NONE"
+}

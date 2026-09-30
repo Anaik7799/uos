@@ -21,8 +21,8 @@ import cepaf_gleam/fpp/fifteen_evolutionary_cycles.{
 }
 import cepaf_gleam/ha/homeostasis_evolution_engine.{
   type HomeostasisSystemState, EvolutionaryMutation, apply_ratified_evolution,
-  ingest_telemetry, init_homeostasis_system, propose_evolution,
-  vote_on_evolution,
+  ingest_telemetry, init_homeostasis_system, submit_evolution,
+  cast_registered_vote, evolution_error_to_string,
 }
 import cepaf_gleam/ha/multi_agent_quorum.{
   AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign,
@@ -31,6 +31,7 @@ import cepaf_gleam/ha/multi_agent_quorum.{
 import gleam/bit_array
 import gleam/crypto
 import gleam/int
+import gleam/result
 import gleam/list
 import gleam/string
 
@@ -83,46 +84,19 @@ pub fn execute_cycle(
     )
 
   // 3. Propose evolution on the Pareto frontier
-  case propose_evolution(eq_state, mutation, base_time_us + 4000) {
-    Error(err) -> Error("ProposalFailed: " <> err)
-    Ok(proposal0) -> {
-      // 4. Conduct 4-party sovereign quorum balloting
-      let p1 =
-        vote_on_evolution(
-          proposal0,
-          AgySovereign,
-          QuorumApprove,
-          "Formal proof & Gospel verified for " <> cycle.ev_tag,
-          "sig-agy",
-          base_time_us + 4100,
-        )
-      let p2 =
-        vote_on_evolution(
-          p1,
-          ClaudeSovereign,
-          QuorumApprove,
-          "Monorepo architecture confirmed for " <> cycle.ev_tag,
-          "sig-claude",
-          base_time_us + 4200,
-        )
-      let p3 =
-        vote_on_evolution(
-          p2,
-          CodexSovereign,
-          QuorumApprove,
-          "Kernel & hardware storage lock proved for " <> cycle.ev_tag,
-          "sig-codex",
-          base_time_us + 4300,
-        )
-      let p4 =
-        vote_on_evolution(
-          p3,
-          OpenRouterSovereign,
-          QuorumApprove,
-          "Remote advisory consensus ratified for " <> cycle.ev_tag,
-          "sig-openrouter",
-          base_time_us + 4400,
-        )
+  case submit_evolution(eq_state, mutation, base_time_us + 4000) {
+    Error(err) -> Error("ProposalFailed: " <> evolution_error_to_string(err))
+    Ok(submitted) -> {
+      // Pure simulation: these model votes are not observed sovereign approvals.
+      use voted <- result.try(
+        [AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign]
+        |> list.try_fold(submitted, fn(pair, member) {
+          cast_registered_vote(pair.0, pair.1, member, QuorumApprove,
+            "SIMULATED model vote", "simulation-only", base_time_us + 4400)
+        })
+        |> result.map_error(evolution_error_to_string),
+      )
+      let p4 = voted.1
 
       // 5. Verify quorum ratification
       case p4.ballot.verdict {
@@ -131,8 +105,8 @@ pub fn execute_cycle(
           let lyap_prior = eq_state.metrics.lyapunov_v
 
           // 6. Apply ratified mutation advancing generation
-          case apply_ratified_evolution(eq_state, p4) {
-            Error(err) -> Error("EvolutionApplyFailed: " <> err)
+          case apply_ratified_evolution(voted.0, p4) {
+            Error(err) -> Error("EvolutionApplyFailed: " <> evolution_error_to_string(err))
             Ok(next_state) -> {
               let gen_posterior = next_state.generation
               let lyap_posterior = next_state.metrics.lyapunov_v

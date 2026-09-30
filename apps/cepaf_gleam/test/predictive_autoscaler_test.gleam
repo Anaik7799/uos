@@ -13,7 +13,7 @@ pub fn main() {
 }
 
 pub fn init_autoscaler_test() {
-  let a = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
+  let assert Ok(a) = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
   a.current_workers |> should.equal(2)
   a.min_workers |> should.equal(2)
   a.max_workers |> should.equal(10)
@@ -22,7 +22,7 @@ pub fn init_autoscaler_test() {
 }
 
 pub fn token_consumption_and_refill_test() {
-  let a0 = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
+  let assert Ok(a0) = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
   let res1 = consume_tokens(a0, 400, 1000)
   case res1 {
     Ok(a1) -> {
@@ -38,16 +38,18 @@ pub fn token_consumption_and_refill_test() {
 }
 
 pub fn token_exhaustion_test() {
-  let a0 = init_autoscaler(2, 10, 50.0, 100, 10, 1000)
+  let assert Ok(a0) = init_autoscaler(2, 10, 50.0, 100, 10, 1000)
   let res = consume_tokens(a0, 500, 1000)
   case res {
     Ok(_) -> panic as "Expected error due to token exhaustion"
-    Error(msg) -> should.be_true(msg != "")
+    Error(error) ->
+      error
+      |> should.equal(predictive_autoscaler.TokenBudgetExhausted(500, 100))
   }
 }
 
 pub fn scale_up_on_queue_spike_test() {
-  let a0 = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
+  let assert Ok(a0) = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
 
   // Pass cooldown time (10s + 1us = 10_000_001 us)
   let now = 1000 + 10_000_001
@@ -62,7 +64,7 @@ pub fn scale_up_on_queue_spike_test() {
 }
 
 pub fn cooldown_inhibits_scaling_test() {
-  let a0 = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
+  let assert Ok(a0) = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
 
   // Attempt scale during cooldown (only 1s passed)
   let now = 1000 + 1_000_000
@@ -76,7 +78,7 @@ pub fn cooldown_inhibits_scaling_test() {
 }
 
 pub fn scale_down_on_idle_queue_test() {
-  let a0 = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
+  let assert Ok(a0) = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
   // Manually put workers to 6
   let a_scaled = evaluate_scaling(a0, 40, 150.0, 1000 + 10_000_001)
   let a_scaled_more = evaluate_scaling(a_scaled, 45, 160.0, 1000 + 20_000_002)

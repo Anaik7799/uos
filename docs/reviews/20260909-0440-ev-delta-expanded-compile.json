@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/ev-delta-expanded-20260909-0440", "--out",
+    "/tmp/ev-delta-expanded-20260909-0440/compiled", "--lib",
+    "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang"
+  ],
+  "utc_started": 1788928855.160654,
+  "utc_finished": 1788928855.655991,
+  "elapsed_seconds": 0.495336102,
+  "deadline_seconds": 60.0,
+  "exit_code": 0,
+  "output": "warning: Redundant record update\n    ┌─ /tmp/ev-delta-expanded-20260909-0440/src/cepaf_gleam/ha/deadman_freshness.gleam:146:9\n    │  \n146 │ ╭         DeadManRegistry(\n147 │ │           ..reg,\n148 │ │           actors: list.reverse(actors),\n149 │ │           last_eval_ms: now_ms,\n150 │ │           total_tripped_count: reg.total_tripped_count + trips,\n151 │ │         ),\n    │ ╰─────────^ This record update specifies all fields\n\nHint: It is better style to use the record creation syntax.\n\n",
+  "output_sha256": "8bc47b016e1cbd35a57a9441ce9f0f0f2eb31ba4e2b4a0e082897fc0cf029e89",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

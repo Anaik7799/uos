@@ -1,0 +1,72 @@
+PASS valid_synthetic_bundle
+PASS wrong_revision
+PASS wrong_ev
+PASS empty_coverage
+PASS duplicate_coverage
+PASS unknown_key
+PASS missing_key
+PASS duplicate_key
+PASS same_receipt_two_keys
+PASS wrong_source_hash
+PASS undeclared_scope
+PASS wrong_receipt_revision
+PASS wrong_receipt_coverage
+PASS missing_negative_controls
+PASS unknown_receipt_key
+PASS failed_exit
+PASS timed_out
+PASS output_overflow
+PASS unrun
+PASS skipped
+PASS failed_check
+PASS unverified_status
+PASS stale
+PASS future
+PASS reversed_time
+PASS nonfinite_time
+PASS bad_clock
+PASS formal_sorry
+PASS formal_unsupported
+PASS formal_axiom
+PASS tampered_receipt_bytes
+PASS tampered_output
+PASS path_traversal
+PASS absolute_path
+PASS escaping_symlink
+PASS directory_reference
+PASS malformed_json
+PASS oversize_json
+SYNTHETIC consistency tests: checks=38 failed=0; admission_authority=NONE
+PASS candidate_reader_independent_of_caller_cwd
+PASS live_clock_csv_positive
+PASS live_clock_unsynchronized
+PASS live_clock_malformed
+PASS live_clock_nonfinite
+PASS live_clock_future_ref
+PASS live_clock_stale_ref
+PASS consistent_labels_untracked_source
+PASS consistent_labels_untracked_policy
+PASS negative_control_accepted
+PASS duplicate_nested_key
+PASS shared_invocation_id
+PASS fifo_refused_before_open
+PASS symlink_parent_refused
+PASS deep_json
+PASS reader_timeout
+PASS reader_output_quota
+PASS reader_exit_failure
+SYNTHETIC fixture_bundle=tools/ev_receipts/_fixture-1788927317576855/bundle.json
+TOTAL checks=49 (plus 6 clock cases) failed=0; authority=NONE
+PASS repeated_command_arguments_are_valid
+FINAL consistency cases=50 clock cases=6 failed=0; all receipts SYNTHETIC; authority=NONE
+PASS immutable_revision_ignores_conflicting_symbol_alias
+PASS final_clock_before_expiry
+PASS final_clock_delay_crosses_expiry
+PASS final_clock_nonfinite
+PASS aggregate_accounts_candidate_and_rehash
+PASS aggregate_exact_boundary
+PASS deadline_between_metadata_and_content
+PASS aggregate_includes_actual_final_rehash reason=aggregate content byte quota
+PASS candidate_content_refused_after_metadata_exhausts_bytes reason=reader budget exhausted
+PASS candidate_deadline_between_actual_metadata_and_content reason=validation deadline
+REVIEW FINAL original_cases=56 review_cases=11 failed=0 authority=NONE

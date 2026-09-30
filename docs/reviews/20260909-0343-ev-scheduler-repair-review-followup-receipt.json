@@ -1,0 +1,15 @@
+{
+  "receipt_id": "ev-scheduler-repair-20260909-0343-review-followup",
+  "status": "PASS_AT_SCOPED_COMPILED_GLEAM_TEST_SCOPE",
+  "parent_candidate": "b79962650c2fdd7d66e51d045f1333a544d66f64",
+  "source_sha256": {
+    "heijunka_scheduler": "6380ad940b32bf517200c78165460e0f235fa61d67a301ce44592d290b6ea6e8",
+    "work_stealing": "1224618a2cfeaad05351510ab7b0cdab92a9c1536964944f61b92220f910803e",
+    "heijunka_scheduler_test": "58eb5f07cd70fd4cec8ad9dc9b1f92b8a2ed5b95c73cc76a5ff1349cd428b7e1",
+    "work_stealing_test": "f94ee9abcde2f67040c29f9427628a386be258c000a0ad9962bad376d2a96ea0"
+  },
+  "red_observed": ["same task/worker/attempt across plans removed both leases", "duplicate donor request removed a second batch", "wrong-donor request removed donor-a work", "1000 unique empty responses retained 1000 receipts"],
+  "green": {"compile": "gleam compile-package, OTP 29, realized root dependency ebin inputs: PASS", "tests": "24 direct compiled Gleam tests: PASS (11 Heijunka, 13 work-stealing)", "format": "four scoped Gleam files: PASS"},
+  "changes": ["complete_task now matches plan_id, task_id, worker_id, and attempt", "donors validate request donor_node and cache the original response by initiator/transfer identity", "receiver and donor receipt stores are bounded at 256 and reject new transfers when full without eviction", "deferred reclaims are explicitly regression-tested as drained by pull_batch"],
+  "limitations": ["Receipt state is bounded in-memory model state, not network or disk durability.", "Normal gleam test remains UNRUN because the resolver attempted repo.hex.pm; no download occurred.", "Formal proof, runtime deployment, integration, task completion, and EV admission remain unrun or out of scope."]
+}

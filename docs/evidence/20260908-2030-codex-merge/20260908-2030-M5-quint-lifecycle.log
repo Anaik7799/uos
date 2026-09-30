@@ -1,0 +1,11 @@
+
+  mirage_receipt_admission
+    ok goodLifecycleTest passed 1 test(s)
+    ok delayedCandidateTest passed 1 test(s)
+    ok delayedRebootTest passed 1 test(s)
+    ok delayedRunTest passed 1 test(s)
+    ok staleObservationTest passed 1 test(s)
+    ok missingVirtioTest passed 1 test(s)
+    ok failedTargetTest passed 1 test(s)
+
+  7 passing (27ms)

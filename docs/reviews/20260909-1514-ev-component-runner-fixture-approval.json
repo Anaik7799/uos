@@ -1,0 +1,86 @@
+{
+  "candidate": "bfeda779d73a1bebab4c562a25e7036d7e5170d7",
+  "base": "49897c6570c72f40dc697ee29b244e0173ed77ad",
+  "verdict": "APPROVED_BOUNDED_THREE_FILE_REVIEW",
+  "authority": "NONE",
+  "scope": [
+    {
+      "path": "tools/generate_ev_recovery_runner.ml",
+      "sha256": "bd42b2f5ba1b262711a78192da4afb460a2537126d727b45dee1afd357b2df51",
+      "bytes": 5139
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev_recovery_runner.gleam",
+      "sha256": "1e867c16325423712a4408f8a855d7dc7dbfe5347e27ebe767b49d2ddebe9bd2",
+      "bytes": 30334
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mesh_peer_actor_test.gleam",
+      "sha256": "09c1a8705945c11c2296e9bc37031c0499666c1c1e62a5446288f1efbe1c4c79",
+      "bytes": 5781
+    }
+  ],
+  "static_and_binding_review": {
+    "path": "/tmp/ev-recovery-generator-independent-1535/20260909-1535-threefile-static.json",
+    "sha256": "f62d7bf3a2b2fd911336a310984c7a7ff9a5aa60a43769bbaf9821412fe6da6b",
+    "bytes": 52623
+  },
+  "independent_generator_controls": {
+    "path": "/tmp/ev-recovery-generator-independent-1535/verification.json",
+    "sha256": "13e8c8574209c9ea8bd8aad21c8039c107391584132ce8069719b0f96f0dd402",
+    "bytes": 6382
+  },
+  "independent_receipts": [
+    {
+      "path": "/tmp/ev-recovery-generator-independent-1535/actor-build.json",
+      "sha256": "78c5b52ab43a8b2f64b7cef6fbbc17c2412540036181098f89a34d9dcec53f7f",
+      "bytes": 2284
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-independent-1535/actor-timer-runtime.json",
+      "sha256": "8e13d43e9aaedd95890183041cec32f428d04eb61d933d72dba72129e1a28dc4",
+      "bytes": 2617
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-independent-1535-runtime.json",
+      "sha256": "c5aaf846cad99509ca40a05983f9d92be1515e7eeb5d7f69b3fe99fed6a72405",
+      "bytes": 2778
+    }
+  ],
+  "actor_fixture_beam": {
+    "path": "/tmp/ev-recovery-generator-independent-1535/actor-compiled/ebin/mesh_peer_actor_test.beam",
+    "sha256": "87a774d517b2288dd2e880b82a410ea782ad89333f037c40a82f733249d8fa69",
+    "bytes": 20884
+  },
+  "root177_runtime_audited": {
+    "path": "/tmp/ev-recovery177-runtime-1532.json",
+    "sha256": "38d7b7cb6c6d8d8a052d2a7f94de7c7f93990fabb1d8256b43442b7991697dba",
+    "bytes": 17976
+  },
+  "root_full_compile_audited": {
+    "path": "/tmp/ev-recovery177-build-1530.json",
+    "sha256": "4bcf8de6cbb25ed25fc764947fc656f4b6a801d8fbf30b61302d4be66eb975b7",
+    "bytes": 7765
+  },
+  "driver": {
+    "path": "/tmp/ev_recovery_threefile_review.ml",
+    "sha256": "0bff3175fbce1afddfee3a8f481ff0d14fd8f5ac87716dae5f496c5559d33ea9",
+    "bytes": 5775
+  },
+  "findings": [],
+  "observations": [
+    "Fresh private execution of all15 generator controls passed; exact immutable formatted runner output preserved",
+    "Independent old/new immutable comparison retains all168 calls in order and adds exactly9 previously reviewed sync cases",
+    "Ordered177-name SHA256 is enforced; same-count rename, duplicate, reorder, reduced denominator refuse without output replacement",
+    "Filesystem replacement code is byte-identical to base; existing bounded cooperative filesystem guarantees unchanged",
+    "Independent warning-free11-source Gleam fixture rebuild reused211 hashed dependency files; actual OTP timer/full-queue/replay test passes",
+    "Fixture keeps stale ACK FrameQuota refusal, successful covering ACK at old epoch1, unchanged tripped freshness and256 retained outbound frames",
+    "Root177 runtime receipt output digest and exact177 ordered PASS labels checked; full177 runtime and live broker run not independently repeated"
+  ],
+  "limits": [
+    "Review restricted to generator, generated recovery runner and actor fixture; no verdict on independent EUnit autodiscovery or remaining composition",
+    "Lexical call-name digest is enumeration protection, not source-body authentication or whole-suite completeness",
+    "No hostile directory race/crash durability guarantee; generator retains prior cooperative filesystem limitations",
+    "No full EV runtime, formal, sovereign, deployment or admission authority"
+  ]
+}

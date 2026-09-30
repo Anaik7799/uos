@@ -1,0 +1,27 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/mojo",
+    "build",
+    "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+    "-o", "/tmp/uos-ev-combined-66304950-mojo.exe"
+  ],
+  "utc_started": 1788929238.727906,
+  "utc_finished": 1788929239.337976,
+  "elapsed_seconds": 0.6100710620000001,
+  "deadline_seconds": 90.0,
+  "exit_code": 0,
+  "output": "Failed to initialize Crashpad.  Crash reporting will not be available.  Cause: while locating crashpad handler: unable to locate crashpad handler executable\n",
+  "output_sha256": "8b33180b5dd484cbaa302cc68b3794e69204fc8de4d0b692cbb1332a95aa44d0",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

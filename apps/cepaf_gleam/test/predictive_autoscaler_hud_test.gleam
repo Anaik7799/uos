@@ -22,7 +22,7 @@ pub fn init_autoscaler_hud_test() {
 
 pub fn update_from_autoscaler_test() {
   let hud = predictive_autoscaler_hud.init_autoscaler_hud()
-  let engine0 = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
+  let assert Ok(engine0) = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
   let engine1 = evaluate_scaling(engine0, 25, 120.0, 1000 + 10_000_001)
 
   let updated_hud =

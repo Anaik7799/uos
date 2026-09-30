@@ -1,0 +1,431 @@
+[
+  {
+    "snapshot": {
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+          "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam",
+          "sha256": "6380ad940b32bf517200c78165460e0f235fa61d67a301ce44592d290b6ea6e8",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam",
+          "sha256": "60f37a2e3899507ff33a3bb395a7f77835d6113ac4302b89de579ac2cccb0400",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+          "sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+          "sha256": "5813678ba71dcb676d8713e6d6a8bb4afb62e7f61adc38267bd8c29ac6a86c70",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam",
+          "sha256": "b156c992ceca39fc0cb0b6c983c194164045fbb88b20ff9cf3212b04b23e7a8a",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam",
+          "sha256": "0dc918abb976b34802934cdfd0ccb7a18836198da62422316e18a4cf68392dcb",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ui/homeostasis_data.gleam",
+          "sha256": "f6c469e0b016930a8c6603d41ab7c0ef337c542ea027d0462d6551d302b4a2af",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/deadman_freshness_test.gleam",
+          "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+          "sha256": "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_control_boundary_test.gleam",
+          "sha256": "1a69160cef04b7d557271ba338d4727078a6bef1ac40a41b2e36d1f3ba463053",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_control_bounds_test.gleam",
+          "sha256": "0897c332216a9d9b753070a3600f7b4a3d20d1f54a7f8d4b6eaae0959e1e33b0",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+          "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam",
+          "sha256": "23ea5e8464856acc160086bd97e0634955f22d2aef7b4cee0823575c238a2174",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_recovery_runner.gleam",
+          "sha256": "2ab3a77a80714165c400a7b92783caaf4ffa13b589043eb1e8ffe89265e94568",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_scheduler_repair_runner.gleam",
+          "sha256": "763afef6080c2aa9bc922ffa63f43dd96a24ee7b2ff39570d5946c136e48af4d",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam",
+          "sha256": "58eb5f07cd70fd4cec8ad9dc9b1f92b8a2ed5b95c73cc76a5ff1349cd428b7e1",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/homeostasis_evolution_engine_test.gleam",
+          "sha256": "e695759e908bb4cbc26dc8bde2108ce3ba351c993a72684711fe2ab85df71b08",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/predictive_autoscaler_hud_test.gleam",
+          "sha256": "b5f162f3117e26b8aec5c4796347699e6863b764d281b3dfea3a4df0d201b924",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/predictive_autoscaler_test.gleam",
+          "sha256": "263b6f92b6f2f855a879cce834b6828e199effd06b4bd97dd65288e022055e42",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam",
+          "sha256": "0ce228fe12bda4dd366b32ff654d2c6f6a15c47e57eeea11eb0ad3a503b3d793",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/tui_15_evolutionary_cycles_test.gleam",
+          "sha256": "df4c8f6c6c7ee20192c5f505149914e6be91171b0b5bbd80c6f20fdb4ea3186c",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/work_stealing_test.gleam",
+          "sha256": "96ede4e24cbdcba58f053a71f5856834c168e37cd06c3cf8911cc60a56c4b9e9",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/uos_swarm/src/session_store_cli.gleam",
+          "sha256": "e4cca142da1d8dfa8a7cad63e36a2d9d83390d8141201e0ecb55518e3539814e",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "sha256": "e2d5ba9ee4854cf3228299137e904cb4126ea569d1a933a793c1bfb2cd35cf5b",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/uos_swarm/test/session_store_test.gleam",
+          "sha256": "a070733e611429f8ae68c77e9900fcc1028e0f58d22e865d4e36c1edfc1cbdaf",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/uos_swarm/test/session_store_verification_test.gleam",
+          "sha256": "e2f83d24bd05b616a942d228ea0a63e5292ab75f936e9a8cdaed8cf44691d034",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+          "sha256": "1a625a9a0cfcad2df9e68374fcc4017da186414a38450783dd61016ebb9fae12",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/dune",
+          "sha256": "f6151b78db6692e4b2b70e41d4473da170c19e59094f62e78c753d19e80d3971",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/run_agent_dispatch_hook.ml",
+          "sha256": "3d446b31d4895aaa438bc23483c123774f729889472ed7e5d1bec64ff4b820a7",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/test_agent_dispatch_hook.ml",
+          "sha256": "a0696b91bc143d743a1d1533ecd16d339f19a1e2d6ec53e6228131d9e2e2a411",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          "sha256": "a13dd2c9bfbbe5755cd2381aba489e028918d51468813207787a78ae5e765eb0",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml",
+          "sha256": "f44349d131202ad18e6d5becf0bedf601dc91bacf5a773369dd576accc13df14",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native_test_child.ml",
+          "sha256": "07849d3b8e95220000c4f261e6288b72fb2a6f4e83a5b1ee50b68f747edc41bd",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/dune",
+          "sha256": "b40fc15d19a3a81d2e3fd85c37fc9eb71cb2b1538cbd3d0a16f876bd2370757a",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/dune-project",
+          "sha256": "5b9ddbed029d927ab3c93a9ee634b3d054cbbdc0ea8c0ed86683bc1b3ed2b35f",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/ev_receipt.ml",
+          "sha256": "248370465af0ab1bf2af3c1bd5c849910675954d4a704606d29a328a5e158774",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/receipt_test.ml",
+          "sha256": "cb468098880d893ad07c4940ffb18723d3559873cf5da15550ed9916792134b6",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/receipt_validator.ml",
+          "sha256": "9f4ceda788586cc6aa79ae99cd33a01ec68523395fbfca3759f66d960be09618",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/generate_ev_recovery_runner.ml",
+          "sha256": "ff1588e7cb3b91439793d7bc5a493d4fcbbc249226bae4364e74319259ec30b3",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          "sha256": "667acf2ef336d13ca9d4c4e851c26c96adf345a5521d1754b14dbfcfa3898f4e",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          "sha256": "eb5d31b88bc62cc0a648bec4b56c5173f8506bc7c3c05b2ecb834e3e03b852b1",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          "sha256": "ede21fc625208b62c44b57d207946cdcde69e8c8c20999d9e14987a36301a7f4",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/test_ev_native.ml",
+          "sha256": "38392ae72278177275c6d8f4eb2ba1b4b7ab656feacda66f845ac5f922cff7e0",
+          "observed_at": "2026-09-09T05:41:36Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/test_session_store_verification.ml",
+          "sha256": "1697cbc08106c3287afdcf569b4df7b5fb007408227d0702fc6a157ca9385d57",
+          "observed_at": "2026-09-09T05:41:36Z"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace at immutable base 337f9913; current scoped bytes observed directly."
+    },
+    "valid_until": "2026-09-09T06:41:36Z",
+    "observed_at": "2026-09-09T05:41:36Z",
+    "assessment_id": "ev-admission-native-20260909-0536",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "plan_id": "uos/ev-admission/20260909-0210",
+    "task_id": "PROGRAM",
+    "actor": "codex-ev-admission-01a08017",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "scope": "Complete EV-01..EV-109 through isolated source repairs, bounded candidate-bound runtime/formal evidence, independent review and supported admission. Historical ledgers are preserved; integration and runtime replacement require their separate current fences.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "ready_since": "2026-09-09T02:47:52Z",
+    "factors": {
+      "criticality": {
+        "rationale": "Requested admission is blocked by observed provenance and false-positive verification gaps.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/run_agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/dune"
+        ]
+      },
+      "stpa": {
+        "rationale": "Observed printed deployment PASS and file-presence admission can assert safe completion without required behavior.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/run_agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/dune"
+        ]
+      },
+      "fmea": {
+        "rationale": "S5 O3 Det4 RPN60; severity floor makes F5 for false system admission.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/run_agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/dune"
+        ]
+      },
+      "dependency": {
+        "rationale": "Evidence and authority repairs gate all requested EV admissions.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/run_agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/dune"
+        ]
+      },
+      "impact": {
+        "rationale": "Correct admission protects the shared fleet-wide control and evidence boundary.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/run_agent_dispatch_hook.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/dune"
+        ]
+      }
+    },
+    "score": 2500,
+    "score_interval": [ 2500, 2500 ],
+    "fmea_modes": [
+      {
+        "id": "FM-FALSE-ADMISSION",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Noncanonical writers and unobserved fixed-positive checks can be mistaken for runtime and formal evidence.",
+        "effect": "False system admission or unsafe downstream release.",
+        "controls": "Preserve history, use canonical Sa-plan, immutable candidates, negative controls, independent sovereign review and effect-time fencing."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "EV admission programme owner and independent sovereign reviewers",
+      "control_action": "Repair and verify candidate capabilities, then record admission only for satisfied obligations",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required runtime or formal checks are omitted before admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Every EV has explicit acceptance obligations and executed receipts."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Printouts, stale files, fabricated reviewers or quarantined claims grant admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Validate evidence content, digests, scope, candidate and independent review; no ceiling changes before review."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A candidate or owner changes after observation.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Use immutable JJ revisions and current task/workspace/integration/runtime fences at each effect."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Tests or workers outlive resource or ownership bounds.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Bound subprocesses, outputs and lease durations; recheck before effects."
+        }
+      ]
+    },
+    "decision": {
+      "summary": "Repair and verify the existing EV programme under canonical authority, beginning with the admission evidence substrate.",
+      "alternatives": [
+        "Promote recorded historical counts",
+        "Repair gaps and execute revision-bound checks"
+      ],
+      "assumptions": [
+        "User authorizes completing and admitting existing EVs; evidence requirements remain in force."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Only synthetic EV999 exists in the legacy evidence table; actual EV evidence must be obtained."
+      ],
+      "forecast": "Negative tests will expose unsupported admission and fixed-positive verification; genuine runtime/formal obligations may require additional scoped work.",
+      "falsifier": "Any missing, tampered, stale, wrong-candidate or nonpassing evidence is accepted for admission.",
+      "acceptance": [
+        "All existing EV-01..EV-109 have explicit source, runtime and formal obligations",
+        "Candidate-bound checks and negative controls execute successfully",
+        "Codex and AGY review is recorded for the candidate",
+        "Admission records and policy change only after all required gates pass"
+      ],
+      "rollback": "Preserve failed receipts and immutable work. Do not rewrite shared journal/cycle history or replace runtime without its own checked fence and recovery path.",
+      "budget": "Existing realized tools only; no package downloads or paid inference. Two build jobs, two BEAM schedulers per probe, bounded subprocess timeouts; stage-specific execution ceilings recorded with receipts.",
+      "reviewer": "Independent code review and actual Codex/AGY sovereign review; no model impersonation.",
+      "residuals": [
+        "Same-UID host mutation remains outside cooperative fences.",
+        "Historical broken chain remains evidence; it cannot be rewritten into a pass.",
+        "A complete source inventory alone does not establish runtime conformance."
+      ],
+      "supersedes": "Prior assessment; source containment preserved at77e2b932. Next bounded repair removes false DMC/fence authority from actual dispatch output and bounds stdin; no live dispatch replacement."
+    }
+  }
+]

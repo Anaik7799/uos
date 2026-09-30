@@ -41,7 +41,8 @@ let ()=
    List.iter(fun(label,path,_,page,started)->
      let body=Playwright.Page.evaluate ~expression:"(()=>({url:location.href,text_length:document.body.innerText.trim().length,scroll_height:document.documentElement.scrollHeight,source:document.querySelector('#homeostasis-source-time')?.textContent??null,frames:document.querySelectorAll('#homeostasis-live-stream-body tr').length}))()"page in
      let fields=Yojson.Safe.Util.to_assoc body in
-     require(Yojson.Safe.Util.to_int(List.assoc"text_length"fields)>40)("empty render "^path);
+     let length=match List.assoc"text_length"fields with `Int n->float_of_int n|`Float f->f|_->failwith"DOM length must be numeric"in
+     require(Float.is_finite length&&length>40.)("empty render "^path);
      require(Playwright.Page.page_errors page=[||])("script error "^path);
      samples:= `Assoc["page",`String label;"tick",`Int tick;"utc_seconds",`Float(Unix.gettimeofday());"elapsed_seconds",`Float(mono()-.started);"observation",body]::!samples;
      ignore(Playwright.Page.evaluate ~expression:(Printf.sprintf"window.scrollTo(0, Math.max(0,document.documentElement.scrollHeight-window.innerHeight)*%f)"(float_of_int tick/.6.))page))pages;
@@ -59,4 +60,3 @@ let ()=
  let report=`Assoc["schema",`String"uos.browser-recording.v1";"status",`String"PASS";"authority",`String"NONE";"routes",`Int 8;"samples",`Int(List.length !samples);"recordings",`List receipts;"limit",`String"Eight routes only; not all233 components or manual acceptance"]in
  save(out^"/report.json")(Yojson.Safe.pretty_to_string report);print_endline(Yojson.Safe.to_string report)
  ))));;
-

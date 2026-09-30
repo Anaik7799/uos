@@ -1,0 +1,26 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-native-risk-20260909/default/validate.exe", "--preflight",
+    ".uos-workspaces/ev-evidence-campaign-20260909/docs/reviews/20260909-0535-ev-campaign-risk-1788932435.json",
+    "PRODUCER"
+  ],
+  "utc_started": 1788932445.477652,
+  "utc_finished": 1788932445.530919,
+  "elapsed_seconds": 0.053265867999999994,
+  "deadline_seconds": 30.0,
+  "exit_code": 1,
+  "output": "Could not open connection to daemon\n{\"status\":\"HOLD\",\"authority\":\"NONE\",\"rule\":\"RP-INVALID\",\"detail\":\"chronyc unavailable or timed out\"}\n",
+  "output_sha256": "23b31affdcbb25a42abdf41fa2ce766bf1136a3e07013fed230fbb190534e4b8",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

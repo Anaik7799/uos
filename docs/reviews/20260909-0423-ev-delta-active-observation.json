@@ -1,0 +1,27 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-native-risk-20260909/default/validate.exe",
+    "--active-check",
+    ".uos-workspaces/ev-delta-freshness-20260909/docs/reviews/20260909-0429-ev-delta-freshness-risk-review.json",
+    "REPAIR", "codex-ev-delta-freshness", "1"
+  ],
+  "utc_started": 1788929838.282792,
+  "utc_finished": 1788929838.35009,
+  "elapsed_seconds": 0.06729415500000001,
+  "deadline_seconds": 30.0,
+  "exit_code": 1,
+  "output": "{\"status\":\"HOLD\",\"authority\":\"NONE\",\"rule\":\"RP-UNAVAILABLE\",\"detail\":\"Input, dependency or checker unavailable; inspect locally.\"}\n",
+  "output_sha256": "7283b7830232762be6c6c7d2ccd6f2a3b66b6732ded2f9f1bd6498570d0dcc3d",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

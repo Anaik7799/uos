@@ -1,0 +1,8 @@
+import gleam/io
+import delta_mesh_engine_test
+
+pub fn main() {
+  io.println("EV98 START delta_mesh_engine_test.newer_sample_time_wins_over_an_older_logical_counter_test")
+  delta_mesh_engine_test.newer_sample_time_wins_over_an_older_logical_counter_test()
+  io.println("EV98 PASS delta_mesh_engine_test.newer_sample_time_wins_over_an_older_logical_counter_test")
+}

@@ -1,0 +1,50 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+open Yojson.Basic.Util
+let root="/home/an/NAS-setup/uos"
+let ws=root^"/.uos-workspaces/ev98-wire-codec-20260909"
+let peer=root^"/.uos-workspaces/ev98-health-formal-20260909"
+let rev="7375a867c5e86d020805976fb64d014009fac870"
+let stage="/tmp/ev104-independent-review-20260909-1642"
+let budget=Receipt_validator.make_budget ~seconds:60. ~bytes:134217728 ()
+let read=Ev_campaign.read_file budget
+let sha=Receipt_validator.sha
+let require=Receipt_validator.require
+let s x=`String x
+let strings xs=`List(List.map s xs)
+let bind p=let resolved=Unix.realpath p in let bytes=read resolved in `Assoc["path",s p;"resolved_path",s resolved;"sha256",s(sha bytes);"bytes",`Int(String.length bytes)]
+let now=Unix.gettimeofday()
+let t=Unix.gmtime now
+let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d"(t.tm_year+1900)(t.tm_mon+1)t.tm_mday t.tm_hour t.tm_sec
+let iso=Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ"(t.tm_year+1900)(t.tm_mon+1)t.tm_mday t.tm_hour t.tm_min t.tm_sec
+let prefix=ws^"/docs/reviews/"^stamp^"-ev104-independent"
+let check original b=let expected=b|>member "sha256"|>to_string in require(sha(read(b|>member "staged"|>to_string))=expected)"staged hash changed";if original then require(sha(read(b|>member "source"|>to_string))=expected)"runtime dependency changed"
+let archive name p=let out=prefix^"-"^name in Ev_campaign.write out(read p);bind out
+let ()=
+ let inputs=Yojson.Basic.from_file(stage^"/bindings.json") in
+ List.iter(check false)(inputs|>member "sources"|>to_list);
+ let deps=inputs|>member "dependencies"|>to_list in List.iter(check true)deps;
+ check false(inputs|>member "probe");check false(inputs|>member "profile");
+ let receipts=List.map(fun name->let p="/tmp/ev104-review-"^name^".json" in let j=Yojson.Basic.from_file p in
+ require(j|>member "exit_code"|>to_int=0)("exit "^name);require(sha(j|>member "output"|>to_string)=(j|>member "output_sha256"|>to_string))"output hash";
+ archive(name^".json")p)["plan-create";"task-create";"preflight";"claim";"active";"stage-corrected";"compile-corrected";"author-tests";"independent-probe"] in
+ let failed=List.map(fun(name,p)->archive name p)["first-compile-failure.json","/tmp/ev104-review-compile.json";"first-probe.gleam.txt","/tmp/ev104-independent-review-20260909-1640/package/test/ev104_independent_probe.gleam";"first-bindings.json.txt","/tmp/ev104-independent-review-20260909-1640/bindings.json"] in
+ let author=List.map(fun(name,p)->archive name p)["author-historical-red.json","/tmp/ev104-remediation-red-run-20260909-1618.json";"author-green.json","/tmp/ev104-remediation-green-run-20260909-1630.json";"author-active.json","/tmp/ev104-remediation-active-green-20260909-1632.json"] in
+ let author_active=Yojson.Basic.from_file "/tmp/ev104-remediation-active-green-20260909-1632.json" in
+ require((author_active|>member "output"|>to_string|>Yojson.Basic.from_string|>member "assessment_sha256"|>to_string)="e5655cb9e3ab163774294a09926e5f1dd9d8846f6f49e4febedd17f6ed9cf598")"author assessment binding";
+ let archives=List.map(fun p->archive(Filename.basename p^".txt")p)[stage^"/bindings.json";"/tmp/ev104_independent_probe.gleam";"/tmp/ev104-independent-stage.ml";"/tmp/ev104-review-evidence.ml"] in
+ let compiled=Ev_campaign.file_names(stage^"/compiled")"ebin"|>List.map(fun p->bind(stage^"/compiled/"^p)) in
+ let jj="/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj" in
+ let hudpath="apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/ooda_shruti_hud.gleam" in
+ let hud=Receipt_validator.run ~seconds:5. ~limit:1048576 jj ["--ignore-working-copy";"--no-pager";"-R";peer;"file";"show";"-r";"commit_id(\""^rev^"\")";"--";"root:"^hudpath] in
+ let hudout=prefix^"-hud-source.gleam.txt" in Ev_campaign.write hudout hud;
+ let tools=List.map bind[jj;root^"/toolchains/gleam-1.16.0/bin/gleam";root^"/toolchains/opam-ocaml/bin/ocamlrun";root^"/toolchains/opam-ocaml/bin/ocaml";root^"/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml";"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec";"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp"] in
+ let report=`Assoc["schema",s "uos.ev104-independent-review.v1";"observed_at",s iso;"verdict",s "APPROVE_BOUNDED_REMEDIATION_TRANSITION";"source_candidate",s rev;"blocking_findings",`List[];
+ "authority",`Assoc["plan",s "uos/ev104-remediation-review/20260909";"task",s "REVIEW";"worker",s "codex-ev104-remediation-review";"attempt",`Int 1;"admission",s "NOT_GRANTED"];
+ "actually_executed",`Assoc["fresh_native_compile",`Bool true;"focused_author_calls",`Int 4;"retained_tests_in_independent_runner",`Int 8;"independent_state_transitions",`Int 41472;"independent_distinct_id_order_controls",`Int 10368];
+ "reviewed_semantics",strings["ooda_shruti_copilot.gleam:176-181 unknown or already-resolved IDs return the exact original state.";"ooda_shruti_copilot.gleam:184-199 all records matching a known unresolved ID become resolved; count increments once for that successful ID transition, not per duplicate record.";"ooda_shruti_copilot.gleam:191-203 unresolved severity >=0.85 retains halt and existing Lyapunov value; last critical/noncritical-only successful transition retains legacy clear/reset behavior.";"All unrelated state fields and anomaly payload bytes remain unchanged.";"Distinct ID remediation order converges for the enumerated states; replay after resolution is a no-op.";"Production caller scan finds HUD type/rendering use, not a patch executor."];
+ "inputs_before_and_after",inputs;"dependencies_rehashed_staged_and_runtime",`Int(List.length deps);"compiled_artifacts_after_execution",`List compiled;"tool_hashes_after_execution",`List tools;"hud_immutable_source",bind hudout;"receipts",`List receipts;"preserved_private_probe_compile_failure",`List failed;"author_receipts_read_only",`List author;"review_sources",`List archives;"preserved_evidence_helper_failure",archive "evidence-helper-failure.json" "/tmp/ev104-review-evidence-generation.json";
+ "limits",strings["Pure state transition component only: no patch generation/execution, audio synthesis, production remediation, formal proof or EV104 admission.";"Pre-existing module comment claims deterministic patch generation and HUD claims Patched/EV104 Ratified; these are not established by this review and remain deferred truth gaps.";"Anomaly IDs are not uniqueness-enforced; all matching records represent one addressed remediation ID. A newly inserted unresolved record with a previously resolved ID can be remediated again; no durable replay ledger is claimed.";"Noncritical-only successful remediation retains legacy clearing of halt and reset to -3.85. Unknown/resolved IDs preserve even inconsistent public state exactly.";"No new input-size bound, severity validation or derived physical Lyapunov calculation; list processing remains linear in caller-provided anomaly count.";"Author RED was read, not independently rerun. First private probe failed to compile due nonexistent list.range; only private probe was corrected before fresh successful build.";"168 required dependency files were rehashed before/after staging and at runtime origins; additional canonical search paths remain exposed.";"Compiled/tool hashes are post-execution bindings; no fresh execve trace or hermetic authenticated runtime closure."]]
+ in let output=prefix^"-approval.json" in Ev_campaign.write output(Yojson.Basic.pretty_to_string report^"\n");Printf.printf "%s\nSHA256 %s\n"output(sha(read output))

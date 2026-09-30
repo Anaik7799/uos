@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "kind": "CODEX_MERGE_EXECUTION_CENSUS",
+  "plan_id": "uos/codex-mainline-merge/20260908-1925",
+  "task_id": "M0",
+  "observed_at": "2026-09-08T19:26:15Z",
+  "operation": "f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+  "main": "1be8029d72bc9530b1937564a37c555bd0b4b938",
+  "design_candidate": "2473ea54a72bc75ed69e5f57c8791efaa4982abd",
+  "previous_census": "docs/reviews/20260908-1418-codex-mainline-census.json",
+  "previous_source_records": 72,
+  "previous_heads_unchanged": true,
+  "additional_source_records": [
+    {
+      "kind": "bookmark",
+      "name": "review/codex-mainline-merge-plan-20260908-1439",
+      "commit": "2473ea54a72bc75ed69e5f57c8791efaa4982abd"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-merge-plan-20260908-1439",
+      "commit": "2473ea54a72bc75ed69e5f57c8791efaa4982abd"
+    }
+  ],
+  "known_records": 74,
+  "known_unique_heads": 67,
+  "known_outside_nonempty_changes": 15,
+  "application_and_evidence_packets": [
+    {
+      "commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "stage": "M4"
+    },
+    {
+      "commit": "2be0d18d338a333c33b4a0d715d535d3573932db",
+      "stage": "M4"
+    },
+    {
+      "commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "stage": "M3"
+    },
+    {
+      "commit": "fb71b4ca9680a084aecd1f98048def0b525a196f",
+      "stage": "M3"
+    },
+    {
+      "commit": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+      "stage": "M3"
+    },
+    {
+      "commit": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "stage": "M5"
+    },
+    {
+      "commit": "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+      "stage": "M5"
+    },
+    {
+      "commit": "b9d486170af9c3a0d12a6ae7db03836287f2b65a",
+      "stage": "M5"
+    },
+    {
+      "commit": "595a3c8333a9239837129e2146e48df732493c23",
+      "stage": "M2"
+    },
+    {
+      "commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+      "stage": "M2"
+    },
+    {
+      "commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+      "stage": "M2"
+    },
+    {
+      "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+      "stage": "M2"
+    },
+    {
+      "commit": "b9c99841b3cf6bde7f3346d0700432e5aaec08b0",
+      "stage": "M2"
+    },
+    {
+      "commit": "7621d5dfebe92ed8de7684e392b92c983b3acf36",
+      "stage": "M5"
+    }
+  ],
+  "destination": {
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-merge-execute-20260908-1925",
+    "initial_commit": "f6d34a08",
+    "parent": "2473ea54a72bc75ed69e5f57c8791efaa4982abd"
+  },
+  "herdr": {
+    "caller_pane": "w2:p4",
+    "caller_session": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+    "agents": [
+      {
+        "pane": "w2:p1",
+        "session": "6e132c1c-7436-43ef-abb6-f3468e7fe87f",
+        "provider": "agy",
+        "status": "working",
+        "project": "/home/an/NAS-setup/uos",
+        "foreground": "/home/an/dev/ver/zigvm"
+      },
+      {
+        "pane": "w2:p2",
+        "session": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+        "provider": "claude",
+        "status": "working",
+        "project": "/home/an/NAS-setup",
+        "foreground": "/home/an/NAS-setup"
+      },
+      {
+        "pane": "w2:p4",
+        "session": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+        "provider": "codex",
+        "status": "working",
+        "project": "/home/an/NAS-setup/uos",
+        "foreground": "/home/an/NAS-setup/uos"
+      },
+      {
+        "pane": "w2:p5",
+        "session": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+        "provider": "codex",
+        "status": "idle",
+        "project": "/home/an/NAS-setup/uos",
+        "foreground": "/home/an/NAS-setup/uos"
+      },
+      {
+        "pane": "w2:p6",
+        "session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+        "provider": "agy",
+        "status": "working",
+        "project": "/home/an/NAS-setup/uos",
+        "foreground": "/home/an/dev/ver/zigvm"
+      }
+    ]
+  },
+  "coordinator": {
+    "session": "codex-merge-execute-20260908-1925",
+    "epoch": 1,
+    "resource": "workspace:/home/an/NAS-setup/uos/.uos-workspaces/codex-merge-execute-20260908-1925",
+    "scope_message": "codex-merge-execute-scope",
+    "registration_sequence": 1144,
+    "scope_sequence": 1146,
+    "active_integration_leases_observed": 0
+  },
+  "source_scope": "Pinned immutable JJ revisions only; peer worktrees preserved.",
+  "owner_acknowledgements": "REQUESTED_NOT_OBSERVED",
+  "unsnapshotted_work": "UNKNOWN; cannot claim every live byte covered",
+  "scope_refinement": "M0 completes the observable immutable census and isolated destination. Source-owner acknowledgements and changed/dirty-work reconciliation remain mandatory pre-landing conditions at M6/M7. Isolated baseline tests do not depend on stopping peer writers.",
+  "runtime_changes": 0,
+  "main_moved": false
+}
+

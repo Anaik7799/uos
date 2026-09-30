@@ -1,0 +1,231 @@
+{
+  "schema": "uos.codex-merge.coverage.v1",
+  "recorded_utc": "2026-09-08T20:23:30Z",
+  "plan": "uos/codex-mainline-merge/20260908-1925",
+  "session": "codex-merge-execute-20260908-1925",
+  "source_candidate": "5bb3af799ae69dd56b39b1b702cc565276e61467",
+  "main_before": "1be8029d72bc9530b1937564a37c555bd0b4b938",
+  "main_last_observed": "1be8029d72bc9530b1937564a37c555bd0b4b938",
+  "review_bookmark": "review/codex-mainline-consolidation-20260908-1925",
+  "disposition": "SOURCE_CONSOLIDATED_MAINLINE_HELD",
+  "original_census": {
+    "records": 72,
+    "unique_heads": 66,
+    "nonempty_changes_outside_main": 14,
+    "observed_head_drifts": [],
+    "scope": "Pinned immutable heads; unsnapshotted peer bytes UNKNOWN"
+  },
+  "execution_census": {
+    "records": 74,
+    "unique_heads": 67,
+    "nonempty_changes_outside_main": 15,
+    "additional": "Planning artifact 2473ea54a72bc75ed69e5f57c8791efaa4982abd is also an ancestor"
+  },
+  "changes": [
+    {
+      "source_commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "change_id": "zosuwowvmzstltwnmzqmnqpuorrlkwot",
+      "description": "docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "2be0d18d338a333c33b4a0d715d535d3573932db",
+      "change_id": "tqqpqwnnzuqopkuruonrtmsvovmuzpyw",
+      "description": "feat(testing): add restricted Tailnet manual UI listener and keep navigation on its origin",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "change_id": "rvuxyuxyvlxpyzynrvvrkwqzkspwsrlv",
+      "description": "docs(assurance): close fifty verified focuses with explicit ABI and integration holds",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "fb71b4ca9680a084aecd1f98048def0b525a196f",
+      "change_id": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+      "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+      "change_id": "zluqqwslskvtrksqlrsswnkvkxrzpqrn",
+      "description": "fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance",
+      "disposition": "PATCH_EQUIVALENT_ALREADY_COVERED",
+      "equivalent_main_commit": "e73430f15115e2be011c297fdc8e792f1dddb558"
+    },
+    {
+      "source_commit": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "change_id": "zrzxvvnlvlzmosruxuouozzutuqzlslv",
+      "description": "work: Solo5 0.13.0 candidate frozen for independent review",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+      "change_id": "tqxwqrspvvypwuxmkyvyxmwozvqmxoku",
+      "description": "feat(mirage): pin Solo5 0.13.0 and verify current host toolchain",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "b9d486170af9c3a0d12a6ae7db03836287f2b65a",
+      "change_id": "mwtzqlwzuttmvvtqzttrumrmmkprzzsy",
+      "description": "review(mirage): record producer and consumer source blockers at canonical snapshot",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "595a3c8333a9239837129e2146e48df732493c23",
+      "change_id": "ypqztovmwptownqtxynomtvnuvwwmvuu",
+      "description": "review(auth): approve bounded framing and fixed-reader follow-up",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+      "change_id": "ltzunpsxvzzxnryykomwlwovnxkoypou",
+      "description": "fix(auth): reject unsupported request expectations before read",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+      "change_id": "rksvvryuuyqxpmpqupuqqvvwomwzvvlt",
+      "description": "fix(auth): bound HTTP request framing before body ingestion",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+      "change_id": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+      "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "b9c99841b3cf6bde7f3346d0700432e5aaec08b0",
+      "change_id": "nmqqpqxstkuvypporrumqomulkrxlouz",
+      "description": "review(auth): verify ingress adapter and reject unbounded body reader",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    },
+    {
+      "source_commit": "7621d5dfebe92ed8de7684e392b92c983b3acf36",
+      "change_id": "yllzltnplkuvvqrslnnwomksouxppzox",
+      "description": "formal(mirage): verify receipt admission reference and preserve independent review evidence",
+      "disposition": "ANCESTOR_OF_COMPOSED_SOURCE",
+      "equivalent_main_commit": null
+    }
+  ],
+  "patch_equivalence_check": {
+    "argv": [
+      "jj",
+      "--ignore-working-copy",
+      "interdiff",
+      "--from",
+      "e73430f15115e2be011c297fdc8e792f1dddb558",
+      "--to",
+      "83d5a7caabb7ecfa28352a0ce8f091179347e9b7"
+    ],
+    "outcome": "EMPTY_DIFF"
+  },
+  "source_delta_at_candidate": {
+    "paths": 347,
+    "added": 332,
+    "modified": 15,
+    "deleted": 0,
+    "code_tool_formal_patch_paths": 33,
+    "core_paths": [
+      "M apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam",
+      "M apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam",
+      "M apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "M apps/cepaf_gleam/test/e2e_full_stack_test.gleam",
+      "M apps/cepaf_gleam/test/fractal_bdd_31x7_test.gleam",
+      "M apps/cepaf_gleam/test/tui_15_evolutionary_cycles_test.gleam",
+      "M apps/cepaf_gleam/test/tui_bdd_scenarios_test.gleam",
+      "M apps/cepaf_gleam/test/wisp_api_comprehensive_test.gleam",
+      "M apps/indrajaal_gleam_web/src/indrajaal/homeostasis_http.gleam",
+      "A apps/indrajaal_gleam_web/src/indrajaal/manual_test.gleam",
+      "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "M apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl",
+      "A apps/indrajaal_gleam_web/test/auth_ingress_test.gleam",
+      "A apps/indrajaal_gleam_web/test/auth_ingress_test_ffi.erl",
+      "A apps/indrajaal_gleam_web/test/manual_test_test.gleam",
+      "A formal/lean/MirageReceiptAdmission.lean",
+      "A formal/quint/mirage_receipt_admission.qnt",
+      "A ops/mirage/patches/mirage-4.11.2-solo5-0.13.patch",
+      "A tools/evolution_archive.ml",
+      "A tools/evolution_media_receipt.ml",
+      "A tools/homeostasis_compat_check.ml",
+      "M tools/release_process.ml",
+      "M tools/validation/homeostasis_browser_check.ml",
+      "M tools/validation/release_browser_capture.ml",
+      "A tools/verification/mirage/admission_reference_check.ml",
+      "A tools/verification/mirage/gate_fixture.ml",
+      "A tools/verification/mirage/probe_adversarial.ml",
+      "A tools/verification/mirage/probe_fixture.ml",
+      "A tools/verification/mirage/probe_v2_adversarial.ml",
+      "A tools/verification/mirage/probe_v2_fixture.ml",
+      "A tools/verification/mirage/projection_control.erl",
+      "A tools/verification/oidc/auth_framing_independent_review.erl",
+      "A tools/verification/oidc/auth_ingress_independent_review.erl"
+    ]
+  },
+  "ownership": {
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-merge-execute-20260908-1925",
+    "source_workspaces_mutated": false,
+    "owner_acknowledgements": "NOT_OBSERVED",
+    "unsnapshotted_work": "UNKNOWN; source owner freeze/confirmation required",
+    "integration_main_lease_taken": false,
+    "runtime_lease_taken": false
+  },
+  "checks_scope": "Incremental M1-M5 receipts bind the source revision tested. No claim that all tests were rerun at the final combined candidate.",
+  "holds": [
+    {
+      "id": "H1",
+      "criticality": "P1",
+      "summary": "Native ABI baseline fails 12 tests",
+      "evidence": "docs/reviews/20260908-1915-codex-merge-baseline.json",
+      "required": "Reproducibly rebuild the native artifact and dependencies against the pinned OTP/runtime toolchain; rerun positive/negative ABI tests and the composed suite."
+    },
+    {
+      "id": "H2",
+      "criticality": "P1",
+      "summary": "Independent exact-composition review and source-owner confirmation missing",
+      "required": "Obtain bounded owner freeze/remaining-work receipts and independent review at the exact composed revision; no peer mutation or self-approval."
+    },
+    {
+      "id": "H3",
+      "criticality": "P1",
+      "summary": "Final M6 verification unrun",
+      "required": "Fresh Tailscale GUI/SSE/TUI real/fixture checks, manual acceptance, affected full regression/formal and Mirage implementation/receipt correspondence; retain failed and negative controls."
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": "M6",
+      "state": "available",
+      "readiness": "blocked"
+    },
+    {
+      "id": "M7",
+      "state": "available",
+      "readiness": "blocked"
+    },
+    {
+      "id": "M8",
+      "state": "available",
+      "readiness": "blocked"
+    }
+  ],
+  "vcs": {
+    "backend": "/home/an/NAS-setup/uos/.jj/repo/store/git",
+    "native_git_commands": 0,
+    "legacy_dot_git": "Empty root directory predating this execution; no HEAD/config/objects observed; preserved untouched, not a functioning colocated repository."
+  },
+  "authority": "No system admission, deployment, EV minting or mainline update is granted by this record."
+}

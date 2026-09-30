@@ -1,0 +1,41 @@
+  Compiling argv
+  Compiling certifi
+===> Analyzing applications...
+===> Compiling certifi
+  Compiling gleam_stdlib
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl:75:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   75|     case catch binary_to_integer(String, Base) of
+%     |          ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl:81:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   81|     case catch binary_to_integer(String) of
+%     |          ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl:87:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   87|     case catch binary_to_float(String) of
+%     |          ^
+
+  Compiling envoy
+  Compiling platform
+  Compiling filepath
+  Compiling simplifile
+  Compiling directories
+  Compiling esqlite
+===> Failed to update package pc from repo hexpm
+===> Errors loading plugin {pc,"~> 1.15"}. Run rebar3 with DEBUG=1 set to see errors.
+===> Failed to update package pc from repo hexpm
+===> Errors loading plugin {pc,"~> 1.15"}. Run rebar3 with DEBUG=1 set to see errors.
+===> Analyzing applications...
+===> Compiling esqlite
+===> Uncaught error in rebar_core. Run with DIAGNOSTIC=1 to see stacktrace or consult rebar3.crashdump
+===> When submitting a bug report, please include the output of `rebar3 report "your command"`
+error: Shell command failure
+
+There was a problem when running the shell command `rebar3`.
+

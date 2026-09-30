@@ -1,0 +1,166 @@
+{
+  "schema": "uos.ev98-peer-independent-review.v1",
+  "source_candidate": "ee6037cc8b2ce7f8eb0cda58a3e21f2ffbd66335",
+  "reviewer": "Codex parent, independent of component author",
+  "observed_at": 1788962413.597253,
+  "verdict": "APPROVE_BOUNDED_PEER_LAYER",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "reviewed_change": [
+    "crdt/mesh_peer.gleam", "crdt/mesh_peer_actor.gleam",
+    "test/mesh_peer_test.gleam", "test/mesh_peer_actor_test.gleam",
+    "tools/ev_peer_stage.ml (private RED staging only)"
+  ],
+  "checks": {
+    "immutable_compiler_inputs": 19,
+    "unchanged_dependency_files": 211,
+    "author_pure_groups": 10,
+    "actual_otp_groups": 3,
+    "base_regression_cases": 72,
+    "additional_groups": [
+      "independent_fanout_boundary", "independent_aggregate_merge_refusal",
+      "independent_counter_limit", "independent_stale_activity",
+      "independent_actual_two_way_retry"
+    ]
+  },
+  "scope": "Bounded retained routed state and actual local OTP actor behavior, independently compiled from immutable source with private dependency copies.",
+  "base_sync_status_caveat": "Underlying delta engine diagnostic Synchronized false positives remain known and are under separate SYNC_STATUS repair; this layer never uses that flag as an authorization predicate. This is not approval of the full base tree or mesh readiness.",
+  "probe_correction": {
+    "initial_sha256": "866966686028ca4ec12f2edcd5a82f592cd33fa29c0d7ad2bbbe099f13d5b7bd",
+    "final": {
+      "path": "/tmp/ev-peer-independent-root-1354/package/test/ev_peer_independent_probe.gleam",
+      "sha256": "d45b9b24c6df39fac2d14841720871c259a0c1ffba36491b85b69cc24f42aad0",
+      "bytes": 6776
+    },
+    "cause": "Reviewer probe needed a MeshDeltaState type annotation; failed compiler receipt preserved, no candidate source changed."
+  },
+  "receipts": [
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/source-bindings.json",
+      "sha256": "904f4ba104e3f91b9c9062fe765a996ccd3687f6eb2a4d12f1d1b9954ab66cbb",
+      "bytes": 79955
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compile.json",
+      "sha256": "3df565927fbdf8c7b0821b54c1e3c70de1502f9f4b22f959ffe7565d980ac16f",
+      "bytes": 4192
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compile-corrected-probe.json",
+      "sha256": "80fd42440358ca63a49a5219f906036330b561399d39dae293305488aa3d3243",
+      "bytes": 2273
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/runtime.json",
+      "sha256": "dc7e2d8924f172c33479d8f38220a937807eb6863417cd5ef9e059d028ec3d80",
+      "bytes": 14309
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1250-peer-verification.json",
+      "sha256": "53060d643f31d5d2a5e34b6cab91436128e5a8bfb8a3154567c7d059a71e6955",
+      "bytes": 8101
+    }
+  ],
+  "beam_artifacts": [
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "e04ce972a83e49b4513c8463d296501007507d69ed6198a3dc51eef63083a8e2",
+      "bytes": 14780
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "a3f52544a699dbd734d329bd8a6eafe61841112fff24da200e43936d6b7b48f1",
+      "bytes": 13428
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "75935d515ada4385b0b9e273947ac274ed3acbb7e555c878c2df85edc7b5ee73",
+      "bytes": 9104
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "8201d35ff9d80f9b3dafc8c7531440bef42aedfa7a7c21adb8e75fedd5c30267",
+      "bytes": 23584
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "2b74f915bbdeaec6b68d11672cfc73d6265bf9e77fadbb977337832971639c10",
+      "bytes": 16924
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "1818e736266c0d3cae7303ef2e10e7065a59ad8f7d7861be56ddd9f9f8478573",
+      "bytes": 26612
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "9d82234fca81bceaa931f4fc5c2e7a713d95280ee43b55f77578ad1fb35fc3ac",
+      "bytes": 11276
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "ce14ec65a429424db89c313172bfa40a8b0095d9649a5dbdafb2348ae4c66399",
+      "bytes": 10992
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/crdt_delta_state_test.beam",
+      "sha256": "10cd80e477c92ad89d838ade5db3bd81e7f4473a95e027254eb46e64ced6b64e",
+      "bytes": 7904
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "c3855e36e3a08c173d28b06190437012bec212185238fa3dca94e4f50e49e0b7",
+      "bytes": 3572
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "09ba7fc32d39f14cf591789a1caef0d85628a1124c4ad7473ac8af496802b28c",
+      "bytes": 5268
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "e8907ced4acea89730db390429716de74430e7efdc531544db24459f7833e813",
+      "bytes": 13996
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "e68607de3c0a2dc80dc25de5b57bb18fa864223d9845ee750d9ee252ebe90fd5",
+      "bytes": 32716
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/ev98_codec_runner.beam",
+      "sha256": "c34a142b4080fc3053f85cb764c9ce7c02855f6c6ec567224a6142e627d74222",
+      "bytes": 26264
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/ev_peer_independent_probe.beam",
+      "sha256": "66eaa310116a9e80a89c47170d75585c16cd25444caff48fafca025c05397345",
+      "bytes": 23840
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/mesh_peer_actor_test.beam",
+      "sha256": "7e9433acde26d67c6fa44d84d402af0d92d846dcc95fecc8dbd01ef225a117ca",
+      "bytes": 20144
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/mesh_peer_test.beam",
+      "sha256": "b3b7b482a00ac2d4f056da28381a32545907b0f5bda32ba931b7309c0755400e",
+      "bytes": 24676
+    },
+    {
+      "path": "/tmp/ev-peer-independent-root-1354/compiled/ebin/mesh_sync_codec_test.beam",
+      "sha256": "0af344c6e17855d11c20373ff2363fdfe5371f959b1a052f148c1cedab3354fa",
+      "bytes": 33944
+    }
+  ],
+  "limits": [
+    "Routing-ID equality is not authentication.",
+    "No network transport, production startup or full distributed-runtime proof occurred.",
+    "Actor FrameIds are unique within one ERTS VM; no cross-VM fencing is established.",
+    "State and advisories are bounded; demand on the actor mailbox must be bounded by trusted callers.",
+    "In-memory state may be lost on crash. Shutdown returns a snapshot but does not implement a durable recovery store.",
+    "ActorUnavailable after timeout means unknown operation outcome.",
+    "Direct native ERTS argv observed; this review did not trace all descendant execs or establish full shared-library closure.",
+    "Sa-plan completion requires a fresh current active check."
+  ]
+}

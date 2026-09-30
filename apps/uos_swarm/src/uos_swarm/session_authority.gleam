@@ -23,6 +23,7 @@ pub fn run_at(path: String, arguments: List(String)) -> Result(String, String) {
   use verified <- result.try(store.open_existing(path) |> result.map_error(store.error_to_string))
   use _ <- result.try(store.close(verified) |> result.map_error(store.error_to_string))
   session_store_cli.run([path, ..arguments])
+  |> result.map_error(fn(error) { session_store_cli.response(Error(error)).1 })
 }
 
 pub fn run(arguments: List(String)) -> Result(String, String) {

@@ -1,0 +1,374 @@
+{
+  "schema": "uos.ev-recovery-observations.v1",
+  "recorded_at": "2026-09-09T05:00:41Z",
+  "source_candidate": "6630495091b4e2c8baa1853a99a6d30c8e5258f7",
+  "authority": "NO_EV_ADMISSION_OR_DEPLOYMENT",
+  "source_files_rechecked": 34,
+  "source_manifest": [
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam",
+      "sha256": "6380ad940b32bf517200c78165460e0f235fa61d67a301ce44592d290b6ea6e8",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam",
+      "sha256": "60f37a2e3899507ff33a3bb395a7f77835d6113ac4302b89de579ac2cccb0400",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+      "sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+      "sha256": "5813678ba71dcb676d8713e6d6a8bb4afb62e7f61adc38267bd8c29ac6a86c70",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam",
+      "sha256": "b156c992ceca39fc0cb0b6c983c194164045fbb88b20ff9cf3212b04b23e7a8a",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/ui/homeostasis_data.gleam",
+      "sha256": "f6c469e0b016930a8c6603d41ab7c0ef337c542ea027d0462d6551d302b4a2af",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_control_boundary_test.gleam",
+      "sha256": "1a69160cef04b7d557271ba338d4727078a6bef1ac40a41b2e36d1f3ba463053",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_control_bounds_test.gleam",
+      "sha256": "0897c332216a9d9b753070a3600f7b4a3d20d1f54a7f8d4b6eaae0959e1e33b0",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_recovery_runner.gleam",
+      "sha256": "7b598eb2b0d1bcbb28ff000d48eb9d9674ffec39b48bdaa18d78fa5afcfff982",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_scheduler_repair_runner.gleam",
+      "sha256": "763afef6080c2aa9bc922ffa63f43dd96a24ee7b2ff39570d5946c136e48af4d",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam",
+      "sha256": "58eb5f07cd70fd4cec8ad9dc9b1f92b8a2ed5b95c73cc76a5ff1349cd428b7e1",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/homeostasis_evolution_engine_test.gleam",
+      "sha256": "e695759e908bb4cbc26dc8bde2108ce3ba351c993a72684711fe2ab85df71b08",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/predictive_autoscaler_hud_test.gleam",
+      "sha256": "b5f162f3117e26b8aec5c4796347699e6863b764d281b3dfea3a4df0d201b924",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/predictive_autoscaler_test.gleam",
+      "sha256": "263b6f92b6f2f855a879cce834b6828e199effd06b4bd97dd65288e022055e42",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/tui_15_evolutionary_cycles_test.gleam",
+      "sha256": "df4c8f6c6c7ee20192c5f505149914e6be91171b0b5bbd80c6f20fdb4ea3186c",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/work_stealing_test.gleam",
+      "sha256": "96ede4e24cbdcba58f053a71f5856834c168e37cd06c3cf8911cc60a56c4b9e9",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+      "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+      "sha256": "1a625a9a0cfcad2df9e68374fcc4017da186414a38450783dd61016ebb9fae12",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/dune",
+      "sha256": "f6151b78db6692e4b2b70e41d4473da170c19e59094f62e78c753d19e80d3971",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/run_agent_dispatch_hook.ml",
+      "sha256": "3d446b31d4895aaa438bc23483c123774f729889472ed7e5d1bec64ff4b820a7",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/engines/hermes/modules/system_engg/test_agent_dispatch_hook.ml",
+      "sha256": "a0696b91bc143d743a1d1533ecd16d339f19a1e2d6ec53e6228131d9e2e2a411",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/services/inference/max/uos_tui_webui_runner.mojo",
+      "sha256": "a13dd2c9bfbbe5755cd2381aba489e028918d51468813207787a78ae5e765eb0",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml",
+      "sha256": "ce520332f026e4122fa1bbcb844ba24cc5a7a8f1299180a56e26146067be16db",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native_test_child.ml",
+      "sha256": "07849d3b8e95220000c4f261e6288b72fb2a6f4e83a5b1ee50b68f747edc41bd",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/dune",
+      "sha256": "b40fc15d19a3a81d2e3fd85c37fc9eb71cb2b1538cbd3d0a16f876bd2370757a",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/dune-project",
+      "sha256": "5b9ddbed029d927ab3c93a9ee634b3d054cbbdc0ea8c0ed86683bc1b3ed2b35f",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/ev_receipt.ml",
+      "sha256": "248370465af0ab1bf2af3c1bd5c849910675954d4a704606d29a328a5e158774",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/receipt_test.ml",
+      "sha256": "cb468098880d893ad07c4940ffb18723d3559873cf5da15550ed9916792134b6",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_receipts/receipt_validator.ml",
+      "sha256": "9f4ceda788586cc6aa79ae99cd33a01ec68523395fbfca3759f66d960be09618",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/generate_ev_recovery_runner.ml",
+      "sha256": "3e3f3b9b73f05204002821cb151278eaf4cc8340aaf2f1c460c8e2f1c27b9b61",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_chain.ml",
+      "sha256": "667acf2ef336d13ca9d4c4e851c26c96adf345a5521d1754b14dbfcfa3898f4e",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_ev.ml",
+      "sha256": "eb5d31b88bc62cc0a648bec4b56c5173f8506bc7c3c05b2ecb834e3e03b852b1",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/km_provenance/km_gate.ml",
+      "sha256": "ede21fc625208b62c44b57d207946cdcde69e8c8c20999d9e14987a36301a7f4",
+      "observed_at": "2026-09-09T04:42:38Z"
+    },
+    {
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/test_ev_native.ml",
+      "sha256": "38392ae72278177275c6d8f4eb2ba1b4b7ab656feacda66f845ac5f922cff7e0",
+      "observed_at": "2026-09-09T04:42:38Z"
+    }
+  ],
+  "component_observations": {
+    "gleam": 107,
+    "receipt_consistency": 67,
+    "dispatch": 18,
+    "native_adapter": 6,
+    "ev_gate": 17,
+    "in_memory_append_only": 5,
+    "mojo_finite_examples": 1115
+  },
+  "independent_reviews": [
+    {
+      "scope": "control bounds",
+      "candidate": "2d6f907d59179358aebda2d202feadd1fabfe474",
+      "reviewer": "/root/homeostasis_change_review",
+      "decision": "BOUNDED_APPROVAL",
+      "independent_checks": 400
+    },
+    {
+      "scope": "scheduler",
+      "candidate": "48160fe6faecc564296e72f9176e76611218782f",
+      "reviewer": "/root/homeostasis_change_review",
+      "decision": "BOUNDED_APPROVAL",
+      "independent_checks": 28
+    },
+    {
+      "scope": "receipt validator",
+      "candidate": "50eb6ea23fb6dedf7130623b8983b9a4a80e3e84",
+      "reviewer": "/root/homeostasis_change_review",
+      "decision": "BOUNDED_APPROVAL",
+      "independent_checks": 7
+    },
+    {
+      "scope": "native adapter",
+      "candidate": "c18528326ab7eb14cef7889330797deb5d9a6210",
+      "reviewer": "/root/homeostasis_change_review",
+      "decision": "BOUNDED_APPROVAL",
+      "independent_checks": 6
+    }
+  ],
+  "reused_dependency_artifacts_unchanged": 293,
+  "active_observation": {
+    "observed_at": "2026-09-09T04:45:52Z",
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "worker": "codex-ev-admission-01a08017",
+    "attempt": 1,
+    "ntp_absolute_offset_seconds": 0.00069707
+  },
+  "artifacts": [
+    {
+      "label": "gleam-build",
+      "path": "docs/reviews/20260909-0541-ev-recovery-gleam-build.json",
+      "sha256": "3528f08d648807f24f147397e41b29c06956eeb136d7f9a845524a124805801b",
+      "observed_source": "/tmp/20260909-0452-combined-gleam-build.json"
+    },
+    {
+      "label": "gleam-tests",
+      "path": "docs/reviews/20260909-0541-ev-recovery-gleam-tests.json",
+      "sha256": "7d34f5cd55a3eea6a74b64444af60399f00546125e28202a4e1b98bbee3a5b1d",
+      "observed_source": "/tmp/20260909-0452-combined-gleam-tests.json"
+    },
+    {
+      "label": "dispatch-build",
+      "path": "docs/reviews/20260909-0541-ev-recovery-dispatch-build.json",
+      "sha256": "be19063c52a49d175232cc3fdd71574e82138d07015269bf5cff845a37b4c2d6",
+      "observed_source": "/tmp/20260909-0452-combined-dispatch-build.json"
+    },
+    {
+      "label": "dispatch-tests",
+      "path": "docs/reviews/20260909-0541-ev-recovery-dispatch-tests.json",
+      "sha256": "86bd380554789aa5b2b74da66fad29dfe5321a5ec711a95c7c3c03ecf201a08e",
+      "observed_source": "/tmp/20260909-0452-combined-dispatch-tests.json"
+    },
+    {
+      "label": "receipts-build",
+      "path": "docs/reviews/20260909-0541-ev-recovery-receipts-build.json",
+      "sha256": "887953f1865c6049df025ca25ba86fae2603c9523ae7cc05407f666421113b19",
+      "observed_source": "/tmp/20260909-0452-combined-receipts-build.json"
+    },
+    {
+      "label": "receipts-tests",
+      "path": "docs/reviews/20260909-0541-ev-recovery-receipts-tests.json",
+      "sha256": "42e2adefe38e9c6462c57dae37183788bf6a97d7d5ac4c9c608a9dd7a7461f07",
+      "observed_source": "/tmp/20260909-0452-combined-receipts-tests.json"
+    },
+    {
+      "label": "mojo-build",
+      "path": "docs/reviews/20260909-0541-ev-recovery-mojo-build.json",
+      "sha256": "d1be830921177c69414c9aaf3c1295f694bd876a846275eca146746299e9887b",
+      "observed_source": "/tmp/20260909-0452-combined-mojo-build.json"
+    },
+    {
+      "label": "mojo-tests",
+      "path": "docs/reviews/20260909-0541-ev-recovery-mojo-tests.json",
+      "sha256": "96f83982a86f639a621ade56e04def98218556cbe406032c203affc6ad8a41b4",
+      "observed_source": "/tmp/20260909-0452-combined-mojo-tests.json"
+    },
+    {
+      "label": "mojo-auto-test-hold",
+      "path": "docs/reviews/20260909-0541-ev-recovery-mojo-auto-test-hold.json",
+      "sha256": "d3499b75a86614f094dbbee145cf597df0547e9180ee46e45cc25fb28885db3c",
+      "observed_source": "/tmp/20260909-0450-combined-mojo-auto-test.json"
+    },
+    {
+      "label": "mojo-preflight-hold",
+      "path": "docs/reviews/20260909-0541-ev-recovery-mojo-preflight-hold.json",
+      "sha256": "4389d71ecdabfbb33eb6ead35bd8fc2eaa584f30695590c579935283ea640516",
+      "observed_source": "/tmp/20260909-0450-combined-mojo-preflight-corrected.json"
+    },
+    {
+      "label": "mojo-deploy-hold",
+      "path": "docs/reviews/20260909-0541-ev-recovery-mojo-deploy-hold.json",
+      "sha256": "fb136a0f29944fc26b0a252490d3aee65b23e2c6cb78994196e05b4201d62208",
+      "observed_source": "/tmp/20260909-0450-combined-mojo-full-corrected.json"
+    },
+    {
+      "label": "mojo-invalid-preflight-argv",
+      "path": "docs/reviews/20260909-0541-ev-recovery-mojo-invalid-preflight-argv.json",
+      "sha256": "f24e6838fdcb45a69f0c9b5b62289b5815258a6be527e37983ea46f7280eca26",
+      "observed_source": "/tmp/20260909-0450-combined-mojo-deploy-preflight.json"
+    },
+    {
+      "label": "mojo-invalid-deploy-argv",
+      "path": "docs/reviews/20260909-0541-ev-recovery-mojo-invalid-deploy-argv.json",
+      "sha256": "df73de43a42c6f4e440923c464612c402a69d75f0471a6b8f6d6aa85a68fa62c",
+      "observed_source": "/tmp/20260909-0450-combined-mojo-deploy-full.json"
+    },
+    {
+      "label": "km-build",
+      "path": "docs/reviews/20260909-0541-ev-recovery-km-build.json",
+      "sha256": "23cc3385d36f2bc85ddf9a832c83ab98fd4de2cabb40ae92ea2ee14681f74fd3",
+      "observed_source": "/tmp/20260909-0450-combined-km-build.json"
+    },
+    {
+      "label": "ev-gate-tests",
+      "path": "docs/reviews/20260909-0541-ev-recovery-ev-gate-tests.json",
+      "sha256": "122e199b3aa2c5d1afd9c2d4c5807e05c84d3cba63746888dbfcd45322f91314",
+      "observed_source": "/tmp/20260909-0450-combined-ev-gate-tests.json"
+    },
+    {
+      "label": "append-only-tests",
+      "path": "docs/reviews/20260909-0541-ev-recovery-append-only-tests.json",
+      "sha256": "9906bb20c339dd5d88668f04dbbe4ec6a88c1719662455101573b8658526250b",
+      "observed_source": "/tmp/20260909-0450-combined-append-only-tests.json"
+    },
+    {
+      "label": "dependency-bytes",
+      "path": "docs/reviews/20260909-0541-ev-recovery-dependency-bytes.json",
+      "sha256": "7a1b20265d8a4ad655ae06a4bfd31676963abf528a0d5b87e2be45e9be60473f",
+      "observed_source": "/tmp/20260909-0452-combined-dependencies.json"
+    },
+    {
+      "label": "dispatch-mixed-mode-red",
+      "path": "docs/reviews/20260909-0541-ev-recovery-dispatch-mixed-mode-red.json",
+      "sha256": "2e15be995030a36a61782d62c753ad09b6e1a20b8bcb23d4317e8b6e03b12633",
+      "observed_source": "/tmp/20260909-0433-dispatch-mixed-mode-red.json"
+    },
+    {
+      "label": "dispatch-mixed-mode-green",
+      "path": "docs/reviews/20260909-0541-ev-recovery-dispatch-mixed-mode-green.json",
+      "sha256": "a35eb78b5b44a60dbcbf1a2d5b3f702a97cd6cc91453edf91284e16e51c3b266",
+      "observed_source": "/tmp/20260909-0432-dispatch-mixed-mode-green.json"
+    },
+    {
+      "label": "native-signal",
+      "path": "docs/reviews/20260909-0541-ev-recovery-native-signal.json",
+      "sha256": "22f44d7a29329e368a47014066dc82c6823c2fdeec4d69ecdda6ec2202064de8",
+      "observed_source": "/tmp/uos-ev-native-tests-82b8bf/signal.json"
+    },
+    {
+      "label": "native-closed-output",
+      "path": "docs/reviews/20260909-0541-ev-recovery-native-closed-output.json",
+      "sha256": "4771a2a86cac8b695ad0a6608a055f75a7a6c4d327caebb57f608550d191b6ef",
+      "observed_source": "/tmp/uos-ev-native-tests-82b8bf/closed-output.json"
+    },
+    {
+      "label": "native-deadline",
+      "path": "docs/reviews/20260909-0541-ev-recovery-native-deadline.json",
+      "sha256": "3c87232126501bfbf3c5d8678cabb5b82680f84bbbff149e3097c02f2fe17a00",
+      "observed_source": "/tmp/uos-ev-native-tests-82b8bf/deadline.json"
+    },
+    {
+      "label": "native-success",
+      "path": "docs/reviews/20260909-0541-ev-recovery-native-success.json",
+      "sha256": "3b0e60b79ee96009c680d648497d8daf87e90d097edadfd6482e590de07b6675",
+      "observed_source": "/tmp/uos-ev-native-tests-82b8bf/success.json"
+    }
+  ],
+  "remaining": [
+    "PROGRAM remains executing; no EV completion/admission inferred from component counts",
+    "EV98 and EV103 repairs are separate unfinished child tasks",
+    "Canonical policy applicability and authenticated runtime/formal producers are not established",
+    "No live ledger rewrite, SQLite migration or runtime deployment performed",
+    "Runbook coordinator remains file-backed; historical SQLite work was rehearsal only",
+    "Pinned release risk-checker output is unrealized; component native linker paths are recorded"
+  ]
+}

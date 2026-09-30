@@ -1,0 +1,1006 @@
+{
+  "schema": "uos.ev98-transport-independent-review.v1",
+  "source_candidate": "14057e08112c1cd5d44297eac6a9c853e8287b7a",
+  "observed_at": 1788966922.824979,
+  "reviewer": "Codex parent, independent of component author",
+  "verdict": "APPROVE_BOUNDED_TRANSPORT",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "checks": {
+    "main_distinct_PASS_labels": 102,
+    "independent_http_groups": 4,
+    "synthetic_fault_groups": 4,
+    "actual_broker_roundtrips": 1,
+    "owned_run": "r1788965700482010-1",
+    "exact_broker_records": [
+      {
+        "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965700482010-1/a/b/1",
+        "body_sha256": "2fbac66bcc36db7a6303b9959aded53e847ad7863600f29d01463e463c290eef",
+        "wire_sha256": "25707bf9c66e167a61c5f1d3a52c4b8b62079a8f9aa4a52d8f8d46969135fefe"
+      },
+      {
+        "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965700482010-1/a/b/2",
+        "body_sha256": "86e6f4831f753f3fa9132a70370bfab59cf55e085121e98d0b920777af5508f8",
+        "wire_sha256": "29aeb6c2debb1fd4bb8f19298df22849270591702fe3341a134e6478ef1ed8d8"
+      },
+      {
+        "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965700482010-1/a/b/3",
+        "body_sha256": "e039009f6c41383fafbcdce1fb1cc8d3364c77f4797ee65aafc6d7235dfe7f2e",
+        "wire_sha256": "d25e7dbc5a304848f7e67e86daaf5790e30d1569317b0670427c1398cfc990af"
+      },
+      {
+        "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965700482010-1/b/a/1",
+        "body_sha256": "95bb051b99622e86308b7a1acf3770c129cb6e2dd2869d6eeb72d9d480d2cab0",
+        "wire_sha256": "6933f2abd5eb4f79029c05231ba3b65a1f310b5f5f8880c70b02995f07983d04"
+      },
+      {
+        "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965700482010-1/b/a/2",
+        "body_sha256": "ea96e0a3604c07d48081f9ef9f52625bbedd8432a6553d2172950287d3720e1e",
+        "wire_sha256": "27b14cd9a1b94b7ebf6d6a8f4963b7aefa4340cc1037eab4a7cb77ce304ed54f"
+      },
+      {
+        "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965700482010-1/b/a/3",
+        "body_sha256": "d55105771e0dd401dee58783db2d642e0b77e61b7e09d19d45a3069462e70cdc",
+        "wire_sha256": "f9fb718c9746f911bbb1dd8546c1053fb346216f002298f3109b65bfae54c244"
+      }
+    ],
+    "observed_application": {
+      "kind": "peer_applied",
+      "worker": "worker-owned-live",
+      "health": 0.91,
+      "a_broker_custody_reports": 3,
+      "b_applied_frames": 3,
+      "run": "r1788965700482010-1"
+    },
+    "actual_wire_sha256": "d25e7dbc5a304848f7e67e86daaf5790e30d1569317b0670427c1398cfc990af",
+    "staged_candidate_inputs": 23,
+    "private_dependency_files": 211,
+    "actual_total_header_bound_bytes": 8194
+  },
+  "artifacts": [
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/bindings.json",
+      "sha256": "588ea1c8c0a2e97c4c91cd11538b47edc4d2a70636244e34adb889acd4c373f9",
+      "bytes": 83044
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "76c63fcbefaabaecb24bdb8316045d2bf3d74021791da8b464fce9ae9c5e73e1",
+      "bytes": 14792
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "ef84921dc774e49f145f3f5d2ae7e28cd546239c0a77d79d7b96618d97cd9262",
+      "bytes": 13432
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "67522359366e931eac7a3bc0cc8d4f359663bf82cbbc2f4a6409a9d1c98a01f5",
+      "bytes": 9120
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "3e7aad8553a09f49cef861bb82c8372225a9d1c513b11504890142871d742868",
+      "bytes": 23592
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "f38f4e386fb14070dd867c3cfefd08d819d2db43967f0aba25e5eaf35137c2ad",
+      "bytes": 16932
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "a7d641fc166cf719b9d42959a9a22335f6231335092d3d6f02680bbc54e784cb",
+      "bytes": 26624
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "565ed78f11f2b7b67d65ac643f42482ee416bb9e118afdb36d7c5eb6a9fb42c3",
+      "bytes": 11284
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "82d37b40ed5d05fcfc914d3cb9362e1ff46f686659766e0cf100b41e6ce4ff05",
+      "bytes": 25836
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "17cb3fdd6ebdca2e640669a2020af4b70e64f258daabd2844694c4cd949a9370",
+      "bytes": 34276
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "f81e7ceff8ba50607315d494a655089d85c367c2b6bb85d25a777569575ff3eb",
+      "bytes": 11000
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/crdt_delta_state_test.beam",
+      "sha256": "6238198b71ed6a1f5948187a96490897629b133c3f7763b6e29adc505bce7afd",
+      "bytes": 7912
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "0866c77756f5882ab4efebed9fae05dfeced5f458e5d2f4bbd79b105764c1dfd",
+      "bytes": 3576
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "7d13b88b6b5d0a9b91797245dfd985c88311145d09c32ab92dedbe1084019ad7",
+      "bytes": 5276
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "e3d15b46c0dc976fc4fac8b9aef379cdcd80b103f772c58ff9028ae3ba028ddc",
+      "bytes": 14008
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "075a326e4734063a9bcd176fe04ea4df96dc028fa678246289ebd5268e8668de",
+      "bytes": 32732
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/ev98_codec_runner.beam",
+      "sha256": "90cb84d4add32b2a8179f52420d8bb6754af542d6a4fb5f19a104fb93f9aca4e",
+      "bytes": 26276
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/ev_peer_independent_probe.beam",
+      "sha256": "1a51e2ac0e4ddd19ad7574c21b0fef86102d086fcd46845ae91cb725216f5dc6",
+      "bytes": 23844
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/ev_transport_independent_http.beam",
+      "sha256": "34f7438a9424d448903d1c32b731705794355f2585c3c04053075c41690b9b9b",
+      "bytes": 14668
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/mesh_peer_actor_test.beam",
+      "sha256": "00bc4458ca1882e89b133bbe54d4c245d6ea89221cddce6653bb3b589f155697",
+      "bytes": 20148
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/mesh_peer_test.beam",
+      "sha256": "9356840525cdd8992892d2c369e92fde85bc886074c03f4a74d9f16dbc6bca64",
+      "bytes": 24684
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/mesh_sync_codec_test.beam",
+      "sha256": "7117b05b901d04988b1217daca0e095dab6aab68964a2692a7ecbe057fb78a94",
+      "bytes": 33948
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "980c4f474c5419036c2743ea3697db2df39d3a4f98d473faff7ae664a8f87cb4",
+      "bytes": 20076
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compiled/ebin/mesh_zenoh_test.beam",
+      "sha256": "0b2d2b554011fd2e03d5687cb1f29732a3611860e9f804fc6168ad2faf4538af",
+      "bytes": 59816
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/compile.json",
+      "sha256": "8c744a668b6c21152d7556ebb6048d2509f1b98b65cdd9d12177cdd4a51c4402",
+      "bytes": 2286
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/runtime.json",
+      "sha256": "874f09b7e4497060b7c123150954582acd8d39cbbe5e3214c292020d1b69dc4b",
+      "bytes": 15371
+    },
+    {
+      "path": "/tmp/ev-transport-root-independent-1450/live-corrected.json",
+      "sha256": "08528f862ce2994a1a7ae70cf83903d4f7ca074086ad377e0b81446d521a3c81",
+      "bytes": 7275
+    },
+    {
+      "path": "/tmp/ev-http-independent-1442/bindings.json",
+      "sha256": "aec990ed7c20b2be06e99936fca0a6cac06fad18aef84259b3cf8ab01ed8a6e8",
+      "bytes": 52607
+    },
+    {
+      "path": "/tmp/ev-http-independent-1442/compile.json",
+      "sha256": "ab1b090ca8b3fcd8134bd7b737706a7bc50d678ca9806e45d186bcc420b5d050",
+      "bytes": 2246
+    },
+    {
+      "path": "/tmp/ev-http-independent-1442/runtime.json",
+      "sha256": "1164b35bff62ca010fbb42c18c0ead153a8d31b6484bd793c4e3aae1a2259b3a",
+      "bytes": 2645
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/bindings.json",
+      "sha256": "574b5c5dbec4ccb223f9d798362e07c297de3367dcdc26b288c79d1dee22f644",
+      "bytes": 83281
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "c184af6b902aff031fd0471c28bcb81d8dd3ad0cfc7c9672bf984308271b363b",
+      "bytes": 14792
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "a12e77c42c069406731a892a37e082e6437081c659d8b7e5f81860a8799ce990",
+      "bytes": 13428
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "993914230c7962786376e1f41a94e809f206153c63aab4557af1bd8622747635",
+      "bytes": 9116
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "861d18c702dd759f483aa36c8cb01abff2a77431da526f41321227293c14a1c2",
+      "bytes": 23592
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "7cf526943df1b0f1cb2d6a42e385b0aedf07dd0905a68f66fc9d97c93611e65b",
+      "bytes": 17112
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "592030f738b3a554187de0db5201b579efc9f97861ae16b8ebc417faa398ab7e",
+      "bytes": 26620
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "9608164334af76801113e13f83e318cfde839efd1a51258c8868940775b32c44",
+      "bytes": 11280
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "4b68b5e36101d1f77d67a47889d8d769f7da6befae512b0f768c2ff3eb9ec651",
+      "bytes": 25832
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "48b1435e351bb26045a8e43e2a8f4dc696ff5c764a6c7bc91b8aa4cfb181ef68",
+      "bytes": 34272
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "be40dc8db595777666ae2b933ff57b7078a8996218dd2c0e8762f99f001afe88",
+      "bytes": 10996
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/crdt_delta_state_test.beam",
+      "sha256": "82eaa7b8398a8b4c874c3faa2834ecbfe5ebbb10a1522b28ab0bdea9febfc144",
+      "bytes": 7912
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "0e5f51ace5db40a89c99c325189f892d4c552443fba25729d754cd1eef6f40aa",
+      "bytes": 3572
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "69f3e06a09e4df2f009beeb3c8345cf1590f15608df3b7dcd617d081e464efec",
+      "bytes": 5272
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "461a4de7d57cb3d31fdc8578c8073ddb5adfe48782aa6c2032ce71d5f993c0de",
+      "bytes": 14000
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "b2d72ebe80b546fdbdcca71f301b552d0c549de80ab70dfc4b9328cb6c8f0801",
+      "bytes": 32728
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/ev98_codec_runner.beam",
+      "sha256": "42993c6065f10b3ddbeb3a9d3e88b5fa3f3b12fee5d8f0580fe72e46af8878a9",
+      "bytes": 26280
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/ev_peer_independent_probe.beam",
+      "sha256": "75c513e4e476102b57c5513432eae2ffe483ec64e9b0a7fbdea109e515e468c0",
+      "bytes": 23852
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/ev_transport_independent_http.beam",
+      "sha256": "0de9f3728f9f2ffafacb5c197bc5fa885aba46582da8141c9018b33ea31ef48f",
+      "bytes": 14672
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/mesh_peer_actor_test.beam",
+      "sha256": "18ad15aa22b4930c9f970b1716f7d1f56d3c75b6de21b5c0e0b49e95d7157574",
+      "bytes": 20144
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/mesh_peer_test.beam",
+      "sha256": "918300c12349b5d1d92f04ca4f19a47a7c612af25ed1f7070ad89293d032db3b",
+      "bytes": 24680
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/mesh_sync_codec_test.beam",
+      "sha256": "b92ba46cc71edd112ddc161255d99650515bc31f3fd2c86e1c2381a496e4e64e",
+      "bytes": 33952
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "9767a622e66323f9baf71fdcd8820b3144b96f55c14483688f77ca9f02dc6cb6",
+      "bytes": 1092
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compiled/ebin/mesh_zenoh_test.beam",
+      "sha256": "c9059ac119f9cab3c111fab40302c161c3987cd87fc9b2a8cee5393d4a37270e",
+      "bytes": 59808
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/fault-bindings.json",
+      "sha256": "982993cb731ba5092362dbe4172d27ed06e1c27d130540086c2aa9fa441b3c74",
+      "bytes": 1300
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/mutator.ml",
+      "sha256": "3a83c36d4b81edbd984b648e1b6f19459f6fd365da6e61747c4eb8a757caedd6",
+      "bytes": 1371
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/compile.json",
+      "sha256": "fb1efa77b1a7b1ffaba23bf00d10be4a8bfe04a766b0105be734500d06275487",
+      "bytes": 2289
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/runtime.json",
+      "sha256": "f20cd98076d05fce970e3f0ebf8d0c6a05103570a5564c983203f35c198ea819",
+      "bytes": 4768
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-report-1511/runtime-network-permitted.json",
+      "sha256": "e5bda8dd13774d0fe82be0dc0c6280eadf0307abd919e763548b52a864b4db8e",
+      "bytes": 2963
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/bindings.json",
+      "sha256": "63c76831f803f49f16a33b27f6b1628d7f67a97c372030a050738734e74698f9",
+      "bytes": 83517
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "4ffbad76701887a54cc60e14490c868b6b0bbf5c328fda5f94378e15e91c9218",
+      "bytes": 14796
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "21cc0ae71fd99b20bdbc27e7ec94b5e990a92c13a5e39ca5ad2ca1a29b99a574",
+      "bytes": 13440
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "980b6297265b356e622ed93f80794458b0064f9fd9f5a80f62946891940d90dd",
+      "bytes": 9120
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "48dc8c3aacc40e09f3fc08f470b6786004e57cea3ae9d36091306acaeb825c28",
+      "bytes": 23604
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "4fb4b0ad2b8e8ad22ac6cc21a8d04a4d45cb3f4c84a453eefd37fb00c04fb271",
+      "bytes": 16936
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "d7358b939c251036bb78bb79b4d4089e6253e2f8e58c483d15cbfef9dd43f91a",
+      "bytes": 26628
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "dedcb84bec6d99d71ab657fe4804aa90f6799f77e022844be1d6736cf28b0621",
+      "bytes": 11284
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "d5c203f83fae073b1eb44340c0c91305801765c50e9ae56e7454a8db37f16034",
+      "bytes": 26004
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "11ca7289590f1303f7713c5b00fa8ec302b922c4f82af72dad344e9d826fceeb",
+      "bytes": 34280
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "13e59491bd22bc7e421ef04e697046026b273042ed35c3f495363e981179c2f6",
+      "bytes": 11004
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/crdt_delta_state_test.beam",
+      "sha256": "0ec1854e89143e54329424e1084033bf5b1ecfcc4c859217ff46649cb5241c6f",
+      "bytes": 7916
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "7f644c90bffef3d01a0f464794ece13de661b4636781a7c4dad46e6957f9c5be",
+      "bytes": 3576
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "7341026aea2eec87358a134f3bf05f967ab2f454ee32d24c5a37a8011568a617",
+      "bytes": 5272
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "4e95da07d61f2932c32d3769c5fa89c8899671589e3ffa32821d71ced76d6012",
+      "bytes": 14012
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "e2f4893632ce01f22e49fc8db52234fdaa5b40eb568209b3036108b730b035bd",
+      "bytes": 32732
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/ev98_codec_runner.beam",
+      "sha256": "bd29b2634977868813f975ed3cf7a433ecdaa01e69c1c208d599d96763a1510a",
+      "bytes": 26284
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/ev_peer_independent_probe.beam",
+      "sha256": "735d9ebfa3a50d6b733b40ceabcca0a85dbef2cad1a88321fbed047c78a3d8f9",
+      "bytes": 23856
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/ev_transport_independent_http.beam",
+      "sha256": "e87ed0fe93c50e7ea1743ebb768e01bfb121596b2ca23168aea0d6c80396b4de",
+      "bytes": 14676
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/mesh_peer_actor_test.beam",
+      "sha256": "7e28bbd0ad2f4c95ee113839a08341e7c922a8f27b9cdb71e02782143505287e",
+      "bytes": 20152
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/mesh_peer_test.beam",
+      "sha256": "d1914424599b569aa866a2702a59b58a01bfc47a366e28bd752117f5a61738f9",
+      "bytes": 24688
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/mesh_sync_codec_test.beam",
+      "sha256": "f8485f28ce8893ec9a36f02fcc6a0fa71364da3bcd7ce45afc40763368098d68",
+      "bytes": 33960
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "563f18f9b14ae6d8c8f2b6d5e5c85512c35418091c30b8a5e999bb67292ec378",
+      "bytes": 1096
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compiled/ebin/mesh_zenoh_test.beam",
+      "sha256": "37d2d634b3335c459d1aadb1cc9f5eb789fd84fe2e7d59b0963bd4211b3076fa",
+      "bytes": 59812
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/fault-bindings.json",
+      "sha256": "cf545fe70224dac2e9558d43923dc1d0971416f080bc5bd3d81517f582de1405",
+      "bytes": 1305
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/mutator.ml",
+      "sha256": "18471c90ef75d57f6bf068d76b4fba3532400c3ff943a69b78363e3c5386889e",
+      "bytes": 1080
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/compile.json",
+      "sha256": "2816f84e6d85b6328ee78b68eef6f3294d322e9e3426330dad7dbd3a24e419f5",
+      "bytes": 2294
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-cleanup-1511/runtime.json",
+      "sha256": "1d7f6483e6b06db6dc6b32545d2b835a842d6089729a23454002ca79cbbc9155",
+      "bytes": 2667
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/bindings.json",
+      "sha256": "ecaa8d81181d8d9e2503d87e9e87db8e6bf6aa23693c95ec8360eac84520cd60",
+      "bytes": 83518
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "19569b9414fbefa00957198390855d6d0a05e8a7624c57522b5b88e9eb497935",
+      "bytes": 14796
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "0af431d749f72ceabcd2622f586b19ae40648b5cafe6547df67804bfb6f2b10a",
+      "bytes": 13440
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "3af1b69b2ed3d5c4138d98d7be84c1f30b03ec47b649ac501fcea3383f9be5aa",
+      "bytes": 9124
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "51c16bd5ea33ecd5da94efc128413b012b158ff2e5811b3253839aee9d60ebc8",
+      "bytes": 23596
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "dbfadebbd3875bdf675a6f16f726ddb94e631229398887ced856d26f3c674a33",
+      "bytes": 17420
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "25b805053124c71b8d561246bae3a1343fb64a5800a25d952895cd452b27587c",
+      "bytes": 26628
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "070f59bab874c0c8221934b183a7da12e55a2e97da46276f7dee7c4bdd625de7",
+      "bytes": 11288
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "eeae1cfb266e4a2655d9b03598866808c29501d2f9f2d20e796f375dd685ee5f",
+      "bytes": 25836
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "38008f10768a82836b5d3949570ea2c277c47625e4b145234feac67fe7db4a1f",
+      "bytes": 34284
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "692496dbf17cad507fe29b5475f3b66077090a891f1059b242ab58868ba3522c",
+      "bytes": 11004
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/crdt_delta_state_test.beam",
+      "sha256": "843931ac9ba78440146b5956e255c5d576dea94793716d9a943d54b23529666d",
+      "bytes": 7912
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "4d410a0e0b766d0505833e49177e502ca4aa9ba5c51895ec5de3f4cc93e4c191",
+      "bytes": 3576
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "b465942ec4c938c04c86447fd56b23f90f8dfd16b9dce3f257c46036bc96eea1",
+      "bytes": 5272
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "4d8883672227275c834ff77a9f4b4b6d9b037d8c72bd2dd6603eb6b14c7ea48f",
+      "bytes": 14008
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "70fbae90aaa79db54d7b5f9cda5a90f38eadc8feee037bf0a4a7af0313e6575a",
+      "bytes": 32728
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/ev98_codec_runner.beam",
+      "sha256": "ea74c2a231334236d55b22368faea5b03742fcee69db4f066b144d6f54029acb",
+      "bytes": 26284
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/ev_peer_independent_probe.beam",
+      "sha256": "13411cf01b5985ed707c2a5c20117e2c0859148bcaf5624b31ea12c5bfff1ecd",
+      "bytes": 23852
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/ev_transport_independent_http.beam",
+      "sha256": "bec97a4e4eb0d6f2b2587c6f3c77400dfd65bed01067992eee75740e00692994",
+      "bytes": 14672
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/mesh_peer_actor_test.beam",
+      "sha256": "be6c12089a5a2af2da7857f385e2440954f7fc067d05073275035800122da926",
+      "bytes": 20148
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/mesh_peer_test.beam",
+      "sha256": "600f179e45aa969718cb0cc01de5abf403837adeca036e9c83475d12d2ff9721",
+      "bytes": 24684
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/mesh_sync_codec_test.beam",
+      "sha256": "52f88eba1d6d3232ca3e8c0e80b67549ed922af77f46d73d3cf7bee565898dd6",
+      "bytes": 33960
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "429ca14ff66e5e9a1f474469faa375ac2d05e3f513f69d6748ebb3ba8a5323d3",
+      "bytes": 1096
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compiled/ebin/mesh_zenoh_test.beam",
+      "sha256": "957b13d16c5ab9a4fc9e190b8f184b3ed5aaf95f34e0a165a71030fee014b9eb",
+      "bytes": 59812
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/fault-bindings.json",
+      "sha256": "36fed7e04abf7236b8e6d1dac977e4735912474b9c944612d21585fc77e8ceba",
+      "bytes": 1304
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/mutator.ml",
+      "sha256": "863e89f6be8db592dc9490ce479446493fbf2a121e4e3c60a4448a8b548bfcd3",
+      "bytes": 1194
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/compile.json",
+      "sha256": "c985480104863dc751723acfe8301e51d9068cf529fcb4af40a19ff2f8ed8db3",
+      "bytes": 2301
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/runtime.json",
+      "sha256": "ed53bd501111af9712cc5d9e3ea081621b1bf93960f437c43137579dc3410d1d",
+      "bytes": 4772
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-receive-1511/runtime-network-permitted.json",
+      "sha256": "e9eee1c9fffe9de821b0fdb1487f47aa202cc4e2bb9be252f59a1fd640163f23",
+      "bytes": 2681
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/bindings.json",
+      "sha256": "f49b9c5e491bf585d505c6e7cec002051befe5fc989f8ecb62f6643c7cfaf12d",
+      "bytes": 83044
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "d6bd68ecc77615332e1d98b4fb1d0ed5e05ff4d78c05259dfb0cbf86f4cc1953",
+      "bytes": 14792
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "5bbe1be4a7a80b262b6ced58a7f7941db128ac09eea61f3f399a605b02163787",
+      "bytes": 13436
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "912db83b756a6e7daa73485e2b0d2421d444a8642f75a304c021ac1cd409b6b4",
+      "bytes": 9120
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "a44ab986405ab47ab9f52c78b7d428df0cebcf829b04b92b7510e4f0aa3a6dba",
+      "bytes": 23596
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "12752e37797c191b0868398fa25e5b077bc62a8f2a75a24a3cb4d96104ad0551",
+      "bytes": 16932
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "0b5703973a80fd30b29bbdd0827c2b134e06abc4edddb7a5ba1cea83c8e13768",
+      "bytes": 26628
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "cc3569a1792502fda56595ddd81c24aef65f1ad1bf2bbc12de8731eb69754972",
+      "bytes": 11288
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "f802a41298a0260bf9b0c96af43a4178a9f3279ed9cfb4259b0a772463032f06",
+      "bytes": 25836
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "7dfcf98d0bc4cef1e4bb202abc9821248565db4a31af6cd2e2cd186b8d0b8b89",
+      "bytes": 34276
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "776f631f3a314aa3784dea58e24e075f57034036ddff0e2c606b73feeb554037",
+      "bytes": 11000
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/crdt_delta_state_test.beam",
+      "sha256": "b0e11383e960ff835e038cd8c8a6bc6850bdb9a7b7200e989cc76ff739b4e83d",
+      "bytes": 7908
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "68d7c82e19c52faed3833eca0b1bbc95500b8c7a82d5d52245597efe49084426",
+      "bytes": 3576
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "48d3f51f7c5e61fb91829185de17ec42ea81f10847718012e1df6368613b2662",
+      "bytes": 5272
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "a407d6a035cdd70c38d4f00c9e57fb1f11ef2da7dcbf9d225015c7558a1b1e66",
+      "bytes": 14008
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "9ae25a2b72754e928120b28b298b3652c8233ee6ca51e21d7e1ef14cb5c97c8b",
+      "bytes": 32732
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/ev98_codec_runner.beam",
+      "sha256": "0b317c04e037be39501700e2e636c31fecb844a5dc4eb8d9ab66cae5cc820c94",
+      "bytes": 26280
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/ev_peer_independent_probe.beam",
+      "sha256": "73dec004ead7df95f025189a40bbc43b7e7cfee504e0be28051a56380415a07f",
+      "bytes": 23848
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/ev_transport_independent_http.beam",
+      "sha256": "1b2657fe1cb2acb7fb7add95711aa490616adb3604a089b30b56a9916f902387",
+      "bytes": 14672
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/mesh_peer_actor_test.beam",
+      "sha256": "3edd55abc8eb4806089edaec28807b173c3714d841adfc4f97af8a8df4e34f99",
+      "bytes": 20144
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/mesh_peer_test.beam",
+      "sha256": "53c6a85830857a84f09bbd8f30926f0412b4c7da7f0f1ae04f873cddca06c0bd",
+      "bytes": 24684
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/mesh_sync_codec_test.beam",
+      "sha256": "4bb5f7fc9c05c0162f420850258ae4bafb0b16840cbfb21af778b714ee86f5e6",
+      "bytes": 33956
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "47703d7d50fd80b342ec9a49c8c76a4d6acc7ea3d460d8996815634478c9497d",
+      "bytes": 1096
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compiled/ebin/mesh_zenoh_test.beam",
+      "sha256": "7b47b109db1b8cec19301ab8262c51481d301ddc9b837e4fbbb935a78279b8c8",
+      "bytes": 59812
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/fault-bindings.json",
+      "sha256": "56e31e7559a09ddbcda90bf270184183a5d520add18de65b3aee85d783fb1130",
+      "bytes": 1307
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/mutator.ml",
+      "sha256": "f40157a9e81c3c0f0e3d11724526c4e2184ba5e9df0c3ad9f19fc8f5a03d2440",
+      "bytes": 893
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/compile.json",
+      "sha256": "7266f550969eb56d71dda4faf59842c9e20e9c2e706be375fba91b48d5d386ff",
+      "bytes": 2293
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/runtime.json",
+      "sha256": "cc5c1a0646a71abaf81457f264366690a0b73f61301476542e5f4f0b12e89dbc",
+      "bytes": 4754
+    },
+    {
+      "path": "/tmp/ev-transport-root-fault-quota-1511/runtime-network-permitted.json",
+      "sha256": "5daed07b5f6134db4ffe0eb821da5dea2d8dfb332aa903dd84c328e57d6d1d98",
+      "bytes": 2667
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-source-manifest.json",
+      "sha256": "312a2d7974777fe71c095c7181dff0fbfc24fd1ef3e8f3087b7381201f0d81d1",
+      "bytes": 50288
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-build.json",
+      "sha256": "09c5050a1157d143754507bfabf282f84aa721e49309aaa9f40fcaa464456000",
+      "bytes": 2231
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-transport.json",
+      "sha256": "19c58f47d0251bdc20015c050764eeb010c1af30b8d3448225c0996ee2f26dad",
+      "bytes": 5751
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-peer.json",
+      "sha256": "8e3ab97bb8b57306a5268980a47b20c1b2cfd7b368638c32e8e1d61bd0ad81b6",
+      "bytes": 5107
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-peer-actor.json",
+      "sha256": "48ae5fcb608704d84c3733e08311853f82aa39f6c0311c15d57c29be10287fdb",
+      "bytes": 5412
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-regressions.json",
+      "sha256": "de393f415db84dea3f0c8b91342b9906800b2b5ca91c7bb057e61b8af3065df6",
+      "bytes": 15300
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-live.json",
+      "sha256": "969fdb4d566220ae3f41d75c38391f37ad9ac952f4423bf2045546d4f15eea50",
+      "bytes": 9453
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-format.json",
+      "sha256": "749aae066fad93a43d31c4b7dd46c1e15905d2e20be4abd900a4baff05aec929",
+      "bytes": 2245
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-erts.json",
+      "sha256": "9d4907a92230c050b9800f8fc4df9bee2dc384f10123277b64ab8265a9cb035f",
+      "bytes": 2136
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-red-configuration.json",
+      "sha256": "eaf0bb2599bb473341d35ea41f9890fadbb64fe89b445a26a50607f349ea677f",
+      "bytes": 5837
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-red-http-framing.json",
+      "sha256": "ce1040aa31d43bb32078be8ce9bdc177bc4858dd87a79ccd5238128125d0ebac",
+      "bytes": 6031
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-red-one-sided-gossip.json",
+      "sha256": "d4f3f334c95c89c77638670d8501ea933c0d4f7dce059deff91aa400b493fdd0",
+      "bytes": 6134
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-red-report.json",
+      "sha256": "035e09b372d0b7c46a7949ea1ab5df069313811340fa59c33799e276d6960133",
+      "bytes": 5905
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-red-cleanup.json",
+      "sha256": "43c0346fdfb7674f283a2e48fe02e55920bfb78fbd9c8de79e521b0c25e04263",
+      "bytes": 5757
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-red-broker-schema.json",
+      "sha256": "521cbf37b562d8f9ce5c011a790ff138a69ba94774d2ea947840a4e7392e9ea6",
+      "bytes": 6523
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-preflight-refused-shape.json",
+      "sha256": "007cd73c419194bf3b526261fe02add70c80cb3d488ab99f0d909c565aad4808",
+      "bytes": 2288
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-preflight-refused-binding.json",
+      "sha256": "a67f665d87bd94fc560c4dd106950b754b1c91917cee7eaefed6ef69cac09c22",
+      "bytes": 4563
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-preflight.json",
+      "sha256": "4b12735ee751102c027df1e9cf570cc22395981be9348a5d99af9e27cf954f9f",
+      "bytes": 4027
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-claim.json",
+      "sha256": "c46db6db4ff5840c98d9610e9abeb4ac71222d81f9cdae7e965f6ae4c1571c92",
+      "bytes": 2989
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-active-source.json",
+      "sha256": "1c506bc33351c7000b487c46d5b178cd4a67db78194bd4b2ef9724c5ed554b83",
+      "bytes": 4002
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-active-handoff.json",
+      "sha256": "347c45d4c8bd38bd46c7039d48fdc8c2c7988f801297051dba6c15243e74da1b",
+      "bytes": 3993
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-report-source-manifest.json",
+      "sha256": "ba95d691decaeee70ce9b41da3ec161a3a896b6ebf64ab24423ae35841bf5857",
+      "bytes": 3999
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-report-build.json",
+      "sha256": "1865b85f44e96c4cf14c56815480cbde9189de9c2e4bc59fb673c8ca36f2ded1",
+      "bytes": 2257
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-report-run.json",
+      "sha256": "b4ac914aaf3237b50f406fdc8d1d4efcc19f794685fa1d1001e87481391a7c30",
+      "bytes": 5146
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-cleanup-source-manifest.json",
+      "sha256": "a809a878e86af0f9f2e6e50a236361a2c0489a8a398e62c39f2ceefb6333fe53",
+      "bytes": 3999
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-cleanup-build.json",
+      "sha256": "eb2563bc6a831bf93495d5f0abd8648ecabd51ca4f5e1e181bc599620503f895",
+      "bytes": 2266
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-cleanup-run.json",
+      "sha256": "bf30398b1e8f400fec7bfae1e285e395227ccede12ad990f0d78d1a5d80f56f7",
+      "bytes": 4837
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-receive-source-manifest.json",
+      "sha256": "0c30715c26971dcb69cb98b50e85acd3c830103423b4656e21d3ca534e6c64d9",
+      "bytes": 3999
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-receive-build.json",
+      "sha256": "9849b6266a6a10fdb380c8dfaeb3efd5b61ba75bcc8058cde366b166c098ddaf",
+      "bytes": 2259
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-receive-run.json",
+      "sha256": "6a2c4b2e23e9c1ecfac961b48152f15028b06350db90243d78c0dbcc03b0ba81",
+      "bytes": 4858
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-quota-source-manifest.json",
+      "sha256": "ac378c2183193b6d294c3573ff06da3702141977d77d2e020ffd42486dc11732",
+      "bytes": 3999
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-quota-build.json",
+      "sha256": "ba354aeaed2e243f5641fa945f251d70cbd390829a067ab5ae10f619d8d0e4ef",
+      "bytes": 2262
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-fault-quota-run.json",
+      "sha256": "38554e520f87187486b9f48328b357ef809797bad906367e39a6418c60721618",
+      "bytes": 4857
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1445-transport-verification.json",
+      "sha256": "1260c72e594cb804f3dc4766f7264cc94141b6311a28bbc2786824dc9b63421c",
+      "bytes": 36143
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1450-transport-header-bound-addendum.json",
+      "sha256": "135240bb8ab683a110b1cb2891560deedceb5b3033b20048c54b6d54ec81aaf0",
+      "bytes": 731
+    },
+    {
+      "path": "/tmp/ev_composed_peer_stage.ml",
+      "sha256": "829de0130af63d6cc3e08b969641d17388a6ac0b2b21e5050a23005f94e310ec",
+      "bytes": 5770
+    },
+    {
+      "path": "/tmp/ev_transport_independent_fault.ml",
+      "sha256": "7dd760a83ac00e114c7d0da79571f55116194d2ca9d0a2348b81986e43c4e41d",
+      "bytes": 3768
+    },
+    {
+      "path": "/tmp/ev_transport_independent_http.gleam",
+      "sha256": "e63d4ae7c0a3fa2b110f666614700004e648b8d7ff64739f759acb251b0c5498",
+      "bytes": 5426
+    },
+    {
+      "path": "/tmp/ev-transport-pre-release-active-1505.json",
+      "sha256": "ba214eb689130effcd5657b6bbe32a23d2419f4a2f5b985d2318dc802b3f2ed7",
+      "bytes": 3999
+    },
+    {
+      "path": "/tmp/ev-transport-release-observation-1505.json",
+      "sha256": "9d5e57900205ead42321a9f13563820fd0016b4e92cdd24259d9e7faac5e2bad",
+      "bytes": 2904
+    },
+    {
+      "path": "/tmp/ev_independent_reviews_record.ml",
+      "sha256": "c50ba5ad1faec564fa22a5f9e3a0869ca15310cf71be7faf3ee84b5c9ecc17ed",
+      "bytes": 15289
+    }
+  ],
+  "limits": [
+    "Both peer actors ran on one NAS ERTS instance. Real network broker I/O is not multihost peer execution.",
+    "GET-before-PUT and readback are cooperative collision detection, not atomic CAS against another writer.",
+    "VM-local registration and routing equality are not authenticated identity or cross-VM fencing.",
+    "Cursors, outbox and peer clocks are in memory; no crash-durable recovery is claimed.",
+    "CleanupUnconfirmed halt is synthetic fault injection. An actually unreapable OS process was not created.",
+    "Watchdog registration follows child spawn; atomic immediate owner-death cleanup is not claimed.",
+    "Three private listener runs were refused with sandbox EPERM; unchanged compiled artifacts passed after approved socket access. Refusals are preserved.",
+    "Initial live invocation had an incorrect executable path and failed before child execution; corrected explicit native ERTS invocation is retained.",
+    "The first release arrived after task lease expiry and was refused. Attempt recovery and a fresh active check are required before completion.",
+    "Trusted callers must bound mailbox demand. Full descendant exec and library closure were not established.",
+    "The branch still contains the old SyncStatus dependency. Its separate causal fix requires composition and regression.",
+    "No production startup, complete formal transport proof, or EV admission is established."
+  ]
+}

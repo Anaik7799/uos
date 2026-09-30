@@ -140,19 +140,6 @@ let check_generation db path =
   | Some (_, prior) -> require (prior = current) "cycle connection generation retired"
   | None -> bind_generation db current
 
-let open_db () =
-  recovery_clear db_path;
-  let generation = recovery_generation db_path in
-  let db = Sqlite3.db_open ~mutex:`FULL db_path in
-  bind_generation db generation;
-  (try recovery_clear db_path; check_generation db db_path with exn ->
-    generations := List.filter (fun (other, _) -> other != db) !generations;
-    ignore (Sqlite3.db_close db); raise exn);
-  Sqlite3.busy_timeout db 2000;
-  ok (Sqlite3.exec db "PRAGMA journal_mode=WAL");
-  ok (Sqlite3.exec db schema);
-  db
-
 let text s i = match Sqlite3.column s i with Sqlite3.Data.TEXT t -> t | _ -> ""
 let num  s i = match Sqlite3.column s i with Sqlite3.Data.INT n -> Int64.to_int n | _ -> 0
 
@@ -218,6 +205,40 @@ let verify db =
       | _ -> raise (Invalid "cycle scan failed") in
     loop 0 1 "" [])
 
+let trigger_definitions db =
+  let stmt = Sqlite3.prepare db "SELECT name,sql FROM sqlite_master WHERE type='trigger' ORDER BY name" in
+  Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
+    let rec rows acc = match Sqlite3.step stmt with
+      | Sqlite3.Rc.ROW -> rows ((text stmt 0, text stmt 1)::acc)
+      | Sqlite3.Rc.DONE -> List.rev acc
+      | _ -> raise (Invalid "cycle trigger inspection failed")
+    in rows [])
+
+let open_db () =
+  recovery_clear db_path;
+  let stat = Unix.lstat db_path in
+  require (stat.Unix.st_kind = Unix.S_REG && stat.Unix.st_size >= 512)
+    "operational cycle ledger must already exist";
+  let generation = recovery_generation db_path in
+  let db = Sqlite3.db_open ~mode:`NO_CREATE ~mutex:`FULL db_path in
+  bind_generation db generation;
+  try
+    Sqlite3.busy_timeout db 2000;
+    recovery_clear db_path; check_generation db db_path;
+    let reference = Sqlite3.db_open ":memory:" in
+    let required = Fun.protect ~finally:(fun () -> ignore (Sqlite3.db_close reference))
+      (fun () -> ok (Sqlite3.exec reference schema); trigger_definitions reference) in
+    let actual = trigger_definitions db in
+    require (List.for_all (fun guard -> List.mem guard actual) required)
+      "cycle ledger trigger definitions differ from required schema";
+    let count, defects = verify db in
+    require (count > 0 && defects = []) "operational cycle ledger requires a verified nonempty chain";
+    recovery_clear db_path; check_generation db db_path;
+    db
+  with exn ->
+    generations := List.filter (fun (other, _) -> other != db) !generations;
+    ignore (Sqlite3.db_close db); raise exn
+
 (* Validate the entire existing chain while holding the same writer transaction
    that chooses the head and inserts. Otherwise a valid new digest can extend
    known corrupt evidence, or a concurrent writer can invalidate the checked head. *)
@@ -244,6 +265,7 @@ let append db ~cycle_id ~plan_id ~task_id ~kind ~title ~body ~observed ~evidence
       require (defects = []) "cycle append refused: existing chain is corrupt";
       let result = append_row db ~cycle_id ~plan_id ~task_id ~kind ~title ~body
         ~observed ~evidence in
+      check_recovery ();
       ok (Sqlite3.exec db "COMMIT");
       committed := true;
       result)

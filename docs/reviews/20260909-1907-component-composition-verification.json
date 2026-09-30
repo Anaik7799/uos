@@ -1,0 +1,333 @@
+{
+  "schema": "uos.component-composition-verification.v1",
+  "observed_at": "2026-09-09T19:52:07Z",
+  "source_candidate": "79a4ab732ec7af350db3e3eb66fcb8cde6f03d5f",
+  "review_completion_candidate": "73949644a04dbc5d86fef18acd3140f40d6c2f77",
+  "status": "VERIFIED_BOUNDED_COMPOSITION",
+  "authority": "NONE",
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "programme": {
+    "plan": "uos/ev-admission/20260909-0210",
+    "task": "PROGRAM",
+    "worker": "codex-ev-admission-01a08017",
+    "attempt": 6,
+    "state": "executing"
+  },
+  "source_parity_files": 13,
+  "private_dependencies": 168,
+  "gleam_tests": 53,
+  "ocaml_tests": 18,
+  "independent_path_controls": 19,
+  "independent_driver_refusals": 3,
+  "compile_trace_successful_execve": 21,
+  "compile_trace_failed_lookup": 1,
+  "advice_capture_fence_observation_age_seconds": 776.1280100345612,
+  "artifacts": [
+    {
+      "source": "fresh canonical risk observer stdout",
+      "path": "docs/reviews/20260909-1907-component-composition-active-observation.json",
+      "sha256": "64ac4511359f0b8a2d9cc07f24a9df8e92f53b5939054219b02d05296a5671b0",
+      "bytes": 1469
+    },
+    {
+      "source": "fresh coordinator heartbeat stdout",
+      "path": "docs/reviews/20260909-1907-component-composition-heartbeat-observation.json",
+      "sha256": "63ea04e509022ca4aaba7cec4da205511c8f1f4035197ac77c0b9572173baa40",
+      "bytes": 247
+    },
+    {
+      "source": "fresh coordinator fence stdout",
+      "path": "docs/reviews/20260909-1907-component-composition-fence-observation.json",
+      "sha256": "1e9abdfbf8c77e551ccdca103888bc3df6c380a05a043afaa36836fd4613379d",
+      "bytes": 255
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-approval.json",
+      "path": "docs/reviews/20260909-1907-component-composition-independent-approval.json",
+      "sha256": "49d1d4386b47e2c5ae441e407622911a73a6250cdf661b657759a6694801bc6d",
+      "bytes": 16236
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-agy-observation.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-agy-observation.json",
+      "sha256": "6b342cdd30450ed1cfe89edfdede60eaee5454e0c66c2a8b9cc5ffff0378eeff",
+      "bytes": 5023
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-invocation-06.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-invocation-06.json",
+      "sha256": "87794bd0df58aa1877e955c81d6d501a811e2ea051d6626f762d1726b552106a",
+      "bytes": 2971
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-invocation-05.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-invocation-05.json",
+      "sha256": "b7f6dd65a6c1f6bdaa3c1a3613c66010b14b5300481bcc3bd931b9717b9a9090",
+      "bytes": 7510
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-invocation-04.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-invocation-04.json",
+      "sha256": "ecb8342392656c3e6f81cb014d0aba0e4e91de61c2d57c9c779e87f2437f830f",
+      "bytes": 2210
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-invocation-03.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-invocation-03.json",
+      "sha256": "49bbd7a3b02d1b8d16cc38989499db33a7c23e29c711c75e28ec081f83a99f6f",
+      "bytes": 2430
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-invocation-02.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-invocation-02.json",
+      "sha256": "359b82783cdf8d276862d8c365384ffdccab7d7188461c73ace19256236aa652",
+      "bytes": 2446
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-invocation-01.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-invocation-01.json",
+      "sha256": "576150f4e277af93fb19292dbcecced7f76c90184b2e350649ddcbcaa9c5f3a3",
+      "bytes": 2424
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-invocation-00.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-invocation-00.json",
+      "sha256": "a48f9206a8f03aa395f7d7e22483a4ff5468c9ee31123742d756e19de9d98b2f",
+      "bytes": 2509
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-original-stage-failure.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-original-stage-failure.json",
+      "sha256": "c9a7e851447d2f33414a7cf096bfd9090fc66905fd26720628c12df847e633b4",
+      "bytes": 2388
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-digest-trace.txt",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-digest-trace.txt",
+      "sha256": "a1d1ae1cfb69bc5d8f61fdc7011bb8a92ffd53dffca34e5c73a6937b5ea16c7a",
+      "bytes": 9158
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-gleam-trace.txt",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-gleam-trace.txt",
+      "sha256": "4b4c0212b1526a997bc262682f5b0df2af39bd81fbfecb5bec1488cfb78d97d3",
+      "bytes": 4373
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-digest-compile.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-digest-compile.json",
+      "sha256": "b2e3f2c0f9aaa936fef0407ef53b7b929196f61d39f6220be21215087f8fc068",
+      "bytes": 2224
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-gleam-compile.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-gleam-compile.json",
+      "sha256": "ac965dd8387cde03876f6c4a216e7a6379ac05f2394c705cedcd681f04f6fbd7",
+      "bytes": 2264
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-active.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-active.json",
+      "sha256": "5dd3f55aa4f09f51ba3ade8703c25c5979944fea786308826bdb946e2d03c79b",
+      "bytes": 3786
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-claim.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-claim.json",
+      "sha256": "2f74a37c248853e42e2cee6066473bf8869172f97e461f94cb38306986ff7786",
+      "bytes": 3007
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-preflight.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-preflight.json",
+      "sha256": "0226a28732ecfbc3a28f3033468b8e410769dab8034d692e2e6544597f260607",
+      "bytes": 3807
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-preflight-hold.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-preflight-hold.json",
+      "sha256": "80ad1726a6163f3706cc441c82e82f09a3e164ad58ac858bc2f42ac2b4c1b27c",
+      "bytes": 2284
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-native.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-native.json",
+      "sha256": "565405fc44f26f5178f23737c456e50e2ec7ea8b6d1feded55fa5dd98ec6c88a",
+      "bytes": 2240
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-path-probe.ml.txt",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-path-probe.ml.txt",
+      "sha256": "d333ae94a1c8f669fa9b6d5746edca3035415d81345fbcebe0f1fa7a75e95175",
+      "bytes": 974
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-runner.gleam.txt",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-runner.gleam.txt",
+      "sha256": "63e0c1304d06fa8006a288e0f732954d0d75f63f600ac17ff0232c66c637805a",
+      "bytes": 686
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-driver.ml.txt",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-driver.ml.txt",
+      "sha256": "85c262a3b597abe2fc59263d2d55b5092e9bcd0bc2343ad44e7f5f89c91877ca",
+      "bytes": 8223
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-probe.ml.txt",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-probe.ml.txt",
+      "sha256": "ce6fc3ce667ef5b95f45fcf5b57db2f1d0d6e8132205a2d1b7aa5302b16b11ad",
+      "bytes": 8467
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-original-bindings.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-original-bindings.json",
+      "sha256": "c06d2cd730aca039ec3dd41948cb12192c357a552e3f4aca422418c42a3569f4",
+      "bytes": 66012
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-fresh-bindings.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-fresh-bindings.json",
+      "sha256": "1ee06739ed6ba60ba99502b40b1a2670f6d82d47763b96215fb371bb671d0dbe",
+      "bytes": 68102
+    },
+    {
+      "source": "73949644a04dbc5d86fef18acd3140f40d6c2f77:docs/reviews/20260909-1909-component-independent-verification.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-20260909-1909-component-independent-verification.json",
+      "sha256": "5d768d74b9fca911908a3e6d7af360446904ee394167a4544eb8da01e3bc4c88",
+      "bytes": 8624
+    },
+    {
+      "source": "/tmp/ev-component-composition-stage-1849.json",
+      "path": "docs/reviews/20260909-1907-component-composition-stage-path-refusal.json",
+      "sha256": "c9a7e851447d2f33414a7cf096bfd9090fc66905fd26720628c12df847e633b4",
+      "bytes": 2388
+    },
+    {
+      "source": "/tmp/ev-component-composition-stage-1854.json",
+      "path": "docs/reviews/20260909-1907-component-composition-stage.json",
+      "sha256": "442921930a60f73b8a4cc349ef73c4a15f7b2157af7d0aa1d7b29cfd1dfe23e6",
+      "bytes": 2487
+    },
+    {
+      "source": "/tmp/ev-component-composition-1854/bindings.json",
+      "path": "docs/reviews/20260909-1907-component-composition-bindings.json",
+      "sha256": "c06d2cd730aca039ec3dd41948cb12192c357a552e3f4aca422418c42a3569f4",
+      "bytes": 66012
+    },
+    {
+      "source": "/tmp/ev-composition-gleam-traced-1855.json",
+      "path": "docs/reviews/20260909-1907-component-composition-gleam-sandbox-trace-refusal.json",
+      "sha256": "a103203638667ea2c19f7a4ea636b3ac02b5893d4f75bbd8fa36b0b2a039fda0",
+      "bytes": 2879
+    },
+    {
+      "source": "/tmp/ev-composition-digest-traced-1855.json",
+      "path": "docs/reviews/20260909-1907-component-composition-ocaml-sandbox-trace-refusal.json",
+      "sha256": "8e64a60cf14db7977df0d9f4cf9d801f2da2b46ceaee565c62eb4cb0c76bc0f0",
+      "bytes": 2834
+    },
+    {
+      "source": "/tmp/ev-composition-gleam-traced-permitted-1856.json",
+      "path": "docs/reviews/20260909-1907-component-composition-gleam-traced-build.json",
+      "sha256": "42dca79c1131bff41952aa215aa76983f9d3789fed5eee5c1b8906e4555002ec",
+      "bytes": 2731
+    },
+    {
+      "source": "/tmp/ev-composition-digest-traced-permitted-1856.json",
+      "path": "docs/reviews/20260909-1907-component-composition-ocaml-traced-build.json",
+      "sha256": "acb4aae3880c1e555abbdb1cb9b22b166e4514fe17b7184712c111b9cb1b31c1",
+      "bytes": 2684
+    },
+    {
+      "source": "/tmp/ev-composition-gleam-compile-permitted-1856.json",
+      "path": "docs/reviews/20260909-1907-component-composition-gleam-build.json",
+      "sha256": "ac965dd8387cde03876f6c4a216e7a6379ac05f2394c705cedcd681f04f6fbd7",
+      "bytes": 2264
+    },
+    {
+      "source": "/tmp/ev-composition-digest-compile-permitted-1856.json",
+      "path": "docs/reviews/20260909-1907-component-composition-ocaml-build.json",
+      "sha256": "b2e3f2c0f9aaa936fef0407ef53b7b929196f61d39f6220be21215087f8fc068",
+      "bytes": 2224
+    },
+    {
+      "source": "/tmp/ev-composition-gleam-permitted-1856.execve.log",
+      "path": "docs/reviews/20260909-1907-component-composition-gleam-execve.log",
+      "sha256": "4b4c0212b1526a997bc262682f5b0df2af39bd81fbfecb5bec1488cfb78d97d3",
+      "bytes": 4373
+    },
+    {
+      "source": "/tmp/ev-composition-digest-permitted-1856.execve.log",
+      "path": "docs/reviews/20260909-1907-component-composition-ocaml-execve.log",
+      "sha256": "a1d1ae1cfb69bc5d8f61fdc7011bb8a92ffd53dffca34e5c73a6937b5ea16c7a",
+      "bytes": 9158
+    },
+    {
+      "source": "/tmp/ev-composition-gleam-runtime-1859.json",
+      "path": "docs/reviews/20260909-1907-component-composition-gleam-runtime.json",
+      "sha256": "5996e48d51545d2690a5420b52aa9d35f534bf693ba56d14b280e9e63fd47deb",
+      "bytes": 7528
+    },
+    {
+      "source": "/tmp/ev-composition-digest-runtime-1859.json",
+      "path": "docs/reviews/20260909-1907-component-composition-ocaml-runtime.json",
+      "sha256": "ac73799910a7e12da06da6928cd64675ce30f417a7aee13dad44934d00fec314",
+      "bytes": 2980
+    },
+    {
+      "source": "/tmp/ev-composition-review-completed.json",
+      "path": "docs/reviews/20260909-1907-component-composition-review-completed.json",
+      "sha256": "13585443c5b06430f9c8c5fbc08a588bcc504796520b406e023b4eea88e4b142",
+      "bytes": 3399
+    },
+    {
+      "source": "/tmp/ev-workspace-renew-codec-1913.json",
+      "path": "docs/reviews/20260909-1907-component-composition-wrong-workspace-renew-refusal.json",
+      "sha256": "41a29647c5f45b34447b8b5e273710753204e8c59be41549c3eea6e23efeb067",
+      "bytes": 3286
+    },
+    {
+      "source": "/tmp/ev-root-agy-route-harness-record-1917.json",
+      "path": "docs/reviews/20260909-1907-component-composition-agy-capture-sandbox-refusal.json",
+      "sha256": "792fe167a9ab486a0515efe7da7ff3a47a08fd69d6114125eef9c77cb5ab5d19",
+      "bytes": 2236
+    },
+    {
+      "source": "/tmp/ev-root-agy-route-harness-record-permitted-1918.json",
+      "path": "docs/reviews/20260909-1907-component-composition-agy-capture-environment-refusal.json",
+      "sha256": "e1494937d83a42cbc946b3d5580dff6713321ce9cecf2ecdd3f761814aad65e4",
+      "bytes": 2236
+    },
+    {
+      "source": "/tmp/ev-root-herdr-get-diagnostic-permitted-1920.json",
+      "path": "docs/reviews/20260909-1907-component-composition-agy-socket-diagnostic.json",
+      "sha256": "8fe4449e6fd67b23b5432c5bc56e613e197ffc1a596e30857f77ad5e209a6a7d",
+      "bytes": 2256
+    },
+    {
+      "source": "/tmp/ev_record_component_composition_1929.ml",
+      "path": "docs/reviews/20260909-1907-component-composition-recorder.ml.txt",
+      "sha256": "fdb2cddd3cd8b0948c86f1c315b8ad8fe64960717f27b7db4d114924c43ff44e",
+      "bytes": 19118
+    }
+  ],
+  "limits": [
+    "Independent replay uses parent-compiled artifacts after exact source, dependency and artifact checks; independent fresh staging performed, compile itself not redundantly repeated",
+    "Stage target is caller-selected fresh absolute path; it is not an authorization sandbox or hostile-symlink confinement guarantee",
+    "Fixed approved dependency inventory and cooperative filesystem are assumptions; asynchronous hostile mutation is outside scope",
+    "Reusable ev_receipts.cma and native adapter are existing automation support, hashed here; no complete interpreter/archive/dynamic-library build closure claimed",
+    "Trace audit is of supplied actual compile execve records and currently resolved executable bytes, not authenticated author identity or all possible transitive executions",
+    "Concurrent tests establish this component composition only: no live music/UI/audio, global suite, full EV101/104/107 proof, admission or release closure"
+  ],
+  "preserved_failures": [
+    "Initial8dd staging refused dependency @ basenames; source79a4 narrows the exception to immutable approved dependency basenames.",
+    "Initial build tracing was blocked by sandbox ptrace restrictions. Fresh permitted traces and warning-free compiler outputs are distinct positive observations.",
+    "Independent finalizer initially rejected valid zero-duration EUnit formatting. Corrected parser evidence is preserved in the independent record; runtime was not rerun for that parser correction.",
+    "Wrong codec workspace spelling was refused ENOENT. Subsequent explicit correct-resource renew passed, without changing workspace ownership.",
+    "AGY advice capture failed inside sandbox and then in the adapter with its filtered environment. Diagnostic exposed the missing configured Herdr socket; direct permitted OCaml capture with inherited session context succeeded. These failures do not alter component test results.",
+    "The successful advice-record capture followed approval delays without refreshing its earlier workspace-fence observation. The measured observation age is retained here; it is not relabeled as a fresh effect-time check. Only private advisory evidence files were written, with programme and workspace leases still unexpired. This recorder rechecks active task evidence, renews the heartbeat and checks the workspace fence immediately before its writes.",
+    "The first root composition recorder assumed JSON for the completion response first line; the actual canonical response is text. It refused before any output file write with Invalid token completed=true. Exact text and argv/result checks now match the observed canonical response."
+  ]
+}

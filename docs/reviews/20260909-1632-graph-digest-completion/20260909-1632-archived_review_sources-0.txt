@@ -1,0 +1,136 @@
+import cepaf_gleam/knowledge/sheaf_engine as graph
+import gleam/int
+import gleam/io
+import gleam/list
+import gleam/string
+import gleeunit/should
+
+fn range(a: Int, b: Int) -> List(Int) {
+  case a > b { True -> [] False -> [a, ..range(a + 1, b)] }
+}
+
+fn blank(id: String) -> graph.SheafNode {
+  graph.SheafNode(id, id, graph.ZkAdr, "L5", [], [], [], 0.5)
+}
+
+fn select(mask: Int, values: List(a)) -> List(a) {
+  case values {
+    [] -> []
+    [first, ..rest] -> case mask % 2 {
+      1 -> [first, ..select(mask / 2, rest)]
+      _ -> select(mask / 2, rest)
+    }
+  }
+}
+
+fn built(ids: List(String), edges: List(#(String, String))) -> graph.SheafGraph {
+  let nodes = list.map(ids, fn(id) {
+    let outgoing = list.filter_map(edges, fn(e) { case e.0 == id { True -> Ok(e.1) False -> Error(Nil) } })
+    let incoming = list.filter_map(edges, fn(e) { case e.1 == id { True -> Ok(e.0) False -> Error(Nil) } })
+    graph.SheafNode(..blank(id), outbound_transclusions: outgoing, inbound_references: incoming)
+  })
+  graph.SheafGraph(nodes, list.length(edges), 1.0)
+}
+
+fn assert_graph(g: graph.SheafGraph, ids: List(String), edges: List(#(String, String))) {
+  graph.validate_graph(g) |> should.equal(Ok(Nil))
+  g.total_transclusions |> should.equal(list.length(edges))
+  g.cohomology_score |> should.equal(1.0)
+  list.each(ids, fn(id) {
+    let assert Ok(n) = list.find(g.nodes, fn(n) { n.id == id })
+    let expected_out = list.filter_map(edges, fn(e) { case e.0 == id { True -> Ok(e.1) False -> Error(Nil) } })
+    let expected_in = list.filter_map(edges, fn(e) { case e.1 == id { True -> Ok(e.0) False -> Error(Nil) } })
+    list.sort(n.outbound_transclusions, string.compare) |> should.equal(list.sort(expected_out, string.compare))
+    list.sort(n.inbound_references, string.compare) |> should.equal(list.sort(expected_in, string.compare))
+    let expected_neighbors = list.filter(ids, fn(other) { list.contains(edges, #(id, other)) || list.contains(edges, #(other, id)) })
+    graph.lookup_transclusions(g, id) |> list.map(fn(n) { n.id }) |> list.sort(string.compare) |> should.equal(list.sort(expected_neighbors, string.compare))
+  })
+}
+
+fn replacements_and_additions() {
+  let ids = ["a", "b", "c"]
+  let universe = list.flat_map(ids, fn(a) { list.map(ids, fn(b) { #(a, b) }) })
+  list.each(range(0, 511), fn(mask) {
+    let edges = select(mask, universe)
+    let base = built(ids, edges)
+    assert_graph(base, ids, edges)
+    list.each(ids, fn(id) {
+      list.each(range(0, 7), fn(out_mask) {
+        let outgoing = select(out_mask, ids)
+        let replacement = graph.SheafNode(..blank(id), title: "new metadata", outbound_transclusions: outgoing, inbound_references: ["untrusted", "untrusted"])
+        let assert Ok(updated) = graph.try_add_node(base, replacement)
+        let wanted = list.append(list.filter(edges, fn(e) { e.0 != id }), list.map(outgoing, fn(b) { #(id, b) }))
+        assert_graph(updated, ids, wanted)
+        let assert Ok(again) = graph.try_add_node(updated, replacement)
+        again |> should.equal(updated)
+      })
+    })
+    list.each(universe, fn(edge) {
+      let assert Ok(updated) = graph.try_add_transclusion(base, edge.0, edge.1)
+      let wanted = case list.contains(edges, edge) { True -> edges False -> [edge, ..edges] }
+      assert_graph(updated, ids, wanted)
+      graph.try_add_transclusion(updated, edge.0, edge.1) |> should.equal(Ok(updated))
+    })
+  })
+  io.println("PASS independent 12288 replacement and 4608 edge-add operations")
+}
+
+fn ternary(code: Int, count: Int) -> List(Int) {
+  case count { 0 -> [] _ -> [code % 3, ..ternary(code / 3, count - 1)] }
+}
+
+fn raw_multiset_metric() {
+  let ids = ["a", "b"]
+  list.each(range(0, 6560), fn(code) {
+    let counts = ternary(code, 8)
+    let assert [oaa, oab, oba, obb, iaa, iab, iba, ibb] = counts
+    let a = graph.SheafNode(..blank("a"), outbound_transclusions: list.append(list.repeat("a", oaa), list.repeat("b", oab)), inbound_references: list.append(list.repeat("a", iaa), list.repeat("b", iab)))
+    let b = graph.SheafNode(..blank("b"), outbound_transclusions: list.append(list.repeat("a", oba), list.repeat("b", obb)), inbound_references: list.append(list.repeat("a", iba), list.repeat("b", ibb)))
+    let pairs = [#(oaa, iaa), #(oab, iba), #(oba, iab), #(obb, ibb)]
+    let matched = 2 * list.count(pairs, fn(p) { p.0 == 1 && p.1 == 1 })
+    let total = list.fold(counts, 0, fn(a, b) { a + b })
+    let wanted = case total { 0 -> 1.0 _ -> int.to_float(matched) /. int.to_float(total) }
+    let raw = graph.SheafGraph([a, b], oaa + oab + oba + obb, 1.0)
+    graph.compute_cohomology_consistency(raw) |> should.equal(wanted)
+    case wanted == 1.0 {
+      True -> graph.validate_graph(raw) |> should.equal(Ok(Nil))
+      False -> {
+        graph.validate_graph(raw) |> should.equal(Error(graph.InvalidGraph))
+        graph.add_node(raw, blank("c")) |> should.equal(raw)
+        graph.add_transclusion(raw, "a", "b") |> should.equal(raw)
+        graph.semantic_search(raw, "a", 0.0) |> should.equal([])
+        graph.lookup_transclusions(raw, "a") |> should.equal([])
+      }
+    }
+  })
+  ids |> should.equal(["a", "b"])
+  io.println("PASS independent 6561 duplicate-multiset metric and refusal states")
+}
+
+fn boundary_and_cache_controls() {
+  let ids = list.map(range(0, 63), int.to_string)
+  let empty = built(ids, [])
+  let assert Ok(self) = graph.try_add_node(empty, graph.SheafNode(..blank("63"), outbound_transclusions: ["63"]))
+  assert_graph(self, ids, [#("63", "63")])
+  graph.try_add_node(self, blank("65")) |> should.equal(Error(graph.NodeLimit))
+  let corrupted = graph.SheafGraph(..self, total_transclusions: 99)
+  graph.validate_graph(corrupted) |> should.equal(Error(graph.InvalidGraph))
+  graph.add_transclusion(corrupted, "1", "2") |> should.equal(corrupted)
+  let bad_score = graph.SheafGraph(..self, cohomology_score: 0.0)
+  graph.semantic_search(bad_score, "", 0.0) |> should.equal([])
+  let huge = graph.SheafGraph(list.repeat(blank("x"), 1_000_000), 0, 1.0)
+  graph.validate_graph(huge) |> should.equal(Error(graph.NodeLimit))
+  graph.compute_cohomology_consistency(huge) |> should.equal(0.0)
+  let unicode = graph.SheafNode(..blank("λ"), title: string.repeat("λ", 512))
+  let small = built([], [])
+  let assert Ok(g) = graph.try_add_node(small, unicode)
+  graph.try_add_node(g, graph.SheafNode(..unicode, title: string.repeat("λ", 513))) |> should.equal(Error(graph.MetadataLimit))
+  io.println("PASS independent node-quota, forged-cache, huge-list and UTF8 byte boundaries")
+}
+
+pub fn main() {
+  replacements_and_additions()
+  raw_multiset_metric()
+  boundary_and_cache_controls()
+  io.println("PASS independent EV101 graph review; no sheaf proof or admission")
+}

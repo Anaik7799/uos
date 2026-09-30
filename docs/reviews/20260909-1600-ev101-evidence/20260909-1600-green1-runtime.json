@@ -1,0 +1,43 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "-noshell", "-noinput", "-pa", "/tmp/ev101-green1/lib/gleam_stdlib/ebin",
+    "/tmp/ev101-green1/lib/gleam_erlang/ebin",
+    "/tmp/ev101-green1/lib/gleeunit/ebin", "/tmp/ev101-green1/compiled/ebin",
+    "-s", "ev101_graph_runner", "main", "-s", "init", "stop"
+  ],
+  "utc_started": 1788969323.766112,
+  "utc_finished": 1788969324.069107,
+  "elapsed_seconds": 0.302989418,
+  "deadline_seconds": 15.0,
+  "exit_code": 0,
+  "output": "======================== EUnit ========================\nmodule 'sheaf_engine_test'\n  sheaf_engine_test: sheaf_init_test...[0.005 s] ok\n  sheaf_engine_test: sheaf_add_node_test...ok\n  sheaf_engine_test: sheaf_transclusion_test...ok\n  sheaf_engine_test: sheaf_semantic_search_test...[0.014 s] ok\n  sheaf_engine_test: sheaf_cohomology_consistency_test...ok\n  [done in 0.034 s]\nmodule 'ev101_graph_integrity_test'\n  ev101_graph_integrity_test: duplicate_edge_is_idempotent_test...ok\n  ev101_graph_integrity_test: missing_endpoint_preserves_graph_test...ok\n  ev101_graph_integrity_test: self_edge_has_both_adjacencies_and_one_count_test...ok\n  ev101_graph_integrity_test: replacement_rebuilds_inbound_without_losing_other_edges_test...ok\n  ev101_graph_integrity_test: missing_reciprocity_is_not_consistent_test...ok\n  ev101_graph_integrity_test: initialized_metrics_are_observed_test...ok\n  ev101_graph_integrity_test: legacy_size_refusal_is_atomic_test...ok\n  ev101_graph_integrity_test: every_three_node_directed_graph_matches_edge_set_oracle_test...[0.010 s] ok\n  ev101_graph_integrity_test: node_limit_refusal_preserves_existing_graph_test...[0.002 s] ok\n  ev101_graph_integrity_test: exact_edge_quota_duplicate_and_replacement_test...[0.001 s] ok\n  ev101_graph_integrity_test: typed_missing_and_malformed_input_refusals_test...ok\n  ev101_graph_integrity_test: duplicate_dangling_and_inbound_only_metric_penalties_test...ok\n  ev101_graph_integrity_test: exact_metadata_boundaries_and_invalid_ids_test...ok\n  ev101_graph_integrity_test: replacement_inbound_cache_is_derived_not_imported_test...ok\n  ev101_graph_integrity_test: oversized_public_graph_is_refused_before_read_or_mutation_test...ok\n  [done in 0.058 s]\n=======================================================\n  All 20 tests passed.\nPASS EV101 bounded graph component; admission NOT_GRANTED\n",
+  "output_sha256": "0c860bf6cbdaf9b938de075674d44689a979c58a8abd819b5a22bc6d51b99735",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-951d43:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

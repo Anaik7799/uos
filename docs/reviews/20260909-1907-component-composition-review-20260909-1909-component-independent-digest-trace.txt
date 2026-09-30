@@ -1,0 +1,60 @@
+1869489 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml", "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml", "--cwd", "/tmp/ev-component-composition-1854/digest", "--seconds", "60", "--receipt", "/tmp/ev-composition-digest-compile-permitted-1856.json", "--", "dune", "build", "--root", "/tmp/ev-component-composition-1854/digest", "--build-dir", "/tmp/ev-component-composition-1854/digest-build", "test_gospel_dispatch_contracts.bc"], 0x7fff4a4ceb48 /* 22 vars */) = 0
+1869490 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune", "build", "--root", "/tmp/ev-component-composition-1854/digest", "--build-dir", "/tmp/ev-component-composition-1854/digest-build", "test_gospel_dispatch_contracts.bc"], 0x55b33b739e00 /* 22 vars */) = 0
+1869491 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/nproc", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/nproc"], 0x5bdc5dbddd90 /* 22 vars */) = 0
+1869491 +++ exited with 0 +++
+1869490 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1869491, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1869494 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", "-config"], 0x5bdc5dbe69d0 /* 24 vars */) = 0
+1869494 +++ exited with 0 +++
+1869495 +++ exited with 0 +++
+1869500 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", "-modules", "-impl", "test_gospel_dispatch_contracts.ml"], 0x5bdc5dbe8c00 /* 33 vars */) = 0
+1869501 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", "-modules", "-intf", "test_gospel_dispatch_contracts.mli"], 0x5bdc5dbe8c00 /* 33 vars */) = 0
+1869500 +++ exited with 0 +++
+1869501 +++ exited with 0 +++
+1869496 +++ exited with 0 +++
+1869497 +++ exited with 0 +++
+1869498 +++ exited with 0 +++
+1869499 +++ exited with 0 +++
+1869506 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", "-modules", "-intf", "gospel_dispatch_contracts.mli"], 0x5bdc5dbe8c00 /* 33 vars */) = 0
+1869506 +++ exited with 0 +++
+1869502 +++ exited with 0 +++
+1869503 +++ exited with 0 +++
+1869504 +++ exited with 0 +++
+1869505 +++ exited with 0 +++
+1869511 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt", "-modules", "-impl", "gospel_dispatch_contracts.ml"], 0x5bdc5dbe8c00 /* 33 vars */) = 0
+1869511 +++ exited with 0 +++
+1869507 +++ exited with 0 +++
+1869508 +++ exited with 0 +++
+1869509 +++ exited with 0 +++
+1869515 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", "-nopervasives", "-nostdlib", "-w", "@1..3@5..28@30..39@43@46..47@49..57@61..62-40", "-strict-sequence", "-strict-formats", "-short-paths", "-keep-locs", "-w", "-53", "-w", "-49", "-g", "-bin-annot", "-bin-annot-occurrences", "-I", ".test_gospel_dispatch_contracts.eobjs/byte", "-no-alias-deps", "-opaque", "-o", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe.cmo", "-c", "-impl", ".test_gospel_dispatch_contracts.eobjs/dune__exe.ml-gen"], 0x5bdc5db51eb0 /* 33 vars */) = 0
+1869515 +++ exited with 0 +++
+1869510 +++ exited with 0 +++
+1869512 +++ exited with 0 +++
+1869513 +++ exited with 0 +++
+1869519 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", "-w", "@1..3@5..28@30..39@43@46..47@49..57@61..62-40", "-strict-sequence", "-strict-formats", "-short-paths", "-keep-locs", "-g", "-bin-annot", "-bin-annot-occurrences", "-I", ".test_gospel_dispatch_contracts.eobjs/byte", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/str", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/unix", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/zarith", "-no-alias-deps", "-opaque", "-open", "Dune__exe", "-o", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Gospel_dispatch_contracts.cmi", "-c", "-intf", "gospel_dispatch_contracts.mli"], 0x5bdc5db49e40 /* 33 vars */) = 0
+1869520 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", "-w", "@1..3@5..28@30..39@43@46..47@49..57@61..62-40", "-strict-sequence", "-strict-formats", "-short-paths", "-keep-locs", "-g", "-bin-annot", "-bin-annot-occurrences", "-I", ".test_gospel_dispatch_contracts.eobjs/byte", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/str", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/unix", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/zarith", "-no-alias-deps", "-opaque", "-open", "Dune__exe", "-o", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Test_gospel_dispatch_contracts.cmi", "-c", "-intf", "test_gospel_dispatch_contracts.mli"], 0x5bdc5db4a1e0 /* 33 vars */) = 0
+1869519 +++ exited with 0 +++
+1869520 +++ exited with 0 +++
+1869514 +++ exited with 0 +++
+1869516 +++ exited with 0 +++
+1869517 +++ exited with 0 +++
+1869518 +++ exited with 0 +++
+1869525 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", "-w", "@1..3@5..28@30..39@43@46..47@49..57@61..62-40", "-strict-sequence", "-strict-formats", "-short-paths", "-keep-locs", "-g", "-bin-annot", "-bin-annot-occurrences", "-I", ".test_gospel_dispatch_contracts.eobjs/byte", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/str", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/unix", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/zarith", "-cmi-file", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Gospel_dispatch_contracts.cmi", "-no-alias-deps", "-opaque", "-open", "Dune__exe", "-o", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Gospel_dispatch_contracts.cmo", "-c", "-impl", "gospel_dispatch_contracts.ml"], 0x5bdc5db52780 /* 33 vars */) = 0
+1869526 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", "-w", "@1..3@5..28@30..39@43@46..47@49..57@61..62-40", "-strict-sequence", "-strict-formats", "-short-paths", "-keep-locs", "-g", "-bin-annot", "-bin-annot-occurrences", "-I", ".test_gospel_dispatch_contracts.eobjs/byte", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/str", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/unix", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/zarith", "-cmi-file", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Test_gospel_dispatch_contracts.cmi", "-no-alias-deps", "-opaque", "-open", "Dune__exe", "-o", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Test_gospel_dispatch_contracts.cmo", "-c", "-impl", "test_gospel_dispatch_contracts.ml"], 0x5bdc5db52b90 /* 33 vars */) = 0
+1869526 +++ exited with 0 +++
+1869521 +++ exited with 0 +++
+1869522 +++ exited with 0 +++
+1869525 +++ exited with 0 +++
+1869523 +++ exited with 0 +++
+1869524 +++ exited with 0 +++
+1869531 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt", "-w", "@1..3@5..28@30..39@43@46..47@49..57@61..62-40", "-strict-sequence", "-strict-formats", "-short-paths", "-keep-locs", "-g", "-o", "test_gospel_dispatch_contracts.bc", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/unix/unix.cma", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/ocaml/str/str.cma", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/zarith/zarith.cma", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit/cryptokit.cma", "-I", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit/../stublibs", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe.cmo", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Gospel_dispatch_contracts.cmo", ".test_gospel_dispatch_contracts.eobjs/byte/dune__exe__Test_gospel_dispatch_contracts.cmo", "-without-runtime"], 0x5bdc5db53060 /* 33 vars */) = 0
+1869531 +++ exited with 0 +++
+1869527 +++ exited with 0 +++
+1869493 +++ exited with 0 +++
+1869492 +++ exited with 0 +++
+1869528 +++ exited with 0 +++
+1869532 +++ exited with 0 +++
+1869529 +++ exited with 0 +++
+1869530 +++ exited with 0 +++
+1869490 +++ exited with 0 +++
+1869489 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1869490, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=2 /* 0.02 s */} ---
+1869489 +++ exited with 0 +++

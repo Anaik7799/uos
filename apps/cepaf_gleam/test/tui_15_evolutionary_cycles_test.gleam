@@ -19,8 +19,7 @@
 import cepaf_gleam/ha/homeostasis_evolution_engine.{
   type EvolutionaryMutation, type HomeostasisSystemState,
   AutonomousEvolutionActive, EvolutionaryMutation, apply_ratified_evolution,
-  ingest_telemetry, init_homeostasis_system, propose_evolution,
-  vote_on_evolution,
+  ingest_telemetry, init_homeostasis_system, vote_on_evolution,
 }
 import cepaf_gleam/ha/multi_agent_quorum.{
   AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign,
@@ -171,12 +170,17 @@ pub fn execute_single_cycle(
   let eq_state = reach_equilibrium(state, base_time_us)
 
   // 2. Propose evolution
-  let assert Ok(prop0) =
-    propose_evolution(eq_state, mutation, base_time_us + 4000)
+  let assert Ok(#(eq_state, prop0)) =
+    homeostasis_evolution_engine.submit_evolution(
+      eq_state,
+      mutation,
+      base_time_us + 4000,
+    )
 
   // 3. Quorum balloting (4-party ratification)
-  let prop1 =
-    vote_on_evolution(
+  let assert Ok(#(eq_state, prop1)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      eq_state,
       prop0,
       AgySovereign,
       QuorumApprove,
@@ -184,8 +188,9 @@ pub fn execute_single_cycle(
       "sig-agy",
       base_time_us + 4100,
     )
-  let prop2 =
-    vote_on_evolution(
+  let assert Ok(#(eq_state, prop2)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      eq_state,
       prop1,
       ClaudeSovereign,
       QuorumApprove,
@@ -193,8 +198,9 @@ pub fn execute_single_cycle(
       "sig-claude",
       base_time_us + 4200,
     )
-  let prop3 =
-    vote_on_evolution(
+  let assert Ok(#(eq_state, prop3)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      eq_state,
       prop2,
       CodexSovereign,
       QuorumApprove,

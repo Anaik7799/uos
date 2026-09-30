@@ -1,0 +1,104 @@
+{
+  "schema": "uos.component-completion.v1",
+  "observed_at": 1788971565.355592,
+  "authority": "NONE",
+  "ev_admission": "NOT_GRANTED",
+  "graph_source": "ea6cd8e8dcc0775239d49697390d54728e9eded0",
+  "graph_task": "uos/ev101-graph-integrity/20260909 REPAIR attempt1 completed",
+  "digest_source": "11eeca9df5c14961ed4b4b8fc990752ad7bccd46",
+  "digest_task": "uos/ev107-digest-review/20260909 REVIEW attempt1 completed",
+  "digest_review_evidence": "2ba114bd369d561f722009018d42f54458f1d8bb",
+  "source_unchanged": true,
+  "records": [
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-approval.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-graph-independent-approval.json",
+      "sha256": "012d27c8902246bdea76bfef70293d96aaa0a3134ed6fe3af4a4240be8546abf"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-stage.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-0.txt",
+      "sha256": "52b3088db8da7d129d3b5dca63aa173f7fd02c96b5cd9a6d41e3b0d206809ad0"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-compile.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-1.txt",
+      "sha256": "604624d9877b9343fff9762ec5ca33e96355f655036c6dc28431569dfbc6a6d6"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-author-tests.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-2.txt",
+      "sha256": "8536e153addf1331a4a7be45036a8d3a9f892143c50e3098e439827d76760df6"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-independent-probe.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-3.txt",
+      "sha256": "93d5caf1c22c61a5dcd29b98f2602905ab64fb1eecb0d9d4106e7d42d0f77608"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-preflight.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-4.txt",
+      "sha256": "3eb99e5a68b00db3062d6be9aa4e6b3db59d0eaf32d9d9546d23223288a2e468"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-active.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-5.txt",
+      "sha256": "8159b6650349e2aeea54e6cf6161bb260a767fd82fc2c662dec31c5a41825826"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-claim.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-6.txt",
+      "sha256": "bb37f7370c6679658a7472b0750047ddebb456082132fffefdafef8f18e3985a"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-plan-create.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-7.txt",
+      "sha256": "c0ea1eddf42ea46416a2d27c6ce2cb15ba497d839cccfffded8a8be2665f5f34"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-task-create.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-receipts-8.txt",
+      "sha256": "7d35c86892d3bac6ba3f270d998d109c03880af3d9822f89fbaf74fd947cac54"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-ev101_independent_probe.gleam.txt",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-archived_review_sources-0.txt",
+      "sha256": "3674aa68e4a9e3937dd40f14ec61c5a138241a546f989b4f98430b9392652e91"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-ev101-independent-stage.ml.txt",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-archived_review_sources-1.txt",
+      "sha256": "0e15775bebf371e6c708e28c248d84f126d76dd9164cf062efcfa2eae25d1855"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-ev101-review-evidence.ml.txt",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-archived_review_sources-2.txt",
+      "sha256": "e268b7289c8a76115eb0d6b806f4ddb26727cfedf02fd97620267ef8c423b9f8"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1619-ev101-independent-bindings.json.txt",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-archived_review_sources-3.txt",
+      "sha256": "1d712ce17ab5a3136ab57f7315e091466100a8ef54189a6f441ab2380a8e1b70"
+    },
+    {
+      "original": "/tmp/ev101-completion-active.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-graph-active.json",
+      "sha256": "e99e0f9a91bcc0a8eb6113b7e94dec0c62361d08c19bf1919be75c434146ff96"
+    },
+    {
+      "original": "/tmp/ev101-component-completed-1631.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-graph-completed.json",
+      "sha256": "4b91bac8688b3fa51e5ace5a451f4630ce55983527c9bf3f096c2cd8ed950b61"
+    },
+    {
+      "original": "/tmp/ev107-review-completion-active.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-digest-active.json",
+      "sha256": "bf534f4d71bfe4b85cd92822b3539a962ed02cefa5d95036102d9f41aad31490"
+    },
+    {
+      "original": "/tmp/ev107-review-completed-1631.json",
+      "durable": "docs/reviews/20260909-1632-graph-digest-completion/20260909-1632-digest-completed.json",
+      "sha256": "7c375b393e3238ea6476487a590b05fec070ee995ac21b439a80c47476d05af6"
+    }
+  ]
+}

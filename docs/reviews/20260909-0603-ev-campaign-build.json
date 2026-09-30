@@ -1,0 +1,27 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/tmp/uos-campaign-candidate-source-01c5a095",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune", "build",
+    "--root", "/tmp/uos-campaign-candidate-source-01c5a095", "--build-dir",
+    "/tmp/uos-campaign-candidate-build", "ev_receipt.exe",
+    "campaign_test.exe", "receipt_test.exe"
+  ],
+  "utc_started": 1788933925.830753,
+  "utc_finished": 1788933926.282349,
+  "elapsed_seconds": 0.451595219,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "",
+  "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

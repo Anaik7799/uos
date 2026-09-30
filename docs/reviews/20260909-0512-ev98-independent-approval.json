@@ -1,0 +1,304 @@
+{
+  "candidate": "4af745383248649d0472b734ab825702ee490def",
+  "authority": "NONE",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+      "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/cepaf_gleam/crdt/delta_state.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/cepaf_gleam/crdt/health_bridge.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "sha256": "dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/cepaf_gleam/crdt/mesh_sync.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/cepaf_gleam/ha/deadman_freshness.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+      "sha256": "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/delta_mesh_engine_test.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/deadman_freshness_test.gleam",
+      "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/deadman_freshness_test.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+      "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/ev_delta_freshness_runner.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_health_bridge_test.gleam",
+      "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/crdt_health_bridge_test.gleam"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam",
+      "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83",
+      "staged_path": "/tmp/uos-ev98-review-f615ac/package/src/crdt_mesh_sync_test.gleam"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "9ff816e0c342d435db2ec9ff7f4baa6abfb7be4600f6d5446cb99a9359c06044"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "62ab3b2dce399de9d0560215cc1e71e3390eba0cf0fc5b507a8f4f987fc4a1b9"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "bc492a0ac0838bbd0338d123d88e39e97c987612d5bee6249ebdef93f4aee72f"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "b9fe5a79846891cbae08170644f0074204146ccc2ca0e0aed0e2ce757b138434"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "08b535d81fec7c01705d69e1786b2e6abfa7d76acd5c86c9492df06ff1e74a2d"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "843b7aea201b999bcc83e98f5fc70da290351581b934fb2ea0d8941bc515c861"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "1f6b41998613571292e28e14a14e294f05c389994c40d050cd2e69c100154244"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "dc4e83467e437a35a4866d1ab0e84923de0a3b8bcaee1ea9d45288d76384ed51"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "2fca8e8d91f0b222a495db513e3b16c3102c85fa836e46ab9ad1fc3b9cc122ed"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/ev98_adverse_probe.beam",
+      "sha256": "b40b6152f92aaa7f6066312f1c85a3cacb7a55fc9c7d8a556edc55188177e15a"
+    },
+    {
+      "path": "/tmp/uos-ev98-review-f615ac/compiled/ebin/ev_delta_freshness_runner.beam",
+      "sha256": "98a046d3428af80a1f2acb6d1852cfa57a456167bae0e00b169cb6dc1af3323a"
+    }
+  ],
+  "invocations": [
+    {
+      "case": "source-0",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"
+      ],
+      "output_sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1"
+    },
+    {
+      "case": "source-1",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"
+      ],
+      "output_sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76"
+    },
+    {
+      "case": "source-2",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"
+      ],
+      "output_sha256": "dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f"
+    },
+    {
+      "case": "source-3",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"
+      ],
+      "output_sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d"
+    },
+    {
+      "case": "source-4",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"
+      ],
+      "output_sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50"
+    },
+    {
+      "case": "source-5",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"
+      ],
+      "output_sha256": "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b"
+    },
+    {
+      "case": "source-6",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"
+      ],
+      "output_sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138"
+    },
+    {
+      "case": "source-7",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"
+      ],
+      "output_sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b"
+    },
+    {
+      "case": "source-8",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"
+      ],
+      "output_sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d"
+    },
+    {
+      "case": "source-9",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/.cargo/bin/jj", "--ignore-working-copy", "file", "show",
+        "-r", "commit_id(\"4af745383248649d0472b734ab825702ee490def\")",
+        "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"
+      ],
+      "output_sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83"
+    },
+    {
+      "case": "compile",
+      "exit_code": 0,
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "compile-package", "--target", "erlang", "--package",
+        "/tmp/uos-ev98-review-f615ac/package", "--out",
+        "/tmp/uos-ev98-review-f615ac/compiled", "--lib",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang"
+      ],
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "independent-42-cases",
+      "exit_code": 0,
+      "argv": [
+        "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl",
+        "-noshell", "-noinput", "-pa",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/argv/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/certifi/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/directories/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/envoy/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/esqlite/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/exception/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/filepath/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_crypto/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_erlang/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_http/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_json/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_otp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_regexp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleeunit/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/glisten/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gramps/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hackney/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/houdini/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hpack/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/idna/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/logging/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/lustre/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/marceau/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mimerl/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mist/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/parse_trans/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/platform/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/quic/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/simplifile/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/ssl_verify_fun/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_tui/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/wisp/ebin",
+        "-pa", "/tmp/uos-ev98-review-f615ac/compiled/ebin", "-s",
+        "ev_delta_freshness_runner", "main", "-s", "init", "stop"
+      ],
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "adverse-probes",
+      "exit_code": 0,
+      "argv": [
+        "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl",
+        "-noshell", "-noinput", "-pa",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/argv/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/certifi/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/directories/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/envoy/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/esqlite/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/exception/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/filepath/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_crypto/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_erlang/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_http/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_json/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_otp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_regexp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleeunit/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/glisten/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gramps/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hackney/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/houdini/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hpack/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/idna/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/logging/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/lustre/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/marceau/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mimerl/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mist/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/parse_trans/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/platform/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/quic/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/simplifile/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/ssl_verify_fun/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_tui/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/wisp/ebin",
+        "-pa", "/tmp/uos-ev98-review-f615ac/compiled/ebin", "-s",
+        "ev98_adverse_probe", "main", "-s", "init", "stop"
+      ],
+      "output_sha256": "eb3b1ccf75a1bf0150df91a1595153735325bc3302c5ac8e3e8b8997f4eb1a4a"
+    }
+  ]
+}

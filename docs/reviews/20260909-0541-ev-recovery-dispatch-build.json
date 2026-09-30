@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune", "build", "-j",
+    "1", "--root", "engines/hermes", "--build-dir",
+    "/tmp/uos-ev-combined-66304950-hermes",
+    "./modules/system_engg/test_agent_dispatch_hook.exe",
+    "./modules/system_engg/run_agent_dispatch_hook.exe"
+  ],
+  "utc_started": 1788929215.148479,
+  "utc_finished": 1788929215.717324,
+  "elapsed_seconds": 0.568842745,
+  "deadline_seconds": 120.0,
+  "exit_code": 0,
+  "output": "",
+  "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

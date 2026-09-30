@@ -1,0 +1,69 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-rag-tiny-numeric-20260909-0735",
+    "plan_id": "uos/ev-rag-freshness/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-rag-freshness",
+    "fractal_layer": 5,
+    "phase": "implementation",
+    "scope": "Bounded pure-Gleam correction of tiny nonzero RAG embedding cosine behavior after the scale-normalized boundary repair. Preserve nonzero scale, exact-zero behavior, subnormal control, and prior freshness/input boundaries. Excludes retrieval, inference, persistence, network, deployment, task completion, and admission.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P2",
+    "observed_at": "2026-09-09T05:34:20Z",
+    "ready_since": "2026-09-09T05:34:20Z",
+    "valid_until": "2026-09-09T06:34:20Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "11fa5b0e561580081479420df54dd9a66d13153a; descendant of numeric candidate 7d577676120e61c32c3901e56e82a36984f3a763 and immutable base 337f99137673d7866b958a38bd490fb876b2880f",
+      "evidence": [
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam", "sha256": "0dc918abb976b34802934cdfd0ccb7a18836198da62422316e18a4cf68392dcb", "observed_at": "2026-09-09T05:34:20Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam", "sha256": "0ce228fe12bda4dd366b32ff654d2c6f6a15c47e57eeea11eb0ad3a503b3d793", "observed_at": "2026-09-09T05:34:20Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam", "sha256": "23ea5e8464856acc160086bd97e0634955f22d2aef7b4cee0823575c238a2174", "observed_at": "2026-09-09T05:34:20Z"}
+      ]
+    },
+    "factors": {
+      "criticality": {"rationale": "Valid nonzero embeddings were represented as semantically absent.", "value": 3, "low": 3, "high": 3, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]},
+      "stpa": {"rationale": "Unsafe control is treating an arbitrary positive scale as zero after safe normalization.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam"]},
+      "fmea": {"rationale": "FM-RAG-TINY-SCALE is S4 O2 Det3, RPN24.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam"]},
+      "dependency": {"rationale": "The pure model and realized local toolchain reproduce the issue without external dependencies.", "value": 3, "low": 3, "high": 3, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam"]},
+      "impact": {"rationale": "Exact-zero guarding preserves the stated cache input policy for all nonzero accepted magnitudes.", "value": 3, "low": 3, "high": 3, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]}
+    },
+    "score": 432,
+    "score_interval": [432, 432],
+    "fmea_modes": [
+      {"id": "FM-RAG-TINY-SCALE", "s": 4, "o": 2, "det": 3, "rpn": 24, "band": 4, "cause": "Cosine guard used a 1e-6 cutoff despite scale normalization making all nonzero values safe.", "effect": "Tiny nonzero vectors return similarity zero and semantic CacheMissing.", "controls": "Guard only exact-zero scales; normalize every nonzero scale before arithmetic."}
+    ],
+    "stpa_analysis": {
+      "controller": "Pure RAG cache mesh",
+      "control_action": "Compute normalized semantic cosine",
+      "losses": ["L-SEMANTIC-FALSE-MISS"],
+      "hazards": ["H-TINY-NONZERO-TREATED-AS-ZERO"],
+      "ucas": [
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "A fixed epsilon rejects a valid nonzero scale after normalization.", "hazard_ids": ["H-TINY-NONZERO-TREATED-AS-ZERO"], "constraint": "Only zero has zero-vector semantics."},
+        {"type": "not_provided", "applicability": "applicable", "context": "No test distinguished tiny nonzero vectors from the exact-zero control.", "hazard_ids": ["H-TINY-NONZERO-TREATED-AS-ZERO"], "constraint": "Test analytic tiny similarity, tiny semantic matching, subnormal identity, and zero behavior."},
+        {"type": "wrong_timing", "applicability": "not_applicable", "context": "Pure arithmetic has no timing control.", "hazard_ids": [], "constraint": "Not applicable."},
+        {"type": "duration", "applicability": "applicable", "context": "Normalized fixed iterations operate on bounded values regardless of scale.", "hazard_ids": ["H-TINY-NONZERO-TREATED-AS-ZERO"], "constraint": "Maintain scale independence for nonzero inputs."}
+      ]
+    },
+    "decision": {
+      "summary": "Replace the epsilon zero cutoff with an exact-zero guard and retain scale normalization.",
+      "alternatives": ["Keep epsilon cutoff", "Refuse tiny valid values", "Treat only exact zero as zero"],
+      "assumptions": ["Accepted cache vectors are finite and dimension-bounded by existing validation."],
+      "confidence": "analyst_estimate",
+      "counterevidence": ["Independent numeric review found 2 failures among 6 added cases on 7d577676."],
+      "forecast": "Tiny analytic cosine is approximately 0.96, tiny identical semantic inputs yield CacheFresh, subnormal identity works, and zero remains zero.",
+      "falsifier": "Any nonzero tiny vector yields zero similarity or CacheMissing, or exact-zero control changes.",
+      "acceptance": ["Focused runner records red then green behavior", "Source hashes match this assessment", "Native active check passes for executing attempt 1"],
+      "rollback": "Preserve immutable candidates and do not integrate, complete, deploy, or admit.",
+      "budget": "Existing realized Gleam 1.16.0 and OTP 29 only; no downloads.",
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": ["No retrieval, model inference, persistence, network, or formal proof is exercised."],
+      "supersedes": "The epsilon cutoff in 7d577676 numeric boundary candidate."
+    }
+  }
+]

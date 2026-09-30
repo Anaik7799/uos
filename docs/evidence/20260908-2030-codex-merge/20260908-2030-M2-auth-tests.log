@@ -1,0 +1,9 @@
+======================== EUnit ========================
+erl_eval: -expr/6-fun-7- (method_auth_body_and_response_are_preserved_test)...[0.084 s] ok
+erl_eval: -expr/6-fun-7- (body_conversion_is_bounded_and_utf8_checked_test)...ok
+erl_eval: -expr/6-fun-7- (actual_mist_adapter_rejects_unsafe_framing_before_read_test)...ok
+erl_eval: -expr/6-fun-7- (actual_mist_adapter_admits_bounded_fixed_length_test)...ok
+erl_eval: -expr/6-fun-7- (actual_mist_adapter_rejects_expectation_before_read_test)...ok
+erl_eval: -expr/6-fun-7- (actual_mist_adapter_enforces_total_read_deadline_test)...[5.007 s] ok
+=======================================================
+  All 6 tests passed.

@@ -3,7 +3,6 @@ import cepaf_gleam/ha/homeostasis_evolution_engine.{
   HomeostaticEquilibrium, InstabilityIntervention, apply_ratified_evolution,
   default_pid_config, get_quorum_members, ingest_telemetry,
   init_homeostasis_system, propose_evolution, step_homeostasis,
-  vote_on_evolution,
 }
 import cepaf_gleam/ha/multi_agent_quorum.{
   AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign,
@@ -107,14 +106,16 @@ pub fn three_of_four_evolution_ratification_test() {
       risk_score: 0.02,
     )
 
-  let assert Ok(prop0) = propose_evolution(s3, mut, 4100)
+  let assert Ok(#(s3, prop0)) =
+    homeostasis_evolution_engine.submit_evolution(s3, mut, 4100)
   prop0.ballot.total_eligible |> should.equal(4)
   prop0.ballot.required_approvals |> should.equal(3)
   prop0.ballot.verdict |> should.equal(VerdictPending)
 
   // Vote 1: AGY Approves
-  let prop1 =
-    vote_on_evolution(
+  let assert Ok(#(s3, prop1)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      s3,
       prop0,
       AgySovereign,
       QuorumApprove,
@@ -125,8 +126,9 @@ pub fn three_of_four_evolution_ratification_test() {
   prop1.ballot.verdict |> should.equal(VerdictPending)
 
   // Vote 2: Claude Approves
-  let prop2 =
-    vote_on_evolution(
+  let assert Ok(#(s3, prop2)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      s3,
       prop1,
       ClaudeSovereign,
       QuorumApprove,
@@ -137,8 +139,9 @@ pub fn three_of_four_evolution_ratification_test() {
   prop2.ballot.verdict |> should.equal(VerdictPending)
 
   // Vote 3: OpenRouter Approves (via local free-tier router)
-  let prop3 =
-    vote_on_evolution(
+  let assert Ok(#(s3, prop3)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      s3,
       prop2,
       OpenRouterSovereign,
       QuorumApprove,
@@ -194,11 +197,13 @@ pub fn three_of_four_evolution_rejection_test() {
       risk_score: 0.85,
     )
 
-  let assert Ok(prop0) = propose_evolution(s3, mut, 4100)
+  let assert Ok(#(s3, prop0)) =
+    homeostasis_evolution_engine.submit_evolution(s3, mut, 4100)
 
   // 2 Rejections out of 4 makes 3 approvals impossible
-  let prop1 =
-    vote_on_evolution(
+  let assert Ok(#(s3, prop1)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      s3,
       prop0,
       AgySovereign,
       QuorumReject,
@@ -206,8 +211,9 @@ pub fn three_of_four_evolution_rejection_test() {
       "sha-agy",
       4200,
     )
-  let prop2 =
-    vote_on_evolution(
+  let assert Ok(#(s3, prop2)) =
+    homeostasis_evolution_engine.cast_registered_vote(
+      s3,
       prop1,
       ClaudeSovereign,
       QuorumReject,
@@ -272,7 +278,7 @@ pub fn homeostasis_actor_lifecycle_test() {
     })
 
   // Cast 3 approvals (AGY, Claude, OpenRouter)
-  let prop1 =
+  let assert Ok(prop1) =
     actor.call(subj, 1000, fn(reply) {
       homeostasis_evolution_engine.CastQuorumVote(
         prop0,
@@ -285,7 +291,7 @@ pub fn homeostasis_actor_lifecycle_test() {
       )
     })
 
-  let prop2 =
+  let assert Ok(prop2) =
     actor.call(subj, 1000, fn(reply) {
       homeostasis_evolution_engine.CastQuorumVote(
         prop1,
@@ -298,7 +304,7 @@ pub fn homeostasis_actor_lifecycle_test() {
       )
     })
 
-  let prop3 =
+  let assert Ok(prop3) =
     actor.call(subj, 1000, fn(reply) {
       homeostasis_evolution_engine.CastQuorumVote(
         prop2,

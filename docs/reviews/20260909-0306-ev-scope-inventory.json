@@ -1,0 +1,877 @@
+{
+  "schema": "uos-ev-scope-inventory/v1",
+  "authority": "REPORT_ONLY",
+  "observed_at": "2026-09-09T03:31:06Z",
+  "baseline_revision": "337f99137673d7866b958a38bd490fb876b2880f",
+  "sa_plan": "uos/ev-admission/20260909-0210",
+  "task": "PROGRAM",
+  "requested_range": {
+    "first": 1,
+    "last": 109
+  },
+  "policy_admitted_ceiling": 93,
+  "positive_candidate_admissions": 0,
+  "fractal_layer": 0,
+  "limits": [
+    "This inventories historical scope claims and uncertainty; it is not an execution plan or acceptance receipt.",
+    "All task execution remains in Sa-plan.",
+    "No source claim, component test count, board acknowledgement or model output grants admission.",
+    "EV01..05 naming conflict and provisional EV86 mapping require a recorded sovereign scope decision."
+  ],
+  "common_obligations": [
+    "Explicit acceptance IDs pinned to the intended EV scope",
+    "Fresh observed runtime behavior with falsifiers at immutable candidate",
+    "Machine-verifiable formal specification and completed invocation at same candidate",
+    "Authenticated independent Codex and AGY review bound to the complete bundle",
+    "Current task/workspace/integration/runtime fences at relevant effects"
+  ],
+  "cycles": [
+    {
+      "ev": 1,
+      "scope_label": "Bootstrap",
+      "historical_claim": "Standalone Jujutsu (`.jj/`) non-colocated monorepo setup (`INV-BOOT-JJ-NON-COLOCATED`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Earlier UI-cycle ledger reused this identifier; foundation interpretation follows canonical architecture and remains subject to sovereign scope review."
+    },
+    {
+      "ev": 2,
+      "scope_label": "Governance & Directive Superset",
+      "historical_claim": "38 policy families admitted from `.gemini`, `.claude`, `.agents`, and `.codex` (`INV-GOV-SUPERSET-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Earlier UI-cycle ledger reused this identifier; foundation interpretation follows canonical architecture and remains subject to sovereign scope review."
+    },
+    {
+      "ev": 3,
+      "scope_label": "Source Freeze & Sanitized Ancestry",
+      "historical_claim": "Strict quiescence, secret scrubbing, and ancestry receipts (`INV-SRC-SANITIZED-FREEZE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Earlier UI-cycle ledger reused this identifier; foundation interpretation follows canonical architecture and remains subject to sovereign scope review."
+    },
+    {
+      "ev": 4,
+      "scope_label": "Gleam Control Plane & Holon Actor Runtime",
+      "historical_claim": "Pure BEAM supervisor and actor substrate (`INV-GLEAM-OTP-ISOLATION`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Earlier UI-cycle ledger reused this identifier; foundation interpretation follows canonical architecture and remains subject to sovereign scope review."
+    },
+    {
+      "ev": 5,
+      "scope_label": "Hermes Oracle & Evidence Store",
+      "historical_claim": "OCaml Gospel contracts, SQLite append-only WAL ledgers (`INV-HERMES-EVIDENCE-STORE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Earlier UI-cycle ledger reused this identifier; foundation interpretation follows canonical architecture and remains subject to sovereign scope review."
+    },
+    {
+      "ev": 6,
+      "scope_label": "ZigVM Runtime & Bytecode Engine",
+      "historical_claim": "Deterministic runtime kernel with descriptor-relative VFS backend (`INV-ZIGVM-DETERMINISTIC-EXEC`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 7,
+      "scope_label": "Kubernetes & Secondary Drive Allocation",
+      "historical_claim": "Secondary drive provisioning with host NVMe protection (`INV-K8S-SECONDARY-STORAGE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 8,
+      "scope_label": "Zero-Muda Audit",
+      "historical_claim": "Complete barring of Bevy and Graphite from code, dependencies, and history (`INV-ZERO-MUDA-BEVY-GRAPHITE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 9,
+      "scope_label": "Consolidations",
+      "historical_claim": "NIF interfaces, service abstractions, formal models, and contract consolidation (`INV-CONSOLIDATION-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 10,
+      "scope_label": "Symbiosis",
+      "historical_claim": "170 skills federated, 14 superpowers mapped, AGY/Codex/Claude tri-sovereign consensus (`INV-SYMBIOSIS-TRI-SOVEREIGN`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 11,
+      "scope_label": "Unified MCP Control Loop",
+      "historical_claim": "35+ tools in `contracts/mcp`, zero-trust interception (`INV-MCP-UNIFIED-CONTROL`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 12,
+      "scope_label": "Modular MAX Worker",
+      "historical_claim": "Python strictly isolated to supervised length-delimited JSON-RPC daemon (`INV-MAX-PYTHON-ISOLATION`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 13,
+      "scope_label": "Multi-Layer OTP 29 Root Supervisor",
+      "historical_claim": "Root 4-domain supervisor in `uos_sup.gleam` (`INV-OTP29-SUPERVISION-ROOT`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 14,
+      "scope_label": "Hermes Parity Suites",
+      "historical_claim": "409/409 differential tests matching Gospel contracts (`INV-PARITY-DIFFERENTIAL-ORACLE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 15,
+      "scope_label": "System Admission & Storage Cutover",
+      "historical_claim": "Production storage admission runbook (`INV-ADMISSION-STORAGE-CUTOVER`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 16,
+      "scope_label": "Cross-Language C3I Control Plane",
+      "historical_claim": "Cohesive Gleam, OCaml, Zig, Rust, and MAX boundaries (`INV-CROSS-LANG-CONTROL-PLANE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 17,
+      "scope_label": "Knowledge Management Triad",
+      "historical_claim": "Hermes Wiki, ZigVM ZK, and C3I Living Ontology unified (`INV-KM-TRIAD-UNIFIED`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 18,
+      "scope_label": "Tailscale FQDN Web Integration",
+      "historical_claim": "Universal Tailnet routing on `http://nas-1.tail55d152.ts.net:4100` (`INV-TAILSCALE-FQDN-WEB`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 19,
+      "scope_label": "Comprehensive Verification Checklist",
+      "historical_claim": "5 Domains, 18 Checkpoints, uniform site navigation (`INV-CHECKLIST-UNIFORM-NAV`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 20,
+      "scope_label": "Rocha Cybernetic & Semiotic Closure",
+      "historical_claim": "43/43 documents tagged, Rocha biosemiotics cut verified (`INV-ROCHA-CYBERNETIC-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 21,
+      "scope_label": "Descriptor-Relative VFS & 8 Laws Integration",
+      "historical_claim": "8 canonical VFS laws passing (`INV-VFS-EIGHT-LAWS`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 22,
+      "scope_label": "Sa-Plan OCaml Integration",
+      "historical_claim": "12 suites, 235 formal laws, CLI dispatch (`INV-SA-PLAN-FORMAL-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 23,
+      "scope_label": "Hermes-Bionic Integration",
+      "historical_claim": "18 L1 families, L2 catalog, L0-L6 evidence, LX control plane, FPP (`INV-HERMES-BIONIC-INTEGRATION`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 24,
+      "scope_label": "Omni-Fractal Systemic Symbiosis",
+      "historical_claim": "14 vectors, 17 aspects, 10 use cases, and formal verification (`INV-OMNI-FRACTAL-SYMBIOSIS`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 25,
+      "scope_label": "Presentation Surfaces",
+      "historical_claim": "Morphism consistency across Web SSR, REST API, TUI, SSE, and Zenoh (`INV-SURFACE-HOMOMORPHISM`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 26,
+      "scope_label": "Multi-Layer System Components",
+      "historical_claim": "Component bounded latency ($P99 < 15\\text{ms}$) (`INV-COMPONENT-P99-BOUNDED`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 27,
+      "scope_label": "Control Flows & Circuit Breaker Matrix",
+      "historical_claim": "Prajna 3-state circuit breaker state machine (`INV-PRAJNA-TRIP-BOUND`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 28,
+      "scope_label": "Data Flows & VFS/WAL/Zenoh Mesh",
+      "historical_claim": "Zero-copy ring buffers and WAL durability (`INV-VFS-WAL-DURABILITY`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 29,
+      "scope_label": "L0-L6 Recursive Evidence Plane",
+      "historical_claim": "Two-key verification for all state transitions (`INV-TWO-KEY-EVIDENCE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 30,
+      "scope_label": "Fast OODA Adaptive Regulator",
+      "historical_claim": "Subsecond observe-orient-decide-act control loop (`INV-FAST-OODA-SUBSECOND`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 31,
+      "scope_label": "Fractal SDLC 10-Stage Verification",
+      "historical_claim": "Automated gating from intent to deployment (`INV-SDLC-GATE-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 32,
+      "scope_label": "Fractal SRE Resilience & SIL-6 Safety",
+      "historical_claim": "Lyapunov stability proof $\\Delta V(x) < 0$ (`INV-SRE-LYAPUNOV-STABLE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 33,
+      "scope_label": "170 Skills Inventory Federation",
+      "historical_claim": "Dynamic capability dispatch across agents (`INV-SKILL-FEDERATION`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 34,
+      "scope_label": "Policy Standards & AGENTS.md Governance",
+      "historical_claim": "Sovereign rule enforcement (`INV-ZERO-MUDA-STORAGE-LOCK`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 35,
+      "scope_label": "14 SDD Superpowers Formal Gates",
+      "historical_claim": "Specification-driven development gates (`INV-SUPERPOWERS-GATED`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 36,
+      "scope_label": "Unified MCP Tooling & Zero-Trust Interceptor",
+      "historical_claim": "35+ tools in `contracts/mcp`, embedded NUL bytes (code `-2`) and SQL injections (code `-3`) trapped before execution (`INV-ZERO-TRUST-PAYLOAD`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 37,
+      "scope_label": "266-Actor Elastic Symbiosis Swarm",
+      "historical_claim": "Unconstrained BEAM actor scaling (`INV-UNCONSTRAINED-BEAM-SCALE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 38,
+      "scope_label": "17-Aspect Process Receipts",
+      "historical_claim": "Cryptographic SHA-256 process lineage receipts (`INV-17-ASPECT-RECEIPTS`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 39,
+      "scope_label": "Omni-Cartesian Tensor Closure",
+      "historical_claim": "Full Cartesian tensor space closure ($10 \\times 14 \\times 17$) (`INV-CARTESIAN-TENSOR-CLOSED`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 40,
+      "scope_label": "C3I Knowledge Authority Partitioning",
+      "historical_claim": "Separation of Gleam orchestration from OCaml verification (`INV-KNOW-AUTHORITY-PARTITION`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 41,
+      "scope_label": "Supervised OCaml Worker Port",
+      "historical_claim": "External subprocess communication protecting BEAM dirty schedulers (`INV-OCAML-PORT-REDUCTIONS`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 42,
+      "scope_label": "Typed Cross-Language Protocol",
+      "historical_claim": "Strict JSON envelopes and idempotency receipts (`INV-CROSS-LANG-ENVELOPE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 43,
+      "scope_label": "Zero-Trust Security Traps",
+      "historical_claim": "Trapping NUL bytes (code `-2`) and SQL injections (code `-3`) (`INV-ZERO-TRUST-INGRESS-TRAP`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 44,
+      "scope_label": "Exponential Trust Decay",
+      "historical_claim": "Bayesian trust decay $\\tau(t) = \\tau_0 e^{-\\lambda \\Delta t}$ (`INV-EXPONENTIAL-TRUST-DECAY`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 45,
+      "scope_label": "Negative Knowledge & Anti-Pattern Detection",
+      "historical_claim": "Automated detection of barred practices (`INV-ANTI-PATTERN-DETECTION`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 46,
+      "scope_label": "Multi-Corpus Cited Recall",
+      "historical_claim": "Source grounding across Wiki, ZK, and Journals (`INV-CITED-RECALL-GROUNDING`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 47,
+      "scope_label": "7,918-File C3I Ingestion",
+      "historical_claim": "Zero-error cataloging and sanitization (`INV-7918-FILE-ZERO-ERROR`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 48,
+      "scope_label": "Biosemiotic Knowledge Morphisms",
+      "historical_claim": "Formal decoupling of symbolic and physical states (`INV-BIOSEMIOTIC-KNOWLEDGE-CUT`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 49,
+      "scope_label": "Wisp/Mist REST API Knowledge Routes",
+      "historical_claim": "Typed HTTP endpoints for knowledge query and recall (`INV-WISP-KNOWLEDGE-API`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 50,
+      "scope_label": "ZK ADR-055 & KM Triad Integration",
+      "historical_claim": "Permanent decision record and index cross-linking (`INV-ZK-ADR-055-KM-TRIAD`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 51,
+      "scope_label": "Scalability & Elastic Actor Knowledge Mesh",
+      "historical_claim": "Multi-actor query execution (`INV-ELASTIC-KNOWLEDGE-MESH`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 52,
+      "scope_label": "Formal Verification & Gospel Parity",
+      "historical_claim": "Gospel contract compliance via OCaml oracle (`INV-FORMAL-GOSPEL-PARITY`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 53,
+      "scope_label": "SRE Resilience & Circuit-Breaker Tolerance",
+      "historical_claim": "Automatic degradation under subsystem latency (`INV-SRE-KNOWLEDGE-FRESHNESS`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 54,
+      "scope_label": "Tri-Sovereign Knowledge Mainline Closure",
+      "historical_claim": "AGY, Claude, Codex tri-sovereign ratification (`INV-TRI-SOV-KNOWLEDGE-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 55,
+      "scope_label": "C3I Agentic Ingestion & Sanitization Engine",
+      "historical_claim": "In-depth streaming parser (`INV-AGENTIC-INGESTION-SANITIZED`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 56,
+      "scope_label": "Supervised OCaml Port Pool",
+      "historical_claim": "Dynamic worker pool scaling under load (`INV-SUPERVISED-OCAML-PORT-POOL`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 57,
+      "scope_label": "Dynamic Trust Decay Swarm",
+      "historical_claim": "Asynchronous worker swarm evaluating decay curves (`INV-DYNAMIC-DECAY-ACTOR-SWARM`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 58,
+      "scope_label": "Real-Time Tripartite Knowledge Presentation",
+      "historical_claim": "Server-Sent Events (SSE) streaming updates (`INV-TRIPARTITE-SSE-KNOWLEDGE-MESH`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 59,
+      "scope_label": "Tri-Sovereign Autonomic Governance",
+      "historical_claim": "Closed-loop self-healing policies (`INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 60,
+      "scope_label": "Distributed Knowledge Cache",
+      "historical_claim": "In-memory sheaf harmonizer across workspaces (`INV-DISTRIBUTED-KNOWLEDGE-CACHE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 61,
+      "scope_label": "Zero-Trust Cryptographic Signatures",
+      "historical_claim": "ED25519 trace lineage signatures (`INV-ZT-CRYPTO-SIGNATURE-TRACE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 62,
+      "scope_label": "Automated Anti-Pattern Interceptor",
+      "historical_claim": "Pre-commit lint and verification gates (`INV-AUTO-ANTI-PATTERN-INTERCEPTOR`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 63,
+      "scope_label": "Bounded Gospel Oracle & Z3 Tree",
+      "historical_claim": "Process-tree watchdog terminating queries at $2000\\text{ms}$ (`INV-GOSPEL-Z3-PROCESS-TREE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 64,
+      "scope_label": "Descriptor-Relative VFS Journal Sync",
+      "historical_claim": "Atomic journal updates with WAL persistence (`INV-VFS-JOURNAL-SYNC-DURABILITY`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 65,
+      "scope_label": "Lyapunov-Windowed Telemetry Freshness",
+      "historical_claim": "Dead-man monitor alerting on silent publishers (`INV-LYAPUNOV-FRESHNESS-SWARM`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 66,
+      "scope_label": "17-Aspect Cross-Language Homomorphism",
+      "historical_claim": "Binary ABI contracts between Gleam, Rust, and OCaml (`INV-17-ASPECT-ABI-HOMOMORPHISM`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 67,
+      "scope_label": "Elastic Agent Swarm Concurrency",
+      "historical_claim": "Automatic dynamic worker provisioning up to $10,000$ holons (`INV-ELASTIC-SWARM-SCALING`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 68,
+      "scope_label": "Universal Tailscale Tripartite Navigation",
+      "historical_claim": "Synchronized state across Web, API, and TUI (`INV-TAILSCALE-TRIPARTITE-NAV`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 69,
+      "scope_label": "Sovereign Synthesis Mainline Closure",
+      "historical_claim": "Wave 3 formal closure and ADR-057 ratification (`INV-SOVEREIGN-SYNTHESIS-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 70,
+      "scope_label": "Vertical Slice Journal Ingestion Pipeline",
+      "historical_claim": "Ingestion of 13-section journals with SHA-256 digests (`INV-SLICE-JOURNAL-RETRIEVAL`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 71,
+      "scope_label": "Supervised OCaml Worker Port Protocol",
+      "historical_claim": "Subprocess protocol protecting BEAM reductions (`INV-OCAML-SUBPROCESS-PROTOCOL`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 72,
+      "scope_label": "Rust NIF & OCaml Differential Conformance",
+      "historical_claim": "Parity comparison engine verifying algebra (`INV-RUST-OCAML-DIFF-CONFORMANCE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 73,
+      "scope_label": "Callable OCaml Knowledge Lookup & Recall",
+      "historical_claim": "Bounded query interface returning verified citations (`INV-CALLABLE-OCAML-CITED-RECALL`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 74,
+      "scope_label": "Tripartite Tri-Surface Knowledge Display",
+      "historical_claim": "Isomorphic HTML, JSON, and ANSI presentation (`INV-TRIPARTITE-KNOWLEDGE-SURFACES`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 75,
+      "scope_label": "17-Aspect C3I VM-1 Comprehensive Synthesis",
+      "historical_claim": "Complete multi-dimensional trace matrix (`INV-17-ASPECT-C3I-SYNTHESIS`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 76,
+      "scope_label": "Dynamic Agentic Knowledge Mesh",
+      "historical_claim": "Autonomous actor swarm self-organizing on telemetry (`INV-DYNAMIC-KNOWLEDGE-SWARM`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 77,
+      "scope_label": "Biosemiotic Semantic Invariant Verification",
+      "historical_claim": "Decoupled state mappings preventing semantic drift (`INV-BIOSEMIOTIC-ROCHA-VERIF`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 78,
+      "scope_label": "13D TCM Coordinate Conservation",
+      "historical_claim": "Fail-closed gatekeeper $\\Delta \\vec{\\mathcal{T}}_{13} \\equiv \\mathbf{0}$ (`INV-13D-TCM-FAIL-CLOSED`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 79,
+      "scope_label": "Lyapunov-Bounded Trust Decay & Eviction",
+      "historical_claim": "Purging stale or refuted knowledge nodes (`INV-LYAPUNOV-TRUST-EVICTION`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 80,
+      "scope_label": "Zero-Trust Payload Interceptor Ledger",
+      "historical_claim": "Cryptographic audit ledger for every tool call (`INV-ZT-PAYLOAD-LEDGER`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 81,
+      "scope_label": "Multi-Tenant Elastic BEAM Swarm Scaling",
+      "historical_claim": "Workload-driven actor elasticity (`INV-BEAM-SWARM-ELASTIC-SCALE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 82,
+      "scope_label": "Universal Tailscale Web/API/WebSocket Routing",
+      "historical_claim": "Seamless Tailnet routing matrix (`INV-TAILSCALE-FQDN-ROUTING`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 83,
+      "scope_label": "Formal Gospel & Bounded Z3 Oracle Pipeline",
+      "historical_claim": "Verified pre/post-conditions on formal models (`INV-GOSPEL-Z3-ORACLE-PIPELINE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 84,
+      "scope_label": "Tri-Sovereign Consensus & Mainline Closure",
+      "historical_claim": "Wave 4 formal closure and ADR-059 ratification (`INV-TRI-SOV-MAINLINE-CLOSURE`).",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Historical description, not current acceptance evidence."
+    },
+    {
+      "ev": 85,
+      "scope_label": "ZigVM algebra driven design",
+      "scope_source": "contracts/rules/zigvm-add-fractal-contract.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Source claim requires runtime, formal and sovereign evidence."
+    },
+    {
+      "ev": 86,
+      "scope_label": "Raga cybernetic synthesis",
+      "scope_source": "docs/journal/20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Provisional EV86 interpretation requires an explicit scope decision."
+    },
+    {
+      "ev": 87,
+      "scope_label": "Mirage library OS core",
+      "scope_source": "contracts/rules/mirage-unikernel-contract.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Source claim requires runtime, formal and sovereign evidence."
+    },
+    {
+      "ev": 88,
+      "scope_label": "Mirage migration policy",
+      "scope_source": "contracts/rules/mirage-migration-policy.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Source claim requires runtime, formal and sovereign evidence."
+    },
+    {
+      "ev": 89,
+      "scope_label": "Mirage production integration",
+      "scope_source": "contracts/rules/mirage-production-integration-contract.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Source claim requires runtime, formal and sovereign evidence."
+    },
+    {
+      "ev": 90,
+      "scope_label": "Fractal forecast cockpit",
+      "scope_source": "docs/journal/20260907-1442-ev-90-fractal-forecasting-cockpit-and-zenoh-stream-journal.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Source claim requires runtime, formal and sovereign evidence."
+    },
+    {
+      "ev": 91,
+      "scope_label": "Sa-plan execution authority and Fractal Jidoka TPS",
+      "scope_source": "docs/zk/20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Source claim requires runtime, formal and sovereign evidence."
+    },
+    {
+      "ev": 92,
+      "scope_label": "MAX/Mojo high utility models",
+      "scope_source": "docs/zk/20260907-1830-adr-069-modular-max-mojo-high-utility-models-and-fail-closed-preflight-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Source claim requires runtime, formal and sovereign evidence."
+    },
+    {
+      "ev": 93,
+      "scope_label": "Multi-Host CRDT Mesh Synchronization, Prajna Health Homeostasis & EV-93 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2015-adr-070-multi-host-crdt-sync-prajna-health-and-ev93-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Policy ceiling is not a positive candidate admission decision."
+    },
+    {
+      "ev": 94,
+      "scope_label": "ZMOF Zenoh Backplane, Hermes Wiki Transclusion & EV-94 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2030-adr-071-zmof-zenoh-backplane-wiki-transclusion-and-ev94-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 95,
+      "scope_label": "Cross-Host Peer Simulator, AG-UI Live Sparklines & EV-95 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2045-adr-072-cross-host-peer-simulator-agui-sparklines-and-ev95-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 96,
+      "scope_label": "Adaptive Lyapunov Dynamic Damping, Zenoh WS Bridge & EV-96 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2055-adr-073-adaptive-lyapunov-damping-and-ev96-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 97,
+      "scope_label": "Autonomous Heijunka Task Scheduler, AG-UI WS Hot Stream & EV-97 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2105-adr-074-heijunka-scheduler-ws-hot-stream-and-ev97-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 98,
+      "scope_label": "Multi-Host CRDT Delta Mesh Engine, Actor Dead-Man Freshness & EV-98 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2130-adr-075-crdt-delta-mesh-engine-deadman-freshness-and-ev98-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 99,
+      "scope_label": "Decentralized Work-Stealing Swarm Mesh, SVG Topology View & EV-99 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2145-adr-076-decentralized-work-stealing-topology-view-and-ev99-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 100,
+      "scope_label": "Century Milestone Swarm Harmony, Adaptive PID Telemetry, Unified Century HUD & EV-100 Monorepo Ratif",
+      "scope_source": "docs/zk/20260907-2200-adr-077-century-milestone-swarm-harmony-and-ev100-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 101,
+      "scope_label": "Autonomous Semantic Knowledge Sheaf, Holographic ZK Transclusion Engine & EV-101 Monorepo Ratificati",
+      "scope_source": "docs/zk/20260907-2210-adr-078-autonomous-semantic-knowledge-sheaf-and-ev101-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 102,
+      "scope_label": "Biomorphic Chaos Immune Engine, Self-Healing SRE Mesh & EV-102 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2220-adr-079-biomorphic-chaos-immune-engine-and-ev102-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 103,
+      "scope_label": "Dynamic Semantic RAG Vector Refresher, LLM Cache Mesh & EV-103 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2230-adr-080-dynamic-semantic-rag-vector-cache-and-ev103-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 104,
+      "scope_label": "Autonomous OODA Agent Copilot, 22-Shruti Synthesizer Pipeline & EV-104 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2245-adr-081-autonomous-ooda-copilot-shruti-synthesizer-and-ev104-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 105,
+      "scope_label": "Autonomous Multi-Agent Consensus, Quorum Voting Engine & EV-105 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2300-adr-082-autonomous-multi-agent-consensus-quorum-and-ev105-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 106,
+      "scope_label": "Dynamic Workload Autoscaler, Predictive Token Flow Optimization & EV-106 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 107,
+      "scope_label": "Deep Gospel/Z3 Contract Expansion, Rete-UL Rule Consistency Verifier & EV-107 Monorepo Ratification",
+      "scope_source": "docs/zk/20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 108,
+      "scope_label": "Ultra-Fast OODA Convergence Triad (Modular MAX SIMD Scorer, Sa-Plan Heijunka Pull Queue, Solo5 Sandb",
+      "scope_source": "docs/zk/20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    },
+    {
+      "ev": 109,
+      "scope_label": "4-Party Sovereign Quorum Homeostasis & Cybernetic Self-Evolution Engine & EV-109 Ratification",
+      "scope_source": "docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md",
+      "state": "NOT_VERIFIED",
+      "identity_note": "Quarantined claim: NOT_ADMITTED; retained only to identify requested obligations."
+    }
+  ]
+}

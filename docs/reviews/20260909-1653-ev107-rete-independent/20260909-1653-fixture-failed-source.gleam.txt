@@ -1,0 +1,82 @@
+import cepaf_gleam/knowledge/rete_ul_verifier as r
+import gleam/io
+import gleam/list
+import gleam/string
+import gleeunit/should
+
+fn cond(kind: String, op: r.ReteOp, value: String) -> r.ReteCondition {
+  r.ReteCondition(kind, "value", op, value)
+}
+fn edge(name: String, a: String, b: String) -> r.ReteRule {
+  r.ReteRule(name, [cond(a, r.OpEq, "yes")], r.ConsequenceAssert(b, "value", "yes"))
+}
+fn raw(facts: List(r.ReteFact), rules: List(r.ReteRule)) -> r.WorkingMemory {
+  r.WorkingMemory(facts, rules, [], True, 1234)
+}
+fn fact(kind: String) -> r.ReteFact { r.ReteFact(kind, [#("value", "yes")]) }
+fn has(memory: r.WorkingMemory, kind: String) -> Bool {
+  list.any(memory.facts, fn(f) { f.kind == kind })
+}
+
+pub fn main() {
+  let cycle = raw([fact("a")], [edge("ca", "c", "a"), edge("bc", "b", "c"), edge("ab", "a", "b")])
+  let assert Ok(run) = r.try_fire_forward_chaining(cycle)
+  run.memory.fired_count |> should.equal(3)
+  list.length(run.memory.facts) |> should.equal(3)
+  has(run.memory, "a") && has(run.memory, "b") && has(run.memory, "c") |> should.be_true
+  r.fire_forward_chaining(run.memory) |> should.equal(run.memory)
+  io.println("INDEPENDENT_RETE PASS three_cycle_once")
+
+  let rules = [
+    r.ReteRule("contains", [cond("message", r.OpContains, "token")], r.ConsequenceGateVerdict("ADVISORY")),
+    r.ReteRule("unequal", [cond("colour", r.OpNeq, "red")], r.ConsequenceAssert("message", "value", "prefix-token-suffix")),
+    r.ReteRule("derive", [cond("seed", r.OpEq, "yes")], r.ConsequenceAssert("colour", "value", "blue")),
+  ]
+  let assert Ok(chain) = r.try_fire_forward_chaining(raw([fact("seed")], rules))
+  chain.memory.fired_count |> should.equal(3)
+  chain.verdicts |> should.equal([#("contains", "ADVISORY")])
+  let assert Ok(absent) = r.try_fire_forward_chaining(raw([], rules))
+  absent.memory.fired_count |> should.equal(0)
+  io.println("INDEPENDENT_RETE PASS derived_neq_contains")
+
+  let multi = r.ReteFact("multi", [#("value", "yes"), #("other", "kept")])
+  let already = raw([multi], [
+    r.ReteRule("one", [], r.ConsequenceAssert("multi", "value", "yes")),
+    r.ReteRule("two", [], r.ConsequenceAssert("multi", "other", "kept")),
+  ])
+  let assert Ok(dedup) = r.try_fire_forward_chaining(already)
+  dedup.memory.facts |> should.equal([multi])
+  dedup.memory.fired_count |> should.equal(2)
+  io.println("INDEPENDENT_RETE PASS multi_attribute_dedup")
+
+  let join = raw([
+    r.ReteFact("parts", [#("a", "x")]),
+    r.ReteFact("parts", [#("b", "y")]),
+  ], [r.ReteRule("existentials", [
+    r.ReteCondition("parts", "a", r.OpEq, "x"),
+    r.ReteCondition("parts", "b", r.OpEq, "y"),
+  ], r.ConsequenceAssert("joined", "value", "yes"))])
+  let assert Ok(joined) = r.try_fire_forward_chaining(join)
+  has(joined.memory, "joined") |> should.be_true
+  io.println("INDEPENDENT_RETE PASS cross_fact_existential")
+
+  r.try_fire_forward_chaining_with_budget(cycle, run.match_steps - 1) |> should.equal(Error(r.WorkExhausted))
+  r.try_fire_forward_chaining_with_budget(cycle, run.match_steps) |> should.equal(Ok(run))
+  let malformed = raw([r.ReteFact("bad", [#("same", "a"), #("same", "b")])], [])
+  r.try_fire_forward_chaining(malformed) |> should.equal(Error(r.InvalidWorkingMemory))
+  r.fire_forward_chaining(malformed) |> should.equal(malformed)
+  let large = raw([r.ReteFact(string.repeat("é", 129), [])], [])
+  r.try_fire_forward_chaining(large) |> should.equal(Error(r.InvalidWorkingMemory))
+  let exact = raw([r.ReteFact(string.repeat("é", 128), [])], [])
+  let assert Ok(_) = r.try_fire_forward_chaining(exact)
+  io.println("INDEPENDENT_RETE PASS exact_work_and_malformed_bounds")
+
+  let conflict = raw([fact("seed")], [
+    r.ReteRule("first", [cond("seed", r.OpEq, "yes")], r.ConsequenceGateVerdict("ALLOW")),
+    edge("derive", "seed", "other"),
+    r.ReteRule("second", [cond("other", r.OpEq, "yes")], r.ConsequenceGateVerdict("REFUSE")),
+  ])
+  r.try_fire_forward_chaining(conflict) |> should.equal(Error(r.ConflictingVerdicts))
+  r.fire_forward_chaining(conflict) |> should.equal(conflict)
+  io.println("INDEPENDENT_RETE PASS advisory_conflict_atomic_refusal")
+}

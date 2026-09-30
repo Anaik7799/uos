@@ -1,0 +1,6 @@
+#use "topfind";;
+#require "unix,mtime.clock.os,yojson";;
+#directory "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap";;
+#mod_use "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_model.ml";;
+#mod_use "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_observer.ml";;
+let () = match Bootstrap_observer.observe Sys.argv.(1) with Ok o -> print_endline(Yojson.Basic.to_string(`Assoc["status",`String "PASS";"revision",`String o.revision]));exit 0 | Error why -> print_endline(Yojson.Basic.to_string(`Assoc["status",`String "REFUSED";"reason",`String why]));exit 1
