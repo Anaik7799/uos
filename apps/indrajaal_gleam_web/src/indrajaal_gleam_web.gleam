@@ -59,6 +59,7 @@ import gleam/string
 import indrajaal/runtime_identity
 import indrajaal/homeostasis_http
 import indrajaal/ecology_http
+import indrajaal/music_files
 import cepaf_gleam/ecology/living_swarm_actor
 import lustre/element
 import mist.{type Connection, type ResponseData}
@@ -114,7 +115,24 @@ fn serve() {
   )
 
   let router = fn(connection_req: Request(Connection)) -> Response(ResponseData) {
-    let bounded_router = fn(req: Request(BitArray)) -> Response(ResponseData) {
+    // Reserve Mist's parsed path before application normalisation/file lookup.
+    // Development-only via music_files.configured_root() (default disabled; no production activation).
+    // This does not establish the original wire request-target boundary.
+    case music_files.handles(connection_req.path) {
+      True -> {
+        let reply =
+          music_files.handle(
+            music_files.configured_root(),
+            connection_req.method,
+            connection_req.path,
+          )
+        response.set_body(
+          reply,
+          mist.Bytes(bytes_tree.from_bit_array(reply.body)),
+        )
+      }
+      False -> {
+        let bounded_router = fn(req: Request(BitArray)) -> Response(ResponseData) {
 
     case request.path_segments(req) {
       ["homeostasis"] | ["homeostasis", "evolution"]
@@ -1041,6 +1059,8 @@ fn serve() {
     }
     }
     handle_bounded_connection_request(connection_req, bounded_router)
+      }
+    }
   }
 
   let assert Ok(_) =

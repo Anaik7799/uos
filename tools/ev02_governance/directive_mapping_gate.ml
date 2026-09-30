@@ -9,6 +9,7 @@
    local link prefixes. *)
 
 type rule = { id : string; file : string; anchor : string }
+type directive = { directive_id : string; clauses : string list }
 
 let max_rules = 64
 let max_bytes = 1_048_576
@@ -125,33 +126,90 @@ let normalize body =
       "http://nas-1.tail55d152.ts.net:4100/files/.gemini/rules/";
       "http://nas-1.tail55d152.ts.net:4100/files/.codex/rules/" ]
 
-let ids_from_superset ~budget path =
+type section = Outside | InDirective of string option * string list * string list | ForeignTable
+
+let table_header line =
+  if not (String.starts_with ~prefix:"[" line) then None
+  else if line = "[[directive]]" then Some true
+  else if String.starts_with ~prefix:"[[" line then bounded_error "unsupported-array-table"
+  else if String.length line >= 3 && line.[String.length line - 1] = ']' &&
+          String.for_all (function 'a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-' -> true | _ -> false)
+            (String.sub line 1 (String.length line - 2)) then Some false
+  else bounded_error "unsupported-table-header"
+
+let valid_key key =
+  key <> "" && String.for_all (function 'a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-' -> true | _ -> false) key
+
+let scalar_assignment line =
+  match String.index_opt line '=' with
+  | None -> bounded_error "unsupported-toml-syntax"
+  | Some at ->
+      let key = String.trim (String.sub line 0 at) in
+      let value = String.trim (String.sub line (at + 1) (String.length line - at - 1)) in
+      let inner = if String.length value < 2 then "" else String.sub value 1 (String.length value - 2) in
+      if not (valid_key key) || String.length value < 2 || value.[0] <> '"' ||
+         String.starts_with ~prefix:{|"""|} value ||
+         String.contains inner '"' || String.contains inner '\\' ||
+         value.[String.length value - 1] <> '"' then bounded_error "unsupported-toml-scalar";
+      key, line
+
+let directives_from_superset ~budget path =
   let lines = String.split_on_char '\n' (read_regular ~budget path) in
-  let ids = ref [] in
-  let awaiting_id = ref false in
+  let directives = ref [] in
+  let state = ref Outside in
+  let foreign_headers = ref [] in
+  let flush () =
+    match !state with
+    | InDirective (None, _, _) -> bounded_error "directive-missing-id"
+    | InDirective (Some directive_id, _, clauses) ->
+        directives := { directive_id; clauses = List.rev clauses } :: !directives
+    | Outside | ForeignTable -> ()
+  in
   List.iter (fun raw ->
     let line = String.trim raw in
-    if line = "[[directive]]" then awaiting_id := true
-    else if !awaiting_id && String.starts_with ~prefix:"id = \"" line then begin
-      let start = String.length "id = \"" in
-      match String.index_from_opt line start '"' with
-      | None -> bounded_error "unterminated-directive-id"
-      | Some stop ->
-          ids := String.sub line start (stop - start) :: !ids;
-          awaiting_id := false
-    end) lines;
-  if !awaiting_id || List.length !ids > max_rules then bounded_error "directive-count";
-  List.rev !ids
+    if line = "" || line.[0] = '#' then ()
+    else match table_header line with
+    | Some true -> flush (); state := InDirective (None, [], [])
+    | Some false ->
+        if List.mem line !foreign_headers then bounded_error "duplicate-foreign-table";
+        foreign_headers := line :: !foreign_headers;
+        flush (); state := ForeignTable
+    | None ->
+        match !state with
+        | Outside | ForeignTable -> ()
+        | InDirective (id, keys, clauses) ->
+            let key, clause = scalar_assignment line in
+            if key = "id" then
+              match id with
+              | Some _ -> bounded_error "duplicate-directive-id"
+              | None ->
+                  let value = String.trim (String.sub clause (String.index clause '=' + 1) (String.length clause - String.index clause '=' - 1)) in
+                  state := InDirective (Some (String.sub value 1 (String.length value - 2)), "id" :: keys, clauses)
+            else match id with
+              | None -> bounded_error "directive-field-before-id"
+              | Some _ ->
+                  if List.mem key keys then
+                    bounded_error "duplicate-directive-key";
+                  state := InDirective (id, key :: keys, clause :: clauses)) lines;
+  flush ();
+  if List.length !directives > max_rules || has_duplicate (List.map (fun directive -> directive.directive_id) !directives) then
+    bounded_error "directive-count-or-duplicate";
+  List.rev !directives
 
 let rules_from_json ~budget path =
   let raw = read_regular ~budget path in
   let json = try Yojson.Basic.from_string raw with Yojson.Json_error _ -> bounded_error "mapping-json" in
   match json with
-  | `Assoc fields -> begin match List.assoc_opt "rules" fields with
+  | `Assoc fields ->
+      let allowed = ["schema"; "authority"; "historical_lineage"; "admission"; "normalization_base"; "rules"; "limits"] in
+      let exact key expected = match List.assoc_opt key fields with Some (`String value) -> value = expected | _ -> false in
+      let limits = match List.assoc_opt "limits" fields with Some (`List values) -> List.for_all (function `String _ -> true | _ -> false) values | _ -> false in
+      if List.length fields <> List.length allowed || has_duplicate (List.map fst fields) || List.exists (fun (key, _) -> not (contains allowed key)) fields ||
+         not (exact "schema" "uos.ev02.current-directive-rule-amendment/v1") ||
+         not (exact "authority" "CURRENT_AMENDMENT_PROPOSAL") || not (exact "historical_lineage" "MISSING_HISTORICAL_LINEAGE") ||
+         not (exact "admission" "NOT_GRANTED") || not (exact "normalization_base" ".claude/rules") || not limits then bounded_error "mapping-schema";
+      begin match List.assoc_opt "rules" fields with
       | Some (`List rows) ->
-          let allowed = ["schema"; "authority"; "historical_lineage"; "admission"; "normalization_base"; "rules"; "limits"] in
-          if has_duplicate (List.map fst fields) || List.exists (fun (key, _) -> not (contains allowed key)) fields then
-            bounded_error "mapping-schema";
           if List.length rows > max_rules then bounded_error "mapping-row-count";
           rows |> List.map (function
             | `List [`String id; `String file; `String anchor] -> { id; file; anchor }
@@ -159,6 +217,7 @@ let rules_from_json ~budget path =
       | _ -> bounded_error "mapping-rules"
     end
   | _ -> bounded_error "mapping-root"
+
 
 let exact_line text expected =
   String.split_on_char '\n' text |> List.exists (fun line -> line = expected)
@@ -170,6 +229,7 @@ let json_strings values = values |> List.map quote |> String.concat ","
 
 type observation = {
   directive_ids : string list;
+  directive_clauses : (string * string list) list;
   rules : rule list;
   rule_rows : (rule * bool * int * bool) list;
   mapping_errors : string list;
@@ -179,7 +239,8 @@ type observation = {
 
 let observe root mapping_path =
   let budget = ref 0 in
-  let directive_ids = ids_from_superset ~budget (Filename.concat root "governance/agents/policy/superset.toml") in
+  let directives = directives_from_superset ~budget (Filename.concat root "governance/agents/policy/superset.toml") in
+  let directive_ids = List.map (fun directive -> directive.directive_id) directives in
   let rules = rules_from_json ~budget mapping_path in
   let shared_files =
     surfaces |> List.map (fun surface -> list_rule_names (Filename.concat root surface))
@@ -227,7 +288,9 @@ let observe root mapping_path =
   let body_differences =
     rule_rows |> List.filter_map (fun (rule, _, surface_count, normalized_equal) ->
       if surface_count = List.length surfaces && not normalized_equal then Some (rule.id, rule.file) else None) in
-  { directive_ids; rules; rule_rows; mapping_errors = List.rev !mapping_errors;
+  { directive_ids;
+    directive_clauses = List.map (fun directive -> directive.directive_id, directive.clauses) directives;
+    rules; rule_rows; mapping_errors = List.rev !mapping_errors;
     body_differences;
     unmapped_shared_files = List.filter (fun file -> not (contains mapped_files file)) shared_files }
 
@@ -239,13 +302,17 @@ let print observation =
   let body_differences = observation.body_differences |> List.map (fun (id, file) ->
     "{\"id\":" ^ quote id ^ ",\"file\":" ^ quote file ^ "}") |> String.concat "," in
   let rule_rows = observation.rule_rows |> List.map (fun (rule, anchor_present, surface_count, normalized_equal) ->
-    let source_clause, semantic_status, missing_facet =
-      if rule.id = "DIR-TIME-001" then
-        ("format_mandate=YYYYMMDD-HHSS-; description requires timestamp prefix; enforcement=tools/uos timestamp-check",
-         "PARTIAL_HOLD", "Anchor presence and body parity do not prove enforcement execution or historic provenance")
+    let clauses = Option.value ~default:[] (List.assoc_opt rule.id observation.directive_clauses) in
+    let source_clause = String.concat "; " clauses in
+    let has_normative = List.exists (fun clause ->
+      String.starts_with ~prefix:"format_mandate =" clause ||
+      String.starts_with ~prefix:"description =" clause ||
+      String.starts_with ~prefix:"enforcement =" clause) clauses in
+    let semantic_status, missing_facet =
+      if has_normative then
+        ("PARTIAL_HOLD", "Source clause is observed, but anchor presence and body parity do not prove enforcement execution or historic provenance")
       else
-        ("status=CLASSIFIED_MAPPED; authority_role=AUT-OPERATOR; lifecycle=active; disposition=NORMALIZED",
-         "UNSUPPORTED_HOLD", "superset.toml provides no directive-specific normative clause to establish anchor coverage") in
+        ("UNSUPPORTED_HOLD", "superset.toml supplies only metadata for this directive; it does not establish anchor coverage") in
     "{\"id\":" ^ quote rule.id ^ ",\"canonical_file\":" ^ quote rule.file ^
     ",\"anchor\":" ^ quote rule.anchor ^ ",\"anchor_present\":" ^ string_of_bool anchor_present ^
     ",\"surface_count\":" ^ string_of_int surface_count ^
@@ -258,6 +325,7 @@ let print observation =
     status (List.length observation.directive_ids) (List.length observation.rules)
     rule_rows (json_strings observation.mapping_errors) body_differences
     (json_strings observation.unmapped_shared_files) (json_strings errors)
+
 
 let write path text =
   let channel = open_out_bin path in
@@ -369,7 +437,45 @@ let fixture_selftest () =
   if same_stat s_stat mutated_ctime then failwith "same_stat accepted mutated ctime";
   let substituted_ino = { s_stat with Unix.st_ino = s_stat.Unix.st_ino + 1 } in
   if same_stat s_stat substituted_ino then failwith "same_stat accepted substituted inode";
-  print_endline "PASS directive-mapping fixture selftest: valid/duplicate/unknown/traversal/symlink/missing/budget/nonreg/oversize/entry-limit/metadata"
+  let source_root = private_root "mapping-source" in
+  build_fixture source_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  let source_superset = Filename.concat source_root "governance/agents/policy/superset.toml" in
+  write source_superset
+    ("[foreign]\ndescription = \"BEFORE_DIRECTIVE\"\n\n[[directive]]\nid = \"DIR-01\"\nstatus = \"REVOKED_SYNTHETIC\"\nformat_mandate = \"COUNTERFACTUAL\"\n\n" ^
+     (List.tl ids |> List.map (fun id -> "[[directive]]\nid = \"" ^ id ^ "\"\nstatus = \"REVOKED_SYNTHETIC\"\n") |> String.concat "\n") ^
+     "\n[unrelated]\ndescription = \"UNRELATED_TABLE_ONLY\"\n");
+  let source_map = Filename.concat source_root "mapping.json" in
+  write source_map (mapping_text rows);
+  let source_observation = observe source_root source_map in
+  if List.assoc "DIR-01" source_observation.directive_clauses <>
+     ["status = \"REVOKED_SYNTHETIC\""; "format_mandate = \"COUNTERFACTUAL\""] then
+    failwith "selftest source clauses were not read";
+  let malformed_root = private_root "mapping-malformed" in
+  build_fixture malformed_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat malformed_root "governance/agents/policy/superset.toml")
+    "[[directive]\nid = \"DIR-01\"\n";
+  expect_refusal "malformed-table" (fun () -> observe malformed_root valid);
+  let duplicate_root = private_root "mapping-duplicate-id" in
+  build_fixture duplicate_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat duplicate_root "governance/agents/policy/superset.toml")
+    ("[[directive]]\nid = \"DIR-01\"\n\n[[directive]]\nid = \"DIR-01\"\n");
+  expect_refusal "duplicate-semantic-id" (fun () -> observe duplicate_root valid);
+  let foreign_root = private_root "mapping-duplicate-foreign" in
+  build_fixture foreign_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat foreign_root "governance/agents/policy/superset.toml")
+    "[foreign]\ndescription = \"one\"\n[foreign]\ndescription = \"two\"\n";
+  expect_refusal "duplicate-foreign-table" (fun () -> observe foreign_root valid);
+  let multiline_root = private_root "mapping-multiline" in
+  build_fixture multiline_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat multiline_root "governance/agents/policy/superset.toml")
+    "[[directive]]\nid = \"DIR-01\"\ndescription = \"\"\"not-supported\"\"\"\n";
+  expect_refusal "multiline-string" (fun () -> observe multiline_root valid);
+  let mixed_spacing_root = private_root "mapping-mixed-spacing" in
+  build_fixture mixed_spacing_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat mixed_spacing_root "governance/agents/policy/superset.toml")
+    "[[directive]]\nid = \"DIR-01\"\nstatus=\"REVOKED_SYNTHETIC\"\nstatus = \"REVOKED_SYNTHETIC\"\n";
+  expect_refusal "duplicate-key-mixed-spacing" (fun () -> observe mixed_spacing_root valid);
+  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":13}"
 
 let selftest () =
   let check label actual = if not actual then failwith ("selftest failed: " ^ label) in
@@ -378,7 +484,8 @@ let selftest () =
   check "duplicate-id" (duplicate ["DIR-A"; "DIR-A"]);
   check "set-mismatch" (sort_unique ["DIR-A"] <> sort_unique ["DIR-B"]);
   check "anchor-is-line" (not (exact_line "## Section x" "## Section"));
-  print_endline "PASS directive-mapping selftest: normalization/duplicate/set/anchor"
+  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":5}"
+
 
 let () =
   match Array.to_list Sys.argv with
