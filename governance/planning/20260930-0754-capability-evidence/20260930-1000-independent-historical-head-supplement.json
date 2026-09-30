@@ -1,0 +1,176 @@
+{
+  "schema": "uos.independent-historical-head-supplement.v1",
+  "observed_at": "2026-09-30T10:00:01Z",
+  "reviewer": "codex-capability-review-20260930",
+  "scope": "Delegated read-only ACCEPT attempt2 classification; no source edits, tests, task mutation or production effects",
+  "observed_integration": "c59018a487920bb17ff0eae5e150decc03a08396",
+  "reviewed_history_candidate": "a7b939a6b4afe3ac9a8010b2b823d580d8b07268",
+  "prior_receipt": "20260930-0852-independent-historical-head-classification.json",
+  "verdict": "ADDITIONAL_EXECUTABLE_SOURCE_RECONCILIATION_REQUIRED",
+  "admission": "NOT_GRANTED",
+  "method": "Enumerated unique ancestors outside ancestors(@), inspected each commit own source paths, then compared only those paths; avoided misleading old-tree removal counts.",
+  "heads": [
+    {
+      "head": "7af086121d547a279802d54fa49c5f54c70dbb27",
+      "classification": "EVIDENCE_ONLY_UNIQUE_LINEAGE",
+      "unique_commits": 7,
+      "evidence": "Unique commits modify docs/reviews/journals only. HOLD findings retained; no executable source novelty."
+    },
+    {
+      "head": "1ad593ae55a3f2e3bbe9ed8a63f576fc18940327",
+      "classification": "EVIDENCE_ONLY_UNIQUE_LINEAGE",
+      "unique_commits": 1,
+      "evidence": "Own delta only documents original scope conflicts, Bootstrap observation and bounded capture review."
+    },
+    {
+      "head": "8f80accd787f66acce99d2d7339e36ec32f9f00c",
+      "classification": "UNIQUE_EV02_DEVELOPMENT_EXTENSIONS",
+      "implementation_tip": "fe5cddbb70f965a63f54402a4ab6cf3bf6d0d2dc",
+      "paths": [
+        "tools/ev02_governance/directive_mapping_gate.ml",
+        "tools/ev02_governance/policy_surface_gate.ml",
+        "tools/ev02_governance/run_checks.ml"
+      ],
+      "missing_behaviors": [
+        "Exact amendment schema and authority/admission/normalization/limit values",
+        "Bounded TOML scalar/table subset with duplicate/unsupported syntax refusals and actual source-clause extraction",
+        "Structured stdout/stderr process-result checks in addition to expected exit code",
+        "Immutable JJ candidate full policy input inventory, bounded staging and pre/post observation byte seals"
+      ],
+      "source_commits": [
+        "e11692afdd54",
+        "36cf91218ea4",
+        "ed2add7957b7",
+        "9052252256c6",
+        "5c7964e88dba",
+        "d68c9a305a38",
+        "491e87f6f583",
+        "a5208c4a1702",
+        "fe5cddbb70f9"
+      ],
+      "historical_evidence": "docs/reviews/20260909-2134-ev02-governance-staging-followup.md",
+      "historical_results_only": "Recorded9/9harness,12/12mapping fixture;82regular entries,4UNSTAGED_HOLD symlinks,11unmapped sharedfiles. Not rerun in this classification.",
+      "preserved_holds": [
+        "Scalar/table subset is not full TOML",
+        "Symlinked DIR-GATE surfaces remain HOLD",
+        "Semantic coverage and historical lineage unresolved",
+        "No independent final full-system or sovereign admission"
+      ],
+      "integration_guidance": "Port missing behavior onto a7; preserve current stable metadata reads, parent-path guards, exclusive output, monotonic cleanup and exact stored_output digest repair. Do not overwrite with old hardcoded workspace runner or less-hardened policy reader/writers."
+    },
+    {
+      "head": "f09ca55a4517d147364a2d9c962c750782323bbe",
+      "classification": "UNIQUE_EV86_ROUTE_AND_CAPTURE_DEVELOPMENT_SOURCE",
+      "source_commits": [
+        "9c59632d7951",
+        "7774d1110700",
+        "7db92a8d1bbb"
+      ],
+      "absent_files": [
+        "apps/indrajaal_gleam_web/src/indrajaal/music_files.gleam",
+        "apps/indrajaal_gleam_web/test/music_files_test.gleam",
+        "apps/indrajaal_gleam_web/test/music_http_probe.gleam",
+        "tools/ev86_music_fixtures.ml",
+        "tools/ev86_music_http.ml",
+        "tools/ev86_music_stage.ml",
+        "tools/test_ev86_capture.ml"
+      ],
+      "modified_existing_file": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "missing_behaviors": [
+        "Closed GET/HEAD historical document/audio resource catalog",
+        "Observed regular-file metadata and directory checks with byte limits",
+        "MP3/WAV structure checks and truthful recorded-preview document UI",
+        "Capture-before-assert HTTP evidence checker plus static no-network fixtures"
+      ],
+      "historical_evidence": [
+        "docs/reviews/20260909-2058-ev86-capture-scope-verification.json",
+        "docs/journal/20260909-2058-ev86-capture-scope-journal.md"
+      ],
+      "historical_results_only": "17direct test groups,12saved HTTP responses,case13comparison failed with actualstatusUNKNOWN and10later casesUNRUN;7static capture fixturesPASS. No fresh HTTP/browser/audio tests run.",
+      "preserved_holds": [
+        "Mist supplies parsed path; original wire-target4096byte bound and exact lexical identity unestablished",
+        "Case13response missing; no inference may replace it",
+        "No playback, synthesis, acoustic quality, live deployment or admission"
+      ],
+      "integration_guidance": "Restore/review development source and tests; adapt only minimal hook into current root-web router so newer ecology/auth routes remain. No live music activation or claim of full transport acceptance without separate remediation/review."
+    }
+  ],
+  "specific_historical_defects_to_avoid": [
+    {
+      "path": "tools/ev02_governance/run_checks.ml",
+      "finding": "Old runner hardcodes obsolete workspace and uses unbounded local_bytes; selective port of structured capture/staging required, retaining current fixes."
+    },
+    {
+      "path": "tools/ev86_music_stage.ml",
+      "finding": "Obsolete fixed workspace/ev_native references, unbounded recursive copy and whole-file reads, blocking waitpid; adapt to explicit bounded private inputs and existing process primitives."
+    },
+    {
+      "path": "tools/ev86_music_http.ml",
+      "finding": "Blocking connect/send, wall-clock deadline, SIGTERM followed by unbounded waitpid; retain capture-before-assert while adapting lifecycle before execution."
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/music_files.gleam",
+      "finding": "Explicit cooperative responsive filesystem assumption; not descriptor-relative hostile-race VFS. Application handles() does not establish raw-wire boundary."
+    }
+  ],
+  "source_hashes": [
+    {
+      "revision": "8f80accd787f",
+      "path": "tools/ev02_governance/directive_mapping_gate.ml",
+      "sha256": "b55764bc064fa9103a1f25355e64c82ecc4fccd620da2e1572a4aea6a40523cd"
+    },
+    {
+      "revision": "8f80accd787f",
+      "path": "tools/ev02_governance/policy_surface_gate.ml",
+      "sha256": "4fab4af6d6dc066010f32c74712afee57dfdc7c8d3861960fcbce7936f14abcd"
+    },
+    {
+      "revision": "8f80accd787f",
+      "path": "tools/ev02_governance/run_checks.ml",
+      "sha256": "2752e60b9543a375b1f2b8e5e26f9e14faab0fef598a21fd543676e0bc2ae1bd"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/music_files.gleam",
+      "sha256": "c5d34b2b7876ba3a91bafb8916d98635229c7fcc2690659a056a0aadf32d5718"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "sha256": "1ea39bcc1c1eca528c8462793985a90db0f91d432035602f5c21a9af2eaa50f1"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "apps/indrajaal_gleam_web/test/music_files_test.gleam",
+      "sha256": "19fe3e1de5a8cfd7c7606bfbb0f75a8b5feeda47a6814ae231eac03072f516e3"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "apps/indrajaal_gleam_web/test/music_http_probe.gleam",
+      "sha256": "370098b0ba95c05a236f9cce6c75565e380408f9bce04f4fb5d05c3bf17a2001"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "tools/ev86_music_fixtures.ml",
+      "sha256": "95b854467da4f6e0608d0b7d18dc986fa4d8ee32a3bb776feb80f3a30ccf2c84"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "tools/ev86_music_http.ml",
+      "sha256": "6c2387aa55fa7389952c2e092bdca49676c1a01ff814023c29e121a66d906348"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "tools/ev86_music_stage.ml",
+      "sha256": "1fad24896bb0387d63d19e73b8be9846354116b5baf781cefdba3b0f8b06179d"
+    },
+    {
+      "revision": "f09ca55a4517",
+      "path": "tools/test_ev86_capture.ml",
+      "sha256": "6724ff75f661dde6f91e8a3e908e0d003e8448e7b7b07c7ccddbb5ec92640bd3"
+    }
+  ],
+  "prior_acceptance_boundary": "Completed HISTORY_REVIEW remains valid for a7 and its nine reviewed paths. It did not establish whole-history source completeness.",
+  "next_step": "Parent to create HISTORY_SUPERSET and independent SUPERSET_REVIEW; source consolidation remains HOLD until new candidate tested/reviewed.",
+  "historical_preservation_required": true
+}

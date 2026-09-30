@@ -1,0 +1,5 @@
+=== ev86_music_http selftest ===
+PASS: continuous log writer bounded per step (elapsed 0.0001s, read 131072 bytes)
+PASS: finish_drain refuses incomplete non-EOF drain
+PASS: connect handles log-only select wakeup without aborting
+ALL ev86_music_http selftests passed

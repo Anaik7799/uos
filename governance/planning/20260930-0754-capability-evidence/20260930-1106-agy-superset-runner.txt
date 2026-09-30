@@ -1,0 +1,2 @@
+{"schema":"uos.ev02-harness/v2","status":"PASS","cases":11}
+PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp/digest_receipt_alignment/staging_seals/structured_checks/mapping_hold_shape/read_regular_bounds

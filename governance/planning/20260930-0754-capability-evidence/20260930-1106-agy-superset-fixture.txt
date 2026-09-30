@@ -1,0 +1,19 @@
+   Compiled in 0.14s
+    Running music_files_test.main
+PASS aliases
+PASS malformed_paths
+PASS raw_ingress_bound
+PASS public_origin
+PASS configuration_and_method
+PASS semantic_documents
+PASS mp3_response
+PASS wav_response
+PASS head_response
+PASS wrong_magic
+PASS filesystem_refusals
+PASS document_payload_refusals
+PASS exact_document_bound
+PASS wav_bounds_and_size
+PASS legacy_parser_escape
+PASS legacy_inert_source
+PASS legacy_collapsed_checklist

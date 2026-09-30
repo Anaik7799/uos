@@ -1,0 +1,9 @@
+=== ev86_music_stage selftest ===
+PASS: verify_private_normalized_stage invalid path refusals
+PASS: root creation refuses EEXIST
+PASS: tree enforces global max_tree_entries bound
+PASS: run_bounded stdout/stderr separation
+PASS: run_bounded nonzero exit code preserved
+PASS: run_bounded timeout kills process group and raises timeout
+PASS: stop_group cleans up background process group descendants
+ALL ev86_music_stage selftests passed

@@ -1,0 +1,321 @@
+
+FILE runner.txt
+{"schema":"uos.ev02-harness/v2","status":"PASS","cases":11}
+PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp/digest_receipt_alignment/staging_seals/structured_checks/mapping_hold_shape/read_regular_bounds
+
+FILE polling.txt
+=== ev86_music_http selftest ===
+PASS: continuous log writer bounded per step (elapsed 0.0002s, read 131072 bytes)
+PASS: finish_drain refuses incomplete non-EOF drain
+PASS: connect handles log-only select wakeup without aborting
+ALL ev86_music_http selftests passed
+
+FILE stage.txt
+=== ev86_music_stage selftest ===
+PASS: verify_private_normalized_stage invalid path refusals
+PASS: root creation refuses EEXIST
+PASS: tree enforces global max_tree_entries bound
+PASS: run_bounded stdout/stderr separation
+PASS: run_bounded nonzero exit code preserved
+PASS: run_bounded timeout kills process group and raises timeout
+PASS: stop_group cleans up background process group descendants
+ALL ev86_music_stage selftests passed
+
+FILE census.txt
+{"schema":"uos.census-helper/v1","status":"PASS","rca":"filtering heads first hid code below empty workspace children","naive_query":"heads(all()) & ~empty()","naive_missed_commit_b":true,"robust_query":"heads(all() ~ ancestors(target) ~ empty())","robust_discovered_commit_b":true,"unique_ancestors_count":1}
+
+FILE default-web.txt
+timeout: failed to run command ‘/home/an/NAS-setup/uos/toolchains/nix-profile/bin/gleam’: No such file or directory
+
+FILE default-web-pinned.txt
+   Compiled in 0.21s
+    Running indrajaal_gleam_web_test.main
+[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m.[39m[32m
+43 passed, no failures[39m
+
+FILE governance.txt
+
+FILE staging-live.txt
+4251 bindings
+
+FILE http-live.txt
+PASS 15 actual HTTP cases /tmp/ev86-http-observation-78d924
+
+GOVERNANCE SUMMARY
+{
+  "source_commit": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+  "checks_pass": true,
+  "post_seal_pass": true,
+  "all_control_pass": true,
+  "rows": [
+    {
+      "id": "policy-selftest",
+      "exit_code": 0,
+      "control_pass": true,
+      "output_sha256": "1a83ccf6af7ea643d816cb6cdb218df407c7d68ac9a8a060f69500fd9c90faeb",
+      "stdout_sha256": "85f9da72c315a17125ad963e0bd30b38f768de70b6d4c20a05665d5528d44c87",
+      "stderr_sha256": "4a6618277669c80a249b8d086e5e8d0cbc5a1cc07aab0a088685fa181216e7ce"
+    },
+    {
+      "id": "policy-fixture-selftest",
+      "exit_code": 0,
+      "control_pass": true,
+      "output_sha256": "6e739c4bb870b2144cffac0261f4824f7242917600fb9bfbab61e73c0229aea6",
+      "stdout_sha256": "b5453479bb0050e7fd50dba87ffa06d78bdf6f795d47d3e88ef64915d824c566",
+      "stderr_sha256": "4a6618277669c80a249b8d086e5e8d0cbc5a1cc07aab0a088685fa181216e7ce"
+    },
+    {
+      "id": "policy-observation",
+      "exit_code": 1,
+      "control_pass": true,
+      "output_sha256": "a6228ab80aafcd6fa77d78cca9ba0f9b4dd49d015a8445912529082166306a35",
+      "stdout_sha256": "f58611cb42f5077cc44dec2b0d412d21535267c7fab13345542725dabf13639e",
+      "stderr_sha256": "4a6618277669c80a249b8d086e5e8d0cbc5a1cc07aab0a088685fa181216e7ce"
+    },
+    {
+      "id": "mapping-selftest",
+      "exit_code": 0,
+      "control_pass": true,
+      "output_sha256": "c720898b6d91465b1e9d14a141b185bf17da885172199861a55daf86168bb4c1",
+      "stdout_sha256": "a61d56eebd5fe58408647056d183ad09002f7b22cd3dbe4c58fa9041631eaeed",
+      "stderr_sha256": "831ed59bc2dadb2879f17f74c8c878ae969b989060307e7793c6a93810964910"
+    },
+    {
+      "id": "mapping-fixture-selftest",
+      "exit_code": 0,
+      "control_pass": true,
+      "output_sha256": "11257f8e056ace5ff3c808c6ba4eb63e5709e458a1cc2cbf8d80dbde33c8a397",
+      "stdout_sha256": "cc319d2771b3e51330c1e878af399404a1e7113a824428b82dbc009e1de08b15",
+      "stderr_sha256": "831ed59bc2dadb2879f17f74c8c878ae969b989060307e7793c6a93810964910"
+    },
+    {
+      "id": "mapping-observation",
+      "exit_code": 1,
+      "control_pass": true,
+      "output_sha256": "c22a5c720f8563823e60b7a7f7abe5aff51efb2be4bcb113e671a4db77c5fd15",
+      "stdout_sha256": "1ca72b3da4a0fff15d7741d503a3674f47ae1e1448f847f02269527cd45a25c9",
+      "stderr_sha256": "831ed59bc2dadb2879f17f74c8c878ae969b989060307e7793c6a93810964910"
+    },
+    {
+      "id": "km-gate",
+      "exit_code": 0,
+      "control_pass": true,
+      "output_sha256": "3ff121d0c634c53aadc06b1e81512bada369e87fdc60499d8b340d7b0b51a67d",
+      "stdout_sha256": "3ff121d0c634c53aadc06b1e81512bada369e87fdc60499d8b340d7b0b51a67d",
+      "stderr_sha256": "02a713f76226c52a198adae80526740fc4d6057636326bc8dec49635db8ae7a7"
+    }
+  ],
+  "regular": 147,
+  "holds": 4
+}
+
+ACTUAL PRIVATE HTTP RECEIPT
+{
+  "schema": "uos.ev86-http-verification/v1",
+  "status": "PASS",
+  "scope": "Private native HTTP bytes only; no playback/deploy/admission",
+  "host": "nas-1.tail55d152.ts.net",
+  "private_resolver_mapping": "127.0.0.1",
+  "port": 41001,
+  "child_argv": [
+    "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "-noshell", "-noinput", "-pa",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/argv/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/cepaf_gleam/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/certifi/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/directories/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/envoy/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/esqlite/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/exception/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/filepath/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleam_crypto/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleam_erlang/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleam_http/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleam_json/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleam_otp/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleam_regexp/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleam_stdlib/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gleeunit/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/glisten/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/gramps/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/hackney/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/houdini/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/hpack/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/idna/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/logging/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/lustre/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/marceau/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/mimerl/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/mist/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/parse_trans/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/platform/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/quic/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/simplifile/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/ssl_verify_fun/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/uos_swarm/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/uos_tui/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-lib/wisp/ebin",
+    "/tmp/uos-superset-review-20260930-1107/music-stage/full-compiled/ebin",
+    "-s", "music_http_probe", "main", "-s", "init", "stop"
+  ],
+  "server_log": {
+    "path": "/tmp/ev86-http-observation-78d924/http-server.log",
+    "bytes_read": 150,
+    "bytes_written": 150,
+    "truncated": false
+  },
+  "checks": [
+    {
+      "case": "player",
+      "method": "GET",
+      "path": "/docs/music/player",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1301800,
+      "body_sha256": "efee18669e0e07fd1339f92f2d66c73c64d094e53c8a6cf676e9a24dad241ec8",
+      "raw_sha256": "4e0c09c046cce4090513b6422c85bb2f69e8ecd99b0e3d1823362efc147b4222"
+    },
+    {
+      "case": "studio",
+      "method": "GET",
+      "path": "/docs/music/studio",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 44124,
+      "body_sha256": "565d4e18aedcf1e64b0d0fb2d307c992d7e2b05939268a0fdf0a5059765eb52d",
+      "raw_sha256": "3446e18658c689634e7f4a4be342fa1aad063caa271385b121e146960c476008"
+    },
+    {
+      "case": "mp3",
+      "method": "GET",
+      "path": "/media/music/historical-enhanced.mp3",
+      "status": 200,
+      "content_type": "audio/mpeg",
+      "body_bytes": 480696,
+      "body_sha256": "d5e2e97ae5787b60bc0ec8adf3dbde0e2a08484d4e81a203130ef41da4f32d9a",
+      "raw_sha256": "be4b3d24ffbe5be5560d6e6d93a94fe9b48424290955568d7e126cca9953ef8d"
+    },
+    {
+      "case": "wav",
+      "method": "GET",
+      "path": "/media/music/historical-mix.wav",
+      "status": 200,
+      "content_type": "audio/wav",
+      "body_bytes": 2646044,
+      "body_sha256": "b281fc8bd0b681603de1c15a37e1d1b3fe863181214119b2f8d8238b5baa1ef6",
+      "raw_sha256": "9eb4a7c2d7f69adf67a8947f251f38e6fcd8767ee88496f91cf83b0bd9d7347c"
+    },
+    {
+      "case": "head",
+      "method": "HEAD",
+      "path": "/media/music/historical-enhanced.mp3",
+      "status": 200,
+      "content_type": "audio/mpeg",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_sha256": "51ae9763d0333358319e9449bf09d6b66ff00b685b908648069a49d020802997"
+    },
+    {
+      "case": "missing",
+      "method": "GET",
+      "path": "/docs/music/absent",
+      "status": 404,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 24,
+      "body_sha256": "14b9b1e21b6087e4adb626dec25d00f67def942dda72fb289fb861d99b6d6762",
+      "raw_sha256": "792e962c30647d7fd582ff3edd5e41ca969a3a7fc59158bb7c51e918832d9523"
+    },
+    {
+      "case": "traversal",
+      "method": "GET",
+      "path": "/docs/music/../design/private",
+      "status": 404,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 24,
+      "body_sha256": "14b9b1e21b6087e4adb626dec25d00f67def942dda72fb289fb861d99b6d6762",
+      "raw_sha256": "792e962c30647d7fd582ff3edd5e41ca969a3a7fc59158bb7c51e918832d9523"
+    },
+    {
+      "case": "percent",
+      "method": "GET",
+      "path": "/docs/%6dusic/player",
+      "status": 404,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 24,
+      "body_sha256": "14b9b1e21b6087e4adb626dec25d00f67def942dda72fb289fb861d99b6d6762",
+      "raw_sha256": "792e962c30647d7fd582ff3edd5e41ca969a3a7fc59158bb7c51e918832d9523"
+    },
+    {
+      "case": "backslash",
+      "method": "GET",
+      "path": "/docs/music%5cplayer",
+      "status": 404,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 24,
+      "body_sha256": "14b9b1e21b6087e4adb626dec25d00f67def942dda72fb289fb861d99b6d6762",
+      "raw_sha256": "792e962c30647d7fd582ff3edd5e41ca969a3a7fc59158bb7c51e918832d9523"
+    },
+    {
+      "case": "method",
+      "method": "POST",
+      "path": "/docs/music/player",
+      "status": 405,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 18,
+      "body_sha256": "371b26886bee5e559d5016b17b1479cb7a9154865da5a0f11563580ea99ff033",
+      "raw_sha256": "7ffb87db96d0155aed2e3ae33f012ff0b63e61c655f2bc9219f9636629fdeac8"
+    },
+    {
+      "case": "exact-path",
+      "method": "GET",
+      "path": "/docs/music/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": 404,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 24,
+      "body_sha256": "14b9b1e21b6087e4adb626dec25d00f67def942dda72fb289fb861d99b6d6762",
+      "raw_sha256": "792e962c30647d7fd582ff3edd5e41ca969a3a7fc59158bb7c51e918832d9523"
+    },
+    {
+      "case": "above-path",
+      "method": "GET",
+      "path": "/docs/music/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": 414,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 31,
+      "body_sha256": "626aba4300cf796657de4c7c1d9992b379c3c6ac2f2ac02a6eda497905433e45",
+      "raw_sha256": "e18855e859f76c6e0ba4de073b85210d668c0b8d565214193bacae719713fbc1"
+    },
+    {
+      "case": "long-normalized-music",
+      "method": "GET",
+      "path": "/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/../docs/music/player",
+      "status": 414,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 31,
+      "body_sha256": "626aba4300cf796657de4c7c1d9992b379c3c6ac2f2ac02a6eda497905433e45",
+      "raw_sha256": "e18855e859f76c6e0ba4de073b85210d668c0b8d565214193bacae719713fbc1"
+    },
+    {
+      "case": "long-head",
+      "method": "HEAD",
+      "path": "/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": 414,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_sha256": "f4cd913b71603ef1be7f3f6942b3e746bc1613047a4914c30dacddc31c6cda2f"
+    },
+    {
+      "case": "malformed-mixed",
+      "method": "GET",
+      "path": "/%zz/../%64ocs/%6dusic/player",
+      "status": 404,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 24,
+      "body_sha256": "14b9b1e21b6087e4adb626dec25d00f67def942dda72fb289fb861d99b6d6762",
+      "raw_sha256": "792e962c30647d7fd582ff3edd5e41ca969a3a7fc59158bb7c51e918832d9523"
+    }
+  ]
+}
+REVIEW ACTIVE CHECK AFTER RESYNCHRONIZATION
+{"status":"ACTIVE_OBSERVATION_PASS","authority":"NONE","runtime_admission":"NOT_GRANTED","reclaim":null,"observed_at":"2026-09-30T11:11:21Z","completed_at":"2026-09-30T11:11:21Z","elapsed_monotonic_seconds":0.046833739,"clock_start":{"source":"chronyc tracking","abs_ntp_offset_seconds":0.00056419,"uncertainty_seconds":0.017223298,"reference_age_seconds":665.6704423427582,"stratum":3},"clock_end":{"source":"chronyc tracking","abs_ntp_offset_seconds":0.00056418,"uncertainty_seconds":0.017223332,"reference_age_seconds":665.7020194530487,"stratum":3},"assessment_sha256":"8b087cab8c71270ad973382ec185ec76afe0ebda40fa565139de189e7fbac97e","evidence_files_checked":47,"sa_plan":{"plan_id":"uos/capability-restoration/20260930-0734","snapshot_sha256":"c5a091a8d4da700eb48046462cc22eeb22326611716ecc14dc8d7ae7782925bd","tasks":[{"task_id":"ACCEPT","state":"executing","worker":"codex-capability-restoration-20260930","lease_until_ns":"1790768411443814836","attempt":3,"completed_at_ns":null,"result_present":false,"dependencies":["RELEASE"]},{"task_id":"AGY_FREE","state":"completed","worker":"agy-capability-restoration-20260930","lease_until_ns":null,"attempt":2,"completed_at_ns":"1790755430168041433","result_present":true,"dependencies":["AUDIT"]},{"task_id":"AGY_GUARD","state":"completed","worker":"agy-capability-restoration-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790755901766596675","result_present":true,"dependencies":["AGY_FREE"]},{"task_id":"AUDIT","state":"completed","worker":"codex-capability-restoration-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790754061186812921","result_present":true,"dependencies":[]},{"task_id":"HISTORY_BIND","state":"completed","worker":"agy-capability-restoration-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790761928567805030","result_present":true,"dependencies":["HISTORY_REPAIR"]},{"task_id":"HISTORY_HELPERS","state":"executing","worker":"agy-capability-restoration-20260930","lease_until_ns":"1790770187445982152","attempt":1,"completed_at_ns":null,"result_present":false,"dependencies":["HISTORY_SUPERSET"]},{"task_id":"HISTORY_REPAIR","state":"completed","worker":"agy-capability-restoration-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790761388543568117","result_present":true,"dependencies":["RELEASE"]},{"task_id":"HISTORY_REVIEW","state":"completed","worker":"codex-capability-review-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790762031591533598","result_present":true,"dependencies":["HISTORY_REPAIR"]},{"task_id":"HISTORY_SUPERSET","state":"completed","worker":"agy-capability-restoration-20260930","lease_until_ns":null,"attempt":2,"completed_at_ns":"1790766225181549703","result_present":true,"dependencies":["HISTORY_BIND"]},{"task_id":"INTEGRATE","state":"completed","worker":"codex-capability-restoration-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790756363670872702","result_present":true,"dependencies":["AGY_GUARD","TRANSPORT"]},{"task_id":"RELEASE","state":"completed","worker":"codex-capability-restoration-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790757530053065796","result_present":true,"dependencies":["REVIEW"]},{"task_id":"REVIEW","state":"completed","worker":"codex-capability-review-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790756836819727640","result_present":true,"dependencies":["AGY_FREE","TRANSPORT"]},{"task_id":"SUPERSET_REVIEW","state":"executing","worker":"codex-capability-review-20260930","lease_until_ns":"1790769920326457890","attempt":1,"completed_at_ns":null,"result_present":false,"dependencies":["HISTORY_SUPERSET"]},{"task_id":"TRANSPORT","state":"completed","worker":"codex-capability-restoration-20260930","lease_until_ns":null,"attempt":1,"completed_at_ns":"1790754801873923983","result_present":true,"dependencies":["AUDIT"]}],"mode":"READONLY","lease_fencing_authority":"NOT_GRANTED"},"order":[],"findings":[],"limits":["Listed byte equality does not prove source completeness, runtime behavior or signed provenance.","Analysis prose, class judgments, cost ties and control effectiveness require qualified review.","Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.","Snapshot is confined to one complete plan; no global optimum is asserted."]}

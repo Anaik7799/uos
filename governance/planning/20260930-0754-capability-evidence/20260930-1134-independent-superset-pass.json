@@ -1,0 +1,279 @@
+{
+  "schema": "uos.independent-superset-review.v1",
+  "observed_at": "2026-09-30T11:34:13Z",
+  "reviewer": "codex-capability-review-20260930",
+  "verdict": "PASS_SCOPED_DEVELOPMENT_SOURCE",
+  "plan": "uos/capability-restoration/20260930-0734",
+  "task": "SUPERSET_REVIEW",
+  "attempt": 1,
+  "candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+  "base": "a7b939a6b4afe3ac9a8010b2b823d580d8b07268",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-history-helpers-20260930",
+  "quiescence": {
+    "working_copy": "6f2ab91883433c2a56d74ae12e63cb3c3997f20e",
+    "jj_status": "empty; no working-copy changes",
+    "changed_paths_from_6aa": 2,
+    "changed_paths_from_a7": 11
+  },
+  "scope": "Independent development-source consolidation acceptance for this frozen candidate. Suitable for parent integration; no main movement or production effect performed by reviewer. Does not grant deployment or EV admission.",
+  "findings": [],
+  "independent_checks": [
+    {
+      "name": "default web suite",
+      "status": "PASS",
+      "count": 43,
+      "conditions": "Pinned Gleam1.16.0, OTP29; UOS_MUSIC_ROOT and UOS_MUSIC_PUBLIC_BASE unset.",
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "EV02 runner selftest",
+      "status": "PASS",
+      "reported_cases": 11,
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "HTTP polling selftest",
+      "status": "PASS",
+      "count": 3,
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "EV86 stage selftest",
+      "status": "PASS",
+      "count": 7,
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "pure census witness",
+      "status": "PASS",
+      "scope": "fixed three-node algebraic regression; no actual JJ runtime proof",
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "candidate-bound governance CLI",
+      "status": "PASS",
+      "controls": 7,
+      "regular_inputs": 147,
+      "unstaged_hold_inputs": 4,
+      "mapping_rows": 38,
+      "policy_observation_exit": 1,
+      "mapping_observation_exit": 1,
+      "post_seal_pass": true,
+      "artifact_digest_checks": 21,
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "actual private stage",
+      "status": "PASS",
+      "bindings": 4251,
+      "all_staged_hashes_match_disk": true,
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "actual private HTTP",
+      "status": "PASS",
+      "count": 15,
+      "port": 41001,
+      "listener_closed": true,
+      "server_log_bytes": 150,
+      "truncated": false,
+      "execution_candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+      "reuse_basis": "Only the two fixture/capture helpers changed in descendant; source hashes for these prior safe-path checks unchanged."
+    },
+    {
+      "name": "repaired fixture helper selftest",
+      "status": "PASS",
+      "count": 12,
+      "execution_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+      "scope": "Positive generation; traversal, symlink ancestors/leaf, FIFO, oversize, exclusive writes, actual scope receipt regular/symlink collisions and sentinel preservation."
+    },
+    {
+      "name": "repaired capture helper selftest",
+      "status": "PASS",
+      "count": 11,
+      "execution_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+      "scope": "Actual nonzero exit, bounded output flood, stable FD count across five repeated floods, EOF-before-child-exit timeout, descendant-held pipe/TERM resistance cleanup, output/report collisions and exact sentinel preservation, source ancestor and traversal refusal."
+    },
+    {
+      "name": "exact-source static response capture",
+      "status": "PASS",
+      "count": 13,
+      "execution_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+      "source_sha256": "c3539d4864a34f78b57d0c916ba8540860a4b1cfcfd23a0fb2819b1fd75cf591",
+      "checker_sha256": "ee76fd9f25460c5ab93406ebb4c8de30c28620e28209371a78a5651e19c16171",
+      "projection_sha256": "8100275be1da18408405ccb3b73b539c8a91ccf56b9de97181b9aa5c93accdb8",
+      "all_three_hashes_independently_match_actual_bytes": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "exit_code": 0
+    },
+    {
+      "name": "explicit Gleam fixture integration",
+      "status": "PASS",
+      "count": 17,
+      "execution_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+      "fixture_source": "Fresh repaired-helper generation using independently staged candidate content.",
+      "scope": "Positive media and documents plus read refusals, exact bounds, HEAD behavior, inert HTML and existing rendering regressions."
+    },
+    {
+      "name": "actual capture CLI negatives",
+      "status": "PASS",
+      "count": 4,
+      "execution_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+      "cases": [
+        "parent symlink",
+        "leaf symlink",
+        "FIFO",
+        "1048577-byte source"
+      ],
+      "expected_exit_code": 2,
+      "all_observed_exit_codes": 2,
+      "no_timeout": true
+    }
+  ],
+  "source_sha256": {
+    "apps/indrajaal_gleam_web/src/indrajaal/music_files.gleam": "c5d34b2b7876ba3a91bafb8916d98635229c7fcc2690659a056a0aadf32d5718",
+    "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam": "ecba10dd6d59076773f542fe4ffba8ba1b1b1913d02771308b280fffc67689e9",
+    "apps/indrajaal_gleam_web/test/music_files_test.gleam": "3e5ee323fc1dff9ee05d1153c0b751e9f10c1f246c907b835f486f5b2f1d06d3",
+    "apps/indrajaal_gleam_web/test/music_http_probe.gleam": "370098b0ba95c05a236f9cce6c75565e380408f9bce04f4fb5d05c3bf17a2001",
+    "tools/ev02_governance/census_helper.ml": "2078a6b36fb3c6352a9e4d059c35da7b836a1b9e8889df1f4f18d5829df5e616",
+    "tools/ev02_governance/directive_mapping_gate.ml": "14062781f06e0d99b2458df5c8d432a2da991eec61e1c1faa037f45a4d4747ad",
+    "tools/ev02_governance/run_checks.ml": "8b02ad7e1c83a272221ddc6bbe9033ef1b5b2f597f4ebd652b3ac13d046eec39",
+    "tools/ev86_music_fixtures.ml": "6ae937619c91c7d364e7bf6d4afcdd44342e2cabce8bc630a05eb02dd22d707b",
+    "tools/ev86_music_http.ml": "c3539d4864a34f78b57d0c916ba8540860a4b1cfcfd23a0fb2819b1fd75cf591",
+    "tools/ev86_music_stage.ml": "a680c5a22f0fcbb9d4b60517c6ac16e578546a2443bf636b811c71b34d62ac06",
+    "tools/test_ev86_capture.ml": "b346d43f4fa68064adb0a904c023a2e8ed9ade51379799af2a617ce89c67a415"
+  },
+  "evidence": [
+    {
+      "path": "governance/planning/20260930-0754-capability-evidence/20260930-1111-independent-superset-tests.txt",
+      "sha256": "5f753e68a4ac5eef8e357e76131e7bbcd0ab5a680265da0e6d11069ec2c4c04f"
+    },
+    {
+      "path": "/tmp/uos-superset-review-20260930-1107/music-stage/full-bindings.json",
+      "sha256": "b5ffd67702ea0962e71b8b7c1970fe38663f9e23989ee37f6d4684fabc35faf9"
+    },
+    {
+      "path": "/tmp/uos-superset-review-20260930-1107/governance/20260930-1110-ev02-governance-checks.json",
+      "sha256": "755b445c4f2bb2979810be5d057a6621918cf07dfe00ea6522e6925a8a33b6cc"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-78d924/http-verification.json",
+      "sha256": "01e9f49958b9be35df3489472fb8e7b8e54b53dfd38d07c59ae96f14b8e133ef"
+    },
+    {
+      "path": "governance/planning/20260930-0754-capability-evidence/20260930-1134-independent-helper-tests.txt",
+      "sha256": "9cdca57f21e18b698e0974bc4194f7a9acccf1aff75c2d2c531e074b2fb8a693"
+    },
+    {
+      "path": "/tmp/ev86-capture-fixtures-e644f6/verification.json",
+      "sha256": "08edd56345c336032cbf4b3f7a6cb38af6411958aef1d80b1d7038c56cc04686"
+    },
+    {
+      "path": "/tmp/ev86-capture-fixtures-e644f6/checks.json",
+      "sha256": "b384676f60d66bed8fbe09f0945be43f8f28dea7d906f075164598ecd8b04d23"
+    }
+  ],
+  "preserved_counterevidence": [
+    {
+      "kind": "review invocation error",
+      "detail": "First default-web command used absent toolchains/nix-profile/bin/gleam and exited127. Original log retained; rerun with pinned toolchains/gleam-1.16.0 passed43."
+    },
+    {
+      "kind": "authority observation HOLD",
+      "observed_at": "2026-09-30T11:10:13Z",
+      "rule": "RP-SA-PLAN",
+      "task": "HISTORY_HELPERS",
+      "detail": "Declared task state differed from canonical executing state. Reviewer paused; parent synchronized11:10:28, parent active PASS11:10:45, reviewer fresh active PASS11:11:21. No retroactive authority claim."
+    },
+    {
+      "kind": "historical HTTP counterevidence",
+      "detail": "Original case13 remains UNKNOWN and later cases UNRUN in historical receipts. This fresh15-case observation is separate evidence."
+    }
+  ],
+  "limits": [
+    "Passing counts overlap and are not additive.",
+    "Music root remains explicitly configured and absent by default. Source integration is not production activation.",
+    "Parsed-path HTTP checks do not prove original wire-target bounds, lexical identity, playback, musical authenticity, or deployment/admission.",
+    "Filesystem checks assume cooperative responsive filesystems; no hostile-race descriptor-relative VFS claim.",
+    "Governance observations remain HOLD: missing DIR-TOOL-001 anchor, invalid DIR-GATE-001 reference, body differences, and absent independent amendment admission.",
+    "Census actual historical ancestry evidence remains the independent1000 supplement; synthetic witness does not replace it.",
+    "Directive parsing supports the stated scalar/table subset, not full TOML or semantic policy equivalence.",
+    "Helpers execute trusted reviewed source in development; process bounds and source hashes are not a sandbox for arbitrary hostile code.",
+    "Source acceptance is limited to the19 classified original lineages and the reviewed candidate; it is not a universal claim about all hidden historical source bytes."
+  ],
+  "reviewed_predecessor": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+  "resolved_findings": [
+    {
+      "severity": "P1",
+      "file": "tools/ev86_music_fixtures.ml",
+      "lines": [
+        3,
+        4,
+        5,
+        6,
+        11,
+        12
+      ],
+      "finding": "Historical fixture helper does not enforce private bounded writes: /tmp prefix permits traversal and symlink ancestors, source read is unbounded, writes truncate existing paths.",
+      "required": "Normalize and verify owned private root; bounded stable regular-file reads; atomic exclusive cases-root creation and output writes; traversal/symlink/oversize/collision falsifiers.",
+      "status": "RESOLVED",
+      "evidence": "Independent source inspection, selftests and actual CLI controls on1a816aeb."
+    },
+    {
+      "severity": "P1",
+      "file": "tools/test_ev86_capture.ml",
+      "lines": [
+        6,
+        57,
+        58,
+        59,
+        60
+      ],
+      "finding": "Historical capture helper uses unbounded source/output reads and create_process followed by blocking waitpid, without deadline, captured-output bound or process-group cleanup.",
+      "required": "Bound source/projection/output; preserve separate streams and actual exit status; deadline through EOF and child exit, group cleanup and lifecycle negative controls.",
+      "status": "RESOLVED",
+      "evidence": "Independent source inspection, selftests and actual CLI controls on1a816aeb."
+    }
+  ],
+  "prior_hold": {
+    "path": "governance/planning/20260930-0754-capability-evidence/20260930-1111-independent-superset-hold.json",
+    "sha256": "4ec5633dbf60bba220c5b7ecbc1749dc4dcd0e2e05f4382139dda4ce61a75095",
+    "preserved": true
+  },
+  "historical_source_coverage": {
+    "original_lineages": 19,
+    "prior_classified_heads": 15,
+    "supplemental_heads": 4,
+    "status": "Applicable development-code consolidation reconciled by selective ports; no requirement or authorization to import every historical byte.",
+    "evidence": [
+      {
+        "path": "governance/planning/20260930-0754-capability-evidence/20260930-0852-independent-historical-head-classification.json",
+        "sha256": "6f31b4390acce5f03ec7745d28cccd75f062f65bfd1506a1039e1c8aa4cdf329"
+      },
+      {
+        "path": "governance/planning/20260930-0754-capability-evidence/20260930-1000-independent-historical-head-supplement.json",
+        "sha256": "aee809cf57a42ac11ada610e1ef8090ce79dc5293bee92f41fb265664f398e06"
+      },
+      {
+        "path": "governance/planning/20260930-0754-capability-evidence/20260930-0953-independent-history-review-pass.json",
+        "sha256": "5b81cdfe7f1437d51b8c4f7794cd08c0ab99b30b213ace83345d413a99ebc519"
+      }
+    ],
+    "reconciliation": [
+      "Equivalent EV01 rewrites, root snapshot source and telemetry implementations were already represented; preserved evidence remains distinct.",
+      "Superseded release/unification/Mirage implementations were not blindly restored; a7 retains reviewed fail-closed Mirage gate semantics and safe EV02 base helpers.",
+      "Later EV02 exact amendment schema, directive scalar/table clauses, split structured process results, immutable full policy staging and inventory seals are restored in6aa.",
+      "EV86 closed preview route and test/staging helpers are restored with default-missing root, bounded observations, preserved raw-wire caveat, and two final hardened helper replacements in1a816aeb.",
+      "Census regression is a pure synthetic witness. Actual19-lineage classification relies on the referenced independent historical JJ observations.",
+      "Old ledgers, live-board snapshots, false admission statements, historical HOLD/UNKNOWN/UNRUN evidence, and misleading full-tree removals remain inert historical records; no replay or deletion authorized."
+    ]
+  }
+}

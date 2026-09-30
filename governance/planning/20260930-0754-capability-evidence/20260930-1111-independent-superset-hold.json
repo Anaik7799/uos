@@ -1,0 +1,164 @@
+{
+  "schema": "uos.independent-superset-review.v1",
+  "observed_at": "2026-09-30T11:11:21Z",
+  "reviewer": "codex-capability-review-20260930",
+  "verdict": "HOLD",
+  "plan": "uos/capability-restoration/20260930-0734",
+  "task": "SUPERSET_REVIEW",
+  "attempt": 1,
+  "candidate": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+  "base": "a7b939a6b4afe3ac9a8010b2b823d580d8b07268",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-history-superset-20260930",
+  "quiescence": {
+    "working_copy": "4a39af986730969e551c8f464119f1fd9cad0d45",
+    "jj_status": "empty; no working-copy changes",
+    "source_paths_changed": 11
+  },
+  "scope": "Independent development-source reconciliation review. No production mutation, main movement, EV admission, or music activation.",
+  "findings": [
+    {
+      "severity": "P1",
+      "file": "tools/ev86_music_fixtures.ml",
+      "lines": [
+        3,
+        4,
+        5,
+        6,
+        11,
+        12
+      ],
+      "finding": "Historical fixture helper does not enforce private bounded writes: /tmp prefix permits traversal and symlink ancestors, source read is unbounded, writes truncate existing paths.",
+      "required": "Normalize and verify owned private root; bounded stable regular-file reads; atomic exclusive cases-root creation and output writes; traversal/symlink/oversize/collision falsifiers."
+    },
+    {
+      "severity": "P1",
+      "file": "tools/test_ev86_capture.ml",
+      "lines": [
+        6,
+        57,
+        58,
+        59,
+        60
+      ],
+      "finding": "Historical capture helper uses unbounded source/output reads and create_process followed by blocking waitpid, without deadline, captured-output bound or process-group cleanup.",
+      "required": "Bound source/projection/output; preserve separate streams and actual exit status; deadline through EOF and child exit, group cleanup and lifecycle negative controls."
+    }
+  ],
+  "independent_checks": [
+    {
+      "name": "default web suite",
+      "status": "PASS",
+      "count": 43,
+      "conditions": "Pinned Gleam1.16.0, OTP29; UOS_MUSIC_ROOT and UOS_MUSIC_PUBLIC_BASE unset."
+    },
+    {
+      "name": "EV02 runner selftest",
+      "status": "PASS",
+      "reported_cases": 11
+    },
+    {
+      "name": "HTTP polling selftest",
+      "status": "PASS",
+      "count": 3
+    },
+    {
+      "name": "EV86 stage selftest",
+      "status": "PASS",
+      "count": 7
+    },
+    {
+      "name": "pure census witness",
+      "status": "PASS",
+      "scope": "fixed three-node algebraic regression; no actual JJ runtime proof"
+    },
+    {
+      "name": "candidate-bound governance CLI",
+      "status": "PASS",
+      "controls": 7,
+      "regular_inputs": 147,
+      "unstaged_hold_inputs": 4,
+      "mapping_rows": 38,
+      "policy_observation_exit": 1,
+      "mapping_observation_exit": 1,
+      "post_seal_pass": true,
+      "artifact_digest_checks": 21
+    },
+    {
+      "name": "actual private stage",
+      "status": "PASS",
+      "bindings": 4251,
+      "all_staged_hashes_match_disk": true
+    },
+    {
+      "name": "actual private HTTP",
+      "status": "PASS",
+      "count": 15,
+      "port": 41001,
+      "listener_closed": true,
+      "server_log_bytes": 150,
+      "truncated": false
+    },
+    {
+      "name": "fixture integration and capture helper",
+      "status": "NOT_RUN",
+      "reason": "Unsafe imported helpers withheld pending HISTORY_HELPERS repair; AGY earlier counts are not independently accepted."
+    }
+  ],
+  "source_sha256": {
+    "apps/indrajaal_gleam_web/src/indrajaal/music_files.gleam": "c5d34b2b7876ba3a91bafb8916d98635229c7fcc2690659a056a0aadf32d5718",
+    "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam": "ecba10dd6d59076773f542fe4ffba8ba1b1b1913d02771308b280fffc67689e9",
+    "apps/indrajaal_gleam_web/test/music_files_test.gleam": "3e5ee323fc1dff9ee05d1153c0b751e9f10c1f246c907b835f486f5b2f1d06d3",
+    "apps/indrajaal_gleam_web/test/music_http_probe.gleam": "370098b0ba95c05a236f9cce6c75565e380408f9bce04f4fb5d05c3bf17a2001",
+    "tools/ev02_governance/census_helper.ml": "2078a6b36fb3c6352a9e4d059c35da7b836a1b9e8889df1f4f18d5829df5e616",
+    "tools/ev02_governance/directive_mapping_gate.ml": "14062781f06e0d99b2458df5c8d432a2da991eec61e1c1faa037f45a4d4747ad",
+    "tools/ev02_governance/run_checks.ml": "8b02ad7e1c83a272221ddc6bbe9033ef1b5b2f597f4ebd652b3ac13d046eec39",
+    "tools/ev86_music_fixtures.ml": "95b854467da4f6e0608d0b7d18dc986fa4d8ee32a3bb776feb80f3a30ccf2c84",
+    "tools/ev86_music_http.ml": "c3539d4864a34f78b57d0c916ba8540860a4b1cfcfd23a0fb2819b1fd75cf591",
+    "tools/ev86_music_stage.ml": "a680c5a22f0fcbb9d4b60517c6ac16e578546a2443bf636b811c71b34d62ac06",
+    "tools/test_ev86_capture.ml": "0282476eb48f49146ba3c55920fc52834e6bc3e665293ac0cb83ebc67d2191d5"
+  },
+  "evidence": [
+    {
+      "path": "governance/planning/20260930-0754-capability-evidence/20260930-1111-independent-superset-tests.txt",
+      "sha256": "5f753e68a4ac5eef8e357e76131e7bbcd0ab5a680265da0e6d11069ec2c4c04f"
+    },
+    {
+      "path": "/tmp/uos-superset-review-20260930-1107/music-stage/full-bindings.json",
+      "sha256": "b5ffd67702ea0962e71b8b7c1970fe38663f9e23989ee37f6d4684fabc35faf9"
+    },
+    {
+      "path": "/tmp/uos-superset-review-20260930-1107/governance/20260930-1110-ev02-governance-checks.json",
+      "sha256": "755b445c4f2bb2979810be5d057a6621918cf07dfe00ea6522e6925a8a33b6cc"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-78d924/http-verification.json",
+      "sha256": "01e9f49958b9be35df3489472fb8e7b8e54b53dfd38d07c59ae96f14b8e133ef"
+    }
+  ],
+  "preserved_counterevidence": [
+    {
+      "kind": "review invocation error",
+      "detail": "First default-web command used absent toolchains/nix-profile/bin/gleam and exited127. Original log retained; rerun with pinned toolchains/gleam-1.16.0 passed43."
+    },
+    {
+      "kind": "authority observation HOLD",
+      "observed_at": "2026-09-30T11:10:13Z",
+      "rule": "RP-SA-PLAN",
+      "task": "HISTORY_HELPERS",
+      "detail": "Declared task state differed from canonical executing state. Reviewer paused; parent synchronized11:10:28, parent active PASS11:10:45, reviewer fresh active PASS11:11:21. No retroactive authority claim."
+    },
+    {
+      "kind": "historical HTTP counterevidence",
+      "detail": "Original case13 remains UNKNOWN and later cases UNRUN in historical receipts. This fresh15-case observation is separate evidence."
+    }
+  ],
+  "limits": [
+    "Passing counts overlap and are not additive.",
+    "Music root remains explicitly configured and absent by default. Source integration is not production activation.",
+    "Parsed-path HTTP checks do not prove original wire-target bounds, lexical identity, playback, musical authenticity, or deployment/admission.",
+    "Filesystem checks assume cooperative responsive filesystems; no hostile-race descriptor-relative VFS claim.",
+    "Governance observations remain HOLD: missing DIR-TOOL-001 anchor, invalid DIR-GATE-001 reference, body differences, and absent independent amendment admission.",
+    "Census actual historical ancestry evidence remains the independent1000 supplement; synthetic witness does not replace it.",
+    "Overall source-superset acceptance awaits repaired helper descendant and its independent tests."
+  ]
+}

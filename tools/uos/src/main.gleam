@@ -180,6 +180,35 @@ pub fn parse_args(args: List(String)) -> UosCommand {
   }
 }
 
+fn mirage_not_verified(scope: String, inventory_complete: Bool) -> Int {
+  case inventory_complete {
+    True ->
+      io.println(
+        "  [INVENTORY] "
+        <> scope
+        <> " source, test, and document artifacts are present",
+      )
+    False ->
+      io.println(
+        "  [INVENTORY_MISSING] "
+        <> scope
+        <> " source, test, or document artifacts are incomplete",
+      )
+  }
+  io.println(
+    "  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt",
+  )
+  io.println(
+    "  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result",
+  )
+  io.println(
+    "  [FAIL_CLOSED] "
+    <> scope
+    <> " remains unverified and unadmitted (file presence alone does not grant admission)",
+  )
+  1
+}
+
 pub fn execute(cmd: UosCommand) -> Int {
   case cmd {
     Status -> {
@@ -1661,16 +1690,10 @@ pub fn execute(cmd: UosCommand) -> Int {
             file_exists("apps/cepaf_gleam/src/cepaf_gleam/services/mirage_unikernel_daemon.gleam")
           let mirage_test =
             file_exists("apps/cepaf_gleam/test/mirage_unikernel_daemon_test.gleam")
-          case mirage_sig && mirage_block && mirage_kv && mirage_solo5 && mirage_inter && mirage_gleam && mirage_test {
-            True -> {
-              io.println("  [PASS] MirageOS Library OS Architecture (G-MIRAGE / EV-87) verified")
-              0
-            }
-            False -> {
-              io.println("Gate Result: FAIL (G-MIRAGE missing required components)")
-              1
-            }
-          }
+          mirage_not_verified(
+            "G-MIRAGE",
+            mirage_sig && mirage_block && mirage_kv && mirage_solo5 && mirage_inter && mirage_gleam && mirage_test,
+          )
         }
         "G-MIRAGE-MIGRATE" | "mirage-migration" -> {
           let cat_ml = file_exists("engines/hermes/modules/hermes_mirage/mirage_migration_catalog.ml")
@@ -1681,16 +1704,10 @@ pub fn execute(cmd: UosCommand) -> Int {
           let gleam_tst = file_exists("apps/cepaf_gleam/test/mirage_migration_engine_test.gleam")
           let policy_md = file_exists("contracts/rules/mirage-migration-policy.md")
           let spec_md = file_exists("docs/design/20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md")
-          case cat_ml && dns_ml && tls_ml && test_ml && gleam_eng && gleam_tst && policy_md && spec_md {
-            True -> {
-              io.println("  [PASS] MirageOS Subsystem Migration Engine (G-MIRAGE-MIGRATE / EV-88) verified")
-              0
-            }
-            False -> {
-              io.println("Gate Result: FAIL (G-MIRAGE-MIGRATE missing required components)")
-              1
-            }
-          }
+          mirage_not_verified(
+            "G-MIRAGE-MIGRATE",
+            cat_ml && dns_ml && tls_ml && test_ml && gleam_eng && gleam_tst && policy_md && spec_md,
+          )
         }
         "G-MIRAGE-PROD" | "mirage-prod" -> {
           let runner_ml = file_exists("engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml")
@@ -1701,16 +1718,10 @@ pub fn execute(cmd: UosCommand) -> Int {
           let contract_md = file_exists("contracts/rules/mirage-production-integration-contract.md")
           let spec_md = file_exists("docs/design/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md")
           let journal_md = file_exists("docs/journal/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md")
-          case runner_ml && ui_gleam && api_gleam && tui_gleam && test_gleam && contract_md && spec_md && journal_md {
-            True -> {
-              io.println("  [PASS] MirageOS Triple-Surface Cockpit & Solo5 Cutover (G-MIRAGE-PROD / EV-89) verified")
-              0
-            }
-            False -> {
-              io.println("Gate Result: FAIL (G-MIRAGE-PROD missing required components)")
-              1
-            }
-          }
+          mirage_not_verified(
+            "G-MIRAGE-PROD",
+            runner_ml && ui_gleam && api_gleam && tui_gleam && test_gleam && contract_md && spec_md && journal_md,
+          )
         }
         "G-MIRAGE-TENDERS" | "mirage-tenders" -> {
           let probe_ml =

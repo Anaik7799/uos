@@ -1,0 +1,14 @@
+=== ev86_music_fixtures selftest ===
+PASS: positive fixture generation
+PASS: root collision refused
+PASS: traversal .. in stage refused
+PASS: symlink stage refused
+PASS: symlink source refused
+PASS: non-regular source refused
+PASS: oversize source refused
+PASS: exclusive write refused victim overwrite
+PASS: fixture-scope.json regular collision preserves victim bytes
+PASS: fixture-scope.json symlink collision preserves victim bytes
+PASS: parent-symlink source ancestor refused
+PASS: exclusive write refused victim symlink overwrite
+ALL ev86_music_fixtures selftests passed

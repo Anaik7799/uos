@@ -1,0 +1,2 @@
+/tmp/ev86-capture-fixtures-70ba46/verification.json
+PASS 13 local static-response capture fixtures

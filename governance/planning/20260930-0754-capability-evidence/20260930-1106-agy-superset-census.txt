@@ -1,0 +1,15 @@
+{"schema":"uos.census-helper/v1","status":"PASS","rca":"filtering heads first hid code below empty workspace children","naive_query":"heads(all()) & ~empty()","naive_missed_commit_b":true,"robust_query":"heads(all() ~ ancestors(target) ~ empty())","robust_discovered_commit_b":true,"unique_ancestors_count":1}
+=== Pure Bounded Synthetic DAG Revset Witness ===
+Topology:
+  commit-A-target-base [empty=false, parents=[]] : target baseline revision
+  commit-B-historical-code [empty=false, parents=[commit-A-target-base]] : historical unintegrated development code
+  commit-C-empty-tip [empty=true, parents=[commit-B-historical-code]] : empty workspace child
+
+Naive query 'heads(all()) & ~empty()':
+  Result: [] (commit-B hidden because empty head commit-C was filtered after heads)
+
+Robust query 'heads(all() ~ ancestors(target) ~ empty())':
+  Discovered Head: commit-B-historical-code
+    Unique Ancestors: [commit-B-historical-code]
+
+Verdict: PASS (pure algebraic witness without subprocesses or side effects)

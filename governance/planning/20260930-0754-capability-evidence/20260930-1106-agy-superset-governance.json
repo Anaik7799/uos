@@ -1,0 +1,1086 @@
+{
+  "schema": "uos.ev02-governance-checks/v1",
+  "authority": "REPORT_ONLY",
+  "admission": "NOT_GRANTED",
+  "source_commit": "6aa2f5fe180bce28ddeb33f1df8dff21d95d0edb",
+  "candidate_bindings": [
+    {
+      "path": "tools/ev02_governance/run_checks.ml",
+      "sha256": "8b02ad7e1c83a272221ddc6bbe9033ef1b5b2f597f4ebd652b3ac13d046eec39",
+      "bytes": 51459
+    },
+    {
+      "path": "tools/ev02_governance/directive_mapping_gate.ml",
+      "sha256": "14062781f06e0d99b2458df5c8d432a2da991eec61e1c1faa037f45a4d4747ad",
+      "bytes": 28605
+    },
+    {
+      "path": "tools/ev02_governance/policy_surface_gate.ml",
+      "sha256": "6a711fb10f0d5310fd99e9d6c210dfd25ed6cff5c62fa0d527aa884f2bf5046e",
+      "bytes": 18661
+    },
+    {
+      "path": "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025",
+      "bytes": 4092
+    }
+  ],
+  "staged_bindings": [
+    {
+      "path": "governance/agents/policy/superset.toml",
+      "candidate_kind": "file",
+      "sha256": "274f07ff118547535713f3da74246a653b5a3a460f77dd00a71fe7711ae1f158",
+      "bytes": 5921
+    },
+    {
+      "path": "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "candidate_kind": "file",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025",
+      "bytes": 4092
+    },
+    {
+      "path": ".agents/rules/20260907-0653-tri-agent-coordination.md",
+      "candidate_kind": "file",
+      "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+      "bytes": 9326
+    },
+    {
+      "path": ".agents/rules/20260907-0811-hive-decision-forecast-kpi-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "3d7353a5c5b7466367719cd223d740ff0c8748e046e2b313d658623a211eaab3",
+      "bytes": 13789
+    },
+    {
+      "path": ".agents/rules/20260907-1330-iam-ferriskey-nif-rule.md",
+      "candidate_kind": "file",
+      "sha256": "78b37efbb6da2cad2840ab367212d7f9b86885e93dabd5e79c7c2f4cd7879484",
+      "bytes": 12379
+    },
+    {
+      "path": ".agents/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "c51940e006a3c56950a993aaafe106d0aa7c8ec05d6b0b392bd51ea0ae7bb6c5",
+      "bytes": 15708
+    },
+    {
+      "path": ".agents/rules/20260907-1559-risk-prioritization-sop.md",
+      "candidate_kind": "symlink",
+      "status": "UNSTAGED_HOLD"
+    },
+    {
+      "path": ".agents/rules/20260908-2142-determinate-nix-devenv-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "743210be1a42f21a6280d07a2089117afc634c42bc638f9c84bfe76146193057",
+      "bytes": 10214
+    },
+    {
+      "path": ".agents/rules/20260909-0412-gleam-harness-operations.md",
+      "candidate_kind": "file",
+      "sha256": "ed3012897052c9e54c3264100cc4c9eaacf28db55fd1f58a76a499743e2419a3",
+      "bytes": 3766
+    },
+    {
+      "path": ".agents/rules/20260909-0704-fractal-layer-taxonomy-single-source.md",
+      "candidate_kind": "file",
+      "sha256": "05ba0080e074493c9d82a793a9e772e7822171ed02ebbb64c7d0bcd7ef14abe4",
+      "bytes": 6826
+    },
+    {
+      "path": ".agents/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md",
+      "candidate_kind": "file",
+      "sha256": "d306f8f30148f3ac3e35829bba2231bec7f58aed1115e592c19770fdbd333adb",
+      "bytes": 11975
+    },
+    {
+      "path": ".agents/rules/20260916-0505-five-cycle-category-theoretic-transmutation-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "8f8e33c6832fbbec85410514b28cd0dc5f197dbfe9c398427754d2d6f17a04e1",
+      "bytes": 4576
+    },
+    {
+      "path": ".agents/rules/20260916-0945-topos-internal-logic-and-double-category-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "91a36b8bcf09f5e8d4db2c1076b7039ab00c2378ad8ce5cae3ca3ed7ddb39e5f",
+      "bytes": 4456
+    },
+    {
+      "path": ".agents/rules/20260916-0950-comprehensive-category-theoretic-composability-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "946ceee4c3864e6e61150ca00af65babd1f39119ea83d9b8ca558f2c34d92936",
+      "bytes": 5114
+    },
+    {
+      "path": ".agents/rules/20260916-1000-criticality-utility-stpa-fmea-category-theoretic-evolution-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "f0bba06a0a8074f068573995cbe9c98c66f61af3fef22de2cfdb2bd0763eee06",
+      "bytes": 4835
+    },
+    {
+      "path": ".agents/rules/20260916-1030-criticality-utility-stpa-fmea-co-evolution-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "32c0901af26a0cdf5b8f4f88965d98da54bb8e8fdb8409118b49576e5ebaa07d",
+      "bytes": 5161
+    },
+    {
+      "path": ".agents/rules/20260916-1130-master-feature-categorical-composability-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "f0a7e8204b5fbdfb66af2966e8c13e141c622736f8296b8dc02c7f2c5f9d75b9",
+      "bytes": 5154
+    },
+    {
+      "path": ".agents/rules/20260916-1200-all-features-runtime-implementation-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "3862e515e6100b2180c1ab9cf5f792483f832704fe6bf6bceb6abc08ea7158f5",
+      "bytes": 3890
+    },
+    {
+      "path": ".agents/rules/20260916-1950-zero-copy-rdma-and-burst-benchmark-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "07807806c011182a83a3347cb50a6e0516ba6ae3181ed1fdb6fafca951f40b75",
+      "bytes": 3595
+    },
+    {
+      "path": ".agents/rules/c3i-cross-language-control-contract.md",
+      "candidate_kind": "file",
+      "sha256": "6210253651f4406daeb4b37c329555e5fe963ffb7ec89be4cafd32d1517718af",
+      "bytes": 2432
+    },
+    {
+      "path": ".agents/rules/c3i-indrajaal-functional-mirroring.md",
+      "candidate_kind": "file",
+      "sha256": "89ecb40ab9fc6c1112e4f89867a71b580f565a02bfcd0f8f7c47664e82c3385a",
+      "bytes": 1309
+    },
+    {
+      "path": ".agents/rules/c3i-indrajaal-parity-superiority.md",
+      "candidate_kind": "file",
+      "sha256": "10d33c3a36cbfb41c0b78865b292a65babdcbdc2c3b5ae24857ffae4616c529a",
+      "bytes": 1247
+    },
+    {
+      "path": ".agents/rules/comprehensive-checklist-contract.md",
+      "candidate_kind": "file",
+      "sha256": "99e894c849d0b652eac5e8099a1f494e5e4ee012af82e8036d5d3769a41cb44f",
+      "bytes": 6823
+    },
+    {
+      "path": ".agents/rules/cybernetic-orchestra-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "b6d963fe905963420f952b771dc1148956bd5d10c40237268754a394934beeed",
+      "bytes": 1673
+    },
+    {
+      "path": ".agents/rules/denotational-intent-algebraic-atlas-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2e9528154d9ed6549333583bd4ce0f53c4f58496caac722c48588aeb446279d2",
+      "bytes": 1789
+    },
+    {
+      "path": ".agents/rules/diagram-ascii-mermaid-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4106210a34315db25553fbc8bc8c49542d120233538ed27c6bc2bcbb19352939",
+      "bytes": 2789
+    },
+    {
+      "path": ".agents/rules/dmc-tcm-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "bytes": 1833
+    },
+    {
+      "path": ".agents/rules/fractal-cadence-matrix.md",
+      "candidate_kind": "file",
+      "sha256": "3824c2ad05745c3d1d6fc002997dc89d2c8704c5dfc9bbac673edbb24f385c3f",
+      "bytes": 1684
+    },
+    {
+      "path": ".agents/rules/full-symbiosis.md",
+      "candidate_kind": "file",
+      "sha256": "7aad314f863196130c58faf26b43e9ccb7d4d0687589cfc1d8c715c1295e50cd",
+      "bytes": 5838
+    },
+    {
+      "path": ".agents/rules/hive-synchrony-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "3417b173fd39f7938413ff70580e4b80b68cdc3abeade4453b1fb210612f468c",
+      "bytes": 1604
+    },
+    {
+      "path": ".agents/rules/indrajaal-constitution-migration.md",
+      "candidate_kind": "file",
+      "sha256": "546582b90ef5604cf2e28e0851410c47fc4532f1daa36999e311295ab103bf04",
+      "bytes": 1476
+    },
+    {
+      "path": ".agents/rules/intelligence-routing-rule.md",
+      "candidate_kind": "file",
+      "sha256": "886b47d4b12ee9932daca633bb84b29b7e63e077cc4fa8458c46909fc0946e53",
+      "bytes": 2409
+    },
+    {
+      "path": ".agents/rules/km-wiki-zk-contract.md",
+      "candidate_kind": "file",
+      "sha256": "b3e756ef3bf84116e61989449f623f06f57be3dba61d12e63cddc62dc6812021",
+      "bytes": 1141
+    },
+    {
+      "path": ".agents/rules/mirage-migration-policy.md",
+      "candidate_kind": "file",
+      "sha256": "3fb27e65c72fd75e4679d94319225c68c0e05ac09282cb50e5c4297c48a64172",
+      "bytes": 7080
+    },
+    {
+      "path": ".agents/rules/mirage-production-integration-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2384b79030bf88dec6b8beea12c5d941741628ddf8100f57597fc8b8461456f9",
+      "bytes": 11710
+    },
+    {
+      "path": ".agents/rules/mirage-unikernel-contract.md",
+      "candidate_kind": "file",
+      "sha256": "df06796989ddda79b362f036b9f69e8dd25c4cc231ab17535e569d4a367639f5",
+      "bytes": 7633
+    },
+    {
+      "path": ".agents/rules/provenance-integrity-contract.md",
+      "candidate_kind": "file",
+      "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+      "bytes": 9771
+    },
+    {
+      "path": ".agents/rules/rocha-semiotics-cybernetics-contract.md",
+      "candidate_kind": "file",
+      "sha256": "c53dd6e89c61bdb3eb9ebb1270f5b5acecb28527a4136f2693fab36f11079535",
+      "bytes": 4221
+    },
+    {
+      "path": ".agents/rules/sdlc-sre-verification-process-contract.md",
+      "candidate_kind": "file",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446",
+      "bytes": 8128
+    },
+    {
+      "path": ".agents/rules/swarm-monitoring-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "ce243b80e8e00a7116ff3619df84860bb5c56e29de50b4aa76e079d15d723b93",
+      "bytes": 1787
+    },
+    {
+      "path": ".agents/rules/tailscale-web-fqdn-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4508c009d436dc6419a5d059543f9a2005d958241b393b1a2ece4fc4df4cf7e8",
+      "bytes": 2916
+    },
+    {
+      "path": ".agents/rules/timestamp-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "900ec7facb47a00beda946c81be69c7541659ebcb3423fb99e1acb477441e983",
+      "bytes": 2592
+    },
+    {
+      "path": ".agents/rules/uos-governance.md",
+      "candidate_kind": "file",
+      "sha256": "d377c50719dc6798dcd8c0159a9a679e91d83f56369b75e807d11e5d0d783564",
+      "bytes": 998
+    },
+    {
+      "path": ".agents/rules/workspace-isolation-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+      "bytes": 6303
+    },
+    {
+      "path": ".agents/rules/zigvm-add-fractal-contract.md",
+      "candidate_kind": "file",
+      "sha256": "ad635257b9dfa0dd46a2a0b608f98aaa5f9a45cf20773763d14e32d21d311669",
+      "bytes": 4679
+    },
+    {
+      "path": ".claude/rules/20260907-0653-tri-agent-coordination.md",
+      "candidate_kind": "file",
+      "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+      "bytes": 9326
+    },
+    {
+      "path": ".claude/rules/20260907-0811-hive-decision-forecast-kpi-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "3d7353a5c5b7466367719cd223d740ff0c8748e046e2b313d658623a211eaab3",
+      "bytes": 13789
+    },
+    {
+      "path": ".claude/rules/20260907-1330-iam-ferriskey-nif-rule.md",
+      "candidate_kind": "file",
+      "sha256": "4e4ee15eb85d41ace2b828427e4116c3b80d120d09d13bb20f7c6aaf9929535a",
+      "bytes": 12202
+    },
+    {
+      "path": ".claude/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "c51940e006a3c56950a993aaafe106d0aa7c8ec05d6b0b392bd51ea0ae7bb6c5",
+      "bytes": 15708
+    },
+    {
+      "path": ".claude/rules/20260907-1559-risk-prioritization-sop.md",
+      "candidate_kind": "symlink",
+      "status": "UNSTAGED_HOLD"
+    },
+    {
+      "path": ".claude/rules/20260908-2142-determinate-nix-devenv-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "30896ed1bd3c16a894d1c813e4ed08b956828ef34dfe83712c671580395d46fe",
+      "bytes": 10187
+    },
+    {
+      "path": ".claude/rules/20260909-0412-gleam-harness-operations.md",
+      "candidate_kind": "file",
+      "sha256": "ed3012897052c9e54c3264100cc4c9eaacf28db55fd1f58a76a499743e2419a3",
+      "bytes": 3766
+    },
+    {
+      "path": ".claude/rules/20260909-0704-fractal-layer-taxonomy-single-source.md",
+      "candidate_kind": "file",
+      "sha256": "05ba0080e074493c9d82a793a9e772e7822171ed02ebbb64c7d0bcd7ef14abe4",
+      "bytes": 6826
+    },
+    {
+      "path": ".claude/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md",
+      "candidate_kind": "file",
+      "sha256": "d306f8f30148f3ac3e35829bba2231bec7f58aed1115e592c19770fdbd333adb",
+      "bytes": 11975
+    },
+    {
+      "path": ".claude/rules/c3i-cross-language-control-contract.md",
+      "candidate_kind": "file",
+      "sha256": "6210253651f4406daeb4b37c329555e5fe963ffb7ec89be4cafd32d1517718af",
+      "bytes": 2432
+    },
+    {
+      "path": ".claude/rules/c3i-indrajaal-functional-mirroring.md",
+      "candidate_kind": "file",
+      "sha256": "89ecb40ab9fc6c1112e4f89867a71b580f565a02bfcd0f8f7c47664e82c3385a",
+      "bytes": 1309
+    },
+    {
+      "path": ".claude/rules/c3i-indrajaal-parity-superiority.md",
+      "candidate_kind": "file",
+      "sha256": "10d33c3a36cbfb41c0b78865b292a65babdcbdc2c3b5ae24857ffae4616c529a",
+      "bytes": 1247
+    },
+    {
+      "path": ".claude/rules/comprehensive-checklist-contract.md",
+      "candidate_kind": "file",
+      "sha256": "99e894c849d0b652eac5e8099a1f494e5e4ee012af82e8036d5d3769a41cb44f",
+      "bytes": 6823
+    },
+    {
+      "path": ".claude/rules/cybernetic-orchestra-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "b6d963fe905963420f952b771dc1148956bd5d10c40237268754a394934beeed",
+      "bytes": 1673
+    },
+    {
+      "path": ".claude/rules/denotational-intent-algebraic-atlas-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2e9528154d9ed6549333583bd4ce0f53c4f58496caac722c48588aeb446279d2",
+      "bytes": 1789
+    },
+    {
+      "path": ".claude/rules/diagram-ascii-mermaid-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4106210a34315db25553fbc8bc8c49542d120233538ed27c6bc2bcbb19352939",
+      "bytes": 2789
+    },
+    {
+      "path": ".claude/rules/dmc-tcm-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "bytes": 1833
+    },
+    {
+      "path": ".claude/rules/fractal-cadence-matrix.md",
+      "candidate_kind": "file",
+      "sha256": "3824c2ad05745c3d1d6fc002997dc89d2c8704c5dfc9bbac673edbb24f385c3f",
+      "bytes": 1684
+    },
+    {
+      "path": ".claude/rules/full-symbiosis.md",
+      "candidate_kind": "file",
+      "sha256": "513d8512e19bb23443fbb95e8f68aa862f3c625aad83c76d31eacfe47739dce3",
+      "bytes": 6234
+    },
+    {
+      "path": ".claude/rules/hive-synchrony-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "3417b173fd39f7938413ff70580e4b80b68cdc3abeade4453b1fb210612f468c",
+      "bytes": 1604
+    },
+    {
+      "path": ".claude/rules/indrajaal-constitution-migration.md",
+      "candidate_kind": "file",
+      "sha256": "546582b90ef5604cf2e28e0851410c47fc4532f1daa36999e311295ab103bf04",
+      "bytes": 1476
+    },
+    {
+      "path": ".claude/rules/intelligence-routing-rule.md",
+      "candidate_kind": "file",
+      "sha256": "886b47d4b12ee9932daca633bb84b29b7e63e077cc4fa8458c46909fc0946e53",
+      "bytes": 2409
+    },
+    {
+      "path": ".claude/rules/km-wiki-zk-contract.md",
+      "candidate_kind": "file",
+      "sha256": "b3e756ef3bf84116e61989449f623f06f57be3dba61d12e63cddc62dc6812021",
+      "bytes": 1141
+    },
+    {
+      "path": ".claude/rules/mirage-migration-policy.md",
+      "candidate_kind": "file",
+      "sha256": "3fb27e65c72fd75e4679d94319225c68c0e05ac09282cb50e5c4297c48a64172",
+      "bytes": 7080
+    },
+    {
+      "path": ".claude/rules/mirage-production-integration-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2384b79030bf88dec6b8beea12c5d941741628ddf8100f57597fc8b8461456f9",
+      "bytes": 11710
+    },
+    {
+      "path": ".claude/rules/mirage-unikernel-contract.md",
+      "candidate_kind": "file",
+      "sha256": "df06796989ddda79b362f036b9f69e8dd25c4cc231ab17535e569d4a367639f5",
+      "bytes": 7633
+    },
+    {
+      "path": ".claude/rules/provenance-integrity-contract.md",
+      "candidate_kind": "file",
+      "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+      "bytes": 9771
+    },
+    {
+      "path": ".claude/rules/rocha-semiotics-cybernetics-contract.md",
+      "candidate_kind": "file",
+      "sha256": "c53dd6e89c61bdb3eb9ebb1270f5b5acecb28527a4136f2693fab36f11079535",
+      "bytes": 4221
+    },
+    {
+      "path": ".claude/rules/sdlc-sre-verification-process-contract.md",
+      "candidate_kind": "file",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446",
+      "bytes": 8128
+    },
+    {
+      "path": ".claude/rules/swarm-monitoring-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "ce243b80e8e00a7116ff3619df84860bb5c56e29de50b4aa76e079d15d723b93",
+      "bytes": 1787
+    },
+    {
+      "path": ".claude/rules/tailscale-web-fqdn-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4508c009d436dc6419a5d059543f9a2005d958241b393b1a2ece4fc4df4cf7e8",
+      "bytes": 2916
+    },
+    {
+      "path": ".claude/rules/timestamp-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "900ec7facb47a00beda946c81be69c7541659ebcb3423fb99e1acb477441e983",
+      "bytes": 2592
+    },
+    {
+      "path": ".claude/rules/uos-governance.md",
+      "candidate_kind": "file",
+      "sha256": "b3c1448c073907b17e9b51d6ebd0bb9e63707509c229fabadd336aec12f5d936",
+      "bytes": 970
+    },
+    {
+      "path": ".claude/rules/workspace-isolation-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+      "bytes": 6303
+    },
+    {
+      "path": ".claude/rules/zigvm-add-fractal-contract.md",
+      "candidate_kind": "file",
+      "sha256": "ad635257b9dfa0dd46a2a0b608f98aaa5f9a45cf20773763d14e32d21d311669",
+      "bytes": 4679
+    },
+    {
+      "path": ".gemini/rules/20260907-0653-tri-agent-coordination.md",
+      "candidate_kind": "file",
+      "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+      "bytes": 9326
+    },
+    {
+      "path": ".gemini/rules/20260907-0811-hive-decision-forecast-kpi-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "3d7353a5c5b7466367719cd223d740ff0c8748e046e2b313d658623a211eaab3",
+      "bytes": 13789
+    },
+    {
+      "path": ".gemini/rules/20260907-1330-iam-ferriskey-nif-rule.md",
+      "candidate_kind": "file",
+      "sha256": "edaf3d2e804d28d93f05551d3aea4320ad51fee3e94c35663a2b4208c40e5938",
+      "bytes": 12388
+    },
+    {
+      "path": ".gemini/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "c51940e006a3c56950a993aaafe106d0aa7c8ec05d6b0b392bd51ea0ae7bb6c5",
+      "bytes": 15708
+    },
+    {
+      "path": ".gemini/rules/20260907-1559-risk-prioritization-sop.md",
+      "candidate_kind": "symlink",
+      "status": "UNSTAGED_HOLD"
+    },
+    {
+      "path": ".gemini/rules/20260908-2142-determinate-nix-devenv-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "a5781c38de1a2d04b7be2eb15fea490c7a10700f113b2afc403702bfc1738d7c",
+      "bytes": 10214
+    },
+    {
+      "path": ".gemini/rules/20260909-0412-gleam-harness-operations.md",
+      "candidate_kind": "file",
+      "sha256": "ed3012897052c9e54c3264100cc4c9eaacf28db55fd1f58a76a499743e2419a3",
+      "bytes": 3766
+    },
+    {
+      "path": ".gemini/rules/20260909-0704-fractal-layer-taxonomy-single-source.md",
+      "candidate_kind": "file",
+      "sha256": "05ba0080e074493c9d82a793a9e772e7822171ed02ebbb64c7d0bcd7ef14abe4",
+      "bytes": 6826
+    },
+    {
+      "path": ".gemini/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md",
+      "candidate_kind": "file",
+      "sha256": "d306f8f30148f3ac3e35829bba2231bec7f58aed1115e592c19770fdbd333adb",
+      "bytes": 11975
+    },
+    {
+      "path": ".gemini/rules/c3i-cross-language-control-contract.md",
+      "candidate_kind": "file",
+      "sha256": "6210253651f4406daeb4b37c329555e5fe963ffb7ec89be4cafd32d1517718af",
+      "bytes": 2432
+    },
+    {
+      "path": ".gemini/rules/c3i-indrajaal-functional-mirroring.md",
+      "candidate_kind": "file",
+      "sha256": "89ecb40ab9fc6c1112e4f89867a71b580f565a02bfcd0f8f7c47664e82c3385a",
+      "bytes": 1309
+    },
+    {
+      "path": ".gemini/rules/c3i-indrajaal-parity-superiority.md",
+      "candidate_kind": "file",
+      "sha256": "10d33c3a36cbfb41c0b78865b292a65babdcbdc2c3b5ae24857ffae4616c529a",
+      "bytes": 1247
+    },
+    {
+      "path": ".gemini/rules/comprehensive-checklist-contract.md",
+      "candidate_kind": "file",
+      "sha256": "99e894c849d0b652eac5e8099a1f494e5e4ee012af82e8036d5d3769a41cb44f",
+      "bytes": 6823
+    },
+    {
+      "path": ".gemini/rules/cybernetic-orchestra-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "b6d963fe905963420f952b771dc1148956bd5d10c40237268754a394934beeed",
+      "bytes": 1673
+    },
+    {
+      "path": ".gemini/rules/denotational-intent-algebraic-atlas-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2e9528154d9ed6549333583bd4ce0f53c4f58496caac722c48588aeb446279d2",
+      "bytes": 1789
+    },
+    {
+      "path": ".gemini/rules/diagram-ascii-mermaid-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4106210a34315db25553fbc8bc8c49542d120233538ed27c6bc2bcbb19352939",
+      "bytes": 2789
+    },
+    {
+      "path": ".gemini/rules/dmc-tcm-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "bytes": 1833
+    },
+    {
+      "path": ".gemini/rules/fractal-cadence-matrix.md",
+      "candidate_kind": "file",
+      "sha256": "3824c2ad05745c3d1d6fc002997dc89d2c8704c5dfc9bbac673edbb24f385c3f",
+      "bytes": 1684
+    },
+    {
+      "path": ".gemini/rules/full-symbiosis.md",
+      "candidate_kind": "file",
+      "sha256": "7aad314f863196130c58faf26b43e9ccb7d4d0687589cfc1d8c715c1295e50cd",
+      "bytes": 5838
+    },
+    {
+      "path": ".gemini/rules/hive-synchrony-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "3417b173fd39f7938413ff70580e4b80b68cdc3abeade4453b1fb210612f468c",
+      "bytes": 1604
+    },
+    {
+      "path": ".gemini/rules/indrajaal-constitution-migration.md",
+      "candidate_kind": "file",
+      "sha256": "546582b90ef5604cf2e28e0851410c47fc4532f1daa36999e311295ab103bf04",
+      "bytes": 1476
+    },
+    {
+      "path": ".gemini/rules/intelligence-routing-rule.md",
+      "candidate_kind": "file",
+      "sha256": "886b47d4b12ee9932daca633bb84b29b7e63e077cc4fa8458c46909fc0946e53",
+      "bytes": 2409
+    },
+    {
+      "path": ".gemini/rules/km-wiki-zk-contract.md",
+      "candidate_kind": "file",
+      "sha256": "b3e756ef3bf84116e61989449f623f06f57be3dba61d12e63cddc62dc6812021",
+      "bytes": 1141
+    },
+    {
+      "path": ".gemini/rules/mirage-migration-policy.md",
+      "candidate_kind": "file",
+      "sha256": "3fb27e65c72fd75e4679d94319225c68c0e05ac09282cb50e5c4297c48a64172",
+      "bytes": 7080
+    },
+    {
+      "path": ".gemini/rules/mirage-production-integration-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2384b79030bf88dec6b8beea12c5d941741628ddf8100f57597fc8b8461456f9",
+      "bytes": 11710
+    },
+    {
+      "path": ".gemini/rules/mirage-unikernel-contract.md",
+      "candidate_kind": "file",
+      "sha256": "df06796989ddda79b362f036b9f69e8dd25c4cc231ab17535e569d4a367639f5",
+      "bytes": 7633
+    },
+    {
+      "path": ".gemini/rules/provenance-integrity-contract.md",
+      "candidate_kind": "file",
+      "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+      "bytes": 9771
+    },
+    {
+      "path": ".gemini/rules/rocha-semiotics-cybernetics-contract.md",
+      "candidate_kind": "file",
+      "sha256": "c53dd6e89c61bdb3eb9ebb1270f5b5acecb28527a4136f2693fab36f11079535",
+      "bytes": 4221
+    },
+    {
+      "path": ".gemini/rules/sdlc-sre-verification-process-contract.md",
+      "candidate_kind": "file",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446",
+      "bytes": 8128
+    },
+    {
+      "path": ".gemini/rules/swarm-monitoring-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "ce243b80e8e00a7116ff3619df84860bb5c56e29de50b4aa76e079d15d723b93",
+      "bytes": 1787
+    },
+    {
+      "path": ".gemini/rules/tailscale-web-fqdn-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4508c009d436dc6419a5d059543f9a2005d958241b393b1a2ece4fc4df4cf7e8",
+      "bytes": 2916
+    },
+    {
+      "path": ".gemini/rules/timestamp-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "900ec7facb47a00beda946c81be69c7541659ebcb3423fb99e1acb477441e983",
+      "bytes": 2592
+    },
+    {
+      "path": ".gemini/rules/uos-governance.md",
+      "candidate_kind": "file",
+      "sha256": "d377c50719dc6798dcd8c0159a9a679e91d83f56369b75e807d11e5d0d783564",
+      "bytes": 998
+    },
+    {
+      "path": ".gemini/rules/workspace-isolation-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+      "bytes": 6303
+    },
+    {
+      "path": ".gemini/rules/zigvm-add-fractal-contract.md",
+      "candidate_kind": "file",
+      "sha256": "ad635257b9dfa0dd46a2a0b608f98aaa5f9a45cf20773763d14e32d21d311669",
+      "bytes": 4679
+    },
+    {
+      "path": ".codex/rules/20260907-0653-tri-agent-coordination.md",
+      "candidate_kind": "file",
+      "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+      "bytes": 9326
+    },
+    {
+      "path": ".codex/rules/20260907-0811-hive-decision-forecast-kpi-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "3d7353a5c5b7466367719cd223d740ff0c8748e046e2b313d658623a211eaab3",
+      "bytes": 13789
+    },
+    {
+      "path": ".codex/rules/20260907-1330-iam-ferriskey-nif-rule.md",
+      "candidate_kind": "file",
+      "sha256": "4e4ee15eb85d41ace2b828427e4116c3b80d120d09d13bb20f7c6aaf9929535a",
+      "bytes": 12202
+    },
+    {
+      "path": ".codex/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "c51940e006a3c56950a993aaafe106d0aa7c8ec05d6b0b392bd51ea0ae7bb6c5",
+      "bytes": 15708
+    },
+    {
+      "path": ".codex/rules/20260907-1559-risk-prioritization-sop.md",
+      "candidate_kind": "symlink",
+      "status": "UNSTAGED_HOLD"
+    },
+    {
+      "path": ".codex/rules/20260908-2142-determinate-nix-devenv-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4755b080698a80f1c83e25bfbbc8d1045d9781919587dcd6431a81f4ed2cca79",
+      "bytes": 10186
+    },
+    {
+      "path": ".codex/rules/20260909-0412-gleam-harness-operations.md",
+      "candidate_kind": "file",
+      "sha256": "ed3012897052c9e54c3264100cc4c9eaacf28db55fd1f58a76a499743e2419a3",
+      "bytes": 3766
+    },
+    {
+      "path": ".codex/rules/20260909-0704-fractal-layer-taxonomy-single-source.md",
+      "candidate_kind": "file",
+      "sha256": "05ba0080e074493c9d82a793a9e772e7822171ed02ebbb64c7d0bcd7ef14abe4",
+      "bytes": 6826
+    },
+    {
+      "path": ".codex/rules/20260912-0745-sc-journal-v3-anticipatory-contract.md",
+      "candidate_kind": "file",
+      "sha256": "d306f8f30148f3ac3e35829bba2231bec7f58aed1115e592c19770fdbd333adb",
+      "bytes": 11975
+    },
+    {
+      "path": ".codex/rules/README.md",
+      "candidate_kind": "file",
+      "sha256": "2572dc584abb696ff3d10501f00b08205c352e67ce37f4205eeec9e68b314c06",
+      "bytes": 224
+    },
+    {
+      "path": ".codex/rules/c3i-cross-language-control-contract.md",
+      "candidate_kind": "file",
+      "sha256": "6210253651f4406daeb4b37c329555e5fe963ffb7ec89be4cafd32d1517718af",
+      "bytes": 2432
+    },
+    {
+      "path": ".codex/rules/c3i-indrajaal-functional-mirroring.md",
+      "candidate_kind": "file",
+      "sha256": "89ecb40ab9fc6c1112e4f89867a71b580f565a02bfcd0f8f7c47664e82c3385a",
+      "bytes": 1309
+    },
+    {
+      "path": ".codex/rules/c3i-indrajaal-parity-superiority.md",
+      "candidate_kind": "file",
+      "sha256": "10d33c3a36cbfb41c0b78865b292a65babdcbdc2c3b5ae24857ffae4616c529a",
+      "bytes": 1247
+    },
+    {
+      "path": ".codex/rules/comprehensive-checklist-contract.md",
+      "candidate_kind": "file",
+      "sha256": "99e894c849d0b652eac5e8099a1f494e5e4ee012af82e8036d5d3769a41cb44f",
+      "bytes": 6823
+    },
+    {
+      "path": ".codex/rules/cybernetic-orchestra-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "b6d963fe905963420f952b771dc1148956bd5d10c40237268754a394934beeed",
+      "bytes": 1673
+    },
+    {
+      "path": ".codex/rules/denotational-intent-algebraic-atlas-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2e9528154d9ed6549333583bd4ce0f53c4f58496caac722c48588aeb446279d2",
+      "bytes": 1789
+    },
+    {
+      "path": ".codex/rules/diagram-ascii-mermaid-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4106210a34315db25553fbc8bc8c49542d120233538ed27c6bc2bcbb19352939",
+      "bytes": 2789
+    },
+    {
+      "path": ".codex/rules/dmc-tcm-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "bytes": 1833
+    },
+    {
+      "path": ".codex/rules/fractal-cadence-matrix.md",
+      "candidate_kind": "file",
+      "sha256": "3824c2ad05745c3d1d6fc002997dc89d2c8704c5dfc9bbac673edbb24f385c3f",
+      "bytes": 1684
+    },
+    {
+      "path": ".codex/rules/full-symbiosis.md",
+      "candidate_kind": "file",
+      "sha256": "3eb8a632fbc3a9ac0b286f589ba51b42be004d356375150b2f8463f1fc102ccb",
+      "bytes": 5810
+    },
+    {
+      "path": ".codex/rules/hive-synchrony-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "3417b173fd39f7938413ff70580e4b80b68cdc3abeade4453b1fb210612f468c",
+      "bytes": 1604
+    },
+    {
+      "path": ".codex/rules/indrajaal-constitution-migration.md",
+      "candidate_kind": "file",
+      "sha256": "546582b90ef5604cf2e28e0851410c47fc4532f1daa36999e311295ab103bf04",
+      "bytes": 1476
+    },
+    {
+      "path": ".codex/rules/intelligence-routing-rule.md",
+      "candidate_kind": "file",
+      "sha256": "886b47d4b12ee9932daca633bb84b29b7e63e077cc4fa8458c46909fc0946e53",
+      "bytes": 2409
+    },
+    {
+      "path": ".codex/rules/km-wiki-zk-contract.md",
+      "candidate_kind": "file",
+      "sha256": "b3e756ef3bf84116e61989449f623f06f57be3dba61d12e63cddc62dc6812021",
+      "bytes": 1141
+    },
+    {
+      "path": ".codex/rules/mirage-migration-policy.md",
+      "candidate_kind": "file",
+      "sha256": "3fb27e65c72fd75e4679d94319225c68c0e05ac09282cb50e5c4297c48a64172",
+      "bytes": 7080
+    },
+    {
+      "path": ".codex/rules/mirage-production-integration-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2384b79030bf88dec6b8beea12c5d941741628ddf8100f57597fc8b8461456f9",
+      "bytes": 11710
+    },
+    {
+      "path": ".codex/rules/mirage-unikernel-contract.md",
+      "candidate_kind": "file",
+      "sha256": "df06796989ddda79b362f036b9f69e8dd25c4cc231ab17535e569d4a367639f5",
+      "bytes": 7633
+    },
+    {
+      "path": ".codex/rules/provenance-integrity-contract.md",
+      "candidate_kind": "file",
+      "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+      "bytes": 9771
+    },
+    {
+      "path": ".codex/rules/rocha-semiotics-cybernetics-contract.md",
+      "candidate_kind": "file",
+      "sha256": "c53dd6e89c61bdb3eb9ebb1270f5b5acecb28527a4136f2693fab36f11079535",
+      "bytes": 4221
+    },
+    {
+      "path": ".codex/rules/sdlc-sre-verification-process-contract.md",
+      "candidate_kind": "file",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446",
+      "bytes": 8128
+    },
+    {
+      "path": ".codex/rules/swarm-monitoring-protocol.md",
+      "candidate_kind": "file",
+      "sha256": "ce243b80e8e00a7116ff3619df84860bb5c56e29de50b4aa76e079d15d723b93",
+      "bytes": 1787
+    },
+    {
+      "path": ".codex/rules/tailscale-web-fqdn-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "4508c009d436dc6419a5d059543f9a2005d958241b393b1a2ece4fc4df4cf7e8",
+      "bytes": 2916
+    },
+    {
+      "path": ".codex/rules/timestamp-mandate.md",
+      "candidate_kind": "file",
+      "sha256": "900ec7facb47a00beda946c81be69c7541659ebcb3423fb99e1acb477441e983",
+      "bytes": 2592
+    },
+    {
+      "path": ".codex/rules/uos-governance.md",
+      "candidate_kind": "file",
+      "sha256": "b3c1448c073907b17e9b51d6ebd0bb9e63707509c229fabadd336aec12f5d936",
+      "bytes": 970
+    },
+    {
+      "path": ".codex/rules/workspace-isolation-contract.md",
+      "candidate_kind": "file",
+      "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+      "bytes": 6303
+    },
+    {
+      "path": ".codex/rules/zigvm-add-fractal-contract.md",
+      "candidate_kind": "file",
+      "sha256": "ad635257b9dfa0dd46a2a0b608f98aaa5f9a45cf20773763d14e32d21d311669",
+      "bytes": 4679
+    }
+  ],
+  "checks_pass": true,
+  "post_seal_pass": true,
+  "post_seal_error": null,
+  "all_control_pass": true,
+  "rows": [
+    {
+      "id": "policy-selftest",
+      "argv": [
+        "./toolchains/opam-ocaml/bin/ocamlrun",
+        "./toolchains/opam-ocaml/bin/ocaml",
+        "./tools/ev02_governance/policy_surface_gate.ml", "--selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "raw_empty": false,
+      "output_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-selftest.out",
+      "output_sha256": "5f3f2a85de2762b5e911f831e3213376beb713e606c4d893ffc6ea4bf75e9cfd",
+      "stdout_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-selftest.stdout",
+      "stdout_sha256": "85f9da72c315a17125ad963e0bd30b38f768de70b6d4c20a05665d5528d44c87",
+      "stderr_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-selftest.stderr",
+      "stderr_sha256": "075218d6b53c7bc6b36cd7aa9ff0d559a43cf75eb4b16455b723c3e5dbb4a905",
+      "valid": true
+    },
+    {
+      "id": "policy-fixture-selftest",
+      "argv": [
+        "./toolchains/opam-ocaml/bin/ocamlrun",
+        "./toolchains/opam-ocaml/bin/ocaml",
+        "./tools/ev02_governance/policy_surface_gate.ml",
+        "--fixture-selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "raw_empty": false,
+      "output_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-fixture-selftest.out",
+      "output_sha256": "0a168be6c4fa83c2d0682fa7cd9b26e7be2fc5ca517d51f2513f18710275e823",
+      "stdout_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-fixture-selftest.stdout",
+      "stdout_sha256": "b5453479bb0050e7fd50dba87ffa06d78bdf6f795d47d3e88ef64915d824c566",
+      "stderr_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-fixture-selftest.stderr",
+      "stderr_sha256": "075218d6b53c7bc6b36cd7aa9ff0d559a43cf75eb4b16455b723c3e5dbb4a905",
+      "valid": true
+    },
+    {
+      "id": "policy-observation",
+      "argv": [
+        "./toolchains/opam-ocaml/bin/ocamlrun",
+        "./toolchains/opam-ocaml/bin/ocaml",
+        "./tools/ev02_governance/policy_surface_gate.ml", "--observe",
+        "/tmp/ev02-candidate-stage-603c54.reserve.d"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "control_pass": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "raw_empty": false,
+      "output_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-observation.out",
+      "output_sha256": "7b702ae0a9eeda96daa3e021614ab79df33dfa8afb2830d5497883d6ba537b43",
+      "stdout_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-observation.stdout",
+      "stdout_sha256": "f58611cb42f5077cc44dec2b0d412d21535267c7fab13345542725dabf13639e",
+      "stderr_path": "/tmp/gate-trans-447483/20260930-1300-ev02-policy-observation.stderr",
+      "stderr_sha256": "075218d6b53c7bc6b36cd7aa9ff0d559a43cf75eb4b16455b723c3e5dbb4a905",
+      "valid": true
+    },
+    {
+      "id": "mapping-selftest",
+      "argv": [
+        "./toolchains/opam-ocaml/bin/ocamlrun",
+        "./toolchains/opam-ocaml/bin/ocaml",
+        "./tools/ev02_governance/directive_mapping_gate.ml", "--selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "raw_empty": false,
+      "output_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-selftest.out",
+      "output_sha256": "c9bd7dd373547b7f5919caa9a4435d0553607de593f4b361021580385bbeb4ab",
+      "stdout_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-selftest.stdout",
+      "stdout_sha256": "a61d56eebd5fe58408647056d183ad09002f7b22cd3dbe4c58fa9041631eaeed",
+      "stderr_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-selftest.stderr",
+      "stderr_sha256": "59bbcad1859430deccfb665c1cbbef0820fa4b3c64d2fec7b9802d70a9ba5cd9",
+      "valid": true
+    },
+    {
+      "id": "mapping-fixture-selftest",
+      "argv": [
+        "./toolchains/opam-ocaml/bin/ocamlrun",
+        "./toolchains/opam-ocaml/bin/ocaml",
+        "./tools/ev02_governance/directive_mapping_gate.ml",
+        "--fixture-selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "raw_empty": false,
+      "output_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-fixture-selftest.out",
+      "output_sha256": "a135e043c26f590d213f18645163643ffbfd14dc0d52963eb8be20a2b52028fd",
+      "stdout_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-fixture-selftest.stdout",
+      "stdout_sha256": "cc319d2771b3e51330c1e878af399404a1e7113a824428b82dbc009e1de08b15",
+      "stderr_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-fixture-selftest.stderr",
+      "stderr_sha256": "59bbcad1859430deccfb665c1cbbef0820fa4b3c64d2fec7b9802d70a9ba5cd9",
+      "valid": true
+    },
+    {
+      "id": "mapping-observation",
+      "argv": [
+        "./toolchains/opam-ocaml/bin/ocamlrun",
+        "./toolchains/opam-ocaml/bin/ocaml",
+        "./tools/ev02_governance/directive_mapping_gate.ml", "--observe",
+        "/tmp/ev02-candidate-stage-603c54.reserve.d",
+        "/tmp/ev02-candidate-stage-603c54.reserve.d/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "control_pass": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "raw_empty": false,
+      "output_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-observation.out",
+      "output_sha256": "2d69a497018ebb08deb17c0e947e09c17ae3e835fde042e8f6bf0e7a08eb3afc",
+      "stdout_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-observation.stdout",
+      "stdout_sha256": "1ca72b3da4a0fff15d7741d503a3674f47ae1e1448f847f02269527cd45a25c9",
+      "stderr_path": "/tmp/gate-trans-447483/20260930-1300-ev02-mapping-observation.stderr",
+      "stderr_sha256": "59bbcad1859430deccfb665c1cbbef0820fa4b3c64d2fec7b9802d70a9ba5cd9",
+      "valid": true
+    },
+    {
+      "id": "km-gate",
+      "argv": [ "bash", "./tools/km-gate", "--gate" ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "timed_out": false,
+      "output_truncated": false,
+      "raw_empty": false,
+      "output_path": "/tmp/gate-trans-447483/20260930-1300-ev02-km-gate.out",
+      "output_sha256": "241dc5425e901b6b5e8bf3848afb6292883318eafe53284eb6d5906e3cf822ae",
+      "stdout_path": "/tmp/gate-trans-447483/20260930-1300-ev02-km-gate.stdout",
+      "stdout_sha256": "241dc5425e901b6b5e8bf3848afb6292883318eafe53284eb6d5906e3cf822ae",
+      "stderr_path": "/tmp/gate-trans-447483/20260930-1300-ev02-km-gate.stderr",
+      "stderr_sha256": "02a713f76226c52a198adae80526740fc4d6057636326bc8dec49635db8ae7a7",
+      "valid": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+=== test_ev86_capture selftest ===
+PASS: nonzero exit code preserved
+PASS: output flood truncated and stopped
+PASS: stable open-FD count across repeated floods
+PASS: close output-sleep timeout detected
+PASS: descendant retaining pipe terminated with group
+PASS: output collision refused
+PASS: output symlink destination refused and victim target preserved
+PASS: source path traversal .. and NUL rejected
+PASS: parent-symlink source ancestor refused
+PASS: report path regular collision refuses and preserves sentinel bytes
+PASS: report path symlink collision refuses and preserves sentinel bytes
+ALL test_ev86_capture selftests passed
