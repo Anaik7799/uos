@@ -1,0 +1,8 @@
+{"schema":"uos.cognitive-runtime-observation.v1","modules":{"cognitive_runtime_cli":"b722278ce69698718d30e49b0d412df8","cepaf_gleam@harness@cognitive_worker":"ccf20599777c9532bab91aff6c945baf","cepaf_gleam@harness@doctor_projection":"46e0e8a36553a6ce6d09f3714cf0755e","cepaf_gleam@harness@tool_fenced_dispatcher":"31c24a32c33d5ebf27ff8fa7b5ff9af9"},"doctor":"{\"doctor_status\":\"UNOBSERVED_RUNTIME\",\"admitted_ev_ceiling\":93,\"ev_cycles_verified\":null,\"unadmitted_range\":\"EV-94..EV-109\",\"admission_status\":\"NOT_ADMITTED\",\"checks_passed\":\"UNOBSERVED\",\"gate\":\"UNOBSERVED\",\"test_state\":\"UNOBSERVED (requires candidate-bound execution; no ad-hoc green)\",\"zero_muda\":null,\"observed_in_query\":false}","admission":"NOT_GRANTED_BY_STARTUP_OBSERVATION"}======================== EUnit ========================
+undefined
+*** test module not found ***
+**cognitive_doctor_truth_test
+
+=======================================================
+  Failed: 0.  Skipped: 0.  Passed: 0.
+One or more tests were cancelled.

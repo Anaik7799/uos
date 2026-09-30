@@ -1,0 +1,13 @@
+======================== EUnit ========================
+module 'restoration_runtime_test'
+  restoration_runtime_test: arbitrary_effects_are_refused_test...[0.002 s] ok
+  restoration_runtime_test: release_instance_path_injection_is_refused_test...[0.014 s] ok
+  restoration_runtime_test: service_authority_is_separated_by_resource_test...ok
+  restoration_runtime_test: missing_private_review_cannot_execute_test...[0.002 s] ok
+  restoration_runtime_test: runtime_control_set_must_match_exactly_test...[0.004 s] ok
+  restoration_runtime_test: authority_window_covers_effect_and_cleanup_test...ok
+  restoration_runtime_test: capability_workflow_is_exact_and_prior_completed_plan_is_refused_test...ok
+  restoration_runtime_test: cognitive_release_cannot_inherit_unrelated_effects_test...ok
+  [done in 0.046 s]
+=======================================================
+  All 8 tests passed.

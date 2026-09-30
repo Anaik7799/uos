@@ -1,0 +1,11 @@
+=== CEP-AF Gleam Dispatch Containment & Truthful Doctor Test Execution ===
+Timestamp: 2026-10-01T02:53:51Z
+Workspace: /home/an/NAS-setup/uos/.uos-workspaces/agy-fractal-dispatch-20261001
+Task: DISPATCH_FIX1 / Sa-plan: uos/fractal-recheck/20261001-0226
+Runtime: Erlang/OTP 29 (+S 2:2 +A 2)
+
+--- Execution ---
+PASS: ALL 14 COGNITIVE DOCTOR TRUTH AND DISPATCH NEGATIVE TESTS PASSED
+PASS: TELEGRAM BDD SCENARIOS 025 AND 026 PASSED
+
+Summary: 16/16 tests passed cleanly (14 cognitive doctor truth & dispatch containment + 2 telegram BDD directive scenarios).

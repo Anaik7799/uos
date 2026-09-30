@@ -1,0 +1,31 @@
+{"schema":"uos.cognitive-runtime-observation.v1","modules":{"cognitive_runtime_cli":"b722278ce69698718d30e49b0d412df8","cepaf_gleam@harness@cognitive_worker":"ccf20599777c9532bab91aff6c945baf","cepaf_gleam@harness@doctor_projection":"46e0e8a36553a6ce6d09f3714cf0755e","cepaf_gleam@harness@tool_fenced_dispatcher":"31c24a32c33d5ebf27ff8fa7b5ff9af9"},"doctor":"{\"doctor_status\":\"UNOBSERVED_RUNTIME\",\"admitted_ev_ceiling\":93,\"ev_cycles_verified\":null,\"unadmitted_range\":\"EV-94..EV-109\",\"admission_status\":\"NOT_ADMITTED\",\"checks_passed\":\"UNOBSERVED\",\"gate\":\"UNOBSERVED\",\"test_state\":\"UNOBSERVED (requires candidate-bound execution; no ad-hoc green)\",\"zero_muda\":null,\"observed_in_query\":false}","admission":"NOT_GRANTED_BY_STARTUP_OBSERVATION"}
+======================== EUnit ========================
+module 'cognitive_doctor_truth_test'
+  cognitive_doctor_truth_test: doctor_directive_metadata_test...[0.001 s] ok
+  cognitive_doctor_truth_test: ev_directive_metadata_test...ok
+  cognitive_doctor_truth_test: doctor_markdown_truth_and_negative_test...ok
+  cognitive_doctor_truth_test: doctor_directive_reply_markdown_test...ok
+  cognitive_doctor_truth_test: query_doctor_harness_tool_json_test...ok
+  cognitive_doctor_truth_test: doctor_pure_projection_model_test...ok
+  cognitive_doctor_truth_test: dispatch_missing_lease_fails_closed_test...[0.001 s] ok
+  cognitive_doctor_truth_test: dispatch_synthetic_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: dispatch_expired_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: dispatch_quorum_true_unverified_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: dispatch_quorum_true_missing_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: tool_directive_no_synthetic_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: action_directive_no_synthetic_lease_fails_closed_test...[0.001 s] ok
+  cognitive_doctor_truth_test: doctor_and_ev_pure_projection_unregressed_test...ok
+  [done in 0.045 s]
+module 'restoration_runtime_test'
+  restoration_runtime_test: arbitrary_effects_are_refused_test...[0.003 s] ok
+  restoration_runtime_test: release_instance_path_injection_is_refused_test...[0.002 s] ok
+  restoration_runtime_test: service_authority_is_separated_by_resource_test...ok
+  restoration_runtime_test: missing_private_review_cannot_execute_test...[0.002 s] ok
+  restoration_runtime_test: runtime_control_set_must_match_exactly_test...[0.004 s] ok
+  restoration_runtime_test: authority_window_covers_effect_and_cleanup_test...ok
+  restoration_runtime_test: capability_workflow_is_exact_and_prior_completed_plan_is_refused_test...ok
+  restoration_runtime_test: cognitive_release_cannot_inherit_unrelated_effects_test...ok
+  [done in 0.035 s]
+=======================================================
+  All 22 tests passed.
+BDD025/026 PASS;24 checks total

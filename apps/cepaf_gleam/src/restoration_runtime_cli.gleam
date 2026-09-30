@@ -59,6 +59,19 @@ pub type Action {
   EnableEcology
   DisableOldEcology
   EnableCockpit
+  InstallCognitive
+  RestartCognitive
+}
+
+// A new recovery plan does not inherit the old plan's unrelated effects.
+pub fn authorized_action(plan: String, task: String, worker: String, selected: Action) -> Bool {
+  let cognitive = plan == "uos/fractal-recheck/20261001-0226"
+    && task == "RELEASE" && worker == "codex-fractal-recheck-20261001"
+  case selected {
+    InstallCognitive | RestartCognitive -> cognitive
+    ReloadUnits -> cognitive || authorized_workflow(plan, task, worker)
+    _ -> authorized_workflow(plan, task, worker)
+  }
 }
 
 pub fn action(raw: String) -> Result(Action, String) {
@@ -76,6 +89,8 @@ pub fn action(raw: String) -> Result(Action, String) {
     "enable_ecology" -> Ok(EnableEcology)
     "disable_old_ecology" -> Ok(DisableOldEcology)
     "enable_cockpit" -> Ok(EnableCockpit)
+    "install_cognitive_unit" -> Ok(InstallCognitive)
+    "restart_cognitive" -> Ok(RestartCognitive)
     _ -> Error("unsupported_restoration_action")
   }
 }
@@ -85,6 +100,7 @@ pub fn resource(selected: Action) -> String {
     InstallClock | RestartPrimary | RestartBackup -> "runtime:clock-guard"
     InstallCockpit | RestartCockpit | EnableCockpit -> "runtime:cockpit"
     ReloadUnits -> "integration/main"
+    InstallCognitive | RestartCognitive -> "runtime:cognitive-worker"
     _ -> "runtime:ecology"
   }
 }
@@ -199,7 +215,7 @@ fn fence(grant: v.Value, selected: Action) -> Result(Nil, String) {
   use observed <- result.try(clock.observe())
   let now = observed.sample.observed
   use _ <- result.try(a.require(
-    authorized_workflow(plan, task, worker)
+    authorized_action(plan, task, worker, selected)
     && session == worker && window_valid(now.utc_us, expiry)
     && now.domain.host_id == host && now.domain.boot_id == boot, "finite_grant_or_clock"))
   let binding = dev.Binding("restoration", plan, task, worker, attempt, session, epoch)
@@ -228,6 +244,7 @@ fn service_binding(grant: v.Value, selected: Action, instance: String) -> Result
     RestartPrimary -> "uos-clock-guard@primary.service"
     RestartBackup -> "uos-clock-guard@backup.service"
     RestartCockpit | EnableCockpit -> "c3i-gleam-server.service"
+    RestartCognitive -> "uos-cognitive-worker.service"
     _ -> "uos-ecology@" <> instance <> ".service"
   }
   use expected <- result.try(text(grant, "effective_unit_sha256"))
@@ -238,7 +255,7 @@ fn service_binding(grant: v.Value, selected: Action, instance: String) -> Result
   use deps <- result.try(v.get(grant, "dependencies"))
   let required = case selected {
     StartEcology | EnableEcology -> [release_root <> "/" <> instance <> ".env", release_root <> "/" <> instance <> "/release-manifest.json"]
-    RestartPrimary | RestartBackup | RestartCockpit | EnableCockpit -> [release_root <> "/" <> instance <> "/release-manifest.json"]
+    RestartPrimary | RestartBackup | RestartCockpit | EnableCockpit | RestartCognitive -> [release_root <> "/" <> instance <> "/release-manifest.json"]
     _ -> []
   }
   use _ <- result.try(list.try_each(required, fn(path) {
@@ -246,7 +263,7 @@ fn service_binding(grant: v.Value, selected: Action, instance: String) -> Result
     a.require(v.get(deps, path) == Ok(v.Text(actual)), "required_service_dependency:" <> path)
   }))
   case selected {
-    StartEcology | EnableEcology | RestartPrimary | RestartBackup | RestartCockpit | EnableCockpit ->
+    StartEcology | EnableEcology | RestartPrimary | RestartBackup | RestartCockpit | EnableCockpit | RestartCognitive ->
       dev.bounded(dev.root <> "/toolchains/opam-ocaml/bin/ocaml",
         [dev.root <> "/tools/ecology_release.ml", "verify", release_root <> "/" <> instance], 30_000)
       |> result.map(fn(_) { Nil })
@@ -262,6 +279,7 @@ fn configuration(grant: v.Value, selected: Action, instance: String, intent: Str
   let #(root, target) = case selected {
     InstallClock -> #(config_root, "uos-clock-guard@.service")
     InstallCockpit -> #(config_root, "c3i-gleam-server.service")
+    InstallCognitive -> #(config_root, "uos-cognitive-worker.service")
     _ -> #(release_root, instance <> ".env")
   }
   use prior <- result.try(text(grant, "expected_target_sha256"))
@@ -283,7 +301,7 @@ fn configuration(grant: v.Value, selected: Action, instance: String, intent: Str
 fn perform(grant: v.Value, selected: Action, instance: String, intent: String) -> Result(String, String) {
   let unit = "uos-ecology@" <> instance <> ".service"
   case selected {
-    InstallClock | InstallEcology | InstallCockpit -> configuration(grant, selected, instance, intent)
+    InstallClock | InstallEcology | InstallCockpit | InstallCognitive -> configuration(grant, selected, instance, intent)
     _ -> {
       use _ <- result.try(case selected {
         ReloadUnits -> Ok(Nil)
@@ -298,6 +316,7 @@ fn perform(grant: v.Value, selected: Action, instance: String, intent: String) -
         RestartPrimary -> ["restart", "uos-clock-guard@primary.service"]
         RestartBackup -> ["restart", "uos-clock-guard@backup.service"]
         RestartCockpit -> ["restart", "c3i-gleam-server.service"]
+        RestartCognitive -> ["restart", "uos-cognitive-worker.service"]
         EnableEcology -> ["enable", unit]
         DisableOldEcology -> ["disable", old_ecology]
         EnableCockpit -> ["enable", "c3i-gleam-server.service"]

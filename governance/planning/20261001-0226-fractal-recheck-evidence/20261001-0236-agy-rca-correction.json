@@ -1,0 +1,37 @@
+{
+  "schema": "uos.agy-fractal-recheck-rca-correction.v1",
+  "observed_at": "2026-10-01T02:35:45Z",
+  "worker": "agy-fractal-recheck-20261001",
+  "plan": "uos/fractal-recheck/20261001-0226",
+  "task": "AGY_RCA",
+  "correction_target": "governance/planning/20261001-0226-fractal-recheck-evidence/20261001-0230-agy-rca.json",
+  "correction_type": "main_commit_id_suffix_erratum_and_scope_clarification",
+  "commit_verification": {
+    "erroneous_main_commit_in_0230_rca": "db331710c51122a98f1f5d6f1c42f0261175657b",
+    "verified_main_commit": "db331710fe188bb9160b6a8d6b2b9dc5247be813",
+    "main_change_id": "tnmlrlykwoyyysszswlkuprrsrpmxltq",
+    "jj_command": "jj log -r main --no-graph -T 'commit_id ++ \"\\n\"'",
+    "jj_output": "db331710fe188bb9160b6a8d6b2b9dc5247be813\n"
+  },
+  "scope_clarification_risk_path": {
+    "target_file": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_observer.gleam",
+    "line": 15,
+    "companion_projection": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_projection.gleam:10",
+    "plan_id": "uos/system-mcp-features/20260919-1642",
+    "risk_path": "governance/planning/20260921-1556-risk-portfolio-refresh.json",
+    "classification": "DELIBERATE_PLAN_SCOPED_BINDING",
+    "evaluation": "Execution projection is explicitly bound to plan 'uos/system-mcp-features/20260919-1642'. Rendering stale risk as HOLD or expired is intentional fail-closed governance, not a false claim or runtime defect. Dynamic multi-plan routing is a potential future architectural enhancement, not a bug repair."
+  },
+  "reproduced_active_bugs": [
+    {
+      "component": "cognitive_worker",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "line": 2096,
+      "classification": "ACTIVE_FALSE_CLAIM_DEFECT",
+      "defect": "Doctor Telegram command emits 'Current EV-Cycle: EV-108 / EV-109 (Ratified)'",
+      "expected": "Current EV-Cycle: EV-93 (Admitted Ceiling; EV-94..109 NOT_ADMITTED)",
+      "authority": "AGENTS.md SC-PROVENANCE-001"
+    }
+  ],
+  "source_integrity": "Unchanged; original 20261001-0230-agy-rca.json preserved verbatim; zero source mutations executed; task AGY_RCA remains completed."
+}

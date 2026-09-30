@@ -1,0 +1,13 @@
+=== 1. Running Cognitive Doctor Truth Regression Tests ===
+PASS: ALL 6 COGNITIVE DOCTOR TRUTH AND NEGATIVE TESTS PASSED
+  - doctor_directive_metadata_test: actions==[], confidence==0.5, no fake checks
+  - ev_directive_metadata_test: actions==[], confidence==0.5, no fake checks
+  - doctor_markdown_truth_and_negative_test: EV-93 ceiling asserted, EV-108/Ratified rejected
+  - doctor_directive_reply_markdown_test: public handle_directive markdown route verified
+  - query_doctor_harness_tool_json_test: doctor_status UNOBSERVED_RUNTIME, ceiling 93, no HEALTHY/PASS
+  - doctor_pure_projection_model_test: pure model invariants match denotational.admitted_ev_ceiling
+=== 2. Running Telegram BDD Scenarios 025 and 026 ===
+PASS: All Doctor Truth Tests and Existing Scenarios 025/026 Passed Cleanly.
+Toolchain: Erlang OTP 29 (beamMinimal29) + Gleam 1.16.0, Schedulers: +S 2:2 +A 2
+Workspace: /home/an/NAS-setup/uos/.uos-workspaces/agy-fractal-doctor-20261001
+Base Commit: db331710fe188bb9160b6a8d6b2b9dc5247be813

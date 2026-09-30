@@ -1,0 +1,76 @@
+{
+  "schema": "uos.agy-fractal-recheck-rca.v1",
+  "observed_at": "2026-10-01T02:32:45Z",
+  "worker": "agy-fractal-recheck-20261001",
+  "plan": "uos/fractal-recheck/20261001-0226",
+  "task": "AGY_RCA",
+  "attempt": 1,
+  "main_commit": "db331710c51122a98f1f5d6f1c42f0261175657b",
+  "active_authority": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "evidence_files_checked": 21,
+    "receipt": "governance/planning/20261001-0226-fractal-recheck-evidence/20261001-0229-agy-active.json"
+  },
+  "source_integrity": {
+    "restored_sources_count": 18,
+    "all_18_hashes_match_final_acceptance": true,
+    "admission_ceiling": "EV-93",
+    "unadmitted_range": "EV-94..EV-109"
+  },
+  "historical_census": {
+    "bookmarks_outside_main_count": 0,
+    "all_bookmarks_ancestors_of_main": true,
+    "census_query": "heads(all() ~ ancestors(main) ~ empty()) ~ @",
+    "historical_heads_count": 19,
+    "heads": [
+      "7af086121d54",
+      "1ad593ae55a3",
+      "8f80accd787f",
+      "f09ca55a4517",
+      "57b5579be297",
+      "0bfe5cb47dfd",
+      "e623b584b356",
+      "dd5b6f753e72",
+      "8d0b9d340ec3",
+      "09f7620f0a9a",
+      "d2350ecb6eb2",
+      "5f6b9a12e9dd",
+      "ff0ed665fdb8",
+      "5486a9816784",
+      "0b23ec6b46c8",
+      "0e75c0ffe417",
+      "6968cb2bbb37",
+      "fb945a48b815",
+      "501fdbffc908"
+    ],
+    "reconciliation_verdict": "All 19 original lineages accounted for in 0852/1000/1134 receipts; no omitted applicable source"
+  },
+  "runtime_services": {
+    "managed_services_count": 4,
+    "c3i_gleam_server": {"active": true, "substate": "running", "pid": 293276, "restarts": 0},
+    "uos_clock_guard_primary": {"active": true, "substate": "running", "pid": 224485, "restarts": 0},
+    "uos_clock_guard_backup": {"active": true, "substate": "running", "pid": 224803, "restarts": 0},
+    "uos_ecology_active": {"active": true, "substate": "running", "pid": 292729, "restarts": 0, "release": "20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872"},
+    "preserved_failed_units": [
+      {"unit": "uos-ecology@20260909-0202-926f873c38fef776e170d8d3c8437b114e6a55ebc0d9f1ae47507e094c59dd0b.service", "reason": "superseded old ecology unit, failed at 2026-09-30 04:22 CEST"},
+      {"unit": "uos-fractal-staging-v2-20260930.service", "reason": "transient systemd-run staging test timed out at 2026-09-30 06:53 CEST"}
+    ]
+  },
+  "findings_for_next_epoch": [
+    {
+      "layer": "L4",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_observer.gleam",
+      "line": 15,
+      "finding": "Hardcoded stale risk_path 'governance/planning/20260921-1556-risk-portfolio-refresh.json'",
+      "recommendation": "Parameterize or dynamically resolve active risk portfolio per plan"
+    },
+    {
+      "layer": "L0",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "line": 2096,
+      "finding": "Stale unadmitted EV cycle string 'Current EV-Cycle: EV-108 / EV-109 (Ratified)'",
+      "recommendation": "Align with canonical policy EV-93 ceiling and NOT_ADMITTED range"
+    }
+  ],
+  "verdict": "PASS_READONLY_RCA_DELTA_AUDIT"
+}

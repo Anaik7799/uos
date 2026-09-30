@@ -1,0 +1,64 @@
+{
+  "observed_at": "2026-10-01 02:28:46 UTC",
+  "base": "db331710fe188bb9160b6a8d6b2b9dc5247be813",
+  "observations": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "bookmark_delta",
+        "chunk_id": "3ea3cf",
+        "wall_time_seconds": 0.000010349,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "historical_heads",
+        "chunk_id": "04fd8f",
+        "wall_time_seconds": 0.000014628,
+        "exit_code": 0,
+        "original_token_count": 205,
+        "output": "5f6585e1e65eda35656c24892c4be0a14bd0ab33\n7af086121d547a279802d54fa49c5f54c70dbb27\n1ad593ae55a3f2e3bbe9ed8a63f576fc18940327\n8f80accd787f66acce99d2d7339e36ec32f9f00c\nf09ca55a4517d147364a2d9c962c750782323bbe\n57b5579be29765ea946411324e1cc9c95d6b2bee\n0bfe5cb47dfd054f9833084dd876d150eb4dddd8\ne623b584b356bf5ebb0d346a1623e6df7def8c33\ndd5b6f753e72f4de6cc27d843db8cf77f7e2101b\n8d0b9d340ec3401fbf7ef93c23700ee9c184de12\n09f7620f0a9a4d0256fb5893f6416be69468d054\nd2350ecb6eb23835b7fde923914b15d63d697e64\n5f6b9a12e9dd2cabcf463b1e71a8a129d0dcfc3d\nff0ed665fdb8c70331fefaf0b2459d2d8cf3c56f\n5486a981678414f75caa106937b6fb50649e57bb\n0b23ec6b46c8754c83d4e04fa2f284f0cffb6889\n0e75c0ffe4176e6b649b38810df802cbe55ffeb8\n6968cb2bbb374a95f458b4ceeffec98b9dd6fb16\nfb945a48b815edefe6a7dada0032784a374c985b\n501fdbffc9089a347a4f6d50a5b938b08d1630f5\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "cycle_integrity",
+        "chunk_id": "82d786",
+        "wall_time_seconds": 0.000015659,
+        "exit_code": 0,
+        "original_token_count": 12,
+        "output": "{\"ok\":true,\"rows\":332,\"holds\":24,\"releases\":0}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "coordinator_integrity",
+        "chunk_id": "f0a52a",
+        "wall_time_seconds": 0.055864961,
+        "exit_code": 0,
+        "original_token_count": 62,
+        "output": "{\"ok\":true,\"checked\":139,\"sequence_ok\":true,\"chain_ok\":true,\"digest_ok\":true,\"replay_ok\":true,\"nonempty\":true,\"authority\":\"integrity_observation_only\",\"triggers_present\":true,\"trigger_definitions_ok\":true,\"unique_operations\":true,\"failures\":[]}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "health",
+        "chunk_id": "b32d31",
+        "wall_time_seconds": 0.000012284,
+        "exit_code": 0,
+        "original_token_count": 30,
+        "output": "{\"status\":\"running\",\"cycle\":64249,\"application_admitted\":false,\"scope\":\"shared ecology actor and observed OTP identity\"}"
+      }
+    }
+  ],
+  "integrated_source_compared": 18,
+  "source_mismatch": [],
+  "scope": "Fresh observations; no runtime admission"
+}
