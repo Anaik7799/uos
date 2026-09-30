@@ -51,8 +51,45 @@ let read_regular ~max_bytes path =
       failwith ("path-substituted-or-mutated:" ^ path);
     Bytes.to_string bytes)
 
+let check_no_traversal label path =
+  if String.contains path '\000' then failwith (label ^ " contains NUL byte");
+  if String.contains path '\\' then failwith (label ^ " contains backslash");
+  let segments = String.split_on_char '/' path in
+  List.iter (fun seg ->
+    if seg = ".." then failwith ("traversal .. forbidden in " ^ label ^ ": " ^ path)
+  ) segments
+
+let validate_source_ancestors source_path =
+  check_no_traversal "source path" source_path;
+  let abs_path =
+    if Filename.is_relative source_path then Filename.concat (Sys.getcwd ()) source_path
+    else source_path
+  in
+  let rec check_anc p =
+    if p = "" || p = "/" || p = "." then ()
+    else (
+      check_anc (Filename.dirname p);
+      let st =
+        try Unix.lstat p
+        with Unix.Unix_error (e, _, _) ->
+          failwith ("source ancestor unreadable: " ^ p ^ ": " ^ Unix.error_message e)
+      in
+      if st.Unix.st_kind = Unix.S_LNK then
+        failwith ("symlink forbidden in source ancestor: " ^ p);
+      if st.Unix.st_kind <> Unix.S_DIR then
+        failwith ("source ancestor not directory: " ^ p)
+    )
+  in
+  check_anc (Filename.dirname abs_path);
+  abs_path
+
 let write_exclusive path s =
-  if Sys.file_exists path then failwith ("output-collision:" ^ path);
+  check_no_traversal "output destination" path;
+  (match Unix.lstat path with
+   | exception Unix.Unix_error (Unix.ENOENT, _, _) -> ()
+   | st ->
+       if st.Unix.st_kind = Unix.S_LNK then failwith ("output-symlink-refused:" ^ path);
+       failwith ("output-collision:" ^ path));
   let fd = Unix.openfile path [Unix.O_WRONLY; Unix.O_CREAT; Unix.O_EXCL; Unix.O_CLOEXEC] 0o600 in
   let c = Unix.out_channel_of_descr fd in
   Fun.protect ~finally:(fun () -> close_out_noerr c) (fun () -> output_string c s; flush c)
@@ -225,10 +262,24 @@ let run_bounded ~timeout ?(max_bytes = 16_777_216) (argv : string array) =
     if !err_open then (try Unix.close err_r with _ -> ());
     raise exn
 
-let run_verification source_path =
-  let source = read_regular ~max_bytes:1_048_576 source_path in
-  let stage = Filename.temp_dir "ev86-capture-fixtures-" "" in
-  Unix.chmod stage 0o700;
+let run_verification ?stage source_path =
+  let abs_source = validate_source_ancestors source_path in
+  let source = read_regular ~max_bytes:1_048_576 abs_source in
+  let stage =
+    match stage with
+    | Some s -> s
+    | None ->
+        let s = Filename.temp_dir "ev86-capture-fixtures-" "" in
+        Unix.chmod s 0o700;
+        s
+  in
+  let verif = Filename.concat stage "verification.json" in
+  check_no_traversal "verification report destination" verif;
+  (match Unix.lstat verif with
+   | exception Unix.Unix_error (Unix.ENOENT, _, _) -> ()
+   | st ->
+       if st.Unix.st_kind = Unix.S_LNK then failwith ("output-symlink-refused:" ^ verif);
+       failwith ("output-collision:" ^ verif));
   let checker =
     if String.contains source '\000' then failwith "NUL in checker source"
     else try
@@ -299,11 +350,25 @@ let ()=
     "stdout", `String res.stdout;
     "stderr", `String res.stderr;
   ] in
-  let verif = Filename.concat stage "verification.json" in
-  Yojson.Safe.to_file verif report;
+  let report_str = Yojson.Safe.to_string report in
+  write_exclusive verif report_str;
   print_endline verif;
   print_string res.stdout;
   if res.exit_code <> 0 then exit res.exit_code else ()
+
+let rec remove_tree path =
+  match Unix.lstat path with
+  | exception Unix.Unix_error (Unix.ENOENT, _, _) -> ()
+  | st ->
+      if st.Unix.st_kind = Unix.S_DIR then (
+        (try Unix.chmod path 0o700 with _ -> ());
+        let entries = Sys.readdir path in
+        Array.iter (fun e -> remove_tree (Filename.concat path e)) entries;
+        Unix.rmdir path
+      ) else (
+        (try Unix.chmod path 0o600 with _ -> ());
+        Unix.unlink path
+      )
 
 let selftest () =
   print_endline "=== test_ev86_capture selftest ===";
@@ -361,6 +426,84 @@ let selftest () =
   (try Unix.unlink tmp with _ -> ());
   if not collision_refused then failwith "selftest failed: output collision not refused";
   print_endline "PASS: output collision refused";
+
+  (* 6. Falsifier output symlink destination refused and victim target preserved *)
+  let tmp_tgt = Filename.temp_file "sym-victim-" "" in
+  let c = open_out_bin tmp_tgt in output_string c "victim-target-bytes"; close_out c;
+  let tmp_sym = Filename.temp_file "sym-dest-" "" in
+  Sys.remove tmp_sym;
+  Unix.symlink tmp_tgt tmp_sym;
+  let sym_write_refused =
+    try write_exclusive tmp_sym "overwrite"; false
+    with Failure msg when String.starts_with ~prefix:"output-symlink-refused:" msg -> true
+  in
+  let tgt_bytes = read_regular ~max_bytes:1000 tmp_tgt in
+  Unix.unlink tmp_sym;
+  Unix.unlink tmp_tgt;
+  if not sym_write_refused || tgt_bytes <> "victim-target-bytes" then
+    failwith "selftest failed: symlink write refusal did not preserve victim target";
+  print_endline "PASS: output symlink destination refused and victim target preserved";
+
+  (* 7. Falsifier source path traversal .. and NUL rejected *)
+  let trav_refused =
+    try ignore (validate_source_ancestors "foo/../bar"); false
+    with Failure msg when String.starts_with ~prefix:"traversal .. forbidden" msg -> true
+  in
+  let nul_refused =
+    try ignore (validate_source_ancestors "foo\000bar"); false
+    with Failure msg when String.starts_with ~prefix:"source path contains NUL byte" msg -> true
+  in
+  if not trav_refused || not nul_refused then
+    failwith "selftest failed: traversal or NUL in source path not rejected";
+  print_endline "PASS: source path traversal .. and NUL rejected";
+
+  (* 8. Falsifier parent-symlink source ancestor refused *)
+  let parent_tmp = Filename.temp_dir "parent-sym-test-" "" in
+  let real_sub = Filename.concat parent_tmp "real" in
+  Unix.mkdir real_sub 0o700;
+  let dummy_src = Filename.concat real_sub "source.ml" in
+  let c = open_out_bin dummy_src in output_string c "let x = 1\n"; close_out c;
+  let link_sub = Filename.concat parent_tmp "link" in
+  Unix.symlink real_sub link_sub;
+  let parent_sym_refused =
+    try ignore (validate_source_ancestors (Filename.concat link_sub "source.ml")); false
+    with Failure msg when String.starts_with ~prefix:"symlink forbidden in source ancestor:" msg -> true
+  in
+  remove_tree parent_tmp;
+  if not parent_sym_refused then
+    failwith "selftest failed: parent-symlink source ancestor not refused";
+  print_endline "PASS: parent-symlink source ancestor refused";
+
+  (* 9. Falsifier report path regular collision refuses and preserves sentinel bytes *)
+  let col_stage = Filename.temp_dir "report-reg-col-" "" in
+  let col_verif = Filename.concat col_stage "verification.json" in
+  let c = open_out_bin col_verif in output_string c "sentinel-report-bytes"; close_out c;
+  let rep_col_refused =
+    try run_verification ~stage:col_stage "tools/ev86_music_http.ml"; false
+    with Failure msg when String.starts_with ~prefix:"output-collision:" msg -> true
+  in
+  let verif_bytes = read_regular ~max_bytes:1000 col_verif in
+  remove_tree col_stage;
+  if not rep_col_refused || verif_bytes <> "sentinel-report-bytes" then
+    failwith "selftest failed: report regular collision did not preserve sentinel bytes";
+  print_endline "PASS: report path regular collision refuses and preserves sentinel bytes";
+
+  (* 10. Falsifier report path symlink collision refuses and preserves sentinel bytes *)
+  let sym_stage = Filename.temp_dir "report-sym-col-" "" in
+  let sym_target = Filename.temp_file "report-sym-target-" "" in
+  let c = open_out_bin sym_target in output_string c "target-sentinel-bytes"; close_out c;
+  let sym_verif = Filename.concat sym_stage "verification.json" in
+  Unix.symlink sym_target sym_verif;
+  let rep_sym_refused =
+    try run_verification ~stage:sym_stage "tools/ev86_music_http.ml"; false
+    with Failure msg when String.starts_with ~prefix:"output-symlink-refused:" msg -> true
+  in
+  let target_bytes = read_regular ~max_bytes:1000 sym_target in
+  remove_tree sym_stage;
+  Unix.unlink sym_target;
+  if not rep_sym_refused || target_bytes <> "target-sentinel-bytes" then
+    failwith "selftest failed: report symlink collision did not preserve sentinel bytes";
+  print_endline "PASS: report path symlink collision refuses and preserves sentinel bytes";
 
   print_endline "ALL test_ev86_capture selftests passed"
 

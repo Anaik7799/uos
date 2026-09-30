@@ -78,16 +78,22 @@ let validate_stage_ancestors stage =
 
 let validate_source_ancestors path =
   check_no_traversal "source" path;
+  let abs_path =
+    if Filename.is_relative path then Filename.concat (Sys.getcwd ()) path
+    else path
+  in
   let rec check_anc p =
     if p = "" || p = "/" || p = "." then ()
     else (
       check_anc (Filename.dirname p);
       let st = try Unix.lstat p with Unix.Unix_error (e, _, _) -> failwith ("source ancestor unreadable: " ^ p ^ ": " ^ Unix.error_message e) in
       if st.Unix.st_kind = Unix.S_LNK then
-        failwith ("symlink forbidden in source ancestor: " ^ p)
+        failwith ("symlink forbidden in source ancestor: " ^ p);
+      if st.Unix.st_kind <> Unix.S_DIR then
+        failwith ("source ancestor not directory: " ^ p)
     )
   in
-  check_anc (Filename.dirname path)
+  check_anc (Filename.dirname abs_path)
 
 let rec mkdir_cases_sub root path =
   if not (String.starts_with ~prefix:root path) then
@@ -345,6 +351,39 @@ let selftest () =
     if not sym_victim_refused || target_bytes <> "target-victim-bytes" then
       failwith "selftest failed: scope symlink collision did not preserve victim bytes";
     print_endline "PASS: fixture-scope.json symlink collision preserves victim bytes";
+
+    (* 11. Parent-symlink source ancestor negative *)
+    let parent_sym_root = Filename.concat tmp "anc_test" in
+    Unix.mkdir parent_sym_root 0o700;
+    let real_anc = Filename.concat parent_sym_root "real" in
+    Unix.mkdir real_anc 0o700;
+    let sym_anc = Filename.concat parent_sym_root "sym" in
+    Unix.symlink real_anc sym_anc;
+    let anc_src = Filename.concat sym_anc "player.md" in
+    let c = open_out_bin (Filename.concat real_anc "player.md") in output_string c "# Test\n"; close_out c;
+    let anc_sym_refused =
+      try validate_source_ancestors anc_src; false
+      with Failure msg when string_contains ~sub:"symlink forbidden in source ancestor" msg -> true
+    in
+    remove_owned_tree parent_sym_root;
+    if not anc_sym_refused then failwith "selftest failed: parent-symlink source ancestor not refused";
+    print_endline "PASS: parent-symlink source ancestor refused";
+
+    (* 12. Direct exclusive write refusal on symlink *)
+    let sym_victim_target = Filename.concat tmp "sym_target.txt" in
+    let c = open_out_bin sym_victim_target in output_string c "target-bytes"; close_out c;
+    let sym_victim_link = Filename.concat tmp "sym_link.txt" in
+    Unix.symlink sym_victim_target sym_victim_link;
+    let sym_overwrite_refused =
+      try write_exclusive tmp sym_victim_link "overwrite"; false
+      with Failure msg when string_contains ~sub:"symlink destination refused" msg -> true
+    in
+    let target_bytes_after = read_regular ~max_bytes:1000 sym_victim_target in
+    Unix.unlink sym_victim_link;
+    Unix.unlink sym_victim_target;
+    if not sym_overwrite_refused || target_bytes_after <> "target-bytes" then
+      failwith "selftest failed: exclusive write symlink overwrite not refused";
+    print_endline "PASS: exclusive write refused victim symlink overwrite";
 
     print_endline "ALL ev86_music_fixtures selftests passed"
   )
