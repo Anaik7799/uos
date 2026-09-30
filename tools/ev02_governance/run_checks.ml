@@ -203,7 +203,9 @@ let run_one ~out_dir ~timestamp check =
   let res = run_bounded check.argv in
   let output_filename = Printf.sprintf "%sev02-%s.out" timestamp check.id in
   let output_path = Filename.concat out_dir output_filename in
-  write_exclusive output_path (if res.output = "" then "(no output)\n" else res.output);
+  let raw_empty = (res.output = "") in
+  let stored_output = if raw_empty then "(no output)\n" else res.output in
+  write_exclusive output_path stored_output;
   let control_pass = (res.exit_code = check.expected_code) in
   `Assoc [
     "id", `String check.id;
@@ -213,8 +215,9 @@ let run_one ~out_dir ~timestamp check =
     "control_pass", `Bool control_pass;
     "timed_out", `Bool res.timed_out;
     "output_truncated", `Bool res.output_truncated;
+    "raw_empty", `Bool raw_empty;
     "output_path", `String output_path;
-    "output_sha256", `String (sha res.output)
+    "output_sha256", `String (sha stored_output)
   ], control_pass
 
 let execute_checks ~workspace ~out_dir ~timestamp ~source_commit checks =
@@ -363,12 +366,45 @@ let selftest () =
     let result_passed = execute_checks ~workspace:tmp_dir ~out_dir:run_dir ~timestamp:"20260930-1116-" ~source_commit:"c2" [pass_check] in
     if result_passed <> true then failwith "selftest failed: execute_checks returned false on passing control";
 
-    (* 11. Timestamp validation *)
+    (* 11. Stored-output digest alignment control for silent and nonempty commands *)
+    let digest_dir = Filename.concat tmp_dir "digest_verify" in
+    make_dir digest_dir;
+    let silent_check = { id = "silent-cmd"; expected_code = 0; argv = [|"sh"; "-c"; "exit 0"|] } in
+    let nonempty_check = { id = "nonempty-cmd"; expected_code = 0; argv = [|"sh"; "-c"; "echo hello-digest-verify"|] } in
+    let digest_checks_ok = execute_checks ~workspace:tmp_dir ~out_dir:digest_dir ~timestamp:"20260930-1120-" ~source_commit:"c3" [silent_check; nonempty_check] in
+    if not digest_checks_ok then failwith "selftest failed: digest verify checks failed";
+    let summary_json_path = Filename.concat digest_dir "20260930-1120-ev02-governance-checks.json" in
+    let summary_json = Yojson.Safe.from_file summary_json_path in
+    let open Yojson.Safe.Util in
+    let rows = summary_json |> member "rows" |> to_list in
+    if List.length rows <> 2 then failwith "selftest failed: expected 2 rows in digest verify summary";
+    List.iter (fun row ->
+      let id = row |> member "id" |> to_string in
+      let path = row |> member "output_path" |> to_string in
+      let expected_sha = row |> member "output_sha256" |> to_string in
+      let raw_empty = row |> member "raw_empty" |> to_bool in
+      let ch = open_in_bin path in
+      let len = in_channel_length ch in
+      let disk_bytes = really_input_string ch len in
+      close_in ch;
+      let actual_sha = sha disk_bytes in
+      if actual_sha <> expected_sha then
+        failwith (Printf.sprintf "selftest failed: digest mismatch for %s: summary=%s actual=%s" id expected_sha actual_sha);
+      if id = "silent-cmd" then begin
+        if not raw_empty then failwith "selftest failed: silent-cmd was not raw_empty";
+        if disk_bytes <> "(no output)\n" then failwith "selftest failed: silent-cmd stored bytes != '(no output)\\n'"
+      end else if id = "nonempty-cmd" then begin
+        if raw_empty then failwith "selftest failed: nonempty-cmd was raw_empty";
+        if disk_bytes <> "hello-digest-verify\n" then failwith "selftest failed: nonempty-cmd stored bytes mismatch"
+      end
+    ) rows;
+
+    (* 12. Timestamp validation *)
     if not (validate_timestamp "20260930-1115-") then failwith "selftest failed: valid timestamp rejected";
     if validate_timestamp "bad-timestamp" then failwith "selftest failed: bad timestamp accepted";
     if validate_timestamp "" then failwith "selftest failed: empty timestamp accepted";
 
-    print_endline "PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp"
+    print_endline "PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp/digest_receipt_alignment"
   )
 
 let () =
