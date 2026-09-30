@@ -166,6 +166,7 @@ let run_bounded ~timeout ?(max_bytes = 16_777_216) (argv : string array) =
                     if allowed > 0 then Buffer.add_subbytes out_buf tmp 0 allowed;
                     output_truncated := true;
                     stop_group ();
+                    (try Unix.close out_r with _ -> ());
                     out_open := false
                   ) else Buffer.add_subbytes out_buf tmp 0 n
                 )
@@ -181,6 +182,7 @@ let run_bounded ~timeout ?(max_bytes = 16_777_216) (argv : string array) =
                     if allowed > 0 then Buffer.add_subbytes err_buf tmp 0 allowed;
                     output_truncated := true;
                     stop_group ();
+                    (try Unix.close err_r with _ -> ());
                     err_open := false
                   ) else Buffer.add_subbytes err_buf tmp 0 n
                 )
@@ -317,6 +319,24 @@ let selftest () =
     failwith (Printf.sprintf "selftest failed: output flood (code %d, len %d, trunc %b)"
       b_res.exit_code (String.length b_res.stdout) b_res.output_truncated);
   print_endline "PASS: output flood truncated and stopped";
+
+  (* Stable open-FD count across repeated floods *)
+  let count_open_fds () =
+    try
+      let entries = Sys.readdir "/proc/self/fd" in
+      Array.length entries
+    with _ -> -1
+  in
+  let fds_initial = count_open_fds () in
+  for _ = 1 to 5 do
+    let r = run_bounded ~timeout:2.0 ~max_bytes:500 [|"sh"; "-c"; "while true; do echo -n '1234567890'; done"|] in
+    if not r.output_truncated || r.exit_code <> 125 then
+      failwith "selftest failed: repeated output flood did not truncate";
+  done;
+  let fds_after = count_open_fds () in
+  if fds_initial > 0 && fds_after <> fds_initial then
+    failwith (Printf.sprintf "selftest failed: open FD leak across repeated floods (before=%d, after=%d)" fds_initial fds_after);
+  print_endline "PASS: stable open-FD count across repeated floods";
 
   (* 3. Falsifier close output-sleep *)
   let c_res = run_bounded ~timeout:0.05 [|"sh"; "-c"; "exec 1>&-; exec 2>&-; sleep 5"|] in

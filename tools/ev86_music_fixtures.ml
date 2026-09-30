@@ -102,16 +102,20 @@ let rec mkdir_cases_sub root path =
   if st.Unix.st_kind <> Unix.S_DIR then failwith ("expected directory: " ^ path);
   if st.Unix.st_uid <> Unix.getuid () then failwith ("cases directory not owned by current user: " ^ path)
 
-let write_exclusive root path content =
-  mkdir_cases_sub root (Filename.dirname path);
-  if Sys.file_exists path then (
-    let st = Unix.lstat path in
-    if st.Unix.st_kind = Unix.S_LNK then failwith ("symlink destination refused: " ^ path);
-    failwith ("exclusive write refused - file exists: " ^ path)
-  );
+let write_exclusive_file path content =
+  check_no_traversal "destination file" path;
+  (match Unix.lstat path with
+   | exception Unix.Unix_error (Unix.ENOENT, _, _) -> ()
+   | st ->
+       if st.Unix.st_kind = Unix.S_LNK then failwith ("symlink destination refused: " ^ path);
+       failwith ("exclusive write refused - file exists: " ^ path));
   let fd = Unix.openfile path [Unix.O_WRONLY; Unix.O_CREAT; Unix.O_EXCL; Unix.O_CLOEXEC] 0o600 in
   let c = Unix.out_channel_of_descr fd in
   Fun.protect ~finally:(fun () -> close_out_noerr c) (fun () -> output_string c content; flush c)
+
+let write_exclusive root path content =
+  mkdir_cases_sub root (Filename.dirname path);
+  write_exclusive_file path content
 
 let player = "docs/music/20260907-1052-swarm-durga-player.md"
 let mix = "generated/20260907-1230-uos-hive-sings-full-mix.wav"
@@ -121,6 +125,13 @@ let generate_fixtures stage =
   let content_dir = Filename.concat stage "content" in
   let root = Filename.concat content_dir "cases" in
   if Sys.file_exists root then failwith "fresh private cases required";
+  let scope_path = Filename.concat stage "fixture-scope.json" in
+  check_no_traversal "fixture scope" scope_path;
+  (match Unix.lstat scope_path with
+   | exception Unix.Unix_error (Unix.ENOENT, _, _) -> ()
+   | st ->
+       if st.Unix.st_kind = Unix.S_LNK then failwith ("symlink destination refused: " ^ scope_path);
+       failwith ("exclusive write refused - file exists: " ^ scope_path));
   let player_source = Filename.concat content_dir player in
   validate_source_ancestors player_source;
   let source_st = try Unix.lstat player_source with Unix.Unix_error (e, _, _) ->
@@ -179,12 +190,12 @@ let generate_fixtures stage =
   Bytes.set bad 4 '\000';
   write_exclusive root (named "bad-wav-size" mix) (Bytes.to_string bad);
 
-  let scope_path = Filename.concat stage "fixture-scope.json" in
-  Yojson.Safe.to_file scope_path (`Assoc [
+  let scope_json = Yojson.Safe.to_string (`Assoc [
     "scope", `String "Private read-refusal and exact-bound fixtures; zero-filled PCM is a structural fixture, no musical or playback evidence";
     "cases", `Int 18;
     "root", `String root
-  ]);
+  ]) in
+  write_exclusive_file scope_path scope_json;
   root
 
 let rec remove_owned_tree path =
@@ -236,6 +247,7 @@ let selftest () =
 
     (* Clean cases to test other falsifiers *)
     remove_owned_tree root;
+    (try Unix.unlink (Filename.concat tmp "fixture-scope.json") with _ -> ());
 
     (* 3. Traversal negative *)
     let trav_refused =
@@ -305,6 +317,34 @@ let selftest () =
     in
     if not overwrite_refused then failwith "selftest failed: exclusive write overwrite not refused";
     print_endline "PASS: exclusive write refused victim overwrite";
+
+    (* 9. Regular collision on fixture-scope.json preflight: victim bytes unchanged *)
+    let victim_scope = Filename.concat tmp "fixture-scope.json" in
+    let c = open_out_bin victim_scope in output_string c "victim-scope-bytes"; close_out c;
+    let victim_refused =
+      try ignore (generate_fixtures tmp); false
+      with Failure msg when string_contains ~sub:"exclusive write refused" msg -> true
+    in
+    let scope_bytes = read_regular ~max_bytes:1000 victim_scope in
+    Unix.unlink victim_scope;
+    if not victim_refused || scope_bytes <> "victim-scope-bytes" then
+      failwith "selftest failed: scope regular collision did not preserve victim bytes";
+    print_endline "PASS: fixture-scope.json regular collision preserves victim bytes";
+
+    (* 10. Symlink collision on fixture-scope.json preflight: victim bytes unchanged *)
+    let target_file = Filename.concat tmp "victim_target.txt" in
+    let c = open_out_bin target_file in output_string c "target-victim-bytes"; close_out c;
+    Unix.symlink target_file victim_scope;
+    let sym_victim_refused =
+      try ignore (generate_fixtures tmp); false
+      with Failure msg when string_contains ~sub:"symlink destination refused" msg -> true
+    in
+    let target_bytes = read_regular ~max_bytes:1000 target_file in
+    Unix.unlink victim_scope;
+    Unix.unlink target_file;
+    if not sym_victim_refused || target_bytes <> "target-victim-bytes" then
+      failwith "selftest failed: scope symlink collision did not preserve victim bytes";
+    print_endline "PASS: fixture-scope.json symlink collision preserves victim bytes";
 
     print_endline "ALL ev86_music_fixtures selftests passed"
   )
