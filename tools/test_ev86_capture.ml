@@ -1,17 +1,232 @@
 #use "topfind";;
-#require "unix,yojson,cryptokit,str";;
+#require "unix,yojson,cryptokit,str,mtime.clock.os";;
 
 (* Execute only the post-receive checker extracted from the bound source text.
    The original HTTP driver's top-level socket/process setup is never evaluated. *)
-let read p = let c = open_in_bin p in Fun.protect ~finally:(fun () -> close_in_noerr c) (fun () -> really_input_string c (in_channel_length c))
-let write p s = let c = open_out_gen [Open_creat;Open_excl;Open_wronly;Open_binary] 0o600 p in Fun.protect ~finally:(fun () -> close_out_noerr c) (fun () -> output_string c s)
+
+type run_result = {
+  exit_code : int;
+  stdout : string;
+  stderr : string;
+  timed_out : bool;
+  output_truncated : bool;
+  child_pid : int;
+}
+
+let monotonic_now () =
+  Mtime_clock.now () |> Mtime.to_uint64_ns |> Int64.to_float |> fun ns -> ns /. 1_000_000_000.
+
+let regular stat = stat.Unix.st_kind = Unix.S_REG
+let same_file a b = a.Unix.st_dev = b.Unix.st_dev && a.Unix.st_ino = b.Unix.st_ino
+let same_stat a b =
+  same_file a b &&
+  a.Unix.st_size = b.Unix.st_size &&
+  a.Unix.st_mtime = b.Unix.st_mtime &&
+  a.Unix.st_ctime = b.Unix.st_ctime
+
+let read_regular ~max_bytes path =
+  let listed = try Unix.lstat path with Unix.Unix_error (e, _, _) -> failwith ("missing-or-unreadable:" ^ path ^ ":" ^ Unix.error_message e) in
+  if listed.Unix.st_kind = Unix.S_LNK then failwith ("symlink-forbidden:" ^ path);
+  if not (regular listed) then failwith ("not-regular:" ^ path);
+  if listed.Unix.st_size < 0 || listed.Unix.st_size > max_bytes then failwith ("file-size-exceeded:" ^ path);
+  let fd = try Unix.openfile path [Unix.O_RDONLY; Unix.O_NONBLOCK; Unix.O_CLOEXEC] 0
+    with Unix.Unix_error (e, _, _) -> failwith ("open-refused:" ^ path ^ ":" ^ Unix.error_message e) in
+  Fun.protect ~finally:(fun () -> Unix.close fd) (fun () ->
+    let opened = Unix.fstat fd in
+    if not (regular opened) || not (same_stat listed opened) then
+      failwith ("file-identity-changed-at-open:" ^ path);
+    let bytes = Bytes.create opened.Unix.st_size in
+    let rec read_at offset =
+      if offset = Bytes.length bytes then () else
+      let read = Unix.read fd bytes offset (Bytes.length bytes - offset) in
+      if read <= 0 then failwith ("short-read:" ^ path) else read_at (offset + read)
+    in
+    read_at 0;
+    let closed = Unix.fstat fd in
+    if not (regular closed) || not (same_stat opened closed) then
+      failwith ("file-mutated-during-read:" ^ path);
+    let final_listed = try Unix.lstat path with Unix.Unix_error (e, _, _) -> failwith ("final-stat-failed:" ^ path ^ ":" ^ Unix.error_message e) in
+    if final_listed.Unix.st_kind = Unix.S_LNK then failwith ("final-symlink-forbidden:" ^ path);
+    if not (regular final_listed) || not (same_stat opened final_listed) then
+      failwith ("path-substituted-or-mutated:" ^ path);
+    Bytes.to_string bytes)
+
+let write_exclusive path s =
+  if Sys.file_exists path then failwith ("output-collision:" ^ path);
+  let fd = Unix.openfile path [Unix.O_WRONLY; Unix.O_CREAT; Unix.O_EXCL; Unix.O_CLOEXEC] 0o600 in
+  let c = Unix.out_channel_of_descr fd in
+  Fun.protect ~finally:(fun () -> close_out_noerr c) (fun () -> output_string c s; flush c)
+
 let sha s = Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) s |> Cryptokit.transform_string (Cryptokit.Hexa.encode ())
 let find s part = Str.search_forward (Str.regexp_string part) s 0
 let require p s = if not p then failwith s
-let () =
-  let source_path = Sys.argv.(1) in
-  let source = read source_path in
+
+let run_bounded ~timeout ?(max_bytes = 16_777_216) (argv : string array) =
+  let out_r, out_w = Unix.pipe ~cloexec:true () in
+  let err_r, err_w = Unix.pipe ~cloexec:true () in
+  let pid =
+    let p = Unix.fork () in
+    if p = 0 then (
+      try
+        ignore (Unix.setsid ());
+        Unix.dup2 out_w Unix.stdout;
+        Unix.dup2 err_w Unix.stderr;
+        Unix.close out_w;
+        Unix.close out_r;
+        Unix.close err_w;
+        Unix.close err_r;
+        Unix.execvp argv.(0) argv
+      with _ -> Unix._exit 127
+    ) else p
+  in
+  Unix.close out_w;
+  Unix.close err_w;
+  Unix.set_nonblock out_r;
+  Unix.set_nonblock err_r;
+  let child_status = ref None in
+  let reap_child () =
+    match !child_status with
+    | Some _ -> true
+    | None ->
+        match Unix.waitpid [Unix.WNOHANG] pid with
+        | p, status when p = pid ->
+            child_status := Some status;
+            true
+        | _ -> false
+  in
+  let group_alive () =
+    try Unix.kill (-pid) 0; true
+    with Unix.Unix_error (Unix.ESRCH, _, _) -> false
+       | Unix.Unix_error _ -> false
+  in
+  let stop_group () =
+    (try Unix.kill (-pid) Sys.sigterm with _ -> ());
+    let t0 = monotonic_now () in
+    let rec loop tries =
+      let _ = reap_child () in
+      if not (group_alive ()) && Option.is_some !child_status then ()
+      else if tries <= 0 || monotonic_now () -. t0 > 0.5 then (
+        (try Unix.kill (-pid) Sys.sigkill with _ -> ());
+        let kt0 = monotonic_now () in
+        let rec kloop ktries =
+          let _ = reap_child () in
+          if not (group_alive ()) && Option.is_some !child_status then ()
+          else if ktries <= 0 || monotonic_now () -. kt0 > 0.5 then ()
+          else (ignore (Unix.select [] [] [] 0.01); kloop (ktries - 1))
+        in
+        kloop 10
+      ) else (
+        ignore (Unix.select [] [] [] 0.01);
+        loop (tries - 1)
+      )
+    in
+    loop 10;
+    let _ = reap_child () in
+    if Option.is_none !child_status then
+      failwith (Printf.sprintf "child process %d not reaped within deadline" pid);
+    if group_alive () then
+      failwith (Printf.sprintf "process group %d still alive after SIGKILL" pid)
+  in
+  let out_buf = Buffer.create 4096 in
+  let err_buf = Buffer.create 4096 in
+  let out_open = ref true in
+  let err_open = ref true in
+  let t0 = monotonic_now () in
+  let deadline = t0 +. timeout in
+  let timed_out = ref false in
+  let output_truncated = ref false in
+  let tmp = Bytes.create 65536 in
+  try
+    let rec pump () =
+      if !out_open || !err_open then (
+        let now = monotonic_now () in
+        if now >= deadline then (
+          timed_out := true;
+          stop_group ()
+        ) else (
+          let remaining = deadline -. now in
+          let readers = (if !out_open then [out_r] else []) @ (if !err_open then [err_r] else []) in
+          let r_fds, _, _ = Unix.select readers [] [] (min remaining 0.05) in
+          if r_fds = [] then (
+            if monotonic_now () >= deadline then (
+              timed_out := true;
+              stop_group ()
+            ) else pump ()
+          ) else (
+            List.iter (fun fd ->
+              if fd = out_r && !out_open then (
+                let n =
+                  try Unix.read out_r tmp 0 65536
+                  with Unix.Unix_error ((Unix.EAGAIN | Unix.EWOULDBLOCK | Unix.EINTR), _, _) -> -1
+                in
+                if n = 0 then (Unix.close out_r; out_open := false)
+                else if n > 0 then (
+                  if Buffer.length out_buf + n > max_bytes then (
+                    let allowed = max 0 (max_bytes - Buffer.length out_buf) in
+                    if allowed > 0 then Buffer.add_subbytes out_buf tmp 0 allowed;
+                    output_truncated := true;
+                    stop_group ();
+                    out_open := false
+                  ) else Buffer.add_subbytes out_buf tmp 0 n
+                )
+              ) else if fd = err_r && !err_open then (
+                let n =
+                  try Unix.read err_r tmp 0 65536
+                  with Unix.Unix_error ((Unix.EAGAIN | Unix.EWOULDBLOCK | Unix.EINTR), _, _) -> -1
+                in
+                if n = 0 then (Unix.close err_r; err_open := false)
+                else if n > 0 then (
+                  if Buffer.length err_buf + n > max_bytes then (
+                    let allowed = max 0 (max_bytes - Buffer.length err_buf) in
+                    if allowed > 0 then Buffer.add_subbytes err_buf tmp 0 allowed;
+                    output_truncated := true;
+                    stop_group ();
+                    err_open := false
+                  ) else Buffer.add_subbytes err_buf tmp 0 n
+                )
+              )
+            ) r_fds;
+            if not !timed_out && not !output_truncated then pump ()
+          )
+        )
+      )
+    in
+    pump ();
+    if not !timed_out && not !output_truncated then (
+      let rec wait_child () =
+        let now = monotonic_now () in
+        if now >= deadline then (
+          timed_out := true;
+          stop_group ()
+        ) else if reap_child () then ()
+        else (ignore (Unix.select [] [] [] 0.01); wait_child ())
+      in
+      wait_child ()
+    );
+    if not !timed_out && not !output_truncated then stop_group ();
+    let exit_code =
+      if !timed_out then 124
+      else if !output_truncated then 125
+      else match !child_status with
+        | Some (Unix.WEXITED n) -> n
+        | Some (Unix.WSIGNALED s) -> 128 + s
+        | Some (Unix.WSTOPPED s) -> 128 + s
+        | None -> 127
+    in
+    if !out_open then (try Unix.close out_r with _ -> ());
+    if !err_open then (try Unix.close err_r with _ -> ());
+    { exit_code; stdout = Buffer.contents out_buf; stderr = Buffer.contents err_buf;
+      timed_out = !timed_out; output_truncated = !output_truncated; child_pid = pid }
+  with exn ->
+    (try stop_group () with _ -> ());
+    if !out_open then (try Unix.close out_r with _ -> ());
+    if !err_open then (try Unix.close err_r with _ -> ());
+    raise exn
+
+let run_verification source_path =
+  let source = read_regular ~max_bytes:1_048_576 source_path in
   let stage = Filename.temp_dir "ev86-capture-fixtures-" "" in
+  Unix.chmod stage 0o700;
   let checker =
     if String.contains source '\000' then failwith "NUL in checker source"
     else try
@@ -23,7 +238,8 @@ let () =
       let stop = find source "let ()=Fun.protect" in
       "let check_response name method_ path expected mime raw = " ^ String.sub source start (stop - start)
   in
-  require (not (try ignore (find checker "request "); true with Not_found -> false)) "request execution must not enter fixture projection";
+  require (not (try ignore (find checker "request "); true with Not_found -> false))
+    "request execution must not enter fixture projection";
   let prelude = "#use \"topfind\";;\n#require \"unix,yojson,cryptokit,str\";;\nlet run=" ^ Printf.sprintf "%S" stage ^ "\nlet public_base=\"http://nas-1.tail55d152.ts.net:4100\"\nlet require p s=if not p then failwith s\nlet write p b=let c=open_out_bin p in Fun.protect ~finally:(fun()->close_out_noerr c)(fun()->output_string c b)\nlet sha b=Cryptokit.hash_string(Cryptokit.Hash.sha256())b |> Cryptokit.transform_string(Cryptokit.Hexa.encode())\n" in
   let fixtures = {|
 let read p=let c=open_in_bin p in Fun.protect ~finally:(fun()->close_in_noerr c)(fun()->really_input_string c(in_channel_length c))
@@ -52,12 +268,90 @@ let ()=
  Yojson.Safe.to_file(run^"/checks.json")(`List(List.rev!checks)); print_endline "PASS 13 local static-response capture fixtures"
 |} in
   let projected = prelude ^ checker ^ fixtures in
-  let test = stage ^ "/capture_fixture.ml" in write test projected;
-  let output = stage ^ "/stdout.txt" in let fd=Unix.openfile output [Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL] 0o600 in
-  let executable="/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun" in
-  let args=[|executable;"/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml";test|] in
-  let child=Unix.create_process executable args Unix.stdin fd fd in Unix.close fd;
-  let status=match snd(Unix.waitpid [] child) with Unix.WEXITED n->n|_->125 in
-  let report=`Assoc["scope",`String "Post-receive source projection and local static response fixtures only; no driver setup, HTTP request, listener or live effect";"source_path",`String source_path;"source_sha256",`String(sha source);"checker_sha256",`String(sha checker);"projection_sha256",`String(sha projected);"stage",`String stage;"exit_code",`Int status;"output",`String(read output)] in
-  Yojson.Safe.to_file(stage^"/verification.json")report;
-  print_endline(stage^"/verification.json"); print_string(read output); exit status
+  let test = Filename.concat stage "capture_fixture.ml" in
+  write_exclusive test projected;
+  let ocamlrun =
+    let p = Filename.concat (Sys.getcwd ()) "toolchains/opam-ocaml/bin/ocamlrun" in
+    if Sys.file_exists p then p else "ocamlrun"
+  in
+  let ocaml =
+    let p = Filename.concat (Sys.getcwd ()) "toolchains/opam-ocaml/bin/ocaml" in
+    if Sys.file_exists p then p else "ocaml"
+  in
+  let args = [| ocamlrun; ocaml; test |] in
+  let res = run_bounded ~timeout:10.0 args in
+  let stdout_file = Filename.concat stage "stdout.txt" in
+  write_exclusive stdout_file res.stdout;
+  let stderr_file = Filename.concat stage "stderr.txt" in
+  write_exclusive stderr_file res.stderr;
+  let report = `Assoc [
+    "scope", `String "Post-receive source projection and local static response fixtures only; no driver setup, HTTP request, listener or live effect";
+    "source_path", `String source_path;
+    "source_sha256", `String (sha source);
+    "checker_sha256", `String (sha checker);
+    "projection_sha256", `String (sha projected);
+    "stage", `String stage;
+    "exit_code", `Int res.exit_code;
+    "timed_out", `Bool res.timed_out;
+    "output_truncated", `Bool res.output_truncated;
+    "stdout", `String res.stdout;
+    "stderr", `String res.stderr;
+  ] in
+  let verif = Filename.concat stage "verification.json" in
+  Yojson.Safe.to_file verif report;
+  print_endline verif;
+  print_string res.stdout;
+  if res.exit_code <> 0 then exit res.exit_code else ()
+
+let selftest () =
+  print_endline "=== test_ev86_capture selftest ===";
+  (* 1. Falsifier nonzero: child exit status preserved *)
+  let s_res = run_bounded ~timeout:2.0 [|"sh"; "-c"; "exit 42"|] in
+  if s_res.exit_code <> 42 || s_res.timed_out then
+    failwith (Printf.sprintf "selftest failed: nonzero exit code not preserved (code %d)" s_res.exit_code);
+  print_endline "PASS: nonzero exit code preserved";
+
+  (* 2. Falsifier output flood *)
+  let b_res = run_bounded ~timeout:2.0 ~max_bytes:500 [|"sh"; "-c"; "while true; do echo -n '1234567890'; done"|] in
+  if not b_res.output_truncated || b_res.exit_code <> 125 || String.length b_res.stdout <> 500 then
+    failwith (Printf.sprintf "selftest failed: output flood (code %d, len %d, trunc %b)"
+      b_res.exit_code (String.length b_res.stdout) b_res.output_truncated);
+  print_endline "PASS: output flood truncated and stopped";
+
+  (* 3. Falsifier close output-sleep *)
+  let c_res = run_bounded ~timeout:0.05 [|"sh"; "-c"; "exec 1>&-; exec 2>&-; sleep 5"|] in
+  if not c_res.timed_out || c_res.exit_code <> 124 then
+    failwith (Printf.sprintf "selftest failed: close output-sleep timeout not detected (code %d)" c_res.exit_code);
+  print_endline "PASS: close output-sleep timeout detected";
+
+  (* 4. Falsifier descendant retains pipe/ignores TERM after leader exit *)
+  let d_res = run_bounded ~timeout:0.1 [|"sh"; "-c"; "(trap '' TERM; sleep 30 &); sleep 0.001"|] in
+  if not d_res.timed_out || d_res.exit_code <> 124 then
+    failwith (Printf.sprintf "selftest failed: descendant retaining pipe not terminated (code %d)" d_res.exit_code);
+  print_endline "PASS: descendant retaining pipe terminated with group";
+
+  (* 5. Falsifier output collision *)
+  let tmp = Filename.temp_file "collision-" "" in
+  Sys.remove tmp;
+  write_exclusive tmp "hello";
+  let collision_refused =
+    try write_exclusive tmp "overwrite"; false
+    with Failure msg when String.starts_with ~prefix:"output-collision:" msg -> true
+  in
+  (try Unix.unlink tmp with _ -> ());
+  if not collision_refused then failwith "selftest failed: output collision not refused";
+  print_endline "PASS: output collision refused";
+
+  print_endline "ALL test_ev86_capture selftests passed"
+
+let () =
+  if Array.length Sys.argv < 2 then (
+    prerr_endline "usage: ocaml tools/test_ev86_capture.ml <source_path> | --selftest";
+    exit 1
+  );
+  if Sys.argv.(1) = "--selftest" then (
+    selftest ();
+    exit 0
+  ) else (
+    run_verification Sys.argv.(1)
+  )
