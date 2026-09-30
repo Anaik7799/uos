@@ -1,0 +1,29 @@
+[Unit]
+Description=UOS %i clock observer on reviewed OTP 29 capsule
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+WorkingDirectory=/home/an/NAS-setup/uos/var/releases/ecology/20260930-0608-0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748
+Environment="UOS_CLOCK_RELEASE=/home/an/NAS-setup/uos/var/releases/ecology/20260930-0608-0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748"
+ExecStartPre=/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml /home/an/NAS-setup/uos/tools/ecology_release.ml verify /home/an/NAS-setup/uos/var/releases/ecology/20260930-0608-0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748
+ExecStart=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl +S 2:2 +A 2 -noshell -eval "code:add_paths(filelib:wildcard(os:getenv(\"UOS_CLOCK_RELEASE\") ++ \"/apps/*/ebin\")), 'indrajaal_gleam_web@@main':run(clock_guard_cli)." -extra serve 30000 http://nas-1.tail55d152.ts.net:8080/c3i/a2a/*/*/* /home/an/NAS-setup/uos/var/coordination/tri-agent/clock-guard-%i.floor /home/an/NAS-setup/uos/var/coordination/tri-agent
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=10
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+MemoryMax=256M
+CPUQuota=50%
+TasksMax=64
+LimitNOFILE=256
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=uos-clock-guard-%i
+
+[Install]
+WantedBy=default.target

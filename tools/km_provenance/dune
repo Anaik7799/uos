@@ -13,3 +13,8 @@
  (name km_chain_test)
  (modules km_chain_test)
  (libraries km_chain_core sqlite3))
+
+(executable
+ (name recovery_verify)
+ (modules recovery_verify)
+ (libraries km_chain_core yojson unix sqlite3))

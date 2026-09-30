@@ -21,6 +21,9 @@ pub fn service_authority_is_separated_by_resource_test() {
   runtime.resource(runtime.StartEcology) |> should.equal("runtime:ecology")
   runtime.resource(runtime.ReloadUnits) |> should.equal("integration/main")
   runtime.resource(runtime.RestartCockpit) |> should.equal("runtime:cockpit")
+  runtime.resource(runtime.EnableCockpit) |> should.equal("runtime:cockpit")
+  runtime.resource(runtime.EnableEcology) |> should.equal("runtime:ecology")
+  runtime.resource(runtime.DisableOldEcology) |> should.equal("runtime:ecology")
 }
 
 pub fn missing_private_review_cannot_execute_test() {

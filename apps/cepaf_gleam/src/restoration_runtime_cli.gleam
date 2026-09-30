@@ -51,6 +51,9 @@ pub type Action {
   RestartPrimary
   RestartBackup
   RestartCockpit
+  EnableEcology
+  DisableOldEcology
+  EnableCockpit
 }
 
 pub fn action(raw: String) -> Result(Action, String) {
@@ -65,6 +68,9 @@ pub fn action(raw: String) -> Result(Action, String) {
     "restart_clock_primary" -> Ok(RestartPrimary)
     "restart_clock_backup" -> Ok(RestartBackup)
     "restart_cockpit" -> Ok(RestartCockpit)
+    "enable_ecology" -> Ok(EnableEcology)
+    "disable_old_ecology" -> Ok(DisableOldEcology)
+    "enable_cockpit" -> Ok(EnableCockpit)
     _ -> Error("unsupported_restoration_action")
   }
 }
@@ -72,7 +78,7 @@ pub fn action(raw: String) -> Result(Action, String) {
 pub fn resource(selected: Action) -> String {
   case selected {
     InstallClock | RestartPrimary | RestartBackup -> "runtime:clock-guard"
-    InstallCockpit | RestartCockpit -> "runtime:cockpit"
+    InstallCockpit | RestartCockpit | EnableCockpit -> "runtime:cockpit"
     ReloadUnits -> "integration/main"
     _ -> "runtime:ecology"
   }
@@ -214,10 +220,10 @@ pub fn window_valid(now: Int, expires: Int) -> Bool {
 
 fn service_binding(grant: v.Value, selected: Action, instance: String) -> Result(Nil, String) {
   let unit = case selected {
-    StopOldEcology -> old_ecology
+    StopOldEcology | DisableOldEcology -> old_ecology
     RestartPrimary -> "uos-clock-guard@primary.service"
     RestartBackup -> "uos-clock-guard@backup.service"
-    RestartCockpit -> "c3i-gleam-server.service"
+    RestartCockpit | EnableCockpit -> "c3i-gleam-server.service"
     _ -> "uos-ecology@" <> instance <> ".service"
   }
   use expected <- result.try(text(grant, "effective_unit_sha256"))
@@ -227,8 +233,8 @@ fn service_binding(grant: v.Value, selected: Action, instance: String) -> Result
   use _ <- result.try(a.require(string.trim(reload) == "no", "unit_requires_daemon_reload"))
   use deps <- result.try(v.get(grant, "dependencies"))
   let required = case selected {
-    StartEcology -> [release_root <> "/" <> instance <> ".env", release_root <> "/" <> instance <> "/release-manifest.json"]
-    RestartPrimary | RestartBackup | RestartCockpit -> [release_root <> "/" <> instance <> "/release-manifest.json"]
+    StartEcology | EnableEcology -> [release_root <> "/" <> instance <> ".env", release_root <> "/" <> instance <> "/release-manifest.json"]
+    RestartPrimary | RestartBackup | RestartCockpit | EnableCockpit -> [release_root <> "/" <> instance <> "/release-manifest.json"]
     _ -> []
   }
   use _ <- result.try(list.try_each(required, fn(path) {
@@ -236,7 +242,7 @@ fn service_binding(grant: v.Value, selected: Action, instance: String) -> Result
     a.require(v.get(deps, path) == Ok(v.Text(actual)), "required_service_dependency:" <> path)
   }))
   case selected {
-    StartEcology | RestartPrimary | RestartBackup | RestartCockpit ->
+    StartEcology | EnableEcology | RestartPrimary | RestartBackup | RestartCockpit | EnableCockpit ->
       dev.bounded(dev.root <> "/toolchains/opam-ocaml/bin/ocaml",
         [dev.root <> "/tools/ecology_release.ml", "verify", release_root <> "/" <> instance], 30_000)
       |> result.map(fn(_) { Nil })
@@ -288,6 +294,9 @@ fn perform(grant: v.Value, selected: Action, instance: String, intent: String) -
         RestartPrimary -> ["restart", "uos-clock-guard@primary.service"]
         RestartBackup -> ["restart", "uos-clock-guard@backup.service"]
         RestartCockpit -> ["restart", "c3i-gleam-server.service"]
+        EnableEcology -> ["enable", unit]
+        DisableOldEcology -> ["disable", old_ecology]
+        EnableCockpit -> ["enable", "c3i-gleam-server.service"]
         _ -> []
       }
       dev.bounded(systemctl, ["--user", ..args], 30_000)

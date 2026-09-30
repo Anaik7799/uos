@@ -1,0 +1,171 @@
+{
+  "schema": "uos.restoration-dashboard.v1",
+  "updated_at": "2026-09-30T07:05:39Z",
+  "plan": "uos/full-restoration/20260930-0515",
+  "overall": "RECOVERY IN PROGRESS",
+  "goal_met": false,
+  "as_is": [
+    [
+      "Cockpit",
+      "Managed cockpit ACTIVE and ENABLED, HTTP200, zero restarts on corrected immutable launcher."
+    ],
+    [
+      "Coordinator",
+      "Recovered fresh epoch ACTIVE; digest, chain, typed replay and trigger checks PASS. New fenced leases acquired."
+    ],
+    [
+      "Cycle ledger",
+      "Recovered canonical ledger ACTIVE;332 verified rows,all24 holds preserved,0releases; all original550 rows retained privately."
+    ],
+    [
+      "Ecology",
+      "New immutable ecology release LIVE on4110; realMAX26.5 inference, advancing cycles,0restarts."
+    ],
+    [
+      "Code integration",
+      "Outstanding branch code and Google AGY handoff assembled in canonical integration candidate. main has not moved."
+    ],
+    [
+      "Google AGY",
+      "Actual Google AGY completed scoped implementation. Independent review and corrected transition rehearsal passed."
+    ],
+    [
+      "Clock consumers",
+      "Both ACTIVE/ENABLED; healthy=true, fault_count=0; original Lamport floor316 preserved."
+    ]
+  ],
+  "to_be": [
+    "Coordinator and cycle ledger pass fresh live integrity checks; originals remain preserved.",
+    "Ecology runs on pinned OTP29 with real MAX inference, advancing cycles and no restart loop.",
+    "Clock consumers use recovered canonical SQLite state and exact released artifacts.",
+    "All applicable branch code is integrated into main, with independently reviewed release evidence.",
+    "Task authority, rollback evidence, service health and usable Tailnet interfaces meet final acceptance."
+  ],
+  "tasks": [
+    {
+      "id": "PREPARE",
+      "title": "Preserve originals and establish recovery plan",
+      "state": "completed",
+      "detail": "Original source/history saved; isolated candidates and tasks established."
+    },
+    {
+      "id": "AGY_EXEC",
+      "title": "Google AGY recovery implementation",
+      "state": "completed",
+      "detail": "Actual Google AGY handoff frozen and canonical task completed; independently reviewed corrections integrated."
+    },
+    {
+      "id": "CONTROL",
+      "title": "Recovery fencing and service cutover controls",
+      "state": "completed",
+      "detail": "Strict activation and service controls independently accepted; 30 focused checks pass. New immutable package verified and private runtime observed."
+    },
+    {
+      "id": "SOURCE_INTEGRATION",
+      "title": "Reconcile outstanding branch code",
+      "state": "completed",
+      "detail": "All bookmarked source heads are ancestors of canonical integration; selected regression suites pass."
+    },
+    {
+      "id": "REVIEW",
+      "title": "Independent exact-candidate review",
+      "state": "completed",
+      "detail": "Independent exact DB grants and immutable release accepted; later service/config grants individually reviewed."
+    },
+    {
+      "id": "RESTORE",
+      "title": "Activate data and restore live services",
+      "state": "completed",
+      "detail": "Canonical stores verified, ecology/cockpit/clocks active enabled zero restarts; both clocks healthy; seven routes HTTP200; old ecology disabled."
+    },
+    {
+      "id": "MERGE",
+      "title": "Advance main to reviewed integration",
+      "state": "executing",
+      "detail": "Awaiting restoration evidence; no Git operations."
+    },
+    {
+      "id": "ACCEPT",
+      "title": "Verify usability and close recovery",
+      "state": "available",
+      "detail": "Live health, restart recovery, navigation, main ancestry and final journal pending."
+    }
+  ],
+  "risks": [
+    {
+      "name": "Invalid historical authority",
+      "criticality": "P1 · high",
+      "status": "Recovered and verified; original history preserved",
+      "mitigation": "Preserve every original. Select fresh coordinator epoch and verified cycle prefix. Never re-sign or invent provenance."
+    },
+    {
+      "name": "Replacement races a writer",
+      "criticality": "P1 · high",
+      "status": "Consumer controls verified",
+      "mitigation": "Exclusive target lock, persistent generation fencing, under-lock open-handle refusal, expected main/WAL/SHM hashes."
+    },
+    {
+      "name": "Incomplete rollback or false verification",
+      "criticality": "P1 · high",
+      "status": "Rollback and refusal rehearsals passed",
+      "mitigation": "Reuse canonical cryptographic oracles; validate all backup hashes before effects; durable phase receipts; retain HOLD on uncertain outcomes."
+    },
+    {
+      "name": "Service starts different bytes than reviewed",
+      "criticality": "P1 · high",
+      "status": "Managed cutover verified; old failed startup disabled",
+      "mitigation": "Exact loaded control IDs, effective unit and environment hashes, immutable release verification, fresh task/runtime lease windows."
+    },
+    {
+      "name": "Loss during branch reconciliation",
+      "criticality": "P1 · high",
+      "status": "Preserved; final review pending",
+      "mitigation": "Standalone JJ multi-parent integration and pre-restoration bookmark. Preserve current routes, stronger controls and historical evidence."
+    },
+    {
+      "name": "Premature completion claim",
+      "criticality": "P1 · high",
+      "status": "Controlled",
+      "mitigation": "Final acceptance requires live observations and reviewed candidate identity. Test counts do not grant admission."
+    }
+  ],
+  "evidence": {
+    "swarm": 683,
+    "models": 242,
+    "web": 37,
+    "harness": 95,
+    "runtime_policy": 6,
+    "ecology": 45,
+    "receipt": 67,
+    "agy_reported": 44,
+    "counts_note": "Scoped suites overlap. These counts are not additive reliability or system-admission evidence.",
+    "cycle_candidate": "332 rows ·24 holds ·0 releases",
+    "coordinator_candidate": "1 fresh registration ·full digest/replay/trigger checks pass",
+    "risk": "Raw FMEA S4 × O3 × Det3 =36; constrained priority score960.",
+    "main": "806c27397fd74a5b59e6ac4b7f57bfddefec88d7",
+    "integration": "40ea63f5 (working candidate; ongoing corrections)",
+    "strict_runtime_native": 30,
+    "release": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
+    "private_runtime": "OTP29 / ERTS17.0.5; MAX26.5; cockpit and dashboard HTTP200"
+  },
+  "checks": [
+    "CHK-01 TIME · synchronized host observed",
+    "CHK-02 TAILNET · dashboard serving checked separately",
+    "CHK-03 FRACTAL · L0/L2/L4/L8 scope recorded",
+    "CHK-04 KM · scoped evidence linked; full graph admission pending",
+    "CHK-05 ZERO-MUDA · no new prohibited dependency",
+    "CHK-06 GRAPH · no new foreign graph NIF",
+    "CHK-07 DRIVE · drives untouched; interlock not exercised",
+    "CHK-08 C1–C8 · scoped regression evidence; broad suite pending",
+    "CHK-09 MATH · bounded oracle evidence; global proofs not claimed",
+    "CHK-10 TEST MODES · unit/integration/negative controls observed",
+    "CHK-11 REGRESSION · scoped suites passing; activation corrections pending",
+    "CHK-12 GLEAM/OTP · typed control; live cutover pending",
+    "CHK-13 HERMES · canonical cycle oracle passes candidate",
+    "CHK-14 ZIGVM · unchanged; broad kernel verification not claimed",
+    "CHK-15 MAX · real private inference observed; production pending",
+    "CHK-16 OTEL · full propagation acceptance pending",
+    "CHK-17 SOVEREIGN · independent reviews active; final release pending",
+    "CHK-18 JUJUTSU · history preserved; main integration pending"
+  ]
+}

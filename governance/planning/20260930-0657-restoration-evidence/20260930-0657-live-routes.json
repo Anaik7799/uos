@@ -1,0 +1,58 @@
+[
+  {
+    "path": "/",
+    "chunk_id": "8f26b1",
+    "wall_time_seconds": 0.000012974,
+    "exit_code": 0,
+    "original_token_count": 3,
+    "output": "200 78196\n"
+  },
+  {
+    "path": "/planning",
+    "chunk_id": "b42fba",
+    "wall_time_seconds": 0.141278914,
+    "exit_code": 0,
+    "original_token_count": 3,
+    "output": "200 47372\n"
+  },
+  {
+    "path": "/wiki",
+    "chunk_id": "53d7e0",
+    "wall_time_seconds": 0.000015659,
+    "exit_code": 0,
+    "original_token_count": 3,
+    "output": "200 43959\n"
+  },
+  {
+    "path": "/zk",
+    "chunk_id": "2938e5",
+    "wall_time_seconds": 0.000012253,
+    "exit_code": 0,
+    "original_token_count": 3,
+    "output": "200 45675\n"
+  },
+  {
+    "path": "/static/20260930-0633-restoration-dashboard.html",
+    "chunk_id": "5d5cd6",
+    "wall_time_seconds": 0.000011292,
+    "exit_code": 0,
+    "original_token_count": 3,
+    "output": "200 9485\n"
+  },
+  {
+    "path": "/static/20260930-0633-restoration-state.json",
+    "chunk_id": "c3a371",
+    "wall_time_seconds": 0.0000155,
+    "exit_code": 0,
+    "original_token_count": 3,
+    "output": "200 7545\n"
+  },
+  {
+    "path": "/files/docs/journal/20260930-0659-full-restoration.md",
+    "chunk_id": "6784b7",
+    "wall_time_seconds": 0.000011952,
+    "exit_code": 0,
+    "original_token_count": 3,
+    "output": "200 46124\n"
+  }
+]

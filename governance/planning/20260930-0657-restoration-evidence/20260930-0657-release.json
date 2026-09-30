@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260930-0608-0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
+  "candidate_sha256": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
+  "payload_sha256": "03d50896a81300408b35cb66c5be4447887ef13ba23a67fb0615966aa8d3159b",
+  "source_sha256": "3ce6ff33c43def574eb4e37b25374b394f272994e409fab2cc1e96642c023255",
+  "files": 1239,
+  "payload_bytes": 31254932,
+  "otp": {
+    "otp_release": "29",
+    "root_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+    "erts_version": "17.0.5"
+  },
+  "application_admitted": false
+}
