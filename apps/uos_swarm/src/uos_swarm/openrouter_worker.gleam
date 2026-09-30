@@ -96,7 +96,7 @@ pub fn profile_from_name(name: String) -> Result(Profile, Nil) {
 
 pub fn profile_label(profile: Profile) -> String {
   case profile {
-    FreeAdvisory -> "Free advisory · Ling Flash Fin"
+    FreeAdvisory -> "Free advisory · Free Models Router"
     CodingGlm -> "Coding · GLM 5.3"
     CodingKimi -> "Coding · Kimi K3"
     CodingDeepSeek -> "Coding · DeepSeek V4 Pro 0813"
@@ -107,7 +107,7 @@ pub fn profile_label(profile: Profile) -> String {
 
 pub fn profile_model(profile: Profile) -> String {
   case profile {
-    FreeAdvisory -> "inclusionai/ling-3.0-flash-fin:free"
+    FreeAdvisory -> "openrouter/free"
     CodingGlm -> "z-ai/glm-5.3"
     CodingKimi -> "moonshotai/kimi-k3"
     CodingDeepSeek -> "deepseek/deepseek-v4-pro-0813"

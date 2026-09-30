@@ -52,7 +52,7 @@ fn live_io() -> w.Io {
 }
 
 fn default_model() -> String {
-  "google/gemma-4-31b-it:free"
+  w.profile_model(w.FreeAdvisory)
 }
 
 pub fn main() {

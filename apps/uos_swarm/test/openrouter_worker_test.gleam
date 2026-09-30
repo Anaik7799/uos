@@ -278,7 +278,7 @@ fn profile_prices() -> List(w.Price) {
   // Independent public-catalog observations, 2026-09-09. The accepted ZDR
   // provider ceiling for DeepSeek Pro is intentionally above this minimum.
   [
-    w.Price("inclusionai/ling-3.0-flash-fin:free", 0.0, 0.0),
+    w.Price("openrouter/free", 0.0, 0.0),
     w.Price("z-ai/glm-5.3", 0.0000014, 0.0000044),
     w.Price("moonshotai/kimi-k3", 0.000003, 0.000015),
     w.Price("deepseek/deepseek-v4-pro-0813", 0.00000057948, 0.00000173844),
@@ -295,7 +295,9 @@ pub fn explicit_profiles_preserve_free_default_and_exact_model_names_test() {
   })
   w.profile_from_name("automatic_paid_fallback") |> should.equal(Error(Nil))
   w.profile_model(w.FreeAdvisory)
-  |> should.equal("inclusionai/ling-3.0-flash-fin:free")
+  |> should.equal("openrouter/free")
+  w.profile_label(w.FreeAdvisory)
+  |> should.equal("Free advisory · Free Models Router")
   w.profile_model(w.CodingGlm) |> should.equal("z-ai/glm-5.3")
   w.profile_model(w.CodingKimi) |> should.equal("moonshotai/kimi-k3")
   w.profile_model(w.CodingDeepSeek)
@@ -522,10 +524,15 @@ fn routing_io(selected_model: String) -> w.Io {
               #("total_tokens", json.int(15)),
               #(
                 "cost",
-                json.float(case string.ends_with(selected_model, ":free") {
-                  True -> 0.0
-                  False -> 0.0001
-                }),
+                json.float(
+                  case
+                    string.ends_with(selected_model, ":free")
+                    || selected_model == "openrouter/free"
+                  {
+                    True -> 0.0
+                    False -> 0.0001
+                  },
+                ),
               ),
             ]),
           ),
@@ -538,7 +545,7 @@ fn routing_io(selected_model: String) -> w.Io {
 }
 
 pub fn routed_dispatch_posts_selected_model_instead_of_original_request_model_test() {
-  let chosen = "inclusionai/ling-3.0-flash-fin:free"
+  let chosen = "openrouter/free"
   let posteriors = [
     route.Posterior("openrouter/" <> chosen, route.R3Advisory, 9.0, 1.0, 8),
   ]
@@ -717,3 +724,110 @@ pub fn paid_receipt_cannot_exceed_hard_or_requested_cost_budget_test() {
     Error(w.BadResponse("paid reported cost exceeds request budget")),
   )
 }
+
+pub fn disappeared_model_is_refused_before_dispatch_test() {
+  let live_prices = [w.Price("openrouter/free", 0.0, 0.0)]
+  let disappeared = "inclusionai/ling-3.0-flash-fin:free"
+  w.admit(w.default_policy(), live_prices, req(disappeared))
+  |> should.equal(Error(w.PriceUnknown(disappeared)))
+
+  let io =
+    w.Io(
+      credential: fn() { Some("test-key") },
+      fetch_prices: fn(_) {
+        Ok(#(
+          200,
+          "{\"data\":[{\"id\":\"openrouter/free\",\"pricing\":{\"prompt\":\"0\",\"completion\":\"0\"}}]}",
+        ))
+      },
+      post: fn(_, _, _) { panic as "Disappeared model must not dispatch POST" },
+      now_ms: fn() { 1000 },
+    )
+  w.run(w.default_policy(), io, req(disappeared))
+  |> should.equal(Error(w.PriceUnknown(disappeared)))
+}
+
+pub fn current_free_default_is_openrouter_free_and_admitted_at_zero_cost_test() {
+  let default_model = w.profile_model(w.FreeAdvisory)
+  default_model |> should.equal("openrouter/free")
+  w.profile_label(w.FreeAdvisory)
+  |> should.equal("Free advisory · Free Models Router")
+
+  let live_prices = [w.Price("openrouter/free", 0.0, 0.0)]
+  let assert Ok(admitted) =
+    w.admit(w.default_policy(), live_prices, req(default_model))
+  admitted.model |> should.equal("openrouter/free")
+  admitted.tier |> should.equal(w.Free)
+  admitted.estimated_usd |> should.equal(0.0)
+
+  let io =
+    w.Io(
+      credential: fn() { Some("test-key") },
+      fetch_prices: fn(_) {
+        Ok(#(
+          200,
+          "{\"data\":[{\"id\":\"openrouter/free\",\"pricing\":{\"prompt\":\"0\",\"completion\":\"0\"}}]}",
+        ))
+      },
+      post: fn(_, body, _) {
+        string.contains(body, "\"model\":\"openrouter/free\"")
+        |> should.be_true
+        string.contains(
+          body,
+          "\"max_price\":{\"prompt\":0.0,\"completion\":0.0,\"request\":0.0}",
+        )
+        |> should.be_true
+        string.contains(body, "\"zdr\":true") |> should.be_true
+        string.contains(
+          body,
+          "\"reasoning\":{\"enabled\":false,\"exclude\":true}",
+        )
+        |> should.be_true
+        Ok(#(
+          200,
+          "{\"provider\":\"Router\",\"model\":\"openrouter/free\",\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"bounded answer\"}}],\"usage\":{\"prompt_tokens\":10,\"completion_tokens\":5,\"total_tokens\":15,\"cost\":0.0}}",
+        ))
+      },
+      now_ms: fn() { 1000 },
+    )
+  let assert Ok(outcome) =
+    w.run(w.default_policy(), io, req(default_model))
+  outcome.cost_usd |> should.equal(0.0)
+  outcome.reply.reported_cost_usd |> should.equal(Some(0.0))
+  outcome.reply.model |> should.equal("openrouter/free")
+}
+
+pub fn free_default_refuses_price_hike_above_zero_test() {
+  let hiked = [w.Price("openrouter/free", 0.000001, 0.0)]
+  w.admit(w.default_policy(), hiked, req("openrouter/free"))
+  |> should.equal(
+    Error(w.PriceAboveCeiling("openrouter/free", 0.000001, 0.0)),
+  )
+}
+
+pub fn free_default_refuses_paid_fallback_test() {
+  let prices = [
+    w.Price("openrouter/free", 0.0, 0.0),
+    w.Price("z-ai/glm-5.3", 0.0000014, 0.0000044),
+  ]
+  w.admit(w.default_policy(), prices, req("z-ai/glm-5.3"))
+  |> should.equal(Error(w.FreeOnly("z-ai/glm-5.3")))
+}
+
+pub fn disappeared_model_is_excluded_from_route_tiers_test() {
+  let prices = [w.Price("openrouter/free", 0.0, 0.0)]
+  let tiers = w.route_tiers(prices)
+  let openrouter_free_tier =
+    list.find(tiers, fn(t) { t.id == "openrouter/openrouter/free" })
+  openrouter_free_tier |> should.be_ok
+  let assert Ok(free_t) = openrouter_free_tier
+  free_t.paid |> should.be_false
+  free_t.price_in |> should.equal(Some(0.0))
+  free_t.price_out |> should.equal(Some(0.0))
+
+  list.find(tiers, fn(t) {
+    t.id == "openrouter/inclusionai/ling-3.0-flash-fin:free"
+  })
+  |> should.be_error
+}
+
