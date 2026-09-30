@@ -24,7 +24,6 @@
 //// =============================================================================
 
 import cepaf_gleam/agents/cybernetic
-import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/planning/cli
 import cepaf_gleam/podman/containers
 import cepaf_gleam/podman/domain.{PodmanClientConfig, Rootless}
@@ -38,8 +37,6 @@ import gleam/erlang/process
 import gleam/int
 import gleam/io
 import gleam/list
-import gleam/option
-import gleam/string
 
 @external(erlang, "cepaf_gleam_ffi", "get_uid")
 fn get_uid() -> String
@@ -134,52 +131,18 @@ pub fn main() {
     }
     Error(_) -> io.println("  ❌ Error listing containers")
   }
-
-  // 3. Zenoh IPC — Open session via native NIF first, fallback to FFI
+  // 3. Bounded OTP Zenoh REST publication/query; subscriptions stay explicit.
   io.println("\n📡 ZENOH IPC INTEGRATION:")
-  // Try native NIF first (SC-ZENOH-001)
-  let nif_result = c3i_nif.zenoh_open("{}")
-  let native_zenoh_connected =
-    string.contains(nif_result, "\"status\":\"connected\"")
-  let zenoh_session = case native_zenoh_connected {
-    True -> {
-      io.println("  ✅ Zenoh NIF connected: " <> nif_result)
-      let _ = c3i_nif.zenoh_put("indrajaal/cepaf/gleam/status", "online")
-      io.println("  ✅ Status published via NIF")
-      // Try the FFI session for backward compat
-      case zenoh.open("{\"mode\": \"client\"}") {
-        Ok(session) -> option.Some(session)
-        Error(_) -> option.None
+  case zenoh.open("{}") {
+    Ok(session) -> {
+      io.println("  [zenoh] Reachable backend: " <> zenoh.backend(session))
+      case zenoh.put(session, "indrajaal/cepaf/gleam/status", "online") {
+        Ok(Nil) -> io.println("  [zenoh] Status publication acknowledged by REST endpoint")
+        Error(e) -> io.println("  [zenoh] Status publication FAILED: " <> e)
       }
+      io.println("  [zenoh] Native subscriptions unavailable; REST publication/query only")
     }
-    False -> {
-      io.println("  ⚠️ Zenoh NIF: " <> nif_result)
-      // Fallback to FFI
-      case zenoh.open("{\"mode\": \"client\"}") {
-        Ok(session) -> {
-          io.println("  ✅ Zenoh FFI session opened")
-          option.Some(session)
-        }
-        Error(e) -> {
-          io.println("  ❌ Zenoh unavailable: " <> e)
-          option.None
-        }
-      }
-    }
-  }
-  // Log Zenoh session availability for agents
-  case zenoh_session {
-    option.Some(_) ->
-      io.println("  [agents] Zenoh session available for AG-UI events")
-    option.None ->
-      case native_zenoh_connected {
-        True ->
-          io.println(
-            "  [agents] Zenoh native NIF available for AG-UI status events",
-          )
-        False ->
-          io.println("  [agents] Zenoh unavailable — AG-UI events will no-op")
-      }
+    Error(e) -> io.println("  [zenoh] Backend unavailable: " <> e)
   }
 
   // 4. Runtime Mode Selection

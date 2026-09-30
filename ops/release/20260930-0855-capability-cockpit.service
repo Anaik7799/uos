@@ -1,0 +1,29 @@
+[Unit]
+Description=C3I CEPAF cockpit on reviewed OTP 29 capsule
+After=network-online.target c3i-zenoh-router.service c3i-sa-plan-http.service
+Wants=network-online.target c3i-zenoh-router.service c3i-sa-plan-http.service
+PartOf=c3i.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+WorkingDirectory=/home/an/NAS-setup/uos/apps/cepaf_gleam
+Environment=PROJECT_ROOT=/home/an/NAS-setup/uos
+Environment=SKIP_ZENOH_NIF=0
+Environment=ZENOH_ROUTER_ENDPOINT=tcp/nas-1.tail55d152.ts.net:7447
+Environment=ERL_CRASH_DUMP=/dev/null
+Environment="UOS_COCKPIT_RELEASE=/home/an/NAS-setup/uos/var/releases/ecology/20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872"
+ExecStartPre=/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml /home/an/NAS-setup/uos/tools/ecology_release.ml verify /home/an/NAS-setup/uos/var/releases/ecology/20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872
+ExecStart=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl +S 4:4 +A 4 -noshell -eval "code:add_paths(filelib:wildcard(os:getenv(\"UOS_COCKPIT_RELEASE\") ++ \"/apps/*/ebin\")), 'indrajaal_gleam_web@@main':run(cepaf_gleam)." -extra --serve
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+MemoryMax=2G
+TasksMax=512
+
+[Install]
+WantedBy=c3i.target

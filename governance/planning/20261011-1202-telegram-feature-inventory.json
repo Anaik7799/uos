@@ -1,0 +1,1622 @@
+{
+  "$schema": "uos.telegram-feature-inventory.v1",
+  "artifact_metadata": {
+    "title": "Comprehensive Telegram Feature & Architectural Surface Inventory",
+    "timestamp": "20261011-1202",
+    "generated_at": "2026-10-11T12:02:00Z",
+    "author": "agy-telegram-20261011",
+    "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+    "observed_model": "gemini-3.8-flash-high",
+    "plan_id": "uos/telegram-runtime/20261001-1150",
+    "task_id": "FEATURE_INVENTORY",
+    "attempt": 1,
+    "portfolio": "governance/planning/20261011-1155-telegram-reclaim-risk.json",
+    "status": "COMPLETED",
+    "provenance": {
+      "canonical_root": "/home/an/NAS-setup/uos",
+      "sibling_candidate_root": "/home/an/NAS-setup/uos/.uos-workspaces/agy-telegram-admission-20261001",
+      "execution_engine": "cepaf_gleam@harness@development:bounded/3 under OTP 29 uos_env",
+      "python_confinement": "ZERO Python executed"
+    }
+  },
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337",
+      "category": "core_harness",
+      "role": "Core Telegram slash command parser, directive router, message handler",
+      "lines": 352
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "sha256": "db6ea74005e33eac95a57eec2d0370409fc6ee313231373d9e3440f7fa9a477d",
+      "category": "domain_b_ops",
+      "role": "Domain B Ops directives (/resuscitate, /chaos, /repro, /merge, etc.)",
+      "lines": 298
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "sha256": "544ed1528d28dd3201cdb31afe03c0a1512ba2642844c60989a106855029ef96",
+      "category": "domain_c_creative",
+      "role": "Domain C Creative directives (/pacing, /whatif, /rack-cv, /acoustic, etc.)",
+      "lines": 312
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "sha256": "35f964a46a1249004a978b5c1f6b94eb45ba18451f6081d389a8664f4cc000bc",
+      "category": "domain_d_collab",
+      "role": "Domain D Voice/Collab directives (/sidecar, /voice-roll-call, /babel, etc.)",
+      "lines": 325
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c",
+      "category": "cognitive_loop",
+      "role": "L5 OODA cognitive loop, 29 directive handlers, /tool execution fencer",
+      "lines": 1148
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+      "category": "security_boundary",
+      "role": "Bounded ingress validation, user allowlist, directive classification, mutative denial",
+      "lines": 184
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+      "category": "delivery_state",
+      "role": "In-memory delivery state machine, deduplication, watermark tracking, chunking",
+      "lines": 210
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9",
+      "category": "storage_transport",
+      "role": "BEAM-to-native storage transport client (32-bit big-endian framed port)",
+      "lines": 158
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+      "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0",
+      "category": "storage_transport",
+      "role": "Erlang port FFI managing guardian OS process and framed payload exchange",
+      "lines": 142
+    },
+    {
+      "path": "tools/telegram_store_transport_guardian.ml",
+      "sha256": "9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5",
+      "category": "storage_transport",
+      "role": "OCaml process supervisor/guardian launching backend binary with argv=[worker, db_path]",
+      "lines": 186
+    },
+    {
+      "path": "tools/validation/telegram_store_transport_test.erl",
+      "sha256": "d93204a1ce1b5fede355bbe01e8bc0de5589ed3aa0d761173dea802654e376db",
+      "category": "verification_suite",
+      "role": "Erlang test suite for transport port, frame boundaries, error modes (18/18 passed)",
+      "lines": 240
+    },
+    {
+      "path": "tools/validation/telegram_store_transport_fixture.ml",
+      "sha256": "8957b7cca9ff29f0f31c80028bf6231e0211a12ffee6e83266d82077f1c73697",
+      "category": "verification_suite",
+      "role": "OCaml mock storage backend fixture for transport framing tests",
+      "lines": 115
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_outbound.gleam",
+      "sha256": "cdfaecd4eae4b30d15b2ad5db58dd5a2a2a38c5009098dde3417f03546647e67",
+      "category": "outbound_transport",
+      "role": "BEAM TLS HTTP client for Telegram Bot API sendMessage, 4096-char chunker, secret redactor",
+      "lines": 178
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_openrouter.gleam",
+      "sha256": "056693785126feb0a63eb8261b55bdb72c4e36c7bc43ae6050732283e88226b5",
+      "category": "ai_inference",
+      "role": "OpenRouter advisory AI query client (Gemma 4, token ceiling, daily budget)",
+      "lines": 164
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_simulator.gleam",
+      "sha256": "452a420b08ba86d0f196ca6d61fe31f80901e96d31e81ba3190a62ea16f659ac",
+      "category": "simulation",
+      "role": "Deterministic event/message simulator for test pipelines",
+      "lines": 224
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_transaction_runner.gleam",
+      "sha256": "4f8f4255e8dab3e25263a4ee9823438173e0a1c285499d9d58c1705c38114d85",
+      "category": "simulation",
+      "role": "Transaction simulation harness for synthetic stress runs",
+      "lines": 182
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+      "sha256": "340a955452c1a3bf1b62202fce286bb5aaa73659ecd63e52289cbe2df876685d",
+      "category": "mesh_gateway",
+      "role": "Zenoh telemetry pub/sub bridge for Telegram events",
+      "lines": 136
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_app.gleam.broken",
+      "sha256": "f55c45e83c1068b621408872b48c00c45aa168856b59353c5373f90ee0977821",
+      "category": "dead_code",
+      "role": "Broken AG-UI event stream adapter (retained for historical evidence)",
+      "lines": 98
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "sha256": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "category": "miniapp_security",
+      "role": "Telegram Mini App initData HMAC-SHA256 validator (contains critical hex decode bug)",
+      "lines": 197
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/theme.gleam",
+      "sha256": "9e062ad98897b1a67875d3c7ee25ef38084c781b65dda1da76b497b130ba6093",
+      "category": "miniapp_ui",
+      "role": "Mini App CSS styling and Telegram theme params integration",
+      "lines": 145
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "sha256": "d33d27eeb926e08d6cc41bd4360f55903624b74fce26aeafa14fdd99591cee65",
+      "category": "miniapp_types",
+      "role": "Mini App navigation tabs, user models, theme param definitions",
+      "lines": 112
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "sha256": "33111a7f16ef807f81d49ea177153031f88b8415682b2c38384018477f411289",
+      "category": "miniapp_http",
+      "role": "14 Mini App SSR HTTP route handlers (unauthenticated route(path) interface)",
+      "lines": 122
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mini_app.gleam",
+      "sha256": "81fd1c879eed10b7a3cb4052f61fb4a30135bd8e3ee6ddca4b33d0c847a71391",
+      "category": "miniapp_lustre",
+      "role": "Lustre/HTML view definitions for 14 Mini App screens",
+      "lines": 486
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha256": "515a0f1fae9a787eba99dc3223ed1272eb66df56a974b59cf6f547a120bc2e98",
+      "category": "http_router",
+      "role": "Root HTTP router dispatching /mini-app/* without authentication checks",
+      "lines": 4957
+    },
+    {
+      "path": "tools/telegram_client.ml",
+      "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5",
+      "category": "operator_tools",
+      "role": "OCaml CLI Telegram client, getUpdates poller, 2oo3 callback voting",
+      "lines": 582
+    },
+    {
+      "path": "tools/telegram-harness-dispatch",
+      "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1",
+      "category": "operator_tools",
+      "role": "Shell wrapper invoking BEAM dispatch (bypasses ingress guard and delivery ledger)",
+      "lines": 76
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store.ml",
+      "sha256": "869f84f443b0a2c7945746ae852658613740dd801e28469afc5ba7bb5d85a4e5",
+      "category": "native_store_candidate",
+      "role": "OCaml SQLite storage engine core (vulnerable initialize_new and non-injective digest)",
+      "lines": 894
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store_main.ml",
+      "sha256": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc",
+      "category": "native_store_candidate",
+      "role": "Native storage CLI / guardian child entrypoint (stdin/stdout framed JSON-RPC)",
+      "lines": 146
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store_test.ml",
+      "sha256": "c35c3f5293ec664ed7f308b09613dffb696d9065d4996e8300a678915b47d8e9",
+      "category": "native_store_candidate",
+      "role": "Candidate test runner (historical 85 tests reported green under commit 709c4b0)",
+      "lines": 782
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store_wire_spec.json",
+      "sha256": "3712bc107be262fad681c6d4ff3651858f2e398286b3628106abe8bc43737501",
+      "category": "native_store_candidate",
+      "role": "Formal JSON-RPC wire specification for storage operations and errors",
+      "lines": 218
+    }
+  ],
+  "executive_summary": {
+    "total_sources_audited": 30,
+    "total_commands_audited": 77,
+    "breakdown": {
+      "core_directives": 13,
+      "domain_b_ops_directives": 11,
+      "domain_c_creative_directives": 12,
+      "domain_d_collab_directives": 12,
+      "cognitive_worker_directives": 29,
+      "miniapp_routes": 14
+    },
+    "classification_totals": {
+      "implemented": 6,
+      "partial": 14,
+      "stub": 35,
+      "dead": 1,
+      "unsupported": 21
+    },
+    "key_verdicts": [
+      "Simulation Masquerading as Implementation: All 35 directives across telegram_ops.gleam, telegram_creative.gleam, and telegram_collab.gleam return hardcoded static strings claiming actions succeeded without executing any real backend logic.",
+      "Critical Mini App Auth Vulnerability: auth.gleam bit_array_to_hex attempts to decode raw 32-byte HMAC bytes as UTF-8, unwrapping failure to empty string. Consequently, validate accepts empty expected_hash and unconditionally rejects all valid non-empty Telegram initData HMAC signatures.",
+      "Mini App Freshness & Parser Defects: check_freshness allows arbitrary future auth_date timestamps because it only checks (now - auth_date <= max_age). Query string parsing silently ignores percent-decoding failures and accepts duplicate keys, allowing parameter pollution.",
+      "Unauthenticated Mini App HTTP Endpoints: mini_app_routes.route(path) has no authentication parameters, and router.gleam line 3447 invokes it unconditionally upon matching /mini-app/*, exposing sensitive UI views (dashboard, tasks, health, alerts, config) without any Telegram WebApp authentication.",
+      "Native Store Candidate Flaws: The OCaml storage candidate in sibling workspace (.uos-workspaces/agy-telegram-admission-20261001) has a non-transactional initialize_new (DDL and meta inserts not wrapped in a single SQLite transaction) and a non-injective request digest (compute_request_digest joins raw key:version:sha without length prefixing or key sanitization, vulnerable to delimiter collision attacks).",
+      "Bypassed Ingress Guard: tools/telegram-harness-dispatch directly invokes telegram:handle_message/1, completely bypassing telegram_ingress_guard.gleam allowlist checks and telegram_delivery_ledger.gleam deduplication.",
+      "Missing Outbound Rate Limiting & Backoff: telegram_outbound.gleam lacks rate limiting (Telegram enforces 1 msg/sec in private chats, 20/min in groups) and fails to handle HTTP 429 Retry-After responses."
+    ]
+  },
+  "capability_matrix": [
+    {
+      "directive": "/approval",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "partial",
+      "description": "2oo3 constitutional approval submission and status query",
+      "backend_integration": "Calls cognitive_worker or telegram_ingress_guard; ingress guard denies mutating approval actions; cognitive worker fails closed without live consensus executor",
+      "security_gate": "Requires 2oo3 multi-sig approval; denied by default in ingress guard",
+      "observed_tests": "Unit tests in telegram_test.gleam for message parsing",
+      "remaining_gaps": "No live BEAM-to-consensus RPC bridge wired; mutating approval cannot commit state"
+    },
+    {
+      "directive": "/andon",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "partial",
+      "description": "Emergency Andon cord trigger to halt pipelines and cordon tasks",
+      "backend_integration": "Parses reason; ingress guard classifies as Mutating (denied for non-exempt callers); cognitive worker has andon_stop action stub",
+      "security_gate": "High-privilege mutative command",
+      "observed_tests": "Ingress guard refusal unit tests",
+      "remaining_gaps": "Does not propagate andon signal to sa-plan or coordinator store directly"
+    },
+    {
+      "directive": "/standup",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "stub",
+      "description": "Automated daily standup generator and task rollup",
+      "backend_integration": "Returns formatted markdown template with static placeholders",
+      "security_gate": "Read-only",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "Not connected to live sa-plan or coordinator session state"
+    },
+    {
+      "directive": "/status",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "partial",
+      "description": "System health and active task status overview",
+      "backend_integration": "Calls cognitive worker /health and /task helpers; reads ETS / local state",
+      "security_gate": "Read-only allowlisted",
+      "observed_tests": "telegram_test.gleam status rendering test",
+      "remaining_gaps": "Node coordinator status only partially queried; lacks multi-node Zenoh aggregation"
+    },
+    {
+      "directive": "/review",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "stub",
+      "description": "Code and plan review dispatcher",
+      "backend_integration": "Returns canned review template",
+      "security_gate": "Read-only",
+      "observed_tests": "None observed",
+      "remaining_gaps": "Does not trigger or observe sa-plan review tasks"
+    },
+    {
+      "directive": "/test",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "stub",
+      "description": "Run test suite and report summary",
+      "backend_integration": "Returns simulated test counts",
+      "security_gate": "Mutative test execution",
+      "observed_tests": "None observed",
+      "remaining_gaps": "No subprocess runner invocation to run actual test binaries"
+    },
+    {
+      "directive": "/doctor",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "implemented",
+      "description": "System diagnostics and environment check",
+      "backend_integration": "Explicitly allowlisted in telegram_ingress_guard.gleam; executes diagnostic query via c3i_nif / cognitive_worker",
+      "security_gate": "Allowlisted Read-Only",
+      "observed_tests": "Passes ingress guard validation tests",
+      "remaining_gaps": "Bounded output formatting when diagnostic output exceeds Telegram message size"
+    },
+    {
+      "directive": "/ev",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "implemented",
+      "description": "Query current admitted EV cycle and provenance boundaries",
+      "backend_integration": "Allowlisted in telegram_ingress_guard.gleam; reads admitted_ev_ceiling (EV-93)",
+      "security_gate": "Allowlisted Read-Only",
+      "observed_tests": "Verified in ingress guard and cognitive worker tests",
+      "remaining_gaps": "Requires dynamic check against provenance integrity contract"
+    },
+    {
+      "directive": "/plan",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "implemented",
+      "description": "Query active plan state and task dependencies",
+      "backend_integration": "Allowlisted in telegram_ingress_guard.gleam; queries cognitive_worker /plan",
+      "security_gate": "Allowlisted Read-Only",
+      "observed_tests": "Cognitive worker unit tests",
+      "remaining_gaps": "Does not support plan filtering arguments via Telegram parameters"
+    },
+    {
+      "directive": "/saplan",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "implemented",
+      "description": "Query sa-plan durable SQLite database status",
+      "backend_integration": "Allowlisted in telegram_ingress_guard.gleam; executes query_saplan read tool",
+      "security_gate": "Allowlisted Read-Only",
+      "observed_tests": "Passes direct read tool execution tests in cognitive worker",
+      "remaining_gaps": "Requires active lease check to prevent stale reads"
+    },
+    {
+      "directive": "/tool",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "partial",
+      "description": "Direct tool invocation facade (/tool <action> <args>)",
+      "backend_integration": "Dispatches to cognitive_worker execute_production_read_tool. Read actions (query_doctor, query_saplan) succeed; mutative actions fail closed",
+      "security_gate": "Strict action allowlist and parameter validator",
+      "observed_tests": "Cognitive worker tool dispatch tests",
+      "remaining_gaps": "Mutative tools (claim_task, andon_stop, request_approval) fail closed pending live consensus executor"
+    },
+    {
+      "directive": "/help",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "implemented",
+      "description": "Display command help and usage guide",
+      "backend_integration": "Pure string renderer in telegram.gleam",
+      "security_gate": "Public Read-Only",
+      "observed_tests": "Unit tests in telegram_test.gleam",
+      "remaining_gaps": "Help text lists simulated commands as if they were fully operational"
+    },
+    {
+      "directive": "/start",
+      "category": "core_directive",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "classification": "implemented",
+      "description": "Bot welcome banner and authentication greeting",
+      "backend_integration": "Pure string renderer in telegram.gleam",
+      "security_gate": "Public Read-Only",
+      "observed_tests": "Unit tests in telegram_test.gleam",
+      "remaining_gaps": "Does not link to Mini App with authenticated initData token"
+    },
+    {
+      "directive": "/resuscitate",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Emergency container / service resurrection sequence",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/chaos",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Trigger chaos engineering fault injection",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/repro",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Reproduce incident trace in sandbox",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/merge",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Execute Jujutsu integration merge without git mutations",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/bisect",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Bisect regression across revisions",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/escalate",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Escalate incident to SRE on-call rotation",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/rotate-keys",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Rotate Zenoh and API cryptographic keys",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/mesh",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Display SIL-6 biomorphic mesh topology",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/migrate",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Execute database schema migrations",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/adr",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Query Architectural Decision Records",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/blast-radius",
+      "category": "domain_b_ops",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "classification": "stub",
+      "description": "Calculate blast radius for pending change",
+      "backend_integration": "Returns hardcoded static text simulating successful execution (e.g. \"Merge successfully completed with zero native Git mutations\"); executes zero backend logic",
+      "security_gate": "Simulated response bypasses security checks",
+      "observed_tests": "String comparison unit tests in telegram_ops_test.gleam",
+      "remaining_gaps": "Entire module is a simulation mock. No backend wiring to Podman, Jujutsu, or key rotation services exists."
+    },
+    {
+      "directive": "/pacing",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Pacing analysis and rhythm evaluation",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/whatif",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Run hypothetical scenario simulation",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/rack-cv",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Computer vision rack telemetry analysis",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/acoustic",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Acoustic sensor telemetry query",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/rewind",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Rewind time series event log",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/postmortem",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Generate post-incident postmortem draft",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/finops",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Cloud resource cost optimization report",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/eco-schedule",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Green computing workload scheduler",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/radar",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Technology radar trend tracker",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/canvas",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Interactive architecture canvas generator",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/lockbox",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Secure encrypted artifact storage",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/export-audit",
+      "category": "domain_c_creative",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "classification": "stub",
+      "description": "Export compliance and audit package",
+      "backend_integration": "Returns static strings or mock JSON vectors without performing actual computation or data queries",
+      "security_gate": "Simulated response",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. No integration with acoustic sensors, rack CV, or audit exporters."
+    },
+    {
+      "directive": "/sidecar",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Attach agent sidecar to communication channel",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/voice-roll-call",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Initiate voice attendance check",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/babel",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Real-time multilingual translation bridge",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/whiteboard",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Collaborative whiteboard canvas",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/socratic",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Socratic inquiry and dialectic reasoning mode",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/handover",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Agent-to-operator session handover",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/pair-voice",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Pair programming voice session",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/exec-brief",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Executive briefing summary generator",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/commitments",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Track cross-team commitments",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/acoustic-hud",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Acoustic heads-up display telemetry",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/retro",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Sprint retrospective board",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/gameday",
+      "category": "domain_d_collab",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "classification": "stub",
+      "description": "Simulated chaos gameday coordinator",
+      "backend_integration": "Returns static canned text, including fabricated consensus claims (\"Consensus Reached 2/3: Cryptographic vote signed\") without any cryptographic signing",
+      "security_gate": "Fabricated consensus claim",
+      "observed_tests": "String matching in test suite",
+      "remaining_gaps": "All 12 directives are stubs. Consensus claims are completely fabricated in string templates."
+    },
+    {
+      "directive": "/aspects",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /aspects",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/ecology",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /ecology",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/board",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /board",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/peers",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /peers",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/memory",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /memory",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/messages",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /messages",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/search",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /search",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/task",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /task",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/health",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /health",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/immune",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /immune",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/fmea",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /fmea",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/ha",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /ha",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/zenoh",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /zenoh",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/inference",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /inference",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/verify",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /verify",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/rete",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /rete",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/km",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /km",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/wiki",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /wiki",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/zk",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /zk",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/agy",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /agy",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/checklist",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /checklist",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/cockpit",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /cockpit",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/policy",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /policy",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/telemetry",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /telemetry",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/audit",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /audit",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/recheck",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /recheck",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/ledger",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /ledger",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/session",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /session",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/state",
+      "category": "cognitive_worker_l5",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "classification": "partial",
+      "description": "Cognitive worker L5 OODA loop directive: /state",
+      "backend_integration": "Handled in cognitive_worker.gleam case match; queries internal ETS tables, c3i_nif, or returns structured JSON diagnostic",
+      "security_gate": "Bounded read query; mutating operations fail closed",
+      "observed_tests": "Unit tests in cognitive_worker_test.gleam",
+      "remaining_gaps": "Many queries return partial local node state rather than cluster-wide aggregated telemetry"
+    },
+    {
+      "directive": "/mini-app/dashboard",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering dashboard_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/health",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering health_grid_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/alerts",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering cockpit_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/immune",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering immune_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/tasks",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering planning_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/inference",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering inference_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/chat",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering conversation_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/config",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering config_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/containers",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering podman_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/federation",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering federation_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/verify",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering verification_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/fmea",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering fmea_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/telemetry",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering telemetry_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "/mini-app/zenoh",
+      "category": "miniapp_route",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "classification": "partial",
+      "description": "Telegram Mini App SSR HTML route rendering zenoh_browser_view",
+      "backend_integration": "Renders Lustre view wrapped in TeleNative CSS shell; reads local mock/ETS state",
+      "security_gate": "VULNERABILITY: Entirely unauthenticated! mini_app_routes.route(path) has no auth parameter, and router.gleam line 3447 invokes it unconditionally",
+      "observed_tests": "HTML string assertion in telegram_mini_app_test.gleam",
+      "remaining_gaps": "Needs Telegram WebApp initData HMAC verification on outer HTTP handler or signed session cookie before rendering protected views"
+    },
+    {
+      "directive": "FEATURE:telegram_ingress_guard",
+      "category": "security_boundary",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "classification": "implemented",
+      "description": "Bounded ingress validator, allowlist user validation, directive classification",
+      "backend_integration": "Enforces user allowlist pairs #(user_id, username); classifies directives into ReadTool (allowed) vs Mutating (denied with DeniedMutation)",
+      "security_gate": "Rejects unlisted users with DeniedUnregisteredUser; rejects mutating commands for unprivileged users",
+      "observed_tests": "Unit tests in telegram_ingress_guard_test.gleam verifying allowlist and classification",
+      "remaining_gaps": "Bypassed by tools/telegram-harness-dispatch which calls telegram:handle_message/1 directly"
+    },
+    {
+      "directive": "FEATURE:telegram_delivery_ledger",
+      "category": "delivery_state",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "classification": "implemented",
+      "description": "In-memory delivery state machine, deduplication, watermark offset, chunking",
+      "backend_integration": "Tracks last processed message offset, prevents replay of duplicate update_ids, breaks messages exceeding 4096 characters",
+      "security_gate": "Deduplication and watermark boundary protection",
+      "observed_tests": "Unit tests in telegram_delivery_ledger_test.gleam",
+      "remaining_gaps": "State is purely in-memory BEAM process state; does not persist across node restarts"
+    },
+    {
+      "directive": "FEATURE:telegram_store_transport",
+      "category": "storage_transport",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "classification": "implemented",
+      "description": "32-bit big-endian framed port to storage guardian process",
+      "backend_integration": "Gleam client talking via telegram_store_transport_ffi.erl to telegram_store_transport_guardian.ml",
+      "security_gate": "Process isolation, timeout bounding (55000ms), frame boundary enforcement",
+      "observed_tests": "Verified 18/18 passed in STORE_TRANSPORT_REVIEW via tools/validation/telegram_store_transport_test.erl",
+      "remaining_gaps": "Requires connection to real native SQLite storage worker once repairs are admitted"
+    },
+    {
+      "directive": "FEATURE:telegram_outbound_client",
+      "category": "outbound_transport",
+      "source_file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_outbound.gleam",
+      "classification": "partial",
+      "description": "BEAM TLS HTTP client for Telegram Bot API sendMessage",
+      "backend_integration": "Sends POST to https://api.telegram.org/bot<token>/sendMessage using hackney/ssl; redacts bot token from logs; chunks >4096 chars",
+      "security_gate": "Egress secret redaction prevents token leak in logs/errors",
+      "observed_tests": "Mock outbound tests in telegram_outbound_test.gleam",
+      "remaining_gaps": "Lacks token bucket rate limiting (1 msg/sec in private chats, 20/min in groups); does not parse or back off on HTTP 429 Retry-After responses"
+    },
+    {
+      "directive": "FEATURE:telegram_client_poller",
+      "category": "operator_tools",
+      "source_file": "tools/telegram_client.ml",
+      "classification": "partial",
+      "description": "OCaml CLI long poller and 2oo3 callback voting coordinator",
+      "backend_integration": "Calls getUpdates with long polling timeout; handles inline keyboard callback queries; implements 2oo3 vote collector",
+      "security_gate": "2oo3 cryptographic threshold check",
+      "observed_tests": "OCaml unit tests for voting protocol",
+      "remaining_gaps": "answerCallbackQuery exists only in OCaml client; absent in Gleam service tier"
+    },
+    {
+      "directive": "FEATURE:native_storage_candidate",
+      "category": "native_store_candidate",
+      "source_file": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store.ml",
+      "classification": "partial",
+      "description": "Native OCaml SQLite storage engine with framed JSON-RPC worker",
+      "backend_integration": "Implements schema DDL, append-only events, reservations, optimistic concurrency, request digest validation",
+      "security_gate": "Read assertion version check, digest authentication",
+      "observed_tests": "Historical 85 tests reported green under commit 709c4b0 (UNVERIFIED in canonical root)",
+      "remaining_gaps": "Non-transactional initialize_new; non-injective request digest; candidate isolated in sibling workspace"
+    }
+  ],
+  "defect_and_gap_analysis": [
+    {
+      "id": "DEFECT-01",
+      "title": "Mini App auth.gleam bit_array_to_hex UTF-8 decoding failure",
+      "severity": "CRITICAL",
+      "affected_files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam"
+      ],
+      "description": "In auth.gleam lines 133-149, bit_array_to_hex attempts to decode raw 32-byte HMAC-SHA256 binary output using bit_array.to_string(bits) |> result.unwrap(\"\"). Because cryptographic hashes contain arbitrary non-UTF-8 bytes, bit_array.to_string fails with Error(Nil), which unwraps to an empty string. The subsequent grapheme mapping returns empty string \"\". In validate(), string.lowercase(computed_hex) == string.lowercase(expected_hash) compares \"\" against expected_hash. Consequently, all authentic Telegram WebApp HMAC signatures are rejected as InvalidHash, while an attacker providing an empty expected_hash matches \"\" == \"\" and passes authentication.",
+      "root_cause": "Misuse of bit_array.to_string on raw cryptographic hash bytes instead of direct bitwise extraction of 4-bit nibbles or binary pattern matching.",
+      "remediation": "Replace bit_array_to_hex with pure binary pattern matching: recurse on <<high:4, low:4, rest/bits>> and map each nibble directly to hex characters, with zero UTF-8 conversion. Require independent signed golden test vectors and an empty-hash forgery rejection test."
+    },
+    {
+      "id": "DEFECT-02",
+      "title": "Mini App auth.gleam check_freshness arbitrary future timestamp bypass",
+      "severity": "HIGH",
+      "affected_files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam"
+      ],
+      "description": "In auth.gleam lines 181-196, check_freshness checks only (now_unix - auth_date <= max_age_seconds). If an attacker or compromised client provides an auth_date far in the future (e.g. now + 10^7 seconds), now_unix - auth_date is negative, which is mathematically <= max_age_seconds. This allows initData signed with future timestamps to remain valid indefinitely, bypassing replay protection.",
+      "root_cause": "One-sided freshness bound missing lower-bound clock skew tolerance.",
+      "remediation": "Enforce bidirectional bounding: (now_unix - auth_date <= max_age_seconds) && (auth_date <= now_unix + clock_skew_tolerance_seconds)."
+    },
+    {
+      "id": "DEFECT-03",
+      "title": "Mini App parse_query_string duplicate keys and silent percent-decode fallback",
+      "severity": "MEDIUM",
+      "affected_files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam"
+      ],
+      "description": "parse_query_string splits on & and = then unwraps percent_decode errors by falling back to the raw string. In validate(), list.find picks the first occurrence of hash and user, but data_check_string joins all remaining parameters including duplicates. If an attacker injects duplicate keys or malformed percent-encoded sequences, the HMAC check string diverges from parsed fields.",
+      "root_cause": "Permissive query string parsing without duplicate key rejection or strict percent-decode error propagation.",
+      "remediation": "Strictly reject query strings containing duplicate keys or invalid percent-encoding sequences with MalformedData."
+    },
+    {
+      "id": "DEFECT-04",
+      "title": "Unauthenticated Mini App HTTP Endpoints in wisp/router.gleam and mini_app_routes.gleam",
+      "severity": "CRITICAL",
+      "affected_files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam"
+      ],
+      "description": "mini_app_routes.route(path) takes only a path string and has no authentication or session parameter. In router.gleam lines 3444-3448, any request matching mini_app_routes.is_mini_app_path(path) unconditionally invokes html_response(mini_app_routes.route(path)). Any network actor can access /mini-app/dashboard, /mini-app/tasks, /mini-app/health, /mini-app/config, etc., without presenting any Telegram WebApp initData or authentication token.",
+      "root_cause": "Mini app routes were implemented as static SSR views without connecting to the Telegram auth verification middleware.",
+      "remediation": "Require Telegram initData or signed session cookie on all protected /mini-app/* routes. Pass validated TelegramUser into route handlers or return HTTP 401 Unauthorized with a login shell."
+    },
+    {
+      "id": "DEFECT-05",
+      "title": "Native Store Non-Transactional initialize_new in telegram_store.ml",
+      "severity": "HIGH",
+      "affected_files": [
+        ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store.ml"
+      ],
+      "description": "In telegram_store.ml initialize_new, PRAGMA statements, CREATE TABLE DDLs, and 5 separate INSERT INTO meta queries are executed outside an explicit SQLite transaction (BEGIN IMMEDIATE ... COMMIT). If the process crashes or an error occurs halfway through initialization, a partially initialized, corrupt database file is left on disk.",
+      "root_cause": "Missing atomic transaction wrapper around multi-statement DDL and metadata initialization.",
+      "remediation": "Wrap the entire initialization sequence in a single BEGIN IMMEDIATE ... COMMIT block, ensuring automatic rollback on any failure."
+    },
+    {
+      "id": "DEFECT-06",
+      "title": "Native Store Non-Injective compute_request_digest in telegram_store.ml",
+      "severity": "HIGH",
+      "affected_files": [
+        ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store.ml"
+      ],
+      "description": "In telegram_store.ml compute_request_digest, read assertions are serialized as: \"read:\" ^ a.key ^ \":\" ^ string_of_int a.expected_version ^ \":\" ^ a.expected_sha256 ^ \"\\n\". Because keys and values are joined with colons without length prefixing or character escaping, a key containing colons and newlines (e.g. \"foo:0:\\nread:bar\") produces the exact same serialized digest buffer as two separate assertions for keys \"foo\" and \"bar\". This allows hash collision and digest spoofing attacks.",
+      "root_cause": "Ambiguous delimiter-based serialization of unescaped, variable-length fields.",
+      "remediation": "Implement strict length-prefixed encoding (e.g. key_len:key:version:sha_len:sha) or formal canonical JSON serialization with unambiguous field delimiters."
+    },
+    {
+      "id": "DEFECT-07",
+      "title": "Bypassed Ingress Guard in tools/telegram-harness-dispatch",
+      "severity": "MEDIUM",
+      "affected_files": [
+        "tools/telegram-harness-dispatch",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam"
+      ],
+      "description": "tools/telegram-harness-dispatch directly invokes telegram:handle_message/1, completely bypassing telegram_ingress_guard.gleam allowlist checks and telegram_delivery_ledger.gleam deduplication. Unauthorized messages dispatched through this CLI wrapper are processed without security filtering.",
+      "root_cause": "Developer dispatch wrapper wired directly to low-level message router rather than supervised ingress pipeline.",
+      "remediation": "Rewire telegram-harness-dispatch to route through telegram_ingress_guard:validate_ingress and delivery_ledger before dispatch."
+    },
+    {
+      "id": "DEFECT-08",
+      "title": "Pervasive Simulation in Ops, Creative, and Collab Directives (35 commands)",
+      "severity": "MEDIUM",
+      "affected_files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam"
+      ],
+      "description": "All 35 directives in telegram_ops.gleam (11), telegram_creative.gleam (12), and telegram_collab.gleam (12) return hardcoded static strings claiming successful actions (e.g. key rotation, container resurrection, consensus voting) without executing any real logic or contacting backend services. In telegram_collab.gleam, fabricated claims of cryptographic consensus are returned.",
+      "root_cause": "Prototype simulation mockups were left in the codebase masquerading as implemented features.",
+      "remediation": "Explicitly classify all 35 directives as STUB / SIMULATION in user-facing documentation and help text. Replace mock responses with truthful status indicating backend service connectivity requirements, or wire to real underlying services under 2oo3 constitutional consensus."
+    },
+    {
+      "id": "DEFECT-09",
+      "title": "Missing Outbound Rate Limiting & HTTP 429 Retry-After Handling",
+      "severity": "MEDIUM",
+      "affected_files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_outbound.gleam"
+      ],
+      "description": "Telegram Bot API imposes strict egress rate limits (1 message/second per private chat, 20 messages/minute per group, ~30 messages/second broadcast). telegram_outbound.gleam sends messages immediately upon invocation without token bucket rate limiting or queueing. When Telegram responds with HTTP 429 Too Many Requests containing a retry_after field, telegram_outbound treats it as a generic HTTP error and fails without backing off.",
+      "root_cause": "Outbound client lacks a rate-limiting governor and retry state machine.",
+      "remediation": "Implement a supervised Erlang/Gleam outbound queue with leaky bucket / token bucket rate limiting and automatic exponential backoff honoring Telegram HTTP 429 retry_after headers."
+    },
+    {
+      "id": "DEFECT-10",
+      "title": "Sibling Candidate Isolation & Unverified Historical Test Claims",
+      "severity": "LOW",
+      "affected_files": [
+        ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store.ml",
+        ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store/telegram_store_test.ml"
+      ],
+      "description": "The native OCaml storage engine candidate resides in sibling workspace .uos-workspaces/agy-telegram-admission-20261001. Historical reports claim 85 tests green under commit 709c4b0, but these tests have not been freshly executed and verified in the canonical root tree with the current toolchain.",
+      "root_cause": "Development took place in an unadmitted sibling branch prior to systematic admission gating.",
+      "remediation": "Execute fresh test runs of native store test suite, verify against current OCaml/dune environment, and admit files to canonical root only after two-key sovereign review."
+    }
+  ],
+  "observed_vs_unrun_tests": {
+    "observed_green_tests": [
+      {
+        "test_suite": "telegram_store_transport_test.erl",
+        "framework": "Erlang / OTP 29 common test",
+        "tests_passed": 18,
+        "tests_failed": 0,
+        "verification_date": "2026-10-11T11:54:00Z",
+        "scope": "BEAM-to-guardian 32-bit framed port, JSON-RPC protocol, framing boundaries, error handling"
+      },
+      {
+        "test_suite": "telegram_test.gleam & telegram_ingress_guard_test.gleam",
+        "framework": "Gleeunit / BEAM",
+        "tests_passed": 24,
+        "tests_failed": 0,
+        "verification_date": "2026-10-01",
+        "scope": "Core message parsing, allowlist verification, directive classification, read tool execution"
+      },
+      {
+        "test_suite": "telegram_mini_app_test.gleam",
+        "framework": "Gleeunit / BEAM",
+        "tests_passed": 8,
+        "tests_failed": 0,
+        "verification_date": "2026-10-01",
+        "scope": "Mini app route matching, Lustre view rendering (note: auth tests only test parsing, not raw HMAC hex)"
+      }
+    ],
+    "unrun_or_unverified_claims": [
+      {
+        "test_suite": "telegram_store_test.ml",
+        "framework": "OCaml / Dune",
+        "claimed_passes": 85,
+        "actual_status": "UNVERIFIED in canonical root; candidate isolated in sibling workspace under unadmitted commit 709c4b0"
+      },
+      {
+        "test_suite": "Live Telegram Bot API E2E",
+        "framework": "Network / Real Bot API",
+        "claimed_passes": 0,
+        "actual_status": "UNRUN; live bot token not provisioned in development environment; all network tests use mock HTTP server"
+      },
+      {
+        "test_suite": "Mini App Real WebApp initData Signature Validation",
+        "framework": "Cryptographic Golden Test",
+        "claimed_passes": 0,
+        "actual_status": "UNRUN; existing tests use mock query strings and do not verify authentic Telegram HMAC-SHA256 binary vectors"
+      }
+    ]
+  },
+  "implementation_groups": [
+    {
+      "group_id": "GROUP-1",
+      "name": "Native Storage Engine Repairs",
+      "dependencies": [
+        "FEATURE_INVENTORY"
+      ],
+      "canonical_tasks": [
+        "NATIVE_REPAIR",
+        "NATIVE_REVIEW"
+      ],
+      "focus_areas": [
+        "Wrap initialize_new DDL and metadata insertion in an explicit BEGIN IMMEDIATE ... COMMIT transaction.",
+        "Fix compute_request_digest to use length-prefixed field encoding, eliminating delimiter injection and collision vulnerabilities.",
+        "Add strict path ancestor and symlink verification to prevent directory traversal when opening SQLite database paths.",
+        "Execute fresh 85-test suite in native directory and record reproducible verification receipt."
+      ]
+    },
+    {
+      "group_id": "GROUP-2",
+      "name": "Storage Codec & Transport Bridge",
+      "dependencies": [
+        "NATIVE_REVIEW"
+      ],
+      "canonical_tasks": [
+        "TRANSPORT_CODEC_FIX",
+        "TRANSPORT_REVIEW"
+      ],
+      "focus_areas": [
+        "Implement typed Gleam domain codec for storage requests and responses, replacing untyped dynamic JSON.",
+        "Wire telegram_store_transport.gleam directly to repaired native store binary via guardian supervisor.",
+        "Add end-to-end roundtrip tests for reservations, append-only events, and optimistic concurrency locks."
+      ]
+    },
+    {
+      "group_id": "GROUP-3",
+      "name": "Supervised Core Service & Ingress Hardening",
+      "dependencies": [
+        "TRANSPORT_REVIEW"
+      ],
+      "canonical_tasks": [
+        "INGRESS_ENFORCE",
+        "DELIVERY_PERSISTENCE"
+      ],
+      "focus_areas": [
+        "Enforce telegram_ingress_guard.gleam across all ingress channels (including tools/telegram-harness-dispatch).",
+        "Persist delivery ledger state in SQLite storage engine so message deduplication and watermarks survive restarts.",
+        "Ensure single poller guarantee across OTP supervision tree to prevent duplicate message retrieval."
+      ]
+    },
+    {
+      "group_id": "GROUP-4",
+      "name": "Directives Truthfulness & Mini App UI Security",
+      "dependencies": [
+        "INGRESS_ENFORCE"
+      ],
+      "canonical_tasks": [
+        "MINI_AUTH_FIX",
+        "DIRECTIVES_TRUTHFULNESS"
+      ],
+      "focus_areas": [
+        "Fix auth.gleam bit_array_to_hex using binary pattern matching (nibble-to-hex) without UTF-8 decoding.",
+        "Fix check_freshness with bidirectional timestamp tolerance (auth_date <= now + skew_tolerance).",
+        "Reject duplicate parameters and malformed percent sequences in parse_query_string.",
+        "Add authentication middleware to router.gleam and mini_app_routes.gleam before rendering /mini-app/* views.",
+        "Refactor 35 simulated commands in ops/creative/collab to truthfully state backend status or wire to real services."
+      ]
+    },
+    {
+      "group_id": "GROUP-5",
+      "name": "Outbound Rate Limiting & Resilience",
+      "dependencies": [
+        "DIRECTIVES_TRUTHFULNESS"
+      ],
+      "canonical_tasks": [
+        "OUTBOUND_RATE_LIMITER",
+        "CALLBACK_ANSWERING"
+      ],
+      "focus_areas": [
+        "Implement token bucket rate limiter in telegram_outbound.gleam (1 msg/sec chat, 20/min group, 30/sec total).",
+        "Parse HTTP 429 Too Many Requests and honor retry_after header with exponential backoff.",
+        "Port answerCallbackQuery from OCaml telegram_client.ml to Gleam service tier to dismiss user loading spinners."
+      ]
+    },
+    {
+      "group_id": "GROUP-6",
+      "name": "Reviewed Admission & Sovereign Ratification",
+      "dependencies": [
+        "OUTBOUND_RATE_LIMITER",
+        "CALLBACK_ANSWERING"
+      ],
+      "canonical_tasks": [
+        "TELEGRAM_SOVEREIGN_ADMISSION",
+        "EV_RATIFICATION"
+      ],
+      "focus_areas": [
+        "Perform two-key verification (Codex + AGY) on all admitted Telegram source files.",
+        "Verify comprehensive 18/18 checklist and execute uos-cli verify-all.",
+        "Publish final timestamped admission receipt and update canonical architecture documentation."
+      ]
+    }
+  ],
+  "acceptance_criteria": {
+    "positive_criteria": [
+      "Valid Telegram Mini App initData signed with known bot token authenticates successfully and returns typed TelegramUser.",
+      "Native SQLite storage engine completes initialize_new atomically, creating all tables and metadata entries within a single transaction.",
+      "Storage compute_request_digest uniquely identifies requests regardless of key contents, colons, or newlines.",
+      "Directives /doctor, /ev, /plan, /saplan, and /tool execute through ingress guard and return bounded diagnostic JSON.",
+      "Outbound messages exceeding 4096 characters are cleanly chunked and transmitted in sequence without dropping text."
+    ],
+    "negative_criteria": [
+      "Unregistered users or non-allowlisted callers receive DeniedUnregisteredUser and cannot trigger directives.",
+      "Mutating directives (/andon, /approval, /resuscitate, /merge) without 2oo3 constitutional approval fail closed with DeniedMutation.",
+      "Mini App initData with empty hash parameter or mismatched HMAC is strictly rejected with InvalidHash.",
+      "Mini App initData with future auth_date (> now + 60s) is strictly rejected with ExpiredData.",
+      "Query strings containing duplicate parameter keys or invalid percent encodings fail with MalformedData.",
+      "HTTP GET requests to /mini-app/* without valid authentication headers return HTTP 401 Unauthorized."
+    ],
+    "recovery_criteria": [
+      "Process crash during native store initialization rolls back cleanly, leaving no orphan tables or corrupted DB files.",
+      "Storage guardian automatically restarts crashed storage worker child processes up to restart intensity ceiling.",
+      "HTTP 429 rate limit responses from Telegram Bot API trigger queue suspension and resume cleanly after retry_after duration.",
+      "Transient network disconnects in getUpdates polling loop reconnect with exponential backoff without dropping unacknowledged updates."
+    ]
+  }
+}

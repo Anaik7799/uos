@@ -23,7 +23,12 @@ const private_root = "/home/an/uos-recovery-candidates/20260930-0421-fractal-rca
 const config_root = "/home/an/.config/systemd/user"
 const release_root = dev.root <> "/var/releases/ecology"
 const systemctl = "/usr/bin/systemctl"
-const old_ecology = "uos-ecology@20260909-0202-926f873c38fef776e170d8d3c8437b114e6a55ebc0d9f1ae47507e094c59dd0b.service"
+const old_ecology = "uos-ecology@20260930-0608-0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748.service"
+
+pub fn authorized_workflow(plan: String, task: String, worker: String) -> Bool {
+  plan == "uos/capability-restoration/20260930-0734" && task == "RELEASE"
+  && worker == "codex-capability-restoration-20260930"
+}
 
 @external(erlang, "recovery_activation_ffi", "sha256_file")
 fn sha256_file(path: String) -> Result(String, String)
@@ -194,8 +199,7 @@ fn fence(grant: v.Value, selected: Action) -> Result(Nil, String) {
   use observed <- result.try(clock.observe())
   let now = observed.sample.observed
   use _ <- result.try(a.require(
-    plan == "uos/full-restoration/20260930-0515" && task == "RESTORE"
-    && worker == "codex-full-restoration-20260930"
+    authorized_workflow(plan, task, worker)
     && session == worker && window_valid(now.utc_us, expiry)
     && now.domain.host_id == host && now.domain.boot_id == boot, "finite_grant_or_clock"))
   let binding = dev.Binding("restoration", plan, task, worker, attempt, session, epoch)

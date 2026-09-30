@@ -151,7 +151,7 @@ pub fn authorized(class: OperationClass, tier: Tier) -> Bool {
 
 fn is_free_openrouter(t: Tier) -> Bool {
   case t.provider {
-    OpenRouter -> string.ends_with(t.id, ":free")
+    OpenRouter -> string.ends_with(t.id, ":free") || t.model == "openrouter/free"
     _ -> False
   }
 }
@@ -635,7 +635,11 @@ pub fn default_tiers(live_prices: List(#(String, Float, Float))) -> List(Tier) {
     )
   let free_tiers =
     live_prices
-    |> list.filter(fn(p) { string.ends_with(p.0, ":free") })
+    |> list.filter(fn(p) {
+      { string.ends_with(p.0, ":free") || p.0 == "openrouter/free" }
+      && p.1 == 0.0
+      && p.2 == 0.0
+    })
     |> list.map(fn(p) {
       Tier(
         "openrouter/" <> p.0,

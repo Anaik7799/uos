@@ -39,6 +39,8 @@ pub fn provider_ceilings_are_exact_and_free_route_is_separate_test() {
   |> should.equal(Ok(budget.Price(90, 340, 0)))
   budget.provider_ceiling("inclusionai/ling-3.0-flash-fin:free")
   |> should.be_error
+  budget.provider_ceiling("openrouter/free")
+  |> should.be_error
   budget.provider_ceiling("unknown") |> should.be_error
 }
 

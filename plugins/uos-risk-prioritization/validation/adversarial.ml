@@ -172,6 +172,34 @@ let run () =
     check "lease expiry exact boundary" (not (coherent [executing] [{leased with lease=Some 1000L}]));
     check "wrong worker detected" (not (coherent [executing] [{leased with worker=Some "other"}]));
     check "attempt zero rejected" (not (coherent [executing] [{leased with attempt=0}]));
+    let expired={leased with lease=Some 900L} in
+    let binding=("a",text "actor" base,1,900L) in
+    let project rows=Checker.reclaim_projection ~now_ns:1000L binding [executing] rows in
+    check "exact expired reclaim projection" (text "task_state" (List.hd(project [expired]))="available");
+    check "reclaim leaves original assessment unchanged" (text "task_state" executing="executing");
+    check "exact reclaim coherence" (Checker.coherence ~reclaim:binding ~now_ns:1000L [executing] [expired]=[]);
+    check "ordinary preflight still refuses expired lease" (not(coherent [executing] [expired]));
+    reject "reclaim cannot take live lease" (fun()->ignore(project [leased]));
+    reject "reclaim cannot take foreign owner" (fun()->ignore(project [{expired with worker=Some "other"}]));
+    reject "reclaim cannot hide changed attempt" (fun()->ignore(project [{expired with attempt=2}]));
+    reject "reclaim cannot hide changed deadline" (fun()->ignore(project [{expired with lease=Some 899L}]));
+    reject "reclaim needs actual lease" (fun()->ignore(project [{expired with lease=None}]));
+    reject "reclaim cannot take available task" (fun()->ignore(project [live]));
+    reject "reclaim cannot take completed task" (fun()->ignore(project [{expired with state="completed"}]));
+    reject "reclaim cannot hide result" (fun()->ignore(project [{expired with result_present=true}]));
+    reject "reclaim cannot hide completion time" (fun()->ignore(project [{expired with completed=Some 800L}]));
+    let other_exec=executing |> change "task_id" (`String "b") |> change "assessment_id" (`String "b") in
+    check "reclaim preserves other expired task HOLD"
+      (Checker.coherence ~reclaim:binding ~now_ns:1000L [executing;other_exec]
+        [expired;{expired with id="b"}]<>[]);
+    check "reclaim preserves changed dependencies HOLD"
+      (Checker.coherence ~reclaim:binding ~now_ns:1000L [executing]
+        [{expired with dependencies=["uncompleted"]}]<>[]);
+    check "reclaim preserves full plan completeness HOLD"
+      (Checker.coherence ~reclaim:binding ~now_ns:1000L [executing] [expired;{live with id="b"}]<>[]);
+    let projected=project [expired] |> List.map(change "readiness" (`String "blocked")) in
+    check "reclaim does not make blocked task eligible"
+      (Priority.rank ~now (List.map Record.candidate projected)=[]);
     let dbpath=Filename.concat root "plan.sqlite3" in
     let db=Sqlite3.db_open dbpath in
     let sql s=check "fixture SQL" (Sqlite3.exec db s=Sqlite3.Rc.OK) in

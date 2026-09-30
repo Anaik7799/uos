@@ -438,6 +438,7 @@ pub fn default_tiers_shape_test() {
   let tiers =
     route.default_tiers([
       #("vendor/free-model:free", 0.0, 0.0),
+      #("openrouter/free", 0.0, 0.0),
       #("openai/gpt-4.1-nano", 0.0000001, 0.0000004),
     ])
   let assert Ok(det) = list.find(tiers, fn(t) { t.id == "deterministic" })
@@ -446,6 +447,11 @@ pub fn default_tiers_shape_test() {
   let assert Ok(free) =
     list.find(tiers, fn(t) { t.id == "openrouter/vendor/free-model:free" })
   free.paid |> should.be_false
+  let assert Ok(orf) =
+    list.find(tiers, fn(t) { t.id == "openrouter/openrouter/free" })
+  orf.paid |> should.be_false
+  orf.price_in |> should.equal(Some(0.0))
+  orf.price_out |> should.equal(Some(0.0))
   let assert Ok(nano) =
     list.find(tiers, fn(t) { t.id == "openrouter/openai/gpt-4.1-nano" })
   nano.price_in |> should.equal(Some(0.0000001))
@@ -502,3 +508,37 @@ pub fn budget_ledger_over_cap_refusal_test() {
     Ok(_) -> panic as "an over-cap charge must be refused"
   }
 }
+
+pub fn arbitrary_free_suffix_is_not_admitted_as_free_tier_test() {
+  let tiers =
+    route.default_tiers([
+      #("provider/foo/free", 0.0, 0.0),
+      #("other/model/free", 0.0, 0.0),
+    ])
+  list.find(tiers, fn(t) { t.model == "provider/foo/free" })
+  |> should.be_error
+  list.find(tiers, fn(t) { t.model == "other/model/free" })
+  |> should.be_error
+}
+
+pub fn default_tiers_rejects_positive_prices_for_free_models_test() {
+  let tiers =
+    route.default_tiers([
+      #("openrouter/free", 0.0001, 0.0),
+      #("google/gemma-4-31b-it:free", 0.0, 0.0001),
+      #("vendor/free-model:free", 0.0, 0.0),
+    ])
+  // Non-zero prices must not be admitted into free tiers
+  list.find(tiers, fn(t) { t.model == "openrouter/free" })
+  |> should.be_error
+  list.find(tiers, fn(t) { t.model == "google/gemma-4-31b-it:free" })
+  |> should.be_error
+  // Both prices strictly zero is admitted into free tiers
+  let assert Ok(free) =
+    list.find(tiers, fn(t) { t.id == "openrouter/vendor/free-model:free" })
+  free.paid |> should.be_false
+  free.price_in |> should.equal(Some(0.0))
+  free.price_out |> should.equal(Some(0.0))
+}
+
+

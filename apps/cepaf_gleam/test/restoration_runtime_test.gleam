@@ -45,3 +45,17 @@ pub fn authority_window_covers_effect_and_cleanup_test() {
   |> list.each(fn(remaining) { runtime.window_valid(100, 100 + remaining) |> should.be_false })
   runtime.window_valid(100, 60_000_101) |> should.be_true
 }
+pub fn capability_workflow_is_exact_and_prior_completed_plan_is_refused_test() {
+  runtime.authorized_workflow(
+    "uos/capability-restoration/20260930-0734", "RELEASE",
+    "codex-capability-restoration-20260930",
+  ) |> should.be_true
+  runtime.authorized_workflow(
+    "uos/full-restoration/20260930-0515", "RESTORE",
+    "codex-full-restoration-20260930",
+  ) |> should.be_false
+  runtime.authorized_workflow(
+    "uos/capability-restoration/20260930-0734", "TRANSPORT",
+    "codex-capability-restoration-20260930",
+  ) |> should.be_false
+}

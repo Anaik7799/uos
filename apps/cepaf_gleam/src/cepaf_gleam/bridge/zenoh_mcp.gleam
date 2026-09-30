@@ -44,6 +44,13 @@ pub fn start(
   session: zenoh.Session,
   node_id: String,
 ) -> Result(Subject(Message), actor.StartError) {
+  case zenoh.supports_subscriptions(session) {
+    False -> Error(actor.InitFailed("zenoh_rest_subscriptions_unsupported"))
+    True -> start_subscribed(session, node_id)
+  }
+}
+
+fn start_subscribed(session: zenoh.Session, node_id: String) -> Result(Subject(Message), actor.StartError) {
   actor.new(State(session: session, node_id: node_id))
   |> actor.on_message(handle_message)
   |> actor.start()

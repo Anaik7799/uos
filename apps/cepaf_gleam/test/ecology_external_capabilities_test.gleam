@@ -1,3 +1,4 @@
+import cepaf_gleam/ecology/capability_port
 import cepaf_gleam/ecology/external_capabilities as external
 import gleam/list
 import gleam/option.{None, Some}
@@ -107,3 +108,40 @@ pub fn unknown_completion_price_refuses_before_dispatch_test() {
     )
   external.openrouter_with(input, no_post) |> should.be_error
 }
+
+pub fn disappeared_model_refuses_before_dispatch_test() {
+  let disappeared_input =
+    "{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"prompt\":\"Describe one bounded feedback-loop invariant.\",\"max_tokens\":128}"
+  let no_post =
+    worker.Io(
+      ..io(Some("unit-test"), prices, reply),
+      post: fn(_, _, _) { panic as "Disappeared model must not dispatch POST" },
+    )
+  external.openrouter_with(disappeared_input, no_post) |> should.be_error
+}
+
+pub fn capability_port_openrouter_free_default_input_test() {
+  let default_in = capability_port.default_input("openrouter_free")
+  string.contains(default_in, "\"model\":\"openrouter/free\"")
+  |> should.be_true
+  let assert Ok(req) = external.decode_request(default_in)
+  req.model |> should.equal("openrouter/free")
+  req.max_tokens |> should.equal(256)
+  let assert Ok(receipt) =
+    external.openrouter_with(default_in, io(Some("unit-test"), prices, reply))
+  string.contains(receipt, "Require fresh feedback") |> should.be_true
+}
+
+pub fn paid_fallback_under_free_policy_is_refused_test() {
+  let paid_input =
+    "{\"model\":\"z-ai/glm-5.3\",\"prompt\":\"Describe one bounded feedback-loop invariant.\",\"max_tokens\":128}"
+  let prices_with_paid =
+    "{\"data\":[{\"id\":\"openrouter/free\",\"pricing\":{\"prompt\":\"0\",\"completion\":\"0\"}},{\"id\":\"z-ai/glm-5.3\",\"pricing\":{\"prompt\":\"0.0000014\",\"completion\":\"0.0000044\"}}]}"
+  let no_post =
+    worker.Io(
+      ..io(Some("unit-test"), prices_with_paid, reply),
+      post: fn(_, _, _) { panic as "Paid fallback must not dispatch under free policy" },
+    )
+  external.openrouter_with(paid_input, no_post) |> should.be_error
+}
+

@@ -131,7 +131,26 @@ let audit ~root ~now records =
   let evidence=Hashtbl.fold (fun path (digest,_) acc->(path,digest)::acc) cache []
     |> List.sort compare in
   {ranked;findings=List.rev !findings;evidence}
-let coherence ~now_ns records live =
+(* Read-only reclaim observation. This never creates a lease or makes an
+   expired attempt executable. The exact previous worker/attempt/deadline must
+   still match; ordinary preflight/active checks retain their strict behavior. *)
+let reclaim_matches ~now_ns (id,worker,attempt,lease) (t:Live_plan.task) =
+  id=t.id && worker<>"" && t.state="executing" && t.worker=Some worker &&
+  attempt>=1 && attempt<1000000 && t.attempt=attempt &&
+  lease>0L && lease<=now_ns && t.lease=Some lease &&
+  t.completed=None && not t.result_present
+let reclaim_projection ~now_ns binding records live =
+  let id,worker,_,_=binding in
+  require (List.exists (reclaim_matches ~now_ns binding) live)
+    "reclaim requires exact expired same-worker attempt and lease";
+  require (List.exists (fun j->text "task_id" j=id &&
+    text "task_state" j="executing" && text "actor" j=worker) records)
+    "reclaim assessment must declare the original executing owner";
+  List.map (fun j->if text "task_id" j<>id then j else
+    match j with `Assoc xs -> `Assoc (List.map (fun(k,v)->
+      k,(if k="task_state" then `String "available" else v)) xs)
+    | _ -> raise (Invalid "invalid reclaim record")) records
+let coherence ?reclaim ~now_ns records live =
   let out=ref [] in
   let add id detail=out:=issue "RP-SA-PLAN" id detail
     "Re-read the canonical plan and refresh its complete assessment; claim only through Sa-plan."::!out in
@@ -149,13 +168,19 @@ let coherence ~now_ns records live =
         then add id "declared dependencies differ from Sa-plan";
         if t.state="executing" then (
           if t.worker<>Some (text "actor" j) then add id "executing worker does not match assessment actor";
-          if t.attempt<1 || not (Option.fold ~none:false ~some:(fun n->n>now_ns) t.lease)
+          let exact_reclaim=Option.fold ~none:false
+            ~some:(fun binding->reclaim_matches ~now_ns binding t) reclaim in
+          if not exact_reclaim &&
+            (t.attempt<1 || not (Option.fold ~none:false ~some:(fun n->n>now_ns) t.lease))
           then add id "executing lease is missing or expired at this observation")
         else if t.state="available" && (t.worker<>None || t.lease<>None) then
           add id "available task retains inconsistent ownership";
         if t.state="completed" &&
           (not t.result_present || not (Option.fold ~none:false ~some:(fun n->n>0L && n<=now_ns) t.completed))
         then add id "completed task lacks a valid completion record") records;
+  Option.iter (fun binding->
+    if not (List.exists (reclaim_matches ~now_ns binding) live) then
+      let id,_,_,_=binding in add id "reclaim binding changed or is not an expired owned attempt") reclaim;
   List.rev !out
 let verify_again ~root evidence =
   List.iter (fun (path,digest)->

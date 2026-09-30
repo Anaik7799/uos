@@ -101,14 +101,21 @@ let portfolio path =
   let records=List.map (check_record s) xs in
   require (records<>[]) "empty portfolio";
   bytes,records
-let run_audit ?active path selected =
+let run_audit ?active ?reclaim path selected =
   ignore (check_package ());
   let timer=Mtime_clock.counter () and wall_start=Unix.gettimeofday () in
   let raw,records=portfolio path in
   let clock=Host_clock.observe () in
   let now=now_utc () in
   let root=Unix.realpath "." in
-  let report=Checker.audit ~root ~now records in
+  let initial_reclaim=Option.map (fun binding->
+    let plan=text "plan_id" (List.hd records) in
+    let live=Live_plan.read ~path:(Filename.concat root "var/sa-plan/uos.sqlite3") ~plan in
+    let ns=Int64.add (Int64.of_float (ceil (Unix.gettimeofday () *. 1e9))) 1024L in
+    let projected=Checker.reclaim_projection ~now_ns:ns binding records live in
+    live,projected) reclaim in
+  let ranking_records=Option.fold ~none:records ~some:snd initial_reclaim in
+  let report=Checker.audit ~root ~now ranking_records in
   let findings=ref report.findings in
   let live_observation=ref None in
   let live_info=match selected with
@@ -118,7 +125,9 @@ let run_audit ?active path selected =
         let plan=text "plan_id" (List.hd records) in
         let live=Live_plan.read ~path:database ~plan in
         let ns=Int64.add (Int64.of_float (ceil (Unix.gettimeofday () *. 1e9))) 1024L in
-        findings:= !findings @ Checker.coherence ~now_ns:ns records live;
+        Option.iter (fun(before,_)->require(Live_plan.digest before=Live_plan.digest live)
+          "Sa-plan changed during reclaim preflight") initial_reclaim;
+        findings:= !findings @ Checker.coherence ?reclaim ~now_ns:ns records live;
         (match active with
         | Some (worker,attempt) ->
             require (attempt>=1 && attempt<=1000000) "invalid active attempt";
@@ -145,7 +154,7 @@ let run_audit ?active path selected =
   let clock_end=Host_clock.observe () in
   let ended=now_utc () in
   let final_ns=Int64.add (Int64.of_float (ceil (Unix.gettimeofday () *. 1e9))) 1024L in
-  Option.iter (fun live->findings:= !findings @ Checker.coherence ~now_ns:final_ns records live)
+  Option.iter (fun live->findings:= !findings @ Checker.coherence ?reclaim ~now_ns:final_ns records live)
     !live_observation;
   findings:= !findings @ Checker.final_time_findings ~now:ended records;
   findings:=List.sort_uniq compare !findings;
@@ -154,9 +163,15 @@ let run_audit ?active path selected =
   let pass= !findings=[] in
   print_json (`Assoc [
     "status",`String (if not pass then "HOLD" else
-      if selected=None then "LISTED_EVIDENCE_VALID" else if active=None then "PREFLIGHT_PASS"
+      if selected=None then "LISTED_EVIDENCE_VALID" else if reclaim<>None then "RECLAIM_PREFLIGHT_PASS"
+      else if active=None then "PREFLIGHT_PASS"
       else "ACTIVE_OBSERVATION_PASS");
     "authority",`String "NONE";"runtime_admission",`String "NOT_GRANTED";
+    "reclaim", (match reclaim with None->`Null | Some(task,worker,attempt,lease)->
+      `Assoc ["task_id",`String task;"worker",`String worker;
+        "previous_attempt",`Int attempt;"previous_lease_until_ns",`String(Int64.to_string lease);
+        "expected_new_attempt",`Int(attempt+1);
+        "scope",`String "Expired claim replacement only; no execution before a fresh exact-owner active check"]);
     "observed_at",`String now;"completed_at",`String ended;"elapsed_monotonic_seconds",`Float elapsed;
     "clock_start",Host_clock.to_json clock;"clock_end",Host_clock.to_json clock_end;
     "assessment_sha256",`String (Bounded.sha256 raw);
@@ -226,6 +241,8 @@ let () =
     | [_;"--audit";path] -> run_audit path None
     | [_;"--receipt";path] -> verify_receipt path
     | [_;"--preflight";path;task] -> run_audit path (Some task)
+    | [_;"--reclaim-preflight";path;task;worker;attempt;lease] ->
+        run_audit ~reclaim:(task,worker,int_of_string attempt,Int64.of_string lease) path (Some task)
     | [_;"--active-check";path;task;worker;attempt] ->
         run_audit ~active:(worker,int_of_string attempt) path (Some task)
     | [_;"--plan";plan] ->
@@ -253,7 +270,7 @@ let () =
             "effective_class",`String ("P"^string_of_int r.effective_class);
             "effective_score",`Int r.effective_score;
             "origins",`List (List.map (fun s->`String s) r.origins)]) ranked)])
-    | _ -> prerr_endline "Usage: risk-priority-check --all | --selftest | --adversarial | --package | --record FILE | --rank FILE | --audit PORTFOLIO | --preflight PORTFOLIO TASK | --active-check PORTFOLIO TASK WORKER ATTEMPT | --plan PLAN | --receipt FILE";exit 2
+    | _ -> prerr_endline "Usage: risk-priority-check --all | --selftest | --adversarial | --package | --record FILE | --rank FILE | --audit PORTFOLIO | --preflight PORTFOLIO TASK | --reclaim-preflight PORTFOLIO TASK WORKER PREVIOUS_ATTEMPT PREVIOUS_LEASE_NS | --active-check PORTFOLIO TASK WORKER ATTEMPT | --plan PLAN | --receipt FILE";exit 2
   with
   | Invalid message -> print_json (`Assoc ["status",`String "HOLD";"authority",`String "NONE";
       "rule",`String "RP-INVALID";"detail",`String message]);exit 1
