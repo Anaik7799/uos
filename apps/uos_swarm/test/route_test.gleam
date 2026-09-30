@@ -521,3 +521,24 @@ pub fn arbitrary_free_suffix_is_not_admitted_as_free_tier_test() {
   |> should.be_error
 }
 
+pub fn default_tiers_rejects_positive_prices_for_free_models_test() {
+  let tiers =
+    route.default_tiers([
+      #("openrouter/free", 0.0001, 0.0),
+      #("google/gemma-4-31b-it:free", 0.0, 0.0001),
+      #("vendor/free-model:free", 0.0, 0.0),
+    ])
+  // Non-zero prices must not be admitted into free tiers
+  list.find(tiers, fn(t) { t.model == "openrouter/free" })
+  |> should.be_error
+  list.find(tiers, fn(t) { t.model == "google/gemma-4-31b-it:free" })
+  |> should.be_error
+  // Both prices strictly zero is admitted into free tiers
+  let assert Ok(free) =
+    list.find(tiers, fn(t) { t.id == "openrouter/vendor/free-model:free" })
+  free.paid |> should.be_false
+  free.price_in |> should.equal(Some(0.0))
+  free.price_out |> should.equal(Some(0.0))
+}
+
+

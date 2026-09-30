@@ -217,7 +217,7 @@ fn io_with(credential: option.Option(String), posted: fn() -> Nil) -> w.Io {
       posted()
       Ok(#(
         200,
-        "{\"provider\":\"Google\",\"model\":\"google/gemma-4-31b-it:free\",\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"ok\"}}],\"usage\":{\"prompt_tokens\":10,\"completion_tokens\":5,\"total_tokens\":15}}",
+        "{\"provider\":\"Google\",\"model\":\"google/gemma-4-31b-it:free\",\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"ok\"}}],\"usage\":{\"prompt_tokens\":10,\"completion_tokens\":5,\"total_tokens\":15,\"cost\":0.0}}",
       ))
     },
     now_ms: fn() { 1000 },
@@ -830,4 +830,132 @@ pub fn disappeared_model_is_excluded_from_route_tiers_test() {
   })
   |> should.be_error
 }
+
+fn free_receipt_io(
+  model: String,
+  completion_tokens: Int,
+  cost: option.Option(Float),
+) -> w.Io {
+  let cost_field = case cost {
+    Some(value) -> [#("cost", json.float(value))]
+    None -> []
+  }
+  w.Io(
+    credential: fn() { Some("test-key") },
+    fetch_prices: fn(_) {
+      Ok(#(
+        200,
+        "{\"data\":[{\"id\":\"openrouter/free\",\"pricing\":{\"prompt\":\"0\",\"completion\":\"0\"}},{\"id\":\"google/gemma-4-31b-it:free\",\"pricing\":{\"prompt\":\"0\",\"completion\":\"0\"}}]}",
+      ))
+    },
+    post: fn(_, _, _) {
+      let body =
+        json.object([
+          #("id", json.string("test-free-gen")),
+          #("provider", json.string("test-provider")),
+          #("model", json.string(model)),
+          #(
+            "choices",
+            json.array([#("content", "ok")], fn(c) {
+              json.object([
+                #("finish_reason", json.string("stop")),
+                #(
+                  "message",
+                  json.object([
+                    #("role", json.string("assistant")),
+                    #("content", json.string(c.1)),
+                  ]),
+                ),
+              ])
+            }),
+          ),
+          #(
+            "usage",
+            json.object(
+              list.append(
+                [
+                  #("prompt_tokens", json.int(10)),
+                  #("completion_tokens", json.int(completion_tokens)),
+                  #("total_tokens", json.int(10 + completion_tokens)),
+                ],
+                cost_field,
+              ),
+            ),
+          ),
+        ])
+        |> json.to_string
+      Ok(#(200, body))
+    },
+    now_ms: fn() { 1000 },
+  )
+}
+
+pub fn free_receipt_validation_requires_reported_zero_cost_test() {
+  let request = req("openrouter/free")
+  // Missing cost
+  w.run(w.default_policy(), free_receipt_io("openrouter/free", 5, None), request)
+  |> should.equal(
+    Error(w.BadResponse("free completion is missing reported usage cost")),
+  )
+
+  // Non-zero cost (e.g. provider charged 0.0001)
+  w.run(
+    w.default_policy(),
+    free_receipt_io("openrouter/free", 5, Some(0.0001)),
+    request,
+  )
+  |> should.equal(
+    Error(w.BadResponse("free completion reported non-zero usage cost")),
+  )
+
+  // Exact zero cost succeeds
+  let assert Ok(outcome) =
+    w.run(
+      w.default_policy(),
+      free_receipt_io("openrouter/free", 5, Some(0.0)),
+      request,
+    )
+  outcome.cost_usd |> should.equal(0.0)
+  outcome.reply.reported_cost_usd |> should.equal(Some(0.0))
+}
+
+pub fn free_receipt_validation_refuses_token_overlimit_test() {
+  let request = w.Request(..req("openrouter/free"), max_tokens: 100)
+  w.run(
+    w.default_policy(),
+    free_receipt_io("openrouter/free", 101, Some(0.0)),
+    request,
+  )
+  |> should.equal(
+    Error(w.BadResponse("free completion exceeds admitted max_tokens")),
+  )
+}
+
+pub fn free_router_admits_physical_routed_model_identity_test() {
+  // openrouter/free routes to an underlying physical model, e.g. "provider/routed-free-model"
+  let request = req("openrouter/free")
+  let assert Ok(outcome) =
+    w.run(
+      w.default_policy(),
+      free_receipt_io("provider/routed-free-model", 5, Some(0.0)),
+      request,
+    )
+  outcome.admitted.model |> should.equal("openrouter/free")
+  outcome.reply.model |> should.equal("provider/routed-free-model")
+  outcome.cost_usd |> should.equal(0.0)
+}
+
+pub fn free_fixed_model_refuses_mismatched_model_identity_test() {
+  // A non-router free model requires exact model match
+  let request = req("google/gemma-4-31b-it:free")
+  w.run(
+    w.default_policy(),
+    free_receipt_io("wrong/model:free", 5, Some(0.0)),
+    request,
+  )
+  |> should.equal(
+    Error(w.BadResponse("free completion model differs from admitted model")),
+  )
+}
+
 

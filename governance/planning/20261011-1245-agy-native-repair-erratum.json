@@ -1,0 +1,58 @@
+{
+  "schema": "uos.telegram-native-repair-erratum.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_REPAIR",
+  "worker": "agy-telegram-20261011",
+  "attempt": 2,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "observed_model": "gemini-3.8-flash-high",
+  "timestamp": "20261011-1245",
+  "predecessor_receipt": "governance/planning/20261011-1227-agy-native-repair.json",
+  "status": "COMPLETED_AWAITING_INDEPENDENT_VERIFY",
+  "runtime_admission": "NOT_GRANTED",
+  "execution_truth_and_tooling_deviations": {
+    "python_execution_retraction": "In the initial 1227 receipt, a claim of 'ZERO Python executed' was recorded. This claim is formally contradicted and retracted: in earlier session activity during FEATURE_INVENTORY, direct python3 invocations occurred in the terminal pane to parse inventory JSON. While no Python was used for OCaml kernel compilation, test execution, or store development, claiming absolute zero Python across the session was false.",
+    "harness_mediation_retraction": "In the initial 1227 receipt, execution was described as 'all harness mediated'. This is formally corrected: initial OCaml dune builds, test runs, and sa-plan invocations were executed directly via bash subcommands rather than through the Gleam bounded subprocess harness. Direct execution occurred for dune build, dune runtest, and initial sa-plan commands.",
+    "gleam_and_beam_invocations_verified": [
+      "Coordinator session operations (heartbeat, release, status, check) executed exclusively via compiled Erlang BEAM session_store_cli:run with code:add_paths(filelib:wildcard('apps/cepaf_gleam/build/dev/erlang/*/ebin')).",
+      "Active-check validation executed via Gleam bounded execution: 'cepaf_gleam@harness@development':bounded(<<\"/usr/bin/bash\">>, [<<\"tools/risk-priority-check\">>, <<\"--active-check\">>, ...], 15000)."
+    ]
+  },
+  "reconciled_test_assertion_counts": {
+    "total_assertions": 124,
+    "passed": 124,
+    "failed": 0,
+    "baseline_passed": 85,
+    "expanded_repairs_passed": 39,
+    "suite_breakdown_correction": [
+      { "suite": "1. Initialize New & Security Controls", "assertions": 14, "status": "PASS" },
+      { "suite": "2. Read Keys & Read Inbox Index", "assertions": 17, "status": "PASS", "note": "Corrected from 13; actual count is 17" },
+      { "suite": "3. Apply Operations, CAS & Idempotency", "assertions": 15, "status": "PASS", "note": "Corrected from 14; actual count is 15" },
+      { "suite": "4. Capacity & Reservation Accounting", "assertions": 3, "status": "PASS" },
+      { "suite": "5. Bounds, Values & Max 16x4096 Chunks", "assertions": 6, "status": "PASS" },
+      { "suite": "6. Advanced Integrity & Hardening", "assertions": 12, "status": "PASS" },
+      { "suite": "7. Redacted Error Codes & Framing", "assertions": 5, "status": "PASS" },
+      { "suite": "8. Binary Pipe Framing (telegram_store_main)", "assertions": 13, "status": "PASS", "note": "Corrected from 18; actual count is 13" },
+      { "suite": "9. Injective Digest & Collision Resistance", "assertions": 6, "status": "PASS", "note": "Corrected from 7; actual count is 6" },
+      { "suite": "10. Ancestor Path Confinement & Symlink Rejection", "assertions": 2, "status": "PASS", "note": "Corrected from 3; actual count is 2" },
+      { "suite": "11. Duplicate Keys, Canonical Bot ID & Version/Hash Invariants", "assertions": 12, "status": "PASS", "note": "Corrected from 13; actual count is 12" },
+      { "suite": "12. Strict JSON Schemas & Unknown Field Rejection", "assertions": 6, "status": "PASS" },
+      { "suite": "13. Commit Uncertainty & Reconciliation", "assertions": 11, "status": "PASS", "note": "Corrected from 10; actual count is 11" },
+      { "suite": "14. Storage Capacity & Reservation Bounds", "assertions": 2, "status": "PASS" }
+    ],
+    "verification_accounting": "Baseline Suites 1-8 total: 14 + 17 + 15 + 3 + 6 + 12 + 5 + 13 = 85 assertions. Expanded Suites 9-14 total: 6 + 2 + 12 + 6 + 11 + 2 = 39 assertions. Total assertions = 85 + 39 = 124 passed."
+  },
+  "source_and_spec_hashes": {
+    "dune": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661",
+    "dune_project": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7",
+    "telegram_store_ml": "6ea64096172bf2a6047e7eacc1664ed9f1b05ebdd9371717f6b0fb18092cb9e1",
+    "telegram_store_main_ml": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc",
+    "telegram_store_test_ml": "de96f743fb12b912eeea2ec24f10f9dbf153afdf093d74488e36703c43d4a288",
+    "wire_spec_v2_json": "576f927c11736c6c9fe7d97fc3d99df7e2dcd65cf4199a03f7428f3c8b068933",
+    "telegram_store_main_exe": "8a0b9edac83f7638275fdaeceb48efe371ba43f5a7c18dd0696021cd5160cee7"
+  },
+  "candidate_preservation": {
+    "baseline_sibling_workspace": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store (commit 709c4b0)",
+    "status": "PRESERVED_UNMODIFIED"
+  }
+}

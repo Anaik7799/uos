@@ -636,7 +636,9 @@ pub fn default_tiers(live_prices: List(#(String, Float, Float))) -> List(Tier) {
   let free_tiers =
     live_prices
     |> list.filter(fn(p) {
-      string.ends_with(p.0, ":free") || p.0 == "openrouter/free"
+      { string.ends_with(p.0, ":free") || p.0 == "openrouter/free" }
+      && p.1 == 0.0
+      && p.2 == 0.0
     })
     |> list.map(fn(p) {
       Tier(

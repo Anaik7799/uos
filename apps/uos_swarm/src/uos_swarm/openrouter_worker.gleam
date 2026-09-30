@@ -628,20 +628,50 @@ pub fn run(policy: Policy, io: Io, req: Request) -> Result(Outcome, Refusal) {
     c -> Error(HttpStatus(c, string.slice(body, 0, 120)))
   })
   use reply <- result.try(decode_reply(body))
-  use _ <- result.try(validate_paid_reply(policy, admitted, reply))
+  use _ <- result.try(validate_reply(policy, admitted, reply))
   Ok(Outcome(admitted, reply, actual_cost(reply, admitted.price), elapsed))
 }
 
-/// A public catalog estimate cannot stand in for measured paid spend. These
-/// checks validate the returned receipt; the caller still owns its durable
-/// reservation, including liability for timed-out or rejected completions.
-fn validate_paid_reply(
+/// Validates returned completion receipts against admitted tier constraints.
+/// Free completions require explicit zero reported cost and token bounds
+/// (with router flexibility on physical model identity). Paid completions
+/// require measured usage cost, exact model match, token bounds, and budget limits.
+fn validate_reply(
   policy: Policy,
   admitted: Admitted,
   reply: Reply,
 ) -> Result(Nil, Refusal) {
   case admitted.tier {
-    Free -> Ok(Nil)
+    Free -> {
+      use _ <- result.try(case reply.reported_cost_usd {
+        Some(cost) ->
+          case cost == 0.0 {
+            True -> Ok(cost)
+            False ->
+              Error(BadResponse("free completion reported non-zero usage cost"))
+          }
+        None ->
+          Error(BadResponse("free completion is missing reported usage cost"))
+      })
+      case reply.completion_tokens > admitted.max_tokens {
+        True ->
+          Error(BadResponse("free completion exceeds admitted max_tokens"))
+        False ->
+          case admitted.model == "openrouter/free" {
+            True -> Ok(Nil)
+            False ->
+              case reply.model != admitted.model {
+                True ->
+                  Error(
+                    BadResponse(
+                      "free completion model differs from admitted model",
+                    ),
+                  )
+                False -> Ok(Nil)
+              }
+          }
+      }
+    }
     Paid -> {
       use cost <- result.try(case reply.reported_cost_usd {
         Some(cost) -> Ok(cost)

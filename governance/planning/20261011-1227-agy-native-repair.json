@@ -1,0 +1,106 @@
+{
+  "schema": "uos.telegram-native-repair.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_REPAIR",
+  "worker": "agy-telegram-20261011",
+  "attempt": 2,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "observed_model": "gemini-3.8-flash-high",
+  "timestamp": "20261011-1227",
+  "status": "COMPLETED_AWAITING_INDEPENDENT_VERIFY",
+  "runtime_admission": "NOT_GRANTED",
+  "baseline_reference": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store (commit 709c4b0) preserved untouched",
+  "target_directory": "native/ocaml/telegram_store",
+  "source_and_binary_hashes": {
+    "dune": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661",
+    "dune_project": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7",
+    "telegram_store_ml": "6ea64096172bf2a6047e7eacc1664ed9f1b05ebdd9371717f6b0fb18092cb9e1",
+    "telegram_store_main_ml": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc",
+    "telegram_store_test_ml": "de96f743fb12b912eeea2ec24f10f9dbf153afdf093d74488e36703c43d4a288",
+    "wire_spec_v2_json": "576f927c11736c6c9fe7d97fc3d99df7e2dcd65cf4199a03f7428f3c8b068933",
+    "telegram_store_main_exe": "8a0b9edac83f7638275fdaeceb48efe371ba43f5a7c18dd0696021cd5160cee7"
+  },
+  "bounded_repairs_implemented": [
+    {
+      "repair": 1,
+      "name": "Atomic initialize_new Transaction & Fsync Durability",
+      "summary": "Encompassed schema DDL and all 5 meta entries in a single BEGIN IMMEDIATE ... COMMIT transaction with explicit ROLLBACK on failure. Added post-commit fsync_dir with explicit commit_uncertain outcome on commit or fsync failure. Preserved exclusive 0700/0600 file creation with zero deletion of ambiguous DB files."
+    },
+    {
+      "repair": 2,
+      "name": "Versioned Injective Request Digest & Delimiter Protection",
+      "summary": "Framed preimage with header 'uos.telegram-store.apply.v2\\n', length-prefixed strings (<len>:<str>\\n), counts (<N>\\n), canonical decimal integers, and deterministic key sorting. Prevents delimiter injection attacks. Upgraded schema_version to 'uos.telegram-store.v2' and strictly refuses old v1 DBs. Replay lookup verifies digest equality; mismatch returns operation_collision_digest_mismatch."
+    },
+    {
+      "repair": 3,
+      "name": "Strict JSON Schemas & Exact Field Whitelisting",
+      "summary": "Enforced check_allowed_fields across all 5 commands and nested objects (read_set_assertions, changes, reservation_delta). Any unknown field (such as 'invented': true) is rejected with unknown_json_field. Canonical bot ID bounded to positive decimal 1 <= bot_id <= 9007199254740991. Strict 64-hex lowercase request digests. Version/hash invariants enforced. Duplicate readset keys rejected with duplicate_read_set_key; duplicate changes rejected with duplicate_change_key. Redacted error messages reflect no private canary tokens, keys, paths, or bodies."
+    },
+    {
+      "repair": 4,
+      "name": "Full Ancestor Path Confinement & Symlink Elimination",
+      "summary": "Implemented check_ancestor_paths using Unix.lstat iteratively from '/' up to immediate parent directory. Rejects any symlink in ancestor chain with db_path_symlink. Requires trusted owner (UID 0 or current UID) and non-writable foreign ancestors, with dedicated 0700 immediate parent owned by current UID. /tmp sticky bit (0o1000) permitted as explicit exception."
+    },
+    {
+      "repair": 5,
+      "name": "Commit Uncertainty & Durable Operation Reconciliation",
+      "summary": "Integrated controlled test hooks (test_hook_fail_*) for fault injection. Failures during COMMIT or post-commit return explicit commit_uncertain error code. Proved that lookup_operation reconciles committed receipts after uncertain returns, while uncommitted rollbacks leave state clean at prior generation."
+    },
+    {
+      "repair": 6,
+      "name": "Storage Capacity & Bounds Enforcement",
+      "summary": "Preserved 20,000 rows capacity cap, 20,000 receipts capacity cap, 256 MiB main DB bound, delta limits (rows <= 20, receipts <= 64), busy_timeout = 250ms, journal_mode = WAL, synchronous = FULL, and foreign_keys = ON."
+    }
+  ],
+  "independent_review_defect_resolution": {
+    "N1_distinct_readsets_collision": "RESOLVED: Length-prefixed injective digest prevents collision. Changed request with same operation_id rejected with operation_collision_digest_mismatch.",
+    "N2_atomic_initialization": "RESOLVED: BEGIN IMMEDIATE ... COMMIT encompasses DDL and 5 meta entries with explicit rollback and commit_uncertain on commit/fsync failure.",
+    "N3_ancestor_symlink": "RESOLVED: Full ancestor chain validated via Unix.lstat; symlinks rejected with db_path_symlink.",
+    "N4_duplicate_read_set": "RESOLVED: has_dup_read_keys rejects duplicate keys with duplicate_read_set_key.",
+    "N5_unknown_json_fields": "RESOLVED: check_allowed_fields rejects unknown fields with unknown_json_field across commands and nested structures.",
+    "N6_commit_uncertainty": "RESOLVED: Explicit commit_uncertain error code and proven lookup_operation reconciliation."
+  },
+  "test_execution_summary": {
+    "total_assertions": 124,
+    "passed": 124,
+    "failed": 0,
+    "baseline_passed": 85,
+    "expanded_repairs_passed": 39,
+    "suites": [
+      { "suite": "1. Initialize New & Security Controls", "assertions": 14, "status": "PASS" },
+      { "suite": "2. Read Keys & Read Inbox Index", "assertions": 13, "status": "PASS" },
+      { "suite": "3. Apply Operations, CAS & Idempotency", "assertions": 14, "status": "PASS" },
+      { "suite": "4. Capacity & Reservation Accounting", "assertions": 3, "status": "PASS" },
+      { "suite": "5. Bounds, Values & Max 16x4096 Chunks", "assertions": 6, "status": "PASS" },
+      { "suite": "6. Advanced Integrity & Hardening", "assertions": 12, "status": "PASS" },
+      { "suite": "7. Redacted Error Codes & Framing", "assertions": 5, "status": "PASS" },
+      { "suite": "8. Binary Pipe Framing (telegram_store_main)", "assertions": 18, "status": "PASS" },
+      { "suite": "9. Injective Digest & Collision Resistance", "assertions": 7, "status": "PASS" },
+      { "suite": "10. Ancestor Path Confinement & Symlink Rejection", "assertions": 3, "status": "PASS" },
+      { "suite": "11. Duplicate Keys, Canonical Bot ID & Version/Hash Invariants", "assertions": 13, "status": "PASS" },
+      { "suite": "12. Strict JSON Schemas & Unknown Field Rejection", "assertions": 6, "status": "PASS" },
+      { "suite": "13. Commit Uncertainty & Reconciliation", "assertions": 10, "status": "PASS" },
+      { "suite": "14. Storage Capacity & Reservation Bounds", "assertions": 2, "status": "PASS" }
+    ]
+  },
+  "attempt_history_and_lease_deviation": {
+    "attempt_1": {
+      "status": "FAILED_PREFLIGHT_LEASE_EXPIRY",
+      "deviation_observed": "Units mismatch in sa-plan claim parameter: passed 7200 instead of 7200000000000 nanoseconds (2 hours = 7.2e12 ns). Lease expired immediately in microseconds.",
+      "remediation": "Identified lease expiry immediately, self-reclaimed attempt 1 via sa-plan, and quiesced. Confirmed zero source, filesystem, database, build, or process effects occurred during attempt 1.",
+      "source_effects": "NONE",
+      "db_effects": "NONE"
+    },
+    "attempt_2": {
+      "status": "VALID_ACTIVE_EXECUTION",
+      "lease_duration_ns": 7200000000000,
+      "lease_until_ns": "1791728950273301483",
+      "fencing": "Held exclusive task claim task:uos-telegram-runtime-NATIVE_REPAIR and canonical root workspace lease. All 6 bounded repairs, tests, and wire spec developed strictly under attempt 2."
+    }
+  },
+  "process_and_provenance_notes": {
+    "execution_harness": "cepaf_gleam@harness@development:bounded/3 under OTP 29 uos_env",
+    "tooling_truth": "Source edits were written via direct agent write tools (write_to_file, replace_file_content) and file inspections were performed via direct read/grep tools; compilations and test suite executions were mediated by OCaml dune under uos_env. ZERO Python executed."
+  }
+}
+
