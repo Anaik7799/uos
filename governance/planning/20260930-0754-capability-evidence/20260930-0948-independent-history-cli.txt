@@ -1,0 +1,50 @@
+Observed 2026-09-30T09:46:17Z
+CASE G-MIRAGE
+Evaluating UOS Gate: G-MIRAGE
+  [INVENTORY] G-MIRAGE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE remains unverified and unadmitted (file presence alone does not grant admission)
+EXIT 1
+CASE G-MIRAGE-MIGRATE
+Evaluating UOS Gate: G-MIRAGE-MIGRATE
+  [INVENTORY] G-MIRAGE-MIGRATE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-MIGRATE remains unverified and unadmitted (file presence alone does not grant admission)
+EXIT 1
+CASE G-MIRAGE-PROD
+Evaluating UOS Gate: G-MIRAGE-PROD
+  [INVENTORY] G-MIRAGE-PROD source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-PROD remains unverified and unadmitted (file presence alone does not grant admission)
+EXIT 1
+CASE mirage-migration
+Evaluating UOS Gate: mirage-migration
+  [INVENTORY] G-MIRAGE-MIGRATE source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-MIGRATE remains unverified and unadmitted (file presence alone does not grant admission)
+EXIT 1
+CASE mirage-prod
+Evaluating UOS Gate: mirage-prod
+  [INVENTORY] G-MIRAGE-PROD source, test, and document artifacts are present
+  [HOLD] Behavioral execution receipt unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt
+  [HOLD] Formal evidence unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result
+  [FAIL_CLOSED] G-MIRAGE-PROD remains unverified and unadmitted (file presence alone does not grant admission)
+EXIT 1
+======================== EUnit ========================
+module 'mirage_gates_truth_test'
+  mirage_gates_truth_test: mirage_core_inventory_is_complete_and_cli_returns_hold_exit_1_test...[0.005 s] ok
+  mirage_gates_truth_test: mirage_migration_inventory_is_complete_and_cli_returns_hold_exit_1_test...ok
+  mirage_gates_truth_test: mirage_prod_inventory_is_complete_and_cli_returns_hold_exit_1_test...ok
+  [done in 0.014 s]
+module 'exit_status_test'
+  exit_status_test: unknown_gate_returns_exit_code_1_test...ok
+  exit_status_test: known_gate_returns_exit_code_0_test...ok
+  exit_status_test: doctor_returns_exit_code_1_when_unverifiable_cycles_exist_test...[0.016 s] ok
+  exit_status_test: mirage_gates_fail_closed_without_behavioral_and_formal_evidence_test...[0.001 s] ok
+  [done in 0.029 s]
+=======================================================
+  All 7 tests passed.

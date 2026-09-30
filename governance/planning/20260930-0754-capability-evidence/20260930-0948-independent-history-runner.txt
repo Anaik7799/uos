@@ -1,0 +1,5 @@
+PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp
+RUNNER_SELFTEST_EXIT 0
+{"id":"should-pass","output_path":"/tmp/ev02-coll-0a476a/checks_test/20260930-1116-ev02-should-pass.out","output_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+02a713f76226c52a198adae80526740fc4d6057636326bc8dec49635db8ae7a7  /tmp/ev02-coll-0a476a/checks_test/20260930-1116-ev02-should-pass.out
+FINDING: stored file hash differs from claimed output_sha256 for silent command

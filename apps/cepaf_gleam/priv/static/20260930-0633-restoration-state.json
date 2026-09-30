@@ -1,41 +1,41 @@
 {
   "schema": "uos.restoration-dashboard.v1",
-  "updated_at": "2026-09-30T08:10:24.346Z",
+  "updated_at": "2026-09-30T09:54:00.759Z",
   "plan": "uos/capability-restoration/20260930-0734",
-  "overall": "CORE RESTORED · CANDIDATE AND AUTHORITY REVIEW",
+  "overall": "OPERATIONS STABLE · FINAL SOURCE RECONCILIATION",
   "goal_met": false,
   "as_is": [
     [
       "Cockpit",
-      "Managed cockpit ACTIVE and ENABLED, HTTP200, zero restarts on corrected immutable launcher."
+      "New immutable capsule active/enabled, HTTP200. Bounded zenoh_rest reachable; actual publication acknowledged."
     ],
     [
       "Coordinator",
-      "Recovered fresh epoch ACTIVE; digest, chain, typed replay and trigger checks PASS. New fenced leases acquired."
+      "Recovered canonical epoch passes digest, chain, typed replay and trigger checks; only final integration ownership remains held."
     ],
     [
       "Cycle ledger",
-      "Recovered canonical ledger ACTIVE;332 verified rows,all24 holds preserved,0releases; all original550 rows retained privately."
+      "332 verified rows,24 holds,0 releases; original550-row history retained privately."
     ],
     [
       "Ecology",
-      "New immutable ecology release LIVE on4110; realMAX26.5 inference, advancing cycles,0restarts."
+      "New capsule active/enabled; cycle2700 observed at09:23UTC, actual MAX26.5 graph and zero-cost OpenRouter receipt retained; PID292729 and0current-invocation restarts."
     ],
     [
       "Code integration",
-      "Restored baseline main9d905802 remains live; new capability and reclaim work is isolated pending final integration."
+      "All bookmarked and completed runtime recovery source is in main0131154f. Independent15-head historical audit identified verifier and Mirage gate repairs now undergoing testing."
     ],
     [
       "Google AGY",
-      "Default-model repair completed; actual Google AGY is now repairing shared free-cost/token and catalog guards under a fresh one-hour task lease."
+      "Actual Google AGY completed runtime capability repairs and is executing historical governance-tool hardening in an isolated workspace."
     ],
     [
       "Clock consumers",
-      "Both ACTIVE/ENABLED, healthy=true and fault_count=0 in fresh observations; Lamport floor316 preserved."
+      "Both active/enabled, healthy=true,fault_count0; Lamportfloor316 preserved."
     ],
     [
-      "Remaining capabilities",
-      "OpenRouter fixed free ID absent; cockpit native fallback unavailable. Repairs underway in isolated workspaces."
+      "Remaining limitations",
+      "Native NIF features/subscriptions unavailable. Free provider may rate-limit; initial429 preserved and one reviewed recovery succeeded. Global EV admission unchanged."
     ]
   ],
   "to_be": [
@@ -63,8 +63,8 @@
     {
       "id": "AGY_GUARD",
       "title": "Enforce free cost/token receipts and actual catalog prices",
-      "state": "executing",
-      "detail": "Independent adversarial review found pre-existing generic free-path gap; Google AGY implementing scoped fix."
+      "state": "completed",
+      "detail": "Google AGY frozen8823c08a independently accepted; zero-cost/token and live-price refusals pass."
     },
     {
       "id": "TRANSPORT",
@@ -75,26 +75,44 @@
     {
       "id": "INTEGRATE",
       "title": "Integrate sources and stage immutable release",
-      "state": "available",
-      "detail": "Waiting on final free guard repair."
+      "state": "completed",
+      "detail": "Frozen0131154f;695swarm45closure37webPASS; immutable5fdb0051 verified; real privateMAX and REST roundtrip observed."
     },
     {
       "id": "REVIEW",
       "title": "Independently review exact capability candidate and release evidence",
-      "state": "available",
-      "detail": "Waiting on canonical prerequisites."
+      "state": "completed",
+      "detail": "Exact source/capsule/config PASS; independent 34+69 packaged-runtime checks."
     },
     {
       "id": "RELEASE",
       "title": "Activate reviewed capability release and verify recovery",
-      "state": "available",
-      "detail": "Waiting on canonical prerequisites."
+      "state": "completed",
+      "detail": "Finite reviewed cutover verified; MAX and zero-cost free109/256tokens; cockpit REST ACK; four services enabled, old ecology disabled."
+    },
+    {
+      "id": "HISTORY_REPAIR",
+      "title": "Google AGY hardens missing verifier and truthful Mirage gates",
+      "state": "completed",
+      "detail": "Actual Google AGY completed attempt1; frozen08c44553,7OCaml suites and18focusedGleam tests reported. Independent review pending."
+    },
+    {
+      "id": "HISTORY_BIND",
+      "title": "Fix exact saved-output evidence hashing",
+      "state": "completed",
+      "detail": "Google AGY frozea7b939a6. Independent recheck confirms exact stored-byte digests for silent/nonempty commands; original failure retained."
+    },
+    {
+      "id": "HISTORY_REVIEW",
+      "title": "Independently verify historical source reconciliation",
+      "state": "executing",
+      "detail": "Independent source and CLI checks passed; one finding fixed and rechecked. Final canonical review receipt/task closure in progress."
     },
     {
       "id": "ACCEPT",
       "title": "Verify full operational scope, dashboard, main integration and lifecycle closure",
-      "state": "available",
-      "detail": "Waiting on canonical prerequisites."
+      "state": "executing",
+      "detail": "Live system accepted. Attempt2 freshly claimed through reviewed expiry recovery; final source merge and lifecycle/evidence closure await independent review."
     }
   ],
   "risks": [
@@ -119,36 +137,48 @@
     {
       "name": "Service starts different bytes than reviewed",
       "criticality": "P1 · high",
-      "status": "Managed cutover verified; old failed startup disabled",
+      "status": "New managed capsule cutover verified against exact dependencies and units",
       "mitigation": "Exact loaded control IDs, effective unit and environment hashes, immutable release verification, fresh task/runtime lease windows."
     },
     {
       "name": "Loss during branch reconciliation",
       "criticality": "P1 · high",
-      "status": "All bookmarked source ancestors integrated; originals retained",
+      "status": "All bookmarked source heads are ancestors of stabilized main0131154f",
       "mitigation": "Standalone JJ multi-parent integration and pre-restoration bookmark. Preserve current routes, stronger controls and historical evidence."
     },
     {
       "name": "Premature completion claim",
       "criticality": "P1 · high",
-      "status": "Bounded live acceptance verified; global admission explicitly excluded",
+      "status": "Independent live acceptance passed; lifecycle closure still pending",
       "mitigation": "Final acceptance requires live observations and reviewed candidate identity. Test counts do not grant admission."
     },
     {
       "name": "Unsafe capability shortcut",
       "criticality": "P1 · high",
-      "status": "Contained; implementation and design review underway",
+      "status": "Live bounded zero-cost advisory and REST verified",
       "mitigation": "No paid fallback or broad NIF activation; exact free pricing, bounded OTP transport, reviewed immutable release."
     },
     {
       "name": "Expired development task claim",
       "criticality": "P1 · high",
-      "status": "Contained: source frozen; integration/release held",
+      "status": "Recovered with independently reviewed exact reclaim mode",
       "mitigation": "Separately authorized narrow reclaim-preflight implementation; exact previous owner/attempt/deadline, independent review, fresh active check before further work."
+    },
+    {
+      "name": "External free-provider rate limit",
+      "criticality": "P2 · availability",
+      "status": "One explicit reviewed recovery succeeded; ongoing capacity remains external",
+      "mitigation": "Preserve failure, bounded cooldown and one independently reviewed explicit recovery; no paid fallback or false completion."
+    },
+    {
+      "name": "Historical experimental code mistaken for admitted work",
+      "criticality": "P1 · provenance",
+      "status": "Two actual source gaps identified; canonical repair/review tasks added",
+      "mitigation": "Compare rewrite counterparts and source changes; preserve historical HOLD evidence and stable runtime. Main inclusion does not grant EV admission."
     }
   ],
   "evidence": {
-    "swarm": 683,
+    "swarm": 695,
     "models": 242,
     "web": 37,
     "harness": 95,
@@ -160,15 +190,21 @@
     "cycle_candidate": "332 rows ·24 holds ·0 releases",
     "coordinator_candidate": "Activated fresh epoch; subsequent actual events pass integrity",
     "risk": "Raw FMEA S4 × O3 × Det3 =36; constrained priority score960.",
-    "main": "9d905802f2f42ee93dcadfe25ec65743307e0d5a",
-    "integration": "pvvonvlm, independently source-reviewed and merged",
+    "main": "0131154f1b02e78e4b5067476c9d75cac672a381",
+    "integration": "mnqxrsqp0131154f, independent source/capsule/live review; main advanced after stabilization",
     "strict_runtime_native": 30,
-    "release": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
+    "release": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
     "private_runtime": "OTP29 / ERTS17.0.5; MAX26.5; cockpit and dashboard HTTP200",
-    "residuals": "Resolving free advisory and bounded cockpit transport. Core recovery accepted; global system/EV admission not claimed.",
+    "residuals": "Native subscriptions unavailable; external free capacity variable; global EV/formal admission and visual/manual UI acceptance not claimed.",
     "reclaim_plan": "uos/claim-recovery/20260930-0758",
     "transport_tests": 34,
-    "reclaim_checker": "Independent source review PASS, exact AGY reclaim attempt2 and active-check PASS. Separate REPAIR task completed; journal10/10."
+    "reclaim_checker": "Independent source review PASS, exact AGY reclaim attempt2 and active-check PASS. Separate REPAIR task completed; journal10/10.",
+    "candidate": "0131154f1b02e78e4b5067476c9d75cac672a381",
+    "candidate_release": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+    "final_closure": 45,
+    "main_includes_candidate": true,
+    "summary": "Current candidate:695swarm,45focused closure,37web tests PASS; independent packaged-runtime34+69 PASS. Actual Google AGY reported96focused guard tests. Suites overlap; prior-baseline counts remain in prior_restoration.",
+    "historical_classification": "15 historical nonempty heads classified independently; two genuine source gaps assigned to HISTORY_REPAIR/REVIEW; no board replay or new EV admission."
   },
   "checks": [
     "CHK-01 TIME · synchronized host observed",
@@ -181,14 +217,14 @@
     "CHK-08 C1–C8 · scoped regression evidence; broad suite pending",
     "CHK-09 MATH · bounded oracle evidence; global proofs not claimed",
     "CHK-10 TEST MODES · unit/integration/negative controls observed",
-    "CHK-11 REGRESSION · scoped suites and activation PASS",
-    "CHK-12 GLEAM/OTP · typed control; live cutover PASS",
+    "CHK-11 REGRESSION · scoped candidate and managed runtime PASS",
+    "CHK-12 GLEAM/OTP · actual released OTP29 verified",
     "CHK-13 HERMES · canonical cycle oracle passes candidate",
     "CHK-14 ZIGVM · unchanged; broad kernel verification not claimed",
-    "CHK-15 MAX · real production inference observed",
+    "CHK-15 MAX · actual managed inference PASS",
     "CHK-16 OTEL · full propagation acceptance pending",
-    "CHK-17 SOVEREIGN · independent source/data/runtime reviews PASS",
-    "CHK-18 JUJUTSU · history preserved; main integration complete"
+    "CHK-17 SOVEREIGN · independent source/capsule/grants/live reviews PASS",
+    "CHK-18 JUJUTSU · stable reviewed code on main; closing evidence pending"
   ],
   "prior_restoration": {
     "plan": "uos/full-restoration/20260930-0515",

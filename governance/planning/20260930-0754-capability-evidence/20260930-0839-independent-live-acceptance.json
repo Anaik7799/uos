@@ -1,0 +1,189 @@
+{
+  "schema": "uos.capability-independent-live-acceptance.v1",
+  "status": "SCOPED_LIVE_ACCEPTANCE_PASS",
+  "reviewer": "codex-capability-review-20260930",
+  "observed_through_utc": "2026-09-30T08:39:49Z",
+  "plan": "uos/capability-restoration/20260930-0734",
+  "delegated_scope": "Independent observation and evidence under ACCEPT attempt 1; no task mutation or service action by reviewer.",
+  "source_revision": "0131154f1b02e78e4b5067476c9d75cac672a381",
+  "release": {
+    "path": "var/releases/ecology/20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+    "candidate_sha256": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+    "manifest_sha256": "1ec77d7c079b8e637fcd777d2ffa552bc61b8c244cc8c1a41c0c3009e23be1a7",
+    "source_sha256": "79ec668c955830a50b71c415f22fa1297efe01271eb6d59ced1fb05b26d5abd5",
+    "payload_sha256": "935bf0f0341fc478e47ef2dc18440d0f2f1a598c6d744ac9728486e6703f0df1",
+    "runtime_declared_source_manifest_sha1": "aecd4cd26ee703eb7f93eb14114256e4617ca9e2",
+    "runtime_identity_limit": "The declared 40-hex identifier is source-manifest SHA1, not the Jujutsu revision.",
+    "independent_verifier": "PASS"
+  },
+  "services": [
+    {
+      "unit": "uos-ecology@20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872.service",
+      "pid": 292729,
+      "invocation_id": "f904f1d21c26408f82b75985d9827de5",
+      "active": "active",
+      "substate": "running",
+      "enabled": true,
+      "restarts": 0,
+      "observed_health_cycles": [
+        51,
+        81,
+        177
+      ],
+      "otp": "29",
+      "erts": "17.0.5",
+      "identity_consistent": true
+    },
+    {
+      "unit": "c3i-gleam-server.service",
+      "pid": 293276,
+      "invocation_id": "f754337b1ea9410e9424160cbccb8e31",
+      "active": "active",
+      "substate": "running",
+      "enabled": true,
+      "restarts": 0
+    },
+    {
+      "unit": "uos-clock-guard@primary.service",
+      "pid": 224485,
+      "invocation_id": "883dfe7968da494b9751ff104889b3ec",
+      "active": "active",
+      "substate": "running",
+      "enabled": true,
+      "restarts": 0,
+      "observed_sequence": 186,
+      "observed_utc_us": 1790757463530953,
+      "healthy": true,
+      "fault_count": 0,
+      "lamport_floor": 316
+    },
+    {
+      "unit": "uos-clock-guard@backup.service",
+      "pid": 224803,
+      "invocation_id": "e2f7f102b08c4090ab56d75965f58604",
+      "active": "active",
+      "substate": "running",
+      "enabled": true,
+      "restarts": 0,
+      "observed_sequence": 186,
+      "observed_utc_us": 1790757473589830,
+      "healthy": true,
+      "fault_count": 0,
+      "lamport_floor": 316
+    }
+  ],
+  "old_ecology": {
+    "candidate_sha256": "0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748",
+    "observed_state": "inactive",
+    "enabled": false,
+    "preserved": true
+  },
+  "max": {
+    "status": "engaged",
+    "journal_invocation_id": "f904f1d21c26408f82b75985d9827de5",
+    "backend": "modular_max_graph",
+    "engine_version": "26.5.0",
+    "operation": "linear_softmax",
+    "probabilities": [
+      0.9820137619972229,
+      0.01798621006309986
+    ],
+    "elapsed_us": 965329,
+    "model_sha256": "24a10caa8a03efb2949c01b36ea0d644dff9cbc035934f31cb334357a5c70d8a"
+  },
+  "openrouter": {
+    "status": "engaged",
+    "requested_model": "openrouter/free",
+    "observed_model": "inclusionai/ling-3.0-flash-sante:free",
+    "provider": "Novita",
+    "prompt_tokens": 61,
+    "completion_tokens": 109,
+    "total_tokens": 170,
+    "max_tokens": 256,
+    "estimated_usd": 0,
+    "actual_usd": 0,
+    "reported_cost_usd": 0,
+    "elapsed_ms": 2334,
+    "timeout_ms": 12000,
+    "finish_reason": "stop",
+    "journal_invocation_id": "f904f1d21c26408f82b75985d9827de5",
+    "paid_fallback": false
+  },
+  "rest": {
+    "backend": "zenoh_rest",
+    "cockpit_startup": "Actual journal reports reachable backend and acknowledged status publication.",
+    "safe_query_key": "c3i/agui/events/recovery-capability-20260930/roundtrip",
+    "observed_payload": "bounded-rest-recovery-observed",
+    "encoding": "text/plain",
+    "subscriptions": "explicitly unsupported",
+    "http200": [
+      "http://nas-1.tail55d152.ts.net:4100/",
+      "http://nas-1.tail55d152.ts.net:4100/planning",
+      "http://nas-1.tail55d152.ts.net:4100/wiki",
+      "http://nas-1.tail55d152.ts.net:4100/zk",
+      "http://nas-1.tail55d152.ts.net:4100/static/20260930-0633-restoration-dashboard.html"
+    ]
+  },
+  "integrity": {
+    "coordinator": {
+      "events": 35,
+      "full_verification": true,
+      "defects": []
+    },
+    "cycles": {
+      "rows": 332,
+      "holds": 24,
+      "releases": 0,
+      "readonly_cryptographic_oracle": true
+    }
+  },
+  "tests": {
+    "independently_executed_against_packaged_production_modules": {
+      "rest_runtime_ecology_budget": 34,
+      "worker_and_route": 69
+    },
+    "test_harness_origin": "Existing development test BEAMs explicitly loaded; production modules exclusively from immutable capsule.",
+    "reported_logs_reviewed": {
+      "swarm": 695,
+      "web": 37
+    }
+  },
+  "preserved_counterevidence": [
+    {
+      "path": "governance/planning/20260930-0754-capability-evidence/managed-ecology-startup-first.log",
+      "sha256": "d035d1c95f3c2e588254bf41a57473af36a8d30e193206f878b20b13f48abc29",
+      "finding": "First managed OpenRouter request returned HTTP429. One separately reviewed retry followed local backoff; no provider Retry-After was observed."
+    },
+    {
+      "path": "governance/planning/20260930-0754-capability-evidence/managed-ecology-recovery.log",
+      "sha256": "e367dae2a58c916e6d30fe73b3602ebf652ef5092a176e407c379a927450427a",
+      "finding": "Successful reviewed retry; independently cross-checked against actual invocation journal."
+    },
+    {
+      "finding": "Current root-web build cepaf_gleam.app, indrajaal_gleam_web.app and uos_swarm.app have modules=[] while packaged versions retain recorded lists. Their08:18:53 mutation followed package staging and preceded a later Gleam test completion. All other source-manifest inputs matched; immutable capsule itself verified. Generator causality was not reproduced."
+    },
+    {
+      "finding": "Earlier expired AGY claim and TRANSPORT completion sequencing defect remain preserved; later valid authority is not retrospective clearance."
+    }
+  ],
+  "acceptance_conditions": [
+    "Main ancestry/clean-tree transition remains a separate observation.",
+    "Final worker lease release and typed retirement must occur after task completion; active parent heartbeat remains expected until then."
+  ],
+  "limits": [
+    "Bounded operational capability acceptance only; no EV or universal system admission.",
+    "Embedded native c3i_nif features and subscriptions remain unavailable.",
+    "HTTP publication acknowledgement alone does not prove persistence; exact owned test query provides separate storage evidence.",
+    "One successful free-provider response does not establish future availability, price stability, or long-duration reliability.",
+    "Current generated build-tree byte equality is not claimed; immutable capsule is the sole reviewed release input.",
+    "MAX full environment closure and global formal or cross-node failover guarantees are outside this scoped acceptance."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l2",
+    "#fractal-l4",
+    "#fractal-l8",
+    "#zero-muda"
+  ],
+  "application_admitted": false
+}

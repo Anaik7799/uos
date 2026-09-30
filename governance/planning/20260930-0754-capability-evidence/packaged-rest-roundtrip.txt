@@ -1,0 +1,5 @@
+Error! Failed to eval: code:add_paths(filelib:wildcard("apps/*/ebin")), {ok,_}=application:ensure_all_started(indrajaal_gleam_web), R='cepaf_gleam@zenoh@rest', K=<<"c3i/agui/events/recovery-capability-20260930/packaged-5fdb">>,P=<<"exact-packaged-rest-roundtrip">>,io:format("backend_open=~p~n",['cepaf_gleam@zenoh@client':open(<<"{}">>)]),io:format("publication=~p~n",[R:put(K,P)]),io:format("query=~p~n",[R:get(K)]),halt().
+
+Runtime terminating during boot ({{badmatch,{error,{1,erl_parse,["syntax error before: ","'<'"]}}},[{init,start_it,1,[]},{init,start_em,1,[]},{init,do_boot,3,[]}]})
+
+Crash dump is being written to: erl_crash.dump...

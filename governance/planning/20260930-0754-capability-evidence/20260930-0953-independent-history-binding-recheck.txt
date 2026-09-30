@@ -1,0 +1,12 @@
+PRIVATE_FIXTURE /tmp/uos-history-binding-review-1TJPOq
+OBSERVED 2026-09-30T09:52:41Z
+PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp/digest_receipt_alignment
+{"id":"silent-cmd","raw_empty":true,"output_path":"/tmp/uos-history-binding-review-1TJPOq/ev02-coll-31f6dd/digest_verify/20260930-1120-ev02-silent-cmd.out","output_sha256":"02a713f76226c52a198adae80526740fc4d6057636326bc8dec49635db8ae7a7"}
+{"id":"nonempty-cmd","raw_empty":false,"output_path":"/tmp/uos-history-binding-review-1TJPOq/ev02-coll-31f6dd/digest_verify/20260930-1120-ev02-nonempty-cmd.out","output_sha256":"81638f288c18aa3a6790381c2e69112081510b93005ead51bc7c963a6c10566b"}
+DIGEST_MATCH expected=02a713f76226c52a198adae80526740fc4d6057636326bc8dec49635db8ae7a7 actual=02a713f76226c52a198adae80526740fc4d6057636326bc8dec49635db8ae7a7 path=/tmp/uos-history-binding-review-1TJPOq/ev02-coll-31f6dd/digest_verify/20260930-1120-ev02-silent-cmd.out
+DIGEST_MATCH expected=81638f288c18aa3a6790381c2e69112081510b93005ead51bc7c963a6c10566b actual=81638f288c18aa3a6790381c2e69112081510b93005ead51bc7c963a6c10566b path=/tmp/uos-history-binding-review-1TJPOq/ev02-coll-31f6dd/digest_verify/20260930-1120-ev02-nonempty-cmd.out
+true
+The working copy has no changes.
+Working copy  (@) : wvvvqlzv 9f89cb46 (empty) (no description set)
+Parent commit (@-): tqpoqlss a7b939a6 fix(ev02): align stored_output with output_sha256 digest in run_checks
+6b5138b364bb04de863e4adc4d3a0ebd1431cf7200a669eae7d09115b89d3853  tools/ev02_governance/run_checks.ml

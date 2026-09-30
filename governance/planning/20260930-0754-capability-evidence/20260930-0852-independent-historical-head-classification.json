@@ -1,0 +1,358 @@
+{
+  "schema": "uos.independent-historical-head-classification.v1",
+  "observed_at": "2026-09-30T08:52:14Z",
+  "reviewer": "codex-capability-review-20260930",
+  "scope": {
+    "plan": "uos/capability-restoration/20260930-0734",
+    "delegation": "Read-only ancestry/source review and explicit evidence receipt under parent ACCEPT; no task, branch, runtime or board mutation",
+    "main_commit": "0131154f1b02e78e4b5067476c9d75cac672a381",
+    "authority": "ADVISORY_SOURCE_REVIEW_ONLY",
+    "admission": "NOT_GRANTED"
+  },
+  "clock": {
+    "reference": "NTP stratum 3, reference time 2026-09-30T08:42:26Z",
+    "system_offset_seconds": -0.000618323,
+    "last_offset_seconds": -0.000712798
+  },
+  "verdict": "CURRENT_RECOVERY_SOURCE_INTEGRATED_WITH_TWO_HISTORICAL_RECONCILIATIONS_REQUIRED",
+  "claims": {
+    "all_bookmarked_heads_ancestors_of_main": true,
+    "current_recovery_and_capability_source_missing": false,
+    "all_historical_source_bytes_integrated": false,
+    "historical_preservation_required": true
+  },
+  "method": [
+    "Jujutsu --ignore-working-copy log/diff/file show only; no Git",
+    "Compared historical heads against main, fork points where unique, and integrated counterparts",
+    "Compared SHA256 of source bytes to path history in ancestors(main)",
+    "Inspected historical explicit HOLD and NOT_GRANTED evidence; did not replay old commands"
+  ],
+  "classifications": [
+    {
+      "heads": [
+        "dd5b6f753e72",
+        "5f6b9a12e9dd",
+        "ff0ed665fdb8"
+      ],
+      "status": "SOURCE_EQUIVALENT_REWRITES",
+      "counterparts": [
+        "3c13ba3b3e21",
+        "0a8c03c55f91",
+        "805b8667bfdf"
+      ],
+      "evidence": "Each historical head has the same change ID as its integrated counterpart; tools/ diff empty between each pair. Historical receipt additions are retained separately.",
+      "paths": [
+        "tools/bootstrap/",
+        "tools/test_ev01_bootstrap.ml",
+        "tools/test_ev01_bootstrap_cwd.ml",
+        "tools/uos/src/main.gleam"
+      ]
+    },
+    {
+      "heads": [
+        "0e75c0ffe417"
+      ],
+      "status": "HISTORICAL_SNAPSHOT_NO_NOVEL_SOURCE",
+      "comparison_ancestor": "888b0df29e68d5e1051545f19d27175d9319db79",
+      "unique_paths_against_comparison": 0,
+      "modified_paths_against_comparison": 22,
+      "source_build_test_modified_paths": 17,
+      "all_17_match_exact_main_ancestor_bytes": true,
+      "evidence": "Root-like 8211-file addition is a full old snapshot, not 8211 novel files. Remaining differences include historical policy/docs and a tracked SQLite file; no runtime database ingestion authorized."
+    },
+    {
+      "heads": [
+        "0b23ec6b46c8"
+      ],
+      "status": "SUPERSEDED_DEVELOPMENT_IMPLEMENTATION",
+      "paths": [
+        "tools/release_process.ml",
+        "tools/unification_cycles.ml",
+        "tools/unification_cycles.mojo"
+      ],
+      "evidence": "release_process.ml exactly matches integrated ancestor9bbc5217a740. Integrated unification_cycles replaces fixed /tmp checker and raw mirrors with source-bound checker, typed real API validation, exact byte/hash envelopes, receipt verification and lossless reconciliation. Mojo differences are equivalent syntax/diagnostics. No old effect command executed."
+    },
+    {
+      "heads": [
+        "6968cb2bbb37"
+      ],
+      "status": "MOSTLY_SUPERSEDED_WITH_LOST_FAIL_CLOSED_GATE_SEMANTICS",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+        "tools/uos/src/main.gleam"
+      ],
+      "evidence": "Receipt API retained; service decoder differs from integrated a1e700517dbf only by terminal blank line. Current native probe supersedes old implementation with pinned paths, monotonic deadlines, process-group handling and receipt validation. Current selfcheck commands execute suites. However three named gates still claim verified from file existence, whereas historical source refused without behavioral/formal evidence."
+    },
+    {
+      "heads": [
+        "57b5579be297",
+        "0bfe5cb47dfd",
+        "e623b584b356",
+        "8d0b9d340ec3",
+        "09f7620f0a9a"
+      ],
+      "status": "UNIQUE_MISSING_DEVELOPMENT_TOOLS_AND_HELD_EVIDENCE",
+      "latest_source": "e843465721bce2a1a6b6258c8fff58bc26865abe",
+      "paths": [
+        "tools/ev02_governance/directive_mapping_gate.ml",
+        "tools/ev02_governance/policy_surface_gate.ml",
+        "tools/ev02_governance/run_checks.ml",
+        "tools/ev02_governance/write_evidence.ml",
+        "tools/ev02_governance/write_manifest.ml",
+        "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+      ],
+      "source_hashes": {
+        "directive_mapping_gate_ml": "3978822f8fd27070a7816db1c2916625118b3798e2d5ddb0fd62f737db537c7d",
+        "policy_surface_gate_ml": "3259b22365936320d65aa89a2b32010de3baac0132a93fa06a765b8a03a30768"
+      },
+      "evidence_path_at_head": "docs/reviews/20260909-1902-ev02-governance-directory-bound-evidence.json",
+      "evidence_status": {
+        "authority": "REPORT_ONLY",
+        "admission": "NOT_GRANTED",
+        "historical_lineage": "MISSING_HISTORICAL_LINEAGE"
+      },
+      "evidence_holds": [
+        "DIR-AUTH-001 and DIR-TOOL-001 normalized body differences",
+        "Current amendment is not independent semantic review",
+        "Historical design/implementation lineage missing",
+        "Historical KM entropy HOLD remains historical evidence"
+      ],
+      "recommendation": "Adapt and test development tools while preserving original source/evidence and all nonadmission semantics. An expected observation HOLD alone does not prohibit development-source integration. Do not execute old evidence writers."
+    },
+    {
+      "heads": [
+        "d2350ecb6eb2"
+      ],
+      "status": "HISTORICAL_EV01_EVIDENCE",
+      "evidence": "Tip changes documentation/evidence only; no unique active code."
+    },
+    {
+      "heads": [
+        "5486a9816784"
+      ],
+      "status": "MANUAL_TEST_EVIDENCE_ALREADY_PRESENT",
+      "evidence": "tests/evidence/20260908-1234-manual-ui-testing tree is byte-identical to main; tip adds evidence/docs, no unique implementation."
+    },
+    {
+      "heads": [
+        "fb945a48b815",
+        "501fdbffc908"
+      ],
+      "status": "TELEMETRY_SOURCE_INTEGRATED_DIFFERENT_HISTORICAL_RECEIPTS",
+      "integrated_source": "a5fae5a56069",
+      "integration_chain": [
+        "42e1994dbc89",
+        "8180c7360837"
+      ],
+      "evidence": "Merge-tip differences are historical decision/effect evidence;501f includes old swarm-board.jsonl differences. Preserve records, do not replay or overwrite live board bytes."
+    },
+    {
+      "paths": [
+        "tools/km_provenance/km_layers.ml"
+      ],
+      "status": "INTENTIONALLY_REMOVED_SUPERSEDED",
+      "integrated_removal": "f752d3c9afe2",
+      "evidence": "Historical deletion records independent reviews, canonical taxonomy single-sourcing and removal of discredited authoring-order entropy proposal; do not reintroduce as missing functionality."
+    },
+    {
+      "paths": [
+        "apps/cepaf_gleam/priv/static/tui_evolution/player.html"
+      ],
+      "status": "SUPERSEDED_HISTORICAL_PLAYER",
+      "replacement": "apps/cepaf_gleam/priv/static/tui_evolution_player.html",
+      "evidence": "Current top-level player retains player behavior with expanded30s media; old nested page carries historical verification claims. No visual browser or fresh media verification claimed."
+    }
+  ],
+  "repair_findings": [
+    {
+      "severity": "P1",
+      "path": "tools/uos/src/main.gleam",
+      "lines": [
+        1649,
+        1710
+      ],
+      "finding": "G-MIRAGE, G-MIRAGE-MIGRATE and G-MIRAGE-PROD return PASS/verified solely from file_exists. Reconcile historical fail-closed semantics or explicitly bounded candidate-bound suite evidence; source presence cannot establish verification/admission."
+    },
+    {
+      "severity": "P1",
+      "historical_path": "tools/ev02_governance/run_checks.ml",
+      "finding": "Hardcoded historical workspace and output timestamps; open_out overwrites evidence; one Unix.read can truncate output; waitpid has no deadline; row control_pass false does not fail final process. Must adapt before execution."
+    },
+    {
+      "severity": "P1",
+      "historical_paths": [
+        "tools/ev02_governance/write_evidence.ml",
+        "tools/ev02_governance/write_manifest.ml"
+      ],
+      "finding": "Fixed old workspace/evidence paths and open_out overwrite immutable history; write_evidence also hardcodes old revision and authority receipts. Keep originals inert and replace with explicit bounded inputs and exclusive new output."
+    },
+    {
+      "severity": "P2",
+      "historical_path": "tools/ev02_governance/policy_surface_gate.ml",
+      "finding": "Sys.readdir allocates unbounded inventory; open_in follows symlinks; directive scan/aggregate read budget not bounded like mapping verifier. Harden before representing observation as bounded."
+    }
+  ],
+  "root_snapshot_exact_source_matches": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+      "sha": "600efce913f85f8caf2883944f6b1326a6873bc5f49ae8fc438e0b436223cd98",
+      "ancestorIdentical": "aef028b715a2f876d5027a0a81070d24b0d652f9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/sysadmin_cockpit.gleam",
+      "sha": "7d0383a22374304f4be3d454583cca7ed2fe2d5afa2880b990407e6eecf60efc",
+      "ancestorIdentical": "49fd344719fb4b862799716250d7d9ec4ad820c6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+      "sha": "fe9fe26cd3c361b21c144c45472126bcef1665c5399e1bcdf0607642f7e9178f",
+      "ancestorIdentical": "1f20c137f43770b2e3aab3c70f98cbbda14632cc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam",
+      "sha": "7442614e6e55c50ecd8eb35044e497926ed14813e080ba67ef9f17db38ba72fb",
+      "ancestorIdentical": "a1d3c623223f9f3429cdfb58ff7fc53b4f1373ea"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha": "c2a69f222968575ecade5d1b1d57211585b7be0f58ad087b8dea577ea4258ca1",
+      "ancestorIdentical": "1f20c137f43770b2e3aab3c70f98cbbda14632cc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "sha": "ead8d3ba252e6776e4253c8d5db29bf9bb3ba674bdb9ba1c450cd2a0c4b853a8",
+      "ancestorIdentical": "fde2e2f484bf993180c6f3723b85f3b42ee7cb9d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+      "sha": "110edc2a099b67cbdbbb8ce0a0c79b58eeb010c1b2f1bc6dcd3b3dc173655128",
+      "ancestorIdentical": "ddb3138d37154e7dddd095c1eabb32eb36ba3a13"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/agui_sse_api_test.gleam",
+      "sha": "e7f694a31b2ae0bed177364eb76e763d4d93b173b55ea5875d9e6986f57efb96",
+      "ancestorIdentical": "1f20c137f43770b2e3aab3c70f98cbbda14632cc"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/sysadmin_tui_test.gleam",
+      "sha": "c8d2cd7e68a2a7861484d7fd8dcf1d08c2fbd5979c468f19ab2d455f46727c26",
+      "ancestorIdentical": "49fd344719fb4b862799716250d7d9ec4ad820c6"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "sha": "6dd74e0e223658877abe259534359759eddab496b209e5ec79aff57247acde02",
+      "ancestorIdentical": "dc12e5314369363c5dfbac845a7a7298f20ac2c8"
+    },
+    {
+      "path": "apps/uos_swarm/gleam.toml",
+      "sha": "8322ba32079f802fc6ed0e771fa160575e5182c450c00ab995f5648e7b1753d5",
+      "ancestorIdentical": "3644224ce7d7f04cfe40e21b3d33f07865d898af"
+    },
+    {
+      "path": "apps/uos_swarm/manifest.toml",
+      "sha": "bd42a4d99497bffddc213b6a48b0e0f35a628c1935555357277648dff1742e27",
+      "ancestorIdentical": "3644224ce7d7f04cfe40e21b3d33f07865d898af"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+      "sha": "ba43afda772409cfaf90eec090327df7f7cadd66cd112ae8b73901834fcdbeb2",
+      "ancestorIdentical": "1c69804b45f13af549f0070a711ed089cee8a418"
+    },
+    {
+      "path": "engines/hermes/modules/system_engg/dune",
+      "sha": "42f18422aea415ff5f403efbdb8167f73a7dab0abc8009c27e9a924a1ea5a13d",
+      "ancestorIdentical": "c7173316b8b79794b558b31a19ecf66ceac7b686"
+    },
+    {
+      "path": "tools/tui",
+      "sha": "901eef659bf363132d2e3fa48a6a496e575f0204d0173d444722e9db9c586372",
+      "ancestorIdentical": "49fd344719fb4b862799716250d7d9ec4ad820c6"
+    },
+    {
+      "path": "tools/uos/src/main.gleam",
+      "sha": "42e9215278c4e5874742ad99ce44b7fbd2c438391bf5c712ede07df81fc4a987",
+      "ancestorIdentical": "1f20c137f43770b2e3aab3c70f98cbbda14632cc"
+    },
+    {
+      "path": "tools/uos/test/gate_verdict_test.gleam",
+      "sha": "a794e92f6d030957b006b57c904a5b8cee90afe8b879953890621078be14f2ca",
+      "ancestorIdentical": "1f20c137f43770b2e3aab3c70f98cbbda14632cc"
+    }
+  ],
+  "selected_source_hash_comparisons": [
+    {
+      "target": "0b23ec6b46c8",
+      "path": "tools/release_process.ml",
+      "sha": "ec3e755a50aedb7aca15bbb3be9fdd9169ff17c3669365fb928cefc6a884bf6e",
+      "ancestorIdentical": "9bbc5217a740ff03791d68c11913c0cc1823ff4b"
+    },
+    {
+      "target": "0b23ec6b46c8",
+      "path": "tools/unification_cycles.ml",
+      "sha": "f50ca638d5001079d23bfa05c3b61a338bc3c0f057ed40f2bf878b4be9717c3a",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "0b23ec6b46c8",
+      "path": "tools/unification_cycles.mojo",
+      "sha": "ba36b60558b3568811db1bb56f2f9665bf950ecfca8698eff1bf640661cb5c22",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam",
+      "sha": "402473064834703fba8761b8bd2d29ce6a7a0eecd6065db7d1ce49b7b860faf1",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam",
+      "sha": "add194350a5a16c0aa83a03138b5e83b9a141d18351fb5c6f6e86352413d3243",
+      "ancestorIdentical": "a1e700517dbff56f05a88baad9ebce89c1d6f4a2"
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "apps/cepaf_gleam/test/mirage_hypervisor_test.gleam",
+      "sha": "e5a920d36c38f5a756617adc470dc104a4ee82a3021102beabcd26ba2d468392",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "sha": "c328c1ab06f1c328a85f82f5e2c31747a4056634275ca612bed99965dff6baf1",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.mli",
+      "sha": "6c3e62fee8055fc2bb1edfbae5d1b7abad816835c33edca9228035d35c7bb9a3",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml",
+      "sha": "2359a2e74945f4c77f1620482eb3a5f5d25042d286769bde06f35f7f1db808f3",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "tools/uos/src/main.gleam",
+      "sha": "a0db28ed1699874fa7911252954155fd3345b590e0b770ea79511bd823b8e919",
+      "ancestorIdentical": null
+    },
+    {
+      "target": "6968cb2bbb37",
+      "path": "tools/uos/src/uos_ffi.erl",
+      "sha": "d5694be42089e91ce2edf0ec3ce32aee3518e8b3ce2181a7a41263e9ab87a5f6",
+      "ancestorIdentical": "a1e700517dbff56f05a88baad9ebce89c1d6f4a2"
+    }
+  ],
+  "limits": [
+    "No broad historical capability or EV admission",
+    "No production change, paid provider request, task mutation, source edit, branch mutation or old helper execution",
+    "Raw historical snapshots and receipts remain preserved; this receipt does not authorize merging live DB/board files",
+    "Subsequent HISTORY_REPAIR and HISTORY_REVIEW candidate acceptance remains pending"
+  ]
+}

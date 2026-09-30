@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+  "payload_sha256": "935bf0f0341fc478e47ef2dc18440d0f2f1a598c6d744ac9728486e6703f0df1",
+  "application_admitted": false
+}
+🚀 CEPAF Gleam Orchestrator - Unified Swarm Execution
+=====================================================
+  [otel] Boot span export failed: OTel export failed: econnrefused
+  [agents] Starting 3-layer autonomous hierarchy...
+  [sup] Starting root OTP supervisor with homeostasis engine...
+Usage: sa-plan [status|list|start|complete|sync|add|delete|dispatch|update|up|down|mesh-status|restart-node]
+🏢 FETCHING CONTAINER STATUS:
+  - c3i-zenoh-router-1 (docker.io/eclipse/zenoh:latest) [Up 6 hours]
+  - c3i-docs-server (docker.io/library/busybox:latest) [Up 6 hours]
+💊 RUNNING SIL-6 HEALTH VERIFICATION:
+  Healthy Containers: 2/2
+📡 ZENOH IPC INTEGRATION:
+  [zenoh] Reachable backend: zenoh_rest
+  [zenoh] Status publication acknowledged by REST endpoint
+  [zenoh] Native subscriptions unavailable; REST publication/query only
+🌐 STARTING HTTP SERVER MODE (port 4100)...
+  Gleam HTTP+WS on 0.0.0.0:4100
+[C3I] Starting OTP application...
+[C3I] ETS cache initialised
+[c3i_nif] NIF load failed: {load_failed,
+                               "Failed to load NIF library: '/home/an/NAS-setup/uos/var/releases/ecology/20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872/apps/cepaf_gleam/priv/c3i_nif.so: cannot open shared object file: No such file or directory'"} (path: /home/an/NAS-setup/uos/var/releases/ecology/20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872/apps/cepaf_gleam/priv/c3i_nif)
+[FRESHNESS-ACTOR] Initialised — level=fresh
+[C3I] Freshness actor initialised (10 s cycle)
+[C3I] Self-observer actor initialised (60 s cycle)
+[GUARD-GRID-ACTOR] Initialised — running first OODA tick
+[GUARD-GRID] HOT RELOAD triggered [health=1.0 entropy=0.0 lyapunov=-3.7325645892450052 cascade=false]
+[C3I] Guard grid OODA actor initialised (10 s cycle)
+[C3I] Sentinel patrol initialised (35 pages)
+[C3I] Endocrine system initialised (7 hormones)
+[C3I] Immune learning initialised (antibody synthesis)
+[C3I] Health derivative tracker initialised (d(H)/dt)
+[C3I] Request guard initialised (threshold: 0.3)
+[C3I] Failure classifier ready (Poisson/Bursty/Periodic)
+[C3I] Zenoh federation initialised (Tailnet mesh: nas-1 <-> vm-1)
+[C3I] CRDT version vector initialised (c3i-primary)
+[C3I] IEC 61508 evidence loaded (coverage: 86%)
+[C3I] Claude metrics initialised (session: gleam-1790757444989)
+[C3I] 3D Fractal Triad Matrix & Claude Sovereign Verification published to ETS and Zenoh
+[C3I] All subsystems started. System is ALIVE.
+  OTP actors started (freshness monitor, observer, guard grid)
+Listening on http://0.0.0.0:4100
+  HTTP server running on http://0.0.0.0:4100
+Listening on https://0.0.0.0:4101
+  HTTPS server running on https://0.0.0.0:4101
+  Both HTTP (:4100) and HTTPS (:4101) available

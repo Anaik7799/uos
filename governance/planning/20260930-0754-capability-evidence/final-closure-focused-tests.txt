@@ -1,0 +1,58 @@
+======================== EUnit ========================
+module 'zenoh_rest_test'
+  zenoh_rest_test: exact_text_reply_test...[0.009 s] ok
+  zenoh_rest_test: json_reply_is_serialized_as_payload_test...ok
+  zenoh_rest_test: missing_reply_is_not_query_success_test...ok
+  zenoh_rest_test: wrong_key_is_not_query_success_test...ok
+  zenoh_rest_test: malformed_or_incomplete_envelope_rejected_test...ok
+  zenoh_rest_test: unknown_encoding_rejected_test...ok
+  zenoh_rest_test: duplicate_reply_rejected_test...ok
+  zenoh_rest_test: text_value_type_checked_test...ok
+  zenoh_rest_test: path_injection_and_wildcards_rejected_before_network_test...[0.013 s] ok
+  zenoh_rest_test: arbitrary_native_or_remote_config_rejected_before_network_test...ok
+  zenoh_rest_test: redirects_and_publication_failures_never_pass_test...ok
+  [done in 0.055 s]
+module 'restoration_runtime_test'
+  restoration_runtime_test: arbitrary_effects_are_refused_test...[0.001 s] ok
+  restoration_runtime_test: release_instance_path_injection_is_refused_test...[0.001 s] ok
+  restoration_runtime_test: service_authority_is_separated_by_resource_test...ok
+  restoration_runtime_test: missing_private_review_cannot_execute_test...[0.001 s] ok
+  restoration_runtime_test: runtime_control_set_must_match_exactly_test...ok
+  restoration_runtime_test: authority_window_covers_effect_and_cleanup_test...ok
+  restoration_runtime_test: capability_workflow_is_exact_and_prior_completed_plan_is_refused_test...ok
+  [done in 0.024 s]
+module 'ecology_external_capabilities_test'
+  ecology_external_capabilities_test: missing_key_is_unavailable_test...[0.001 s] ok
+  ecology_external_capabilities_test: free_receipt_is_actual_reply_test...[0.001 s] ok
+  ecology_external_capabilities_test: price_increase_is_refused_test...ok
+  ecology_external_capabilities_test: provider_charge_is_refused_test...ok
+  ecology_external_capabilities_test: invalid_or_oversized_request_is_refused_test...ok
+  ecology_external_capabilities_test: malformed_success_does_not_earn_capability_credit_test...ok
+  ecology_external_capabilities_test: unknown_completion_price_refuses_before_dispatch_test...ok
+  ecology_external_capabilities_test: disappeared_model_refuses_before_dispatch_test...ok
+  ecology_external_capabilities_test: capability_port_openrouter_free_default_input_test...ok
+  ecology_external_capabilities_test: paid_fallback_under_free_policy_is_refused_test...ok
+  [done in 0.032 s]
+module 'ecology_daily_budget_test'
+  ecology_daily_budget_test: worst_provider_and_maximum_request_fit_fixed_reservation_test...ok
+  ecology_daily_budget_test: provider_ceilings_are_exact_and_free_route_is_separate_test...ok
+  ecology_daily_budget_test: live_price_must_be_nonnegative_within_provider_ceiling_and_no_fee_test...ok
+  ecology_daily_budget_test: byte_count_is_utf8_and_caller_cannot_assert_smaller_size_test...[0.001 s] ok
+  ecology_daily_budget_test: invalid_identity_token_and_body_bounds_reject_test...[0.002 s] ok
+  ecology_daily_budget_test: usage_outside_original_admission_rejects_without_refund_test...ok
+  [done in 0.021 s]
+module 'capability_port_test'
+  capability_port_test: every_capability_has_a_backend_test...ok
+  capability_port_test: unknown_capability_is_rejected_test...ok
+  capability_port_test: masked_capability_does_not_touch_backend_test...[0.001 s] ok
+  capability_port_test: reflex_keeps_its_own_capabilities_test...ok
+  capability_port_test: bayesian_computes_real_posterior_test...[0.001 s] ok
+  capability_port_test: capability_is_input_sensitive_test...ok
+  capability_port_test: ruliad_width_tracks_input_test...ok
+  capability_port_test: outcomes_are_total_test...[0.139 s] ok
+  capability_port_test: credential_presence_is_not_an_answer_test...ok
+  capability_port_test: stm_compare_exchange_updates_and_rejects_stale_writer_test...ok
+  capability_port_test: stm_rejects_unconditional_store_mutations_test...ok
+  [done in 0.174 s]
+=======================================================
+  All 45 tests passed.

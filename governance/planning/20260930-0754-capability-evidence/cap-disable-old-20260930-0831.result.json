@@ -1,0 +1,1 @@
+{"schema":"uos.restoration-runtime-result.v1","intent":"cap-disable-old-20260930-0831","action":"disable_old_ecology","ok":true,"result":"Removed '/home/an/.config/systemd/user/default.target.wants/uos-ecology@20260930-0608-0bc78194a7487b0702381c7b982feae21a831579f6da2f24b06f48d13e7e8748.service'.\n"}

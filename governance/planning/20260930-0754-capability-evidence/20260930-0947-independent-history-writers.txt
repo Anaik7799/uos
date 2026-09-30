@@ -1,0 +1,41 @@
+PRIVATE_FIXTURE /tmp/uos-history-review-FDOJJx
+Wrote manifest: /tmp/uos-history-review-FDOJJx/out/20260930-0947-ev02-governance-manifest.json
+CASE collision EXIT 2
+Exception:
+Failure
+ "output-collision:/tmp/uos-history-review-FDOJJx/out/20260930-0947-ev02-governance-manifest.json".
+CASE traversal EXIT 2
+Exception: Failure "invalid-path:traversal-forbidden:../input.json".
+CASE symlink EXIT 2
+Exception:
+Failure
+ "symlink-component-forbidden:/tmp/uos-history-review-FDOJJx/link.json".
+CASE outsymlink EXIT 2
+Exception:
+Failure
+ "symlink-in-output-dir-forbidden:/tmp/uos-history-review-FDOJJx/out-link".
+CASE timestamp EXIT 2
+Exception: Failure "invalid timestamp format: must be YYYYMMDD-HHSS-".
+Wrote evidence binding: /tmp/uos-history-review-FDOJJx/out/20260930-0947-ev02-governance-evidence-binding.json
+CASE evcollision EXIT 2
+Exception:
+Failure
+ "output-collision:/tmp/uos-history-review-FDOJJx/out/20260930-0947-ev02-governance-evidence-binding.json".
+CASE evtraversal EXIT 2
+Exception: Failure "invalid-path:traversal-forbidden:../input.json".
+CASE evsymlink EXIT 2
+Exception:
+Failure
+ "symlink-component-forbidden:/tmp/uos-history-review-FDOJJx/link.json".
+CASE evoutsymlink EXIT 2
+Exception:
+Failure
+ "symlink-in-output-dir-forbidden:/tmp/uos-history-review-FDOJJx/out-link".
+CASE policy_surface_gate EXIT 1
+{"schema":"uos.ev02-policy-surface/v1","authority":"REPORT_ONLY","admission":"NOT_GRANTED","status":"HOLD","errors":["invalid-input:rule-symlink-forbidden:/home/an/NAS-setup/uos/.uos-workspaces/agy-history-reconciliation-20260930/.agents/rules/20260907-1559-risk-prioritization-sop.md"]}
+true
+CASE directive_mapping_gate EXIT 1
+{"schema":"uos.ev02-directive-mapping/v1","authority":"REPORT_ONLY","admission":"NOT_GRANTED","status":"HOLD","errors":["invalid-input:rule-symlink-forbidden:/home/an/NAS-setup/uos/.uos-workspaces/agy-history-reconciliation-20260930/.agents/rules/20260907-1559-risk-prioritization-sop.md"]}
+true
+true
+PASS actual writer CLI rejection, exact collision preservation, parser-valid HOLD observations

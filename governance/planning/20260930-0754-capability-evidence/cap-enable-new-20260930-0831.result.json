@@ -1,0 +1,1 @@
+{"schema":"uos.restoration-runtime-result.v1","intent":"cap-enable-new-20260930-0831","action":"enable_ecology","ok":true,"result":"Created symlink '/home/an/.config/systemd/user/default.target.wants/uos-ecology@20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872.service' → '/home/an/.config/systemd/user/uos-ecology@.service'.\n"}

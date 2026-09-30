@@ -1,0 +1,3 @@
+backend_open={ok,rest_session}
+publication={ok,nil}
+query={ok,<<"exact-packaged-rest-roundtrip">>}

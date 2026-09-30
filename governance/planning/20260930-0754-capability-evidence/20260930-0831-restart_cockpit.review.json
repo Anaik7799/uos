@@ -1,0 +1,25 @@
+{
+  "schema": "uos.restoration-runtime-review.v1",
+  "verdict": "PASS",
+  "reviewer": "codex-capability-review-20260930",
+  "grant_sha256": "7bd659fdf7b3e7cc7990a515185458c4c99e108e728d0e88e696971ec49d93fc",
+  "scope": "Only exact restart_cockpit action in reviewed 0831 grant, within the staged cutover sequence.",
+  "resource": "runtime:cockpit",
+  "required_epoch": 2,
+  "required_release_attempt": 1,
+  "candidate_sha256": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+  "checks": [
+    "Actual loaded controls equal all grant control_ids",
+    "All required dependencies including immutable manifest and installed environment match",
+    "Exact effective unit hashes match; NeedDaemonReload=no for old/new ecology and cockpit",
+    "Independent full immutable capsule verification PASS"
+  ],
+  "conditions": [
+    "All effect-time task/resource/clock/expiry checks must pass through the reviewed controller",
+    "Stop old then start new; observe actual MAX, zero-cost bounded OpenRouter reply and health before proceeding to cockpit restart",
+    "Enable new ecology and disable old ecology only after successful managed health/capability observations; preserve failed outcomes and do not blindly retry",
+    "Retain prior capsule/configuration and exclusive started/result receipts; clocks remain on existing verified capsule",
+    "This receipt is action-scoped and does not establish successful startup, capability acceptance or system admission"
+  ],
+  "application_admitted": false
+}

@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "scope": "Actual production JavaScript/current snapshot with minimal DOM/fetch adapters",
+  "main": "Integrated",
+  "progress": "7 / 8",
+  "task_rows": 8,
+  "risk_rows": 9,
+  "limits": "Not browser layout or visual acceptance. Initial smoke assertion incorrectly searched literal mitigation in rendered values; corrected to validate all risk rows.",
+  "prior_bug": "Missing MERGE task dereference threw before rendering current capability plan; use explicit main_includes_candidate with safe legacy task fallback."
+}

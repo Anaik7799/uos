@@ -1,0 +1,4 @@
+  Compiling uos_swarm
+  Compiling cepaf_gleam
+  Compiling indrajaal_gleam_web
+   Compiled in 3.56s

@@ -1,0 +1,29 @@
+=== START VERIFICATION: 2026-09-30T09:50:39Z ===
+=== 1. OCaml Selftests (7 suites) ===
+PASS policy-surface selftest: mapping/missing/directive-count/divergence/json-encoding
+PASS policy-surface fixture selftest: valid/symlink-file/symlink-dir/oversize/non-regular/metadata
+PASS directive-mapping selftest: normalization/duplicate/set/anchor
+PASS directive-mapping fixture selftest: valid/duplicate/unknown/traversal/symlink/missing/budget/nonreg/oversize/entry-limit/metadata
+PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp/digest_receipt_alignment
+PASS write_manifest selftest: bounded_regular/traversal/absolute/symlink/symlink_dir/symlink_out_dir/oversize/count_limit/timestamp/zero_progress/collision/cli_exit
+PASS write_evidence selftest: bounded_regular/traversal/absolute/symlink/symlink_dir/symlink_out_dir/oversize/timestamp/collision/cli_exit
+=== 2. Gate Observations on Workspace ===
+{"schema":"uos.ev02-policy-surface/v1","authority":"REPORT_ONLY","admission":"NOT_GRANTED","status":"HOLD","errors":["invalid-input:rule-symlink-forbidden:./.agents/rules/20260907-1559-risk-prioritization-sop.md"]}
+policy_surface_gate exited 1 (expected 1 HOLD)
+{"schema":"uos.ev02-directive-mapping/v1","authority":"REPORT_ONLY","admission":"NOT_GRANTED","status":"HOLD","errors":["invalid-input:missing-or-unreadable:governance/amendments/20260905-1815-ev02-governance-consolidation-amendment.md"]}
+directive_mapping_gate exited 1 (expected 1 HOLD)
+=== 3. Safe Runner End-to-End & Receipt Hash Verification ===
+VERIFIED row policy-selftest: raw_empty=False, bytes=532, sha=3dad6c41714aac20e67d719110dce01da06ff6530d40d8306f5999994e2b7c01
+VERIFIED row policy-fixture-selftest: raw_empty=False, bytes=544, sha=22c628e4b4cc5ce41c4443d16f72993b1b222bcbd6c463ddafbd396b70f92662
+VERIFIED row policy-observation: raw_empty=False, bytes=660, sha=a6ef7afe8090439b7def10b45166fd60e6a838be08dba06647fb9be37b5307cc
+VERIFIED row mapping-selftest: raw_empty=False, bytes=516, sha=9ce55470cae5c92fa67f00f3d50af2c8a120911ef32cf550d5b23b0831a7188c
+VERIFIED row mapping-fixture-selftest: raw_empty=False, bytes=583, sha=65b7e5b3bd0bb3b09efdbf4ab4682aeb151a253861a19948399fe2231f1d87cf
+VERIFIED row mapping-observation: raw_empty=False, bytes=666, sha=248d3a0b2d4d34e9406c304a8c0c46b63821f59c067ad5ea488308f27041d222
+VERIFIED row km-gate: raw_empty=False, bytes=4516, sha=d4796b6ace65bc3371702b0d078f5a550e84b003228298355c18580ff73bbace
+ALL 7 ROW ARTIFACT SHAS MATCH SUMMARY OUTPUT_SHA256 EXACTLY
+=== 4. Focused Gleam Tests (18 tests across 4 modules) ===
+  All 4 tests passed.
+  2 tests passed.
+  All 3 tests passed.
+  All 9 tests passed.
+=== ALL VERIFICATIONS PASSED: 2026-09-30T09:50:47Z ===

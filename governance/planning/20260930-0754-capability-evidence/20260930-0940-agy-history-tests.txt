@@ -1,0 +1,32 @@
+=== START VERIFICATION SUITE: 2026-09-30T09:40:01Z ===
+=== 1. OCaml Selftests (7 suites) ===
+PASS policy-surface selftest: mapping/missing/directive-count/divergence/json-encoding
+PASS policy-surface fixture selftest: valid/symlink-file/symlink-dir/oversize/non-regular/metadata
+PASS directive-mapping selftest: normalization/duplicate/set/anchor
+PASS directive-mapping fixture selftest: valid/duplicate/unknown/traversal/symlink/missing/budget/nonreg/oversize/entry-limit/metadata
+PASS run_checks selftest: monotonic_process_group/close_output_sleep/descendant_pipe/output_flood/reap/grandchild_kill/symlink_out_dir/chunked_read/collision/zero_progress/timestamp
+PASS write_manifest selftest: bounded_regular/traversal/absolute/symlink/symlink_dir/symlink_out_dir/oversize/count_limit/timestamp/zero_progress/collision/cli_exit
+PASS write_evidence selftest: bounded_regular/traversal/absolute/symlink/symlink_dir/symlink_out_dir/oversize/timestamp/collision/cli_exit
+=== 2. Gate Observations on Workspace (Negative / HOLD controls) ===
+{"schema":"uos.ev02-policy-surface/v1","authority":"REPORT_ONLY","admission":"NOT_GRANTED","status":"HOLD","errors":["invalid-input:rule-symlink-forbidden:./.agents/rules/20260907-1559-risk-prioritization-sop.md"]}
+policy_surface_gate exited 1 (expected 1 HOLD)
+{"schema":"uos.ev02-directive-mapping/v1","authority":"REPORT_ONLY","admission":"NOT_GRANTED","status":"HOLD","errors":["invalid-input:missing-or-unreadable:governance/amendments/20260905-1815-ev02-governance-consolidation-amendment.md"]}
+directive_mapping_gate exited 1 (expected 1 HOLD)
+=== 3. Safe Runner End-to-End ===
+total 36
+drwxr-xr-x   2 an   an     200 Sep 30 11:40 .
+drwxrwxrwt 795 root root 23440 Sep 30 11:40 ..
+-rw-r--r--   1 an   an    4082 Sep 30 11:40 20260930-0850-ev02-governance-checks.json
+-rw-r--r--   1 an   an    4516 Sep 30 11:40 20260930-0850-ev02-km-gate.out
+-rw-r--r--   1 an   an     583 Sep 30 11:40 20260930-0850-ev02-mapping-fixture-selftest.out
+-rw-r--r--   1 an   an     666 Sep 30 11:40 20260930-0850-ev02-mapping-observation.out
+-rw-r--r--   1 an   an     516 Sep 30 11:40 20260930-0850-ev02-mapping-selftest.out
+-rw-r--r--   1 an   an     544 Sep 30 11:40 20260930-0850-ev02-policy-fixture-selftest.out
+-rw-r--r--   1 an   an     660 Sep 30 11:40 20260930-0850-ev02-policy-observation.out
+-rw-r--r--   1 an   an     532 Sep 30 11:40 20260930-0850-ev02-policy-selftest.out
+=== 4. Focused Gleam Tests (18 tests across 4 modules) ===
+  All 4 tests passed.
+  2 tests passed.
+  All 3 tests passed.
+  All 9 tests passed.
+=== ALL VERIFICATIONS PASSED: 2026-09-30T09:40:09Z ===

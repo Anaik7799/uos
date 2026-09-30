@@ -1,0 +1,4 @@
+{"capability":"modular_max","status":"engaged","backend":"supervised_max_daemon","evidence":"bounded request returned a backend receipt","detail":{"backend_result_json":"{\"application_admitted\":false,\"backend\":\"modular_max_graph\",\"class_index\":0,\"device\":\"CPU\",\"elapsed_us\":977109,\"engine_version\":\"26.5.0\",\"model_sha256\":\"24a10caa8a03efb2949c01b36ea0d644dff9cbc035934f31cb334357a5c70d8a\",\"model_source\":\"request_supplied\",\"operation\":\"linear_softmax\",\"probabilities\":[0.9820137619972229,0.01798621006309986]}"}}
+{"capability":"openrouter_free","status":"unavailable","reason":"no OPENROUTER_API_KEY in the approved environment"}
+Listening on http://100.87.7.78:14110
+UOS ecology: http://nas-1.tail55d152.ts.net:14110/ecology

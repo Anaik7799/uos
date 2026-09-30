@@ -1,0 +1,23 @@
+{
+  "schema": "uos.restoration-runtime-review.v1",
+  "verdict": "PASS",
+  "reviewer": "codex-capability-review-20260930",
+  "grant_sha256": "4f3b296e4d41ae3c0092ecfa97e09c1997c3f21c4a28d1013c1c23bdb11aea10",
+  "scope": "Only exact install_ecology_env action named in reviewed grant; service actions require separate grants.",
+  "resource": "runtime:ecology",
+  "required_epoch": 2,
+  "required_release_attempt": 1,
+  "candidate_sha256": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+  "checks": [
+    "Actual loaded controls equal grant control_ids",
+    "Required native dependencies match exact hashes",
+    "Private reviewed source hashes match; cockpit preimage matches and new environment target is absent",
+    "Correct finite RELEASE workflow, worker, host/boot and expiry bound"
+  ],
+  "conditions": [
+    "Execute through reviewed controller with fresh effect-time task/resource/clock fences",
+    "Preserve prior cockpit bytes and exclusive started/result receipts",
+    "Observe effective units after reload before independently reviewing service effects"
+  ],
+  "application_admitted": false
+}

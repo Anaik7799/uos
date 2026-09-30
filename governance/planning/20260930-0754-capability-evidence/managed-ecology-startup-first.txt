@@ -1,0 +1,12 @@
+Starting uos-ecology@20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872.service - UOS shared ecology 20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872 on pinned OTP 29...
+{
+  "status": "PASS",
+  "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+  "payload_sha256": "935bf0f0341fc478e47ef2dc18440d0f2f1a598c6d744ac9728486e6703f0df1",
+  "application_admitted": false
+}
+Started uos-ecology@20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872.service - UOS shared ecology 20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872 on pinned OTP 29.
+{"capability":"modular_max","status":"engaged","backend":"supervised_max_daemon","evidence":"bounded request returned a backend receipt","detail":{"backend_result_json":"{\"application_admitted\":false,\"backend\":\"modular_max_graph\",\"class_index\":0,\"device\":\"CPU\",\"elapsed_us\":972548,\"engine_version\":\"26.5.0\",\"model_sha256\":\"24a10caa8a03efb2949c01b36ea0d644dff9cbc035934f31cb334357a5c70d8a\",\"model_source\":\"request_supplied\",\"operation\":\"linear_softmax\",\"probabilities\":[0.9820137619972229,0.01798621006309986]}"}}
+{"capability":"openrouter_free","status":"unavailable","reason":"http 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"qwen/qwen3.8-27b:free is temporarily rate-li"}
+Listening on http://100.87.7.78:4110
+UOS ecology: http://nas-1.tail55d152.ts.net:4110/ecology

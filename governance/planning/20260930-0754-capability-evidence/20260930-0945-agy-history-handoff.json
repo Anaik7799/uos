@@ -1,0 +1,71 @@
+{
+  "schema": "uos.agy-history-handoff.v1",
+  "observed_at": "2026-09-30T09:45:47.642Z",
+  "provider": "Google Antigravity CLI",
+  "pane": "w2:p9",
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "plan": "uos/capability-restoration/20260930-0734",
+  "task": "HISTORY_REPAIR",
+  "worker": "agy-capability-restoration-20260930",
+  "attempt": 1,
+  "canonical_state": "completed",
+  "completed_at_ns": "1790761388543568117",
+  "candidate": "08c44553debe82e825f5bf444103737538832e33",
+  "source_quiesced_ack": true,
+  "independently_observed_jj_parent_matches": true,
+  "reported_tests": {
+    "ocaml_suites": 7,
+    "focused_gleam_tests": 18,
+    "policy_and_mapping_observations": "HOLD, exit1"
+  },
+  "transcript": {
+    "path": "governance/planning/20260930-0754-capability-evidence/20260930-0940-agy-history-tests.txt",
+    "sha256": "40a60a41d555627d281199eaf1527dbd9cc5cd7c4ac613d25ddfb0823c10f0ba"
+  },
+  "source_bindings": [
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/ev02_governance/directive_mapping_gate.ml",
+      "sha256": "d274687111d877220b1d7fec8c1430d9d7a12bde80a1e8876e91cb9effa4b309"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/ev02_governance/policy_surface_gate.ml",
+      "sha256": "6a711fb10f0d5310fd99e9d6c210dfd25ed6cff5c62fa0d527aa884f2bf5046e"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/ev02_governance/run_checks.ml",
+      "sha256": "229c626a2e0c92da9fe8f011e2ab63de9bb8212247b0af223302a516113345a1"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/ev02_governance/write_evidence.ml",
+      "sha256": "2dd8512b488fdbfea277c9182a42ab4a0bdd6bba62db877508134206e6eb363d"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/ev02_governance/write_manifest.ml",
+      "sha256": "56c0ec51534a17f073c30510270a67bb790353ff637bcf29d923e3534856929d"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/uos/src/main.gleam",
+      "sha256": "9805f332edf1b8ddb565688a91e86ba6e59c11a60c6ca6bdc499f6a671916c83"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/uos/test/exit_status_test.gleam",
+      "sha256": "6eb13bb4215fa0d984e69aa8767be347bcae4de8915864254eefb5831b739f46"
+    },
+    {
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930/tools/uos/test/mirage_gates_truth_test.gleam",
+      "sha256": "192ed4480b9b0f06ef1ff6f289c11cfba23be5f2db3e276e32fb4d8c25b4d881"
+    }
+  ],
+  "counterevidence": [
+    "Earlier draft negative helper was vacuous; corrected before final candidate, earlier draft not accepted.",
+    "Initial handoff misstated full commit suffix; parent independently observed actual JJ ID, AGY explicitly corrected to exact08c44553debe82e825f5bf444103737538832e33.",
+    "Full isolated CLI suite included unchanged SelfcheckMirage controls requiring unavailable compiled artifacts; no broad-suite PASS claimed."
+  ],
+  "authority": "REPORT_ONLY; canonical implementation complete; independent review and main integration still pending",
+  "runtime_changed": false,
+  "admission": "NOT_GRANTED"
+}

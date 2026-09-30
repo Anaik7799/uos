@@ -1,0 +1,106 @@
+{
+  "schema": "uos.independent-history-source-review.v1",
+  "observed_at": "2026-09-30T09:47:54Z",
+  "reviewer": "codex-capability-review-20260930",
+  "plan": "uos/capability-restoration/20260930-0734",
+  "task": "HISTORY_REVIEW",
+  "attempt": 1,
+  "lease_until_ns": "1790765056064442347",
+  "active_receipt": "20260930-0944-history-review-active.json",
+  "candidate": "08c44553debe82e825f5bf444103737538832e33",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-history-reconciliation-20260930",
+  "quiescence": "working copy clean before and after tests; empty child8cffd0844c31852ee75755789d5d9b25bf4c2938; nine source hashes unchanged",
+  "verdict": "HOLD_PENDING_OUTPUT_DIGEST_REPAIR",
+  "authority": "DEVELOPMENT_SOURCE_REVIEW_ONLY",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "tools/ev02_governance/directive_mapping_gate.ml": "d274687111d877220b1d7fec8c1430d9d7a12bde80a1e8876e91cb9effa4b309",
+    "tools/ev02_governance/policy_surface_gate.ml": "6a711fb10f0d5310fd99e9d6c210dfd25ed6cff5c62fa0d527aa884f2bf5046e",
+    "tools/ev02_governance/run_checks.ml": "229c626a2e0c92da9fe8f011e2ab63de9bb8212247b0af223302a516113345a1",
+    "tools/ev02_governance/write_evidence.ml": "2dd8512b488fdbfea277c9182a42ab4a0bdd6bba62db877508134206e6eb363d",
+    "tools/ev02_governance/write_manifest.ml": "56c0ec51534a17f073c30510270a67bb790353ff637bcf29d923e3534856929d",
+    "tools/uos/src/main.gleam": "9805f332edf1b8ddb565688a91e86ba6e59c11a60c6ca6bdc499f6a671916c83",
+    "tools/uos/test/exit_status_test.gleam": "6eb13bb4215fa0d984e69aa8767be347bcae4de8915864254eefb5831b739f46",
+    "tools/uos/test/mirage_gates_truth_test.gleam": "192ed4480b9b0f06ef1ff6f289c11cfba23be5f2db3e276e32fb4d8c25b4d881",
+    "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025"
+  },
+  "findings": [
+    {
+      "severity": "P1",
+      "path": "tools/ev02_governance/run_checks.ml",
+      "lines": [
+        206,
+        217
+      ],
+      "description": "Silent child output is persisted as '(no output)\\n', but output_sha256 hashes raw empty bytes. A successful row cannot be verified against the artifact it names.",
+      "reproduction": {
+        "receipt": "/tmp/ev02-coll-0a476a/checks_test/20260930-1116-ev02-governance-checks.json",
+        "claimed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stored_artifact_sha256": "02a713f76226c52a198adae80526740fc4d6057636326bc8dec49635db8ae7a7"
+      },
+      "required_fix": "Single stored_output byte binding used for both write and digest, with silent and nonempty exact-file digest regression."
+    }
+  ],
+  "independent_checks": [
+    {
+      "check": "Seven OCaml selftest/fixture suites",
+      "result": "PASS",
+      "note": "Policy2, mapping2, runner1, writers2. Runner rerun recorded for durable evidence; passing selftests did not catch discovered hash mismatch."
+    },
+    {
+      "check": "Mirage gates and aliases actual parse/execute path",
+      "result": "PASS",
+      "cases": [
+        "G-MIRAGE",
+        "G-MIRAGE-MIGRATE",
+        "G-MIRAGE-PROD",
+        "mirage-migration",
+        "mirage-prod"
+      ],
+      "observation": "All five emit INVENTORY complete, HOLD and FAIL_CLOSED; all process exit1."
+    },
+    {
+      "check": "Focused Gleam EUnit",
+      "result": "PASS",
+      "tests": 7,
+      "modules": [
+        "mirage_gates_truth_test",
+        "exit_status_test"
+      ],
+      "note": "Inventory existence positively asserted. Existing candidate dev BEAMs; no rebuild or broad-suite pass claimed."
+    },
+    {
+      "check": "Actual writer CLI",
+      "result": "PASS",
+      "positive_cases": 2,
+      "negative_cases": 9,
+      "controls": "Collision, traversal, input symlink, output ancestor symlink for both writers; invalid timestamp for manifest. Exact error classes required, preexisting artifact hashes unchanged."
+    },
+    {
+      "check": "Actual policy/mapping observation JSON",
+      "result": "PASS_EXPECTED_HOLD",
+      "observation": "Both exit1; jq parses schema output and confirms HOLD/NOT_GRANTED; actual canonical policy symlink is refused."
+    }
+  ],
+  "transcripts": [
+    {
+      "path": "20260930-0948-independent-history-cli.txt",
+      "sha256": "50c27adf5b061d9762b6d350e96524be00183477ad57d6ca98e6924bd044e860",
+      "note": "Filename label0948; actual observed execution time09:46:17Z recorded inside."
+    },
+    {
+      "path": "20260930-0947-independent-history-writers.txt",
+      "sha256": "06d4e6e31c1b032490fb18d912080eedffbc4caa62a7f1d55c2521507f0775ee"
+    },
+    {
+      "path": "20260930-0948-independent-history-runner.txt",
+      "sha256": "f8af1e770d2a31ec82952ef6804ad000f61fac66e84dfea3b805bef4cf6454a2"
+    }
+  ],
+  "limits": [
+    "No source edits, production effects, main merge or task completion",
+    "Historical admission and semantic policy mapping remain held",
+    "No full unchanged Mirage selfcheck suite or full repository suite pass claimed",
+    "Parent assigned separate HISTORY_BIND repair; this REVIEW remains executing pending new frozen child"
+  ]
+}

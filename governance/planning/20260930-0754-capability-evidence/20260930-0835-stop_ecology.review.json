@@ -1,0 +1,25 @@
+{
+  "schema": "uos.restoration-runtime-review.v1",
+  "verdict": "PASS",
+  "reviewer": "codex-capability-review-20260930",
+  "grant_sha256": "23abda2148d81d3e26d25ad524c26e708f86b27c2ed8225cb0ff0ca90ec79f5e",
+  "scope": "Exactly one reviewed stop/start reconciliation pair following the preserved first OpenRouter HTTP429; no further retry authorization.",
+  "resource": "runtime:ecology",
+  "required_epoch": 2,
+  "required_release_attempt": 1,
+  "earliest_retry_utc": "2026-09-30T08:35:15Z",
+  "backoff_interpretation": "Local backoff only; no provider Retry-After observed. Reviewer host observation08:35:53Z exceeds earliest retry.",
+  "checks": [
+    "Actual loaded controls match",
+    "Native, manifest and installed environment hashes match",
+    "Exact effective unit hash matches and NeedDaemonReload=no",
+    "Same previously verified immutable capsule, with strict free cost/token policy unchanged"
+  ],
+  "conditions": [
+    "Execute only via reviewed finite controller with current effect-time task/resource/clock checks",
+    "Unique stop/start intents and exclusive receipts enforce this one reconciliation; no blind replay",
+    "Preserve first429 and this attempt outcome; second failure holds cockpit and persistence changes",
+    "No paid fallback, subscription claim or retrospective success relabeling"
+  ],
+  "application_admitted": false
+}
