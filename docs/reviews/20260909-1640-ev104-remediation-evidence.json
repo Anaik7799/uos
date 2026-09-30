@@ -1,0 +1,70 @@
+{
+  "schema": "uos.ev104-remediation-evidence.v1",
+  "source_commit": "7375a867c5e86d020805976fb64d014009fac870",
+  "source_change": "qmzmuuxmxnwzsmrwvmpxnmkqxvrquylk",
+  "parent": "52e013cfe8c32d6c8d4353c27cfdf0a23f225124",
+  "files": [
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/agents/ooda_shruti_copilot.gleam",
+      "sha256": "389fc2456cc1ab13d8799a3fb3050a6404a4120f064cfccdc748b006c39c4621",
+      "bytes": 6623
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ooda_shruti_copilot_test.gleam",
+      "sha256": "b1a253de4bbe1c0b76f40a847c52a8537ccf0cd4cfb7a7c556046e30bde1b6c6",
+      "bytes": 4204
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev104_remediation_runner.gleam",
+      "sha256": "95c028d5c3e1b116254bfc44502aa5a58fb0469e68864549f016f44bba9f74ac",
+      "bytes": 637
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/gleam.toml",
+      "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b",
+      "bytes": 1029
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/manifest.toml",
+      "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+      "bytes": 8810
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1558-ev104-remediation-risk.json",
+      "sha256": "e5655cb9e3ab163774294a09926e5f1dd9d8846f6f49e4febedd17f6ed9cf598",
+      "bytes": 6649
+    }
+  ],
+  "native_receipts": [
+    {
+      "path": "/tmp/ev104-remediation-red-build-20260909-1618.json",
+      "sha256": "b4f96257d62dae8aaafc48414420676e2b3515f5c9be61e49490ea7b5aec79e6",
+      "bytes": 96778
+    },
+    {
+      "path": "/tmp/ev104-remediation-red-run-20260909-1618.json",
+      "sha256": "21e4a04a0b233f6e532ee9df50253afb5804c344b26809d350331f15e26b008d",
+      "bytes": 7749
+    },
+    {
+      "path": "/tmp/ev104-remediation-green-build-20260909-1630.json",
+      "sha256": "c884f635f6e04e1d703d243d32e8f6725f88bf9d335fbfc8ef976ec25ccc81f6",
+      "bytes": 96784
+    },
+    {
+      "path": "/tmp/ev104-remediation-green-run-20260909-1630.json",
+      "sha256": "f3875abe22261914c293d82d80d852b5a244efefa1aee13c55d57f55b3fab1e4",
+      "bytes": 5036
+    },
+    {
+      "path": "/tmp/ev104-remediation-active-green-20260909-1632.json",
+      "sha256": "201d4ae9df067f61af2596d5752870504a1079ce5866d6f42fb8375578196304",
+      "bytes": 3778
+    }
+  ],
+  "review": { "state": "PENDING", "assigned": "homeostasis_change_review" },
+  "limits": [
+    "Pure in-memory remediation accounting only.",
+    "No patch execution, audio, deployment, authenticated input, or EV104 admission."
+  ]
+}

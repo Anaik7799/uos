@@ -1,0 +1,25 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-dispatch-review-green-20260909/default/modules/system_engg/run_agent_dispatch_hook.exe",
+    "--self-test", "--intercept-mcp", "--enforce-dmc-tcm"
+  ],
+  "utc_started": 1788928135.185749,
+  "utc_finished": 1788928135.230824,
+  "elapsed_seconds": 0.045074666,
+  "deadline_seconds": 30.0,
+  "exit_code": 2,
+  "output": "{\"verdict\":\"FAIL_CLOSED\",\"authority\":\"NONE\",\"reason\":\"Invalid or conflicting dispatch modes\",\"error_code\":-9,\"halt_effect\":true}\n",
+  "output_sha256": "fdb7db9740ae460fa2227d26c9c8727d004409646fc9ea908d6f93e0633460ea",
+  "child_termination": { "kind": "EXITED", "code": 2 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

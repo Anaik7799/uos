@@ -1,0 +1,26 @@
+{
+  "schema": "uos.ev01-native-trace.v1",
+  "status": "PASS",
+  "trace": "/tmp/ev01-bootstrap-canonical-final-1742.trace",
+  "trace_sha256": "8e77fe30c84e905bab3c8dfc4c1c6406473287cdd811d67c0dc3fac1e3d53c1a",
+  "successful_execs": 9,
+  "failed_lookups": 4,
+  "executables": [
+    {
+      "path": "/bin/tput",
+      "resolved": "/usr/bin/tput",
+      "sha256": "568b559c40262dcb851aed26115767ca646b4269118a0c93ded7d2dd5c565ec6"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/x86_64-pc-linux-gnu-ocamlrun-a100",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+    },
+    {
+      "path": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "resolved": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    }
+  ],
+  "scope": "Actual successful execve paths and current ELF bytes; no shared-library release-closure or hostile-host authenticity claim"
+}

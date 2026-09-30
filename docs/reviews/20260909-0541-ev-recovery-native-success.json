@@ -1,0 +1,25 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-native-tests-82b8bf/ev_native_test_child.exe", "mark",
+    "/tmp/uos-ev-native-tests-82b8bf/allowed-effect"
+  ],
+  "utc_started": 1788928538.324319,
+  "utc_finished": 1788928538.347405,
+  "elapsed_seconds": 0.023083190000000003,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "effect observed\n",
+  "output_sha256": "cf09fb637e9a03bc797b9c7633c5aff360a3bc35193433c1bd40961c86442863",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

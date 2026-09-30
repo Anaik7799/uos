@@ -1,0 +1,80 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+open Yojson.Basic.Util
+let root="/home/an/NAS-setup/uos"
+let own=root^"/.uos-workspaces/ev98-peer-loop-20260909"
+let author=root^"/.uos-workspaces/codex-ev-admission-20260909-0210"
+let stage="/tmp/ev107-rete-independent-1650"
+let rev="168c31943c90b0c494b60ca0baff9f25c8cc702c"
+let budget=Receipt_validator.make_budget ~seconds:60. ~bytes:134217728 ()
+let read=Ev_campaign.read_file budget
+let sha=Receipt_validator.sha
+let require=Receipt_validator.require
+let write=Ev_campaign.write
+let str k j=member k j|>to_string
+let now=Unix.gettimeofday()
+let prefix=let t=Unix.gmtime now in Printf.sprintf "%04d%02d%02d-%02d%02d-"(t.tm_year+1900)(t.tm_mon+1)t.tm_mday t.tm_hour t.tm_min
+let copies=ref []
+let copy label p=
+ let b=read p in let dest="docs/reviews/"^prefix^"ev107-rete-independent/"^prefix^label in
+ write(own^"/"^dest)b;
+ copies:=`Assoc["original",`String p;"durable",`String dest;"sha256",`String(sha b)]::!copies
+let audit_bindings path=
+ let j=Yojson.Basic.from_string(read path)in
+ require(member "candidate"j=`String rev)"staged candidate";
+ List.iter(fun key->List.iter(fun b->require(sha(read(str "staged"b))=str "sha256"b)"staged bytes changed";
+ if key="dependencies"then require(sha(read(str "source"b))=str "sha256"b)"dependency origin drift"
+ else let name=str "source"b in let name=if String.starts_with ~prefix:"candidate:"name then String.sub name 10(String.length name-10)else name in
+ require(sha(Receipt_validator.candidate_bytes author rev name)=str "sha256"b)"immutable source drift")(member key j|>to_list))["sources";"dependencies"];j
+let native p marker=
+ let j=Yojson.Basic.from_string(read p)in require(member "exit_code"j=`Int 0 && member "failure"j=`Null)"native result";
+ require(sha(str "output"j)=str "output_sha256"j)"native output digest";
+ require(Ev_campaign.contains(str "output"j)marker)"native expected observation";j
+let ()=
+ let local=audit_bindings(stage^"/bindings.json")and original=audit_bindings "/tmp/ev107-rete-full-1646/bindings.json"in
+ require(List.length(member "dependencies"local|>to_list)=160 && List.length(member "dependencies"original|>to_list)=160)"dependency denominator";
+ let test=native(stage^"/author23.json")"All 23 tests passed."in
+ let extra=native(stage^"/independent6.json")"INDEPENDENT_RETE PASS advisory_conflict_atomic_refusal"in
+ require(List.length(List.filter(fun s->String.starts_with ~prefix:"INDEPENDENT_RETE PASS "s)(String.split_on_char '\n'(str "output"extra)))=6)"probe denominator";
+ let oracle=native(stage^"/oracle2048.json")"FINITE_CORPUS_CONSISTENT"in
+ let projection=native(stage^"/projection2048.json")"PASS EV107 finite projection emitted 2048 observed cases"in
+ let author_oracle=native "/tmp/ev107-rete-independent-author-oracle.json" "FINITE_CORPUS_CONSISTENT"in
+ require(str "output_sha256"projection = "de27d5992fc03c6bc6ccbdd0bb77c32e3c50b2b6245e141bd596559df378cb2e")"independent/author projection outputs differ";
+ let source_scope=member "sources"local|>to_list in
+ let helper=Receipt_validator.candidate_bytes author rev "tools/ev107_rete_stage.ml"in require(helper=read(stage^"/author-stage.ml"))"author helper changed";
+ let caller="apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/rete_ul_hud.gleam"in let callerbytes=Receipt_validator.candidate_bytes author rev caller in require(callerbytes=read(author^"/"^caller))"caller drift";
+ let tools=List.map(fun p->let p=Unix.realpath p in Ev_campaign.reference p(read p))[
+ root^"/toolchains/gleam-1.16.0/bin/gleam";
+ root^"/toolchains/opam-ocaml/bin/ocamlrun";
+ "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec";
+ "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp";
+ author^"/tools/ev_native.ml";
+ "/tmp/ev107-rete-oracle-immutable/ev107_rete_reference.ml"]in
+ let artifacts=Ev_campaign.file_names(stage^"/compiled")""|>List.map(fun p->let p=stage^"/compiled/"^p in Ev_campaign.reference p(read p))in
+ List.iter(fun(label,p)->copy label p)[
+ "bindings.json",stage^"/bindings.json";"author-bindings.json","/tmp/ev107-rete-full-1646/bindings.json";
+ "stage.json","/tmp/ev107-rete-independent-stage2.json";"compile.json","/tmp/ev107-rete-independent-compile2.json";
+ "author23.json",stage^"/author23.json";"independent6.json",stage^"/independent6.json";"projection2048.json",stage^"/projection2048.json";"oracle2048.json",stage^"/oracle2048.json";
+ "author-oracle.json","/tmp/ev107-rete-independent-author-oracle.json";"candidate-active.json","/tmp/ev107-rete-independent-candidate-active.json";
+ "fixture-compile-refusal.json","/tmp/ev107-rete-independent-compile.json";
+ "fixture-failed-source.gleam.txt","/tmp/ev107-rete-independent-1649/package/test/ev107_rete_independent_probe.gleam";
+ "probe.gleam.txt","/tmp/ev107_rete_independent_probe.gleam";"stage.ml.txt","/tmp/ev107_rete_independent_stage.ml";"run.ml.txt","/tmp/ev107_rete_independent_run.ml";
+ "evidence.ml.txt","/tmp/ev107_rete_independent_evidence.ml";
+ "author-red-no-tests.json","/tmp/ev107-rete-red-runtime-1632.json";"author-red-corrected.json","/tmp/ev107-rete-red-runtime-cwd-corrected-1633.json";
+ "author-compile.json","/tmp/ev107-rete-full-compile-1646.json";"author-runtime.json","/tmp/ev107-rete-full-runtime-1647.json";"author-projection.json","/tmp/ev107-rete-full-projection-1647.json";
+ "outer-run.json","/tmp/ev107-rete-independent-run-launch.json"];
+ let report=`Assoc[
+ "schema",`String "uos.ev107.rete-independent-review.v1";"observed_at",`Float now;
+ "verdict",`String "APPROVE_BOUNDED_STATIC_ASSERTION_CLOSURE";"source_candidate",`String rev;
+ "authority",`String "NONE";"admission",`String "NOT_GRANTED";"findings",`List[];
+ "review_plan",`String "uos/ev107-rete-review/20260909";"task",`String "REVIEW";"worker",`String "codex-ev107-rete-review";"attempt",`Int 1;
+ "oracle_source",`String "2677fde003250652c900bec76bbe28d22d8b17e6";
+ "observed",`Assoc["fresh_author_eunit",`Int 23;"independent_groups",`Int 6;"independent_projection_rows",`Int 2048;"author_projection_rows_checked",`Int 2048;"oracle_synthetic_controls",`Int 29;"staged_dependency_artifacts",`Int 160;"test_output_sha256",member "output_sha256"test;"projection_output_sha256",member "output_sha256"projection;"oracle_output_sha256",member "output_sha256"oracle;"author_oracle_output_sha256",member "output_sha256"author_oracle];
+ "source_bindings",`List source_scope;"author_helper",Ev_campaign.reference "tools/ev107_rete_stage.ml"helper;
+ "caller",Ev_campaign.reference caller callerbytes;"compiled_artifacts",`List artifacts;"tool_observations",`List tools;"receipts",`List(List.rev !copies);
+ "static_review",`List(List.map(fun s->`String s)["Typed result contains no partial memory on invalid input, capacity/work exhaustion or conflicting gate observations; legacy wrapper preserves exact original on refusal.";"Inputs bounded to256facts64rules8attributes8conditions256-byte strings before pairwise consistency validation; duplicate rule names/attributes refused.";"Symmetric condition-set equality handles repeated conditions. Same antecedents with distinct assertions permit fan-out; exact consequence shadows and historical pairwise cycles veto.";"Add-only existential Eq/Neq/Contains conditions are monotone. Deferred rounds terminate because each successful rule is removed; facts retained and assertions deduplicated by existing kind/attribute/value.";"Work counter meters matching visits; bounded validation, list operations and string work are separate from that counter.";"Production caller search found only HUD type/presentation use. No dispatch consumer or runtime effect was established; verdict pairs remain local advisory observations.";"Projection independently reads actual engine memory and refuses unexpected/duplicate fact kinds; rows are not computed from its input masks." ]);
+ "limits",`List(List.map(fun s->`String s)["Four-node acyclic corpus is finite observation, not general Rete refinement or formal solver proof. Extra cycle/operator cases extend tests only.";"Static rules only: no variable binding, same-fact joins, negation-by-absence or retraction. Conservative anomaly checks are not complete logical consistency.";"Legacy builders remain unbounded compatibility APIs; execution checked API supplies bounded refusal. Public record constructors require validation.";"Local native receipts and post-execution hashes are cooperative evidence, not authenticated producers or hostile concurrent replacement protection.";"No fresh descendant execve trace or complete dynamic/linker release closure; previously reviewed direct ERTS adapter and realized dependency bytes reused.";"Historical HUD constant consistency/sovereign status is outside this component review and not current runtime evidence.";"Original no-tests-found receipt is non-evidence; corrected author RED inspected but not independently rerun. Private probe compile typo preserved separately.";"No live production/crosshost effects, full EV107, sovereign approval or EV admission."])]in
+ let path="docs/reviews/"^prefix^"ev107-rete-independent-approval.json"in write(own^"/"^path)(Yojson.Basic.pretty_to_string report);
+ Printf.printf "%s SHA256 %s\n"path(sha(read(own^"/"^path)))

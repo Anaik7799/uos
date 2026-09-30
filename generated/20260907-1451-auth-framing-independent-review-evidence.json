@@ -1,0 +1,639 @@
+{
+  "schema": "uos-auth-framing-review-evidence/v1",
+  "generated_at_utc": "2026-09-07T14:51:51Z",
+  "clock": {
+    "source": "observed host UTC",
+    "ntp_synchronized": true
+  },
+  "task": {
+    "id": "AUTH-INGRESS",
+    "coordinator": "parent /root",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-auth-framing-review"
+  },
+  "candidate": {
+    "commit_id": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+    "change_id": "ltzunpsxvzzxnryykomwlwovnxkoypou",
+    "parent_commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+    "ancestor_ingress_commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+    "oidc_commit": "9193385706282ea61300e77cbcc6f4664273a57d"
+  },
+  "verdict": {
+    "scope": "fixed-length request body framing/reading and AG-UI/API fallback adapter",
+    "result": "APPROVED_BOUNDED_IMPLEMENTATION",
+    "remaining_blocking_findings_in_scope": 0,
+    "live_rollout": "UNRUN",
+    "system_admission": "NOT_GRANTED"
+  },
+  "toolchain": {
+    "gleam": "1.16.0",
+    "otp": "29",
+    "erts": "17.0.6",
+    "mist": "6.0.2",
+    "otp_path": "/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6/lib/erlang/bin",
+    "erl_flags": "+S 4:4 +A 4"
+  },
+  "build": {
+    "status": "PASS",
+    "generation": "Fresh Gleam compile-package for apps/indrajaal_gleam_web followed by erlc of changed application/FFI and focused test modules.",
+    "generation_timeout_seconds": 90,
+    "test_process_timeout_seconds": 30,
+    "eunit_case_timeout_seconds": 10,
+    "termination_grace_seconds": 2,
+    "own_beam_directory": "var/auth-framing-review/ebin",
+    "unchanged_auth_router_modules": "Reused from this reviewer's prior candidate-6b033f37 build under .uos-workspaces/codex-auth-ingress-review/var/auth-ingress-review/ebin. jj diff confirms apps/cepaf_gleam unchanged from 6b033f37 to acfe752c.",
+    "dependency_cache": "/home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress/apps/indrajaal_gleam_web/build/dev/erlang",
+    "module_path_observation": "Erlang/OTP 29 [erts-17.0.6] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:4] [jit:ns]\n\nindrajaal_gleam_web var/auth-framing-review/ebin/indrajaal_gleam_web.beam\nindrajaal_web_ffi var/auth-framing-review/ebin/indrajaal_web_ffi.beam\nauth_ingress_test var/auth-framing-review/ebin/auth_ingress_test.beam\nauth_ingress_test_ffi var/auth-framing-review/ebin/auth_ingress_test_ffi.beam\nauth_framing_independent_review var/auth-framing-review/ebin/auth_framing_independent_review.beam\ncepaf_gleam@ui@wisp@router /home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress-review/var/auth-ingress-review/ebin/cepaf_gleam@ui@wisp@router.beam\ncepaf_gleam@auth@oidc /home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress-review/var/auth-ingress-review/ebin/cepaf_gleam@auth@oidc.beam\ncepaf_gleam@ui@wisp@auth /home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress-review/var/auth-ingress-review/ebin/cepaf_gleam@ui@wisp@auth.beam\noidc_jwt_ffi /home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress-review/var/auth-ingress-review/ebin/oidc_jwt_ffi.beam\n",
+    "limitation": "This is not a full dependency rebuild or runtime deployment identity receipt."
+  },
+  "supplied_focused_eunit": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "exit_code": 0,
+    "output": "======================== EUnit ========================\nauth_ingress_test: method_auth_body_and_response_are_preserved_test...[0.047 s] ok\nauth_ingress_test: body_conversion_is_bounded_and_utf8_checked_test...ok\nauth_ingress_test: actual_mist_adapter_rejects_unsafe_framing_before_read_test...ok\nauth_ingress_test: actual_mist_adapter_admits_bounded_fixed_length_test...ok\nauth_ingress_test: actual_mist_adapter_rejects_expectation_before_read_test...ok\nauth_ingress_test: actual_mist_adapter_enforces_total_read_deadline_test...[5.002 s] ok\n=======================================================\n  All 6 tests passed.\n"
+  },
+  "independent": {
+    "exit_code": 0,
+    "total": 42,
+    "otp_release": "29",
+    "failed": 0,
+    "network_scope": "owned 127.0.0.1 ephemeral sockets only",
+    "passed": 42,
+    "results": [
+      {
+        "name": "expect_continue_rejected_before_read",
+        "status": 417,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "expect_case_insensitive",
+        "status": 417,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "expect_empty_rejected",
+        "status": 417,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "expect_unknown_rejected",
+        "status": 417,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "expect_duplicate_rejected",
+        "status": 417,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "exact_prior_chunked_counterexample",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "transfer_encoding_case_insensitive",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "transfer_encoding_empty_rejected",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "transfer_encoding_identity_rejected",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "transfer_encoding_and_length_rejected",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "duplicate_same_length",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "duplicate_case_length",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "comma_length",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_plus_sign",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_minus_sign",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_whitespace",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_empty",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_nondigit",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_unicode_digits",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_exceeds_cap",
+        "status": 413,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "length_huge_integer",
+        "status": 413,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "initial_exceeds_declared",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "explicit_zero_rejects_initial",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "initial_over_cap_rejected",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "absent_framing_drops_initial",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 0,
+        "handler_calls": 1
+      },
+      {
+        "name": "absent_framing_drops_prior_chunk_wire",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 0,
+        "handler_calls": 1
+      },
+      {
+        "name": "explicit_zero_empty",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 0,
+        "handler_calls": 1
+      },
+      {
+        "name": "valid_fixed_body",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 5,
+        "handler_calls": 1
+      },
+      {
+        "name": "leading_zero_decimal_fixed_body",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 5,
+        "handler_calls": 1
+      },
+      {
+        "name": "case_insensitive_length",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 5,
+        "handler_calls": 1
+      },
+      {
+        "name": "exact_byte_limit",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 65536,
+        "handler_calls": 1
+      },
+      {
+        "name": "non_utf8_ingestion_preserves_bytes",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 1,
+        "handler_calls": 1
+      },
+      {
+        "name": "stream_body_rejected",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "unsupported_transport_rejected_before_handler",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "socket_reads_only_declared_remainder",
+        "status": 299,
+        "passed": true,
+        "body_bytes": 5,
+        "leftover_bytes": 4
+      },
+      {
+        "name": "closed_incomplete_socket_rejected",
+        "status": 400,
+        "passed": true,
+        "handler_called": false
+      },
+      {
+        "name": "actual_wrapper_stalled_socket_408",
+        "status": 408,
+        "passed": true,
+        "handler_called": false,
+        "configured_deadline_ms": 5000,
+        "elapsed_ms": 5001
+      },
+      {
+        "name": "partial_progress_does_not_extend_deadline",
+        "passed": true,
+        "configured_deadline_ms": 450,
+        "elapsed_ms": 453,
+        "received_outcome": "fixed_body_read_timeout"
+      },
+      {
+        "name": "connection_to_auth_rejects_static_downgrade",
+        "status": 401,
+        "passed": true
+      },
+      {
+        "name": "connection_to_auth_accepts_signed_unknown_route",
+        "status": 404,
+        "passed": true
+      },
+      {
+        "name": "connection_to_auth_preserves_body_validation",
+        "status": 400,
+        "passed": true
+      },
+      {
+        "name": "connection_to_http_rejects_non_utf8",
+        "status": 400,
+        "passed": true
+      }
+    ],
+    "schema": "uos-auth-framing-independent/v1"
+  },
+  "intermediate_observation": {
+    "candidate": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+    "focused_eunit": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "independent": {
+      "total": 33,
+      "otp_release": "29",
+      "failed": 0,
+      "network_scope": "owned 127.0.0.1 ephemeral sockets only",
+      "passed": 33,
+      "results": [
+        {
+          "name": "exact_prior_chunked_counterexample",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "transfer_encoding_case_insensitive",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "transfer_encoding_empty_rejected",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "transfer_encoding_identity_rejected",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "transfer_encoding_and_length_rejected",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "duplicate_same_length",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "duplicate_case_length",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "comma_length",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_plus_sign",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_minus_sign",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_whitespace",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_empty",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_nondigit",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_unicode_digits",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_exceeds_cap",
+          "status": 413,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "length_huge_integer",
+          "status": 413,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "initial_exceeds_declared",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "explicit_zero_rejects_initial",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "initial_over_cap_rejected",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "absent_framing_drops_initial",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 0,
+          "handler_calls": 1
+        },
+        {
+          "name": "absent_framing_drops_prior_chunk_wire",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 0,
+          "handler_calls": 1
+        },
+        {
+          "name": "explicit_zero_empty",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 0,
+          "handler_calls": 1
+        },
+        {
+          "name": "valid_fixed_body",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 5,
+          "handler_calls": 1
+        },
+        {
+          "name": "leading_zero_decimal_fixed_body",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 5,
+          "handler_calls": 1
+        },
+        {
+          "name": "case_insensitive_length",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 5,
+          "handler_calls": 1
+        },
+        {
+          "name": "exact_byte_limit",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 65536,
+          "handler_calls": 1
+        },
+        {
+          "name": "non_utf8_ingestion_preserves_bytes",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 1,
+          "handler_calls": 1
+        },
+        {
+          "name": "stream_body_rejected",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "unsupported_transport_rejected_before_handler",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "socket_reads_only_declared_remainder",
+          "status": 299,
+          "passed": true,
+          "body_bytes": 5,
+          "leftover_bytes": 4
+        },
+        {
+          "name": "closed_incomplete_socket_rejected",
+          "status": 400,
+          "passed": true,
+          "handler_called": false
+        },
+        {
+          "name": "actual_wrapper_stalled_socket_408",
+          "status": 408,
+          "passed": true,
+          "handler_called": false,
+          "configured_deadline_ms": 5000,
+          "elapsed_ms": 5001
+        },
+        {
+          "name": "partial_progress_does_not_extend_deadline",
+          "passed": true,
+          "configured_deadline_ms": 450,
+          "elapsed_ms": 451,
+          "received_outcome": "fixed_body_read_timeout"
+        }
+      ],
+      "schema": "uos-auth-framing-independent/v1"
+    },
+    "test_source_sha256_at_that_run": "48fbd9859aa416244adf1f0858ea020f939b2c136f2f4fe232f24bb4f5a0d0e6",
+    "limit": "Expect support was absent at this intermediate candidate. These observations are not relabeled as executions of the final child."
+  },
+  "invariant_correspondence": [
+    {
+      "invariant": "Reject transfer encodings and ambiguous/invalid Content-Length before any body read or handler.",
+      "code": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:1010",
+      "evidence": "Exact prior 65537-byte chunked counterexample, header case/duplicate/comma/sign/empty/unicode/oversize cases return 400/413; handler-called counter remains false."
+    },
+    {
+      "invariant": "Reject unsupported Expect without entering the reader.",
+      "code": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:1020",
+      "evidence": "Five Expect variants return 417 with dummy non-socket and no handler call."
+    },
+    {
+      "invariant": "Admit empty unframed body or exact fixed body <=65536; explicit zero rejects buffered excess.",
+      "code": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:1075; apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl:7",
+      "evidence": "Absent framing drops initial bytes, CL=0 and initial>CL reject, exact 65536 accepted, full request metadata preserved."
+    },
+    {
+      "invariant": "Read only the declared remainder with one monotonic deadline.",
+      "code": "apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl:43",
+      "evidence": "Owned loopback read returned hello and left TAIL buffered; incomplete close rejected; stalled wrapper 408 at 5001 ms; trickle reader timeout at 453 ms for 450 ms configured deadline."
+    },
+    {
+      "invariant": "Carry bounded bytes into real HTTP and OIDC boundary.",
+      "code": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:964; apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:1092",
+      "evidence": "Connection-to-HTTP chain rejects static credential in OIDC mode, accepts public signed token to harmless unknown route, preserves invalid planning status for rejection before persistence, and rejects invalid UTF-8."
+    },
+    {
+      "invariant": "Preserve routed response status and header list while adapting body.",
+      "code": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:1109",
+      "evidence": "Source uses polymorphic response.set_body on the routed record, eliminating header reconstruction; supplied helper tests preserve status/Allow/SSE headers, and outer connection boundary preserves repeated header names."
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "INGRESS-BODY-001",
+      "previous_candidate": "6b033f3781e159495b3cb9812b5480f4802a8855",
+      "result": "CLOSED_IN_BOUNDED_PROFILE",
+      "evidence": "Actual public handle_bounded_connection_request rejects the exact previous chunked input before reader/next. Reader uses declared remainder and total deadline."
+    },
+    {
+      "id": "INGRESS-HEADERS-002",
+      "result": "CLOSED_SOURCE_CORRESPONDENCE",
+      "evidence": "response.set_body preserves original status and header list."
+    },
+    {
+      "id": "EXPECT-COMPATIBILITY",
+      "previous_candidate": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+      "result": "EXPLICIT_UNSUPPORTED_417",
+      "evidence": "Any Expect header rejected before read. 100-continue support is intentionally not claimed."
+    }
+  ],
+  "safety": {
+    "environment": "Each test VM uses env -i; only committed public interoperability fixtures, synthetic credential values and process-local test environment.",
+    "network": "Only owned ephemeral 127.0.0.1 TCP listener/client pairs. No production listener or external address contacted.",
+    "cleanup": "Fixture closes server, client and listener in nested try/after; partial-progress sender is monitored and awaited.",
+    "actions": "No production config, secrets, live reload, integration, main-bookmark move, service restart or deployment."
+  },
+  "claim_limits": [
+    "Approved scope is fixed-length request-body ingestion and AG-UI/API fallback adaptation. Specialized direct API handler authorization is not covered.",
+    "Transfer-Encoding and Expect are unsupported and fail closed; clients requiring chunked uploads or 100 Continue must use a compatible profile.",
+    "Absent Content-Length is treated as an empty request body; explicit zero with buffered bytes is rejected.",
+    "TCP loopback was executed. SSL and HTTP/2 were not exercised; Mist Stream bodies with fixed length are rejected by the implementation.",
+    "The 65536-byte limit applies to the body admitted/read by this adapter. No bound on Mist's preceding header parser, prebuffering, complete listener memory, or concurrent connection population is proved.",
+    "The five-second total read deadline does not claim a hard real-time scheduler guarantee; observed loopback timings include normal scheduling tolerance.",
+    "No general HTTP/JOSE/OIDC compliance, per-route RBAC/MFA completeness, formal implementation proof, full suite or production admission follows."
+  ],
+  "source_sha256": {
+    "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam": "848347b3ceca39182bde89d18126f9f05443ef3fd225f9d809bc3798582e353c",
+    "apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl": "143311adf1f9a359762a44d63fd13f0e303e1d83c7b4facc27bb9f5019679237",
+    "apps/indrajaal_gleam_web/test/auth_ingress_test.gleam": "c7c7740db62a5ae04bfbaafb503c186e8b79eca2e11002816fd7d2a9dab94cfc",
+    "apps/indrajaal_gleam_web/test/auth_ingress_test_ffi.erl": "3c6eefa2ba18a65488ac0a7613f83396ce06d581c95aee128259fc7d2c8b93c9",
+    "tools/verification/oidc/auth_framing_independent_review.erl": "4a6814fcf51ae085ab8784cff2546354f162b76df4bae66db52123f66199b74d"
+  },
+  "reproduction": {
+    "module": "auth_framing_independent_review",
+    "entrypoint": "run/0",
+    "command_template": "env -i PATH=<OTP29>:/usr/bin:/bin ERL_FLAGS='+S 4:4 +A 4' LANG=C.UTF-8 timeout --kill-after=2s 30s erl -noshell -pa <LOCAL_DEPENDENCY_CACHE>/*/ebin -pa <REVIEWED_UNCHANGED_AUTH_BEAMS> -pa var/auth-framing-review/ebin -eval 'erlang:halt(auth_framing_independent_review:run()).'"
+  },
+  "artifacts": {
+    "test": "tools/verification/oidc/auth_framing_independent_review.erl",
+    "journal": "docs/journal/20260907-1451-auth-framing-independent-review.md",
+    "evidence": "generated/20260907-1451-auth-framing-independent-review-evidence.json"
+  }
+}

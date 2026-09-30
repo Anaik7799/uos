@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "candidate": "c6c4bc3b6a3bda9c43ae6864335f91617a43ca35",
+  "source": {"path":"apps/cepaf_gleam/test/ev98_health_projection_runner.gleam","sha256":"1a320a256005ad7811662b8e1afc2ce7725b3add85764eca3bdd61dcddf0c527"},
+  "compiled": {"directory":"/tmp/ev98-health-projection-final-20260909-0803","beam":"ev98_health_projection_runner.beam","sha256":"8e82f0c249939337145b741a2ec93428e3ef95a6e34535b01701716246b61a75"},
+  "invocation": {"adapter":"ev_native.ml","mode":"beam","module":"ev98_health_projection_runner","receipt":"/tmp/ev98-health-projection-native-20260909-0607.json","receipt_sha256":"9189d0538f2a8b961d3d49e89b3541a1e39180b074c51ad4a5835b32192fd1a2","result":"PASS","cases":4},
+  "limits":["The runner is a bounded projection witness, not exhaustive cross-language equivalence.","No runtime or admission authority is granted."]
+}

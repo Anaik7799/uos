@@ -1,0 +1,301 @@
+{
+  "schema": "uos.ev101.graph-integrity-component.v1",
+  "observed_at": 1788969712.220532,
+  "source_candidate": "ea6cd8e8dcc0775239d49697390d54728e9eded0",
+  "base": "52e013cfe8c32d6c8d4353c27cfdf0a23f225124",
+  "red_candidate": "eb1f1b835b515aad4bad0b4225a806efcecc297f",
+  "edge_red_candidate": "635d7c1971b1360e472bd4580fb8697151dd45d5",
+  "authority": "NONE",
+  "state": "EXECUTED_COMPONENT_AWAITING_INDEPENDENT_REVIEW",
+  "plan": "uos/ev101-graph-integrity/20260909",
+  "task": "REPAIR",
+  "worker": "codex-ev101-graph",
+  "attempt": 1,
+  "scope": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+      "sha256": "8ccc385d0a4ae4399ba2a9fe8990a35066ee9881ec1cb5a4a2c9064851fbfed5",
+      "bytes": 14359
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev101_graph_integrity_test.gleam",
+      "sha256": "991361fc06636c85f4ef697482c49ec3c8f4ff11b67b16d3ed439c832caf1c9f",
+      "bytes": 11882
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev101_graph_runner.gleam",
+      "sha256": "faf1c93f323d2f1acc3459d0da2bdcb8741052040b692abf141d8da9124757a1",
+      "bytes": 467
+    },
+    {
+      "path": "tools/ev101_graph_stage.ml",
+      "sha256": "046c9d6d006ec0d900520f5efd70256dd9c140cf8c9398fe1b79c39e59212841",
+      "bytes": 2333
+    }
+  ],
+  "tests": {
+    "legacy": 5,
+    "new": 17,
+    "total_eunit_tests": 22,
+    "three_node_graphs": 512,
+    "raw_two_node_adjacency_states": 256,
+    "red_original_new_failures": 9
+  },
+  "dependencies": 160,
+  "receipts": [
+    {
+      "original": "/tmp/ev101-plan-create.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-plan-create-refusal.json",
+      "sha256": "35764945a42a6bf2d88fd8c1bf92fadc6115264b6f7258ef769b1c2fd01df294"
+    },
+    {
+      "original": "/tmp/ev101-task-create.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-task-create-refusal.json",
+      "sha256": "5a5a99da7f974ad2466b62c41ad2defdaaccc1a3c84d66340a70c5c2425b3f5f"
+    },
+    {
+      "original": "/tmp/ev101-plan-create-2.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-plan-create.json",
+      "sha256": "36d7ab58685077e9591acf171cbc2fb0e8fb6f399b45b7f6853f8d375d9f29f1"
+    },
+    {
+      "original": "/tmp/ev101-task-create-2.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-task-create.json",
+      "sha256": "6703cfde2d0f2599e0a77646c776ada87ee1c5fedc0e87e3061837ef712e1063"
+    },
+    {
+      "original": "/tmp/ev101-preflight.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-preflight-refusal.json",
+      "sha256": "971e86c2683feba61aac30d93b7275c94177ddf2fee7301667918af6e888d89d"
+    },
+    {
+      "original": "/tmp/ev101-preflight-2.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-preflight.json",
+      "sha256": "05be95069ea6754f427f06d3f6c5e4801cb85efddda85177b38c881aa7d84e92"
+    },
+    {
+      "original": "/tmp/ev101-claim.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-claim.json",
+      "sha256": "c07b73a709e303991eebd49d904de388cc266a6549584b49eb8e2fafdf276ab6"
+    },
+    {
+      "original": "/tmp/ev101-active.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-active-initial.json",
+      "sha256": "a23481c10432117349633a2c000cf45bc32f8730f61452fe70ee51a0cdcf43a7"
+    },
+    {
+      "original": "/tmp/ev101-red-compile.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-red-fixture-compile-refusal.json",
+      "sha256": "5e31dc7e025f75ea0f92472d059596965dd3bf6de4d754bd45bc4525008e1785"
+    },
+    {
+      "original": "/tmp/ev101-red-runtime.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-red-fixture-unavailable-runtime.json",
+      "sha256": "d19805810ab7cc7dbc45f67b8e0bdfc6123e609937f2ff6118dcd1e882456084"
+    },
+    {
+      "original": "/tmp/ev101-red2/bindings.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-red-bindings.json",
+      "sha256": "ddce91472d89cfc12ca534b9bebd34cc501ce5b86ebcba1dcd40d63b0bc90001"
+    },
+    {
+      "original": "/tmp/ev101-red2-compile.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-red-compile.json",
+      "sha256": "69f9ba25ab48dacf6ea399e485e298225d1913f7d3ac185897ce265614832d3f"
+    },
+    {
+      "original": "/tmp/ev101-red2-runtime.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-red-runtime.json",
+      "sha256": "3faec5f833f78bace03d6db07d858ba33befd95a6a394025772fd025de53cd43"
+    },
+    {
+      "original": "/tmp/ev101-green1-runtime.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-green1-runtime.json",
+      "sha256": "d4ba59d435eb97920066106128ba390eb561a6829b76cb3d2e9f030bf5d9c244"
+    },
+    {
+      "original": "/tmp/ev101-final-runtime.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-green21-runtime.json",
+      "sha256": "26b8f79391e2ee81f8f4071595e402bdda42c02aa1ec26e134c39d046970ae69"
+    },
+    {
+      "original": "/tmp/ev101-edge-red/bindings.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-edge-red-bindings.json",
+      "sha256": "4a0b71c46db69139364e336ff3686e05ed5f1dcab6dc2b11cd5bc32a505724bc"
+    },
+    {
+      "original": "/tmp/ev101-edge-red-compile.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-edge-red-compile.json",
+      "sha256": "302c42abf989e9bfe8617afc77b2e3a96470e37ec043e57f0ad9f549ac86fe1c"
+    },
+    {
+      "original": "/tmp/ev101-edge-red-runtime.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-edge-red-runtime.json",
+      "sha256": "55acf19eecb30610c4bdc64fe97cb681acb152c5aff67c3e84e3de3d5c37b0ea"
+    },
+    {
+      "original": "/tmp/ev101-sealed-active.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-final-active.json",
+      "sha256": "8349ff14a77d5380bcf77cb1da4c15f578913aca0ef067940b686247a940b5b2"
+    },
+    {
+      "original": "/tmp/ev101-sealed-stage.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-final-stage.json",
+      "sha256": "588a84b844ff6c17d985382ae8606c450e8fb359e54d875cb02c9513310a314c"
+    },
+    {
+      "original": "/tmp/ev101-sealed/bindings.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-final-bindings.json",
+      "sha256": "96c89e64f79137f78cca28dbf0469edb207a2838fc363c16300b52c571f5f754"
+    },
+    {
+      "original": "/tmp/ev101-sealed-compile.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-final-compile.json",
+      "sha256": "d910783d4a80ce530138425ccd353a64dfe72fa5433999dd25b713e3142d7585"
+    },
+    {
+      "original": "/tmp/ev101-sealed-runtime.json",
+      "durable": "docs/reviews/20260909-1600-ev101-evidence/20260909-1600-final-runtime.json",
+      "sha256": "f70411e54788137d42b5e9cb0cc5a13e693300f8ca8dbf7bc82dab7f109bd28a"
+    }
+  ],
+  "compiled_artifacts": [
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/cepaf_gleam@knowledge@sheaf_engine.cache",
+      "sha256": "80a540333e0afb5f868a602f8fd36002e78b8c8b96619d8584e53676c88058b9",
+      "bytes": 34133
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/cepaf_gleam@knowledge@sheaf_engine.cache_meta",
+      "sha256": "fddb631b7e38157ad369d77097bf0a7eff4aa9dba5436e2b80c2f5270c0d0ebb",
+      "bytes": 2109
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/cepaf_gleam@knowledge@sheaf_engine.erl",
+      "sha256": "1bc5b1852f8f0b9b0f00c162647e2caaeedff29b77f349b99491cb931c643bb0",
+      "bytes": 29462
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/ev101_graph_integrity_test.cache",
+      "sha256": "e8dcaba92f3b69aefdca91772efc8c048f5def9e50335bfbc86d7c5ca3d43c73",
+      "bytes": 18090
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/ev101_graph_integrity_test.cache_meta",
+      "sha256": "a4e1cf91dd8fc475f93fa365ceb5da0c7ac4935aa0b2fdba3c9df14b39834204",
+      "bytes": 1693
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/ev101_graph_integrity_test.erl",
+      "sha256": "fcb91841c9988f8e88868111687dc0c5eaf2c54a7830389855bc328f55ddd53c",
+      "bytes": 34901
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/ev101_graph_runner.cache",
+      "sha256": "c802ab71d0f5fa2897898d859ae45d0b3d57bb0d43768d8f0e4c67a6341d6435",
+      "bytes": 1828
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/ev101_graph_runner.cache_meta",
+      "sha256": "6f7611e145733cfaf9f9d7ae983d7a011d68a30d26405e11e6edece39cf9f160",
+      "bytes": 217
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/ev101_graph_runner.erl",
+      "sha256": "d2ba75a2d48816a68f95ae05f039e508fe0e313c47fbeb1c6511e9c2b370e78d",
+      "bytes": 696
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/gleam@@compile.erl",
+      "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196",
+      "bytes": 6231
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/sheaf_engine_test.cache",
+      "sha256": "1ba6d1d89ee5ea3ae9e8f015a1a01e599c14c6a0c58972d09f4deffd0704e970",
+      "bytes": 4012
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/sheaf_engine_test.cache_meta",
+      "sha256": "6b76b6b6b696308e105b2d18ef7fb86696811e2ccbe102cfe6f1f817db404399",
+      "bytes": 404
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/_gleam_artefacts/sheaf_engine_test.erl",
+      "sha256": "7facad5610319c41fce398d4c549a8dcc239946483677bf3ee32c6007c105c96",
+      "bytes": 3845
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/ebin/cepaf_gleam@knowledge@sheaf_engine.beam",
+      "sha256": "c790bdc53a3a2ab36264c9b645448428bfe5df7373ab5b500f508b37c86fb33d",
+      "bytes": 24668
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/ebin/ev101_graph_integrity_test.beam",
+      "sha256": "a3ead24464f4b8da969b87dcc9144e8b80a5110a7a14732b3145a414b5ee72b2",
+      "bytes": 33844
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/ebin/ev101_graph_runner.beam",
+      "sha256": "afbf125f43b7aa407ab4f53d47945c5a24ca7f2443089bde8147832e1a5d37c7",
+      "bytes": 1756
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/ebin/sheaf_engine_test.beam",
+      "sha256": "c82b1b17b889c2238e0ede3e9f2e30a3f2d5670a173c4ef08241349b142df3d5",
+      "bytes": 5172
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/include/cepaf_gleam@knowledge@sheaf_engine_QueryResult.hrl",
+      "sha256": "6e928915eae4cd689493a37820f1debfd481bead34c8b2aa41ee1bc4a39ec72e",
+      "bytes": 162
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/include/cepaf_gleam@knowledge@sheaf_engine_SheafGraph.hrl",
+      "sha256": "dbdd0b2a591efe85bdbdd155a21be0c08522a043f3da8fe1d7dff8dc6c21acf0",
+      "bytes": 165
+    },
+    {
+      "path": "/tmp/ev101-sealed/compiled/include/cepaf_gleam@knowledge@sheaf_engine_SheafNode.hrl",
+      "sha256": "5f8c1dea5e899dba6984605508e7c0dabbcc574bab91fa1ef6c741e762f489aa",
+      "bytes": 317
+    }
+  ],
+  "tools": [
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697",
+      "bytes": 24440408
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/x86_64-pc-linux-gnu-ocamlrun-a100",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f",
+      "bytes": 2029504
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8",
+      "bytes": 67320
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+      "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966",
+      "bytes": 11063664
+    },
+    {
+      "path": "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma",
+      "sha256": "71ba709129744abcdf8dccdf97d0afa6326ce8bbe04063b316c3568b489c6023",
+      "bytes": 154525
+    }
+  ],
+  "limits": [
+    "Directed simple graph, self-edge supported once;64nodes256edges;1024byte text256byte IDs16tags64entries per adjacency",
+    "Checked APIs return typed refusals; legacy mutation wrappers preserve original graph on refusal",
+    "Node replacement treats outgoing edges as authoritative and rebuilds inbound cache; input inbound cache is bounded but ignored by documented contract",
+    "Reciprocity is observed adjacency ratio, not mathematical sheaf/cohomology proof or semantic corpus consistency",
+    "Public record constructors remain forgeable; consumers must validate; snapshot/search refuse invalid graph",
+    "Only navigator imports production engine; UI static checklist/consistency claims, live corpus, full formal and EV101 admission remain out of scope",
+    "Realized local dependency artifacts reused; no complete reproducible or shared-library closure claimed",
+    "Same-host cooperative evidence; no producer cryptographic authentication"
+  ]
+}

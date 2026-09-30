@@ -1,0 +1,33 @@
+{
+  "schema": "uos.codex-merge.manual-ui.v1",
+  "sources": [
+    "2be0d18d338a333c33b4a0d715d535d3573932db",
+    "c5a0d3e69067d35c291dfa2c769d202136e77cb9"
+  ],
+  "changes": [
+    "Restricted manual listener and same-origin navigation merged",
+    "Manual listener now uses integrated bounded-framing adapter",
+    "Release unit preparation includes required fixture module"
+  ],
+  "checks": {
+    "web_build": "PASSED",
+    "unit_tests": {
+      "passed": 128,
+      "failed": 0
+    },
+    "transition_parity_cases": 338,
+    "parity_scope": "Same frozen inputs and existing OCaml/Mojo release frontend; not an independent proof"
+  },
+  "historical_package": {
+    "executable": "517252df824c487ee80e61dfb4dec0fc139ec086",
+    "original_docs": "1bf746c973b152fa78592432c7ba24bc2719452a",
+    "modified": false,
+    "relabelled": false
+  },
+  "remaining": [
+    "Fresh live browser/SSE/TUI and human manual acceptance not executed for composed source",
+    "Native ABI and independent review gates remain held"
+  ],
+  "main_moved": false,
+  "runtime_mutated": false
+}

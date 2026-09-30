@@ -56,12 +56,19 @@ fn panel(
   )
 }
 
-pub fn render_view(
+pub fn render_view(selection: data.Selection, component: String, snapshot: status.Snapshot, now: Int) -> Element(msg) {
+  render_view_on_port(selection, component, snapshot, now, 4100)
+}
+
+/// Listener-owned origin; request headers cannot redirect navigation.
+pub fn render_view_on_port(
   selection: data.Selection,
   component: String,
   snapshot: status.Snapshot,
   now: Int,
+  port: Int,
 ) -> Element(msg) {
+  let origin = "http://nas-1.tail55d152.ts.net:" <> int.to_string(port)
   let fields = status.fields(snapshot, now)
   let visibility = case component == "all" {
     True -> ""
@@ -85,19 +92,19 @@ pub fn render_view(
           <> visibility,
       ),
       html.nav([attribute.attribute("aria-label", "Homeostasis navigation")], [
-        link("http://nas-1.tail55d152.ts.net:4100/", "Cockpit"),
+        link(origin <> "/", "Cockpit"),
         link(
-          "http://nas-1.tail55d152.ts.net:4100/homeostasis?"
+          origin <> "/homeostasis?"
             <> data.query(selection),
           "Homeostasis",
         ),
         link(
-          "http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution?"
+          origin <> "/homeostasis/evolution?"
             <> data.query(selection),
           "Evolution",
         ),
         link(
-          "http://nas-1.tail55d152.ts.net:4100/homeostasis/terminal?"
+          origin <> "/homeostasis/terminal?"
             <> data.query(selection),
           "Terminal view",
         ),
@@ -108,7 +115,7 @@ pub fn render_view(
           [attribute.attribute("aria-label", "Homeostasis components")],
           list.map(components, fn(name) {
             link(
-              "http://nas-1.tail55d152.ts.net:4100/homeostasis/components?"
+              origin <> "/homeostasis/components?"
                 <> data.query(selection)
                 <> "&component="
                 <> name,
@@ -401,7 +408,7 @@ pub fn render_view(
           "Read-only evidence surface. Missing sensors remain UNKNOWN. ",
         ),
         link(
-          "http://nas-1.tail55d152.ts.net:4100/api/v1/runtime/identity",
+          origin <> "/api/v1/runtime/identity",
           "Runtime identity",
         ),
       ]),

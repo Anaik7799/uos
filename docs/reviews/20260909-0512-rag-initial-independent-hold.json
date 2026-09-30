@@ -1,0 +1,87 @@
+{
+  "schema": "uos.ev-rag-independent-review.v1",
+  "status": "HOLD",
+  "authority": "NONE",
+  "observed_utc_seconds": 1788930797.610562,
+  "tested_source_commit": "12b978fd0a140b36f9ca22d2489e3069b2b4851f",
+  "original_passed": 11,
+  "original_failed": 0,
+  "independent_passed": 2,
+  "independent_failed": 5,
+  "artifacts": [
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam",
+      "sha256": "4d64da8f446196ccaa9161d766a6961c13c3cb0b9f19e5aeb1301c2764244ec5"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/src/rag_cache_mesh_test.gleam",
+      "sha256": "55f7c2756461c0325af31337d36f2ba4d8f897ae1205917638d7eb26704b6c16"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/src/ev_rag_freshness_runner.gleam",
+      "sha256": "8f753ec01b438f374ff91691e6cbcc0ca29c523ae3f8840642c48e88aad3c75f"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/src/ev_rag_adverse_test.gleam",
+      "sha256": "dfeed0527740539f11e04fd6349445fa690c85583314c427b617f0b390adf78f"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/compiled/ebin/cepaf_gleam@knowledge@rag_cache_mesh.beam",
+      "sha256": "1a65b605c41bb8a7524ddfb46d8aae8ff5f8e365b3fbe5d1f74a4a8436e42ec2"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/compiled/ebin/rag_cache_mesh_test.beam",
+      "sha256": "ac3ed2211876a3faaf9aacdaf35393b28d75836b196b041b4bbf80b5e5081d09"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/compiled/ebin/ev_rag_adverse_test.beam",
+      "sha256": "b85fb83e0bbe1006718d5fd0150962d6227a1e9def1608c60709d79a7738f4f1"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/compile.json",
+      "sha256": "b1411723e536ed3c068dd111fb2dc7453041efc19a05e465bddc4f189b81dff9"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/original-tests.json",
+      "sha256": "2a13e2d9e0b096d28f580cd96f8c21db10af5547bc8da0e087fc7242779f9dba"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/adverse-tests.json",
+      "sha256": "3b0c978f0ba14ec127709009e3769f692e25f88ea70b77a465ac47436cf65bcc"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-review-20260909/source-manifest.json",
+      "sha256": "59ed97f683aae61a79dd1c7293e2e0b6215a3223c3d4d1d6e213f70d29682e29"
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P1",
+      "line": 454,
+      "finding": "Accepted finite embedding [1.0e200] overflows x*x at line142, raising BEAM Badarith during lookup rather than refusing. Bound numeric magnitude or use stable arithmetic and test accepted extremes."
+    },
+    {
+      "priority": "P1",
+      "line": 439,
+      "finding": "entry_is_fresh accepts now earlier than observed_at. Entry observed1000 returns CacheFresh at999. Require an ordered observation window before fresh classification."
+    },
+    {
+      "priority": "P1",
+      "line": 430,
+      "finding": "Vector-only refresh1200 renews TTL for unchanged response/chunks created1000 (TTL100), returning them fresh1250. Separate vector observation from content freshness or require explicit validated content refresh; model-only timestamp is not content verification."
+    },
+    {
+      "priority": "P2",
+      "line": 425,
+      "finding": "Refresh900 overwrites observation1000 and its newer vector. Reject nonadvancing observations, also checking replacement put and access paths for temporal regression."
+    },
+    {
+      "priority": "P2",
+      "line": 246,
+      "finding": "Semantic lookup accepts dimension mismatch: query[1.0] matches stored[1.0,0.0]. Require matching dimensions before computing cosine."
+    }
+  ],
+  "caller_observation": "Repository Gleam-source search found production rag_cache_hud only reads summary metrics; lookup/refresh consumers were scoped tests. No live retrieval/model caller established.",
+  "refusal_controls": "Negative lookup time yields CacheRefused(InvalidObservationTime); empty-vector refresh and negative-token put leave original state unchanged.",
+  "limits": "Private source extracted by explicit commit_id selector from immutable candidate. Native Gleam compile/BEAM execution reused realized canonical dependency artifacts, excluded stale cepaf/uos_swarm outputs. No source, Sa-plan or live mutations; no admission or formal proof. Hashes bind observed files but do not authenticate producer identity."
+}

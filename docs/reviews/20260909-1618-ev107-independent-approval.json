@@ -1,0 +1,238 @@
+{
+  "schema": "uos.ev107.independent-review.v1",
+  "observed_at": 1788971296.488085,
+  "source_candidate": "11eeca9df5c14961ed4b4b8fc990752ad7bccd46",
+  "author_evidence": "725aa3d18813280554964885ddeba9820ac171a7",
+  "verdict": "APPROVED_BOUNDED_DIGEST_COMPARISON",
+  "authority": "NONE",
+  "ev_admission": "NOT_GRANTED",
+  "review_plan": "uos/ev107-digest-review/20260909",
+  "task": "REVIEW",
+  "attempt": 1,
+  "independent_tests": {
+    "author_tests_rebuilt": 18,
+    "independent_baseline_controls": 14,
+    "compiled_disagreement_mutants": 4,
+    "diagnostic_prose_variant_controls": 14,
+    "successful_native_invocations": 13
+  },
+  "author_archive_unique_files_verified": 54,
+  "author_bindings_checked": 87,
+  "author_binding_current_mismatches": [],
+  "author_dependencies_rehashed": 8,
+  "independent_source_and_artifacts": [
+    {
+      "path": "engines/hermes/modules/system_engg/gospel_dispatch_contracts.ml",
+      "sha256": "c3c2255a6e2cdaf725a54f12181142e0072e1c988abf1a77a25fb6dd82193d94",
+      "bytes": 3259
+    },
+    {
+      "path": "engines/hermes/modules/system_engg/gospel_dispatch_contracts.mli",
+      "sha256": "2387d51d4dbb5ea032c50d918c1dfa776473996d7f58a74780c97232b2da7274",
+      "bytes": 2284
+    },
+    {
+      "path": "engines/hermes/modules/system_engg/test_gospel_dispatch_contracts.ml",
+      "sha256": "d2c3135eb0d92f203fc1688c48019e1dd2138909dc05c291f27dc0ec348e81f1",
+      "bytes": 4351
+    },
+    {
+      "path": "tools/test_ev107_digest.ml",
+      "sha256": "35b5180833a205bbea6dae8cce39837d06a3c09b6091f7256f80bcc4ad2313c0",
+      "bytes": 9288
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/positive-build.json",
+      "sha256": "b84a4a16d40a03dce1d691af4d2181dd29034b2b8d15f46fe8c9f536a50fc0a2",
+      "bytes": 2229
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/positive-probe.json",
+      "sha256": "0c529cdb62ff0dabe95411664b2ba48ba38a555aeb13c15ed22a579b33619b17",
+      "bytes": 2593
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/author18.json",
+      "sha256": "f5d73128b8c7e93235fb199a6891bb7c75f48594d33400d0b59dc0c6e2707377",
+      "bytes": 2905
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/positive/gospel_dispatch_contracts.ml",
+      "sha256": "c3c2255a6e2cdaf725a54f12181142e0072e1c988abf1a77a25fb6dd82193d94",
+      "bytes": 3259
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/positive/independent_probe.ml",
+      "sha256": "c1ee63642c37c40693852a5ab75874e0f2f84e73e0aaae6eda8fb1792bed1a1a",
+      "bytes": 1621
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/positive/build/default/independent_probe.exe",
+      "sha256": "4ae42bf35983f985cb581c3a807586512061073252d21e0a7687e09f79f804a8",
+      "bytes": 5064528
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/primary-digest-build.json",
+      "sha256": "e5d460b789871be2109eba626b738e75da80922dda8a23cfd3d1500a7cad6dad",
+      "bytes": 2255
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/primary-digest-probe.json",
+      "sha256": "17b6ff99edef063a0bfd1ee80f9cfc0d6661f43588c5dcaa918890cfc9b7fe0b",
+      "bytes": 2107
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/primary-digest/gospel_dispatch_contracts.ml",
+      "sha256": "9441a6228a0de411f7db973b2370be3ba7cb54f27d4f73c97cf9f719e5c352de",
+      "bytes": 3256
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/primary-digest/independent_probe.ml",
+      "sha256": "2ea201c6cd4bfada99c674d514756128f923bc18d8330e466581fc1da8d80e60",
+      "bytes": 231
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/primary-digest/build/default/independent_probe.exe",
+      "sha256": "be676ec32377b86f3f176fd2c3a5e0c80428d49e57b2faf0eb56e7341c6f356c",
+      "bytes": 5052992
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-digest-build.json",
+      "sha256": "8236cd1c47fa3d7e6f5551cde5b2c5b7971b7692c2477d8b5b022bb4d62f58a1",
+      "bytes": 2260
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-digest-probe.json",
+      "sha256": "c1d8370f034181870da8c4e202e20624af97d1421a6bb8e58c5255f24c1a5271",
+      "bytes": 2112
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-digest/gospel_dispatch_contracts.ml",
+      "sha256": "fb1fd278919f4655af789cc0da0f3430854e8c7852abddeebf4be97662a02c2f",
+      "bytes": 3256
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-digest/independent_probe.ml",
+      "sha256": "2ea201c6cd4bfada99c674d514756128f923bc18d8330e466581fc1da8d80e60",
+      "bytes": 231
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-digest/build/default/independent_probe.exe",
+      "sha256": "639b4ebcf5cff084ebaa923a7386170a01704a1472d05a25038a5b878d0260f6",
+      "bytes": 5052992
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-code-build.json",
+      "sha256": "e1963e8bad57d0d922d74be33ceda3c900593a0f2ff31ef033f768ddcec1fb56",
+      "bytes": 2247
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-code-probe.json",
+      "sha256": "deeb462a600267b45501002bdeae68424783cc6136931bf50163f7c6500bb0d9",
+      "bytes": 2108
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-code/gospel_dispatch_contracts.ml",
+      "sha256": "76ea4cfab6cd3e1ffbc9f7689c769a7f5afd6d2438216851a2e0462539903e32",
+      "bytes": 3259
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-code/independent_probe.ml",
+      "sha256": "d9f9dfe8d274adea9da5b5101a77c11108f73141cfbe906c1a4bbd6a81a1f4dd",
+      "bytes": 234
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-code/build/default/independent_probe.exe",
+      "sha256": "54480ff772aa59767ac0e87bc780d87925f5af978f155223d7cc03d47ffa115a",
+      "bytes": 5052944
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-kind-build.json",
+      "sha256": "1e9ee64d27c5cbc819ff25ad342243271fc8a98f597ed003e4915d5199670ace",
+      "bytes": 2255
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-kind-probe.json",
+      "sha256": "8c0d97509e4297bd4e9579890fdc3e03e5bc96aa5d7306b6aa87c4098a2a63c9",
+      "bytes": 2099
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-kind/gospel_dispatch_contracts.ml",
+      "sha256": "fdc367af4aed7c4ef72a9595154432f1e40470320ddae0df54775b1668fb34f9",
+      "bytes": 3267
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-kind/independent_probe.ml",
+      "sha256": "2ea201c6cd4bfada99c674d514756128f923bc18d8330e466581fc1da8d80e60",
+      "bytes": 231
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/reference-kind/build/default/independent_probe.exe",
+      "sha256": "ff42806109afd6cf15637609b3924862e247a72d5a394a4bd0476d32bd349355",
+      "bytes": 5053008
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/diagnostics-only-build.json",
+      "sha256": "bf5501ac2987de09af29ffef20789e0f44e748d3f761f4e2cb8599cb12cda1e4",
+      "bytes": 2261
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/diagnostics-only-probe.json",
+      "sha256": "92ae39ecb7783a144db6d6ed5206c5249a7f338102bd894f2290fdcaf2d6b1ae",
+      "bytes": 2609
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/diagnostics-only/gospel_dispatch_contracts.ml",
+      "sha256": "ce6049e3cbed8fd2a2c43baec7b6f1274ee4da3af06f4650e3c36daeaad308b5",
+      "bytes": 3283
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/diagnostics-only/independent_probe.ml",
+      "sha256": "c1ee63642c37c40693852a5ab75874e0f2f84e73e0aaae6eda8fb1792bed1a1a",
+      "bytes": 1621
+    },
+    {
+      "path": "/tmp/ev107-independent-1625/diagnostics-only/build/default/independent_probe.exe",
+      "sha256": "5b4045d6619309f9788067ae9d2d2909573b053660b08833c552ffbd546f72e4",
+      "bytes": 5064528
+    }
+  ],
+  "review_controls": [
+    {
+      "path": "/tmp/ev107-review-preflight.json",
+      "sha256": "c6b974368ed0c0cac9f852f431dd77de67bd4539277a0521ebcb328c1b48ecaf",
+      "bytes": 3800
+    },
+    {
+      "path": "/tmp/ev107-review-claim.json",
+      "sha256": "f425ddc4d27617c2dd13ae59edbf44aad3f3220fa740eaf53fb5630714751346",
+      "bytes": 2998
+    },
+    {
+      "path": "/tmp/ev107-review-active.json",
+      "sha256": "599212cbe6c1ba55835178d3bd93b1607768ffdbd82ae9105dd2bb40311d0b0c",
+      "bytes": 3787
+    },
+    {
+      "path": "/tmp/ev107_independent.ml",
+      "sha256": "a0e1a4e28a250776c278358144cf1d39280aaae00200cb66a0da1091e8ff9abf",
+      "bytes": 6563
+    },
+    {
+      "path": "/tmp/ev107_review_audit.ml",
+      "sha256": "d56d5ec043ecf2b9be01a774cb65727383fb5db7ca878dd004123264e2f40177",
+      "bytes": 5707
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "Approval covers exact lowercase SHA-256 expectation and comparison of verdict kinds, rejection codes, and passing digests; Ok true can mean matching rejections.",
+    "Caller scan found direct tests and driver only. No production MCP/Rete invocation, dispatch safety, SQL-injection completeness, or full EV107 runtime was established.",
+    "Both implementations share digest and SQL helpers; independent known vectors support specific digest observations, not cryptographic proof.",
+    "Historical bounded function name does not impose a payload-size bound; operations are linear in caller-provided payload. Largest independent fixture is one million bytes.",
+    "Authored orchestration uses argv-only native OCaml/Dune/ELF executables. Dune trace inspected; transitive compiler/linker exec closure was not traced or authenticated.",
+    "Campaign uses cooperative local JJ/source and mutable executable paths; tool hashing is observed evidence, not immutable tool execution or producer authentication.",
+    "Eight dependency hashes are post-execution checks, not complete hermetic or shared-library release closure. Formal solver unavailable in this component scope; no admission.",
+    "Reviewer fixtures run under 180-second outer and 60-second child deadlines with bounded captured output; local filesystem reads remain cooperative."
+  ]
+}

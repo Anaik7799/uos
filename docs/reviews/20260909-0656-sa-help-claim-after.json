@@ -1,0 +1,26 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe",
+    "--format", "json", "task", "show",
+    "infranodus-fractal-closure-20260804-0936", "task-0"
+  ],
+  "utc_started": 1788933425.930344,
+  "utc_finished": 1788933425.991161,
+  "elapsed_seconds": 0.06081634899999999,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "{\"plan_id\":\"infranodus-fractal-closure-20260804-0936\",\"id\":\"task-0\",\"name\":\"legacy/tasks/legacy-408fb7d538d886976a2bf2c7f9e1678f/legacy-d5b584bdf992e309842ba1e0d2dffe94\",\"title\":\"Durable Sa-plan and registration\",\"parent_id\":\"-\",\"state\":\"available\",\"priority\":\"0\",\"worker\":\"-\",\"attempt\":\"2\"}\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788933425945422837\",\"command\":\"--task-show\",\"authority\":\"report_only\",\"total_ns\":1966821,\"server_timing\":\"decode;dur=0.002, normalize;dur=0.002, validate;dur=0.001, store_open;dur=1.680, dispatch;dur=0.078, store_close;dur=0.187, total;dur=1.967\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1844,\"duration_ms\":0.001844},{\"name\":\"normalize\",\"duration_ns\":1973,\"duration_ms\":0.001973},{\"name\":\"validate\",\"duration_ns\":1232,\"duration_ms\":0.001232},{\"name\":\"store_open\",\"duration_ns\":1680100,\"duration_ms\":1.6801},{\"name\":\"dispatch\",\"duration_ns\":78247,\"duration_ms\":0.078247},{\"name\":\"store_close\",\"duration_ns\":186952,\"duration_ms\":0.186952}]}\n",
+  "output_sha256": "9c08eaba4f31372de52c643ff546e2cda8aa6bb2ed4f52fda6a5a0e430472cd4",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

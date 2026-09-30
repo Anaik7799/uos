@@ -198,16 +198,16 @@ pub fn evolve_model(
       1.0,
       0.0,
     )
-  use proposal <- result.try(engine.propose_evolution(
-    stable,
-    mutation,
-    now + 4_000_000,
-  ))
-  let voted =
+  use submitted <- result.try(
+    engine.submit_evolution(stable, mutation, now + 4_000_000)
+    |> result.map_error(engine.evolution_error_to_string),
+  )
+  use voted <- result.try(
     [quorum.AgySovereign, quorum.ClaudeSovereign, quorum.CodexSovereign]
-    |> list.fold(proposal, fn(p, member) {
-      engine.vote_on_evolution(
-        p,
+    |> list.try_fold(submitted, fn(pair, member) {
+      engine.cast_registered_vote(
+        pair.0,
+        pair.1,
         member,
         quorum.QuorumApprove,
         "SIMULATED vote",
@@ -215,7 +215,10 @@ pub fn evolve_model(
         now + 5_000_000,
       )
     })
-  engine.apply_ratified_evolution(stable, voted)
+    |> result.map_error(engine.evolution_error_to_string),
+  )
+  engine.apply_ratified_evolution(voted.0, voted.1)
+  |> result.map_error(engine.evolution_error_to_string)
 }
 
 pub fn cycles(count: Int) -> List(Int) {

@@ -1,0 +1,27 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe",
+    "task", "complete", "uos/ev-rag-freshness/20260909", "REPAIR",
+    "codex-ev-rag-freshness", "1",
+    "Bounded cache-model repair completed at source11fa5b0e561580081479420df54dd9a66d13153a,evidence712ad7bbf131a076fc3d42f2de07ddb63a466aed.19nativeauthorchecks and15independentadverse/numeric probes pass. Finalreview docs/reviews/20260909-0506-ev103-independent-review-approved.json SHA1b82cec9906dc0e9583d9f0485afb628ae8ca43a00f59ef522fb499de8408622 in rootEVsiblingscope. FreshactivecheckPASS2026-09-09T05:40:06Z assessment06edc6c3. Priorfuture/stale/content/dimension/overflow/tinyvectorfailures preserved. Live retrieval,inference,network,formalproof,releaseandEV103admissionremainunestablished."
+  ],
+  "utc_started": 1788932431.078814,
+  "utc_finished": 1788932431.127711,
+  "elapsed_seconds": 0.048896096000000014,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "completed=true plan_id=uos/ev-rag-freshness/20260909 task=REPAIR attempt=1\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788932431097712565\",\"command\":\"--complete\",\"authority\":\"report_only\",\"total_ns\":6468820,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.002, validate;dur=0.003, store_open;dur=1.527, dispatch;dur=3.444, store_close;dur=1.448, total;dur=6.469\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":2675,\"duration_ms\":0.002675},{\"name\":\"normalize\",\"duration_ns\":2234,\"duration_ms\":0.002234},{\"name\":\"validate\",\"duration_ns\":2554,\"duration_ms\":0.002554},{\"name\":\"store_open\",\"duration_ns\":1527403,\"duration_ms\":1.527403},{\"name\":\"dispatch\",\"duration_ns\":3443618,\"duration_ms\":3.443618},{\"name\":\"store_close\",\"duration_ns\":1448114,\"duration_ms\":1.448114}]}\n",
+  "output_sha256": "24585b23b0196d002d3c0db5d954c16542bb48178bf5cebd8391873b5376793b",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

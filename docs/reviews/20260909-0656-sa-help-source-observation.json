@@ -1,0 +1,136 @@
+{
+  "sources": [
+    {
+      "path": "engines/hermes/modules/sa_plan/guardian.ml",
+      "sha256": "b6858dd7c78ba93a2f4930c21f871b0ce3abd9d316231c4f9e48457c845311c9"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/guardian.mli",
+      "sha256": "1003725639191fb53179065c08ef364be681bd454498ab823be46bd30ff05ea4"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan.ml",
+      "sha256": "729890770e4f90d5a2dfacdb9970b1875856dbbc6635a077134b4dbcb4561697"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_c3i_reference.ml",
+      "sha256": "9f3c5548d7d2ff6514df605ce61c66272a33ed2bfd27fca33a45ac7f46e617cb"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_c3i_reference.mli",
+      "sha256": "19aea35934efda215321de627dfe06ba63c110dc64964a668e15011648ec7743"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_control_plane.ml",
+      "sha256": "beff2c5ac054d83c85c63ca4ac32d07e0e7ce8ef1ea1878c8a15367a72f5f675"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_control_plane.mli",
+      "sha256": "c8f4d8274e87bdad2dcbd63e4813cd08aba183ca14d32cb3c13d045267638878"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_control_plane_oracle.ml",
+      "sha256": "03aba947a14f2b9d48c9646df3367c9002d067859e47e7fb0dc65778d9a62d8e"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_control_plane_oracle.mli",
+      "sha256": "1df0cfaac17691b5f4840e7d0a3ed29cd9cf5e17f04dae295d1e167a5315a86e"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_crdt.ml",
+      "sha256": "05be7faee4755646ec955df3cbcefb87729028c3a9ef850c78546ae990c25970"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_deck.ml",
+      "sha256": "56f17e040274dee25c3856c14f746b4590c2b4b71ddda97b0798c0af4d18ffd2"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_journal.ml",
+      "sha256": "56c7406cda9bfd0646d3cfc3b1f793d1b6e52916161d32894125795b945486fa"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_mail.ml",
+      "sha256": "e86a44d72725a89dfb93460f23d6ef10cfd0641074dd8e7cbe59f6f20b811861"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_management.ml",
+      "sha256": "49f03d48997a3430e94e62aa2d17cd88c49af67c6036d58f69fb462ab3a44539"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_name.ml",
+      "sha256": "5f27d4024f196ceb6f72da8b742501daa9bf9216a031f1a05c190d0b9d005cf6"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_name.mli",
+      "sha256": "a0f9e47c5535ef52f1701f981d5d72505800315c69e9247ac924176c44cdd5be"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_oban.ml",
+      "sha256": "0cc5c4248de058da7b5fc3e82d39a2ff5c0d72823bf8fbfe1edc573d210dd4f5"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_observability.ml",
+      "sha256": "30d13aa4eea59cdb4586198845621fce288ec9b757ad3512477c45fad0cfcae4"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_observability.mli",
+      "sha256": "1e250cdc56519d29ace8c695b88a4f1eff7e5f1a285fda9168e7cea9d0353fef"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_observation.ml",
+      "sha256": "7a6e2e56818b144d0061989e9776912bc1dac142e3c011bc2bf6d93e501cce70"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_observation.mli",
+      "sha256": "c3f1febf7e0ed1ea2a40af07156b22566cdc2a17a7bb8c107d7d7ce8e98cec4d"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_pipeline_telemetry.ml",
+      "sha256": "dc12b7059a4a73e6b33e60691d3d0ebef083cdecbff877835be6846cd1ab6f7f"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_pipeline_telemetry.mli",
+      "sha256": "dd130cd1381316377f6998984a62625497ca0571daabed25e91cac7e57e5fb0c"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+      "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_store.mli",
+      "sha256": "9e0f305a6895db16190dca80ff826009ea135916d29f31876881bf1dd73462f7"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_temporal.ml",
+      "sha256": "082f8e36a6f7cb7a079634967b8bb1e64de507e03531c939d1adf7b684112ad0"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_main.ml",
+      "sha256": "72cf7319be989e996a20478d12ec8b1c49c371d2b474fc1fd428ffacfa8b8952"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_cli.ml",
+      "sha256": "592a3de0f9e100e1d8def2169828663d579dac4d0e87ae48fcd2c11374ee6a19"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_work.ml",
+      "sha256": "907899c2ac5e31d7a902a89100d58bc9c66cf3d27f1e77450173872f542db5ff"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_manual.ml",
+      "sha256": "5e0348684dcdf1fd359ef5ceab979345db8bb946326cf78bc03f1a0bd40de12c"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/journal_markdown_html.ml",
+      "sha256": "9e09e9f077317bfd5481da2ee39d0e8209f6b1c1bec14be0f86dd766ae94c7f4"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_cli.ml",
+      "sha256": "8b301c3a4623b0ecf2fe1dab2dd622dd7a4c1d4831c5dc28f25b5dfe3982d086"
+    }
+  ],
+  "checks_passed": 27,
+  "executable_sha256": "7d6ad9ad26b97cb5b0060a35b0db49403d9593833adf6d8ac977a808a0c80fad",
+  "authority": "NONE",
+  "scope": "Private CLI behavior; no live binary replacement"
+}

@@ -1,0 +1,15 @@
+#use "topfind";;
+#require "unix,str,yojson,cryptokit";;
+let root="/tmp/ev98-codec-final-5e1edaa7"
+let target="/tmp/ev98-codec-sample-mutant-5e1"
+let read p=let c=open_in_bin p in let b=really_input_string c(in_channel_length c)in close_in c;b
+let sha s=Cryptokit.hash_string(Cryptokit.Hash.sha256())s |> Cryptokit.transform_string(Cryptokit.Hexa.encode())
+let rec copy a b=match(Unix.lstat a).st_kind with Unix.S_DIR->Unix.mkdir b 0o700;Array.iter(fun n->copy(a^"/"^n)(b^"/"^n))(Sys.readdir a)|Unix.S_REG->let c=open_out_bin b in output_string c(read a);close_out c|_->failwith "type"
+let ()=Unix.mkdir target 0o700;List.iter(fun p->copy(root^"/"^p)(target^"/"^p))["src";"lib";"gleam.toml"]
+let p=target^"/src/cepaf_gleam/crdt/mesh_sync.gleam"
+let original=read p
+let anchor="Integer(h.sample_epoch_us)"
+let chunks=Str.split_delim(Str.regexp_string anchor)original
+let ()=if List.length chunks<>2 then failwith "mutation anchor count"
+let mutant=String.concat "Integer(reg.timestamp_us)" chunks
+let ()=let c=open_out_bin p in output_string c mutant;close_out c;Yojson.Basic.to_file(target^"/mutation.json")(`Assoc["candidate",`String "5e1edaa7bb1b3b39a501e771720bc2ef63174a87";"source",`String p;"original_sha256",`String(sha original);"mutant_sha256",`String(sha mutant);"anchor",`String anchor;"replacement",`String "Integer(reg.timestamp_us)";"designated_assertion",`String "mesh_sync_codec_test.all_fields_and_forwarding_origin_roundtrip_test"])

@@ -1,0 +1,68 @@
+======================== EUnit ========================
+module 'module_guard_contract_test'
+  module_guard_contract_test: exact_key_cases_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from gleam@list:each/2 (src/gleam/list.gleam, line 1655)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message =>
+      <<"\n#(\"value_substring\", True)\nshould equal\n#(\"value_substring\", False)">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  module_guard_contract_test: passing_bytes_preserved_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from gleam@list:each/2 (src/gleam/list.gleam, line 1655)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message =>
+      <<"\nGuardFailed(\"JSON missing field 'status' for contract\", \"{\\\"error\\\":\\\"m"...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  module_guard_contract_test: fallback_escapes_metadata_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message =>
+      <<"\nError(UnexpectedByte(\"0x22\"))\nshould equal\nOk(#(\"e\\\"\\n\", \"s\\\"\\n\"))">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  module_guard_contract_test: malformed_nonempty_rejected_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  [done in 0.029 s]
+=======================================================
+  Failed: 4.  Skipped: 0.  Passed: 0.

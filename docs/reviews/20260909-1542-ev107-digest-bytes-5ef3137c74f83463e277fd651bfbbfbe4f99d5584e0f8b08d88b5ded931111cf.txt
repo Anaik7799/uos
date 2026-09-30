@@ -1,0 +1,1 @@
+(executable (name test_gospel_dispatch_contracts) (modules gospel_dispatch_contracts test_gospel_dispatch_contracts) (libraries unix str cryptokit))

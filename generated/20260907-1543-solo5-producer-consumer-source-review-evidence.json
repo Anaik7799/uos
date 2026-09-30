@@ -1,0 +1,185 @@
+{
+  "schema": "uos-solo5-producer-consumer-source-review/v1",
+  "generated_at_utc": "2026-09-07T15:00:43Z",
+  "clock": {
+    "source": "host UTC",
+    "ntp_synchronized": true
+  },
+  "source_snapshot": {
+    "commit_id": "7634c2ae8f808bae1c7832a25a8762b1e7c33ab4",
+    "change_id": "wxzlyzqksostuulkkxupkoyukyqqpwwp",
+    "root_observed_at_utc": "2026-09-07T14:56:51Z",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-solo5-source-review",
+    "all_seven_root_and_snapshot_hashes_equal": true,
+    "kind": "canonical immutable review snapshot; not a quiesced AGY handoff",
+    "agy_final_handoff": "NOT_RECEIVED_AT_REVIEW"
+  },
+  "verdict": "NOT_APPROVED_SOURCE_BLOCKERS",
+  "method": {
+    "source_files_reviewed": 7,
+    "native_executions": 0,
+    "consumer_reproduction_executions": 0,
+    "formal_tool_invocations": 0,
+    "production_mutations": 0,
+    "analysis": "Bounded source inspection and read-only SHA256/stat observations. No result is claimed as a runtime counterexample unless separately labeled; all listed acceptance/cleanup consequences are source deductions."
+  },
+  "source_sha256": {
+    "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml": "5b51a75aad01f00712b0dd05a386e5d30f977c6bb7b13384c1638e44f8890f77",
+    "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.mli": "265bbd6876beef46fcb6dcc2021b2330e331a7226ef1b163b18ced00363bd35d",
+    "engines/hermes/modules/hermes_mirage/kvm_ioctl_stub.c": "73f9ca9b708c78c0e86eb73aa2244f0dc382483725901bd92e3c1281c637599f",
+    "engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml": "f1a308d1ae6ad9681e500176f934c174659b8fe4ddbea5a6424a4923f90d345b",
+    "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam": "2b0b3a47ddb5cc8cde4d4c8a378b134ca65a0b95af0c0d013ade57dd02b5171d",
+    "tools/uos/src/main.gleam": "7f97103364370b404caa12c3f4719e92c7a1b9c547b69fc387c752ed7227684c",
+    "tools/uos/src/uos_ffi.erl": "990cb598c3683355007ef9558916003334ca4d44613df540a986d77266a6b2ea"
+  },
+  "installed_artifact_observations": {
+    "status": "SIX_DECLARED_SOLO5_PINS_MATCH_AT_READ_TIME",
+    "sha256": {
+      "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt": "5ac9c80ccb413dcff3f0b8cc19863d926b4249f72d96313b925d5ef354425944",
+      "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt": "cc56911c77db44ba66b9027886de681d36f30dd372be19e9b16902afaed516de",
+      "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run": "ea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1",
+      "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt": "0ea6659e620e47ed1194a6db414a50ce4ff973d882731d56251642cc2e966654",
+      "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt": "fcbb35ce8d4609a5d43b055798f54b11548156670febc5dae3a0b12ba3bbc7a0",
+      "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio": "6382630707f92302ba98d8e45e408e5d691830acd87940d25aa87764c26483e6",
+      "/usr/bin/qemu-system-x86_64": "0cd4112a8f0cb891eb7c10e8df38c9dfeec8c7389bb22db6aa425f0d6fe733dc"
+    },
+    "stat_and_runner_source_output": "5ac9c80ccb413dcff3f0b8cc19863d926b4249f72d96313b925d5ef354425944  /home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt\ncc56911c77db44ba66b9027886de681d36f30dd372be19e9b16902afaed516de  /home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt\nea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1  /home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run\n0ea6659e620e47ed1194a6db414a50ce4ff973d882731d56251642cc2e966654  /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt\nfcbb35ce8d4609a5d43b055798f54b11548156670febc5dae3a0b12ba3bbc7a0  /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt\n6382630707f92302ba98d8e45e408e5d691830acd87940d25aa87764c26483e6  /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio\n0cd4112a8f0cb891eb7c10e8df38c9dfeec8c7389bb22db6aa425f0d6fe733dc  /usr/bin/qemu-system-x86_64\n202664 regular file /home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt\n116496 regular file /home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt\n7765 regular file /home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run\n119904 regular file /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt\n86992 regular file /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt\n216296 regular file /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio\n31328048 regular file /usr/bin/qemu-system-x86_64\n4:# This file is part of Solo5, a sandboxed execution environment.\n61:qemu_add_device ()\n187:            HV=qemu\n204:kvm|qemu)\n205:    hv_addargs qemu-system-x86_64\n210:    qemu)\n216:    # Kill all default devices provided by QEMU, we don't need them.\n220:    # QEMU monitor on stdio which requires ^Ax to exit. This makes things look\n229:        qemu_add_device $D ${PCI_SLOT}\n230:        # The maximum PCI slot is 31. We don't check this as qemu will fail\n235:    # Used by automated tests on QEMU (see kernel/virtio/platform.c).\n240:    # QEMU command line parsing is just stupid.\n245:        exec ${HVCMD} -append \"${ARGS}\"\n248:        exec ${HVCMD}\n300:    # Can't do exec here since we need to clean up the 'cat' process.\n",
+    "limit": "One read-only observation of installed bytes, not an execution or before/after run binding. QEMU hash is observed, not pinned by this producer."
+  },
+  "findings": [
+    {
+      "id": "S13-01",
+      "severity": "HIGH",
+      "title": "Gleam projection accepts unbound fabricated and stale claims",
+      "locations": [
+        "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam:26",
+        "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam:65",
+        "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam:289"
+      ],
+      "source_observation": "Receipt type/decoder omits tender/guest digests and boot ID; no candidate/run identity exists. Freshness is starts_with(timestamp_utc,\"2026\"). Success trusts passed booleans and exit 0/0/83. Public hardcoded default_verified_probe still returns a full verified report.",
+      "consequence": "Neither actual date parsing, elapsed age, boot/candidate binding nor authentic execution is established. A source-derived variant of the default report with timestamp '2026-not-a-date' meets the timestamp predicate; this was not executed.",
+      "repair": "Use one typed admission validator with trusted expected context and actual parsed freshness. Preserve and validate every identity/digest; move fabricated verified fixture to tests."
+    },
+    {
+      "id": "S13-02",
+      "severity": "HIGH",
+      "title": "CLI receipt validator checks shape and assertions rather than execution provenance",
+      "locations": [
+        "tools/uos/src/uos_ffi.erl:83",
+        "tools/uos/src/uos_ffi.erl:101",
+        "tools/uos/src/uos_ffi.erl:107",
+        "tools/uos/src/uos_ffi.erl:117"
+      ],
+      "source_observation": "Allows dates within abs(now-receipt)<=7 days, including future. Boot ID requires only >=32 bytes; tender/guest SHA fields require only 64-byte strings. No hex or equality check, current artifact hash, exact paths, output, candidate, invocation or before/after binding is checked. INDEPENDENT_EVALUATION_IN_PROGRESS is the accepted review label. api_version >= 12 lacks an integer type guard and uses Erlang term ordering.",
+      "consequence": "A syntactically constructed receipt can satisfy checked fields without authentic execution. Producer/CLI/Gleam apply different predicates, so one surface's validation cannot establish another's.",
+      "repair": "Strictly decode typed fields, reject future observations, compare bounded age and expected boot/candidate/run/artifact/QEMU context, and consume authentic execution evidence plus a separately verified review result. Remove direct authority from self-reported passed/review strings."
+    },
+    {
+      "id": "S13-03",
+      "severity": "HIGH",
+      "title": "Declared Solo5 guest pins and post-execution hashes do not bind the executed artifacts",
+      "locations": [
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:228",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:285",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:324",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:427"
+      ],
+      "source_observation": "Guest digest/size bindings are declared but only their paths are used. run_tender_test accepts guest size>=10000 and ELF prefix; direct calls to allowed tender paths skip digest verification. find_tender falls back to OPAM/system paths if the 0.13.0 pin fails. Tender and guest hashes are read only after execution and are not checked against expectations; no before/after equality or stable descriptor identity exists.",
+      "consequence": "Matching installed artifacts at this review time does not bind the executable/guest used by a past or future invocation. Wrong release, substituted guest or changed artifact is not rejected by a uniform current-context policy.",
+      "repair": "Require exact approved release/catalog pins for both tender and guest, verify them immediately before and after the run (or retain stronger descriptor identity), fail on pin mismatch and remove unpinned fallbacks from 0.13.0 readiness."
+    },
+    {
+      "id": "S13-04",
+      "severity": "HIGH",
+      "title": "QEMU observation and virtio execution are not bound to the same QEMU",
+      "locations": [
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:91",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:192",
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run:205"
+      ],
+      "source_observation": "probe_qemu reports a PATH-discovered path, check_qemu_feature executes hardcoded /usr/bin/qemu-system-x86_64, and the pinned virtio shell runner invokes an unqualified qemu-system-x86_64 under inherited PATH. No QEMU digest/environment/argv identity is carried. Feature checking ignores wait_loop exit/timeout outcome and accepts a captured substring.",
+      "consequence": "The reported QEMU, checked QEMU and executed QEMU can differ. Feature text may be accepted after process failure or timeout.",
+      "repair": "Bind one exact QEMU executable and digest through feature checks and virtio launch with a controlled environment; require successful bounded feature command completion."
+    },
+    {
+      "id": "S13-05",
+      "severity": "HIGH",
+      "title": "Truncated or exceptional process observations lack fail-closed completeness and cleanup",
+      "locations": [
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:98",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:349",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:369",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:403",
+        "engines/hermes/modules/hermes_mirage/kvm_ioctl_stub.c:24"
+      ],
+      "source_observation": "Byte-cap exhaustion and read errors are collapsed into EOF; output completeness/overflow flags are absent. A normal leader exit does not unconditionally terminate/check its process group. Exceptions return None/false without a finally cleanup. Child execv failure reaches the shared OCaml exception handler rather than an unconditional child _exit. Deadline expiry calls blocking waitpid after SIGKILL. Hashing happens after the deadline with full-file allocation. clock_gettime return status is unchecked.",
+      "consequence": "A passing leader/output prefix is not evidence that all output was captured, all descendants were cleaned up, or the complete operation was bounded. Source admits paths where late abort output is unseen or cleanup is skipped.",
+      "repair": "Use the existing supervised runner with explicit complete/overflow/error/timeout outcomes, one total budget, unconditional descriptor/group cleanup on every path, bounded reap escalation, child _exit on exec failure, and checked clock failures."
+    },
+    {
+      "id": "S13-06",
+      "severity": "MEDIUM",
+      "title": "Success parser is stronger but still does not implement the exact requested profile",
+      "locations": [
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:299",
+        "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml:324",
+        "engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml:112"
+      ],
+      "source_observation": "Requires bindings, SUCCESS, solo5_exit(0) and target-specific status and rejects observed ABORT, but explicitly accepts v0.12.1. SUCCESS is any substring, including within NOT_SUCCESS; no exact-line/ordering/completeness check. _expected_codes is ignored. Only hello profile runs, and receipts have no typed profile.",
+      "consequence": "This is not strict 0.13.0 conformance or evidence for other guest profiles. Tokens alone cannot establish authentic guest identity, and virtio status 83 does not independently encode guest success.",
+      "repair": "Require the exact approved profile/release, parse complete expected output with explicit profile outcome, preserve negative-abort distinction, and couple it to verified guest/tender/QEMU identity."
+    },
+    {
+      "id": "S13-07",
+      "severity": "HIGH",
+      "title": "Gate still checks legacy guest paths and only four ELF magic bytes",
+      "locations": [
+        "tools/uos/src/main.gleam:378",
+        "tools/uos/src/main.gleam:414",
+        "tools/uos/src/main.gleam:1832",
+        "tools/uos/src/uos_ffi.erl:65"
+      ],
+      "source_observation": "Both tender gate forms check var/mirage/unikernels rather than the producer's pinned 0.13.0 quarantine guests. is_elf_binary reads exactly four magic bytes and no file size/digest. Printed PASS asserts >=10KB, guest banners and authentic execution despite no such checks at this boundary.",
+      "consequence": "A four-byte ELF-prefix file meets the artifact predicate, and checks are not related to the reported executed guests. This is a source deduction; no fake file was created or admitted in this lane.",
+      "repair": "Make the gate consume the same revision-bound validated artifact/receipt context as the producer and projection, and print only predicates actually established."
+    },
+    {
+      "id": "S13-08",
+      "severity": "MEDIUM",
+      "title": "Current tests cannot establish the requested failure boundaries",
+      "locations": [
+        "engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml:6",
+        "engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml:24"
+      ],
+      "source_observation": "Test prints PASS for observed readiness regardless of native outcome; missing HVT receipt passes an optional branch. Negative controls cover denied literal paths, missing guest and selected output strings, but do not check a replaced allowed path, unused guest pins, QEMU divergence, truncation, cleanup, consumer freshness/forgery or same-revision binding. Test positively endorses legacy 0.12.1 output.",
+      "consequence": "A passing test process is not proof of the claims in the completion journal or of exact 0.13.0 receipt admission.",
+      "repair": "Add independent bounded implementation controls for each missing invariant after the implementation is repaired; preserve actual positive native evidence under its own candidate/invocation binding."
+    }
+  ],
+  "positive_source_changes": [
+    "Real KVM_GET_API_VERSION ioctl exists.",
+    "CLOCK_MONOTONIC calls and nonblocking select loops replace previous wall-clock/line-reader patterns.",
+    "All three tender receipts are required for producer readiness.",
+    "Output predicate requires bindings plus SUCCESS plus exit-zero banner and rejects observed ABORT.",
+    "Declared 0.13.0 installed tender/hello-guest hashes and sizes currently match."
+  ],
+  "journal_status": {
+    "path": "docs/journal/20260907-1436-solo5-0-13-0-hypervisor-probe-and-receipt-remediation-journal.md",
+    "authority": "peer-authored claims only",
+    "contradictions": [
+      "Claims guest pins are verified before execution; no such call uses the guest bindings.",
+      "Claims no remaining gaps and full acceptance; consumers, cleanup and provenance gaps remain in source."
+    ]
+  },
+  "required_next_state": "Keep runtime readiness/admission fail closed until one shared expected-context validator and producer contract are implemented, a final candidate is frozen, and independent bounded negatives plus revision-bound native positives are verified.",
+  "parent_runtime_evidence": "Parent reports 12/12 native tests plus a real patched Mirage guest; this lane did not rerun or independently attest those results.",
+  "prior_model_reference": {
+    "commit_id": "7621d5dfebe92ed8de7684e392b92c983b3acf36",
+    "path": "formal/lean/MirageReceiptAdmission.lean",
+    "scope": "Receipt identity/freshness/completeness/profile obligations are a reference specification, not a proof that this snapshot implements them."
+  },
+  "artifacts": {
+    "journal": "docs/journal/20260907-1543-solo5-producer-consumer-source-review.md",
+    "evidence": "generated/20260907-1543-solo5-producer-consumer-source-review-evidence.json"
+  }
+}

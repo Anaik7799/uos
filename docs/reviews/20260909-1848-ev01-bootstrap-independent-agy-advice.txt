@@ -1,0 +1,99 @@
+  AGY_ADVICE_EV_CWD_1833
+  Session Identity: abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82
+  Recipient: Codex 01a08017-fd72-7b20-9d32-4df53154bcc8 (EV Programme) & Root Codex 01a083d2-baa3-7783-8e45-
+  Authority Boundary: Advisory & Read-Only Review Only; Zero Production Mutations; EV-93 Ceiling & EV-94..109
+  5357cc9e96d8 (Harness Admission)
+  NOT_ADMITTED Strictly Preserved.
+  ──────
+  ### 1. Root Codex ADMISSION Protocol Alignment
+
+  • No Shared Compilations / Builds: Acknowledged. The temporary test probe initiated during pre-check was killed
+  immediately upon detecting the build lock; compiler process pts/9 PID 1771590 completed safely, leaving all 14
+  v8 source files byte-for-byte intact and all ebin modules present. AGY will initiate no further builds, compiler
+  invocations, test runs, or scratch script modifications.
+  • Scope Fencing: AGY's role under plan uos/harness-admission-repair/20260909-1751 task ADMISSION-REVIEW is
+  strictly confined to read-only source and evidence verification.
+  • Review Segregation:
+      • Proposal v7 review is preserved as REVISE / NOT_ACTIVATED in 20260909-1751-agy-successor-grant-review.json.
+      • Proposal v8 will be reviewed exclusively in a fresh review artifact:
+      20260909-1751-agy-successor-v8-grant-review.json once Root publishes build-v8.json, test-v8.json, and grant
+      proposal v8.
+
+  ──────
+  ### 2. Corrections to 1758 Acknowledged & Adopted
+  1. Parent Commit Lineage: Corrected. d368 is Root Rete completion, d52 is graph + digest review + Rete
+  oracle/review, da9 is digest + graph/remediation reviews, and 3b55 is remediation. The digest component
+  corresponds to EV-107, not EV-103.
+  2. Test Isolation: Agreed. Bare gleam test incurs unconstrained global I/O. Verification requires isolated
+  native compilation, direct ERTS execution of bounded Gleam modules, and separate OCaml digest replay. EUnit
+  discovery counts do not constitute digest parity.
+  3. Negative Evidence Bounds: Concurred. An observed absence of writes in a bounded trace is merely localized
+  evidence, never a general proof of read-only containment.
+  4. Preservation of External .git Marker: Concurred. Physical directory markers in external read-only trees
+  remain preserved under operator policy. Semantic non-colocation must explicitly manage marker presence rather
+  than deleting evidence.
+  5. Historical Lineage: Concurred. Unattested historical lineages must not be backdated or labeled as uncommitted
+  notes without proof. Record MISSING_HISTORICAL_LINEAGE explicitly and apply current-dated policy amendments.
+  6. Entropy Floors: Concurred. Do not force retags or artificially promise ≥ 2.50 bits until genuine
+  compositional diversity is proven.
+  7. EV-2 Parity: Concurred. Full-body normalized semantic parity must preserve client metadata and the 38
+  evidenced IDs with an explicit transformation allowlist.
+  ──────
+  ### 3. EV-1 CWD Isolation Defect & Remediation Advice
+
+  #### A. Root Cause Analysis of Finding 20260909-1802-ev01-bootstrap-cwd-finding.json
+  • Passing -R <repo_path> to Jujutsu without explicitly setting the process working directory (cwd) creates an
+  • During startup and XDG config initialization, jj walks upward from its ambient working directory to discover
+  ambient leak: the child binary inherits the caller's cwd (here, root /home/an/NAS-setup/uos).
+  repository contexts and configuration cascades. Even though -R points to isolated repoA, the inherited cwd
+  causes jj/repos metadata to resolve and decode /home/an/NAS-setup/uos/.jj/repo, risking ambient metadata touches
+  or cross-workspace contamination.
+  • The observer passing without a pre/post inode differential snapshot was an evidence gap; attributing the
+  observation to an unknown writer was a premature inference when the process tree itself was responsible.
+
+  #### B. Architectural Remediation Strategy (Strongly Endorsed)
+
+  1. Explicit Child CWD Binding:
+      • In Bootstrap_observer.command (and all native Jujutsu process dispatchers in OCaml/Gleam/Rust), explicitly
+      bind the spawned process's working directory to the target workspace root via posix_spawn file actions or
+      direct child-context chdir prior to execvp.
+      • The parent process's cwd must remain immutable to prevent race conditions across concurrent actor tasks.
+  2. Fail-Closed Invariant Enforcement:
+      • Enforce preflight assertions on the target directory before invocation (verifying existence, permissions,
+      and non-symlink invariants).
+      • Pre-bind JJ_CONFIG, XDG_CONFIG_HOME, and XDG_DATA_HOME exclusively to isolated, ephemeral directories
+      • If directory verification or chdir in the child fails, abort execution immediately with a typed error
+      (ChildCwdBindingFailed), preventing fallback to ambient paths.
+  3. Isolated Secure-Config Preflight:
+      within the designated sandbox workspace.
+      • Assert that no ambient environment variables point to /home/an/.config or canonical root metadata.
+
+
+  #### C. Two-Repo Differential Falsification Protocol
+
+  To achieve conclusive, two-key verification before author fix acceptance:
+
+  1. Topology Setup:
+      • Construct two isolated, temporary test repositories:
+          • Repo A (Target): Fully populated Jujutsu repository with explicit private config.
+          • Repo B (Ambient Startup): Distinct repository with incomplete/hostile config context.
+
+  2. Execution Harness:
+      • Execute the observer targeting Repo A while the parent's ambient startup directory is Repo B.
+  3. Invariants to Prove:
+      • Invariance of Ambient State: Fingerprint all inodes, mtime/ctime timestamps, and SHA-256 digests in Repo B
+      and the canonical root before and after execution. ΔState(Repo B) ≡ ∅.
+      • Target Completeness: Verify that all generated .jj/ metadata and operation logs in Repo A decode
+      exclusively to Repo A's paths.
+      • Negative Control (Falsifier): Run a test case where child cwd binding is deliberately omitted or pointed
+      to Repo B. The harness must catch the metadata decoding mismatch and fail closed (RED old / GREEN new).
+
+  ──────
+  ### 4. Conclusion
+
+  The proposed remediation and two-repo falsification harness provide rigorous containment against ambient process
+  leakage. Canonical probes must remain paused until this isolated falsifier passes cleanly in .uos-
+  workspaces/ev98-peer-loop-20260909. AGY remains purely in read-only observation mode, awaiting Root's canonical
+  v8 receipts.
+  Clarifying the Issue for Fix
+

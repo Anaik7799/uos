@@ -1,0 +1,110 @@
+{
+  "schema": "uos.ev-recovery-stage.v1",
+  "observed_at": "2026-09-09T05:35:12Z",
+  "authority": "REPORT_ONLY",
+  "plan": "uos/ev-admission/20260909-0210",
+  "task": "PROGRAM",
+  "worker": "codex-ev-admission-01a08017",
+  "attempt": 1,
+  "sqlite_source_candidate": "e2bb27072c55128420d529533686a86e896dec62",
+  "ev98_source_candidate": "4af745383248649d0472b734ab825702ee490def",
+  "sqlite_component_cases": 20,
+  "sqlite_cli_cases": 6,
+  "sqlite_independent_extra_probes": 3,
+  "native_adapter_cases": 6,
+  "ev98_cases": 42,
+  "ev98_independent_ordered_checks": 324,
+  "ev98_independent_associativity_checks": 5832,
+  "policy_admitted_ceiling": 93,
+  "new_ev_admissions": 0,
+  "artifacts": [
+    {
+      "source": "/tmp/uos-store-verifier-independent-b4b3c8/binding.json",
+      "path": "docs/reviews/20260909-0512-sqlite-independent-review.json",
+      "sha256": "ec73f0e65790bea193ef84d82dba2572a2f520aa670a4799639db50c66f624b1"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-119ce5/compile.json",
+      "path": "docs/reviews/20260909-0512-sqlite-independent-compile.json",
+      "sha256": "3e49bc1996bb35b7e268c2e72404ee521fdc36f0b541e29047223baf85bd45a6"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-119ce5/unit-tests.json",
+      "path": "docs/reviews/20260909-0512-sqlite-independent-component-tests.json",
+      "sha256": "1c9fb332bfd76675b510c1a10daaa43b51d71cb01488224e515eda39709d897b"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-119ce5/cli-valid.json",
+      "path": "docs/reviews/20260909-0512-sqlite-independent-valid-cli.json",
+      "sha256": "681e3d8f2cbdb77eed460a8f7e400a8db2ec6518ae9314953c1f81672a265936"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-119ce5/cli-tampered.json",
+      "path": "docs/reviews/20260909-0512-sqlite-independent-corrupt-cli.json",
+      "sha256": "13e50334a30530075301d89795164587b259db034fa9622d1f9b776589477b67"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-119ce5/cli-absent.json",
+      "path": "docs/reviews/20260909-0512-sqlite-independent-absent-cli.json",
+      "sha256": "068343ec46ca3c772b6865d105905c62211c2541b2acfb0c9176f599daff471e"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-119ce5/cli-empty.json",
+      "path": "docs/reviews/20260909-0512-sqlite-independent-empty-cli.json",
+      "sha256": "09f92b8a5bd9d8c2ccb4c40a56bc546da76156a44bf4a7079250103028fac102"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-2536c2/compile.json",
+      "path": "docs/reviews/20260909-0512-sqlite-initial-type-error.json",
+      "sha256": "01fc9673106b2f242e0be916f5888543f94fbb5a549225886464149153635f50"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-9a6765/unit-tests.json",
+      "path": "docs/reviews/20260909-0512-sqlite-unstable-fixture.json",
+      "sha256": "7e415ca109c6833d66943eb3ee3c840ed8752dd88dd7490ca98b2592987610eb"
+    },
+    {
+      "source": "/tmp/uos-store-verification-run-2caf36/unit-tests.json",
+      "path": "docs/reviews/20260909-0512-sqlite-author-green-tests.json",
+      "sha256": "624269133c48285623e5b9db6f288d36a94df7599263502373de45a80fc66d9c"
+    },
+    {
+      "source": "/tmp/ev98-repair-complete-20260909-0527.json",
+      "path": "docs/reviews/20260909-0512-ev98-repair-task-completed.json",
+      "sha256": "1b3e5a9e6dd53dd5f87d67225afc3a668eead076794348688c8ae7b4dc3aaad4"
+    },
+    {
+      "source": "/tmp/uos-ev98-review-6db975/review.json",
+      "path": "docs/reviews/20260909-0512-ev98-initial-independent-hold.json",
+      "sha256": "e99e655bce3d59a7076cd477655a0e6b85c9a6f16a0d655f93553721b736d7f4"
+    },
+    {
+      "source": "/tmp/uos-ev98-review-f615ac/review.json",
+      "path": "docs/reviews/20260909-0512-ev98-independent-approval.json",
+      "sha256": "9052624129787a8699c71d9d6aa0eb52b5b6810c651fd32c2da47084bef164e9"
+    },
+    {
+      "source": "/tmp/ev-rag-independent-review-20260909/20260909-0513-ev-rag-independent-review.json",
+      "path": "docs/reviews/20260909-0512-rag-initial-independent-hold.json",
+      "sha256": "bf9d49270dcab06667678b1e91f43cc7cf679797821a728a9d98308f56c184e6"
+    },
+    {
+      "source": "/tmp/ev-rag-independent-rereview-20260909/20260909-0525-ev-rag-independent-rereview.json",
+      "path": "docs/reviews/20260909-0512-rag-first-independent-rereview.json",
+      "sha256": "0e4518a6506571addedbb28ec53d7a4da2f758e88b4f01a200f5a49896effdfc"
+    },
+    {
+      "source": "/tmp/ev-rag-independent-numeric-review-20260909/20260909-0532-ev-rag-numeric-review.json",
+      "path": "docs/reviews/20260909-0512-rag-numeric-independent-hold.json",
+      "sha256": "8c18dd2aec03e0b5eb286fa9c0f76f1fe2046dbf3cad9715a200c5f47234e586"
+    }
+  ],
+  "limits": [
+    "SQLite verification checks declared structural consistency and exact trigger definitions; not authenticated origin or all schema/event semantics.",
+    "SQLite may manage reader sidecars; private fixture main-file stability is not a live immutable snapshot.",
+    "The file-backed coordinator remains active; no live database migration, integration or runtime cutover occurred.",
+    "EV98 repair task is completed; the full EV98 transport, formal refinement and admission obligations remain unestablished.",
+    "RAG remains under repair/review; prior negative observations are retained.",
+    "Independent finite cases are observations, not unrestricted mathematical proofs."
+  ]
+}

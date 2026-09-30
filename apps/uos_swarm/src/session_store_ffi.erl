@@ -6,7 +6,7 @@
 %% clock derivation as session_sync_ffi. No exception ever escapes to
 %% Gleam: every exported function returns {ok, _} | {error, Reason::binary()}.
 -module(session_store_ffi).
--export([open/1, create_exclusive/1, exec/2, query/3, begin_immediate/1, commit/1, rollback/1,
+-export([open/1, open_existing/1, create_exclusive/1, exec/2, query/3, begin_immediate/1, commit/1, rollback/1,
          close/1, clock/0, halt/1]).
 
 -spec halt(integer()) -> no_return().
@@ -17,9 +17,15 @@ halt(Code) -> erlang:halt(Code).
 %% ---------------------------------------------------------------------
 
 -spec open(binary()) -> {ok, term()} | {error, binary()}.
-open(PathBinary) -> guarded(fun() ->
+open(PathBinary) -> open_mode(PathBinary, create).
+open_existing(PathBinary) -> open_mode(PathBinary, existing).
+open_mode(PathBinary, Mode) -> guarded(fun() ->
     Path = unicode:characters_to_list(PathBinary),
-    case esqlite3:open(Path) of
+    OpenPath = case Mode of
+        create -> Path;
+        existing -> "file:" ++ uri_string:quote(Path, "/") ++ "?mode=rw"
+    end,
+    case esqlite3:open(OpenPath) of
         {ok, Conn} ->
             %% `PRAGMA journal_mode=WAL` does not fail when WAL cannot be
             %% enabled (read-only file, some network filesystems): it returns

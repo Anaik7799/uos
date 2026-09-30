@@ -113,12 +113,32 @@ let ok rc = require (rc = Sqlite3.Rc.OK) "sqlite operation failed"
 
 let sha256 s = Cryptokit.(transform_string (Hexa.encode ()) (hash_string (Hash.sha256 ()) s))
 
-let open_db () =
-  let db = Sqlite3.db_open ~mutex:`FULL db_path in
-  Sqlite3.busy_timeout db 2000;
-  ok (Sqlite3.exec db "PRAGMA journal_mode=WAL");
-  ok (Sqlite3.exec db schema);
-  db
+let recovery_clear path =
+  if path <> "" then
+    match Unix.lstat (path ^ ".recovery-lock") with
+    | _ -> require false "cycle recovery in progress"
+    | exception Unix.Unix_error (Unix.ENOENT, _, _) -> ()
+
+let recovery_generation path =
+  if path = "" then "memory" else
+  let marker = path ^ ".recovery-generation" in
+  match Unix.lstat marker with
+  | stat ->
+    require (stat.Unix.st_kind = Unix.S_REG && stat.Unix.st_size > 0 && stat.Unix.st_size <= 256)
+      "cycle recovery generation invalid";
+    let channel = open_in_bin marker in
+    Fun.protect ~finally:(fun () -> close_in_noerr channel)
+      (fun () -> really_input_string channel stat.Unix.st_size)
+  | exception Unix.Unix_error (Unix.ENOENT, _, _) -> "genesis"
+
+let generations = ref []
+let bind_generation db generation =
+  generations := (db, generation) :: List.filter (fun (other, _) -> other != db) !generations
+let check_generation db path =
+  let current = recovery_generation path in
+  match List.find_opt (fun (other, _) -> other == db) !generations with
+  | Some (_, prior) -> require (prior = current) "cycle connection generation retired"
+  | None -> bind_generation db current
 
 let text s i = match Sqlite3.column s i with Sqlite3.Data.TEXT t -> t | _ -> ""
 let num  s i = match Sqlite3.column s i with Sqlite3.Data.INT n -> Int64.to_int n | _ -> 0
@@ -185,20 +205,71 @@ let verify db =
       | _ -> raise (Invalid "cycle scan failed") in
     loop 0 1 "" [])
 
+let trigger_definitions db =
+  let stmt = Sqlite3.prepare db "SELECT name,sql FROM sqlite_master WHERE type='trigger' ORDER BY name" in
+  Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
+    let rec rows acc = match Sqlite3.step stmt with
+      | Sqlite3.Rc.ROW -> rows ((text stmt 0, text stmt 1)::acc)
+      | Sqlite3.Rc.DONE -> List.rev acc
+      | _ -> raise (Invalid "cycle trigger inspection failed")
+    in rows [])
+
+let open_db () =
+  recovery_clear db_path;
+  let stat = Unix.lstat db_path in
+  require (stat.Unix.st_kind = Unix.S_REG && stat.Unix.st_size >= 512)
+    "operational cycle ledger must already exist";
+  let generation = recovery_generation db_path in
+  let db = Sqlite3.db_open ~mode:`NO_CREATE ~mutex:`FULL db_path in
+  bind_generation db generation;
+  try
+    Sqlite3.busy_timeout db 2000;
+    recovery_clear db_path; check_generation db db_path;
+    let reference = Sqlite3.db_open ":memory:" in
+    let required = Fun.protect ~finally:(fun () -> ignore (Sqlite3.db_close reference))
+      (fun () -> ok (Sqlite3.exec reference schema); trigger_definitions reference) in
+    let actual = trigger_definitions db in
+    require (List.for_all (fun guard -> List.mem guard actual) required)
+      "cycle ledger trigger definitions differ from required schema";
+    let count, defects = verify db in
+    require (count > 0 && defects = []) "operational cycle ledger requires a verified nonempty chain";
+    recovery_clear db_path; check_generation db db_path;
+    db
+  with exn ->
+    generations := List.filter (fun (other, _) -> other != db) !generations;
+    ignore (Sqlite3.db_close db); raise exn
+
 (* Validate the entire existing chain while holding the same writer transaction
    that chooses the head and inserts. Otherwise a valid new digest can extend
    known corrupt evidence, or a concurrent writer can invalidate the checked head. *)
 let append db ~cycle_id ~plan_id ~task_id ~kind ~title ~body ~observed ~evidence =
+  let check_recovery () =
+    let stmt = Sqlite3.prepare db "PRAGMA database_list" in
+    Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
+      let rec scan () = match Sqlite3.step stmt with
+        | Sqlite3.Rc.ROW ->
+          if text stmt 1 = "main" then (
+            recovery_clear (text stmt 2); check_generation db (text stmt 2));
+          scan ()
+        | Sqlite3.Rc.DONE -> ()
+        | _ -> failwith "cycle database identity unavailable"
+      in scan ())
+  in
+  check_recovery ();
   ok (Sqlite3.exec db "BEGIN IMMEDIATE");
   let committed = ref false in
   Fun.protect ~finally:(fun () ->
     if not !committed then ignore (Sqlite3.exec db "ROLLBACK")) (fun () ->
+      check_recovery ();
       let _, defects = verify db in
       require (defects = []) "cycle append refused: existing chain is corrupt";
       let result = append_row db ~cycle_id ~plan_id ~task_id ~kind ~title ~body
         ~observed ~evidence in
+      check_recovery ();
       ok (Sqlite3.exec db "COMMIT");
       committed := true;
       result)
 
-let close db = ignore (Sqlite3.db_close db)
+let close db =
+  generations := List.filter (fun (other, _) -> other != db) !generations;
+  ignore (Sqlite3.db_close db)

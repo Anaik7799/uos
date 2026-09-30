@@ -2,7 +2,7 @@
  (name km_chain_core)
  (wrapped false)
  (modules km_chain)
- (libraries cryptokit sqlite3))
+ (libraries cryptokit sqlite3 unix))
 
 (executable
  (name km_gate)

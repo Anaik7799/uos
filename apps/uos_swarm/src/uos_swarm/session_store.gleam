@@ -39,6 +39,8 @@
 //// STAMP: SC-TUI-COORD-001; SC-FPP-INTENT-001; SC-DB-001. #fractal-l2
 //// #fractal-l3 #zero-muda
 
+import gleam/dynamic.{type Dynamic}
+import gleam/uri
 import gleam/int
 import gleam/json.{type Json}
 import gleam/list
@@ -68,6 +70,15 @@ pub type Cell {
 
 @external(erlang, "session_store_ffi", "open")
 fn ffi_open(path: String) -> Result(Conn, String)
+
+@external(erlang, "session_store_ffi", "open_existing")
+fn ffi_open_existing(path: String) -> Result(Conn, String)
+
+@external(erlang, "erlang", "binary_to_list")
+fn ascii_charlist(text: String) -> List(Int)
+
+@external(erlang, "esqlite3", "open")
+fn ffi_open_uri(path: List(Int)) -> Result(Conn, Dynamic)
 
 @external(erlang, "session_store_ffi", "exec")
 fn ffi_exec(conn: Conn, sql: String) -> Result(Int, String)
@@ -99,7 +110,7 @@ fn ffi_clock() -> Result(#(String, String, Int, Int), String)
 // ---------------------------------------------------------------------
 
 pub opaque type Store {
-  Store(conn: Conn, path: String)
+  Store(conn: Conn, path: String, generation: String)
 }
 
 pub fn path(store: Store) -> String {
@@ -149,6 +160,7 @@ pub type VerifyReport {
     digest_ok: Bool,
     replay_ok: Bool,
     triggers_present: Bool,
+    trigger_definitions_ok: Bool,
     unique_operations: Bool,
     failures: List(String),
   )
@@ -165,6 +177,7 @@ pub fn verify_report_json(report: VerifyReport) -> Json {
     #("nonempty", json.bool(report.checked > 0)),
     #("authority", json.string("integrity_observation_only")),
     #("triggers_present", json.bool(report.triggers_present)),
+    #("trigger_definitions_ok", json.bool(report.trigger_definitions_ok)),
     #("unique_operations", json.bool(report.unique_operations)),
     #("failures", json.array(report.failures, json.string)),
   ])
@@ -299,11 +312,129 @@ CREATE TABLE IF NOT EXISTS quarantine (
 }
 
 /// Open (creating if absent) a SQLite store at `path`, apply the schema,
+pub fn verify_file(path: String) -> Result(VerifyReport, StoreError) {
+  use _ <- result.try(
+    case
+      string.starts_with(path, "/")
+      && !string.contains(path, "\u{0}")
+      && string.byte_size(path) <= 1024
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(OpenError("verification requires a bounded absolute file path"))
+    },
+  )
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
+  let encoded =
+    path
+    |> string.split("/")
+    |> list.map(uri.percent_encode)
+    |> string.join("/")
+  let sqlite_uri = "file://" <> encoded <> "?mode=ro&cache=private"
+  use conn <- result.try(
+    ffi_open_uri(ascii_charlist(sqlite_uri))
+    |> result.map_error(fn(error) { OpenError(string.inspect(error)) }),
+  )
+  let opened = Store(conn, path, generation)
+  let outcome = {
+    use _ <- result.try(
+      ffi_exec(conn, "BEGIN") |> result.map_error(StorageError),
+    )
+    use schema <- result.try(
+      run(opened, "SELECT value FROM meta WHERE key = 'schema'", []),
+    )
+    use _ <- result.try(case schema {
+      [[CellText(value)]] if value == sync.genesis -> Ok(Nil)
+      _ -> Error(SchemaError("missing or incompatible meta.schema"))
+    })
+    use _ <- result.try(recovery_current(opened))
+    verify(opened)
+  }
+  let closed = close(opened)
+  case outcome {
+    Error(error) -> Error(error)
+    Ok(report) -> closed |> result.replace(report)
+  }
+}
+
+/// Open (creating if absent) a SQLite store at `path`, apply the schema,
 /// and verify `meta.schema == session_sync.genesis`. A freshly created
 /// store gets its `meta` rows written here; an existing store is only read.
 pub fn open(path: String) -> Result(Store, StoreError) {
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
   use conn <- result.try(ffi_open(path) |> result.map_error(OpenError))
-  let store = Store(conn, path)
+  // Recheck after opening so a newly raised recovery hold cannot admit a writer.
+  let store = Store(conn, path, generation)
+  case recovery_current(store) {
+    Error(reason) -> {
+      let _ = ffi_close(conn)
+      Error(reason)
+    }
+    Ok(_) -> initialize(store)
+  }
+}
+
+/// Operational authority never initializes missing, truncated or empty history.
+pub fn open_existing(path: String) -> Result(Store, StoreError) {
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
+  use conn <- result.try(ffi_open_existing(path) |> result.map_error(OpenError))
+  let store = Store(conn, path, generation)
+  let checked = {
+    use _ <- result.try(recovery_current(store))
+    use metadata <- result.try(run(store, "SELECT value FROM meta WHERE key = 'schema'", []))
+    use _ <- result.try(case metadata {
+      [[CellText(schema)]] if schema == sync.genesis -> Ok(Nil)
+      _ -> Error(SchemaError("operational_coordinator_schema_mismatch"))
+    })
+    use report <- result.try(verify(store))
+    use #(rows, _) <- result.try(head(store))
+    use _ <- result.try(recovery_current(store))
+    case report.ok && rows > 0 {
+      True -> Ok(store)
+      False -> Error(CorruptError("operational_coordinator_requires_verified_nonempty_ledger"))
+    }
+  }
+  case checked {
+    Ok(_) -> checked
+    Error(_) -> { let _ = ffi_close(conn)
+      checked }
+  }
+}
+
+fn recovery_clear(path: String) -> Result(Nil, StoreError) {
+  case simplifile.link_info(path <> ".recovery-lock") {
+    Error(simplifile.Enoent) -> Ok(Nil)
+    Ok(_) -> Error(RefusedError("coordinator_recovery_in_progress"))
+    Error(_) -> Error(RefusedError("coordinator_recovery_lock_unknown"))
+  }
+}
+
+fn recovery_generation(path: String) -> Result(String, StoreError) {
+  let marker = path <> ".recovery-generation"
+  case simplifile.link_info(marker) {
+    Error(simplifile.Enoent) -> Ok("genesis")
+    Ok(info) -> case simplifile.file_info_type(info) == simplifile.File && info.size > 0 && info.size <= 256 {
+      True -> simplifile.read(marker) |> result.map_error(fn(_) { RefusedError("coordinator_generation_unreadable") })
+      False -> Error(RefusedError("coordinator_generation_invalid"))
+    }
+    Error(_) -> Error(RefusedError("coordinator_generation_unknown"))
+  }
+}
+
+fn recovery_current(store: Store) -> Result(Nil, StoreError) {
+  use _ <- result.try(recovery_clear(store.path))
+  use generation <- result.try(recovery_generation(store.path))
+  case generation == store.generation {
+    True -> Ok(Nil)
+    False -> Error(RefusedError("coordinator_connection_generation_retired"))
+  }
+}
+
+fn initialize(store: Store) -> Result(Store, StoreError) {
+  let conn = store.conn
   use _ <- result.try(
     ffi_exec(conn, schema_sql()) |> result.map_error(SchemaError),
   )
@@ -388,11 +519,14 @@ fn transactionally(
   body: fn() -> Result(a, StoreError),
 ) -> Result(a, StoreError) {
   use _ <- result.try(begin(store))
-  case body() {
-    Ok(value) -> {
-      use _ <- result.try(commit(store))
-      Ok(value)
-    }
+  let outcome = {
+    use value <- result.try(body())
+    use _ <- result.try(recovery_current(store))
+    use _ <- result.try(commit(store))
+    Ok(value)
+  }
+  case outcome {
+    Ok(_) -> outcome
     Error(error) -> {
       let _ = rollback(store)
       Error(error)
@@ -474,14 +608,18 @@ pub fn replay(store: Store) -> Result(sync.State, StoreError) {
 /// plus the current `(boot, now)` pair used to normalize it.
 pub fn observe(
   store: Store,
-  query: fn(sync.State, String, Int) -> Result(Json, StoreError),
-) -> Result(Json, StoreError) {
+  query: fn(sync.State, String, Int) -> Result(a, StoreError),
+) -> Result(a, StoreError) {
+  use _ <- result.try(recovery_current(store))
   use state <- result.try(replay(store))
   use #(host, boot, now, _utc) <- result.try(read_clock())
   use current <- result.try(
     sync.rebase_clock(state, host, boot, now) |> result.map_error(RefusedError),
   )
-  query(current, boot, now)
+  use _ <- result.try(recovery_current(store))
+  use value <- result.try(query(current, boot, now))
+  use _ <- result.try(recovery_current(store))
+  Ok(value)
 }
 
 /// The canonical journal lines, one event per line, in the exact byte
@@ -507,10 +645,14 @@ pub fn append(
   command: sync.Command,
   operation_id: String,
 ) -> Result(#(sync.Receipt, Bool), StoreError) {
+  use _ <- result.try(recovery_current(store))
   use command <- result.try(
     sync.canonical_command(command) |> result.map_error(RefusedError),
   )
-  transactionally(store, fn() { append_locked(store, command, operation_id) })
+  transactionally(store, fn() {
+    use _ <- result.try(recovery_current(store))
+    append_locked(store, command, operation_id)
+  })
 }
 
 fn append_locked(
@@ -596,6 +738,16 @@ fn add_if(
 /// every `operation_id` is unique. A tampered row (edited via a scratch
 /// copy with the triggers dropped, or hand-built) is reported by exact
 /// sequence and failed check rather than a generic refusal.
+fn required_trigger_sql() -> List(String) {
+  schema_sql()
+  |> string.split("CREATE TRIGGER IF NOT EXISTS ")
+  |> list.drop(1)
+  |> list.map(fn(part) {
+    let first = string.split(part, "\nEND;") |> list.first |> result.unwrap("")
+    "CREATE TRIGGER " <> first <> "\nEND"
+  })
+}
+
 pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   use rows <- result.try(
     run(
@@ -607,11 +759,17 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   use trigger_rows <- result.try(
     run(
       store,
-      "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain', 'events_no_replace', 'events_payload')",
+      "SELECT name, sql FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain', 'events_no_replace', 'events_payload')",
       [],
     ),
   )
   let triggers_present = list.length(trigger_rows) == 5
+  let trigger_definitions_ok = list.all(required_trigger_sql(), fn(sql) {
+    list.any(trigger_rows, fn(row) { case row {
+      [CellText(_), CellText(actual)] -> actual == sql
+      _ -> False
+    } })
+  })
   let #(_, _, failures, _) =
     list.fold(rows, #(0, sync.genesis, [], set.new()), fn(acc, row) {
       let #(expected_sequence, expected_previous, fails, seen_ops) = acc
@@ -698,7 +856,9 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
       ..failures
     ]
   }
-  let failures = list.reverse(failures)
+  let failures = failures
+    |> add_if(!trigger_definitions_ok, "trigger_definitions", "append-only trigger definitions do not match this candidate's required schema")
+    |> list.reverse
   let failed = fn(check: String) {
     list.any(failures, fn(entry) { entry.0 == check })
   }
@@ -710,6 +870,7 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
     digest_ok: !failed("digest") && !failed("malformed"),
     replay_ok: !failed("replay"),
     triggers_present: triggers_present,
+    trigger_definitions_ok: trigger_definitions_ok,
     unique_operations: !failed("duplicate"),
     failures: list.map(failures, fn(entry) { entry.1 }),
   ))

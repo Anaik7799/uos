@@ -1,0 +1,1 @@
+{"schema":"uos.local-forecast.v1","focus":"N22","event":"check_returns_PASS","horizon":"this bounded focus","probability":0.9583333333333334,"method":"Laplace-smoothed prior outcomes; dependent checks, not calibrated system confidence","issued_utc_us":"1788859499101317","authority":"NONE"}

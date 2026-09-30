@@ -1,0 +1,1833 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-mainline-merge-source-census",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M0",
+    "actor": "codex-merge-execute",
+    "scope": "User authorized merge: refresh census and ownership, create owned workspace, preserve all source references; no main movement or runtime effects in M0.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:26:15Z",
+    "valid_until": "2026-09-08T20:21:15Z",
+    "task_state": "completed",
+    "ready_since": "2026-09-08T19:26:15Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:26:15Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:26:15Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:26:15Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "False clearance of lost source/evidence is severity 5; credible integration-fault exposure O3 Det3 gives RPN45, F5 severity floor.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Plan author and future serialized integration controller",
+      "control_action": "Specify complete provenance-preserving consolidation with gated mainline updates.",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Keep this task planning-only; activate execution separately through Sa-plan."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 1600,
+    "score_interval": [
+      1600,
+      1600
+    ],
+    "decision": {
+      "summary": "Refresh pinned Codex source set and prepare isolated integration under explicit user merge authorization.",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Thirteen explicit Codex heads already occur in observed main ancestry.",
+        "Six Codex changes have divergent versions; executable bookmark differs from retained test package.",
+        "Canonical Sa-plan binary CLI advertises0.3.0 while current source advertises0.4.0; execution needs an authority/tool receipt."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "All current source heads compared with original census",
+        "Known immutable source objects preserved",
+        "Attribution and untracked-work limits explicit",
+        "Owned integration workspace and coordinator task fences observed"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker; bounded native inspection; no installs, peer mutations or runtime changes during M0.",
+      "residuals": [
+        "Independent composition review and owner acknowledgements may remain required before main movement.",
+        "M0 does not authorize deployment or waive downstream gates."
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-mainline-baseline",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M1",
+    "actor": "codex-merge-execute",
+    "scope": "M1: build pinned source and test authority/ABI behavior only in owned workspace/temp fixtures; no peer, mainline or runtime mutation.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:30:33Z",
+    "valid_until": "2026-09-08T20:25:33Z",
+    "task_state": "completed",
+    "ready_since": "2026-09-08T19:30:33Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:30:33Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:30:33Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:30:33Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Plan author and future serialized integration controller",
+      "control_action": "Specify complete provenance-preserving consolidation with gated mainline updates.",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Keep this task planning-only; activate execution separately through Sa-plan."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "M0"
+    ],
+    "score": 1600,
+    "score_interval": [
+      1600,
+      1600
+    ],
+    "decision": {
+      "summary": "Verify current Sa-plan API fencing and build exact baseline in isolated candidate before source reconciliation.",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Exact-source CLI builds",
+        "Wrong/stale/expired attempt rejection and valid controls pass in temporary databases",
+        "Common toolchain and provisioned baseline receipts recorded"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Full source integration, runtime validation and independent review remain gated."
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-mainline-auth-reconciliation",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M2",
+    "actor": "codex-merge-execute",
+    "scope": "M2: integrate immutable auth source and historical reviews into owned JJ child, resolve current route conflicts, run bounded isolated tests; no mainline or production mutation.",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:48:34Z",
+    "valid_until": "2026-09-08T20:43:34Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-08T19:48:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:48:34Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned source integrator",
+      "control_action": "Prepare isolated candidate without changing main or production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Only owned integration workspace may change; final main landing requires separate M7 gates."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "M1"
+    ],
+    "score": 1280,
+    "score_interval": [
+      1280,
+      1280
+    ],
+    "decision": {
+      "summary": "Integrate the complete fixed-length authenticated ingress chain into an owned candidate; baseline ABI failure remains a mandatory M6/M7 hold.",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Current routes preserved",
+        "Complete bounded reader and Expect rejection integrated together",
+        "Malformed and authenticated request tests run on exact candidate; failures recorded and repaired before admission"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Native ABI baseline failed 12 tests; M6/M7 blocked",
+        "Current owner and independent-review acknowledgements not observed"
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-merge-M3",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M3",
+    "actor": "codex-merge-execute",
+    "scope": "Reconcile release source and preserve immutable historical evidence in owned workspace",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:48:34Z",
+    "valid_until": "2026-09-08T20:43:34Z",
+    "task_state": "available",
+    "ready_since": "2026-09-08T19:48:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:48:34Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned source integrator",
+      "control_action": "Prepare isolated candidate without changing main or production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Only owned integration workspace may change; final main landing requires separate M7 gates."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Packet-specific hunk comparison and integration decisions have not yet been reviewed; only M2's complete auth delta has been inspected."
+    ],
+    "dependencies": [
+      "M1"
+    ],
+    "score": 1024,
+    "score_interval": [
+      1024,
+      1024
+    ],
+    "decision": {
+      "summary": "Reconcile release source and preserve immutable historical evidence in owned workspace",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements.",
+        "Comparative readiness: M2 complete three-commit diff inspected; this packet still lacks the hunk-level reconciliation required by the plan. Prepare assessment before claiming."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Packet-specific acceptance from immutable consolidation plan",
+        "Fresh exact-candidate evidence; failures remain failures"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Native ABI baseline failed 12 tests; M6/M7 blocked",
+        "Current owner and independent-review acknowledgements not observed"
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-merge-M4",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M4",
+    "actor": "codex-merge-execute",
+    "scope": "Integrate and test manual UI source in owned workspace; any staging needs a separate runtime lease",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:48:34Z",
+    "valid_until": "2026-09-08T20:43:34Z",
+    "task_state": "available",
+    "ready_since": "2026-09-08T19:48:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:48:34Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned source integrator",
+      "control_action": "Prepare isolated candidate without changing main or production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Only owned integration workspace may change; final main landing requires separate M7 gates."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Unfinished canonical dependencies"
+    ],
+    "dependencies": [
+      "M2",
+      "M3"
+    ],
+    "score": 576,
+    "score_interval": [
+      576,
+      576
+    ],
+    "decision": {
+      "summary": "Integrate and test manual UI source in owned workspace; any staging needs a separate runtime lease",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Packet-specific acceptance from immutable consolidation plan",
+        "Fresh exact-candidate evidence; failures remain failures"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Native ABI baseline failed 12 tests; M6/M7 blocked",
+        "Current owner and independent-review acknowledgements not observed"
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-merge-M5",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M5",
+    "actor": "codex-merge-execute",
+    "scope": "Reconcile Mirage source and evidence in owned workspace; no physical runtime execution without own runtime lease",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:48:34Z",
+    "valid_until": "2026-09-08T20:43:34Z",
+    "task_state": "available",
+    "ready_since": "2026-09-08T19:48:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:48:34Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned source integrator",
+      "control_action": "Prepare isolated candidate without changing main or production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Only owned integration workspace may change; final main landing requires separate M7 gates."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Packet-specific hunk comparison and integration decisions have not yet been reviewed; only M2's complete auth delta has been inspected."
+    ],
+    "dependencies": [
+      "M1"
+    ],
+    "score": 720,
+    "score_interval": [
+      720,
+      720
+    ],
+    "decision": {
+      "summary": "Reconcile Mirage source and evidence in owned workspace; no physical runtime execution without own runtime lease",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements.",
+        "Comparative readiness: M2 complete three-commit diff inspected; this packet still lacks the hunk-level reconciliation required by the plan. Prepare assessment before claiming."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Packet-specific acceptance from immutable consolidation plan",
+        "Fresh exact-candidate evidence; failures remain failures"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Native ABI baseline failed 12 tests; M6/M7 blocked",
+        "Current owner and independent-review acknowledgements not observed"
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-merge-M6",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M6",
+    "actor": "codex-merge-execute",
+    "scope": "Verify exact composed candidate; ABI repair, ownership ACK and independent approval required",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:48:34Z",
+    "valid_until": "2026-09-08T20:43:34Z",
+    "task_state": "available",
+    "ready_since": "2026-09-08T19:48:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:48:34Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned source integrator",
+      "control_action": "Prepare isolated candidate without changing main or production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Only owned integration workspace may change; final main landing requires separate M7 gates."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Unfinished canonical dependencies",
+      "Baseline OCaml NIF ABI mismatch; current ownership and independent approval absent"
+    ],
+    "dependencies": [
+      "M2",
+      "M3",
+      "M4",
+      "M5"
+    ],
+    "score": 1600,
+    "score_interval": [
+      1600,
+      1600
+    ],
+    "decision": {
+      "summary": "Verify exact composed candidate; ABI repair, ownership ACK and independent approval required",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Packet-specific acceptance from immutable consolidation plan",
+        "Fresh exact-candidate evidence; failures remain failures"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Native ABI baseline failed 12 tests; M6/M7 blocked",
+        "Current owner and independent-review acknowledgements not observed"
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-merge-M7",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M7",
+    "actor": "codex-merge-execute",
+    "scope": "Serialized main source landing only after all gates, exact base and integration/main lease",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:48:34Z",
+    "valid_until": "2026-09-08T20:43:34Z",
+    "task_state": "available",
+    "ready_since": "2026-09-08T19:48:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:48:34Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned source integrator",
+      "control_action": "Prepare isolated candidate without changing main or production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Only owned integration workspace may change; final main landing requires separate M7 gates."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Unfinished canonical dependencies",
+      "Baseline OCaml NIF ABI mismatch; current ownership and independent approval absent"
+    ],
+    "dependencies": [
+      "M6"
+    ],
+    "score": 1600,
+    "score_interval": [
+      1600,
+      1600
+    ],
+    "decision": {
+      "summary": "Serialized main source landing only after all gates, exact base and integration/main lease",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Packet-specific acceptance from immutable consolidation plan",
+        "Fresh exact-candidate evidence; failures remain failures"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Native ABI baseline failed 12 tests; M6/M7 blocked",
+        "Current owner and independent-review acknowledgements not observed"
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-merge-M8",
+    "plan_id": "uos/codex-mainline-merge/20260908-1925",
+    "task_id": "M8",
+    "actor": "codex-merge-execute",
+    "scope": "Publish coverage, immutable source handoff and task completion after verified source landing",
+    "phase": "planning",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T19:48:34Z",
+    "valid_until": "2026-09-08T20:43:34Z",
+    "task_state": "available",
+    "ready_since": "2026-09-08T19:48:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Pinned main 1be8029d72bc9530b1937564a37c555bd0b4b938 at JJ operation f180a94291677e03a55c3b23f76494225d5ff905723b9ef892bf68fe2f60eb0fecf58586454ed7855612ec2f0d780ab5456f06b7b7013693996864bc852a2167",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T19:48:34Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "0d5100c804b02fd4165534727e35f64211c3e6fca289385c29b03d26c3de1aef",
+          "observed_at": "2026-09-08T19:48:34Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Verified Codex work is fragmented while shared main is evolving.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Rewriting peer candidates or accepting stale evidence is a critical UCA without mandatory JJ fences.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Fencing or ABI false clearance can create a false safety admission; S5 O3 Det3 RPN45 F5.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Ownership and provenance are shared controls for every integration packet.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "One plan covers several Codex subsystem work streams and shared integration.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CODEX-CONSOLIDATION",
+        "cause": "Mutable labels, incomplete workspace inventory or stale test association.",
+        "effect": "Omitted unique code, lost provenance or false clearance of shared main.",
+        "controls": "Pin operation/commit identity, include every Codex workspace, require owner freeze and candidate-bound tests, serialize integration under lease.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned source integrator",
+      "control_action": "Prepare isolated candidate without changing main or production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Unique workspace work is omitted from the merge census.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inventory workspaces, bookmarks, candidate receipts and attribution gaps."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Plan is mistaken for automatic mainline or deployment authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Only owned integration workspace may change; final main landing requires separate M7 gates."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Candidate or main moves after evidence is collected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Revalidate commit/operation identity, ownership and gates at each wave."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Integration reservation blocks unrelated work or validation runs indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound checks; hold integration/main only during authorized serialized landing."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Unfinished canonical dependencies"
+    ],
+    "dependencies": [
+      "M7"
+    ],
+    "score": 288,
+    "score_interval": [
+      288,
+      288
+    ],
+    "decision": {
+      "summary": "Publish coverage, immutable source handoff and task completion after verified source landing",
+      "alternatives": [
+        "Merge all bookmarks in one change: rejected because ancestry, authorship and evidence differ.",
+        "Merge only named Codex bookmarks: rejected because unique workspace-only changes could be omitted.",
+        "Create a full pinned census and dependency-gated wave plan: selected."
+      ],
+      "counterevidence": [
+        "Installed version command now reports 0.4.0 and task help exposes ATTEMPT; general help banner remains 0.3.0.",
+        "Peer Herdr sessions are active despite stale coordinator state; final source integration requires current acknowledgements."
+      ],
+      "assumptions": [
+        "User authorized source merge; production cutover remains separate.",
+        "No subagents in this side conversation; peer workspaces stay unchanged."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Most historical bookmarks require coverage receipts; a smaller set needs actual source integration after evidence reconciliation.",
+      "falsifier": "Census misses a Codex workspace, proposed wave replays an already covered patch, or an activated task changes main without fresh gates.",
+      "acceptance": [
+        "Packet-specific acceptance from immutable consolidation plan",
+        "Fresh exact-candidate evidence; failures remain failures"
+      ],
+      "rollback": "Abandon only own plan changes if required; no application or mainline rollback is needed.",
+      "reviewer": "Author self-review; independent execution review remains required.",
+      "budget": "One worker, one build job, two Erlang schedulers, bounded temporary fixtures; no install/downloads or shared runtime effects.",
+      "residuals": [
+        "Native ABI baseline failed 12 tests; M6/M7 blocked",
+        "Current owner and independent-review acknowledgements not observed"
+      ],
+      "supersedes": "uos/codex-mainline-merge/20260908-1439 completed planning task"
+    }
+  }
+]

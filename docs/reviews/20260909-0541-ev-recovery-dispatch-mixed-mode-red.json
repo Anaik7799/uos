@@ -1,0 +1,19 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-dispatch-green-20260909/default/modules/system_engg/run_agent_dispatch_hook.exe",
+    "--self-test", "--intercept-mcp", "--enforce-dmc-tcm"
+  ],
+  "utc_started": 1788927453.340475,
+  "utc_finished": 1788927453.385782,
+  "elapsed_seconds": 0.04530168400000001,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "[SELF-TEST PASSED] Three payload-filter examples; authority NONE, DMC/TCM enforcement unverified.\n  - Embedded NUL byte trapping: PASSED (code -2)\n  - Raw SQL injection defense: PASSED (code -3)\n  - Valid payload verification & SHA-256 digestion: PASSED\n",
+  "output_sha256": "f26501e4fcff6ee03c2d0332683c58a18b35de01e628abaadef30df53f543ff9",
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

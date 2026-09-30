@@ -1,0 +1,19 @@
+(library
+ (name bootstrap_model)
+ (modes byte)
+ (modules bootstrap_model)
+ (wrapped false)
+ (flags (:standard -warn-error +8)))
+(executable
+ (name test_bootstrap_model)
+ (modes byte)
+ (link_flags -without-runtime)
+ (modules test_bootstrap_model)
+ (libraries bootstrap_model))
+(library
+ (name bootstrap_observer)
+ (modes byte)
+ (modules bootstrap_observer)
+ (wrapped false)
+ (libraries bootstrap_model unix mtime.clock.os)
+ (flags (:standard -warn-error +8)))

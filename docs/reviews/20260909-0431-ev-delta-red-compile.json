@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/ev-delta-red-20260909-0431", "--out",
+    "/tmp/ev-delta-red-20260909-0431/compiled", "--lib",
+    "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang"
+  ],
+  "utc_started": 1788928497.685177,
+  "utc_finished": 1788928497.833469,
+  "elapsed_seconds": 0.148291518,
+  "deadline_seconds": 60.0,
+  "exit_code": 1,
+  "output": "warning: Unused imported item\n  ┌─ /tmp/ev-delta-red-20260909-0431/src/deadman_freshness_test.gleam:7:3\n  │\n7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,\n  │   ^^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /tmp/ev-delta-red-20260909-0431/src/deadman_freshness_test.gleam:7:39\n  │\n7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,\n  │                                       ^^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n   ┌─ /tmp/ev-delta-red-20260909-0431/src/delta_mesh_engine_test.gleam:11:3\n   │\n11 │   SyncDelta, SyncDigest,\n   │   ^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nerror: App importing dev dependency\n   ┌─ /tmp/ev-delta-red-20260909-0431/src/deadman_freshness_test.gleam:13:1\n   │\n13 │ import gleeunit\n   │ ^^^^^^^^^^^^^^^\n\nThe application module `deadman_freshness_test` is importing the module\n`gleeunit`, but `gleeunit`, the package it belongs to, is a dev dependency.\n\nDev dependencies are not included in production builds so application\nmodules should not import them. Perhaps change `gleeunit` to a regular\ndependency.\n\nerror: App importing dev dependency\n   ┌─ /tmp/ev-delta-red-20260909-0431/src/deadman_freshness_test.gleam:14:1\n   │\n14 │ import gleeunit/should\n   │ ^^^^^^^^^^^^^^^^^^^^^^\n\nThe application module `deadman_freshness_test` is importing the module\n`gleeunit/should`, but `gleeunit`, the package it belongs to, is a dev\ndependency.\n\nDev dependencies are not included in production builds so application\nmodules should not import them. Perhaps change `gleeunit` to a regular\ndependency.\n\nerror: App importing dev dependency\n   ┌─ /tmp/ev-delta-red-20260909-0431/src/delta_mesh_engine_test.gleam:13:1\n   │\n13 │ import gleeunit\n   │ ^^^^^^^^^^^^^^^\n\nThe application module `delta_mesh_engine_test` is importing the module\n`gleeunit`, but `gleeunit`, the package it belongs to, is a dev dependency.\n\nDev dependencies are not included in production builds so application\nmodules should not import them. Perhaps change `gleeunit` to a regular\ndependency.\n\nerror: App importing dev dependency\n   ┌─ /tmp/ev-delta-red-20260909-0431/src/delta_mesh_engine_test.gleam:14:1\n   │\n14 │ import gleeunit/should\n   │ ^^^^^^^^^^^^^^^^^^^^^^\n\nThe application module `delta_mesh_engine_test` is importing the module\n`gleeunit/should`, but `gleeunit`, the package it belongs to, is a dev\ndependency.\n\nDev dependencies are not included in production builds so application\nmodules should not import them. Perhaps change `gleeunit` to a regular\ndependency.\n\nerror: Unknown module value\n   ┌─ /tmp/ev-delta-red-20260909-0431/src/delta_mesh_engine_test.gleam:38:31\n   │\n38 │   let engine = list.fold(list.range(1, 300), init_engine(\"nas-1\", \"nas-1.tail55d152.ts.net:4100\", 1000), fn(engine, epoch) {\n   │                               ^^^^^\n\nThe module `gleam/list` does not have a `range` value.\n\n",
+  "output_sha256": "0d4c6990a2efcbcd623afab39e273bcc7f7ca3b19a445115a14d707d21fbafc4",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

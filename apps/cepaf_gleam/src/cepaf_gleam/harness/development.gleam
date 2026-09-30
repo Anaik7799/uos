@@ -19,7 +19,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
-import session_sync_cli
+import uos_swarm/session_authority
 import simplifile
 import uos_swarm/clock_guard
 import uos_swarm/session_sync
@@ -417,8 +417,7 @@ fn coordinator_observation(binding: Binding) -> Result(#(String, Int), String) {
   let resource = task_resource(binding)
   use raw <- result.try(bounded_observation(
     fn() {
-      session_sync.observe(
-        root <> "/var/coordination/tri-agent",
+      session_authority.observe(
         fn(state, boot, now) {
           use _ <- result.try(session_sync.check(
             state,
@@ -603,8 +602,7 @@ fn heartbeat(binding: Binding) -> Result(json.Json, String) {
     "harness-heartbeat-" <> int.to_string(proof.clock.sample.observed.utc_us)
   use beat <- result.try(bounded_observation(
     fn() {
-      session_sync_cli.run([
-        root <> "/var/coordination/tri-agent",
+      session_authority.run([
         "heartbeat",
         binding.session,
         string.trim(revision),
@@ -616,8 +614,7 @@ fn heartbeat(binding: Binding) -> Result(json.Json, String) {
   ))
   use renewed <- result.try(bounded_observation(
     fn() {
-      session_sync_cli.run([
-        root <> "/var/coordination/tri-agent",
+      session_authority.run([
         "renew",
         binding.session,
         "task:" <> binding.task,
@@ -922,8 +919,15 @@ pub fn bootstrap_source_paths() -> List(String) {
     "apps/cepaf_gleam/test/mcp_runtime_truth_test.gleam",
     "apps/cepaf_gleam/gleam.toml",
     "apps/cepaf_gleam/manifest.toml",
-    "apps/uos_swarm/src/session_sync_cli.gleam",
+    "apps/uos_swarm/src/session_store_cli.gleam",
+    "apps/uos_swarm/src/uos_swarm/session_authority.gleam",
+    "apps/uos_swarm/src/uos_swarm/session_store.gleam",
     "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+    "apps/uos_swarm/src/uos_swarm/coord.gleam",
+    "apps/uos_swarm/src/uos_swarm/board.gleam",
+    "apps/uos_swarm/src/uos_swarm_ffi.erl",
+    "apps/uos_swarm/src/session_sync_ffi.erl",
+    "apps/uos_swarm/manifest.toml",
     "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
     "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
     "apps/uos_swarm/src/session_store_ffi.erl",
@@ -1544,8 +1548,7 @@ fn reconcile_terminal(
   let released =
     bounded_observation(
       fn() {
-        session_sync_cli.run([
-          root <> "/var/coordination/tri-agent",
+        session_authority.run([
           "release",
           binding.session,
           "task:" <> binding.task,

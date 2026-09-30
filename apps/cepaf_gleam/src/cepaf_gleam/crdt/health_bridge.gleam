@@ -30,6 +30,7 @@ import cepaf_gleam/crdt/delta_state.{
 }
 import gleam/int
 import gleam/list
+import gleam/order
 
 /// Node health telemetry snapshot.
 pub type NodeHealthTelemetry {
@@ -52,9 +53,37 @@ pub fn empty_health_map() -> ClusterHealthMap {
   []
 }
 
-/// Records or updates a node's health telemetry in the cluster health map.
+/// Compatibility helper for a single writer identified by the target node.
+/// Multi-observer engines must use `record_health_from` with their own identity.
 pub fn record_health(
   map: ClusterHealthMap,
+  node: NodeId,
+  health_score: Float,
+  lyapunov_exponent: Float,
+  is_stable: Bool,
+  breaker_state: String,
+  now_us: Int,
+) -> ClusterHealthMap {
+  record_health_from(
+    map,
+    node,
+    node,
+    health_score,
+    lyapunov_exponent,
+    is_stable,
+    breaker_state,
+    now_us,
+  )
+}
+
+/// Record a sample from a serialized writer. Older samples are ignored and exact
+/// replays are idempotent. The register timestamp is a logical merge version:
+/// it advances beyond the observed register even for different same-tick samples.
+/// `sample_epoch_us` retains the actual supplied observation time; the register
+/// version must not be interpreted as an independent physical clock observation.
+pub fn record_health_from(
+  map: ClusterHealthMap,
+  writer: NodeId,
   node: NodeId,
   health_score: Float,
   lyapunov_exponent: Float,
@@ -71,18 +100,40 @@ pub fn record_health(
       breaker_state: breaker_state,
       sample_epoch_us: now_us,
     )
-  let reg = new_lww_register(telemetry, now_us, node)
-
   case list.key_find(map, node) {
     Ok(existing_reg) -> {
-      let merged = merge_lww(existing_reg, reg)
-      list.key_set(map, node, merged)
+      case
+        now_us < existing_reg.value.sample_epoch_us
+        || telemetry == existing_reg.value
+      {
+        True -> map
+        False -> {
+          let version = int.max(now_us, existing_reg.timestamp_us + 1)
+          let reg = new_lww_register(telemetry, version, writer)
+          list.key_set(map, node, reg)
+        }
+      }
     }
-    Error(_) -> [#(node, reg), ..map]
+    Error(_) -> [#(node, new_lww_register(telemetry, now_us, writer)), ..map]
   }
 }
 
-/// Merges two distributed cluster health maps taking pointwise LWW registers.
+/// Order first by actual sample time, then by logical register version and writer.
+/// This prevents a burst of same-tick observations from outranking a genuinely
+/// newer sample. Distinct writer IDs and serialized retained state are required
+/// to prevent two different values from claiming the same complete version.
+fn merge_health_registers(
+  a: LWWRegister(NodeHealthTelemetry),
+  b: LWWRegister(NodeHealthTelemetry),
+) -> LWWRegister(NodeHealthTelemetry) {
+  case int.compare(a.value.sample_epoch_us, b.value.sample_epoch_us) {
+    order.Gt -> a
+    order.Lt -> b
+    order.Eq -> merge_lww(a, b)
+  }
+}
+
+/// Merge health maps by sample time, logical version and writer identity.
 pub fn merge_health_maps(
   a: ClusterHealthMap,
   b: ClusterHealthMap,
@@ -91,7 +142,7 @@ pub fn merge_health_maps(
     list.map(a, fn(pair) {
       let #(node, reg_a) = pair
       case list.key_find(b, node) {
-        Ok(reg_b) -> #(node, merge_lww(reg_a, reg_b))
+        Ok(reg_b) -> #(node, merge_health_registers(reg_a, reg_b))
         Error(_) -> #(node, reg_a)
       }
     })

@@ -1,0 +1,289 @@
+{
+  "authority": "NONE",
+  "scope": "Private component and process verification; no live cutover or admission",
+  "observed_at_unix": 1788932581.673823,
+  "unit_tests_passed": 20,
+  "cli_process_cases_passed": 6,
+  "source_manifest": [
+    {
+      "path": "apps/uos_swarm/test/session_store_verification_test.gleam",
+      "sha256": "e2f83d24bd05b616a942d228ea0a63e5292ab75f936e9a8cdaed8cf44691d034"
+    },
+    {
+      "path": "apps/uos_swarm/test/session_store_test_ffi.erl",
+      "sha256": "d0d5acb2ac0c9630658f81b43acdca54505ef2147d4e1e0f8f37c5691fd8d005"
+    },
+    {
+      "path": "apps/uos_swarm/test/session_store_test.gleam",
+      "sha256": "a070733e611429f8ae68c77e9900fcc1028e0f58d22e865d4e36c1edfc1cbdaf"
+    },
+    {
+      "path": "apps/uos_swarm/gleam.toml",
+      "sha256": "6e6f15e555dcc101d420902fc2a3b1cc4b27d0bc2f1edff1cf42513eed6b57ab"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm_ffi.erl",
+      "sha256": "35d10385f9de8f69244b42bf985577b28ebe05beaf000bd0623c2f74ea78bd3c"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm.gleam",
+      "sha256": "593ea92753d6d5b5deae5da99c8d0cd39e2a959ac33da95d0d67fd9fc343f99d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/tps.gleam",
+      "sha256": "b1d7436f92f0282ba67de1ff58c07601ffae0d33e7b7952ab270a9c31cd8d961"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/system_ontology.gleam",
+      "sha256": "fcc156dcfd40b0ea142d8521cf55065a947bfa5f06ed3ef92eb5c489cf71f2b7"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/system_audit.gleam",
+      "sha256": "01462a4ec10157a4cf3743d27933945c50f4dd3a302a0dea54452f08475e9223"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/swarm.gleam",
+      "sha256": "d7b9fe1d920a200313dda44362f6a0089ce13c8bac84d5d8fc8fb48bbb067d9a"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/sutra.gleam",
+      "sha256": "c91b945c59063ad1bc384bf99f584e0c3ff8562d7a687ca6c9d20c71243ecb70"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/sup_generator.gleam",
+      "sha256": "9895aafc2c7ed96bd745c95865c5a92f3e72e5a0aa2f9247f956ead26313be6c"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/stpa.gleam",
+      "sha256": "c7c0c6862f49ae21f11a65c4cd67cbda538dfed6f51423ef95f7710fe134db54"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+      "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "e2d5ba9ee4854cf3228299137e904cb4126ea569d1a933a793c1bfb2cd35cf5b"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_observation.gleam",
+      "sha256": "a2d33ec0264fbcbc0a87f85b3e2b822a4d1267c8d20fc709ec491adff76ffc11"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_binding.gleam",
+      "sha256": "39322a8039c7ea3fc6464571a856bebde3d2506ad4247bed73c3e2268f4e96ae"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/sangita.gleam",
+      "sha256": "0ab7b66eeb5e29940f14d11ca13058014c3277dcfded070db6092a704e6a61ad"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/route.gleam",
+      "sha256": "4c858b2c3ad22dbc49aefb175c4f87aa32e633f4123a470c5d171c430ff652e5"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/raga.gleam",
+      "sha256": "d509cbd0180650a6c8586ead88a7906a5f9cdda411f33ffa710cdc373986a23d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/provenance_panel.gleam",
+      "sha256": "015ec799f04384ac03b400c246fb5c4484c62965070086570545720ef9e0b7c1"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+      "sha256": "63e7c0042118a42b3d285e9db9ed608ac032e7ad5834d33ae148802115d2f3bf"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/ooda.gleam",
+      "sha256": "08c0615ff4d36a33c7e84a1985de22f875ac539c28f7299621129a5331aa6be4"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/manager.gleam",
+      "sha256": "eb1fa8ee09405dfe2910d8753e2f1f9fb9b80a534bc2b238f4bd300d75e9c551"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/live_evolution.gleam",
+      "sha256": "00ef9bffe4e32ef88d25a96d99d8161bf964aecc186f104c3766a0c6a3234286"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/jj.gleam",
+      "sha256": "f549303034741dd1ee63ad2631a4a84e40740cafcd406f798b337b4ad8014473"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/holon_km.gleam",
+      "sha256": "62bddfb1a685d19075726d7d300dbbdf39b4cbae231a59707b9ab3f56d17ab35"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/holon.gleam",
+      "sha256": "33459fa6ae7ae1c8b7809d90a6977ef8e3f868e8ff0c494f496f83fde9bd204d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/hive_projection.gleam",
+      "sha256": "c8670794d8ab3598d5b2b659b7730c0238c99787531b8663b63392d1fd88b682"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/hive_kpi.gleam",
+      "sha256": "d8e05d8835feef7925dff0921467160e82f15b754ec4a6fbb7ddd1d505bfe2a7"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/herdr.gleam",
+      "sha256": "6eba710b1265f6ebb15700fb70a5296ab518314676c06eb4aa1c760c8097274a"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/gita.gleam",
+      "sha256": "25d1852d2aa3e5c9bfd50543a135a5deddcf679e23bb6e17ce6917af8b9f652a"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/fmea.gleam",
+      "sha256": "3e8fd81cb974a7f592669822f04cb0f2ae1ea9202dfb15391c1e92ed116a9951"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/evolve.gleam",
+      "sha256": "2b8c2be346de72e422a5a781961e606766e414e385989ccf2e6fb0c5e0974b49"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/dream.gleam",
+      "sha256": "6183c940be2eaf0e8c89ec61f2f6f228c532526dfd3b8e44eb650682c180d27d"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/decision_record_cli.gleam",
+      "sha256": "d775a5e5592a183be8044d6f74b949809f89a9331b2e1139c5a353a2b6b65cd8"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/decision_record.gleam",
+      "sha256": "259798f58fdb5d605ea8a09e660e0f9edb952f7db0d642f201bff36c57d8bdc2"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/coord.gleam",
+      "sha256": "dbe42fb21ccc674b3f36621c456c9831a466819387a1901e820f3f4904df3dd1"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/cockpit.gleam",
+      "sha256": "b4f28c91daf7716fc8b194ea077da3e17d6b3b0960dfd0eeb59f50a0c1dd2751"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+      "sha256": "520b58feafa08310f3bde5c83db1cd2813f0f6c161d011b07d73778923780380"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+      "sha256": "38987ae4ff5d16752aacfc070b4781ef095560a5d8480e4ac3c6e5a55700f9a4"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+      "sha256": "516c0d769cb3f5f8dc827d09fa62aef724686ca1565096ba1c55b5a912df311e"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/board_reader.gleam",
+      "sha256": "d44dc115d851b5cbb1b04822123fc9375c23becce6166b3f4d4c4d4bfe3afe97"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/board_insights.gleam",
+      "sha256": "1c5ac002e489de27103f9fe22367342aa69886023ab2bad65a445d5643621939"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/board.gleam",
+      "sha256": "758505ee41c30f73bdc118b326d86137749ade1aa2b45a54d8e6b0a00632f2bc"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/agent_runtime.gleam",
+      "sha256": "3df41436954e98d063d113ae0ee61d8a6940d05e181e1547ea3e9b7ce19d6e24"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/action_boundary.gleam",
+      "sha256": "36ce18964906ee1b8c6d012a72430250bb97936bf24a2eeeee6898341bfd6154"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/acl.gleam",
+      "sha256": "2477d4df87689b846b31574a513600d9c430a70242d8ee71901aab86d33daf60"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_sangita_cli.gleam",
+      "sha256": "b1eb723567fef5998adec9ddb31f2c528f7206643e4cee129a3f3b9a01ec7082"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_route_cli.gleam",
+      "sha256": "6049b0ac8a0ca9735eed5e5b33761a96d5fc0f8f5cefdad5e8599bef25aefc3f"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+      "sha256": "0fac69889267296abfb35a975a7d90081ee58c833c52634c36a1d8571e7cb552"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_jj_ffi.erl",
+      "sha256": "77e4792e3d282faeb2274c888975fcfa5f8dd3ead63379fb2ea64c6cc1dd8aa1"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_jj_cli.gleam",
+      "sha256": "bfa3547cac2161efa5d7fa5dca3caf28de85d06ac4c53a2cad2dc1752f41ba59"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_hive_cli.gleam",
+      "sha256": "55dcfc372202d4e3c6b00bea736b8db85f276fa5e726bf6711b4f1cc03be6b46"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_herdr_ffi.erl",
+      "sha256": "cb1e6349c1be4fa224816b7c7933d58cb9ad58b5282dec05dbd65316c9dbf5c8"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_sync_ffi.erl",
+      "sha256": "41b33e65025c5e9ea68b5fbde62186a08a6524822bc6bf78e902d998559650fe"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+      "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_store_ffi.erl",
+      "sha256": "72630cf09783dd4e78c855fd8411594a362b72a43901d5ebafba489846a44b20"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_store_cli.gleam",
+      "sha256": "e4cca142da1d8dfa8a7cad63e36a2d9d83390d8141201e0ecb55518e3539814e"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_observation_cli.gleam",
+      "sha256": "d2e873da03de4bdbfe8eeed3567356415a96068b5d4c69ad027f4a03a241bbf6"
+    },
+    {
+      "path": "apps/uos_swarm/src/session_binding_cli.gleam",
+      "sha256": "95ac7bf7ed75215ab9514c5dc7ba2f033c555d2cc6ee99787022d28857493a49"
+    },
+    {
+      "path": "apps/uos_swarm/src/openrouter_worker_cli.gleam",
+      "sha256": "59bebbf64c1f63ca9c9953484fee2130be3748a35bbc699a26f65023c3b1b2f6"
+    },
+    {
+      "path": "apps/uos_swarm/src/live_evolution_ffi.erl",
+      "sha256": "c36ad7e01ee19edc8492333e42b245da8ad2029ad9f1f55b8b05baac91174a4c"
+    },
+    {
+      "path": "apps/uos_swarm/src/live_evolution_cli.gleam",
+      "sha256": "ac0b77427ae84df1740d77e491527e82e95a062080594601ff4dc6c8673ea854"
+    },
+    {
+      "path": "apps/uos_swarm/src/herdr_sync_cli.gleam",
+      "sha256": "fbd87eb98be6d8f3ae305c19d9179849c35155d8fb4b78d436fe6f7b75468bfe"
+    },
+    {
+      "path": "apps/uos_swarm/src/clock_guard_ffi.erl",
+      "sha256": "cc7d1771d8976dc036fbd5011cb2a15746a324a22da8b6a1437b6016fa336251"
+    },
+    {
+      "path": "apps/uos_swarm/src/clock_guard_cli.gleam",
+      "sha256": "a9d9537d5cd78277ead755161ee65cadabce007653a6a2b48fd3dcf57ebf3e6d"
+    },
+    {
+      "path": "apps/uos_swarm/src/board_reader_ffi.erl",
+      "sha256": "4440701291af49876ba2e9ad1e3b83522bda364c08e8db791a0081c8b59fe00d"
+    },
+    {
+      "path": "apps/uos_swarm/src/board_insights_cli.gleam",
+      "sha256": "b7f4e8ff298021e1a93f99020d6deb9d76b23a43c35ef37890474d2c2c43ae56"
+    },
+    {
+      "path": "apps/uos_swarm/src/action_boundary_cli.gleam",
+      "sha256": "cc3f7447ad8f79fb6bc03b56461791f09bdf5c400a2134c275d8005859a01ebc"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/tmp/uos-sa-plan-help-573b1c/_build/default/cli/sa_plan_main.exe",
+    "task", "claim", "--help"
+  ],
+  "database": "/tmp/uos-sa-plan-help-573b1c/private.sqlite3",
+  "utc_started": 1788933962.992776,
+  "utc_finished": 1788933963.013478,
+  "exit_code": 0,
+  "output": "Sa-plan 0.3.0 — durable plans, tasks, jobs, workflows, and work artifacts\n\nUsage: sa-plan [--format text|json] <noun> <verb> [arguments]\n\n  plan      create | show | register | status | list | tree | watch\n  task      create | show | list | rename | claim | complete | select\n  job|oban enqueue | claim | complete | list\n  workflow|temporal start | activity | complete | fail | history\n  work      path | materialize\n  docs      validate | render | publish\n  ui        tui | jobs | workflows | bonsai | snapshot | parity\n  help [noun] | version | status | sync | selftest\n\nUse `sa-plan help <noun>` for a compact synopsis. The unified manual is:\nwork/plans/zigvm/documentation/sa-plan-unified-manual/manual.md\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788933963007311132\",\"command\":\"--help\",\"authority\":\"report_only\",\"total_ns\":42299,\"server_timing\":\"decode;dur=0.004, normalize;dur=0.000, validate;dur=0.001, dispatch;dur=0.022, total;dur=0.042\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":3977,\"duration_ms\":0.003977},{\"name\":\"normalize\",\"duration_ns\":491,\"duration_ms\":0.000491},{\"name\":\"validate\",\"duration_ns\":571,\"duration_ms\":0.000571},{\"name\":\"dispatch\",\"duration_ns\":21540,\"duration_ms\":0.02154}]}\n",
+  "output_sha256": "75e28206f1992f8161742383f40599a1087d3978b14c2d6078f4d2cd88a94982",
+  "authority": "NONE"
+}

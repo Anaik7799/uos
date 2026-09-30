@@ -1,0 +1,22 @@
+{
+  "schema": "uos.ev98.health-formal.followup.v1",
+  "observed_at": "2026-09-09T06:12:02Z",
+  "authority": "NONE",
+  "candidate": "f4724b11; independent review required",
+  "source_sha256": {
+    "health_bridge": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+    "delta_state": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+    "gleam_projection": "d7f742436cbb22fa35cbee24d02978ed5eda33bc9a2b8a16f5101d491ce2ff36",
+    "formal_model": "7a5232672c083675c9d7e47a612f628dcc81d5f2bde007896f99d9f9368661c4",
+    "smtml_worker": "174eb4e03a383ff3393e161dbd964b0375a68177f3cb89ca2579753cfb2ec95b",
+    "smtml_child": "4686b667e4e8e8495fe2fb95a6968f8407f6298fd9fde74fe23563b7e6eb6dbf",
+    "projection_verifier": "039cdc799a341c9b4b0290489f8ca7b0cf522d886282f7dd0a22575277a8042d"
+  },
+  "executions": {
+    "projection_receipt": "/tmp/ev98-health-projection-exhaustive-native-20260909-0904.json",
+    "projection_beam_sha256": "ba22eab43b3f57b941e7e342571c684c2692b21621b0bccacf2d3b060489daca",
+    "smt_receipt": "/tmp/ev98-health-smt-native-20260909-0920.json",
+    "clock_receipt": "/tmp/ev98-health-clock-native-20260909-0921.json"
+  },
+  "bounded_claim": "2862 compiled-Gleam pair rows and their closed finite triple compositions only; no runtime or admission authority."
+}

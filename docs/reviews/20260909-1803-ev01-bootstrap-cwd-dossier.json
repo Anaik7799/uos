@@ -1,0 +1,518 @@
+{
+  "schema": "uos.ev01.cwd-repair-dossier.v1",
+  "source_revision": "3c13ba3b3e210e98c289147a2041aadcdcc72ebd",
+  "base_revision": "0a8c03c55f91cdf4279ff14503651227c9bb6010",
+  "status": "BOUNDED_FIX_GREEN_PENDING_INDEPENDENT_REVIEW",
+  "admission": "NOT_GRANTED",
+  "withdrawn_readiness": "0a8 public observer PASS could coexist with ambient startup-cwd config writes; prior readiness withdrawn and attributed",
+  "source_bindings": [
+    {
+      "path": "tools/bootstrap/bootstrap_observer.ml",
+      "sha256": "591b02bdbc560822ea3bb4ff54e057470f6ae092064af11456778fa4a2323eb1"
+    },
+    {
+      "path": "tools/bootstrap/bootstrap_observer.mli",
+      "sha256": "eca2ae568314dbd1d7227ab99333df11d082807a2c715aad14f20cf50b1ecef1"
+    },
+    {
+      "path": "tools/test_ev01_bootstrap_cwd.ml",
+      "sha256": "134a7c9a496cd34ecda7478eb98b827ba137f265e38ce204a86c63068f792dbe"
+    }
+  ],
+  "advice_qualification": "AGY markerAGY_ADVICE_EV_CWD_1833 actualsessionabe9bd8d advisory only. Parent confines ephemeral XDG to private tests and preserves runtime inherited secure-config preflight. Broader dispatcher rewrites, paid advice, canonical tests and admission are not authorized by this advice.",
+  "decision": "After recorded advice and fresh own active check, child-only Unix.chdir selected root before exec, parent unchanged, chdir failure exits127 before JJ startup",
+  "verification": {
+    "old_designated_child_exit": 2,
+    "new_designated_child_exit": 0,
+    "private_tree_fingerprints": "A selected, B startup, C private config; inode/mode/size/mtime/ctime and regular-file SHA256; atime excluded",
+    "parent_cwd_preserved": true,
+    "missing_child_cwd_refused": true,
+    "retained_checks": 40,
+    "retained_child_invocations": 61,
+    "retained_exec_trace": "321 successful /16 ELF paths /71 failed lookups",
+    "cwd_exec_trace": "24 successful /6 ELF paths /14 failed lookups",
+    "canonical_observer_invocations": 0
+  },
+  "authority": {
+    "plan": "uos/ev01-bootstrap/20260909",
+    "task": "VERIFY",
+    "worker": "codex-ev01-bootstrap",
+    "attempt": 3,
+    "lease_until_ns": "1788982659842022773",
+    "final_active": "2026-09-09T18:44:06Z",
+    "assessment_sha256": "13abd5f8f169823c1214116504af209196cda2a2e102794d3fe66f5d22dc5844"
+  },
+  "remaining": [
+    "Independent source review and authenticated Codex+AGY full dossier review pending",
+    "Current source canonical behavior not rerun by author; prior canonical source0a8 receipts remain historical",
+    "Original governing design/plan lineage handled separately by parent; no scope substitution",
+    "Cooperative local filesystem observation; no hostile race containment or complete release closure"
+  ],
+  "records": [
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-agy-advice.txt",
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-corrected-advice.txt",
+      "sha256": "a34dde1e0208348f68d2f04c25d5a91ccd16b0f719b75e31d76410e577d7ee2d"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-agy-observation.json",
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json",
+      "sha256": "6b342cdd30450ed1cfe89edfdede60eaee5454e0c66c2a8b9cc5ffff0378eeff"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-independent-finding.json",
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1802-ev01-bootstrap-cwd-finding.json",
+      "sha256": "bd44f2cf54d5d192c32a2fc511ce7ea6b6ffaf7df84a3feb11c12c8d9dabddbe"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red.json",
+      "original": "/tmp/ev01-cwd-regression-a765d3/verification.json",
+      "sha256": "e57b662a9046c33503472d87c9f560d4dcc6ddc5b4d703d690b17bc39e767f74"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green.json",
+      "original": "/tmp/ev01-cwd-regression-a83c39/verification.json",
+      "sha256": "4df56e9e22fa98a8290586035c361502f9f27d3ca91501285a582d1596a2d7f1"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-campaign.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/verification.json",
+      "sha256": "2200b9f8d6472758addb0f1f314d8b780503d7a7d7c7178fd3862469669dcbda"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red-native.json",
+      "original": "/tmp/ev01-cwd-author-designated-red.json",
+      "sha256": "259017c8fca2cb88d1fdcbedfe3466307057c9722de3194179a971079f5a392d"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-native.json",
+      "original": "/tmp/ev01-cwd-author-green.json",
+      "sha256": "b413fcc347b09170941beee738a1359a930b401cfcceea1fb8978ac1dbe87de4"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-native.json",
+      "original": "/tmp/ev01-cwd-retained-campaign.json",
+      "sha256": "4d14e066ced35780aa16655239cea43c9f565d52a384d07a1ae2aaabb4c14689"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-trace-audit.json",
+      "original": "/tmp/ev01-cwd-author-green-audit.json",
+      "sha256": "46b108f763e62bda08985d25b517d063dcd143d4291afa0dba8fb1cb6fff389e"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-trace-audit.json",
+      "original": "/tmp/ev01-cwd-retained-campaign-audit.json",
+      "sha256": "8ef8aa8d14d389449342d7c2721a3193646425debcbff678c925f9ed99d99c2a"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-prerelease-active.json",
+      "original": "/tmp/ev01-cwd-prerelease-active.json",
+      "sha256": "3796adcb6ed84a3ee7fef73589fde26d86f72306354d7caed28fc4cb9d839758"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-release-attempt2.json",
+      "original": "/tmp/ev01-cwd-release-attempt2.json",
+      "sha256": "3929200a6cc5942f78776a77fc45f9b203ceb9c51fcd66b4f0292dcd7c868079"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-reclaim-preflight.json",
+      "original": "/tmp/ev01-cwd-reclaim-preflight.json",
+      "sha256": "ef2d94bc433f81216e76a712dece7e5ebceb7e0e71a0caf98a2cad170b0d329c"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-claim-attempt3.json",
+      "original": "/tmp/ev01-cwd-claim-attempt3.json",
+      "sha256": "6e4b3767016938d20a9f428e79d009e07985421870dbab89b7f9f17d7ed330cd"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-active-attempt3.json",
+      "original": "/tmp/ev01-cwd-active-attempt3.json",
+      "sha256": "3d185d4400455331b2b1aa8e16e93a81a1c3e2873768e043dbc33b99e0bc36c2"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-before-fix-active.json",
+      "original": "/tmp/ev01-cwd-before-fix-active.json",
+      "sha256": "5e708de432850514c36ded1d3e3d2bb5e14861a02b36bf62e3b9585d4975b1cc"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-final-active.json",
+      "original": "/tmp/ev01-cwd-final-active.json",
+      "sha256": "32ad2529d50f07054c4801e554cc142a26e284d82bd9e2ab13b1aa16f6f464c1"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red-child-000.json",
+      "original": "/tmp/ev01-cwd-regression-a765d3/01-source.json",
+      "sha256": "b2cda7888fd466bb17817914d929653b311ef92a6d9ea4817ef87a50e191c1dc"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red-child-001.json",
+      "original": "/tmp/ev01-cwd-regression-a765d3/02-source.json",
+      "sha256": "3cd047ad8e33fe221d9452e4bba9ab4918b53bf7cb95e3d1cb08a3b1ef322cce"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red-child-002.json",
+      "original": "/tmp/ev01-cwd-regression-a765d3/03-source.json",
+      "sha256": "a427919e0d3f39a4250fc31bb27f4ad8e2ed5a52a941944c644d6b734144fdbb"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red-child-003.json",
+      "original": "/tmp/ev01-cwd-regression-a765d3/04-init-private.json",
+      "sha256": "33b07b6bc73eace3057ad4512741b4f547618816df1e0a5cd1004b1445188862"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red-child-004.json",
+      "original": "/tmp/ev01-cwd-regression-a765d3/05-init-private.json",
+      "sha256": "f88a0c8a32a93f41bf25ac30f510ad540b5f21826b3a7a2bf31a21eb14228b09"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-red-child-005.json",
+      "original": "/tmp/ev01-cwd-regression-a765d3/06-two-private-cwd.json",
+      "sha256": "6def9e077ab466b8f6db932b543502a80b80e12f5439b6e96871061e808f9f80"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-child-000.json",
+      "original": "/tmp/ev01-cwd-regression-a83c39/01-source.json",
+      "sha256": "645620d85eaf68d3fa56a9463518d8f3f7774a37a42d122bdd549e2b4c028611"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-child-001.json",
+      "original": "/tmp/ev01-cwd-regression-a83c39/02-source.json",
+      "sha256": "e456c8b63ee835c5de57759bb48aa1e94ccfad06cfbebe5f8483fa351d2fc2eb"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-child-002.json",
+      "original": "/tmp/ev01-cwd-regression-a83c39/03-source.json",
+      "sha256": "d9ab2801dc4fd874a7cb9be18aa38564c42ffb53e44ad45127a71b126e22c664"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-child-003.json",
+      "original": "/tmp/ev01-cwd-regression-a83c39/04-init-private.json",
+      "sha256": "ef931b8ef4468d337fa54d386315e3ba797c494ae18f676f2d512447db809875"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-child-004.json",
+      "original": "/tmp/ev01-cwd-regression-a83c39/05-init-private.json",
+      "sha256": "49bd07df5a5f146d36061a90ba9fc8c370dcd47395e0cdd711b5dc3ce59bab6a"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-child-005.json",
+      "original": "/tmp/ev01-cwd-regression-a83c39/06-two-private-cwd.json",
+      "sha256": "a972aea387e5fc05ae378f94e10f932666880f7fc63b26f07eafbdca0f2db1c7"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-000.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/001-candidate.json",
+      "sha256": "22ccfe03fdbc3a0c577b65db94adf135d1c33282e4de93ed4bc9a36581a1d908"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-001.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/002-candidate.json",
+      "sha256": "c4b0d50c3afbc3a64d7f4072f2e84b61b6d6a6c2ddbb18a6a5b0856843c592f3"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-002.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/003-candidate.json",
+      "sha256": "a1b32140747e21563c4a907277df88b7fc3045d94096070c9823ed2eedf2db45"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-003.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/004-candidate.json",
+      "sha256": "61afc2e461db1b34171907dd66539438ae41b7b6c9deb46a6af8ca1436a976ca"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-004.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/005-candidate.json",
+      "sha256": "61e077f516a34c4135510e0341a768c76629868af7fb4c88d379512ac6641195"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-005.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/006-candidate.json",
+      "sha256": "3297069b1f868d18f6ffba03f4522b15cb9c418a2d7c23c6c2c25ff743caaf6a"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-006.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/007-candidate.json",
+      "sha256": "74597c5269477bf8c21784f49f6f97a53cb15a5570153e04484ef9fc4ac6b1a4"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-007.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/008-candidate.json",
+      "sha256": "85baa9a2b7f5e7aaaff9aa3eec7b64f1095e814a59e6c8dd0fd127e42621c6ee"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-008.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/009-candidate.json",
+      "sha256": "3e7467c246f719fdeb4ad3688fc7f877442e5e0426b090d8da9cfcf3625181a8"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-009.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/010-candidate.json",
+      "sha256": "422d0f7c18cf55d2b026a001d4eb02f8def76c207b710a30245e7e4be3d37f28"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-010.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/011-candidate.json",
+      "sha256": "f2d6ce50bfc4e37b5f09c32bd61137385ea7cd319adc1ce094c391aa91eaf35b"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-011.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/012-candidate.json",
+      "sha256": "d17825d1c3f6903e05d3fda67da806fb687f112ca1cd5e08bb31c62193243de0"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-012.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/013-candidate.json",
+      "sha256": "170f86b8ed07b704b95c5dad6089b76d3973a2d86b87ae602665c61d235a4ca1"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-013.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/014-candidate.json",
+      "sha256": "bd9152529ce0d3824ef14632cd82310bd12d3e6581aad5b048896b304a0c74d5"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-014.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/015-candidate.json",
+      "sha256": "aa4dd635d772f71b69d1f61d73f35846b10e30394fb992c8361aed9e87c8c98f"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-015.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/016-compile-cli.json",
+      "sha256": "21784bf6d46834148d282b6d23cd5c2efb2b0ffc19c5f7fd82ea2cf081e3b32e"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-016.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/017-compile-model-observer.json",
+      "sha256": "f4902885db087a02d716d36ff78ca866e148d8a6fa72efcb7ab9aad213cee33c"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-017.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/018-formal-truth-table.json",
+      "sha256": "6f3ad8a3b898b3fcac3adba1a1f16d7993ddc979ecfb6e0125401d9ca9611de0"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-018.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/019-absent-refuses.json",
+      "sha256": "c9dc990c8e2607ece748947968dba480d7e16f34d9bdfdd38e3dfe9cab9f328f"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-019.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/020-empty-jj-refuses.json",
+      "sha256": "4626e88005cb7c48deb7c7e3faddb7b88aff4139d33237ae2d0fbe72f556edc9"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-020.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/021-file-jj-refuses.json",
+      "sha256": "2c8876bf952733cb1aa1f2342fb1774b27a100d08aa6722283875ff915348ab3"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-021.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/022-init-colocated.json",
+      "sha256": "6c679f129c65a5b03b1c389e4a673a8f9c8cb380ea2b4cd29107a163b0fd754e"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-022.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/023-colocated-refuses.json",
+      "sha256": "c2c42b0fd2872c19d66f0b94de0b6bae5ad51cdef589917af545cf776855544e"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-023.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/024-init-standalone.json",
+      "sha256": "e08d853f965b46a7e1fc4a1c462161ab77305e3f3680266abfd7ad8b291c3054"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-024.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/025-snapshot-a.json",
+      "sha256": "df0766590cf94d457aa79005c3a990b3bb69395733142cc10d09138a5d425883"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-025.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/026-current.json",
+      "sha256": "ed3b32d27c2cf823b7199eae2e511e7fdd390ec2fb919618a7dffcf3e8d63d78"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-026.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/027-standalone-passes.json",
+      "sha256": "30dbdb05b59bcd52e4408e873608d3e4b96561bc47fadaf0348dd1c738db0318"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-027.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/028-current.json",
+      "sha256": "e3f3999cc23e7f7de3cbe7fead9f537529df3a1a7c316c88b1c8b66ec4be85aa"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-028.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/029-legacy-config-migration-refuses.json",
+      "sha256": "02b121ebf78f9981646e0ab0e1957042c5f2b9184c3095e6926d5d189568f297"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-029.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/030-missing-secure-metadata-refuses.json",
+      "sha256": "7aebcc08d5bf871a07d11554052e6ae196c471967032d91a23b04733e3874374"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-030.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/031-malformed-config-id-refuses.json",
+      "sha256": "b96fc4caf1c870b51e1c04d30673148cb2c0202984afca89ac1fe9620ddabcfd"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-031.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/032-existing-secure-config-passes.json",
+      "sha256": "b6eae510b5575bb17b5ef0bd5beed55427f390bff5f2e1a256bd4b6880be2669"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-032.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/033-relocated-secure-config-refuses.json",
+      "sha256": "022159d8f307585eb8bc573ca083f0da747a03042f47d2a3c7e43f2c64a912ef"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-033.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/034-malformed-secure-metadata-refuses.json",
+      "sha256": "3421d03e741468dfe5cb46cc6d53fb4fa4e9ee5901776bb00a5bc774f9ff47fa"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-034.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/035-workspace-config-initialization-refuses.json",
+      "sha256": "5f798c0231c1571d90f8fbbccb397b2f58ebbbea4a5927d71400de54a3656d23"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-035.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/036-empty-git-marker-passes.json",
+      "sha256": "8b63babd064bb3539efacb2bfd05e7730b429cb6b5a4e475126671ba5f4ef0ed"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-036.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/037-git-file-refuses.json",
+      "sha256": "d09b414b126f5666dd64f6e350a552b0ad6ead262e0af7031e31b35fac1846cd"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-037.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/038-git-symlink-refuses.json",
+      "sha256": "cbe21cb23ce48e2c4579e814c141820b32d9874b25106a2f7ae8a0107aa82ae7"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-038.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/039-unreadable-git-refuses.json",
+      "sha256": "f90b44e264341c0b8341d3bd637d010332e5e02338b0206cd951962270f4f0a1"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-039.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/040-nonempty-git-refuses.json",
+      "sha256": "94a212062962386bc84a23e5184742b6d2e38e82b2c02c953cf560d477fff5c6"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-040.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/041-external-store-refuses.json",
+      "sha256": "fc9e947d6fcc62fcdfa73905421141f3bf7003271541510cd85df3b41603d69e"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-041.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/042-bad-store-type-refuses.json",
+      "sha256": "d6fe37bbba2dbe88e02e8c10d2537d77b9c21dec69e1af9300d18934d24a5829"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-042.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/043-symlink-store-refuses.json",
+      "sha256": "a5d5869e64f0bde069b9933e0772ab6e2d24c1345eae3a9bb5f0f53b41936160"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-043.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/044-symlink-jj-refuses.json",
+      "sha256": "743ed12288b84ffff421fd9a16eb8d399afd5dd8f23033035c909af8aff29703"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-044.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/045-corrupt-checkout-refuses.json",
+      "sha256": "97ac37d36fc89f99861649431b4cf58bed76c665695c1addb3da5d5cf483b186"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-045.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/046-snapshot-alpha.json",
+      "sha256": "e09192d1128c7cd7641a2351eec35fd4b07485db8b1407f82fcc5d0d068545a9"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-046.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/047-current.json",
+      "sha256": "b1844dd6554f6dc2a2714a7868540ef1eb0df67ade07f4abe199bdc374cd28ac"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-047.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/048-snapshot-beta.json",
+      "sha256": "c5c13fd951a50333e110586f21dce3366f865c5688233cb2cb52df80eb865c31"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-048.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/049-current.json",
+      "sha256": "4cb7511df7a941550b719b350c728176731dcad257816c7b7635d9d807d1397f"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-049.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/050-read-alpha.json",
+      "sha256": "edc7c9619ee0a2bf68b79098f1420f8addb33e851c372a38c253cc75dcb9049f"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-050.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/051-read-beta.json",
+      "sha256": "a0fd4921525a90f7ee62574a02c84ed36cf03e5a3e1fb1c995bd47ccbbdf92c4"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-051.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/052-workspace-add.json",
+      "sha256": "99a5318d82c6ce19f88535fb17f9aa749a99c2f5325d491fd6ea1725c38304e0"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-052.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/053-additional-workspace-passes.json",
+      "sha256": "5ba8bf06b4481b179f1973856ef4e017f7874e9c44fc42d9541265871db4bd32"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-053.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/054-snapshot-sibling.json",
+      "sha256": "bcfb06d2f67e899056679917891276a7ef4f65fe82beb126f09f393006b2a9f5"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-054.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/055-corrupt-pointer-refuses.json",
+      "sha256": "d82faed0fe97fa4de623dc9a311a07dcd613f307ba9f6b8a9e206cdd2d8bc4f5"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-055.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/056-nested-cli-resolves-root.json",
+      "sha256": "d240a6b0f041370511daaeb80d0ce15b8ebdac357a13745a73fcc2a28c7d0358"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-056.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/057-checker-args-refuse.json",
+      "sha256": "74d171c918588fc91d7e757537e294ef8d735fff78fe0cc27ce14363eea9635e"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-057.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/058-compile-designated-mutant.json",
+      "sha256": "75e0e2f9f2c1d5c2dc4d8440737b1e7a5fe6a1976eeffbf753e2d918f628de9c"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-058.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/059-designated-mutant-fails.json",
+      "sha256": "50464028a6250e351d4f1d4a28c48fefbad24df7a46904775302c3c784f72bab"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-059.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/060-compile-duplicate-mutant.json",
+      "sha256": "965b99973e8dcc88b1c15be4518d6958d15196c99207f6f4ffa0f140c52c65c5"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-child-060.json",
+      "original": "/tmp/ev01-bootstrap-campaign-a44036/receipts/061-duplicate-mutant-fails.json",
+      "sha256": "ea7cc3ca396d5481ff4b657cd6eb5ad921212dc554864214bd2f6a194e07e26a"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-green-execve.json",
+      "sha256": "a911c9b124a35fb0c5267289b2cf7e726b5e24a18b645e9845d2e1df673e9679",
+      "raw_sha256": "f39113034a68dcb2a84f44f411a4caf5355459452745b96bc6e77f869aa01a61"
+    },
+    {
+      "path": "docs/reviews/20260909-1803-ev01-bootstrap-cwd-retained-execve.json",
+      "sha256": "44b178da81744e885418a975d014bc1606af2621606b77401b50d94b249d0a61",
+      "raw_sha256": "f5e786f1a27cd6f3bcd9223fc3dad5f33386184d3d7814f87904a8d51e9041bf"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "uos.retained-checks.v1",
+  "authority": "NONE",
+  "note": "Six original log files explicitly tracked by Jujutsu; original manifest preserved.",
+  "files": {
+    "broad-source-provenance.json": "20c69bafb05fe77c681c4afdf841f55be97c4f5aa3032206309f43bd0e22013d",
+    "broad-tests.log": "e51fad93093b71592070a11f75443756b69e4179423e1154afa58fb2ecf11cc9",
+    "browser.log": "b5eedd73016c3d97baf92649dca61d6e43d621570d7c5be440a89613707a0f5f",
+    "final-broad-source-provenance.json": "38cccac31dec5694a58327cd771cdba7c55f9ca280f5170497829e3588d86dbb",
+    "final-broad-tests.log": "4390e1d8927d86c87baadff7131cd469d5f7fe752183213821dc58b9160c68d0",
+    "guard-before-repair.log": "dfb10ba387d9aacc39294f71be5e8018eeda92ed15eb44f79714036ef5e3ff33",
+    "manifest.json": "2bed7117cd552ea36823de349ac997d5ac374f6fca0a9dbf3c099262ddec1651",
+    "native-provenance.json": "495122954560526f2c36b935d02a1f1cf8d1a8e2f45daf376cbc0f500de6b147",
+    "recording-initial-failure.log": "b5feefd423ca058d336ce82cd2e085f6cd74fac9b65441c351b3b1ed727c8584",
+    "recording-report.json": "663b340ebd9505cf0763891b51f3b5323fbb22394c08a9991b55c91df9ec6b92",
+    "rejected-close-assessment-lifetime.json": "ea27da86da490c339181b0ac91bec1c9bfb57559a2b79d54d67fdccd4af99e9e",
+    "rejected-close-assessment-shape.json": "6e8b1b1ed7fa40fe835fad96971e99b7d88e35e377e56a83f244a043af981c21",
+    "scoped-unit.log": "f0a8cf770392d49ca33c5bb81909583d2f00e73206b363d2703ec011c77fad9b",
+    "transition-parity.txt": "321814068d7d0ebe454828b3ec30cd75987455e71cb8f6ea5cffd3266feb6429",
+    "video-provenance.json": "b135f60ab3a0f14207897034969c147ed92fabb275df86b9876485d0dd9a8875"
+  }
+}

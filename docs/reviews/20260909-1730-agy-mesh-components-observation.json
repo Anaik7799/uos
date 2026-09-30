@@ -1,0 +1,48 @@
+{
+  "schema": "uos.observed-agy-component-review.v1",
+  "observed_at_epoch": 1788973230.597807,
+  "observer_session": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "request_operation": "ev-admission-mesh-agy-review-1625",
+  "request_event": 1608,
+  "candidate": "8152a497929d68f830385a1a887570f94ccebd77",
+  "observed_verdict": "APPROVE_BOUNDED_COMPONENT_SCOPE_ONLY",
+  "authority": "NONE",
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "tags": [
+    "#fractal-l0", "#fractal-l3", "#fractal-l6", "#zk-adr", "#zero-muda"
+  ],
+  "scope": "Completed transport, causal synchronization, closed recipe and runner/discovery fixtures",
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-1730-agy-mesh-components-session-before.json",
+      "sha256": "bdada69fb5e19450681e844721735bbb5c3bb621c509a2ae4bc9a84f58d30f6d",
+      "bytes": 440
+    },
+    {
+      "path": "docs/reviews/20260909-1730-agy-mesh-components-pane.txt",
+      "sha256": "a9edadf15d434052d5458506e5efe9818ed20c80d669e64905a24ea28643b81e",
+      "bytes": 27819
+    },
+    {
+      "path": "docs/reviews/20260909-1730-agy-mesh-components-session-after.json",
+      "sha256": "bdada69fb5e19450681e844721735bbb5c3bb621c509a2ae4bc9a84f58d30f6d",
+      "bytes": 440
+    },
+    {
+      "path": "docs/reviews/20260909-1730-agy-mesh-components-observed-addendum.txt",
+      "sha256": "d6aeb050a0d2450e2d0da4a22a62068980380efa1331997f30f63adabea8f6d9",
+      "bytes": 4368
+    }
+  ],
+  "qualifications": [
+    "Observed read-only AGY review and final addendum, with actual Herdr identity checked before and after; no new AGY runtime execution.",
+    "Raw pane text is cooperative evidence, not a signed producer attestation or a new coordinator entry under AGY identity.",
+    "The pane calls the requesting PROGRAM attempt4. Canonical root task had recovered to attempt5 before request1608; exact recovery receipts in docs/reviews/20260909-1600-program-lease-recovery.json take precedence for task authority.",
+    "The header distinction is8192 configured parser budget and8194 actual total wire ceiling. The177 calls retain ordered168 originals plus9 reviewed causal cases.",
+    "Earlier wording about complete/reproducible evidence is bounded by the final addendum; no authenticated transitive release closure, multihost, durable identity/outboxes, full model refinement or production cutover is established.",
+    "The earlier stale-heartbeat refusal followed by a JJ description write remains a sequencing incident. A corrected heartbeat/fence cannot retroactively make the earlier refusal a pass.",
+    "EV94-109 remain NOT_ADMITTED. The policy ceiling93 is unchanged and does not itself positively verify EV1-93."
+  ]
+}

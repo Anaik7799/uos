@@ -1,0 +1,71 @@
+Pinned JJ operation: 3f75a63b43a634c3c3c7a09e90937fb187eabf3a126f6673d75a8668ae28d27544820b13673e5958cac431279445c77050938745109f09bb29329fe083d455aa
+Pinned main: 1be8029d72bc9530b1937564a37c555bd0b4b938
+
+agy-l3: .uos-workspaces/agy-l3 ouopomnw 67d5d57b (empty) (no description set)
+codex-action-boundaries: .uos-workspaces/codex-action-boundaries ouzqnluz 1353e658 feat(swarm): require reviewable decision records for actions
+codex-action-kpi-integration: .uos-workspaces/codex-action-kpi-integration usxqyqtq 31207adb (empty) (no description set)
+codex-ainf-design: .uos-workspaces/codex-ainf-design nmxzrtyw 2624cff0 (empty) (no description set)
+codex-astra: .uos-workspaces/codex-astra rwrnxyum 5b9b9388 (empty) (no description set)
+codex-auth-framing-review: .uos-workspaces/codex-auth-framing-review vxvxwvzt f8c38071 (empty) work: bounded auth framing review frozen; no rollout authority
+codex-auth-ingress: .uos-workspaces/codex-auth-ingress lykxtrxv 3ee0188b (empty) (no description set)
+codex-auth-ingress-review: .uos-workspaces/codex-auth-ingress-review yutkxmus 1753727c (empty) work: ingress 6b033f37 review frozen pending bounded reader repair
+codex-board-insights: .uos-workspaces/codex-board-insights qxvrlnqo ada45ee7 feat(swarm): scoped board discovery reporting and telemetry correlation
+codex-board-strict-validate: .uos-workspaces/codex-board-strict-validate umptwvny e0b50cdc fix(board): fail closed on invalid validation input
+codex-clock-guard: .uos-workspaces/codex-clock-guard zzkpwsnu c1841115 (empty) (no description set)
+codex-clock-provenance: .uos-workspaces/codex-clock-provenance qupsryxk 4a5e1fa3 (empty) (no description set)
+codex-coordination-formal: .uos-workspaces/codex-coordination-formal utmmzunu 6d1cda9a formal: refine durable session journal crash and authority model
+codex-coordination-impl: .uos-workspaces/codex-coordination-impl mqzpmsuo a0c3fd11 (empty) (no description set)
+codex-hive-projection: .uos-workspaces/codex-hive-projection nrzkmvrq 4e6632fc feat(swarm): add deterministic hive awareness projection
+codex-homeostasis-interface-repair: .uos-workspaces/codex-homeostasis-interface-repair lopzuptq bf136217 review/codex-side-homeostasis-20260908-0045 | fix(homeostasis): wire test and observed UI modes with bounded verification evidence
+codex-homeostasis-release-20260908-0551: .uos-workspaces/codex-homeostasis-release-20260908-0551 owuunmml/1 45435f5b (divergent) (empty) work(unification): thirty bounded evidence cycles and artifact synchronization
+codex-live-evolution: .uos-workspaces/codex-live-evolution yxrxonox 78d8fef6 feat(swarm): connect live evolution watchers to bounded board fetch
+codex-manual-ui-20260908-1150: .uos-workspaces/codex-manual-ui-20260908-1150 zosuwowv/0 c5a0d3e6 review/codex-manual-ui | (divergent) docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts
+codex-mcp-catalog: .uos-workspaces/codex-mcp-catalog tsslvxly b9959830 mcp: expose adapter availability and fail closed on unbound tools; preserve numeric request IDs and redact transport logging; four focused tests passed
+codex-mcp-runtime-check: .uos-workspaces/codex-mcp-runtime-check zkvsmloo cb625f48 mcp: gate native adapters on runtime load evidence
+codex-mcp-stdio-runtime: .uos-workspaces/codex-mcp-stdio-runtime zrmkpozz 4eabfc34 mcp: preserve JSON-RPC framing on stdio
+codex-mcp-wave34-tests: .uos-workspaces/codex-mcp-wave34-tests ruprxopu 88fe4fa8 test(mcp): expect fail-closed system tools without NIF
+codex-mirage-audit: .uos-workspaces/codex-mirage-audit ptnlxrpp b63169a3 (empty) chore: preserve Mirage repair candidate
+codex-mirage-audit-action-boundary: .uos-workspaces/codex-mirage-audit-action-boundary zukslups 02d43656 (empty) (no description set)
+codex-mirage-benchmark-review: .uos-workspaces/codex-mirage-benchmark-review rrxrpksw a7b47961 (empty) review: pin final Mirage composition
+codex-mirage-evidence-audit: .uos-workspaces/codex-mirage-evidence-audit kvmlnkuu fe542cb8 (empty) (no description set)
+codex-mirage-feature: .uos-workspaces/codex-mirage-feature npptqozn 4aec1c8e (empty) work: Mirage handoff complete; integration held
+codex-mirage-governance-failclosed: .uos-workspaces/codex-mirage-governance-failclosed mumkznxt c5960ff1 (empty) (no description set)
+codex-mirage-metrics: .uos-workspaces/codex-mirage-metrics mopwrkrq 9962d6d1 (empty) (no description set)
+codex-mirage-tenders-audit: .uos-workspaces/codex-mirage-tenders-audit mtrpsnky b10e5532 (empty) work: Mirage tender review completed; candidate preserved
+codex-mirage-verification: .uos-workspaces/codex-mirage-verification sktupywr 72c7552b (empty) work: Mirage model evidence frozen; implementation remains unapproved
+codex-mirage-workorder: .uos-workspaces/codex-mirage-workorder rywsslnm 059afa53 (empty) work: runtime component staging evidence frozen for integration
+codex-observation-bridge: .uos-workspaces/codex-observation-bridge rkvntpmv e95cdf75 hermes: add durable typed session observation ingestion
+codex-oidc-auth-review: .uos-workspaces/codex-oidc-auth-review qxtzlqnk 294ebc47 (empty) work: OIDC independent review frozen; ingress gaps remain open
+codex-oidc-verifier: .uos-workspaces/codex-oidc-verifier qrnynrvs 10ead02d (empty) (no description set)
+codex-reuse-ops: .uos-workspaces/codex-reuse-ops zxqtoyxm e5572657 (empty) (no description set)
+codex-session-durability: .uos-workspaces/codex-session-durability mmzqmnyt de84ada8 (empty) (no description set)
+codex-side-hive-fencing: .uos-workspaces/codex-side-hive-fencing pnmksopx 311d2b12 review/codex-side-hive-fencing-20260907-1854 | fix(sa-plan): fence completion by original claim attempt
+codex-side-interface-skills: .uos-workspaces/codex-side-interface-skills ylnmkoss efbaea22 review/codex-side-interface-skills-20260907-2312 | skills(ui): add repository-local GUI TUI rules and verification workflows
+codex-side-resource-controls: .uos-workspaces/codex-side-resource-controls spqrrxnm 7c162d0f (empty) docs(plan): prepare dependency-gated hive stabilization
+codex-solo5-source-review: .uos-workspaces/codex-solo5-source-review mqwsvpxk 52f8034f (empty) work: Solo5 source review frozen; candidate remains unapproved
+codex-solo5-toolchain: .uos-workspaces/codex-solo5-toolchain zrzxvvnl e081c209 work: Solo5 0.13.0 candidate frozen for independent review
+codex-telemetry-repair: .uos-workspaces/codex-telemetry-repair qxuzvwkz 8180c736 fix(telemetry): preserve truthful OTel route discovery
+codex-unification-20260908-0753: .uos-workspaces/codex-unification-20260908-0753 prkplrtv 9bbc5217 review/codex-unification-20260908-0753 | feat(assurance): record thirty risk-ranked cycles with lossless board/Zenoh evidence and native SDLC checks
+codex-unification-50-20260908-0852: .uos-workspaces/codex-unification-50-20260908-0852 rvuxyuxy 6d15a6d3 review/codex-unification-50 | docs(assurance): close fifty verified focuses with explicit ABI and integration holds
+codex-unification-integration-20260908-0821: .uos-workspaces/codex-unification-integration-20260908-0821 pvsuywxm 0114d306 docs(assurance): retain final merge tests, decision boundaries and coordination receipt
+default: . wuxpxopp 69d51cf9 (empty) (no description set)
+e01-candidate: .uos-workspaces/e01-candidate pwzrpxmk a1a02a88 E01: freeze review snapshot with unconditional probe group cleanup
+e01-review: .uos-workspaces/e01-review pwzrpxmk a1a02a88 E01: freeze review snapshot with unconditional probe group cleanup
+e02-acceptance: .uos-workspaces/e02-acceptance ksyzyrpp 646741f7 (empty) (no description set)
+e03-evidence: .uos-workspaces/e03-evidence rokqroml 42568ef7 (no description set)
+e04-census: .uos-workspaces/e04-census rouvwoow dd00d2c9 (empty) (no description set)
+execution-audit: .uos-workspaces/execution-audit yvownwzk 84c050b8 audit: map merged execution tasks and E01 evidence
+execution-control: .uos-workspaces/execution-control yzuvuytq e17fd93b E04: integrate reviewed source census and durable reproducibility index
+execution-tracker: .uos-workspaces/execution-tracker sulrxtlu 10b42a43 tool: bind manual support JSON parsing to bounded checked descriptor bytes
+fable-l0: .uos-workspaces/fable-l0 oyzplmml 1a414206 (empty) merge: integrate review/codex-side-resource-controls-20260907-1906
+full-implementation-plan-main: .uos-workspaces/full-implementation-plan-main stnrxslk ca1d21c4 (empty) docs(handover): integrate the latest AGY session handover with review provenance
+incoming-review: .uos-workspaces/incoming-review nqumyrzz 17aae5b7 review: reject incoming E01-E03 implementation credit
+n01-peer: .uos-workspaces/n01-peer pyyukmvr d3432a57 (empty) N01: record endpoint provenance and integrate independent review
+ocaml-gleam-tests: ../.uos-workspaces/ocaml-gleam-tests yrxuzoqo 4cc1ac15 (empty) (no description set)
+q01-warnings: .uos-workspaces/q01-warnings xosyyuxu 1a4b34b5 (empty) (no description set)
+sa-plan-execution: .uos-workspaces/sa-plan-execution yupqvvln c5c048dd integration/sa-plan-execution-20260906-1655 | plan: register complete UOS execution programme in sa-plan
+skills-preparation: .uos-workspaces/skills-preparation zsypmxot fda0b91e S16: prepare bounded skill health audit
+split-int: .uos-workspaces/split-int ywlswkow 0705e342 (empty) (no description set)
+w-coverage2: .uos-workspaces/w-coverage2 wwmuxmmv af12bb89 (empty) (no description set)
+w-store2: .uos-workspaces/w-store2 lzsymnzq 381c400d feat(uos_swarm): SQLite-backed session_store alongside session_sync file journal (COORD-JOURNAL-DB)
+

@@ -1,0 +1,99 @@
+{
+  "source_revision": "14057e08112c1cd5d44297eac6a9c853e8287b7a",
+  "scope": "SYNTHETIC_FAULT_VARIANT_NOT_PRODUCTION",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+      "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "sha256": "67d3f4831f968faf4026ed5d5e8a3015d98f9f21e61d61018a6046f4253bd872"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+      "sha256": "887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+      "sha256": "fc44263b04bd08fbff3c9a60244f3a7d49c9094e0d7ed72e66c9a4e94a0fb313"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+      "sha256": "8c58b08aeea63a0f2936034881108122ee14e518cba8715465f3515f014dbfc0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+      "sha256": "247d32160def65e50f2906f39713d4f0da11bf913336da9ae7980b87e233652c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam",
+      "sha256": "6946860923ce7849506b259b9315e06d989866af0968e17a0b3e09e39e3bf45a"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_delta_state_test.gleam",
+      "sha256": "5c6dfec60719af0278ffc525e95634d48e25ab820b9d17c8a94d2991a8b9e7c8"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_health_bridge_test.gleam",
+      "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam",
+      "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/deadman_freshness_test.gleam",
+      "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+      "sha256": "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mesh_sync_codec_test.gleam",
+      "sha256": "140eddbe3e47c4e1b3e24daca0416dd681bdc9413e23b298caa0be56b0af16f0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev98_codec_runner.gleam",
+      "sha256": "57bd0c999de6570a79fa5b92116448e59e8c54f7269b2157f5a61af0ca9c5404"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mesh_peer_test.gleam",
+      "sha256": "602fcc7659659c2ecc6d9b7ca44490b23e9a35328b995454b0a79a5c45222407"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mesh_peer_actor_test.gleam",
+      "sha256": "6f2833ec3ced98ecf519e47a690576464561954b24b27f790972efb89979e77b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mesh_zenoh_test.gleam",
+      "sha256": "bf78d4aa46c24773a5de1270f55fdf2e19e40e01d9dc84f341786b0dfd3f6bf3"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mesh_zenoh_live_test.gleam",
+      "sha256": "9e8fe2eab3e71de5320395d2bf255b6d43bdc37a7c5b27b5c8090822ff2445bd"
+    },
+    {
+      "path": "apps/cepaf_gleam/gleam.toml",
+      "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+    },
+    {
+      "path": "apps/cepaf_gleam/manifest.toml",
+      "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169"
+    }
+  ],
+  "helper_sha256": "f40157a9e81c3c0f0e3d11724526c4e2184ba5e9df0c3ad9f19fc8f5a03d2440"
+}

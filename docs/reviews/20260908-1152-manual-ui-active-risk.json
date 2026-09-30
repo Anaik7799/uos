@@ -1,0 +1,204 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "manual-ui-latest-candidate",
+    "plan_id": "uos/manual-ui/20260908-1150",
+    "task_id": "PREPARE",
+    "actor": "codex-manual-ui",
+    "scope": "Prepare latest-main plus reviewed UI in own sibling, bounded native tests and read-only Tailnet manual-test instance; user guide. No production or main replacement.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T11:53:52Z",
+    "valid_until": "2026-09-08T12:48:52Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-08T11:53:52Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Observed canonical policy and runtime observer; pinned main231ba3db and review6d15a6d3 combined only in own sibling.",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T11:53:52Z"
+        },
+        {
+          "path": "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "sha256": "2d096a62160067c18954b1169fb121a7753a5b14d022d3d7554bb2b7e68764d3",
+          "observed_at": "2026-09-08T11:53:52Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "a4e1a6b44f227e25c4349b0cd36d9c0292f068e94bae87fdbe4c6529e8561625",
+          "observed_at": "2026-09-08T11:53:52Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Current manual acceptance is blocked by stale deployed surfaces.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Wrong-instance testing and uncontrolled exposure are credible unless origin, routes and target are checked.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 gives RPN36/F4: testing the wrong deployment can produce false evidence.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "GUI and TUI manual acceptance depend on a current identified test instance.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical UOS testing service and its operator workflow.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260908-1030-workspace-isolation-contract.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-WRONG-TEST-INSTANCE",
+        "cause": "Static origins or stale runtime route the operator to an older service.",
+        "effect": "Incorrect manual acceptance or unintended production interaction.",
+        "controls": "Explicit candidate, same-origin links, restricted test routes, new unit/port, actual VM identity.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Manual-test preparation and bounded service launcher",
+      "control_action": "Start only identified read-only test service and present exact candidate to the operator",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "No candidate identity or guide is provided.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require candidate/run identity and manual acceptance instructions."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "A test endpoint mutates production or navigation jumps to production.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Restrict test listener to read-only homeostasis routes and preserve its origin."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "An old fence or changed source is used during startup.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Recheck active task, workspace/runtime epoch and immutable candidate before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "An abandoned manual instance consumes resources indefinitely.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Supervised named unit, no automatic restarts, bounded lifetime, memory and CPU."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 432,
+    "score_interval": [
+      432,
+      432
+    ],
+    "decision": {
+      "summary": "Use a separately identified read-only Tailnet test listener on latest combined source; verify native/UI behavior and give a repository-local user guide.",
+      "alternatives": [
+        "Replace production4100 now: rejected because production gates remain held.",
+        "Leave operator with localhost overrides: rejected because remote manual access remains awkward.",
+        "Build and expose bounded test-only instance with exact origin and candidate: selected."
+      ],
+      "counterevidence": [
+        "Production currently returns503 and legacy generic homeostasis content.",
+        "Prior source had12 native ABI test failures; no global admission inferred."
+      ],
+      "assumptions": [
+        "Current request authorizes a separate manual-testing instance.",
+        "No subagents, no new dependencies, preserve shared default and peers."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "The retained scoped UI contracts should work after binding the latest package; broader native failure may remain.",
+      "falsifier": "Any test route grants execution, navigation targets production, or claimed runtime differs from the prepared package.",
+      "acceptance": [
+        "Scoped native and UI tests pass at candidate",
+        "Direct Tailnet GUI access and same-origin navigation",
+        "Real/test/unavailable modes and bounded stream updates",
+        "TUI snapshots and manual user guide available",
+        "Exact runtime unit/run/candidate and bounded cleanup recorded"
+      ],
+      "rollback": "Stop only the named new test unit after identity check; retain prior package and production unchanged.",
+      "reviewer": "Author verification; human acceptance and independent admission remain unrun.",
+      "budget": "One local worker; no subagents or new dependencies;1GiB test unit,2CPU,4-hour maximum lifetime; bounded browser checks.",
+      "residuals": [
+        "Production integration and complete system admission remain separate.",
+        "Tailnet-only read access is not public or cross-tenant authentication."
+      ],
+      "supersedes": "/home/an/NAS-setup/uos/.uos-workspaces/codex-manual-ui-20260908-1150/docs/reviews/20260908-1152-manual-ui-risk.json"
+    }
+  }
+]

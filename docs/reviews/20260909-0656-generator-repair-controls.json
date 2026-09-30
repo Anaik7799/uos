@@ -1,0 +1,6 @@
+{
+  "checks_passed": 6,
+  "generator_sha256": "51692d43becc2d6c60b0f404773f3b45ed091e638e0950f90b0f23e405299a58",
+  "authority": "NONE",
+  "scope": "Private path controls; concurrent hostile parent-directory replacement is not proven safe"
+}

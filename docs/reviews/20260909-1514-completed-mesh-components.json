@@ -1,0 +1,441 @@
+{
+  "schema": "uos.completed-mesh-components.v1",
+  "observed_at": "2026-09-09T15:52:14Z",
+  "composed_candidate_before_record": "903a1cbc71b83a9914fc1dea36727388ae98e8e4",
+  "authority": "NONE",
+  "admitted_ev_ceiling": 93,
+  "new_ev_admissions": 0,
+  "source_equivalence": {
+    "apps_unchanged_from": "52e013cfe8c32d6c8d4353c27cfdf0a23f225124",
+    "producer_unchanged_from": "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93",
+    "method": "Exact immutable JJ diff is empty for each complete named subtree"
+  },
+  "completed_components": [
+    {
+      "plan": "uos/ev98-peer-loop/20260909",
+      "task": "TRANSPORT",
+      "attempt": 2,
+      "evidence": "ef1cfe3c71494d7696956abf66bdde5024d11723"
+    },
+    {
+      "plan": "uos/ev98-sync-status/20260909",
+      "task": "SYNC_STATUS",
+      "attempt": 2,
+      "evidence": "fe3f6e4edc56edc7b31c3c909a5a4fedfdcfb68f"
+    },
+    {
+      "plan": "uos/ev98-wire-codec/20260909",
+      "task": "RECIPE_CODEC",
+      "attempt": 3,
+      "evidence": "7a7c8ac0913f4a5b620a3c3c9dc4968f5debae92"
+    }
+  ],
+  "checks": {
+    "composed_distinct_PASS_labels": 115,
+    "recovery_ordered_invocations": 177,
+    "legacy_recovery_calls_preserved": 168,
+    "new_causal_calls": 9,
+    "generator_control_groups": 15,
+    "normal_eunit_transport_cases": 1,
+    "normal_case_internal_groups": 12,
+    "private_fault_cases": 4,
+    "owned_broker_records": 6,
+    "owned_broker_run": "r1788967835332236-1"
+  },
+  "copies": [
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-transport-approval.json",
+      "original_locator": "/tmp/ev-transport-root-independent-1450/20260909-1522-transport-independent-approval.json",
+      "sha256": "068e95c6b856f7870de0d40c11f8b87fef2d7c0fc9e6ee79c216afe1814af399",
+      "bytes": 45322
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-sync-approval.json",
+      "original_locator": "/tmp/ev-sync-root-reorder-green-1508/20260909-1536-sync_status-independent-approval.json",
+      "sha256": "287b419f76f5a1b1fbc2468d3b41b9d8acd319a5d8cbf35d1825276d7d87bc92",
+      "bytes": 7352
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recipe-approval.json",
+      "original_locator": "/tmp/ev-recipe-independent-20260909-1524/20260909-1528-final-approval.json",
+      "sha256": "69d86f77e041c4ae311564ba80712031e11666d525136be1ef17d11e147ff7b8",
+      "bytes": 8071
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-runner-fixture-approval.json",
+      "original_locator": "/tmp/ev-recovery-generator-independent-1535/20260909-1539-threefile-independent-approval.json",
+      "sha256": "4e8d0a647de55cd1ded66e90d6cea65198d8dc1e5ae118c79246b1eb3bbf0f88",
+      "bytes": 4085
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-test-discovery-approval.json",
+      "original_locator": "/tmp/ev-fault52-independent-discovery/20260909-1541-fivefile-independent-approval.json",
+      "sha256": "d056e54e787a4cf260bc094eba7fc65f9db8a78d7ad65fe13a276533fdbf7ce1",
+      "bytes": 162872
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-combined-bindings.json",
+      "original_locator": "/tmp/ev-transport-sync-composed-fixed-1527/bindings.json",
+      "sha256": "96e68464cab8ffc7844a1f53029128574158439d46f24992af9508cf633c9864",
+      "bytes": 83755
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-combined-additional-bindings.json",
+      "original_locator": "/tmp/ev-transport-sync-composed-fixed-1527/composition-bindings.json",
+      "sha256": "92af08272b7d0fe1ccec448ad3ceddc85d67a1cd3481e31f4e7ef480484ab3ab",
+      "bytes": 861
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-combined-compile.json",
+      "original_locator": "/tmp/ev-transport-sync-composed-fixed-1527/compile.json",
+      "sha256": "40574feb7c4889209ab17632a21b4814791bebf75d9a57a6625595f105c9d8b8",
+      "bytes": 2298
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-combined-runtime.json",
+      "original_locator": "/tmp/ev-transport-sync-composed-fixed-1527/runtime.json",
+      "sha256": "61e73a3752f8fd09859eaee3e5a459f2fc7dbe49c65134f48a72fbc99208a739",
+      "bytes": 16243
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-combined-live.json",
+      "original_locator": "/tmp/ev-transport-sync-composed-fixed-1527/live.json",
+      "sha256": "bb06424b7a5302a35e2b003faa7710e96aa52168d11394da96fdd6f82ba41ff8",
+      "bytes": 7306
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-combined-ack-fixture-red.json",
+      "original_locator": "/tmp/ev-transport-sync-composed-1519/runtime.json",
+      "sha256": "2068dc106e0f5dbdbd22ed6230368bb61b054b4724fa5196948d3019a1801dfb",
+      "bytes": 6058
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-enumeration.json",
+      "original_locator": "/tmp/ev-recovery-case-set-1522.json",
+      "sha256": "d071f51fc5cfb1e690d47f989384243daa8a4b8e0dffdf095419e9f22e73c2ca",
+      "bytes": 29857
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-generator-red.json",
+      "original_locator": "/tmp/ev-recovery-generator-new-sync-red-1519.json",
+      "sha256": "de1320afb0e673e6db05ad912fffc08b1a1d8b2daa4e3a9ae2d99178f2854ef2",
+      "bytes": 2255
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-generator-green.json",
+      "original_locator": "/tmp/ev-recovery-generator-new-sync-green-1522.json",
+      "sha256": "914b6d507a7aa0db0ddc011f05cb9fba38fe0221dad50f8a3f86611ee88a1fd8",
+      "bytes": 2343
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-generator-controls.json",
+      "original_locator": "/tmp/ev-recovery-generator-controls-1529/verification.json",
+      "sha256": "dad7e6306ba37152ea3d0eda92d024e0670d21b81d3134c132d947a200dcd60b",
+      "bytes": 6340
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-build.json",
+      "original_locator": "/tmp/ev-recovery177-build-1530.json",
+      "sha256": "4bcf8de6cbb25ed25fc764947fc656f4b6a801d8fbf30b61302d4be66eb975b7",
+      "bytes": 7765
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-runtime.json",
+      "original_locator": "/tmp/ev-recovery177-runtime-1532.json",
+      "sha256": "38d7b7cb6c6d8d8a052d2a7f94de7c7f93990fabb1d8256b43442b7991697dba",
+      "bytes": 17976
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-dependencies.json",
+      "original_locator": "/tmp/ev-recovery177-dependencies-1530.json",
+      "sha256": "8b66d60c0c263eef20d430c45d70394c53c436cfe7508b9fc6253e42dde05179",
+      "bytes": 59771
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-red-bindings.json",
+      "original_locator": "/tmp/ev-transport-discovery-red-1535/bindings.json",
+      "sha256": "8b17caaf98114879cafc0f7a9eacd7c7bfd66eddb616fae4f550877e7920a0a4",
+      "bytes": 82333
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-red-compile.json",
+      "original_locator": "/tmp/ev-transport-discovery-red-1535/compile.json",
+      "sha256": "f17a341e1fa64c773869e878d0570520c8bf8a6f69116cb90caded7bab11939c",
+      "bytes": 2281
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-red-runtime.json",
+      "original_locator": "/tmp/ev-transport-discovery-red-1535/runtime.json",
+      "sha256": "0d41e89e61cb2706357a67a20a938a8598867a068e2cd12eb3bb738a226b56b2",
+      "bytes": 6420
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-green-bindings.json",
+      "original_locator": "/tmp/ev-transport-discovery-green-1539/bindings.json",
+      "sha256": "7d3f8703e5153a345326d75f94bed9d77004df2287b7ae8ca458f6c5f9d091fa",
+      "bytes": 82807
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-green-probe-binding.json",
+      "original_locator": "/tmp/ev-transport-discovery-green-1539/discovery-probe-binding.json",
+      "sha256": "ed704276b0c5b7be1221b93c15368e6d43003950ad27899d09564ca5cf8b1b08",
+      "bytes": 448
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-green-compile.json",
+      "original_locator": "/tmp/ev-transport-discovery-green-1539/compile.json",
+      "sha256": "356fed9ce8d52368e77ec24da22bfcad48497273d1959d3c05f24d2e24028e98",
+      "bytes": 2282
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-green-runtime.json",
+      "original_locator": "/tmp/ev-transport-discovery-green-1539/runtime.json",
+      "sha256": "6b986c9f60b5112d10e6bd46921135334676b7107663341928b3b5755b5d0a55",
+      "bytes": 3406
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-http-independent-bindings.json",
+      "original_locator": "/tmp/ev-http-independent-1442/bindings.json",
+      "sha256": "aec990ed7c20b2be06e99936fca0a6cac06fad18aef84259b3cf8ab01ed8a6e8",
+      "bytes": 52607
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-http-independent-compile.json",
+      "original_locator": "/tmp/ev-http-independent-1442/compile.json",
+      "sha256": "ab1b090ca8b3fcd8134bd7b737706a7bc50d678ca9806e45d186bcc420b5d050",
+      "bytes": 2246
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-http-independent-runtime.json",
+      "original_locator": "/tmp/ev-http-independent-1442/runtime.json",
+      "sha256": "1164b35bff62ca010fbb42c18c0ead153a8d31b6484bd793c4e3aae1a2259b3a",
+      "bytes": 2645
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-task-sync-completed.json",
+      "original_locator": "/tmp/ev98-sync-status-completed-20260909-1543.json",
+      "sha256": "a16d1976912469ff7eb6b8998a638a7e1d371d344fb2b672c126de603123ba37",
+      "bytes": 3103
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-task-transport-completed.json",
+      "original_locator": "/tmp/ev-transport-component-completed.json",
+      "sha256": "a445542991e7ddecd82cc9be298dfdc1a4bcc7b79f7ebb305db6189bf074cd9e",
+      "bytes": 3568
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-root-composition.json",
+      "original_locator": "/tmp/ev-root-final-component-evidence-compose-1546.json",
+      "sha256": "c6a345b6a0570a97e2b6dc12410359ebb91e8bf6e59f694d83d626667ef87d2e",
+      "bytes": 2913
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-root-workspace-fence.json",
+      "original_locator": "/tmp/ev-root-evidence-compose-fence-1546.json",
+      "sha256": "d1f7212124ffab2e9e51d79e621886aee54bc757b70d8451c028624dceb616fe",
+      "bytes": 3498
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-root-active.json",
+      "original_locator": "/tmp/ev-root-component-evidence-active-1547.json",
+      "sha256": "c9272f01d67d5d2c8ab687310a032f2868a900a3d56e2b5a06be858e1a0912b3",
+      "bytes": 3808
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-review-record-source.ml",
+      "original_locator": "/tmp/ev_independent_reviews_record.ml",
+      "sha256": "c50ba5ad1faec564fa22a5f9e3a0869ca15310cf71be7faf3ee84b5c9ecc17ed",
+      "bytes": 15289
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-composition-stager-source.ml",
+      "original_locator": "/tmp/ev_transport_sync_stage.ml",
+      "sha256": "8d06fa25a6bd0adc7a84aa176538d95b91d1d85817614bcab2aca3a7844d5fe0",
+      "bytes": 1162
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-immutable-stager-source.ml",
+      "original_locator": "/tmp/ev_composed_peer_stage.ml",
+      "sha256": "829de0130af63d6cc3e08b969641d17388a6ac0b2b21e5050a23005f94e310ec",
+      "bytes": 5770
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-stager-source.ml",
+      "original_locator": "/tmp/ev_transport_independent_fault.ml",
+      "sha256": "7dd760a83ac00e114c7d0da79571f55116194d2ca9d0a2348b81986e43c4e41d",
+      "bytes": 3768
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-generator-controls-source.ml",
+      "original_locator": "/tmp/ev_recovery_generator_controls.ml",
+      "sha256": "b96f37f49073ad0e2f1bb988915970b41ec59f6d69ad6c0ac8ab1fb3e4738e7b",
+      "bytes": 7359
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-generator-case-update-source.ml",
+      "original_locator": "/tmp/ev_update_recovery_case_set.ml",
+      "sha256": "3dc0eb3e6d13e265fd702eb73e30a33301b2ae61a2c21b6c7e0f925d78556af1",
+      "bytes": 5414
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-recovery-dependency-source.ml",
+      "original_locator": "/tmp/ev_recovery_dependencies.ml",
+      "sha256": "cb9f7bb61e1fd7f44cd17a64324c892fa503de20650536d000e31ea281c20e27",
+      "bytes": 2557
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-http-probe-source.gleam",
+      "original_locator": "/tmp/ev_transport_independent_http.gleam",
+      "sha256": "e63d4ae7c0a3fa2b110f666614700004e648b8d7ff64739f759acb251b0c5498",
+      "bytes": 5426
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-sync-probe-source.gleam",
+      "original_locator": "/tmp/ev_sync_reorder_probe.gleam",
+      "sha256": "6f6d8446f89e9c78d40191739af4e651d644a9c3987b4ab91cb12c828d0107d3",
+      "bytes": 1540
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-probe-source.gleam",
+      "original_locator": "/tmp/ev_transport_test_discovery.gleam",
+      "sha256": "1c9490a113a44f724b2fe82b2fe0bbdc27241f8f17e34f94042282acaacf3330",
+      "bytes": 362
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-discovery-stager-source.ml",
+      "original_locator": "/tmp/ev_transport_discovery_stage.ml",
+      "sha256": "5ce14d06c5cd30ff808555968eb258e791c08f371219db2aa58f3f3804c16764",
+      "bytes": 491
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-completion-record-source.ml",
+      "original_locator": "/tmp/ev_completed_components_record.ml",
+      "sha256": "2f0278f8267188c7a8f1bdd2f3945b82da8297a3d28b4d859872c7a66d8ac624",
+      "bytes": 22475
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-report-baseline-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-report-1511/bindings.json",
+      "sha256": "574b5c5dbec4ccb223f9d798362e07c297de3367dcdc26b288c79d1dee22f644",
+      "bytes": 83281
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-report-variant-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-report-1511/fault-bindings.json",
+      "sha256": "982993cb731ba5092362dbe4172d27ed06e1c27d130540086c2aa9fa441b3c74",
+      "bytes": 1300
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-report-compile.json",
+      "original_locator": "/tmp/ev-transport-root-fault-report-1511/compile.json",
+      "sha256": "fb1efa77b1a7b1ffaba23bf00d10be4a8bfe04a766b0105be734500d06275487",
+      "bytes": 2289
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-report-initial-runtime.json",
+      "original_locator": "/tmp/ev-transport-root-fault-report-1511/runtime.json",
+      "sha256": "f20cd98076d05fce970e3f0ebf8d0c6a05103570a5564c983203f35c198ea819",
+      "bytes": 4768
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-report-network-runtime.json",
+      "original_locator": "/tmp/ev-transport-root-fault-report-1511/runtime-network-permitted.json",
+      "sha256": "e5bda8dd13774d0fe82be0dc0c6280eadf0307abd919e763548b52a864b4db8e",
+      "bytes": 2963
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-cleanup-baseline-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-cleanup-1511/bindings.json",
+      "sha256": "63c76831f803f49f16a33b27f6b1628d7f67a97c372030a050738734e74698f9",
+      "bytes": 83517
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-cleanup-variant-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-cleanup-1511/fault-bindings.json",
+      "sha256": "cf545fe70224dac2e9558d43923dc1d0971416f080bc5bd3d81517f582de1405",
+      "bytes": 1305
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-cleanup-compile.json",
+      "original_locator": "/tmp/ev-transport-root-fault-cleanup-1511/compile.json",
+      "sha256": "2816f84e6d85b6328ee78b68eef6f3294d322e9e3426330dad7dbd3a24e419f5",
+      "bytes": 2294
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-cleanup-initial-runtime.json",
+      "original_locator": "/tmp/ev-transport-root-fault-cleanup-1511/runtime.json",
+      "sha256": "1d7f6483e6b06db6dc6b32545d2b835a842d6089729a23454002ca79cbbc9155",
+      "bytes": 2667
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-receive-baseline-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-receive-1511/bindings.json",
+      "sha256": "ecaa8d81181d8d9e2503d87e9e87db8e6bf6aa23693c95ec8360eac84520cd60",
+      "bytes": 83518
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-receive-variant-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-receive-1511/fault-bindings.json",
+      "sha256": "36fed7e04abf7236b8e6d1dac977e4735912474b9c944612d21585fc77e8ceba",
+      "bytes": 1304
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-receive-compile.json",
+      "original_locator": "/tmp/ev-transport-root-fault-receive-1511/compile.json",
+      "sha256": "c985480104863dc751723acfe8301e51d9068cf529fcb4af40a19ff2f8ed8db3",
+      "bytes": 2301
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-receive-initial-runtime.json",
+      "original_locator": "/tmp/ev-transport-root-fault-receive-1511/runtime.json",
+      "sha256": "ed53bd501111af9712cc5d9e3ea081621b1bf93960f437c43137579dc3410d1d",
+      "bytes": 4772
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-receive-network-runtime.json",
+      "original_locator": "/tmp/ev-transport-root-fault-receive-1511/runtime-network-permitted.json",
+      "sha256": "e9eee1c9fffe9de821b0fdb1487f47aa202cc4e2bb9be252f59a1fd640163f23",
+      "bytes": 2681
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-quota-baseline-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-quota-1511/bindings.json",
+      "sha256": "f49b9c5e491bf585d505c6e7cec002051befe5fc989f8ecb62f6643c7cfaf12d",
+      "bytes": 83044
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-quota-variant-bindings.json",
+      "original_locator": "/tmp/ev-transport-root-fault-quota-1511/fault-bindings.json",
+      "sha256": "56e31e7559a09ddbcda90bf270184183a5d520add18de65b3aee85d783fb1130",
+      "bytes": 1307
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-quota-compile.json",
+      "original_locator": "/tmp/ev-transport-root-fault-quota-1511/compile.json",
+      "sha256": "7266f550969eb56d71dda4faf59842c9e20e9c2e706be375fba91b48d5d386ff",
+      "bytes": 2293
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-quota-initial-runtime.json",
+      "original_locator": "/tmp/ev-transport-root-fault-quota-1511/runtime.json",
+      "sha256": "cc5c1a0646a71abaf81457f264366690a0b73f61301476542e5f4f0b12e89dbc",
+      "bytes": 4754
+    },
+    {
+      "path": "docs/reviews/20260909-1514-ev-component-fault-quota-network-runtime.json",
+      "original_locator": "/tmp/ev-transport-root-fault-quota-1511/runtime-network-permitted.json",
+      "sha256": "5daed07b5f6134db4ffe0eb821da5dea2d8dfb332aa903dd84c328e57d6d1d98",
+      "bytes": 2667
+    }
+  ],
+  "limits": [
+    "Counts refer to distinct labels or invocations within each stated suite; properties overlap and counts are not added into EV admission credit.",
+    "Two local actors used the real NAS broker. No cross-host peer execution, production supervisor cutover, or durable crash recovery is established.",
+    "Frame/route identity and cooperative broker readback are not authentication or cross-VM atomic fencing.",
+    "Broader formal refinement and authenticated sovereign admission remain open. Prior AGY review covers only its recorded component scope.",
+    "Full package compilation succeeded with existing warnings;177 selected invocations ran. The complete global test suite was not run.",
+    "Private immutable compiler profiles and existing dependency bytes are recorded; compiler caches are not imported as source and complete native/shared-library closure is unproved.",
+    "HTTP total wire header bound is8194bytes. Cleanup failure halts I/O; immediate spawn-window owner-death cleanup is not proved.",
+    "Old failed fixtures, sandbox EPERM, expired lease refusal and synthetic variants remain preserved; they are not passing production evidence."
+  ]
+}

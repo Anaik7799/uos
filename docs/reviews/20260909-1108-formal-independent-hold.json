@@ -1,0 +1,82 @@
+{
+  "source_revision": "d79d38daf36377be8bac7bb8756a88560e3112d3",
+  "status": "HOLD",
+  "authority": "NONE",
+  "observed_at_utc_seconds": 1788954043.03023,
+  "findings": [
+    {
+      "priority": "P2",
+      "issue": "Prefix launch grammar accepts additional -run and -args_file entrypoints",
+      "source": "tools/ev_health_formal/ev98_health_projection_verify.ml:100",
+      "evidence": {
+        "path": "/tmp/ev-health-independent-review-20260909/independent-probes.json",
+        "sha256": "cb78950c471de296da97450d30935ed6c4f06fe56f17295b351ede36c8810da5"
+      }
+    },
+    {
+      "priority": "P2",
+      "issue": "Conflicting duplicate exit_code JSON keys accepted",
+      "source": "tools/ev_health_formal/ev98_health_projection_verify.ml:5",
+      "evidence": {
+        "path": "/tmp/ev-health-independent-review-20260909/fixture-duplicate_exit_code.json",
+        "sha256": "a970f864628b64c914732b81ff632018e57ad14198c87cb1fd7f48b655dba600"
+      }
+    }
+  ],
+  "passed": "Immutable 9-file OCaml/Gleam project built; finite reference controls; 6 UNSAT and 3 SAT including separate evaluation of actual SAT assignments; 9 author negatives; fresh minimal candidate Gleam projection output equals the recorded author projection. Wrong BEAM digest, duplicate/missing pairs, rehashed wrong winner and missing malformed control refused.",
+  "artifacts": [
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/source-manifest.json",
+      "sha256": "b5bba3f4964c5e5db69cb6e1b6a97ce87103c2d1c6f36278b7910e2712d854a1"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/gleam-source-manifest.json",
+      "sha256": "97bf9e45700930403a7479abefcd3a0ea66176ee1d9394095a4d1c1c83b1b651"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/build.json",
+      "sha256": "f1e45ca1333b018bcf8180920175c3645102f01799388b595bc74451e88ed452"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/finite.json",
+      "sha256": "a1fc54deb44795554f2787cba56c1f7cea85fdf179177913f0fcdaaffacaf11b"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/smt.json",
+      "sha256": "5d68a763fdbe8d0780524b02054ac42470be1396a126d360d47f5ff3e1aab53f"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/negatives.json",
+      "sha256": "62e05da240f53ad394338416e41e4a548814e84fa32e4d3f8e642957673b5bc1"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/projection-original.json",
+      "sha256": "e87cc07978d2112caa21bd6a651b59da73a09eabe89bb23b80399411f25c0c09"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/gleam-build.json",
+      "sha256": "33f67c63b1a341ace3a58560616b1c89d24a1d10a157de855e4b84599374ca78"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/gleam-projection.json",
+      "sha256": "d8bd84304a205b850dc0fbd94f5470d70c3df8046dcce1e669e1811f2155c7da"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/independent-probes.json",
+      "sha256": "cb78950c471de296da97450d30935ed6c4f06fe56f17295b351ede36c8810da5"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/build/default/ev98_health_projection_verify.exe",
+      "sha256": "980961badc749f12b9436354f1778d3d48f28ace88df61ce1d8131dbebfd3519"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/build/default/ev98_health_smt_child.exe",
+      "sha256": "ee1d722a89159c283deb2405306db86e8361796ede10ef836adbc6f012844a95"
+    },
+    {
+      "path": "/tmp/ev-health-independent-review-20260909/beam/ebin/ev98_health_projection_runner.beam",
+      "sha256": "3aded08beffc47f5025947e9247f0d18dbbd83a74404833ee27239c5d3d881f1"
+    }
+  ],
+  "limits": "Only finite well-formed health-register model and observed singleton pair projection/closed table triples. No complete refinement, malformed-input convergence, full runtime, producer authentication or EV admission. Private /tmp writes only; source/task/live state unchanged."
+}

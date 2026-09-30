@@ -1,0 +1,25 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-combined-66304950-receipts/default/receipt_test.exe",
+    "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210"
+  ],
+  "utc_started": 1788929277.633538,
+  "utc_finished": 1788929284.661393,
+  "elapsed_seconds": 7.027853694,
+  "deadline_seconds": 60.0,
+  "exit_code": 0,
+  "output": "PASS valid_synthetic_bundle\nPASS wrong_revision\nPASS wrong_ev\nPASS empty_coverage\nPASS duplicate_coverage\nPASS unknown_key\nPASS missing_key\nPASS duplicate_key\nPASS same_receipt_two_keys\nPASS wrong_source_hash\nPASS undeclared_scope\nPASS wrong_receipt_revision\nPASS wrong_receipt_coverage\nPASS missing_negative_controls\nPASS unknown_receipt_key\nPASS failed_exit\nPASS timed_out\nPASS output_overflow\nPASS unrun\nPASS skipped\nPASS failed_check\nPASS unverified_status\nPASS stale\nPASS future\nPASS reversed_time\nPASS nonfinite_time\nPASS bad_clock\nPASS formal_sorry\nPASS formal_unsupported\nPASS formal_axiom\nPASS tampered_receipt_bytes\nPASS tampered_output\nPASS path_traversal\nPASS absolute_path\nPASS escaping_symlink\nPASS directory_reference\nPASS malformed_json\nPASS oversize_json\nSYNTHETIC consistency tests: checks=38 failed=0; admission_authority=NONE\nPASS candidate_reader_independent_of_caller_cwd\nPASS live_clock_csv_positive\nPASS live_clock_unsynchronized\nPASS live_clock_malformed\nPASS live_clock_nonfinite\nPASS live_clock_future_ref\nPASS live_clock_stale_ref\nPASS consistent_labels_untracked_source\nPASS consistent_labels_untracked_policy\nPASS negative_control_accepted\nPASS duplicate_nested_key\nPASS shared_invocation_id\nPASS fifo_refused_before_open\nPASS symlink_parent_refused\nPASS deep_json\nPASS reader_timeout\nPASS reader_output_quota\nPASS reader_exit_failure\nSYNTHETIC fixture_bundle=tools/ev_receipts/_fixture-1788929277639758/bundle.json\nTOTAL checks=49 (plus 6 clock cases) failed=0; authority=NONE\nPASS repeated_command_arguments_are_valid\nFINAL consistency cases=50 clock cases=6 failed=0; all receipts SYNTHETIC; authority=NONE\nPASS immutable_revision_ignores_conflicting_symbol_alias\nPASS final_clock_before_expiry\nPASS final_clock_delay_crosses_expiry\nPASS final_clock_nonfinite\nPASS aggregate_accounts_candidate_and_rehash\nPASS aggregate_exact_boundary\nPASS deadline_between_metadata_and_content\nPASS aggregate_includes_actual_final_rehash reason=aggregate content byte quota\nPASS candidate_content_refused_after_metadata_exhausts_bytes reason=reader budget exhausted\nPASS candidate_deadline_between_actual_metadata_and_content reason=validation deadline\nREVIEW FINAL original_cases=56 review_cases=11 failed=0 authority=NONE\n",
+  "output_sha256": "f648fe64d0976e91b69f7a366c907d661dc287444040714096212cbfc86c9c2b",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

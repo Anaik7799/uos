@@ -1,0 +1,33 @@
+{
+  "schema": "uos.restoration-source-review.v1",
+  "observed_at": "2026-09-30T06:14:13Z",
+  "reviewer": "/root/recovery_review",
+  "plan": "uos/full-restoration/20260930-0515",
+  "status": "CONSUMER_AND_RUNTIME_POLICY_SOURCE_ACCEPTED",
+  "not_granted": [
+    "database activation",
+    "service activation",
+    "global system admission"
+  ],
+  "source_sha256": {
+    "apps/uos_swarm/src/uos_swarm/session_store.gleam": "5402b29debbbd63459e19f05328480ab0901485b5b7a9732bcda9cc0a6277b51",
+    "apps/uos_swarm/src/session_store_cli.gleam": "60440a99109d9c81973b4afaa2b05b7dec022a3212df293e8e70a76e54611a78",
+    "tools/km_provenance/km_chain.ml": "2652a41ff591a0326ea137451f9df42b8bfc7dbef8c8e93ce300d8a6e88991c7",
+    "apps/cepaf_gleam/src/restoration_runtime_cli.gleam": "c6e383f4e026a88a7578d4c2e086b434aa25f59bb071096ddc14965ed70a4a04"
+  },
+  "review_observation": "Independent read-only review accepted noncreating operational readers, exact trigger verification, persistent generation fences, exact runtime control identities, sufficient lease windows, canonical bounded backend and effective service configuration binding. Reviewer did not rerun tests. Activation controller and concrete release/grants remain separate review obligations.",
+  "parent_observed_tests": {
+    "swarm": 683,
+    "alias": 8,
+    "models": 242,
+    "web": 37,
+    "harness": 95,
+    "runtime_policy": 6,
+    "receipt": 67
+  },
+  "test_overlap": "Focused suites overlap broader suites; counts are not additive assurance trials.",
+  "selected_data": {
+    "coordinator": "Fresh recovery epoch, one genuine registration, no inherited historical authority",
+    "cycles": "First valid332 rows with24 holds preserved; excluded rows remain in original backups"
+  }
+}

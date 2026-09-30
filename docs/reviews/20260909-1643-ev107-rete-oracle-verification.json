@@ -1,0 +1,73 @@
+{
+  "schema": "uos.ev107.rete-reference-development.v1",
+  "source": "2677fde003250652c900bec76bbe28d22d8b17e6",
+  "source_path": "tools/ev107_rete_reference.ml",
+  "source_sha256": "d0a29c44acccfb18c61cbcbac643d5d0878db615f03d14531143e0474c9c03ec",
+  "red_source": "f352235b569af4c37316067d623b9de1294a0d0a",
+  "checks": 29,
+  "fixture": "SYNTHETIC_ONLY",
+  "candidate_runtime_review": "AWAITING_IMMUTABLE_PRODUCTION_CANDIDATE",
+  "authority": "NONE",
+  "records": [
+    {
+      "original": "/tmp/ev107-rete-review-plan-create.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-plan.json",
+      "sha256": "13b04a1a24620b4aee15518c86b9dda188e6063ca74683e8d55411c1f83f3f0d"
+    },
+    {
+      "original": "/tmp/ev107-rete-review-task-create.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-task.json",
+      "sha256": "661b033b7d68a75e424f3d9d4241c4789311cdc2b24fbcf4e2120087f98b6ccf"
+    },
+    {
+      "original": "/tmp/ev107-rete-review-preflight.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-preflight.json",
+      "sha256": "6266cf783cf82fa4bfd906465cc2ee5314e790a7a1a62fee8374d0112923a367"
+    },
+    {
+      "original": "/tmp/ev107-rete-review-claim.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-claim.json",
+      "sha256": "3a355860e34332cf87dfaefa2d337e367979d09b989f6c5b359060ee3c530547"
+    },
+    {
+      "original": "/tmp/ev107-rete-review-active.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-active.json",
+      "sha256": "64093cfcbfea8048982e645e2a8cb8f27300af994e6a97841cd6af1b5b7a2c9d"
+    },
+    {
+      "original": "/tmp/ev107-rete-oracle-seal-active.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-seal-active.json",
+      "sha256": "9e59eeeb330253505fd5a8da4afb0fbfa43f3a8acb835047b1a77a0503e04ffd"
+    },
+    {
+      "original": "/tmp/ev107-rete-oracle-red.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-red.json",
+      "sha256": "8c12c9d0749465ed1467ee92b204b961a26b2b068945113b59b8e0c19477ceae"
+    },
+    {
+      "original": "/tmp/ev107-rete-oracle-green.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-fixture-serialization-failure.json",
+      "sha256": "7a70f129846402c646770ac96629dada11cb4267aefb38ce25a4ce601d6d0488"
+    },
+    {
+      "original": "/tmp/ev107-rete-oracle-green2.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-green24.json",
+      "sha256": "13965f403e86f9ed9de43d42fc3a248c4185cc63a31bb27246cc0b83133a02d9"
+    },
+    {
+      "original": "/tmp/ev107-rete-oracle-green3.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-green29.json",
+      "sha256": "b209be0f216e19311b75058acd4822685de8b60ec0b2cbe1c1a0a63def31f6de"
+    },
+    {
+      "original": "/tmp/ev107-rete-oracle-immutable/runtime.json",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-immutable-runtime.json",
+      "sha256": "08aa229ef887113baa61acbfa3887dd5d5e28b5c9c850fc50d5f72f02dabf06c"
+    },
+    {
+      "original": "/tmp/ev107_rete_review_risk.ml",
+      "durable": "docs/reviews/20260909-1643-ev107-rete-oracle/20260909-1643-risk.ml",
+      "sha256": "bec7ff65dd3e751f1b3f6148da89b4cc825982f466f96eade8aeead86e3ac30f"
+    }
+  ]
+}

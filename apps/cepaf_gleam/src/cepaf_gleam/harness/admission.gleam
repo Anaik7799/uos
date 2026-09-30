@@ -16,7 +16,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
-import session_sync_cli
+import uos_swarm/session_authority
 import simplifile
 
 pub type Scope {
@@ -67,6 +67,10 @@ pub const control_modules = [
   "cepaf_gleam@harness@development", "cepaf_gleam@harness@clock",
   "cepaf_gleam@harness@files", "cepaf_gleam@harness@value",
   "cepaf_gleam@planning@sa_plan_bridge",
+  "uos_swarm@session_authority", "uos_swarm@session_store",
+  "uos_swarm@session_sync", "session_store_cli", "session_store_ffi",
+  "uos_swarm@coord", "uos_swarm@board", "uos_swarm_ffi", "session_sync_ffi",
+  "esqlite3", "esqlite3_nif",
 ]
 
 // C4: the guardian at tools/ecology_process.ml bounds every effect's time,
@@ -610,7 +614,7 @@ pub fn lookup(
 pub fn coordinate(args: List(String)) -> Result(String, String) {
   dev.bounded_observation(
     fn() {
-      session_sync_cli.run([dev.root <> "/var/coordination/tri-agent", ..args])
+      session_authority.run(args)
     },
     3000,
   )

@@ -1,0 +1,22 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [ "/tmp/uos-ev-combined-66304950-mojo.exe", "deploy", "full" ],
+  "utc_started": 1788929458.424271,
+  "utc_finished": 1788929458.455466,
+  "elapsed_seconds": 0.031195826999999995,
+  "deadline_seconds": 30.0,
+  "exit_code": 1,
+  "output": "Unknown mode: deploy\nAvailable modes: component-test, auto-test, manual-instructions, deploy-preflight, deploy-full\n",
+  "output_sha256": "e94f326d7db2815d4f747d030afadfd3d9b1ab816db4a4a5f5f5389454ac7fb7",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

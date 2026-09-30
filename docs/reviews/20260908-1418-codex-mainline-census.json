@@ -1,0 +1,3567 @@
+{
+  "schema_version": 1,
+  "kind": "UOS_CODEX_MAINLINE_MERGE_PLAN_CENSUS",
+  "execution_authority": "Sa-plan only; this JSON is a read-only planning specification, not a queue",
+  "plan_id": "uos/codex-mainline-merge/20260908-1439",
+  "task_id": "PLAN",
+  "session": "codex-merge-plan-20260908-1439",
+  "captured_at_utc": "2026-09-08T14:46:00Z",
+  "capture_time_precision": "Census completed within the 14:39–14:46 UTC planning interval; operation identity is exact.",
+  "jj_operation": "3f75a63b43a634c3c3c7a09e90937fb187eabf3a126f6673d75a8668ae28d27544820b13673e5958cac431279445c77050938745109f09bb29329fe083d455aa",
+  "main_commit": "1be8029d72bc9530b1937564a37c555bd0b4b938",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-merge-plan-20260908-1439",
+  "scope": "All Codex-named bookmarks/workspaces and eight associated candidate bookmarks observable at the pinned operation; no assertion about unregistered, abandoned-unreferenced or unsnapshotted work.",
+  "counts": {
+    "source_records": 72,
+    "bookmarks": 26,
+    "workspaces": 46,
+    "distinct_heads": 66,
+    "heads_with_outside_nonempty": 16,
+    "distinct_outside_nonempty_commits": 14,
+    "main_ancestor_commits": 473
+  },
+  "source_records": [
+    {
+      "kind": "bookmark",
+      "name": "candidate/auth-ingress",
+      "change_label": "vwpypxzt",
+      "head_short": "6b033f37",
+      "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler",
+      "divergent": false,
+      "head_commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "6b033f3781e159495b3cb9812b5480f4802a8855"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "candidate/auth-ingress-framing",
+      "change_label": "rksvvryu",
+      "head_short": "5b1146ea",
+      "description": "fix(auth): bound HTTP request framing before body ingestion",
+      "divergent": false,
+      "head_commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+        "6b033f3781e159495b3cb9812b5480f4802a8855"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "candidate/auth-ingress-framing-v2",
+      "change_label": "ltzunpsx",
+      "head_short": "acfe752c",
+      "description": "fix(auth): reject unsupported request expectations before read",
+      "divergent": false,
+      "head_commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "acfe752cc5f1ff4302d605713ea928e051364c2a",
+        "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+        "6b033f3781e159495b3cb9812b5480f4802a8855"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "candidate/auth-oidc-ed25519",
+      "change_label": "kozsqvqt",
+      "head_short": "91933857",
+      "description": "feat(auth): verify bounded FerrisKey Ed25519 JWTs without fallback",
+      "divergent": false,
+      "head_commit": "9193385706282ea61300e77cbcc6f4664273a57d",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "candidate/mirage-metrics-prep",
+      "change_label": "vxwxuqul",
+      "head_short": "8cf4cbec",
+      "description": "feat(mirage): add honest bounded one-shot metrics snapshot",
+      "divergent": false,
+      "head_commit": "8cf4cbec3c00dc32d60616ab5340dd63853e46c2",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "candidate/runtime-loopback",
+      "change_label": "outswoyk",
+      "head_short": "dc12e531",
+      "description": "fix(web): default staged listeners to loopback and exclude crash dumps",
+      "divergent": false,
+      "head_commit": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "candidate/runtime-staging-evidence",
+      "change_label": "wptpvvzn",
+      "head_short": "607aa506",
+      "description": "docs(runtime): record OTP 29 primary backup component staging and scoped recovery",
+      "divergent": false,
+      "head_commit": "607aa506e2721c41dc32f0cb13a6ffa4e3ea7643",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "candidate/solo5-0.13.0",
+      "change_label": "tqxwqrsp",
+      "head_short": "aea32296",
+      "description": "feat(mirage): pin Solo5 0.13.0 and verify current host toolchain",
+      "divergent": false,
+      "head_commit": "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+      "head_empty": false,
+      "attribution": "associated candidate; author/owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "aea3229678a7074b9c5c0bcc672b1d2322c344b3"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "integration/codex-ainf-reuse-design",
+      "change_label": "mmxxqxww/0",
+      "head_short": "614ffbd9",
+      "description": "(divergent) docs(ainf): map 21 infrastructure services and 17 aspects to verified reuse and native UOS placement; record AGY design review and remaining runtime gaps",
+      "divergent": true,
+      "head_commit": "614ffbd9cbc7a307251d24b2cd78ddde81eacb6d",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "integration/codex-mirage-audit",
+      "change_label": "lpkpxryy",
+      "head_short": "b04e4cd9",
+      "description": "docs(mirage): record final sovereign audit and scoped verification receipt",
+      "divergent": false,
+      "head_commit": "b04e4cd9f70fa247993ab2b795c595dd251d780f",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "integration/codex-mirage-tenders-review",
+      "change_label": "rrvlmott",
+      "head_short": "4ddc56b5",
+      "description": "docs(mirage): independent Solo5 review with physical and negative evidence",
+      "divergent": false,
+      "head_commit": "4ddc56b5cccc2cf06adc8560098f0a1da91d2719",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "integration/codex-session-handover-adr-017",
+      "change_label": "pykpkupl",
+      "head_short": "520f96c1",
+      "description": "(empty) merge: unify 10D tensor evolution manifold (EV-TENSOR-01..10, ADR-017) with reviewed migration slice and SA-Plan evidence",
+      "divergent": false,
+      "head_commit": "520f96c125279d90d1c9391941add72617f472e0",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "integration/codex-verified-timestamp-mandate",
+      "change_label": "pxosxkmp",
+      "head_short": "c7173316",
+      "description": "feat(timestamp): enforce mandatory YYYYMMDD-HHSS- prefix, real disk-backed DMC/TCM validation, authentic Cryptokit SHA-256 interceptor, and storage safety invariants",
+      "divergent": false,
+      "head_commit": "c7173316b8b79794b558b31a19ecf66ceac7b686",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "integration/codex-web-runtime-identity",
+      "change_label": "ywxmsuuz",
+      "head_short": "f734f8fb",
+      "description": "feat(runtime): expose observed VM identity and pin managed web instances to OTP29",
+      "divergent": false,
+      "head_commit": "f734f8fb82c7ad5264edf8a0593645a7495c3556",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-homeostasis-release-20260908-0551",
+      "change_label": "zluqqwsl/0",
+      "head_short": "83d5a7ca",
+      "description": "(divergent) fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance",
+      "divergent": true,
+      "head_commit": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "83d5a7caabb7ecfa28352a0ce8f091179347e9b7"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-manual-ui",
+      "change_label": "zosuwowv/0",
+      "head_short": "c5a0d3e6",
+      "description": "(divergent) docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts",
+      "divergent": true,
+      "head_commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+        "2be0d18d338a333c33b4a0d715d535d3573932db",
+        "6d15a6d32f798116634a8eb8760e775eb409133c",
+        "fb71b4ca9680a084aecd1f98048def0b525a196f"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-manual-ui-executable",
+      "change_label": "tqqpqwnn/0",
+      "head_short": "2be0d18d",
+      "description": "(divergent) feat(testing): add restricted Tailnet manual UI listener and keep navigation on its origin",
+      "divergent": true,
+      "head_commit": "2be0d18d338a333c33b4a0d715d535d3573932db",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "2be0d18d338a333c33b4a0d715d535d3573932db",
+        "6d15a6d32f798116634a8eb8760e775eb409133c",
+        "fb71b4ca9680a084aecd1f98048def0b525a196f"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-side-hive-fencing-20260907-1854",
+      "change_label": "pnmksopx",
+      "head_short": "311d2b12",
+      "description": "fix(sa-plan): fence completion by original claim attempt",
+      "divergent": false,
+      "head_commit": "311d2b12368d65c9b0f27f3d6adca315b94bbc62",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-side-homeostasis-20260908-0045",
+      "change_label": "lopzuptq",
+      "head_short": "bf136217",
+      "description": "fix(homeostasis): wire test and observed UI modes with bounded verification evidence",
+      "divergent": false,
+      "head_commit": "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-side-interface-skills-20260907-2312",
+      "change_label": "ylnmkoss",
+      "head_short": "efbaea22",
+      "description": "skills(ui): add repository-local GUI TUI rules and verification workflows",
+      "divergent": false,
+      "head_commit": "efbaea22367d3363df94ee0e36924ce1bfe2585f",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-side-resource-controls-20260907-1906",
+      "change_label": "lyytwtur",
+      "head_short": "c502fbd2",
+      "description": "fix(resource): validate exact capacity and preserve observation authority",
+      "divergent": false,
+      "head_commit": "c502fbd27c68439dd72686f2affe586c4198851b",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-unification-20260908-0753",
+      "change_label": "prkplrtv",
+      "head_short": "9bbc5217",
+      "description": "feat(assurance): record thirty risk-ranked cycles with lossless board/Zenoh evidence and native SDLC checks",
+      "divergent": false,
+      "head_commit": "9bbc5217a740ff03791d68c11913c0cc1823ff4b",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-unification-50",
+      "change_label": "rvuxyuxy",
+      "head_short": "6d15a6d3",
+      "description": "docs(assurance): close fifty verified focuses with explicit ABI and integration holds",
+      "divergent": false,
+      "head_commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "6d15a6d32f798116634a8eb8760e775eb409133c",
+        "fb71b4ca9680a084aecd1f98048def0b525a196f"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-unification-50-merge-held",
+      "change_label": "nounuxql",
+      "head_short": "8b320ef9",
+      "description": "(empty) merge: prepare fifty-cycle assurance integration; broad native gates held",
+      "divergent": false,
+      "head_commit": "8b320ef951572fad930430c1c0056daba5732bf2",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "fb71b4ca9680a084aecd1f98048def0b525a196f"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-unification-50-tested",
+      "change_label": "rvllmwyn/4",
+      "head_short": "c65ad8e2",
+      "description": "(divergent) fix(guard): enforce JSON key contracts and add fifty-focus release assurance",
+      "divergent": true,
+      "head_commit": "c65ad8e2bd85aa03dbb3d07d846129d8935a8c10",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "bookmark",
+      "name": "review/codex-unification-merge-20260908-0835",
+      "change_label": "nxmnkqqt",
+      "head_short": "cd503010",
+      "description": "(empty) merge(assurance): preserve latest main receipt with verified unification changes; production held",
+      "divergent": false,
+      "head_commit": "cd503010f654d9abd876a6328fb80ad14ed14ab3",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "NOT_APPLICABLE_TO_BOOKMARK"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-action-boundaries",
+      "path": ".uos-workspaces/codex-action-boundaries",
+      "change_label": "ouzqnluz",
+      "head_short": "1353e658",
+      "description": "feat(swarm): require reviewable decision records for actions",
+      "divergent": false,
+      "head_commit": "1353e6584342fd7c6fe825a864b2d26ed440cc84",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-action-kpi-integration",
+      "path": ".uos-workspaces/codex-action-kpi-integration",
+      "change_label": "usxqyqtq",
+      "head_short": "31207adb",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "31207adba558d200dcec854809d6bbfc00b860b9",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-ainf-design",
+      "path": ".uos-workspaces/codex-ainf-design",
+      "change_label": "nmxzrtyw",
+      "head_short": "2624cff0",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "2624cff0250247e5675db515f11e7202eb4b1665",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-astra",
+      "path": ".uos-workspaces/codex-astra",
+      "change_label": "rwrnxyum",
+      "head_short": "5b9b9388",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "5b9b9388f7adce3a27acae3c048a5312220967d1",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-auth-framing-review",
+      "path": ".uos-workspaces/codex-auth-framing-review",
+      "change_label": "vxvxwvzt",
+      "head_short": "f8c38071",
+      "description": "(empty) work: bounded auth framing review frozen; no rollout authority",
+      "divergent": false,
+      "head_commit": "f8c38071ab579f4b7dd718f8d899c1a2ee6376d8",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "595a3c8333a9239837129e2146e48df732493c23",
+        "acfe752cc5f1ff4302d605713ea928e051364c2a",
+        "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+        "6b033f3781e159495b3cb9812b5480f4802a8855"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-auth-ingress",
+      "path": ".uos-workspaces/codex-auth-ingress",
+      "change_label": "lykxtrxv",
+      "head_short": "3ee0188b",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "3ee0188be49a6b91d551efebe364e4241342b203",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "acfe752cc5f1ff4302d605713ea928e051364c2a",
+        "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+        "6b033f3781e159495b3cb9812b5480f4802a8855"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-auth-ingress-review",
+      "path": ".uos-workspaces/codex-auth-ingress-review",
+      "change_label": "yutkxmus",
+      "head_short": "1753727c",
+      "description": "(empty) work: ingress 6b033f37 review frozen pending bounded reader repair",
+      "divergent": false,
+      "head_commit": "1753727c53b64e6651a271be68959da8d65cb252",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "b9c99841b3cf6bde7f3346d0700432e5aaec08b0",
+        "6b033f3781e159495b3cb9812b5480f4802a8855"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-board-insights",
+      "path": ".uos-workspaces/codex-board-insights",
+      "change_label": "qxvrlnqo",
+      "head_short": "ada45ee7",
+      "description": "feat(swarm): scoped board discovery reporting and telemetry correlation",
+      "divergent": false,
+      "head_commit": "ada45ee774d2d58d8dca39c8934faa270daacf3a",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-board-strict-validate",
+      "path": ".uos-workspaces/codex-board-strict-validate",
+      "change_label": "umptwvny",
+      "head_short": "e0b50cdc",
+      "description": "fix(board): fail closed on invalid validation input",
+      "divergent": false,
+      "head_commit": "e0b50cdce6fdb08e945984a119f4214c25893a5e",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-clock-guard",
+      "path": ".uos-workspaces/codex-clock-guard",
+      "change_label": "zzkpwsnu",
+      "head_short": "c1841115",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "c1841115ba3b2baf5597ca624c9f69fc9c22e6eb",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-clock-provenance",
+      "path": ".uos-workspaces/codex-clock-provenance",
+      "change_label": "qupsryxk",
+      "head_short": "4a5e1fa3",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "4a5e1fa3681afb66109874b526c549fec2821d89",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-coordination-formal",
+      "path": ".uos-workspaces/codex-coordination-formal",
+      "change_label": "utmmzunu",
+      "head_short": "6d1cda9a",
+      "description": "formal: refine durable session journal crash and authority model",
+      "divergent": false,
+      "head_commit": "6d1cda9ad199a6cfad04b5d9fb5ca01587c5b156",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-coordination-impl",
+      "path": ".uos-workspaces/codex-coordination-impl",
+      "change_label": "mqzpmsuo",
+      "head_short": "a0c3fd11",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "a0c3fd11ea96eeb9a757e668a2cf365abae58b93",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-hive-projection",
+      "path": ".uos-workspaces/codex-hive-projection",
+      "change_label": "nrzkmvrq",
+      "head_short": "4e6632fc",
+      "description": "feat(swarm): add deterministic hive awareness projection",
+      "divergent": false,
+      "head_commit": "4e6632fcad35cd664899efb798cb33748424f2e8",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-homeostasis-interface-repair",
+      "path": ".uos-workspaces/codex-homeostasis-interface-repair",
+      "change_label": "lopzuptq",
+      "head_short": "bf136217",
+      "description": "review/codex-side-homeostasis-20260908-0045 | fix(homeostasis): wire test and observed UI modes with bounded verification evidence",
+      "divergent": false,
+      "head_commit": "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-homeostasis-release-20260908-0551",
+      "path": ".uos-workspaces/codex-homeostasis-release-20260908-0551",
+      "change_label": "owuunmml/1",
+      "head_short": "45435f5b",
+      "description": "(divergent) (empty) work(unification): thirty bounded evidence cycles and artifact synchronization",
+      "divergent": true,
+      "head_commit": "45435f5b215d9cf5932a67d8d22e8c7ef7ed958b",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "83d5a7caabb7ecfa28352a0ce8f091179347e9b7"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-live-evolution",
+      "path": ".uos-workspaces/codex-live-evolution",
+      "change_label": "yxrxonox",
+      "head_short": "78d8fef6",
+      "description": "feat(swarm): connect live evolution watchers to bounded board fetch",
+      "divergent": false,
+      "head_commit": "78d8fef66199f1c5c82a7013efd43099d04437be",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-manual-ui-20260908-1150",
+      "path": ".uos-workspaces/codex-manual-ui-20260908-1150",
+      "change_label": "zosuwowv/0",
+      "head_short": "c5a0d3e6",
+      "description": "review/codex-manual-ui | (divergent) docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts",
+      "divergent": true,
+      "head_commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+        "2be0d18d338a333c33b4a0d715d535d3573932db",
+        "6d15a6d32f798116634a8eb8760e775eb409133c",
+        "fb71b4ca9680a084aecd1f98048def0b525a196f"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mcp-catalog",
+      "path": ".uos-workspaces/codex-mcp-catalog",
+      "change_label": "tsslvxly",
+      "head_short": "b9959830",
+      "description": "mcp: expose adapter availability and fail closed on unbound tools; preserve numeric request IDs and redact transport logging; four focused tests passed",
+      "divergent": false,
+      "head_commit": "b99598309dc0eaa8925862aca7c305201f1b51d1",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mcp-runtime-check",
+      "path": ".uos-workspaces/codex-mcp-runtime-check",
+      "change_label": "zkvsmloo",
+      "head_short": "cb625f48",
+      "description": "mcp: gate native adapters on runtime load evidence",
+      "divergent": false,
+      "head_commit": "cb625f48c9e3b7ab70fa6c1b8797f400302ad599",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mcp-stdio-runtime",
+      "path": ".uos-workspaces/codex-mcp-stdio-runtime",
+      "change_label": "zrmkpozz",
+      "head_short": "4eabfc34",
+      "description": "mcp: preserve JSON-RPC framing on stdio",
+      "divergent": false,
+      "head_commit": "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mcp-wave34-tests",
+      "path": ".uos-workspaces/codex-mcp-wave34-tests",
+      "change_label": "ruprxopu",
+      "head_short": "88fe4fa8",
+      "description": "test(mcp): expect fail-closed system tools without NIF",
+      "divergent": false,
+      "head_commit": "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-audit",
+      "path": ".uos-workspaces/codex-mirage-audit",
+      "change_label": "ptnlxrpp",
+      "head_short": "b63169a3",
+      "description": "(empty) chore: preserve Mirage repair candidate",
+      "divergent": false,
+      "head_commit": "b63169a3eea4792c0b4b690ff23a45be8dcef6db",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-audit-action-boundary",
+      "path": ".uos-workspaces/codex-mirage-audit-action-boundary",
+      "change_label": "zukslups",
+      "head_short": "02d43656",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "02d43656ad7ac562277714e8864a7fb3ceb56b47",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-benchmark-review",
+      "path": ".uos-workspaces/codex-mirage-benchmark-review",
+      "change_label": "rrxrpksw",
+      "head_short": "a7b47961",
+      "description": "(empty) review: pin final Mirage composition",
+      "divergent": false,
+      "head_commit": "a7b479618b4a6f003aefeb435fe53a0807f63af4",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-evidence-audit",
+      "path": ".uos-workspaces/codex-mirage-evidence-audit",
+      "change_label": "kvmlnkuu",
+      "head_short": "fe542cb8",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "fe542cb830e917354f0845ddf6d70d809fe9bcab",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-feature",
+      "path": ".uos-workspaces/codex-mirage-feature",
+      "change_label": "npptqozn",
+      "head_short": "4aec1c8e",
+      "description": "(empty) work: Mirage handoff complete; integration held",
+      "divergent": false,
+      "head_commit": "4aec1c8e1bd19521b66ab03de8ccf2077b05ae0b",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-governance-failclosed",
+      "path": ".uos-workspaces/codex-mirage-governance-failclosed",
+      "change_label": "mumkznxt",
+      "head_short": "c5960ff1",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "c5960ff123cb1218d9a43775082d7ace8fd356a1",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-metrics",
+      "path": ".uos-workspaces/codex-mirage-metrics",
+      "change_label": "mopwrkrq",
+      "head_short": "9962d6d1",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "9962d6d17d5ec1ec0557cae6100d24a293f01bbc",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-tenders-audit",
+      "path": ".uos-workspaces/codex-mirage-tenders-audit",
+      "change_label": "mtrpsnky",
+      "head_short": "b10e5532",
+      "description": "(empty) work: Mirage tender review completed; candidate preserved",
+      "divergent": false,
+      "head_commit": "b10e553273ad520e18aceeae345bdf1d83baf63c",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-verification",
+      "path": ".uos-workspaces/codex-mirage-verification",
+      "change_label": "sktupywr",
+      "head_short": "72c7552b",
+      "description": "(empty) work: Mirage model evidence frozen; implementation remains unapproved",
+      "divergent": false,
+      "head_commit": "72c7552b181fc44f6e30d5611efd84f3b18b9417",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "7621d5dfebe92ed8de7684e392b92c983b3acf36"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-mirage-workorder",
+      "path": ".uos-workspaces/codex-mirage-workorder",
+      "change_label": "rywsslnm",
+      "head_short": "059afa53",
+      "description": "(empty) work: runtime component staging evidence frozen for integration",
+      "divergent": false,
+      "head_commit": "059afa533f2efefdf809756b84da67b98112f6a3",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-observation-bridge",
+      "path": ".uos-workspaces/codex-observation-bridge",
+      "change_label": "rkvntpmv",
+      "head_short": "e95cdf75",
+      "description": "hermes: add durable typed session observation ingestion",
+      "divergent": false,
+      "head_commit": "e95cdf75fa43627d24969d13bbd08d2a915c8120",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-oidc-auth-review",
+      "path": ".uos-workspaces/codex-oidc-auth-review",
+      "change_label": "qxtzlqnk",
+      "head_short": "294ebc47",
+      "description": "(empty) work: OIDC independent review frozen; ingress gaps remain open",
+      "divergent": false,
+      "head_commit": "294ebc47342ac372b886d22656fbd9103f1d5f12",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-oidc-verifier",
+      "path": ".uos-workspaces/codex-oidc-verifier",
+      "change_label": "qrnynrvs",
+      "head_short": "10ead02d",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "10ead02d11d8ffcbaf133702c87244d38b650210",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-reuse-ops",
+      "path": ".uos-workspaces/codex-reuse-ops",
+      "change_label": "zxqtoyxm",
+      "head_short": "e5572657",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "e5572657abeeba9c6eaca2bdf9e24d77bf5603dc",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-session-durability",
+      "path": ".uos-workspaces/codex-session-durability",
+      "change_label": "mmzqmnyt",
+      "head_short": "de84ada8",
+      "description": "(empty) (no description set)",
+      "divergent": false,
+      "head_commit": "de84ada81054f23ea06193ba0c92e124166a9fb8",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-side-hive-fencing",
+      "path": ".uos-workspaces/codex-side-hive-fencing",
+      "change_label": "pnmksopx",
+      "head_short": "311d2b12",
+      "description": "review/codex-side-hive-fencing-20260907-1854 | fix(sa-plan): fence completion by original claim attempt",
+      "divergent": false,
+      "head_commit": "311d2b12368d65c9b0f27f3d6adca315b94bbc62",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-side-interface-skills",
+      "path": ".uos-workspaces/codex-side-interface-skills",
+      "change_label": "ylnmkoss",
+      "head_short": "efbaea22",
+      "description": "review/codex-side-interface-skills-20260907-2312 | skills(ui): add repository-local GUI TUI rules and verification workflows",
+      "divergent": false,
+      "head_commit": "efbaea22367d3363df94ee0e36924ce1bfe2585f",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-side-resource-controls",
+      "path": ".uos-workspaces/codex-side-resource-controls",
+      "change_label": "spqrrxnm",
+      "head_short": "7c162d0f",
+      "description": "(empty) docs(plan): prepare dependency-gated hive stabilization",
+      "divergent": false,
+      "head_commit": "7c162d0f8d83825679c2badcb6703decccd3581e",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-solo5-source-review",
+      "path": ".uos-workspaces/codex-solo5-source-review",
+      "change_label": "mqwsvpxk",
+      "head_short": "52f8034f",
+      "description": "(empty) work: Solo5 source review frozen; candidate remains unapproved",
+      "divergent": false,
+      "head_commit": "52f8034f75bb60bf845d77c5ad5a4c250b47146f",
+      "head_empty": true,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "b9d486170af9c3a0d12a6ae7db03836287f2b65a"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-solo5-toolchain",
+      "path": ".uos-workspaces/codex-solo5-toolchain",
+      "change_label": "zrzxvvnl",
+      "head_short": "e081c209",
+      "description": "work: Solo5 0.13.0 candidate frozen for independent review",
+      "divergent": false,
+      "head_commit": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+        "aea3229678a7074b9c5c0bcc672b1d2322c344b3"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-telemetry-repair",
+      "path": ".uos-workspaces/codex-telemetry-repair",
+      "change_label": "qxuzvwkz",
+      "head_short": "8180c736",
+      "description": "fix(telemetry): preserve truthful OTel route discovery",
+      "divergent": false,
+      "head_commit": "8180c73608373b00b46f7836af71f50ce6f40de7",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-unification-20260908-0753",
+      "path": ".uos-workspaces/codex-unification-20260908-0753",
+      "change_label": "prkplrtv",
+      "head_short": "9bbc5217",
+      "description": "review/codex-unification-20260908-0753 | feat(assurance): record thirty risk-ranked cycles with lossless board/Zenoh evidence and native SDLC checks",
+      "divergent": false,
+      "head_commit": "9bbc5217a740ff03791d68c11913c0cc1823ff4b",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-unification-50-20260908-0852",
+      "path": ".uos-workspaces/codex-unification-50-20260908-0852",
+      "change_label": "rvuxyuxy",
+      "head_short": "6d15a6d3",
+      "description": "review/codex-unification-50 | docs(assurance): close fifty verified focuses with explicit ABI and integration holds",
+      "divergent": false,
+      "head_commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [
+        "6d15a6d32f798116634a8eb8760e775eb409133c",
+        "fb71b4ca9680a084aecd1f98048def0b525a196f"
+      ],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    },
+    {
+      "kind": "workspace",
+      "name": "codex-unification-integration-20260908-0821",
+      "path": ".uos-workspaces/codex-unification-integration-20260908-0821",
+      "change_label": "pvsuywxm",
+      "head_short": "0114d306",
+      "description": "docs(assurance): retain final merge tests, decision boundaries and coordination receipt",
+      "divergent": false,
+      "head_commit": "0114d3063109d120b04b958acf1db1445ba19fed",
+      "head_empty": false,
+      "attribution": "name-associated; owner confirmation pending",
+      "ancestry_disposition": "NO_NONEMPTY_ANCESTORS_OUTSIDE_PINNED_MAIN",
+      "unintegrated_nonempty_commits": [],
+      "semantic_disposition": "REQUIRES_EXECUTION_STAGE_COVERAGE_REVIEW",
+      "dirty_worktree_status": "UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN"
+    }
+  ],
+  "heads": [
+    {
+      "commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "change": "zosuwowvmzstltwnmzqmnqpuorrlkwot",
+      "empty": false,
+      "parents": [
+        "2be0d18d338a333c33b4a0d715d535d3573932db"
+      ],
+      "description": "docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts",
+      "unintegrated_nonempty": [
+        {
+          "commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+          "change": "zosuwowvmzstltwnmzqmnqpuorrlkwot",
+          "description": "docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts"
+        },
+        {
+          "commit": "2be0d18d338a333c33b4a0d715d535d3573932db",
+          "change": "tqqpqwnnzuqopkuruonrtmsvovmuzpyw",
+          "description": "feat(testing): add restricted Tailnet manual UI listener and keep navigation on its origin"
+        },
+        {
+          "commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+          "change": "rvuxyuxyvlxpyzynrvvrkwqzkspwsrlv",
+          "description": "docs(assurance): close fifty verified focuses with explicit ABI and integration holds"
+        },
+        {
+          "commit": "fb71b4ca9680a084aecd1f98048def0b525a196f",
+          "change": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+          "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance"
+        }
+      ]
+    },
+    {
+      "commit": "2be0d18d338a333c33b4a0d715d535d3573932db",
+      "change": "tqqpqwnnzuqopkuruonrtmsvovmuzpyw",
+      "empty": false,
+      "parents": [
+        "16aba7544e161958435e24971559878d22cdccc1",
+        "6d15a6d32f798116634a8eb8760e775eb409133c"
+      ],
+      "description": "feat(testing): add restricted Tailnet manual UI listener and keep navigation on its origin",
+      "unintegrated_nonempty": [
+        {
+          "commit": "2be0d18d338a333c33b4a0d715d535d3573932db",
+          "change": "tqqpqwnnzuqopkuruonrtmsvovmuzpyw",
+          "description": "feat(testing): add restricted Tailnet manual UI listener and keep navigation on its origin"
+        },
+        {
+          "commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+          "change": "rvuxyuxyvlxpyzynrvvrkwqzkspwsrlv",
+          "description": "docs(assurance): close fifty verified focuses with explicit ABI and integration holds"
+        },
+        {
+          "commit": "fb71b4ca9680a084aecd1f98048def0b525a196f",
+          "change": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+          "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance"
+        }
+      ]
+    },
+    {
+      "commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "change": "rvuxyuxyvlxpyzynrvvrkwqzkspwsrlv",
+      "empty": false,
+      "parents": [
+        "fb71b4ca9680a084aecd1f98048def0b525a196f"
+      ],
+      "description": "docs(assurance): close fifty verified focuses with explicit ABI and integration holds",
+      "unintegrated_nonempty": [
+        {
+          "commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+          "change": "rvuxyuxyvlxpyzynrvvrkwqzkspwsrlv",
+          "description": "docs(assurance): close fifty verified focuses with explicit ABI and integration holds"
+        },
+        {
+          "commit": "fb71b4ca9680a084aecd1f98048def0b525a196f",
+          "change": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+          "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance"
+        }
+      ]
+    },
+    {
+      "commit": "8b320ef951572fad930430c1c0056daba5732bf2",
+      "change": "nounuxqlrqspplutlroszklnulsvnpzl",
+      "empty": true,
+      "parents": [
+        "fb71b4ca9680a084aecd1f98048def0b525a196f",
+        "2751f27a645307360214ff91ccdde2d5928e7b41"
+      ],
+      "description": "merge: prepare fifty-cycle assurance integration; broad native gates held",
+      "unintegrated_nonempty": [
+        {
+          "commit": "fb71b4ca9680a084aecd1f98048def0b525a196f",
+          "change": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+          "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance"
+        }
+      ]
+    },
+    {
+      "commit": "c65ad8e2bd85aa03dbb3d07d846129d8935a8c10",
+      "change": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+      "empty": false,
+      "parents": [
+        "0114d3063109d120b04b958acf1db1445ba19fed"
+      ],
+      "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "5b9b9388f7adce3a27acae3c048a5312220967d1",
+      "change": "rwrnxyumxvzxpkpvktxxrpuoostqqpro",
+      "empty": true,
+      "parents": [
+        "e6906a35800be857d5fc1dd8f93a4baa5473c75d"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "0114d3063109d120b04b958acf1db1445ba19fed",
+      "change": "pvsuywxmnpqosqpuxwmosyyuoypqystq",
+      "empty": false,
+      "parents": [
+        "cd503010f654d9abd876a6328fb80ad14ed14ab3"
+      ],
+      "description": "docs(assurance): retain final merge tests, decision boundaries and coordination receipt",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "cd503010f654d9abd876a6328fb80ad14ed14ab3",
+      "change": "nxmnkqqtyylnxroktmnuqkwsppxkswru",
+      "empty": true,
+      "parents": [
+        "1f666a2bde34b2a5f73d3b14d104fa3a2b2af784",
+        "a25a46d9ae59c0b960d4e38a28628b950e8339d0"
+      ],
+      "description": "merge(assurance): preserve latest main receipt with verified unification changes; production held",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "9bbc5217a740ff03791d68c11913c0cc1823ff4b",
+      "change": "prkplrtvukrlvoooqllzxkyzqmyyookr",
+      "empty": false,
+      "parents": [
+        "e73430f15115e2be011c297fdc8e792f1dddb558"
+      ],
+      "description": "feat(assurance): record thirty risk-ranked cycles with lossless board/Zenoh evidence and native SDLC checks",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "45435f5b215d9cf5932a67d8d22e8c7ef7ed958b",
+      "change": "owuunmmlvutsykzoyzkpwpqrlyqxuzln",
+      "empty": true,
+      "parents": [
+        "83d5a7caabb7ecfa28352a0ce8f091179347e9b7"
+      ],
+      "description": "work(unification): thirty bounded evidence cycles and artifact synchronization",
+      "unintegrated_nonempty": [
+        {
+          "commit": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+          "change": "zluqqwslskvtrksqlrsswnkvkxrzpqrn",
+          "description": "fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance"
+        }
+      ]
+    },
+    {
+      "commit": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+      "change": "zluqqwslskvtrksqlrsswnkvkxrzpqrn",
+      "empty": false,
+      "parents": [
+        "25c47426041d5c864c98028b47606304245b4b3a",
+        "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6"
+      ],
+      "description": "fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance",
+      "unintegrated_nonempty": [
+        {
+          "commit": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+          "change": "zluqqwslskvtrksqlrsswnkvkxrzpqrn",
+          "description": "fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance"
+        }
+      ]
+    },
+    {
+      "commit": "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6",
+      "change": "lopzuptqkwmxzuyzxuprzutxrrproukn",
+      "empty": false,
+      "parents": [
+        "888b0df29e68d5e1051545f19d27175d9319db79",
+        "efbaea22367d3363df94ee0e36924ce1bfe2585f"
+      ],
+      "description": "fix(homeostasis): wire test and observed UI modes with bounded verification evidence",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "efbaea22367d3363df94ee0e36924ce1bfe2585f",
+      "change": "ylnmkosswnypxssplzmwlvtrnkwznpqx",
+      "empty": false,
+      "parents": [
+        "4eab8b7280e13186cca69aecc101ba17d12b0247"
+      ],
+      "description": "skills(ui): add repository-local GUI TUI rules and verification workflows",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "7c162d0f8d83825679c2badcb6703decccd3581e",
+      "change": "spqrrxnmnwxsmmtvkzomsknonzzkovzt",
+      "empty": true,
+      "parents": [
+        "c502fbd27c68439dd72686f2affe586c4198851b"
+      ],
+      "description": "docs(plan): prepare dependency-gated hive stabilization",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "c502fbd27c68439dd72686f2affe586c4198851b",
+      "change": "lyytwturtnwqrvmnlwkyvvvqvymzrysm",
+      "empty": false,
+      "parents": [
+        "311d2b12368d65c9b0f27f3d6adca315b94bbc62"
+      ],
+      "description": "fix(resource): validate exact capacity and preserve observation authority",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "311d2b12368d65c9b0f27f3d6adca315b94bbc62",
+      "change": "pnmksopxqrzrroxsqwoqsywsknzolpqk",
+      "empty": false,
+      "parents": [
+        "3c05ee107bdfb2a5f4cab16b1c04377c55e909d7"
+      ],
+      "description": "fix(sa-plan): fence completion by original claim attempt",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "change": "zrzxvvnlvlzmosruxuouozzutuqzlslv",
+      "empty": false,
+      "parents": [
+        "aea3229678a7074b9c5c0bcc672b1d2322c344b3"
+      ],
+      "description": "work: Solo5 0.13.0 candidate frozen for independent review",
+      "unintegrated_nonempty": [
+        {
+          "commit": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+          "change": "zrzxvvnlvlzmosruxuouozzutuqzlslv",
+          "description": "work: Solo5 0.13.0 candidate frozen for independent review"
+        },
+        {
+          "commit": "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+          "change": "tqxwqrspvvypwuxmkyvyxmwozvqmxoku",
+          "description": "feat(mirage): pin Solo5 0.13.0 and verify current host toolchain"
+        }
+      ]
+    },
+    {
+      "commit": "52f8034f75bb60bf845d77c5ad5a4c250b47146f",
+      "change": "mqwsvpxkszotmmppsxuuxmqlozsszkou",
+      "empty": true,
+      "parents": [
+        "b9d486170af9c3a0d12a6ae7db03836287f2b65a"
+      ],
+      "description": "work: Solo5 source review frozen; candidate remains unapproved",
+      "unintegrated_nonempty": [
+        {
+          "commit": "b9d486170af9c3a0d12a6ae7db03836287f2b65a",
+          "change": "mwtzqlwzuttmvvtqzttrumrmmkprzzsy",
+          "description": "review(mirage): record producer and consumer source blockers at canonical snapshot"
+        }
+      ]
+    },
+    {
+      "commit": "9962d6d17d5ec1ec0557cae6100d24a293f01bbc",
+      "change": "mopwrkrqkuuusnmmuxptoqmluttmmqsw",
+      "empty": true,
+      "parents": [
+        "8cf4cbec3c00dc32d60616ab5340dd63853e46c2"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "8cf4cbec3c00dc32d60616ab5340dd63853e46c2",
+      "change": "vxwxuqullxlzmrzwlymryoyprxtzltwr",
+      "empty": false,
+      "parents": [
+        "c08ec3942e12c41d2ac60c3ab4e954969e3983ae"
+      ],
+      "description": "feat(mirage): add honest bounded one-shot metrics snapshot",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "f8c38071ab579f4b7dd718f8d899c1a2ee6376d8",
+      "change": "vxvxwvztktuzxoklyrroxqrypnpyxzln",
+      "empty": true,
+      "parents": [
+        "595a3c8333a9239837129e2146e48df732493c23"
+      ],
+      "description": "work: bounded auth framing review frozen; no rollout authority",
+      "unintegrated_nonempty": [
+        {
+          "commit": "595a3c8333a9239837129e2146e48df732493c23",
+          "change": "ypqztovmwptownqtxynomtvnuvwwmvuu",
+          "description": "review(auth): approve bounded framing and fixed-reader follow-up"
+        },
+        {
+          "commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+          "change": "ltzunpsxvzzxnryykomwlwovnxkoypou",
+          "description": "fix(auth): reject unsupported request expectations before read"
+        },
+        {
+          "commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+          "change": "rksvvryuuyqxpmpqupuqqvvwomwzvvlt",
+          "description": "fix(auth): bound HTTP request framing before body ingestion"
+        },
+        {
+          "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+          "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+          "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler"
+        }
+      ]
+    },
+    {
+      "commit": "3ee0188be49a6b91d551efebe364e4241342b203",
+      "change": "lykxtrxvmyoxpqnomootrxkvuwqmsmts",
+      "empty": true,
+      "parents": [
+        "acfe752cc5f1ff4302d605713ea928e051364c2a"
+      ],
+      "description": "",
+      "unintegrated_nonempty": [
+        {
+          "commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+          "change": "ltzunpsxvzzxnryykomwlwovnxkoypou",
+          "description": "fix(auth): reject unsupported request expectations before read"
+        },
+        {
+          "commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+          "change": "rksvvryuuyqxpmpqupuqqvvwomwzvvlt",
+          "description": "fix(auth): bound HTTP request framing before body ingestion"
+        },
+        {
+          "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+          "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+          "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler"
+        }
+      ]
+    },
+    {
+      "commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+      "change": "ltzunpsxvzzxnryykomwlwovnxkoypou",
+      "empty": false,
+      "parents": [
+        "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64"
+      ],
+      "description": "fix(auth): reject unsupported request expectations before read",
+      "unintegrated_nonempty": [
+        {
+          "commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+          "change": "ltzunpsxvzzxnryykomwlwovnxkoypou",
+          "description": "fix(auth): reject unsupported request expectations before read"
+        },
+        {
+          "commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+          "change": "rksvvryuuyqxpmpqupuqqvvwomwzvvlt",
+          "description": "fix(auth): bound HTTP request framing before body ingestion"
+        },
+        {
+          "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+          "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+          "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler"
+        }
+      ]
+    },
+    {
+      "commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+      "change": "rksvvryuuyqxpmpqupuqqvvwomwzvvlt",
+      "empty": false,
+      "parents": [
+        "6b033f3781e159495b3cb9812b5480f4802a8855"
+      ],
+      "description": "fix(auth): bound HTTP request framing before body ingestion",
+      "unintegrated_nonempty": [
+        {
+          "commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+          "change": "rksvvryuuyqxpmpqupuqqvvwomwzvvlt",
+          "description": "fix(auth): bound HTTP request framing before body ingestion"
+        },
+        {
+          "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+          "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+          "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler"
+        }
+      ]
+    },
+    {
+      "commit": "059afa533f2efefdf809756b84da67b98112f6a3",
+      "change": "rywsslnmkupqpzvyywwkywklnsurwmqt",
+      "empty": true,
+      "parents": [
+        "607aa506e2721c41dc32f0cb13a6ffa4e3ea7643"
+      ],
+      "description": "work: runtime component staging evidence frozen for integration",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "607aa506e2721c41dc32f0cb13a6ffa4e3ea7643",
+      "change": "wptpvvzntynlmuqnxrwxypzksmrvyqwq",
+      "empty": false,
+      "parents": [
+        "dc12e5314369363c5dfbac845a7a7298f20ac2c8"
+      ],
+      "description": "docs(runtime): record OTP 29 primary backup component staging and scoped recovery",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "1753727c53b64e6651a271be68959da8d65cb252",
+      "change": "yutkxmusmnxtkpovoyvuxnwqyxnqvtvk",
+      "empty": true,
+      "parents": [
+        "b9c99841b3cf6bde7f3346d0700432e5aaec08b0"
+      ],
+      "description": "work: ingress 6b033f37 review frozen pending bounded reader repair",
+      "unintegrated_nonempty": [
+        {
+          "commit": "b9c99841b3cf6bde7f3346d0700432e5aaec08b0",
+          "change": "nmqqpqxstkuvypporrumqomulkrxlouz",
+          "description": "review(auth): verify ingress adapter and reject unbounded body reader"
+        },
+        {
+          "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+          "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+          "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler"
+        }
+      ]
+    },
+    {
+      "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+      "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+      "empty": false,
+      "parents": [
+        "9193385706282ea61300e77cbcc6f4664273a57d"
+      ],
+      "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler",
+      "unintegrated_nonempty": [
+        {
+          "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+          "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+          "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler"
+        }
+      ]
+    },
+    {
+      "commit": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+      "change": "outswoykkwvwrqvrylrwvmkwvwvnmozl",
+      "empty": false,
+      "parents": [
+        "f734f8fb82c7ad5264edf8a0593645a7495c3556"
+      ],
+      "description": "fix(web): default staged listeners to loopback and exclude crash dumps",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "294ebc47342ac372b886d22656fbd9103f1d5f12",
+      "change": "qxtzlqnkzrrkppyuysqkurlqpvslxosz",
+      "empty": true,
+      "parents": [
+        "83ed3774c053f11ee1e0e7486fbf31970067c75c"
+      ],
+      "description": "work: OIDC independent review frozen; ingress gaps remain open",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+      "change": "tqxwqrspvvypwuxmkyvyxmwozvqmxoku",
+      "empty": false,
+      "parents": [
+        "1964bc3f3669825834a19f2b67a322e1ae63f447"
+      ],
+      "description": "feat(mirage): pin Solo5 0.13.0 and verify current host toolchain",
+      "unintegrated_nonempty": [
+        {
+          "commit": "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+          "change": "tqxwqrspvvypwuxmkyvyxmwozvqmxoku",
+          "description": "feat(mirage): pin Solo5 0.13.0 and verify current host toolchain"
+        }
+      ]
+    },
+    {
+      "commit": "10ead02d11d8ffcbaf133702c87244d38b650210",
+      "change": "qrnynrvswtznnrzxrqsrqssunoynuzru",
+      "empty": true,
+      "parents": [
+        "9193385706282ea61300e77cbcc6f4664273a57d"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "9193385706282ea61300e77cbcc6f4664273a57d",
+      "change": "kozsqvqtssvpvupqpnstxuxrkvlwuoyl",
+      "empty": false,
+      "parents": [
+        "c08ec3942e12c41d2ac60c3ab4e954969e3983ae"
+      ],
+      "description": "feat(auth): verify bounded FerrisKey Ed25519 JWTs without fallback",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "72c7552b181fc44f6e30d5611efd84f3b18b9417",
+      "change": "sktupywrunrvlnslzlvmskosywyylpsn",
+      "empty": true,
+      "parents": [
+        "7621d5dfebe92ed8de7684e392b92c983b3acf36"
+      ],
+      "description": "work: Mirage model evidence frozen; implementation remains unapproved",
+      "unintegrated_nonempty": [
+        {
+          "commit": "7621d5dfebe92ed8de7684e392b92c983b3acf36",
+          "change": "yllzltnplkuvvqrslnnwomksouxppzox",
+          "description": "formal(mirage): verify receipt admission reference and preserve independent review evidence"
+        }
+      ]
+    },
+    {
+      "commit": "f734f8fb82c7ad5264edf8a0593645a7495c3556",
+      "change": "ywxmsuuzmwtxmyypxtoloqkrnkrvvqmz",
+      "empty": false,
+      "parents": [
+        "c08ec3942e12c41d2ac60c3ab4e954969e3983ae"
+      ],
+      "description": "feat(runtime): expose observed VM identity and pin managed web instances to OTP29",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "b10e553273ad520e18aceeae345bdf1d83baf63c",
+      "change": "mtrpsnkypxulszonwxtuszwsstrtqxln",
+      "empty": true,
+      "parents": [
+        "4ddc56b5cccc2cf06adc8560098f0a1da91d2719"
+      ],
+      "description": "work: Mirage tender review completed; candidate preserved",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "4ddc56b5cccc2cf06adc8560098f0a1da91d2719",
+      "change": "rrvlmottlytnytpkqyzrnuxyuqvszout",
+      "empty": false,
+      "parents": [
+        "a9d40c6e63696f16ca0c83d5512636be5a16ff1c"
+      ],
+      "description": "docs(mirage): independent Solo5 review with physical and negative evidence",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "2624cff0250247e5675db515f11e7202eb4b1665",
+      "change": "nmxzrtywpwpsvlzpkrzxwxrprnookwuq",
+      "empty": true,
+      "parents": [
+        "614ffbd9cbc7a307251d24b2cd78ddde81eacb6d"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "614ffbd9cbc7a307251d24b2cd78ddde81eacb6d",
+      "change": "mmxxqxwwvtzrnyuxxnxulzpsnwsmsryv",
+      "empty": false,
+      "parents": [
+        "f01d2531279ce078c5a28ea55550a3399af5ae0a"
+      ],
+      "description": "docs(ainf): map 21 infrastructure services and 17 aspects to verified reuse and native UOS placement; record AGY design review and remaining runtime gaps",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "4aec1c8e1bd19521b66ab03de8ccf2077b05ae0b",
+      "change": "npptqoznmyyzpqkynnqmrskvksozwopn",
+      "empty": true,
+      "parents": [
+        "b04e4cd9f70fa247993ab2b795c595dd251d780f"
+      ],
+      "description": "work: Mirage handoff complete; integration held",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "b04e4cd9f70fa247993ab2b795c595dd251d780f",
+      "change": "lpkpxryypluzyxwyvyxktxtzytlywyon",
+      "empty": false,
+      "parents": [
+        "0384a714bf5fe469b9c37accc58a11e98ba016a6"
+      ],
+      "description": "docs(mirage): record final sovereign audit and scoped verification receipt",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "02d43656ad7ac562277714e8864a7fb3ceb56b47",
+      "change": "zukslupsooszowzsylrwnqvukkvqtpty",
+      "empty": true,
+      "parents": [
+        "a49879a3ba0b8d857efb78652e72f98451d9ec65"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "a7b479618b4a6f003aefeb435fe53a0807f63af4",
+      "change": "rrxrpkswsmkznmwksynzokkkqtkwnnwl",
+      "empty": true,
+      "parents": [
+        "abb7d4178bfa44c2a99a0f144c058d221f9535eb"
+      ],
+      "description": "review: pin final Mirage composition",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "c5960ff123cb1218d9a43775082d7ace8fd356a1",
+      "change": "mumkznxtyoswqvxozpvslyprryroutox",
+      "empty": true,
+      "parents": [
+        "3706ea05f7f7d97d963a33be037b2a845c9e412a"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "b63169a3eea4792c0b4b690ff23a45be8dcef6db",
+      "change": "ptnlxrpptppmwkmlwpzkpxrylruklsrm",
+      "empty": true,
+      "parents": [
+        "00ac6c2158750a1196820bb8e656ba671b09cf7d"
+      ],
+      "description": "chore: preserve Mirage repair candidate",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "fe542cb830e917354f0845ddf6d70d809fe9bcab",
+      "change": "kvmlnkuuztlvrpxyssrvozvvxrktsmzo",
+      "empty": true,
+      "parents": [
+        "d916ac66528f9fb6884344934b96a207fbecffa4"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "e5572657abeeba9c6eaca2bdf9e24d77bf5603dc",
+      "change": "zxqtoyxmxslmmkpzsuovqxmsuquwmkrz",
+      "empty": true,
+      "parents": [
+        "4826d07a173d38fe18b8c8f6f82959bd219e3dca"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "e0b50cdce6fdb08e945984a119f4214c25893a5e",
+      "change": "umptwvnysmxoywurvrtlnsrvtvmzpkwy",
+      "empty": false,
+      "parents": [
+        "94ed6c2e0056b0c0dccb35e2b1f77226887217bb"
+      ],
+      "description": "fix(board): fail closed on invalid validation input",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "8180c73608373b00b46f7836af71f50ce6f40de7",
+      "change": "qxuzvwkzzopstmvlkrxnvmosnxkpuqoq",
+      "empty": false,
+      "parents": [
+        "a5fae5a56069d891c9dfeeef457132c6abff499c"
+      ],
+      "description": "fix(telemetry): preserve truthful OTel route discovery",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "31207adba558d200dcec854809d6bbfc00b860b9",
+      "change": "usxqyqtqmttzomzyqkolqvzmpxmkvwql",
+      "empty": true,
+      "parents": [
+        "d65573354bb619e8c94a63b28c45efcd4e5c1a3e"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "4a5e1fa3681afb66109874b526c549fec2821d89",
+      "change": "qupsryxkkynlrykvspvlpqxuxulmluys",
+      "empty": true,
+      "parents": [
+        "f0a9d7e6732c6b8a3722f75797a35e5dc1a4efd8"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f",
+      "change": "ruprxopuznmomxmymmmnonzwoxxprmqv",
+      "empty": false,
+      "parents": [
+        "4eabfc34fea9d0a96317fff4c759d8b3141a2c73"
+      ],
+      "description": "test(mcp): expect fail-closed system tools without NIF",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "change": "zrmkpozzvvtzystuwktrprsqtqovskos",
+      "empty": false,
+      "parents": [
+        "cb625f48c9e3b7ab70fa6c1b8797f400302ad599"
+      ],
+      "description": "mcp: preserve JSON-RPC framing on stdio",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "c1841115ba3b2baf5597ca624c9f69fc9c22e6eb",
+      "change": "zzkpwsnukpuzktxpluoslstmzkokvxpx",
+      "empty": true,
+      "parents": [
+        "98936f9e961e5b909c0e8445123b705aedb669a5"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "cb625f48c9e3b7ab70fa6c1b8797f400302ad599",
+      "change": "zkvsmloonztnwnmrnlovrznwuunlrtxz",
+      "empty": false,
+      "parents": [
+        "b99598309dc0eaa8925862aca7c305201f1b51d1"
+      ],
+      "description": "mcp: gate native adapters on runtime load evidence",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "78d8fef66199f1c5c82a7013efd43099d04437be",
+      "change": "yxrxonoxuzwyuvrtuxzvtuvvoxknuwsl",
+      "empty": false,
+      "parents": [
+        "cfc4029bca016631082f0b2a65bd6921e5aab3cf",
+        "e14e82a87007eb17c42277c973d29d1de61272a3"
+      ],
+      "description": "feat(swarm): connect live evolution watchers to bounded board fetch",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "a0c3fd11ea96eeb9a757e668a2cf365abae58b93",
+      "change": "mqzpmsuozqtxxzkzkkpnropzkuvopsws",
+      "empty": true,
+      "parents": [
+        "f9dfd98b59f08cd12e7b1402746088526edab419"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "b99598309dc0eaa8925862aca7c305201f1b51d1",
+      "change": "tsslvxlylkuvnpwypqmmnvmvkkvzpyvq",
+      "empty": false,
+      "parents": [
+        "426fe34e160cbba23ec92a1d9580b6c0ab0f088f"
+      ],
+      "description": "mcp: expose adapter availability and fail closed on unbound tools; preserve numeric request IDs and redact transport logging; four focused tests passed",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "ada45ee774d2d58d8dca39c8934faa270daacf3a",
+      "change": "qxvrlnqomvxwstmrzruytumoxsxtpuuw",
+      "empty": false,
+      "parents": [
+        "342bc5443a23c88ca761f3311a0ee399d5505924"
+      ],
+      "description": "feat(swarm): scoped board discovery reporting and telemetry correlation",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "4e6632fcad35cd664899efb798cb33748424f2e8",
+      "change": "nrzkmvrqqqsoknqxuspxsupmuklypzwm",
+      "empty": false,
+      "parents": [
+        "1353e6584342fd7c6fe825a864b2d26ed440cc84"
+      ],
+      "description": "feat(swarm): add deterministic hive awareness projection",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "1353e6584342fd7c6fe825a864b2d26ed440cc84",
+      "change": "ouzqnluzpmuppzkoqmoyvmnwuyuwtomv",
+      "empty": false,
+      "parents": [
+        "ae5fea502d49682eaeb5e9417975cd6797f932bb"
+      ],
+      "description": "feat(swarm): require reviewable decision records for actions",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "6d1cda9ad199a6cfad04b5d9fb5ca01587c5b156",
+      "change": "utmmzunuzrlxmvovlwxwyqpxvowpqkry",
+      "empty": false,
+      "parents": [
+        "e83b24e0e9cdb14c5fd4b2760e60de6ff6ca2800"
+      ],
+      "description": "formal: refine durable session journal crash and authority model",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "e95cdf75fa43627d24969d13bbd08d2a915c8120",
+      "change": "rkvntpmvvmpkqtmzmnnwkxzkvpkxxttl",
+      "empty": false,
+      "parents": [
+        "3644224ce7d7f04cfe40e21b3d33f07865d898af"
+      ],
+      "description": "hermes: add durable typed session observation ingestion",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "de84ada81054f23ea06193ba0c92e124166a9fb8",
+      "change": "mmzqmnytpzvypoynuokqzzmzskspsotn",
+      "empty": true,
+      "parents": [
+        "1c69804b45f13af549f0070a711ed089cee8a418"
+      ],
+      "description": "",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "520f96c125279d90d1c9391941add72617f472e0",
+      "change": "pykpkuplqmyrwptsmruzsooxomqpmryl",
+      "empty": true,
+      "parents": [
+        "4001d084658fd1182f0959d59e88cb86c479bbba",
+        "f28b15265d681eeaac4698cd7a9633205da7b107"
+      ],
+      "description": "merge: unify 10D tensor evolution manifold (EV-TENSOR-01..10, ADR-017) with reviewed migration slice and SA-Plan evidence",
+      "unintegrated_nonempty": []
+    },
+    {
+      "commit": "c7173316b8b79794b558b31a19ecf66ceac7b686",
+      "change": "pxosxkmpmvvqvtmstuyqsmkwvupuqkor",
+      "empty": false,
+      "parents": [
+        "dcc3e643d5be8a3f068cc1fffe3ecc07251cd294"
+      ],
+      "description": "feat(timestamp): enforce mandatory YYYYMMDD-HHSS- prefix, real disk-backed DMC/TCM validation, authentic Cryptokit SHA-256 interceptor, and storage safety invariants",
+      "unintegrated_nonempty": []
+    }
+  ],
+  "unintegrated_changes": [
+    {
+      "commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "change": "zosuwowvmzstltwnmzqmnqpuorrlkwot",
+      "description": "docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts",
+      "changed_paths": [
+        "A docs/guides/20260908-1234-manual-gui-tui-testing.md",
+        "A docs/journal/20260908-1234-manual-ui-testing-journal.md",
+        "A tests/evidence/20260908-1234-manual-ui-testing/browser.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/build.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/inventory.json",
+        "A tests/evidence/20260908-1234-manual-ui-testing/mojo-tui-parity.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/receipt.json",
+        "A tests/evidence/20260908-1234-manual-ui-testing/transition-parity.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/tui-real-nominal.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/tui-test-disturbance.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/tui-test-recovery.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/tui-test-unavailable.txt",
+        "A tests/evidence/20260908-1234-manual-ui-testing/unit.txt"
+      ],
+      "current_main_path_differences": [
+        "D docs/guides/20260908-1234-manual-gui-tui-testing.md",
+        "D docs/journal/20260908-1234-manual-ui-testing-journal.md",
+        "D tests/evidence/20260908-1234-manual-ui-testing/browser.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/build.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/inventory.json",
+        "D tests/evidence/20260908-1234-manual-ui-testing/mojo-tui-parity.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/receipt.json",
+        "D tests/evidence/20260908-1234-manual-ui-testing/transition-parity.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/tui-real-nominal.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/tui-test-disturbance.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/tui-test-recovery.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/tui-test-unavailable.txt",
+        "D tests/evidence/20260908-1234-manual-ui-testing/unit.txt"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M4",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "2be0d18d338a333c33b4a0d715d535d3573932db",
+      "change": "tqqpqwnnzuqopkuruonrtmsvovmuzpyw",
+      "description": "feat(testing): add restricted Tailnet manual UI listener and keep navigation on its origin",
+      "changed_paths": [
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal/homeostasis_http.gleam",
+        "A apps/indrajaal_gleam_web/src/indrajaal/manual_test.gleam",
+        "A apps/indrajaal_gleam_web/test/manual_test_test.gleam",
+        "A docs/reviews/20260908-1152-manual-ui-active-risk.json",
+        "A docs/reviews/20260908-1152-manual-ui-risk.json",
+        "M tools/release_process.ml",
+        "M tools/validation/homeostasis_browser_check.ml"
+      ],
+      "current_main_path_differences": [
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal/homeostasis_http.gleam",
+        "D apps/indrajaal_gleam_web/src/indrajaal/manual_test.gleam",
+        "D apps/indrajaal_gleam_web/test/manual_test_test.gleam",
+        "D docs/reviews/20260908-1152-manual-ui-active-risk.json",
+        "D docs/reviews/20260908-1152-manual-ui-risk.json",
+        "M tools/release_process.ml",
+        "M tools/validation/homeostasis_browser_check.ml"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M4",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "change": "rvuxyuxyvlxpyzynrvvrkwqzkspwsrlv",
+      "description": "docs(assurance): close fifty verified focuses with explicit ABI and integration holds",
+      "changed_paths": [
+        "A docs/journal/20260908-0936-fifty-cycle-assurance-and-integration-hold.md",
+        "A docs/reviews/20260908-0938-fifty-cycle-finalization-risk.json",
+        "M docs/sop/20260908-0906-fifty-cycle-assurance-sop.md",
+        "A tests/evidence/20260908-0933-unification-50-checks/broad-source-provenance.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/broad-tests.log",
+        "A tests/evidence/20260908-0933-unification-50-checks/browser.log",
+        "A tests/evidence/20260908-0933-unification-50-checks/final-broad-source-provenance.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/final-broad-tests.log",
+        "A tests/evidence/20260908-0933-unification-50-checks/final-retention-manifest.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/guard-before-repair.log",
+        "A tests/evidence/20260908-0933-unification-50-checks/manifest.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/native-provenance.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/recording-initial-failure.log",
+        "A tests/evidence/20260908-0933-unification-50-checks/recording-report.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/rejected-close-assessment-lifetime.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/rejected-close-assessment-shape.json",
+        "A tests/evidence/20260908-0933-unification-50-checks/scoped-unit.log",
+        "A tests/evidence/20260908-0933-unification-50-checks/transition-parity.txt",
+        "A tests/evidence/20260908-0933-unification-50-checks/video-provenance.json",
+        "A tools/evolution_media_receipt.ml",
+        "M tools/homeostasis_compat_check.ml"
+      ],
+      "current_main_path_differences": [
+        "D docs/journal/20260908-0936-fifty-cycle-assurance-and-integration-hold.md",
+        "D docs/reviews/20260908-0938-fifty-cycle-finalization-risk.json",
+        "M docs/sop/20260908-0906-fifty-cycle-assurance-sop.md",
+        "D tests/evidence/20260908-0933-unification-50-checks/broad-source-provenance.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/broad-tests.log",
+        "D tests/evidence/20260908-0933-unification-50-checks/browser.log",
+        "D tests/evidence/20260908-0933-unification-50-checks/final-broad-source-provenance.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/final-broad-tests.log",
+        "D tests/evidence/20260908-0933-unification-50-checks/final-retention-manifest.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/guard-before-repair.log",
+        "D tests/evidence/20260908-0933-unification-50-checks/manifest.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/native-provenance.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/recording-initial-failure.log",
+        "D tests/evidence/20260908-0933-unification-50-checks/recording-report.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/rejected-close-assessment-lifetime.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/rejected-close-assessment-shape.json",
+        "D tests/evidence/20260908-0933-unification-50-checks/scoped-unit.log",
+        "D tests/evidence/20260908-0933-unification-50-checks/transition-parity.txt",
+        "D tests/evidence/20260908-0933-unification-50-checks/video-provenance.json",
+        "D tools/evolution_media_receipt.ml",
+        "D tools/homeostasis_compat_check.ml"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M3",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "fb71b4ca9680a084aecd1f98048def0b525a196f",
+      "change": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+      "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance",
+      "changed_paths": [
+        "M apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam",
+        "M apps/cepaf_gleam/test/e2e_full_stack_test.gleam",
+        "M apps/cepaf_gleam/test/fractal_bdd_31x7_test.gleam",
+        "A apps/cepaf_gleam/test/module_guard_contract_test.gleam",
+        "M apps/cepaf_gleam/test/module_guard_substring_weakness_test.gleam",
+        "M apps/cepaf_gleam/test/tui_15_evolutionary_cycles_test.gleam",
+        "M apps/cepaf_gleam/test/tui_bdd_scenarios_test.gleam",
+        "M apps/cepaf_gleam/test/wisp_api_comprehensive_test.gleam",
+        "A docs/reviews/20260908-0830-fifty-cycle-risk.json",
+        "A docs/reviews/20260908-0912-fifty-cycle-active-risk.json",
+        "M docs/sop/20260908-0551-web-release-sdlc-sre-runbook.md",
+        "A docs/sop/20260908-0906-fifty-cycle-assurance-sop.md",
+        "A tests/evidence/20260908-0933-unification-50/archive-manifest.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-01.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-02.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-03.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-04.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-05.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-06.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-07.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-08.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-09.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-10.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-11.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-12.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-13.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-14.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-15.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-16.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-17.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-18.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-19.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-20.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-21.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-22.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-23.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-24.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-25.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-26.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-27.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-28.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-29.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-30.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-31.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-32.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-33.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-34.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-35.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-36.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-37.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-38.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-39.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-40.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-41.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-42.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-43.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-44.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-45.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-46.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-47.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-48.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-49.json",
+        "A tests/evidence/20260908-0933-unification-50/cycle-50.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-01.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-02.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-03.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-04.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-05.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-06.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-07.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-08.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-09.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-10.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-11.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-12.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-13.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-14.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-15.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-16.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-17.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-18.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-19.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-20.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-21.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-22.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-23.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-24.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-25.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-26.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-27.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-28.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-29.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-30.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-31.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-32.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-33.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-34.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-35.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-36.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-37.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-38.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-39.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-40.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-41.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-42.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-43.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-44.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-45.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-46.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-47.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-48.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-49.json",
+        "A tests/evidence/20260908-0933-unification-50/envelope-50.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-01.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-02.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-03.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-04.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-05.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-06.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-07.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-08.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-09.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-10.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-11.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-12.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-13.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-14.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-15.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-16.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-17.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-18.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-19.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-20.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-21.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-22.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-23.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-24.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-25.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-26.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-27.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-28.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-29.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-30.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-31.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-32.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-33.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-34.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-35.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-36.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-37.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-38.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-39.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-40.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-41.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-42.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-43.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-44.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-45.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-46.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-47.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-48.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-49.json",
+        "A tests/evidence/20260908-0933-unification-50/forecast-50.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-01.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-02.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-03.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-04.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-05.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-06.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-07.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-08.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-09.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-10.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-11.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-12.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-13.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-14.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-15.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-16.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-17.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-18.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-19.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-20.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-21.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-22.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-23.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-24.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-25.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-26.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-27.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-28.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-29.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-30.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-31.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-32.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-33.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-34.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-35.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-36.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-37.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-38.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-39.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-40.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-41.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-42.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-43.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-44.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-45.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-46.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-47.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-48.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-49.json",
+        "A tests/evidence/20260908-0933-unification-50/inbound-50.json",
+        "A tests/evidence/20260908-0933-unification-50/plan.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-01.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-02.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-03.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-04.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-05.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-06.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-07.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-08.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-09.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-10.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-11.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-12.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-13.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-14.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-15.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-16.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-17.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-18.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-19.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-20.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-21.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-22.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-23.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-24.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-25.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-26.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-27.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-28.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-29.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-30.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-31.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-32.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-33.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-34.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-35.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-36.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-37.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-38.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-39.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-40.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-41.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-42.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-43.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-44.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-45.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-46.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-47.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-48.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-49.json",
+        "A tests/evidence/20260908-0933-unification-50/publication-50.json",
+        "A tests/evidence/20260908-0933-unification-50/summary.json",
+        "A tools/evolution_archive.ml",
+        "A tools/evolution_cycles.ml",
+        "A tools/evolution_cycles.mojo",
+        "A tools/evolution_integrity_test.ml",
+        "A tools/homeostasis_compat_check.ml",
+        "A tools/output_guard_check.ml",
+        "M tools/release_process.ml",
+        "M tools/unification_cycles.ml",
+        "A tools/validation/release_browser_capture.ml"
+      ],
+      "current_main_path_differences": [
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam",
+        "M apps/cepaf_gleam/test/e2e_full_stack_test.gleam",
+        "M apps/cepaf_gleam/test/fractal_bdd_31x7_test.gleam",
+        "M apps/cepaf_gleam/test/tui_15_evolutionary_cycles_test.gleam",
+        "M apps/cepaf_gleam/test/tui_bdd_scenarios_test.gleam",
+        "M apps/cepaf_gleam/test/wisp_api_comprehensive_test.gleam",
+        "D tests/evidence/20260908-0933-unification-50/archive-manifest.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-01.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-02.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-03.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-04.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-05.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-06.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-07.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-08.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-09.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-10.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-11.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-12.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-13.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-14.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-15.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-16.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-17.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-18.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-19.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-20.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-21.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-22.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-23.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-24.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-25.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-26.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-27.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-28.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-29.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-30.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-31.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-32.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-33.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-34.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-35.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-36.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-37.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-38.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-39.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-40.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-41.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-42.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-43.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-44.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-45.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-46.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-47.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-48.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-49.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-50.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-01.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-02.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-03.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-04.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-05.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-06.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-07.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-08.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-09.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-10.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-11.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-12.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-13.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-14.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-15.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-16.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-17.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-18.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-19.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-20.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-21.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-22.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-23.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-24.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-25.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-26.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-27.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-28.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-29.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-30.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-31.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-32.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-33.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-34.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-35.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-36.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-37.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-38.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-39.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-40.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-41.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-42.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-43.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-44.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-45.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-46.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-47.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-48.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-49.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-50.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-01.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-02.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-03.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-04.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-05.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-06.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-07.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-08.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-09.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-10.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-11.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-12.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-13.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-14.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-15.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-16.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-17.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-18.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-19.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-20.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-21.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-22.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-23.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-24.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-25.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-26.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-27.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-28.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-29.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-30.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-31.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-32.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-33.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-34.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-35.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-36.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-37.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-38.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-39.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-40.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-41.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-42.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-43.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-44.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-45.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-46.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-47.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-48.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-49.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-50.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-01.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-02.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-03.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-04.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-05.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-06.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-07.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-08.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-09.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-10.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-11.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-12.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-13.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-14.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-15.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-16.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-17.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-18.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-19.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-20.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-21.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-22.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-23.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-24.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-25.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-26.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-27.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-28.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-29.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-30.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-31.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-32.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-33.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-34.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-35.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-36.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-37.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-38.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-39.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-40.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-41.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-42.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-43.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-44.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-45.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-46.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-47.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-48.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-49.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-50.json",
+        "D tests/evidence/20260908-0933-unification-50/plan.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-01.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-02.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-03.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-04.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-05.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-06.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-07.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-08.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-09.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-10.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-11.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-12.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-13.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-14.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-15.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-16.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-17.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-18.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-19.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-20.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-21.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-22.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-23.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-24.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-25.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-26.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-27.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-28.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-29.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-30.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-31.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-32.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-33.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-34.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-35.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-36.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-37.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-38.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-39.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-40.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-41.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-42.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-43.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-44.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-45.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-46.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-47.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-48.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-49.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-50.json",
+        "D tests/evidence/20260908-0933-unification-50/summary.json",
+        "D tools/evolution_archive.ml",
+        "D tools/homeostasis_compat_check.ml",
+        "M tools/release_process.ml",
+        "M tools/validation/release_browser_capture.ml"
+      ],
+      "same_change_in_main": [
+        {
+          "commit": "c65ad8e2bd85aa03dbb3d07d846129d8935a8c10",
+          "change": "rvllmwynyqkyrvtttvztplnvqxskuupr",
+          "description": "fix(guard): enforce JSON key contracts and add fifty-focus release assurance"
+        }
+      ],
+      "stage_id": "M3",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+      "change": "zluqqwslskvtrksqlrsswnkvkxrzpqrn",
+      "description": "fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance",
+      "changed_paths": [
+        "M AGENTS.md",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_01.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_01.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_02.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_02.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_03.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_03.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_04.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_04.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_05.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_05.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_06.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_06.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_07.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_07.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_08.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_08.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_09.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_09.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_10.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_10.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_11.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_11.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_12.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_12.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_13.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_13.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_14.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_14.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_15.png",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/frame_15.txt",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/tui_15_evolutionary_cycles.gif",
+        "M apps/cepaf_gleam/priv/static/tui_evolution/tui_15_evolutionary_cycles.mp4",
+        "M apps/cepaf_gleam/priv/static/tui_evolution_player.html",
+        "A apps/cepaf_gleam/src/cepaf_gleam/fpp/release_lifecycle.gleam",
+        "M apps/cepaf_gleam/src/cepaf_gleam/ha/beam_metrics.gleam",
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/homeostasis_status.gleam",
+        "M apps/cepaf_gleam/test/homeostasis_evidence_test.gleam",
+        "A apps/cepaf_gleam/test/release_lifecycle_test.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal/runtime_identity.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "M apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+        "M apps/indrajaal_gleam_web/test/runtime_identity_test.gleam",
+        "A contracts/rules/20260908-0551-release-assurance-sdlc-sre-sop.md",
+        "A docs/design/20260908-0551-release-lifecycle-denotational-specification.md",
+        "A docs/evidence/20260908-0551-release/20260908-0551-browser.txt",
+        "A docs/evidence/20260908-0551-release/20260908-0551-checker.jsonl",
+        "A docs/evidence/20260908-0551-release/20260908-0551-model-table.txt",
+        "A docs/evidence/20260908-0551-release/20260908-0551-package-faults.jsonl",
+        "A docs/evidence/20260908-0551-release/20260908-0551-unit.txt",
+        "M docs/evidence/tui_evolution_cycles/tui_evolution_player.html",
+        "A docs/journal/20260908-0551-homeostasis-release-journal.md",
+        "A docs/reviews/20260908-0551-gemma-release-advisory-request.json",
+        "A docs/reviews/20260908-0551-homeostasis-release-risk.json",
+        "A docs/reviews/20260908-0551-homeostasis-release-verification.json",
+        "A docs/reviews/20260908-0551-release-17-aspect-and-source-review.md",
+        "A docs/reviews/20260908-0551-release-decision-and-forecast-review.md",
+        "A docs/sop/20260908-0551-web-release-sdlc-sre-runbook.md",
+        "A ops/release/flake.lock",
+        "A ops/release/flake.nix",
+        "A tools/release_process.ml",
+        "A tools/release_process.mojo",
+        "M tools/validation/homeostasis_browser_check.ml"
+      ],
+      "current_main_path_differences": [
+        "M AGENTS.md",
+        "M docs/sop/20260908-0551-web-release-sdlc-sre-runbook.md",
+        "M ops/release/flake.nix",
+        "M tools/release_process.ml"
+      ],
+      "same_change_in_main": [
+        {
+          "commit": "e73430f15115e2be011c297fdc8e792f1dddb558",
+          "change": "zluqqwslskvtrksqlrsswnkvkxrzpqrn",
+          "description": "fix(release): add native parity checks, truthful runtime identity and SDLC/SRE assurance"
+        }
+      ],
+      "stage_id": "M3",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "change": "zrzxvvnlvlzmosruxuouozzutuqzlslv",
+      "description": "work: Solo5 0.13.0 candidate frozen for independent review",
+      "changed_paths": [
+        "A ops/mirage/patches/mirage-4.11.2-solo5-0.13.patch",
+        "A tools/verification/mirage_guest_toolchain.ml",
+        "M tools/verification/solo5_toolchain.ml"
+      ],
+      "current_main_path_differences": [
+        "D ops/mirage/patches/mirage-4.11.2-solo5-0.13.patch"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M5",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "aea3229678a7074b9c5c0bcc672b1d2322c344b3",
+      "change": "tqxwqrspvvypwuxmkyvyxmwozvqmxoku",
+      "description": "feat(mirage): pin Solo5 0.13.0 and verify current host toolchain",
+      "changed_paths": [
+        "A docs/journal/20260907-1401-solo5-0.13.0-toolchain-update.md",
+        "A generated/20260907-1336-solo5-0.13.0-runtime-evidence.json",
+        "A governance/sources/20260907-1336-solo5-0.13.0-installed.sha256",
+        "A governance/sources/20260907-1401-solo5-0.13.0-toolchain.json",
+        "A tools/verification/solo5_toolchain.ml"
+      ],
+      "current_main_path_differences": [
+        "D docs/journal/20260907-1401-solo5-0.13.0-toolchain-update.md",
+        "D generated/20260907-1336-solo5-0.13.0-runtime-evidence.json",
+        "D governance/sources/20260907-1336-solo5-0.13.0-installed.sha256",
+        "D governance/sources/20260907-1401-solo5-0.13.0-toolchain.json",
+        "M tools/verification/solo5_toolchain.ml"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M5",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "b9d486170af9c3a0d12a6ae7db03836287f2b65a",
+      "change": "mwtzqlwzuttmvvtqzttrumrmmkprzzsy",
+      "description": "review(mirage): record producer and consumer source blockers at canonical snapshot",
+      "changed_paths": [
+        "A docs/journal/20260907-1543-solo5-producer-consumer-source-review.md",
+        "A generated/20260907-1543-solo5-producer-consumer-source-review-evidence.json"
+      ],
+      "current_main_path_differences": [
+        "D docs/journal/20260907-1543-solo5-producer-consumer-source-review.md",
+        "D generated/20260907-1543-solo5-producer-consumer-source-review-evidence.json"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M5",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "595a3c8333a9239837129e2146e48df732493c23",
+      "change": "ypqztovmwptownqtxynomtvnuvwwmvuu",
+      "description": "review(auth): approve bounded framing and fixed-reader follow-up",
+      "changed_paths": [
+        "A docs/journal/20260907-1451-auth-framing-independent-review.md",
+        "A generated/20260907-1451-auth-framing-independent-review-evidence.json",
+        "A tools/verification/oidc/auth_framing_independent_review.erl"
+      ],
+      "current_main_path_differences": [
+        "D docs/journal/20260907-1451-auth-framing-independent-review.md",
+        "D generated/20260907-1451-auth-framing-independent-review-evidence.json",
+        "D tools/verification/oidc/auth_framing_independent_review.erl"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M2",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "acfe752cc5f1ff4302d605713ea928e051364c2a",
+      "change": "ltzunpsxvzzxnryykomwlwovnxkoypou",
+      "description": "fix(auth): reject unsupported request expectations before read",
+      "changed_paths": [
+        "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "M apps/indrajaal_gleam_web/test/auth_ingress_test.gleam"
+      ],
+      "current_main_path_differences": [
+        "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "D apps/indrajaal_gleam_web/test/auth_ingress_test.gleam"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M2",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "5b1146ea97cc62c1ed9108bd8d254f4d6e4a8e64",
+      "change": "rksvvryuuyqxpmpqupuqqvvwomwzvvlt",
+      "description": "fix(auth): bound HTTP request framing before body ingestion",
+      "changed_paths": [
+        "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl",
+        "M apps/indrajaal_gleam_web/test/auth_ingress_test.gleam",
+        "M apps/indrajaal_gleam_web/test/auth_ingress_test_ffi.erl"
+      ],
+      "current_main_path_differences": [
+        "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl",
+        "D apps/indrajaal_gleam_web/test/auth_ingress_test.gleam",
+        "D apps/indrajaal_gleam_web/test/auth_ingress_test_ffi.erl"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M2",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "6b033f3781e159495b3cb9812b5480f4802a8855",
+      "change": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+      "description": "fix(auth): route real HTTP ingress through authenticated Wisp handler",
+      "changed_paths": [
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "A apps/indrajaal_gleam_web/test/auth_ingress_test.gleam",
+        "A apps/indrajaal_gleam_web/test/auth_ingress_test_ffi.erl"
+      ],
+      "current_main_path_differences": [
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+        "M apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "D apps/indrajaal_gleam_web/test/auth_ingress_test.gleam",
+        "D apps/indrajaal_gleam_web/test/auth_ingress_test_ffi.erl"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M2",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "b9c99841b3cf6bde7f3346d0700432e5aaec08b0",
+      "change": "nmqqpqxstkuvypporrumqomulkrxlouz",
+      "description": "review(auth): verify ingress adapter and reject unbounded body reader",
+      "changed_paths": [
+        "A docs/journal/20260907-1418-auth-ingress-independent-review.md",
+        "A generated/20260907-1418-auth-ingress-independent-review-evidence.json",
+        "A tools/verification/oidc/auth_ingress_independent_review.erl"
+      ],
+      "current_main_path_differences": [
+        "D docs/journal/20260907-1418-auth-ingress-independent-review.md",
+        "D generated/20260907-1418-auth-ingress-independent-review-evidence.json",
+        "D tools/verification/oidc/auth_ingress_independent_review.erl"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M2",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    },
+    {
+      "commit": "7621d5dfebe92ed8de7684e392b92c983b3acf36",
+      "change": "yllzltnplkuvvqrslnnwomksouxppzox",
+      "description": "formal(mirage): verify receipt admission reference and preserve independent review evidence",
+      "changed_paths": [
+        "A docs/journal/20260907-1329-mirage-receipt-formal-correspondence.md",
+        "A formal/lean/MirageReceiptAdmission.lean",
+        "A formal/quint/mirage_receipt_admission.qnt",
+        "A generated/20260907-1304-mirage-independent-adversarial-evidence.json",
+        "A generated/20260907-1329-mirage-receipt-formal-evidence.json",
+        "A tools/verification/mirage/admission_reference_check.ml",
+        "A tools/verification/mirage/gate_fixture.ml",
+        "A tools/verification/mirage/probe_adversarial.ml",
+        "A tools/verification/mirage/probe_fixture.ml",
+        "A tools/verification/mirage/probe_v2_adversarial.ml",
+        "A tools/verification/mirage/probe_v2_fixture.ml",
+        "A tools/verification/mirage/projection_control.erl"
+      ],
+      "current_main_path_differences": [
+        "D docs/journal/20260907-1329-mirage-receipt-formal-correspondence.md",
+        "D formal/lean/MirageReceiptAdmission.lean",
+        "D formal/quint/mirage_receipt_admission.qnt",
+        "D generated/20260907-1304-mirage-independent-adversarial-evidence.json",
+        "D generated/20260907-1329-mirage-receipt-formal-evidence.json",
+        "D tools/verification/mirage/admission_reference_check.ml",
+        "D tools/verification/mirage/gate_fixture.ml",
+        "D tools/verification/mirage/probe_adversarial.ml",
+        "D tools/verification/mirage/probe_fixture.ml",
+        "D tools/verification/mirage/probe_v2_adversarial.ml",
+        "D tools/verification/mirage/probe_v2_fixture.ml",
+        "D tools/verification/mirage/projection_control.erl"
+      ],
+      "same_change_in_main": [],
+      "stage_id": "M5",
+      "disposition": "RECONCILE_THEN_VERIFY; not yet approved for merge"
+    }
+  ],
+  "patch_comparisons": [
+    {
+      "name": "manual-source",
+      "from": "517252df824c487ee80e61dfb4dec0fc139ec086",
+      "to": "2be0d18d",
+      "exit_code": 0,
+      "paths": []
+    },
+    {
+      "name": "manual-docs",
+      "from": "1bf746c973b152fa78592432c7ba24bc2719452a",
+      "to": "c5a0d3e6",
+      "exit_code": 0,
+      "paths": []
+    },
+    {
+      "name": "fifty-source",
+      "from": "fb71b4ca",
+      "to": "c65ad8e2",
+      "exit_code": 0,
+      "paths": [
+        "M apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam",
+        "M apps/cepaf_gleam/test/e2e_full_stack_test.gleam",
+        "M apps/cepaf_gleam/test/fractal_bdd_31x7_test.gleam",
+        "M apps/cepaf_gleam/test/tui_15_evolutionary_cycles_test.gleam",
+        "M apps/cepaf_gleam/test/tui_bdd_scenarios_test.gleam",
+        "M apps/cepaf_gleam/test/wisp_api_comprehensive_test.gleam",
+        "D tests/evidence/20260908-0933-unification-50/archive-manifest.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-01.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-02.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-03.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-04.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-05.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-06.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-07.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-08.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-09.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-10.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-11.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-12.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-13.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-14.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-15.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-16.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-17.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-18.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-19.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-20.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-21.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-22.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-23.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-24.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-25.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-26.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-27.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-28.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-29.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-30.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-31.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-32.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-33.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-34.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-35.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-36.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-37.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-38.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-39.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-40.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-41.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-42.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-43.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-44.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-45.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-46.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-47.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-48.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-49.json",
+        "D tests/evidence/20260908-0933-unification-50/cycle-50.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-01.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-02.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-03.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-04.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-05.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-06.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-07.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-08.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-09.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-10.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-11.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-12.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-13.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-14.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-15.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-16.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-17.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-18.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-19.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-20.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-21.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-22.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-23.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-24.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-25.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-26.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-27.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-28.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-29.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-30.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-31.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-32.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-33.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-34.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-35.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-36.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-37.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-38.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-39.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-40.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-41.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-42.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-43.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-44.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-45.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-46.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-47.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-48.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-49.json",
+        "D tests/evidence/20260908-0933-unification-50/envelope-50.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-01.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-02.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-03.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-04.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-05.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-06.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-07.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-08.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-09.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-10.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-11.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-12.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-13.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-14.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-15.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-16.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-17.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-18.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-19.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-20.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-21.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-22.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-23.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-24.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-25.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-26.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-27.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-28.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-29.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-30.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-31.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-32.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-33.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-34.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-35.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-36.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-37.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-38.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-39.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-40.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-41.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-42.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-43.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-44.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-45.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-46.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-47.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-48.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-49.json",
+        "D tests/evidence/20260908-0933-unification-50/forecast-50.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-01.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-02.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-03.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-04.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-05.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-06.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-07.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-08.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-09.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-10.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-11.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-12.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-13.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-14.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-15.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-16.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-17.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-18.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-19.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-20.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-21.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-22.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-23.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-24.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-25.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-26.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-27.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-28.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-29.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-30.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-31.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-32.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-33.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-34.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-35.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-36.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-37.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-38.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-39.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-40.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-41.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-42.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-43.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-44.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-45.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-46.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-47.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-48.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-49.json",
+        "D tests/evidence/20260908-0933-unification-50/inbound-50.json",
+        "D tests/evidence/20260908-0933-unification-50/plan.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-01.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-02.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-03.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-04.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-05.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-06.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-07.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-08.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-09.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-10.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-11.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-12.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-13.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-14.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-15.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-16.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-17.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-18.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-19.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-20.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-21.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-22.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-23.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-24.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-25.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-26.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-27.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-28.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-29.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-30.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-31.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-32.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-33.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-34.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-35.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-36.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-37.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-38.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-39.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-40.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-41.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-42.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-43.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-44.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-45.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-46.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-47.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-48.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-49.json",
+        "D tests/evidence/20260908-0933-unification-50/publication-50.json",
+        "D tests/evidence/20260908-0933-unification-50/summary.json",
+        "D tools/evolution_archive.ml",
+        "D tools/homeostasis_compat_check.ml",
+        "M tools/release_process.ml",
+        "M tools/validation/release_browser_capture.ml"
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "id": "M0",
+      "title": "Freeze census, provenance and source ownership",
+      "dependencies": [],
+      "class": "P1",
+      "factors": {
+        "C": 4,
+        "T": 4,
+        "F": 5,
+        "Dep": 5,
+        "I": 4
+      },
+      "fmea": {
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      "hazard": "Lose unique source or accept substituted evidence through moving references.",
+      "control": "Pin revision and patch identities; obtain owner-frozen dirty manifests; require explicit coverage dispositions.",
+      "acceptance": "All source records and newly discovered heads have owner/provenance/coverage records; unresolved ownership blocks affected imports.",
+      "score": 1600,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M1",
+      "title": "Establish authoritative tooling and common build baseline",
+      "dependencies": [
+        "M0"
+      ],
+      "class": "P1",
+      "factors": {
+        "C": 4,
+        "T": 4,
+        "F": 5,
+        "Dep": 5,
+        "I": 4
+      },
+      "fmea": {
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      "hazard": "A stale CLI, expired task attempt or mismatched NIF ABI produces false clearance.",
+      "control": "Verify Sa-plan binary/source behavior, task-attempt fencing, exact Nix/OTP/NIF provisioning and baseline tests.",
+      "acceptance": "Authority negative tests and candidate-bound baseline pass; no missing kernel is counted as healthy.",
+      "score": 1600,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M2",
+      "title": "Reconcile authenticated ingress and bounded framing as one repaired unit",
+      "dependencies": [
+        "M1"
+      ],
+      "class": "P1",
+      "factors": {
+        "C": 4,
+        "T": 4,
+        "F": 5,
+        "Dep": 4,
+        "I": 4
+      },
+      "fmea": {
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      "hazard": "An authentication regression or unbounded body reader reaches the network boundary.",
+      "control": "Compose all three fixes, preserve current routes, exercise malformed framing, bounded reads and real authentication.",
+      "acceptance": "Historical positive/adversarial tests rerun on the reconciled tree, current routes covered, independent boundary review complete.",
+      "score": 1280,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M3",
+      "title": "Reconcile release assurance and preserve missing evidence",
+      "dependencies": [
+        "M1"
+      ],
+      "class": "P1",
+      "factors": {
+        "C": 4,
+        "T": 4,
+        "F": 4,
+        "Dep": 4,
+        "I": 4
+      },
+      "fmea": {
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      },
+      "hazard": "A rewritten patch omits evidence or restores an obsolete policy/tool implementation.",
+      "control": "Compare both versions at path/hunk level; retain historical receipts and rebuild current tools.",
+      "acceptance": "All release/50-cycle deltas have explicit disposition; native/Mojo parity and release checks pass on exact current inputs.",
+      "score": 1024,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M4",
+      "title": "Integrate manual GUI/TUI testing with authenticated release path",
+      "dependencies": [
+        "M2",
+        "M3"
+      ],
+      "class": "P2",
+      "factors": {
+        "C": 3,
+        "T": 3,
+        "F": 4,
+        "Dep": 4,
+        "I": 4
+      },
+      "fmea": {
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      },
+      "hazard": "A test UI contacts production or displays a stale build as current.",
+      "control": "Use isolated data, current release identity, same-origin Tailnet links, browser/TUI update checks and lease-bound listener.",
+      "acceptance": "Test and read-only real-data journeys, negative cases and manual guide agree with the integrated package identity.",
+      "score": 576,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M5",
+      "title": "Reconcile Solo5 source provenance, receipt validation and formal evidence",
+      "dependencies": [
+        "M1"
+      ],
+      "class": "P1",
+      "factors": {
+        "C": 4,
+        "T": 4,
+        "F": 5,
+        "Dep": 3,
+        "I": 3
+      },
+      "fmea": {
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      "hazard": "Fabricated, stale or weakly bound tender evidence causes false isolation/admission claims.",
+      "control": "Recheck S13-01 through S13-08; share typed receipt validation and bind physical results to exact binaries and context.",
+      "acceptance": "Each source delta is accounted for; required model, implementation and physical controls pass independently; application migration remains separately evidenced.",
+      "score": 720,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M6",
+      "title": "Compose final candidate and complete independent verification",
+      "dependencies": [
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "class": "P1",
+      "factors": {
+        "C": 4,
+        "T": 4,
+        "F": 5,
+        "Dep": 4,
+        "I": 5
+      },
+      "fmea": {
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      "hazard": "Separately passing branches are treated as a passing combined release.",
+      "control": "Freeze final tree, build/test full composition, review all 17 aspects and reconcile census coverage.",
+      "acceptance": "Exact candidate receipt set and independent review pass; no selected delta or required gate remains unknown.",
+      "score": 1600,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M7",
+      "title": "Land verified source under serialized integration authority",
+      "dependencies": [
+        "M6"
+      ],
+      "class": "P1",
+      "factors": {
+        "C": 4,
+        "T": 4,
+        "F": 5,
+        "Dep": 4,
+        "I": 5
+      },
+      "fmea": {
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      "hazard": "A stale integrator overwrites concurrent main or moves it to an unverified tree.",
+      "control": "Recheck task attempt, integration/main fence, peer acknowledgements, current main and candidate identity immediately before movement.",
+      "acceptance": "Main advances only to the exact verified descendant; post-move readback matches; production is unchanged.",
+      "score": 1600,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    },
+    {
+      "id": "M8",
+      "title": "Close coverage, synchronize references and publish handoff",
+      "dependencies": [
+        "M7"
+      ],
+      "class": "P2",
+      "factors": {
+        "C": 3,
+        "T": 3,
+        "F": 4,
+        "Dep": 2,
+        "I": 4
+      },
+      "fmea": {
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      },
+      "hazard": "Peers keep developing from incorrectly reported state or source history is deleted prematurely.",
+      "control": "Publish exact source/evidence references with readbacks; preserve peer heads; finalize Sa-plan receipts and additive KM links.",
+      "acceptance": "All census records have terminal reviewed dispositions and main targets; no unaccounted unique code; leases released.",
+      "score": 288,
+      "activation": "SPECIFICATION_ONLY_NOT_DISPATCHED",
+      "risk_basis": "Ordinal analyst assessment of proposed integration failure modes; O=3 is credible exposure, not a measured incident probability."
+    }
+  ],
+  "explicit_exclusions": [
+    {
+      "scope": "Own newly created planning workspace and review bookmark",
+      "reason": "Created after the pinned census; contains planning artifacts only. Include it in the execution refresh and final documentation closure."
+    },
+    {
+      "scope": "Seven Codex-associated historical tag bookmarks",
+      "reason": "Historical references in raw bookmark listing; not independent candidate heads. Reconsider only if owner evidence establishes unique missing work."
+    },
+    {
+      "scope": "Unregistered, unsnapshotted and abandoned-unreferenced work",
+      "reason": "Not safely attributable from this read-only census. M0 owner attestations and retention/history checks must resolve this boundary before an all-code completion claim."
+    },
+    {
+      "scope": "Non-Codex peers and production runtime",
+      "reason": "Preserve current main and peer changes; no attribution or deployment permission implied."
+    }
+  ],
+  "limitations": [
+    "Ancestry is not semantic coverage.",
+    "An empty tip may contain nonempty unmerged ancestors.",
+    "Identical Jujutsu change IDs do not establish patch equivalence.",
+    "Empty interdiff establishes patch equivalence only, not a new runtime test receipt.",
+    "Missing copied NIFs do not establish source regression.",
+    "No source writers were quiesced in this planning turn."
+  ]
+}
+

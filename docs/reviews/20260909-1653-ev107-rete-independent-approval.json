@@ -1,0 +1,403 @@
+{
+  "schema": "uos.ev107.rete-independent-review.v1",
+  "observed_at": 1788972790.604312,
+  "verdict": "APPROVE_BOUNDED_STATIC_ASSERTION_CLOSURE",
+  "source_candidate": "168c31943c90b0c494b60ca0baff9f25c8cc702c",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "findings": [],
+  "review_plan": "uos/ev107-rete-review/20260909",
+  "task": "REVIEW",
+  "worker": "codex-ev107-rete-review",
+  "attempt": 1,
+  "oracle_source": "2677fde003250652c900bec76bbe28d22d8b17e6",
+  "observed": {
+    "fresh_author_eunit": 23,
+    "independent_groups": 6,
+    "independent_projection_rows": 2048,
+    "author_projection_rows_checked": 2048,
+    "oracle_synthetic_controls": 29,
+    "staged_dependency_artifacts": 160,
+    "test_output_sha256": "cb87a7692501aec4f07c6b2320ba25f980974cd37d88d55b234208ad8fe78eb3",
+    "projection_output_sha256": "de27d5992fc03c6bc6ccbdd0bb77c32e3c50b2b6245e141bd596559df378cb2e",
+    "oracle_output_sha256": "e94e9185d3c7b5c0629717cbca91168b11b593aff62a3e95687fac6bacfde4a9",
+    "author_oracle_output_sha256": "724f0316ec0d54c7197c13df23b94a2c0a44b066ccdb8099307a6dbb198dce62"
+  },
+  "source_bindings": [
+    {
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+      "staged": "/tmp/ev107-rete-independent-1650/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+      "sha256": "d5c54d35aa3addbb24d5dd865f6266772880c1f1ce91ccf25eaa84cbe87bbefd"
+    },
+    {
+      "source": "apps/cepaf_gleam/test/rete_ul_verifier_test.gleam",
+      "staged": "/tmp/ev107-rete-independent-1650/package/test/rete_ul_verifier_test.gleam",
+      "sha256": "efde3c1eab0df5de0de9a10e2576fd58e5f50d4232d42539dcfca50798339bb4"
+    },
+    {
+      "source": "apps/cepaf_gleam/test/ev107_rete_closure_test.gleam",
+      "staged": "/tmp/ev107-rete-independent-1650/package/test/ev107_rete_closure_test.gleam",
+      "sha256": "ca86ee21859cd4f421b3ee6c1410de44dd9a85aa327d2305d5bd02d4dafb8bf3"
+    },
+    {
+      "source": "apps/cepaf_gleam/test/ev107_rete_runner.gleam",
+      "staged": "/tmp/ev107-rete-independent-1650/package/test/ev107_rete_runner.gleam",
+      "sha256": "2ef64ebe5a0d2f54b31131beda7f47ea57e151f831bd0745a8a1a6f070c95934"
+    },
+    {
+      "source": "apps/cepaf_gleam/test/ev107_rete_projection.gleam",
+      "staged": "/tmp/ev107-rete-independent-1650/package/test/ev107_rete_projection.gleam",
+      "sha256": "ad575743b6209de755e3434336fb16f40010ddf2033d61e384e9d1c0be7bb2f2"
+    }
+  ],
+  "author_helper": {
+    "path": "tools/ev107_rete_stage.ml",
+    "sha256": "5a6341348ffcf30a8cb53bc36f10b2a8f50535935cbaf10b18e9201192cb1699",
+    "bytes": 2558
+  },
+  "caller": {
+    "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/rete_ul_hud.gleam",
+    "sha256": "0111c73287b1a1727b7d4841fee12e047173044d40d4d18b00e1e19977d5dbc8",
+    "bytes": 11601
+  },
+  "compiled_artifacts": [
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/cepaf_gleam@knowledge@rete_ul_verifier.cache",
+      "sha256": "abf8ca7dd3624013571e972b0a87392a9a0229f436d6d1827ea39f4a048644be",
+      "bytes": 49742
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/cepaf_gleam@knowledge@rete_ul_verifier.cache_meta",
+      "sha256": "dd0754b94e71f2d94fd91d552bbc7e7ab30923c2b410bf199398acf46b63a753",
+      "bytes": 2165
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/cepaf_gleam@knowledge@rete_ul_verifier.erl",
+      "sha256": "5770e9209b694f564d124dcfdb5b21ab6c7172c2163b5e5b1d92d1e0c1e76b77",
+      "bytes": 26413
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_closure_test.cache",
+      "sha256": "13bec30acde28ef6f8b58c66e4ab5cfdcabf0fc0ae5d24b46eb1a758de1eb062",
+      "bytes": 17832
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_closure_test.cache_meta",
+      "sha256": "592b5cfa1f3bf7b695fd5fe457c43a04ed412731d55767bf3c47b33ab3c4e542",
+      "bytes": 1593
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_closure_test.erl",
+      "sha256": "36dea2295d4968d9268f7babb6fff4fa549c4863a7ed580c75035262a54a631e",
+      "bytes": 36191
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_independent_probe.cache",
+      "sha256": "b64fa3d017dd419b3016f754e1788c5a59e08fbb118ab7592c284660b8183148",
+      "bytes": 7104
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_independent_probe.cache_meta",
+      "sha256": "2c687fb35193dea29db0684e275421d7776a308f01da16988fbf524dd00e6e73",
+      "bytes": 564
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_independent_probe.erl",
+      "sha256": "d20af24058a83ad3687c57197b46e21a5a65797b0ccfa2e69bb4c26f15c8af06",
+      "bytes": 12540
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_projection.cache",
+      "sha256": "f1e6452cfed6f137e24bbfe061d5637fd38b54e3b817b55cdd41cbafcddb32b7",
+      "bytes": 5123
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_projection.cache_meta",
+      "sha256": "79b5204ca59145800f1c05fc6472973f38306924938d85bfc97bd864a10e4fdd",
+      "bytes": 594
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_projection.erl",
+      "sha256": "b2da18802fcb9d6b462ef60953a36546cd2c8c77439c3d87ddfa2dc8190f9d99",
+      "bytes": 8459
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_runner.cache",
+      "sha256": "671bb822616e4ce656df0d1c7e5f7dba4bf86c5ab23d023eb220b762e7074559",
+      "bytes": 1837
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_runner.cache_meta",
+      "sha256": "785352b4a7cd4f19a2bd63e0e191f21134295f84339bbffab91c114604feee3c",
+      "bytes": 217
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/ev107_rete_runner.erl",
+      "sha256": "05ec6577553c86c2a296378ecf9212d81b15dee21edb1d39a8bdfee3236e47be",
+      "bytes": 695
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/gleam@@compile.erl",
+      "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196",
+      "bytes": 6231
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/rete_ul_verifier_test.cache",
+      "sha256": "650264d9a28fba4393ea4f2574d51b048e33bc25634024a8844e7e43c9395905",
+      "bytes": 5015
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/rete_ul_verifier_test.cache_meta",
+      "sha256": "61a8d2dfa154b59a187448773205e22e7347c3bbdd50b47b1ec8c9dada527ae8",
+      "bytes": 748
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/_gleam_artefacts/rete_ul_verifier_test.erl",
+      "sha256": "ca10455e8ca5306ec592398c2d7754484e3fba10b39f1f2ec1b54ae73655919c",
+      "bytes": 6685
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/ebin/cepaf_gleam@knowledge@rete_ul_verifier.beam",
+      "sha256": "cb80def0496eb970996e9c73be8dfa0ca1332f89cf109f3e698d13f3be9dfb81",
+      "bytes": 20996
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/ebin/ev107_rete_closure_test.beam",
+      "sha256": "ab527d2651db61bf71d39b1cb6c5e2181a26211a6eda6b3930c06d323814eb29",
+      "bytes": 35112
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/ebin/ev107_rete_independent_probe.beam",
+      "sha256": "dcc325ac4ae8778830857ea575fea880998ec14350ad0ccf86a8361a9c2b7066",
+      "bytes": 13548
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/ebin/ev107_rete_projection.beam",
+      "sha256": "7b66db74c7bbf9527912a7b185cea59fab08b74e5e3aef279312dbe0b2fc2c94",
+      "bytes": 8452
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/ebin/ev107_rete_runner.beam",
+      "sha256": "56344f25e66e2f564adbd201aae43d5160c924fa9e1e22db0010d155495f8bcc",
+      "bytes": 1784
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/ebin/rete_ul_verifier_test.beam",
+      "sha256": "25867cb5092f74fccba20c3938763fc9fc0069ed719622e9e9410a367ced5a92",
+      "bytes": 7840
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ConsequenceAssert.hrl",
+      "sha256": "52f5f6b6bf4a09f8d80639e8c8a8e443b3eb564bfc250f15757a679a734314ce",
+      "bytes": 110
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ConsequenceGateVerdict.hrl",
+      "sha256": "46fa6e82d76235dd8957f899eb961b1ee9743780751bfb8ec0e4878189c442ac",
+      "bytes": 58
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ContradictoryRules.hrl",
+      "sha256": "0edbad20ef349020ac1de482ccf8b0cc1084d0d23ec93f009e897127aba2a1b1",
+      "bytes": 106
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_CyclicChaining.hrl",
+      "sha256": "4f615742330244b434d59c42d7daec9ad155028ad612b6501cc6f50ae2d20f6a",
+      "bytes": 77
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ForwardRun.hrl",
+      "sha256": "6e76a09cfc9d9a868fb854d9e60185c9e582182349994546e443f366317406ce",
+      "bytes": 171
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ReteCondition.hrl",
+      "sha256": "80a5e922acd433e940a9cd24107695efaa152ca0e51d9dea83cb6cec9a035e63",
+      "bytes": 166
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ReteFact.hrl",
+      "sha256": "4de87948eea70c270e117a1cbf86d50bf099db160d4afa40a04cb0c37e50dddd",
+      "bytes": 82
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ReteRule.hrl",
+      "sha256": "8e8905284fa50c0a69f884e30180a84d461a2eeffa3bcbc225296f3288042442",
+      "bytes": 205
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_ShadowedRule.hrl",
+      "sha256": "259f515ed7c1568532793c98feeb785722c9c73a7459dca0815949feac6edf95",
+      "bytes": 74
+    },
+    {
+      "path": "/tmp/ev107-rete-independent-1650/compiled/include/cepaf_gleam@knowledge@rete_ul_verifier_WorkingMemory.hrl",
+      "sha256": "d5d29399e7ff641fbe6c33376a3ea498e0a91a227cca02e5d11d0c1dd8467882",
+      "bytes": 311
+    }
+  ],
+  "tool_observations": [
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697",
+      "bytes": 24440408
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/x86_64-pc-linux-gnu-ocamlrun-a100",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f",
+      "bytes": 2029504
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8",
+      "bytes": 67320
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+      "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966",
+      "bytes": 11063664
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml",
+      "sha256": "2674b8445c704c7fe9d22e23e7479d886779d4cab635e167723776e1124960b6",
+      "bytes": 13974
+    },
+    {
+      "path": "/tmp/ev107-rete-oracle-immutable/ev107_rete_reference.ml",
+      "sha256": "d0a29c44acccfb18c61cbcbac643d5d0878db615f03d14531143e0474c9c03ec",
+      "bytes": 12300
+    }
+  ],
+  "receipts": [
+    {
+      "original": "/tmp/ev107-rete-independent-1650/bindings.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-bindings.json",
+      "sha256": "864446af7bd8699ece43a6fcffe472fb3491fe56e3a9b492cd782bd73d407b94"
+    },
+    {
+      "original": "/tmp/ev107-rete-full-1646/bindings.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author-bindings.json",
+      "sha256": "db93c765a55aee9ca29cb8f03c110ce6ce9bc1ec2289a5df21e3a2f7e04cd55b"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-stage2.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-stage.json",
+      "sha256": "83bb61c161ac3b5350348d52860a2ee052d544880a9c8e365b2df6597cadde4a"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-compile2.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-compile.json",
+      "sha256": "392337f8806a204682551ec33b9ad622f907c522ba083234c2709af1282e0970"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-1650/author23.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author23.json",
+      "sha256": "ed0102f5c42fe6e79bb02067363f05358f262242fc78135b2f05b57463209252"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-1650/independent6.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-independent6.json",
+      "sha256": "f51fe831bc86c6937a6a0ab2f69e4756bb85163226e8335ebfce6221d382c832"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-1650/projection2048.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-projection2048.json",
+      "sha256": "c1f56dc4196386a80ed8b5afb73e38df89e81b01e31bb282c5870076ee8cbf8d"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-1650/oracle2048.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-oracle2048.json",
+      "sha256": "86103b60532dcbecdefa0cfba56412eb15f5808023912d0b7e8b7e46aada8a71"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-author-oracle.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author-oracle.json",
+      "sha256": "5869cf537ec7e1fda706ebd3f514363955c7934c5c6dffa941c5fded7ecb48d8"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-candidate-active.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-candidate-active.json",
+      "sha256": "28b4169560e750e6cb2c3cd04f59ca7e7d32039a4c11046985d9374c649b540f"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-compile.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-fixture-compile-refusal.json",
+      "sha256": "cc02fbe7c8ff2a126baafcd87f3d84838c2a25605f7595a0ef4a906118b3bf3c"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-1649/package/test/ev107_rete_independent_probe.gleam",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-fixture-failed-source.gleam.txt",
+      "sha256": "cc9a0b9bfb3e9c9d8ba3a416c69abed914fd9f5c2226141168fb25009ccdb030"
+    },
+    {
+      "original": "/tmp/ev107_rete_independent_probe.gleam",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-probe.gleam.txt",
+      "sha256": "616ba3882cf4ccb8db5627062a1a1aa2904bac8e78b5419d8618eecd912edfd8"
+    },
+    {
+      "original": "/tmp/ev107_rete_independent_stage.ml",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-stage.ml.txt",
+      "sha256": "bb3e4d14ed5ab972ad200247c985492227a0bfcd21a462a7460e9af99a8232ca"
+    },
+    {
+      "original": "/tmp/ev107_rete_independent_run.ml",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-run.ml.txt",
+      "sha256": "aa76f299ac8865f4993ac5ea57a39ba543da6452a246574757551ca3f54f617f"
+    },
+    {
+      "original": "/tmp/ev107_rete_independent_evidence.ml",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-evidence.ml.txt",
+      "sha256": "7bcbf0b0beb286c783118a0926e59f870f5c90f6b592c56d4c7e8ddbc24cf43b"
+    },
+    {
+      "original": "/tmp/ev107-rete-red-runtime-1632.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author-red-no-tests.json",
+      "sha256": "c6591ffd6f3b7d848ebe09e026fa50baf4e66af5aec349ecb9dd75e73b8dea24"
+    },
+    {
+      "original": "/tmp/ev107-rete-red-runtime-cwd-corrected-1633.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author-red-corrected.json",
+      "sha256": "de4006c05523f18e3c893e26782155bf8f4ff25de10b29a4533aa1a5366b98de"
+    },
+    {
+      "original": "/tmp/ev107-rete-full-compile-1646.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author-compile.json",
+      "sha256": "651ba93b85e58ba1f9c7ba45fd2de2554ed9169e5cee9cb3242ab87bfe4423c3"
+    },
+    {
+      "original": "/tmp/ev107-rete-full-runtime-1647.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author-runtime.json",
+      "sha256": "b674661f2a91b301fd6dcf562f35d8015b7d3b71f15c7c54d47cbc8ebd0043bc"
+    },
+    {
+      "original": "/tmp/ev107-rete-full-projection-1647.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-author-projection.json",
+      "sha256": "5f669dc15301e1351fa477f58bb6018f8ceea7445d8c8cd8410e9ad8053816e6"
+    },
+    {
+      "original": "/tmp/ev107-rete-independent-run-launch.json",
+      "durable": "docs/reviews/20260909-1653-ev107-rete-independent/20260909-1653-outer-run.json",
+      "sha256": "e77aa4b4eba087e1a260cc06dcfe96a7e7ce18a3baf23d4e5da1dc979a4578da"
+    }
+  ],
+  "static_review": [
+    "Typed result contains no partial memory on invalid input, capacity/work exhaustion or conflicting gate observations; legacy wrapper preserves exact original on refusal.",
+    "Inputs bounded to256facts64rules8attributes8conditions256-byte strings before pairwise consistency validation; duplicate rule names/attributes refused.",
+    "Symmetric condition-set equality handles repeated conditions. Same antecedents with distinct assertions permit fan-out; exact consequence shadows and historical pairwise cycles veto.",
+    "Add-only existential Eq/Neq/Contains conditions are monotone. Deferred rounds terminate because each successful rule is removed; facts retained and assertions deduplicated by existing kind/attribute/value.",
+    "Work counter meters matching visits; bounded validation, list operations and string work are separate from that counter.",
+    "Production caller search found only HUD type/presentation use. No dispatch consumer or runtime effect was established; verdict pairs remain local advisory observations.",
+    "Projection independently reads actual engine memory and refuses unexpected/duplicate fact kinds; rows are not computed from its input masks."
+  ],
+  "limits": [
+    "Four-node acyclic corpus is finite observation, not general Rete refinement or formal solver proof. Extra cycle/operator cases extend tests only.",
+    "Static rules only: no variable binding, same-fact joins, negation-by-absence or retraction. Conservative anomaly checks are not complete logical consistency.",
+    "Legacy builders remain unbounded compatibility APIs; execution checked API supplies bounded refusal. Public record constructors require validation.",
+    "Local native receipts and post-execution hashes are cooperative evidence, not authenticated producers or hostile concurrent replacement protection.",
+    "No fresh descendant execve trace or complete dynamic/linker release closure; previously reviewed direct ERTS adapter and realized dependency bytes reused.",
+    "Historical HUD constant consistency/sovereign status is outside this component review and not current runtime evidence.",
+    "Original no-tests-found receipt is non-evidence; corrected author RED inspected but not independently rerun. Private probe compile typo preserved separately.",
+    "No live production/crosshost effects, full EV107, sovereign approval or EV admission."
+  ]
+}

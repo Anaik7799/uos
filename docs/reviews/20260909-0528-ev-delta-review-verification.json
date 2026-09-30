@@ -1,0 +1,147 @@
+{
+  "schema": "uos.ev-delta-freshness-verification.v1",
+  "status": "PASS",
+  "authority": "NONE",
+  "observed_utc_seconds": 1788931372.905203,
+  "tested_source_commit": "4af745383248649d0472b734ab825702ee490def",
+  "base_commit": "337f99137673d7866b958a38bd490fb876b2880f",
+  "preserved_reviewed_source": "df0978287c4ffa9dcad14a10298081297327d3f5",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+      "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/cepaf_gleam/crdt/delta_state.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "sha256": "dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+      "sha256": "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/delta_mesh_engine_test.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/deadman_freshness_test.gleam",
+      "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/deadman_freshness_test.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+      "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/ev_delta_freshness_runner.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_health_bridge_test.gleam",
+      "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/crdt_health_bridge_test.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam",
+      "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83",
+      "staged_path": "/tmp/ev-delta-review-final-20260909-0524/src/crdt_mesh_sync_test.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    }
+  ],
+  "compiled_artifacts": [
+    {
+      "path": "/tmp/ev-delta-review-final-20260909-0524/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "1ce354c141df527c272a9064ffd1f0f1855397d45feef8bd5dd7c97e97019fa5"
+    },
+    {
+      "path": "/tmp/ev-delta-review-final-20260909-0524/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "eda748e4ec70933873518abab834eacb580b0a55c814ccebf0ae75e891d134aa"
+    },
+    {
+      "path": "/tmp/ev-delta-review-final-20260909-0524/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "3ef00551dba8a145c9c1a97a32e05bd178b184df308f7fde493f81896194ef01"
+    },
+    {
+      "path": "/tmp/ev-delta-review-final-20260909-0524/compiled/ebin/ev_delta_freshness_runner.beam",
+      "sha256": "607d269d7eba158af3df23ae564634fd39246100ee1528e6ed80cf9c60be0433"
+    }
+  ],
+  "manifest": {
+    "path": "apps/cepaf_gleam/gleam.toml",
+    "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+  },
+  "private_manifest_sha256": "48b630b24c37d15f18bebee666efc4d54c1baec5f5f4678b981d356684a78f08",
+  "private_manifest_transformation": "Only remove the exact [dev-dependencies] header line so copied tests compile as application modules.",
+  "invocations": [
+    {
+      "path": "docs/reviews/20260909-0524-ev-delta-review-final-compile.json",
+      "sha256": "0f3e3c07c7e1385afc5ff7fc212a59dcc3ecc16f45294f61e9ea93b22eaf811f"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-ev-delta-review-final-tests.json",
+      "sha256": "7a7ff86b63681dfc938fd77b22c313efa2156e2e1190d8b38460f1542021882a"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-ev-delta-review-final-direct.json",
+      "sha256": "99d1d52d6d46c3257cac9fa9ed4b9e649c34bdc13ca228b5a6988e477c7eb161"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-ev-delta-review-final-format.json",
+      "sha256": "4ed3b75826612c8b394c0c0868635c7a22b8a767df61acef35869a4126b94869"
+    },
+    {
+      "path": "docs/reviews/20260909-0528-ev-delta-review-final-active.json",
+      "sha256": "8cae52835977deee06849d3af37e0a459df60a39f20c4289cd633fcb3bdc4f15"
+    }
+  ],
+  "tests_passed": 42,
+  "tests_failed": 0,
+  "preserved_red_observations": [
+    "docs/reviews/20260909-0518-ev-delta-review-red-tests.json:33 passed,4 failed",
+    "docs/reviews/20260909-0522-ev-delta-review-order-red-tests.json:37 passed,1 failed"
+  ],
+  "risk_assessment": {
+    "path": "docs/reviews/20260909-0429-ev-delta-freshness-risk-health-review-final.json",
+    "sha256": "f11f4827373101138292c861085319ccb726ece49b9ca2d5deba84984418cfe8"
+  },
+  "dependencies": "Reused already-realized canonical apps/cepaf_gleam/build/dev/erlang artifacts; exact ebin search paths appear in native invocation receipts. Adapter excludes stale cepaf_gleam and uos_swarm outputs. Dependency closure provenance/reproducibility is not established by this receipt.",
+  "limits": [
+    "Author-observed state tests; independent rereview required. No EV admission or formal refinement proof.",
+    "Health ordering compares sample time, logical register version, then writer identity. Register timestamp_us is logical for health entries; sample_epoch_us is physical observation input.",
+    "Valid-state convergence requires distinct writer identities and serialized retained state. Existing legacy equal-version conflicts have no recoverable causal history; no live migration performed.",
+    "256 bounds queued message count, not payload bytes, peers or health entries.",
+    "Response preview and queued copy are the same messages; callers must not dispatch both. Drain is in-memory ownership transfer, not transport acknowledgment.",
+    "Exactly-once trip requests depend on retaining returned state and a serialized owner; old-state replay, crashes and network failures are outside tested scope.",
+    "This receipt checks current staged/source byte equality after execution; it does not authenticate historical producers or establish an atomic execution snapshot."
+  ]
+}

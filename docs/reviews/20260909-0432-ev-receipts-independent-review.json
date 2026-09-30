@@ -1,0 +1,15 @@
+{
+  "schema": "uos.independent-development-review.v1",
+  "recorded_at": "2026-09-09T04:21:32Z",
+  "candidate": "50eb6ea23fb6dedf7130623b8983b9a4a80e3e84",
+  "tested_source": "748395220b2f2a39689472aa75060c3dd7fbf30e",
+  "reviewer": "/root/homeostasis_change_review",
+  "decision": "APPROVED_FOR_BOUNDED_STRUCTURAL_CONSISTENCY_USE",
+  "authority": "NO_EV_ADMISSION_OR_DEPLOYMENT",
+  "resolved_findings": ["explicit immutable commit_id selection and exact ID check", "root-relative Jujutsu filesets", "final host and monotonic freshness checks", "shared byte and time budgets including Jujutsu output and final rehash"],
+  "independent_observations": {"read_only_ocaml_probes_passed": 7, "source_hashes_matched": 6, "candidate_tests_reported": 67, "candidate_suite": "Receipt read; suite was not independently rerun because it writes fixtures", "artifact_use": "Existing compiled library, no independent rebuild"},
+  "completion_check": {"observed_at": "2026-09-09T04:21:32Z", "status": "ACTIVE_OBSERVATION_PASS", "plan": "uos/ev-receipt-validation/20260909", "task": "VALIDATE", "worker": "codex-ev-receipts", "attempt": 1, "assessment_sha256": "b132e9bc6006e6ecd5f5efb229460cdb57897d733354983c574b1629e28bdc33", "evidence_files_checked": 4},
+  "limitations": ["Canonical policy applicability is not established", "Producer and invocation authentication are not established", "Formal semantics are not verified by structural receipt consistency", "Cooperative local filesystem responsiveness is assumed", "Integration and EV admission require separate authority"],
+  "fractal_tags": ["#fractal-l0", "#fractal-l4", "#zero-muda", "#zk-adr"],
+  "navigation": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-0432-ev-receipts-independent-review.json"
+}

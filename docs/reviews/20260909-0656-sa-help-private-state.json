@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/tmp/uos-sa-plan-help-573b1c/_build/default/cli/sa_plan_main.exe",
+    "--format", "json", "task", "show", "private", "t"
+  ],
+  "database": "/tmp/uos-sa-plan-help-573b1c/private.sqlite3",
+  "utc_started": 1788933963.240288,
+  "utc_finished": 1788933963.261043,
+  "exit_code": 0,
+  "output": "{\"plan_id\":\"private\",\"id\":\"t\",\"name\":\"private/help/task\",\"title\":\"Private task\",\"parent_id\":\"-\",\"state\":\"available\",\"priority\":\"0\",\"worker\":\"-\",\"attempt\":\"0\"}\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788933963252399159\",\"command\":\"--task-show\",\"authority\":\"report_only\",\"total_ns\":731877,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.001, validate;dur=0.001, store_open;dur=0.593, dispatch;dur=0.050, store_close;dur=0.069, total;dur=0.732\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":2705,\"duration_ms\":0.002705},{\"name\":\"normalize\",\"duration_ns\":521,\"duration_ms\":0.000521},{\"name\":\"validate\",\"duration_ns\":952,\"duration_ms\":0.000952},{\"name\":\"store_open\",\"duration_ns\":592885,\"duration_ms\":0.592885},{\"name\":\"dispatch\",\"duration_ns\":50405,\"duration_ms\":0.050405},{\"name\":\"store_close\",\"duration_ns\":68830,\"duration_ms\":0.06883}]}\n",
+  "output_sha256": "ddf68ac281ab66d6452b43c64086a0fee83df06bf8ea3dd3f8471963c786165a",
+  "authority": "NONE"
+}

@@ -1,0 +1,22 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+let root="/home/an/NAS-setup/uos"
+let ws=root^"/.uos-workspaces/codex-ev-admission-20260909-0210"
+let rev="168c31943c90b0c494b60ca0baff9f25c8cc702c"
+let stage="/tmp/ev107-rete-independent-1650"
+let budget=Receipt_validator.make_budget ~seconds:30. ~bytes:67108864 ()
+let read=Ev_campaign.read_file budget
+let write=Ev_campaign.write
+let bind source staged bytes=`Assoc["source",`String source;"staged",`String staged;"sha256",`String(Receipt_validator.sha bytes)]
+let ()=
+ let paths=["src/cepaf_gleam/knowledge/rete_ul_verifier.gleam";"test/rete_ul_verifier_test.gleam";"test/ev107_rete_closure_test.gleam";"test/ev107_rete_runner.gleam";"test/ev107_rete_projection.gleam"]in
+ let sources=List.map(fun p->let source="apps/cepaf_gleam/"^p in let b=Receipt_validator.candidate_bytes ws rev source in Receipt_validator.require(b=read(ws^"/"^source))"candidate/worktree mismatch";let dest=stage^"/package/"^p in write dest b;bind source dest b)paths in
+ let helper=Receipt_validator.candidate_bytes ws rev "tools/ev107_rete_stage.ml"in write(stage^"/author-stage.ml")helper;
+ let probe=read "/tmp/ev107_rete_independent_probe.gleam"in write(stage^"/package/test/ev107_rete_independent_probe.gleam")probe;
+ let profile="name = \"cepaf_gleam\"\nversion = \"1.0.0\"\ntarget = \"erlang\"\n[dependencies]\ngleam_stdlib = \"0.71.0\"\ngleam_erlang = \"1.3.0\"\ngleeunit = \"1.9.0\"\n"in write(stage^"/package/gleam.toml")profile;
+ let dependency=root^"/apps/cepaf_gleam/build/dev/erlang"in
+ let dependencies=List.concat_map(Ev_campaign.file_names dependency)["gleam_stdlib";"gleam_erlang";"gleeunit"]|>List.map(fun p->let source=dependency^"/"^p in let b=read source and dest=stage^"/lib/"^p in write dest b;bind source dest b)in
+ write(stage^"/bindings.json")(Yojson.Basic.pretty_to_string(`Assoc["candidate",`String rev;"sources",`List sources;"dependencies",`List dependencies;"probe",bind "/tmp/ev107_rete_independent_probe.gleam"(stage^"/package/test/ev107_rete_independent_probe.gleam")probe;"profile",bind "fixed-profile"(stage^"/package/gleam.toml")profile;"author_helper",bind "tools/ev107_rete_stage.ml"(stage^"/author-stage.ml")helper]));
+ print_endline stage

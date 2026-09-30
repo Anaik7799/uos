@@ -1,0 +1,151 @@
+{
+  "schema": "uos.ev107.rete-completion.v1",
+  "observed_at": "2026-09-09T17:13:15Z",
+  "source_candidate": "168c31943c90b0c494b60ca0baff9f25c8cc702c",
+  "red_candidate": "7bdcc794d161918ee31026afb02b44b3f4499edb",
+  "independent_evidence": "d52eb0f9ed922b0bb666c4aa6ed31902e9198af3",
+  "component_status": "COMPLETED",
+  "plan": "uos/ev107-rete/20260909",
+  "task": "RETE",
+  "worker": "codex-ev107-rete",
+  "attempt": 1,
+  "authority": "NONE",
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "author_tests": 23,
+  "independent_probe_groups": 6,
+  "finite_reference_cases": 2048,
+  "model_fixture_controls": 29,
+  "dependency_artifacts_rechecked": 160,
+  "artifacts": [
+    {
+      "source": "/tmp/ev107-rete-claim-1627.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-claim.json",
+      "sha256": "9266b35c42b5549e8a654b4c09854703d2f1d779a22b3fe748b4a43dbb4870c4",
+      "bytes": 3033
+    },
+    {
+      "source": "/tmp/ev107-rete-preflight-1627.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-preflight.json",
+      "sha256": "8a8cf21400cbba6694b457e84f781452eb0478a2f82b643ed5728c7692fcb537",
+      "bytes": 3798
+    },
+    {
+      "source": "/tmp/ev107-rete-completed-1709.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-completed.json",
+      "sha256": "e8ad1f60ffc610899ad9d33712985d98df5abb6706270c3b54a547c83b97126d",
+      "bytes": 3416
+    },
+    {
+      "source": "/tmp/ev107-rete-completion-active-1708.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-active.json",
+      "sha256": "3752cb9a155d86799d9ffd9cc059c4dfa49b045895b34f0b840b40e7b3cdeea9",
+      "bytes": 3765
+    },
+    {
+      "source": "/tmp/ev107-rete-source-unchanged-1708.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-source-unchanged.json",
+      "sha256": "b380950c0e770d3eba7f9c4ce0021da1f264c699a4be674af51618b60fb7a322",
+      "bytes": 2432
+    },
+    {
+      "source": "/tmp/ev107-rete-full-projection-1647.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-green-projection.json",
+      "sha256": "5f669dc15301e1351fa477f58bb6018f8ceea7445d8c8cd8410e9ad8053816e6",
+      "bytes": 49454
+    },
+    {
+      "source": "/tmp/ev107-rete-full-runtime-1647.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-green-runtime.json",
+      "sha256": "b674661f2a91b301fd6dcf562f35d8015b7d3b71f15c7c54d47cbc8ebd0043bc",
+      "bytes": 4471
+    },
+    {
+      "source": "/tmp/ev107-rete-full-compile-1646.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-green-compile.json",
+      "sha256": "651ba93b85e58ba1f9c7ba45fd2de2554ed9169e5cee9cb3242ab87bfe4423c3",
+      "bytes": 2230
+    },
+    {
+      "source": "/tmp/ev107-rete-full-1646/bindings.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-green-bindings.json",
+      "sha256": "db93c765a55aee9ca29cb8f03c110ce6ce9bc1ec2289a5df21e3a2f7e04cd55b",
+      "bytes": 56395
+    },
+    {
+      "source": "/tmp/ev107-rete-initial-green-compile-1639.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-unsupported-api-compile-refusal.json",
+      "sha256": "37254aed992e560692359ac01b2b7d1b1f96df107cf8ab44962c2fed43b4a43b",
+      "bytes": 8597
+    },
+    {
+      "source": "/tmp/ev107-rete-red-runtime-cwd-corrected-1633.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-red-actual-runtime.json",
+      "sha256": "de4006c05523f18e3c893e26782155bf8f4ff25de10b29a4533aa1a5366b98de",
+      "bytes": 3327
+    },
+    {
+      "source": "/tmp/ev107-rete-red-runtime-1632.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-empty-discovery-observation.json",
+      "sha256": "c6591ffd6f3b7d848ebe09e026fa50baf4e66af5aec349ecb9dd75e73b8dea24",
+      "bytes": 2387
+    },
+    {
+      "source": "/tmp/ev107-rete-red-compile-1632.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-red-compile.json",
+      "sha256": "e09c749b1ec4f7d46a49a647fc225243d163e178fa05b2067d9475132bb9a42a",
+      "bytes": 2225
+    },
+    {
+      "source": "/tmp/ev107-rete-red-1632/bindings.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-red-bindings.json",
+      "sha256": "d9c97c14f5f8a2a83887c307fc9ad671045cc30e6fa4d43b55f0a6576bc8f0c0",
+      "bytes": 55945
+    },
+    {
+      "source": "d52eb0f9ed922b0bb666c4aa6ed31902e9198af3:docs/reviews/20260909-1653-ev107-rete-independent-approval.json",
+      "path": "docs/reviews/20260909-1715-ev107-rete-independent-approval.json",
+      "sha256": "027c90ec501ef915d89860d6215fe896f193ae84d2569aff320e533e96cae7f0",
+      "bytes": 20373
+    },
+    {
+      "source": "/tmp/ev107-rete-red-1632/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+      "path": "docs/reviews/20260909-1715-ev107-rete-red-source-rete_ul_verifier.gleam",
+      "sha256": "ef99830d561646b113376ecf60fc25810f20afc3f5d8d14f8dc2d647517580f7",
+      "bytes": 6669
+    },
+    {
+      "source": "/tmp/ev107-rete-red-1632/package/test/rete_ul_verifier_test.gleam",
+      "path": "docs/reviews/20260909-1715-ev107-rete-red-source-rete_ul_verifier_test.gleam",
+      "sha256": "efde3c1eab0df5de0de9a10e2576fd58e5f50d4232d42539dcfca50798339bb4",
+      "bytes": 3572
+    },
+    {
+      "source": "/tmp/ev107-rete-red-1632/package/test/ev107_rete_closure_test.gleam",
+      "path": "docs/reviews/20260909-1715-ev107-rete-red-source-ev107_rete_closure_test.gleam",
+      "sha256": "0f84741141b4cccdbb7e5035079d234a89bc515fc42a61354688e9c85bbe1e89",
+      "bytes": 2311
+    },
+    {
+      "source": "/tmp/ev107-rete-red-1632/package/test/ev107_rete_runner.gleam",
+      "path": "docs/reviews/20260909-1715-ev107-rete-red-source-ev107_rete_runner.gleam",
+      "sha256": "1de3b3fc14f6c79a0829b39954afec969acc60295c645d4932a7a4492474f3af",
+      "bytes": 53
+    },
+    {
+      "source": "2677fde003250652c900bec76bbe28d22d8b17e6:tools/ev107_rete_reference.ml",
+      "path": "docs/reviews/20260909-1715-ev107-rete-independent-model.ml",
+      "sha256": "d0a29c44acccfb18c61cbcbac643d5d0878db615f03d14531143e0474c9c03ec",
+      "bytes": 12300
+    }
+  ],
+  "limits": [
+    "Bounded pure static assertion closure and advisory verdict observations; legacy builders are not bounded interfaces.",
+    "256 facts,64 rules,8 attributes and8 conditions per record,256 UTF8 bytes per string,100000 matching visits. Validation work is separately bounded by input limits.",
+    "Rule conclusions are observations, not effect authorization. Conditions remain existential across facts, with no variable joins or retractions.",
+    "Legacy projection preserves the original memory on refusal, including any previous cached count; checked callers must inspect Result.",
+    "Pairwise duplicate/conflict/cycle checks remain conservative, not complete logical consistency proofs.",
+    "The OCaml reachability reference covers64 four-node DAG masks,16 seed masks and2 orders. It does not prove all rule programs or full EV107 Gospel/Z3 refinement.",
+    "No live dispatch/patching, UI correction, authenticated transitive build closure, deployment or whole-EV admission."
+  ]
+}

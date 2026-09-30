@@ -1,0 +1,34 @@
+{
+  "schema": "uos.ev98.recipe-codec.task-handoff.v1",
+  "task": "RECIPE_CODEC",
+  "worker": "codex-ev98-recipe-codec",
+  "current_attempt": 3,
+  "lease_until_ns": "1788967996490516857",
+  "receipts": [
+    {
+      "path": "docs/reviews/20260909-1425-ev98-recipe-codec-pre-release-active-1432.json",
+      "sha256": "7fb22d68ff8513b8f764e2e306a93675fb5a507308167cb6d79617ffacf6737c"
+    },
+    {
+      "path": "docs/reviews/20260909-1425-ev98-recipe-codec-pre-release-active-fresh-1432.json",
+      "sha256": "18cc11c46127b86296280dcf14047c7a613339b84047372129f876e8bc93ebfe"
+    },
+    {
+      "path": "docs/reviews/20260909-1425-ev98-recipe-codec-release-attempt2-1432.json",
+      "sha256": "77aea220a4be46a37d3f4f836005914ef19d2f01ee9700d415df016ffa8fb170"
+    },
+    {
+      "path": "docs/reviews/20260909-1425-ev98-recipe-codec-preflight-attempt3-1433.json",
+      "sha256": "cf5ed1eda403fef9b27ef0d633611692c8b4fa5ac8f7359f8ed5493f8db24be3"
+    },
+    {
+      "path": "docs/reviews/20260909-1425-ev98-recipe-codec-claim-attempt3-1433.json",
+      "sha256": "6ff17f0ac766d890f8db3fd45bdba6cf5e3966838c7156ccf9f82c617bf9b798"
+    },
+    {
+      "path": "docs/reviews/20260909-1425-ev98-recipe-codec-active-attempt3-1433.json",
+      "sha256": "472e35eb0fa859f2015a33cf4851cea4ded2a6c29cdc47ab0b26977a5e53c364"
+    }
+  ],
+  "authority": "Native observations do not replace canonical task/workspace fences"
+}
