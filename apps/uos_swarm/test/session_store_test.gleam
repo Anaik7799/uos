@@ -5,6 +5,7 @@ import gleam/string
 import gleeunit/should
 import simplifile
 import uos_swarm/session_store as store
+import uos_swarm/session_authority as authority
 import uos_swarm/session_sync as sync
 
 @external(erlang, "session_sync_ffi", "unique_id")
@@ -21,6 +22,60 @@ fn copy_file(from: String, to: String) -> Result(Nil, String)
 /// exist for any other session or on CI. Every path under it is suffixed with
 /// `unique_id()`, so concurrent runs do not collide.
 const scratch_root = "/tmp/uos-session-store-tests"
+
+pub fn recovery_hold_refuses_open_append_and_observation_test() {
+  let db = db_path()
+  let assert Ok(opened) = store.open(db)
+  let assert Ok(_) = simplifile.write(db <> ".recovery-lock", "owned recovery")
+  store.open(db) |> should.be_error
+  store.append(opened, sync.Register("held", "codex", workspace_dir(), "revision", []), "held-register")
+  |> should.be_error
+  authority.query_at(db, fn(_, _, _) { Ok(Nil) }) |> should.be_error
+  store.head(opened) |> should.equal(Ok(#(0, sync.genesis)))
+  let assert Ok(_) = simplifile.delete(db <> ".recovery-lock")
+  let assert Ok(_) = store.append(opened, sync.Register("released", "codex", workspace_dir(), "revision", []), "released-register")
+  let assert Ok(_) = store.close(opened)
+}
+
+pub fn canonical_authority_requires_existing_regular_database_test() {
+  let db = db_path()
+  authority.run_at(db, ["status"]) |> should.be_error
+  simplifile.is_file(db) |> should.equal(Ok(False))
+  let assert Ok(_) = simplifile.write(db, "")
+  authority.run_at(db, ["status"]) |> should.be_error
+  simplifile.read(db) |> should.equal(Ok(""))
+  let assert Ok(opened) = store.open(db)
+  authority.run_at(db, ["status"]) |> should.be_error
+  let assert Ok(_) = store.append(opened, sync.Register("seed", "codex", workspace_dir(), "revision", []), "seed-register")
+  let assert Ok(_) = store.close(opened)
+  let assert Ok(_) = simplifile.create_symlink(db, db <> ".link")
+  authority.run_at(db <> ".link", ["status"]) |> should.be_error
+  authority.run_at(db, ["register", "sqlite-owner", "codex", workspace_dir(), "revision", "-", "register-sqlite-owner"])
+  |> should.be_ok
+  authority.query_at(db, fn(state, _, _) { Ok(dict.has_key(state.sessions, "sqlite-owner")) })
+  |> should.equal(Ok(True))
+  authority.run_at(db, ["status"]) |> should.be_ok
+}
+
+pub fn recovery_generation_retires_old_connections_after_unlock_test() {
+  let db = db_path()
+  let assert Ok(old) = store.open(db)
+  let assert Ok(_) = store.append(old, sync.Register("old", "codex", workspace_dir(), "old", []), "old-register")
+  let candidate = db_path()
+  let assert Ok(fresh) = store.open(candidate)
+  let assert Ok(_) = store.append(fresh, sync.Register("fresh", "codex", workspace_dir(), "fresh", []), "fresh-register")
+  let assert Ok(_) = store.close(fresh)
+  let assert Ok(_) = simplifile.write(db <> ".recovery-lock", "test recovery")
+  let assert Ok(_) = simplifile.write(db <> ".recovery-generation", "generation-2")
+  // Model replacement while a stale descriptor survives; production activation
+  // additionally refuses open handles before replacing any database bytes.
+  let assert Ok(_) = simplifile.rename(db, db <> ".preserved")
+  let assert Ok(_) = simplifile.rename(candidate, db)
+  let assert Ok(_) = simplifile.delete(db <> ".recovery-lock")
+  store.append(old, sync.Heartbeat("old", "stale", []), "stale-write") |> should.be_error
+  store.observe(old, fn(_, _, _) { Ok(Nil) }) |> should.be_error
+  let assert Ok(_) = store.close(old)
+}
 
 /// Migration source for the migration tests. The original was a frozen
 /// 415-event copy in one session's private scratchpad, which no other session

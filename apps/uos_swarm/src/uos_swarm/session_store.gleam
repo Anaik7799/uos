@@ -69,6 +69,9 @@ pub type Cell {
 @external(erlang, "session_store_ffi", "open")
 fn ffi_open(path: String) -> Result(Conn, String)
 
+@external(erlang, "session_store_ffi", "open_existing")
+fn ffi_open_existing(path: String) -> Result(Conn, String)
+
 @external(erlang, "session_store_ffi", "exec")
 fn ffi_exec(conn: Conn, sql: String) -> Result(Int, String)
 
@@ -99,7 +102,7 @@ fn ffi_clock() -> Result(#(String, String, Int, Int), String)
 // ---------------------------------------------------------------------
 
 pub opaque type Store {
-  Store(conn: Conn, path: String)
+  Store(conn: Conn, path: String, generation: String)
 }
 
 pub fn path(store: Store) -> String {
@@ -302,8 +305,79 @@ CREATE TABLE IF NOT EXISTS quarantine (
 /// and verify `meta.schema == session_sync.genesis`. A freshly created
 /// store gets its `meta` rows written here; an existing store is only read.
 pub fn open(path: String) -> Result(Store, StoreError) {
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
   use conn <- result.try(ffi_open(path) |> result.map_error(OpenError))
-  let store = Store(conn, path)
+  // Recheck after opening so a newly raised recovery hold cannot admit a writer.
+  let store = Store(conn, path, generation)
+  case recovery_current(store) {
+    Error(reason) -> {
+      let _ = ffi_close(conn)
+      Error(reason)
+    }
+    Ok(_) -> initialize(store)
+  }
+}
+
+/// Operational authority never initializes missing, truncated or empty history.
+pub fn open_existing(path: String) -> Result(Store, StoreError) {
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
+  use conn <- result.try(ffi_open_existing(path) |> result.map_error(OpenError))
+  let store = Store(conn, path, generation)
+  let checked = {
+    use _ <- result.try(recovery_current(store))
+    use metadata <- result.try(run(store, "SELECT value FROM meta WHERE key = 'schema'", []))
+    use _ <- result.try(case metadata {
+      [[CellText(schema)]] if schema == sync.genesis -> Ok(Nil)
+      _ -> Error(SchemaError("operational_coordinator_schema_mismatch"))
+    })
+    use report <- result.try(verify(store))
+    use #(rows, _) <- result.try(head(store))
+    use _ <- result.try(recovery_current(store))
+    case report.ok && rows > 0 {
+      True -> Ok(store)
+      False -> Error(CorruptError("operational_coordinator_requires_verified_nonempty_ledger"))
+    }
+  }
+  case checked {
+    Ok(_) -> checked
+    Error(_) -> { let _ = ffi_close(conn)
+      checked }
+  }
+}
+
+fn recovery_clear(path: String) -> Result(Nil, StoreError) {
+  case simplifile.link_info(path <> ".recovery-lock") {
+    Error(simplifile.Enoent) -> Ok(Nil)
+    Ok(_) -> Error(RefusedError("coordinator_recovery_in_progress"))
+    Error(_) -> Error(RefusedError("coordinator_recovery_lock_unknown"))
+  }
+}
+
+fn recovery_generation(path: String) -> Result(String, StoreError) {
+  let marker = path <> ".recovery-generation"
+  case simplifile.link_info(marker) {
+    Error(simplifile.Enoent) -> Ok("genesis")
+    Ok(info) -> case simplifile.file_info_type(info) == simplifile.File && info.size > 0 && info.size <= 256 {
+      True -> simplifile.read(marker) |> result.map_error(fn(_) { RefusedError("coordinator_generation_unreadable") })
+      False -> Error(RefusedError("coordinator_generation_invalid"))
+    }
+    Error(_) -> Error(RefusedError("coordinator_generation_unknown"))
+  }
+}
+
+fn recovery_current(store: Store) -> Result(Nil, StoreError) {
+  use _ <- result.try(recovery_clear(store.path))
+  use generation <- result.try(recovery_generation(store.path))
+  case generation == store.generation {
+    True -> Ok(Nil)
+    False -> Error(RefusedError("coordinator_connection_generation_retired"))
+  }
+}
+
+fn initialize(store: Store) -> Result(Store, StoreError) {
+  let conn = store.conn
   use _ <- result.try(
     ffi_exec(conn, schema_sql()) |> result.map_error(SchemaError),
   )
@@ -474,8 +548,9 @@ pub fn replay(store: Store) -> Result(sync.State, StoreError) {
 /// plus the current `(boot, now)` pair used to normalize it.
 pub fn observe(
   store: Store,
-  query: fn(sync.State, String, Int) -> Result(Json, StoreError),
-) -> Result(Json, StoreError) {
+  query: fn(sync.State, String, Int) -> Result(a, StoreError),
+) -> Result(a, StoreError) {
+  use _ <- result.try(recovery_current(store))
   use state <- result.try(replay(store))
   use #(host, boot, now, _utc) <- result.try(read_clock())
   use current <- result.try(
@@ -507,10 +582,14 @@ pub fn append(
   command: sync.Command,
   operation_id: String,
 ) -> Result(#(sync.Receipt, Bool), StoreError) {
+  use _ <- result.try(recovery_current(store))
   use command <- result.try(
     sync.canonical_command(command) |> result.map_error(RefusedError),
   )
-  transactionally(store, fn() { append_locked(store, command, operation_id) })
+  transactionally(store, fn() {
+    use _ <- result.try(recovery_current(store))
+    append_locked(store, command, operation_id)
+  })
 }
 
 fn append_locked(

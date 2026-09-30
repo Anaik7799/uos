@@ -59,7 +59,10 @@ fn with_store(
   f: fn(store.Store) -> Result(String, store.StoreError),
 ) -> Result(String, String) {
   use opened <- result.try(
-    store.open(db) |> result.map_error(store.error_to_string),
+    { case db == "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3" {
+      True -> store.open_existing(db)
+      False -> store.open(db)
+    } } |> result.map_error(store.error_to_string),
   )
   let outcome = f(opened)
   let _ = store.close(opened)

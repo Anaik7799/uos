@@ -10,7 +10,7 @@ import gleam/string
 import uos_swarm/board_reader
 import uos_swarm/clock_guard as guard
 import uos_swarm/clock_guard_fetch
-import uos_swarm/session_sync
+import uos_swarm/session_authority
 
 @external(erlang, "clock_guard_ffi", "halt_failure")
 fn halt_failure() -> Nil
@@ -29,14 +29,14 @@ fn print_error(code: String, detail: String) -> Nil {
 }
 
 fn expected_active(root: String) -> Result(List(guard.ExpectedActor), String) {
-  use journal <- result.try(session_sync.read_journal(root))
-  use state <- result.try(session_sync.replay(journal))
-  Ok(
-    state.sessions
-    |> dict.values
-    |> list.filter(fn(session) { !session.retired })
-    |> list.map(fn(session) { guard.expected_actor(session.id, session.refs) }),
-  )
+  session_authority.query_at(root <> "/coordinator.sqlite3", fn(state, _, _) {
+    Ok(
+      state.sessions
+      |> dict.values
+      |> list.filter(fn(session) { !session.retired })
+      |> list.map(fn(session) { guard.expected_actor(session.id, session.refs) }),
+    )
+  })
 }
 
 fn board(

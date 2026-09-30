@@ -26,4 +26,21 @@ let () =
     need (rejected (fun () -> ignore (append db "A"))) "duplicate append must fail";
     ignore (append db "B");
     need (Km_chain.verify db = (2, [])) "failed append rolls back and releases transaction");
-  print_endline "PASS: cycle append, corruption refusal, REPLACE refusal and rollback controls"
+  let path = Filename.temp_file "uos-cycle-recovery-" ".sqlite3" in
+  let db = Sqlite3.db_open path in
+  Fun.protect ~finally:(fun () -> Km_chain.close db; Sys.remove path) (fun () ->
+    Km_chain.ok (Sqlite3.exec db Km_chain.schema);
+    ignore (append db "A");
+    let lock = path ^ ".recovery-lock" in
+    let channel = open_out lock in close_out channel;
+    Fun.protect ~finally:(fun () -> Sys.remove lock) (fun () ->
+      need (rejected (fun () -> ignore (append db "B"))) "recovery hold must fence already-open writer";
+      need (Km_chain.head db = 1) "recovery hold preserves existing rows");
+    ignore (append db "B");
+    need (Km_chain.verify db = (2, [])) "writer resumes after recovery hold ends";
+    let generation = path ^ ".recovery-generation" in
+    let channel = open_out generation in output_string channel "generation-2"; close_out channel;
+    Fun.protect ~finally:(fun () -> Sys.remove generation) (fun () ->
+      need (rejected (fun () -> ignore (append db "C"))) "old generation refuses append after unlock";
+      need (Km_chain.head db = 2) "generation refusal preserves chain"));
+  print_endline "PASS: cycle append, corruption refusal, REPLACE refusal, recovery hold and rollback controls"
