@@ -1,7 +1,7 @@
 {
   "schema": "uos.direct-tool-dispatch-spec.v1",
-  "observed_at": "2026-10-01T04:50:43Z",
-  "status": "SPECIFIED_NOT_YET_VERIFIED",
+  "observed_at": "2026-10-01T05:48:00Z",
+  "status": "SCOPED_EXECUTABLE_VERIFICATION_PASS",
   "plan": "uos/direct-dispatch/20261001-0440",
   "base": "fd4950eebf490b9972e204488e719978ee7a5522",
   "scope": {
@@ -9,7 +9,7 @@
       "query_doctor",
       "query_saplan"
     ],
-    "transport": "trusted local CLI, optionally bounded stdio MCP",
+    "transport": "Trusted same-Unix-user local CLI; MCP transport not implemented",
     "excluded": [
       "Telegram payload authority",
       "mutating executors",
@@ -22,61 +22,103 @@
       "id": "DD-01",
       "predicate": "Identity comes from a trusted local launcher, never tool request arguments.",
       "falsifier": "Missing/forged request binding refused; cooperative Unix boundary explicit.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     },
     {
       "id": "DD-02",
       "predicate": "Only implemented bounded read operations are dispatchable.",
       "falsifier": "query_doctor and query_saplan positive; every mutation/unknown tool refused.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     },
     {
       "id": "DD-03",
       "predicate": "Canonical task must be executing for bound worker and attempt, with completed dependencies.",
       "falsifier": "Wrong owner, attempt, blocked or terminal task refused.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     },
     {
       "id": "DD-04",
       "predicate": "Canonical coordinator task lease must match session and epoch in current boot.",
       "falsifier": "Missing/released/wrong epoch and boot continuity failure refused.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ],
+      "limits": "Positive current epoch observed; complete forged-boot and epoch fault-injection matrix not repeated in this slice."
     },
     {
       "id": "DD-05",
       "predicate": "Fresh clock and sufficient task/coordinator lease windows must surround execution.",
       "falsifier": "Authority change during observation discards output; no success after expiry.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ],
+      "limits": "Before/after production fences and post-fence failure unit tested; host-clock discontinuity injection not performed."
     },
     {
       "id": "DD-06",
       "predicate": "Tool arguments cannot select a DB, path, command, authority or arbitrary SQL.",
       "falsifier": "Only strict empty object accepted; malformed/oversized/extra fields refused.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     },
     {
       "id": "DD-07",
       "predicate": "Reports distinguish policy, observed task state and unobserved runtime health.",
       "falsifier": "Doctor ceiling93, unknown counts/purity; no simulated mutation success.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     },
     {
       "id": "DD-08",
       "predicate": "Bounded read repeats may reobserve and never claim exactly-once effects.",
       "falsifier": "Repeated observations do not mutate task authority or external services.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     },
     {
       "id": "DD-09",
       "predicate": "Sa-plan results and private message payloads are absent from public task responses.",
       "falsifier": "Only scoped non-sensitive identifiers/states/counts; sanitized errors.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     },
     {
       "id": "DD-10",
       "predicate": "Exact source, artifact and loaded runtime are independently reviewed before main advancement.",
       "falsifier": "Source candidate and immutable release identity match observed process.",
-      "evidence_status": "UNRUN"
+      "evidence_status": "SCOPED_PASS",
+      "evidence_refs": [
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-source-review2-pass.json",
+        "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0508-independent-runtime-verify-pass.json"
+      ]
     }
   ],
   "fractal_layers": [
@@ -86,5 +128,7 @@
     "L5 feedback",
     "L9 provenance"
   ],
-  "authority": "Specification is not admission; candidate-bound executable tests and independent review are required."
+  "authority": "Executable bounded invariant evidence; not exhaustive proof, IAM, transport admission or global system admission.",
+  "candidate": "77699b99f269aecd254f5931cccfa676fc41e093",
+  "release": "f080822e321b03cc044a906130ab4a2b129b6fbf0a16c6c979e188478982ee3e"
 }

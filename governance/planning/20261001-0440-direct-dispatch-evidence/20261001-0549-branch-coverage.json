@@ -1,0 +1,39 @@
+{
+  "observed_at": "2026-10-01T05:49:00Z",
+  "base": "fd4950eebf490b9972e204488e719978ee7a5522",
+  "reviewed_source": "77699b99f269aecd254f5931cccfa676fc41e093",
+  "active_bookmarks_outside_main": 0,
+  "original_historical_heads": [
+    "7af086121d547a279802d54fa49c5f54c70dbb27",
+    "1ad593ae55a3f2e3bbe9ed8a63f576fc18940327",
+    "8f80accd787f66acce99d2d7339e36ec32f9f00c",
+    "f09ca55a4517d147364a2d9c962c750782323bbe",
+    "57b5579be29765ea946411324e1cc9c95d6b2bee",
+    "0bfe5cb47dfd054f9833084dd876d150eb4dddd8",
+    "e623b584b356bf5ebb0d346a1623e6df7def8c33",
+    "dd5b6f753e72f4de6cc27d843db8cf77f7e2101b",
+    "8d0b9d340ec3401fbf7ef93c23700ee9c184de12",
+    "09f7620f0a9a4d0256fb5893f6416be69468d054",
+    "d2350ecb6eb23835b7fde923914b15d63d697e64",
+    "5f6b9a12e9dd2cabcf463b1e71a8a129d0dcfc3d",
+    "ff0ed665fdb8c70331fefaf0b2459d2d8cf3c56f",
+    "5486a981678414f75caa106937b6fb50649e57bb",
+    "0b23ec6b46c8754c83d4e04fa2f284f0cffb6889",
+    "0e75c0ffe4176e6b649b38810df802cbe55ffeb8",
+    "6968cb2bbb374a95f458b4ceeffec98b9dd6fb16",
+    "fb945a48b815edefe6a7dada0032784a374c985b",
+    "501fdbffc9089a347a4f6d50a5b938b08d1630f5"
+  ],
+  "count": 19,
+  "scope": "All bookmarked branches are ancestors of main. AGY corrected implementation d58bc94d and fix835b6d1f are ancestors of reviewed77699b99. Nineteen original historical nonempty heads remain preserved under prior independent selective-port classifications. Superseded unsafe candidate e7de43dc is not replayed; no quarantined evidence is admitted.",
+  "prior_classification": [
+    "20260930-0852-independent-historical-head-classification.json",
+    "20260930-1000-independent-historical-head-supplement.json",
+    "20260930-1134-independent-superset-pass.json"
+  ],
+  "main_advance": "ACCEPTED_SOURCE_ON_MAIN; administrative closure descendant follows",
+  "new_implementation_lineages": [
+    "d58bc94d3f043b71003400c77f536c3a1bc036db",
+    "835b6d1f34ef0c651a10c00638f1dc272ed997e8"
+  ]
+}

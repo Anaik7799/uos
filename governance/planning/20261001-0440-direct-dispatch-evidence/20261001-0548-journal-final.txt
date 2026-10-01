@@ -1,0 +1,14 @@
+Evaluating SC-JOURNAL-v3 Anticipatory Epistemic Ledger:
+Target: docs/journal/20261001-0443-canonical-direct-tool-dispatch.md
+  [PASS] CHK-TIME: Valid YYYYMMDD-HHSS- timestamp prefix in filename
+  [PASS] CHK-SECT: All 13 canonical sections present in exact sequential order
+  [PASS] CHK-ACH: Engine 1 (ACH Hypothesis Disconfirmation) verified in Section 4
+  [PASS] CHK-ADMR: Engine 2 (Admiralty Protocol >= B2) verified in Section 7
+  [PASS] CHK-RED: Engine 4 (Devil's Advocate / Falsification) present in Section 6/10
+  [PASS] CHK-DECAY: Engine 3 (Bayesian Trust & Lyapunov Stability) present in Section 11
+  [PASS] CHK-PRED: Engine 7 (Predictive Forecast & Brier Horizon) present in Section 13
+  [PASS] CHK-MUDA: Zero-Muda purity verified (0 Bevy, 0 Graphite)
+  [PASS] CHK-DRIVE: Hardware storage interlock respected (serial redacted)
+  [PASS] CHK-DIAG: SC-DIAGRAM-001 ASCII diagram source present alongside mermaid (CO-PRESENCE only; topology parity is checked by G-DIAGRAM)
+
+Summary: 10/10 Verification Checks Passed (PASS)

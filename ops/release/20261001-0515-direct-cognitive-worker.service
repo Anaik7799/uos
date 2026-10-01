@@ -1,0 +1,22 @@
+[Unit]
+Description=UOS cognitive worker (verified immutable OTP 29 capsule)
+After=network-online.target c3i-zenoh-router-1.service uos-telegram-bridge.service
+Wants=network-online.target c3i-zenoh-router-1.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/an/NAS-setup/uos
+ExecStartPre=/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml /home/an/NAS-setup/uos/tools/ecology_release.ml verify /home/an/NAS-setup/uos/var/releases/ecology/20261001-0511-f080822e321b03cc044a906130ab4a2b129b6fbf0a16c6c979e188478982ee3e
+ExecStart=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard("/home/an/NAS-setup/uos/var/releases/ecology/20261001-0511-f080822e321b03cc044a906130ab4a2b129b6fbf0a16c6c979e188478982ee3e/apps/*/ebin")),cognitive_runtime_cli:main().'
+Environment=ERL_CRASH_DUMP=/dev/null
+Restart=always
+RestartSec=5
+KillMode=control-group
+TimeoutStartSec=45
+TimeoutStopSec=30
+PassEnvironment=OPENROUTER_API_KEY TELEGRAM_BOT_TOKEN TELEGRAM_TOKEN TELEGRAM_CHAT_ID
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
