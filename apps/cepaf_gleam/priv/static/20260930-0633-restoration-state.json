@@ -1,109 +1,226 @@
 {
   "schema": "uos.restoration-dashboard.v1",
-  "updated_at": "2026-10-01T02:50:53Z",
+  "updated_at": "2026-10-01T03:22:16Z",
   "plan": "uos/fractal-recheck/20261001-0226",
-  "overall": "OPERATIONS STABLE · DIAGNOSTIC AND DISPATCH REPAIR UNDER REVIEW",
-  "goal_met": false,
+  "overall": "SCOPED RECOVERY VERIFIED · ACCEPTED CODE ON MAIN",
+  "goal_met": true,
   "as_is": [
     [
-      "Cockpit",
-      "New immutable capsule active/enabled, HTTP200. Bounded zenoh_rest reachable; actual publication acknowledged."
+      "Coordinator and cycle integrity",
+      "Fresh canonical checks pass. Original failures and rejected evidence remain preserved."
     ],
     [
-      "Coordinator",
-      "Recovered canonical epoch passes digest, chain, typed replay and trigger checks; only final integration ownership remains held."
+      "Cognitive worker",
+      "Immutable capsule 142d21d7; PID 891443; reviewed startup identities match; zero automatic restarts."
     ],
     [
-      "Cycle ledger",
-      "332 verified rows,24 holds,0 releases; original550-row history retained privately."
+      "Doctor and EV diagnostics",
+      "Canonical EV ceiling 93. Unmeasured verification counts and purity are explicitly unknown."
     ],
     [
-      "Ecology",
-      "Overnight runtime stable: cycle64249 observed2026-10-01UTC; four managed services running/enabled, samePIDs and zero restarts."
+      "Tool authority",
+      "Invented leases and caller-supplied quorum cannot authorize direct tool dispatch."
     ],
     [
-      "Code integration",
-      "All pre-existing bookmarked code is on main db331710;19historical heads remain preserved with applicable source selectively integrated. New diagnostic correction is in development."
+      "Existing services",
+      "Cockpit, ecology and both clock services retain their original PIDs; ecology cycles advance."
     ],
     [
-      "Google AGY",
-      "Actual AGY performing fresh RCA and isolated doctor response repair; independent review will precede merge."
+      "Clock contract",
+      "The session board reference is repaired. Both guards report healthy with zero faults."
     ],
     [
-      "Clock consumers",
-      "Both healthy with fault_count0 and Lamportfloor316; prior recovery session retired successfully. New audit session has separate bounded ownership."
+      "Mainline coverage",
+      "Accepted source 9cea3c6c is on main. All bookmarked branches are ancestors; 19 historical heads remain preserved with applicable code accounted for."
     ],
     [
-      "Remaining limitations",
-      "Native NIF features/subscriptions unavailable. Free provider may rate-limit; initial429 preserved and one reviewed recovery succeeded. Global EV admission unchanged."
+      "Admission boundary",
+      "EV 94–109 remain NOT_ADMITTED. Source integration and scoped health checks do not grant global admission."
     ]
   ],
   "to_be": [
-    "Coordinator and cycle ledger pass fresh live integrity checks; originals remain preserved.",
-    "Ecology runs on pinned OTP29 with real MAX inference, advancing cycles and no restart loop.",
-    "Clock consumers use recovered canonical SQLite state and exact released artifacts.",
-    "All applicable branch code is integrated into main, with independently reviewed release evidence.",
-    "Task authority, rollback evidence, service health and usable Tailnet interfaces meet final acceptance.",
-    "Free advisory selects a live allowlisted zero-price model with no paid fallback.",
-    "Cockpit publication/query uses an observed bounded backend, with unsupported operations explicit."
+    "Achieved: reviewed source and closure evidence consolidated on main.",
+    "Achieved: five stable service invocations, matching cognitive code and healthy clock guards.",
+    "Achieved: canonical integrity checks, truthful diagnostics and fail-closed effect authority.",
+    "Residual limits remain explicit; final coordination retirement follows publication."
   ],
   "tasks": [
     {
       "id": "INTAKE",
       "title": "Observe baseline, authority and branch delta",
       "state": "completed",
-      "detail": "Observe baseline, authority and branch delta"
+      "detail": "Verified baseline integrity, services and branch coverage."
     },
     {
       "id": "AGY_RCA",
       "title": "AGY independently checks actual fractal failures and branch coverage",
       "state": "completed",
-      "detail": "AGY independently checks actual fractal failures and branch coverage"
+      "detail": "Actual Google AGY traced the failures and checked historical source coverage."
     },
     {
       "id": "CLOSE",
       "title": "Resolve verified deltas and integrate reviewed closure evidence",
-      "state": "executing",
-      "detail": "Resolve verified deltas and integrate reviewed closure evidence"
+      "state": "completed",
+      "detail": "All ten tasks are complete. Reviewed source and closure evidence are on main change lkovqsvy; session ownership retirement follows publication."
     },
     {
       "id": "DOCTOR_FIX",
       "title": "AGY repairs false doctor admission and test claims",
       "state": "completed",
-      "detail": "First candidate frozen; independent review found two remaining false claims; correction executing under DISPATCH_FIX."
+      "detail": "Initial implementation frozen; its independent rejection remains preserved."
     },
     {
       "id": "SOURCE_REVIEW",
       "title": "Independently verify diagnostic truth and scope before merge",
-      "state": "executing",
-      "detail": "Independently verify diagnostic truth and scope before merge"
+      "state": "completed",
+      "detail": "Independent source tests and exact candidate review passed."
     },
     {
       "id": "DISPATCH_FIX",
-      "title": "Remove synthetic dispatch lease and false authority; fail closed pending canonical proof",
-      "state": "executing",
-      "detail": "Remove synthetic dispatch lease and false authority; fail closed pending canonical proof"
+      "title": "Contain fabricated dispatch authority and correct first doctor review purity/count failures",
+      "state": "completed",
+      "detail": "Corrected diagnostic truth and removed fabricated lease authority."
     },
     {
       "id": "RUNTIME_PREP",
       "title": "Implement finite candidate-bound cognitive install and restart; prepare immutable release, no production effects",
-      "state": "executing",
-      "detail": "Implement finite candidate-bound cognitive install and restart; prepare immutable release, no production effects"
+      "state": "completed",
+      "detail": "Built and verified the immutable capsule and proposed worker unit."
     },
     {
       "id": "RELEASE_REVIEW",
       "title": "Independently review immutable source, unit, grants, rollback and dispatch containment",
-      "state": "available",
-      "detail": "Independently review immutable source, unit, grants, rollback and dispatch containment"
+      "state": "completed",
+      "detail": "Independently verified the capsule, unit and three finite grants."
     },
     {
       "id": "RELEASE",
       "title": "Execute only independently reviewed cognitive unit installation and restart with current fences",
-      "state": "available",
-      "detail": "Execute only independently reviewed cognitive unit installation and restart with current fences"
+      "state": "completed",
+      "detail": "Installed and restarted the worker; original configuration preserved."
+    },
+    {
+      "id": "RUNTIME_VERIFY",
+      "title": "Independently observe loaded cognitive correction and unchanged restored services",
+      "state": "completed",
+      "detail": "Independently verified loaded identities, service stability, integrity and repaired clocks."
     }
   ],
   "risks": [
+    {
+      "name": "False diagnostic claims",
+      "criticality": "P1 · operator evidence",
+      "status": "Corrected and independently verified in loaded code",
+      "mitigation": "One truthful projection separates policy from observation; negative tests reject invented counts and purity."
+    },
+    {
+      "name": "Fabricated dispatch authority",
+      "criticality": "P0 · effect authorization",
+      "status": "Contained; direct tool dispatch remains unavailable without canonical authority",
+      "mitigation": "No synthetic lease or unconditional authority flag; caller-supplied lease and quorum fail closed."
+    },
+    {
+      "name": "Missing session board reference",
+      "criticality": "P1 · coordination",
+      "status": "Repaired; original clock HOLD preserved",
+      "mitigation": "Retain explicit board reference on every heartbeat, inspect both guard reports and retire the session."
+    },
+    {
+      "name": "Release executes different code",
+      "criticality": "P1 · runtime integrity",
+      "status": "Exact immutable artifact and loaded identities verified",
+      "mitigation": "Independent grants bind control IDs, unit, dependencies, task attempt, resource epoch and expiry."
+    },
+    {
+      "name": "Unsafe historical merge",
+      "criticality": "P1 · provenance",
+      "status": "Applicable code accounted for; historical originals preserved",
+      "mitigation": "Use standalone JJ ancestry and independent lineage reviews; do not replay quarantined authority."
+    },
+    {
+      "name": "Intent delivery uncertainty",
+      "criticality": "P2 · availability",
+      "status": "Residual; delivery guarantees were not established",
+      "mitigation": "No synthetic message tests or automatic replay; existing polling semantics remain explicitly documented."
+    },
+    {
+      "name": "Premature global admission",
+      "criticality": "P1 · governance",
+      "status": "Admission safeguards remain intact",
+      "mitigation": "Keep EV ceiling 93 and explicit NOT_ADMITTED range; scoped tests and runtime checks do not promote admission."
+    },
+    {
+      "name": "External free-provider capacity",
+      "criticality": "P2 · availability",
+      "status": "Residual external dependency",
+      "mitigation": "Retain bounded free-only policy and explicit failures; no paid fallback."
+    }
+  ],
+  "evidence": {
+    "swarm": 695,
+    "models": 242,
+    "web": 37,
+    "harness": 95,
+    "runtime_policy": 6,
+    "ecology": 45,
+    "receipt": 67,
+    "agy_reported": 44,
+    "counts_note": "Parent: 24 focused checks. Independent reviewer: 22 EUnit tests plus 5 assertion groups. Risk checker: 375 baseline and 32,860 adversarial checks. These overlap and are not summed; no universal admission is inferred.",
+    "cycle_candidate": "332 rows ·24 holds ·0 releases",
+    "coordinator_candidate": "Activated fresh epoch; subsequent actual events pass integrity",
+    "risk": "P0 authority defect contained; P1 release and coordination verified",
+    "main": "db331710fe188bb9160b6a8d6b2b9dc5247be813",
+    "integration": "Previous reviewed recovery integrated atdb331710; new diagnostic repair pending.",
+    "strict_runtime_native": 30,
+    "release": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+    "private_runtime": "OTP29 / ERTS17.0.5; MAX26.5; cockpit and dashboard HTTP200",
+    "residuals": "Native subscriptions unavailable; external free capacity variable; global EV/formal admission and visual/manual UI acceptance not claimed.",
+    "reclaim_plan": "uos/claim-recovery/20260930-0758",
+    "transport_tests": 34,
+    "reclaim_checker": "Independent source review PASS, exact AGY reclaim attempt2 and active-check PASS. Separate REPAIR task completed; journal10/10.",
+    "candidate": "0131154f1b02e78e4b5067476c9d75cac672a381",
+    "candidate_release": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
+    "final_closure": 45,
+    "main_includes_candidate": true,
+    "summary": "Google AGY repairs and independent source, artifact, grant and live reviews passed. Five service invocations are stable with zero automatic restarts; both clock guards are healthy with zero faults. Coordinator and cycle integrity pass. Accepted source 9cea3c6c is on main. All 10 canonical tasks are complete. Main integration change: lkovqsvy.",
+    "historical_classification": "19original lineages independently reconciled; applicable source selectively restored and verified. Original historical ledgers and HOLD/UNKNOWN evidence retained without replay or new admission.",
+    "live_runtime_verified": true,
+    "superset_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
+    "source_consolidation_verified": true
+  },
+  "checks": [
+    "CHK-01 TIME · synchronized host observed",
+    "CHK-02 TAILNET · dashboard serving checked separately",
+    "CHK-03 FRACTAL · L0/L2/L4/L8 scope recorded",
+    "CHK-04 KM · scoped evidence linked; full graph admission pending",
+    "CHK-05 ZERO-MUDA · no new prohibited dependency",
+    "CHK-06 GRAPH · no new foreign graph NIF",
+    "CHK-07 DRIVE · drives untouched; interlock not exercised",
+    "CHK-08 C1–C8 · scoped regression suites PASS; broader system tests not claimed",
+    "CHK-09 MATH · bounded oracle evidence; global proofs not claimed",
+    "CHK-10 TEST MODES · unit/integration/negative controls observed",
+    "CHK-11 REGRESSION · corrected source and managed runtime passed scoped review",
+    "CHK-12 GLEAM/OTP · actual immutable OTP 29 / ERTS 17.0.5 verified",
+    "CHK-13 HERMES · canonical cycle oracle passes candidate",
+    "CHK-14 ZIGVM · unchanged; broad kernel verification not claimed",
+    "CHK-15 MAX · prior Sep30 managed inference PASS; existing ecology unchanged",
+    "CHK-16 OTEL · full propagation acceptance not claimed",
+    "CHK-17 SOVEREIGN · independent source, capsule, grant and live reviews passed",
+    "CHK-18 JUJUTSU · reviewed and stabilized repair code on main"
+  ],
+  "prior_restoration": {
+    "plan": "uos/full-restoration/20260930-0515",
+    "state": "8/8 completed; independent bounded acceptance PASS",
+    "main": "9d905802f2f42ee93dcadfe25ec65743307e0d5a"
+  },
+  "previous_recovery": {
+    "plan": "uos/capability-restoration/20260930-0734",
+    "completed_tasks": 14,
+    "main": "db331710fe188bb9160b6a8d6b2b9dc5247be813",
+    "source_review": "governance/planning/20260930-0754-capability-evidence/20260930-1134-independent-superset-pass.json",
+    "session_retired": true
+  },
+  "prior_recovery_risks": [
     {
       "name": "Invalid historical authority",
       "criticality": "P1 · high",
@@ -135,6 +252,12 @@
       "mitigation": "Standalone JJ multi-parent integration and pre-restoration bookmark. Preserve current routes, stronger controls and historical evidence."
     },
     {
+      "name": "Premature completion claim",
+      "criticality": "P1 · high",
+      "status": "Independent runtime and source acceptance passed;14tasks complete",
+      "mitigation": "Final acceptance requires live observations and reviewed candidate identity. Test counts do not grant admission."
+    },
+    {
       "name": "Unsafe capability shortcut",
       "criticality": "P1 · high",
       "status": "Live bounded zero-cost advisory and REST verified",
@@ -163,82 +286,6 @@
       "criticality": "High · L3 execution / L9 provenance",
       "status": "Verified scoped closure",
       "mitigation": "19-lineage audit, exact18integrated source hashes, private path/read/write controls, monotonic process cleanup, collision and lifecycle falsifiers; original failures and historical admission limits preserved."
-    },
-    {
-      "name": "Diagnostic false admission claims",
-      "criticality": "P1 · L0/L9",
-      "status": "Reproduced; repair executing",
-      "mitigation": "Replace hard-coded doctor text/JSON ratification and green test claims with canonical EV ceiling and explicit unobserved state; test actual routes, independent review before merge."
-    },
-    {
-      "name": "Synthetic dispatch authority",
-      "criticality": "P0 · authority",
-      "status": "Reproduced; containment executing",
-      "mitigation": "Remove fabricated lease and constant verified flag; reject direct dispatch without canonical authority; retain pure diagnostics."
     }
-  ],
-  "evidence": {
-    "swarm": 695,
-    "models": 242,
-    "web": 37,
-    "harness": 95,
-    "runtime_policy": 6,
-    "ecology": 45,
-    "receipt": 67,
-    "agy_reported": 44,
-    "counts_note": "Scoped suites overlap. These counts are not additive reliability or system-admission evidence.",
-    "cycle_candidate": "332 rows ·24 holds ·0 releases",
-    "coordinator_candidate": "Activated fresh epoch; subsequent actual events pass integrity",
-    "risk": "Raw FMEA S4 × O3 × Det3 =36; constrained priority score960.",
-    "main": "db331710fe188bb9160b6a8d6b2b9dc5247be813",
-    "integration": "Previous reviewed recovery integrated atdb331710; new diagnostic repair pending.",
-    "strict_runtime_native": 30,
-    "release": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
-    "private_runtime": "OTP29 / ERTS17.0.5; MAX26.5; cockpit and dashboard HTTP200",
-    "residuals": "Native subscriptions unavailable; external free capacity variable; global EV/formal admission and visual/manual UI acceptance not claimed.",
-    "reclaim_plan": "uos/claim-recovery/20260930-0758",
-    "transport_tests": 34,
-    "reclaim_checker": "Independent source review PASS, exact AGY reclaim attempt2 and active-check PASS. Separate REPAIR task completed; journal10/10.",
-    "candidate": "0131154f1b02e78e4b5067476c9d75cac672a381",
-    "candidate_release": "5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872",
-    "final_closure": 45,
-    "main_includes_candidate": true,
-    "summary": "Four restored managed services stable. New doctor candidate32b51d5b failed independent truth review; corrected candidate pending. Runtime adapter8tests passed; no new production effects.",
-    "historical_classification": "19original lineages independently reconciled; applicable source selectively restored and verified. Original historical ledgers and HOLD/UNKNOWN evidence retained without replay or new admission.",
-    "live_runtime_verified": true,
-    "superset_candidate": "1a816aeb0dd2b4266cda28d40728ce968a70b10a",
-    "source_consolidation_verified": true
-  },
-  "checks": [
-    "CHK-01 TIME · synchronized host observed",
-    "CHK-02 TAILNET · dashboard serving checked separately",
-    "CHK-03 FRACTAL · L0/L2/L4/L8 scope recorded",
-    "CHK-04 KM · scoped evidence linked; full graph admission pending",
-    "CHK-05 ZERO-MUDA · no new prohibited dependency",
-    "CHK-06 GRAPH · no new foreign graph NIF",
-    "CHK-07 DRIVE · drives untouched; interlock not exercised",
-    "CHK-08 C1–C8 · scoped regression suites PASS; broader system tests not claimed",
-    "CHK-09 MATH · bounded oracle evidence; global proofs not claimed",
-    "CHK-10 TEST MODES · unit/integration/negative controls observed",
-    "CHK-11 REGRESSION · scoped candidate and managed runtime PASS",
-    "CHK-12 GLEAM/OTP · actual released OTP29 verified",
-    "CHK-13 HERMES · canonical cycle oracle passes candidate",
-    "CHK-14 ZIGVM · unchanged; broad kernel verification not claimed",
-    "CHK-15 MAX · actual managed inference PASS",
-    "CHK-16 OTEL · full propagation acceptance not claimed",
-    "CHK-17 SOVEREIGN · independent source/capsule/grants/live reviews PASS",
-    "CHK-18 JUJUTSU · reviewed recovery code and closure evidence on main"
-  ],
-  "prior_restoration": {
-    "plan": "uos/full-restoration/20260930-0515",
-    "state": "8/8 completed; independent bounded acceptance PASS",
-    "main": "9d905802f2f42ee93dcadfe25ec65743307e0d5a"
-  },
-  "previous_recovery": {
-    "plan": "uos/capability-restoration/20260930-0734",
-    "completed_tasks": 14,
-    "main": "db331710fe188bb9160b6a8d6b2b9dc5247be813",
-    "source_review": "governance/planning/20260930-0754-capability-evidence/20260930-1134-independent-superset-pass.json",
-    "session_retired": true
-  }
+  ]
 }

@@ -1,0 +1,30 @@
+======================== EUnit ========================
+module 'cognitive_doctor_truth_test'
+  cognitive_doctor_truth_test: doctor_directive_metadata_test...[0.012 s] ok
+  cognitive_doctor_truth_test: ev_directive_metadata_test...ok
+  cognitive_doctor_truth_test: doctor_markdown_truth_and_negative_test...[0.014 s] ok
+  cognitive_doctor_truth_test: doctor_directive_reply_markdown_test...ok
+  cognitive_doctor_truth_test: query_doctor_harness_tool_json_test...[0.004 s] ok
+  cognitive_doctor_truth_test: doctor_pure_projection_model_test...ok
+  cognitive_doctor_truth_test: dispatch_missing_lease_fails_closed_test...[0.004 s] ok
+  cognitive_doctor_truth_test: dispatch_synthetic_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: dispatch_expired_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: dispatch_quorum_true_unverified_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: dispatch_quorum_true_missing_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: tool_directive_no_synthetic_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: action_directive_no_synthetic_lease_fails_closed_test...ok
+  cognitive_doctor_truth_test: doctor_and_ev_pure_projection_unregressed_test...ok
+  [done in 0.076 s]
+module 'restoration_runtime_test'
+  restoration_runtime_test: arbitrary_effects_are_refused_test...[0.003 s] ok
+  restoration_runtime_test: release_instance_path_injection_is_refused_test...[0.003 s] ok
+  restoration_runtime_test: service_authority_is_separated_by_resource_test...ok
+  restoration_runtime_test: missing_private_review_cannot_execute_test...[0.003 s] ok
+  restoration_runtime_test: runtime_control_set_must_match_exactly_test...[0.002 s] ok
+  restoration_runtime_test: authority_window_covers_effect_and_cleanup_test...ok
+  restoration_runtime_test: capability_workflow_is_exact_and_prior_completed_plan_is_refused_test...ok
+  restoration_runtime_test: cognitive_release_cannot_inherit_unrelated_effects_test...ok
+  [done in 0.035 s]
+=======================================================
+  All 22 tests passed.
+{"status":"PASS","bindings":[{"module":"cognitive_runtime_cli","path":"/home/an/NAS-setup/uos/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cognitive_runtime_cli.beam","sha256":"75f808ca8b3eec64e314eec44ea483320743b42e21625813080ce81bdc2b6558","loaded_md5":"b722278ce69698718d30e49b0d412df8"},{"module":"cepaf_gleam@harness@cognitive_worker","path":"/home/an/NAS-setup/uos/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@cognitive_worker.beam","sha256":"d9684044465b9a5b4953d1f511322f09132a1585ccee6bcdb25de6904dbe14a7","loaded_md5":"ccf20599777c9532bab91aff6c945baf"},{"module":"cepaf_gleam@harness@doctor_projection","path":"/home/an/NAS-setup/uos/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@doctor_projection.beam","sha256":"75907105185bc6ff964bbae9f35b67368b12983413cf01bf63c17c9da679e73d","loaded_md5":"46e0e8a36553a6ce6d09f3714cf0755e"},{"module":"cepaf_gleam@harness@tool_fenced_dispatcher","path":"/home/an/NAS-setup/uos/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@tool_fenced_dispatcher.beam","sha256":"ec073b687bfbe3aa8641c07b86e54ee6e401af8008911cda15ab608c6d7070c9","loaded_md5":"31c24a32c33d5ebf27ff8fa7b5ff9af9"},{"module":"restoration_runtime_cli","path":"/home/an/NAS-setup/uos/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/restoration_runtime_cli.beam","sha256":"f649eab6ae9c19b5434c8bec5a0ef38e9df563973111c86b28355269ea004074","loaded_md5":"766153301ef70099bbf6b11309ae5de6"}],"candidate":"9cea3c6c0975492d3aeb174b0d0bdc85c76e694c","eunit_tests":22,"independent_groups":["decoded_json_truth","doctor_ev_actual_routes_and_metadata","missing_and_fabricated_leases_with_both_quorum_values","actual_tool_action_alias_refusals","pure_startup_identity_matches_tool_projection"],"startup":{"admission":"NOT_GRANTED_BY_STARTUP_OBSERVATION","doctor":"{\"doctor_status\":\"UNOBSERVED_RUNTIME\",\"admitted_ev_ceiling\":93,\"ev_cycles_verified\":null,\"unadmitted_range\":\"EV-94..EV-109\",\"admission_status\":\"NOT_ADMITTED\",\"checks_passed\":\"UNOBSERVED\",\"gate\":\"UNOBSERVED\",\"test_state\":\"UNOBSERVED (requires candidate-bound execution; no ad-hoc green)\",\"zero_muda\":null,\"observed_in_query\":false}","modules":{"cepaf_gleam@harness@cognitive_worker":"ccf20599777c9532bab91aff6c945baf","cepaf_gleam@harness@doctor_projection":"46e0e8a36553a6ce6d09f3714cf0755e","cepaf_gleam@harness@tool_fenced_dispatcher":"31c24a32c33d5ebf27ff8fa7b5ff9af9","cognitive_runtime_cli":"b722278ce69698718d30e49b0d412df8"},"schema":"uos.cognitive-runtime-observation.v1"}}

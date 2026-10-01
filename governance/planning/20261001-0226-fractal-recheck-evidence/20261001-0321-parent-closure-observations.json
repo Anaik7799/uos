@@ -1,0 +1,73 @@
+{
+  "observed_at": "2026-10-01T03:21:25Z",
+  "source": "9cea3c6c0975492d3aeb174b0d0bdc85c76e694c",
+  "release": "/home/an/NAS-setup/uos/var/releases/ecology/20261001-0336-142d21d7dbb5a55ba019ad3a8ca6debbb3121632f63568f9412c28a6518d2090",
+  "observations": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "coordinator",
+        "chunk_id": "0e0111",
+        "wall_time_seconds": 0.065487958,
+        "exit_code": 0,
+        "original_token_count": 62,
+        "output": "{\"ok\":true,\"checked\":174,\"sequence_ok\":true,\"chain_ok\":true,\"digest_ok\":true,\"replay_ok\":true,\"nonempty\":true,\"authority\":\"integrity_observation_only\",\"triggers_present\":true,\"trigger_definitions_ok\":true,\"unique_operations\":true,\"failures\":[]}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "cycles",
+        "chunk_id": "7ae314",
+        "wall_time_seconds": 0.000011511,
+        "exit_code": 0,
+        "original_token_count": 12,
+        "output": "{\"ok\":true,\"rows\":332,\"holds\":24,\"releases\":0}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "services",
+        "chunk_id": "770a45",
+        "wall_time_seconds": 0.000006853,
+        "exit_code": 0,
+        "original_token_count": 138,
+        "output": "Id=uos-cognitive-worker.service\nActiveState=active\nSubState=running\nMainPID=891443\nNRestarts=0\n\nId=c3i-gleam-server.service\nActiveState=active\nSubState=running\nMainPID=293276\nNRestarts=0\n\nId=uos-clock-guard@primary.service\nActiveState=active\nSubState=running\nMainPID=224485\nNRestarts=0\n\nId=uos-clock-guard@backup.service\nActiveState=active\nSubState=running\nMainPID=224803\nNRestarts=0\n\nId=uos-ecology@20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872.service\nActiveState=active\nSubState=running\nMainPID=292729\nNRestarts=0\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "clocks",
+        "chunk_id": "9d60a1",
+        "wall_time_seconds": 0.000010019,
+        "exit_code": 0,
+        "original_token_count": 198,
+        "output": "{\"schema\":\"uos-clock-guard/v1\",\"sequence\":2428,\"healthy\":true,\"source\":\"chronyc:-c-tracking:reference-utc\",\"host_id\":\"nas-1\",\"boot_id\":\"b0cc84fb-12ae-40ae-a5be-6d488272efb3\",\"observed_utc_us\":1790824827012132,\"observed_boot_us\":89925880000,\"offset_us\":212,\"uncertainty_us\":16324,\"reference_age_us\":278305861,\"lamport_floor\":316,\"fault_count\":0,\"faults_returned\":0,\"faults_omitted\":0,\"faults\":[]}\n{\"schema\":\"uos-clock-guard/v1\",\"sequence\":2428,\"healthy\":true,\"source\":\"chronyc:-c-tracking:reference-utc\",\"host_id\":\"nas-1\",\"boot_id\":\"b0cc84fb-12ae-40ae-a5be-6d488272efb3\",\"observed_utc_us\":1790824836799731,\"observed_boot_us\":89935670000,\"offset_us\":211,\"uncertainty_us\":16334,\"reference_age_us\":288093460,\"lamport_floor\":316,\"fault_count\":0,\"faults_returned\":0,\"faults_omitted\":0,\"faults\":[]}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "ecology",
+        "chunk_id": "842e7c",
+        "wall_time_seconds": 0.000008486,
+        "exit_code": 0,
+        "original_token_count": 30,
+        "output": "{\"status\":\"running\",\"cycle\":67405,\"application_admitted\":false,\"scope\":\"shared ecology actor and observed OTP identity\"}"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "conflicts",
+        "chunk_id": "40dbdd",
+        "wall_time_seconds": 0.000014427,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    }
+  ]
+}

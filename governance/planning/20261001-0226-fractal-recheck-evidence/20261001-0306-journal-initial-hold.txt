@@ -1,0 +1,14 @@
+Evaluating SC-JOURNAL-v3 Anticipatory Epistemic Ledger:
+Target: docs/journal/20261001-0255-fractal-rca-mainline-recheck.md
+  [PASS] CHK-TIME: Valid YYYYMMDD-HHSS- timestamp prefix in filename
+  [PASS] CHK-SECT: All 13 canonical sections present in exact sequential order
+  [FAIL] CHK-ACH: Section 4 lacks structured ACH competing hypotheses (H1, H2)
+  [FAIL] CHK-ADMR: Section 7 lacks Admiralty >= B2 verification evidence
+  [FAIL] CHK-RED: Section 6 or 10 lacks Devil's Advocate / Popperian falsification
+  [PASS] CHK-DECAY: Engine 3 (Bayesian Trust & Lyapunov Stability) present in Section 11
+  [FAIL] CHK-PRED: Section 13 lacks precommitted Brier-scored forecast
+  [PASS] CHK-MUDA: Zero-Muda purity verified (0 Bevy, 0 Graphite)
+  [PASS] CHK-DRIVE: Hardware storage interlock respected (serial redacted)
+  [PASS] CHK-DIAG: No diagrams or text-only (SC-DIAGRAM-001 satisfied)
+
+Summary: 4 Verification Failure(s) Detected (FAIL)

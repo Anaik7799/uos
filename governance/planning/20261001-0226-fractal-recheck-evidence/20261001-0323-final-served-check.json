@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-01T03:22:57Z",
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "7886dc",
+        "wall_time_seconds": 0.000011732,
+        "exit_code": 0,
+        "original_token_count": 26,
+        "output": "8a1356d6d2f3f553d3076e99c702b8ef4ff939a71031acb9ff7ecdd786aaf07b  /tmp/uos-final-recheck-dashboard.html\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "324ddd",
+        "wall_time_seconds": 0.000019086,
+        "exit_code": 0,
+        "original_token_count": 25,
+        "output": "2f3e2e3ad91806f411f5a6e99ad0b7c18b4399b0d06bdce6d46c99d97e319be8  /tmp/uos-final-recheck-state.json\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "21b87f",
+        "wall_time_seconds": 0.000012454,
+        "exit_code": 0,
+        "original_token_count": 1,
+        "output": "200"
+      }
+    }
+  ],
+  "scope": "Actual script/data rendering and served-byte matching; browser layout/manual visual acceptance UNRUN."
+}
