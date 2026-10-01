@@ -12,211 +12,230 @@ fn standard_allowlist() -> tg_guard.Allowlist {
     allowed_pairs: [
       #(1001, 501),
       #(1001, 502),
-      #(1002, 503),
     ],
   )
 }
 
-fn make_update_json(
-  update_id: Int,
-  message_id: Int,
-  chat_id: Int,
-  user_id: Int,
-  is_bot: Bool,
-  username: String,
-  text: String,
-) -> String {
-  "{\"update_id\":"
-  <> string.inspect(update_id)
-  <> ",\"message\":{\"message_id\":"
-  <> string.inspect(message_id)
-  <> ",\"date\":1727780000,\"chat\":{\"id\":"
-  <> string.inspect(chat_id)
-  <> ",\"type\":\"private\"},\"from\":{\"id\":"
-  <> string.inspect(user_id)
-  <> ",\"is_bot\":"
-  <> case is_bot {
-    True -> "true"
-    False -> "false"
-  }
-  <> ",\"username\":\""
-  <> username
-  <> "\"},\"text\":\""
-  <> text
-  <> "\"}}"
-}
+pub fn valid_allowlisted_envelope_test() {
+  let allowlist = standard_allowlist()
+  let payload = "{\"update_id\": 100, \"message\": {\"message_id\": 10, \"date\": 1700000000, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"from\": {\"id\": 501, \"is_bot\": false, \"username\": \"alice\"}, \"text\": \"/doctor\"}}"
 
-// -----------------------------------------------------------------------------
-// Unit Tests
-// -----------------------------------------------------------------------------
-
-pub fn valid_envelope_accepted_test() {
-  let json_str = make_update_json(100, 1, 1001, 501, False, "authorized_user", "/doctor")
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
-
-  case verdict {
-    tg_guard.AcceptedEnvelope(update_id, message_id, chat_id, user_id, text_hash, raw_text, directive) -> {
-      update_id |> should.equal(100)
-      message_id |> should.equal(1)
-      chat_id |> should.equal(1001)
-      user_id |> should.equal(501)
-      raw_text |> should.equal("/doctor")
-      string.length(text_hash) |> should.equal(64)
-      directive |> should.equal(tg_guard.DirectReadTool("query_doctor"))
-    }
-    _ -> panic as "Expected AcceptedEnvelope"
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.AcceptedEnvelope(
+      update_id: 100,
+      message_id: 10,
+      chat_id: 1001,
+      user_id: 501,
+      directive: tg_guard.DirectReadTool("query_doctor"),
+      bot_id: 123_456,
+      ..,
+    ) -> Nil
+    other -> panic as string.inspect(other)
   }
 }
 
-pub fn adversarial_identity_swap_rejected_test() {
-  // Attacker uses same allowed username "authorized_user" but different numeric user_id (999)
-  let json_str = make_update_json(101, 2, 1001, 999, False, "authorized_user", "/doctor")
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
+pub fn adversarial_identity_swap_attack_test() {
+  let allowlist = standard_allowlist()
+  // Attacker puts admin username in body or text, but real user is unauthorized 999
+  let payload = "{\"update_id\": 101, \"message\": {\"message_id\": 11, \"date\": 1700000000, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"from\": {\"id\": 999, \"is_bot\": false, \"username\": \"admin_alice\"}, \"text\": \"/tool query_doctor\"}}"
 
-  case verdict {
-    tg_guard.RejectedUpdate(update_id, tg_guard.UnauthorizedSenderPair(chat_id, user_id)) -> {
-      update_id |> should.equal(101)
-      chat_id |> should.equal(1001)
-      user_id |> should.equal(999)
-    }
-    _ -> panic as "Expected RejectedUpdate due to unauthorized pair"
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(101, tg_guard.UnauthorizedSenderPair(1001, 999)) -> Nil
+    other -> panic as string.inspect(other)
   }
 }
 
-pub fn wrong_chat_user_pair_rejected_test() {
-  // User 503 is allowed in chat 1002, but NOT in chat 1001
-  let json_str = make_update_json(102, 3, 1001, 503, False, "user3", "/status")
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
+pub fn unauthorized_pair_chat_match_user_mismatch_test() {
+  let allowlist = standard_allowlist()
+  // Chat 1001 matches, but user 888 is not allowlisted
+  let payload = "{\"update_id\": 102, \"message\": {\"message_id\": 12, \"date\": 1700000000, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"from\": {\"id\": 888, \"is_bot\": false}, \"text\": \"/ev\"}}"
 
-  case verdict {
-    tg_guard.RejectedUpdate(update_id, tg_guard.UnauthorizedSenderPair(1001, 503)) -> {
-      update_id |> should.equal(102)
-    }
-    _ -> panic as "Expected RejectedUpdate due to mismatched chat/user pair"
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(102, tg_guard.UnauthorizedSenderPair(1001, 888)) -> Nil
+    other -> panic as string.inspect(other)
   }
 }
 
-pub fn bot_sender_barred_test() {
-  let json_str = make_update_json(103, 4, 1001, 501, True, "bot_user", "/doctor")
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
+pub fn bot_sender_rejection_test() {
+  let allowlist = standard_allowlist()
+  let payload = "{\"update_id\": 103, \"message\": {\"message_id\": 13, \"date\": 1700000000, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"from\": {\"id\": 501, \"is_bot\": true}, \"text\": \"/status\"}}"
 
-  case verdict {
+  case tg_guard.evaluate_update(payload, allowlist) {
     tg_guard.RejectedUpdate(103, tg_guard.BotSenderBarred) -> Nil
-    _ -> panic as "Expected BotSenderBarred"
+    other -> panic as string.inspect(other)
   }
 }
 
-pub fn channel_post_sender_chat_barred_test() {
-  let json_str = "{\"update_id\":104,\"message\":{\"message_id\":5,\"date\":1727780000,\"chat\":{\"id\":1001,\"type\":\"channel\"},\"sender_chat\":{\"id\":-100222,\"type\":\"channel\"},\"text\":\"/doctor\"}}"
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
+pub fn channel_post_rejection_test() {
+  let allowlist = standard_allowlist()
+  let payload = "{\"update_id\": 104, \"channel_post\": {\"message_id\": 14, \"chat\": {\"id\": -100123, \"type\": \"channel\"}, \"text\": \"/doctor\"}}"
 
-  case verdict {
-    tg_guard.RejectedUpdate(104, tg_guard.ChannelOrAnonymousSenderBarred) -> Nil
-    _ -> panic as "Expected ChannelOrAnonymousSenderBarred"
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(104, tg_guard.MissingMessage) -> Nil
+    other -> panic as string.inspect(other)
   }
 }
 
-pub fn missing_sender_user_barred_test() {
-  let json_str = "{\"update_id\":105,\"message\":{\"message_id\":6,\"date\":1727780000,\"chat\":{\"id\":1001,\"type\":\"group\"},\"text\":\"/doctor\"}}"
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
+pub fn channel_chat_with_user_rejection_test() {
+  let allowlist = standard_allowlist()
+  // Message has allowed user 501, but chat type is "channel"
+  let payload = "{\"update_id\": 105, \"message\": {\"message_id\": 15, \"chat\": {\"id\": 1001, \"type\": \"channel\"}, \"from\": {\"id\": 501, \"is_bot\": false}, \"text\": \"/doctor\"}}"
 
-  case verdict {
-    tg_guard.RejectedUpdate(105, tg_guard.MissingSenderUser) -> Nil
-    _ -> panic as "Expected MissingSenderUser"
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(105, tg_guard.ChannelOrAnonymousSenderBarred) -> Nil
+    other -> panic as string.inspect(other)
   }
 }
 
-pub fn empty_text_barred_test() {
-  let json_str = make_update_json(106, 7, 1001, 501, False, "user", "")
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
+pub fn sender_chat_rejection_test() {
+  let allowlist = standard_allowlist()
+  // Message has sender_chat (anonymous channel forward)
+  let payload = "{\"update_id\": 106, \"message\": {\"message_id\": 16, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"sender_chat\": {\"id\": 123, \"type\": \"channel\"}, \"from\": {\"id\": 501, \"is_bot\": false}, \"text\": \"/doctor\"}}"
 
-  case verdict {
-    tg_guard.RejectedUpdate(106, tg_guard.EmptyOrMissingText) -> Nil
-    _ -> panic as "Expected EmptyOrMissingText"
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(106, tg_guard.ChannelOrAnonymousSenderBarred) -> Nil
+    other -> panic as string.inspect(other)
   }
 }
 
-pub fn oversized_payload_barred_test() {
-  // Payload exceeds 65536 bytes
-  let long_filler = string.repeat("a", 65_600)
-  let json_str = "{\"update_id\":107,\"dummy\":\"" <> long_filler <> "\"}"
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
+pub fn configured_bot_id_variation_test() {
+  let allow1 = standard_allowlist()
+  let allow2 = tg_guard.Allowlist(bot_id: 999_999, allowed_pairs: [#(1001, 501)])
+  let payload = "{\"update_id\": 107, \"message\": {\"message_id\": 17, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"from\": {\"id\": 501, \"is_bot\": false}, \"text\": \"/doctor\"}}"
 
-  case verdict {
-    tg_guard.RejectedUpdate(0, tg_guard.OversizedPayload(_)) -> Nil
-    _ -> panic as "Expected OversizedPayload"
+  let res1 = tg_guard.evaluate_update(payload, allow1)
+  let res2 = tg_guard.evaluate_update(payload, allow2)
+
+  case res1, res2 {
+    tg_guard.AcceptedEnvelope(bot_id: 123_456, ..), tg_guard.AcceptedEnvelope(bot_id: 999_999, ..) -> Nil
+    _, _ -> panic as "bot_id was not propagated into AcceptedEnvelope"
   }
 }
 
-pub fn malformed_json_barred_test() {
-  let json_str = "{not_json: 123}"
-  let verdict = tg_guard.evaluate_update(json_str, standard_allowlist())
-
-  case verdict {
-    tg_guard.RejectedUpdate(0, tg_guard.MalformedUpdateJson(_)) -> Nil
-    _ -> panic as "Expected MalformedUpdateJson"
-  }
-}
-
-pub fn directive_classification_test() {
-  // Safe reads
+pub fn strict_2tool_grammar_and_empty_args_test() {
+  // 1. Valid empty forms
   tg_guard.classify_directive("/doctor")
   |> should.equal(tg_guard.DirectReadTool("query_doctor"))
+
+  tg_guard.classify_directive("/doctor {}")
+  |> should.equal(tg_guard.DirectReadTool("query_doctor"))
+
   tg_guard.classify_directive("/ev")
   |> should.equal(tg_guard.DirectReadTool("query_doctor"))
+
   tg_guard.classify_directive("/plan")
   |> should.equal(tg_guard.DirectReadTool("query_saplan"))
-  tg_guard.classify_directive("/saplan")
+
+  tg_guard.classify_directive("/saplan {}")
   |> should.equal(tg_guard.DirectReadTool("query_saplan"))
+
   tg_guard.classify_directive("/tool query_doctor")
   |> should.equal(tg_guard.DirectReadTool("query_doctor"))
+
+  tg_guard.classify_directive("/tool query_doctor {}")
+  |> should.equal(tg_guard.DirectReadTool("query_doctor"))
+
   tg_guard.classify_directive("/tool query_saplan")
   |> should.equal(tg_guard.DirectReadTool("query_saplan"))
 
-  // Preserved truthful informational directives
-  tg_guard.classify_directive("/status")
-  |> should.equal(tg_guard.PreservedDirective("/status", []))
-  tg_guard.classify_directive("/checklist")
-  |> should.equal(tg_guard.PreservedDirective("/checklist", []))
-  tg_guard.classify_directive("/storage")
-  |> should.equal(tg_guard.PreservedDirective("/storage", []))
-  tg_guard.classify_directive("/start")
-  |> should.equal(tg_guard.PreservedDirective("/start", []))
-  tg_guard.classify_directive("/help")
-  |> should.equal(tg_guard.PreservedDirective("/help", []))
-
-  // Denied mutating directives
-  case tg_guard.classify_directive("/tool resuscitate_node") {
-    tg_guard.DeniedMutation("resuscitate_node", _) -> Nil
-    _ -> panic as "Expected DeniedMutation for resuscitate_node"
-  }
-  case tg_guard.classify_directive("/approval 1 2 title") {
-    tg_guard.DeniedMutation("approval", _) -> Nil
-    _ -> panic as "Expected DeniedMutation for /approval"
-  }
-  case tg_guard.classify_directive("/andon") {
-    tg_guard.DeniedMutation("andon", _) -> Nil
-    _ -> panic as "Expected DeniedMutation for /andon"
-  }
-  case tg_guard.classify_directive("/zigvm version") {
-    tg_guard.DeniedMutation("zigvm", _) -> Nil
-    _ -> panic as "Expected DeniedMutation for /zigvm"
+  // 2. Refusal of non-empty args for read tools
+  case tg_guard.classify_directive("/tool query_doctor {\"path\":\"/etc\"}") {
+    tg_guard.DeniedMutation("query_doctor", _) -> Nil
+    other -> panic as string.inspect(other)
   }
 
-  // Unknown directive
-  tg_guard.classify_directive("/unknown_cmd")
-  |> should.equal(tg_guard.UnknownDirective("/unknown_cmd"))
+  case tg_guard.classify_directive("/doctor extra_arg") {
+    tg_guard.DeniedMutation("query_doctor", _) -> Nil
+    other -> panic as string.inspect(other)
+  }
+
+  // 3. Rejection of /action and unknown directives
+  case tg_guard.classify_directive("/action query_saplan garbage") {
+    tg_guard.UnknownDirective("/action") -> Nil
+    other -> panic as string.inspect(other)
+  }
+
+  // 4. Denied mutating tool
+  case tg_guard.classify_directive("/tool write_task") {
+    tg_guard.DeniedMutation("write_task", _) -> Nil
+    other -> panic as string.inspect(other)
+  }
+}
+
+pub fn truthful_denial_text_test() {
+  case tg_guard.classify_directive("/approval") {
+    tg_guard.DeniedMutation("approval", reason) -> {
+      // Must NOT advertise that approval is available
+      string.contains(reason, "not implemented") |> should.equal(True)
+    }
+    other -> panic as string.inspect(other)
+  }
+}
+
+pub fn private_canary_leak_prevention_test() {
+  let allowlist = standard_allowlist()
+  // Payload has corrupted JSON containing CANARY_PRIVATE
+  let payload = "{\"update_id\": 108, \"message\": {\"text\": \"CANARY_PRIVATE\", INVALID_JSON}}"
+  let res = tg_guard.evaluate_update(payload, allowlist)
+  let inspected = string.inspect(res)
+  string.contains(inspected, "CANARY_PRIVATE") |> should.equal(False)
+}
+
+pub fn missing_from_user_rejection_test() {
+  let allowlist = standard_allowlist()
+  let payload = "{\"update_id\": 109, \"message\": {\"message_id\": 19, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"text\": \"/help\"}}"
+
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(109, tg_guard.MissingSenderUser) -> Nil
+    other -> panic as string.inspect(other)
+  }
+}
+
+pub fn empty_text_rejection_test() {
+  let allowlist = standard_allowlist()
+  let payload = "{\"update_id\": 110, \"message\": {\"message_id\": 20, \"chat\": {\"id\": 1001, \"type\": \"private\"}, \"from\": {\"id\": 501, \"is_bot\": false}, \"text\": \"\"}}"
+
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(110, tg_guard.EmptyOrMissingText) -> Nil
+    other -> panic as string.inspect(other)
+  }
+}
+
+pub fn oversized_payload_rejection_test() {
+  let allowlist = standard_allowlist()
+  let huge_text = string.repeat("a", 70_000)
+  let payload = "{\"update_id\": 111, \"message\": {\"text\": \"" <> huge_text <> "\"}}"
+
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(0, tg_guard.OversizedPayload(_)) -> Nil
+    other -> panic as string.inspect(other)
+  }
+}
+
+pub fn malformed_json_rejection_test() {
+  let allowlist = standard_allowlist()
+  let payload = "not json at all"
+
+  case tg_guard.evaluate_update(payload, allowlist) {
+    tg_guard.RejectedUpdate(0, tg_guard.MalformedUpdateJson(_)) -> Nil
+    other -> panic as string.inspect(other)
+  }
 }
 
 pub fn main() {
-  valid_envelope_accepted_test()
-  adversarial_identity_swap_rejected_test()
-  wrong_chat_user_pair_rejected_test()
-  bot_sender_barred_test()
-  channel_post_sender_chat_barred_test()
-  missing_sender_user_barred_test()
-  empty_text_barred_test()
-  oversized_payload_barred_test()
-  malformed_json_barred_test()
-  directive_classification_test()
+  valid_allowlisted_envelope_test()
+  adversarial_identity_swap_attack_test()
+  unauthorized_pair_chat_match_user_mismatch_test()
+  bot_sender_rejection_test()
+  channel_post_rejection_test()
+  channel_chat_with_user_rejection_test()
+  sender_chat_rejection_test()
+  configured_bot_id_variation_test()
+  strict_2tool_grammar_and_empty_args_test()
+  truthful_denial_text_test()
+  private_canary_leak_prevention_test()
+  missing_from_user_rejection_test()
+  empty_text_rejection_test()
+  oversized_payload_rejection_test()
+  malformed_json_rejection_test()
 }

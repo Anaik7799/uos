@@ -95,6 +95,7 @@ pub type IngressVerdict {
     text_hash: String,
     raw_text: String,
     directive: ParsedDirective,
+    bot_id: Int,
   )
   RejectedUpdate(
     update_id: Int,
@@ -147,58 +148,118 @@ pub fn update_decoder() -> decode.Decoder(Update) {
 // Pure Directive Classification
 // -----------------------------------------------------------------------------
 
+fn is_valid_empty_args(args: String) -> Bool {
+  let trimmed = string.trim(args)
+  trimmed == "" || trimmed == "{}"
+}
+
 pub fn classify_directive(raw_text: String) -> ParsedDirective {
   let trimmed = string.trim(raw_text)
   case string.starts_with(trimmed, "/") {
     False -> PreservedDirective("conversational", [trimmed])
     True -> {
-      let parts = string.split(trimmed, " ")
-      let cmd = case parts {
-        [c, ..] -> c
-        [] -> ""
-      }
-      let args = case parts {
-        [_, ..rest] -> rest
-        [] -> []
+      let #(cmd, arg_tail) = case string.split_once(trimmed, " ") {
+        Ok(#(c, rest)) -> #(c, string.trim(rest))
+        Error(Nil) -> #(trimmed, "")
       }
 
       case cmd {
-        // Direct safe bounded read tools
-        "/doctor" | "/ev" -> DirectReadTool("query_doctor")
-        "/plan" | "/saplan" -> DirectReadTool("query_saplan")
-
-        "/tool" | "/action" -> {
-          case args {
-            ["query_doctor", ..] -> DirectReadTool("query_doctor")
-            ["query_saplan", ..] -> DirectReadTool("query_saplan")
-            [mutating, ..] ->
+        // Direct read tools: /doctor, /ev
+        "/doctor" | "/ev" -> {
+          case is_valid_empty_args(arg_tail) {
+            True -> DirectReadTool("query_doctor")
+            False ->
               DeniedMutation(
-                mutating,
-                "Mutating tool execution requires canonical Sa-plan task lease and 2oo3 constitutional quorum approved via /approval.",
+                "query_doctor",
+                "Non-empty arguments barred for direct read tool: only empty arguments are permitted; mutations are barred.",
               )
-            [] -> UnknownDirective(cmd)
+          }
+        }
+
+        // Direct read tools: /plan, /saplan
+        "/plan" | "/saplan" -> {
+          case is_valid_empty_args(arg_tail) {
+            True -> DirectReadTool("query_saplan")
+            False ->
+              DeniedMutation(
+                "query_saplan",
+                "Non-empty arguments barred for direct read tool: only empty arguments are permitted; mutations are barred.",
+              )
+          }
+        }
+
+        // Tool dispatch: /tool <tool_name> [args]
+        "/tool" -> {
+          case string.split_once(arg_tail, " ") {
+            Ok(#(tool_name, tool_args)) -> {
+              let trimmed_args = string.trim(tool_args)
+              case tool_name {
+                "query_doctor" -> {
+                  case is_valid_empty_args(trimmed_args) {
+                    True -> DirectReadTool("query_doctor")
+                    False ->
+                      DeniedMutation(
+                        "query_doctor",
+                        "Non-empty arguments barred for direct read tool: only empty arguments are permitted; mutations are barred.",
+                      )
+                  }
+                }
+                "query_saplan" -> {
+                  case is_valid_empty_args(trimmed_args) {
+                    True -> DirectReadTool("query_saplan")
+                    False ->
+                      DeniedMutation(
+                        "query_saplan",
+                        "Non-empty arguments barred for direct read tool: only empty arguments are permitted; mutations are barred.",
+                      )
+                  }
+                }
+                mutating ->
+                  DeniedMutation(
+                    mutating,
+                    "Mutating tool execution is permanently disabled at Telegram ingress: only read tools (query_doctor, query_saplan) with empty arguments are permitted; approval workflow is not implemented at ingress.",
+                  )
+              }
+            }
+            Error(Nil) -> {
+              case arg_tail {
+                "query_doctor" -> DirectReadTool("query_doctor")
+                "query_saplan" -> DirectReadTool("query_saplan")
+                "" -> UnknownDirective("/tool")
+                mutating ->
+                  DeniedMutation(
+                    mutating,
+                    "Mutating tool execution is permanently disabled at Telegram ingress: only read tools (query_doctor, query_saplan) with empty arguments are permitted; approval workflow is not implemented at ingress.",
+                  )
+              }
+            }
           }
         }
 
         // Truthful preserved informational directives
-        "/status" | "/checklist" | "/storage" | "/start" | "/help" | "/cockpit" ->
+        "/status" | "/checklist" | "/storage" | "/start" | "/help" | "/cockpit" -> {
+          let args = case arg_tail {
+            "" -> []
+            _ -> string.split(arg_tail, " ")
+          }
           PreservedDirective(cmd, args)
+        }
 
-        // Refused mutating directives (unsupported until authentic 2oo3 quorum implementation)
+        // Explicitly denied mutating directives - truthful reason, no false /approval promises
         "/approval" ->
           DeniedMutation(
             "approval",
-            "Direct approval execution refused: authentic 2oo3 quorum workflow requires signed coordinator lease.",
+            "Approval workflow is not implemented at Telegram ingress: mutating commands are permanently disabled.",
           )
         "/andon" ->
           DeniedMutation(
             "andon",
-            "Emergency Andon stop line requires coordinator confirmation lease.",
+            "Emergency Andon stop line is not available at Telegram ingress: requires authenticated coordinator lease.",
           )
         "/resuscitate" | "/chaos" | "/rotate_keys" | "/repro" | "/merge" ->
           DeniedMutation(
             cmd,
-            "Mutating cluster directive requires offline operator authorization.",
+            "Mutating cluster directive is not available at Telegram ingress.",
           )
         "/zigvm" ->
           DeniedMutation(
@@ -222,14 +283,15 @@ pub fn evaluate_update(raw_json: String, allowlist: Allowlist) -> IngressVerdict
     False -> RejectedUpdate(0, OversizedPayload(byte_size))
     True -> {
       case json.parse(raw_json, update_decoder()) {
-        Error(err) -> RejectedUpdate(0, MalformedUpdateJson(string.inspect(err)))
+        Error(_err) -> RejectedUpdate(0, MalformedUpdateJson("malformed_json_syntax"))
         Ok(update) -> {
           case update.message {
             None -> RejectedUpdate(update.update_id, MissingMessage)
             Some(msg) -> {
-              case msg.sender_chat {
-                Some(_) -> RejectedUpdate(update.update_id, ChannelOrAnonymousSenderBarred)
-                None -> {
+              // Reject channel chats or sender_chat immediately
+              case msg.chat.chat_type == "channel" || option.is_some(msg.sender_chat) {
+                True -> RejectedUpdate(update.update_id, ChannelOrAnonymousSenderBarred)
+                False -> {
                   case msg.from {
                     None -> RejectedUpdate(update.update_id, MissingSenderUser)
                     Some(user) -> {
@@ -268,6 +330,7 @@ pub fn evaluate_update(raw_json: String, allowlist: Allowlist) -> IngressVerdict
                                             text_hash: text_hash,
                                             raw_text: txt,
                                             directive: directive,
+                                            bot_id: allowlist.bot_id,
                                           )
                                         }
                                       }

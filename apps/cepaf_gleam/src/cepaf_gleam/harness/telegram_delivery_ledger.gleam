@@ -21,11 +21,15 @@ import gleam/int
 import gleam/list
 import gleam/string
 
+pub const max_queue_capacity = 1000
+pub const max_chunk_payload_bytes = 4096
+
 pub type InboxStatus {
   InboxPending
   InboxProcessing(worker: String, epoch: Int)
   InboxCompleted(digest: String)
   InboxRejected(reason: String)
+  InboxHold(reason: String)
 }
 
 pub type InboxRecord {
@@ -37,6 +41,8 @@ pub type InboxRecord {
     text_hash: String,
     status: InboxStatus,
     created_at_ms: Int,
+    bot_id: Int,
+    request_id: String,
   )
 }
 
@@ -64,6 +70,10 @@ pub type OutboxChunk {
   )
 }
 
+pub fn make_request_id(update_id: Int) -> String {
+  "req-tg-" <> int.to_string(update_id)
+}
+
 // -----------------------------------------------------------------------------
 // Pure Batch Ingestion & Watermark Progression
 // -----------------------------------------------------------------------------
@@ -74,57 +84,105 @@ pub fn ingest_single(
   inbox: List(InboxRecord),
 ) -> Result(InboxRecord, String) {
   case verdict {
-    tg_guard.AcceptedEnvelope(update_id, message_id, chat_id, user_id, text_hash, _raw_text, _directive) -> {
-      // Check for identity collision or duplicate
+    tg_guard.AcceptedEnvelope(
+      update_id,
+      message_id,
+      chat_id,
+      user_id,
+      text_hash,
+      _raw_text,
+      _directive,
+      bot_id,
+    ) -> {
       case list.find(inbox, fn(r) { r.update_id == update_id }) {
         Ok(existing) -> {
-          case existing.text_hash == text_hash {
+          // Idempotency requires complete equality across all envelope identity coordinates
+          case
+            existing.message_id == message_id
+            && existing.chat_id == chat_id
+            && existing.user_id == user_id
+            && existing.bot_id == bot_id
+            && existing.text_hash == text_hash
+          {
             True -> Ok(existing)
-            False -> Error("identity_collision_differing_text_hash")
+            False -> Error("identity_collision_envelope_mismatch")
           }
         }
         Error(Nil) -> {
-          Ok(InboxRecord(
-            update_id: update_id,
-            message_id: message_id,
-            chat_id: chat_id,
-            user_id: user_id,
-            text_hash: text_hash,
-            status: InboxPending,
-            created_at_ms: now_ms,
-          ))
+          case list.length(inbox) >= max_queue_capacity {
+            True -> Error("queue_capacity_exceeded_max_1000")
+            False -> {
+              Ok(InboxRecord(
+                update_id: update_id,
+                message_id: message_id,
+                chat_id: chat_id,
+                user_id: user_id,
+                text_hash: text_hash,
+                status: InboxPending,
+                created_at_ms: now_ms,
+                bot_id: bot_id,
+                request_id: make_request_id(update_id),
+              ))
+            }
+          }
         }
       }
     }
     tg_guard.RejectedUpdate(update_id, reason) -> {
+      let reason_str = string.inspect(reason)
       case list.find(inbox, fn(r) { r.update_id == update_id }) {
-        Ok(existing) -> Ok(existing)
+        Ok(existing) -> {
+          case existing.status {
+            InboxRejected(r) if r == reason_str -> Ok(existing)
+            _ -> Error("identity_collision_rejection_mismatch")
+          }
+        }
         Error(Nil) -> {
-          Ok(InboxRecord(
-            update_id: update_id,
-            message_id: 0,
-            chat_id: 0,
-            user_id: 0,
-            text_hash: "rejection_tombstone",
-            status: InboxRejected(string.inspect(reason)),
-            created_at_ms: now_ms,
-          ))
+          case list.length(inbox) >= max_queue_capacity {
+            True -> Error("queue_capacity_exceeded_max_1000")
+            False -> {
+              Ok(InboxRecord(
+                update_id: update_id,
+                message_id: 0,
+                chat_id: 0,
+                user_id: 0,
+                text_hash: "rejection_tombstone",
+                status: InboxRejected(reason_str),
+                created_at_ms: now_ms,
+                bot_id: 0,
+                request_id: make_request_id(update_id),
+              ))
+            }
+          }
         }
       }
     }
   }
 }
 
-/// Ingests a batch of updates in strict order, advancing the watermark ONLY over
-/// an uninterrupted contiguous prefix of successfully stored records.
-/// If any record fails or has an identity collision, the batch prefix halts.
+fn get_update_id(verdict: tg_guard.IngressVerdict) -> Int {
+  case verdict {
+    tg_guard.AcceptedEnvelope(update_id: uid, ..) -> uid
+    tg_guard.RejectedUpdate(update_id: uid, ..) -> uid
+  }
+}
+
+/// Ingests a batch of updates in strict ascending order, advancing the watermark ONLY
+/// over an uninterrupted contiguous prefix of successfully stored records.
+/// Batches are sorted safely by update_id before evaluation.
+/// If any collision, queue overflow, or failure occurs, advancement halts immediately.
 pub fn ingest_batch(
   watermark: Watermark,
   updates: List(tg_guard.IngressVerdict),
   inbox: List(InboxRecord),
   now_ms: Int,
 ) -> #(Watermark, List(InboxRecord), List(String)) {
-  do_ingest_batch(watermark, updates, inbox, now_ms, [])
+  let sorted_updates =
+    list.sort(updates, fn(a, b) {
+      int.compare(get_update_id(a), get_update_id(b))
+    })
+
+  do_ingest_batch(watermark, sorted_updates, inbox, now_ms, [])
 }
 
 fn do_ingest_batch(
@@ -139,7 +197,7 @@ fn do_ingest_batch(
     [verdict, ..rest] -> {
       case ingest_single(verdict, now_ms, inbox) {
         Error(err) -> {
-          // Prefix halts at first failure; watermark does not advance further
+          // Prefix halts at first failure; watermark does not advance past failed update
           #(watermark, inbox, list.reverse([err, ..errors]))
         }
         Ok(record) -> {
@@ -147,7 +205,6 @@ fn do_ingest_batch(
             True -> inbox
             False -> [record, ..inbox]
           }
-          // Advance watermark to update_id + 1 if update_id >= last_committed_offset
           let next_offset = int.max(watermark.last_committed_offset, record.update_id + 1)
           let next_watermark = Watermark(next_offset)
           do_ingest_batch(next_watermark, rest, updated_inbox, now_ms, errors)
@@ -166,15 +223,28 @@ pub fn claim_inbox_task(
   worker: String,
   epoch: Int,
 ) -> Result(InboxRecord, String) {
-  case record.status {
-    InboxPending ->
-      Ok(InboxRecord(..record, status: InboxProcessing(worker: worker, epoch: epoch)))
-    InboxProcessing(w, e) ->
-      Error("task_already_processing_by:" <> w <> "_epoch:" <> int.to_string(e))
-    InboxCompleted(_) ->
-      Error("task_already_completed")
-    InboxRejected(r) ->
-      Error("task_was_rejected:" <> r)
+  let trimmed_worker = string.trim(worker)
+  case trimmed_worker == "" {
+    True -> Error("worker_must_not_be_empty")
+    False -> {
+      case epoch <= 0 {
+        True -> Error("epoch_must_be_positive")
+        False -> {
+          case record.status {
+            InboxPending ->
+              Ok(InboxRecord(..record, status: InboxProcessing(worker: trimmed_worker, epoch: epoch)))
+            InboxProcessing(w, e) ->
+              Error("task_already_processing_by:" <> w <> "_epoch:" <> int.to_string(e))
+            InboxCompleted(_) ->
+              Error("task_already_completed")
+            InboxRejected(r) ->
+              Error("task_was_rejected:" <> r)
+            InboxHold(r) ->
+              Error("task_in_hold:" <> r)
+          }
+        }
+      }
+    }
   }
 }
 
@@ -184,19 +254,68 @@ pub fn complete_inbox_task(
   worker: String,
   epoch: Int,
 ) -> Result(InboxRecord, String) {
-  case record.status {
-    InboxProcessing(w, e) if w == worker && e == epoch ->
-      Ok(InboxRecord(..record, status: InboxCompleted(digest: digest)))
-    InboxProcessing(w, e) ->
-      Error("claim_owner_mismatch: expected " <> worker <> ":" <> int.to_string(epoch) <> " but got " <> w <> ":" <> int.to_string(e))
-    _ ->
-      Error("task_not_in_processing_state")
+  let trimmed_worker = string.trim(worker)
+  let trimmed_digest = string.trim(digest)
+  case trimmed_worker == "" {
+    True -> Error("worker_must_not_be_empty")
+    False -> {
+      case epoch <= 0 {
+        True -> Error("epoch_must_be_positive")
+        False -> {
+          case trimmed_digest == "" {
+            True -> Error("digest_must_not_be_empty")
+            False -> {
+              case record.status {
+                InboxProcessing(w, e) if w == trimmed_worker && e == epoch ->
+                  Ok(InboxRecord(..record, status: InboxCompleted(digest: trimmed_digest)))
+                InboxProcessing(w, e) ->
+                  Error("claim_owner_mismatch: expected " <> trimmed_worker <> ":" <> int.to_string(epoch) <> " but got " <> w <> ":" <> int.to_string(e))
+                _ ->
+                  Error("task_not_in_processing_state")
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 // Pure Outbox State Machine & Send Reconciliation
 // -----------------------------------------------------------------------------
+
+pub fn validate_chunk(chunk: OutboxChunk) -> Result(Nil, String) {
+  case string.trim(chunk.request_id) == "" {
+    True -> Error("request_id_must_not_be_empty")
+    False -> {
+      case chunk.chunk_index < 0 {
+        True -> Error("chunk_index_must_be_non_negative")
+        False -> {
+          case chunk.total_chunks <= 0 {
+            True -> Error("total_chunks_must_be_positive")
+            False -> {
+              case chunk.chunk_index >= chunk.total_chunks {
+                True -> Error("chunk_index_out_of_bounds")
+                False -> {
+                  case chunk.chat_id == 0 {
+                    True -> Error("chat_id_must_be_non_zero")
+                    False -> {
+                      case string.byte_size(chunk.payload) > max_chunk_payload_bytes {
+                        True -> Error("payload_exceeds_max_4096_bytes")
+                        False -> Ok(Nil)
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 pub fn create_outbox_chunk(
   request_id: String,
@@ -221,21 +340,37 @@ pub fn claim_outbox_send(
   worker: String,
   epoch: Int,
 ) -> Result(OutboxChunk, String) {
-  case chunk.status {
-    OutboxPending ->
-      Ok(OutboxChunk(
-        ..chunk,
-        status: OutboxSending(worker: worker, epoch: epoch),
-        attempt_count: chunk.attempt_count + 1,
-      ))
-    OutboxSending(w, e) ->
-      Error("blind_retry_barred_already_sending_by:" <> w <> ":" <> int.to_string(e))
-    OutboxUncertain(_) ->
-      Error("blind_retry_barred_on_uncertain_outcome_requires_explicit_reconciliation")
-    OutboxDelivered(_) ->
-      Error("chunk_already_delivered")
-    OutboxFailed(_) ->
-      Error("chunk_permanently_failed")
+  let trimmed_worker = string.trim(worker)
+  case trimmed_worker == "" {
+    True -> Error("worker_must_not_be_empty")
+    False -> {
+      case epoch <= 0 {
+        True -> Error("epoch_must_be_positive")
+        False -> {
+          case validate_chunk(chunk) {
+            Error(err) -> Error(err)
+            Ok(Nil) -> {
+              case chunk.status {
+                OutboxPending ->
+                  Ok(OutboxChunk(
+                    ..chunk,
+                    status: OutboxSending(worker: trimmed_worker, epoch: epoch),
+                    attempt_count: chunk.attempt_count + 1,
+                  ))
+                OutboxSending(w, e) ->
+                  Error("blind_retry_barred_already_sending_by:" <> w <> ":" <> int.to_string(e))
+                OutboxUncertain(_) ->
+                  Error("blind_retry_barred_on_uncertain_outcome_requires_explicit_reconciliation")
+                OutboxDelivered(_) ->
+                  Error("chunk_already_delivered")
+                OutboxFailed(_) ->
+                  Error("chunk_permanently_failed")
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -246,6 +381,7 @@ pub fn claim_outbox_send(
 /// 3. remote_msg_id > 0
 /// 4. remote_chat_id == chunk.chat_id
 /// Any mismatch or failure results in UNCERTAIN (never blind retry).
+/// Wrong owner/epoch or terminal states return Error with chunk state preserved unchanged.
 pub fn reconcile_send_outcome(
   chunk: OutboxChunk,
   http_status: Int,
@@ -254,37 +390,50 @@ pub fn reconcile_send_outcome(
   remote_msg_id: Int,
   worker: String,
   epoch: Int,
-) -> OutboxChunk {
+) -> Result(OutboxChunk, String) {
   case chunk.status {
-    OutboxSending(w, e) if w == worker && e == epoch -> {
-      case
-        http_status == 200
-        && ok == True
-        && remote_msg_id > 0
-        && remote_chat_id == chunk.chat_id
-      {
-        True -> OutboxChunk(..chunk, status: OutboxDelivered(telegram_msg_id: remote_msg_id))
-        False -> {
-          let err_detail = case http_status != 200 {
-            True -> "http_status_" <> int.to_string(http_status)
+    OutboxDelivered(_) ->
+      Error("terminal_state_already_delivered_state_unchanged")
+    OutboxUncertain(_) ->
+      Error("terminal_state_uncertain_state_unchanged")
+    OutboxFailed(_) ->
+      Error("terminal_state_failed_state_unchanged")
+    OutboxPending ->
+      Error("invalid_prior_state_pending_state_unchanged")
+    OutboxSending(w, e) -> {
+      case w == worker && e == epoch {
+        False ->
+          Error("owner_or_epoch_mismatch: expected " <> w <> ":" <> int.to_string(e) <> " but got " <> worker <> ":" <> int.to_string(epoch))
+        True -> {
+          case
+            http_status == 200
+            && ok == True
+            && remote_msg_id > 0
+            && remote_chat_id == chunk.chat_id
+          {
+            True ->
+              Ok(OutboxChunk(..chunk, status: OutboxDelivered(telegram_msg_id: remote_msg_id)))
             False -> {
-              case ok != True {
-                True -> "botapi_ok_false"
+              let err_detail = case http_status != 200 {
+                True -> "http_status_" <> int.to_string(http_status)
                 False -> {
-                  case remote_msg_id <= 0 {
-                    True -> "non_positive_message_id"
-                    False -> "mismatched_remote_chat_id"
+                  case ok != True {
+                    True -> "botapi_ok_false"
+                    False -> {
+                      case remote_msg_id <= 0 {
+                        True -> "non_positive_message_id"
+                        False -> "mismatched_remote_chat_id"
+                      }
+                    }
                   }
                 }
               }
+              Ok(OutboxChunk(..chunk, status: OutboxUncertain(err: err_detail)))
             }
           }
-          OutboxChunk(..chunk, status: OutboxUncertain(err: err_detail))
         }
       }
     }
-    _ ->
-      OutboxChunk(..chunk, status: OutboxUncertain(err: "unexpected_claim_state_during_reconciliation"))
   }
 }
 
@@ -294,7 +443,12 @@ pub fn reconcile_send_outcome(
 
 /// On service restart:
 /// 1. Any in-flight OutboxSending is transitioned to OutboxUncertain (crash in-flight).
-/// 2. Any InboxProcessing is recovered back to InboxPending if no completed outbox exists.
+/// 2. Any InboxProcessing is correlated with corresponding outbox chunks:
+///    - If an outbox chunk exists and was DELIVERED, inbox is marked InboxCompleted.
+///    - If an outbox chunk exists and was UNCERTAIN or SENDING, inbox is marked InboxHold.
+///    - If an outbox chunk exists and was PENDING, inbox is marked InboxCompleted (result produced).
+///    - If NO outbox chunk exists, inbox is marked InboxHold (missing linkage after crash).
+///    In ALL cases, an interrupted processing request NEVER requeues to InboxPending.
 pub fn handle_restart(
   chunks: List(OutboxChunk),
   inboxes: List(InboxRecord),
@@ -316,8 +470,32 @@ pub fn handle_restart(
   let recovered_inboxes =
     list.map(inboxes, fn(inbox) {
       case inbox.status {
-        InboxProcessing(_w, _e) ->
-          InboxRecord(..inbox, status: InboxPending)
+        InboxProcessing(w, e) -> {
+          let matching_chunk =
+            list.find(recovered_chunks, fn(c) { c.request_id == inbox.request_id })
+          case matching_chunk {
+            Ok(chunk) -> {
+              case chunk.status {
+                OutboxDelivered(msg_id) ->
+                  InboxRecord(..inbox, status: InboxCompleted("delivered:" <> int.to_string(msg_id)))
+                OutboxUncertain(err) ->
+                  InboxRecord(..inbox, status: InboxHold("uncertain_outbox:" <> err))
+                OutboxSending(_, _) ->
+                  InboxRecord(..inbox, status: InboxHold("in_flight_outbox_crash"))
+                OutboxPending ->
+                  InboxRecord(..inbox, status: InboxCompleted("outbox_pending"))
+                OutboxFailed(err) ->
+                  InboxRecord(..inbox, status: InboxHold("outbox_failed:" <> err))
+              }
+            }
+            Error(Nil) -> {
+              InboxRecord(
+                ..inbox,
+                status: InboxHold("crash_during_processing_missing_outbox:" <> w <> ":" <> int.to_string(e)),
+              )
+            }
+          }
+        }
         _other -> inbox
       }
     })
