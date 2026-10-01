@@ -25,6 +25,7 @@ import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/doctor_projection
 import cepaf_gleam/harness/tool_fenced_dispatcher as td
+import gleam/dict
 import gleam/dynamic/decode
 import gleam/int
 import gleam/json
@@ -44,44 +45,40 @@ pub const direct_read_allowlist: List(String) = [
 
 /// Strict launcher environment binding for local direct dispatch.
 /// Trusted same-Unix-user launcher environment; not credential authentication.
+/// Strictly requires UOS_DIRECT_ROLE == "direct_read" and all 6 UOS_DIRECT_* fields.
+/// Zero fallback to UOS_HARNESS_* and zero role defaults or aliases.
 pub fn load_direct_binding() -> Result(dev.Binding, String) {
-  let role = case get_env("UOS_DIRECT_ROLE") {
-    Ok(r) -> r
-    Error(_) -> "direct_read"
-  }
-  use _ <- result.try(case role == "direct_read" || role == "development" {
+  use role <- result.try(
+    get_env("UOS_DIRECT_ROLE")
+    |> result.map_error(fn(_) { "role_binding_missing" }),
+  )
+  use _ <- result.try(case role == "direct_read" {
     True -> Ok(Nil)
     False -> Error("invalid_direct_role_expected_direct_read")
   })
   use plan <- result.try(
     get_env("UOS_DIRECT_PLAN")
-    |> result.or(get_env("UOS_HARNESS_PLAN"))
     |> result.map_error(fn(_) { "plan_binding_missing" }),
   )
   use task <- result.try(
     get_env("UOS_DIRECT_TASK")
-    |> result.or(get_env("UOS_HARNESS_TASK"))
     |> result.map_error(fn(_) { "task_binding_missing" }),
   )
   use worker <- result.try(
     get_env("UOS_DIRECT_WORKER")
-    |> result.or(get_env("UOS_HARNESS_WORKER"))
     |> result.map_error(fn(_) { "worker_binding_missing" }),
   )
   use attempt <- result.try(
     get_env("UOS_DIRECT_ATTEMPT")
-    |> result.or(get_env("UOS_HARNESS_ATTEMPT"))
     |> result.try(int.parse)
     |> result.map_error(fn(_) { "attempt_binding_missing" }),
   )
   use session <- result.try(
     get_env("UOS_DIRECT_SESSION")
-    |> result.or(get_env("UOS_HARNESS_SESSION"))
     |> result.map_error(fn(_) { "session_binding_missing" }),
   )
   use epoch <- result.try(
     get_env("UOS_DIRECT_EPOCH")
-    |> result.or(get_env("UOS_HARNESS_EPOCH"))
     |> result.try(int.parse)
     |> result.map_error(fn(_) { "epoch_binding_missing" }),
   )
@@ -133,10 +130,20 @@ pub fn validate_tool_proposal(
         "Tool proposal args exceed bound (limit 256 bytes).",
       ))
     True -> {
-      let trimmed = string.trim(proposal.args_json)
-      case trimmed == "{}" || trimmed == "" {
-        True -> Ok(Nil)
-        False ->
+      let empty_dict_decoder = decode.dict(decode.string, decode.dynamic)
+      case json.parse(proposal.args_json, empty_dict_decoder) {
+        Ok(entries) ->
+          case dict.size(entries) == 0 {
+            True -> Ok(Nil)
+            False ->
+              Error(td.FencedAndonHalt(
+                -32_000,
+                "Invalid arguments: tool '"
+                  <> proposal.tool_name
+                  <> "' strictly requires empty JSON object '{}'.",
+              ))
+          }
+        Error(_) ->
           Error(td.FencedAndonHalt(
             -32_000,
             "Invalid arguments: tool '"
@@ -163,8 +170,17 @@ pub fn parse_sanitized_tasks(raw: String) -> Result(List(SanitizedTask), String)
     True -> Ok(Nil)
     False -> Error("task_list_bound_exceeded")
   })
-  json.parse(raw, decode.list(task_entry_decoder()))
-  |> result.replace_error("invalid_task_list_json")
+  use tasks <- result.try(
+    json.parse(raw, decode.list(task_entry_decoder()))
+    |> result.replace_error("invalid_task_list_json"),
+  )
+  case list.length(tasks) > 256 {
+    True ->
+      Error(
+        "task_count_exceeds_limit_256: plan task count exceeds 256 bound; direct read observation refused",
+      )
+    False -> Ok(tasks)
+  }
 }
 
 pub fn format_sanitized_saplan(
