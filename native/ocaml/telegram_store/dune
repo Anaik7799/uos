@@ -1,0 +1,14 @@
+(library
+ (name telegram_store)
+ (modules telegram_store)
+ (libraries cryptokit sqlite3 yojson unix))
+
+(executable
+ (name telegram_store_main)
+ (modules telegram_store_main)
+ (libraries telegram_store))
+
+(test
+ (name telegram_store_test)
+ (modules telegram_store_test)
+ (libraries telegram_store unix))
