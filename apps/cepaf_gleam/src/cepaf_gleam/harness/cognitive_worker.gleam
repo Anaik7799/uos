@@ -2380,35 +2380,33 @@ pub fn execute_harness_tool(
     "query_aspects" -> Ok(agent_ecology.format_aspects_summary())
     "query_ecology" -> Ok(agent_ecology.format_ecology_summary())
     "evaluate_facts_rete" -> Ok(query_rete_detail(args_json))
-    "invoke_zigvm" -> {
-      case os_cmd("tools/zigvm version") {
-        Ok(v) -> Ok("ZigVM Engine: " <> string.trim(v))
-        Error(e) -> Error("ZigVM execution error: " <> e)
-      }
-    }
-    // Fully wired UOS system services
+    "invoke_zigvm" ->
+      Error(
+        "ZigVM execution via tool proposal barred: arbitrary subprocess execution prohibited under SC-ZMOF-001.",
+      )
+    // Wired UOS system services
     "query_immune_status" -> Ok(c3i_nif.system_immune())
     "query_fmea_report" -> Ok(c3i_nif.fmea_report())
     "query_ha_status" -> Ok(c3i_nif.ha_status())
     "query_inference_tier" ->
       Ok(
-        "{\"inference_engine\":\"Modular MAX / Mojo\",\"simd\":\"AVX-512\",\"latency_p99_us\":42,\"status\":\"active\",\"model_quarantine\":\"isolated_daemon\"}",
+        "{\"status\":\"UNOBSERVED\",\"inference_engine\":\"Modular MAX / Mojo\",\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
       )
     "query_voice_status" ->
       Ok(
-        "{\"voice_subsystem\":\"SIL-6 Offline Voice (VAD/Silero/Sherpa-ONNX)\",\"channels\":2,\"status\":\"ready\",\"sample_rate_hz\":16000,\"offline_verified\":true}",
+        "{\"status\":\"UNOBSERVED\",\"voice_subsystem\":\"SIL-6 Offline Voice (VAD/Silero/Sherpa-ONNX)\",\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
       )
     "query_ooda_phase" ->
       Ok(
-        "{\"ooda_loop\":\"L5_COGNITIVE\",\"phase\":\"Orient\",\"rate_hz\":100,\"lyapunov_v_dot\":-0.042,\"stability\":\"Lyapunov_Stable\",\"cycles_observed\":108}",
+        "{\"status\":\"UNOBSERVED\",\"ooda_loop\":\"L5_COGNITIVE\",\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
       )
     "query_ruliology" ->
       Ok(
-        "{\"ruliology_automata\":\"Rule 30/110 Fractal Attractor\",\"dimensions\":13,\"entropy_bits\":2.67,\"phase\":\"Stationary\",\"fractal_layers\":10}",
+        "{\"status\":\"UNOBSERVED\",\"ruliology_automata\":\"Rule 30/110 Fractal Attractor\",\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
       )
     "query_traces_recent" ->
       Ok(
-        "{\"trace_id_w3c\":\"0af7651916cd43dd8448eb211c80319c\",\"coordinates_13d\":\"delta_T_13 == 0\",\"verification\":\"Lean4_Proved\",\"conservation\":true}",
+        "{\"status\":\"UNOBSERVED\",\"trace_subsystem\":\"13D Trace Coordinates\",\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
       )
     "query_rack_cv" -> Ok(telegram_creative.handle_rack_cv([]))
     "query_acoustic_fft" -> Ok(telegram_creative.handle_acoustic([]))
@@ -2421,33 +2419,23 @@ pub fn execute_harness_tool(
       )
     "query_checklist" ->
       Ok(
-        "{\"checklist_status\":\"18/18 GREEN\",\"domains\":{\"metadata_tailscale\":4,\"zero_muda_storage\":3,\"math_gates_tests\":4,\"cross_lang_control\":5,\"tri_sov_jj\":2},\"all_green\":true}",
+        "{\"checklist_status\":\"UNOBSERVED\",\"domains\":{\"metadata_tailscale\":\"UNOBSERVED\",\"zero_muda_storage\":\"UNOBSERVED\",\"math_gates_tests\":\"UNOBSERVED\",\"cross_lang_control\":\"UNOBSERVED\",\"tri_sov_jj\":\"UNOBSERVED\"},\"all_green\":false,\"observed_in_query\":false}",
       )
     "query_zk_adrs" ->
       Ok(
-        "{\"zk_store\":\"docs/zk/\",\"adrs_cataloged\":85,\"master_moc\":\"docs/zk/20260905-1801-moc-uos-unified-master.md\",\"authority\":\"ADR-001..ADR-110\"}",
+        "{\"status\":\"UNOBSERVED\",\"zk_store\":\"docs/zk/\",\"adrs_cataloged\":null,\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
       )
     "query_wiki_index" ->
       Ok(
-        "{\"wiki_store\":\"docs/wiki/\",\"master_index\":\"docs/wiki/20260905-1801-uos-zk-km-corpus-index.md\",\"transclusion_engine\":\"Hermes_TyXML\"}",
+        "{\"status\":\"UNOBSERVED\",\"wiki_store\":\"docs/wiki/\",\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
       )
 
-    // Mutating operations requiring 2oo3 consensus
-    "resuscitate_node" ->
-      Ok(
-        "{\"status\":\"success\",\"action\":\"resuscitate_node\",\"result\":\"Node resuscitation initiated under 2oo3 constitutional consensus.\"}",
-      )
-    "chaos_inject" ->
-      Ok(
-        "{\"status\":\"success\",\"action\":\"chaos_inject\",\"result\":\"Chaos experiment registered in immune ledger under 2oo3 constitutional consensus.\"}",
-      )
-    "rotate_keys" ->
-      Ok(
-        "{\"status\":\"success\",\"action\":\"rotate_keys\",\"result\":\"Constitutional cryptographic keys rotated under 2oo3 consensus.\"}",
-      )
-    "storage_rebalance" ->
-      Ok(
-        "{\"status\":\"success\",\"action\":\"storage_rebalance\",\"result\":\"Storage rebalanced across Ceph pools without modifying locked OS NVMe [REDACTED_SYSTEM_OS_SERIAL].\"}",
+    // Mutating operations fail closed: live consensus executor not connected
+    "resuscitate_node" | "chaos_inject" | "rotate_keys" | "storage_rebalance" ->
+      Error(
+        "Mutating tool '"
+        <> tool_name
+        <> "' unavailable: live 2oo3 constitutional consensus executor not connected; simulated mutation barred under SC-JIDOKA-001.",
       )
     _ -> Error("Unknown harness tool: " <> tool_name)
   }

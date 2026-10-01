@@ -336,7 +336,10 @@ pub fn telegram_execute_harness_tools_expanded_test() {
   let chk = execute_harness_tool("query_checklist", "{}")
   chk |> should.be_ok
   case chk {
-    Ok(s) -> s |> string.contains("18/18 GREEN") |> should.be_true
+    Ok(s) -> {
+      s |> string.contains("checklist_status") |> should.be_true
+      s |> string.contains("UNOBSERVED") |> should.be_true
+    }
     Error(_) -> panic as "expected ok"
   }
 }
