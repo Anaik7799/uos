@@ -1,8 +1,8 @@
 {
   "schema": "uos.restoration-dashboard.v1",
-  "updated_at": "2026-10-01T05:01:55Z",
+  "updated_at": "2026-10-01T05:18:45Z",
   "plan": "uos/direct-dispatch/20261001-0440",
-  "overall": "DIRECT DISPATCH \u00b7 IMPLEMENTATION IN PROGRESS",
+  "overall": "REVIEW HOLD \u00b7 AGY REPAIR IN PROGRESS",
   "goal_met": false,
   "as_is": [
     [
@@ -42,25 +42,25 @@
       "id": "INTAKE",
       "title": "Observe and design canonical direct dispatch",
       "state": "completed",
-      "detail": "Baseline health and root causes observed."
+      "detail": "Baseline health and authority observed."
     },
     {
       "id": "AGY_IMPL",
       "title": "Implement direct dispatch authority and truthful tool results",
-      "state": "executing",
-      "detail": "Dispatcher, CLI and focused tests in isolated AGY workspace; correction and freeze pending."
+      "state": "completed",
+      "detail": "Initial corrected implementation frozen atd58bc94d; independent review found further defects."
     },
     {
       "id": "SOURCE_REVIEW",
       "title": "Independently review dispatch implementation and falsifiers",
-      "state": "available",
-      "detail": "Pending dependency: AGY_IMPL"
+      "state": "completed",
+      "detail": "Review performed: HOLD. Real positive reads observed, but four defects must be corrected; no acceptance."
     },
     {
       "id": "PREP",
       "title": "Build immutable capsule and prepare bounded release",
       "state": "available",
-      "detail": "Pending dependency: SOURCE_REVIEW"
+      "detail": "Held until SOURCE_REVIEW2 passes."
     },
     {
       "id": "RELEASE_REVIEW",
@@ -90,19 +90,31 @@
       "id": "STATUS",
       "title": "Audit pending capabilities and publish truthful live progress",
       "state": "completed",
-      "detail": "Pending-capability inventory published and served JSON verified."
+      "detail": "Pending inventory and served dashboard verified."
     },
     {
       "id": "DOCS",
       "title": "Record dispatch specification, pending work and recovery journal",
       "state": "completed",
-      "detail": "10-invariant specification and 13-section journal drafted; structural checks10/10."
+      "detail": "10-invariant specification and13-section journal drafted."
     },
     {
       "id": "LAUNCHER",
       "title": "Verify canonical launcher and prepare finite cognitive release workflow",
       "state": "completed",
-      "detail": "Canonical positive fence observed; finite release policy9/9 tests. No production effect."
+      "detail": "Finite release policy9/9; no production effect."
+    },
+    {
+      "id": "AGY_FIX",
+      "title": "Repair independently found dispatch authority and truth defects",
+      "state": "executing",
+      "detail": "Fresh task: strict DIRECT identity, valid empty JSON object, overflow refusal, strict live tests."
+    },
+    {
+      "id": "SOURCE_REVIEW2",
+      "title": "Independently verify corrected direct dispatch candidate",
+      "state": "available",
+      "detail": "Pending corrected candidate and independent falsifiers."
     }
   ],
   "risks": [
@@ -156,7 +168,7 @@
     }
   ],
   "evidence": {
-    "summary": "Fresh baseline is healthy. Dispatch implementation and independent acceptance remain pending; no new release or main integration is claimed.",
+    "summary": "Independent review observed successful doctor and sanitized Sa-plan reads, and reproduced four blockers. AGY is repairing malformed-argument acceptance, overflow counts, permissive identity fallback and false-green tests. Candidate5a23e76d is not released or on main.",
     "live_runtime_verified": false,
     "main_includes_candidate": false,
     "main": "fd4950eebf490b9972e204488e719978ee7a5522",
@@ -169,7 +181,8 @@
       "unavailable": 12,
       "declared_unprobed": 53,
       "observation": "Inventory is not a successful dispatch test."
-    }
+    },
+    "independent_review_hold": "governance/planning/20261001-0440-direct-dispatch-evidence/20261001-0557-independent-direct-review-hold.json"
   },
   "checks": [
     "CHK-01 \u00b7 TIME: NTP synchronized at intake",

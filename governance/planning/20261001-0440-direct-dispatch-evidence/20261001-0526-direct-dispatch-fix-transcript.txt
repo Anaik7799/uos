@@ -1,0 +1,30 @@
+=======================================================
+UOS DIRECT READ DISPATCH AGY_FIX TEST SUITE TRANSCRIPT
+Plan: uos/direct-dispatch/20261001-0440
+Task: AGY_FIX (Attempt 1)
+Worker: agy-direct-dispatch-20261001
+Coordinator Session: codex-direct-dispatch-20261001 (Epoch 1)
+Resource: task:f4899115ad8176c019ffc85c1b7ad59b920b3482d7d69f5ff04888f3fd0c01ee
+=======================================================
+1. Running direct_read_dispatch_test:main() (Deterministic Unit Suite) ...
+PASS: ALL 32 DETERMINISTIC DIRECT READ DISPATCH UNIT TESTS PASSED
+
+2. Running direct_read_dispatch_test:live_canonical_positive_probe() (Strict Live Authority) ...
+PASS: Live canonical query_doctor dispatched successfully!
+PASS: Live canonical query_saplan dispatched successfully (13 tasks observed)!
+PASS: ALL LIVE CANONICAL POSITIVE PROBES PASSED
+
+3. Running Live Authority Refusal Falsifiers ...
+- Wrong launcher role (UOS_DIRECT_ROLE=development):
+  Runtime terminating during boot ({#{message=><<"Live probe failed: launcher binding missing/invalid: invalid_direct_role_expected_direct_read">>}}) -> Exit Code 1 (HALT_CLOSED)
+- Stale/completed task (UOS_DIRECT_TASK=AGY_IMPL):
+  Runtime terminating during boot ({#{message=><<"Live query_doctor failed with code -32002: Authority fence failed before observation: refused: session heartbeat is stale; heartbeat before claiming or renewing">>}}) -> Exit Code 1 (HALT_CLOSED)
+
+4. Independent Review Findings Verification:
+- Fix 1: Deterministic unit suite (32 tests) completely separated from live positive probe (0 brittle mocks).
+- Fix 2: Strict JSON object validation accepts {} and { } whitespace; rejects blank "", primitives, arrays, and non-empty objects.
+- Fix 3: LIMIT 257 sentinel in parse_sanitized_tasks explicitly refuses plans > 256 with task_count_exceeds_limit_256.
+- Fix 4: Launcher requires UOS_DIRECT_ROLE=direct_read and all 6 fields; zero harness fallback; development.gleam 100% UNTOUCHED.
+=======================================================
+SUMMARY: 32/32 DETERMINISTIC UNIT TESTS + 2/2 LIVE PROBES PASSED
+=======================================================
