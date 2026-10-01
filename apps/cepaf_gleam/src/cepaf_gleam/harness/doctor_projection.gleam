@@ -27,7 +27,7 @@ pub fn project() -> DoctorProjection {
     admission_status: "NOT_ADMITTED (pending sovereign review; INV-PROV-05)",
     test_state: "UNOBSERVED (requires candidate-bound execution; no ad-hoc green)",
     checklist_gate_state: "UNOBSERVED (requires explicit G-CHECKLIST run)",
-    zero_muda_compliance: "0 Bevy, 0 Graphite, 0 Unvetted NIFs",
+    zero_muda_compliance: "UNOBSERVED (requires candidate-bound G-MUDA gate run)",
     vcs_architecture: "Standalone Jujutsu Monorepo (`.jj/`)",
     doctor_status: "UNOBSERVED_RUNTIME",
     observed_in_query: False,
@@ -44,6 +44,7 @@ pub fn to_markdown(p: DoctorProjection) -> String {
   <> " ("
   <> p.admission_status
   <> ")\n"
+  <> "• *Verified Cycles:* UNOBSERVED (runtime verified count unobserved in query)\n"
   <> "• *Test Suite Results:* "
   <> p.test_state
   <> "\n"
@@ -64,13 +65,13 @@ pub fn to_json(p: DoctorProjection) -> String {
   json.object([
     #("doctor_status", json.string(p.doctor_status)),
     #("admitted_ev_ceiling", json.int(p.admitted_ev_ceiling)),
-    #("ev_cycles_verified", json.int(p.admitted_ev_ceiling)),
+    #("ev_cycles_verified", json.null()),
     #("unadmitted_range", json.string(p.unadmitted_range)),
     #("admission_status", json.string("NOT_ADMITTED")),
     #("checks_passed", json.string("UNOBSERVED")),
     #("gate", json.string("UNOBSERVED")),
     #("test_state", json.string(p.test_state)),
-    #("zero_muda", json.bool(True)),
+    #("zero_muda", json.null()),
     #("observed_in_query", json.bool(p.observed_in_query)),
   ])
   |> json.to_string

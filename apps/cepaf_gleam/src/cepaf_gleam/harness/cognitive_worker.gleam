@@ -39,7 +39,7 @@ import gleam/int
 import gleam/io
 import gleam/json
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{type Option, None}
 import gleam/otp/actor
 import gleam/otp/supervision
 import gleam/result
@@ -796,19 +796,11 @@ pub fn handle_directive(
             [] -> "{}"
             _ -> string.join(rest_args, " ")
           }
-          let lease =
-            td.FencingLease(
-              worker: "worker-agy",
-              plan_id: "telegram-gemma-wiring",
-              task_id: "task-3",
-              fencing_token: 1,
-              lease_until_ns: system_time_nanos() + 3_600_000_000_000,
-            )
           dispatch_action_request(
             "call-tg-" <> intent.intent_id,
             tool_name,
             args_str,
-            Some(lease),
+            None,
             False,
             intent,
           )
@@ -2477,7 +2469,7 @@ pub fn dispatch_action_request(
       lease_opt,
       current_time_ns,
       quorum_approved,
-      True,
+      False,
       execute_harness_tool,
     )
 
