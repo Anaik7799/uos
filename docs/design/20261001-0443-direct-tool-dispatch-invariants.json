@@ -1,0 +1,90 @@
+{
+  "schema": "uos.direct-tool-dispatch-spec.v1",
+  "observed_at": "2026-10-01T04:50:43Z",
+  "status": "SPECIFIED_NOT_YET_VERIFIED",
+  "plan": "uos/direct-dispatch/20261001-0440",
+  "base": "fd4950eebf490b9972e204488e719978ee7a5522",
+  "scope": {
+    "tools": [
+      "query_doctor",
+      "query_saplan"
+    ],
+    "transport": "trusted local CLI, optionally bounded stdio MCP",
+    "excluded": [
+      "Telegram payload authority",
+      "mutating executors",
+      "arbitrary subprocess dispatch",
+      "global system admission"
+    ]
+  },
+  "invariants": [
+    {
+      "id": "DD-01",
+      "predicate": "Identity comes from a trusted local launcher, never tool request arguments.",
+      "falsifier": "Missing/forged request binding refused; cooperative Unix boundary explicit.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-02",
+      "predicate": "Only implemented bounded read operations are dispatchable.",
+      "falsifier": "query_doctor and query_saplan positive; every mutation/unknown tool refused.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-03",
+      "predicate": "Canonical task must be executing for bound worker and attempt, with completed dependencies.",
+      "falsifier": "Wrong owner, attempt, blocked or terminal task refused.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-04",
+      "predicate": "Canonical coordinator task lease must match session and epoch in current boot.",
+      "falsifier": "Missing/released/wrong epoch and boot continuity failure refused.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-05",
+      "predicate": "Fresh clock and sufficient task/coordinator lease windows must surround execution.",
+      "falsifier": "Authority change during observation discards output; no success after expiry.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-06",
+      "predicate": "Tool arguments cannot select a DB, path, command, authority or arbitrary SQL.",
+      "falsifier": "Only strict empty object accepted; malformed/oversized/extra fields refused.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-07",
+      "predicate": "Reports distinguish policy, observed task state and unobserved runtime health.",
+      "falsifier": "Doctor ceiling93, unknown counts/purity; no simulated mutation success.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-08",
+      "predicate": "Bounded read repeats may reobserve and never claim exactly-once effects.",
+      "falsifier": "Repeated observations do not mutate task authority or external services.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-09",
+      "predicate": "Sa-plan results and private message payloads are absent from public task responses.",
+      "falsifier": "Only scoped non-sensitive identifiers/states/counts; sanitized errors.",
+      "evidence_status": "UNRUN"
+    },
+    {
+      "id": "DD-10",
+      "predicate": "Exact source, artifact and loaded runtime are independently reviewed before main advancement.",
+      "falsifier": "Source candidate and immutable release identity match observed process.",
+      "evidence_status": "UNRUN"
+    }
+  ],
+  "fractal_layers": [
+    "L0 authority",
+    "L3 execution fence",
+    "L4 transport/release",
+    "L5 feedback",
+    "L9 provenance"
+  ],
+  "authority": "Specification is not admission; candidate-bound executable tests and independent review are required."
+}

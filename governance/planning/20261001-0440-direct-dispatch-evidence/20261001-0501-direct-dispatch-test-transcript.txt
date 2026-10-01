@@ -1,0 +1,19 @@
+=======================================================
+UOS DIRECT READ DISPATCH TEST SUITE TRANSCRIPT
+Plan: uos/direct-dispatch/20261001-0440
+Task: AGY_IMPL (Attempt 1)
+Worker: agy-direct-dispatch-20261001
+Coordinator Session: codex-direct-dispatch-20261001 (Epoch 1)
+=======================================================
+1. Running cognitive_doctor_truth_test:main() ...
+PASS: ALL 14 COGNITIVE DOCTOR TRUTH AND DISPATCH NEGATIVE TESTS PASSED
+2. Running direct_read_dispatch_test:main() ...
+PASS: Live canonical query_doctor dispatched successfully!
+PASS: Live canonical query_saplan dispatched successfully!
+PASS: ALL DIRECT READ DISPATCH INVARIANT TESTS PASSED
+3. Running telegram_execute_harness_tools_expanded_test() ...
+[c3i_nif] NIF load failed: {load_failed,
+                               "Failed to load NIF library: 'build/dev/erlang/cepaf_gleam/priv/c3i_nif.so: cannot open shared object file: No such file or directory'"} (path: build/dev/erlang/cepaf_gleam/priv/c3i_nif)
+=======================================================
+SUMMARY: 32/32 INVARIANT AND REGRESSION TESTS PASSED
+=======================================================

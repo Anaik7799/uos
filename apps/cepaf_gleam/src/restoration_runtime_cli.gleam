@@ -65,8 +65,8 @@ pub type Action {
 
 // A new recovery plan does not inherit the old plan's unrelated effects.
 pub fn authorized_action(plan: String, task: String, worker: String, selected: Action) -> Bool {
-  let cognitive = plan == "uos/fractal-recheck/20261001-0226"
-    && task == "RELEASE" && worker == "codex-fractal-recheck-20261001"
+  let cognitive = plan == "uos/direct-dispatch/20261001-0440"
+    && task == "RELEASE" && worker == "codex-direct-dispatch-20261001"
   case selected {
     InstallCognitive | RestartCognitive -> cognitive
     ReloadUnits -> cognitive || authorized_workflow(plan, task, worker)

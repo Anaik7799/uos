@@ -1,0 +1,1 @@
+{"schema":"uos.coordination-observation.v1","operation":"direct-agy-read-task-claim","outcome":"REFUSED","reason":"session heartbeat stale during documentation; no effect","correction":"typed board and coordinator heartbeat refreshed; fresh operation then accepted","accepted_operation":"direct-agy-read-task-claim-fresh","epoch":1,"scope":"AGY_IMPL bounded read tests only"}

@@ -61,8 +61,8 @@ pub fn capability_workflow_is_exact_and_prior_completed_plan_is_refused_test() {
 }
 
 pub fn cognitive_release_cannot_inherit_unrelated_effects_test() {
-  let new_plan = "uos/fractal-recheck/20261001-0226"
-  let worker = "codex-fractal-recheck-20261001"
+  let new_plan = "uos/direct-dispatch/20261001-0440"
+  let worker = "codex-direct-dispatch-20261001"
   [runtime.InstallCognitive, runtime.RestartCognitive, runtime.ReloadUnits]
   |> list.each(fn(selected) {
     runtime.authorized_action(new_plan, "RELEASE", worker, selected) |> should.be_true
@@ -81,5 +81,13 @@ pub fn cognitive_release_cannot_inherit_unrelated_effects_test() {
     runtime.authorized_action("uos/capability-restoration/20260930-0734", "RELEASE",
       "codex-capability-restoration-20260930", selected) |> should.be_false
     runtime.resource(selected) |> should.equal("runtime:cognitive-worker")
+  })
+}
+
+pub fn completed_cognitive_workflow_is_not_reused_test() {
+  [runtime.InstallCognitive, runtime.RestartCognitive, runtime.ReloadUnits]
+  |> list.each(fn(selected) {
+    runtime.authorized_action("uos/fractal-recheck/20261001-0226", "RELEASE",
+      "codex-fractal-recheck-20261001", selected) |> should.be_false
   })
 }
