@@ -24,6 +24,40 @@ import gleam/string
 import uos_swarm/board
 import uos_swarm/coord
 
+pub type Provider {
+  Claude
+  Codex
+  Agy
+  Service
+}
+
+pub fn parse_provider(str: String) -> Result(Provider, String) {
+  case str {
+    "claude" -> Ok(Claude)
+    "codex" -> Ok(Codex)
+    "agy" -> Ok(Agy)
+    "service" -> Ok(Service)
+    _ -> Error("provider must be claude, codex, agy, or service")
+  }
+}
+
+pub fn provider_to_string(provider: Provider) -> String {
+  case provider {
+    Claude -> "claude"
+    Codex -> "codex"
+    Agy -> "agy"
+    Service -> "service"
+  }
+}
+
+pub fn provider_decoder() -> decode.Decoder(Provider) {
+  use str <- decode.then(decode.string)
+  case parse_provider(str) {
+    Ok(p) -> decode.success(p)
+    Error(err) -> decode.failure(Claude, err)
+  }
+}
+
 pub type Command {
   Register(
     session: String,
@@ -365,10 +399,7 @@ fn transition(
 ) -> Result(#(State, Receipt), String) {
   case command {
     Register(id, provider, workspace, revision, refs) -> {
-      use _ <- result.try(require(
-        list.contains(["claude", "codex", "agy"], provider),
-        "provider must be claude, codex, or agy",
-      ))
+      use _parsed_provider <- result.try(parse_provider(provider))
       use _ <- result.try(require(
         !dict.has_key(state.sessions, id),
         "session already registered; retry original op_id or heartbeat",

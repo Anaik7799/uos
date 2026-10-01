@@ -297,7 +297,7 @@ fn run_other(args: List(String)) -> Result(String, String) {
 
 pub fn usage() -> String {
   "gleam run -m session_store_cli -- <absolute_sqlite3_path> <command> ...\n"
-  <> "register <session> <claude|codex|agy> <workspace> <revision> <refs_csv|-> <op_id>\n"
+  <> "register <session> <claude|codex|agy|service> <workspace> <revision> <refs_csv|-> <op_id>\n"
   <> "heartbeat <session> <revision> <refs_csv|-> <op_id>\n"
   <> "claim <session> <task:id|workspace:path|integration/main|runtime:service> <ttl_seconds> <op_id>\n"
   <> "renew <session> <resource> <epoch> <ttl_seconds> <op_id>\n"

@@ -289,7 +289,7 @@ WHEN COALESCE(CASE
     AND NEW.operation IN ('register','heartbeat','claim','renew','release','send','ack','retire')
     AND length(NEW.digest) = 64 AND NEW.digest NOT GLOB '*[^0-9a-f]*'
     AND ((NEW.operation = 'register'
-      AND json_extract(NEW.command_json, '$.a') IN ('claude','codex','agy')
+      AND json_extract(NEW.command_json, '$.a') IN ('claude','codex','agy','service')
       AND substr(json_extract(NEW.command_json, '$.b'),1,1) = '/'
       AND NOT EXISTS (SELECT 1 FROM events WHERE actor=NEW.actor AND operation='register')) OR (
       NEW.operation <> 'register' AND (
