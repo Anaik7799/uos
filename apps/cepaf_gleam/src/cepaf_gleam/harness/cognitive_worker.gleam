@@ -20,6 +20,7 @@ import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/c3i/ocaml_nif
 import cepaf_gleam/harness/agent_ecology
 import cepaf_gleam/harness/conversation_memory
+import cepaf_gleam/harness/doctor_projection
 import cepaf_gleam/harness/egress_redactor
 import cepaf_gleam/harness/telegram as tg
 import cepaf_gleam/harness/telegram_creative
@@ -620,10 +621,10 @@ pub fn handle_directive(
       CognitiveDecision(
         intent_id: intent.intent_id,
         ooda_phase: "Completed",
-        reasoning: "Operator queried EV-cycle diagnostics and invariant verification.",
-        actions: ["diagnose_ev_status", "verify_zero_muda"],
+        reasoning: "Operator queried EV-cycle admission status and diagnostic projection.",
+        actions: [],
         reply_markdown: reply,
-        confidence: 1.0,
+        confidence: 0.5,
         timestamp_ms: intent.timestamp_ms,
       )
     }
@@ -2091,14 +2092,9 @@ fn query_storage_detail() -> String {
   <> "• *Status:* 🟢 Inviolable Hardware Lock Active"
 }
 
-fn query_doctor_detail() -> String {
-  "🩺 *UOS Doctor & EV-Cycle Diagnostics*\n\n"
-  <> "• *Current EV-Cycle:* EV-108 / EV-109 (Ratified)\n"
-  <> "• *Test Suite Results:* >10,636 Tests Passed (100% Clean)\n"
-  <> "• *Checklist Gate (G-CHECKLIST):* 5 Domains, 18/18 Checks PASS\n"
-  <> "• *Zero-Muda Compliance:* 0 Bevy, 0 Graphite, 0 Unvetted NIFs\n"
-  <> "• *VCS Architecture:* Standalone Jujutsu Monorepo (`.jj/`)\n"
-  <> "• *Admitted State:* Ratified by AGY, Claude & Codex Sovereign Consensus"
+pub fn query_doctor_detail() -> String {
+  doctor_projection.project()
+  |> doctor_projection.to_markdown
 }
 
 fn query_task_detail(task_id: String) -> String {
@@ -2428,7 +2424,8 @@ pub fn execute_harness_tool(
     "query_finops" -> Ok(telegram_creative.handle_finops([]))
     "query_doctor" ->
       Ok(
-        "{\"doctor_status\":\"HEALTHY\",\"ev_cycles_verified\":108,\"checks_passed\":\"108/108\",\"gate\":\"PASS\",\"zero_muda\":true}",
+        doctor_projection.project()
+        |> doctor_projection.to_json,
       )
     "query_checklist" ->
       Ok(
