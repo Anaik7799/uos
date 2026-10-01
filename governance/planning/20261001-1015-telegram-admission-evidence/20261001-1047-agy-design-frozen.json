@@ -1,0 +1,87 @@
+{
+  "schema": "uos.telegram-admission-agy-rca.v1",
+  "observed_at": "2026-10-01T10:38:00Z",
+  "task": "AGY_RCA",
+  "worker": "agy-telegram-admission-20261001",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "base": "83dca0394346564356920f066b3924858144107f",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-telegram-admission-20261001",
+  "phase": "DEVELOPMENT_DESIGN_ONLY",
+  "authority": "Design audit only; implementation follows independently accepted DESIGN_REVIEW; zero main or runtime mutations",
+  "rca_layers": {
+    "L0_constitutional": "Ingress accepts unauthenticated messages from arbitrary users into Zenoh cog bus; missing 2oo3 quorum on mutating actions; /tool currently passes None/False and halts closed",
+    "L1_atomic_data": "tools/telegram_client.ml line 567 prints unredacted private message text to stdout; line 570 emits immediate optimistic reactions before downstream acceptance",
+    "L2_component_lifecycle": "tools/telegram_client.ml lines 545-546 marks update processed and advances poll offset before verified downstream acceptance by Gleam/Zenoh, creating silent message loss on failure",
+    "L3_transaction_fencing": "cognitive_worker /tool maps to dispatch_action_request with lease_opt: None and authority_verified: False, correctly rejecting caller-invented leases but lacking canonical direct read dispatch delegation",
+    "L4_system_bus": "cognitive_worker line 2699 deletes shared Zenoh key indrajaal/l5/cog/intent/req via http_delete, racing concurrent intents and causing batch drop",
+    "L5_cognitive_routing": "Informational commands (/start, /status, /doctor, /plan) work well, but /tool lacks bounded read dispatch integration with direct_read_dispatch",
+    "L6_ecosystem_api": "BotAPI polling lacks chat/user allowlist enforcement at ingress; token and default chat loaded from DB/env without identity verification",
+    "L7_federation_symbiosis": "Gleam must own authentication, dispatch, task binding, and delivery policy per SC-HARNESS-MCP-001; native IO acts as subordinate bounded transport",
+    "L8_delivery_ledger": "No durable SQLite delivery ledger; outcomes are unacknowledged or subject to blind retries without idempotency keys",
+    "L9_meta_provenance": "Reliance on synthetic test fixtures instead of verified canonical direct_read_dispatch and real BotAPI contract"
+  },
+  "trust_boundaries": {
+    "untrusted_ingress": "Internet Telegram BotAPI -> Ingress Adapter; strictly filtered by allowlist (allowed_chat_ids, allowed_user_ids) before parsing or publishing",
+    "cooperative_local_launcher": "NAS-1 same-Unix-user (an) trusted service environment holding canonical task resource and coordinator lease for bounded operations",
+    "execution_authority": "Operator chat identity is an authenticated user identity, not a Sa-plan lease. Bounded reads execute under service direct_read_dispatch; mutating tools require 2oo3 quorum and canonical task lease",
+    "delivery_ledger": "Local SQLite ledger guarantees at-least-once durable intake before offset commit, and at-most-once delivery tracking with UNCERTAIN failure semantics"
+  },
+  "exact_ingress_integration": {
+    "module": "tools/telegram_client.ml",
+    "allowlist_gate": "Before parsing message text or reacting, query SQLite preferences/table for allowed chat_ids and usernames. Drop un-allowlisted senders immediately with zero bus publication and zero reaction",
+    "durable_intake_gate": "Replace lines 545-546: INSERT update into telegram_inbox table in SQLite WAL with status PENDING. Commit transaction before advancing telegram_poll_offset. If insert fails, do not advance offset",
+    "logging_redaction": "Replace line 567 printf with egress_redactor sanitized logging (truncate/hash text, omit private tokens)",
+    "reaction_policy": "Remove line 570 immediate optimistic reaction; reactions only permitted after downstream Gleam confirmation"
+  },
+  "durable_database_io_adapter": {
+    "store": "var/telegram/state.sqlite3 (WAL mode, PRAGMA synchronous = NORMAL, busy_timeout = 5000)",
+    "inbox_table": "CREATE TABLE IF NOT EXISTS telegram_inbox (update_id INTEGER PRIMARY KEY, message_id INTEGER, chat_id TEXT NOT NULL, from_user TEXT NOT NULL, text_hash TEXT NOT NULL, raw_payload TEXT NOT NULL, status TEXT CHECK(status IN ('PENDING', 'ACCEPTED', 'PROCESSING', 'COMPLETED', 'REJECTED')), created_at_ms INTEGER NOT NULL, completed_at_ms INTEGER);",
+    "outbox_ledger_table": "CREATE TABLE IF NOT EXISTS telegram_outbox_ledger (request_id TEXT PRIMARY KEY, chat_id TEXT NOT NULL, text_hash TEXT NOT NULL, status TEXT CHECK(status IN ('PENDING', 'SENDING', 'DELIVERED', 'FAILED', 'UNCERTAIN')), telegram_msg_id INTEGER, attempt_count INTEGER NOT NULL DEFAULT 0, error_detail TEXT, created_at_ms INTEGER NOT NULL, updated_at_ms INTEGER NOT NULL);",
+    "invariant": "Offset commit strictly follows successful SQLite inbox transaction commit"
+  },
+  "canonical_task_lifecycle": {
+    "request_identification": "Inbound Telegram update assigned deterministic request_id: req-tg-<update_id>-<text_hash_prefix>",
+    "direct_read_authority": "For query_doctor and query_saplan, Gleam cognitive worker executes via direct_read_dispatch using server-side local launcher binding (UOS_DIRECT_ROLE=direct_read) and active task resource. No caller-supplied lease is trusted",
+    "mutating_action_authority": "Direct /tool mutating commands refuse execution (-32002). Operator must initiate two-step /approval <plan_id> <task_id> <title> workflow acquiring 2oo3 constitutional quorum and canonical Sa-plan lease before execution"
+  },
+  "security_and_operational_invariants": {
+    "forged_zenoh_payload_refusal": "Cognitive worker validates sender chat_id and from_user against internal compiled allowlist, rejecting forged payloads even if injected on Zenoh bus. Tool dispatcher never sets authority_verified=True from payload fields",
+    "server_side_direct_read_authority": "direct_read_dispatch loads trusted environment binding from local launcher (never request JSON). Validates 6 UOS_DIRECT_* fields, performs pre/post fences with clock continuity, and executes read tools",
+    "delivery_unknown_reconciliation": "Outbound BotAPI timeouts or HTTP 5xx errors record status UNCERTAIN in telegram_outbox_ledger. Blind retries are strictly prohibited to prevent duplicate messages or double executions. Explicit retries must carry the same request_id and incremented attempt_count",
+    "single_writer_restart": "Exclusive SQLite writer transaction (BEGIN IMMEDIATE) prevents multi-writer races. Service acquires coordinator lease service:telegram_bridge. On restart, recovery query identifies uncompleted PENDING/PROCESSING updates and resumes getUpdates strictly from max(update_id)+1"
+  },
+  "smallest_usable_production_design": {
+    "component_1_ingress_guard": "tools/telegram_client.ml allowlist verification and payload redaction",
+    "component_2_durable_ledger": "SQLite WAL telegram_inbox and telegram_outbox_ledger tables",
+    "component_3_non_destructive_bus": "Per-update Zenoh subkeys or direct SQLite inbox queue; eliminate http_delete on shared intent key",
+    "component_4_bounded_tool_dispatch": "Route /tool query_doctor and query_saplan through direct_read_dispatch; refuse mutating tools",
+    "component_5_command_preservation": "Preserve all existing directives (/start, /help, /status, /doctor, /plan, /checklist, /storage)"
+  },
+  "acceptance_criteria": [
+    "AC-01: Non-allowlisted chat/user rejected at ingress with zero bus publication and zero offset corruption",
+    "AC-02: Private payload text redacted from all operational logs and traces",
+    "AC-03: Telegram update offset advances only upon verified durable ledger storage",
+    "AC-04: /tool query_doctor and /tool query_saplan return authentic un-fabricated system status via direct_read_dispatch",
+    "AC-05: /tool <mutating_tool> fails closed with 2oo3 quorum and Sa-plan lease requirement",
+    "AC-06: Shared Zenoh request keys are never destructively wiped",
+    "AC-07: Outbound delivery failure is durably recorded as UNCERTAIN or FAILED, never false ACK",
+    "AC-08: Standard bot directives (/start, /help, /doctor, /status) preserve 100% existing functionality"
+  ],
+  "falsifiers": [
+    "F-01: Unauthorized sender update published to indrajaal/l5/cog/intent/req",
+    "F-02: /tool query_doctor with arguments executes or accepts arguments",
+    "F-03: /tool mutating action executes without 2oo3 quorum",
+    "F-04: Downstream failure loses un-persisted Telegram update while offset advanced",
+    "F-05: http_delete wipes unread messages on shared request key"
+  ],
+  "rollback_plan": "Preserve main base 83dca039; all work isolated in .uos-workspaces/agy-telegram-admission-20261001; revert change with jj undo or discard workspace branch",
+  "proposed_owned_paths": [
+    "tools/telegram_client.ml",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+    "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+    "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam"
+  ]
+}

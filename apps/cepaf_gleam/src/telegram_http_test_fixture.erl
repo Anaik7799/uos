@@ -1,0 +1,297 @@
+%% =============================================================================
+%% [C3I-SIL6] telegram_http_test_fixture — Real Bounded Local HTTP Test Fixture
+%% =============================================================================
+%% Strictly local loopback HTTP fixture (127.0.0.1:<ephemeral_port>) for testing
+%% the Telegram client and service without touching live Telegram endpoints.
+%%
+%% Supports programmable modes:
+%%   - normal: 200 OK with valid Telegram response matching target chat
+%%   - forbidden: 403 Forbidden with ok=false
+%%   - bad_request: 400 Bad Request with ok=false
+%%   - bad_gateway: 502 Bad Gateway with ok=false
+%%   - drop: drops TCP socket immediately (triggers client socket error)
+%%   - delay: sleeps 15s (triggers client 10s timeout)
+%%   - malformed: 200 OK with malformed JSON body
+%%   - wrong_chat: 200 OK with valid JSON but wrong chat.id
+%%
+%% This module MUST NOT be reachable from production code paths.
+%% =============================================================================
+-module(telegram_http_test_fixture).
+-behaviour(gen_server).
+
+-export([start/0, start/1, stop/1, set_mode/2, set_updates/2, get_requests/1, clear_requests/1]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+
+-record(state, {
+    listen_socket,
+    port,
+    mode = normal,
+    preset_updates = [],
+    requests = []
+}).
+
+%% -----------------------------------------------------------------------------
+%% Public API
+%% -----------------------------------------------------------------------------
+
+start() ->
+    start(0).
+
+start(Port) ->
+    case gen_server:start_link(?MODULE, [Port], []) of
+        {ok, Pid} ->
+            ActualPort = gen_server:call(Pid, get_port),
+            BaseUrl = list_to_binary(io_lib:format("http://127.0.0.1:~p", [ActualPort])),
+            {ok, {Pid, ActualPort, BaseUrl}};
+        Error ->
+            Error
+    end.
+
+stop(Pid) ->
+    try
+        gen_server:stop(Pid)
+    catch
+        _:_ -> ok
+    end.
+
+set_mode(Pid, Mode) when is_binary(Mode) ->
+    Atom = binary_to_existing_atom(Mode, utf8),
+    gen_server:call(Pid, {set_mode, Atom});
+set_mode(Pid, Mode) ->
+    gen_server:call(Pid, {set_mode, Mode}).
+
+set_updates(Pid, Updates) ->
+    gen_server:call(Pid, {set_updates, Updates}).
+
+get_requests(Pid) ->
+    gen_server:call(Pid, get_requests).
+
+clear_requests(Pid) ->
+    gen_server:call(Pid, clear_requests).
+
+%% -----------------------------------------------------------------------------
+%% gen_server Callbacks
+%% -----------------------------------------------------------------------------
+
+init([Port]) ->
+    Opts = [
+        binary,
+        {packet, raw},
+        {active, false},
+        {reuseaddr, true},
+        {ip, {127, 0, 0, 1}},
+        {backlog, 64}
+    ],
+    case gen_tcp:listen(Port, Opts) of
+        {ok, ListenSocket} ->
+            {ok, ActualPort} = inet:port(ListenSocket),
+            self() ! accept,
+            {ok, #state{listen_socket = ListenSocket, port = ActualPort}};
+        {error, Reason} ->
+            {stop, Reason}
+    end.
+
+handle_call(get_port, _From, State) ->
+    {reply, State#state.port, State};
+handle_call({set_mode, Mode}, _From, State) ->
+    {reply, ok, State#state{mode = Mode}};
+handle_call({set_updates, Updates}, _From, State) ->
+    {reply, ok, State#state{preset_updates = Updates}};
+handle_call(get_requests, _From, State) ->
+    {reply, lists:reverse(State#state.requests), State};
+handle_call(clear_requests, _From, State) ->
+    {reply, ok, State#state{requests = []}};
+handle_call(_Req, _From, State) ->
+    {reply, {error, unknown_call}, State}.
+
+handle_cast(_Msg, State) ->
+    {noreply, State}.
+
+handle_info(accept, State) ->
+    case gen_tcp:accept(State#state.listen_socket, 200) of
+        {ok, ClientSocket} ->
+            ServerPid = self(),
+            spawn_link(fun() -> handle_client(ClientSocket, ServerPid, State#state.mode, State#state.preset_updates) end),
+            self() ! accept,
+            {noreply, State};
+        {error, timeout} ->
+            self() ! accept,
+            {noreply, State};
+        {error, closed} ->
+            {noreply, State};
+        {error, _Reason} ->
+            self() ! accept,
+            {noreply, State}
+    end;
+handle_info({record_request, Req}, State) ->
+    {noreply, State#state{requests = [Req | State#state.requests]}};
+handle_info(_Info, State) ->
+    {noreply, State}.
+
+terminate(_Reason, State) ->
+    case State#state.listen_socket of
+        undefined -> ok;
+        Sock -> gen_tcp:close(Sock)
+    end,
+    ok.
+
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
+
+%% -----------------------------------------------------------------------------
+%% HTTP Request Handling
+%% -----------------------------------------------------------------------------
+
+handle_client(Socket, ServerPid, Mode, PresetUpdates) ->
+    case read_request(Socket, <<>>) of
+        {ok, Method, Path, Headers, Body} ->
+            ServerPid ! {record_request, {Method, Path, Headers, Body}},
+            dispatch_response(Socket, Mode, Method, Path, Body, PresetUpdates);
+        {error, _} ->
+            gen_tcp:close(Socket)
+    end.
+
+read_request(Socket, Acc) ->
+    case gen_tcp:recv(Socket, 0, 5000) of
+        {ok, Chunk} ->
+            Combined = <<Acc/binary, Chunk/binary>>,
+            case binary:split(Combined, <<"\r\n\r\n">>) of
+                [Head, Rest] ->
+                    [RequestLine | HeaderLines] = binary:split(Head, <<"\r\n">>, [global]),
+                    [Method, Path, _Proto] = binary:split(RequestLine, <<" ">>, [global]),
+                    Headers = parse_headers(HeaderLines, []),
+                    ContentLength = case lists:keyfind(<<"content-length">>, 1, Headers) of
+                        {_, Val} ->
+                            try binary_to_integer(string:trim(Val)) catch _:_ -> 0 end;
+                        false -> 0
+                    end,
+                    case byte_size(Rest) >= ContentLength of
+                        true ->
+                            <<Body:ContentLength/binary, _/binary>> = Rest,
+                            {ok, Method, Path, Headers, Body};
+                        false ->
+                            read_remaining_body(Socket, Rest, ContentLength, Method, Path, Headers)
+                    end;
+                _ ->
+                    read_request(Socket, Combined)
+            end;
+        Error ->
+            Error
+    end.
+
+read_remaining_body(Socket, Current, Total, Method, Path, Headers) ->
+    Needed = Total - byte_size(Current),
+    case gen_tcp:recv(Socket, Needed, 5000) of
+        {ok, Chunk} ->
+            FullBody = <<Current/binary, Chunk/binary>>,
+            {ok, Method, Path, Headers, FullBody};
+        Error ->
+            Error
+    end.
+
+parse_headers([], Acc) ->
+    Acc;
+parse_headers([<<>> | Rest], Acc) ->
+    parse_headers(Rest, Acc);
+parse_headers([Line | Rest], Acc) ->
+    case binary:split(Line, <<": ">>) of
+        [Key, Value] ->
+            parse_headers(Rest, [{string:lowercase(Key), Value} | Acc]);
+        _ ->
+            parse_headers(Rest, Acc)
+    end.
+
+dispatch_response(Socket, drop, _Method, _Path, _Body, _Presets) ->
+    gen_tcp:close(Socket);
+
+dispatch_response(Socket, delay, Method, Path, Body, Presets) ->
+    timer:sleep(15000),
+    dispatch_response(Socket, normal, Method, Path, Body, Presets);
+
+dispatch_response(Socket, forbidden, _Method, _Path, _Body, _Presets) ->
+    send_json(Socket, 403, <<"{\"ok\":false,\"error_code\":403,\"description\":\"Forbidden: bot was blocked by the user\"}">>);
+
+dispatch_response(Socket, bad_request, _Method, _Path, _Body, _Presets) ->
+    send_json(Socket, 400, <<"{\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: chat not found\"}">>);
+
+dispatch_response(Socket, bad_gateway, _Method, _Path, _Body, _Presets) ->
+    send_json(Socket, 502, <<"{\"ok\":false,\"error_code\":502,\"description\":\"Bad Gateway\"}">>);
+
+dispatch_response(Socket, malformed, _Method, _Path, _Body, _Presets) ->
+    send_json(Socket, 200, <<"{\"ok\":true, \"result\": broken_json">>);
+
+dispatch_response(Socket, wrong_chat, _Method, _Path, _Body, _Presets) ->
+    send_json(Socket, 200, <<"{\"ok\":true,\"result\":{\"message_id\":42,\"chat\":{\"id\":99999999}}}">>);
+
+dispatch_response(Socket, normal, _Method, Path, Body, Presets) ->
+    case is_subpath(Path, <<"/getUpdates">>) of
+        true ->
+            UpdatesJson = case Presets of
+                [] -> <<"[]">>;
+                List ->
+                    Items = [Item || Item <- List],
+                    iolist_to_binary([<<"[">>, string:join([binary_to_list(I) || I <- Items], ","), <<"]">>])
+            end,
+            Resp = iolist_to_binary([<<"{\"ok\":true,\"result\":">>, UpdatesJson, <<"}">>]),
+            send_json(Socket, 200, Resp);
+        false ->
+            case is_subpath(Path, <<"/sendMessage">>) of
+                true ->
+                    ChatId = extract_chat_id(Body),
+                    Resp = iolist_to_binary([
+                        <<"{\"ok\":true,\"result\":{\"message_id\":42,\"chat\":{\"id\":">>,
+                        integer_to_binary(ChatId),
+                        <<"}}}">>
+                    ]),
+                    send_json(Socket, 200, Resp);
+                false ->
+                    case is_subpath(Path, <<"/answerCallbackQuery">>) of
+                        true ->
+                            send_json(Socket, 200, <<"{\"ok\":true,\"result\":true}">>);
+                        false ->
+                            send_json(Socket, 404, <<"{\"ok\":false,\"error_code\":404,\"description\":\"Not Found\"}">>)
+                    end
+            end
+    end.
+
+is_subpath(Path, Target) ->
+    case binary:match(Path, Target) of
+        nomatch -> false;
+        _ -> true
+    end.
+
+extract_chat_id(Body) ->
+    try
+        case binary:match(Body, <<"\"chat_id\":">>) of
+            {Pos, Len} ->
+                <<_:Pos/binary, _:Len/binary, Rest/binary>> = Body,
+                Trimmed = string:trim(Rest),
+                Digits = lists:takewhile(fun(C) -> (C >= $0 andalso C =< $9) orelse C == $- end, binary_to_list(Trimmed)),
+                list_to_integer(Digits);
+            nomatch ->
+                100
+        end
+    catch
+        _:_ -> 100
+    end.
+
+send_json(Socket, StatusCode, Body) ->
+    StatusText = case StatusCode of
+        200 -> <<"OK">>;
+        400 -> <<"Bad Request">>;
+        403 -> <<"Forbidden">>;
+        404 -> <<"Not Found">>;
+        502 -> <<"Bad Gateway">>;
+        _ -> <<"Status">>
+    end,
+    Len = byte_size(Body),
+    Header = io_lib:format(
+        "HTTP/1.1 ~p ~s\r\n"
+        "Content-Type: application/json; charset=utf-8\r\n"
+        "Content-Length: ~p\r\n"
+        "Connection: close\r\n"
+        "\r\n",
+        [StatusCode, StatusText, Len]
+    ),
+    gen_tcp:send(Socket, [Header, Body]),
+    gen_tcp:close(Socket).

@@ -1,0 +1,61 @@
+{
+  "schema": "uos.independent-doctor-manifest-review.v1",
+  "observed_at": "2026-10-01T11:49:29Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "DOCTOR_REVIEW",
+  "attempt": 1,
+  "verdict": "PASS_SCOPED_DEVELOPMENT_REPAIR",
+  "source_hashes": [
+    {
+      "path": "tools/uos/src/main.gleam",
+      "sha256": "6f1801c0315a83f179bbaf586617267a1d7a7a09d6078d3faf1587db4c8450c1"
+    },
+    {
+      "path": "tools/uos/test/doctor_manifest_truth_test.gleam",
+      "sha256": "3def9f6d209b60720ed7efcc6723c313f4ce5aef352937b1a42b747d85831ba3"
+    }
+  ],
+  "closes_finding": "ADMISSION-REVIEW-P2-DOCTOR-EMPTY",
+  "prior_hold_preserved": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1143-independent-admission-truth-review.json",
+  "scope": "Doctor manifest false-green repair only. Prior unchanged admission-label/catalog review remains applicable. No global admission.",
+  "inspection": {
+    "main_changes": "Only Doctor parsing/pass predicate and new pure helper functions differ from prior reviewed main; remaining branches byte-identical.",
+    "verdict": "Requires nonempty results, every row INVENTORY. Invalid fields, duplicate IDs, nonpositive/noncanonical IDs, missing/unknown/above-ceiling records cannot pass.",
+    "path_policy": "Lexical absolute/traversal/empty-component/backslash/NUL refusal before observer; no descriptor-relative filesystem confinement claim."
+  },
+  "tests": {
+    "focused_eunit_passed": 26,
+    "additional_independent_falsifiers_passed": 6,
+    "additional_cases": [
+      "262145-byte manifest refused",
+      "1001-row manifest refused",
+      "EV94 refuses without observing artifact",
+      "+1 noncanonical ID refused",
+      "a/./b path refused",
+      "trailing path separator refused"
+    ],
+    "actual_missing_manifest_cli": {
+      "cwd": "/",
+      "repository_override": "UOS_REPO=/",
+      "exit_code": 1,
+      "final_output": "UOS Doctor result: HOLD - 0/0 cycles have a checkable artifact; 0 declare none and are NOT admitted.",
+      "manifest_mutation": false
+    },
+    "positive_control": "Valid existing inventory accepted as inventory only",
+    "transcript": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1149-independent-doctor-tests.txt"
+  },
+  "preserved_execution_failure": "Initial extra-falsifier shell command lacked its closing quote and exited 2 before running tests. Corrected quoting then all six passed; both outputs retained.",
+  "limits": [
+    "Inventory PASS does not establish behavior, proof, deployed state or admission.",
+    "This does not bound the earlier whole-file FFI read or establish symlink confinement; pure parser has byte/row limits.",
+    "No verify-all, inference, full gate_verdict_test, downloads, production effects or task mutations.",
+    "Global obligations remain HOLD; EV94..109 NOT_ADMITTED and no new EV IDs."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l4",
+    "#zk-adr",
+    "#zero-muda"
+  ]
+}

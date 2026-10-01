@@ -1,0 +1,122 @@
+{
+  "receipt_id": "20261011-1815-telegram-service-slice2-verification",
+  "timestamp": "2026-10-11T16:15:00Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "SERVICE_IMPL",
+  "attempt": 1,
+  "worker": "agy-telegram-20261011",
+  "status": "DEVELOPMENT_COMPONENT_PASS",
+  "task_state": "executing",
+  "task_remains_open": true,
+  "summary": "Slice 2 Supervised OTP End-to-End Test Suite verified green with 5/5 tests passing; OTP actor API integrated into telegram_service.gleam; generation synchronization on deliver_chunk and poll_cycle verified against SQLite CAS; 8/8 product sources match exact frozen hashes.",
+  "slice2_test_results": {
+    "test_file": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+    "total_tests": 5,
+    "passed_tests": 5,
+    "failed_tests": 0,
+    "test_cases": [
+      {
+        "name": "e2e_full_conversation_lifecycle_test",
+        "duration_s": 0.990,
+        "status": "PASS",
+        "scope": "Ingress poll -> task claim -> result ready -> outbox sending pre-commit -> HTTP 200 OK delivery -> outbox delivered post-commit -> task completion -> empty poll"
+      },
+      {
+        "name": "e2e_unauthorized_user_rejection_test",
+        "duration_s": 0.605,
+        "status": "PASS",
+        "scope": "Unauthorized sender rejected by ingress guard at store admission; InboxRejected admitted with zero tasks claimed"
+      },
+      {
+        "name": "e2e_delivery_failure_bad_request_test",
+        "duration_s": 0.852,
+        "status": "PASS",
+        "scope": "HTTP 400 Bad Request mapped to OutboxFailed in store; no retry loop"
+      },
+      {
+        "name": "e2e_delivery_ambiguous_socket_drop_test",
+        "duration_s": 0.850,
+        "status": "PASS",
+        "scope": "TCP socket drop during delivery mapped to OutboxUncertain; no blind retry"
+      },
+      {
+        "name": "e2e_recovery_cgroup_and_writer_hold_test",
+        "duration_s": 0.176,
+        "status": "PASS",
+        "scope": "Unquiesced in-flight processing task triggers fail-closed in-memory ServiceWriterHold; cleared by valid UnitCleanupReceipt with cgroup.events populated 0"
+      }
+    ]
+  },
+  "slice1_regression_results": {
+    "test_file": "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+    "total_tests": 13,
+    "passed_tests": 13,
+    "failed_tests": 0,
+    "duration_s": 4.131
+  },
+  "ledger_regression_results": {
+    "test_file": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+    "total_tests": 27,
+    "passed_tests": 27,
+    "failed_tests": 0,
+    "duration_s": 0.182
+  },
+  "ingress_guard_regression_results": {
+    "test_file": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+    "total_tests": 16,
+    "passed_tests": 16,
+    "failed_tests": 0,
+    "duration_s": 0.051
+  },
+  "preflight_status": {
+    "command": "bash tools/preflight",
+    "passed_checks": 31,
+    "total_checks": 31,
+    "verdict": "PASS"
+  },
+  "product_source_closure": {
+    "verified_byte_match": true,
+    "sources": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "sha256": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced",
+        "status": "EXACT_MATCH"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+        "sha256": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f",
+        "status": "EXACT_MATCH"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+        "status": "EXACT_MATCH"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "sha256": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+        "status": "EXACT_MATCH"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+        "sha256": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+        "status": "EXACT_MATCH"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+        "status": "EXACT_MATCH"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+        "status": "EXACT_MATCH"
+      },
+      {
+        "path": "native/ocaml/telegram_store/telegram_store.ml",
+        "sha256": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630",
+        "status": "EXACT_MATCH"
+      }
+    ]
+  }
+}

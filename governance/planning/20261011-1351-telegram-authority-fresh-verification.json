@@ -1,0 +1,72 @@
+{
+  "schema": "uos.telegram-authority-fresh-verification.v1",
+  "observed_at": "2026-10-11T13:33:51Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "AUTH_REFRESH",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "verdict": "PASS_SCOPED_STAGED_DEVELOPMENT",
+  "runtime_admission": "NOT_GRANTED",
+  "prior_candidate": "77d937dc460721966ce47a2ff04d70327e44e3c3",
+  "source_manifest": [
+    {
+      "sha256": "ff5e365a34c14c2fe419e426a88d0bbda5a3e7a7eed61517adbe0d7949fb04cb",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "observed_at": "2026-10-11T13:33:51Z"
+    },
+    {
+      "sha256": "06ef90020b4fc3f0e5524dc914712c906785ef1da35145437805dd0bbb37c6f0",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam",
+      "observed_at": "2026-10-11T13:33:51Z"
+    },
+    {
+      "sha256": "3b1c7c25b904367112f584862ee27175356fed49c608f2decc4f4c60cb47410c",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_store_cli.gleam",
+      "observed_at": "2026-10-11T13:33:51Z"
+    },
+    {
+      "sha256": "90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_sync_cli.gleam",
+      "observed_at": "2026-10-11T13:33:51Z"
+    },
+    {
+      "sha256": "f85548fef153d88a85e4032b3985759e11691db6bdcc1cdcc2e66872ded27a38",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "observed_at": "2026-10-11T13:33:51Z"
+    },
+    {
+      "sha256": "d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+      "observed_at": "2026-10-11T13:33:51Z"
+    },
+    {
+      "sha256": "10b0b8a36795d8de1dd28c2fee162b8e3dac831995da31e0abf7b78d487b863b",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/test/session_provider_service_test.gleam",
+      "observed_at": "2026-10-11T13:33:51Z"
+    }
+  ],
+  "private_source_closure": "var/recovery-runtime/20261011-1330-authority-refresh/manifest.json",
+  "validation": {
+    "fresh_compile": "PASS with existing warnings retained",
+    "tests": 14,
+    "independent_scenarios": 4,
+    "actual_lifecycle": "Private service register,claim epoch1,release,claim epoch2,renew epoch2,refuse stale epoch1,release epoch2",
+    "history": "Full event columns and trigger SQL preserved on three refused migrations; successful staged migration preserved event columns",
+    "output": "PASS empty history refusal preserves schema and every event column\nPASS noop payload trigger refusal preserves schema and every event column\nPASS corrupt stored digest refusal preserves schema and every event column\nPASS actual protocol-built private service register/claim1/release/claim2/renew2/refuse stale1/release2\nPASS 4 independent staged scenarios; no operational database touched\n"
+  },
+  "root_integration": "Protocol module/tests and provider tests absent from root. Four root coordinator sources differ by typed service support/private migration. No source copied or root coordinator binary rebuilt by this review.",
+  "limits": [
+    "All databases created exclusively under /tmp/uos-telegram-provider-stage-refresh-*; operational migration route stays absent.",
+    "Source hashes unchanged since prior review; fresh test output supports only stated component scope.",
+    "Inherited coordinator SQLite NORMAL synchronous and30second busy timeout remain; no new durability/physical powerloss guarantee.",
+    "No timed filesystem race, production service startup or live state activation tested.",
+    "Generic fresh build emitted inherited Erlang record/deprecated catch warnings; no zero-warning claim.",
+    "First independent fixture incorrectly used operational run_at to seed empty history and correctly refused. Corrected to explicit fixture bootstrap. Second fixture assumed tuple row shape; corrected to actual list-of-lists. Both failures preserved.",
+    "Service integration needs exact source adoption, live state ownership and independent release/state gates."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#zero-muda"
+  ]
+}

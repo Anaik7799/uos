@@ -1,0 +1,95 @@
+{
+  "schema": "uos.telegram-validation-progress.v1",
+  "observed_at": "2026-10-11T14:37:47.861Z",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "overall_status": "HOLD",
+  "scoped_results": {
+    "regression_replay_and_domain_cases": "31PASS",
+    "additional_invalid_codec_families": "5PASS",
+    "maximum_lifecycle": "16x4096bytesPASS",
+    "overbound_cases": "4097bytesand17chunksrefused",
+    "capacity": "Two concurrent requests preserve other reservation and finish0rows0receipts",
+    "parser": "20000keysrefused1070us;depth64accepted65refused"
+  },
+  "candidate": {
+    "observed_at": "2026-10-11T14:34:11.313Z",
+    "sources": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "sha256": "d379f33bfc52a1d0f1d02cd158c4c3d11170d04d6b6733248e0df96cf5cf6854"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "sha256": "8f1269683927dd9f6e40facdebcc2de91a057167122f58164b357fab72dd3060"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+        "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+        "sha256": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5"
+      }
+    ]
+  },
+  "format_equivalence": {
+    "before_sha256": "8f1269683927dd9f6e40facdebcc2de91a057167122f58164b357fab72dd3060",
+    "after_sha256": "803f55bc701ae44c12ea565bc20fb14aff400f05851cd2ed5325034f91c241f4",
+    "canonical_outputs_equal": true
+  },
+  "remaining": [
+    "Authority requestID decoder accepts noncanonical leadingzero representation",
+    "Pending chunk permits nonzero attempt count",
+    "Chunk decoder accepts unescaped payload even though ledger rejects it",
+    "Actual cleanup proof/recovery proposal remains unaccepted and unimplemented"
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1435-store-validation-review/results.txt",
+      "sha256": "7fe5c2bc88bb8169335ed7be1e9885879eead45479c7fa527828962455316002"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1435-store-validation-review/pure-results.txt",
+      "sha256": "7374063c83d7c5ca9a5c27007677ef649543d1bed250443897b200fa68ab0a8a"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1435-store-validation-review/pure-test-setup-error.txt",
+      "sha256": "03e0307f1a31edb6b5a55a70279b37a3bfb2e9c86da5b4f58dcbb21514ee0154"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1435-store-validation-review/maximum-results.txt",
+      "sha256": "55233cc93f94340ec399c5c5b3d80ec905fffb28de5ff43f9c5aaf1061555350"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1435-store-validation-review/residual-results.txt",
+      "sha256": "4252bda30cf8885ac8d0e91d6bffd207a217923747c5cedc2df61eb9744f93ad"
+    }
+  ],
+  "forecast_resolution": {
+    "source": "governance/planning/20261011-1444-telegram-consumer-forecast-resolution.json",
+    "event": "Three lifecycle replay states and seven identified invalid-domain scenarios pass independent private tests",
+    "probability": 0.65,
+    "horizon": "2026-10-11T15:00:00Z",
+    "outcome": 1,
+    "brier_score": 0.1225,
+    "limitation": "Narrow event only; complete store and Telegram goal remain unmet"
+  },
+  "runtime_admission": "NOT_GRANTED"
+}

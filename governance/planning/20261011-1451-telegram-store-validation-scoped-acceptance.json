@@ -1,0 +1,111 @@
+{
+  "schema": "uos.telegram-store-validation-scoped-acceptance.v1",
+  "observed_at": "2026-10-11T14:46:51.084Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "DEVELOPMENT_VALIDATION_SCOPED_PASS",
+  "overall_consumer_status": "HOLD_PENDING_CLEANUP_RECOVERY",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": {
+    "observed_at": "2026-10-11T14:43:59.496Z",
+    "candidate_receipt": "governance/planning/20261011-1655-telegram-store-fix2-candidate-v3.json",
+    "sources": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "sha256": "d379f33bfc52a1d0f1d02cd158c4c3d11170d04d6b6733248e0df96cf5cf6854"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "sha256": "d5991a5e12774b31ecc969abf22fa6853594141014a5b402de2f2793d586391c"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+        "copy_source": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+        "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+        "copy_source": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+        "sha256": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5"
+      }
+    ]
+  },
+  "verification": [
+    "Fresh private Gleam1.16 and OTP29 source closure compile",
+    "31 original/regression/replay/domain scenarios pass",
+    "5 malformed domain record families refused",
+    "Noncanonical request IDs and wrong Pending attempt count refused",
+    "Blank and NUL payloads refused; literal text positive control allowed",
+    "16x4096byte ASCII lifecycle completes",
+    "16x4096byte JSON maximum control-character escape expansion lifecycle completes",
+    "4097byte and17chunk results refused",
+    "Two concurrent requests preserve other reservation;bothcomplete0reserved rows/receipts",
+    "Valid exponent/fraction JSON controls accepted"
+  ],
+  "root_review_erratum": {
+    "prior_claim": "Root claimed ledger payload_valid rejects literal <bad> text and treated acceptance as defect",
+    "correction": "That was incorrect. Ledger bounds nonblank byte size and NUL; adopted spec requires escaped DOMAIN JSON, not HTML-only stored text. Literal text is valid. Outgoing HTTP rendering must apply its own selected parse-mode policy.",
+    "evidence": "Observed payload_valid source and fresh literal/blank/NUL decoder controls",
+    "affected": [
+      "governance/planning/20261011-1447-telegram-validation-progress.json",
+      "docs/journal/20261011-1412-telegram-validation-recovery-dashboard.md"
+    ],
+    "historical_preservation": "Original reports retained, superseded for this finding by this explicit erratum"
+  },
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1444-store-validation-final/results.txt",
+      "sha256": "7f313e495dd29201672608779e9d40381a1202d1258b5513fe7a5112aef5a535"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1444-store-validation-final/pure-results.txt",
+      "sha256": "0632234e1354e728f3596c51d1a01ce4ef718d1887b4fa3677f7472d5caf6c99"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1444-store-validation-final/pure-expression.erl.txt",
+      "sha256": "94cd8876dd30867f36bc5b39e9fefc203839265785fc016705bc016e58959df2"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1444-store-validation-final/payload-correction.txt",
+      "sha256": "ba7c5ff6dab15d892ad283f4376469e94cce3fc75255161e2dd6c3b431d31001"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1444-store-validation-final/escaped-results.txt",
+      "sha256": "202c64bb42f2b669375d93c525001d57e86504806ad3ab3fff36c7e4bea6e3a0"
+    }
+  ],
+  "remaining": [
+    "Opaque operation-bound cleanup proof and real uncertain-write reconciliation tests",
+    "Supervised single-flight service and restart/cgroup recovery",
+    "Fresh final consumer source closure after cleanup changes"
+  ],
+  "limits": [
+    "Storage lifecycle uses actual private SQLite/native process but synthetic delivery acknowledgements, not Telegram HTTP",
+    "Core validation scoped acceptance does not complete STORE_FIX2 or STORE_DRAFT_REVIEW",
+    "No release or main bookmark mutation"
+  ]
+}

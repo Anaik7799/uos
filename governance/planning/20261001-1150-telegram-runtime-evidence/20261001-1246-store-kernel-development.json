@@ -1,0 +1,128 @@
+{
+  "schema": "uos.telegram-store-kernel-development.v1",
+  "observed_utc": "2026-10-01T12:46:00Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "STORE_KERNEL",
+  "worker": "agy-telegram-admission-20261001",
+  "attempt": 1,
+  "implementer": "agy-telegram-admission-20261001",
+  "status": "DEVELOPMENT_COMPONENT_TESTS_PASS_PENDING_INDEPENDENT_REVIEW",
+  "application_admitted": false,
+  "production_changed": false,
+  "frozen_commit": "709c4b0af55cbbd41dc9dd85e13dfd80b70f4d1e",
+  "working_copy_child": "77ae143f",
+  "test_evidence": {
+    "test_log_path": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1246-store-kernel-test-log.txt",
+    "assertions_passed": 85,
+    "assertions_failed": 0,
+    "command": "dune exec ./telegram_store_test.exe"
+  },
+  "source_and_binary_manifest": [
+    {
+      "path": "native/ocaml/telegram_store/telegram_store.ml",
+      "sha256": "869f84f443b0a2c7945746ae852658613740dd801e28469afc5ba7bb5d85a4e5"
+    },
+    {
+      "path": "native/ocaml/telegram_store/telegram_store_main.ml",
+      "sha256": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc"
+    },
+    {
+      "path": "native/ocaml/telegram_store/telegram_store_test.ml",
+      "sha256": "c35c3f5293ec664ed7f308b09613dffb696d9065d4996e8300a678915b47d8e9"
+    },
+    {
+      "path": "native/ocaml/telegram_store/telegram_store_wire_spec.json",
+      "sha256": "3712bc107be262fad681c6d4ff3651858f2e398286b3628106abe8bc43737501"
+    },
+    {
+      "path": "native/ocaml/telegram_store/dune",
+      "sha256": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661"
+    },
+    {
+      "path": "native/ocaml/telegram_store/_build/default/telegram_store_main.exe",
+      "sha256": "466253a583311dfef93523b8aef11965e0a1deb0bd384f7138b90d31665fbf61"
+    }
+  ],
+  "trusted_db_locator_contract": {
+    "argv_signature": ["<worker_binary>", "<absolute_configured_db_locator>"],
+    "argument_count": 2,
+    "security_rule": "The database locator is taken exclusively from argv[1]. db_path in request JSON is optional; if provided, it must be byte-identical to argv[1] or is rejected with 'db_path_mismatch'. Launching without argv[1] returns 'invalid_command_line_arguments' and exits 0."
+  },
+  "framing_and_eof_contract": {
+    "header": "4 bytes unsigned big-endian uint32 payload length N",
+    "body": "N bytes UTF-8 JSON payload (N <= 1048572)",
+    "eof_handling": "Guardian closes stdin immediately after transmitting the frame. Native worker reads N payload bytes, probes for trailing byte via 'input stdin trailing_buf 0 1' which returns 0 on EOF, and cleanly proceeds. Trailing bytes cause immediate exit with 'trailing_bytes_after_frame'."
+  },
+  "stable_schema_specification": {
+    "schema_version": "uos.telegram-store.v1",
+    "exact_sqlite_master_objects": [
+      {
+        "type": "table",
+        "name": "kv_rows",
+        "sql": "CREATE TABLE kv_rows (key TEXT PRIMARY KEY, version INTEGER NOT NULL, canonical_value_bytes BLOB NOT NULL, sha256 TEXT NOT NULL)"
+      },
+      {
+        "type": "table",
+        "name": "meta",
+        "sql": "CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)"
+      },
+      {
+        "type": "table",
+        "name": "receipts",
+        "sql": "CREATE TABLE receipts (operation_id TEXT PRIMARY KEY, request_digest TEXT NOT NULL, generation INTEGER NOT NULL, summary_json TEXT NOT NULL, committed_utc_us INTEGER NOT NULL)"
+      },
+      {
+        "type": "trigger",
+        "name": "receipts_no_delete",
+        "sql": "CREATE TRIGGER receipts_no_delete BEFORE DELETE ON receipts BEGIN SELECT RAISE(FAIL, 'receipts are append-only'); END"
+      },
+      {
+        "type": "trigger",
+        "name": "receipts_no_update",
+        "sql": "CREATE TRIGGER receipts_no_update BEFORE UPDATE ON receipts BEGIN SELECT RAISE(FAIL, 'receipts are append-only'); END"
+      }
+    ],
+    "verification_rule": "verify_schema queries sqlite_master for all non-internal objects ordered by name and checks exact count (5) and byte-identical SQL definitions. Any foreign table, missing trigger, or modified column definition triggers 'schema_mismatch'."
+  },
+  "canonical_request_digest_format": {
+    "algorithm": "sha256_hex",
+    "stream_encoding": "UTF-8 newline-terminated fields",
+    "fields_order": [
+      "uos.telegram-store.apply.v1\n",
+      "bot:<bot_id>\n",
+      "op:<operation_id>\n",
+      "gen:<expected_generation>\n",
+      "read:<key>:<expected_version>:<expected_sha256>\n (for each read_set_assertion, sorted by key ASC)",
+      "change:<key>:<expected_version>:<expected_sha256>:<new_value_base64>\n (for each change, sorted by key ASC)",
+      "res:<rows>:<receipts>\n",
+      "summary:<summary_json>\n"
+    ],
+    "matching_rule": "Native apply derives digest independently from actual parameters. req.request_digest must match derived digest exactly or returns 'request_digest_mismatch'. Stored receipt retains derived digest. Replay attempt with same operation_id but different digest returns 'operation_collision_digest_mismatch'."
+  },
+  "explicit_remaining_limits_and_residual_risks": [
+    {
+      "code": "INIT_DDL_AND_META_NOT_ONE_TRANSACTION",
+      "description": "initialize_new creates the database file atomically at filesystem level (Unix.O_CREAT | Unix.O_EXCL), but SQLite DDL execution and meta inserts are executed sequentially rather than inside an explicit single BEGIN ... COMMIT block."
+    },
+    {
+      "code": "PATH_ANCESTORS_UNCHECKED",
+      "description": "DB path validation checks permissions on the immediate parent directory (0700, owned by getuid ()), but does not walk all ancestor directories up to root to verify security of each path component."
+    },
+    {
+      "code": "DECODED_VALUES_NO_UTF8_OR_DOMAIN_JSON_PARSING",
+      "description": "Storage kernel validates base64 canonical encoding and byte length budgets, storing raw bytes and indexing their SHA-256. It does not parse or validate UTF-8 validity or domain JSON ASTs; domain validation belongs to Gleam domain codecs."
+    },
+    {
+      "code": "COMMIT_ERROR_STATE_MAY_BE_UNKNOWN",
+      "description": "If SQLite COMMIT experiences an I/O failure or process termination during commit, durability state in WAL may be UNKNOWN until writer quiescence and lookup_operation can confirm or refute commitment."
+    },
+    {
+      "code": "RESERVATION_LEDGER_BELONGS_TO_CONSUMER",
+      "description": "The kernel enforces numeric bounds on reservation deltas (<= 20 rows, <= 64 receipts per request) and checks total capacity limits, but does not maintain a per-request attribution table of outstanding credits; request reservation lifecycle tracking belongs to the Gleam service."
+    },
+    {
+      "code": "DELIMITER_DIGEST_DISAMBIGUATION",
+      "description": "Canonical digest uses newline and colon delimiters. Keys are bounded and checked against key_valid; summary_json must not span ambiguous delimiters without escaping."
+    }
+  ]
+}

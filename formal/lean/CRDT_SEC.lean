@@ -47,8 +47,9 @@ theorem nat_max_comm (a b : Nat) : nat_max a b = nat_max b a := by
   split <;> split <;> omega
 
 theorem nat_max_assoc (a b c : Nat) : nat_max (nat_max a b) c = nat_max a (nat_max b c) := by
-  dsimp [nat_max]
-  split <;> split <;> split <;> split <;> omega
+  unfold nat_max
+  repeat' first | split
+  all_goals omega
 
 theorem nat_max_idem (a : Nat) : nat_max a a = a := by
   dsimp [nat_max]
@@ -75,14 +76,7 @@ def mergeLWW [DecidableEq α] (a b : LWWState α) : LWWState α :=
 /-- Theorem: LWW Register Merge is Idempotent -/
 theorem lww_merge_idem [DecidableEq α] (a : LWWState α) :
     mergeLWW a a = a := by
-  dsimp [mergeLWW]
-  split
-  · next h => omega
-  · split
-    · next h => omega
-    · split
-      · rfl
-      · next h => contradiction
+  simp [mergeLWW]
 
 /-- Strong Eventual Consistency (SEC) Statement:
     For any set of concurrent updates U delivered to replica R1 in permutation p1
@@ -92,10 +86,7 @@ theorem sec_order_independence_2 [DecidableEq α] (a b : Nat) :
 
 theorem sec_order_independence_3 [DecidableEq α] (a b c : Nat) :
     nat_max (nat_max a b) c = nat_max (nat_max c b) a := by
-  rw [nat_max_assoc]
-  rw [nat_max_comm b c]
-  rw [← nat_max_assoc]
-  rw [nat_max_comm a (nat_max c b)]
+  rw [nat_max_comm a b, nat_max_assoc, nat_max_comm a c, ← nat_max_assoc, nat_max_comm b c]
 
 /-- Monotonic convergence invariant: state timestamp never decreases under merge -/
 theorem lww_monotonic_timestamp [DecidableEq α] (a b : LWWState α) :

@@ -1,0 +1,67 @@
+{
+  "schema": "uos.telegram-native-independent-review.v1",
+  "observed_at": "2026-10-11T12:16:00Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_KERNEL_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "HOLD_REPRODUCED_INTEGRITY_DEFECTS",
+  "baseline": "AGY sibling candidate709c4b0af55cbbd41dc9dd85e13dfd80b70f4d1e preserved; exact six source files copied to private directory; no runtime DB touched",
+  "manifest_path": "var/recovery-runtime/20261011-1215-native-baseline/manifest.json",
+  "fresh_suite": {
+    "chunk_id": "980728",
+    "wall_time_seconds": 0.768692632,
+    "exit_code": 0,
+    "original_token_count": 1231,
+    "output": "Entering directory '/home/an/NAS-setup/uos/var/recovery-runtime/20261011-1215-native-baseline'\n\nRunning Telegram Store Native Kernel Test Suite...\n=== Test Suite 1: Initialize New & Security Controls ===\n  [PASS] initialize_new returns generation 1\n  [PASS] db file created\n  [PASS] db file permissions are 0600\n  [PASS] refuses existing DB with db_already_exists\n  [PASS] refuses 0755 directory with db_directory_insecure\n  [PASS] refuses directory symlink\n  [PASS] verify_existing_db_pragmas sets and verifies connection pragmas\n  [PASS] journal_mode is WAL\n  [PASS] synchronous is FULL (2)\n  [PASS] foreign_keys is ON (1)\n  [PASS] max_page_count bounds main DB to 256 MiB\n  [PASS] insert receipt succeeds\n  [PASS] trigger prevents UPDATE on receipts\n  [PASS] trigger prevents DELETE on receipts\n=== Test Suite 2: Read Keys & Read Inbox Index ===\n  [PASS] read_keys returns generation 1\n  [PASS] returns 2 rows\n  [PASS] row 0 exists is false\n  [PASS] row 0 version is 0\n  [PASS] row 0 value is empty\n  [PASS] apply incremented generation to 2\n  [PASS] read_keys returns generation 2\n  [PASS] inbox/req_001 exists\n  [PASS] inbox/req_001 version is 1\n  [PASS] inbox/req_001 sha256 matches\n  [PASS] inbox/req_001 base64 matches\n  [PASS] missing row exists is false\n  [PASS] inbox index returns generation 2\n  [PASS] inbox index returns exactly 2 inbox keys in order\n  [PASS] pagination after inbox/req_001 returns [inbox/req_002]\n  [PASS] refuses > 64 keys with read_keys_too_many\n  [PASS] refuses limit > 100 with invalid_limit\n=== Test Suite 3: Apply Operations, CAS & Idempotency ===\n  [PASS] req1 replay is false\n  [PASS] req1 generation is 2\n  [PASS] replay is true\n  [PASS] receipt operation_id matches\n  [PASS] receipt generation matches original (2)\n  [PASS] receipt summary matches\n  [PASS] refuses tampered request with request_digest_mismatch\n  [PASS] refuses collision with operation_collision_digest_mismatch\n  [PASS] refuses stale generation with stale_generation\n  [PASS] refuses wrong version with cas_conflict\n  [PASS] refuses wrong sha256 with cas_conflict\n  [PASS] refuses mismatched read-set with read_set_conflict\n  [PASS] valid update generation incremented to 3\n  [PASS] lookup_operation finds committed receipt\n  [PASS] lookup_operation matches summary\n=== Test Suite 4: Capacity & Reservation Accounting ===\n  [PASS] refuses negative resulting reservation with invalid_reservation_delta\n  [PASS] refuses reservation delta rows > 20 with invalid_reservation_delta\n  [PASS] refuses reservation delta receipts > 64 with invalid_reservation_delta\n=== Test Suite 5: Bounds, Values & Max 16x4096 Chunks ===\n  [PASS] refuses non-canonical base64 with invalid_base64\n  [PASS] refuses single value > 98304 bytes with value_too_large\n  [PASS] 16 chunks apply succeeded, generation is 2\n  [PASS] read_keys returns generation 2\n  [PASS] read_keys returns 16 rows\n  [PASS] all 16 chunks exist\n=== Test Suite 6: Advanced Integrity & Hardening ===\n  [PASS] verify_schema catches unauthorized extra table with schema_mismatch\n  [PASS] verify_schema restored after removing extra table\n  [PASS] original apply committed\n  [PASS] replay with wrong bot_id refused with bot_id_mismatch before replay lookup\n  [PASS] read_keys catches corrupt row hash with corrupt_row_hash\n  [PASS] apply CAS catches corrupt row hash with corrupt_row_hash\n  [PASS] after_key not starting with inbox/ refused with invalid_after_key\n  [PASS] after_key >= inbox0 refused with invalid_after_key\n  [PASS] after_key exactly 'inbox/' refused with invalid_after_key\n  [PASS] hard-linked db file refused with db_file_insecure\n  [PASS] normal db file accepted after unlinking hard link\n  [PASS] symlink process lock file refused with db_path_symlink\n=== Test Suite 7: Redacted Error Codes & Framing ===\n  [PASS] response is valid JSON\n  [PASS] response does NOT reflect canary token\n  [PASS] duplicate key in JSON rejected with duplicate_json_keys\n  [PASS] read_inbox_index without limit rejected with invalid_limit\n  [PASS] oversized request rejected with oversized_frame\n=== Test Suite 8: Binary Pipe Framing (telegram_store_main) ===\n  [PASS] framed process exits with code 0\n  [PASS] framed process returned response\n  [PASS] initialize_new via framing succeeded\n  [PASS] command omitting db_path exits 0\n  [PASS] command omitting db_path succeeds using trusted argv locator\n  [PASS] mismatched db_path rejected with db_path_mismatch\n  [PASS] worker launched without argv db locator rejected\n  [PASS] truncated frame returned response\n  [PASS] truncated frame refused with truncated_frame\n  [PASS] trailing bytes returned response\n  [PASS] trailing bytes refused with trailing_bytes_after_frame\n  [PASS] oversized frame returned response\n  [PASS] oversized frame refused with oversized_frame\n\nALL TESTS PASSED: 85/85 assertions passed successfully!\nLeaving directory '/home/an/NAS-setup/uos/var/recovery-runtime/20261011-1215-native-baseline'\n"
+  },
+  "independent_native_observations": {
+    "chunk_id": "1dcf59",
+    "wall_time_seconds": 0.445918378,
+    "exit_code": 0,
+    "original_token_count": 91,
+    "output": "digest_a=1670533a2c455404a55f389737e5ed5c209d12219f9c34400580c064c791cdde\ndigest_b=1670533a2c455404a55f389737e5ed5c209d12219f9c34400580c064c791cdde\ndifferent_readsets_same_digest=true\nfirst_commit_replay=false\nchanged_request_accepted_as_replay=true\nancestor_symlink_init=ACCEPTED\nduplicate_readset=ACCEPTED\nunknown_json_field={\"ok\":true,\"generation\":3,\"rows\":[]}\n"
+  },
+  "independent_test_source": "var/recovery-runtime/20261011-1215-native-baseline/independent_review.ml",
+  "findings": [
+    {
+      "id": "N1",
+      "status": "OBSERVED",
+      "defect": "Distinct readsets produce equal digest and apply accepts changed request as replay",
+      "required": "Versioned injective preimage, independent vectors and replay mismatch rejection"
+    },
+    {
+      "id": "N2",
+      "status": "SOURCE_CONFIRMED_NOT_FAULT_INJECTED",
+      "defect": "Initialization schema and metadata execute without encompassing SQL transaction",
+      "required": "Atomic initialization with controlled per-stage error/crash tests; incomplete files never usable; no automatic deletion of ambiguous files"
+    },
+    {
+      "id": "N3",
+      "status": "OBSERVED",
+      "defect": "Symlink ancestor directory accepted",
+      "required": "Validate configured root and all path components; declare cooperative TOCTOU limits unless descriptor-relative implementation"
+    },
+    {
+      "id": "N4",
+      "status": "OBSERVED",
+      "defect": "Duplicate read-set keys accepted",
+      "required": "Reject duplicate keys and malformed version/hash relationships before effects"
+    },
+    {
+      "id": "N5",
+      "status": "OBSERVED",
+      "defect": "Unknown JSON fields accepted",
+      "required": "Exact per-command schema and duplicate/type/unknown validation; explicit optional fields"
+    },
+    {
+      "id": "N6",
+      "status": "SOURCE_CONFIRMED_NOT_FAULT_INJECTED",
+      "defect": "COMMIT error maps to generic sqlite error, no explicit uncertainty",
+      "required": "Explicit uncertain outcome and durable operation lookup before any retry"
+    }
+  ],
+  "bounds": "Preserve atomic storage capacity reservations rows/receipts, existing frame/byte/key/count/database/busy limits. These are not business credits.",
+  "acceptance": "Review complete; baseline candidate remains HOLD. NATIVE_REPAIR and NATIVE_REVIEW required; 85 passing baseline assertions do not override observed falsifiers.",
+  "runtime_admission": "NOT_GRANTED"
+}

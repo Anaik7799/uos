@@ -1,0 +1,67 @@
+{
+  "schema": "uos.independent-telegram-ledger-recheck.v1",
+  "observed_at": "2026-10-01T12:08:05Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "LEDGER_REVIEW2",
+  "attempt": 1,
+  "verdict": "PASS_SCOPED_PURE_DEVELOPMENT",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "1305d1c32de5d796d1eae76cde548cc5cbb7444fb1c0f3e5680589abbb3da212"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "sha256": "251ccab831d59b72dc1b8545a4f133dcfdebad450cf00b022568d24e22e309bc"
+    }
+  ],
+  "closes_findings": [
+    "LEDGER-P1-OLD-UNSEEN",
+    "LEDGER-P2-RECOVERY-STATES",
+    "LEDGER-P2-RESULT-IDENTITY"
+  ],
+  "prior_hold_preserved": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1201-independent-ledger-review-hold.json",
+  "inspection": [
+    "Below-watermark unknown identity now refuses before insertion; known identity still passes through full same_identity/valid_record validation.",
+    "Valid Pending and Rejected records with empty chunks retain exact state. Inconsistent nonempty result follows HOLD path. Processing with no durable result remains HOLD; no processing-to-pending reexecution.",
+    "Result schema v2 binds request_id, bot_id, chat_id, update_id, message_id, user_id, text_hash, created_at_ms and ordered payloads. Mutation tests enforce binding through normal validation/recovery.",
+    "Ingress source/test hashes unchanged; only ledger implementation/test hashes changed from prior review."
+  ],
+  "tests": {
+    "focused_eunit_passed": 43,
+    "independent_previous_falsifiers_repeated": true,
+    "actual_observations": [
+      "Unseen update99 with watermark101 and retained100 refuses; existing inbox/watermark unchanged.",
+      "Pending recovery preserves InboxPending; rejected recovery preserves original InboxRejected tombstone.",
+      "Independent message_id/user_id/text_hash mutations each now refuse result_digest_mismatch.",
+      "Exact retained duplicate below watermark preserves watermark.",
+      "Existing complete-result, collision ordering, sender fences and uncertainty tests passed in the focused suite."
+    ],
+    "transcript": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1208-independent-ledger-recheck-tests.txt"
+  },
+  "residuals": [
+    "Pure state model only; no SQLite durability, CAS, process singleton, actual coordinator/Sa-plan authority, transport authentication, live BotAPI or runtime acceptance claimed.",
+    "Persist request/result/chunk transitions atomically and recheck actual task/resource/clock fences before each effect. Pure values do not grant authority.",
+    "Version2 is a new development schema; parent states no persisted version1 deployment. No migration of live data was tested or performed.",
+    "Historical HOLD receipt retained; this closes only its three source findings.",
+    "Global admission and EV94..109 status unchanged."
+  ],
+  "source_edits": false,
+  "task_mutations": false,
+  "production_effects": false,
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l5",
+    "#zero-muda"
+  ]
+}

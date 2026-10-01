@@ -1,0 +1,295 @@
+EXACT BUILD/TEST COMMANDS
+set -e
+source tools/lib/uos-toolchain.sh
+uos_env
+cp tools/telegram_store_transport_guardian.ml var/recovery-runtime/20261001-1238-store-transport/guardian.ml
+cp tools/validation/telegram_store_transport_fixture.ml var/recovery-runtime/20261001-1238-store-transport/fixture.ml
+OCAMLPATH=/nix/store/6qdx3qvjidcdwjdjyanl5fawv48j1nyr-uos-release-checker-dependencies/lib toolchains/opam-ocaml/bin/ocamlfind ocamlopt -package unix,mtime.clock -linkpkg var/recovery-runtime/20261001-1238-store-transport/guardian.ml -o var/recovery-runtime/20261001-1238-store-transport/guardian
+toolchains/opam-ocaml/bin/ocamlopt -I +unix unix.cmxa var/recovery-runtime/20261001-1238-store-transport/fixture.ml -o var/recovery-runtime/20261001-1238-store-transport/fixture
+toolchains/nix-profile/bin/erlc -o var/recovery-runtime/20261001-1238-store-transport apps/cepaf_gleam/src/telegram_store_transport_ffi.erl tools/validation/telegram_store_transport_test.erl
+ERL_CRASH_DUMP=/dev/null toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -pa var/recovery-runtime/20261001-1238-store-transport -eval 'case eunit:test(telegram_store_transport_test,[verbose]) of ok->halt();_->halt(1)end.'
+cd apps/cepaf_gleam
+ERL_FLAGS='+S 2:2 +A 2' gleam build
+
+PRESERVED FIRST FAIL
+backend_exit:1
+File "var/recovery-runtime/20261001-1238-store-transport/fixture.ml", line 1:
+Alert ocaml_deprecated_auto_include: 
+OCaml's lib directory layout changed in 5.0. The unix subdirectory has been
+automatically added to the search path, but you should add -I +unix to the
+command-line to silence this alert (e.g. by adding unix to the list of
+libraries in your dune file, or adding use_unix to your _tags file for
+ocamlbuild, or using -package unix for ocamlfind).
+
+File "var/recovery-runtime/20261001-1238-store-transport/fixture.ml", line 1:
+Alert ocaml_deprecated_auto_include: 
+OCaml's lib directory layout changed in 5.0. The unix subdirectory has been
+automatically added to the search path, but you should add -I +unix to the
+command-line to silence this alert (e.g. by adding unix to the list of
+libraries in your dune file, or adding use_unix to your _tags file for
+ocamlbuild, or using -package unix for ocamlfind).
+apps/cepaf_gleam/src/telegram_store_transport_ffi.erl:22:12: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   22|      after catch port_close(Port) end
+%     |            ^
+
+tools/validation/telegram_store_transport_test.erl:36:44: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   36|  receive{P,{exit_status,N}}->N after 1000->catch port_close(P),unknown end.
+%     |                                            ^
+
+======================== EUnit ========================
+module 'telegram_store_transport_test'
+  telegram_store_transport_test: eof_and_frame_test...[0.034 s] ok
+  telegram_store_transport_test: maximum_frame_test...[0.028 s] ok
+  telegram_store_transport_test: oversize_before_spawn_test...[0.013 s] ok
+  telegram_store_transport_test: empty_test...[0.006 s] ok
+  telegram_store_transport_test: truncated_response_test...[0.016 s] ok
+  telegram_store_transport_test: trailing_response_test...[0.022 s] ok
+  telegram_store_transport_test: output_bound_test...[0.020 s] ok
+  telegram_store_transport_test: invalid_utf8_test...[0.017 s] ok
+  telegram_store_transport_test: nonzero_test...[0.016 s] ok
+  telegram_store_transport_test: pin_refusal_test...[0.006 s] ok
+  telegram_store_transport_test: -fixed_deadline_test_/0-fun-3-...[5.023 s] ok
+  telegram_store_transport_test: -group_cleanup_test_/0-fun-3-...*failed*
+in function telegram_store_transport_test:'-group_cleanup_test_/0-fun-3-'/0 (tools/validation/telegram_store_transport_test.erl, line 29)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+in call from eunit_proc:run_group/2 (eunit_proc.erl, line 597)
+**error:{assertEqual,[{module,telegram_store_transport_test},
+              {line,29},
+              {expression,"filelib : is_file ( Marker )"},
+              {expected,false},
+              {value,true}]}
+  output:<<"">>
+
+  telegram_store_transport_test: trailing_input_test...[0.004 s] ok
+  telegram_store_transport_test: truncated_input_test...[0.103 s] ok
+  telegram_store_transport_test: oversize_header_test...[0.003 s] ok
+  [done in 7.494 s]
+=======================================================
+  Failed: 1.  Skipped: 0.  Passed: 14.
+
+
+CORRECTED BUILD/15TEST PASS
+======================== EUnit ========================
+module 'telegram_store_transport_test'
+  telegram_store_transport_test: eof_and_frame_test...[0.023 s] ok
+  telegram_store_transport_test: maximum_frame_test...[0.041 s] ok
+  telegram_store_transport_test: oversize_before_spawn_test...[0.013 s] ok
+  telegram_store_transport_test: empty_test...[0.005 s] ok
+  telegram_store_transport_test: truncated_response_test...[0.019 s] ok
+  telegram_store_transport_test: trailing_response_test...[0.018 s] ok
+  telegram_store_transport_test: output_bound_test...[0.024 s] ok
+  telegram_store_transport_test: invalid_utf8_test...[0.019 s] ok
+  telegram_store_transport_test: nonzero_test...[0.019 s] ok
+  telegram_store_transport_test: pin_refusal_test...[0.008 s] ok
+  telegram_store_transport_test: -fixed_deadline_test_/0-fun-3-...[5.012 s] ok
+  telegram_store_transport_test: -group_cleanup_test_/0-fun-3-...[1.134 s] ok
+  telegram_store_transport_test: trailing_input_test...[0.003 s] ok
+  telegram_store_transport_test: truncated_input_test...[0.105 s] ok
+  telegram_store_transport_test: oversize_header_test...[0.003 s] ok
+  [done in 6.491 s]
+=======================================================
+  All 15 tests passed.
+warning: Unused imported item
+  \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/test/work_stealing_test.gleam:7:19
+  \u2502
+7 \u2502   NodeQueueState, RandomVictim, StealResponse, StealableTask, TransferAccepted,
+  \u2502                   ^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+  Compiling cepaf_gleam
+warning: Unused imported module
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:31:1
+   \u2502
+31 \u2502 import cepaf_gleam/agui/event_stream_widget
+   \u2502 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This imported module is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:35:25
+   \u2502
+35 \u2502   type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
+   \u2502                         ^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:35:34
+   \u2502
+35 \u2502   type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
+   \u2502                                  ^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:35:46
+   \u2502
+35 \u2502   type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
+   \u2502                                              ^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:35:59
+   \u2502
+35 \u2502   type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
+   \u2502                                                           ^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:35:71
+   \u2502
+35 \u2502   type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
+   \u2502                                                                       ^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:36:3
+   \u2502
+36 \u2502   ThreatCritical, ThreatSevere, cockpit_mode_to_string, ooda_phase_to_string,
+   \u2502   ^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:36:19
+   \u2502
+36 \u2502   ThreatCritical, ThreatSevere, cockpit_mode_to_string, ooda_phase_to_string,
+   \u2502                   ^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported module
+   \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:38:1
+   \u2502
+38 \u2502 import gleam/float
+   \u2502 ^^^^^^^^^^^^^^^^^^ This imported module is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+    \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:716:1
+    \u2502
+716 \u2502 fn ooda_phase_pill(label: String, active: Bool) -> Element(msg) {
+    \u2502 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This private function is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+    \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:724:1
+    \u2502  
+724 \u2502 \u256d fn quick_link_card(
+725 \u2502 \u2502   title: String,
+726 \u2502 \u2502   href: String,
+727 \u2502 \u2502   description: String,
+728 \u2502 \u2502   layer: String,
+729 \u2502 \u2502 ) -> Element(msg) {
+    \u2502 \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500^ This private function is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+    \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:741:1
+    \u2502
+741 \u2502 fn filter_pill(label: String, active: Bool) -> Element(msg) {
+    \u2502 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This private function is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+    \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:768:1
+    \u2502  
+768 \u2502 \u256d fn dash_progress_ring(
+769 \u2502 \u2502   value: String,
+770 \u2502 \u2502   label: String,
+771 \u2502 \u2502   color: String,
+772 \u2502 \u2502   dash: String,
+773 \u2502 \u2502   gap: String,
+774 \u2502 \u2502 ) -> Element(msg) {
+    \u2502 \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500^ This private function is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+    \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:811:1
+    \u2502  
+811 \u2502 \u256d fn fractal_layer_health_bar(
+812 \u2502 \u2502   label: String,
+813 \u2502 \u2502   health: Int,
+814 \u2502 \u2502   color: String,
+815 \u2502 \u2502 ) -> Element(msg) {
+    \u2502 \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500^ This private function is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+    \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:909:1
+    \u2502
+909 \u2502 fn vega_health_sparkline_spec(health_score: Int) -> String {
+    \u2502 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This private function is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+    \u250c\u2500 /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam:934:1
+    \u2502
+934 \u2502 fn dashboard_concept_f_css() -> String {
+    \u2502 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This private function is never used
+
+Hint: You can safely remove it.
+
+   Compiled in 2.17s
+
+
+FINAL18TEST PASS
+======================== EUnit ========================
+module 'telegram_store_transport_test'
+  telegram_store_transport_test: eof_and_frame_test...[0.023 s] ok
+  telegram_store_transport_test: maximum_frame_test...[0.028 s] ok
+  telegram_store_transport_test: oversize_before_spawn_test...[0.010 s] ok
+  telegram_store_transport_test: empty_test...[0.005 s] ok
+  telegram_store_transport_test: truncated_response_test...[0.014 s] ok
+  telegram_store_transport_test: trailing_response_test...[0.016 s] ok
+  telegram_store_transport_test: output_bound_test...[0.018 s] ok
+  telegram_store_transport_test: invalid_utf8_test...[0.015 s] ok
+  telegram_store_transport_test: nonzero_test...[0.012 s] ok
+  telegram_store_transport_test: pin_refusal_test...[0.005 s] ok
+  telegram_store_transport_test: -fixed_deadline_test_/0-fun-3-...[5.010 s] ok
+  telegram_store_transport_test: -group_cleanup_test_/0-fun-3-...[1.133 s] ok
+  telegram_store_transport_test: trailing_input_test...[0.003 s] ok
+  telegram_store_transport_test: truncated_input_test...[0.104 s] ok
+  telegram_store_transport_test: oversize_header_test...[0.003 s] ok
+  telegram_store_transport_test: typed_entrypoint_test...[0.024 s] ok
+  telegram_store_transport_test: -timeout_group_cleanup_test_/0-fun-2-...[1.255 s] ok
+  telegram_store_transport_test: -caller_death_cleanup_test_/0-fun-2-...[1.202 s] ok
+  [done in 8.934 s]
+=======================================================
+  All 18 tests passed.
+
+
+FINAL HASHES
+20261001-1239|2026-10-01T12:41:39Z
+9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5  tools/telegram_store_transport_guardian.ml
+89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0  apps/cepaf_gleam/src/telegram_store_transport_ffi.erl
+f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9  apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam
+8957b7cca9ff29f0f31c80028bf6231e0211a12ffee6e83266d82077f1c73697  tools/validation/telegram_store_transport_fixture.ml
+d93204a1ce1b5fede355bbe01e8bc0de5589ed3aa0d761173dea802654e376db  tools/validation/telegram_store_transport_test.erl
+b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b  tools/ecology_process.ml
+d4d4dfc204d815fa23617d70ac0d4779cf8c86119ca6d89948c52cca5c1f6210  apps/cepaf_gleam/src/ecology_capability_ffi.erl
+08ff5d388d2b73a93ab5008b4ebe9819c3b8945253a96d9bea8db8c896535918  var/recovery-runtime/20261001-1238-store-transport/guardian
+6714aed10b649a2cc7d69dec00f18e98110ceff4a907ae9c2de0147acab9aae9  var/recovery-runtime/20261001-1238-store-transport/fixture
+176:ets_request(Input) when is_binary(Input),byte_size(Input)=<8192 ->
+234:invoke_external(<<"modular_max">>,Input) -> max_request(Input);
+239:max_request(Input) when is_binary(Input),byte_size(Input)=<65536 ->

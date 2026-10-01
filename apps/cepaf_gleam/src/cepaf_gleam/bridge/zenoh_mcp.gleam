@@ -50,7 +50,10 @@ pub fn start(
   }
 }
 
-fn start_subscribed(session: zenoh.Session, node_id: String) -> Result(Subject(Message), actor.StartError) {
+fn start_subscribed(
+  session: zenoh.Session,
+  node_id: String,
+) -> Result(Subject(Message), actor.StartError) {
   actor.new(State(session: session, node_id: node_id))
   |> actor.on_message(handle_message)
   |> actor.start()

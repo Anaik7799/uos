@@ -19,9 +19,9 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
-import uos_swarm/session_authority
 import simplifile
 import uos_swarm/clock_guard
+import uos_swarm/session_authority
 import uos_swarm/session_sync
 
 pub const root = "/home/an/NAS-setup/uos"
@@ -417,32 +417,30 @@ fn coordinator_observation(binding: Binding) -> Result(#(String, Int), String) {
   let resource = task_resource(binding)
   use raw <- result.try(bounded_observation(
     fn() {
-      session_authority.observe(
-        fn(state, boot, now) {
-          use _ <- result.try(session_sync.check(
-            state,
-            binding.session,
-            resource,
-            binding.epoch,
-            boot,
-            now,
-          ))
-          use lease <- result.try(
-            dict.get(state.coordinator.leases, resource)
-            |> result.map_error(fn(_) { "coordinator_lease_missing" }),
-          )
-          Ok(
-            json.object([
-              #("boot_id", json.string(boot)),
-              #("lease_until_us", json.int(lease.expires_us)),
-              #(
-                "scope",
-                json.string("cooperative_observation_not_atomic_authority"),
-              ),
-            ]),
-          )
-        },
-      )
+      session_authority.observe(fn(state, boot, now) {
+        use _ <- result.try(session_sync.check(
+          state,
+          binding.session,
+          resource,
+          binding.epoch,
+          boot,
+          now,
+        ))
+        use lease <- result.try(
+          dict.get(state.coordinator.leases, resource)
+          |> result.map_error(fn(_) { "coordinator_lease_missing" }),
+        )
+        Ok(
+          json.object([
+            #("boot_id", json.string(boot)),
+            #("lease_until_us", json.int(lease.expires_us)),
+            #(
+              "scope",
+              json.string("cooperative_observation_not_atomic_authority"),
+            ),
+          ]),
+        )
+      })
     },
     2000,
   ))

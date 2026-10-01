@@ -182,7 +182,6 @@ def is_denied_nvme (serial : String) : Bool :=
     any format, wipe, or allocation operation. -/
 theorem stamp_hazard_storage_hard_denial :
     is_denied_nvme "25503L801736" = true := by
-  dsimp [is_denied_nvme]
   rfl
 
 end UOS.CriticalitySTPAEvolution

@@ -1,0 +1,101 @@
+{
+  "schema": "uos.telegram-native-fix3.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_FIX3",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "observed_model": "gemini-3.8-flash-high",
+  "timestamp": "20261011-1325",
+  "status": "COMPLETED_AWAITING_INDEPENDENT_VERIFY",
+  "runtime_admission": "NOT_GRANTED",
+  "baseline_reference": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store (commit 709c4b0) preserved untouched",
+  "target_directory": "native/ocaml/telegram_store",
+  "source_and_binary_hashes": {
+    "dune": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661",
+    "dune_project": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7",
+    "telegram_store_ml": "aa3646cc19752ac4488d900c61177a67b4c3356eb697764bc8c2c7e8bd5bebd7",
+    "telegram_store_main_ml": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc",
+    "telegram_store_test_ml": "4895239728b3e71e92174ae4d7684dbbe31663c61502bd15fe6e1e871f4f4515",
+    "wire_spec_v3_json": "2c93540e2578108bb4da089c364fa7f3420c270980191eeba44eea005c01b57d",
+    "telegram_store_main_exe": "2116697d6532aea226e48b2abdc5d05387c2ce1b944ace6fc45bd5bf9b22c70c"
+  },
+  "defects_resolved": {
+    "N12_decoded_json_key_identity_and_nesting_limits": {
+      "summary": "Updated validate_strict_json.parse_string to decode all RFC 8259 simple escapes (\\\", \\\\, \\/, \\b, \\f, \\n, \\r, \\t), non-surrogate Unicode escapes (\\uXXXX), and non-BMP surrogate pairs (\\uD800..\\uDBFF\\uDC00..\\uDFFF) into exact Unicode UTF-8 scalar bytes. Enforces decoded key equality so distinct escaped keys (\\u0061 vs \\u0062) are accepted while equivalent keys (literal 'a' vs '\\u0061', '/' vs '\\/', '\\n' vs '\\u000a') are strictly rejected with duplicate_json_keys. Introduced max_json_depth = 64 enforcing recursion limits against stack exhaustion.",
+      "status": "RESOLVED"
+    },
+    "N13_apply_stage_hook_exception_safety": {
+      "summary": "Enclosed Apply_pre_commit and Apply_post_commit_pre_reply stage callbacks within strict exception handling boundaries. Any exception before commit (Apply_between_rows, Apply_pre_commit) triggers immediate ROLLBACK and returns finite error 'sqlite_error', leaving receipt absent. Any exception after commit (Apply_post_commit_pre_reply) guarantees durable receipt persistence and returns 'commit_uncertain'. Private fault markers are never reflected in error responses.",
+      "status": "RESOLVED"
+    }
+  },
+  "verification_accounting": {
+    "total_assertions": 170,
+    "passed": 170,
+    "failed": 0,
+    "actual_output_pass_lines": 170,
+    "suites": [
+      { "suite": "1. Initialize New & Security Controls", "assertions": 14, "status": "PASS" },
+      { "suite": "2. Read Keys & Read Inbox Index", "assertions": 13, "status": "PASS" },
+      { "suite": "3. Apply Operations, CAS & Idempotency", "assertions": 14, "status": "PASS" },
+      { "suite": "4. Capacity & Reservation Accounting", "assertions": 3, "status": "PASS" },
+      { "suite": "5. Bounds, Values & Max 16x4096 Chunks", "assertions": 6, "status": "PASS" },
+      { "suite": "6. Advanced Integrity & Hardening", "assertions": 12, "status": "PASS" },
+      { "suite": "7. Redacted Error Codes & Framing", "assertions": 5, "status": "PASS" },
+      { "suite": "8. Binary Pipe Framing (telegram_store_main)", "assertions": 13, "status": "PASS" },
+      { "suite": "9. Injective Digest & Collision Resistance", "assertions": 6, "status": "PASS" },
+      { "suite": "10. Ancestor Path Confinement & Symlink Rejection", "assertions": 2, "status": "PASS" },
+      { "suite": "11. Duplicate Keys, Canonical Bot ID & Version/Hash Invariants", "assertions": 12, "status": "PASS" },
+      { "suite": "12. Strict JSON Schemas & Unknown Field Rejection", "assertions": 6, "status": "PASS" },
+      { "suite": "13. Commit Uncertainty & Reconciliation", "assertions": 11, "status": "PASS" },
+      { "suite": "14. Storage Capacity & Reservation Bounds", "assertions": 2, "status": "PASS" },
+      { "suite": "15. N7 Strict Optional Field Types", "assertions": 8, "status": "PASS" },
+      { "suite": "16. N8 Strict UTF-8 & Standard JSON", "assertions": 5, "status": "PASS" },
+      { "suite": "17. N9 Ancestor Path Confinement & Sticky Exemption", "assertions": 2, "status": "PASS" },
+      { "suite": "18. N10 Transaction Exception Safety", "assertions": 2, "status": "PASS" },
+      { "suite": "19. N11 Actual SIGKILL Crash Recovery Barriers", "assertions": 13, "status": "PASS" },
+      { "suite": "20. N12 Decoded JSON Keys & Nesting Depth Limits", "assertions": 10, "status": "PASS" },
+      { "suite": "21. N13 Apply Stage Hook Exception Safety", "assertions": 7, "status": "PASS" }
+    ],
+    "independent_suites_verified": {
+      "unicode_independent_cjs": {
+        "script": "var/recovery-runtime/20261011-1301-native-verify2/unicode-independent.cjs",
+        "total_cases": 6,
+        "passed": 6,
+        "failed": 0,
+        "status": "PASS"
+      },
+      "independent_exceptions_ml": {
+        "script": "var/recovery-runtime/20261011-1301-native-verify2/independent_exceptions.ml",
+        "results": [
+          "between_rows response=ERROR:sqlite_error committed_receipt=false",
+          "pre_commit response=ERROR:sqlite_error committed_receipt=false",
+          "post_commit response=ERROR:commit_uncertain committed_receipt=true"
+        ],
+        "status": "PASS"
+      },
+      "independent_kill_ml": {
+        "script": "var/recovery-runtime/20261011-1301-native-verify2/independent_kill.ml",
+        "assertions": 27,
+        "status": "PASS"
+      },
+      "prior_framed_review_cjs": {
+        "script": "var/recovery-runtime/20261011-1244-native-independent/independent-review.cjs",
+        "total_cases": 11,
+        "passed": 11,
+        "failed": 0,
+        "status": "PASS"
+      }
+    }
+  },
+  "process_and_provenance_notes": {
+    "execution_harness": "cepaf_gleam@harness@development:bounded/3 under OTP 29 uos_env",
+    "tooling_truth": "Source edits performed via direct write/replace tools. All compilations and test suite executions performed via OCaml dune under uos_env in Gleam bounded harness. ZERO Python executed.",
+    "fencing_and_leases": {
+      "task_claim": "task:uos-telegram-runtime-NATIVE_FIX3",
+      "root_workspace_lease": "workspace:/home/an/NAS-setup/uos",
+      "sibling_workspace_lease": "workspace:/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "observed_at": "2026-10-11T16:58:27.449Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 2,
+  "verdict": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "94e2d053e4dbc25b429182a94947692ce444b19ad737627db09e8a0357b2613c",
+      "bytes": 21327
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "fb6ee4061e5faf068f1d90c3adf3ff990721b02a87c4db54c44d65994067ac78",
+      "bytes": 10781
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+      "sha256": "058e30d3278da294b95da7a90adc254dd7b45772d26461457467bc07b238b7e7",
+      "bytes": 12069
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+      "sha256": "eac822d8e537306a6194f22c407ce4a231b5c0e1f202b5def23ef0aeab3c6872",
+      "bytes": 8194
+    }
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1655-service-closure-review/manifest.json",
+      "sha256": "53e37f5c0967ad90e8a7bc9a3f04158f2fca610c60356a671d7a17068a6078d9"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1655-service-closure-review/authority-results.txt",
+      "sha256": "20a8f634b5254b5b8a6427525c59f98f80bf8cd3035868323e04cc497e08f358"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1655-service-closure-review/authority-full-path-results.txt",
+      "sha256": "8fca6a15e12466761dfd52243830d359426d2d45aa54c716f359bd776f293187"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1655-service-closure-review/src/service_authority_probe.gleam",
+      "sha256": "ee481c1b0812bd3561e4bf72843d4c8c7cde86d9ee4bdd1dfbecf7c12925268d"
+    }
+  ],
+  "actual_observations": [
+    "Private database created/claimed/completed via tools/sa-plan; no operational DB mutation",
+    "FFI accepts expected epoch1,0,-1 for actual attempt1; refuses2",
+    "Full typed public poll_cycle accepts epoch0 configuration/lease and performs actual private HTTP getUpdates without any coordinator DB/claim",
+    "HTTP fixture returns empty updates; no store worker launched and no Telegram endpoint used"
+  ],
+  "source_findings": [
+    "No exact plan parameter; task id/name lookup may select across plans",
+    "Sa-plan OR coordinator fallback, rather than both scopes",
+    "Startup watermark/index reads precede establishing unknown-writer cleanup",
+    "PendingOperation mapped to string error instead of retained in owner state",
+    "Lifecycle receipt has no durable prelaunch registration or actual unit-to-slice/database/incarnation binding",
+    "Only beginning-of-step authority check; no new check at each later commit/send after waits"
+  ],
+  "limits": [
+    "Development source/API exposure only; no production path claimed",
+    "Private DB selection is a test fixture; environment substitution alone is not claimed to break a hostile-user boundary",
+    "Some changes such as generation coherence/page limit are present; source preservation does not establish runtime acceptance"
+  ]
+}

@@ -80,9 +80,9 @@ pub fn inference_selfcheck_missing_final_line_is_not_ok_test() {
 
 // --- gates against the current repository state --------------------------
 
-pub fn checklist_gate_returns_zero_on_current_tree_test() {
+pub fn checklist_presence_is_not_verification_test() {
   execute(Checklist)
-  |> should.equal(0)
+  |> should.equal(1)
 }
 
 pub fn fifteen_cycles_inventory_returns_zero_when_records_present_test() {

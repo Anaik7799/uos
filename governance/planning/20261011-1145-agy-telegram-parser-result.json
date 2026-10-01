@@ -1,0 +1,147 @@
+{
+  "schema": "uos.agy-telegram-parser-result.v1",
+  "observed_utc": "2026-10-11T11:50:50Z",
+  "task": {
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "task_id": "PARSER_FIX",
+    "worker": "agy-telegram-20261011",
+    "attempt": 1,
+    "lease_until_ns": "1791722755758870905",
+    "status": "READY_FOR_ROOT_REFRESH",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+    "canonical_root": "/home/an/NAS-setup/uos",
+    "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+    "pane": "w2:p9",
+    "model": "Gemini 3.8 Flash (High)",
+    "coordinator_db": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "sa_plan_db": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "portfolio": "governance/planning/20261011-1115-telegram-tools-risk.json"
+  },
+  "summary": "Repaired exact plan-bound recovery parser, enforced selected task membership in reclaim bindings set, and added extensive negative tests in plugins/uos-risk-prioritization/validation/{checker.ml,validate.ml,adversarial.ml}. All subprocesses executed through compiled Gleam development.bounded on pinned OTP 29; zero Python used. Coordinator claimed workspace and task resources. Post-edit active-check holds solely on cross-task evidence source hashes across shared portfolio records; reporting ready-for-root-refresh without completing.",
+  "candidate_source_hashes": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "6e3b1f9c12517563c1ca647ec61864d1b1fc465db6efc13a695a47dda5008c6f"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "a631758abc8aac5468fa3228d8e82be8bb401c5996baa32ea3f0a572a8818928"
+    }
+  ],
+  "parser_contract_implemented": {
+    "interface": "Single explicit inline JSON string interface; file guessing (Sys.file_exists) removed.",
+    "top_level_object": "Strict object requiring exactly keys 'plan_id' and 'bindings'. Top-level arrays, missing plan_id, empty plan_id, alias fields ('plan', 'id'), and unknown fields are strictly rejected with RP-INVALID.",
+    "binding_records": "Strict object requiring exactly keys 'task_id', 'worker', 'attempt', and 'lease_until_ns'. Alias fields ('task', 'id', 'lease', 'deadline', 'previous_attempt', 'expected_new_attempt') and unknown fields are strictly rejected with RP-INVALID.",
+    "deadline_discipline": "Strict decimal string representation required. Numbers, floats, zero/negative, overflow (>Int64), and non-decimal characters are strictly rejected with RP-INVALID.",
+    "plan_identity_binding": "Mandatory plan_id in reclaim payload must match the portfolio plan_id; mismatches are strictly rejected with RP-INVALID.",
+    "selected_task_membership": "SELECTED_TASK must be an exact member of the supplied reclaim bindings set; selecting an out-of-set or unrelated task is strictly rejected with RP-INVALID.",
+    "legacy_compatibility": "Preserved single-binding CLI (--reclaim-preflight) and all ordinary gates."
+  },
+  "review_findings_resolved": [
+    {
+      "id": "R1",
+      "resolution": "parse_bindings enforces strict {plan_id, bindings} object, exact binding keys, non-empty plan identity, and rejects numbers/aliases/unknowns immediately before recovery projection."
+    },
+    {
+      "id": "R1_BOUNDARY",
+      "resolution": "Enforced SELECTED_TASK membership check in validate.run_audit and CLI dispatch via Checker.require_selected_in_set, strictly preventing selection of unrelated or out-of-set available tasks under the expired claim exemption."
+    },
+    {
+      "id": "R2",
+      "resolution": "Added 20 new adversarial test cases covering selected task membership, top-level array rejection, missing/empty plan_id, unknown/alias fields, numeric/float/overflow/non-decimal/zero/negative deadlines, duplicate task IDs, live unexpired lease rejection, missing lease rejection, completed row rejection, result-bearing row rejection, changed dependencies hold preservation, and full plan completeness hold preservation."
+    },
+    {
+      "id": "R3",
+      "resolution": "Executed all commands through compiled Gleam 'cepaf_gleam@harness@development':bounded/3 under pinned OTP 29 (uos_env). Zero Python utilized (node v22.23.2 used for JSON data). Session 954b9a82 claimed coordinator resources workspace:/home/an/NAS-setup/uos (sequence 412, epoch 1) and task:uos-telegram-tools-PARSER_FIX (sequence 413, epoch 1)."
+    }
+  ],
+  "verification_evidence": {
+    "suite": {
+      "command": "bash tools/risk-priority-check --all",
+      "exit_code": 0,
+      "status": "PASS",
+      "baseline_checks": 375,
+      "adversarial_checks": 32903,
+      "independent_dag_scenarios": 32768,
+      "package_status": "PASS",
+      "local_paths_checked": 39
+    },
+    "pre_edit_active_check": {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20261011-1115-telegram-tools-risk.json PARSER_FIX agy-telegram-20261011 1",
+      "exit_code": 0,
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "findings_count": 0,
+      "assessment_sha256": "470a9faf1e3bbf6e91c5a894bf5547d4678d3e1b99a6284b43bb10e0c5fc6da5"
+    },
+    "post_edit_active_check": {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20261011-1115-telegram-tools-risk.json PARSER_FIX agy-telegram-20261011 1",
+      "exit_code": 1,
+      "status": "HOLD",
+      "findings_summary": "Holds solely on cross-task RP-EVIDENCE for the 3 modified validation source files across completed and available task records in the shared portfolio.",
+      "sole_hold_rule": "RP-EVIDENCE"
+    },
+    "cli_negative_checks_verified": [
+      {
+        "case": "selected_task_out_of_set",
+        "input": "SELECTED_TASK = UNRELATED_AVAILABLE_TASK",
+        "exit_code": 1,
+        "status": "HOLD",
+        "rule": "RP-INVALID",
+        "detail": "selected task must be a member of reclaim bindings set"
+      },
+      {
+        "case": "missing_plan",
+        "input": "{\"bindings\":[{\"task_id\":\"FORMAL_FIX\",\"worker\":\"w\",\"attempt\":1,\"lease_until_ns\":\"100\"}]}",
+        "exit_code": 1,
+        "status": "HOLD",
+        "rule": "RP-INVALID",
+        "detail": "reclaim payload must contain exactly {plan_id, bindings} with no unknown or alias fields"
+      },
+      {
+        "case": "unknown_fields",
+        "input": "{\"plan_id\":\"uos/telegram-runtime/20261001-1150\",\"extra\":1,\"bindings\":[...]}",
+        "exit_code": 1,
+        "status": "HOLD",
+        "rule": "RP-INVALID",
+        "detail": "reclaim payload must contain exactly {plan_id, bindings} with no unknown or alias fields"
+      },
+      {
+        "case": "unknown_binding_field",
+        "input": "{\"plan_id\":\"...\",\"bindings\":[{...,\"unknown\":true}]}",
+        "exit_code": 1,
+        "status": "HOLD",
+        "rule": "RP-INVALID",
+        "detail": "reclaim binding must contain exactly {task_id, worker, attempt, lease_until_ns} with no unknown or alias fields"
+      },
+      {
+        "case": "alias_binding_fields",
+        "input": "{\"plan_id\":\"...\",\"bindings\":[{...,\"previous_attempt\":1,\"expected_new_attempt\":2}]}",
+        "exit_code": 1,
+        "status": "HOLD",
+        "rule": "RP-INVALID",
+        "detail": "reclaim binding must contain exactly {task_id, worker, attempt, lease_until_ns} with no unknown or alias fields"
+      },
+      {
+        "case": "numeric_deadline",
+        "input": "{\"plan_id\":\"...\",\"bindings\":[{...,\"lease_until_ns\":1790862250536791626}]}",
+        "exit_code": 1,
+        "status": "HOLD",
+        "rule": "RP-INVALID",
+        "detail": "lease_until_ns must be a decimal string, not a number"
+      },
+      {
+        "case": "wrong_plan",
+        "input": "{\"plan_id\":\"wrong-plan-id\",\"bindings\":[...]}",
+        "exit_code": 1,
+        "status": "HOLD",
+        "rule": "RP-INVALID",
+        "detail": "plan_id in bindings does not match portfolio plan_id"
+      }
+    ]
+  },
+  "disposition": "READY_FOR_ROOT_REFRESH. No task completion performed; awaiting root reconciliation of shared assessment hashes."
+}

@@ -1,0 +1,114 @@
+{
+  "observed_at": "2026-10-11T15:16:42.172Z",
+  "receipt": "governance/planning/20261011-1521-telegram-store-final-independent-verification.json",
+  "files": [
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/gleam.toml",
+      "sha256": "d14edc0bcb49c849ac7aac4704cc365436a2f4ebd0eb71e24fbdf823c859747c"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/recovery_independent.erl",
+      "sha256": "dfd0f54ab5eb95246f0eea00322dc71ecc52070457749dd72c8657ae432f3f60"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/recovery_lookup.erl",
+      "sha256": "2af86bbc404f7f7abc1af8a87d62fb7f1d0cec6bdd9362dba41fead9245add91"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/recovery_unknown.erl",
+      "sha256": "a736a7ee1d7549d75127dca79c199d26d1b7fc706511afa55bf03b75d39085e2"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/store_boundary.erl",
+      "sha256": "9f36bd7549bcdf1b8be4aea71fc5846fc2b52a6978c39d7ebaef772cbda14ff0"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/store_domain.erl",
+      "sha256": "9a000d5bccf5de2d784ec40d823bfa70f3ff7228fb82a0a273a35060a95fcfbb"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/store_escaped.erl",
+      "sha256": "9c773f66e8cee6b1b709fbb8cbedfbc383020979d674b5ecdbcb512892284f2e"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/store_extended.erl",
+      "sha256": "6daf90944fa1e514331c20b18ee90b940425868ae03aafb070c70bcb35936a36"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/store_independent.erl",
+      "sha256": "a29d01bb2cbb27254c80ab81ba65117921f05cb6972822a1762d80b8b61889b4"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/store_maximum.erl",
+      "sha256": "f285dbf48c8cfc057601acd9a1c1190e3adfb51c798861a8a100bc7b022e2e5d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/store_multi.erl",
+      "sha256": "f6186829a8e5728c45fb3ca5c1842fe81f30bd9148fe3b2a863e048f5cb130bc"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/telegram_store_main.exe",
+      "sha256": "2cf64d7a24da0e9c1dc7ace920b3f119447e6b0de3e75a8f7ee74e37930156ec"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/telegram_store_transport_guardian.exe",
+      "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1516-store-lookup-fixtures/guardian",
+      "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1516-store-lookup-fixtures/recovery_worker.exe",
+      "sha256": "20a5e717997c9e4de13a2992576d51df3b77ef82cb0b67a448e824bd3f37cd31"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1516-store-lookup-fixtures/recovery_worker.ml",
+      "sha256": "7239a2fe1dc1176be2dd1a9f462153759b738b232c07d8ee65ed820cc1800d05"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1516-store-lookup-fixtures/telegram_store.ml",
+      "sha256": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3/guardian",
+      "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3/recovery_worker.exe",
+      "sha256": "0eeb97ccf030e588fbed66a791218f6cd4b2d71423c1249feafc9d10c130c74c"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3/recovery_worker.ml",
+      "sha256": "1c849c93ba757eb24b9c5bf7157a23b167799cc722f7bb44f91455c404f36470"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3/telegram_store.ml",
+      "sha256": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/cleanup_witness_test.erl",
+      "sha256": "0cd3e4bc94c77afb1db0ad368452d899cc11d0dd3409a52f6b4365cec2dd2c78"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/fixture",
+      "sha256": "93630b8547f5b6ee9e529d48c422b7f005a4217021c96d4ee4c97fdb4c160cf0"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/fixture.ml",
+      "sha256": "8957b7cca9ff29f0f31c80028bf6231e0211a12ffee6e83266d82077f1c73697"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/guardian",
+      "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/telegram_store_transport_ffi.erl",
+      "sha256": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/telegram_store_transport_test.erl",
+      "sha256": "0600d7958fb74be9fe11c17c4173743434f4d4b2cdd215103d9ec50d66e28371"
+    }
+  ]
+}

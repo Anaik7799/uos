@@ -1,0 +1,110 @@
+{
+  "schema": "uos.telegram-pure-review.v1",
+  "timestamp_utc": "2026-10-01T11:22:42Z",
+  "tags": [
+    "#fractal-l5",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "PURE_REVIEW",
+  "worker": "codex-admission-review-20261001",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "candidate": "e9e888a9111d82bb31477d77a2edc7cee0f86532",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-telegram-admission-20261001",
+  "scope": "Independent source and offline pure-function review only; no ingress, durable storage, canonical authority, delivery, runtime or system admission.",
+  "source_bindings": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "38317d28e0f031d4989a8c89d0719f7cdb7bc15a21e11da9d7c7752399fff098"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "37ebdc98a8b4ffb3e31c57680e3e83906d68d76f500c379274eb77a79e48a5f4"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "ba6c70f24a66afd345885d53ff979cf4f65d90f099b7eebd595c81d87e2a973b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "sha256": "3c3a2e9d0bf400b7859cd54b1108d234f7b7cbda1362a070fca223e8c521c01f"
+    }
+  ],
+  "source_match": "JJ diff candidate to current @ on four reviewed paths empty immediately after test run.",
+  "validation": {
+    "risk_active": "PASS observed 2026-10-01T11:17:24Z; assessment e0efdab866b62f57da89ce1ba7a8e41a9d7c625042f595c1b4a9aee55b11cb99",
+    "build": "Pinned sibling gleam build PASS using existing dependencies; no downloads observed",
+    "unit_tests": 18,
+    "unit_result": "All 18 tests passed under independent EUnit invocation.",
+    "adversarial_result": "HOLD; independent Erlang calls assert actual counterexample outcomes, not expected correct behavior.",
+    "evidence": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1142-independent-pure-review-evidence.json",
+    "reviewer_harness_error": "Initial independent probe had an Erlang map-brace parse error before any tests ran. Corrected evaluator then exited 0; both transcripts preserved."
+  },
+  "findings": [
+    {
+      "id": "PURE-01",
+      "priority": "P1",
+      "function": "telegram_delivery_ledger.ingest_single",
+      "observation": "Same update_id and text_hash with changed message_id, chat_id and user_id is accepted as the original record. Rejected updates also return an existing row without checking collision identity.",
+      "fix": "Bind canonical bot/request identity plus full immutable envelope identity/digest. Idempotency requires complete equality, including rejection tombstones; changed identity must refuse unchanged.",
+      "falsifier": "Existing update100; replay same text hash with message888/chat9999/user999 must return collision."
+    },
+    {
+      "id": "PURE-02",
+      "priority": "P1",
+      "function": "telegram_delivery_ledger.ingest_batch",
+      "observation": "Watermark100 with [new101, conflicting100] returns watermark102 and one collision. Input order is trusted, so acknowledgement can skip the failed lower update.",
+      "fix": "Validate whole batch ordering and duplicate consistency before advancing any prefix, or normalize deterministically with collision prevalidation. Keep integer gaps legal; never acknowledge past a failed presented update.",
+      "falsifier": "Descending batch above must refuse without advancing beyond unresolved100; repeat across nonadjacent duplicate/collision positions."
+    },
+    {
+      "id": "PURE-03",
+      "priority": "P1",
+      "function": "telegram_delivery_ledger.handle_restart",
+      "observation": "Every InboxProcessing becomes InboxPending even when outbox is delivered. The record has no request_id/result linkage to correlate output. Recovered inbox can be claimed by a new worker. Supplied restart test asserts unconditional reset.",
+      "fix": "Persist explicit request/result/outbox linkage and recovery disposition. Existing durable results resume only delivery reconciliation; delivered or uncertain results cannot re-execute. Missing/inconsistent linkage holds rather than silently requeues.",
+      "falsifier": "Crash snapshots with PENDING/SENDING/DELIVERED/UNCERTAIN chunks and matching request must not create a second result/send attempt; mixed unrelated requests remain isolated."
+    },
+    {
+      "id": "PURE-04",
+      "priority": "P1",
+      "function": "telegram_delivery_ledger.reconcile_send_outcome",
+      "observation": "Wrong worker for a sending chunk rewrites its status to UNCERTAIN; calling reconciliation on delivered chunk overwrites DELIVERED with UNCERTAIN. Refused authority changes state.",
+      "fix": "Return Result and preserve original state on nonmatching request/worker/epoch or invalid prior state. Only matching current SENDING may consume its corresponding outcome.",
+      "falsifier": "Wrong owner/epoch/request and terminal replay return error with state unchanged; matching send mismatch may become UNCERTAIN."
+    },
+    {
+      "id": "PURE-05",
+      "priority": "P2",
+      "function": "telegram_ingress_guard.classify_directive",
+      "observation": "/tool query_doctor {\"path\":\"/etc\"} and /action query_saplan garbage both become argument-free DirectReadTool. Denial text also suggests an available /approval workflow although it is unimplemented.",
+      "fix": "Validate exact command grammar and optional empty JSON object explicitly; refuse blank/nonobject/nonempty arguments instead of discarding. State unsupported mutation/approval behavior truthfully.",
+      "falsifier": "Valid no-arg/empty-object forms accepted; supplied malformed/nonempty examples refused; no denial advertises an implemented approval path."
+    },
+    {
+      "id": "PURE-06",
+      "priority": "P2",
+      "function": "ledger constructors/claims and ingress identity validation",
+      "observation": "Empty worker and epoch0 can claim and complete with empty digest; invalid empty request_id/index-1/total0/chat0/payload4097 and epoch-1 can be sent; ingestion accepts1001 pending rows. Channel chat with allowed numeric from is accepted; allowlist.bot_id has no effect and is not carried in envelope.",
+      "fix": "Use checked constructors/opaque validated inputs and explicit documented limits: nonempty owner/request, positive epoch, digest shape, valid chunk count/index/payload and queue cap. Validate required numeric identity fields/chat kind. Carry trusted observed bot identity into envelope/ledger or explicitly document single-bot external binding without claiming guard authentication.",
+      "falsifier": "Boundary and boundary+1 tests, empty/negative identity/epoch tests, channel variants, cross-bot same update ID. Queue-full refusal must preserve offset."
+    }
+  ],
+  "positive_controls": [
+    "Allowed numeric private pair accepted",
+    "sender_chat refused",
+    "actual channel_post refused",
+    "numeric user spoof with allowed-looking username refused",
+    "SENDING crash becomes UNCERTAIN and send retry refuses",
+    "Malformed text-object canary not present in observed rejection detail"
+  ],
+  "limitations": [
+    "Pure function constructors are not proof of canonical Sa-plan authority or durable CAS. Effectful adapters remain outside this review.",
+    "No SQLite, Telegram, production service, transport, power-loss or runtime testing performed.",
+    "No secrets or real private messages read; all adversarial payloads synthetic and offline.",
+    "No source edits or task completion performed by reviewer. Prior design HOLD receipts remain unchanged."
+  ],
+  "next_step": "Correct these pure transitions and regression tests at a new frozen candidate, then repeat independent source review. This HOLD does not bar scoped development repair."
+}

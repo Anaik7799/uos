@@ -1,0 +1,80 @@
+{
+  "schema": "uos.telegram-store-fix2-candidate.v5",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1715",
+  "observed_at": "2026-10-11T15:03:24Z",
+  "status": "CANDIDATE_DELIVERED_OPEN_ATTEMPT",
+  "task_lifecycle": "executing (PRESERVED OPEN for independent root and Codex STORE_DRAFT_REVIEW)",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store.gleam": "bf2199357e23078a6673215306412501b47dcbb0cd5379ccf3d187ea821e5856",
+    "telegram_store_codec.gleam": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+    "telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+    "telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+    "telegram_store_test.gleam": "97b5145d31201fb53d09d1dd815216e88d9eadb490f4549c0b7a942fd85562fa",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "telegram_store_transport_ffi.erl": "c4190915197f2ae4a643b724fec4246751b94b6456a4eb58985deb8575cd7c72"
+  },
+  "process_deviation_acknowledgement": {
+    "incident": "Direct Bash shell/sa-plan/erl/jj invocations occurred during turn 14:47 after session context reset",
+    "rule_binding": "SC-HARNESS-MCP: all commands must execute through Gleam supervisor launcher",
+    "correction": "All command execution restored through /home/an/NAS-setup/uos/var/recovery-runtime/20261011-1318-native-verify3/gleam-bound TIMEOUT_MS ABSOLUTE_EXEC ARG... under pinned uos_env",
+    "verification_repeated": true
+  },
+  "root_review_corrections_addressed": [
+    {
+      "item": "pending_operation_opacity",
+      "detail": "Public make_pending_operation_for_testing removed entirely from telegram_store.gleam. PendingOperation remains strictly opaque with private constructor; test cases obtain genuine PendingOperation directly through real operations using root recovery fixtures."
+    },
+    {
+      "item": "error_discrimination",
+      "detail": "execute_apply discriminates between explicit whitelisted backend errors ({ok: false, error: ...}), commit_uncertain, and domain decode failures via codec.decode_apply_response_discriminated."
+    },
+    {
+      "item": "commit_uncertain_always_pending",
+      "detail": "If native explicitly returns {'ok': false, 'error': 'commit_uncertain'}, it is treated as an uncertain apply, constructing PendingOperation with observed CleanupProof rather than definitive refusal."
+    },
+    {
+      "item": "receipt_invariants_retain_proof",
+      "detail": "If worker returns exit 0 with receipt but invariant checks fail (field mismatch or generation CAS mismatch), execute_apply constructs PendingOperation with observed CleanupProof in StoreUncertainApply(pending), ensuring caller does not lose proof and can reconcile with durable DB."
+    },
+    {
+      "item": "actual_recovery_fixtures_in_tests",
+      "detail": "Test 31 exercises actual root fault fixtures (recovery_worker.exe, guardian) for fault-pre (deadline kill -> PendingAbsent), fault-post (postcommit kill -> PendingCommitted), fault-domain (exit 0 decode failure -> fail closed without panic), and binding mismatch."
+    }
+  ],
+  "verification_results": {
+    "in_tree_gleam_tests": {
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "modules": [
+        "telegram_store_test (31 tests)",
+        "telegram_delivery_ledger_test (27 tests)",
+        "telegram_ingress_guard_test (16 tests)"
+      ]
+    },
+    "transport_fixture_tests": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "runner": "tools/validation/telegram_store_transport_test.erl"
+    },
+    "preflight_gate": {
+      "checks": 31,
+      "status": "PASS"
+    },
+    "risk_priority_active_check": {
+      "task_id": "STORE_FIX2",
+      "worker": "agy-telegram-20261011",
+      "attempt": 1,
+      "findings_for_task": [],
+      "status": "ACTIVE_OBSERVATION_PASS"
+    }
+  }
+}

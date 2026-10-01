@@ -1,0 +1,103 @@
+{
+  "schema": "uos.telegram-store-impl.v2",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_IMPL",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1351",
+  "observed_at": "2026-10-11T13:51:22Z",
+  "status": "HARDENED_ALL_FINDINGS_ADDRESSED_AWAITING_ROOT_REVIEW",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store_codec.gleam": "80a5a08bf96a711d23acb91b46ae43ef8613fa89d30320985c5faf78edad80e0",
+    "telegram_store.gleam": "6b04a5cc31da1075a73455d3b75149229c810478618fd6ca0cac031f044ec32f",
+    "telegram_store_test.gleam": "1a32222c668937e7b2c55d0562e1b5ecf10362dc2a2e0064768182f8cd5707c1",
+    "telegram_delivery_ledger.gleam": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9"
+  },
+  "verification_results": {
+    "telegram_store_test": {
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "tests": [
+        "golden_digest_parity_test",
+        "base64_and_row_invariants_test",
+        "initialize_and_bootstrap_test",
+        "atomic_prefix_commit_test",
+        "cas_and_read_set_concurrency_test",
+        "maximal_16_chunk_result_atomic_test",
+        "sending_and_outcome_lifecycle_test",
+        "uncertainty_reconciliation_test",
+        "recovery_model_invariants_test",
+        "finding1_singleton_and_directive_validation_test",
+        "finding2_batch_bounds_and_known_replay_test",
+        "finding3_backend_error_whitelist_and_decoder_invariants_test",
+        "finding5_capacity_reservation_accounting_test",
+        "finding6_resumable_bootstrap_interrupted_init_test"
+      ]
+    },
+    "telegram_delivery_ledger_test": {
+      "total": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "telegram_ingress_guard_test": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    "total_telegram_tests_passed": 57
+  },
+  "review_findings_addressed": [
+    {
+      "finding_id": 1,
+      "description": "validate_group_identity singleton bypass, directive omission, prevalidation",
+      "resolution": "Enforced representative bot ID equality check on singleton groups, added directive equality check in verdicts_match, and prevalidated all update groups before any atomic prefix commit.",
+      "tests": ["finding1_singleton_and_directive_validation_test"]
+    },
+    {
+      "finding_id": 2,
+      "description": "commit_prefix batch bounds and replay below watermark semantics",
+      "resolution": "Enforced bounded batch size (<= ledger.max_batch_size), and for updates below watermark queried inbox via read_keys to admit matching known replays rather than blindly failing with unseen_update_below_committed_offset.",
+      "tests": ["finding2_batch_bounds_and_known_replay_test"]
+    },
+    {
+      "finding_id": 3,
+      "description": "read_keys/response decoders key/version/generation binding, canonical digest match, receipt validation, error whitelist",
+      "resolution": "Enforced requested key count match, unique rows, requested key containment, positive versions/generation, verified decoded canonical value digests, validated apply receipts against expected operation_id/digest/summary/generation, and mapped backend errors through a finite whitelist of 60+ native kernel codes to prevent raw error reflection.",
+      "tests": ["finding3_backend_error_whitelist_and_decoder_invariants_test"]
+    },
+    {
+      "finding_id": 4,
+      "description": "reconcile_uncertain writer quiescence proof requirement",
+      "resolution": "Added writer_quiesced: Bool parameter to reconcile_uncertain; absent key returns ReconciledUnknown('writer_quiescence_unproven') unless writer quiescence is proven True, returning ReconciledAbsent only when quiesced.",
+      "tests": ["uncertainty_reconciliation_test"]
+    },
+    {
+      "finding_id": 5,
+      "description": "Capacity reservation deltas across lifecycle transitions",
+      "resolution": "Replaced zero deltas with exact accounting against 20 total potential KV rows and 64 receipt credits: +18/+63 on accepted prefix commit; -1/-1 on claim; -17/-1 on result; 0/-1 on sending, outcome, completion.",
+      "tests": ["finding5_capacity_reservation_accounting_test", "sending_and_outcome_lifecycle_test"]
+    },
+    {
+      "finding_id": 6,
+      "description": "Resumable bootstrap on interrupted native DB initialization",
+      "resolution": "Intercepted db_already_exists in initialize_store, inspecting meta/bot_identity and meta/next_offset via read_keys to idempotently resume or complete bootstrap metadata application.",
+      "tests": ["finding6_resumable_bootstrap_interrupted_init_test", "initialize_and_bootstrap_test"]
+    }
+  ],
+  "invariants_enforced": [
+    "Exact apply digest parity (uos.telegram-store.apply.v2) matching native test vector 8825f9c2f07cbdc1dd35478403db4922b79abce9e485db0bd23ade6dfb8fe339",
+    "Row version/hash invariant: version=0 <=> absent & sha256 empty; version>0 <=> present & 64-hex sha256",
+    "Atomic whole-prefix commit: watermark + inbox + input rows committed in single atomic apply with reservation accounting (+18 rows, +63 receipts)",
+    "CAS and Read-Set consistency: expected_generation checked, read set assertions validated against database rows",
+    "Maximal 16-chunk result atomicity: up to 16 chunks of 4096-byte escaped payloads persisted atomically with result metadata",
+    "Durable SENDING persistence: chunk state transitioned to OutboxSending before HTTP transmission attempt",
+    "Send outcome persistence: chunk state updated to OutboxDelivered, OutboxFailed, or OutboxUncertain upon completion",
+    "Strict uncertainty reconciliation: lookup_operation used to reconcile unknown outcomes with writer quiescence proof without blind retry",
+    "Zero Python, zero native store mutations, all execution strictly through gleam-bound under pinned uos_env"
+  ]
+}

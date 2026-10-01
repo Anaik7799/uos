@@ -1,0 +1,54 @@
+{
+  "observed_at": "2026-10-11T12:32:36Z",
+  "action": "Pinned Gleam formatter only; semantic verification rerun next",
+  "changes": [
+    {
+      "task": "FEATURE_INVENTORY",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "new": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "task": "NATIVE_REPAIR",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "new": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "task": "NATIVE_REVIEW",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "new": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "task": "MINI_AUTH_REVIEW",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "new": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "task": "MINI_AUTH_FIX",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "new": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "task": "MINI_AUTH_VERIFY",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "new": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "task": "MINI_AUTH_VERIFY",
+      "path": "apps/cepaf_gleam/test/telegram_auth_golden_test.gleam",
+      "old": "50fa025dd52dd71367897960a3a61ea1923f75b657b0d30bf1cbd77e9d4c6596",
+      "new": "358227fd5df887c05a885ed9cc14f4f221cce02d4d001e0a8d192d978596f33c"
+    },
+    {
+      "task": "INVENTORY_REVIEW",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "new": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    }
+  ]
+}

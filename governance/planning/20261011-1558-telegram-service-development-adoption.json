@@ -1,0 +1,84 @@
+{
+  "schema": "uos.telegram-service-development-adoption.v1",
+  "observed_at": "2026-10-11T15:53:58Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "implementation": {
+    "task": "SERVICE_IMPL",
+    "worker": "agy-telegram-20261011",
+    "attempt": 1
+  },
+  "review": {
+    "task": "SERVICE_DRAFT_REVIEW",
+    "worker": "codex-telegram-20261011",
+    "attempt": 1
+  },
+  "decision": "ADOPT_FOR_BOUNDED_DEVELOPMENT_WITH_BINDING_AMENDMENTS",
+  "runtime_admission": "NOT_GRANTED",
+  "source": {
+    "path": "docs/design/20261011-1528-telegram-service-implementation-plan-v2.md",
+    "sha256": "7bded8c7e6fd93d8d04ef8c43a2a176812f131847197d20feb5da73104624732"
+  },
+  "review_receipt": "governance/planning/20261011-1512-telegram-service-design-review.json",
+  "amendments": [
+    {
+      "area": "Unknown writer",
+      "rule": "Use in-memory service HOLD with zero new DB worker/mutation until actual prior writer cleanup is established. Do not persist InboxHold as the first response to unknown writer state. After proven whole-unit cleanup recover verified current ledger state; exact old-operation reconciliation still requires original canonical context."
+    },
+    {
+      "area": "Lifecycle receipt",
+      "rule": "Opaque receipt minted by actual lifecycle observation; bind unit, InvocationID, store incarnation/database and pinned worker/guardian association. Registration must precede worker launch and survive VM death. Never accept a caller-constructed record or Boolean. Stop completion plus recursive cgroup emptiness is required; parent cgroup.procs empty, unit inactive or missing directory alone are insufficient."
+    },
+    {
+      "area": "Private unit scope",
+      "rule": "Create only fresh uniquely named private test units. Validate exact non-glob unit identity and ownership, not prefix alone. No Herdr/current UOS/production unit mutation. Systemctl stop implementation details cannot be asserted as cgroup.kill without observation."
+    },
+    {
+      "area": "Supervision",
+      "rule": "rest_for_one child3 failure restarts child4. Specify bounded queues, cancel/monitor behavior, stop new admissions on observed authority loss and preserve uncertain in-flight external outcomes. Do not claim distributed checks occur atomically at one instant."
+    },
+    {
+      "area": "Authority and identities",
+      "rule": "Runtime worker identity comes from trusted service config/current canonical claim, never hardcoded development AGY worker. Current per-request Sa-plan owner/attempt/lease and resource epoch checks occur at effect boundary. Logical remote effect IDs survive authority epochs; new storage transitions must not replay an uncertain remote effect."
+    },
+    {
+      "area": "Exact schema/API",
+      "rule": "Reuse evaluate_update(raw,Allowlist), read_inbox_records and codec key functions. Source has a bounded inbox index; root's earlier absence claim is retracted. Callback decoding, guarded acknowledgment and task authority are new implementation obligations."
+    },
+    {
+      "area": "HTTP",
+      "rule": "Separate opaque/private HTTP config from storage config. Bound body and time. Delivered requires positive valid message_id, ok=true and intended chat. Only proven rejection becomes Failed; sanitize error categories and never reflect raw private errors. Uncertain outcomes are not blindly retried."
+    },
+    {
+      "area": "Evidence/documents",
+      "rule": "Real HTTP fixture is planned until actually built/run. Use canonical18 core obligations plus provenance extension without unsupported pass/consensus claims. Align ASCII/Mermaid or omit diagrams. Correct v2 wording as implementation proceeds; preserve original records."
+    }
+  ],
+  "acceptance": [
+    "Actual private HTTP server, OTP actors and native SQLite positive/refusal/restart observations",
+    "No duplicate poller/store flight or automatic replay after ambiguous remote effect",
+    "Caller-forged/mismatched cleanup receipt, wrong unit/store incarnation and stale task/epoch are refused",
+    "Current store37-probe/six-recovery/five-tamper evidence retained; rerun relevant tests for any accepted product changes",
+    "Independent root candidate review while AGY task remains executing; no production deployment during development"
+  ],
+  "risk": {
+    "criticality": "P1",
+    "raw_fmea": {
+      "s": 4,
+      "o": 3,
+      "det": 3,
+      "rpn": 36
+    },
+    "ucas": {
+      "not_provided": "Lost request/recovery or acknowledgment",
+      "provided_unsafe": "Wrong-recipient or unauthorized/duplicate effects",
+      "wrong_timing": "Effect after stale ownership or recovery before writer cleanup",
+      "duration": "Unbounded queue/child/retry or lingering send"
+    },
+    "residuals": [
+      "External systemd lifecycle adapter not yet implemented/verified",
+      "Actual production runtime authority and release are separate gates",
+      "Same-UID cooperative trust model; no hostile account isolation claim",
+      "Remaining command/media/MiniApp/gateway/formal/E2E obligations remain open"
+    ]
+  }
+}

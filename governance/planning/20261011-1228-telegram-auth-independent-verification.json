@@ -1,0 +1,71 @@
+{
+  "schema": "uos.telegram-auth-independent-verification.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "MINI_AUTH_VERIFY",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "PASS_DEVELOPMENT_COMPONENT",
+  "baseline_receipt": "governance/planning/20261011-1210-telegram-mini-auth-independent-review.json",
+  "agy_receipts": [
+    "governance/planning/20261011-1212-agy-mini-auth-fix.json",
+    "governance/planning/20261011-1225-agy-mini-auth-correction.json"
+  ],
+  "source_manifest_path": "var/recovery-runtime/20261011-1230-auth-independent/formatted-manifest.json",
+  "build": "Exact task-owned source and both test modules freshly compiled via pinned Gleam compile-package, isolated package, existing realized library path. Private auth BEAM explicitly loaded before test.",
+  "cleanup": "Initial Gleam formatter check failed on two task files. Pinned formatter normalization only; refreshed hashes and repeated exact-source compile/test.",
+  "verification": {
+    "chunk_id": "a31abf",
+    "wall_time_seconds": 0.456970097,
+    "exit_code": 0,
+    "original_token_count": 53,
+    "output": "auth_module=\"var/recovery-runtime/20261011-1230-auth-independent/build/ebin/cepaf_gleam@telegram@auth.beam\"\n  All 72 tests passed.\nindependent_vectors=128 semantic_assertions=768 malformed_percent_cases=8 PASS\n"
+  },
+  "independent_vectors": {
+    "path": "var/recovery-runtime/20261011-1230-auth-independent/vectors.json",
+    "driver": "var/recovery-runtime/20261011-1230-auth-independent/auth_independent_vectors.erl",
+    "generator": "Pinned Node standard crypto independent HMAC-SHA256 oracle, all synthetic tokens/users",
+    "cases": 128,
+    "semantic_assertions": 768,
+    "malformed_encoding_cases": 8,
+    "properties": [
+      "Valid signatures accepted with Unicode, combining characters, literal plus, ampersand, quotes and reordered parameters",
+      "Freshness exact boundary accepted, expired/future refused",
+      "Decoded duplicate auth_date keys refused",
+      "Wrong token invalidates signature",
+      "Malformed/truncated/invalid UTF8 percent encodings refused without crashes"
+    ]
+  },
+  "limits": [
+    "Component auth accepts signed identity; it does not grant allowlist membership, task authority, HTTP session or effect authority.",
+    "Existing validate is documented signature-only; operational consumers must use validate_fresh or explicitly bounded validate_fresh_with_skew.",
+    "4KiB input cap,24h maximum caller age policy,60s maximum explicit skew and finite identity limits are UOS choices; Telegram does not mandate those freshness windows.",
+    "Mini App HTTP integration/CSRF/replay/session/allowlist and mobile browser/live Telegram acceptance remain separate pending work.",
+    "72 tests include current source auth/test modules plus unchanged already-built UI dependencies; no browser interaction is claimed.",
+    "No production release, main merge or global admission."
+  ],
+  "observed_at": "2026-10-11T12:33:28.811Z",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "sha256": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_auth_golden_test.gleam",
+      "sha256": "358227fd5df887c05a885ed9cc14f4f221cce02d4d001e0a8d192d978596f33c"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_mini_app_test.gleam",
+      "sha256": "cea5c0b45b25a173e1b1752842ea91907a7a5700a548c96ec5fe7deaf19042bb"
+    }
+  ],
+  "binary_manifest": [
+    {
+      "path": "var/recovery-runtime/20261011-1230-auth-independent/build/ebin/cepaf_gleam@telegram@auth.beam",
+      "sha256": "bf00246896611629c4a9ecf43eb1e4861ace8f779fd206fbaa8bf240afda4386"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1230-auth-independent/build/ebin/auth_independent_vectors.beam",
+      "sha256": "288f7624e5d081c0f5fdb1afc8ab7977b476e2104f1129c89d7684f3515e33d3"
+    }
+  ]
+}

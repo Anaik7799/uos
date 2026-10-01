@@ -26,8 +26,8 @@
 //// =============================================================================
 
 import cepaf_gleam/crdt/delta_state.{
-  type MeshDeltaState, type NodeId, empty_clock, increment_clock, merge_clocks,
-  new_mesh_delta_state, dominates, orset_add, pncounter_increment,
+  type MeshDeltaState, type NodeId, dominates, empty_clock, increment_clock,
+  merge_clocks, new_mesh_delta_state, orset_add, pncounter_increment,
 }
 import cepaf_gleam/crdt/health_bridge.{
   type ClusterHealthMap, empty_health_map, evaluate_quorum, record_health_from,
@@ -256,13 +256,14 @@ pub fn handle_incoming_message(
               epoch_us: current_epoch_us,
             )
           use queued <- result.try(enqueue_outbound(engine, delta_msg))
-          let updated_peers = observe_peer_clock(
-            engine.peers,
-            from_node,
-            engine.local_mesh_state.vector_clock,
-            remote_clock,
-            current_epoch_us,
-          )
+          let updated_peers =
+            observe_peer_clock(
+              engine.peers,
+              from_node,
+              engine.local_mesh_state.vector_clock,
+              remote_clock,
+              current_epoch_us,
+            )
           let updated_engine = DeltaMeshEngine(..queued, peers: updated_peers)
           Ok(#(updated_engine, [delta_msg]))
         }
@@ -275,13 +276,14 @@ pub fn handle_incoming_message(
               epoch_us: current_epoch_us,
             )
           use queued <- result.try(enqueue_outbound(engine, ack_msg))
-          let updated_peers = observe_peer_clock(
-            engine.peers,
-            from_node,
-            engine.local_mesh_state.vector_clock,
-            remote_clock,
-            current_epoch_us,
-          )
+          let updated_peers =
+            observe_peer_clock(
+              engine.peers,
+              from_node,
+              engine.local_mesh_state.vector_clock,
+              remote_clock,
+              current_epoch_us,
+            )
           let updated_engine = DeltaMeshEngine(..queued, peers: updated_peers)
           Ok(#(updated_engine, [ack_msg]))
         }
@@ -304,13 +306,14 @@ pub fn handle_incoming_message(
         True -> engine.peers
         False -> invalidate_peer_coverage(engine.peers)
       }
-      let updated_peers = observe_peer_clock(
-        coverage_peers,
-        from_node,
-        merged_mesh.vector_clock,
-        remote_state.vector_clock,
-        current_epoch_us,
-      )
+      let updated_peers =
+        observe_peer_clock(
+          coverage_peers,
+          from_node,
+          merged_mesh.vector_clock,
+          remote_state.vector_clock,
+          current_epoch_us,
+        )
       let updated_engine =
         DeltaMeshEngine(
           ..queued,
@@ -321,26 +324,24 @@ pub fn handle_incoming_message(
       Ok(#(updated_engine, [ack]))
     }
     SyncAck(from_node, applied_clock, _, _) -> {
-      let clocks_match = clocks_equal(
-        engine.local_mesh_state.vector_clock,
-        applied_clock,
-      )
+      let clocks_match =
+        clocks_equal(engine.local_mesh_state.vector_clock, applied_clock)
       case clocks_match {
         True -> {
-          let updated_peers = observe_peer_clock(
-            engine.peers,
-            from_node,
-            engine.local_mesh_state.vector_clock,
-            applied_clock,
-            current_epoch_us,
-          )
+          let updated_peers =
+            observe_peer_clock(
+              engine.peers,
+              from_node,
+              engine.local_mesh_state.vector_clock,
+              applied_clock,
+              current_epoch_us,
+            )
           Ok(#(DeltaMeshEngine(..engine, peers: updated_peers), []))
         }
         False -> {
-          let follow_up = case requires_delta_sync(
-            engine.local_mesh_state,
-            applied_clock,
-          ) {
+          let follow_up = case
+            requires_delta_sync(engine.local_mesh_state, applied_clock)
+          {
             True ->
               SyncDelta(
                 from_node: engine.local_node_id,
@@ -356,13 +357,14 @@ pub fn handle_incoming_message(
               )
           }
           use queued <- result.try(enqueue_outbound(engine, follow_up))
-          let updated_peers = observe_peer_clock(
-            queued.peers,
-            from_node,
-            engine.local_mesh_state.vector_clock,
-            applied_clock,
-            current_epoch_us,
-          )
+          let updated_peers =
+            observe_peer_clock(
+              queued.peers,
+              from_node,
+              engine.local_mesh_state.vector_clock,
+              applied_clock,
+              current_epoch_us,
+            )
           Ok(#(DeltaMeshEngine(..queued, peers: updated_peers), [follow_up]))
         }
       }

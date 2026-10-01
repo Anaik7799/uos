@@ -1,0 +1,51 @@
+{
+  "observed_at": "2026-10-12T03:49:23.818Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261012",
+  "attempt": 7,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate_service_sha256": "9eb32d0a9dd8243d86d2886a5b1a737567db2aabcac12a361a1f70bdfba193be",
+  "finding": "AUTO-01",
+  "criticality": "critical",
+  "cases": [
+    {
+      "stage": "after read_inbox_index response computed, before return",
+      "fixture": "Expire executing tasks only in adjacent guarded private Sa-plan DB",
+      "expected": "No processing claim; store generation remains3",
+      "observed": "Native barrier confirms expiry; service later refuses commit_result but store generation4 proves processing claim already committed after expiry; no HTTPsend."
+    },
+    {
+      "stage": "after commit_sending commits, before return",
+      "fixture": "Expire executing private task before service receives sending receipt",
+      "expected": "No HTTPsend after authority expiry",
+      "observed": "Native expiry marker; fixture records one sendMessage request; service only refuses AFTER HTTPsend. Store generation6."
+    }
+  ],
+  "scope": "All network effects against private localhost fixture; no Telegram network message or canonical authority DB changes. Fixture guard restricts /tmp/uos_tg_service_e2e_test_*/telegram.sqlite3.",
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261012-0348-service-fence-independent/manifest.json",
+      "sha256": "945279f2eb5def7b42048dedc37b2ab69896f631ab3bb8b8a535feb388abf7f3"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0348-service-fence-independent/tests.json",
+      "sha256": "cc2f5b09472dac480a4c3cf1f35a971fbcdd0922c9418e42213a623f0ae31f16"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0348-service-fence-independent/cleanup.json",
+      "sha256": "3539c2c5d0be585bad6a4bd578d8dff7e9c166ecf3bde095c71b81f35eadbb64"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0348-service-fence-independent/package/src/telegram_service_e2e_test.gleam",
+      "sha256": "ddf67c8f0351e65c1b289d9a8e7d0c1cfacc6bf48d6332155c19e9d25947978c"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0348-service-fence-independent/native/telegram_store_recovery_worker.ml",
+      "sha256": "c8cbc4c4a13b01a961ea2ce7f2f43fa9d9aa8a14ec69f48b267e294868629d45"
+    }
+  ],
+  "cleanup": "Owned root0348 units/slices final inventory empty; target assertions failed as expected, not interpreted as passing tests.",
+  "mitigation": "Refresh authority immediately after blocking store stages and before each separate store/network effect; require these negative controls to pass on corrected candidate."
+}

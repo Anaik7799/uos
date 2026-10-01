@@ -84,47 +84,19 @@ def evaluateIntent (tok: CapabilityToken) (i: Intent) (nowUs: Nat) : Authorizati
 
 /-- THEOREM: No authorized intent can target the protected root NVMe serial -/
 theorem storage_serial_lock_invariant (tok: CapabilityToken) (i: Intent) (nowUs: Nat) :
-  evaluateIntent tok i nowUs = AuthorizationResult.Authorized r id epoch →
+  evaluateIntent tok i nowUs = AuthorizationResult.Authorized r resultId epoch →
   (i.targetDomain = EffectDomain.StorageMutation ∨ i.targetDomain = EffectDomain.HardwareControl) →
   (¬ i.payloadJson.contains HARD_DENIED_SYSTEM_OS_SERIAL ∧ ¬ i.action.contains HARD_DENIED_SYSTEM_OS_SERIAL) := by
   intro hAuth hDomain
   unfold evaluateIntent at hAuth
-  split at hAuth
-  · contradiction
-  · split at hAuth
-    · contradiction
-    · split at hAuth
-      · contradiction
-      · split at hAuth
-        · contradiction
-        · split at hAuth
-          · contradiction
-          · intro hCont
-            rename_i hNotLock
-            cases hDomain with
-            | inl h1 =>
-              have hCond : (i.targetDomain = EffectDomain.StorageMutation ∨ i.targetDomain = EffectDomain.HardwareControl) := Or.inl h1
-              have hContra : (i.payloadJson.contains HARD_DENIED_SYSTEM_OS_SERIAL ∨ i.action.contains HARD_DENIED_SYSTEM_OS_SERIAL) = false := by
-                cases hOr : (i.payloadJson.contains HARD_DENIED_SYSTEM_OS_SERIAL ∨ i.action.contains HARD_DENIED_SYSTEM_OS_SERIAL)
-                · rfl
-                · rw [hCond, hOr] at hNotLock
-                  contradiction
-              cases hContra' : i.payloadJson.contains HARD_DENIED_SYSTEM_OS_SERIAL
-              · cases hContra'' : i.action.contains HARD_DENIED_SYSTEM_OS_SERIAL
-                · exact ⟨by assumption, by assumption⟩
-                · rw [hContra', hContra''] at hContra; contradiction
-              · rw [hContra'] at hContra; contradiction
-            | inr h2 =>
-              have hCond : (i.targetDomain = EffectDomain.StorageMutation ∨ i.targetDomain = EffectDomain.HardwareControl) := Or.inr h2
-              have hContra : (i.payloadJson.contains HARD_DENIED_SYSTEM_OS_SERIAL ∨ i.action.contains HARD_DENIED_SYSTEM_OS_SERIAL) = false := by
-                cases hOr : (i.payloadJson.contains HARD_DENIED_SYSTEM_OS_SERIAL ∨ i.action.contains HARD_DENIED_SYSTEM_OS_SERIAL)
-                · rfl
-                · rw [hCond, hOr] at hNotLock
-                  contradiction
-              cases hContra' : i.payloadJson.contains HARD_DENIED_SYSTEM_OS_SERIAL
-              · cases hContra'' : i.action.contains HARD_DENIED_SYSTEM_OS_SERIAL
-                · exact ⟨by assumption, by assumption⟩
-                · rw [hContra', hContra''] at hContra; contradiction
-              · rw [hContra'] at hContra; contradiction
+  split at hAuth <;> try contradiction
+  split at hAuth <;> try contradiction
+  split at hAuth <;> try contradiction
+  split at hAuth <;> try contradiction
+  split at hAuth <;> try contradiction
+  rename_i hLock
+  cases hDomain with
+  | inl h => simpa [h, Bool.and_eq_true, Bool.or_eq_true] using hLock
+  | inr h => simpa [h, Bool.and_eq_true, Bool.or_eq_true] using hLock
 
 end UOS.IntentSafety

@@ -1,0 +1,51 @@
+{
+  "schema": "uos.telegram-ledger-development-fix.v1",
+  "observed_at": "2026-10-01T12:06:14Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "LEDGER_FIX",
+  "worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "status": "IMPLEMENTED_TESTED_PENDING_INDEPENDENT_REVIEW",
+  "findings_closed_by_candidate": [
+    "LEDGER-P1-OLD-UNSEEN",
+    "LEDGER-P2-RECOVERY-STATES",
+    "LEDGER-P2-RESULT-IDENTITY"
+  ],
+  "changes": [
+    "Unknown identities below committed offset refuse before insertion; retained exact identities still reconcile.",
+    "Pending and rejection tombstones with empty outbox retain their original state; processing without durable result still holds; existing valid HOLD retained.",
+    "Result schema v2 binds all immutable inbox identity fields including update/message/user/text hash and creation time plus ordered payloads."
+  ],
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "1305d1c32de5d796d1eae76cde548cc5cbb7444fb1c0f3e5680589abbb3da212"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "sha256": "251ccab831d59b72dc1b8545a4f133dcfdebad450cf00b022568d24e22e309bc"
+    }
+  ],
+  "tests": {
+    "focused_eunit": 43,
+    "build": "PASS",
+    "format": "PASS",
+    "logs": [
+      "var/recovery-runtime/20261001-1205-ledger-tests.log",
+      "var/recovery-runtime/20261001-1205-ledger-build.log"
+    ]
+  },
+  "limits": [
+    "Pure development only, no IO/network/runtime effects.",
+    "No persisted v1 deployment exists for these new unintegrated modules; v2 is explicit candidate schema.",
+    "Source consumer integration requires independent acceptance."
+  ]
+}

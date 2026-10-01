@@ -1,0 +1,70 @@
+{
+  "observed_at": "2026-10-11T13:22:51.393Z",
+  "private_db_root": "/tmp/uos-native-independent-suIDxR",
+  "results": [
+    {
+      "name": "distinct escaped BMP keys accepted",
+      "expectation_met": true,
+      "response": {
+        "ok": true,
+        "replay": false,
+        "receipt": {
+          "operation_id": "unicode-1",
+          "request_digest": "050affa5017f84fe68409f92d6a5c9e040541bc6972a6d2449a97c51d2b68108",
+          "generation": 2,
+          "summary_json": "{\"\\u0061\":1,\"\\u0062\":2}",
+          "committed_utc_us": 1791724971352923
+        }
+      }
+    },
+    {
+      "name": "literal and escaped duplicate summary rejected",
+      "expectation_met": true,
+      "response": {
+        "ok": false,
+        "error": "invalid_json"
+      }
+    },
+    {
+      "name": "literal and escaped duplicate value rejected",
+      "expectation_met": true,
+      "response": {
+        "ok": false,
+        "error": "invalid_value"
+      }
+    },
+    {
+      "name": "distinct escaped surrogate pair keys accepted",
+      "expectation_met": true,
+      "response": {
+        "ok": true,
+        "replay": false,
+        "receipt": {
+          "operation_id": "unicode-4",
+          "request_digest": "5f9e5bbe3948950c2f3f8dd083f9a1d7e8cfdb5daf7634119db5b15a3d07c729",
+          "generation": 3,
+          "summary_json": "{\"\\ud83d\\ude00\":1,\"\\ud83d\\ude01\":2}",
+          "committed_utc_us": 1791724971377150
+        }
+      }
+    },
+    {
+      "name": "literal and escaped slash duplicate rejected",
+      "expectation_met": true,
+      "response": {
+        "ok": false,
+        "error": "invalid_json"
+      }
+    },
+    {
+      "name": "two encodings of newline duplicate rejected",
+      "expectation_met": true,
+      "response": {
+        "ok": false,
+        "error": "invalid_json"
+      }
+    }
+  ],
+  "passed": 6,
+  "failed": 0
+}

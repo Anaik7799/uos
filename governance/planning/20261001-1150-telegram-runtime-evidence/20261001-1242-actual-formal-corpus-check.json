@@ -1,0 +1,608 @@
+{
+  "schema": "uos.actual-formal-corpus-check.v1",
+  "observed_utc": "2026-10-01 12:41:49 UTC",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "FORMAL_GATES",
+  "worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "candidate": {
+    "main": "83dca0394346564356920f066b3924858144107f",
+    "working_change": "suukkrkqkwuvstkyxxwxvxswkkkolswo",
+    "observed_jj_snapshot": "eb025d17b2f1fd75dcac4cdafecd3a3dfba1548f",
+    "binding": "Exact pre-execution source hashes; working revision is mutable and no admission is inferred"
+  },
+  "toolchain": {
+    "lean": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)",
+    "quint": "0.32.0",
+    "hashes": {
+      "toolchains/lean-4.33.0/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "tools/lean": "fa27fcff9814241a6a0093dc13f529781f2620ab4d7152f73c73447999600c6e",
+      "tools/quint": "26891097c110489bc67cb880512097eadd6047d366c4dea01fef4543b0f29daa"
+    }
+  },
+  "source_hashes": {
+    "formal/lean/AgenticCoordination.lean": "7ab1e32798b593e5e5f0b18b15a27002a913df00655393427705059d34542316",
+    "formal/lean/AgenticJournal.lean": "77f0012ef4327106a62b4db3a583058f183c849755e710470f43b0c0ae92f8cd",
+    "formal/lean/Algebraic_Atlas_Intent.lean": "7ef4292d2587cb38fe474bd801878e313a3cebabf76d143e6df2076f939a8f22",
+    "formal/lean/All_Features_Runtime_Implementation.lean": "a312062b9b23a7df78332a24829fa0eb65aba3c052caf7b763d260535b8153ef",
+    "formal/lean/Autoscaler_Stability.lean": "3706641e79d8b7e52f523b77bacf976e853016e277fde77816b35b23a0f90150",
+    "formal/lean/BrowserStateMachineInvariants.lean": "634cdbe8f239f4480b97d98ecbc9aac126ec6f073edb179212d43603ea58c87c",
+    "formal/lean/Burst_Work_Stealing_And_RDMA_Offload.lean": "542be3a40c556a377c4a764245d8acfdb5b3aea4036ab895c9fc9290d2f32096",
+    "formal/lean/CRDT_Lattice_Algebra.lean": "0a588059494a5e2f6de6a777a995db3e8a1dbacdfb7250a5e05039b007d80c0a",
+    "formal/lean/CRDT_SEC.lean": "b8b5b7c71961d5b88d3648043cf564c523699b4dd9ca0d7e75f1ef0375daa6b9",
+    "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859",
+    "formal/lean/Century_Harmony.lean": "db59e6bf3f301a103b8f1597eec21dad6fd31a87f9a6bbbcf286a42c84898342",
+    "formal/lean/Chaos_Containment.lean": "37aa9aa1703b628a4131c6238f6a19bb1105b80ffac7e984bf5909e9cd973834",
+    "formal/lean/ConcurrentFractalReload.lean": "29ca6dbfcdc2c5a693bfb909186bd77b5217ae58ec9446fb52049c95cb67e4d4",
+    "formal/lean/Constitutional_Invariants.lean": "092d83e5d15448f103f8067a5f1665ec9bba72df78b9df6d2f24658abb85466c",
+    "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean": "22f8e55f95681d3070625806c8d5196e53173d21815a87bfb23f7863b6e4ce1e",
+    "formal/lean/Denotational_Atlas_Cohomology.lean": "d52e69d679e80abd10b2968da7784968b429458807ffb02eff8a1bd73e622c4e",
+    "formal/lean/Denotational_Intent_Design.lean": "37bd168bad3202f6ba5aa2f1c5eecba50aa4a500a3c8ff128dbb36aa9341ad59",
+    "formal/lean/Denotational_Intent_Functor.lean": "a402e55c2826c628a33f62e1484914b2a70865a3fb7f36d031718be3a76399ae",
+    "formal/lean/DynamicHotReload.lean": "6263efcf24dd082a9dd1edf049f89629d581062a942003edf807148d4555297e",
+    "formal/lean/Ecology_Capability_Twin.lean": "2178270d36e406ec0003f0edd4576a2ba023b26a8c0af49ce4346769acc698af",
+    "formal/lean/Evolutionary_Categorical_Composability.lean": "73ef686866dbe047cc14dc79cc70336f5d959aef39e733903ef8f8ea6818420a",
+    "formal/lean/Fast_OODA_Convergence.lean": "5ce6875352cb16e29b81463ed576e11be2f46ed9b9d9a93f201828e495164bf0",
+    "formal/lean/Fifteen_Evolutionary_Cycles.lean": "d749cd9e791f4933d9f9f847beaf8dc1c340fdcad4ba562ac2154e31a24c1bf7",
+    "formal/lean/Fifteen_SciViz_Regression_Cycles.lean": "86ac281219729f65a23064eb49aade775d1e814c518199e871321bd417e3a363",
+    "formal/lean/Fifteen_Unbounded_Fractal_Aspect_Passes.lean": "a216e0ef7b37d262b268bb1b47f584c0c772eea32eeb7dd40daf2a5343f9c2ac",
+    "formal/lean/Five_BDD_Demo_Evolutionary_Cycles.lean": "a3eb8db63329f8850c657805cd854efe58c9aa9f8b1d1ae048570c6883b9338e",
+    "formal/lean/Five_Component_Deep_Design_Evolutionary_Cycles.lean": "db1a11a2f9a5d30b7a257840ce91dbb7b575f0e0c496e39f03215a2cc862609b",
+    "formal/lean/Five_Component_Inventory_And_Requirements_Cycles.lean": "f1f14f8df2f31286a06a9fb04cb1d60112140c0c0385436c8181bace43a774de",
+    "formal/lean/Five_Control_Center_Evolutionary_Cycles.lean": "fa3f2e215f210b265ae763a78d8361063239decf8f4dcb32b209b2bce8942a7a",
+    "formal/lean/Five_Cycle_Category_Theoretic_Transmutation.lean": "8fcff3dd93ae91e4c8cf8c8d6b0ff55eb9746ce7eaa9cc8648fdf59a748a02da",
+    "formal/lean/Five_Denotational_FPrime_Evolutionary_Cycles.lean": "9e5af0b9b5f642e6747dd2401e77abbff21084c3542b1e153fcc8894e3cd7752",
+    "formal/lean/Five_Fractal_Hierarchical_Denotational_Cycles.lean": "73c112eeece2e52ec8dc8e08769ddea50c48b6abbeb30ec59b423a16d01c0a8c",
+    "formal/lean/Five_Lustre_WebUI_Evolutionary_Cycles.lean": "749de9c86d0603c4a1df07fbc2f37fc3437f960e43e2841656fab7e0588b83ae",
+    "formal/lean/Five_More_Cycles_Category_Theoretic_Transmutation.lean": "f7270e890c919856c84a6b77871c994750629c6afd916221952fa0438e9e21eb",
+    "formal/lean/Five_SciViz_Library_Evolutionary_Cycles.lean": "dd07b270511b2e4aa20deb6f3e0cee9039ff02b5dd92a9783a79c33052ee1668",
+    "formal/lean/Fractal_Holonic_Composability.lean": "3f2a862ef23ab1dea5bf2de8c60120e74d22ccbadc6d015bbce7cce8244fc19e",
+    "formal/lean/Fractal_Triad_Matrix_Invariants.lean": "4f3817cccf486326ca58f5a95c23573ae4b0d07f6e3e643ae2207ea3fb28b975",
+    "formal/lean/Full_Feature_Testing_Invariants.lean": "060daa591bb73be84be11a278a856ade61829d3f8769ad2b9afb147c37f972c0",
+    "formal/lean/GGPlot2_Denotational_Atlas.lean": "cab401e2ae633e6feb58f82dfef328bfe54e5c342b5e2c66213fe37f59b860ad",
+    "formal/lean/GGPlot2_Extensions_Verification.lean": "1764a6eda6fdcf2c2e74b418e310cff2a25bb4b621e54d59444aac51f22f0b06",
+    "formal/lean/Gospel_Rete_Consistency.lean": "01b62c0f47c9105e9d9d0f163b5795ffc8d69fcf20c333e68917d5f1cfa7d4f7",
+    "formal/lean/Homeostasis_Evolution.lean": "edc6dd4757979097fd4142e2783a19bb8cb898a0a7f5d7a503a6d599abc1eced",
+    "formal/lean/IntentSafety.lean": "8af8f949858d1c9b1c104c9de1f8d0d8098bf30b0fa08b5562d6dfc9ed1ea59a",
+    "formal/lean/KnowledgeGraphTopology.lean": "2c663d92ba670f9eb67a57cdcd90b208aa33da25b056f097f5ab969f8deeee60",
+    "formal/lean/LinkGraphInvariants.lean": "98ff8046fcc00691fa3fdb6215d02792b74e9101b2b8686c78d52e1abec3996f",
+    "formal/lean/Lyapunov_Stability.lean": "f9ddd63341e00c7aa17be4bcb296802a8daa137229482a17623f697caf897229",
+    "formal/lean/Master_Feature_Composability_Evolution.lean": "a126679b133a94fc12c418282432323ead1c1e8cf483cba831672e6d49397c5c",
+    "formal/lean/MirageReceiptAdmission.lean": "a6ed1b1adb82ea863d53b86182c391da37db826069a17cc3b1e3cc629b91953f",
+    "formal/lean/OODA_Convergence.lean": "74046ff9e8e6c6031d0c8ae7f848e2e3d70763c53b0957c39a487e2090171d86",
+    "formal/lean/POODAVR_FPrime_Mapping.lean": "763d99f108f10969b643adf1f82b1ebc462b55c61c484a06c3fecbe558af70ca",
+    "formal/lean/POODAVR_FPrime_Semantics.lean": "02796eed2a901019bde66e3a84c4b1a18b7e9de93df36ae404844fd4f2560e6c",
+    "formal/lean/Predictive_Forecasting_Categorical_Semantics.lean": "e12fb6c967909af3ff72fc72e70d04392e3050516e750e953395eb7b32e0178f",
+    "formal/lean/Preflight_Verdict_Algebra.lean": "3816879830d34c63bc40af0a09b4cc73cdc660ff4c17a135bebc73996265642d",
+    "formal/lean/Quorum_Consensus.lean": "5a319c43793dc8fe821aa0fb7afb5ef2fb9ee95973149f6ba271b1138c9c647a",
+    "formal/lean/RAG_Cache_Consistency.lean": "c8b0a16e900f5f6a4f94c8ae572270b4fb41ba31bab2cecf840632c5901074a7",
+    "formal/lean/SciViz_167_Comprehensive.lean": "938758b21aa4ade9db04d86d4cf1960b5d3874587da1d810cbc695ff1d6cde71",
+    "formal/lean/SciViz_All_167_Complete.lean": "3227a6c8ee058b2ff3beb242db03d2e733d3e02565e879d4187ac9eadee6bb3d",
+    "formal/lean/SciViz_Browser_Verification_Invariants.lean": "40b196f0439d9f3d4931989c3ee18a2f5eeda4727eee93e96f6db283d6c98965",
+    "formal/lean/SciViz_Fifteen_Modalities_Verification.lean": "dd592e6c9f99a7d5f1f6d845e8135c10d32b3f8d0312f96498e812d27ee97f3f",
+    "formal/lean/SciViz_Interactive_Filtering.lean": "b440013cf94b189070df1bc0ad53b46fb2df8b3ccc02307dd8249a9d495cbb14",
+    "formal/lean/Sheaf_Presheaf.lean": "9b8d0f35eda1b429ec1fb7c2b36600833310069b23eeb207efad0166bd2acb2d",
+    "formal/lean/Substrate_Categorical_Mechanics.lean": "83ed198afb58d8cbec1c8bbd5c03242e55aff8c792251498d6c425ebebddb10e",
+    "formal/lean/Systemic_Categorical_Composability.lean": "472614f9cc044f8dd18a75e5ee395f96e79ec1cc1ddb033f6b862a1dec4fb34a",
+    "formal/lean/Topos_Heyting_Double_Category_Transmutation.lean": "588865759339b0f189852a367dc2fe0e431a5d20c90fb1edd651fa1fa9a10784",
+    "formal/lean/Traceability.lean": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c",
+    "formal/lean/TriLanguage_Zenoh_ETS_Invariants.lean": "13cda6c4974690258e2069a0848dd786742314880d3a08b0763920451fdfcc78",
+    "formal/lean/TwoLattice_Concurrency.lean": "f40c3ca8bfa8890f1736dfc30c410941f013f1e5ca0deffabebe95c2f6c1c2f6",
+    "formal/lean/TwoLattice_STM.lean": "bc0a280b22516a5b0b3cd57c3572f10db484564f74bd74fc8cf97be7ce64b9ef",
+    "formal/lean/UnifiedWebSemantics.lean": "97b6e4e1d9c5bf2bda43bd6c967b4a3f151b711b1b639af363de0c1a4d247f84",
+    "formal/lean/Universal_Categorical_Composability.lean": "860184362f88b21211955167bfa36c575209a909c299b99f335eeb7809362ad7",
+    "formal/lean/WorkStealing_Fairness.lean": "b6229133747aab9be27f7c347a7e44b69dad6d8fe4f251b537d95db39d9c1ed3",
+    "formal/quint/agentic_coordination.qnt": "9bb51b8b153339f951b2b2892ac92a3ae4186c6c8fe67792d1ec192bc2798b06",
+    "formal/quint/agentic_journal.qnt": "1c9ae97d266e458f63fa26b30687726e57ede1328724dbeae9efc8ddbfbd6c3a",
+    "formal/quint/ecology_capability_twin.qnt": "2c17ed800b83592b2927c7a7c57f6bc9e26e29d44c6b94bb92e1ab4829051450",
+    "formal/quint/intent_invariants.qnt": "b5c3530f879ceb3d41fe24113eb79e607f1629a0ebdd8aa6aaaafdd950b5eb0d",
+    "formal/quint/mirage_receipt_admission.qnt": "487b8f095028fab70b0f93031e9e9f1d548f2762cb142a5d30caa534a9de0ebc",
+    "formal/quint/parity_frontier.qnt": "d5af3d49506e4ee54ba31ca5ac2d1435925bd512563b17ee32f2106c883564d0",
+    "formal/quint/preflight_receipt.qnt": "9780dd09bbb56ff063f820cede37f396df3b1b98c2861030ff86b1d2d77d2b4b"
+  },
+  "output_hashes": {
+    "var/recovery-runtime/20261001-1236-formal-gates/AgenticCoordination.lean.log": "b3f0d5fa222373bf0f7a21d8b1cc1dd41bb5c5ae2670f701be2317fb5e8b5997",
+    "var/recovery-runtime/20261001-1236-formal-gates/AgenticJournal.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Algebraic_Atlas_Intent.lean.log": "49d4798dd521897cd3bad7b26d6bc10598ce4717fc1742c81602f0104c8731fc",
+    "var/recovery-runtime/20261001-1236-formal-gates/All_Features_Runtime_Implementation.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Autoscaler_Stability.lean.log": "d79e6bcd50578ef092316f795ea57605eeb8a371b0c45dc7ceae15d5e0f7066b",
+    "var/recovery-runtime/20261001-1236-formal-gates/BrowserStateMachineInvariants.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Burst_Work_Stealing_And_RDMA_Offload.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/CRDT_Lattice_Algebra.lean.log": "bec3e0d87e940b31d5f38283c3f21c98a20f98c820f3e57fef231855f652db0b",
+    "var/recovery-runtime/20261001-1236-formal-gates/CRDT_SEC.lean.log": "a94aa714a60720093057021eeef536269073aa689d4b430326116b8d62c18e65",
+    "var/recovery-runtime/20261001-1236-formal-gates/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Century_Harmony.lean.log": "59e4cb9bdcb077ebf547bed2ea4603adab36f8884220451c0646f3f1398aac86",
+    "var/recovery-runtime/20261001-1236-formal-gates/Chaos_Containment.lean.log": "49a88a7dadb25ed49e375b63fda565cb780cbf7b607f7a9dc1542207ff299ee6",
+    "var/recovery-runtime/20261001-1236-formal-gates/ConcurrentFractalReload.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Constitutional_Invariants.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Criticality_Utility_STPA_FMEA_Evolution.lean.log": "e7fb87bdf2aa8b0b09a717e05ac95e148985ee26d5f1fa1e7814e55e9a174c05",
+    "var/recovery-runtime/20261001-1236-formal-gates/Denotational_Atlas_Cohomology.lean.log": "36a2a91685559c78eaacc3bdbb77f80c5477c82b40f09f7dcb9cd1c07b2868fd",
+    "var/recovery-runtime/20261001-1236-formal-gates/Denotational_Intent_Design.lean.log": "0725c7112ae2668e9ee17308fe63d15a038779fcf35b225bacfbba04d0f5814a",
+    "var/recovery-runtime/20261001-1236-formal-gates/Denotational_Intent_Functor.lean.log": "7e2d193d4e0f96227fd74b75a63f39c59aa1ae7cf23e437acc1782099b544beb",
+    "var/recovery-runtime/20261001-1236-formal-gates/DynamicHotReload.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Ecology_Capability_Twin.lean.log": "5194af9696e1d2ed83f831c96305252db88b2d6e566fc9dd9b178fb606140c14",
+    "var/recovery-runtime/20261001-1236-formal-gates/Evolutionary_Categorical_Composability.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Fast_OODA_Convergence.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Fifteen_Evolutionary_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Fifteen_SciViz_Regression_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Fifteen_Unbounded_Fractal_Aspect_Passes.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_BDD_Demo_Evolutionary_Cycles.lean.log": "b439bbf4b2b0a81123bf4e6548742e0e2e55fe441ce69f53bcc1455d598a9c19",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_Component_Deep_Design_Evolutionary_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_Component_Inventory_And_Requirements_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_Control_Center_Evolutionary_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_Cycle_Category_Theoretic_Transmutation.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_Denotational_FPrime_Evolutionary_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_Fractal_Hierarchical_Denotational_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_Lustre_WebUI_Evolutionary_Cycles.lean.log": "c688aa0aae0267d06c3900e03b013d4eaecffd986c108776b5d878e4679b0bc0",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_More_Cycles_Category_Theoretic_Transmutation.lean.log": "f70fe913caf6bf66c5dbf69e43f4f445f7f6353568725159f492aebbb3e6a0cd",
+    "var/recovery-runtime/20261001-1236-formal-gates/Five_SciViz_Library_Evolutionary_Cycles.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Fractal_Holonic_Composability.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Fractal_Triad_Matrix_Invariants.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Full_Feature_Testing_Invariants.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/GGPlot2_Denotational_Atlas.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/GGPlot2_Extensions_Verification.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Gospel_Rete_Consistency.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Homeostasis_Evolution.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/IntentSafety.lean.log": "d2393431a6262faa7862fad2440e31766925be1af03090e7d0b7d6d1d16465ea",
+    "var/recovery-runtime/20261001-1236-formal-gates/KnowledgeGraphTopology.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/LinkGraphInvariants.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Lyapunov_Stability.lean.log": "769fac850f3afdb4b4102b75969df1ed21fd7e13973e95dd48346217373eafca",
+    "var/recovery-runtime/20261001-1236-formal-gates/Master_Feature_Composability_Evolution.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/MirageReceiptAdmission.lean.log": "73a9d55bc86fbac85e474017b948941d7fef3952ea0dba477eb6a3297359cf1f",
+    "var/recovery-runtime/20261001-1236-formal-gates/OODA_Convergence.lean.log": "79ab32e76e18ba5d20e12aaceb2200c32b5f2d7f0f926aecff703400ec9a9e15",
+    "var/recovery-runtime/20261001-1236-formal-gates/POODAVR_FPrime_Mapping.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/POODAVR_FPrime_Semantics.lean.log": "e6d1b3be51b5bcf44f6c4a899d5dbd9345bc0ce2d561372139f3345bf78e1a27",
+    "var/recovery-runtime/20261001-1236-formal-gates/Predictive_Forecasting_Categorical_Semantics.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Preflight_Verdict_Algebra.lean.log": "d3eab940bfd3ec696259176d42bb5ca6ef6a987d8bc86016df7667b6e9c5d8fa",
+    "var/recovery-runtime/20261001-1236-formal-gates/Quorum_Consensus.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/RAG_Cache_Consistency.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/SciViz_167_Comprehensive.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/SciViz_All_167_Complete.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/SciViz_Browser_Verification_Invariants.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/SciViz_Fifteen_Modalities_Verification.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/SciViz_Interactive_Filtering.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Sheaf_Presheaf.lean.log": "95b3d30cae343ec1626d49fee93649d33e78532d5065a5788206eddd3ec1fff5",
+    "var/recovery-runtime/20261001-1236-formal-gates/Substrate_Categorical_Mechanics.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Systemic_Categorical_Composability.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Topos_Heyting_Double_Category_Transmutation.lean.log": "c3ee03f3cc633d563d92a466553ecce7889d16831a0b6dedfe204bdabf8d7833",
+    "var/recovery-runtime/20261001-1236-formal-gates/Traceability.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/TriLanguage_Zenoh_ETS_Invariants.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/TwoLattice_Concurrency.lean.log": "c8758b65c405223b467cb71b55fb03e985c465439bbe5dd981d3ba0196b23beb",
+    "var/recovery-runtime/20261001-1236-formal-gates/TwoLattice_STM.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/UnifiedWebSemantics.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/Universal_Categorical_Composability.lean.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/WorkStealing_Fairness.lean.log": "31bd3bc22a2eb65c43aa0aeb47732f8a0a79e2a47d887ad0061fae6b5dccfdb8",
+    "var/recovery-runtime/20261001-1236-formal-gates/agentic_coordination.qnt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/agentic_coordination_runtime_test.tests.log": "0df58996f0b95b9628314a249d3d6f6167bc2233e7e324471b17d58d9f45b011",
+    "var/recovery-runtime/20261001-1236-formal-gates/agentic_coordination_test.tests.log": "74f6f284218aa30a57801a503eab6f3337a5808b8adef7c1c8f51a4c8bd97a1e",
+    "var/recovery-runtime/20261001-1236-formal-gates/agentic_journal.qnt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/agentic_journal_test.tests.log": "52d8ce069e88f2ad87ff569673713aadd3e59e969c4a4dd45af104ea91b82de6",
+    "var/recovery-runtime/20261001-1236-formal-gates/ecology_capability_twin.qnt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/ecology_capability_twin.tests.log": "4270e0c1086a13c870bba182490a5dfce3511405c4bc6f685b96a6b0428f1cba",
+    "var/recovery-runtime/20261001-1236-formal-gates/intent_invariants.qnt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/mirage_receipt_admission.qnt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/mirage_receipt_admission.tests.log": "cb9b05352f7780333383a6a6d3da69e72804eb94f0697c1dc9d69d9c65ecd4fc",
+    "var/recovery-runtime/20261001-1236-formal-gates/parity_frontier.qnt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "var/recovery-runtime/20261001-1236-formal-gates/preflight_receipt.qnt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lean": {
+    "files": 71,
+    "elaborated_models": 53,
+    "failed": 17,
+    "sorry_hold": 1,
+    "command": "Pinned Lean4.33.0/bin/lean FILE; timeout7s plus1s kill grace; outer Gleam guardian55s per6filebatch; no emitted object or runtime main",
+    "results": [
+      {
+        "path": "formal/lean/AgenticCoordination.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/AgenticJournal.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Algebraic_Atlas_Intent.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/All_Features_Runtime_Implementation.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Autoscaler_Stability.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/BrowserStateMachineInvariants.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Burst_Work_Stealing_And_RDMA_Offload.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/CRDT_Lattice_Algebra.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/CRDT_SEC.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Century_Harmony.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Chaos_Containment.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Sheaf_Presheaf.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Substrate_Categorical_Mechanics.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Systemic_Categorical_Composability.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Topos_Heyting_Double_Category_Transmutation.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Traceability.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/TriLanguage_Zenoh_ETS_Invariants.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/TwoLattice_Concurrency.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/TwoLattice_STM.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/UnifiedWebSemantics.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Universal_Categorical_Composability.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/WorkStealing_Fairness.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/ConcurrentFractalReload.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Constitutional_Invariants.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Denotational_Atlas_Cohomology.lean",
+        "exit": 0,
+        "status": "HOLD_SORRY"
+      },
+      {
+        "path": "formal/lean/Denotational_Intent_Design.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Denotational_Intent_Functor.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/DynamicHotReload.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Ecology_Capability_Twin.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Evolutionary_Categorical_Composability.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Fast_OODA_Convergence.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Fifteen_Evolutionary_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Fifteen_SciViz_Regression_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Fifteen_Unbounded_Fractal_Aspect_Passes.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_BDD_Demo_Evolutionary_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_Component_Deep_Design_Evolutionary_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_Component_Inventory_And_Requirements_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_Control_Center_Evolutionary_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_Cycle_Category_Theoretic_Transmutation.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_Denotational_FPrime_Evolutionary_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_Fractal_Hierarchical_Denotational_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_Lustre_WebUI_Evolutionary_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Five_More_Cycles_Category_Theoretic_Transmutation.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Five_SciViz_Library_Evolutionary_Cycles.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Fractal_Holonic_Composability.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Fractal_Triad_Matrix_Invariants.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Full_Feature_Testing_Invariants.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/GGPlot2_Denotational_Atlas.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/GGPlot2_Extensions_Verification.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Gospel_Rete_Consistency.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Homeostasis_Evolution.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/IntentSafety.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/KnowledgeGraphTopology.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/LinkGraphInvariants.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Lyapunov_Stability.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Master_Feature_Composability_Evolution.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/MirageReceiptAdmission.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/OODA_Convergence.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/POODAVR_FPrime_Mapping.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/POODAVR_FPrime_Semantics.lean",
+        "exit": 1,
+        "status": "FAILED"
+      },
+      {
+        "path": "formal/lean/Predictive_Forecasting_Categorical_Semantics.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Preflight_Verdict_Algebra.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/Quorum_Consensus.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/RAG_Cache_Consistency.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/SciViz_167_Comprehensive.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/SciViz_All_167_Complete.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/SciViz_Browser_Verification_Invariants.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/SciViz_Fifteen_Modalities_Verification.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      },
+      {
+        "path": "formal/lean/SciViz_Interactive_Filtering.lean",
+        "exit": 0,
+        "status": "ELABORATED_MODEL"
+      }
+    ]
+  },
+  "quint": {
+    "typechecked_files": 7,
+    "scenario_tests_passed": 42,
+    "commands": "tools/quint typecheck FILE (5s); tools/quint test FILE --main MODULE --backend typescript --seed12345 --max-samples1 (10s)",
+    "modules": [
+      {
+        "module": "agentic_coordination_test",
+        "passed": 9
+      },
+      {
+        "module": "agentic_coordination_runtime_test",
+        "passed": 9
+      },
+      {
+        "module": "agentic_journal_test",
+        "passed": 9
+      },
+      {
+        "module": "ecology_capability_twin",
+        "passed": 8
+      },
+      {
+        "module": "mirage_receipt_admission",
+        "passed": 7
+      }
+    ]
+  },
+  "rca": {
+    "observed": [
+      "Seventeen stale/invalid theorem scripts fail the installed pinned compiler; unsupported tactics, elaboration and unresolved goal errors are preserved in individual logs.",
+      "Denotational_Atlas_Cohomology compiles with three explicit sorry placeholders; exit0 is insufficient. Float identity/cocycle/zero residual claims require disconfirmation and mathematically valid model boundaries."
+    ],
+    "not_established": [
+      "No proof that every passing theorem states a meaningful or applicable property.",
+      "No complete axiom dependency audit for53 elaborated files; standard Lean axioms are not automatically implementation evidence.",
+      "No model-to-current-runtime refinement or global two-key admission.",
+      "Quint scenarios are bounded examples, not exhaustive model checking."
+    ]
+  },
+  "effects": {
+    "production": false,
+    "network": false,
+    "canonical_db": false,
+    "new_packages": false,
+    "ev_numbers": false
+  },
+  "prior_refusal": {
+    "receipt": "20261001-1235-formal_gates-preflight.json",
+    "reason": "Invalid phase enum verification; corrected to review and obtained fresh preflight+active before any check execution"
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l8",
+    "#zero-muda"
+  ]
+}

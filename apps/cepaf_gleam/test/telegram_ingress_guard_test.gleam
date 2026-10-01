@@ -1,0 +1,217 @@
+import cepaf_gleam/harness/telegram_ingress_guard as g
+import gleam/json
+import gleam/string
+import gleeunit/should
+
+fn allow() {
+  g.Allowlist(123, [#(1001, 501), #(-1001, 501)])
+}
+
+fn payload(
+  uid: Int,
+  mid: Int,
+  chat: Int,
+  user: Int,
+  kind: String,
+  bot: Bool,
+  text: String,
+) {
+  json.object([
+    #("update_id", json.int(uid)),
+    #(
+      "message",
+      json.object([
+        #("message_id", json.int(mid)),
+        #(
+          "chat",
+          json.object([#("id", json.int(chat)), #("type", json.string(kind))]),
+        ),
+        #(
+          "from",
+          json.object([#("id", json.int(user)), #("is_bot", json.bool(bot))]),
+        ),
+        #("text", json.string(text)),
+      ]),
+    ),
+  ])
+  |> json.to_string
+}
+
+fn accepted(v: g.IngressVerdict) {
+  case v {
+    g.AcceptedEnvelope(..) -> True
+    _ -> False
+  }
+}
+
+pub fn valid_pair_test() {
+  g.evaluate_update(
+    payload(100, 10, 1001, 501, "private", False, "/doctor"),
+    allow(),
+  )
+  |> accepted
+  |> should.be_true
+}
+
+pub fn username_is_not_authority_test() {
+  g.evaluate_update(
+    payload(100, 10, 1001, 999, "private", False, "/doctor"),
+    allow(),
+  )
+  |> accepted
+  |> should.be_false
+}
+
+pub fn group_negative_id_test() {
+  g.evaluate_update(
+    payload(100, 10, -1001, 501, "supergroup", False, "/doctor"),
+    allow(),
+  )
+  |> accepted
+  |> should.be_true
+}
+
+pub fn channel_and_unknown_type_test() {
+  g.evaluate_update(
+    payload(100, 10, 1001, 501, "channel", False, "/doctor"),
+    allow(),
+  )
+  |> accepted
+  |> should.be_false
+  g.evaluate_update(
+    payload(100, 10, 1001, 501, "invented", False, "/doctor"),
+    allow(),
+  )
+  |> accepted
+  |> should.be_false
+}
+
+pub fn bot_sender_test() {
+  g.evaluate_update(
+    payload(100, 10, 1001, 501, "private", True, "/doctor"),
+    allow(),
+  )
+  |> accepted
+  |> should.be_false
+}
+
+pub fn missing_security_fields_test() {
+  let raw =
+    "{\"update_id\":100,\"message\":{\"message_id\":10,\"chat\":{\"id\":1001},\"from\":{\"id\":501},\"text\":\"/doctor\"}}"
+  g.evaluate_update(raw, allow()) |> accepted |> should.be_false
+}
+
+pub fn sender_chat_test() {
+  let raw =
+    "{\"update_id\":100,\"message\":{\"message_id\":10,\"chat\":{\"id\":1001,\"type\":\"private\"},\"from\":{\"id\":501,\"is_bot\":false},\"sender_chat\":null,\"text\":\"/doctor\"}}"
+  g.evaluate_update(raw, allow()) |> accepted |> should.be_false
+}
+
+pub fn channel_post_test() {
+  g.evaluate_update("{\"update_id\":100,\"channel_post\":{}}", allow())
+  |> accepted
+  |> should.be_false
+}
+
+pub fn invalid_ids_test() {
+  g.evaluate_update(
+    payload(-1, 0, 0, -3, "private", False, "/doctor"),
+    g.Allowlist(0, [#(0, -3)]),
+  )
+  |> accepted
+  |> should.be_false
+  g.evaluate_update(
+    payload(100, 0, 1001, 501, "private", False, "/doctor"),
+    allow(),
+  )
+  |> accepted
+  |> should.be_false
+}
+
+pub fn id_boundaries_test() {
+  g.valid_update_id(0) |> should.be_true
+  g.valid_update_id(g.max_update_id) |> should.be_true
+  g.valid_update_id(g.max_update_id + 1) |> should.be_false
+  g.valid_positive_id(g.max_identity) |> should.be_true
+  g.valid_positive_id(g.max_identity + 1) |> should.be_false
+  g.valid_chat_id(0 - g.max_identity) |> should.be_true
+  g.valid_chat_id(0) |> should.be_false
+}
+
+pub fn text_boundaries_test() {
+  g.evaluate_update(
+    payload(100, 10, 1001, 501, "private", False, string.repeat("x", 4096)),
+    allow(),
+  )
+  |> accepted
+  |> should.be_true
+  g.evaluate_update(
+    payload(100, 10, 1001, 501, "private", False, string.repeat("x", 4097)),
+    allow(),
+  )
+  |> accepted
+  |> should.be_false
+  g.evaluate_update(payload(100, 10, 1001, 501, "private", False, " "), allow())
+  |> accepted
+  |> should.be_false
+}
+
+pub fn malformed_has_no_private_leak_test() {
+  let verdict = g.evaluate_update("{CANARY_PRIVATE", allow())
+  string.inspect(verdict)
+  |> string.contains("CANARY_PRIVATE")
+  |> should.be_false
+}
+
+pub fn oversized_payload_test() {
+  g.evaluate_update(string.repeat("x", 65_537), allow())
+  |> should.equal(g.UnidentifiedRejection("payload_bound"))
+}
+
+pub fn empty_object_whitespace_test() {
+  g.classify_directive("/tool query_doctor { \n\t }")
+  |> should.equal(g.DirectReadTool("query_doctor"))
+  g.classify_directive("/doctor")
+  |> should.equal(g.DirectReadTool("query_doctor"))
+}
+
+pub fn strict_args_and_truthful_denial_test() {
+  case g.classify_directive("/tool query_doctor {\"path\":\"/etc\"}") {
+    g.DeniedMutation(..) -> Nil
+    _ -> panic as "nonempty object accepted"
+  }
+  case g.classify_directive("/tool query_saplan []") {
+    g.DeniedMutation(..) -> Nil
+    _ -> panic as "array accepted"
+  }
+  case g.classify_directive("/approval") {
+    g.DeniedMutation(_, reason) ->
+      string.contains(reason, "not implemented") |> should.be_true
+    _ -> panic as "approval allowed"
+  }
+}
+
+pub fn rejection_fingerprint_test() {
+  let a =
+    g.evaluate_update(
+      payload(100, 10, 1001, 999, "private", False, "a"),
+      allow(),
+    )
+  let b =
+    g.evaluate_update(
+      payload(100, 10, 1001, 999, "private", False, "b"),
+      allow(),
+    )
+  case a, b {
+    g.RejectedUpdate(100, 123, hash_a, _), g.RejectedUpdate(100, 123, hash_b, _)
+    -> {
+      guard_hash(hash_a)
+      { hash_a == hash_b } |> should.be_false
+    }
+    _, _ -> panic as "missing authenticated tombstone identity"
+  }
+}
+
+fn guard_hash(hash: String) {
+  g.valid_digest(hash) |> should.be_true
+}

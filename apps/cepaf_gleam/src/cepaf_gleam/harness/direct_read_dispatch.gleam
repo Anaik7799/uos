@@ -112,16 +112,18 @@ pub fn validate_tool_proposal(
         ))
     },
   )
-  use _ <- result.try(case list.contains(direct_read_allowlist, proposal.tool_name) {
-    True -> Ok(Nil)
-    False ->
-      Error(td.FencedAndonHalt(
-        -32_001,
-        "Tool '"
-          <> proposal.tool_name
-          <> "' is not in direct read allowlist. Strictly allowed: [query_doctor, query_saplan].",
-      ))
-  })
+  use _ <- result.try(
+    case list.contains(direct_read_allowlist, proposal.tool_name) {
+      True -> Ok(Nil)
+      False ->
+        Error(td.FencedAndonHalt(
+          -32_001,
+          "Tool '"
+            <> proposal.tool_name
+            <> "' is not in direct read allowlist. Strictly allowed: [query_doctor, query_saplan].",
+        ))
+    },
+  )
   let args_len = string.byte_size(proposal.args_json)
   case args_len <= 256 {
     False ->
@@ -165,7 +167,9 @@ fn task_entry_decoder() -> decode.Decoder(SanitizedTask) {
   decode.success(SanitizedTask(id, state))
 }
 
-pub fn parse_sanitized_tasks(raw: String) -> Result(List(SanitizedTask), String) {
+pub fn parse_sanitized_tasks(
+  raw: String,
+) -> Result(List(SanitizedTask), String) {
   use _ <- result.try(case string.byte_size(raw) <= 262_144 {
     True -> Ok(Nil)
     False -> Error("task_list_bound_exceeded")
@@ -225,14 +229,16 @@ pub fn query_bound_saplan(
     True -> Ok(Nil)
     False -> Error("invalid_plan_identifier")
   })
-  use _ <- result.try(case
-    string.byte_size(db_path) > 0
-    && string.byte_size(db_path) <= 256
-    && !string.contains(db_path, "\u{0}")
-  {
-    True -> Ok(Nil)
-    False -> Error("invalid_database_path")
-  })
+  use _ <- result.try(
+    case
+      string.byte_size(db_path) > 0
+      && string.byte_size(db_path) <= 256
+      && !string.contains(db_path, "\u{0}")
+    {
+      True -> Ok(Nil)
+      False -> Error("invalid_database_path")
+    },
+  )
   let sql =
     "SELECT id, state FROM sa_plan_task WHERE plan_id='"
     <> plan_id
@@ -256,8 +262,7 @@ pub fn execute_production_read_tool(
         doctor_projection.project()
         |> doctor_projection.to_json,
       )
-    "query_saplan" ->
-      query_bound_saplan(binding.plan, canonical_database)
+    "query_saplan" -> query_bound_saplan(binding.plan, canonical_database)
     _ -> Error("tool_not_allowlisted: " <> tool_name)
   }
 }

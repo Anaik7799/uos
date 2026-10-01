@@ -411,10 +411,7 @@ pub fn intent_decoder() -> decode.Decoder(ActivationIntent) {
 pub fn grant_decoder() -> decode.Decoder(ReviewedGrant) {
   use grant_id <- decode.field("grant_id", decode.string)
   use reviewer <- decode.field("reviewer", decode.string)
-  use review_receipt_path <- decode.field(
-    "review_receipt_path",
-    decode.string,
-  )
+  use review_receipt_path <- decode.field("review_receipt_path", decode.string)
   use review_receipt_sha256 <- decode.field(
     "review_receipt_sha256",
     decode.string,
@@ -469,28 +466,19 @@ pub fn receipt_to_json(receipt: RecoveryReceipt) -> String {
     #("generation_token", json.string(receipt.generation_token)),
     #("candidate_path", json.string(receipt.candidate_path)),
     #("candidate_sha256", json.string(receipt.candidate_sha256)),
-    #(
-      "prior_target_sha256",
-      case receipt.prior_target_sha256 {
-        Some(h) -> json.string(h)
-        None -> json.null()
-      },
-    ),
+    #("prior_target_sha256", case receipt.prior_target_sha256 {
+      Some(h) -> json.string(h)
+      None -> json.null()
+    }),
     #("backup_target_path", json.string(receipt.backup_target_path)),
-    #(
-      "backup_wal_path",
-      case receipt.backup_wal_path {
-        Some(w) -> json.string(w)
-        None -> json.null()
-      },
-    ),
-    #(
-      "backup_shm_path",
-      case receipt.backup_shm_path {
-        Some(s) -> json.string(s)
-        None -> json.null()
-      },
-    ),
+    #("backup_wal_path", case receipt.backup_wal_path {
+      Some(w) -> json.string(w)
+      None -> json.null()
+    }),
+    #("backup_shm_path", case receipt.backup_shm_path {
+      Some(s) -> json.string(s)
+      None -> json.null()
+    }),
     #("swapped", json.bool(receipt.swapped)),
     #("verified", json.bool(receipt.verified)),
     #("tables_found", json.int(receipt.tables_found)),
@@ -520,30 +508,21 @@ pub fn status_to_json(status: ActivationStatus) -> String {
     #("schema", json.string("uos.recovery-status.v1")),
     #("target_path", json.string(status.target_path)),
     #("is_locked", json.bool(status.is_locked)),
-    #(
-      "lock_owner",
-      case status.lock_owner {
-        Some(o) -> json.string(o)
-        None -> json.null()
-      },
-    ),
+    #("lock_owner", case status.lock_owner {
+      Some(o) -> json.string(o)
+      None -> json.null()
+    }),
     #("generation", json.string(status.generation)),
     #("target_exists", json.bool(status.target_exists)),
-    #(
-      "target_sha256",
-      case status.target_sha256 {
-        Some(h) -> json.string(h)
-        None -> json.null()
-      },
-    ),
+    #("target_sha256", case status.target_sha256 {
+      Some(h) -> json.string(h)
+      None -> json.null()
+    }),
     #("candidate_exists", json.bool(status.candidate_exists)),
-    #(
-      "candidate_sha256",
-      case status.candidate_sha256 {
-        Some(h) -> json.string(h)
-        None -> json.null()
-      },
-    ),
+    #("candidate_sha256", case status.candidate_sha256 {
+      Some(h) -> json.string(h)
+      None -> json.null()
+    }),
     #("candidate_matches", json.bool(status.candidate_matches)),
     #("sqlite_valid", json.bool(status.sqlite_valid)),
   ])
@@ -760,42 +739,45 @@ pub fn validate_intent_and_grant(
       GrantInvalid("strict clock observation failed: " <> e)
     }),
   )
-  use _ <- result.try(case
-    obs_host == intent.host_id && obs_boot == intent.boot_id
-  {
-    True -> Ok(Nil)
-    False ->
-      Error(HostBootMismatch(
-        expected_host: intent.host_id,
-        actual_host: obs_host,
-        expected_boot: intent.boot_id,
-        actual_boot: obs_boot,
-      ))
-  })
+  use _ <- result.try(
+    case obs_host == intent.host_id && obs_boot == intent.boot_id {
+      True -> Ok(Nil)
+      False ->
+        Error(HostBootMismatch(
+          expected_host: intent.host_id,
+          actual_host: obs_host,
+          expected_boot: intent.boot_id,
+          actual_boot: obs_boot,
+        ))
+    },
+  )
 
   // 5. Grant authorization parameters verification
-  use _ <- result.try(case
-    grant.plan == intent.plan
-    && grant.task == intent.task
-    && grant.target_path == intent.target_path
-    && grant.candidate_sha256 == intent.candidate_sha256
-    && grant.review_receipt_sha256 == intent.review_receipt_sha256
-  {
-    True -> Ok(Nil)
-    False ->
-      Error(GrantInvalid(
-        "grant parameters do not match intent or review receipt digest",
-      ))
-  })
+  use _ <- result.try(
+    case
+      grant.plan == intent.plan
+      && grant.task == intent.task
+      && grant.target_path == intent.target_path
+      && grant.candidate_sha256 == intent.candidate_sha256
+      && grant.review_receipt_sha256 == intent.review_receipt_sha256
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(GrantInvalid(
+          "grant parameters do not match intent or review receipt digest",
+        ))
+    },
+  )
 
   // 6. Expiry checks
-  use _ <- result.try(case
-    now_utc_us < grant.valid_until_utc_us
-    && now_utc_us < intent.expiry_utc_us
-  {
-    True -> Ok(Nil)
-    False -> Error(GrantInvalid("grant or intent expired before operation"))
-  })
+  use _ <- result.try(
+    case
+      now_utc_us < grant.valid_until_utc_us && now_utc_us < intent.expiry_utc_us
+    {
+      True -> Ok(Nil)
+      False -> Error(GrantInvalid("grant or intent expired before operation"))
+    },
+  )
 
   // 7. Review receipt presence and digest check
   use actual_receipt_sha256 <- result.try(
@@ -807,16 +789,16 @@ pub fn validate_intent_and_grant(
       )
     }),
   )
-  use _ <- result.try(case
-    actual_receipt_sha256 == grant.review_receipt_sha256
-  {
-    True -> Ok(Nil)
-    False ->
-      Error(ReviewReceiptMismatch(
-        expected: grant.review_receipt_sha256,
-        actual: actual_receipt_sha256,
-      ))
-  })
+  use _ <- result.try(
+    case actual_receipt_sha256 == grant.review_receipt_sha256 {
+      True -> Ok(Nil)
+      False ->
+        Error(ReviewReceiptMismatch(
+          expected: grant.review_receipt_sha256,
+          actual: actual_receipt_sha256,
+        ))
+    },
+  )
 
   // 8. Review receipt content validation
   use receipt_raw <- result.try(
@@ -942,9 +924,10 @@ pub fn prepare(
     sqlite_verify_integrity(intent.candidate_path)
     |> result.map_error(IntegrityVerificationFailed),
   )
-  use _ <- result.try(
-    verify_target_cryptographic_chain(intent.target_kind, intent.candidate_path),
-  )
+  use _ <- result.try(verify_target_cryptographic_chain(
+    intent.target_kind,
+    intent.candidate_path,
+  ))
 
   // 10. Target presence and expected hash verification
   // Existing targets REQUIRE an expected_target_sha256; None is refused on existing targets.
@@ -1002,9 +985,7 @@ pub fn validate_canonical_sa_plan_task(
   )
   case row.state == "executing" {
     False ->
-      Error(TaskStateInvalid(
-        "task is not executing; state=" <> row.state,
-      ))
+      Error(TaskStateInvalid("task is not executing; state=" <> row.state))
     True -> {
       case row.worker == Some(intent.worker) {
         False ->
@@ -1163,33 +1144,32 @@ pub fn activate_with_task_validator(
     use _ <- result.try(task_validator())
 
     // b. Under lock, recheck target hash if target exists
-    use prior_hash <- result.try(case
-      file_exists(intent.target_path),
-      intent.expected_target_sha256
-    {
-      True, Some(expected) -> {
-        use current_target_sha256 <- result.try(
-          sha256_file(intent.target_path)
-          |> result.map_error(fn(e) {
-            TargetHashMismatch(expected: expected, actual: "unreadable:" <> e)
-          }),
-        )
-        use _ <- result.try(case current_target_sha256 == expected {
-          True -> Ok(Nil)
-          False ->
-            Error(TargetHashMismatch(
-              expected: expected,
-              actual: current_target_sha256,
-            ))
-        })
-        Ok(Some(current_target_sha256))
-      }
-      True, None ->
-        Error(TargetHashMissingOnExistingTarget(
-          "expected_target_sha256 missing on existing target",
-        ))
-      False, _ -> Ok(None)
-    })
+    use prior_hash <- result.try(
+      case file_exists(intent.target_path), intent.expected_target_sha256 {
+        True, Some(expected) -> {
+          use current_target_sha256 <- result.try(
+            sha256_file(intent.target_path)
+            |> result.map_error(fn(e) {
+              TargetHashMismatch(expected: expected, actual: "unreadable:" <> e)
+            }),
+          )
+          use _ <- result.try(case current_target_sha256 == expected {
+            True -> Ok(Nil)
+            False ->
+              Error(TargetHashMismatch(
+                expected: expected,
+                actual: current_target_sha256,
+              ))
+          })
+          Ok(Some(current_target_sha256))
+        }
+        True, None ->
+          Error(TargetHashMissingOnExistingTarget(
+            "expected_target_sha256 missing on existing target",
+          ))
+        False, _ -> Ok(None)
+      },
+    )
 
     // c. Atomically advance persistent generation BEFORE preservation/swap
     let gen_token = intent.intent_id <> "-" <> int.to_string(pid) <> "-gen"
@@ -1217,7 +1197,9 @@ pub fn activate_with_task_validator(
     use _ <- result.try(
       check_quiescence(intent.target_path)
       |> result.map_error(fn(err) {
-        QuiescenceFailed("open handles remain after generation advance: " <> err)
+        QuiescenceFailed(
+          "open handles remain after generation advance: " <> err,
+        )
       }),
     )
     use _ <- result.try(
@@ -1268,25 +1250,29 @@ pub fn activate_with_task_validator(
     // Recheck fresh task lease and clock against grant/intent expiry immediately
     // before destructive sidecar retirement!
     use _ <- result.try(task_validator())
-    use #(
-      _obs_host_retire,
-      _obs_boot_retire,
-      _obs_tick_retire,
-      now_before_retire_us,
-    ) <- result.try(
+    use
+      #(
+        _obs_host_retire,
+        _obs_boot_retire,
+        _obs_tick_retire,
+        now_before_retire_us,
+      )
+    <- result.try(
       ffi_clock()
       |> result.map_error(NativeIoError),
     )
-    use _ <- result.try(case
-      now_before_retire_us < grant.valid_until_utc_us
-      && now_before_retire_us < intent.expiry_utc_us
-    {
-      True -> Ok(Nil)
-      False ->
-        Error(GrantInvalid(
-          "grant or intent expired before destructive sidecar retirement",
-        ))
-    })
+    use _ <- result.try(
+      case
+        now_before_retire_us < grant.valid_until_utc_us
+        && now_before_retire_us < intent.expiry_utc_us
+      {
+        True -> Ok(Nil)
+        False ->
+          Error(GrantInvalid(
+            "grant or intent expired before destructive sidecar retirement",
+          ))
+      },
+    )
 
     // f. Retire target sidecars BEFORE replacing main DB
     case retire_target_sidecars(intent.target_path) {
@@ -1613,7 +1599,9 @@ pub fn rollback_with_task_validator(
         "{}",
       )
       |> result.map_error(fn(err) {
-        NativeIoError("failed to persist ROLLBACK_LOCKED phase receipt: " <> err)
+        NativeIoError(
+          "failed to persist ROLLBACK_LOCKED phase receipt: " <> err,
+        )
       }),
     )
 

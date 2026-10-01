@@ -1,7 +1,10 @@
 # UOS 256 Sovereign Agents Capability Inventory
 [meta]
 source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-06-256"
-authority = "Tri-Sovereign Architecture Board (AGY, Claude, Codex)"
+historical_authority_claim = "Tri-Sovereign Architecture Board (AGY, Claude, Codex)"
+authority = "A0_reference; catalog is not runtime admission"
+current_evidence_status = "UNPROBED"
+observed_at = "2026-10-01T11:20:02Z"
 total_agents = 256
 pillars = ["C3I-SDLC", "C3I-SRE", "C3I-VERIFICATION", "C3I-INTELLIGENCE"]
 agents_per_pillar = 64
@@ -22,7 +25,8 @@ operational_domain = "Architecture Synthesis"
 sdlc_phase = "System Design"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcHitlGatekeeper"
@@ -39,7 +43,8 @@ operational_domain = "Constitutional Governance"
 sdlc_phase = "HITL Authorization"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SDLC-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcConstitutionalSpecifier"
@@ -56,7 +61,8 @@ operational_domain = "Constitutional Synthesis"
 sdlc_phase = "Governance Specification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SDLC-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcPolicyRuleCompiler"
@@ -73,7 +79,8 @@ operational_domain = "Policy Compilation"
 sdlc_phase = "Policy Generation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcTwoKeyAuthorization"
@@ -90,7 +97,8 @@ operational_domain = "Authorization Gates"
 sdlc_phase = "Two-Key Review"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SDLC-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcGovernanceCharterAuditor"
@@ -107,7 +115,8 @@ operational_domain = "Governance Audit"
 sdlc_phase = "Charter Audit"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcLicenseComplianceChecker"
@@ -124,7 +133,8 @@ operational_domain = "License Compliance"
 sdlc_phase = "Dependency Verification"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-MUDA-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcMonorepoBoundaryEnforcer"
@@ -141,7 +151,8 @@ operational_domain = "Monorepo Governance"
 sdlc_phase = "VCS Boundary Control"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-JJ-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcContractCodeGenerator"
@@ -158,7 +169,8 @@ operational_domain = "Contract Codegen"
 sdlc_phase = "Type Generation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcOpenApiSchemaGenerator"
@@ -175,7 +187,8 @@ operational_domain = "API Schema"
 sdlc_phase = "Interface Specification"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcGospelOrtacSpecification"
@@ -192,7 +205,8 @@ operational_domain = "Formal Contracts"
 sdlc_phase = "Contract Authoring"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-GOSPEL-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcAstTransformer"
@@ -209,7 +223,8 @@ operational_domain = "AST Transformation"
 sdlc_phase = "Compilation Stage"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-009"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcTypeInferenceBridge"
@@ -226,7 +241,8 @@ operational_domain = "Type Inference"
 sdlc_phase = "Cross-Language Boundary"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-010"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcLexerParserGenerator"
@@ -243,7 +259,8 @@ operational_domain = "Parsing Synthesis"
 sdlc_phase = "Grammar Compilation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-011"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcBytecodeInstructionEmitter"
@@ -260,7 +277,8 @@ operational_domain = "Bytecode Emission"
 sdlc_phase = "Codegen Runtime"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-012"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcSymbolTableManager"
@@ -277,7 +295,8 @@ operational_domain = "Symbol Management"
 sdlc_phase = "Symbol Resolution"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-013"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "ParameterDatabase"
@@ -294,7 +313,8 @@ operational_domain = "Parameter Management"
 sdlc_phase = "Configuration & Storage"
 sre_resilience_tier = "SIL-3 / ACID Persistent"
 contracts = ["SC-FPP-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcStaticAnalysisAuditor"
@@ -311,7 +331,8 @@ operational_domain = "Static Analysis"
 sdlc_phase = "Code Quality Linting"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-MUDA-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcDesignSystemFigmaBridge"
@@ -328,7 +349,8 @@ operational_domain = "Design System"
 sdlc_phase = "UI Component Tokenization"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-UI-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcComponentSchemaSynthesizer"
@@ -345,7 +367,8 @@ operational_domain = "Component Synthesis"
 sdlc_phase = "Schema Validation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-A2UI-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcPropBindingValidator"
@@ -362,7 +385,8 @@ operational_domain = "Property Validation"
 sdlc_phase = "Binding Verification"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-A2UI-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcWidgetPaletteRegistry"
@@ -379,7 +403,8 @@ operational_domain = "Widget Registry"
 sdlc_phase = "Catalog Governance"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-A2UI-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcDataModelNormalizer"
@@ -396,7 +421,8 @@ operational_domain = "Data Modeling"
 sdlc_phase = "Schema Normalization"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-014"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcInterfaceContractBinder"
@@ -413,7 +439,8 @@ operational_domain = "Interface Binding"
 sdlc_phase = "Triple Interface Integration"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-GLM-UI-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "MissionPhaseHsm"
@@ -430,7 +457,8 @@ operational_domain = "Mission Phase Autonomy"
 sdlc_phase = "Phase Orchestration"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "PayloadScience"
@@ -447,7 +475,8 @@ operational_domain = "Payload Operations"
 sdlc_phase = "Instrument Scheduling"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-FPP-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcToolRegistryMcpBridge"
@@ -464,7 +493,8 @@ operational_domain = "Tool Integration"
 sdlc_phase = "MCP Registry"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MCP-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcHierarchicalStateComposer"
@@ -481,7 +511,8 @@ operational_domain = "State Machine Design"
 sdlc_phase = "HSM Composition"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcLcaTransitionResolver"
@@ -498,7 +529,8 @@ operational_domain = "State Machine Math"
 sdlc_phase = "LCA Resolution"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcGuardActionSynthesizer"
@@ -515,7 +547,8 @@ operational_domain = "Action Synthesis"
 sdlc_phase = "Guard Logic"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-009"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcOrthogonalRegionCoordinator"
@@ -532,7 +565,8 @@ operational_domain = "Concurrency Modeling"
 sdlc_phase = "Region Synchronization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-010"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcSignalDispatchMatrix"
@@ -549,7 +583,8 @@ operational_domain = "Signal Dispatch"
 sdlc_phase = "Event Routing"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-FPP-011"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "AppupHotReloadCoordinator"
@@ -566,7 +601,8 @@ operational_domain = "Runtime Upgrades"
 sdlc_phase = "Hot Code Reload"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-OTP-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcReleasePackagingOrchestrator"
@@ -583,7 +619,8 @@ operational_domain = "Packaging & Release"
 sdlc_phase = "Artifact Assembly"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-015"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcSessionMemoryReplay"
@@ -600,7 +637,8 @@ operational_domain = "Session Memory"
 sdlc_phase = "Interaction Replay"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-016"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcForkJoinParallelBranch"
@@ -617,7 +655,8 @@ operational_domain = "Workflow Parallelism"
 sdlc_phase = "Fork-Join Execution"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ADK-011"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcFeatureSliceComposer"
@@ -634,7 +673,8 @@ operational_domain = "Feature Slicing"
 sdlc_phase = "Algebraic Slices"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-017"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcApiEndpointPackager"
@@ -651,7 +691,8 @@ operational_domain = "API Packaging"
 sdlc_phase = "Endpoint Serialization"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-018"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcArtifactTarballBundler"
@@ -668,7 +709,8 @@ operational_domain = "Artifact Bundling"
 sdlc_phase = "Digest Verification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-019"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcSemanticVersionManager"
@@ -685,7 +727,8 @@ operational_domain = "Version Governance"
 sdlc_phase = "Semver Calculation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-020"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "KmSync"
@@ -702,7 +745,8 @@ operational_domain = "Knowledge Management"
 sdlc_phase = "KM Sync"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-KM-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SlmBifInference"
@@ -719,7 +763,8 @@ operational_domain = "Inference BIF"
 sdlc_phase = "Local SLM Dispatch"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-MAX-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "FastPatternFilter"
@@ -736,7 +781,8 @@ operational_domain = "Pattern Matching"
 sdlc_phase = "Bitstring Filter"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-021"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcGraphWorkflowOrchestrator"
@@ -753,7 +799,8 @@ operational_domain = "Graph Execution"
 sdlc_phase = "Workflow Coordination"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcPromptTemplateInjector"
@@ -770,7 +817,8 @@ operational_domain = "Prompt Templates"
 sdlc_phase = "Instruction Composition"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ADK-009"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcStateGraphCycleResolver"
@@ -787,7 +835,8 @@ operational_domain = "Graph Resolution"
 sdlc_phase = "Cycle Resolution"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-010"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcDenotationalSemanticsMapper"
@@ -804,7 +853,8 @@ operational_domain = "Denotational Design"
 sdlc_phase = "Intent Semantics"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-DMC-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcTemplateRenderer"
@@ -821,7 +871,8 @@ operational_domain = "Template Rendering"
 sdlc_phase = "Isomorphic Views"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-UI-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcDocumentationTransclusionSync"
@@ -838,7 +889,8 @@ operational_domain = "Documentation Sync"
 sdlc_phase = "Transclusion Linking"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-KM-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcA2aMultiAgentDelegation"
@@ -855,7 +907,8 @@ operational_domain = "Multi-Agent Delegation"
 sdlc_phase = "A2A Messaging"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcNotionLivingOntology"
@@ -872,7 +925,8 @@ operational_domain = "Living Ontology"
 sdlc_phase = "External Sync"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ONTO-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcSwarmWorkflowScheduler"
@@ -889,7 +943,8 @@ operational_domain = "Swarm Scheduling"
 sdlc_phase = "Workflow Allocation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-022"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcAgentInterchangeProtocol"
@@ -906,7 +961,8 @@ operational_domain = "Agent Protocols"
 sdlc_phase = "Message Serialization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-023"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcDialogueTurnOrchestrator"
@@ -923,7 +979,8 @@ operational_domain = "Dialogue Management"
 sdlc_phase = "Turn Orchestration"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-024"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcContextWindowManager"
@@ -940,7 +997,8 @@ operational_domain = "Context Management"
 sdlc_phase = "Token Pruning"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SDLC-025"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcCollaborativeTaskRouter"
@@ -957,7 +1015,8 @@ operational_domain = "Task Routing"
 sdlc_phase = "Role Dispatch"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-026"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcAlgebraicAtlasRouter"
@@ -974,7 +1033,8 @@ operational_domain = "Algebraic Atlas"
 sdlc_phase = "Category Morphisms"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ATLAS-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcRouteTableHtmlAlgebra"
@@ -991,7 +1051,8 @@ operational_domain = "Web Navigation"
 sdlc_phase = "Route Algebra"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ROUTE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "LivingMetaEvolution"
@@ -1008,7 +1069,8 @@ operational_domain = "Meta Evolution"
 sdlc_phase = "Adaptive Loops"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-FPP-012"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "DynamicAgentBytecodeSynthesizer"
@@ -1025,7 +1087,8 @@ operational_domain = "Bytecode Synthesis"
 sdlc_phase = "Dynamic Compilation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-013"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcEvolutionaryLoopGovernor"
@@ -1042,7 +1105,8 @@ operational_domain = "Lifecycle Governance"
 sdlc_phase = "OODA Lifecycle"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SDLC-SRE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcCrossRepositorySynchronizer"
@@ -1059,7 +1123,8 @@ operational_domain = "Repository Sync"
 sdlc_phase = "Pin Verification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-027"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcContinuousDeploymentPipeline"
@@ -1076,7 +1141,8 @@ operational_domain = "Deployment Pipeline"
 sdlc_phase = "Cluster Rolling Updates"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-OPS-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcArtifactRegistryMirror"
@@ -1093,7 +1159,8 @@ operational_domain = "Artifact Mirror"
 sdlc_phase = "Immutable Storage"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SDLC-028"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SrePluginPolicyGuardrail"
@@ -1110,7 +1177,8 @@ operational_domain = "Policy Enforcement"
 sdlc_phase = "Plugin Security"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SRE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreReteFailClosedAdmission"
@@ -1127,7 +1195,8 @@ operational_domain = "Rule Inference"
 sdlc_phase = "Admission Control"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-RETE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreStpaSafetyController"
@@ -1144,7 +1213,8 @@ operational_domain = "STPA Safety"
 sdlc_phase = "Safety Control Structure"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-STPA-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreContentSafetySanitizer"
@@ -1161,7 +1231,8 @@ operational_domain = "Security & Safety"
 sdlc_phase = "Zero-Trust Content Scrubbing"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ADK-018"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreEmergencyJidokaInterlock"
@@ -1178,7 +1249,8 @@ operational_domain = "Operational Safety"
 sdlc_phase = "Emergency Stop"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SRE-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreConstitutionalQuorumWatcher"
@@ -1195,7 +1267,8 @@ operational_domain = "Consensus Quorum"
 sdlc_phase = "Constitutional Consensus"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SRE-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreFailClosedCircuitGovernor"
@@ -1212,7 +1285,8 @@ operational_domain = "Circuit Governance"
 sdlc_phase = "Fail-Closed Protection"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SRE-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreZeroTrustAdmissionFilter"
@@ -1229,7 +1303,8 @@ operational_domain = "Zero-Trust Security"
 sdlc_phase = "Payload Sanitization"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-HERMES-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "StorageCustodian"
@@ -1246,7 +1321,8 @@ operational_domain = "Storage Custody"
 sdlc_phase = "Persistence Integrity"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-FPP-014"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "DeterministicReductionScheduler"
@@ -1263,7 +1339,8 @@ operational_domain = "Scheduler Control"
 sdlc_phase = "Reduction Budgeting"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "LinearArenaReclaimer"
@@ -1280,7 +1357,8 @@ operational_domain = "Memory Management"
 sdlc_phase = "Arena Reclamation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreCpuBudgetGovernor"
@@ -1297,7 +1375,8 @@ operational_domain = "Resource Management"
 sdlc_phase = "CPU Budgeting"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreSandboxedToolIsolation"
@@ -1314,7 +1393,8 @@ operational_domain = "Process Isolation"
 sdlc_phase = "Sandboxed Execution"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ADK-019"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreMemoryLeakDetector"
@@ -1331,7 +1411,8 @@ operational_domain = "Heap Monitoring"
 sdlc_phase = "Memory Leak Prevention"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SrePageFaultRateController"
@@ -1348,7 +1429,8 @@ operational_domain = "VFS Monitoring"
 sdlc_phase = "Page Fault Control"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-009"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreGarbageCollectionPacer"
@@ -1365,7 +1447,8 @@ operational_domain = "GC Optimization"
 sdlc_phase = "Latency Pacing"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-010"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "LocklessHamtStorage"
@@ -1382,7 +1465,8 @@ operational_domain = "Storage Structures"
 sdlc_phase = "HAMT Management"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-011"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "TaggedPointerGuard"
@@ -1399,7 +1483,8 @@ operational_domain = "Memory Safety"
 sdlc_phase = "Tagged Pointer Audit"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SRE-012"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "HierarchicalTimerWheel"
@@ -1416,7 +1501,8 @@ operational_domain = "Timer Scheduling"
 sdlc_phase = "Hierarchical Wheels"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-013"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreFreshnessMonitor"
@@ -1433,7 +1519,8 @@ operational_domain = "Freshness Monitoring"
 sdlc_phase = "Liveness Detection"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-014"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreOpenTelemetrySpanTracer"
@@ -1450,7 +1537,8 @@ operational_domain = "Distributed Tracing"
 sdlc_phase = "OTel Span Emission"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-OTEL-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreDeadMansSwitchWatchdog"
@@ -1467,7 +1555,8 @@ operational_domain = "Liveness & Health"
 sdlc_phase = "Dead-Mans Switch"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreHeartbeatLivenessCluster"
@@ -1484,7 +1573,8 @@ operational_domain = "Cluster Liveness"
 sdlc_phase = "Heartbeat Tracking"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-015"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreHealthEntropyAggregator"
@@ -1501,7 +1591,8 @@ operational_domain = "Entropy Aggregation"
 sdlc_phase = "Health Statistics"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MATH-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "CrashWalReplay"
@@ -1518,7 +1609,8 @@ operational_domain = "State Recovery"
 sdlc_phase = "Crash WAL Replay"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-016"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreSaPlanTaskLeaser"
@@ -1535,7 +1627,8 @@ operational_domain = "Task Leasing"
 sdlc_phase = "Single-Writer Leases"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-017"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreDatabaseActorWalSerializer"
@@ -1552,7 +1645,8 @@ operational_domain = "Persistence Engine"
 sdlc_phase = "WAL Serialization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-018"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreMailboxBackpressureController"
@@ -1569,7 +1663,8 @@ operational_domain = "Backpressure Control"
 sdlc_phase = "Mailbox Regulation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-019"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreActorDeadlockResolver"
@@ -1586,7 +1681,8 @@ operational_domain = "Deadlock Resolution"
 sdlc_phase = "Cycle Breaking"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-020"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreMessageQueueDrainer"
@@ -1603,7 +1699,8 @@ operational_domain = "Queue Draining"
 sdlc_phase = "Orderly Teardown"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-021"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SrePriorityQueueFairScheduler"
@@ -1620,7 +1717,8 @@ operational_domain = "Priority Scheduling"
 sdlc_phase = "Fair Execution"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-022"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreTransactionSagaCompensator"
@@ -1637,7 +1735,8 @@ operational_domain = "Saga Compensation"
 sdlc_phase = "Transaction Recovery"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-023"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreSentinel"
@@ -1654,7 +1753,8 @@ operational_domain = "Health Sentinel"
 sdlc_phase = "Quarantine Supervision"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-024"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "CyberneticImmune"
@@ -1671,7 +1771,8 @@ operational_domain = "Cybernetic Immunity"
 sdlc_phase = "Autonomous Healing"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-025"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreLyapunovTrendDetector"
@@ -1688,7 +1789,8 @@ operational_domain = "Stability Analysis"
 sdlc_phase = "Cascade Detection"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-026"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreChaosFaultInjector"
@@ -1705,7 +1807,8 @@ operational_domain = "Chaos Engineering"
 sdlc_phase = "Fault Injection"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-027"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreRunnerLifecycleHookSupervisor"
@@ -1722,7 +1825,8 @@ operational_domain = "Lifecycle Hooks"
 sdlc_phase = "Hook Supervision"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-028"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreTimeTravelStateRollback"
@@ -1739,7 +1843,8 @@ operational_domain = "State Rollback"
 sdlc_phase = "Time-Travel Recovery"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-015"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreTokenQuotaRateLimiter"
@@ -1756,7 +1861,8 @@ operational_domain = "Quota Limiting"
 sdlc_phase = "Token Throttling"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-017"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreCephOsdDiskSafetyGuard"
@@ -1773,7 +1879,8 @@ operational_domain = "Storage Safety"
 sdlc_phase = "NVMe Hardware Lock"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-STORAGE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreForecastPredictivePreflight"
@@ -1790,7 +1897,8 @@ operational_domain = "Predictive SRE"
 sdlc_phase = "Bayesian Preflight"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-029"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreEndocrineHormoneBalancer"
@@ -1807,7 +1915,8 @@ operational_domain = "Endocrine Modulation"
 sdlc_phase = "Hormonal Balance"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CYBER-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreAdaptiveRateController"
@@ -1824,7 +1933,8 @@ operational_domain = "Rate Control"
 sdlc_phase = "Concurrency Tuning"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-030"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreWindowedTrendAnalyzer"
@@ -1841,7 +1951,8 @@ operational_domain = "Trend Analysis"
 sdlc_phase = "Early Warning"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-031"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreDynamicCapacityPlanner"
@@ -1858,7 +1969,8 @@ operational_domain = "Capacity Planning"
 sdlc_phase = "Resource Forecasting"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-032"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreMetabolicGovernor"
@@ -1875,7 +1987,8 @@ operational_domain = "Metabolic Governance"
 sdlc_phase = "Energy Optimization"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-033"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreDegradedModeOrchestrator"
@@ -1892,7 +2005,8 @@ operational_domain = "Degraded Modes"
 sdlc_phase = "Graceful Degradation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-034"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreLoadSheddingGovernor"
@@ -1909,7 +2023,8 @@ operational_domain = "Load Shedding"
 sdlc_phase = "Stress Relief"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-035"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SwarmMesh"
@@ -1926,7 +2041,8 @@ operational_domain = "Mesh Networking"
 sdlc_phase = "Topology Management"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-FPP-015"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "EpidemicGossip"
@@ -1943,7 +2059,8 @@ operational_domain = "Gossip Protocols"
 sdlc_phase = "Epidemic Dissemination"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-FPP-016"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreSessionShardRebalancer"
@@ -1960,7 +2077,8 @@ operational_domain = "Session Sharding"
 sdlc_phase = "Shard Rebalancing"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ADK-016"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SrePrajnaCircuitBreaker"
@@ -1977,7 +2095,8 @@ operational_domain = "Circuit Breakers"
 sdlc_phase = "Fault Isolation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-036"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreMeshPartitionHealer"
@@ -1994,7 +2113,8 @@ operational_domain = "Partition Healing"
 sdlc_phase = "Split-Brain Resolution"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-037"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreCascadingFailureShield"
@@ -2011,7 +2131,8 @@ operational_domain = "Cascade Shielding"
 sdlc_phase = "Failure Containment"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-038"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreGossipMembershipCluster"
@@ -2028,7 +2149,8 @@ operational_domain = "Cluster Membership"
 sdlc_phase = "Peer Tracking"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-039"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreConsensusConsulElector"
@@ -2045,7 +2167,8 @@ operational_domain = "Leader Election"
 sdlc_phase = "Consensus Governance"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-040"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "GroundGateway"
@@ -2062,7 +2185,8 @@ operational_domain = "Gateway Operations"
 sdlc_phase = "Ground Uplink/Downlink"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-017"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreCrdtVersionVectorSync"
@@ -2079,7 +2203,8 @@ operational_domain = "Federation Sync"
 sdlc_phase = "CRDT Merging"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CRDT-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreCastIncidentInvestigator"
@@ -2096,7 +2221,8 @@ operational_domain = "Incident Analysis"
 sdlc_phase = "CAST Root Cause"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-CAST-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SrePostMortemRcaSynthesizer"
@@ -2113,7 +2239,8 @@ operational_domain = "Post Mortem"
 sdlc_phase = "RCA Synthesis"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CAST-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreFederationGatewayProxy"
@@ -2130,7 +2257,8 @@ operational_domain = "Gateway Proxy"
 sdlc_phase = "Federation Routing"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SRE-041"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreTelemetryBackplanePublisher"
@@ -2147,7 +2275,8 @@ operational_domain = "Telemetry Publishing"
 sdlc_phase = "Metrics Streaming"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SRE-042"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreDisasterRecoverySequencer"
@@ -2164,7 +2293,8 @@ operational_domain = "Disaster Recovery"
 sdlc_phase = "Site Restoration"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SRE-043"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SreAuditTrailLedgerSigner"
@@ -2181,7 +2311,8 @@ operational_domain = "Audit Signing"
 sdlc_phase = "Ledger Integrity"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SRE-044"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "ConstitutionalGuardian"
@@ -2198,7 +2329,8 @@ operational_domain = "Constitutional Safety"
 sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / Fail-Closed"
 contracts = ["SC-CHECKLIST-001", "SC-STORAGE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "FormalOracle"
@@ -2215,7 +2347,8 @@ operational_domain = "Formal Methods"
 sdlc_phase = "Proof & Contract Checking"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-FPP-018"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "HardwareDriveInterlock"
@@ -2232,7 +2365,8 @@ operational_domain = "Hardware Safety"
 sdlc_phase = "Storage Gatekeeping"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-STORAGE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "RochaSemioticCutGuard"
@@ -2249,7 +2383,8 @@ operational_domain = "Biosemiotics"
 sdlc_phase = "Semiotic Boundary Audit"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ROCHA-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationChecklistAuditor"
@@ -2266,7 +2401,8 @@ operational_domain = "Verification Checklist"
 sdlc_phase = "Checklist Certification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-CHECKLIST-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationMathGateCertifier"
@@ -2283,7 +2419,8 @@ operational_domain = "Mathematical Gates"
 sdlc_phase = "Formal Metric Certification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-MATH-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationTcmCoordinateProtector"
@@ -2300,7 +2437,8 @@ operational_domain = "TCM Space-Time"
 sdlc_phase = "Coordinate Conservation"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-TCM-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationZeroMudaPurityEnforcer"
@@ -2317,7 +2455,8 @@ operational_domain = "Zero Muda Purity"
 sdlc_phase = "Purity Gatekeeping"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-MUDA-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "DeterministicFlightController"
@@ -2334,7 +2473,8 @@ operational_domain = "Avionics Real-Time"
 sdlc_phase = "Flight Execution Runtime"
 sre_resilience_tier = "SIL-4 / Real-Time Bounded"
 contracts = ["SC-FPP-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SubstrateReactor"
@@ -2351,7 +2491,8 @@ operational_domain = "Execution Substrate"
 sdlc_phase = "Kernel Verification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ZIGVM-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationPinnedOtpDifferential"
@@ -2368,7 +2509,8 @@ operational_domain = "Differential Parity"
 sdlc_phase = "Parity Oracle Verification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-OTP-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationGospelOrtacRuntimeMonitor"
@@ -2385,7 +2527,8 @@ operational_domain = "Formal Monitoring"
 sdlc_phase = "Dynamic Contract Validation"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-GOSPEL-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationSmtNegationAuditor"
@@ -2402,7 +2545,8 @@ operational_domain = "SMT Verification"
 sdlc_phase = "Negation Proof Checking"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SMT-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationZ3UnsatValidator"
@@ -2419,7 +2563,8 @@ operational_domain = "SMT Solver"
 sdlc_phase = "Unsat Validation"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-Z3-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationNegativeControlVerifier"
@@ -2436,7 +2581,8 @@ operational_domain = "Control Verification"
 sdlc_phase = "Vacuity Detection"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SMT-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationTypestateInvariantChecker"
@@ -2453,7 +2599,8 @@ operational_domain = "Typestate Safety"
 sdlc_phase = "Compile-Time Invariant Proof"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-VER-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "AvionicsTelemetry"
@@ -2470,7 +2617,8 @@ operational_domain = "Telemetry Streaming"
 sdlc_phase = "Telemetry Aggregation"
 sre_resilience_tier = "SIL-2 / Non-Blocking"
 contracts = ["SC-FPP-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "CockpitTelemetry"
@@ -2487,7 +2635,8 @@ operational_domain = "Cockpit Streaming"
 sdlc_phase = "UI Telemetry Feed"
 sre_resilience_tier = "SIL-3 / Monitored"
 contracts = ["SC-GLM-UI-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationBrowserMatrixTester"
@@ -2504,7 +2653,8 @@ operational_domain = "Browser Testing"
 sdlc_phase = "E2E Web Verification"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-UI-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationMutationAdequacyKiller"
@@ -2521,7 +2671,8 @@ operational_domain = "Mutation Testing"
 sdlc_phase = "Defect Kill Certification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MUT-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationTddLawEnforcer"
@@ -2538,7 +2689,8 @@ operational_domain = "TDD Discipline"
 sdlc_phase = "Micro-Cycle Enforcement"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-TDD-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationRedGreenRevertJudge"
@@ -2555,7 +2707,8 @@ operational_domain = "Mutation Verification"
 sdlc_phase = "Kill Proof Inspection"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MUT-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationFlaccidLawDetector"
@@ -2572,7 +2725,8 @@ operational_domain = "Law Hardening"
 sdlc_phase = "Assertion Strength Audit"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-VER-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationFixtureTotalityAuditor"
@@ -2589,7 +2743,8 @@ operational_domain = "Fixture Totality"
 sdlc_phase = "Asymmetry Verification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-TEST-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "McdcAvionicsTap"
@@ -2606,7 +2761,8 @@ operational_domain = "MCDC Coverage"
 sdlc_phase = "Avionics Trace Recording"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-FPP-019"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "DifferentialBisimulation"
@@ -2623,7 +2779,8 @@ operational_domain = "Bisimulation"
 sdlc_phase = "Equivalence Checking"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-FPP-020"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationNineModalityExecutor"
@@ -2640,7 +2797,8 @@ operational_domain = "Nine Modality"
 sdlc_phase = "Comprehensive Test Protocol"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-9MOD-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationToolSchemaConformance"
@@ -2657,7 +2815,8 @@ operational_domain = "Schema Validation"
 sdlc_phase = "Tool Contract Conformance"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-022"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationBddScenarioRunner"
@@ -2674,7 +2833,8 @@ operational_domain = "BDD Scenarios"
 sdlc_phase = "Behavior Verification"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-BDD-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationStateTransitionAsserter"
@@ -2691,7 +2851,8 @@ operational_domain = "State Transition"
 sdlc_phase = "Reachability Checking"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-021"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationTraceEquivalenceJudge"
@@ -2708,7 +2869,8 @@ operational_domain = "Trace Equivalence"
 sdlc_phase = "Behavioral Equivalence"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-VER-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationMcdcBranchCoverageAuditor"
@@ -2725,7 +2887,8 @@ operational_domain = "Branch Coverage"
 sdlc_phase = "MCDC Certification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-VER-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationPlaywrightControlAuditor"
@@ -2742,7 +2905,8 @@ operational_domain = "Browser Automation"
 sdlc_phase = "Playwright Verification"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-UI-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationMultiTurnDialogueVerifier"
@@ -2759,7 +2923,8 @@ operational_domain = "Dialogue Audit"
 sdlc_phase = "Multi-Turn Coherence"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ADK-023"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationPropertyGeneratorFuzzer"
@@ -2776,7 +2941,8 @@ operational_domain = "Property Fuzzing"
 sdlc_phase = "Generative Testing"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-PROP-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationGenerativeShrinkEngine"
@@ -2793,7 +2959,8 @@ operational_domain = "Test Shrinking"
 sdlc_phase = "Counterexample Minimization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-PROP-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationBoundaryValueTester"
@@ -2810,7 +2977,8 @@ operational_domain = "Boundary Testing"
 sdlc_phase = "Edge Case Fuzzing"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-TEST-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationSeededRandomReplayer"
@@ -2827,7 +2995,8 @@ operational_domain = "Deterministic Replay"
 sdlc_phase = "Seed Replay"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-TEST-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationCorpusModuleExecutor"
@@ -2844,7 +3013,8 @@ operational_domain = "Corpus Testing"
 sdlc_phase = "Real Module Execution"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CORPUS-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationAstMutantSynthesizer"
@@ -2861,7 +3031,8 @@ operational_domain = "AST Mutation"
 sdlc_phase = "Mutant Synthesis"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MUT-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationAdkEvalBenchmark"
@@ -2878,7 +3049,8 @@ operational_domain = "ADK Evaluation"
 sdlc_phase = "Agent Benchmarking"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationTrajectoryReplayCertifier"
@@ -2895,7 +3067,8 @@ operational_domain = "Trajectory Replay"
 sdlc_phase = "Golden Replay Certification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-020"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationHallucinationScorer"
@@ -2912,7 +3085,8 @@ operational_domain = "Truthfulness"
 sdlc_phase = "Hallucination Scoring"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ADK-021"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationEntropyCalculator"
@@ -2929,7 +3103,8 @@ operational_domain = "Entropy Math"
 sdlc_phase = "Shannon Entropy Gate"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MATH-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationDivergenceMetricScorer"
@@ -2946,7 +3121,8 @@ operational_domain = "Divergence Scoring"
 sdlc_phase = "Parity Metric Evaluation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MATH-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationFactualGroundingAuditor"
@@ -2963,7 +3139,8 @@ operational_domain = "Factual Grounding"
 sdlc_phase = "Citation Verification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FACT-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationReasoningStepValidator"
@@ -2980,7 +3157,8 @@ operational_domain = "Reasoning Audit"
 sdlc_phase = "Step Coherence"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-REASON-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationContextRetentionVerifier"
@@ -2997,7 +3175,8 @@ operational_domain = "Context Retention"
 sdlc_phase = "Long-Context Audit"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-CONTEXT-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationSimulationEnvironment"
@@ -3014,7 +3193,8 @@ operational_domain = "Simulation"
 sdlc_phase = "Swarm Simulation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SIM-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationActorBisimulationTester"
@@ -3031,7 +3211,8 @@ operational_domain = "Bisimulation Testing"
 sdlc_phase = "Actor Equivalence"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-VER-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationConcurrencyRaceDetector"
@@ -3048,7 +3229,8 @@ operational_domain = "Race Detection"
 sdlc_phase = "Concurrency Safety"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SMP-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationModelCheckerBridge"
@@ -3065,7 +3247,8 @@ operational_domain = "Model Checking"
 sdlc_phase = "State Space Exploration"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-MC-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationLinearizabilityOracle"
@@ -3082,7 +3265,8 @@ operational_domain = "Linearizability"
 sdlc_phase = "History Verification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-VER-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationDistributedPartitionTester"
@@ -3099,7 +3283,8 @@ operational_domain = "Partition Testing"
 sdlc_phase = "Network Chaos"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CHAOS-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationMessageLossSimulator"
@@ -3116,7 +3301,8 @@ operational_domain = "Fault Simulation"
 sdlc_phase = "Transport Robustness"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CHAOS-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationClockDriftChaosTester"
@@ -3133,7 +3319,8 @@ operational_domain = "Clock Chaos"
 sdlc_phase = "Time Drift Verification"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-TIME-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationSheafGluingHarmonizer"
@@ -3150,7 +3337,8 @@ operational_domain = "Sheaf Theory"
 sdlc_phase = "Gluing Harmonization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationLeanFormalProofOracle"
@@ -3167,7 +3355,8 @@ operational_domain = "Lean 4 Proofs"
 sdlc_phase = "Mathematical Authority"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-LEAN-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationQuintParityFrontierOracle"
@@ -3184,7 +3373,8 @@ operational_domain = "Quint Models"
 sdlc_phase = "Parity Frontier Checking"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-QUINT-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationMasterChecklistGatekeeper"
@@ -3201,7 +3391,8 @@ operational_domain = "Gatekeeper"
 sdlc_phase = "Master Checklist Gate"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-CHECKLIST-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationParityRatchetEnforcer"
@@ -3218,7 +3409,8 @@ operational_domain = "Ratchet Enforcer"
 sdlc_phase = "Parity Preservation"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-DIVERGE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationBaselineReleaseGatekeeper"
@@ -3235,7 +3427,8 @@ operational_domain = "Release Gate"
 sdlc_phase = "Baseline Acceptance"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-RELEASE-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationFormalEvidenceArchiver"
@@ -3252,7 +3445,8 @@ operational_domain = "Evidence Archival"
 sdlc_phase = "Proof Retention"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-EVID-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationSovereignConsensusRatifier"
@@ -3269,7 +3463,8 @@ operational_domain = "Sovereign Ratification"
 sdlc_phase = "Tri-Sovereign Consensus"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SOV-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceRochaCutValidator"
@@ -3286,7 +3481,8 @@ operational_domain = "Biosemiotics"
 sdlc_phase = "Rocha Cut Validation"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ROCHA-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceCodeBiologyBoundaryGuard"
@@ -3303,7 +3499,8 @@ operational_domain = "Metabolic Boundary"
 sdlc_phase = "Boundary Protection"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ROCHA-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSymbolMatterDecoupler"
@@ -3320,7 +3517,8 @@ operational_domain = "Symbolic Decoupling"
 sdlc_phase = "Matter Decoupling"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ROCHA-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSemioticClosureAuditor"
@@ -3337,7 +3535,8 @@ operational_domain = "Semiotic Closure"
 sdlc_phase = "Triad Verification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ROCHA-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSemanticAnchorProtector"
@@ -3354,7 +3553,8 @@ operational_domain = "Semantic Anchoring"
 sdlc_phase = "Invariance Protection"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ROCHA-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceBiomorphicMorphogenRouter"
@@ -3371,7 +3571,8 @@ operational_domain = "Biomorphic Routing"
 sdlc_phase = "Morphogen Diffusion"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-BIOMORPH-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceCyberneticFeedbackHarmonizer"
@@ -3388,7 +3589,8 @@ operational_domain = "Cybernetic Feedback"
 sdlc_phase = "Feedback Harmonization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CYBER-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceMetabolicHomeostasisTracker"
@@ -3405,7 +3607,8 @@ operational_domain = "Metabolic Homeostasis"
 sdlc_phase = "Homeostatic Regulation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-CYBER-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSheafCohomologyEngine"
@@ -3422,7 +3625,8 @@ operational_domain = "Sheaf Theory"
 sdlc_phase = "Cohomology Calculation"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SHEAF-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceLocalSectionExtractor"
@@ -3439,7 +3643,8 @@ operational_domain = "Local Sections"
 sdlc_phase = "Restriction Morphisms"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligencePresheafFunctorMapper"
@@ -3456,7 +3661,8 @@ operational_domain = "Presheaf Functors"
 sdlc_phase = "Functor Mapping"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceGluingMorphismSynthesizer"
@@ -3473,7 +3679,8 @@ operational_domain = "Gluing Morphisms"
 sdlc_phase = "Intersection Synthesis"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceRestrictionMapValidator"
@@ -3490,7 +3697,8 @@ operational_domain = "Restriction Validation"
 sdlc_phase = "Diagram Commutativity"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceCechComplexBuilder"
@@ -3507,7 +3715,8 @@ operational_domain = "Cech Complexes"
 sdlc_phase = "Nerve Construction"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSpectralSequenceAnalyzer"
@@ -3524,7 +3733,8 @@ operational_domain = "Spectral Sequences"
 sdlc_phase = "Topological Convergence"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceCategoryTheoryBridge"
@@ -3541,7 +3751,8 @@ operational_domain = "Category Theory"
 sdlc_phase = "Categorical Bindings"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SHEAF-009"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationZkKmKnowledgeCurrency"
@@ -3558,7 +3769,8 @@ operational_domain = "Cost & Currency"
 sdlc_phase = "ZK Economics"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ZK-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceZettelkastenLibrarian"
@@ -3575,7 +3787,8 @@ operational_domain = "ZK Library"
 sdlc_phase = "Zettelkasten Governance"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ZK-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligencePermanentAdrCustodian"
@@ -3592,7 +3805,8 @@ operational_domain = "ADR Governance"
 sdlc_phase = "Decision Archival"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-ZK-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceMapOfContentCurator"
@@ -3609,7 +3823,8 @@ operational_domain = "MOC Curation"
 sdlc_phase = "Knowledge Clustering"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ZK-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceEpisodicMemoryIndexer"
@@ -3626,7 +3841,8 @@ operational_domain = "Episodic Memory"
 sdlc_phase = "Transcript Indexing"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ZK-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceBidirectionalLinkResolver"
@@ -3643,7 +3859,8 @@ operational_domain = "Link Resolution"
 sdlc_phase = "Graph Connectivity"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ZK-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceFractalTagTaxonomist"
@@ -3660,7 +3877,8 @@ operational_domain = "Tag Taxonomy"
 sdlc_phase = "Fractal Classification"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ZK-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceKnowledgeDecayDetector"
@@ -3677,7 +3895,8 @@ operational_domain = "Knowledge Hygiene"
 sdlc_phase = "Decay Detection"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ZK-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcOntologyInfranodusSynthesizer"
@@ -3694,7 +3913,8 @@ operational_domain = "Ontology Synthesis"
 sdlc_phase = "Infranodus Graphs"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ONTO-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "VerificationInfranodusCentralityAuditor"
@@ -3711,7 +3931,8 @@ operational_domain = "Graph Topology"
 sdlc_phase = "Centrality & Gaps"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ONTO-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "SdlcSemanticVectorEmbedding"
@@ -3728,7 +3949,8 @@ operational_domain = "Vector Search"
 sdlc_phase = "Dense Embeddings"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ADK-013"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceRdfOwlOntologyBuilder"
@@ -3745,7 +3967,8 @@ operational_domain = "RDF/OWL Ontologies"
 sdlc_phase = "Ontology Engineering"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ONTO-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceKnowledgeGraphHarmonizer"
@@ -3762,7 +3985,8 @@ operational_domain = "Knowledge Graphs"
 sdlc_phase = "Graph Harmonization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ONTO-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceConceptLatticeMiner"
@@ -3779,7 +4003,8 @@ operational_domain = "Formal Concept Analysis"
 sdlc_phase = "Lattice Mining"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-ONTO-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSemanticTriplestoreCustodian"
@@ -3796,7 +4021,8 @@ operational_domain = "Triplestore"
 sdlc_phase = "Knowledge Storage"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ONTO-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceTaxonomyGraphTraverser"
@@ -3813,7 +4039,8 @@ operational_domain = "Graph Traversals"
 sdlc_phase = "Query Execution"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ONTO-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "CognitiveOodaIntent"
@@ -3830,7 +4057,8 @@ operational_domain = "Cognitive Architecture"
 sdlc_phase = "OODA Intent Loop"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FPP-022"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceOodaLoopOrchestrator"
@@ -3847,7 +4075,8 @@ operational_domain = "OODA Orchestration"
 sdlc_phase = "Cognitive Loops"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-OODA-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceObserveSensorAggregator"
@@ -3864,7 +4093,8 @@ operational_domain = "Observation"
 sdlc_phase = "Sensor Aggregation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-OODA-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceOrientContextSynthesizer"
@@ -3881,7 +4111,8 @@ operational_domain = "Orientation"
 sdlc_phase = "Context Framing"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-OODA-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceDecideStrategySelector"
@@ -3898,7 +4129,8 @@ operational_domain = "Decision Making"
 sdlc_phase = "Strategy Selection"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-OODA-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceActuatorTaskDispatcher"
@@ -3915,7 +4147,8 @@ operational_domain = "Actuation"
 sdlc_phase = "Task Dispatching"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-OODA-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceReasoningGraphExpander"
@@ -3932,7 +4165,8 @@ operational_domain = "Reasoning Trees"
 sdlc_phase = "Search Expansion"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-REASON-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceHypothesisTestingAgent"
@@ -3949,7 +4183,8 @@ operational_domain = "Hypothesis Testing"
 sdlc_phase = "Epistemic Evaluation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-REASON-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceMaxDaemonSupervisor"
@@ -3966,7 +4201,8 @@ operational_domain = "MAX Supervision"
 sdlc_phase = "Inference Process Isolation"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MAX-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceMojoKernelOptimizer"
@@ -3983,7 +4219,8 @@ operational_domain = "Mojo Acceleration"
 sdlc_phase = "Kernel Optimization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MAX-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceJsonRpcStdioPipeBridge"
@@ -4000,7 +4237,8 @@ operational_domain = "RPC IPC Bridge"
 sdlc_phase = "Stdio Serialization"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-MAX-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceProcessIsolationEnforcer"
@@ -4017,7 +4255,8 @@ operational_domain = "Crash Quarantine"
 sdlc_phase = "Fault Boundary Enforcer"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-MAX-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceBatchInferenceDispatcher"
@@ -4034,7 +4273,8 @@ operational_domain = "Inference Batching"
 sdlc_phase = "Throughput Optimization"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-MAX-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceTokenStreamingPacer"
@@ -4051,7 +4291,8 @@ operational_domain = "Token Streaming"
 sdlc_phase = "Event Pacing"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-UI-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceModelWeightQuarantine"
@@ -4068,7 +4309,8 @@ operational_domain = "Weight Verification"
 sdlc_phase = "Model Integrity"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-MAX-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSlmLocalCacheCustodian"
@@ -4085,7 +4327,8 @@ operational_domain = "Inference Cache"
 sdlc_phase = "Embedding Retention"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-MAX-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSwarmConsensusDirector"
@@ -4102,7 +4345,8 @@ operational_domain = "Swarm Consensus"
 sdlc_phase = "Director Orchestration"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SWARM-001"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceRoleSpecializationMatcher"
@@ -4119,7 +4363,8 @@ operational_domain = "Role Matching"
 sdlc_phase = "Skill Allocation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SWARM-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceTaskDecompositionPlanner"
@@ -4136,7 +4381,8 @@ operational_domain = "Task Planning"
 sdlc_phase = "Decomposition Synthesis"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SWARM-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceAgentPeerMessenger"
@@ -4153,7 +4399,8 @@ operational_domain = "A2A Messaging"
 sdlc_phase = "Peer Dispatch"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SWARM-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSwarmConflictMediator"
@@ -4170,7 +4417,8 @@ operational_domain = "Conflict Mediation"
 sdlc_phase = "Arbitration Protocol"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SWARM-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceCollectiveMemorySync"
@@ -4187,7 +4435,8 @@ operational_domain = "Collective Memory"
 sdlc_phase = "Shared Blackboard"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SWARM-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceAutonomousNegotiationBroker"
@@ -4204,7 +4453,8 @@ operational_domain = "Task Negotiation"
 sdlc_phase = "Resource Allocation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-SWARM-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceFederatedPromptOrchestrator"
@@ -4221,7 +4471,8 @@ operational_domain = "Prompt Federation"
 sdlc_phase = "Multi-Agent Orchestration"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-SWARM-008"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceMasterEncyclopediaIndexer"
@@ -4238,7 +4489,8 @@ operational_domain = "Encyclopedia Index"
 sdlc_phase = "Master Knowledge Tome"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-KM-003"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceCorpusTransclusionEngine"
@@ -4255,7 +4507,8 @@ operational_domain = "Transclusion Engine"
 sdlc_phase = "Corpus Integration"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-KM-004"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceLivingCatalogPublisher"
@@ -4272,7 +4525,8 @@ operational_domain = "Catalog Publishing"
 sdlc_phase = "Living Documentation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-KM-005"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceCrossPlatformKnowledgeMirror"
@@ -4289,7 +4543,8 @@ operational_domain = "Artifact Mirroring"
 sdlc_phase = "Peer Synchronization"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-KM-006"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceSovereignReviewSynthesizer"
@@ -4306,7 +4561,8 @@ operational_domain = "Sovereign Synthesis"
 sdlc_phase = "Review Ratification"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-SOV-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceKnowledgeArchivalVault"
@@ -4323,7 +4579,8 @@ operational_domain = "Knowledge Vault"
 sdlc_phase = "Immutable Archival"
 sre_resilience_tier = "SIL-6 / Sovereign Core"
 contracts = ["SC-KM-007"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceEpistemicCertaintyEvaluator"
@@ -4340,7 +4597,8 @@ operational_domain = "Epistemic Safety"
 sdlc_phase = "Certainty Calibration"
 sre_resilience_tier = "SIL-5 / Safety Critical"
 contracts = ["SC-FACT-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"
 
 [[agent]]
 kind = "IntelligenceUnifiedSiteNavigationCurator"
@@ -4357,4 +4615,5 @@ operational_domain = "Site Navigation"
 sdlc_phase = "Uniform Navigation"
 sre_resilience_tier = "SIL-4 / High Availability"
 contracts = ["SC-ROUTE-002"]
-status = "admitted"
+historical_status_claim = "admitted"
+status = "declared_unverified"

@@ -1,0 +1,149 @@
+{
+  "schema": "uos.agy-telegram-tools-result.v1",
+  "observed_utc": "2026-10-11T11:41:20Z",
+  "task": {
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "task_id": "TOOLS_FIX",
+    "worker": "agy-telegram-20261011",
+    "attempt": 1,
+    "status": "COMPLETED",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+    "canonical_root": "/home/an/NAS-setup/uos",
+    "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+    "pane": "w2:p9",
+    "model": "Gemini 3.8 Flash (High)",
+    "database": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "portfolio": "governance/planning/20261011-1115-telegram-tools-risk.json"
+  },
+  "summary": "Implemented exact-set read-only expired reclaim observation (--reclaim-set-preflight) in plugins/uos-risk-prioritization/validation/{checker.ml,validate.ml,adversarial.ml} to unblock multi-expired-task preflight without relaxing gates or mutating canonical Sa-plan database. Delivered linked erratum for model identity and storage capacity bounds.",
+  "source_modifications": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "baseline_sha256": "485f277f93c25c3820d69c452e72a3843bc9dd7f326fa43b16428ff716129367",
+      "current_sha256": "924846371854e2b5ede6fbdc83e2db7656fb7dabd1aa1a186a69899896cef4fc",
+      "changes": [
+        "Added parse_bindings_with_plan and parse_bindings to parse JSON/file reclaim sets with decimal string deadlines (<2^63 ns, strictly non-negative, preserving full integer precision without float rounding).",
+        "Added reclaim_set_projection enforcing exact set equality between supplied bindings and all expired executing tasks in live plan snapshot, rejecting missing, extra, unexpired, or duplicate tasks.",
+        "Extended Checker.coherence with ?reclaim_set optional argument, verifying exact per-task quadruple matches and full set equality, while strictly preserving all other holds (dependencies, completeness, consistency).",
+        "Preserved existing single-binding ?reclaim parameter and semantics for backwards compatibility."
+      ]
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "baseline_sha256": "9feabd6edaaceb5d13b27ba645d9ad393593a38661445f2473b868d16e0171c3",
+      "current_sha256": "7bdaa83d6822568d1ae71f316cbac4cee744af4cad9188e6ef7e790d474ed796",
+      "changes": [
+        "Extended run_audit with ?reclaim_set and ?plan_id_opt parameters, verifying that live plan matches expected plan_id if provided.",
+        "Enforced before/after live plan snapshot digest equality across reclaim set observation, failing closed if plan changes during observation.",
+        "Emitted structured JSON report with status RECLAIM_PREFLIGHT_PASS and full reclaim metadata (plan_id, bindings list).",
+        "Added CLI dispatch arm for --reclaim-set-preflight PORTFOLIO TASK BINDINGS_JSON and updated usage synopsis."
+      ]
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "baseline_sha256": "96e7ad77ae5bb216dfe9e4433dc95af4a466fd15bf57bd52ae538830eb60299c",
+      "current_sha256": "1f78b5d077300561e2118a9339a3ef6e33a4004a3e840416c521db876590176d",
+      "changes": [
+        "Added test_reclaim_set covering multi-expired tasks with distinct workers/attempts.",
+        "Added negative tests: rejected empty list, rejected missing expired task, rejected extra task, rejected unexpired task, rejected duplicate task ID.",
+        "Added negative tests: rejected altered attempt, altered lease deadline, or altered worker identity.",
+        "Added tests verifying dependency divergence holds and incomplete plan holds are strictly preserved under reclaim sets.",
+        "Added parser tests verifying decimal string validation, rejection of negative deadlines, and plan ID mismatch rejection."
+      ]
+    }
+  ],
+  "verification_evidence": {
+    "test_suite": {
+      "command": "bash tools/risk-priority-check --all",
+      "exit_code": 0,
+      "status": "PASS",
+      "baseline_checks": 375,
+      "adversarial_checks": 32883,
+      "independent_dag_scenarios": 32768,
+      "package_status": "PASS",
+      "local_paths_checked": 39
+    },
+    "pre_edit_active_check": {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20261011-1115-telegram-tools-risk.json TOOLS_FIX agy-telegram-20261011 1",
+      "exit_code": 0,
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "findings_count": 0,
+      "assessment_sha256": "baa44dc43caf0bacc51a003c7301c9cd60b966ed5370f7697c7640cfdeb20d60"
+    },
+    "post_edit_active_check": {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20261011-1115-telegram-tools-risk.json TOOLS_FIX agy-telegram-20261011 1",
+      "exit_code": 0,
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "findings_count": 0,
+      "assessment_sha256": "69099254406967c685c400e82f3b3b49212dad470ab7498a114116bed2841588",
+      "evidence_files_checked": 15
+    },
+    "cli_negative_checks": [
+      {
+        "description": "Empty bindings list",
+        "command": "bash tools/risk-priority-check --reclaim-set-preflight ... '[]'",
+        "expected_status": "HOLD",
+        "observed_status": "HOLD",
+        "detail": "reclaim bindings list cannot be empty"
+      },
+      {
+        "description": "Incomplete set (1 of 2 expired tasks)",
+        "command": "bash tools/risk-priority-check --reclaim-set-preflight ... '[{...}]'",
+        "expected_status": "HOLD",
+        "observed_status": "HOLD",
+        "detail": "reclaim set must exactly equal all expired executing tasks in observed plan"
+      },
+      {
+        "description": "Extra unexpired/non-executing task in set",
+        "command": "bash tools/risk-priority-check --reclaim-set-preflight ... '[{...},{...},{...}]'",
+        "expected_status": "HOLD",
+        "observed_status": "HOLD",
+        "detail": "reclaim set must exactly equal all expired executing tasks in observed plan"
+      },
+      {
+        "description": "Duplicate task IDs in set",
+        "command": "bash tools/risk-priority-check --reclaim-set-preflight ... '[{...},{...same id...}]'",
+        "expected_status": "HOLD",
+        "observed_status": "HOLD",
+        "detail": "reclaim set contains duplicate task IDs"
+      },
+      {
+        "description": "Malformed JSON syntax",
+        "command": "bash tools/risk-priority-check --reclaim-set-preflight ... 'not json'",
+        "expected_status": "HOLD",
+        "observed_status": "HOLD",
+        "detail": "unterminated JSON / syntax error"
+      }
+    ]
+  },
+  "linked_erratum": {
+    "referenced_review": {
+      "artifact": "governance/planning/20261011-1117-agy-telegram-plan-review.json",
+      "sha256": "a9051b9ac38969b989b7a0d76763ae652f1f7862041d687e4b398ad24791244d",
+      "disposition": "PRESERVED IMMUTABLE per historical preservation rule INV-PROV-03."
+    },
+    "corrections": [
+      {
+        "id": "ERR-AGY-01",
+        "topic": "Model Identity Self-Report",
+        "original_text": "reviewer.model reported as 'Gemini 2.5 Pro' in 20261011-1117-agy-telegram-plan-review.json.",
+        "corrected_text": "The actual live session banner is 'Gemini 3.8 Flash (High)'. Model identity must be directly observed from the environment/session banner rather than inferred or asserted.",
+        "rationale": "UOS canonical policy mandates observed facts over inferred claims. The reviewer record is hereby formally corrected to Gemini 3.8 Flash (High) in this linked result."
+      },
+      {
+        "id": "ERR-AGY-02",
+        "topic": "Storage Capacity Bounds vs Business Credit Accounting",
+        "original_text": "RES-05 characterized reservation_delta (reserved_rows, reserved_receipts) as business credit accounting and suggested removing credit enforcement from the storage kernel.",
+        "corrected_text": "Physical inspection of native/ocaml/telegram_store/telegram_store.ml confirms that reservation_delta enforces physical SQLite atomic resource bounds (limits of 20 reserved rows, 64 reserved receipts per transaction) to prevent unbounded allocations, transaction bloat, and SQLite memory pressure. These are low-level physical capacity bounds, NOT business credit accounting.",
+        "rationale": "High-level domain quota and business credit accounting belong to the consumer/Gleam layer. The native storage kernel's physical SQLite reservation bounds are essential capacity interlocks and must remain strictly enforced."
+      }
+    ]
+  },
+  "limits_and_invariants": [
+    "Read-only projection: --reclaim-set-preflight performs zero mutations to the canonical Sa-plan database and mints zero leases.",
+    "Exact-set completeness: all and only expired executing tasks in the live plan snapshot must be included; partial sets are rejected.",
+    "No authority grant: preflight observation does not grant task execution authority; sequential claim through tools/sa-plan remains mandatory.",
+    "Scope discipline: edits strictly confined to plugins/uos-risk-prioritization/validation/{checker.ml,validate.ml,adversarial.ml} and governance evidence.",
+    "Zero-Muda purity: no foreign dependencies, no Git mutation commands, no EV minting beyond EV-93 ceiling."
+  ]
+}

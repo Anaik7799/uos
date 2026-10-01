@@ -1,0 +1,83 @@
+{
+  "schema": "uos.telegram-store-draft-review.v1",
+  "observed_at": "2026-10-11T14:03:31Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": {
+    "observed_at": "2026-10-11T14:01:37.305Z",
+    "files": [
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "copy": "var/recovery-runtime/20261011-1401-store-draft/src/cepaf_gleam/harness/telegram_store.gleam",
+        "sha256": "6f2d5e0602784dd0a4fc3fb22b45c880ce347c301adc52f9597929ef4fb04c9c"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "copy": "var/recovery-runtime/20261011-1401-store-draft/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "sha256": "fe9343b7d5c315e474e165d88dc4357f13eb5338a28e0341043d63431c0c5c2d"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "copy": "var/recovery-runtime/20261011-1401-store-draft/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "copy": "var/recovery-runtime/20261011-1401-store-draft/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "copy": "var/recovery-runtime/20261011-1401-store-draft/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "sha256": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "copy": "var/recovery-runtime/20261011-1401-store-draft/src/cepaf_gleam/harness/files.gleam",
+        "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+        "copy": "var/recovery-runtime/20261011-1401-store-draft/src/telegram_store_transport_ffi.erl",
+        "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+      }
+    ]
+  },
+  "build": "Fresh private Gleam1.16 compile-package with pinned OTP29; six Gleam modules plus transport FFI",
+  "prior_cases": {
+    "repeated": 11,
+    "resolved": 11
+  },
+  "new_confirmed_failures": [
+    "Forged chat_id persisted by claim_task_processing using valid ORIGINAL inbox row hash",
+    "Forged chat_id persisted by commit_result and copied into outbox using valid ORIGINAL inbox hash",
+    "Changed payload persisted by commit_sending using valid ORIGINAL chunk hash",
+    "Stale caller Pending value reenters durable SENDING using actual SENDING row version/hash; creates second send grant",
+    "Changed chat_id persisted by commit_outcome using valid ORIGINAL SENDING row hash",
+    "Caller boolean true returns ReconciledAbsent without actual prior-writer quiescence observation",
+    "Normal completed1chunk request retains58 receipt credits; completed16chunk retains28; row reservations now0"
+  ],
+  "positive_controls": [
+    "Normal1chunk lifecycle completes,7actualKVrows/7receipts",
+    "Normal16chunk lifecycle completes,22actualKVrows/37receipts"
+  ],
+  "root_cause": "CAS binds expected database bytes but not caller's typed input value. Aggregate capacity counters lack exact unused credit release. Caller-declared quiescence is still trusted.",
+  "test_source": "var/recovery-runtime/20261011-1401-store-draft/store_independent.erl",
+  "test_output": "var/recovery-runtime/20261011-1401-store-draft/results.txt",
+  "test_output_sha256": "f81804ec4d76a13fc263e1cbb985d49a6df2bdb566abd304f1d4202d254f1a70",
+  "required_repairs": [
+    "Recompute encoded pre-transition value hash and verify it equals expected SHA for every caller record/chunk; validate immutable identity and paired inbox/result/chunk",
+    "Bind source of quiescence to a real bounded writer cleanup/barrier; cannot accept arbitrary Bool",
+    "Return all per-request unused reservation credits exactly once; multi-request isolation and repeated-replay pressure tests"
+  ],
+  "limits": [
+    "All private DBs and synthetic identities; no network sends",
+    "Output true marks defect reproduced, false marks refusal/positive control as named",
+    "Known replay now appends a receipt: pressure/capacity implications remain to be tested"
+  ],
+  "next": "AGY repair must remain executing while root reviews a frozen candidate; no automatic close on supplied tests alone."
+}

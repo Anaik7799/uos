@@ -43,3 +43,13 @@ name = "playwright"
 source = "c3i"
 state = "classified"
 
+
+[current_observation]
+observed_at = "2026-10-01T11:19:40Z"
+provider = "uos-gleam"
+declared = 65
+unavailable = 12
+declared_unprobed = 53
+admission = "UNKNOWN"
+evidence = "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1119-mcp-inventory-observed.json"
+limitation = "Catalog response only; no per-tool transport or authority verification"

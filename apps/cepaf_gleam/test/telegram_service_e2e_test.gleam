@@ -1,0 +1,1387 @@
+//// End-to-End Integration & Supervised OTP Test Suite for Telegram Service
+////
+//// Tests complete conversation and recovery workflows:
+//// 1. Full conversation lifecycle: Ingress poll -> Task claim -> Result ready ->
+////    Outbox sending pre-commit -> HTTP 200 OK delivery -> Outbox delivered post-commit -> Task completion.
+//// 2. Ingress rejection: Unauthorized sender rejected at store admission with zero tasks claimed.
+//// 3. Bounded delivery failure: HTTP 400 Bad Request maps to OutboxFailed in store.
+//// 4. Ambiguous network drop: TCP socket drop maps to OutboxUncertain (no blind retry).
+//// 5. Crash recovery & cgroup quiescence: Unquiesced in-flight processing task triggers
+////    fail-closed in-memory ServiceWriterHold; cleared by valid UnitCleanupReceipt.
+
+import cepaf_gleam/harness/files
+import cepaf_gleam/harness/telegram_delivery_ledger as ledger
+import cepaf_gleam/harness/telegram_http_client as http_client
+import cepaf_gleam/harness/telegram_ingress_guard as guard
+import cepaf_gleam/harness/telegram_lifecycle_adapter as lifecycle
+import cepaf_gleam/harness/telegram_service as service
+import cepaf_gleam/harness/telegram_store as store
+import cepaf_gleam/harness/telegram_store_codec as codec
+import cepaf_gleam/harness/telegram_store_transport as transport
+import gleam/dynamic.{type Dynamic}
+import gleam/erlang/process.{type Pid}
+import gleam/int
+import gleam/list
+import gleam/option.{type Option, None, Some}
+import gleam/result
+import gleam/string
+import gleeunit/should
+import simplifile
+import uos_swarm/session_store as coord_store
+import uos_swarm/session_sync as sync
+
+// -----------------------------------------------------------------------------
+// Pinned Fixture & Binary Paths
+// -----------------------------------------------------------------------------
+
+const recovery_guardian_path = "/home/an/NAS-setup/uos/tools/validation/telegram_store_transport_guardian.exe"
+
+const recovery_guardian_sha = "06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab"
+
+const recovery_worker_path = "/home/an/NAS-setup/uos/tools/validation/telegram_store_recovery_worker.exe"
+
+const recovery_worker_sha = "f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e"
+
+// -----------------------------------------------------------------------------
+// Fixture FFI
+// -----------------------------------------------------------------------------
+
+@external(erlang, "telegram_http_test_fixture", "start")
+fn fixture_start() -> Result(#(Pid, Int, String), Dynamic)
+
+@external(erlang, "telegram_http_test_fixture", "stop")
+fn fixture_stop(pid: Pid) -> Dynamic
+
+@external(erlang, "telegram_http_test_fixture", "set_mode")
+fn fixture_set_mode(pid: Pid, mode: String) -> Dynamic
+
+@external(erlang, "telegram_http_test_fixture", "set_updates")
+fn fixture_set_updates(pid: Pid, updates: List(String)) -> Dynamic
+
+@external(erlang, "telegram_http_test_fixture", "get_requests")
+fn fixture_get_requests(pid: Pid) -> List(Dynamic)
+
+@external(erlang, "telegram_test_authority", "seed_test_sa_plan_task")
+fn seed_test_sa_plan_task(
+  db_path: String,
+  plan_id: String,
+  task_id: String,
+  worker: String,
+  attempt: Int,
+  lease_until_ns: Int,
+) -> Result(Nil, Dynamic)
+
+fn init_test_coordinator(coord_db: String) -> Result(Nil, String) {
+  use store_handle <- result.try(
+    coord_store.open(coord_db)
+    |> result.map_error(coord_store.error_to_string),
+  )
+  let sessions = [
+    #("worker-e2e-01", "task:lease-e2e-01", "op1"),
+    #("worker-unauth", "task:lease-e2e-02", "op2"),
+    #("worker-fail", "task:lease-e2e-03", "op3"),
+    #("worker-drop", "task:lease-e2e-04", "op4"),
+    #("worker-recovery", "task:lease-e2e-05", "op5"),
+  ]
+  let ttl_us = 3_600_000_000
+  let res =
+    list.try_each(sessions, fn(item) {
+      let #(s, res_name, op) = item
+      use _ <- result.try(
+        coord_store.append(
+          store_handle,
+          sync.Register(s, "agy", "/home/an/NAS-setup/uos", "rev", []),
+          op <> "-reg",
+        )
+        |> result.map_error(coord_store.error_to_string),
+      )
+      use _ <- result.try(
+        coord_store.append(
+          store_handle,
+          sync.Claim(s, res_name, ttl_us),
+          op <> "-claim",
+        )
+        |> result.map_error(coord_store.error_to_string),
+      )
+      Ok(Nil)
+    })
+  let _ = coord_store.close(store_handle)
+  res
+}
+
+// -----------------------------------------------------------------------------
+// Helper: Ephemeral SQLite Store
+// -----------------------------------------------------------------------------
+
+fn with_recovery_store(
+  test_fn: fn(transport.LocalConfiguration, String, String, String, String) -> a,
+) -> a {
+  let unique = int.to_string(int.random(1_000_000_000))
+  let dir = "/tmp/uos_tg_service_e2e_test_" <> unique
+  let assert Ok(_) = simplifile.create_directory_all(dir)
+  let assert Ok(_) = simplifile.set_permissions_octal(dir, 0o700)
+  let db_path = dir <> "/telegram.sqlite3"
+  let sa_plan_db = dir <> "/sa_plan.sqlite3"
+  let coord_db = dir <> "/coord.sqlite3"
+
+  // Seed test authority leases for E2E tests (lease_until: 100 years in future)
+  let far_future_ns = 4_000_000_000_000_000_000
+  let assert Ok(_) =
+    seed_test_sa_plan_task(
+      sa_plan_db,
+      "plan-e2e",
+      "lease-e2e-01",
+      "worker-e2e-01",
+      1,
+      far_future_ns,
+    )
+  let assert Ok(_) =
+    seed_test_sa_plan_task(
+      sa_plan_db,
+      "plan-e2e",
+      "lease-e2e-02",
+      "worker-unauth",
+      1,
+      far_future_ns,
+    )
+  let assert Ok(_) =
+    seed_test_sa_plan_task(
+      sa_plan_db,
+      "plan-e2e",
+      "lease-e2e-03",
+      "worker-fail",
+      1,
+      far_future_ns,
+    )
+  let assert Ok(_) =
+    seed_test_sa_plan_task(
+      sa_plan_db,
+      "plan-e2e",
+      "lease-e2e-04",
+      "worker-drop",
+      1,
+      far_future_ns,
+    )
+  let assert Ok(_) =
+    seed_test_sa_plan_task(
+      sa_plan_db,
+      "plan-e2e",
+      "lease-e2e-05",
+      "worker-recovery",
+      1,
+      far_future_ns,
+    )
+
+  let assert Ok(_) = init_test_coordinator(coord_db)
+
+  let config =
+    transport.reviewed_local_configuration(
+      recovery_guardian_path,
+      recovery_guardian_sha,
+      recovery_worker_path,
+      recovery_worker_sha,
+      db_path,
+    )
+  let res = test_fn(config, db_path, sa_plan_db, coord_db, dir)
+  let _ = simplifile.delete(dir)
+  res
+}
+
+fn mint_test_cleanup_receipt(
+  slice_name: String,
+  unit_name: String,
+  db_path: String,
+) -> lifecycle.UnitCleanupReceipt {
+  let assert Ok(True) = lifecycle.start_test_slice(slice_name)
+  let assert Ok(True) =
+    lifecycle.run_test_unit(
+      slice_name,
+      unit_name,
+      lifecycle.canonical_beam_exe,
+      [
+        "+S", "1:1", "+A", "1", "-noshell", "-eval",
+        "timer:sleep(5000), init:stop().",
+      ],
+    )
+  let assert Ok(receipt) =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  receipt
+}
+
+fn wait_for_file(path: String, retries: Int) -> String {
+  case simplifile.read(path) {
+    Ok(content) -> content
+    Error(_) -> {
+      case retries > 0 {
+        True -> {
+          ffi_sleep_ms(50)
+          wait_for_file(path, retries - 1)
+        }
+        False -> ""
+      }
+    }
+  }
+}
+
+@external(erlang, "timer", "sleep")
+fn ffi_sleep_ms(ms: Int) -> Nil
+
+fn send_runner_cmd(ipc_dir: String, cmd_json: String) -> String {
+  let cmd_tmp = ipc_dir <> "/cmd.json.tmp"
+  let cmd_path = ipc_dir <> "/cmd.json"
+  let resp_path = ipc_dir <> "/resp.json"
+  let _ = simplifile.delete(resp_path)
+  let assert Ok(_) = simplifile.write(cmd_tmp, cmd_json)
+  let assert Ok(_) = simplifile.rename(cmd_tmp, cmd_path)
+  wait_for_file(resp_path, 160)
+}
+
+fn start_runner_actor(
+  ipc_dir: String,
+  db_path: String,
+  base_url: String,
+  token: String,
+  bot_id: Int,
+  worker_id: String,
+  task_id: String,
+  epoch: Int,
+  sa_plan_db: String,
+  coord_db: String,
+  reg_path: Option(String),
+  receipt: Option(lifecycle.UnitCleanupReceipt),
+  supervised: Bool,
+) -> Nil {
+  let receipt_field = case receipt {
+    None -> "\"cleanup_receipt_path\": null"
+    Some(rcpt) -> {
+      let receipt_file = ipc_dir <> "/cleanup_receipt.json"
+      let assert Ok(_) =
+        simplifile.write(
+          receipt_file,
+          lifecycle.encode_unit_cleanup_receipt(rcpt),
+        )
+      "\"cleanup_receipt_path\": \"" <> receipt_file <> "\""
+    }
+  }
+  let reg_field = case reg_path {
+    None -> "\"control_registration_path\": null"
+    Some(rp) -> "\"control_registration_path\": \"" <> rp <> "\""
+  }
+  let sup_str = case supervised {
+    True -> "true"
+    False -> "false"
+  }
+  let cmd =
+    "{\"action\": \"start_actor\", \"db_path\": \""
+    <> db_path
+    <> "\", \"guardian_path\": \""
+    <> recovery_guardian_path
+    <> "\", \"guardian_sha\": \""
+    <> recovery_guardian_sha
+    <> "\", \"worker_path\": \""
+    <> recovery_worker_path
+    <> "\", \"worker_sha\": \""
+    <> recovery_worker_sha
+    <> "\", \"base_url\": \""
+    <> base_url
+    <> "\", \"token\": \""
+    <> token
+    <> "\", \"bot_id\": "
+    <> int.to_string(bot_id)
+    <> ", \"allowed_pairs\": [[100, 200]], \"worker_id\": \""
+    <> worker_id
+    <> "\", \"task_id\": \""
+    <> task_id
+    <> "\", \"plan_id\": \"plan-e2e\", \"service_epoch\": "
+    <> int.to_string(epoch)
+    <> ", \"sa_plan_db\": \""
+    <> sa_plan_db
+    <> "\", \"coord_db\": \""
+    <> coord_db
+    <> "\", "
+    <> reg_field
+    <> ", "
+    <> receipt_field
+    <> ", \"supervised\": "
+    <> sup_str
+    <> "}"
+  let resp = send_runner_cmd(ipc_dir, cmd)
+  case string.contains(resp, "\"status\":\"ok\"") {
+    True -> Nil
+    False -> {
+      echo resp
+      panic as { "start_runner_actor failed: " <> resp }
+    }
+  }
+  Nil
+}
+
+fn runner_set_authority(
+  ipc_dir: String,
+  lease_id: String,
+  attempt: Int,
+  epoch: Int,
+  valid_until_us: Int,
+) -> Nil {
+  let cmd =
+    "{\"action\": \"set_authority\", \"lease_id\": \""
+    <> lease_id
+    <> "\", \"attempt\": "
+    <> int.to_string(attempt)
+    <> ", \"epoch\": "
+    <> int.to_string(epoch)
+    <> ", \"valid_until_us\": "
+    <> int.to_string(valid_until_us)
+    <> "}"
+  let resp = send_runner_cmd(ipc_dir, cmd)
+  case string.contains(resp, "\"status\":\"ok\"") {
+    True -> Nil
+    False -> {
+      echo resp
+      panic as { "runner_set_authority failed: " <> resp }
+    }
+  }
+}
+
+fn runner_poll_cycle(ipc_dir: String, now_us: Int) -> String {
+  let cmd =
+    "{\"action\": \"poll_cycle\", \"now_us\": "
+    <> int.to_string(now_us)
+    <> "}"
+  send_runner_cmd(ipc_dir, cmd)
+}
+
+fn runner_get_state(ipc_dir: String) -> String {
+  send_runner_cmd(ipc_dir, "{\"action\": \"get_state\"}")
+}
+
+fn runner_deliver_chunk_from_store(
+  ipc_dir: String,
+  request_id: String,
+  now_us: Int,
+) -> String {
+  let cmd =
+    "{\"action\": \"deliver_chunk_from_store\", \"request_id\": \""
+    <> request_id
+    <> "\", \"now_us\": "
+    <> int.to_string(now_us)
+    <> "}"
+  send_runner_cmd(ipc_dir, cmd)
+}
+
+fn runner_automatic_dispatch_tick(ipc_dir: String, now_us: Int) -> String {
+  let cmd =
+    "{\"action\": \"automatic_dispatch_tick\", \"now_us\": "
+    <> int.to_string(now_us)
+    <> "}"
+  send_runner_cmd(ipc_dir, cmd)
+}
+
+fn runner_stop(ipc_dir: String) -> Nil {
+  let _ = send_runner_cmd(ipc_dir, "{\"action\": \"stop\"}")
+  Nil
+}
+
+fn start_test_runner(
+  dir: String,
+  slice_name: String,
+  unit_name: String,
+) -> String {
+  let ipc_dir = dir <> "/ipc_" <> unit_name
+  let assert Ok(_) = simplifile.create_directory_all(ipc_dir)
+  let cfg_json =
+    "{\"mode\": \"standby\", \"ipc_dir\": \"" <> ipc_dir <> "\"}"
+  let cfg_file = ipc_dir <> "/worker_config.json"
+  let assert Ok(_) = simplifile.write(cfg_file, cfg_json)
+
+  let assert Ok(True) = lifecycle.start_test_slice(slice_name)
+  let assert Ok(True) =
+    lifecycle.run_test_unit(
+      slice_name,
+      unit_name,
+      lifecycle.canonical_beam_exe,
+      [
+        "+S", "1:1", "+A", "1", "-noshell", "-eval",
+        "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), telegram_service_worker_runner:start([\""
+        <> cfg_file
+        <> "\"]).",
+      ],
+    )
+
+  // Wait for worker to be ready inside unit
+  let ready_path = ipc_dir <> "/worker.ready"
+  let _ = wait_for_file(ready_path, 80)
+  ipc_dir
+}
+
+fn mint_unit_registration(
+  dir: String,
+  slice_name: String,
+  unit_name: String,
+  db_path: String,
+  epoch: Int,
+) -> String {
+  let assert Ok(unit_status) = lifecycle.get_unit_status(unit_name)
+  let assert Ok(slice_status) = lifecycle.get_unit_status(slice_name)
+
+  let reg_path = dir <> "/control_" <> unit_name <> ".json"
+  let assert Ok(inc) = lifecycle.compute_store_incarnation(db_path)
+  let now_us = service.ffi_system_now_utc_us()
+  let reg =
+    lifecycle.ControlRegistration(
+      unit_name: unit_name,
+      slice_name: slice_name,
+      unit_invocation_id: unit_status.invocation_id,
+      slice_invocation_id: slice_status.invocation_id,
+      store_incarnation_id: inc,
+      store_db_path: db_path,
+      worker_hash: recovery_worker_sha,
+      guardian_hash: recovery_guardian_sha,
+      service_epoch: epoch,
+      registered_at_us: now_us,
+    )
+  let assert Ok(_) = lifecycle.write_prelaunch_control(reg_path, reg)
+  reg_path
+}
+
+// -----------------------------------------------------------------------------
+// E2E Tests
+// -----------------------------------------------------------------------------
+
+pub fn e2e_full_conversation_lifecycle_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 888_111
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+
+  // Initialize store schema & watermark
+  let assert Ok(init_gen) = store.initialize_store(storage_config, bot_id)
+  init_gen |> should.equal(2)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us())
+  let slice_name = "app-uos_tg_test_conv_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-conv-" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  // Start actor in runner inside transient unit
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-e2e",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    False,
+  )
+
+  // 1. Without authority lease: poll fails closed
+  let err_res = runner_poll_cycle(ipc_dir, 1_700_000_000_000)
+  case string.contains(err_res, "authority_lease_missing") {
+    True -> Nil
+    False -> panic as { "err_res unexpected: " <> err_res }
+  }
+
+  // 2. Set valid authority lease
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-01",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+  // 3. Ingress: queue update from authorized user (chat 100, user 200)
+  let update_json =
+    "{\"update_id\": 7001, \"message\": {\"message_id\": 88, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/status\", \"date\": 1700000000}}"
+  fixture_set_updates(fixture_pid, [update_json])
+
+  // 4. Poll cycle via actor inside runner
+  let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_001_000)
+  case string.contains(poll_res, "\"type\":\"poll_committed\"") {
+    True -> Nil
+    False -> panic as { "poll_res unexpected: " <> poll_res }
+  }
+  string.contains(poll_res, "\"count\":1") |> should.equal(True)
+  string.contains(poll_res, "\"new_watermark\":7002") |> should.equal(True)
+
+  // Verify actor state inside runner
+  let state_json = runner_get_state(ipc_dir)
+  string.contains(state_json, "\"last_committed_offset\":7002") |> should.equal(True)
+  string.contains(state_json, "\"expected_generation\":3") |> should.equal(True)
+  string.contains(state_json, "\"writer_state\":\"clean\"") |> should.equal(True)
+
+  // 5. Read inbox record from store
+  let assert Ok(#(gen1, [inbox_row])) =
+    store.read_inbox_records(storage_config, 10, None)
+  gen1 |> should.equal(3)
+  let #(inbox_rec, inbox_ver1, inbox_sha1) = inbox_row
+  inbox_rec.update_id |> should.equal(7001)
+  inbox_ver1 |> should.equal(1)
+  let assert ledger.InboxPending = inbox_rec.status
+
+  // 6. Claim task for processing
+  let assert Ok(#(claim_rcpt, processing_rec)) =
+    store.claim_task_processing(
+      storage_config,
+      bot_id,
+      "op-claim-7001",
+      gen1,
+      inbox_rec,
+      inbox_ver1,
+      inbox_sha1,
+      worker_id,
+      epoch,
+      1_700_000_002_000,
+    )
+  claim_rcpt.generation |> should.equal(4)
+  let assert ledger.InboxProcessing(w, ep) = processing_rec.status
+  w |> should.equal(worker_id)
+  ep |> should.equal(epoch)
+
+  // 7. Commit result ready with response payload
+  let response_payload = "System operational. All 7 engines nominal."
+  let processing_ver = 2
+  let processing_sha = files.digest(codec.encode_inbox_record(processing_rec))
+  let assert Ok(res_result) =
+    store.commit_result(
+      storage_config,
+      bot_id,
+      "op-result-7001",
+      claim_rcpt.generation,
+      processing_rec,
+      processing_ver,
+      processing_sha,
+      [response_payload],
+      worker_id,
+      epoch,
+    )
+  res_result.receipt.generation |> should.equal(5)
+  let assert [_chunk0] = res_result.chunks
+  let ready_rec = res_result.inbox_record
+  let ready_ver = 3
+  let ready_sha = files.digest(codec.encode_inbox_record(ready_rec))
+
+  // 8. Deliver chunk via service actor inside runner
+  let deliver_res = runner_deliver_chunk_from_store(ipc_dir, inbox_rec.request_id, 1_700_000_003_000)
+  string.contains(deliver_res, "\"type\":\"delivery_step_success\"") |> should.equal(True)
+  string.contains(deliver_res, "\"message_id\":42") |> should.equal(True)
+
+  // 9. Verify delivered chunk in SQLite store
+  let assert Ok(#(_, [chunk_row])) =
+    store.read_keys(storage_config, [codec.chunk_key(inbox_rec.request_id, 0)])
+  chunk_row.exists |> should.equal(True)
+  chunk_row.version |> should.equal(3)
+  let assert Ok(chunk_raw) = codec.decode_row_value(chunk_row)
+  let assert Ok(delivered_chunk) = codec.decode_chunk_value(chunk_raw)
+  delivered_chunk.status |> should.equal(ledger.OutboxDelivered(42))
+
+  // 10. Commit task completion
+  let after_deliver_gen = 7
+  let assert Ok(#(comp_rcpt, completed_rec)) =
+    store.commit_task_completion(
+      storage_config,
+      bot_id,
+      "op-comp-7001",
+      after_deliver_gen,
+      ready_rec,
+      ready_ver,
+      ready_sha,
+      [delivered_chunk],
+    )
+  comp_rcpt.generation |> should.equal(8)
+  let assert ledger.InboxCompleted(_digest) = completed_rec.status
+
+  // 11. Empty poll returns PollEmpty
+  fixture_set_updates(fixture_pid, [])
+  let empty_res = runner_poll_cycle(ipc_dir, 1_700_000_004_000)
+  string.contains(empty_res, "\"type\":\"poll_empty\"") |> should.equal(True)
+
+  // Clean shutdown
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  let _ =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+pub fn e2e_unauthorized_user_rejection_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 888_222
+  let worker_id = "worker-unauth"
+  let task_id = "lease-e2e-02"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_u" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-u" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-e2e",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    False,
+  )
+
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-02",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+  // Ingress: user 999 is NOT in allowlist
+  let update_json =
+    "{\"update_id\": 7002, \"message\": {\"message_id\": 89, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 999, \"is_bot\": false, \"first_name\": \"Eve\"}, \"text\": \"/admin\", \"date\": 1700000000}}"
+  fixture_set_updates(fixture_pid, [update_json])
+
+  let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_005_000)
+  string.contains(poll_res, "\"type\":\"poll_committed\"") |> should.equal(True)
+  string.contains(poll_res, "\"new_watermark\":7003") |> should.equal(True)
+
+  // Verify record in store is InboxRejected
+  let assert Ok(#(_, [inbox_row])) =
+    store.read_inbox_records(storage_config, 10, None)
+  let #(inbox_rec, _, _) = inbox_row
+  inbox_rec.update_id |> should.equal(7002)
+  let assert ledger.InboxRejected(rej) = inbox_rec.status
+  string.contains(rej, "unauthorized") |> should.equal(True)
+
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  let _ =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+pub fn e2e_delivery_failure_bad_request_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 888_333
+  let worker_id = "worker-fail"
+  let task_id = "lease-e2e-03"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_b" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-b" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-e2e",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    False,
+  )
+
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-03",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+  // Ingress & Claim
+  let update_json =
+    "{\"update_id\": 7003, \"message\": {\"message_id\": 90, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/large\", \"date\": 1700000000}}"
+  fixture_set_updates(fixture_pid, [update_json])
+
+  let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_006_000)
+  string.contains(poll_res, "\"type\":\"poll_committed\"") |> should.equal(True)
+  string.contains(poll_res, "\"new_watermark\":7004") |> should.equal(True)
+
+  let assert Ok(#(gen1, [inbox_row])) =
+    store.read_inbox_records(storage_config, 10, None)
+  let #(inbox_rec, inbox_ver1, inbox_sha1) = inbox_row
+  let assert Ok(#(claim_rcpt, proc_rec)) =
+    store.claim_task_processing(
+      storage_config,
+      bot_id,
+      "op-claim-7003",
+      gen1,
+      inbox_rec,
+      inbox_ver1,
+      inbox_sha1,
+      worker_id,
+      epoch,
+      1_700_000_007_000,
+    )
+
+  let proc_sha = files.digest(codec.encode_inbox_record(proc_rec))
+  let assert Ok(res_result) =
+    store.commit_result(
+      storage_config,
+      bot_id,
+      "op-result-7003",
+      claim_rcpt.generation,
+      proc_rec,
+      2,
+      proc_sha,
+      ["Oversized Payload"],
+      worker_id,
+      epoch,
+    )
+  let assert [_chunk0] = res_result.chunks
+
+  // Set HTTP fixture to Bad Request (400)
+  fixture_set_mode(fixture_pid, "bad_request")
+
+  // Deliver chunk via runner
+  let deliver_res = runner_deliver_chunk_from_store(ipc_dir, inbox_rec.request_id, 1_700_000_008_000)
+  string.contains(deliver_res, "\"type\":\"delivery_step_failed\"") |> should.equal(True)
+  string.contains(deliver_res, "http_rejected_400") |> should.equal(True)
+
+  // Verify chunk in store has OutboxFailed
+  let assert Ok(#(_, [chunk_row])) =
+    store.read_keys(storage_config, [codec.chunk_key(inbox_rec.request_id, 0)])
+  let assert Ok(chunk_raw) = codec.decode_row_value(chunk_row)
+  let assert Ok(failed_chunk) = codec.decode_chunk_value(chunk_raw)
+  let assert ledger.OutboxFailed(reason) = failed_chunk.status
+  string.contains(reason, "400") |> should.equal(True)
+
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  let _ =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+pub fn e2e_delivery_ambiguous_socket_drop_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 888_444
+  let _allowed_pairs = [#(100, 200)]
+  let worker_id = "worker-drop"
+  let task_id = "lease-e2e-04"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_d" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-d" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-e2e",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    False,
+  )
+
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-04",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+  // Ingress & Claim
+  let update_json =
+    "{\"update_id\": 7004, \"message\": {\"message_id\": 91, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/drop\", \"date\": 1700000000}}"
+  fixture_set_updates(fixture_pid, [update_json])
+
+  let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_009_000)
+  string.contains(poll_res, "\"type\":\"poll_committed\"") |> should.equal(True)
+  string.contains(poll_res, "\"new_watermark\":7005") |> should.equal(True)
+
+  let assert Ok(#(gen1, [inbox_row])) =
+    store.read_inbox_records(storage_config, 10, None)
+  let #(inbox_rec, inbox_ver1, inbox_sha1) = inbox_row
+  let assert Ok(#(claim_rcpt, proc_rec)) =
+    store.claim_task_processing(
+      storage_config,
+      bot_id,
+      "op-claim-7004",
+      gen1,
+      inbox_rec,
+      inbox_ver1,
+      inbox_sha1,
+      worker_id,
+      epoch,
+      1_700_000_010_000,
+    )
+
+  let proc_sha = files.digest(codec.encode_inbox_record(proc_rec))
+  let assert Ok(res_result) =
+    store.commit_result(
+      storage_config,
+      bot_id,
+      "op-result-7004",
+      claim_rcpt.generation,
+      proc_rec,
+      2,
+      proc_sha,
+      ["Drop Payload"],
+      worker_id,
+      epoch,
+    )
+  let assert [_chunk0] = res_result.chunks
+
+  // Set HTTP fixture to Socket Drop
+  fixture_set_mode(fixture_pid, "drop")
+
+  // Deliver chunk via runner
+  let deliver_res = runner_deliver_chunk_from_store(ipc_dir, inbox_rec.request_id, 1_700_000_011_000)
+  string.contains(deliver_res, "\"type\":\"delivery_step_uncertain\"") |> should.equal(True)
+  let is_match =
+    string.contains(deliver_res, "closed")
+    || string.contains(deliver_res, "request_failed")
+    || string.contains(deliver_res, "cleanup_unknown")
+    || string.contains(deliver_res, "guardian_failed")
+  is_match |> should.equal(True)
+
+  // Verify chunk in store has OutboxUncertain
+  let assert Ok(#(_, [chunk_row])) =
+    store.read_keys(storage_config, [codec.chunk_key(inbox_rec.request_id, 0)])
+  let assert Ok(chunk_raw) = codec.decode_row_value(chunk_row)
+  let assert Ok(uncertain_chunk) = codec.decode_chunk_value(chunk_raw)
+  let assert ledger.OutboxUncertain(unc_reason) = uncertain_chunk.status
+  let is_unc_match =
+    string.contains(unc_reason, "closed")
+    || string.contains(unc_reason, "request_failed")
+    || string.contains(unc_reason, "cleanup_unknown")
+    || string.contains(unc_reason, "guardian_failed")
+  is_unc_match |> should.equal(True)
+
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  let _ =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+pub fn e2e_recovery_cgroup_and_writer_hold_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+
+  let bot_id = 888_555
+  let allowed_pairs = [#(100, 200)]
+  let worker_id = "worker-recovery"
+  let task_id = "lease-e2e-05"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let http_cfg =
+    http_client.default_configuration("http://127.0.0.1:9", "test-token")
+  let svc_cfg =
+    service.ServiceConfiguration(
+      storage_config: storage_config,
+      http_config: http_cfg,
+      bot_id: bot_id,
+      allowed_pairs: allowed_pairs,
+      plan_id: "plan-e2e",
+      task_id: task_id,
+      session_id: worker_id,
+      resource_id: "task:" <> task_id,
+      worker_id: worker_id,
+      expected_task_attempt: 1,
+      coordinator_epoch: 1,
+      service_epoch: epoch,
+      poll_limit: 10,
+      poll_timeout_s: 1,
+      observer_exe: service.canonical_observer_exe,
+      observer_sha256: service.canonical_observer_sha256,
+      guardian_exe: service.canonical_guardian_exe,
+      guardian_sha256: service.canonical_guardian_sha256,
+      authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db),
+      control_registration_path: None,
+    )
+
+  // 1. Commit an initial record to store
+  let assert Ok(#(wm, wm_ver, wm_sha)) = store.read_watermark(storage_config)
+  let verdict =
+    guard.evaluate_update(
+      "{\"update_id\": 7005, \"message\": {\"message_id\": 92, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/crash\", \"date\": 1700000000}}",
+      guard.Allowlist(bot_id: bot_id, allowed_pairs: allowed_pairs),
+    )
+  let assert Ok(pref) =
+    store.commit_prefix(
+      storage_config,
+      bot_id,
+      "op-pref-7005",
+      2,
+      wm,
+      wm_ver,
+      wm_sha,
+      [verdict],
+      1_700_000_012_000,
+    )
+  let assert [_inbox_rec] = pref.admitted_records
+
+  // 2. Start transient unit 1 running telegram_service_worker_runner
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_r" <> nonce <> ".slice"
+  let unit_name1 = "uos-tg-store-test-r1" <> nonce <> ".service"
+  let ipc_dir1 = dir <> "/ipc_" <> unit_name1
+  let assert Ok(_) = simplifile.create_directory_all(ipc_dir1)
+  let cfg_json1 = "{\"mode\": \"standby\", \"ipc_dir\": \"" <> ipc_dir1 <> "\"}"
+  let cfg_file1 = ipc_dir1 <> "/worker_config.json"
+  let assert Ok(_) = simplifile.write(cfg_file1, cfg_json1)
+
+  let assert Ok(True) = lifecycle.start_test_slice(slice_name)
+  let assert Ok(True) =
+    lifecycle.run_test_unit(
+      slice_name,
+      unit_name1,
+      lifecycle.canonical_beam_exe,
+      [
+        "+S", "1:1", "+A", "1", "-noshell", "-eval",
+        "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), telegram_service_worker_runner:start([\""
+        <> cfg_file1
+        <> "\"]).",
+      ],
+    )
+  let _ = wait_for_file(ipc_dir1 <> "/worker.ready", 80)
+
+  let assert Ok(unit_status1) = lifecycle.get_unit_status(unit_name1)
+  let assert Ok(slice_status1) = lifecycle.get_unit_status(slice_name)
+  let reg_path1 = dir <> "/control_r1_" <> nonce <> ".json"
+  let assert Ok(inc) = lifecycle.compute_store_incarnation(db_path)
+  let now_us = service.ffi_system_now_utc_us()
+  let reg1 =
+    lifecycle.ControlRegistration(
+      unit_name: unit_name1,
+      slice_name: slice_name,
+      unit_invocation_id: unit_status1.invocation_id,
+      slice_invocation_id: slice_status1.invocation_id,
+      store_incarnation_id: inc,
+      store_db_path: db_path,
+      worker_hash: recovery_worker_sha,
+      guardian_hash: recovery_guardian_sha,
+      service_epoch: epoch,
+      registered_at_us: now_us,
+    )
+  let assert Ok(_) = lifecycle.write_prelaunch_control(reg_path1, reg1)
+
+  // 3. Instruct unit 1 to claim the task in store and hang (simulating crash)
+  let claim_hang_cmd =
+    "{\"action\": \"claim_processing_and_hang\", \"db_path\": \""
+    <> db_path
+    <> "\", \"bot_id\": "
+    <> int.to_string(bot_id)
+    <> ", \"worker_id\": \""
+    <> worker_id
+    <> "\", \"service_epoch\": "
+    <> int.to_string(epoch)
+    <> ", \"now_us\": 1700000013000}"
+  let claim_resp = send_runner_cmd(ipc_dir1, claim_hang_cmd)
+  string.contains(claim_resp, "\"status\":\"claimed\"") |> should.equal(True)
+
+  // Verify task in store is in InboxProcessing state
+  let assert Ok(#(_, [inbox_row_crashed])) =
+    store.read_inbox_records(storage_config, 10, None)
+  let #(rec_crashed, _, _) = inbox_row_crashed
+  let assert ledger.InboxProcessing(_, _) = rec_crashed.status
+
+  // 4. Restart service WITHOUT cleanup receipt -> must hold truthfully without inventing counts
+  let assert Ok(#(state_held, service.RecoveryHold(reason))) =
+    service.init_service(svc_cfg, None)
+  let assert lifecycle.ServiceWriterHold(state_reason) = state_held.writer_state
+  string.contains(state_reason, "first_bootstrap_rejected: in-flight operations detected")
+  |> should.equal(True)
+  string.contains(reason, "first_bootstrap_rejected: in-flight operations detected")
+  |> should.equal(True)
+
+  // Writer hold bars mutations
+  let lease =
+    service.AuthorityLease(
+      lease_id: "lease-e2e-05",
+      expected_task_attempt: 1,
+      coordinator_epoch: 1,
+      valid_until_us: 3_000_000_000_000_000,
+    )
+  let state_with_auth = service.set_authority(state_held, lease)
+  let poll_fail = service.poll_cycle(state_with_auth, 1_700_000_014_000)
+  let assert Error(service.ServiceError(_err_state, poll_err)) = poll_fail
+  string.contains(poll_err, "service_writer_held") |> should.equal(True)
+
+  // 5. Kill unit 1 -> physically terminates the real writer VM, verifies empty cgroup, mints receipt1
+  let assert Ok(receipt1) =
+    lifecycle.stop_and_verify_test_unit_epoch(
+      slice_name,
+      unit_name1,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+      epoch,
+    )
+
+  // 6. Start transient unit 2 running telegram_service_worker_runner
+  let unit_name2 = "uos-tg-store-test-r2" <> nonce <> ".service"
+  let ipc_dir2 = dir <> "/ipc_" <> unit_name2
+  let assert Ok(_) = simplifile.create_directory_all(ipc_dir2)
+  let cfg_json2 = "{\"mode\": \"standby\", \"ipc_dir\": \"" <> ipc_dir2 <> "\"}"
+  let cfg_file2 = ipc_dir2 <> "/worker_config.json"
+  let assert Ok(_) = simplifile.write(cfg_file2, cfg_json2)
+
+  let assert Ok(True) = lifecycle.start_test_slice(slice_name)
+  let assert Ok(True) =
+    lifecycle.run_test_unit(
+      slice_name,
+      unit_name2,
+      lifecycle.canonical_beam_exe,
+      [
+        "+S", "1:1", "+A", "1", "-noshell", "-eval",
+        "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), telegram_service_worker_runner:start([\""
+        <> cfg_file2
+        <> "\"]).",
+      ],
+    )
+  let _ = wait_for_file(ipc_dir2 <> "/worker.ready", 80)
+
+  // Write receipt1 to file for unit 2 to read
+  let receipt1_file = ipc_dir2 <> "/receipt1.json"
+  let assert Ok(_) =
+    simplifile.write(
+      receipt1_file,
+      lifecycle.encode_unit_cleanup_receipt(receipt1),
+    )
+
+  // 7. Restart service WITH verified cleanup receipt and live control registration inside unit 2
+  // Successor epoch must be epoch + 1 = 2, pointing to predecessor registration reg_path1
+  let init_cmd2 =
+    "{\"action\": \"init_only\", \"db_path\": \""
+    <> db_path
+    <> "\", \"bot_id\": "
+    <> int.to_string(bot_id)
+    <> ", \"worker_id\": \""
+    <> worker_id
+    <> "\", \"task_id\": \""
+    <> task_id
+    <> "\", \"service_epoch\": "
+    <> int.to_string(epoch + 1)
+    <> ", \"sa_plan_db\": \""
+    <> sa_plan_db
+    <> "\", \"coord_db\": \""
+    <> coord_db
+    <> "\", \"control_registration_path\": \""
+    <> reg_path1
+    <> "\", \"cleanup_receipt_path\": \""
+    <> receipt1_file
+    <> "\"}"
+  let init_resp2 = send_runner_cmd(ipc_dir2, init_cmd2)
+  string.contains(init_resp2, "\"status\":\"ok\"") |> should.equal(True)
+  string.contains(init_resp2, "\"writer_state\":\"clean\"") |> should.equal(True)
+  string.contains(init_resp2, "\"held_count\":1") |> should.equal(True)
+
+  // 8. Refusal on consumed receipt reuse (prevents restart reuse of old cleanup receipt)
+  let replay_resp = send_runner_cmd(ipc_dir2, init_cmd2)
+  string.contains(replay_resp, "cleanup_receipt_already_consumed") |> should.equal(True)
+
+  // Cleanup active test unit and slice
+  runner_stop(ipc_dir2)
+  let _ =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name2,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+pub fn e2e_automatic_dispatch_cycle_actor_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 999_888
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_a" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-a" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  // Start supervised actor in runner inside transient unit
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-auto",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    True,
+  )
+
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-auto-01",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+  // Queue a /doctor command update into the mock fixture
+  let update_json =
+    "{\"update_id\": 8001, \"message\": {\"message_id\": 501, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/doctor\", \"date\": 1700000000}}"
+  fixture_set_updates(fixture_pid, [update_json])
+
+  // 1. PollCycle polls update and stores input_key + inbox row
+  let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_020_000)
+  string.contains(poll_res, "\"type\":\"poll_committed\"") |> should.equal(True)
+  string.contains(poll_res, "\"new_watermark\":8002") |> should.equal(True)
+
+  // 2. AutomaticDispatchTick autonomously claims, generates observation, commits result & sending, and delivers via HTTP
+  let dispatch_res = runner_automatic_dispatch_tick(ipc_dir, 1_700_000_021_000)
+  string.contains(dispatch_res, "\"type\":\"dispatch_cycle_result\"") |> should.equal(True)
+  string.contains(dispatch_res, "\"processed_count\":1") |> should.equal(True)
+  string.contains(dispatch_res, "\"delivered_count\":1") |> should.equal(True)
+
+  // Wait briefly for delivery worker to finish
+  ffi_sleep_ms(100)
+
+  // 3. Verify chunk delivered in SQLite store
+  let req_id = ledger.make_request_id(bot_id, 8001)
+  let assert Ok(#(_, [chunk_row])) =
+    store.read_keys(storage_config, [codec.chunk_key(req_id, 0)])
+  chunk_row.exists |> should.equal(True)
+  let assert Ok(chunk_raw) = codec.decode_row_value(chunk_row)
+  let assert Ok(delivered_chunk) = codec.decode_chunk_value(chunk_raw)
+  delivered_chunk.status |> should.equal(ledger.OutboxDelivered(42))
+  string.contains(delivered_chunk.payload, "UNOBSERVED_RUNTIME")
+  |> should.equal(True)
+
+  // 4. Test /saplan automatic dispatch
+  let saplan_update =
+    "{\"update_id\": 8002, \"message\": {\"message_id\": 778, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/saplan\", \"date\": 1700000002}}"
+  fixture_set_updates(fixture_pid, [saplan_update])
+
+  let poll_res2 = runner_poll_cycle(ipc_dir, 1_700_000_022_000)
+  string.contains(poll_res2, "\"type\":\"poll_committed\"") |> should.equal(True)
+  string.contains(poll_res2, "\"new_watermark\":8003") |> should.equal(True)
+
+  let dispatch_res2 = runner_automatic_dispatch_tick(ipc_dir, 1_700_000_023_000)
+  string.contains(dispatch_res2, "\"type\":\"dispatch_cycle_result\"") |> should.equal(True)
+  string.contains(dispatch_res2, "\"processed_count\":1") |> should.equal(True)
+  string.contains(dispatch_res2, "\"delivered_count\":1") |> should.equal(True)
+
+  ffi_sleep_ms(100)
+
+  let req_id2 = ledger.make_request_id(bot_id, 8002)
+  let assert Ok(#(_, [chunk_row2])) =
+    store.read_keys(storage_config, [codec.chunk_key(req_id2, 0)])
+  chunk_row2.exists |> should.equal(True)
+  let assert Ok(chunk_raw2) = codec.decode_row_value(chunk_row2)
+  let assert Ok(delivered_chunk2) = codec.decode_chunk_value(chunk_raw2)
+  delivered_chunk2.status |> should.equal(ledger.OutboxDelivered(42))
+  string.contains(delivered_chunk2.payload, "uos.sa_plan.observer.v1")
+  |> should.equal(True)
+
+  // Clean shutdown
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  let _ =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+pub fn unrelated_cleanup_receipt_should_not_admit_writer_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 888_111
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 7
+
+  // Initialize store schema & watermark
+  let assert Ok(init_gen) = store.initialize_store(storage_config, bot_id)
+  init_gen |> should.equal(2)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us())
+  let slice_name = "app-uos_tg_test_unrel_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-unrel-" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  let reg_path = mint_unit_registration(dir, slice_name, unit_name, db_path, epoch)
+  let unrelated_slice = "app-uos_tg_test_unrel_slp_" <> nonce <> ".slice"
+  let unrelated_unit = "uos-tg-store-test-unrel-sleep-" <> nonce <> ".service"
+  let receipt = mint_test_cleanup_receipt(unrelated_slice, unrelated_unit, db_path)
+
+  // Start actor in runner inside transient unit with unrelated receipt (epoch 1) offered for epoch 7
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-e2e",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    Some(reg_path),
+    Some(receipt),
+    False,
+  )
+
+  let observed_state = runner_get_state(ipc_dir)
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
+  lifecycle.cleanup_test_unit_and_slice(unrelated_slice, unrelated_unit)
+  // Receipt came from unrelated sleeper at epoch1, not prior registered writer.
+  string.contains(observed_state, "\"writer_state\":\"clean\"") |> should.equal(False)
+}
+
+pub fn large_saplan_result_is_chunked_and_delivered_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 999_888
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_large_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-large-" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  list.each([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30], fn(i) {
+    let assert Ok(_) = seed_test_sa_plan_task(sa_plan_db, "plan-e2e", "bulk-task-" <> int.to_string(i), "worker-e2e-01", 1, 4_000_000_000_000_000_000)
+  })
+
+  // Start supervised actor in runner inside transient unit
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-auto",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    True,
+  )
+
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-auto-01",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+  // Queue a /saplan command update into the mock fixture
+  let update_json =
+    "{\"update_id\": 8001, \"message\": {\"message_id\": 501, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/saplan\", \"date\": 1700000000}}"
+  fixture_set_updates(fixture_pid, [update_json])
+
+  // 1. PollCycle polls update and stores input_key + inbox row
+  let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_020_000)
+  string.contains(poll_res, "\"type\":\"poll_committed\"") |> should.equal(True)
+
+  let observed_dispatch = runner_automatic_dispatch_tick(ipc_dir, 1_700_000_021_000)
+  string.contains(observed_dispatch, "\"type\":\"dispatch_cycle_result\"") |> should.equal(True)
+
+  ffi_sleep_ms(300)
+
+  // Delivered chunks verify in mock fixture
+  let reqs = fixture_get_requests(fixture_pid)
+  { list.length(reqs) > 1 } |> should.equal(True)
+
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
+}

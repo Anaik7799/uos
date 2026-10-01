@@ -1,0 +1,94 @@
+{
+  "schema": "uos.telegram-service-draft-findings.v1",
+  "observed_at": "2026-10-11T16:02:13.495Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "DEVELOPMENT_CANDIDATE_HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "findings": [
+    {
+      "id": "SVC-001",
+      "area": "Lifecycle build",
+      "kind": "observed_compile_failure",
+      "detail": "Exact frozen telegram_lifecycle_ffi.erl fails illegal binary pattern at line15. HTTP-only compile excludes the preserved unmodified FFI; not a whole-candidate build."
+    },
+    {
+      "id": "SVC-002",
+      "area": "Unit identity",
+      "kind": "observed_pure_validation_and_source",
+      "detail": "Public pure validator accepts uos-tg-store-test-*;fake. FFI concatenates prefix-only input into os:cmd and ignores stop exit. No shell exploit or lifecycle stop executed."
+    },
+    {
+      "id": "SVC-003",
+      "area": "Cleanup proof",
+      "kind": "source_review",
+      "detail": "Public mint_verified_receipt_for_test accepts arbitrary cgroup.events path; stop receipt accepts caller DB/hash association/cgroup root. Missing durable owned registration/incarnation binding."
+    },
+    {
+      "id": "SVC-004",
+      "area": "HTTP ABI",
+      "kind": "actual_private_http_failure",
+      "detail": "All positive and negative requests reached a private socket but return hackney_not_available_undef. Pinned Hackney request/5 returns BodyBinary and has no body/1; existing FFI calls removed function. Negative response cases are UNREACHED, not PASS."
+    },
+    {
+      "id": "SVC-005",
+      "area": "HTTP bounds/privacy",
+      "kind": "source_review_pending_reachable_http",
+      "detail": "config.timeout_ms unused, synchronous full-body read before size check; poll and callback no body limit; raw errors/descriptions reflected; callback checks ok without result true."
+    },
+    {
+      "id": "SVC-006",
+      "area": "Canonical authority",
+      "kind": "source_review",
+      "detail": "Public AuthorityLease and caller now_us establish only self-asserted authority; reviewed canonical provider/current request task not wired. No fresh fence after polling or before HTTP after store commit."
+    },
+    {
+      "id": "SVC-007",
+      "area": "Startup",
+      "kind": "source_review",
+      "detail": "DB workers launched before cleanup, only first64 rows inspected, any Some receipt accepted, no complete bounded scan/outbox recovery. Processing-only detection misses unknown pending DB writer."
+    },
+    {
+      "id": "SVC-008",
+      "area": "Supervision",
+      "kind": "source_review",
+      "detail": "Synchronous functions and copyable in_flight Bool do not implement OTP ownership/single-flight or bounded monitored children."
+    },
+    {
+      "id": "SVC-009",
+      "area": "Unknown transaction",
+      "kind": "source_review",
+      "detail": "Store failures stringify original context and return errors; unknown writer must retain exact pending request and put service on hold before any additional worker."
+    }
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1559-service-draft-review/manifest.json",
+      "sha256": "093bfd6bf14d6d3cfde0b42aa02504fa6b9b0211254b5ebdbc45d74f3442766e"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1559-service-draft-review/service_http_review.erl",
+      "sha256": "8bdefec27b6a2adf51db79fd8244249c4f103fe013b5b7d5a1e101990db00a6a"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1559-service-draft-review/http-results.txt",
+      "sha256": "6b408133850a9fb9f89645e530625eb0ad4dca7c531c1635996c4707a9268582"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1559-service-draft-review/compile-failure.txt",
+      "sha256": "fef8e299d9e45f0996f2818baba3eaed0005cb062f552cc1527be4676d5e984f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "02e28595540f13cd33cb39922ed53cc8f10928bec8593c1246d77bba63549875"
+    },
+    {
+      "path": "apps/cepaf_gleam/build/packages/hackney/src/hackney.erl",
+      "sha256": "bcf9b4f192d5cf4208e047d0bca749b58ac97f85d8b051e1fa3b4018217b2ac1"
+    }
+  ],
+  "scope": "Independent frozen draft review; no live Telegram call, shell exploit or systemd mutation. Successful HTTP control failed, so response-negative tests are not accepted.",
+  "dispatch": "Actual AGY prompts returned success; queued and not yet acknowledged as of16:00Z."
+}

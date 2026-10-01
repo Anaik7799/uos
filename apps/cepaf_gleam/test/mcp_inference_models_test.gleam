@@ -154,7 +154,7 @@ pub fn tool_rete_rule_conflict_rejects_invalid_rules_test() {
       "test-rete-invalid",
       "rete_rule_conflict",
       json.object([#("rules", json.string("not-a-rule-list"))]),
-  )
+    )
   let assert Ok(text) = extract_tool_result(response)
   text
   |> string.contains("expected a list of rule objects")

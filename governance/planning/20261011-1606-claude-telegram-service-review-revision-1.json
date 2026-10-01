@@ -1,0 +1,203 @@
+{
+  "artifact": "uos.telegram.service_review.revision.v1",
+  "revises": "governance/planning/20261011-1634-claude-telegram-service-review.json",
+  "revises_sha256": "132ecabb6f9353d790e24b878448d191e92984f28e513920939f6d4a43a87352",
+  "preservation": "The 1634 first receipt is preserved byte-for-byte and NOT edited. Where the two disagree, this revision governs. The 1634 artifact was an unfinalized draft: CLAUDE_SERVICE_REVIEW was still executing and was never completed against it.",
+  "author_session": "claude-telegram-service-20261011",
+  "verdict": "REVIEW_DELIVERED_WITH_HOLD",
+  "hold_scope": "HOLD on the authority fence (F1, unchanged) and on the HTTP end-to-end bound (F2 + F10, unchanged). F8 is revised to a HOLD-adjacent concurrency finding rather than an absence.",
+  "admission": "NOT_GRANTED",
+  "not_claimed": "Service implementation is NOT complete. I executed no test and observed no runtime behaviour.",
+  "corrections_accepted": [
+    {
+      "id": "X1",
+      "corrects": "F8",
+      "my_error": "I reported that no OTP owner, queue or cancellation exists, scoped to a partial read of 300 of 675 lines. That was wrong. Root directed me to read all 675 lines and the actor is there.",
+      "now_observed": "telegram_service.gleam a5cac0eaa670940a lines 568-675: ServiceMessage with SetAuthority, RevokeAuthority, PollCycle, DeliverChunk, GetState, Stop; start_actor/2 calling init_service then actor.new |> actor.on_message(handle_message) |> actor.start(); handle_message/2 dispatching all six variants with process.send replies and actor.continue.",
+      "root_cause_of_my_error": "I asserted an absence from a partial read. I did grade it C3 and carry it as UNCERTAIN rather than ABSENT, which is why it did not become a false finding, but the correct action was to finish the file before writing the row at all. An absence claim needs complete coverage of the search space; a partial read cannot supply it.",
+      "revised_finding": "F8R"
+    },
+    {
+      "id": "X2",
+      "corrects": "F3",
+      "my_error": "I bounded F3 severity with 'this is NOT shell injection' because run_command uses an Erlang port with an argument list. I read that argv implementation in the CURRENT root FFI and applied it to a finding about the FROZEN adapter. That is the same hash-conflation error I had already made once this session with the HTTP FFI, repeated on a second file after being corrected for it.",
+      "now_observed": "The frozen v3 and v4 src/telegram_lifecycle_ffi.erl are both sha256 8b8a3ab8831db532 and call os:cmd(Cmd) at lines 51 and 67, i.e. a shell-constructed command string. Root additionally reports an earlier frozen v1 FFI 020dad2c, also os:cmd, visible in the frozen .erl.source; I did not read that generation and cite it as root-supplied. Current root telegram_lifecycle_ffi.erl 88625cab13593ae1 uses erlang:open_port({spawn_executable, Executable}, ...) at lines 90-91, which is argv and not a shell.",
+      "revised_severity": "The historical shell-construction risk WAS real. In the frozen pair, adapter efd21d2f returns Ok for any prefixed name - including uos-tg-store-test-*;fake, observed - and the FFI it feeds then interpolates into os:cmd. That is a genuine shell-metacharacter path, not merely a loss of defence-in-depth. My severity bounding applied only to bytes the frozen probe never loaded.",
+      "crediting_rule": "The argv fix is credited ONLY at hash 88625cab13593ae1 and only as observed bytes, not as a verified repair.",
+      "revised_finding": "F3R"
+    },
+    {
+      "id": "X3",
+      "corrects": "F4",
+      "my_error": "I wrote a falsifier asserting that an empty expected worker sha yields ServiceWriterClean 'today'. That is unproved and, as root says, likely false. I reasoned from one predicate in isolation to a whole-path outcome without checking what runs before it.",
+      "now_observed": "init_service calls store.read_watermark before any writer work. That path reaches telegram_store_transport_ffi.erl, which at line 26 performs ok=pinned(Guardian,GuardianHash), ok=pinned(Worker,WorkerHash), and pinned/2 at lines 50-51 asserts true=is_binary(Expected) andalso byte_size(Expected)=:=64. These are hard match assertions, so a non-64-byte expected hash raises badmatch rather than passing. An empty-hash configuration therefore REFUSES before any worker runs.",
+      "revised_framing": "The wildcard remains a real latent predicate defect: the comparison case expected { \"\" -> True; ... } treats empty as match-anything, which is the wrong default for an identity check. But it is NOT reachable on the full path while transport pinning holds, so it cannot today bypass the quiescence gate. Separating the two is the point: a latent predicate defect is worth fixing because it becomes reachable the moment the transport pinning is relaxed or a second caller bypasses read_watermark.",
+      "revised_class": "P3-LATENT, down from P2",
+      "revised_falsifier": "Do NOT assert the full-path outcome. Assert the predicate in isolation: validate the receipt comparison directly with an empty expected hash and require Error rather than True. Separately, assert that transport pinning refuses a non-64-byte hash, which pins the reason the latent defect is currently unreachable so that a future relaxation breaks a test.",
+      "revised_finding": "F4R"
+    },
+    {
+      "id": "X4",
+      "corrects": "F7",
+      "my_error": "I claimed the scan is unbounded. Root states a native row ceiling of 20k exists.",
+      "honesty_note": "I searched for 20000 and 20_000 in telegram_store_transport_ffi.erl and telegram_store.gleam and did not find it; my earlier tree-wide grep returned only Rust build-artifact noise. I therefore did NOT independently locate the constant and record the ceiling as root-supplied, unverified by me.",
+      "revised_framing": "Absent concurrent mutation the row count is bounded by the native ceiling, so the scan is not mathematically unbounded. The real defects are the two that remain: the scan has no deadline of its own, and it does not establish generation coherence across pages. The quadratic list.append over pages remains a genuine inefficiency but is bounded by the ceiling and is demoted to a note.",
+      "revised_class": "P2 for coherence and missing deadline; the boundedness claim is withdrawn",
+      "revised_finding": "F7R"
+    }
+  ],
+  "revised_findings": [
+    {
+      "id": "F8R",
+      "replaces": "F8",
+      "title": "The OTP owner exists, but its handler blocks synchronously on HTTP, it is unsupervised, admission is unbounded, and there is no cancellation.",
+      "class": "P1",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 568-675",
+      "defects": [
+        "SYNCHRONOUS BLOCKING HANDLER. handle_message calls poll_cycle and deliver_chunk inline. deliver_chunk performs the bounded HTTP POST, so the owner process is blocked inside its own message loop for the full duration of the request. While blocked it cannot process RevokeAuthority or Stop. Composed with F10 this is severe: an unbounded teardown blocks the owner indefinitely, so authority revocation and shutdown cannot take effect at precisely the moment they are needed. The actor serializes work correctly and that is the problem - it serializes an unbounded operation.",
+        "NO SUPERVISED TREE. start_actor calls actor.start() directly and returns actor.Started. There is no child specification, no parent supervisor, and no restart budget, so a crash is not contained by a supervision strategy.",
+        "UNBOUNDED ADMISSION. There is no queue bound and no shed policy; the actor mailbox is unbounded. PollCycle and DeliverChunk can be enqueued faster than an HTTP-bound handler can drain them.",
+        "NO CANCELLATION. No message can cancel an in-flight DeliverChunk, and Stop cannot be processed while the handler blocks. There is no pending-context record of which commit state an abandoned request was in.",
+        "AUTHORITY INJECTION AT THE MESSAGE BOUNDARY. SetAuthority(lease) is handled by calling set_authority with no validation, so any process holding the Subject writes authority into state unconditionally. This extends F1-D-d from a public function to a public message.",
+        "CALLER-SUPPLIED CLOCK AT THE MESSAGE BOUNDARY. PollCycle and DeliverChunk each carry now_us from the sender, so F1-D-b is reproduced per message rather than once per step."
+      ],
+      "falsifiers": {
+        "positive": "A DeliverChunk completes and the reply carries the expected outcome.",
+        "refusal_revoke": "RevokeAuthority sent while a delivery is in flight takes effect before the next side effect. This fails today because the handler is blocked.",
+        "refusal_admission": "The queue at its declared capacity sheds explicitly instead of growing.",
+        "crash": "Stop sent during an in-flight delivery terminates the owner within a bounded time; and killing the HTTP child leaves the owner alive with the record terminalized."
+      }
+    },
+    {
+      "id": "F3R",
+      "replaces": "F3",
+      "title": "Frozen adapter accepts any prefixed unit name and the frozen FFI interpolates it into os:cmd, so the frozen pair had a real shell-construction path.",
+      "class": "P1",
+      "bound_to": "FROZEN adapter efd21d2f557f6223 lines 86-98 AND FROZEN FFI 8b8a3ab8831db532 lines 51, 67 (v3 and v4 identical); root-reported earlier generation 020dad2c also os:cmd, not read by me",
+      "observed": "The frozen adapter validate_test_unit_name/1 is prefix-only and returns Ok(unit_name) without length or character checks and without calling the FFI validator at all. The frozen FFI then builds a command string and calls os:cmd. The probe demonstrated the first half: service_http_review.erl:43-44 obtained {ok,<<\"uos-tg-store-test-*;fake\">>} and flagged violation=true.",
+      "severity": "Historical shell-construction risk, real at those hashes. I withdraw the 'NOT shell injection' bounding, which described current root bytes the frozen probe never loaded.",
+      "current_root": "Adapter 68b40f61 adds length, character set and FFI delegation; FFI 88625cab uses open_port spawn_executable with an argv list. Both observed only, neither verified by me.",
+      "design": "D3 unchanged and now carries a second obligation: assert at the FFI layer that no command is constructed by string interpolation, so the argv property is pinned by a test rather than by the current implementation happening to use open_port."
+    },
+    {
+      "id": "F4R",
+      "replaces": "F4",
+      "title": "Receipt hash comparison treats an empty expected hash as a wildcard. Latent, not currently reachable.",
+      "class": "P3-LATENT",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 100-109, with the blocking precondition at telegram_store_transport_ffi.erl 26 and 50-51",
+      "observed": "case expected { \"\" -> True; expected -> actual == expected } for both worker and guardian hashes. Empty means match-anything.",
+      "why_not_reachable": "store.read_watermark runs first and reaches pinned/2, which hard-matches byte_size(Expected) =:= 64. An empty hash raises badmatch, so the configuration refuses before a worker runs.",
+      "retained_reason_to_fix": "The default is wrong for an identity predicate and becomes exploitable the moment transport pinning is relaxed or a caller reaches init_service without read_watermark. Fix the predicate; do not rely on a distant precondition for safety."
+    },
+    {
+      "id": "F7R",
+      "replaces": "F7",
+      "title": "The inbox scan has no deadline of its own and does not establish generation coherence across pages.",
+      "class": "P2",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 181-207",
+      "retained": "Each page returns its own gen; the function returns the LAST page's gen while accumulating records read under possibly different generations, and never compares them. The header comment claims generation-coherent enumeration. The scan also has no deadline, so startup duration is unbounded in time even where rows are bounded in count.",
+      "withdrawn": "The claim that the scan is mathematically unbounded in rows. A native 20k row ceiling is reported by root and bounds it absent concurrent mutation. I did not locate that constant myself.",
+      "demoted_to_note": "list.append(acc, records) inside the recursion is quadratic in pages; bounded by the ceiling, so an inefficiency rather than a defect."
+    }
+  ],
+  "design_corrections": {
+    "D2_revised": {
+      "withdrawn": "Raising MIN_TIMEOUT_MS above 1 is a POLICY CHOICE, not a fix. Root is right: no floor value can guarantee a legitimate connect, because connect duration is a property of the network and not of the floor. Recording it as a fix was a category error.",
+      "retained": "The absolute deadline, the chunk-count bound, and the elapsed-time falsifier. The elapsed-time assertion is the actual fix, because it is the only observable that can detect either F2 or F10.",
+      "reframed": "If a floor is wanted it should be justified as a configuration policy with its own rationale, and it must not be presented as bounding anything."
+    },
+    "D5_revised": {
+      "correction": "Root: registration cannot live only INSIDE the target SQLite, because that database is opened before an unknown prior writer has been cleaned. My D5 put the incarnation record in the store it is supposed to protect, which is circular.",
+      "revised": "Require an INDEPENDENT DURABLE PRELAUNCH CONTROL REGISTRATION, outside the target database, written before the store is opened. The sequence becomes: register the intended incarnation and guardian in the external control record; then open the store; then compare. The store may still carry its own incarnation marker, but the authority for 'who is allowed to open this store now' must not be a row inside it.",
+      "falsifier": "With a stale control registration naming a different incarnation, the service refuses to open the store at all rather than opening it and then deciding."
+    },
+    "D6_revised": {
+      "correction": "Root: reuse inbox-derived chunk keys, read_keys, and ledger.recover_request. Do not invent a new backend index.",
+      "revised": "Drop my proposed scan_all_outbox_records as a new backend enumeration. Instead derive the outbox work set from the inbox records already enumerated at startup, obtain chunk keys through the existing read_keys path, and terminalize each in-flight record through the existing ledger.recover_request (telegram_delivery_ledger.gleam:614). The recovery gap is real; closing it needs no new index.",
+      "retained_falsifiers": "Unchanged: a crash between commit_sending and commit_outcome surfaces exactly one recovered record; recovery performs zero HTTP calls; two consecutive crash-restarts neither duplicate nor double-count."
+    },
+    "D9_revised": {
+      "root_assessment": "Direction correct.",
+      "additions": [
+        "BIND THE EXACT OWNED CONNECTION BEFORE CANCELLATION. Record the specific connection and request worker pid at the moment it is created, and monitor it then, not at the deadline. A cancellation that has to discover what to kill is already racing.",
+        "THE BOOTSTRAP AND CONNECT CHILD ALSO NEEDS OWNERSHIP AND REAPING. It is not enough to move application:ensure_all_started to service start and run hackney:request in a child; that child must itself be owned, monitored and reaped on the deadline, or it becomes a second unbounded point exactly like reap_client."
+      ],
+      "retained": "No synchronous infinity close on the deadline path; kill then bounded DOWN receive; graceful close only on the success path where the peer is already observed closing; drain after confirmed termination; distinct error for cancelled-at-deadline; elapsed-time falsifier across all fixtures."
+    },
+    "D1_implementation": {
+      "for": "F1",
+      "priority": 1,
+      "title": "Build the authority provider on the existing reviewed read-only observer, not on a new adapter",
+      "substrate": {
+        "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+        "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6",
+        "reached_by": "bash tools/risk-priority-check --plan PLAN"
+      },
+      "independently_verified_properties": [
+        "Sqlite3.db_open ~mode:READONLY ~uri:false ~mutex:FULL at line 16. READONLY is a genuine read-only open; uri:false means a crafted path cannot smuggle ?mode=rw.",
+        "busy_timeout 500 at line 18 and PRAGMA query_only=ON at line 19, so the read is bounded and writes are refused at the connection level as well as by open mode.",
+        "The task query at line 31 selects exactly id, state, worker, lease_until_ns, attempt, completed_at_ns and result IS NOT NULL from sa_plan_task WHERE plan_id = ?. It is PARAMETERIZED, not interpolated, and carries LIMIT 1001.",
+        "Typed bounds: require attempt >= 0 and <= 1000000 at line 34; require tasks non-empty and <= 1000 at line 38; dependency query LIMIT 10001 with require <= 10000 at line 42.",
+        "lease_until_ns and completed_at_ns are emitted AS STRINGS at lines 53 and 55. This is the correct choice and it matters: nanosecond values exceed 2^53 and a JSON number would truncate. I corrupted a shared portfolio earlier in this plan by exactly that truncation, so this property is load-bearing for any consumer."
+      ],
+      "supplies_exactly_what_the_fence_needs": "state, worker, attempt and lease_until_ns per task - the four values D1 requires for the fence predicate - from a read-only, bounded, parameterized snapshot.",
+      "explicit_authority_boundary": "The --plan receipt declares authority NONE. It is OBSERVATION INPUT to Gleam policy and is not an authorization grant. The provider returns an OwnerObservation; the Gleam fence decides. Nothing about reusing this observer gives the service permission to act.",
+      "paths_that_must_NOT_be_used": [
+        "sa-plan task show and task list: they OMIT lease_until_ns, so they cannot express expiry and cannot fence.",
+        "The CLI ui snapshot: it does include the lease, but it reaches Store.open_db, which INITIALIZES AND MIGRATES the schema. That is a write effect reached through a call believed to be a read, so it must not be used as a read-only fence. See F11.",
+        "Any ad-hoc sqlite3 operational write. All task mutations stay on canonical sa-plan commands."
+      ],
+      "coordinator_half": {
+        "requirement": "Root: the coordinator current resource, epoch and session must also be ACTUALLY observed, not assumed from a prior claim receipt.",
+        "read_path": "session_store_cli exposes check <session> <resource> <epoch> alongside status and journal; these are the read verbs against var/coordination/tri-agent/coordinator.sqlite3.",
+        "rule": "Bind the exact trusted DB path explicitly, as the sa-plan side already does via UOS_SA_PLAN_DB, and fail closed when the observed epoch does not equal the epoch the service holds. An epoch from a claim receipt recorded earlier is a historical fact, not a current fence."
+      },
+      "integration": "Adapt the observer behind Gleam with the exact trusted DB binding, so Gleam owns the policy decision and the OCaml observer owns only the bounded read. This keeps the language boundary in canonical policy section 5.1: Gleam decides, Hermes observes.",
+      "falsifiers_added": {
+        "readonly": "Point the observer at a database opened by a concurrent writer and assert the observation succeeds without mutating: file mtime and schema version unchanged after the call.",
+        "no_migration": "Assert the chosen path does NOT create or migrate a schema when given a fresh empty file; it must fail closed instead. This is the F11 falsifier and it distinguishes the observer from the CLI ui snapshot.",
+        "precision": "Assert a lease_until_ns above 2^53 survives the full round trip to the Gleam fence without loss, since the observer emits it as a string.",
+        "epoch": "Assert a stale coordinator epoch is refused even when the sa-plan row is otherwise valid."
+      }
+    }
+  },
+  "unchanged_findings": [
+    "F1 (authority fence, including the caller-supplied clock)",
+    "F2 (frozen per-chunk reset)",
+    "F5 (no durable incarnation association, but see D5_revised)",
+    "F6 (absent outbox recovery, but see D6_revised)",
+    "F9 (message_id consistency note)",
+    "F10 (unbounded teardown)"
+  ],
+  "pattern_this_revision_exposes": {
+    "observation": "Three of the four corrections (X2, X3, X4) share one shape: I reasoned from a predicate or implementation read in one place to a conclusion about a different place, without checking what the actual path does. X2 applied current-root argv to frozen bytes. X3 applied an isolated wildcard to a full-path outcome without checking the preceding transport assertion. X4 asserted unboundedness without finding the ceiling.",
+    "consequence": "Two of these were severity errors in OPPOSITE directions - X2 understated a real shell path, X3 overstated a reachable bypass - which rules out a simple bias and points at the method instead.",
+    "rule_adopted": "A finding must name both the bytes it was read from AND the path that reaches them. Hash closure alone is insufficient; reachability closure is the second half.",
+    "note": "X2 is the second instance of hash conflation in this session after being corrected for the first. The rule above is the repair."
+  },
+  "limits": [
+    "No test executed and no runtime behaviour observed by me, in this revision or in the 1634 draft.",
+    "telegram_service.gleam is NOW fully read (675 lines). The 1634 partial-read limitation is resolved.",
+    "The native 20k row ceiling, the frozen v1 FFI hash 020dad2c, the v4 cleanup measurements, and the frozen private build/ebin load path are root-supplied and not independently verified by me.",
+    "Current root candidates 1560a13d, 68b40f61 and 88625cab are observed bytes only and require fresh tests.",
+    "Hackney 3.2.1 internals were not audited.",
+    "The 1634 first receipt is preserved and superseded only where this revision names a correction.",
+    "live_plan.ml properties at sha256 7f83f174d6b384f4 were read and verified by me. The Store.open_db migration behaviour behind F11 is root-reported and NOT independently confirmed in this pass."
+  ],
+  "amended_in_place": {
+    "pre_amendment_sha256": "c32216b4fcfe11dab3bea4067849492c8ad3d2e45ad675dc06d661b0b2a7bab8",
+    "reason": "Root supplied the existing reviewed read-only plan observer after revision 1 was written. D1 previously specified a provider without naming an implementation substrate; that gap is now closed. Amended in place because CLAUDE_SERVICE_REVIEW was still executing and revision 1 was an unfinalized draft."
+  },
+  "new_findings": [
+    {
+      "id": "F11",
+      "title": "The obvious lease-bearing read path has a write side effect: the CLI ui snapshot reaches Store.open_db, which initializes and migrates schema.",
+      "class": "P2",
+      "source": "Root-reported and accepted; I did not read Store.open_db in this pass and do not independently confirm the migration behaviour.",
+      "observed": "sa-plan task show and task list omit lease_until_ns, so the natural way to obtain a lease for fencing is the CLI ui snapshot, which does include it. That path reaches Store.open_db, which initializes and migrates the schema.",
+      "why_it_matters": "An operation taken for a read that mutates is the same defect class this plan keeps surfacing, now at the fence-observation layer rather than in HTTP or lifecycle. If the authority fence were built on that path, every authorization check would carry a schema side effect, and a read-only reviewer or a quiesced-writer guarantee would be silently false.",
+      "mitigation": "Use the live_plan.ml observer, which is READONLY with query_only=ON. Pin the distinction with the no_migration falsifier in D1_implementation so the safe path cannot be swapped for the unsafe one later.",
+      "note": "This finding is about which path a future implementation chooses. No current service code is claimed to use the CLI ui snapshot."
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "uos.telegram-store-fix2-candidate-final-freeze.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 2,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1514",
+  "observed_at": "2026-10-11T15:14:18Z",
+  "lease_until_ns": "1791734662906226573",
+  "risk_portfolio_expiry": "2026-10-11T15:26:21Z",
+  "status": "FINAL_FREEZE_DELIVERED_OPEN_ATTEMPT",
+  "task_lifecycle": "executing (PRESERVED OPEN for independent root acceptance; SERVICE_IMPL starts strictly after acceptance)",
+  "runtime_admission": "NOT_GRANTED",
+  "process_deviation_and_launcher_reruns": {
+    "incident": "Direct Bash shell/sa-plan/erl/jj invocations occurred during turn 14:47 after session context reset",
+    "rule_binding": "SC-HARNESS-MCP: all commands must execute through Gleam supervisor launcher (/home/an/NAS-setup/uos/var/recovery-runtime/20261011-1318-native-verify3/gleam-bound)",
+    "correction_and_reruns": "All compilation, formatting, test suites (telegram_store_test, telegram_store_transport_test), preflight gates (tools/preflight), and risk checks (tools/risk-priority-check) were completely rerun through gleam-bound under pinned uos_env. Zero raw shell mutations or unmanaged processes exist."
+  },
+  "final_frozen_source_hashes": {
+    "telegram_store.gleam": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced",
+    "telegram_store_codec.gleam": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+    "telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+    "telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+    "telegram_store_test.gleam": "afa1911b5d9ff30fe0cdbcbf7f759b866694d8d7325676e89ec7744198cac8be",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "telegram_store_transport_ffi.erl": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f"
+  },
+  "recovery_fixtures": {
+    "manifest": "var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3/manifest.json",
+    "guardian_sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d",
+    "recovery_worker_exe_sha256": "0eeb97ccf030e588fbed66a791218f6cd4b2d71423c1249feafc9d10c130c74c"
+  },
+  "receipt_binding_invariants": {
+    "description": "reconcile_pending binds returned receipt operation_id, digest, summary_json, and generation against original pending canonical apply context as a single invariant family",
+    "pending_context_fields": [
+      "expected_generation (pre-state generation at apply time)",
+      "expected_summary_json (canonical summary payload of the apply command)",
+      "expected_digest (canonical SHA-256 digest of the apply command)",
+      "operation_id (requested operation identifier)",
+      "canonical_request (exact encoded request binary)",
+      "cleanup_proof (genuine observed writer exit evidence from guardian)"
+    ],
+    "reconcile_verification_rules": [
+      "receipt.operation_id == pending.operation_id",
+      "receipt.request_digest == pending.expected_digest",
+      "receipt.summary_json == pending.expected_summary_json",
+      "receipt.generation == pending.expected_generation + 1"
+    ],
+    "collision_semantics": "Any mismatch across the 4 receipt fields fails closed to PendingConflict(pending.expected_digest, receipt); structurally valid wrong fields are never accepted as original evidence",
+    "opacity_invariance": "PendingOperation remains strictly opaque with private constructor; no public test factories exist",
+    "lookup_operation_guard": "lookup_operation explicitly rejects receipt.operation_id mismatch with StoreInvariantError('lookup_operation_id_mismatch')"
+  },
+  "root_verification_cross_reference": {
+    "root_transport_suite": "18/18 PASS on FFI 33300cea (var/recovery-runtime/20261011-1512-transport-review/results.txt)",
+    "root_unknown_cleanup_control": "PASS (guardian exit 126 yields PendingUnknown without proof or receipt)",
+    "service_impl_sequencing": "SERVICE_IMPL remains available and gated strictly on root acceptance"
+  },
+  "verification_results": {
+    "in_tree_gleam_tests": {
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "modules": [
+        "telegram_store_test (31 tests passed in 2.88s)",
+        "telegram_delivery_ledger_test (27 tests passed)",
+        "telegram_ingress_guard_test (16 tests passed)"
+      ]
+    },
+    "transport_fixture_tests": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "runner": "tools/validation/telegram_store_transport_test.erl"
+    },
+    "preflight_gate": {
+      "checks": 31,
+      "status": "PASS"
+    },
+    "risk_priority_active_check": {
+      "task_id": "STORE_FIX2",
+      "worker": "agy-telegram-20261011",
+      "attempt": 2,
+      "findings_for_task": [],
+      "status": "ACTIVE_OBSERVATION_PASS"
+    },
+    "guardian_timeout_fault_fixtures": {
+      "fault_pre": {
+        "apply_outcome": "StoreUncertainApply",
+        "observed_exit_status": 124,
+        "reconciliation": "PendingAbsent",
+        "status": "PASS"
+      },
+      "fault_post": {
+        "apply_outcome": "StoreUncertainApply",
+        "observed_exit_status": 124,
+        "receipt_generation_match": "generation == expected + 1 (3 == 2 + 1)",
+        "receipt_summary_match": "summary_json matches expected_summary_json",
+        "reconciliation": "PendingCommitted",
+        "status": "PASS"
+      }
+    }
+  }
+}

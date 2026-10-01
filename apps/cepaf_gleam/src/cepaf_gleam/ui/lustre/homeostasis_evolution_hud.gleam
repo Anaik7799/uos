@@ -56,7 +56,12 @@ fn panel(
   )
 }
 
-pub fn render_view(selection: data.Selection, component: String, snapshot: status.Snapshot, now: Int) -> Element(msg) {
+pub fn render_view(
+  selection: data.Selection,
+  component: String,
+  snapshot: status.Snapshot,
+  now: Int,
+) -> Element(msg) {
   render_view_on_port(selection, component, snapshot, now, 4100)
 }
 
@@ -93,19 +98,13 @@ pub fn render_view_on_port(
       ),
       html.nav([attribute.attribute("aria-label", "Homeostasis navigation")], [
         link(origin <> "/", "Cockpit"),
+        link(origin <> "/homeostasis?" <> data.query(selection), "Homeostasis"),
         link(
-          origin <> "/homeostasis?"
-            <> data.query(selection),
-          "Homeostasis",
-        ),
-        link(
-          origin <> "/homeostasis/evolution?"
-            <> data.query(selection),
+          origin <> "/homeostasis/evolution?" <> data.query(selection),
           "Evolution",
         ),
         link(
-          origin <> "/homeostasis/terminal?"
-            <> data.query(selection),
+          origin <> "/homeostasis/terminal?" <> data.query(selection),
           "Terminal view",
         ),
       ]),
@@ -115,7 +114,8 @@ pub fn render_view_on_port(
           [attribute.attribute("aria-label", "Homeostasis components")],
           list.map(components, fn(name) {
             link(
-              origin <> "/homeostasis/components?"
+              origin
+                <> "/homeostasis/components?"
                 <> data.query(selection)
                 <> "&component="
                 <> name,
@@ -407,10 +407,7 @@ pub fn render_view_on_port(
         html.text(
           "Read-only evidence surface. Missing sensors remain UNKNOWN. ",
         ),
-        link(
-          origin <> "/api/v1/runtime/identity",
-          "Runtime identity",
-        ),
+        link(origin <> "/api/v1/runtime/identity", "Runtime identity"),
       ]),
       html.script([], stream_script()),
     ],

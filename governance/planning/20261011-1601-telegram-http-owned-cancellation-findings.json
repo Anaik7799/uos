@@ -1,0 +1,55 @@
+{
+  "observed_at": "2026-10-11T16:51:01.812Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 2,
+  "verdict": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+      "sha256": "b701126927e0b03a62be05494f7ef00b8f695534de2bff59d3569303f797f4ce"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+      "sha256": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1648-http-review-v5/manifest.json",
+      "sha256": "3ff623906e4c1ae67713c3abfba6adf1c25e8a700fe1b6da33c4a457a7c678ed"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1648-http-review-v5/results.txt",
+      "sha256": "5292a614579c6955aa550331e7c15a0a980c46d2212804793b6cc2c8da22af2a"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1648-http-review-v5/service_http_orphan.erl",
+      "sha256": "69edf64a9d06d4280438abdef9baa0adcca92836f4928968038e473e85aa2789"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1648-http-review-v5/orphan-results.txt",
+      "sha256": "72bf74d47ce30d22ea7b7a6c012261bea19e8315412e5f6553fc726f416b6949"
+    }
+  ],
+  "passes": [
+    "17 HTTP response cases",
+    "body deadline81ms",
+    "header deadline81ms",
+    "successful socket closure"
+  ],
+  "failure": {
+    "case": "connection persists after caller timeout",
+    "caller_elapsed_ms": 81,
+    "configured_ms": 80,
+    "connection_alive_ms_after_return": 150,
+    "server_bytes_after_partial_header": 67,
+    "server_closed_ms": 1569
+  },
+  "limits": [
+    "Frozen lifecycle dependency is historical and not current lifecycle evidence",
+    "Private socket server only; no Telegram call",
+    "Completion requires owned connection termination, not merely timely return"
+  ]
+}

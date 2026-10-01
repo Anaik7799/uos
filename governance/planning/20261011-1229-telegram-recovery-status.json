@@ -1,0 +1,458 @@
+{
+  "schema": "uos.telegram-recovery-status.v1",
+  "observed_at": "2026-10-11T12:23:29Z",
+  "status": "IN_PROGRESS_NOT_ADMITTED",
+  "canonical_plans": [
+    "uos/telegram-tools/20261011-1115",
+    "uos/telegram-runtime/20261001-1150"
+  ],
+  "journal_url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261011-1229-telegram-recovery-feature-ledger.md",
+  "task_snapshot": [
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/auth_review",
+      "title": "Inspect real coordinator and Sa-plan wire compatibility of AGY32a4864e",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/auth_fix",
+      "title": "Repair protocol/provider findings with actual isolated wire receipts",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_REVIEW2",
+      "name": "uos/telegram-runtime/20261001-1150/auth_review2",
+      "title": "Independently validate corrected authority protocol and provider migration",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "LEDGER_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/ledger_review",
+      "title": "Independently validate root pure ledger candidate and fullgroup invariants",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/store_impl",
+      "title": "Implement bounded durable inbox/outbox persistence behind Gleam in isolated development",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_review",
+      "title": "Independently fault-test durable transaction and crash recovery behavior",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "SERVICE_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/service_impl",
+      "title": "Wire supervised authorized Telegram polling read dispatch and delivery",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "SERVICE_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/service_review",
+      "title": "Independently verify service lifecycle refusal and end-to-end development transport",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_fix",
+      "title": "Complete known browser assertion profiles and review dashboard script/socket behavior",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_review",
+      "title": "Independently verify corrected cockpit and browser route coverage",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "RETURN",
+      "name": "uos/telegram-runtime/20261001-1150/return",
+      "title": "Publish accepted source evidence back to parent release and admission tasks",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "LEDGER_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/ledger_fix",
+      "title": "Repair below-watermark replay, state-specific recovery and full immutable result identity",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "LEDGER_REVIEW2",
+      "name": "uos/telegram-runtime/20261001-1150/ledger_review2",
+      "title": "Independently verify three residual pure ledger corrections",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_DESIGN",
+      "name": "uos/telegram-runtime/20261001-1150/store_design",
+      "title": "Review bounded durable Telegram storage adapter design and isolated crash acceptance contract",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_DESIGN_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_design_review",
+      "title": "Independently review bounded durable storage protocol and failure acceptance",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_KERNEL",
+      "name": "uos/telegram-runtime/20261001-1150/store_kernel",
+      "title": "AGY implement isolated bounded native SQLite kernel per adopted corrected storage protocol",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_FIX2",
+      "name": "uos/telegram-runtime/20261001-1150/auth_fix2",
+      "title": "Contain staged provider migration path and transaction integrity findings",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_REVIEW3",
+      "name": "uos/telegram-runtime/20261001-1150/auth_review3",
+      "title": "Independently verify staged-only atomic provider migration and protocol candidate",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_TRANSPORT",
+      "name": "uos/telegram-runtime/20261001-1150/store_transport",
+      "title": "Implement bounded pinned storage transport with worker EOF and unchanged MAX limits",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "FORMAL_GATES",
+      "name": "uos/telegram-runtime/20261001-1150/formal_gates",
+      "title": "Execute bounded candidate-bound formal checks and preserve all failures",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_FIX2",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_fix2",
+      "title": "Remove legacy simulated live/proof behaviors from recovery shell",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_REVIEW2",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_review2",
+      "title": "Independently recheck recovery shell legacy effects containment",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "FORMAL_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/formal_fix",
+      "title": "Repair actual Lean failures without weakening obligations or admitting placeholders",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "2"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_TRANSPORT_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_transport_review",
+      "title": "Independently review pinned store transport and bounded cleanup evidence",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "2"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_KERNEL_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_kernel_review",
+      "title": "Independently falsify native SQLite candidate integrity and exact wire",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "TOOLS_RESUME",
+      "name": "uos/telegram-runtime/20261001-1150/tools_resume",
+      "title": "Recover existing Gleam AGY execution adapters and reconcile Telegram task handoff",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "FEATURE_INVENTORY",
+      "name": "uos/telegram-runtime/20261001-1150/feature_inventory",
+      "title": "AGY inventories every repository Telegram command and interface with concrete completion and acceptance gaps",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_REPAIR",
+      "name": "uos/telegram-runtime/20261001-1150/native_repair",
+      "title": "AGY repairs bounded native Telegram store atomic initialization, digest framing, strict input and uncertain commit behavior",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/native_review",
+      "title": "Independent source and fresh adversarial verification of repaired native Telegram storage candidate",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_AUTH_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/mini_auth_review",
+      "title": "Independently reproduce Mini App signature and freshness defects with synthetic credentials and assess route exposure",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_AUTH_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/mini_auth_fix",
+      "title": "AGY repairs strict Mini App signature validation and bounded freshness with independent golden vectors",
+      "parent_id": "-",
+      "state": "executing",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_AUTH_VERIFY",
+      "name": "uos/telegram-runtime/20261001-1150/mini_auth_verify",
+      "title": "Independent fresh verification of repaired Mini App authentication",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "INVENTORY_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/inventory_review",
+      "title": "Independently reconcile AGY Telegram inventory against actual source and preserve corrections",
+      "parent_id": "-",
+      "state": "executing",
+      "priority": "10",
+      "worker": "claude-telegram-20261011",
+      "attempt": "1"
+    }
+  ],
+  "snapshot_semantics": "Historical read-only Sa-plan observation; completed review tasks may contain HOLD verdicts, not feature admission. Live canonical task state can change.",
+  "main": "83dca0394346564356920f066b3924858144107f",
+  "rows": [
+    {
+      "task": "execution-tools",
+      "as_is": "Actual AGY/Gemini and Claude reviews; bounded recovery checker independently verified",
+      "to_be": "Reliable reviewed task execution",
+      "completion": "VERIFIED_DEVELOPMENT",
+      "criticality": "HIGH",
+      "risk": "Stale/forged authority",
+      "mitigation": "Exact-set observer, canonical CAS, active checks"
+    },
+    {
+      "task": "storage-transport",
+      "as_is": "18 fresh tests pass",
+      "to_be": "Bounded native I/O",
+      "completion": "VERIFIED_DEVELOPMENT",
+      "criticality": "HIGH",
+      "risk": "Unknown response or orphan worker",
+      "mitigation": "Framing, pinned binaries, deadline and cooperative group cleanup"
+    },
+    {
+      "task": "native-storage",
+      "as_is": "85 baseline tests pass but independent replay/path/schema falsifiers fail",
+      "to_be": "Atomic initialization, injective digest, strict validation, uncertainty",
+      "completion": "HOLD_REPAIR_QUEUED",
+      "criticality": "HIGH",
+      "risk": "False replay or partial state",
+      "mitigation": "AGY six-part repair and independent private DB verification"
+    },
+    {
+      "task": "mini-app-auth",
+      "as_is": "Baseline forgery reproduced; AGY repair under review",
+      "to_be": "Valid signatures, bounded parser and freshness",
+      "completion": "IN_PROGRESS",
+      "criticality": "HIGH",
+      "risk": "Forged identity",
+      "mitigation": "Independent synthetic HMAC and malformed/boundary vectors"
+    },
+    {
+      "task": "inventory",
+      "as_is": "Incorrect AGY report; independent correction underway",
+      "to_be": "77 actual source commands and noncommand features mapped",
+      "completion": "IN_PROGRESS",
+      "criticality": "HIGH",
+      "risk": "Stubs or phantom commands counted complete",
+      "mitigation": "Case-arm extraction and target-function review"
+    },
+    {
+      "task": "durable-service-and-features",
+      "as_is": "Component models present; integrated service unverified",
+      "to_be": "Single poller, durable task/result/outbox, complete interfaces",
+      "completion": "PENDING",
+      "criticality": "HIGH",
+      "risk": "Lost/duplicate requests and unauthorized side effects",
+      "mitigation": "State transactions, actual fences, truthful results and uncertain-send quarantine"
+    },
+    {
+      "task": "browser-live-release-main",
+      "as_is": "No new end-to-end release or merge",
+      "to_be": "Reviewed operational acceptance and stabilized main inclusion",
+      "completion": "PENDING",
+      "criticality": "HIGH",
+      "risk": "False usability/admission",
+      "mitigation": "Private E2E, scoped live acceptance, independent release/rollback, JJ integration"
+    }
+  ],
+  "verification": {
+    "journal_linter": {
+      "chunk_id": "d7dcf5",
+      "wall_time_seconds": 0.130684164,
+      "exit_code": 0,
+      "original_token_count": 258,
+      "output": "Evaluating SC-JOURNAL-v3 Anticipatory Epistemic Ledger:\nTarget: docs/journal/20261011-1229-telegram-recovery-feature-ledger.md\n  [PASS] CHK-TIME: Valid YYYYMMDD-HHSS- timestamp prefix in filename\n  [PASS] CHK-SECT: All 13 canonical sections present in exact sequential order\n  [PASS] CHK-ACH: Engine 1 (ACH Hypothesis Disconfirmation) verified in Section 4\n  [PASS] CHK-ADMR: Engine 2 (Admiralty Protocol >= B2) verified in Section 7\n  [PASS] CHK-RED: Engine 4 (Devil's Advocate / Falsification) present in Section 6/10\n  [PASS] CHK-DECAY: Engine 3 (Bayesian Trust & Lyapunov Stability) present in Section 11\n  [PASS] CHK-PRED: Engine 7 (Predictive Forecast & Brier Horizon) present in Section 13\n  [PASS] CHK-MUDA: Zero-Muda purity verified (0 Bevy, 0 Graphite)\n  [PASS] CHK-DRIVE: Hardware storage interlock respected (serial redacted)\n  [PASS] CHK-DIAG: SC-DIAGRAM-001 ASCII diagram source present alongside mermaid (CO-PRESENCE only; topology parity is checked by G-DIAGRAM)\n\nSummary: 10/10 Verification Checks Passed (PASS)\n"
+    },
+    "diagram": "tools/diagram-check exact journal file: 1 verified,0failed,0unverified",
+    "initial_journal_linter_failures": [
+      "Case-sensitive Red Team keyword missing",
+      "Case-sensitive Forecast keyword missing",
+      "Unqualified excluded dependency names in prose"
+    ],
+    "mechanical_check_limit": "Journal linter is lexical evidence of structure, not validation of every mathematical/risk claim or system admission."
+  }
+}

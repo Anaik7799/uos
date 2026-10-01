@@ -1,0 +1,150 @@
+{
+  "schema": "uos.claude-telegram-inventory-correction.v1",
+  "observed_utc": "2026-10-11T12:47:00Z",
+  "corrects": {
+    "artifact": "governance/planning/20261011-1244-claude-telegram-behavioural-inventory.json",
+    "sha256": "a9b5f0ea52844fc88351bd0a0a34c0c4bf56b6dac9a8c9cbad29a65d89d4e6f9",
+    "disposition": "PRESERVED IMMUTABLE AND NOT EDITED (INV-PROV-03). Also preserved: 1213 review, 1222 erratum."
+  },
+  "author": {
+    "actor": "claude-telegram-20261011",
+    "coordinator_session_uuid": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "authority": "uos/telegram-runtime/20261001-1150 INVENTORY_CORRECTION attempt 1, lease_until_ns 1791726034444566036 (1h duration verified)",
+    "model_self_report": "Claude Opus 5 SELF-REPORT grade E3, cannot certify admission"
+  },
+  "method_correction": {
+    "what_i_did_wrong": "I substituted LEXICAL MARKER COUNTS for BEHAVIOURAL PROPERTIES. A grep for the word dedup is not a test for idempotency. A grep scoped to src/cepaf_gleam is not a test for repository-wide absence.",
+    "error_class": "This is the fourth instance of one failure mode in this task: my pattern could not see the thing that mattered. (1) charset [a-z_] hid hyphenated commands. (2) module-qualified regex hid the unqualified os_cmd. (3) word-grep hid implemented idempotency. (4) path-scoped grep hid an OCaml adapter.",
+    "corrected_method": "Every claim below quotes a function body with file and line. Absence claims are now repository-wide via the wrapper and are labelled with their exact search scope.",
+    "execution": "All native commands via cepaf_gleam@harness@development:bounded/3 (find, grep, cat). No direct native execution."
+  },
+  "retractions": [
+    {
+      "id": "X1",
+      "severity": "MATERIAL - UNSUPPORTED NEGATIVE",
+      "retracted": "1244 claimed: delivery ledger PRESENT BUT NO IDEMPOTENCY, on the evidence of ZERO dedup/idempotency markers in 697 lines.",
+      "verdict": "WRONG. Idempotency is fully implemented; the WORD is simply not used.",
+      "evidence": {
+        "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+        "line_count": 697,
+        "stable_identity": "line 94 make_request_id(bot_id, update_id) -> \"tg-\" <> bot <> \"-\" <> update. Line 101 valid_record requires r.request_id == make_request_id(r.bot_id, r.update_id), so identity is derived, not supplied.",
+        "repeated_insert_comparison": "lines 194..218 ingest_single filters inbox by request_id. [] inserts. [old] requires valid_record(old) && same_identity(old, proposed) then RETURNS THE EXISTING RECORD rather than inserting a second. [_,_] returns Error(duplicate_persisted_identity).",
+        "full_identity_compare": "lines 179..186 same_identity compares request_id, bot_id, update_id, message_id, chat_id, user_id and text_hash.",
+        "watermark_replay": "lines 44..45 Watermark(last_committed_offset); ingest_batch (line 229) is documented one watermark per bot, rejects mixed-bot batches, and checks equal-ID groups completely before committing a representative. Line 175 refuses Error(unidentified_update_cannot_advance_offset).",
+        "immutable_results_and_recovery": "record_result at line 366 and recover_request at line 614 provide result recording and state-specific recovery."
+      },
+      "corrected_position": "The ledger implements idempotent ingest with derived stable identities, replay-safe repeated insert, a per-bot offset watermark, and explicit refusal to advance the offset on an unidentified update. The 1244 gap claim is withdrawn in full."
+    },
+    {
+      "id": "X2",
+      "severity": "MATERIAL - UNSUPPORTED NEGATIVE AND A WRONG HIGH FINDING",
+      "retracted": "1244 finding B1 (HIGH) asserted the ingress guard gates sender identity only and does NOT sanitise arguments, and flagged /zigvm user-argument shell interpolation as a live injection risk.",
+      "verdict": "WRONG ON THE GUARD. classify_directive is an ARGUMENT-LEVEL authorisation classifier and it explicitly DENIES /zigvm.",
+      "evidence": {
+        "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+        "line_count": 261,
+        "restricts_reads": "lines 117..118 \"/doctor\"|\"/ev\" -> read_directive(\"query_doctor\", args); \"/plan\"|\"/saplan\" -> read_directive(\"query_saplan\", args). The tool name is FIXED by the guard, not taken from the user.",
+        "tool_allowlist": "lines 119..134 \"/tool\" splits the argument and admits ONLY query_doctor or query_saplan; anything else returns DeniedMutation(tool, \"Unsupported at Telegram ingress; mutation and approval workflows are not implemented.\")",
+        "explicit_denials": "lines 139..147 \"/approval\" | \"/andon\" | \"/resuscitate\" | \"/chaos\" | \"/rotate_keys\" | \"/repro\" | \"/merge\" | \"/zigvm\" -> DeniedMutation",
+        "preserved": "lines 136..138 \"/status\"|\"/checklist\"|\"/storage\"|\"/start\"|\"/help\"|\"/cockpit\" -> PreservedDirective"
+      },
+      "what_survives": "The STRUCTURAL observation stands: harness/telegram.gleam handle_zigvm (379..421) does interpolate string.join(rest,\" \") into a shell string executed via os_cmd. What was wrong was the claim that nothing classifies arguments.",
+      "wiring_status_present_logic_vs_adapter": "Observed: the ONLY canonical caller of guard.classify_directive is telegram_delivery_ledger.gleam:138, inside a conjunct (directive == guard.classify_directive(text)) used as a LEDGER CONSISTENCY ASSERTION. I did NOT find the guard imported by harness/telegram.gleam. Search scope: apps/cepaf_gleam/src plus tools, *.gleam *.ml *.erl, excluding the guard file itself. Classification: PRESENT PURE LOGIC, wired into the ledger, NOT OBSERVED gating the S1 router dispatch path.",
+      "residual_question_for_owner": "Whether a running service routes updates through the guard before S1 dispatch is UNVERIFIED by me and is the question that decides whether the handle_zigvm concatenation is reachable in practice. I do not assert either answer."
+    },
+    {
+      "id": "X3",
+      "severity": "MATERIAL - UNSUPPORTED NEGATIVE",
+      "retracted": "1244 claimed poller_service ABSENT with ZERO getUpdates occurrences, and callback_query ABSENT with ZERO occurrences.",
+      "verdict": "WRONG. Both exist. My search was scoped to apps/cepaf_gleam/src/cepaf_gleam and missed an OCaml adapter outside Gleam.",
+      "evidence": {
+        "file": "tools/telegram_client.ml",
+        "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5",
+        "line_count": 879,
+        "get_updates": "line 312 let get_updates ~token ?(offset = -1L) ?(timeout = 2) () building an offset/timeout payload and calling telegram_call ~token \"getUpdates\" (line 319).",
+        "transport": "line 299 url = https://api.telegram.org/bot%s/%s",
+        "offset_persistence": "line 546 set_db_preference \"telegram_poll_offset\" (Int64.to_string (Int64.add update_id 1L)) - durable long-poll offset advance.",
+        "callback_handling": "line 388 answer_callback_query ~token ~callback_query_id ?text ?show_alert; dispatch at line 594 member \"callback_query\" update; approval and rejection flows at lines 619, 637 and 651.",
+        "inline_keyboard": "line 410 constructs an inline keyboard button with a cockpit URL."
+      },
+      "corrected_classification": "PRESENT ADAPTER, implemented in OCaml at tools/telegram_client.ml (879 lines), NOT in Gleam. Whether it is RUNNING is UNVERIFIED - I did not inspect service units or process state.",
+      "repository_wide_scope_now_stated": "Searching apps and tools for *.gleam *.ml *.erl, the ONLY canonical file containing getUpdates or callback_query is tools/telegram_client.ml. Gleam source contains neither. That is a language-boundary fact, not an absence."
+    },
+    {
+      "id": "X4",
+      "severity": "MODERATE",
+      "retracted": "1244 implied the 14 /mini-app/* entries were a matrix category error whose existence was unestablished.",
+      "verdict": "PARTLY WRONG. They are HTTP routes rather than chat directives (that part stands), but they EXIST and ARE WIRED.",
+      "evidence": {
+        "file": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+        "sha256": "33111a7f16ef807f81d49ea177153031f88b8415682b2c38384018477f411289",
+        "line_count": 121,
+        "route_table": "lines 18..49 route(path) maps 14 literal paths (/mini-app/dashboard|/mini-app|/mini-app/, health, alerts, immune, tasks, inference, chat, config, containers, federation, verify, fmea, telemetry, zenoh) to mini_app view functions, with a catch-all _ -> dashboard_view().",
+        "wiring": "router.gleam:3444..3447 case mini_app_routes.is_mini_app_path(path) { True -> html_response(mini_app_routes.route(path)) }"
+      },
+      "new_observation_stated_carefully": {
+        "id": "B2",
+        "severity": "MEDIUM, REQUIRES OWNER CONFIRMATION",
+        "observation": "At the observed call site router.gleam:3444..3447 the mini-app dispatch passes only `path`. route(path: String) takes no init_data, token or session parameter, and I observed no auth check in the surrounding lines 3430..3452.",
+        "explicit_limit": "I did NOT read router.gleam in full (it exceeds 3450 lines) and I did NOT trace middleware that may run before this case. I therefore do NOT claim the routes are unauthenticated. I claim only that auth is not visible AT THIS CALL SITE and that route/1 cannot receive a credential through its signature.",
+        "why_recorded": "Given how many of my negatives were wrong today, this is filed as a question for the owner with its scope stated, not as a defect."
+      }
+    }
+  ],
+  "reframed_static_claim_finding": {
+    "prior_number": "71 of 79 arms classified STATIC_CLAIM in 1244",
+    "status": "RETAINED AS A HEURISTIC GUIDE, EXPLICITLY NOT A PROOF OF MISSING FEATURES",
+    "root_correction_accepted": "Informational commands are legitimately static. /help and /start SHOULD return text; returning a shell result would be wrong. Counting them as unimplemented features was a category error of mine.",
+    "corrected_trichotomy": {
+      "PRESENT_PURE_LOGIC": "Code implements the property with no adapter needed. Example: the ingress guard classifier and the ledger idempotency. Legitimately effect-free.",
+      "LEGITIMATELY_INFORMATIONAL": "Command whose contract IS text. /help, /start, /cockpit (link list), /checklist. Static is CORRECT here; no backend is owed.",
+      "ABSENT_ADAPTER": "Command whose text asserts a system fact it never reads. This is the real gap class, and identifying it requires reading each body against its asserted claim - NOT the reachability heuristic alone.",
+      "UNVERIFIED_RUNNING_SERVICE": "Adapter exists (e.g. tools/telegram_client.ml) but no observation that it runs."
+    },
+    "honest_status": "I have NOT re-partitioned the 71 across these four classes. Doing so requires reading each arm body against the specific claim its text makes. The 8 effectful arms and the bodies quoted in X1-X4 are read; the remaining 71 are classified only by effect-reachability, which cannot distinguish LEGITIMATELY_INFORMATIONAL from ABSENT_ADAPTER.",
+    "what_is_still_sound": "The reachability measurement itself is reproducible and stands: 71 of 79 arms reach no SHELL or HTTP FFI; 8 reach os_cmd; 0 reach http_get/http_put. That is a fact about effect reachability. It is NOT a completion metric."
+  },
+  "surviving_findings_from_earlier_artifacts": {
+    "dual_routing_divergence": "STANDS. 12 dual-routed literals, 3 behaviourally divergent: /status (S1 ACTUAL_READ vs S2 STATIC), /zigvm (S1 READ vs S2 CONTROL), /zk (S1 READ vs S2 STATIC). The /zigvm read-versus-control split is unaffected by the guard correction because the divergence is between the two routers, not between router and guard.",
+    "agy_quantitative": "STANDS. Line counts 0/30 correct; hashes 30/30 correct; total_commands_audited 77 versus capability_matrix length 97.",
+    "agy_coverage": "STANDS as corrected in 1222: 11 unfounded chat directives, 14 miscategorised route paths (now known to EXIST per X4), 4 genuine primary omissions, 7 alias omissions. My 9 false ghosts remain retracted.",
+    "arm_totals": "STAND. 79 arms, 89 literal tokens, 77 unique directives, 12 dual-routed - reproduced through the compiled wrapper.",
+    "native": "C1 RETAINED and escalated by root receipt 1216 (collision accepted as replay at apply). C2 non-transactional initialize_new RETAINED. C3 reservation_delta is bounded storage capacity, bounds must be preserved."
+  },
+  "auth_final_binding": {
+    "receipt": "governance/planning/20261011-1228-telegram-auth-independent-verification.json",
+    "receipt_hash_as_supplied_by_root": "a8ce790734ee5abf5f96a83144df446d30ccc91cbdf31ec903a8af642d0f9949",
+    "receipt_hash_observed_by_me": "a8ce790734ee5abf5f96a83144df446d30ccc91cbdf31ec903a8af642d0f9949",
+    "my_position": "Auth is bound to this final independent verification receipt. I did NOT read, edit or test auth.gleam and I assert no auth property of my own."
+  },
+  "active_check_status": {
+    "observed": "HOLD, 1 finding: RP-SA-PLAN INVENTORY_CORRECTION - declared task state differs from Sa-plan",
+    "cause": "The portfolio snapshot recorded PREFLIGHT_PASS at 12:40 with the task AVAILABLE. I then claimed it, so Sa-plan reads executing while the portfolio still declares available. The HOLD is a consequence of my own claim transition, not a defect.",
+    "my_action": "I did NOT edit the shared portfolio and will not; root owns that reconciliation. I did NOT force-pass.",
+    "completion_decision": "Completing the correction task because the correction WORK is finished and the single HOLD is an expected state-transition artifact owned by root. Recorded rather than concealed."
+  },
+  "residuals_truthful": [
+    "The 71 effect-free arms are NOT re-partitioned across PRESENT_PURE_LOGIC / LEGITIMATELY_INFORMATIONAL / ABSENT_ADAPTER. That is the remaining substantive inventory work and it needs per-body reading against each arm's asserted claim.",
+    "router.gleam was NOT read in full (3450+ lines) and middleware preceding the mini-app case was NOT traced; B2 is scoped to one call site.",
+    "Whether any service routes updates through classify_directive before S1 dispatch is UNVERIFIED.",
+    "Whether tools/telegram_client.ml is RUNNING is UNVERIFIED; no service unit or process state inspected.",
+    "attachments/media remains characterised by markers only; not corrected in this pass and therefore NOT asserted either way.",
+    "No suite executed, no build, no native apply, no Telegram send, no injection attempted, no auth read.",
+    "Effect reachability remains a depth-6 call-graph heuristic, not compiler analysis."
+  ],
+  "limits": [
+    "Source reading only, acquired and searched through development.bounded/3.",
+    "Absence claims are scoped and the scope is stated with each.",
+    "Correction delivered is not approval. No whole-system admission, no new EV."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l6",
+    "#fractal-l9",
+    "#zero-muda",
+    "#stamp-stpa"
+  ]
+}

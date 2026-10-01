@@ -1,0 +1,65 @@
+{
+  "schema": "uos.telegram-toolchain-environment-correction.v1",
+  "observed_at": "2026-10-11T17:58:07.083Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 3,
+  "finding": "Inherited PATH resolves dune/ocamlc/ocamlfind under external /home/an/dev/ver/zigvm/_opam; repository policy requires project-owned compiler entrypoints.",
+  "scope": "Earlier risk-priority-check rebuilds invoked through raw helper could use ambient external compiler. Preserve results as observations, not pinned-toolchain proof. This was read-only external tool execution, not source ingestion.",
+  "repair": "Every future root bounded command explicitly sources tools/lib/uos-toolchain.sh and uos_env inside the Gleam-owned bounded shell, including commands that themselves use bash -lc.",
+  "tool_paths": [
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc",
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlfind"
+  ],
+  "fresh_verification": {
+    "risk_all": {
+      "status": "PASS",
+      "authority": "NONE",
+      "baseline_checks": 375,
+      "adversarial_checks": 32903,
+      "independent_dag_scenarios": 32768,
+      "package": {
+        "status": "PASS",
+        "local_paths_checked": 39,
+        "authority": "REPORT_ONLY",
+        "runtime_enforcement": "NOT_ASSERTED",
+        "global_skill_dependency": false
+      },
+      "runtime_admission": "NOT_GRANTED",
+      "live_agent_tests": "UNRUN"
+    },
+    "active_status": "ACTIVE_OBSERVATION_PASS"
+  },
+  "unchanged_scope": [
+    "HTTP independent compilation already explicitly used uos_env; its source-bound result is unaffected by this ambient-path finding.",
+    "Canonical Sa-plan wrapper executed an already existing absolute native binary; no rebuild was observed here.",
+    "Peer launcher path is unchanged; both peers told to set explicit project toolchain in their bounded command."
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1707-telegram-toolchain-environment-review/helper-after.js",
+      "sha256": "d403f2b4c096dd47f6776c224e3336901f3203d492e3136462549ec40843ea34"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1707-telegram-toolchain-environment-review/helper-before.js",
+      "sha256": "2fea73fa95a088271c8d93e19a6a6d213822ca9c90603c605836cfab9fd08f42"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1707-telegram-toolchain-environment-review/risk-active.json",
+      "sha256": "428662b355999a2d5f8b0c5359fb6ba4a05d96b57b959ae70bfb7860936bffb7"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1707-telegram-toolchain-environment-review/risk-all.json",
+      "sha256": "6c78340cbf52a024a02922f078e424b40f6f8157bf81b1d96dd8403f67984992"
+    }
+  ],
+  "runtime_admission": "NOT_GRANTED",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l9",
+    "#zero-muda"
+  ]
+}

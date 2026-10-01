@@ -1,0 +1,55 @@
+{
+  "schema": "uos.browser-independent-review.v1",
+  "observed_at": "2026-10-01T11:43:28Z",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "BROWSER_REVIEW2",
+  "reviewer": "codex-telegram-admission-20261001",
+  "implementer": "/root/recovery_review",
+  "status": "ACCEPTED_SCOPED_DEVELOPMENT_FIX",
+  "scope": "Two peer-corrected files; six declared private profiles. Remaining live/product browser acceptance HOLD.",
+  "source_hashes": [
+    {
+      "path": "tools/validation/restoration_browser_check.ml",
+      "sha256": "a70d34f77e938b12da9fec79eb4b7d635aa707de4c471dd6affd2a6ac1b4709c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/homeostasis_http.gleam",
+      "sha256": "a9b622c651eb34a6584e95bd2c49e709a44d0f76e1cd7bd85faf92ed4eabf673"
+    }
+  ],
+  "reviewed_behavior": [
+    "Canonical checklist explicitly outside HUD component filter; terminal18UNRUN plus provenance visible",
+    "HTTP200/exact response and final URL/visible pageheading/actual18unique requirements enforced",
+    "Exact GET document/dependency allowlist; downloads/serviceworkers/sockets refused",
+    "Actual redirect gap guarded with Chromium Fetch response stage beforefollow",
+    "Dedicated simulated chart profile does not masquerade as product/runtime evidence"
+  ],
+  "independent_execution": {
+    "policy_falsifiers": 14,
+    "offline_browser_negatives": 6,
+    "logs": [
+      "var/recovery-runtime/20261001-1143-browser-independent-policy.log",
+      "var/recovery-runtime/20261001-1143-browser-independent-negative.log"
+    ],
+    "binary_sha256": "1f11bad5624544694ca3b22e8e604fd54601c3d785691f71e95c5d3090af1e4d",
+    "compiled_source_matches_repository": true
+  },
+  "visual_review": [
+    "20261001-1130-fix2-final-terminal/20261001-1048-page.png: all18requirements/provenance readable; missing sensors UNKNOWN and controlNONE remain",
+    "20261001-1130-fix2-final-chart/20261001-1048-viewport.png:26bars, title/beat separated, explicit simulatedfixture disclosure"
+  ],
+  "remaining": [
+    "Cockpit frontend/backend socket safety review required: existing apps/cepaf_gleam/priv/static/dashboard-grid.js opens /ws/dashboard and polls /api/v1/plan/status on initialization; contains legacy hardcoded agent/health claims. No edits to this asset; root will create separate canonical follow-up.",
+    "Do not run helper on production until independent source/traffic review authorizes exact profiles and dependency closure. No live acceptance complete.",
+    "Mirage, restoration dashboard and production ecology need explicit matching assertion profiles; unsupported profile returns HOLD rather than generic PASS. Existing ecology native probe remains separate.",
+    "Private probe has no OTP control actors and does not prove production loaded-source/runtime identity, capabilities, failover or Telegram behavior.",
+    "Network tests used offline native browser and HTML/forms, no authored page JavaScript; pure socket refusal tested and production callback installed, but no actual WebSocket peer/client handshake falsifier executed.",
+    "Browser page_errors is not all console/resource failure or whole-product accessibility coverage; C1-C8/global17-aspect admission remains separate.",
+    "Response guard is attached to inspected page; this is a finite known-page probe, not a hostile arbitrary-popup browser sandbox certification.",
+    "Formatting gate not rerun; inherited transport style remains. No broad unrelated source changes.",
+    "Root crashdump presence caused by adapter syntax failure preserved for parent artifact policy; not inspected or hashed here."
+  ],
+  "main_admission": false,
+  "production_release": false,
+  "global_admission": false
+}

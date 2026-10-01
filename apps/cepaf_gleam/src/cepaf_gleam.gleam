@@ -137,10 +137,15 @@ pub fn main() {
     Ok(session) -> {
       io.println("  [zenoh] Reachable backend: " <> zenoh.backend(session))
       case zenoh.put(session, "indrajaal/cepaf/gleam/status", "online") {
-        Ok(Nil) -> io.println("  [zenoh] Status publication acknowledged by REST endpoint")
+        Ok(Nil) ->
+          io.println(
+            "  [zenoh] Status publication acknowledged by REST endpoint",
+          )
         Error(e) -> io.println("  [zenoh] Status publication FAILED: " <> e)
       }
-      io.println("  [zenoh] Native subscriptions unavailable; REST publication/query only")
+      io.println(
+        "  [zenoh] Native subscriptions unavailable; REST publication/query only",
+      )
     }
     Error(e) -> io.println("  [zenoh] Backend unavailable: " <> e)
   }

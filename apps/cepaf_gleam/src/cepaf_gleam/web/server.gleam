@@ -34,6 +34,7 @@ import cepaf_gleam/otp_app
 import cepaf_gleam/planning/safety_kernel
 import cepaf_gleam/ui/wisp/router
 import cepaf_gleam/ui/wisp/secret_api as vault_secret_api
+import cepaf_gleam/web/homeostasis_http
 import gleam/bytes_tree
 import gleam/erlang/process
 import gleam/http
@@ -1214,6 +1215,14 @@ pub fn start(port: Int) -> Result(Nil, String) {
     }
   }
 
+  // Share the same read-only evidence routes on the canonical cockpit listener.
+  let routed_handler = fn(req: request.Request(mist.Connection)) {
+    case homeostasis_http.handles(req.path) {
+      True -> homeostasis_http.handle_on_port(req, port)
+      False -> handler(req)
+    }
+  }
+
   // Start OTP actors (freshness monitor 10s loop, observer, guard grid)
   let _app_state = otp_app.start()
   io.println("  OTP actors started (freshness monitor, observer, guard grid)")
@@ -1225,7 +1234,7 @@ pub fn start(port: Int) -> Result(Nil, String) {
 
   // HTTP server on primary port (4100) — no TLS, accessible from any browser
   let http_builder =
-    mist.new(handler)
+    mist.new(routed_handler)
     |> mist.port(port)
     |> mist.bind("0.0.0.0")
 
@@ -1240,7 +1249,7 @@ pub fn start(port: Int) -> Result(Nil, String) {
 
   // HTTPS server on port+1 (4101) — TLS with self-signed cert
   let https_builder =
-    mist.new(handler)
+    mist.new(routed_handler)
     |> mist.port(https_port)
     |> mist.bind("0.0.0.0")
 

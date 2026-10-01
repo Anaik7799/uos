@@ -1,0 +1,14 @@
+{
+  "schema": "uos.ledger-export-review.v1",
+  "observed_at": "2026-10-11T14:41:21Z",
+  "before_sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+  "after_sha256": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+  "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+  "change": "Only visibility of existing three pure validators becomes public; bodies byte-identical",
+  "status": "SOURCE_DIFF_REVIEWED",
+  "runtime_admission": "NOT_GRANTED",
+  "limits": [
+    "Prior test receipts retain old binding",
+    "New codec callers require fresh candidate tests"
+  ]
+}

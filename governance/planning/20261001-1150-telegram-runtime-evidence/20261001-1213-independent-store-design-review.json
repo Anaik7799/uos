@@ -1,0 +1,103 @@
+{
+  "schema": "uos.independent-store-design-review.v1",
+  "observed_at": "2026-10-01T12:13:27Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "STORE_DESIGN_REVIEW",
+  "attempt": 1,
+  "verdict": "HOLD_AS_WRITTEN_CORRECTED_DEVELOPMENT_SPEC_PROVIDED",
+  "source_manifest": [
+    {
+      "path": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1210-durable-store-design.json",
+      "sha256": "7a4b5f5bc254219f6b1fec7ee84a21c5071670408efca98b2674390665638b74"
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "d4d4dfc204d815fa23617d70ac0d4779cf8c86119ca6d89948c52cca5c1f6210"
+    }
+  ],
+  "accepted_direction": "Gleam domain/authority policy with fixed isolated OCaml SQLite facade and existing bounded process guardian. Direct esqlite/NORMAL sync is not substituted for durability evidence.",
+  "blockers": [
+    "Existing framed input cap65536 is smaller than proposed request262144 and value98304;16 valid escaped4096-byte payloads can also exceed262144. Encoding and aggregate limits need explicit reconciliation.",
+    "Changed-row CAS alone omits unchanged authority/watermark/inbox read-set races; multi-row observations need one snapshot/generation.",
+    "Operation ambiguity needs explicit lookup plus prior-worker quiescence. Successful-looking response alone must not trigger retry or send.",
+    "Row/receipt/global storage ceilings can exhaust mid-request.1000 requests with16chunks require20002 KV rows and>32000 send-transition receipts;20000 each is not promised capacity. Reserve completion capacity before ingress commit.",
+    "256MiB main DB limit does not cap WAL/sidecars; FULL alone does not prove directory-entry durability. Distinguish implemented bounds from physical UNKNOWN."
+  ],
+  "corrected_spec": {
+    "schema": "uos.telegram-durable-store-corrected-development-spec.v1",
+    "scope": "Minimal isolated SQLite facade; proposed corrections for parent adoption, not production authority",
+    "transport": {
+      "request_json_bytes": 1048572,
+      "response_json_bytes": 1048572,
+      "frame": "Exactly one unsigned big-endian32 length plus that many UTF-8 JSON bytes; EOF/trailing frame/truncated/oversized/duplicate-key/noncanonical encoding refuses. Four framing bytes count against guardian1048576 output cap.",
+      "input": "Separate storage-specific typed launch function; existing MAX65536/ETS8192 limits unchanged. Validate size before spawn. Pin executable, guardian and DB locator from reviewed local configuration, never Telegram input.",
+      "deadline": "One5000ms monotonic request deadline includes spawn, input transfer, output and worker completion; bounded grace/reaping separately budgeted before next effect. Close owned port/process group on all failures. Unknown exit/outcome remains uncertain.",
+      "errors": "Finite redacted error codes only, no SQL, path, row value, token or request-body reflection."
+    },
+    "encoding_bounds": {
+      "key_bytes": 256,
+      "operation_id_bytes": 128,
+      "value_bytes": 98304,
+      "aggregate_decoded_values_per_apply_or_read": 524288,
+      "changes": 128,
+      "read_set_assertions": 128,
+      "read_keys": 64,
+      "receipt_bytes": 65536,
+      "values": "Protocol transports canonical_value_bytes as strict canonical base64; stored/hash bytes are decoded UTF-8 domain JSON. Gleam domain codec validates canonical identity; worker independently enforces raw/decoded aggregate limits and value hashes. Both exact encoded message length and decoded budgets must pass before BEGIN."
+    },
+    "transactions": {
+      "commands": [
+        "initialize_new",
+        "read_keys",
+        "read_inbox_index",
+        "lookup_operation",
+        "apply"
+      ],
+      "read": "Return requested rows, versions, hashes, missing status and one store-generation token from a single bounded SQLite read transaction. Index listing uses bounded key-only pages and exact generation; changed generation requires fresh whole observation, never mixed snapshot.",
+      "apply": "BEGIN IMMEDIATE. Check exact schema/bot binding, global generation, unchanged read-set assertions, changed-row absent/version/hash preconditions, immutable operation ID digest and all size/count/reservation limits; then fixed parameterized writes plus operation receipt plus generation increment atomically COMMIT.",
+      "read_set": "Include authority/inbox/watermark rows relied upon even when only a chunk row changes. Stale plan/attempt or changed authority cannot survive merely because target chunk version is unchanged. This local CAS supplements real pre-effect canonical fences.",
+      "receipt": "Same op+same canonical request digest returns original committed small receipt; same op+different digest refuses. Receipt includes operation ID/digest, transaction generation and affected-key version/hash summary; no full values. No receipt write for reads/refused operations.",
+      "prefix": "Prevalidate bounded whole fetched update set and equal-ID groups using accepted ingress model. Choose largest whole-group committed prefix fitting change count, decoded bytes, encoded bytes and reserved capacity. Atomic input+inbox+watermark; rejected tombstones likewise atomic. Never acknowledge an excluded group.100 updates may require multiple prefix commits.",
+      "result": "One immutable v2 result and all<=16 chunks commit in one transaction; no chunk-level staging that exposes incomplete result. Result row stores digest/metadata; payloads live in chunks. Maximum valid escaped domain JSON fixture must fit corrected budgets or explicit narrower ingress/result policy is required.",
+      "uncertainty": "Any lost/timeout/partial response is UNKNOWN. First confirm previous worker and group exited; then lookup exact operation ID on same DB. Present+matching digest reconciles original commit. Absent after writer quiescence proves no committed operation. No automatic blind apply/retry; any later attempt requires current fences and reviewed reconciliation policy. Never send while SENDING commit remains uncertain."
+    },
+    "capacity": {
+      "rows": 20000,
+      "retained_requests": 1000,
+      "receipts": 20000,
+      "main_db_bytes": 268435456,
+      "semantics": "These are upper ceilings, not a promise to retain1000 maximum-size requests. Reserve per-request lifecycle capacity before advancing ingress watermark; reserve64 receipt credits and20 potential KV rows per admitted request (plus bootstrap metadata), accounting current and reserved counts atomically. Typed service must cap lifecycle to64 distinct mutation ops or stop before new effects. Replays consume no additional credit. Exhaustion must block new admission, not prevent storing already-authorized send outcome.",
+      "physical": "max_page_count with fixed queried page_size bounds main DB only. WAL/SHM/journal/temp bytes and fsync/rename directory durability need explicit separate accounting and sufficient reserve. Do not claim256MiB total physical bound from main-file stat. Hard total-directory bound requires measured filesystem quota or proven native bound; otherwise record this guarantee UNKNOWN and block production assurance requiring it."
+    },
+    "durability": {
+      "new": "Explicit initialize_new only in fresh exclusive0700 private directory,0600 files; refuse existing/alias/symlink/unsafe ancestor paths. Fsync creation directory as required for durable DB locator.",
+      "existing": "Open existing NO_CREATE; verify exact known schema/triggers/indexes/meta before writes. No implicit upgrade/checkpoint/VACUUM/delete or production cleanup. Existing journal_mode must already be WAL; refuse unexpected mode instead of silently converting.",
+      "connection": "Set/query synchronous FULL,foreign_keys ON,busy_timeout250; verify journal_mode WAL and page_size/max_page_count before transactions. Maintain narrow process-lifetime lock and file identity checks under cooperative same-UID boundary.",
+      "commit": "Acknowledge only actual successful COMMIT plus bounded receipt serialization. Preflight every predictable response/space bound before mutation; I/O/kill/ENOSPC during COMMIT is UNKNOWN, not clean refusal."
+    },
+    "acceptance": [
+      "Actual maximal escaped16x4096 result, maximum raw ingress65,536 and many-update prefix splitting; no torn groups or results; exact read/write/output budgets.",
+      "Atomic unchanged read-set race and changed-row CAS race each refuse stale transaction; one of parallel conflicts commits.",
+      "Timeout/kill before/within/after COMMIT and before reply; lookup observes old or fully new transaction, never duplicate send.",
+      "Capacity reservation preserves space/receipt credits for SENDING outcome and terminal bookkeeping; bound admission before exhaustion.",
+      "Malformed framing/base64/duplicate JSON fields, partial/oversized output, unknown exit and reflected-private-marker negative controls.",
+      "Real FULL/WAL readbacks/reopen/permissions/path controls and pinned worker+guardian launch; no claim that process kill simulates power loss."
+    ]
+  },
+  "tests_run": "None; source/design inspection only. Numerical bounds are derived from declared protocol/state shapes, not benchmark measurements.",
+  "limitations": [
+    "Corrected design needs parent adoption and separately authorized implementation/review.",
+    "No production, filesystem quota changes, DB mutation, Telegram traffic, source edit or task mutation.",
+    "Real risk adapter, canonical effect-time fences, process ownership, immutable release closure and power-loss assumptions remain independently required."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#zero-muda"
+  ]
+}

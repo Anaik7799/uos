@@ -1,0 +1,136 @@
+{
+  "schema": "uos.independent-telegram-authority-review.v1",
+  "observed_at": "2026-10-01T11:55:26Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "AUTH_REVIEW",
+  "attempt": 1,
+  "candidate": "32a4864e2ff2d50f0fce91beb91f7f56122974ec",
+  "empty_child_observed": "6ccde5da6e2f7e0298be5b70f8a118cca51e4765",
+  "verdict": "HOLD",
+  "scope": "Seven-file pure protocol/provider candidate and isolated local coordinator tests only; no canonical coordinator, Telegram, runtime or task mutations.",
+  "source_manifest": [
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "sha256": "31e42365ac52abbbdce5c4665ceed3f72d4880c07366ebdfcf0c765c1b9832e3"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam",
+      "sha256": "623d3e1f2484850f080864076d867d3df62cbf87f7a15e7b730427a0a570cbb7"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_store_cli.gleam",
+      "sha256": "2f4e795527b4a38994a070d4fa32d199bd22e78c44197fa60f38c522bdf36e80"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_sync_cli.gleam",
+      "sha256": "90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "afb82762a417a7518f37c7505bf2769decc640c7c22fbc61f90ed2e3ad368994"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+      "sha256": "d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/test/session_provider_service_test.gleam",
+      "sha256": "c7aebcf48413b7a1c667303165c1400c7aca36473afe4a68b22391e06a26cc9f"
+    }
+  ],
+  "findings": [
+    {
+      "id": "AUTH-P1-WIRE-EXPIRY",
+      "severity": "P1",
+      "file": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "lines": [
+        181,
+        182,
+        220
+      ],
+      "problem": "Decoder reads optional expires_us with zero default. Canonical receipt_json emits expires_boot_us. A genuine isolated authority.run_at claim was rejected; invented expires_us-only fixture accepted.",
+      "fix": "Require canonical expires_boot_us for claim/renew with positive epoch/future deadline, no alias/default. Test actual register/claim/renew/release formatter and authority.run_at outputs, including epoch greater than one, wrong/missing/null fields and alias rejection."
+    },
+    {
+      "id": "AUTH-P1-EXISTING-SCHEMA",
+      "severity": "P1",
+      "file": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "lines": [
+        264,
+        292,
+        379,
+        392,
+        439,
+        741,
+        860
+      ],
+      "problem": "Changing exact required events_payload SQL without an upgrade path prevents new open_existing on every old-schema valid DB. CREATE TRIGGER IF NOT EXISTS in open does not replace the old trigger. Reproduced with an isolated one-event DB created through the current root writer.",
+      "fix": "Provide separately authorized, reviewed schema transition or staged candidate migration with old/new precondition hashes, writer quiescence/fencing, preserved event bytes and rollback. Prove old-provider replay and all guard/digest controls before/after. Do not silently loosen exact verification or mutate production on open."
+    },
+    {
+      "id": "AUTH-P2-DECIMAL",
+      "severity": "P2",
+      "file": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "lines": [
+        354,
+        360
+      ],
+      "problem": "int.parse alone accepts noncanonical '+1'/'01' attempts and signed '+2000000000' deadline. Independent controls observed acceptance despite strict decimal contract.",
+      "fix": "Require bounded ASCII digits with canonical round-trip representation and strictly positive/future values; reject signs, leading zeros, whitespace, numeric JSON types, oversized strings, and missing fields."
+    },
+    {
+      "id": "AUTH-P2-PRIVATE-ERRORS",
+      "severity": "P2",
+      "file": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "lines": [
+        199,
+        206,
+        210,
+        346,
+        352,
+        383
+      ],
+      "problem": "Response mismatch and unrecognized-value errors concatenate received operation/task/claimed values; parse errors inspect decoder failures. PRIVATE_SENTINEL was reflected verbatim in actual error output.",
+      "fix": "Return finite redacted error codes; never echo response/expected private values. Bound input before parsing and test sentinel non-disclosure on all decoder refusal branches."
+    },
+    {
+      "id": "AUTH-P2-ARGV-IDENTITY-BOUNDS",
+      "severity": "P2",
+      "file": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "lines": [
+        30,
+        31,
+        74,
+        90,
+        110
+      ],
+      "problem": "Generic identifier helper silently trims identity values and permits characters rejected by coordinator identifiers. Claim builder accepts session 'bad id', operation ' op '->'op', and TTL3601 though coordinator maximum is3600 seconds.",
+      "fix": "Use exact downstream identifier constraints without silent normalization; separate identifier/workspace/ref validation. Apply coordinator TTL bounds or finite service-selected TTL and test boundaries against actual downstream command parsing."
+    }
+  ],
+  "tests": {
+    "existing_protocol_eunit_passed": 6,
+    "existing_fresh_provider_eunit_passed": 2,
+    "independent_actual_claim": "New private DB service registration and actual authority.run_at claim succeeded; protocol rejected the genuine JSON.",
+    "old_schema": "Old root writer created valid one-event private DB. New open_existing refused. New open followed by verify retained exact-trigger failure.",
+    "pure_controls": "Actual receipt serializer fails decoder; invented alias accepted; noncanonical decimals accepted; invalid session/excess TTL accepted by builder; private sentinel reflected.",
+    "preserved_failure": "First old-fixture launcher matched simplifile mkdir result as ok instead of {ok,nil}; exited before DB creation. Corrected invocation succeeded; outputs retained.",
+    "private_databases": [
+      "/tmp/uos-auth-review-1790855679087261/events.sqlite3",
+      "/tmp/uos-auth-wire-1790855726527855/events.sqlite3"
+    ]
+  },
+  "accepted_limits": [
+    "Typed Provider renderer/parser preserves claude/codex/agy wire labels and adds service. Fresh-store registration/refusal/replay controls passed.",
+    "None risk adapter fails closed. Injected mock pass is development only; no real risk validator or runtime authorization is established.",
+    "No paid request, external network, live DB schema mutation, source edit, task mutation or release occurred.",
+    "Whole service remains unimplemented/unadmitted; candidate review does not close ingress/outbox/risk/release obligations."
+  ],
+  "transcript": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1155-independent-authority-tests.txt",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#zero-muda"
+  ]
+}

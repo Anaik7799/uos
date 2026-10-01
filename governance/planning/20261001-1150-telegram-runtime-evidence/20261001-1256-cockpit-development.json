@@ -1,0 +1,116 @@
+{
+  "schema": "uos.cockpit-development-receipt.v1",
+  "observed_utc": "2026-10-01T12:16:56Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COCKPIT_FIX",
+  "worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "implementer": "codex-admission-review-20261001",
+  "status": "SCOPED_DEVELOPMENT_PASS_VISUAL_RESIDUAL_HOLD",
+  "application_admitted": false,
+  "production_changed": false,
+  "source_manifest": [
+    {
+      "path": "tools/validation/restoration_browser_check.ml",
+      "sha256": "2bcc64645e44977a4a05d51d11a0bcfa1c778d281b42acfc8caf9c1f9310a8dc"
+    },
+    {
+      "path": "apps/cepaf_gleam/priv/static/dashboard-grid.js",
+      "sha256": "b8cbfe476815bb8247c6f324ab60081930b6fcd74bd33f68c86a254e82b32a7d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam",
+      "sha256": "dfa402508e81741b361cafc9086de150c5b8e933d3d6547c4b19f5024aa97f52"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/restoration_browser_probe.gleam",
+      "sha256": "c07e3595df21fbdceb516b9f85d8b28ebc2b39ba27a33fdff8bdabdf8ab7a12c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam",
+      "sha256": "e8651983783c75779e54962fe73c69444a53a5a0a3e80abb35d3f64bd1fc96a5"
+    },
+    {
+      "path": "var/recovery-runtime/20261001-1203-cockpit-build/restoration_browser_check",
+      "sha256": "c04e8376fc149b025b0bb7ac80e7d740f2c1c61afe2a9d0401adc3785710417b"
+    }
+  ],
+  "changes": [
+    "Replace fabricated root dashboard cards and unsupported automatic WS/legacy NIF polling with a bounded public recovery snapshot, visible observation age/staleness, task filtering and evidence navigation.",
+    "Finite browser profiles assert actual cockpit, Mirage and restoration content/checklists; allow only reviewed dashboard asset, refuse legacy NIF status and sockets.",
+    "Private probe serves exact finite static files with correct MIME rather than HTTP 200 HTML fallback.",
+    "Mirage labels model-derived example telemetry, records separate provenance boundary, and constrains horizontal table overflow."
+  ],
+  "validation": {
+    "pinned_gleam_build": "PASS; unused imports/helpers remain after root view replacement; preexisting warning also preserved",
+    "javascript_syntax": "PASS via existing Playwright node --check",
+    "native_build": "PASS; mtime.clock.os deprecation warning",
+    "pure_browser_policy_falsifiers": 17,
+    "actual_offline_browser_negative_controls": 6,
+    "private_profiles": [
+      {
+        "route": "/",
+        "width": 1280,
+        "status": "PASS"
+      },
+      {
+        "route": "/mirage",
+        "width": 390,
+        "status": "PASS"
+      },
+      {
+        "route": "/static/20260930-0633-restoration-dashboard.html",
+        "width": 1280,
+        "status": "PASS"
+      }
+    ],
+    "each_profile": "Actual HTTP 200, exact final URL and page-specific visible requirements; zero page errors, blocked requests and socket attempts. Snapshot contents observed, not treated as frozen runtime admission.",
+    "private_listener": "Exact restoration_browser_probe main; 127.0.0.1:49157; 25 second self-exit, 30 second outer bound, process cleanup; no production listener or control activation."
+  },
+  "visual_review": {
+    "cockpit": "PASS for limited recovery projection; observed stale snapshot explicitly labeled STALE",
+    "restoration": "Readable recovery/checklist snapshot",
+    "mirage": "HOLD: mobile table text remains low contrast; explicit model-derived labeling and horizontal containment are present. No accessibility certification."
+  },
+  "evidence": {
+    "final_profile_dirs": [
+      "20261001-1214-cockpit-final",
+      "20261001-1214-mirage-final",
+      "20261001-1214-restoration-final"
+    ],
+    "final_transcript": "20261001-1256-cockpit-build-browser-transcript.txt",
+    "screenshots": [
+      {
+        "profile": "cockpit",
+        "sha256": "c68840cbda3b624a2699f122febbf4dd31051bebf2d5d2aa1a0f21fd4c6b9b84"
+      },
+      {
+        "profile": "mirage",
+        "sha256": "6151d56e4eb3ea5559b34785f06331b8a12e1f7d9211c317ce27b45962b821be"
+      },
+      {
+        "profile": "restoration",
+        "sha256": "b9093bb83fb9a221e50fe90470187e0ea6f1f6b74b18eaca3ab5e8514cdc1a72"
+      }
+    ],
+    "preserved_failure_dirs": [
+      "20261001-1206-* connection refused after private listener expired",
+      "20261001-1208-* wrong static fallback and profile-selector HOLDs",
+      "20261001-1211-* DOM-only PASS, subsequent screenshot review exposed original false green root cards and mobile overflow; superseded for visual acceptance"
+    ],
+    "implementation_failures": "Argument-size and Erlang variable errors preserved in tool trace; invalid UTF8 source edit produced build failure then was repaired from exact stored original with intended patch; final build passed."
+  },
+  "residual_limits": [
+    "Production ecology profile is explicitly unsupported/unverified; no production route request or runtime release occurred.",
+    "Mirage low-contrast mobile tables require a focused follow-up before visual acceptance.",
+    "Other legacy dashboard routes and shared shell controls were not activated or admitted.",
+    "Task filter and evidence view functions are implemented; this browser receipt checks initial loading and checklist interaction, not exhaustive control interaction.",
+    "No universal runtime, agent, EV, accessibility or system admission."
+  ],
+  "tags": [
+    "#fractal-l3",
+    "#zero-muda",
+    "#tailscale-web",
+    "#checklist-nav"
+  ]
+}

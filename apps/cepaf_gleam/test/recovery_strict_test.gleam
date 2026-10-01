@@ -1,38 +1,52 @@
+import cepaf_gleam/harness/files
 import cepaf_gleam/harness/recovery_activation as io
 import cepaf_gleam/harness/recovery_strict as strict
-import gleeunit/should
-import gleam/list
-import gleam/result
 import gleam/bit_array
 import gleam/int
+import gleam/list
+import gleam/result
+import gleeunit/should
 import simplifile
-import cepaf_gleam/harness/files
 
 pub fn only_the_matching_canonical_target_is_accepted_test() {
-  let coordinator = "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
+  let coordinator =
+    "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
   let cycles = "/home/an/NAS-setup/uos/var/km/provenance-cycles.sqlite3"
   strict.canonical_target(io.CoordinatorStore, coordinator) |> should.be_true
   strict.canonical_target(io.KmCycleStore, cycles) |> should.be_true
   ["/tmp/arbitrary.sqlite3", "/tmp/target.db", coordinator <> "/..", cycles]
-  |> list.each(fn(path) { strict.canonical_target(io.CoordinatorStore, path) |> should.be_false })
+  |> list.each(fn(path) {
+    strict.canonical_target(io.CoordinatorStore, path) |> should.be_false
+  })
   strict.canonical_target(io.KmCycleStore, coordinator) |> should.be_false
 }
 
 pub fn authority_must_cover_the_full_bounded_recovery_window_test() {
   [0, 1, 119_999_999, 120_000_000]
-  |> list.each(fn(left) { strict.authority_window(1000, 1000 + left) |> should.be_false })
+  |> list.each(fn(left) {
+    strict.authority_window(1000, 1000 + left) |> should.be_false
+  })
   strict.authority_window(1000, 120_001_001) |> should.be_true
 }
 
 pub fn no_private_review_means_no_activation_test() {
-  strict.prepare("does-not-exist.json", "does-not-exist-review.json") |> result.is_error |> should.be_true
-  strict.activate("does-not-exist.json", "does-not-exist-review.json") |> result.is_error |> should.be_true
+  strict.prepare("does-not-exist.json", "does-not-exist-review.json")
+  |> result.is_error
+  |> should.be_true
+  strict.activate("does-not-exist.json", "does-not-exist-review.json")
+  |> result.is_error
+  |> should.be_true
 }
 
 @external(erlang, "session_sync_ffi", "unique_id")
 fn unique_id() -> String
+
 @external(erlang, "recovery_activation_ffi", "staged_swap_database")
-fn swap(candidate: String, target: String, expected: String) -> Result(Nil, String)
+fn swap(
+  candidate: String,
+  target: String,
+  expected: String,
+) -> Result(Nil, String)
 
 fn fixture() -> String {
   let root = "/tmp/uos-strict-rehearsal-" <> unique_id()
@@ -50,12 +64,17 @@ pub fn pre_mutation_refusal_never_rolls_back_or_overwrites_test() {
   let assert Ok(_) = put(target, "newly observed foreign bytes")
   strict.transition(
     fn() { Error("target_preimage_changed") },
-    fn() { let _ = put(target, "incorrect mutation") Error("must not execute") },
+    fn() {
+      let _ = put(target, "incorrect mutation")
+      Error("must not execute")
+    },
     fn(_) { put(target, "incorrect rollback") },
     fn(_) { put(root <> "/rollback", "incorrect receipt") },
     fn() { put(root <> "/unlocked", "incorrect unlock") },
     fn(reason) { put(root <> "/hold", reason) },
-  ) |> result.is_error |> should.be_true
+  )
+  |> result.is_error
+  |> should.be_true
   simplifile.read(target) |> should.equal(Ok("newly observed foreign bytes"))
   simplifile.is_file(root <> "/rollback") |> should.equal(Ok(False))
   simplifile.is_file(root <> "/unlocked") |> should.equal(Ok(False))
@@ -71,7 +90,15 @@ pub fn partial_sidecar_retirement_restores_all_bytes_and_holds_test() {
   let assert Ok(_) = put(target <> "-shm", "original SHM")
   strict.transition(
     fn() {
-      use saved <- result.try(io.preserve_target_state(target, root, "partial", 1, "generation", 100, "fixture"))
+      use saved <- result.try(io.preserve_target_state(
+        target,
+        root,
+        "partial",
+        1,
+        "generation",
+        100,
+        "fixture",
+      ))
       Ok(saved.0)
     },
     fn() {
@@ -82,7 +109,9 @@ pub fn partial_sidecar_retirement_restores_all_bytes_and_holds_test() {
     fn(detail) { put(root <> "/rollback", detail) },
     fn() { put(root <> "/unlocked", "incorrect unlock") },
     fn(reason) { put(root <> "/hold", reason) },
-  ) |> result.is_error |> should.be_true
+  )
+  |> result.is_error
+  |> should.be_true
   io.sha256_file(target) |> should.equal(Ok(original))
   simplifile.read(target <> "-wal") |> should.equal(Ok("original WAL"))
   simplifile.read(target <> "-shm") |> should.equal(Ok("original SHM"))
@@ -98,11 +127,26 @@ pub fn successful_copy_has_durable_verification_before_unlock_test() {
   let assert Ok(_) = io.create_test_db(candidate, "replacement")
   let assert Ok(hash) = io.sha256_file(candidate)
   let lock = target <> ".recovery-lock"
-  let assert Ok(_) = io.acquire_target_lock(lock, "{\"pid\":" <> int.to_string(io.get_pid()) <> "}")
+  let assert Ok(_) =
+    io.acquire_target_lock(
+      lock,
+      "{\"pid\":" <> int.to_string(io.get_pid()) <> "}",
+    )
   strict.transition(
     fn() {
-      use _ <- result.try(io.advance_generation(target <> ".recovery-generation", "new"))
-      use saved <- result.try(io.preserve_target_state(target, root, "success", 1, "new", 100, "fixture"))
+      use _ <- result.try(io.advance_generation(
+        target <> ".recovery-generation",
+        "new",
+      ))
+      use saved <- result.try(io.preserve_target_state(
+        target,
+        root,
+        "success",
+        1,
+        "new",
+        100,
+        "fixture",
+      ))
       Ok(saved.0)
     },
     fn() {
@@ -122,7 +166,8 @@ pub fn successful_copy_has_durable_verification_before_unlock_test() {
       }
     },
     fn(reason) { put(root <> "/hold", reason) },
-  ) |> should.equal(Ok(hash))
+  )
+  |> should.equal(Ok(hash))
   io.sha256_file(target) |> should.equal(Ok(hash))
   simplifile.is_file(lock) |> should.equal(Ok(False))
   simplifile.is_file(root <> "/VERIFIED") |> should.equal(Ok(True))

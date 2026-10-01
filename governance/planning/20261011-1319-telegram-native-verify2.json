@@ -1,0 +1,307 @@
+{
+  "schema": "uos.telegram-native-verify2.v1",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "NATIVE_VERIFY2",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "supplied_suite": {
+    "assertions": 154,
+    "passed": 154,
+    "actual_output_pass_lines": 154,
+    "binary_sha256": "50ba519801c2a4c290277164b9c567ea023e18109b872dbc73f41cba8bd1d231"
+  },
+  "independent_kill": {
+    "stages": 5,
+    "assertions": 27,
+    "status": "PASS",
+    "output": "PASS stage barrier reached 0\nPASS SIGKILL observed 0\nPASS init no partial schema 0\nPASS stage barrier reached 1\nPASS SIGKILL observed 1\nPASS init no partial schema 1\nPASS stage barrier reached 2\nPASS SIGKILL observed 2\nPASS receipt old or committed 2\nPASS generation atomic 2\nPASS seed version atomic 2\nPASS second row atomic 2\nPASS seed bytes atomic 2\nPASS stage barrier reached 3\nPASS SIGKILL observed 3\nPASS receipt old or committed 3\nPASS generation atomic 3\nPASS seed version atomic 3\nPASS second row atomic 3\nPASS seed bytes atomic 3\nPASS stage barrier reached 4\nPASS SIGKILL observed 4\nPASS receipt old or committed 4\nPASS generation atomic 4\nPASS seed version atomic 4\nPASS second row atomic 4\nPASS seed bytes atomic 4\nPASS independent 5 actual kill barriers and 27 assertions\n",
+    "script": "var/recovery-runtime/20261011-1301-native-verify2/independent_kill.ml",
+    "sha256": "93e2ba513383a7266f3e52c52c8b13162b372f16ecc5a74d652cd8636e29863e"
+  },
+  "independent_exceptions": {
+    "output": "between_rows response=ERROR:sqlite_error committed_receipt=false\npre_commit response=UNCAUGHT_EXCEPTION committed_receipt=false\npost_commit response=UNCAUGHT_EXCEPTION committed_receipt=true\n",
+    "script": "var/recovery-runtime/20261011-1301-native-verify2/independent_exceptions.ml",
+    "sha256": "726407176099f065660ad7a163c9eae8307a60572e666def3663d18bfb1dadad"
+  },
+  "findings": [
+    {
+      "id": "N12",
+      "criticality": "HIGH",
+      "cause": "Strict JSON parse_string collapses all Unicode escapes to literal backslash-u and retains simple escape spellings instead of decoded key identity.",
+      "observed": "Two valid distinct escaped-key objects reject; four equivalent-key duplicate cases commit in value/summary.",
+      "required": "Decode escapes/surrogate pairs to exact scalar UTF8 identity before duplicate check. Test positive and negative alternate encodings; bound nesting and document policy."
+    },
+    {
+      "id": "N13",
+      "criticality": "HIGH",
+      "cause": "Apply pre/post commit stage callbacks are outside exception-to-result handling.",
+      "observed": "Precommit exception escapes with absent receipt; postcommit escapes despite committed receipt.",
+      "required": "Protect rollback before commit and return explicit uncertainty after commit, redact exception messages; independently reopen state."
+    }
+  ],
+  "accepted_subproperties": [
+    "Previous six negatives now refuse in actual framed worker;11 independent cases pass.",
+    "Five parent-controlled SIGKILL barriers with27 checks show no partial initialization and old/full-new atomic state+receipt.",
+    "Independent digest oracle and replay controls remain passing."
+  ],
+  "limits": [
+    "Processkill is not powerloss proof; physical quota and cooperative sameUID limits remain.",
+    "One-change exception fixture missed betweenrow hook; corrected two-change fixture result preserved.",
+    "One orchestration template and one report-generation code syntax error occurred before writes; corrected, no candidate or state effects.",
+    "Candidate remains HOLD despite passing positive suites."
+  ],
+  "tags": [
+    "#fractal-l3",
+    "#fractal-l5",
+    "#zero-muda"
+  ],
+  "observed_at": "2026-10-11T13:06:19.746Z",
+  "candidate": [
+    {
+      "path": "dune",
+      "sha256": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661"
+    },
+    {
+      "path": "dune-project",
+      "sha256": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7"
+    },
+    {
+      "path": "telegram_store.ml",
+      "sha256": "31d19eb6755e1ab9e1b3c7b3750fe4269cdc1b73887c37638352c8964e4cd1aa"
+    },
+    {
+      "path": "telegram_store_main.ml",
+      "sha256": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc"
+    },
+    {
+      "path": "telegram_store_test.ml",
+      "sha256": "642398668dcfa75523c0082ceb884f3da1895237cbf68a8bc33cae6969c557e1"
+    },
+    {
+      "path": "20261011-1247-telegram_store_wire_v2.json",
+      "sha256": "c9d615a86288e118276671ac74849d53a6ac67abfb88c6b87842592e439bd124"
+    }
+  ],
+  "old_independent_cases": {
+    "observed_at": "2026-10-11T13:01:55.518Z",
+    "private_db_root": "/tmp/uos-native-independent-MrY9cl",
+    "source_manifest": [
+      {
+        "path": "dune",
+        "sha256": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661"
+      },
+      {
+        "path": "dune-project",
+        "sha256": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7"
+      },
+      {
+        "path": "telegram_store.ml",
+        "sha256": "31d19eb6755e1ab9e1b3c7b3750fe4269cdc1b73887c37638352c8964e4cd1aa"
+      },
+      {
+        "path": "telegram_store_main.ml",
+        "sha256": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc"
+      },
+      {
+        "path": "telegram_store_test.ml",
+        "sha256": "642398668dcfa75523c0082ceb884f3da1895237cbf68a8bc33cae6969c557e1"
+      },
+      {
+        "path": "20261011-1247-telegram_store_wire_v2.json",
+        "sha256": "c9d615a86288e118276671ac74849d53a6ac67abfb88c6b87842592e439bd124"
+      }
+    ],
+    "results": [
+      {
+        "name": "valid init",
+        "expectation_met": true,
+        "response": {
+          "ok": true,
+          "generation": 1
+        }
+      },
+      {
+        "name": "wrong typed optional db_path must reject",
+        "expectation_met": true,
+        "response": {
+          "ok": false,
+          "error": "invalid_json"
+        }
+      },
+      {
+        "name": "raw malformed UTF8 wire key must reject",
+        "expectation_met": true,
+        "response": {
+          "ok": false,
+          "error": "invalid_json"
+        }
+      },
+      {
+        "name": "wrong typed optional expected_sha256 must reject",
+        "expectation_met": true,
+        "response": {
+          "ok": false,
+          "error": "invalid_read_set_assertion"
+        }
+      },
+      {
+        "name": "decoded malformed UTF8 value must reject",
+        "expectation_met": true,
+        "response": {
+          "ok": false,
+          "error": "invalid_value"
+        }
+      },
+      {
+        "name": "nonJSON summary must reject",
+        "expectation_met": true,
+        "response": {
+          "ok": false,
+          "error": "invalid_json"
+        }
+      },
+      {
+        "name": "current UID ancestor world writable must reject",
+        "expectation_met": true,
+        "response": {
+          "ok": false,
+          "error": "db_directory_insecure"
+        }
+      },
+      {
+        "name": "independent Node v2 digests differ",
+        "expectation_met": true,
+        "digests": [
+          "ee519f010653867151a3f594db1fdec571ed7357ee44954bd31c0605a123ed91",
+          "1a079121fea48553add856bd05f642f6e998c96d6481ca20d569bd030151a332"
+        ]
+      },
+      {
+        "name": "first independent digest accepted",
+        "expectation_met": true,
+        "response": {
+          "ok": true,
+          "replay": false,
+          "receipt": {
+            "operation_id": "same-operation",
+            "request_digest": "ee519f010653867151a3f594db1fdec571ed7357ee44954bd31c0605a123ed91",
+            "generation": 2,
+            "summary_json": "{}",
+            "committed_utc_us": 1791723715510481
+          }
+        }
+      },
+      {
+        "name": "old colliding change refuses replay",
+        "expectation_met": true,
+        "response": {
+          "ok": false,
+          "error": "operation_collision_digest_mismatch"
+        }
+      },
+      {
+        "name": "same request replays",
+        "expectation_met": true,
+        "response": {
+          "ok": true,
+          "replay": true,
+          "receipt": {
+            "operation_id": "same-operation",
+            "request_digest": "ee519f010653867151a3f594db1fdec571ed7357ee44954bd31c0605a123ed91",
+            "generation": 2,
+            "summary_json": "{}",
+            "committed_utc_us": 1791723715510481
+          }
+        }
+      }
+    ],
+    "passed": 11,
+    "failed": 0
+  },
+  "new_unicode_cases": {
+    "observed_at": "2026-10-11T13:02:29.971Z",
+    "private_db_root": "/tmp/uos-native-independent-HGUBpk",
+    "results": [
+      {
+        "name": "distinct escaped BMP keys accepted",
+        "expectation_met": false,
+        "response": {
+          "ok": false,
+          "error": "invalid_json"
+        }
+      },
+      {
+        "name": "literal and escaped duplicate summary rejected",
+        "expectation_met": false,
+        "response": {
+          "ok": true,
+          "replay": false,
+          "receipt": {
+            "operation_id": "unicode-2",
+            "request_digest": "b640d44da13440d70e513a5c831efdc2940487d74e81a11100c4ca7a5153c8c2",
+            "generation": 2,
+            "summary_json": "{\"a\":1,\"\\u0061\":2}",
+            "committed_utc_us": 1791723749941027
+          }
+        }
+      },
+      {
+        "name": "literal and escaped duplicate value rejected",
+        "expectation_met": false,
+        "response": {
+          "ok": true,
+          "replay": false,
+          "receipt": {
+            "operation_id": "unicode-3",
+            "request_digest": "145182d0696efba8f7ad7f600ff04dc4a478db07acdae0e019f8560a39f00d19",
+            "generation": 3,
+            "summary_json": "{}",
+            "committed_utc_us": 1791723749948608
+          }
+        }
+      },
+      {
+        "name": "distinct escaped surrogate pair keys accepted",
+        "expectation_met": false,
+        "response": {
+          "ok": false,
+          "error": "invalid_json"
+        }
+      },
+      {
+        "name": "literal and escaped slash duplicate rejected",
+        "expectation_met": false,
+        "response": {
+          "ok": true,
+          "replay": false,
+          "receipt": {
+            "operation_id": "unicode-5",
+            "request_digest": "42fb383df7b140191495a0eec1e96ccc7cae24ffb5577e2e392f37ed543ebfe0",
+            "generation": 4,
+            "summary_json": "{\"/\":1,\"\\/\":2}",
+            "committed_utc_us": 1791723749962918
+          }
+        }
+      },
+      {
+        "name": "two encodings of newline duplicate rejected",
+        "expectation_met": false,
+        "response": {
+          "ok": true,
+          "replay": false,
+          "receipt": {
+            "operation_id": "unicode-6",
+            "request_digest": "8524bc13cdd6339f525742c173b7adec05f56893cbcf994e1c449c3fbf879459",
+            "generation": 5,
+            "summary_json": "{\"\\n\":1,\"\\u000a\":2}",
+            "committed_utc_us": 1791723749970942
+          }
+        }
+      }
+    ],
+    "passed": 0,
+    "failed": 6
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "uos.staged-provider-migration-development.v1",
+  "observed_at": "2026-10-01T12:24:03Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "AUTH_FIX2",
+  "worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "candidate": "77d937dc460721966ce47a2ff04d70327e44e3c3",
+  "parent": "1ffb92320c7f2453a87f765f52137d2d3f18feed",
+  "status": "IMPLEMENTED_TESTED_PENDING_REVIEW",
+  "source_manifest": [
+    {
+      "sha256": "ff5e365a34c14c2fe419e426a88d0bbda5a3e7a7eed61517adbe0d7949fb04cb",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam"
+    },
+    {
+      "sha256": "06ef90020b4fc3f0e5524dc914712c906785ef1da35145437805dd0bbb37c6f0",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam"
+    },
+    {
+      "sha256": "3b1c7c25b904367112f584862ee27175356fed49c608f2decc4f4c60cb47410c",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_store_cli.gleam"
+    },
+    {
+      "sha256": "90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_sync_cli.gleam"
+    },
+    {
+      "sha256": "f85548fef153d88a85e4032b3985759e11691db6bdcc1cdcc2e66872ded27a38",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam"
+    },
+    {
+      "sha256": "d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+    },
+    {
+      "sha256": "10b0b8a36795d8de1dd28c2fee162b8e3dac831995da31e0abf7b78d487b863b",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/test/session_provider_service_test.gleam"
+    }
+  ],
+  "changes": [
+    "Core API confines migration to exact private /tmp/uos-telegram-provider-stage-NONCE/coordinator.sqlite3 with owned0700 directory, owned0600 regular single-link DB and real /tmp ancestry; lexical/directory/file symlinks and hardlinks refuse.",
+    "Removed operational migrate-service-provider CLI route and help.",
+    "BEGIN IMMEDIATE contains exact schema/full verification/nonempty history, trigger transition, complete journal byte/head/count equality and full postverification; path identity checked within transaction; existing generation/lock guard rechecks before COMMIT."
+  ],
+  "tests": {
+    "build": "PASS",
+    "format": "PASS",
+    "private_provider_eunit": 6,
+    "log": "var/recovery-runtime/20261001-1223-auth-fix2-tests.log",
+    "preserved_failure": "First build refused unknown simplifile.RegularFile constructor; corrected to actual File constructor, then rebuilt."
+  },
+  "limits": [
+    "Current canonical writer and DB unchanged; source built only in isolated sibling.",
+    "No migration is permitted on operational path. Later production staged activation requires independent finite release/state authority.",
+    "Cooperative same-UID boundary remains; no hostile same-user filesystem race isolation claim.",
+    "Prior protocol8tests/genuine epoch2 acceptance belongs unchanged source hashes; independent exact-candidate review pending."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-10-11T12:26:11Z",
+  "status": "OBSERVED_NOT_VERIFIED",
+  "changed": [
+    {
+      "task": "FEATURE_INVENTORY",
+      "old": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d",
+      "current": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c"
+    },
+    {
+      "task": "NATIVE_REPAIR",
+      "old": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d",
+      "current": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c"
+    },
+    {
+      "task": "NATIVE_REVIEW",
+      "old": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d",
+      "current": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c"
+    },
+    {
+      "task": "MINI_AUTH_REVIEW",
+      "old": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d",
+      "current": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c"
+    },
+    {
+      "task": "MINI_AUTH_FIX",
+      "old": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d",
+      "current": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c"
+    },
+    {
+      "task": "MINI_AUTH_VERIFY",
+      "old": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d",
+      "current": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c"
+    },
+    {
+      "task": "INVENTORY_REVIEW",
+      "old": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d",
+      "current": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c"
+    }
+  ]
+}

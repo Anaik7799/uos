@@ -1,0 +1,55 @@
+{
+  "observed_at": "2026-10-11T12:55:23Z",
+  "kind": "SOURCE_OBSERVATION_ONLY",
+  "changes": [
+    {
+      "task": "NATIVE_REPAIR",
+      "path": "native/ocaml/telegram_store/telegram_store.ml",
+      "old": "6ea64096172bf2a6047e7eacc1664ed9f1b05ebdd9371717f6b0fb18092cb9e1",
+      "new": "31d19eb6755e1ab9e1b3c7b3750fe4269cdc1b73887c37638352c8964e4cd1aa"
+    },
+    {
+      "task": "NATIVE_REPAIR",
+      "path": "native/ocaml/telegram_store/telegram_store_test.ml",
+      "old": "de96f743fb12b912eeea2ec24f10f9dbf153afdf093d74488e36703c43d4a288",
+      "new": "78eac8028b5d45bff7e9e0692141e937b964b5ed3771846804bd190a901d6a0c"
+    },
+    {
+      "task": "NATIVE_REVIEW",
+      "path": "native/ocaml/telegram_store/telegram_store.ml",
+      "old": "6ea64096172bf2a6047e7eacc1664ed9f1b05ebdd9371717f6b0fb18092cb9e1",
+      "new": "31d19eb6755e1ab9e1b3c7b3750fe4269cdc1b73887c37638352c8964e4cd1aa"
+    },
+    {
+      "task": "NATIVE_REVIEW",
+      "path": "native/ocaml/telegram_store/telegram_store_test.ml",
+      "old": "de96f743fb12b912eeea2ec24f10f9dbf153afdf093d74488e36703c43d4a288",
+      "new": "78eac8028b5d45bff7e9e0692141e937b964b5ed3771846804bd190a901d6a0c"
+    },
+    {
+      "task": "NATIVE_FIX2",
+      "path": "native/ocaml/telegram_store/telegram_store.ml",
+      "old": "6ea64096172bf2a6047e7eacc1664ed9f1b05ebdd9371717f6b0fb18092cb9e1",
+      "new": "31d19eb6755e1ab9e1b3c7b3750fe4269cdc1b73887c37638352c8964e4cd1aa"
+    },
+    {
+      "task": "NATIVE_FIX2",
+      "path": "native/ocaml/telegram_store/telegram_store_test.ml",
+      "old": "de96f743fb12b912eeea2ec24f10f9dbf153afdf093d74488e36703c43d4a288",
+      "new": "78eac8028b5d45bff7e9e0692141e937b964b5ed3771846804bd190a901d6a0c"
+    },
+    {
+      "task": "NATIVE_VERIFY2",
+      "path": "native/ocaml/telegram_store/telegram_store.ml",
+      "old": "6ea64096172bf2a6047e7eacc1664ed9f1b05ebdd9371717f6b0fb18092cb9e1",
+      "new": "31d19eb6755e1ab9e1b3c7b3750fe4269cdc1b73887c37638352c8964e4cd1aa"
+    },
+    {
+      "task": "NATIVE_VERIFY2",
+      "path": "native/ocaml/telegram_store/telegram_store_test.ml",
+      "old": "de96f743fb12b912eeea2ec24f10f9dbf153afdf093d74488e36703c43d4a288",
+      "new": "78eac8028b5d45bff7e9e0692141e937b964b5ed3771846804bd190a901d6a0c"
+    }
+  ],
+  "verification": "UNVERIFIED editing draft; old candidate and failure receipts preserved in var/recovery-runtime/20261011-1244-native-independent"
+}

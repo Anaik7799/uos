@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-11T18:51:34.761Z",
+  "status": "PASS_BOUNDED_DEVELOPMENT_COMPONENT",
+  "runtime_admission": "NOT_GRANTED",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "OBSERVER_COMPLETION",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "producer": "Codex completion of preserved Claude partial candidate",
+  "independent_reviewer": "Actual AGY/Gemini session 954b9a82-15dc-4bd5-ae31-dd9670e583ca, SERVICE_IMPL attempt4",
+  "peer_review": {
+    "path": "governance/planning/20261011-2045-telegram-observer-independent-review-agy.json",
+    "sha256": "9d6a0bcab51255497ceaeb63741c6d6197683386b567b8598a81934b2300fea7"
+  },
+  "candidate": {
+    "path": "governance/planning/20261011-1824-telegram-observer-candidate-handoff.json",
+    "sha256": "ed6cd9d749971956306ad9cb29f18d85004cd9e987107c2196e05ce137a4a039"
+  },
+  "journal": {
+    "path": "docs/journal/20261011-1849-telegram-observer-completion-journal.md",
+    "sha256": "b7f4e9e85e24509f1ebfd891e6c28fc7a6233539c79164456de4de18372d7eda",
+    "mechanical_checks": "10/10 PASS"
+  },
+  "active_observation": "ACTIVE_OBSERVATION_PASS",
+  "adopted_sources_and_binaries": 6,
+  "tests": "11 receipt + 6 lifetime + 9 completion assertions PASS; native CLI18/19 with historical cold-WAL physical-invariance failure explicitly retained and classified in handoff",
+  "reproducibility": "4/4 exact binary matches after fresh-directory deterministic rebuild",
+  "service_integration": "Still HOLD under SERVICE_IMPL; no service behavior, production release, global admission or main merge asserted",
+  "forecast": {
+    "probability": 0.65,
+    "horizon": "2026-10-11T18:45:00Z",
+    "outcome": 0,
+    "brier": 0.4225,
+    "receipt_birthtime": "2026-10-11T18:46:14.938Z"
+  }
+}

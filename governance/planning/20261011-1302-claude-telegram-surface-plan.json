@@ -1,0 +1,1931 @@
+{
+  "schema": "uos.claude-telegram-surface-plan.v1",
+  "observed_utc": "2026-10-11T13:02:00Z",
+  "admission": "NOT_GRANTED",
+  "author": {
+    "actor": "claude-telegram-20261011",
+    "coordinator_session_uuid": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "authority": "uos/telegram-runtime/20261001-1150 SURFACE_PLAN attempt 1, lease_until_ns 1791726533123559753 (1h duration verified)",
+    "model_self_report": "Claude Opus 5 SELF-REPORT grade E3, cannot certify admission"
+  },
+  "preserved_predecessors": [
+    {
+      "path": "governance/planning/20261011-1213-claude-telegram-inventory-review.json",
+      "sha256": "c60ef31168e8c73dc03d3f60bb0e54c6e65f0c2ec4da7f4846427a64deb48027"
+    },
+    {
+      "path": "governance/planning/20261011-1222-claude-telegram-inventory-review-erratum.json",
+      "sha256": "1156af40f3cda168130ec62bc6fbf530c75f3b07a5199be3b42d93ed16a3bf3c"
+    },
+    {
+      "path": "governance/planning/20261011-1244-claude-telegram-behavioural-inventory.json",
+      "sha256": "a9b5f0ea52844fc88351bd0a0a34c0c4bf56b6dac9a8c9cbad29a65d89d4e6f9"
+    },
+    {
+      "path": "governance/planning/20261011-1247-claude-telegram-inventory-correction.json",
+      "sha256": "0c5e6cd5d8ecd093e0371b15c68e4e90337910c486112fd9032c34da1addf55c"
+    }
+  ],
+  "referenced_root_receipts": {
+    "mini_http_audit": {
+      "path": "governance/planning/20261011-1217-telegram-mini-http-audit.json",
+      "sha256_supplied_by_root": "b291d4637c14f8ce72fdfd1999bd8af4b65e436041933ec031cd2db995925651",
+      "sha256_observed_by_me": "b291d4637c14f8ce72fdfd1999bd8af4b65e436041933ec031cd2db995925651",
+      "match": true,
+      "findings_incorporated_not_reproduced": "17 browser routes; 14 pages serve initial/default data; hardcoded 17 containers / 5 agents / Health OK / Zenoh UP; empty alarms rendered AllClear; 3 buttons (AckAll, ToggleMara, RunVerification) produce NO DOM or network effect on click; no fresh Telegram auth production caller; server 1485 empties body; POST requires Bearer/proof; unknown /mini-application returns 200 dashboard; /mini-app/tasks?probe=1 returns wrong dashboard; all 17 checklist items 0. Root OCaml Playwright 390px GET-only fenced, external SDK blocked, NO Telegram SDK acceptance claim.",
+      "my_position": "REFERENCED, NOT REPRODUCED. I did not run a browser and will not repeat it."
+    },
+    "native_baseline": {
+      "path": "governance/planning/20261011-1216-telegram-native-baseline-independent-review.json",
+      "my_position": "referenced; C1 collision accepted as replay at apply"
+    },
+    "native_editing_observation": {
+      "id": "20261011-1223",
+      "binds_draft": "31d19 / 78eac",
+      "my_position": "NO verification claim made by me"
+    },
+    "auth_final": {
+      "path": "governance/planning/20261011-1228-telegram-auth-independent-verification.json",
+      "sha256_supplied_by_root": "a8ce790734ee5abf5f96a83144df446d30ccc91cbdf31ec903a8af642d0f9949",
+      "auth_source_bound": {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+        "sha256": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45",
+        "line_count": 559
+      },
+      "my_position": "auth 1514 final stable per root; I did NOT read, edit or test auth.gleam"
+    }
+  },
+  "evidence_fencing": {
+    "acquisition": "ALL native commands through cepaf_gleam@harness@development:bounded/3 (compiled beam) invoking /usr/bin/{cat,grep,find}. No direct native execution.",
+    "scripts": [
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/extract.erl",
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/fetch.erl",
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/fetch3.erl",
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/final3.js"
+    ],
+    "runtime_facts": "Every runtime property is recorded UNKNOWN with a resolving test. No process, service unit or port was inspected.",
+    "source_snapshot": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+        "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337",
+        "line_count": 555
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+        "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c",
+        "line_count": 2806
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+        "sha256": "db6ea74005e33eac95a57eec2d0370409fc6ee313231373d9e3440f7fa9a477d",
+        "line_count": 223
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+        "sha256": "544ed1528d28dd3201cdb31afe03c0a1512ba2642844c60989a106855029ef96",
+        "line_count": 251
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+        "sha256": "35f964a46a1249004a978b5c1f6b94eb45ba18451f6081d389a8664f4cc000bc",
+        "line_count": 250
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+        "line_count": 261
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+        "line_count": 697
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_outbound.gleam",
+        "sha256": "cdfaecd4eae4b30d15b2ad5db58dd5a2a2a38c5009098dde3417f03546647e67",
+        "line_count": 355
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+        "sha256": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499",
+        "line_count": 180
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+        "sha256": "340a955452c1a3bf1b62202fce286bb5aaa73659ecd63e52289cbe2df876685d",
+        "line_count": 145
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_app.gleam.broken",
+        "sha256": "f55c45e83c1068b621408872b48c00c45aa168856b59353c5373f90ee0977821",
+        "line_count": 115
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+        "sha256": "33111a7f16ef807f81d49ea177153031f88b8415682b2c38384018477f411289",
+        "line_count": 121
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mini_app.gleam",
+        "sha256": "81fd1c879eed10b7a3cb4052f61fb4a30135bd8e3ee6ddca4b33d0c847a71391",
+        "line_count": 460
+      },
+      {
+        "path": "tools/telegram_client.ml",
+        "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5",
+        "line_count": 879
+      }
+    ]
+  },
+  "classifier_five_corrections": {
+    "statement": "The effect-reachability classifier was wrong FIVE times in this task, each time because my pattern could not see the thing that mattered. The method is the claim; the totals moved every time I fixed a blind spot (8 -> 12 -> 21 OPERATIONAL).",
+    "corrections": [
+      "charset [a-z_] hid hyphenated command literals",
+      "module-qualified regex hid the UNQUALIFIED local os_cmd",
+      "word-grep for 'dedup' hid implemented idempotency",
+      "path scope src/cepaf_gleam hid tools/telegram_client.ml",
+      "unresolved IMPORT ALIAS (import cepaf_gleam/c3i/nif as c3i_nif) hid 9 NIF-backed S2 arms"
+    ],
+    "final_method": "Per module: parse @external to get the FFI set, parse imports to get the alias map, build a call graph across modules, mark transitive reachability to NIF/SHELL/HTTP/FFI with depth bound 7.",
+    "residual_confidence": "The OPERATIONAL vs ABSENT_ADAPTER partition is the load-bearing output and is now alias-correct. The read-versus-control split INSIDE the 21 operational arms is a VERB-TOKEN heuristic and is LOW CONFIDENCE - it currently over-reports control because tokens like 'dispatch' and 'complete' appear in unrelated record construction. Do not rely on it; resolve per arm when implementing."
+  },
+  "command_matrix": {
+    "totals": {
+      "arms": 79,
+      "literal_tokens": 89,
+      "unique_directives": 77,
+      "dual_routed": 12,
+      "partition": {
+        "LEGITIMATELY_INFORMATIONAL": 4,
+        "OPERATIONAL": 21,
+        "ABSENT_ADAPTER": 54
+      },
+      "behaviour_low_confidence": {
+        "STATIC_CLAIM": 58,
+        "ACTUAL_READ": 4,
+        "ACTUAL_CONTROL": 17
+      },
+      "effects": {
+        "none": 58,
+        "SHELL": 6,
+        "NIF": 11,
+        "NIF+SHELL": 1,
+        "FFI+NIF+SHELL": 1,
+        "FFI": 2
+      }
+    },
+    "partition_definitions": {
+      "OPERATIONAL": "Transitively reaches a real backend (NIF, SHELL, HTTP or other FFI). Needs BINDING work at most, not a new backend.",
+      "LEGITIMATELY_INFORMATIONAL": "Contract IS reference text. /start, /help, /cockpit. A backend would be WRONG here. Counting these as unimplemented was my earlier category error.",
+      "ABSENT_ADAPTER": "Returns text asserting a system fact while reaching no backend. This is the real gap class."
+    },
+    "rows": [
+      {
+        "surface": "S1",
+        "line": 111,
+        "literals": [
+          "/start",
+          "/help"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "111..168",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "LEGITIMATELY_INFORMATIONAL",
+        "needs": "NONE - contract is reference text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 169,
+        "literals": [
+          "/status"
+        ],
+        "alias": false,
+        "dispatch_target": "query_cluster_status",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "319..378",
+        "effects": [
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_READ",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches SHELL",
+        "backend": "SHELL",
+        "refusal_path": true
+      },
+      {
+        "surface": "S1",
+        "line": 171,
+        "literals": [
+          "/storage"
+        ],
+        "alias": false,
+        "dispatch_target": "query_storage_status",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "473..481",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": true
+      },
+      {
+        "surface": "S1",
+        "line": 173,
+        "literals": [
+          "/dark"
+        ],
+        "alias": false,
+        "dispatch_target": "handle_dark_cockpit",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "482..490",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 175,
+        "literals": [
+          "/andon"
+        ],
+        "alias": false,
+        "dispatch_target": "handle_andon_halt",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "491..510",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 177,
+        "literals": [
+          "/zigvm"
+        ],
+        "alias": false,
+        "dispatch_target": "handle_zigvm",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "379..421",
+        "effects": [
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches SHELL",
+        "backend": "SHELL",
+        "refusal_path": true
+      },
+      {
+        "surface": "S1",
+        "line": 179,
+        "literals": [
+          "/plan"
+        ],
+        "alias": false,
+        "dispatch_target": "query_saplan_tasks",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "422..458",
+        "effects": [
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches SHELL",
+        "backend": "SHELL",
+        "refusal_path": true
+      },
+      {
+        "surface": "S1",
+        "line": 181,
+        "literals": [
+          "/sutra"
+        ],
+        "alias": false,
+        "dispatch_target": "query_sutra_status",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "459..472",
+        "effects": [
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_READ",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches SHELL",
+        "backend": "SHELL",
+        "refusal_path": true
+      },
+      {
+        "surface": "S1",
+        "line": 183,
+        "literals": [
+          "/zk"
+        ],
+        "alias": false,
+        "dispatch_target": "query_zk",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "511..545",
+        "effects": [
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_READ",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches SHELL",
+        "backend": "SHELL",
+        "refusal_path": true
+      },
+      {
+        "surface": "S1",
+        "line": 185,
+        "literals": [
+          "/checklist"
+        ],
+        "alias": false,
+        "dispatch_target": "query_checklist_status",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "546..556",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 187,
+        "literals": [
+          "/cockpit"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "187..197",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "LEGITIMATELY_INFORMATIONAL",
+        "needs": "NONE - contract is reference text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 198,
+        "literals": [
+          "/approval"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "198..217",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 218,
+        "literals": [
+          "/resuscitate"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_resuscitate",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "16..37",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 219,
+        "literals": [
+          "/chaos"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_chaos",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "38..63",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 220,
+        "literals": [
+          "/repro"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_repro",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "64..84",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 221,
+        "literals": [
+          "/merge"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_merge",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "85..101",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 222,
+        "literals": [
+          "/bisect"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_bisect",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "102..118",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 223,
+        "literals": [
+          "/escalate"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_escalate",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "119..134",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 224,
+        "literals": [
+          "/rotate-keys"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_rotate_keys",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "135..151",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 225,
+        "literals": [
+          "/mesh"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_mesh",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "152..170",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 226,
+        "literals": [
+          "/migrate"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_migrate",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "171..187",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 227,
+        "literals": [
+          "/adr"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_adr",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "188..208",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 228,
+        "literals": [
+          "/blast-radius"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_ops.handle_blast_radius",
+        "body_file": "harness__telegram_ops.gleam",
+        "body_lines": "209..224",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 231,
+        "literals": [
+          "/pacing"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_pacing",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "14..33",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 232,
+        "literals": [
+          "/whatif",
+          "/simulate"
+        ],
+        "alias": true,
+        "dispatch_target": "telegram_creative.handle_whatif",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "34..54",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 233,
+        "literals": [
+          "/rack-cv"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_rack_cv",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "55..85",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": true
+      },
+      {
+        "surface": "S1",
+        "line": 234,
+        "literals": [
+          "/acoustic"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_acoustic",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "86..119",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 235,
+        "literals": [
+          "/rewind"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_rewind",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "120..142",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 236,
+        "literals": [
+          "/postmortem"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_postmortem",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "143..164",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 237,
+        "literals": [
+          "/finops",
+          "/budget"
+        ],
+        "alias": true,
+        "dispatch_target": "telegram_creative.handle_finops",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "165..176",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 238,
+        "literals": [
+          "/eco-schedule"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_eco_schedule",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "177..195",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 239,
+        "literals": [
+          "/radar"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_radar",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "196..208",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 240,
+        "literals": [
+          "/canvas"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_canvas",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "209..218",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 241,
+        "literals": [
+          "/lockbox"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_lockbox",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "219..236",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 242,
+        "literals": [
+          "/export-audit"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_creative.handle_export_audit",
+        "body_file": "harness__telegram_creative.gleam",
+        "body_lines": "237..252",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 245,
+        "literals": [
+          "/sidecar"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_sidecar",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "14..31",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 246,
+        "literals": [
+          "/voice-roll-call"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_voice_roll_call",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "32..58",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 247,
+        "literals": [
+          "/babel"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_babel",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "59..79",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 248,
+        "literals": [
+          "/whiteboard"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_whiteboard",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "80..99",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 249,
+        "literals": [
+          "/socratic"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_socratic",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "100..118",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 250,
+        "literals": [
+          "/handover"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_handover",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "119..138",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 251,
+        "literals": [
+          "/pair-voice"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_pair_voice",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "139..155",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 252,
+        "literals": [
+          "/exec-brief"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_exec_brief",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "156..174",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 253,
+        "literals": [
+          "/commitments"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_commitments",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "175..190",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 254,
+        "literals": [
+          "/acoustic-hud"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_acoustic_hud",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "191..207",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 255,
+        "literals": [
+          "/retro"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_retro",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "208..232",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 256,
+        "literals": [
+          "/gameday"
+        ],
+        "alias": false,
+        "dispatch_target": "telegram_collab.handle_gameday",
+        "body_file": "harness__telegram_collab.gleam",
+        "body_lines": "233..251",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 259,
+        "literals": [
+          "/aspects"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "259..264",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S1",
+        "line": 265,
+        "literals": [
+          "/ecology"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__telegram.gleam",
+        "body_lines": "265..279",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 290,
+        "literals": [
+          "/start",
+          "/help"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "290..326",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "LEGITIMATELY_INFORMATIONAL",
+        "needs": "NONE - contract is reference text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 327,
+        "literals": [
+          "/status"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "327..339",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 340,
+        "literals": [
+          "/health"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "340..352",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 353,
+        "literals": [
+          "/plan",
+          "/tasks"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "353..365",
+        "effects": [
+          "NIF",
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF+SHELL",
+        "backend": "NIF+SHELL",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 366,
+        "literals": [
+          "/task"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "366..379",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 380,
+        "literals": [
+          "/search"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "380..393",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 394,
+        "literals": [
+          "/immune"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "394..406",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 407,
+        "literals": [
+          "/fmea"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "407..419",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 420,
+        "literals": [
+          "/ha"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "420..432",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 433,
+        "literals": [
+          "/zenoh"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "433..445",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 446,
+        "literals": [
+          "/inference"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "446..458",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 459,
+        "literals": [
+          "/verify",
+          "/verification"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "459..471",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 472,
+        "literals": [
+          "/rete"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "472..485",
+        "effects": [
+          "NIF"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches NIF",
+        "backend": "NIF",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 486,
+        "literals": [
+          "/km"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "486..498",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 499,
+        "literals": [
+          "/wiki"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "499..512",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 513,
+        "literals": [
+          "/zk"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "513..526",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 527,
+        "literals": [
+          "/storage",
+          "/nvme"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "527..539",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 540,
+        "literals": [
+          "/zigvm"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "540..564",
+        "effects": [
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches SHELL",
+        "backend": "SHELL",
+        "refusal_path": true
+      },
+      {
+        "surface": "S2",
+        "line": 565,
+        "literals": [
+          "/cockpit"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "565..588",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "LEGITIMATELY_INFORMATIONAL",
+        "needs": "NONE - contract is reference text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 589,
+        "literals": [
+          "/approval"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "589..618",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 619,
+        "literals": [
+          "/doctor",
+          "/ev"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "619..631",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 632,
+        "literals": [
+          "/agy"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "632..636",
+        "effects": [
+          "FFI",
+          "NIF",
+          "SHELL"
+        ],
+        "behaviour": "ACTUAL_READ",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches FFI+NIF+SHELL",
+        "backend": "FFI+NIF+SHELL",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 637,
+        "literals": [
+          "/checklist"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "637..657",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 658,
+        "literals": [
+          "/aspects"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "658..673",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 674,
+        "literals": [
+          "/ecology"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "674..689",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 690,
+        "literals": [
+          "/board"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "690..702",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 703,
+        "literals": [
+          "/peers"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "703..715",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 716,
+        "literals": [
+          "/memory"
+        ],
+        "alias": false,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "716..768",
+        "effects": [
+          "FFI"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches FFI",
+        "backend": "FFI",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 769,
+        "literals": [
+          "/messages",
+          "/history"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "769..791",
+        "effects": [
+          "FFI"
+        ],
+        "behaviour": "ACTUAL_CONTROL",
+        "partition": "OPERATIONAL",
+        "needs": "BIND_EXISTING: already reaches FFI",
+        "backend": "FFI",
+        "refusal_path": false
+      },
+      {
+        "surface": "S2",
+        "line": 792,
+        "literals": [
+          "/tool",
+          "/action"
+        ],
+        "alias": true,
+        "dispatch_target": "(inline block)",
+        "body_file": "harness__cognitive_worker.gleam",
+        "body_lines": "792..811",
+        "effects": [],
+        "behaviour": "STATIC_CLAIM",
+        "partition": "ABSENT_ADAPTER",
+        "needs": "REAL_BACKEND or explicit downgrade of asserted text",
+        "backend": "none",
+        "refusal_path": false
+      }
+    ]
+  },
+  "non_command_families": [
+    {
+      "family": "F1_POLLER_AND_CALLBACKS",
+      "status": "PRESENT ADAPTER IN OCAML, RUNTIME UNKNOWN",
+      "source": {
+        "path": "tools/telegram_client.ml",
+        "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5",
+        "line_count": 879
+      },
+      "bodies": "get_updates L312 with offset/timeout payload; getUpdates call L319; transport L299 https://api.telegram.org/bot%s/%s; durable offset L546 set_db_preference telegram_poll_offset = update_id+1; answer_callback_query L388; callback dispatch L594 member callback_query; approve L619 / reject L637 / acknowledge L651; inline keyboard L410.",
+      "needs": "BIND_EXISTING. The adapter exists outside Gleam. Decision required: keep OCaml as the poller of record and give Gleam a typed boundary, or port. Do NOT re-implement before deciding.",
+      "acceptance": {
+        "positive": "One authorised poller advances telegram_poll_offset exactly once per update and emits one envelope.",
+        "negative": "A second concurrent poller is refused; a forged update_id below the watermark is not re-ingested (ledger ingest_single already returns the existing record).",
+        "recovery": "Crash between fetch and offset advance re-fetches the same update and ingests idempotently, producing no duplicate delivery."
+      },
+      "runtime_unknown": "Whether this is RUNNING is UNKNOWN. Resolving test: enumerate the service unit and observe one offset advance in the preference store."
+    },
+    {
+      "family": "F2_OUTBOUND_OUTBOX",
+      "status": "PRESENT IN GLEAM",
+      "source": {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_outbound.gleam",
+        "sha256": "cdfaecd4eae4b30d15b2ad5db58dd5a2a2a38c5009098dde3417f03546647e67",
+        "line_count": 355
+      },
+      "bodies": "send_single_message with Markdown then plaintext fallback; build_send_payload carries the egress redaction guard (laws already pin the denied-serial redaction); chunk_text / find_cut_index for the 4096 bound.",
+      "needs": "BIND_EXISTING plus one safety law.",
+      "acceptance": {
+        "positive": "A chunked message delivers in order with redaction applied.",
+        "negative": "The denied OS serial never leaves; already law-covered at build_send_payload.",
+        "recovery": "The Markdown-to-plaintext fallback must not double-send. THIS IS NOT CURRENTLY PROVEN and is the one acceptance gap in this family."
+      }
+    },
+    {
+      "family": "F3_DURABLE_STORE_AND_LEDGER",
+      "status": "PRESENT PURE LOGIC, IDEMPOTENT",
+      "source": {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+        "line_count": 697
+      },
+      "bodies": "make_request_id L94 derived identity; valid_record L101 enforces derivation; ingest_single L194-218 repeated-insert returns existing record; same_identity L179-186 seven-field compare; Watermark L44 per bot; L175 refuses offset advance on unidentified update; record_result L366; recover_request L614.",
+      "needs": "NONE for idempotency. Native store C1/C2 remain BLOCKING beneath it.",
+      "acceptance": {
+        "positive": "Same update twice yields one inbox record and one delivery.",
+        "negative": "Mixed-bot batch rejected; unidentified update cannot advance the offset.",
+        "recovery": "recover_request resumes per state without duplicating a delivered result."
+      },
+      "blocked_by": "C1 non-injective request digest (root observed the collision ACCEPTED AS A REPLAY at apply) and C2 non-transactional initialize_new. The Gleam ledger is sound; the native store under it is not."
+    },
+    {
+      "family": "F4_INGRESS_AUTHORISATION",
+      "status": "PRESENT PURE LOGIC, WIRING INCOMPLETE",
+      "source": {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+        "line_count": 261
+      },
+      "bodies": "classify_directive L117-147: fixes the tool name for /doctor and /plan; allowlists /tool to query_doctor|query_saplan with DeniedMutation otherwise; explicit DeniedMutation for /approval /andon /resuscitate /chaos /rotate_keys /repro /merge /zigvm; PreservedDirective for /status /checklist /storage /start /help /cockpit.",
+      "needs": "ADAPTER WIRING. Observed only at telegram_delivery_ledger L138 as a consistency assertion; NOT observed imported by harness/telegram.gleam.",
+      "acceptance": {
+        "positive": "Every inbound directive is classified before dispatch and the verdict is recorded.",
+        "negative": "/zigvm is refused at ingress and never reaches handle_zigvm; a /tool argument outside the allowlist is refused.",
+        "recovery": "A classification failure refuses rather than falls through to dispatch."
+      },
+      "runtime_unknown": "Whether any running path routes updates through the guard before S1 dispatch is UNKNOWN. Resolving test: a private end-to-end /zigvm send must produce DeniedMutation, not a ZigVM execution result."
+    },
+    {
+      "family": "F5_MINI_APP_HTTP",
+      "status": "PRESENT SSR NAVIGATION ONLY",
+      "source": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+          "sha256": "33111a7f16ef807f81d49ea177153031f88b8415682b2c38384018477f411289",
+          "line_count": 121
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mini_app.gleam",
+          "sha256": "81fd1c879eed10b7a3cb4052f61fb4a30135bd8e3ee6ddca4b33d0c847a71391",
+          "line_count": 460
+        }
+      ],
+      "bodies": "mini_app_routes.route L18-49 maps 14 literal paths to mini_app view functions with a catch-all _ -> dashboard_view(); wired at router.gleam:3444-3447 passing ONLY path; route/1 has no credential parameter. mini_app.gleam contains ZERO haptic and ZERO fetch/XHR markers - it is server-rendered navigation with no client transport.",
+      "root_audit_incorporated": "14 pages serve initial/default data; 17 containers, 5 agents, Health OK, Zenoh UP are hardcoded; empty alarms render AllClear; the 3 buttons produce no DOM or network effect; unknown /mini-application returns 200 dashboard; /mini-app/tasks?probe=1 returns the wrong dashboard; all 17 checklist items 0.",
+      "needs": "REAL_BACKEND for data, plus a BOUNDED MINI APP API. Explicitly NOT a blanket auth bypass: POST already requires Bearer/proof and that must stay.",
+      "design": "Define a narrow authenticated read API (one endpoint per page family) that validates Telegram initData HMAC via telegram/auth.gleam and returns typed JSON; keep SSR for shell only; make the 3 buttons POST to the bounded API with proof. Reject unknown paths with 404 instead of a 200 dashboard, and make query strings significant or explicitly ignored.",
+      "acceptance": {
+        "positive": "Each of the 14 pages renders values that change when the backend changes; a valid initData yields 200.",
+        "negative": "Absent or expired initData yields 401 and NO page body; unknown /mini-application yields 404 not a 200 dashboard; a POST without Bearer/proof is refused.",
+        "recovery": "Backend unavailable renders an explicit degraded state, never a hardcoded AllClear."
+      },
+      "my_scoped_question_B2_retained": "At router.gleam:3444-3447 no auth is visible and route/1 cannot receive a credential. I did NOT read router.gleam in full nor trace middleware, so this is a question, not a defect finding. Root's audit independently reports no fresh Telegram auth production caller, which is consistent."
+    },
+    {
+      "family": "F6_GATEWAY_NOTIFICATIONS_STREAMING",
+      "status": "PRESENT BUT MOCKED, AND A TOKEN EXPOSURE",
+      "source": {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+        "sha256": "340a955452c1a3bf1b62202fce286bb5aaa73659ecd63e52289cbe2df876685d",
+        "line_count": 145
+      },
+      "bodies": "Subscribes indrajaal/otel/span/critical and routes to Telegram via MoZ (header L7); GatewayState carries bot_token L16; start L24; L66-67 let mock_command = \"Summarize daily activity and check L4 health\" then process_inbound_message(session, state, mock_command) - a MOCK STARTUP INTENT executed at start; send_notification L112 builds params L117-120 including #(\"token\", json.string(state.bot_token)).",
+      "findings": [
+        {
+          "id": "B3",
+          "severity": "HIGH",
+          "detail": "The bot token is placed INSIDE MoZ request params (L120). Any MoZ subscriber or log of that request observes a live bot credential. Credentials must travel out-of-band, not as a routed message field."
+        },
+        {
+          "id": "B4",
+          "severity": "MEDIUM",
+          "detail": "A mock command is dispatched through process_inbound_message at startup (L66-67). Startup must not synthesise operator intent."
+        }
+      ],
+      "needs": "REAL_BACKEND wiring plus two removals. Zero slash-literals here: this is NOT a command surface.",
+      "acceptance": {
+        "positive": "A critical OTel span produces exactly one notification to the configured chat.",
+        "negative": "No token appears in any MoZ param, log or Zenoh payload; no synthetic command is dispatched at startup.",
+        "recovery": "MoZ unavailable queues or drops with an explicit record, never silently."
+      }
+    },
+    {
+      "family": "F7_CONVERSATION_AND_MODEL",
+      "status": "PRESENT, BUDGET-GATED",
+      "source": {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+        "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c",
+        "line_count": 2806
+      },
+      "bodies": "17 fall-through arms; openrouter/gemma synthesis path; conversation_memory module reached via FFI from /memory and /messages|/history arms (both OPERATIONAL in the matrix).",
+      "needs": "BIND_EXISTING. The budget ledger is already on the OpenRouter path per earlier session work.",
+      "acceptance": {
+        "positive": "Non-command text yields a bounded model reply within the daily budget.",
+        "negative": "Unauthorised sender refused before any model call; over-budget refused before network I/O.",
+        "recovery": "Model failure leaves no partial memory write."
+      }
+    },
+    {
+      "family": "F8_ATTACHMENTS_MEDIA",
+      "status": "UNRESOLVED - NOT ASSERTED EITHER WAY",
+      "evidence": "6 photo/voice/audio/document/video/file_id markers in cognitive_worker; no ingestion pipeline body read.",
+      "needs": "INVESTIGATION before design. I will not claim present or absent.",
+      "acceptance": "Deferred pending a per-media-type body read.",
+      "honest_note": "This is the ONE family I am leaving unresolved, stated as unresolved rather than guessed. Every earlier guess of mine in this class was wrong."
+    },
+    {
+      "family": "F9_BROKEN_APP",
+      "status": "PRESENT BUT DISABLED",
+      "source": {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_app.gleam.broken",
+        "sha256": "f55c45e83c1068b621408872b48c00c45aa168856b59353c5373f90ee0977821",
+        "line_count": 115
+      },
+      "bodies": "115 lines, start(session: zenoh.Session) at L37; the .broken extension removes it from compilation.",
+      "needs": "DECISION: revive under the F1 poller decision or delete. A .broken file is neither implementation nor absence.",
+      "acceptance": "If revived it inherits F1 acceptance; if deleted, record the deletion."
+    }
+  ],
+  "single_surface_ownership": {
+    "rule": "Each user-visible literal gets exactly ONE owning surface. 12 literals are currently dual-routed; 3 are behaviourally divergent.",
+    "decisions_required": [
+      {
+        "literal": "/zigvm",
+        "current": "S1 reaches SHELL; S2 reaches SHELL; guard says DeniedMutation",
+        "recommendation": "OWNER = NEITHER until the guard is wired. /zigvm is explicitly denied at ingress; both routers nonetheless build and execute a shell string from user arguments (handle_zigvm interpolates string.join(rest,\" \")). Wire F4 first, then assign a single owner, then add the argument-sanitisation negative test.",
+        "rationale": "This is the only literal where a denial exists in one module and an execution path exists in two others."
+      },
+      {
+        "literal": "/status",
+        "current": "S1 SHELL curl vs S2 NIF system_health",
+        "recommendation": "OWNER = S2. The NIF probe is the typed path; retire the S1 curl."
+      },
+      {
+        "literal": "/zk",
+        "current": "S1 SHELL vs S2 ABSENT_ADAPTER",
+        "recommendation": "OWNER = S1 until S2 gains a real backend."
+      },
+      {
+        "literal": "/plan and /tasks",
+        "current": "both operational, S1 SHELL sqlite3, S2 NIF+SHELL",
+        "recommendation": "OWNER = S2 via the NIF; S1 shells sqlite3 directly at telegram.gleam:422-458 which bypasses Sa-plan authority and should be retired."
+      },
+      {
+        "literal": "/start /help /cockpit /checklist /approval /aspects /ecology /storage",
+        "current": "dual, both static",
+        "recommendation": "OWNER = S2 (single cognitive surface); delete the S1 duplicates or make S1 delegate."
+      }
+    ]
+  },
+  "staged_implementation": [
+    {
+      "stage": "T0_BLOCKERS",
+      "owner": "native team",
+      "items": [
+        "C1 injective request digest with regression law on the exact collision pair",
+        "C2 transactional initialize_new"
+      ],
+      "gate": "No Telegram feature may claim completion while C1 stands, because the ledger idempotency above it is defeated by a colliding digest accepted as a replay."
+    },
+    {
+      "stage": "T1_WIRE_THE_GUARD",
+      "owner": "AGY",
+      "items": [
+        "Import telegram_ingress_guard into the dispatch path",
+        "Refuse before dispatch",
+        "Record every verdict"
+      ],
+      "gate": "Private end-to-end /zigvm must yield DeniedMutation, not an execution result.",
+      "unblocks": "B1-class argument risk and the /zigvm ownership decision."
+    },
+    {
+      "stage": "T2_POLLER_DECISION",
+      "owner": "root",
+      "items": [
+        "Decide OCaml-of-record vs port",
+        "Typed Gleam boundary if kept",
+        "Resolve telegram_app.gleam.broken"
+      ],
+      "gate": "One observed offset advance plus a single-poller refusal test."
+    },
+    {
+      "stage": "T3_RETIRE_DUPLICATES",
+      "owner": "AGY",
+      "items": [
+        "Apply the 12 ownership decisions",
+        "Delete or delegate the losing arm"
+      ],
+      "gate": "Zero literals resolve on two surfaces."
+    },
+    {
+      "stage": "T4_MINI_APP_BOUNDED_API",
+      "owner": "AGY + root review",
+      "items": [
+        "Authenticated typed read API per page family",
+        "initData HMAC validation via auth.gleam",
+        "Buttons POST with proof",
+        "404 for unknown paths"
+      ],
+      "gate": "Absent initData yields 401 with no body; unknown /mini-application yields 404; one page value changes with the backend."
+    },
+    {
+      "stage": "T5_GATEWAY_HARDENING",
+      "owner": "AGY",
+      "items": [
+        "Remove bot_token from MoZ params (B3)",
+        "Remove the startup mock command (B4)"
+      ],
+      "gate": "No credential in any MoZ payload or log; no synthetic intent at startup."
+    },
+    {
+      "stage": "T6_ABSENT_ADAPTER_SWEEP",
+      "owner": "AGY",
+      "items": [
+        "For each of the 54 ABSENT_ADAPTER arms: bind a real backend OR downgrade the asserted text to an explicit informational contract"
+      ],
+      "gate": "No arm returns text asserting a system fact it never read.",
+      "note": "54 is the measured size of this class after all five classifier corrections."
+    },
+    {
+      "stage": "T7_MEDIA",
+      "owner": "AGY",
+      "items": [
+        "Resolve F8 by reading each media path"
+      ],
+      "gate": "Per-media-type present/absent recorded with bodies."
+    }
+  ],
+  "real_backend_vs_binding": {
+    "BIND_EXISTING": {
+      "count": 21,
+      "detail": "The 21 OPERATIONAL arms already reach NIF, SHELL, HTTP or FFI. Work is typing, fencing and tests - not new backends.",
+      "backends_named": {
+        "NIF": "cepaf_gleam/c3i/nif.gleam, 31 @external declarations to the Rust c3i_nif",
+        "SHELL": "cepaf_gleam_ffi:os_cmd",
+        "FFI": "conversation_memory and related",
+        "OCAML_ADAPTER": "tools/telegram_client.ml for poller and callbacks"
+      }
+    },
+    "REAL_BACKEND_REQUIRED": {
+      "count": 54,
+      "detail": "ABSENT_ADAPTER arms assert facts with no reachable source. Each needs either a backend binding or an explicit downgrade."
+    },
+    "NO_WORK_OWED": {
+      "count": 4,
+      "detail": "LEGITIMATELY_INFORMATIONAL: /start, /help, /cockpit. A backend here would be wrong."
+    }
+  },
+  "limits_and_residuals": [
+    "OPERATIONAL=21 is an UPPER BOUND. 11 of the 21 reach only c3i_nif, whose Erlang shim returns valid-looking stub payloads when the Rust NIF is unloaded. runtime_loaded() is the one-line test that settles it; UNKNOWN at write time. No physical backend was executed or certified, as root directed.",
+    "Read-only. No runtime, no Telegram send, no source mutation, no browser, no private test.",
+    "Read-versus-control split inside the 21 OPERATIONAL arms is a LOW-CONFIDENCE verb-token heuristic and over-reports control; resolve per arm at implementation.",
+    "F8 attachments/media deliberately UNRESOLVED rather than guessed.",
+    "router.gleam not read in full; B2 scoped to one call site.",
+    "Runtime status of the OCaml poller, the guard wiring and the mini-app auth caller are all UNKNOWN with resolving tests named.",
+    "Root browser audit findings are incorporated by reference and were NOT reproduced by me.",
+    "Native draft 31d19/78eac referenced with NO verification claim.",
+    "GATE STATUS AT WRITE TIME: active-check HOLD, 4 RP-EVIDENCE findings, all one file - native/ocaml/telegram_store/telegram_store_test.ml - under concurrent AGY NATIVE_FIX2 edits, affecting NATIVE_FIX2, NATIVE_REPAIR, NATIVE_REVIEW and NATIVE_VERIFY2. None are my tasks. I did NOT complete under HOLD and did NOT force-pass."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l6",
+    "#fractal-l9",
+    "#zero-muda",
+    "#stamp-stpa",
+    "#km-triad"
+  ],
+  "gate_status_at_completion": {
+    "pre_work": "HOLD at 12:56 - 4 RP-EVIDENCE on native/ocaml/telegram_store/telegram_store_test.ml under concurrent AGY NATIVE_FIX2. I did NOT work past it as a completion and did NOT force-pass.",
+    "root_refresh": "Root refreshed native source/test observation 12:59:17; NATIVE_FIX2 active PASS 12:59:18.",
+    "post_refresh": "ACTIVE_OBSERVATION_PASS, 0 findings, re-run by me after the refresh and BEFORE completion.",
+    "process_deviation_preserved": "In the INVENTORY_CORRECTION receipt I completed a task while active-check read HOLD. That deviation is recorded and was NOT repeated here: this task gated PASS before work and PASS again before completion.",
+    "native_fix2_binding": "source 31d19, test 642398, new wire c9d615, awaiting native verify. Hash refresh means OBSERVED BYTES ONLY, not a candidate pass. No verification claim made by me."
+  },
+  "ffi_facade_stub_caveat": {
+    "severity": "MATERIAL CORRECTION TO MY OWN OPERATIONAL COUNT",
+    "root_caveat_accepted": "An external native call alone is NOT proof of effect; some FFI facades stub.",
+    "first_hand_evidence": {
+      "file": "apps/cepaf_gleam/src/c3i_nif.erl",
+      "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+      "stubs_observed": [
+        "L49 plan_status() -> {\"active\":0,\"pending\":0,\"completed\":0,\"blocked\":0,\"total\":0}",
+        "L57 system_health() -> {\"container_count\":0,\"healthy_count\":0,\"threat_level\":\"unknown\",\"zenoh_connected\":false}",
+        "L60 system_zenoh() -> {\"page\":\"Zenoh Mesh\",\"status\":\"offline\",\"connected\":false,\"routers\":0}",
+        "L81 zenoh_get(_Key) -> [] - returns VALID-LOOKING EMPTY DATA rather than an error, unlike its siblings zenoh_open/zenoh_put which return {\"status\":\"error\",\"error\":\"zenoh_nif_not_loaded\"}"
+      ],
+      "honest_discriminator_the_module_provides": "L45 runtime_loaded() -> persistent_term:get(?RUNTIME_LOADED_KEY, false). The module's own comment distinguishes this from the payload-returning stubs precisely because a stub cannot be told apart from valid empty data."
+    },
+    "consequence": "Of my 21 OPERATIONAL arms, 11 reach only the NIF (S2 /status /health /task /search /immune /fmea /ha /zenoh /inference /verify|/verification /rete). If c3i_nif.so is not loaded those return STUB PAYLOADS and the arm is behaviourally indistinguishable from ABSENT_ADAPTER while my classifier scores it OPERATIONAL.",
+    "corrected_three_state_reading": {
+      "OPERATIONAL_SHELL": {
+        "count": 7,
+        "detail": "Reaches cepaf_gleam_ffi:os_cmd. A shell call has no stub fallback, so reachability does imply a real attempt.",
+        "arms": "S1 /status /zigvm /plan /sutra /zk; S2 /plan|/tasks /zigvm"
+      },
+      "OPERATIONAL_NIF_STUB_RISK": {
+        "count": 11,
+        "detail": "Reaches only c3i_nif. Real iff the Rust .so is loaded. UNKNOWN at write time.",
+        "resolving_test": "Call c3i_nif:runtime_loaded(). If false, all 11 are returning stubs and must be reclassified ABSENT_ADAPTER_BY_STUB. This is a one-line test and it decides 11 of 79 arms."
+      },
+      "OPERATIONAL_OTHER_FFI": {
+        "count": 3,
+        "detail": "S2 /agy (FFI+NIF+SHELL), /memory (FFI), /messages|/history (FFI). Mixed; the SHELL component of /agy is stub-free."
+      }
+    },
+    "why_this_matters": "This is the SIXTH instance in this task of my pattern not seeing what mattered, and the first one root warned me about before I shipped it. Reaching a facade is not reaching a backend."
+  }
+}

@@ -56,10 +56,7 @@ fn make_review_receipt_content(
   <> "\"}"
 }
 
-fn create_private_review_receipt(
-  path: String,
-  content: String,
-) -> String {
+fn create_private_review_receipt(path: String, content: String) -> String {
   let assert Ok(Nil) = ra.write_file_binary(path, <<content:utf8>>)
   let assert Ok(h) = ra.sha256_file(path)
   h
@@ -79,7 +76,8 @@ fn make_intent_and_grant(
   let receipt_path = test_root <> "/reviews/review_receipt.json"
   let receipt_content =
     make_review_receipt_content(plan, task, reviewer, target_path, cand_hash)
-  let receipt_hash = create_private_review_receipt(receipt_path, receipt_content)
+  let receipt_hash =
+    create_private_review_receipt(receipt_path, receipt_content)
 
   let assert Ok(#(host_id, boot_id, _, now_utc_us)) = ra.ffi_clock()
   let expiry = now_utc_us + 3_600_000_000
@@ -206,7 +204,8 @@ pub fn prepare_review_receipt_verdict_fail_refusal_test() {
     ra.write_file_binary(grant.review_receipt_path, <<bad_content:utf8>>)
   let assert Ok(bad_hash) = ra.sha256_file(grant.review_receipt_path)
   let bad_grant = ra.ReviewedGrant(..grant, review_receipt_sha256: bad_hash)
-  let bad_intent = ra.ActivationIntent(..intent, review_receipt_sha256: bad_hash)
+  let bad_intent =
+    ra.ActivationIntent(..intent, review_receipt_sha256: bad_hash)
 
   case ra.prepare(bad_intent, bad_grant) {
     Error(ra.ReviewReceiptInvalid(_)) -> Nil
@@ -283,10 +282,9 @@ pub fn prepare_mismatched_receipt_test() {
 
   let #(intent, grant) = make_intent_and_grant(target_path, cand_path, None)
   let _ =
-    ra.write_file_binary(
-      grant.review_receipt_path,
-      <<"{\"tampered\":true}":utf8>>,
-    )
+    ra.write_file_binary(grant.review_receipt_path, <<
+      "{\"tampered\":true}":utf8,
+    >>)
 
   case ra.prepare(intent, grant) {
     Error(ra.ReviewReceiptMismatch(_, _)) -> Nil
@@ -601,7 +599,8 @@ pub fn prepare_non_sqlite_target_refusal_test() {
   let target_path = test_root <> "/target_dir/target.txt"
   let assert Ok(Nil) = ra.create_test_coordinator_db(cand_path)
 
-  let #(base_intent, grant) = make_intent_and_grant(target_path, cand_path, None)
+  let #(base_intent, grant) =
+    make_intent_and_grant(target_path, cand_path, None)
   let intent = ra.ActivationIntent(..base_intent, target_path: target_path)
 
   case ra.prepare(intent, grant) {
@@ -616,7 +615,8 @@ pub fn prepare_non_sqlite_candidate_refusal_test() {
   let target_path = test_root <> "/target_dir/target.sqlite3"
   let assert Ok(Nil) = ra.write_file_binary(cand_path, <<"test":utf8>>)
 
-  let #(base_intent, grant) = make_intent_and_grant(target_path, cand_path, None)
+  let #(base_intent, grant) =
+    make_intent_and_grant(target_path, cand_path, None)
   let intent = ra.ActivationIntent(..base_intent, candidate_path: cand_path)
 
   case ra.prepare(intent, grant) {
@@ -630,7 +630,8 @@ pub fn prepare_target_equals_candidate_refusal_test() {
   let target_path = test_root <> "/target_dir/target.sqlite3"
   let assert Ok(Nil) = ra.create_test_coordinator_db(target_path)
 
-  let #(base_intent, grant) = make_intent_and_grant(target_path, target_path, None)
+  let #(base_intent, grant) =
+    make_intent_and_grant(target_path, target_path, None)
   let intent = ra.ActivationIntent(..base_intent, candidate_path: target_path)
 
   case ra.prepare(intent, grant) {
@@ -645,7 +646,8 @@ pub fn prepare_incompatible_operator_scope_refusal_test() {
   let target_path = test_root <> "/target_dir/target.sqlite3"
   let assert Ok(Nil) = ra.create_test_coordinator_db(cand_path)
 
-  let #(base_intent, grant) = make_intent_and_grant(target_path, cand_path, None)
+  let #(base_intent, grant) =
+    make_intent_and_grant(target_path, cand_path, None)
   let intent = ra.ActivationIntent(..base_intent, operator_scope: "wrong_scope")
 
   case ra.prepare(intent, grant) {
@@ -660,7 +662,8 @@ pub fn prepare_unsupported_target_kind_refusal_test() {
   let target_path = test_root <> "/target_dir/target.sqlite3"
   let assert Ok(Nil) = ra.create_test_coordinator_db(cand_path)
 
-  let #(base_intent, grant) = make_intent_and_grant(target_path, cand_path, None)
+  let #(base_intent, grant) =
+    make_intent_and_grant(target_path, cand_path, None)
   let intent =
     ra.ActivationIntent(
       ..base_intent,

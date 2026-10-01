@@ -1,0 +1,212 @@
+# Unified Operational System (UOS) Canonical Agent Policy
+
+## 1. Scope and Canonical Truth
+
+This repository is the canonical Unified Operational System (UOS).
+
+- Canonical workspace: `/home/an/NAS-setup/uos`
+- Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
+- Current phase: active migration, governance establishment, and formal implementation
+- EV-Cycle Status: `EV-01` through `EV-19` admitted; `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
+- Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
+- Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
+- External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
+
+All agents operating in this repository must strictly adhere to the policies, boundaries, and evidence contracts defined herein.
+
+## 2. Governing References and Lineage
+
+The canonical UOS architecture derives from the planning synthesis:
+1. `docs/design/2026-09-05-uos-standalone-jujutsu-monorepo-design.md`
+2. `docs/design/2026-09-05-uos-standalone-jujutsu-monorepo-implementation-plan.md`
+3. `docs/design/2026-09-05-uos-source-feature-traceability-catalog.md`
+4. `docs/design/2026-09-05-uos-formal-mandate-spec.json`
+5. `docs/journal/2026-09-05-uos-consolidation-context-journal.md`
+6. `docs/design/2026-09-05-uos-agent-policy-capability-superset-mapping.md`
+7. `docs/design/2026-09-05-uos-agent-capability-inventory.json`
+8. `governance/agents/policy/superset.toml`
+9. `governance/capability-inventory/skills.toml`
+
+Historical documents and C3I/Harness/ZigVM copies are source evidence, not governing authority over UOS.
+
+## 3. External Source Authorities & Ingestion Discipline
+
+The external source authorities for UOS are:
+- VM-1 C3I: `/home/an/dev/ver/c3i`
+- VM-1 ZigVM: `/home/an/dev/ver/zigvm`
+- VM-1 Harness-Bionic: `/home/an/dev/ver/harness-bionic`
+- NAS-1 Kubernetes: `/home/an/NAS-setup/k8s-lab`
+- Pinned Modular platform and skills
+- Pinned DeepSeek Harness/Cordis and paper
+- Pinned OpenClaw stable compatibility baseline
+
+These external trees are dirty, moving, and read-only. Before any file or logic is admitted into UOS:
+1. Source writers must be quiesced.
+2. Exact revision, dirty manifest, sanitized snapshot digest, and source locator must be bound into `governance/sources/`.
+3. Sanitized ingestion: secret bytes, private keys, authentication tokens, live DB/WAL/SHM, compiler caches, and model weights are strictly barred.
+4. Quarantined incidents (such as the Harness SSH injector and ZigVM OAuth secret) are recorded by presence-only incident records—never copied or hashed.
+5. Imported rules, skills, agents, and hooks remain inert evidence until adapted, tested, and admitted by UOS authority.
+
+## 4. Version Control Discipline (Jujutsu Standalone)
+
+1. Standalone, non-colocated Jujutsu (`.jj/`) is the sole VCS for UOS.
+2. Native Git mutation commands (`git commit`, `git push`, `git checkout`, etc.) are prohibited inside `/home/an/NAS-setup/uos`.
+3. All operations utilize Jujutsu change IDs, commit IDs, operations, bookmarks, and sibling workspaces.
+4. The `main` bookmark remains uncreated until final system admission (`EV-15`). Active development proceeds on feature and integration bookmarks (`integration/*`).
+5. Sibling workspaces (`.uos-workspaces/*`) are used for parallel work streams; integration gates are serialized.
+
+## 5. Architecture and Language Boundaries
+
+1. **Supervision, Control, Policy & Agents**: Pure Gleam/OTP (`apps/cepaf_gleam`, `apps/*`). Owns state machines, supervision trees, agent swarms, leases, and operational APIs.
+2. **Deterministic Runtime Engine**: ZigVM (`engines/zigvm`). Zig-only runtime kernel with descriptor-relative VFS backend.
+3. **Formal Evidence & Analysis**: Hermes (`engines/hermes`). OCaml/Dune engine for Gospel contracts, Z3 queries, differential oracles, and bounded formal verification.
+4. **Isolated AI Inference**: Modular MAX/Mojo (`services/inference/max`). Python is strictly confined to this supervised daemon service.
+5. **Native Bounded Kernels**: `native/{c,cpp,rust,ocaml}`. Strictly short, deterministic, bounded kernels or dispatch facades with explicit ABI contracts. Blocking work belongs in supervised isolated daemons.
+6. **Zero-Muda Rule**: Zero Bevy and Graphite are prohibited in UOS source, dependencies, APIs, runtime roles and imported history. Keep exclusion provenance; do not delete legacy trees during ordinary planning or migration. Graphene is not required: all 2D vector mathematics, transforms, and graph operations are implemented in pure Erlang/Gleam or Hermes OCaml, maintaining Zero-Muda purity without foreign NIFs.
+
+### 5.0 Knowledge Management, Wiki & Zettelkasten Architecture (`#km-triad`)
+
+The UOS knowledge system unifies three foundational corpora into an integrated,
+bidirectionally linked living knowledge graph:
+1. **Hermes Wiki Engine** (`engines/hermes/modules/hermes_wiki`): AST parsing,
+   Gospel-specified contracts, transclusion (`[[wiki:...]]`), vector similarity,
+   and TyXML rendering.
+2. **ZigVM Zettelkasten (ZK)** (`/home/an/dev/ver/zigvm/docs/zk/`): Permanent
+   architectural decision records (`ADR-001` through `ADR-016`), Maps of Content
+   (MOCs), and fractal design invariants (`[[zk:...]]`).
+3. **C3I Living Ontology & Evidence Plane** (`/home/an/dev/ver/c3i/docs/`):
+   STAMP/STPA safety lattices, SQLite living catalogs, and 13D trace coordinates.
+All newly generated documentation, wiki articles, and journals MUST bear the
+canonical `YYYYMMDD-HHSS-` timestamp prefix and standardized fractal tags
+(`#fractal-l0`..`#fractal-l9`, `#zk-adr`, `#zero-muda`).
+
+### 5.1 Cross-Language Implementation of the C3I Control Plane
+The Unified Operational System distributes C3I control functions across explicit language domains according to safety, formal verification, and performance characteristics:
+
+1. **Gleam/OTP (Supervision, Intent, State Machines & OODA Loops)**:
+   - **Supervision**: `uos_sup.gleam` root 4-domain supervisor (Apps, Engines, Services, Intelligence) with strict isolation and child restart budgets.
+   - **Controllers**: Pure functional Gleam implementations of Prajna circuit breakers (`prajna/circuit_breaker.gleam`), Lyapunov windowed trend detectors (`ha/lyapunov_proof.gleam`), 2oo3 constitutional consensus (`fractal/l0_constitutional.gleam`), and dead-man's-switch freshness monitors (`ha/freshness_monitor.gleam`).
+   - **Telemetry**: Universal structured C3I JSON logging with 128-bit W3C OTel `trace_id` and fractal layer annotations ($L_0 \dots L_9$).
+
+2. **Hermes OCaml (Evidence, Bounded Analysis, Differential Oracles & Interception)**:
+   - **Evidence Store**: Authoritative SQLite WAL append-only ledgers and differential parity comparison (`test_parity_algebra.exe`, `test_parity_compare.exe`).
+   - **Zero-Trust Interceptor**: `run_agent_dispatch_hook.exe` validating MCP tool payloads with authentic `Cryptokit` SHA-256 digestion, trapping embedded NUL bytes (code `-2`) and raw SQL injections (code `-3`).
+   - **Formal Rules**: Gospel contracts, bounded Z3 solver workers, and Rete-UL forward-chaining rule engines evaluated against simple independent reference oracles.
+
+3. **ZigVM (Deterministic Execution Kernel & Storage Engine)**:
+   - **Kernel**: Pure Zig deterministic runtime engine (`engines/zigvm`).
+   - **VFS**: Descriptor-relative, race-free, symlink-aware filesystem abstraction.
+   - **Memory**: Linear allocation arenas and lockless ring buffers with zero garbage collection overhead.
+
+4. **Rust / NIFs (Bounded Kernels & Hardware Safety Interlocks)**:
+   - **Bounded Kernels**: Short, deterministic, non-blocking C-ABI functions under `native/`.
+   - **Hardware Safety**: Production Kubernetes and Rook-Ceph storage controller (`ops/kubernetes/nas-k8s-lab/src/spec.rs`) strictly locking host OS NVMe serial `HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"` against OSD wiping or allocation.
+
+5. **Modular MAX / Mojo (Isolated AI Inference Tier)**:
+   - **Daemon**: Python is strictly quarantined to `services/inference/max/max_worker.py`.
+   - **Protocol**: Length-delimited JSON-RPC over standard I/O pipes supervised by OTP.
+
+6. **Lean 4 & Quint (Mathematical & Temporal Authority)**:
+   - **13D Traceability**: `formal/lean/Traceability.lean` proves coordinate conservation $\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$ and fail-closed indicator $\mathbb{I}(\text{Trust})$.
+   - **Two-Lattice STM**: `formal/lean/TwoLattice_STM.lean` proves telemetry observation non-interference and single-writer exclusive lease mutex.
+   - **Quint Parity**: `formal/quint/parity_frontier.qnt` simulates intent closure invariants.
+
+### 5.2 Universal Tailscale FQDN Web Navigation (`#tailscale-web`)
+
+Per explicit operator mandate and contract `contracts/rules/tailscale-web-fqdn-mandate.md`, all dashboards, web pages, wiki articles, ZK decision records, and files are served live over the Tailnet and MUST carry full, clickable Tailscale FQDN links:
+- **Tailnet Base FQDN**: `http://nas-1.tail55d152.ts.net:4100` (Tailscale IP: `100.87.7.78`)
+- **Main Cockpit Dashboard**: `http://nas-1.tail55d152.ts.net:4100/`
+- **Planning Cockpit**: `http://nas-1.tail55d152.ts.net:4100/planning`
+- **AG-UI Real-Time Event Stream**: `http://nas-1.tail55d152.ts.net:4100/ag-ui/events`
+- **Hermes Wiki Master Index**: `http://nas-1.tail55d152.ts.net:4100/wiki`
+- **ZigVM ZK Master MOC**: `http://nas-1.tail55d152.ts.net:4100/zk`
+- **Live File & Doc Viewer**: `http://nas-1.tail55d152.ts.net:4100/files/<path>` and `http://nas-1.tail55d152.ts.net:4100/docs/<path>`
+- **Peer Runtime Host**: `http://vm-1.tail55d152.ts.net:8088` (Tailscale IP: `100.78.98.18`)
+
+### 5.3 Universal Comprehensive Verification Checklist & Uniform Site Navigation (`#checklist-nav`)
+
+Per operator mandate (`contracts/rules/comprehensive-checklist-contract.md` `SC-CHECKLIST-001` and `SPEC-CHECKLIST-NAV-001`), every webpage and `.md` file MUST provide the 5-domain, 18-checkpoint verification structure and adhere to the uniform, cohesive site architecture:
+1. **Interactive Checklist Component**: 18/18 checks rendered via expandable accordion component on every single web screen and document view.
+2. **5 Verification Domains**: (1) Metadata/Timestamp/Tailscale Navigation, (2) Zero-Muda Purity & Storage Safety, (3) Testing Gold Standard C1–C8 & 4 Math Gates, (4) Cross-Language Control & Observability, (5) Tri-Sovereign Governance & Jujutsu Monorepo.
+3. **Uniform Cohesive Navigation**: Grouped Sidebar (Command & Control, Knowledge Base, Repository & Gov), Top Status Bar with clickable Tailscale FQDN URL and click-to-copy, Breadcrumb hierarchy, Dual View Mode (Rendered Markdown vs Raw Source toggle), Bottom linear Prev/Next navigation, and Persistent System Footer.
+4. **Machine Verification**: Validated by `tools/uos checklist`, gate `G-CHECKLIST`, and `tools/uos doctor` EV-19.
+
+### 5.6 Systematic Risk Prioritization (SC-RISK-PRIORITY-001)
+
+For intake, planning, dispatch, review, release and incidents, follow
+[the repository-owned SOP](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1559-risk-prioritization-sop.md)
+at contracts/rules/20260907-1559-risk-prioritization-sop.md, using the local uos-risk-prioritization skill.
+Apply authority/safety constraints and dependency readiness before
+**criticality × STPA × FMEA × dependency × impact**. Record raw FMEA, all four
+UCA types, evidence age, uncertainty, acceptance tests and residual risks.
+Keep plans/tasks/jobs/workflows in Sa-plan; a score or board ACK grants no effect authority.
+The SOP's Superpowers and plugin bindings are mandatory at lifecycle entry/exit.
+All necessary policy, examples and OCaml validation sources are repository-local;
+global/imported skills are optional context. Validate with
+**bash tools/risk-priority-check --all**. Follow
+[SC-RISK-CHECK-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1606-risk-checker-contract.md):
+use --preflight before a task claim and --active-check with the current worker/attempt
+during execution. HOLD/unknown/stale results require evidence repair; no force-pass.
+A passing observation never replaces Sa-plan authority or effect-time fencing.
+Process guidance and report-only validation do not establish runtime scheduler enforcement.
+Respect the active session's scope, permission and delegation restrictions.
+
+## 6. Evidence, Gates, and Completion Semantics
+
+State transitions must advance strictly through:
+```text
+discovered -> classified -> mapped -> implemented -> built -> executed -> passed -> verified -> admitted
+```
+- `PLANNED`, `MOCK`, `UNRUN`, `STALE`, `QUARANTINED`, `EXCLUDED`, and `UNKNOWN` are not passing states.
+- Two-Key Verification: Every capability requires fresh observed runtime behavior AND machine-verifiable formal specification at the candidate revision.
+- Formal results, AI advice, and Rete inferences advise and veto; they never directly execute side-effects without typed policy authorization.
+
+## 7. Formal Verification and Solvers
+
+- Solver queries (Z3) run exclusively in isolated bounded worker processes with normalized queries, timeouts, process-tree reaping, and satisfiable control assertions. Unbounded solvers in NIFs are barred.
+- Formal authority is invocation-specific: missing tools, timeouts, unsupported syntax, `sorry`, `Admitted`, and undeclared axioms fail closed.
+- Partial models (Harness FPP, Harness SysML) are treated as generated projections until verified against pinned official toolchains.
+
+## 8. Timestamp & Journal Protocols
+
+### 8.1 Timestamp Synchronization (`SC-TIME`)
+- Trust observed host clock after synchronization check (`chrony`/timesync receipt); do not trust injected model strings.
+- Host NTP offset, system-to-model delta, and agent-context delta are non-aliasing typed measurements.
+- Inherited drift bands: nominal (<2s), minor (2–5s), warning (5–10s), critical (>10s).
+- **Mandatory Generated Document Timestamp Prefix**: Per explicit operator mandate (`contracts/rules/timestamp-mandate.md`), all newly generated documents across UOS MUST carry the `YYYYMMDD-HHSS-` timestamp prefix (e.g. `20260905-1725-`). Historical source formats are preserved byte-for-byte in typed namespaces.
+- Machine-checked by `tools/uos timestamp-check` and `dependability_clock.ml`.
+
+### 8.2 Journal Protocol (`SC-JOURNAL`)
+Every task completion journal MUST contain the exact 13 required sections:
+1. Scope & Trigger
+2. Pre-State Assessment
+3. Execution Detail
+4. Root Cause Analysis
+5. Fix Taxonomy
+6. Patterns & Anti-Patterns Discovered
+7. Verification Matrix
+8. Files Modified
+9. Architectural Observations
+10. Remaining Gaps
+11. Metrics Summary
+12. STAMP & Constitutional Alignment
+13. Conclusion
+
+Scaling boundaries: trivial (1–3 files: 1–2 lines/sec), standard (4–14 files: paragraph detail), major (15+ files: full subsections & diagrams).
+
+## 9. Status Line
+
+```text
+UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
+CURRENT EV-CYCLE: EV-19 (COMPREHENSIVE CHECKLIST & UNIFORM SITE NAVIGATION 18/18 PASS ON nas-1.tail55d152.ts.net:4100)
+CHECKLIST STATUS: 5 DOMAINS, 18/18 CHECKS 100% GREEN (SC-CHECKLIST-001, G-CHECKLIST PASS)
+DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean)
+TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,600 TESTS, 206 CORE GLEAM, 2037 HARNESS)
+FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observability_spec.json)
+ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF (PURE BEAM & HERMES OCAML)
+STORAGE SAFETY: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" ENFORCED (7/7 PASS)
+KM TRIAD: 16 ZK ADRs + MASTER MOC + WIKI CORPUS INDEX + LIVING ONTOLOGY ACTIVE
+TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
+CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED
+IMPLEMENTATION/CUTOVER: SEALED UNDER MULTILAYER OTP 29 ROOT SUPERVISOR
+```

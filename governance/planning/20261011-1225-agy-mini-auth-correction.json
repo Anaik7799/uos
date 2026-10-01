@@ -1,0 +1,106 @@
+{
+  "schema": "uos.telegram-mini-auth-fix-correction.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "MINI_AUTH_FIX",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "observed_model": "gemini-3.8-flash-high",
+  "timestamp": "20261011-1225",
+  "predecessor_receipt": "governance/planning/20261011-1212-agy-mini-auth-fix.json",
+  "status": "COMPLETED_AWAITING_INDEPENDENT_VERIFY",
+  "runtime_admission": "NOT_GRANTED",
+  "source_edits": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "sha256": "06a1c8ad2bdeb3a2777f4db30be1ddf74ba486032013295e4c18dc714709218c",
+      "role": "Hardened Telegram Mini App authentication module with IETF language_code subtags and exhaustive C0/DEL control character rejection"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_auth_golden_test.gleam",
+      "sha256": "50fa025dd52dd71367897960a3a61ea1923f75b657b0d30bf1cbd77e9d4c6596",
+      "role": "Comprehensive 37-test golden and negative verification suite including signed pt-BR, es-419 vectors and C0/DEL control tests"
+    }
+  ],
+  "corrections_applied": [
+    "IETF BCP-47 language_code validation: is_valid_language_code accepts bounded ASCII alphanumeric hyphen-separated subtags (max 64 bytes total, each subtag 1..8 characters, first subtag letters only). Admitted legitimate subtags include pt-BR, zh-Hant, and es-419, while malformed codes and underscore-delimited codes (such as EN_US) remain rejected.",
+    "Exhaustive C0 control and DEL character rejection: updated contains_disallowed_bytes and is_valid_parameter_value to inspect codepoints using string.to_utf_codepoints and string.utf_codepoint_to_int, rejecting all C0 control characters (codepoints 0 to 31, including NUL, CR, LF, ESC, BEL, TAB) and DEL (codepoint 127).",
+    "Parameter key validation consolidation: is_valid_parameter_key utilizes is_ascii_alphanumeric with underscore exemption for strict [a-zA-Z0-9_] 1..64 byte ASCII identifiers.",
+    "Expanded test suite: added signed positive vectors for pt-BR and es-419, plus negative tests for C0 control characters and DEL (0x7F) in parameter values."
+  ],
+  "independent_review_verification": {
+    "review_artifact": "governance/planning/20261011-1210-telegram-mini-auth-independent-review.json",
+    "synthetic_token": "123456789:synthetic-test-token-not-a-real-credential",
+    "golden_signed_vector_status": "PASS_AUTHENTICATED",
+    "empty_hash_forgery_status": "PASS_REJECTED_AS_INVALID_HASH",
+    "future_auth_date_status": "PASS_REJECTED_AS_EXPIRED_DATA",
+    "negative_now_status": "PASS_REJECTED_AS_EXPIRED_DATA",
+    "pt_br_signed_vector_status": "PASS_AUTHENTICATED",
+    "es_419_signed_vector_status": "PASS_AUTHENTICATED",
+    "en_us_underscore_status": "PASS_REJECTED_AS_INVALID_FIELDS",
+    "c0_control_char_status": "PASS_REJECTED_AS_INVALID_CHARACTERS",
+    "del_control_char_status": "PASS_REJECTED_AS_INVALID_CHARACTERS"
+  },
+  "test_execution_summary": {
+    "total_tests": 72,
+    "tests_passed": 72,
+    "tests_failed": 0,
+    "suites": [
+      {
+        "suite": "telegram_auth_golden_test",
+        "passed": 37,
+        "failed": 0,
+        "cases": [
+          "auth_independent_review_golden_vector_test",
+          "auth_empty_hash_forgery_rejected_test",
+          "auth_short_hash_rejected_test",
+          "auth_long_hash_rejected_test",
+          "auth_non_hex_hash_rejected_test",
+          "auth_wrong_signature_rejected_test",
+          "auth_uppercase_hash_accepted_test",
+          "auth_duplicate_keys_rejected_test",
+          "auth_encoded_duplicate_key_rejected_test",
+          "auth_malformed_percent_rejected_test",
+          "auth_nul_byte_rejected_test",
+          "auth_crlf_injection_rejected_test",
+          "auth_error_nonreflection_test",
+          "auth_combining_mark_oversized_test",
+          "auth_huge_user_id_rejected_test",
+          "auth_plus_as_space_test",
+          "auth_unicode_name_test",
+          "auth_invalid_user_id_zero_test",
+          "auth_invalid_language_code_test",
+          "auth_freshness_valid_test",
+          "auth_freshness_exact_boundary_test",
+          "auth_freshness_future_rejected_test",
+          "auth_freshness_negative_now_rejected_test",
+          "auth_freshness_negative_max_age_rejected_test",
+          "auth_freshness_negative_skew_rejected_test",
+          "auth_freshness_skew_exceeds_max_rejected_test",
+          "auth_freshness_max_age_exceeds_policy_rejected_test",
+          "auth_freshness_time_overflow_rejected_test",
+          "auth_freshness_expired_rejected_test",
+          "auth_validate_fresh_valid_test",
+          "auth_validate_fresh_future_rejected_test",
+          "auth_validate_fresh_expired_rejected_test",
+          "auth_clock_skew_tolerance_test",
+          "auth_pt_br_language_code_accepted_test",
+          "auth_es_419_language_code_accepted_test",
+          "auth_c0_control_char_in_param_rejected_test",
+          "auth_del_control_char_in_param_rejected_test"
+        ]
+      },
+      {
+        "suite": "telegram_mini_app_test",
+        "passed": 35,
+        "failed": 0,
+        "regression_status": "ZERO_REGRESSIONS"
+      }
+    ]
+  },
+  "process_and_provenance_notes": {
+    "execution_harness": "cepaf_gleam@harness@development:bounded/3 under OTP 29 uos_env",
+    "compilation_strategy": "gleam compile-package in isolated recovery runtime, beams linked directly into dev ebin",
+    "tooling_truth": "Source edits were written via direct agent write tools (write_to_file, replace_file_content) and file inspections were performed via direct read/grep tools; compilations and test suite executions were mediated by the OTP 29 development:bounded Erlang harness. ZERO Python executed."
+  }
+}

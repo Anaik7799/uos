@@ -1,0 +1,127 @@
+{
+  "schema": "uos.telegram-store-quiescence-proposal.v2",
+  "authored_at": "2026-10-11T14:45:00Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "status": "PROPOSED_FOR_REVIEW",
+  "title": "Supervised Single-Flight Opaque Cleanup Proof and Fenced Lookup Architecture for Telegram Storage Operation Reconciliation",
+  "review_reference": {
+    "path": "governance/planning/20261011-1421-telegram-quiescence-design-review.json",
+    "status_addressed": "HOLD_REVISE_DESIGN",
+    "dispositioned_findings": [
+      "124/125 cleanup does not locate commit boundary; lost response can follow durable COMMIT: addressed by mandatory post-cleanup database lookup separating process death from transaction outcome",
+      "126 and missing guardian exit cannot establish cleanup: addressed by strict failure-to-unknown; only verified clean guardian reap produces a witness",
+      "flock does not prove absence of SQLite fcntl/WAL writers: addressed by removing flock assertions; process death is established solely by observed supervisor/guardian reap",
+      "A caller-computed witness SHA256 is not trusted lifecycle observation: addressed by internally constructed opaque BEAM proof bound to observed process lifecycle",
+      "New native fence command adds unnecessary protocol and schema work: addressed by adopting the frozen v4 native protocol using clean cleanup followed by read_keys/lookup query"
+    ]
+  },
+  "architecture": {
+    "supervised_single_flight_owner": {
+      "name": "Supervised Single-Flight Database Owner",
+      "role": "BEAM OTP actor/gen_server owning exclusive access to a given Telegram SQLite database configuration",
+      "rules": [
+        "Prohibits duplicate concurrent in-flight operation dispatch to the same database",
+        "Serializes all native requests through the pinned guardian port",
+        "Maintains in-flight operation context: {operation_id, canonical_request_digest, expected_generation, dispatched_at_tick_us}",
+        "Transitions to RECONCILING state upon any uncertain return (timeout, port_close, DOWN, exit)",
+        "Blocks any subsequent mutation dispatch while in RECONCILING state until reconciliation reaches ReconciledCommitted or ReconciledAbsent"
+      ]
+    },
+    "internal_opaque_cleanup_proof": {
+      "name": "Internally Constructed Opaque Cleanup Proof",
+      "constructor": "Minted exclusively inside telegram_store_transport from direct guardian port monitoring (never by caller)",
+      "type_definition": "{cleanup_witness, #{config_db_digest := Binary, native_bin_digest := Binary, guardian_bin_digest := Binary, operation_id := Binary, operation_digest := Binary, exit_status := Int, reaped_at_us := Int}}",
+      "issuance_conditions": {
+        "valid_witness_produced": [
+          "Guardian process exited with verified code 124 (timeout with clean SIGKILL reap of child process tree confirmed)",
+          "Guardian process exited with verified code 125 (buffer overflow with clean SIGKILL reap of child process tree confirmed)"
+        ],
+        "witness_strictly_refused": [
+          "Guardian exited with code 126 (SIGTERM timeout where child did not cleanly terminate within grace period)",
+          "Guardian exited with code 127 or unhandled signal",
+          "Port closed or DOWN without clean guardian exit message",
+          "Helper worker crash/catch/unhandled exception",
+          "Any mismatched configuration, database path, or operation digest"
+        ]
+      },
+      "handling_of_refusal": "Returns {reconciled_unknown, <<\"writer_quiescence_unproven\">>}; state remains held for supervisor restart/cgroup recovery"
+    },
+    "cleanup_then_lookup_reconciliation_protocol": {
+      "name": "Two-Phase Cleanup-Then-Lookup Reconciliation",
+      "phase_1_quiescence_verification": [
+        "1. Supervised owner observes uncertain response on an in-flight operation.",
+        "2. Owner inspects guardian termination receipt.",
+        "3. If guardian lifecycle did not cleanly reap the worker (e.g. exit 126, crash, missing message): owner halts with {reconciled_unknown, <<\"writer_quiescence_unproven\">>}.",
+        "4. If guardian lifecycle confirms complete process-tree reap (exit 124/125): transport mints the internal opaque CleanupWitness bound to {config_db_digest, native_bin_digest, operation_id, operation_digest}."
+      ],
+      "phase_2_fenced_state_lookup": [
+        "1. Owner launches a fresh, clean read query through the transport to the database using the frozen v4 wire protocol.",
+        "2. Query inspects the durable receipt table for the specific operation_id.",
+        "3. Scenario A (Post-Commit Lost Response): The receipt row exists in SQLite with matching operation_id and canonical digest. Outcome: ReconciledCommitted(Receipt). Durable state transition is recovered intact; caller is provided the original commit receipt.",
+        "4. Scenario B (Timeout Before Commit): The receipt row is absent in SQLite. Because CleanupWitness proves the prior worker was fully reaped before this query, no background write can occur. Outcome: ReconciledAbsent(CleanupWitness). Operation is proven non-committed.",
+        "5. Scenario C (Decode Failure on Lookup): If the returned response fails domain decoding, transport retains the cleanup evidence and operation context in an explicit wrapped error {error, {domain_decode_failure, Detail, Context, CleanupWitness}} without dropping lifecycle evidence."
+      ]
+    },
+    "side_effect_and_retry_fencing": {
+      "name": "Zero-Blind-Retry and Side-Effect Policy",
+      "mandate": "ReconciledAbsent proves the absence of storage commitment, but NEVER automatically initiates an external HTTP send or blind retry.",
+      "policy": "Any retry decision belongs strictly to the higher-level service supervisor (L3) under explicit rate-limiting and authorization policies. No implicit re-submission within the storage client."
+    }
+  },
+  "formal_invariants": [
+    {
+      "id": "INV-QUIESCENCE-01",
+      "statement": "An operation cannot be reconciled as ReconciledAbsent without a valid internally constructed CleanupWitness proving zero surviving worker processes."
+    },
+    {
+      "id": "INV-QUIESCENCE-02",
+      "statement": "A CleanupWitness can only be minted from verified guardian exit codes 124 or 125 with confirmed process tree reap; code 126, unhandled signals, or missing exits strictly fail to unproven quiescence."
+    },
+    {
+      "id": "INV-QUIESCENCE-03",
+      "statement": "A CleanupWitness is cryptographically bound to the database path digest, native executable digest, guardian executable digest, operation ID, and canonical operation digest. Any argument mismatch is refused."
+    },
+    {
+      "id": "INV-QUIESCENCE-04",
+      "statement": "Absence of a receipt in SQLite proves non-commitment ONLY when evaluated after a verified CleanupWitness is established; lookup alone without prior writer quiescence remains ReconciledUnknown."
+    },
+    {
+      "id": "INV-QUIESCENCE-05",
+      "statement": "The database owner enforces single-flight serialization: no subsequent operation can be dispatched to a database while an earlier operation is undergoing reconciliation."
+    },
+    {
+      "id": "INV-QUIESCENCE-06",
+      "statement": "Domain decode failures on returned responses must retain the associated cleanup witness and operation context rather than dropping them into opaque errors."
+    }
+  ],
+  "acceptance_matrix": [
+    {
+      "scenario": "Actual worker timeout before commit",
+      "expected_behavior": "Guardian exits 124, child process tree reaped, lookup finds no receipt -> Reconciles as ReconciledAbsent(CleanupWitness)"
+    },
+    {
+      "scenario": "Actual postcommit lost response",
+      "expected_behavior": "Transport experiences disconnect/timeout, guardian reaps worker, lookup finds committed receipt -> Reconciles as ReconciledCommitted(Receipt)"
+    },
+    {
+      "scenario": "Wrong database, operation digest, or configuration",
+      "expected_behavior": "Transport or store refuses proof validation with {error, {store_invariant_error, <<\"quiescence_witness_binding_mismatch\">>}}"
+    },
+    {
+      "scenario": "Unknown cleanup (exit 126, crash, missing guardian message)",
+      "expected_behavior": "Witness is refused; reconciliation yields {reconciled_unknown, <<\"writer_quiescence_unproven\">>}; database owner remains held until supervisor intervention"
+    },
+    {
+      "scenario": "Worker/group marker verification",
+      "expected_behavior": "After cleanup and absence reconciliation, worker/group markers remain absent and generation CAS remains consistent"
+    }
+  ],
+  "implementation_scope_and_limits": [
+    "Architecture proposal only; no implementation in candidate sources until reviewed and accepted by Codex and Root",
+    "Supervisor restart and cgroup recovery of unproven quiescence remains within service scope",
+    "No final admission or main bookmark merge granted by proposal"
+  ]
+}

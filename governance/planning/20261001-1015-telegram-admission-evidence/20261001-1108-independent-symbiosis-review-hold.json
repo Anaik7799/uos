@@ -1,0 +1,228 @@
+{
+  "schema": "uos.symbiosis-independent-review.v1",
+  "timestamp_utc": "2026-10-01T11:31:08Z",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l9",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "SYMBIOSIS_REVIEW",
+  "worker": "codex-admission-review-20261001",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "scope": "Frozen local development guidance and catalogs: 22 regular files, 16 local skill symlinks, 13 historical originals. Four adapted workflows only.",
+  "candidate_manifest": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1126-symbiosis-development.json",
+  "candidate_manifest_sha256": "8befaad74d8041e8f93d8aaf5b43e3eb70e49aaf5076d29b1dd5d47d084fd6e5",
+  "source_bindings": [
+    {
+      "path": "GEMINI.md",
+      "sha256": "bdde8fc130e351f2aea2e43e4f40c5f69cf2a547c490431acee19b6383a5d8b5"
+    },
+    {
+      "path": ".codex/AGENTS.md",
+      "sha256": "bdde8fc130e351f2aea2e43e4f40c5f69cf2a547c490431acee19b6383a5d8b5"
+    },
+    {
+      "path": ".codex/rules/full-symbiosis.md",
+      "sha256": "a514bcd7c21427c8cfd2ef7a1461e1643593f33f3bf6ab054cc8ca4f7e6bf842"
+    },
+    {
+      "path": ".gemini/AGENTS.md",
+      "sha256": "bdde8fc130e351f2aea2e43e4f40c5f69cf2a547c490431acee19b6383a5d8b5"
+    },
+    {
+      "path": ".gemini/rules/full-symbiosis.md",
+      "sha256": "a514bcd7c21427c8cfd2ef7a1461e1643593f33f3bf6ab054cc8ca4f7e6bf842"
+    },
+    {
+      "path": ".claude/AGENTS.md",
+      "sha256": "bdde8fc130e351f2aea2e43e4f40c5f69cf2a547c490431acee19b6383a5d8b5"
+    },
+    {
+      "path": ".claude/rules/full-symbiosis.md",
+      "sha256": "a514bcd7c21427c8cfd2ef7a1461e1643593f33f3bf6ab054cc8ca4f7e6bf842"
+    },
+    {
+      "path": ".agents/AGENTS.md",
+      "sha256": "bdde8fc130e351f2aea2e43e4f40c5f69cf2a547c490431acee19b6383a5d8b5"
+    },
+    {
+      "path": ".agents/rules/full-symbiosis.md",
+      "sha256": "a514bcd7c21427c8cfd2ef7a1461e1643593f33f3bf6ab054cc8ca4f7e6bf842"
+    },
+    {
+      "path": "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+      "sha256": "75fa83f685055a76ecdeb660890d4db3cca8b0df25bfda308a54da1b567b6a0a"
+    },
+    {
+      "path": "governance/capability-inventory/plugins.toml",
+      "sha256": "d80a8762821327386f9b9b4b0c5932dbdf7985cdb9938d93a7d1c7f20a56c06b"
+    },
+    {
+      "path": "governance/capability-inventory/mcp.toml",
+      "sha256": "3a781cacbc445af86af88e0e37cb875da2533ef46e41ff0c711e2a446fb757f8"
+    },
+    {
+      "path": "governance/capability-inventory/skills.toml",
+      "sha256": "95aad1a137f21e5eb15fea7564260863f0bb296210c9e9d295c2e007f0ae135e"
+    },
+    {
+      "path": "governance/capability-inventory/agents.toml",
+      "sha256": "cc421e29eec086e5527ac3ca0b8252152eee36b38b182bf4ac6e0405501c1477"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md",
+      "sha256": "2b8ecba14e3657465ef72109776ea7c467e7fdeecf26e3dcbc91951cf10b7b6d"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md",
+      "sha256": "b8f4701c79013043ae0662ce4c9e692a5a5c2cb723135859419c8baf631b3b42"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/production-readiness/SKILL.md",
+      "sha256": "b107384feed501f94148685df516216450f691a071e35a27e3779da9667a247c"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/ocaml-playwright-control/SKILL.md",
+      "sha256": "2f5efc20214126882269b59d89564092d386d1285f1fcc24f7bd46d6bbd27140"
+    },
+    {
+      "path": ".codex/agents/20261001-1117-full-symbiosis-supervisor.md",
+      "sha256": "2c0016fff55877fedde8b0e6aef6f5745ccfbb223b13402f239b7f3383f646d3"
+    },
+    {
+      "path": ".gemini/agents/20261001-1117-full-symbiosis-supervisor.md",
+      "sha256": "2c0016fff55877fedde8b0e6aef6f5745ccfbb223b13402f239b7f3383f646d3"
+    },
+    {
+      "path": ".claude/agents/20261001-1117-full-symbiosis-supervisor.md",
+      "sha256": "2c0016fff55877fedde8b0e6aef6f5745ccfbb223b13402f239b7f3383f646d3"
+    },
+    {
+      "path": ".agents/agents/20261001-1117-full-symbiosis-supervisor.md",
+      "sha256": "2c0016fff55877fedde8b0e6aef6f5745ccfbb223b13402f239b7f3383f646d3"
+    }
+  ],
+  "symlink_bindings": [
+    {
+      "path": ".codex/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".codex/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".codex/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".codex/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    },
+    {
+      "path": ".gemini/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".gemini/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".gemini/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".gemini/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    },
+    {
+      "path": ".claude/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".claude/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".claude/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".claude/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    },
+    {
+      "path": ".agents/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".agents/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".agents/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".agents/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SYM-01",
+      "priority": "P2",
+      "path": "governance/capability-inventory/skills.toml",
+      "observation": "Two current state=admitted entries remain for forecasting-driven-operations and stage-durability without candidate-bound evidence. denotational-intent-algebraic-atlas and indrajaal-constitution-migration retain implemented_pure_gleam_and_lean4_formal_authority; c3i-indrajaal-holon-parity retains implemented_158_holon_holarchy. These affirmative machine-readable fields are not labeled historical, unlike the corrected 256-agent catalog.",
+      "correction": "Preserve original values under historical_state_claim/historical_authority_claim and give each a truthful current unprobed/unverified/no-runtime-authority disposition, or bind qualifying current evidence. Do not erase original history.",
+      "acceptance": "Parse TOML and assert no unsupported current admission/formal-authority fields remain for these five entries; all historical values preserved exactly. Freeze revised manifest and rerun bounded independent check."
+    }
+  ],
+  "passed_checks": [
+    "All 22 file SHA256 values equal frozen manifest.",
+    "All 16 links have exact declared target, resolve to existing local SKILL.md within UOS governance/agents/20261001-1118-skills, and do not point to external trees.",
+    "All 13 archive files byte-identical to original paths at main83dca0394346564356920f066b3924858144107f.",
+    "Four TOML catalogs independently parsed by installed Nix builtins.fromTOML; no derivations, package builds or downloads.",
+    "All 256 agent entries preserve historical_status_claim=admitted and now have status=declared_unverified.",
+    "All 18 reviewed Markdown files contain exactly18 unique unchecked checkpoint identifiers, with provenance caveat.",
+    "All five unique /files/ link targets found on local filesystem.",
+    "Four local skills, policy adapters, rule mirrors and supervisor roles consistently defer to root policy, Sa-plan, Gleam boundary, independent review and existing user authorization; no effect authority from guidance.",
+    "Manual distinguishes declared/loadable/transport/authorized/verified/admitted states and explicitly retains global HOLD and EV93 ceiling.",
+    "No unsafe Git mutation, global plugin installation, external write-through or unscoped operational command authorized by reviewed adapters."
+  ],
+  "risk": {
+    "initial": "HOLD observed2026-10-01T11:28:17Z RP-SA-PLAN complete-portfolio mismatch; validation stopped immediately.",
+    "recovery": "Fresh independent ACTIVE_OBSERVATION_PASS at2026-10-01T11:29:23Z after parent assessment repair; task remained actual attempt1.",
+    "assessment_sha256": "fd42e3b54ab9586d6fd0c828a4fe823bb03274c55d77d5a86419e11a9c73e0ab"
+  },
+  "limitations": [
+    "Guidance approval is not client load/reload, plugin activation, MCP transport or production admission.",
+    "Hook JSON was not changed or part of frozen22 source manifest; parent parser claim not independently promoted to activated behavior.",
+    "Tailnet /files targets checked locally only; live HTTP/browser navigation unrun here.",
+    "Fixed discovery names AGENTS.md/GEMINI.md/SKILL.md and existing rule/catalog names retained. Timestamp headings/directories identify authored version; this is not claimed as strict timestamp-basename gate PASS or a newly granted policy exemption.",
+    "Root historical policy contradictions are deferred explicitly; this review does not revalidate every imported skill, formal theorem or global capability.",
+    "Nix probe initially failed because reviewer list expression lacked parentheses, then pure evaluation rejected local paths. Corrected local-file-only --impure parse passed; errors preserved, not attributed to source.",
+    "No source edits, production effects, task mutation or main movement by reviewer."
+  ],
+  "evidence": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1108-independent-symbiosis-review-evidence.json"
+}

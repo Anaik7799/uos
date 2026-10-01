@@ -1,0 +1,79 @@
+======================== EUnit ========================
+module 'telegram_ingress_guard_test'
+  telegram_ingress_guard_test: valid_pair_test...[0.041 s] ok
+  telegram_ingress_guard_test: username_is_not_authority_test...ok
+  telegram_ingress_guard_test: group_negative_id_test...ok
+  telegram_ingress_guard_test: channel_and_unknown_type_test...ok
+  telegram_ingress_guard_test: bot_sender_test...ok
+  telegram_ingress_guard_test: missing_security_fields_test...ok
+  telegram_ingress_guard_test: sender_chat_test...ok
+  telegram_ingress_guard_test: channel_post_test...ok
+  telegram_ingress_guard_test: invalid_ids_test...ok
+  telegram_ingress_guard_test: id_boundaries_test...ok
+  telegram_ingress_guard_test: text_boundaries_test...ok
+  telegram_ingress_guard_test: malformed_has_no_private_leak_test...ok
+  telegram_ingress_guard_test: oversized_payload_test...ok
+  telegram_ingress_guard_test: empty_object_whitespace_test...ok
+  telegram_ingress_guard_test: strict_args_and_truthful_denial_test...ok
+  telegram_ingress_guard_test: rejection_fingerprint_test...ok
+  [done in 0.089 s]
+module 'telegram_delivery_ledger_test'
+  telegram_delivery_ledger_test: basic_prefix_test...[0.003 s] ok
+  telegram_delivery_ledger_test: same_batch_collision_test...ok
+  telegram_delivery_ledger_test: exact_duplicate_and_gap_test...ok
+  telegram_delivery_ledger_test: existing_collision_test...ok
+  telegram_delivery_ledger_test: identity_and_rejection_collision_test...ok
+  telegram_delivery_ledger_test: mixed_bot_and_fabricated_hash_test...ok
+  telegram_delivery_ledger_test: unidentified_never_advances_test...ok
+  telegram_delivery_ledger_test: queue_and_batch_bounds_test...[0.041 s] ok
+  telegram_delivery_ledger_test: claim_owner_and_record_bounds_test...ok
+  telegram_delivery_ledger_test: result_owner_and_payload_bounds_test...[0.001 s] ok
+  telegram_delivery_ledger_test: digest_is_real_and_immutable_test...ok
+  telegram_delivery_ledger_test: chunk_set_falsifiers_test...[0.001 s] ok
+  telegram_delivery_ledger_test: outbox_claim_full_set_and_order_test...ok
+  telegram_delivery_ledger_test: wrong_owner_and_terminal_reconcile_test...[0.001 s] ok
+  telegram_delivery_ledger_test: failed_remote_outcome_no_retry_test...ok
+  telegram_delivery_ledger_test: multipart_uncertainty_permutations_test...[0.001 s] ok
+  telegram_delivery_ledger_test: multipart_pending_permutations_test...[0.002 s] ok
+  telegram_delivery_ledger_test: all_delivered_permutations_test...[0.001 s] ok
+  telegram_delivery_ledger_test: impossible_delivery_order_test...ok
+  telegram_delivery_ledger_test: crash_sending_missing_result_and_no_reexecute_test...ok
+  telegram_delivery_ledger_test: restart_processing_durable_result_test...ok
+  telegram_delivery_ledger_test: completion_requires_whole_delivery_test...ok
+  telegram_delivery_ledger_test: impossible_snapshot_send_refused_test...ok
+  telegram_delivery_ledger_test: corrupted_existing_queue_refused_test...ok
+  telegram_delivery_ledger_test: unseen_below_watermark_refuses_without_insertion_test...ok
+  telegram_delivery_ledger_test: untouched_pending_and_tombstone_recovery_test...ok
+  telegram_delivery_ledger_test: result_binds_all_immutable_ingress_fields_test...[0.001 s] ok
+  [done in 0.133 s]
+=======================================================
+  All 43 tests passed.
+
+
+ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard("apps/cepaf_gleam/build/dev/erlang/*/ebin")),L='\''cepaf_gleam@harness@telegram_delivery_ledger'\'',G='\''cepaf_gleam@harness@telegram_ingress_guard'\'',F='\''cepaf_gleam@harness@files'\'',Env=fun(Id,Text)->{accepted_envelope,Id,Id+1,1001,501,F:digest(Text),Text,G:classify_directive(Text),123} end,{ok,R}=L:ingest_single(Env(100,<<"/doctor">>),1000,[]),{ok,Processing}=L:claim_inbox_task(R,<<"worker">>,1),{ok,{Ready,Chunks}}=L:record_result(Processing,[<<"answer">>],<<"worker">>,1),io:format("BELOW_WATERMARK_UNSEEN ~p~n",[L:ingest_batch({watermark,101},[Env(99,<<"/doctor">>)],[R],1001)]),io:format("PENDING_RECOVERY ~p~n",[L:recover_request(R,[])]),{ok,Rejected}=L:ingest_single({rejected_update,102,123,F:digest(<<"rejected-wire">>),<<"denied">>},1000,[]),io:format("REJECTED_RECOVERY ~p~n",[L:recover_request(Rejected,[])]),lists:foreach(fun({Label,Changed})->io:format("RESULT_IDENTITY_MUTATION ~s ~p~n",[Label,L:validate_result(Changed,Chunks)]) end,[{<<"message_id">>,setelement(3,Ready,9999)},{<<"user_id">>,setelement(5,Ready,9999)},{<<"text_hash">>,setelement(6,Ready,F:digest(<<"different-request">>))}]),{watermark,101}=element(1,L:ingest_batch({watermark,101},[Env(100,<<"/doctor">>)],[R],1001)),io:format("EXACT_BELOW_WATERMARK_DUPLICATE retains watermark~n"),halt().'
+
+BELOW_WATERMARK_UNSEEN {{watermark,101},
+                        [{inbox_record,100,101,1001,501,
+                             <<"5a172f6b82e16bfb13227c047c5fa6ec78b2e91fe958dc4d7a2f7e0fbe03f873">>,
+                             inbox_pending,1000,123,<<"tg-123-100">>}],
+                        [<<"unseen_update_below_committed_offset">>]}
+PENDING_RECOVERY {{inbox_record,100,101,1001,501,
+                                <<"5a172f6b82e16bfb13227c047c5fa6ec78b2e91fe958dc4d7a2f7e0fbe03f873">>,
+                                inbox_pending,1000,123,<<"tg-123-100">>},
+                  []}
+REJECTED_RECOVERY {{inbox_record,102,0,0,0,
+                                 <<"39919b78845b39dab9104909d1a7072ed93f29e1183bfb9bf24c0e2909aaedad">>,
+                                 {inbox_rejected,<<"denied">>},
+                                 1000,123,<<"tg-123-102">>},
+                   []}
+RESULT_IDENTITY_MUTATION message_id {error,<<"result_digest_mismatch">>}
+RESULT_IDENTITY_MUTATION user_id {error,<<"result_digest_mismatch">>}
+RESULT_IDENTITY_MUTATION text_hash {error,<<"result_digest_mismatch">>}
+EXACT_BELOW_WATERMARK_DUPLICATE retains watermark
+
+
+apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e
+apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam 2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7
+apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam 1305d1c32de5d796d1eae76cde548cc5cbb7444fb1c0f3e5680589abbb3da212
+apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam 251ccab831d59b72dc1b8545a4f133dcfdebad450cf00b022568d24e22e309bc
+TIME 2026-10-01T12:08:05Z

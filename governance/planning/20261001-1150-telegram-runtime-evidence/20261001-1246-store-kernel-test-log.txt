@@ -1,0 +1,97 @@
+
+Running Telegram Store Native Kernel Test Suite...
+=== Test Suite 1: Initialize New & Security Controls ===
+  [PASS] initialize_new returns generation 1
+  [PASS] db file created
+  [PASS] db file permissions are 0600
+  [PASS] refuses existing DB with db_already_exists
+  [PASS] refuses 0755 directory with db_directory_insecure
+  [PASS] refuses directory symlink
+  [PASS] verify_existing_db_pragmas sets and verifies connection pragmas
+  [PASS] journal_mode is WAL
+  [PASS] synchronous is FULL (2)
+  [PASS] foreign_keys is ON (1)
+  [PASS] max_page_count bounds main DB to 256 MiB
+  [PASS] insert receipt succeeds
+  [PASS] trigger prevents UPDATE on receipts
+  [PASS] trigger prevents DELETE on receipts
+=== Test Suite 2: Read Keys & Read Inbox Index ===
+  [PASS] read_keys returns generation 1
+  [PASS] returns 2 rows
+  [PASS] row 0 exists is false
+  [PASS] row 0 version is 0
+  [PASS] row 0 value is empty
+  [PASS] apply incremented generation to 2
+  [PASS] read_keys returns generation 2
+  [PASS] inbox/req_001 exists
+  [PASS] inbox/req_001 version is 1
+  [PASS] inbox/req_001 sha256 matches
+  [PASS] inbox/req_001 base64 matches
+  [PASS] missing row exists is false
+  [PASS] inbox index returns generation 2
+  [PASS] inbox index returns exactly 2 inbox keys in order
+  [PASS] pagination after inbox/req_001 returns [inbox/req_002]
+  [PASS] refuses > 64 keys with read_keys_too_many
+  [PASS] refuses limit > 100 with invalid_limit
+=== Test Suite 3: Apply Operations, CAS & Idempotency ===
+  [PASS] req1 replay is false
+  [PASS] req1 generation is 2
+  [PASS] replay is true
+  [PASS] receipt operation_id matches
+  [PASS] receipt generation matches original (2)
+  [PASS] receipt summary matches
+  [PASS] refuses tampered request with request_digest_mismatch
+  [PASS] refuses collision with operation_collision_digest_mismatch
+  [PASS] refuses stale generation with stale_generation
+  [PASS] refuses wrong version with cas_conflict
+  [PASS] refuses wrong sha256 with cas_conflict
+  [PASS] refuses mismatched read-set with read_set_conflict
+  [PASS] valid update generation incremented to 3
+  [PASS] lookup_operation finds committed receipt
+  [PASS] lookup_operation matches summary
+=== Test Suite 4: Capacity & Reservation Accounting ===
+  [PASS] refuses negative resulting reservation with invalid_reservation_delta
+  [PASS] refuses reservation delta rows > 20 with invalid_reservation_delta
+  [PASS] refuses reservation delta receipts > 64 with invalid_reservation_delta
+=== Test Suite 5: Bounds, Values & Max 16x4096 Chunks ===
+  [PASS] refuses non-canonical base64 with invalid_base64
+  [PASS] refuses single value > 98304 bytes with value_too_large
+  [PASS] 16 chunks apply succeeded, generation is 2
+  [PASS] read_keys returns generation 2
+  [PASS] read_keys returns 16 rows
+  [PASS] all 16 chunks exist
+=== Test Suite 6: Advanced Integrity & Hardening ===
+  [PASS] verify_schema catches unauthorized extra table with schema_mismatch
+  [PASS] verify_schema restored after removing extra table
+  [PASS] original apply committed
+  [PASS] replay with wrong bot_id refused with bot_id_mismatch before replay lookup
+  [PASS] read_keys catches corrupt row hash with corrupt_row_hash
+  [PASS] apply CAS catches corrupt row hash with corrupt_row_hash
+  [PASS] after_key not starting with inbox/ refused with invalid_after_key
+  [PASS] after_key >= inbox0 refused with invalid_after_key
+  [PASS] after_key exactly 'inbox/' refused with invalid_after_key
+  [PASS] hard-linked db file refused with db_file_insecure
+  [PASS] normal db file accepted after unlinking hard link
+  [PASS] symlink process lock file refused with db_path_symlink
+=== Test Suite 7: Redacted Error Codes & Framing ===
+  [PASS] response is valid JSON
+  [PASS] response does NOT reflect canary token
+  [PASS] duplicate key in JSON rejected with duplicate_json_keys
+  [PASS] read_inbox_index without limit rejected with invalid_limit
+  [PASS] oversized request rejected with oversized_frame
+=== Test Suite 8: Binary Pipe Framing (telegram_store_main) ===
+  [PASS] framed process exits with code 0
+  [PASS] framed process returned response
+  [PASS] initialize_new via framing succeeded
+  [PASS] command omitting db_path exits 0
+  [PASS] command omitting db_path succeeds using trusted argv locator
+  [PASS] mismatched db_path rejected with db_path_mismatch
+  [PASS] worker launched without argv db locator rejected
+  [PASS] truncated frame returned response
+  [PASS] truncated frame refused with truncated_frame
+  [PASS] trailing bytes returned response
+  [PASS] trailing bytes refused with trailing_bytes_after_frame
+  [PASS] oversized frame returned response
+  [PASS] oversized frame refused with oversized_frame
+
+ALL TESTS PASSED: 85/85 assertions passed successfully!

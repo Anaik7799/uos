@@ -1,0 +1,62 @@
+{
+  "schema": "uos.telegram-native-depth-fix.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_DEPTH_FIX",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1354",
+  "observed_at": "2026-10-11T13:23:10Z",
+  "status": "IMPLEMENTED_AWAITING_ROOT_HASH_BINDING",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate_hashes": {
+    "telegram_store.ml": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630",
+    "telegram_store_test.ml": "4625d13983c36e67b04724f93e832a8e11df2711505240bbee812797ad3e01b4",
+    "20261011-1354-telegram_store_wire_v4.json": "b0d6d92d2860f13e6f7922c239e6687637a5368a5ee0c34875894d0fc547dfec",
+    "telegram_store_main.exe": "2cf64d7a24da0e9c1dc7ace920b3f119447e6b0de3e75a8f7ee74e37930156ec"
+  },
+  "modifications": [
+    {
+      "file": "native/ocaml/telegram_store/telegram_store.ml",
+      "summary": "Added entry-depth checks to parse_array and parse_object (if depth > max_json_depth then Error 'json_nesting_depth_exceeded') ensuring empty terminal containers exceeding nesting depth 64 are rejected consistently with non-empty containers."
+    },
+    {
+      "file": "native/ocaml/telegram_store/telegram_store_test.ml",
+      "summary": "Added 4 regression tests to Test Suite 20: empty array depth 64 (accepted), empty array depth 65 (rejected with json_nesting_depth_exceeded), empty object depth 64 (accepted), and empty object depth 65 (rejected with json_nesting_depth_exceeded)."
+    },
+    {
+      "file": "native/ocaml/telegram_store/20261011-1354-telegram_store_wire_v4.json",
+      "summary": "Authored wire contract v4 with truthful host generation timestamp 2026-10-11T13:22:54Z and explicit empty terminal container nesting depth policy."
+    }
+  ],
+  "verification_results": {
+    "dune_test_suite": {
+      "command": "dune runtest --force",
+      "total_assertions": 174,
+      "passed": 174,
+      "failed": 0
+    },
+    "independent_parser_test": {
+      "corpus": "var/recovery-runtime/20261011-1318-native-verify3/parser-cases.json",
+      "total_cases": 1560,
+      "passed": 1560,
+      "failed": 0,
+      "fixed_boundary_cases": [
+        "depth-65-array",
+        "depth-65-object"
+      ]
+    },
+    "independent_framed_tests": {
+      "script": "var/recovery-runtime/20261011-1318-native-verify3/independent-review.cjs",
+      "total_tests": 11,
+      "passed": 11,
+      "failed": 0
+    },
+    "independent_unicode_tests": {
+      "script": "var/recovery-runtime/20261011-1301-native-verify2/unicode-independent.cjs",
+      "total_tests": 6,
+      "passed": 6,
+      "failed": 0
+    }
+  }
+}

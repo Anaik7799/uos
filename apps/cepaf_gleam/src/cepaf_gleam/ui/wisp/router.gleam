@@ -3204,7 +3204,9 @@ pub fn handle_request(req: HttpRequest(String)) -> HttpResponse(String) {
     Get -> safe_get(req.path, path)
     Head -> safe_get(req.path, path) |> response.set_body("")
     Post -> handle_post(req, req.path)
-    Options -> response.new(204) |> response.set_body("")
+    Options ->
+      response.new(204)
+      |> response.set_body("")
       |> response.set_header("allow", "GET, HEAD, POST, OPTIONS")
     _ -> method_not_allowed_response()
   }
@@ -3212,18 +3214,30 @@ pub fn handle_request(req: HttpRequest(String)) -> HttpResponse(String) {
 
 fn safe_get(route_path: String, path: String) -> HttpResponse(String) {
   case is_post_only_path(route_path) {
-    True -> method_not_allowed_response() |> response.set_header("allow", "POST, OPTIONS")
+    True ->
+      method_not_allowed_response()
+      |> response.set_header("allow", "POST, OPTIONS")
     False -> handle_get(path)
   }
 }
 
 fn is_post_only_path(path: String) -> Bool {
   case path {
-    "/api/v1/podman/action" | "/api/v1/podman/restart" | "/api/v1/podman/stop"
-    | "/api/v1/emergency/trigger" | "/api/v1/guardian/respond" | "/api/v1/ooda/trigger"
-    | "/api/v1/system/ooda-trigger" | "/api/v1/plan/update" | "/api/v1/planning/add"
-    | "/api/v1/reload" | "/api/v1/reload/build" | "/api/v1/zenoh/publish"
-    | "/api/v1/pi/prompt" | "/ag-ui/run" | "/ag-ui/hitl/respond" -> True
+    "/api/v1/podman/action"
+    | "/api/v1/podman/restart"
+    | "/api/v1/podman/stop"
+    | "/api/v1/emergency/trigger"
+    | "/api/v1/guardian/respond"
+    | "/api/v1/ooda/trigger"
+    | "/api/v1/system/ooda-trigger"
+    | "/api/v1/plan/update"
+    | "/api/v1/planning/add"
+    | "/api/v1/reload"
+    | "/api/v1/reload/build"
+    | "/api/v1/zenoh/publish"
+    | "/api/v1/pi/prompt"
+    | "/ag-ui/run"
+    | "/ag-ui/hitl/respond" -> True
     _ -> False
   }
 }
@@ -3446,35 +3460,35 @@ fn handle_get(path: String) -> HttpResponse(String) {
                   let _ = hot_reload.reload_changed()
                   html_response(mini_app_routes.route(path))
                 }
-            False ->
-              case string.starts_with(path, "/api/v1/ai/chat") {
-                True ->
-                  json_response(
-                    "{\"error\":\"llm_chat_get_not_wired\",\"hint\":\"Use POST /api/v1/ai/chat with bearer token\"}",
-                    501,
-                  )
                 False ->
-                  case is_api_path(path) {
-                    True -> {
-                      let body = route(path)
-                      let status = case
-                        string.contains(body, "\"error\":\"not_found\"")
-                      {
-                        True -> 404
-                        False -> 200
+                  case string.starts_with(path, "/api/v1/ai/chat") {
+                    True ->
+                      json_response(
+                        "{\"error\":\"llm_chat_get_not_wired\",\"hint\":\"Use POST /api/v1/ai/chat with bearer token\"}",
+                        501,
+                      )
+                    False ->
+                      case is_api_path(path) {
+                        True -> {
+                          let body = route(path)
+                          let status = case
+                            string.contains(body, "\"error\":\"not_found\"")
+                          {
+                            True -> 404
+                            False -> 200
+                          }
+                          json_response(body, status)
+                        }
+                        False -> {
+                          let _ = hot_reload.reload_changed()
+                          html_response(route_html(path))
+                        }
                       }
-                      json_response(body, status)
-                    }
-                    False -> {
-                      let _ = hot_reload.reload_changed()
-                      html_response(route_html(path))
-                    }
                   }
               }
           }
       }
   }
-}
 }
 
 /// True when path starts with /api/ or /ag-ui/ — these are JSON API endpoints.

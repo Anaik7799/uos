@@ -88,7 +88,14 @@ pub fn anomaly_injection_and_remediation_test() {
 
 pub fn unknown_remediation_id_leaves_state_unchanged_test() {
   let critical =
-    AstAnomaly("critical", "UndefinedPatternMatch", 0.92, "a.gleam", "patch", False)
+    AstAnomaly(
+      "critical",
+      "UndefinedPatternMatch",
+      0.92,
+      "a.gleam",
+      "patch",
+      False,
+    )
   let alerted = init_copilot() |> record_ast_anomaly(critical)
 
   remediate_anomaly(alerted, "unknown") |> should.equal(alerted)
@@ -96,16 +103,28 @@ pub fn unknown_remediation_id_leaves_state_unchanged_test() {
 
 pub fn repeated_remediation_id_is_idempotent_test() {
   let critical =
-    AstAnomaly("critical", "UndefinedPatternMatch", 0.92, "a.gleam", "patch", False)
-  let fixed = init_copilot() |> record_ast_anomaly(critical) |> remediate_anomaly("critical")
+    AstAnomaly(
+      "critical",
+      "UndefinedPatternMatch",
+      0.92,
+      "a.gleam",
+      "patch",
+      False,
+    )
+  let fixed =
+    init_copilot()
+    |> record_ast_anomaly(critical)
+    |> remediate_anomaly("critical")
 
   remediate_anomaly(fixed, "critical") |> should.equal(fixed)
 }
 
 pub fn unresolved_critical_anomaly_keeps_andon_active_test() {
   let first = AstAnomaly("first", "TypeError", 0.93, "a.gleam", "patch", False)
-  let second = AstAnomaly("second", "TypeError", 0.94, "b.gleam", "patch", False)
-  let alerted = init_copilot() |> record_ast_anomaly(first) |> record_ast_anomaly(second)
+  let second =
+    AstAnomaly("second", "TypeError", 0.94, "b.gleam", "patch", False)
+  let alerted =
+    init_copilot() |> record_ast_anomaly(first) |> record_ast_anomaly(second)
   let partially_fixed = remediate_anomaly(alerted, "first")
 
   partially_fixed.remediated_count |> should.equal(1)

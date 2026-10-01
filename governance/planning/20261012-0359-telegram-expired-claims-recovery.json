@@ -1,0 +1,85 @@
+{
+  "observed_at": "2026-10-12T03:08:59.180Z",
+  "plan": "uos/telegram-resume/20261012-0216",
+  "task": "RECOVER",
+  "worker": "codex-telegram-20261012",
+  "attempt": 1,
+  "status": "EXPIRED_CLAIMS_RECONCILED",
+  "runtime_admission": "NOT_GRANTED",
+  "authority": "CURRENT_RECOVER_TASK_FOR_METADATA_ONLY",
+  "tool_acceptance": "governance/planning/20261012-0314-telegram-metadata-observer-acceptance.json",
+  "original_plan": "uos/telegram-runtime/20261001-1150",
+  "transitions": [
+    {
+      "task": "FORMAL_FIX",
+      "old_worker": "codex-telegram-20261011",
+      "old_attempt": 3,
+      "old_lease": "1791752573602044117",
+      "new_worker": "codex-telegram-20261012",
+      "new_attempt": 4,
+      "new_lease": "1791779724408321898",
+      "ordinary_active_check": "PASS",
+      "coordinator_epoch": 2
+    },
+    {
+      "task": "SERVICE_DRAFT_REVIEW",
+      "old_worker": "codex-telegram-20261011",
+      "old_attempt": 6,
+      "old_lease": "1791752099179610487",
+      "new_worker": "codex-telegram-20261012",
+      "new_attempt": 7,
+      "new_lease": "1791779738622968909",
+      "ordinary_active_check": "PASS",
+      "coordinator_epoch": 2
+    },
+    {
+      "task": "SERVICE_IMPL",
+      "old_worker": "agy-telegram-20261011",
+      "old_attempt": 6,
+      "old_lease": "1791754904787263175",
+      "temporary_worker": "codex-telegram-20261012",
+      "temporary_attempt": 7,
+      "temporary_lease": "1791777950338185908",
+      "ordinary_active_check": "PASS",
+      "released": true,
+      "reason": "Controlled metadata recovery followed by ordinary handoff to actual AGY; no product edits under temporary ownership",
+      "next_expected_attempt": 8,
+      "next_actor": "agy-telegram-20261012",
+      "normal_preflight_after_release": "PREFLIGHT_PASS",
+      "peer_prompt": "CLI delivered; fresh AGY claim/ACK awaited at this receipt"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/recovery-step1-guarded.txt",
+      "sha256": "aafa513e0d568b80feb001217494c00221d3109c9a3306be94dc568c62446384"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/recovery-step2-guarded.txt",
+      "sha256": "aada1d16a4d1e299cd01a7aee267b97ca39cd793c365b0c826f0f1c94b2155c1"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/recovery-step3-guarded.txt",
+      "sha256": "6a560a640466128a82d43a9c3e4dad055d6e36f1ef88d93feb72e5822ade5a98"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/recovered-formal-active.json",
+      "sha256": "07aebfdf39d599fde4dc8241b956ef0640013f0de56b68b49283732cac1766d8"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/recovered-draft-active.json",
+      "sha256": "5eee5a3b62b25ef740a662e957e8b305022c98b94a0baff8f3aaa69dfa664b75"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/recovered-service-active.json",
+      "sha256": "5a84fe9e9385b084b399a20f81f3c04e557223fed82d8c9006d898cb981693f3"
+    }
+  ],
+  "normal_gates": "No changes to existing preflight, active or reclaim gate semantics; prior HOLDs preserved. Metadata observations supply evidence under separately current RECOVER authority; child effects were barred until all three ordinary active checks passed.",
+  "main": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+  "limits": [
+    "No source merge, production release, service startup or Telegram send by this recovery.",
+    "Model response and observation receipt never substitute for actual Sa-plan ownership.",
+    "Two coordinator task claims initially refused stale session heartbeat; heartbeat refreshed and both claims then granted epoch2 before product work."
+  ]
+}

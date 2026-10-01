@@ -1,0 +1,134 @@
+{
+  "schema": "uos.telegram-http-independent-verification.v1",
+  "observed_at": "2026-10-11T17:41:08.934Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "review_task": "SERVICE_DRAFT_REVIEW",
+  "review_worker": "codex-telegram-20261011",
+  "review_attempt": 3,
+  "producer_task": "HTTP_ACCEPTANCE_REPAIR",
+  "producer": "actual Claude session a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+  "decision": "PASS_BOUNDED_DEVELOPMENT_COMPONENT",
+  "runtime_admission": "NOT_GRANTED",
+  "source": {
+    "path": "var/recovery-runtime/20261011-1715-claude-http-repair/src/telegram_http_ffi.erl",
+    "sha256": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47",
+    "frozen": "var/recovery-runtime/20261011-1741-http-final-review/src/telegram_http_ffi.erl"
+  },
+  "gleam_consumer": {
+    "path": "var/recovery-runtime/20261011-1741-http-final-review/src/cepaf_gleam/harness/telegram_http_client.gleam",
+    "sha256": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938"
+  },
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1741-http-final-review/manifest.json",
+      "sha256": "ada356aba0684ff92892cd31a7f219af9d9b392a0332d90b6868f15c0f52ac1c"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1741-http-final-review/public-results.txt",
+      "sha256": "2e5447c644251da2e8374522051948bafa2765f82f23c4d9165517b102cc44cc"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1741-http-final-review/protocol-results.txt",
+      "sha256": "4a6ee0b7d016bafe3341ee7c624dcde2d817a55990db8f291218d0328ef79022"
+    }
+  ],
+  "variants": {
+    "normal": {
+      "guardian_exported": false,
+      "beam_sha256": "7c89a10e129479da51a1244095e8380215e1bf0f23b3d7bca9f22e9dfc28b0b2",
+      "public_api_tests": true
+    },
+    "test": {
+      "define": "TEST",
+      "guardian_exported": true,
+      "beam_sha256": "1e9aadd7c7c9c3d9a038264396167664a3514f426004362aa455d8a9b1dfb23b",
+      "internal_tests_only": true
+    }
+  },
+  "verified": {
+    "response_semantic_cases": 17,
+    "slow_body_ms": 82,
+    "slow_headers_ms": 81,
+    "configured_request_ms": 80,
+    "orphan_connections_150ms_after_return": 0,
+    "caller_death_cleanup": true,
+    "guardian_death_cleanup": true,
+    "cleanup_before_publish": true,
+    "error_shape": "binary fixed vocabulary",
+    "peer_suite": 8,
+    "ownership_suite": 4,
+    "internal_protocol_suite": 3,
+    "late_ack_no_connection_accepted": true,
+    "expired_ack_no_connection_accepted": true,
+    "mailbox": "own tagged messages drained; unrelated messages preserved",
+    "mixed_soak": {
+      "attempts": 20,
+      "exact_body_successes": 10,
+      "binary_errors": 10,
+      "connection_leaks": 0,
+      "tagged_residue": 0,
+      "process_delta": 9
+    },
+    "tls": {
+      "trusted_anchors": 143,
+      "self_signed_alert": "bad_certificate / selfsigned_peer",
+      "positive_url": "https://core.telegram.org/robots.txt",
+      "positive_status": 404,
+      "positive_bytes": 153,
+      "positive_elapsed_ms": 193,
+      "scope": "credential-free public-document HTTPS, not Telegram Bot API or sending",
+      "alpn": "pinned hackney mapping advertises only http/1.1; plaintext connection observed http1, not itself ALPN evidence"
+    }
+  },
+  "contract": {
+    "request_timeout_ms": [
+      1,
+      60000
+    ],
+    "response_max_bytes": [
+      1,
+      10485760
+    ],
+    "cleanup_wait_budget_ms_per_process": 250,
+    "normal_connection_down_grace_ms": 250,
+    "invariants": [
+      "No network work before caller ACK and unexpired absolute deadline",
+      "Exact connection and worker identities handed to caller",
+      "Successful publication only after confirmed cleanup",
+      "Missing cleanup confirmation yields cleanup_unknown",
+      "Unknown send outcomes remain ambiguous and are never promoted to delivered",
+      "TLS certificate validation retained",
+      "Body size enforced for polls, sends and callbacks"
+    ]
+  },
+  "limitations": [
+    "Development component acceptance only; AGY adoption and complete service integration remain pending.",
+    "Application bootstrap ensure_started/1 and production supervision are not admitted by these request tests.",
+    "start_conn explicit error return and unconfirmed-reap branch were source-reviewed but not directly fault-injected.",
+    "Short bounded soak is not a long-duration load or memory proof.",
+    "Public logs preserve one expected historical lifecycle violation from the frozen unrelated adapter; it is excluded from HTTP scope and remains service work.",
+    "No live Bot API, real Telegram message, production change, global admission, or main merge."
+  ],
+  "preserved_failures": [
+    "governance/planning/20261011-1601-telegram-http-owned-cancellation-findings.json",
+    "governance/planning/20261011-1711-telegram-http-candidate-independent-hold.json",
+    "var/recovery-runtime/20261011-1724-http-daa-review/tls-results.txt"
+  ],
+  "fixture_repairs": [
+    "Existing original synthetic TLS certificate absolute path; no key copied or hashed",
+    "Negative certificate predicate allows observed bad_certificate or unknown_ca"
+  ],
+  "forecast": {
+    "event": "AGY adopts exact accepted HTTP source into development integration with source hash receipt",
+    "horizon_utc": "2026-10-11T18:15:00Z",
+    "probability": 0.75,
+    "status": "PENDING"
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l5",
+    "#fractal-l9",
+    "#zero-muda"
+  ]
+}

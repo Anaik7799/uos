@@ -1,0 +1,122 @@
+{
+  "schema": "uos.telegram-store-fix2-candidate.v3",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1655",
+  "observed_at": "2026-10-11T14:55:00Z",
+  "status": "CANDIDATE_DELIVERED_OPEN_ATTEMPT",
+  "task_lifecycle": "executing (PRESERVED OPEN for independent root and Codex STORE_DRAFT_REVIEW)",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store.gleam": "d379f33bfc52a1d0f1d02cd158c4c3d11170d04d6b6733248e0df96cf5cf6854",
+    "telegram_store_codec.gleam": "d5991a5e12774b31ecc969abf22fa6853594141014a5b402de2f2793d586391c",
+    "telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+    "telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+    "telegram_store_test.gleam": "06efbd082453489cfa4d682871f8acb53b7bb264be73a91b21f222be2dad8c73",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "telegram_store_transport_ffi.erl": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+  },
+  "source_consistency_fixes": [
+    {
+      "finding": "codec valid_authority_request_id accepted noncanonical tg-00123-10",
+      "resolution": "Enforced request_id == ledger.make_request_id(b, u) strictly rejecting leading zeros and enforcing canonical format",
+      "verified_by": "telegram_store_test.canonical_request_id_and_chunk_validator_test"
+    },
+    {
+      "finding": "chunk decoder permitted merely attempts>=0 instead of Pending=0/otherstates=1 and nonempty payload vs ledger.payload_valid",
+      "resolution": "Replaced ad-hoc predicates with ledger.valid_chunk(chunk) checking Pending=0, Sending/Delivered/Failed/Uncertain=1, and string.trim(p) != '' && byte_size(p) <= 4096 && !contains(p, '\\0')",
+      "verified_by": "telegram_store_test.canonical_request_id_and_chunk_validator_test"
+    },
+    {
+      "finding": "inbox record decoder ad-hoc checks",
+      "resolution": "Replaced open-coded checks with ledger.valid_record(record) guaranteeing uniform invariant parity with pure ledger",
+      "verified_by": "telegram_store_test suite"
+    }
+  ],
+  "verification_results": {
+    "in_tree_gleam_tests": {
+      "total": 73,
+      "passed": 73,
+      "failed": 0,
+      "modules": [
+        "telegram_store_test (30 tests)",
+        "telegram_delivery_ledger_test (27 tests)",
+        "telegram_ingress_guard_test (16 tests)"
+      ]
+    },
+    "store_domain_tests": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "findings": {
+        "negative_clock_persisted": false,
+        "forged_directive_persisted": false
+      }
+    },
+    "store_extended_tests": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "findings": {
+        "replay_during_processing_refused": false,
+        "replay_after_result_refused": false,
+        "forged_recipient_claim": false,
+        "forged_recipient_result": false,
+        "forged_payload_send": false,
+        "stale_pending_reenters_sending": false,
+        "forged_recipient_outcome": false,
+        "caller_bool_mints_quiescence": false,
+        "normal_lifecycle_1": false,
+        "normal_lifecycle_16": false
+      }
+    },
+    "store_boundary_tests": {
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "findings": {
+        "watermark_regression_via_forged_value": false,
+        "zero_user_accepted": false,
+        "invalid_text_hash_accepted": false,
+        "rejected_reason_collision_accepted": false,
+        "invalid_domain_record_accepted": false,
+        "duplicate_response_keys_accepted": false,
+        "unknown_response_field_accepted": false
+      }
+    },
+    "store_independent_defect_probes": {
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "all_historical_defects_refused": true
+    },
+    "store_maximum_payload_tests": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "findings": {
+        "normal_lifecycle_16": false,
+        "oversize_payload_commits": false,
+        "too_many_chunks_commit": false
+      }
+    },
+    "capacity_reservation_isolation": {
+      "status": "PASS",
+      "two_pending_tokens": "126 receipts, 36 rows",
+      "one_completed_one_pending_tokens": "63 receipts, 18 rows",
+      "both_completed_tokens": "0 receipts, 0 rows",
+      "completed_replay_refused": false
+    },
+    "preflight": "31/31 PASS",
+    "risk_active_check": "PASS (0 findings)"
+  },
+  "associated_quiescence_proposal": {
+    "v2_path": "governance/planning/20261011-1645-telegram-store-quiescence-proposal-v2.json",
+    "v3_path": "governance/planning/20261011-1650-telegram-store-quiescence-proposal-v3.json",
+    "v3_sha256": "efb226994f53932e8723687c0f906d91ce2ab4695c692bdc1171782ef085b176"
+  }
+}

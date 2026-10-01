@@ -1,0 +1,229 @@
+{
+  "schema": "uos.agy-telegram-plan-review.v1",
+  "observed_utc": "2026-10-11T11:21:30Z",
+  "reviewer": {
+    "actor": "agy-telegram-20261011",
+    "agent": "AGY",
+    "model": "Gemini 2.5 Pro (Google DeepMind Antigravity CLI)",
+    "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+    "pane": "w2:p9",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+    "lease_acknowledgement": "Fresh canonical claim under uos/telegram-tools/20261011-1115 AGY_PLAN; October 1 leases and stale HARNESSBOOT grants are NOT reused."
+  },
+  "evaluated_proposal": {
+    "path": "governance/planning/20261011-1117-telegram-completion-plan.json",
+    "sha256": "0ba76d75ee3f14a101934d8a1abab565b9dcd9152187a21de83080d4996b08a9",
+    "proposed_by": "codex-telegram-20261011",
+    "task": "PLAN",
+    "plan": "uos/telegram-tools/20261011-1115",
+    "risk_portfolio": "governance/planning/20261011-1115-telegram-tools-risk.json",
+    "risk_portfolio_sha256": "4cceb5e8374e6f8c0f0e684fb4d833ff4f668db360f2b81e7952c75218c7deb6",
+    "active_check_status": "ACTIVE_OBSERVATION_PASS"
+  },
+  "verdict": "ACCEPT_WITH_SPECIFIED_RESERVATIONS_AND_REPAIR_PREREQUISITES",
+  "application_admitted": false,
+  "production_changed": false,
+  "ev_ceiling_respected": "EV-93",
+  "review_questions": {
+    "q1_scoped_bootstrap_reuse": {
+      "assessment": "ACCEPTABLE_UNDER_STRICT_BOUNDS",
+      "rationale": "Compiled Gleam CLI adapters (herdr_sync_cli, session_store_cli, development.bounded, successor_mcp) are legitimate operational interfaces that preserve Gleam/OTP harness authority over foreign processes, provided all invocations remain bounded by canonical Sa-plan tasks.",
+      "conditions": [
+        "Every tool invocation must be governed by an active Sa-plan task with a non-expired lease and explicit actor/attempt fencing.",
+        "Tool binaries must be resolved through tools/lib/uos-toolchain.sh and in-project profiles, never host PATH or arbitrary unpinned binaries.",
+        "Stale bootstrap grants (including historical HARNESSBOOT from October 1) are strictly invalidated; any new launcher grant must be freshly minted, time-bounded, and independently reviewed.",
+        "Tool discovery must use authentic session identifiers; AGY session 954b9a82-15dc-4bd5-ae31-dd9670e583ca (pane w2:p9, Gemini 2.5 Pro) in the UOS sibling workspace is confirmed."
+      ],
+      "missing_adapters_identified": [
+        "A dedicated CLI client launcher script for supervised invocation of development tools without requiring manual environment variable bootstrapping.",
+        "An atomic multi-task observation adapter for Sa-plan to inspect and recover sets of expired tasks in a single pass."
+      ]
+    },
+    "q2_minimal_safe_expired_recovery": {
+      "assessment": "RECOVERY_PROTOCOL_REQUIRED_BEFORE_RUNTIME_EXECUTION",
+      "rationale": "In uos/telegram-runtime/20261001-1150, tasks FORMAL_FIX and STORE_TRANSPORT_REVIEW both carry expired October 1 leases. Because risk-priority-check audits the complete plan and fails closed on ANY expired lease, single-task reclaim logic deadlocks. A minimal safe recovery protocol must be executed before runtime tasks can proceed.",
+      "proposed_minimal_safe_recovery": {
+        "step_1_exact_closed_set": "Target exclusively the exact expired task set { plan_id: 'uos/telegram-runtime/20261001-1150', tasks: ['FORMAL_FIX', 'STORE_TRANSPORT_REVIEW'] } with their original workers, attempts, and expired deadline timestamps.",
+        "step_2_quiescence_proof": "Execute /proc and process tree inspection to prove that no active processes for those workers exist or hold open file descriptors/locks on the store or evidence paths.",
+        "step_3_atomic_coordinator_transaction": "Execute a single reviewed coordinator transaction in Sa-plan that atomically releases or resets the lease for both tasks simultaneously, accompanied by a signed observation receipt.",
+        "step_4_immutable_history_preservation": "Original failure receipts, test logs, and expired lease evidence must NOT be modified or deleted. New receipts must link to the original evidence by SHA-256.",
+        "step_5_no_blanket_waiver": "Ordinary active-check and preflight fences remain fully enforced. No global flags like --skip-expired-checks or relaxed time boundaries are permitted.",
+        "step_6_negative_refusal_tests": "Machine-verify that attempting recovery on an incomplete set, a mismatched attempt, or an active process returns an immediate fail-closed refusal."
+      }
+    },
+    "q3_telegram_feature_inventory": {
+      "assessment": "SUBSTANTIALLY_SOUND_WITH_CRITICAL_OMISSIONS_TO_EXPAND",
+      "rationale": "Stages T1, T4, and T5 provide a solid foundation for core bot commands, formatting, and delivery, but omitted several crucial production Telegram feature families that must be represented in the inventory and Sa-plan task breakdown.",
+      "omitted_or_under_specified_feature_families": [
+        {
+          "feature": "Single-Poller Mutex / Split-Brain Prevention",
+          "severity": "CRITICAL",
+          "detail": "Telegram Bot API returns HTTP 409 Conflict if two pollers query getUpdates simultaneously with the same bot token. A strict filesystem or process-level exclusive lease mutex must guarantee that legacy pollers (e.g. tools/telegram_client.ml, apps/cepaf_gleam telegram.gleam) are fully quiesced before the new supervised poller starts."
+        },
+        {
+          "feature": "Callback Queries / Inline Keyboard Interaction",
+          "severity": "HIGH",
+          "detail": "Interactive buttons produce callback_query updates requiring answerCallbackQuery within 30 seconds to dismiss client loading spinners. The ingress handler must route and acknowledge callback queries explicitly."
+        },
+        {
+          "feature": "Telegram Mini-App WebApp initData HMAC Verification",
+          "severity": "HIGH",
+          "detail": "If Mini-App routes are exposed, initData must be cryptographically validated using HMAC-SHA256 with key derived from HMAC_SHA256('WebAppData', bot_token), enforcing auth_date freshness (<24h) to prevent replay attacks."
+        },
+        {
+          "feature": "Telegram Message Splitting & MarkdownV2 Grammar",
+          "severity": "HIGH",
+          "detail": "Messages exceeding 4096 UTF-8 characters must be chunked at clean paragraph/newline boundaries rather than raw byte slices. MarkdownV2 reserved characters (_ * [ ] ( ) ~ ` > # + - = | { } . !) must be escaped systematically to avoid HTTP 400 Bad Request delivery drops."
+        },
+        {
+          "feature": "Rate Limiting & Token Bucket Throttling",
+          "severity": "MEDIUM",
+          "detail": "Telegram enforces global limits of 30 messages/second and per-chat limits of 1 message/second (20/minute for groups). An in-memory token bucket rate limiter in the Gleam outbox supervisor is mandatory to prevent HTTP 429 Too Many Requests."
+        },
+        {
+          "feature": "Attachment & Media Ingress Bounds",
+          "severity": "MEDIUM",
+          "detail": "Photos, documents, and voice notes must have strict size limits (e.g. max 20MB download cap) and hash validation before handoff; unvetted executable files must be quarantined."
+        }
+      ],
+      "state_machine_and_uncertainty_review": {
+        "status": "APPROVED",
+        "notes": "Transition from PENDING -> SENDING -> DELIVERED only on HTTP 200 with matching chat_id and message_id is correct. Network timeouts and HTTP 5xx during send MUST transition to UNCERTAIN with administrative reconciliation; blind automatic retry is strictly barred to avoid duplicate execution."
+      }
+    },
+    "q4_integration_ordering": {
+      "assessment": "APPROVED_AS_SEQUENCED",
+      "rationale": "The progression from T0 (tool/recovery) -> T1 (inventory) -> T2 (native store repair) -> T3 (Gleam codec/transport) -> T4 (supervised poller) -> T5 (private simulated E2E) -> T6 (release prep) -> T7 (single-recipient live acceptance) -> T8 (Codex JJ merge) strictly respects UOS isolation boundaries.",
+      "essential_isolation_barriers": [
+        "Stages T0 through T6 must execute exclusively against hermetic mock/simulated Telegram Bot API endpoints; no live Telegram network traffic or production tokens.",
+        "Stage T7 requires explicit operator authorization for a single designated recipient chat_id and a bounded test message.",
+        "Stage T8 is executed solely by the Codex integration writer in standalone Jujutsu; EV ceiling remains pinned at EV-93."
+      ]
+    }
+  },
+  "store_candidate_residuals_analysis": {
+    "candidate_ref": "709c4b0af55cbbd41dc9dd85e13dfd80b70f4d1e",
+    "test_baseline": "85/85 assertions PASS (test log 020f19a5...)",
+    "residuals": [
+      {
+        "id": "RES-01",
+        "name": "init_ddl_and_meta_not_one_transaction",
+        "problem": "Schema DDL and metadata insertion are executed across separate statements without an enclosing BEGIN IMMEDIATE ... COMMIT transaction. Interruption leaves a partial or corrupt database.",
+        "required_fix": "Wrap all DDL tables, indexes, triggers, and metadata insertion in a single atomic IMMEDIATE transaction, validating schema_version and pragma foreign_keys immediately after commit."
+      },
+      {
+        "id": "RES-02",
+        "name": "path_ancestors_unchecked",
+        "problem": "safe_db_path verifies lstat on the leaf database file but does not check ancestor directories. An attacker or symlinked directory component could allow path traversal or unauthorized redirection.",
+        "required_fix": "Walk all directory components up to the repository root / authorized storage base using lstat, ensuring every component is a regular directory owned by the current UID and not writable by others."
+      },
+      {
+        "id": "RES-03",
+        "name": "decoded_values_no_utf8_or_domain_json_parsing",
+        "problem": "The native store accepts base64-decoded byte payloads without verifying valid UTF-8 encoding or syntactic structure for JSON-typed fields.",
+        "required_fix": "Enforce strict UTF-8 validation and maximum payload size bounds (e.g. 1 MiB) in the native worker. Domain-specific schema validation is enforced in the Gleam layer before invoking the native worker."
+      },
+      {
+        "id": "RES-04",
+        "name": "commit_error_state_may_be_unknown",
+        "problem": "When COMMIT returns SQLITE_BUSY or SQLITE_IOERR, the transaction state in SQLite is ambiguous (it may have committed to WAL or aborted). Returning a generic error causes callers to assume rollback, risking double-writes.",
+        "required_fix": "Inspect sqlite3_get_autocommit(db). If autocommit is false, issue ROLLBACK; if autocommit is true or ROLLBACK fails, return explicit UNCERTAIN_COMMIT error status, directing the caller to perform idempotent lookup_operation before retry."
+      },
+      {
+        "id": "RES-05",
+        "name": "reservation_ledger_belongs_to_consumer",
+        "problem": "The storage kernel attempted to maintain business-domain credit reservation accounting, violating separation of concerns and leaking domain policy into the native layer.",
+        "required_fix": "Strip domain reservation accounting from the native SQLite worker. The storage kernel provides atomic Compare-And-Swap (CAS) on generation and row hash; reservation business logic belongs to the Gleam domain controller."
+      },
+      {
+        "id": "RES-06",
+        "name": "delimiter_digest_disambiguation",
+        "problem": "Computing canonical request digests using simple colon/newline concatenation ('key:val') is vulnerable to ambiguity if keys or values contain delimiters.",
+        "required_fix": "Use unambiguous length-prefixed encoding (e.g. '%d:%s') or RFC 8785 canonical JSON serialization for all fields contributing to the SHA-256 request digest."
+      }
+    ]
+  },
+  "stage_by_stage_assessment": [
+    {
+      "stage": "T0",
+      "verdict": "CRITICAL_PATH_UNBLOCKER",
+      "notes": "Must be executed first. Requires atomic recovery of the two expired tasks in uos/telegram-runtime/20261001-1150 with quiescence proof."
+    },
+    {
+      "stage": "T1",
+      "verdict": "ACCEPTED_WITH_ADDITIONS",
+      "notes": "Inventory must encompass the 6 omitted feature families identified in Q3 (single-poller mutex, callback queries, WebApp initData, message splitting, rate limiting, and attachment bounds)."
+    },
+    {
+      "stage": "T2",
+      "verdict": "APPROVED",
+      "notes": "Native store candidate 709c4b0 must be repaired to resolve all 6 residuals. Tests must run on private temporary databases with simulated crash and fault injection."
+    },
+    {
+      "stage": "T3",
+      "verdict": "APPROVED",
+      "notes": "Gleam domain codec and transport facade must enforce strict type decoding, transactional offset advancement, and zero blind retries."
+    },
+    {
+      "stage": "T4",
+      "verdict": "APPROVED",
+      "notes": "Supervised poller with strict numeric allowlist (bot_id, chat_id, user_id) and durable outbox state machine."
+    },
+    {
+      "stage": "T5",
+      "verdict": "APPROVED",
+      "notes": "Hermetic private end-to-end integration tests using a local simulated Telegram Bot API server. Positive, negative, and recovery paths must all be verified."
+    },
+    {
+      "stage": "T6",
+      "verdict": "APPROVED",
+      "notes": "Candidate freeze, independent review, and immutable packaging. Legacy poller quiescence verified."
+    },
+    {
+      "stage": "T7",
+      "verdict": "APPROVED_WITH_SAFETY_INTERLOCK",
+      "notes": "Actual operator Telegram acceptance must be bounded to a single configured test recipient and explicit operator confirmation. No bulk or automated broadcasts."
+    },
+    {
+      "stage": "T8",
+      "verdict": "APPROVED",
+      "notes": "Codex sole integration writer merges to main via standalone JJ. Provenance boundary EV-93 preserved."
+    }
+  ],
+  "residual_risks_and_mitigations": [
+    {
+      "risk": "Legacy poller conflict",
+      "mitigation": "Enforce filesystem lock /proc mutual exclusion before starting the supervised poller."
+    },
+    {
+      "risk": "Telegram API rate limit violation",
+      "mitigation": "Token bucket rate limiter in Gleam outbox controller capped at 25 msgs/sec global and 0.8 msg/sec per chat."
+    },
+    {
+      "risk": "Message loss or duplication during network instability",
+      "mitigation": "Durable request ledger with UNCERTAIN state and manual reconciliation; no blind retries."
+    },
+    {
+      "risk": "Malicious payload injection via Bot API updates",
+      "mitigation": "Strict numeric allowlist, JSON envelope size bounds, and rejection of all un-allowlisted or malformed updates."
+    }
+  ],
+  "acceptance_prerequisites": [
+    "Atomic multi-task expired claim recovery executed for FORMAL_FIX and STORE_TRANSPORT_REVIEW.",
+    "Comprehensive feature inventory documented in Sa-plan with positive and negative test cases.",
+    "All 6 native store residuals resolved with passing isolated tests.",
+    "Hermetic mock Bot API test suite passing 100% before any live deployment."
+  ],
+  "limits": [
+    "This document is an independent candid plan review under task AGY_PLAN; it does not authorize runtime execution or production deployment.",
+    "Global system admission remains governed by EV-93 ceiling and formal verification gates.",
+    "Live Telegram acceptance requires separate, explicit operator authorization."
+  ],
+  "tags": [
+    "#telegram",
+    "#review",
+    "#fractal-l3",
+    "#zero-muda",
+    "#sa-plan"
+  ]
+}

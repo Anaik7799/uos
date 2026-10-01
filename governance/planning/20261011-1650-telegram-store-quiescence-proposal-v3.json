@@ -1,0 +1,177 @@
+{
+  "schema": "uos.telegram-store-quiescence-proposal.v3",
+  "authored_at": "2026-10-11T14:50:00Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "status": "PROPOSED_FOR_REVIEW",
+  "title": "Supervised Single-Flight Opaque Cleanup Proof and Two-Phase Fenced Reconciliation Architecture",
+  "governing_references": [
+    {
+      "path": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1215-store-development-adoption.json",
+      "line": 45,
+      "mandate": "First confirm previous worker and group exited; then lookup exact operation ID on same DB. Present+matching digest reconciles original commit. Absent after writer quiescence proves no committed operation. No automatic blind apply/retry; any later attempt requires current fences and reviewed reconciliation policy."
+    },
+    {
+      "path": "governance/planning/20261011-1421-telegram-quiescence-design-review.json",
+      "status": "HOLD_REVISE_DESIGN",
+      "findings_addressed": [
+        "Exit 124/125 proves guardian cleanup, not before-commit: addressed by mandatory post-cleanup database receipt lookup separating process death from transaction commitment",
+        "Exit 125 means general failure, not only overflow: adopted comprehensive exit 125 taxonomy",
+        "Exit 126/port DOWN explicitly means cleanup UNKNOWN: adopted strict failure-to-unknown; never upgraded using flock",
+        "flock does not prove SQLite fcntl/WAL writer absence: flock assertions completely removed; writer absence established solely by observed supervisor/guardian process-tree reap",
+        "SHA digest is binding, not authenticity: trust originates strictly from observed pinned guardian lifecycle via internally constructed opaque Gleam proof",
+        "Avoid new native command/schema: adopted frozen v4 native protocol using clean guardian lookup query without native schema changes",
+        "Store uncertain result retains operation context and proof: adopted typed StoreUncertainty and ResponseDecodeError wrappers",
+        "No automatic retry/send: explicit service-layer fencing policy barring automatic resubmission on ReconciledAbsent"
+      ]
+    },
+    {
+      "reusable_guardian_fixtures": [
+        "tools/validation/telegram_store_transport_test.erl",
+        "tools/validation/telegram_store_transport_fixture.ml",
+        "tools/telegram_store_transport_guardian.ml"
+      ]
+    }
+  ],
+  "guardian_exit_code_matrix": {
+    "exit_0": {
+      "meaning": "Normal execution: child process reaped with waitpid, process group killed with SIGKILL, response emitted cleanly",
+      "quiescence_witness": "Eligible if response handling encounters transport/port drop"
+    },
+    "exit_124": {
+      "meaning": "Deadline/timeout: guardian hit deadline, killed child process and process group with SIGKILL, reaped child with waitpid within 0.5s grace",
+      "quiescence_witness": "Eligible (proves writer process tree is dead; does not prove whether COMMIT completed)"
+    },
+    "exit_125": {
+      "meaning": "General failure: framing error, buffer overflow (>1MB), child nonzero exit, or internal error; killed child and process group with SIGKILL, reaped child with waitpid within 0.5s grace",
+      "quiescence_witness": "Eligible (proves writer process tree is dead; does not prove whether COMMIT completed)"
+    },
+    "exit_126": {
+      "meaning": "Cleanup unconfirmed: guardian hit deadline or general failure, but child waitpid did not return within 0.5s grace period",
+      "quiescence_witness": "STRICTLY BARRED: cleanup is UNKNOWN. Never upgraded by flock or caller assertions"
+    },
+    "helper_down_catch_timeout": {
+      "meaning": "Port closed, Erlang catch, helper DOWN, or outer timeout before guardian exit message received",
+      "quiescence_witness": "STRICTLY BARRED: cleanup is UNKNOWN. State remains held"
+    }
+  },
+  "typed_api_specification": {
+    "opaque_witness": {
+      "declaration": "pub opaque type CleanupWitness",
+      "internal_fields": {
+        "config_db_digest": "String (SHA-256 of canonical DB path)",
+        "native_bin_digest": "String (SHA-256 of native executable)",
+        "guardian_bin_digest": "String (SHA-256 of guardian executable)",
+        "operation_id": "String (exact operation identifier)",
+        "operation_digest": "String (SHA-256 of canonical apply request payload)",
+        "exit_status": "Int (0, 124, or 125)",
+        "reaped_at_us": "Int (monotonic timestamp of guardian reap)"
+      },
+      "constructor_visibility": "Internal to telegram_store_transport only; NO public constructor exists"
+    },
+    "store_uncertainty_type": {
+      "definition": "pub type StoreUncertainty {\n  StoreUncertainty(\n    operation_id: String,\n    operation_digest: String,\n    witness: Option(CleanupWitness),\n    error_reason: String,\n  )\n}"
+    },
+    "reconciliation_outcome_type": {
+      "definition": "pub type ReconciliationOutcome {\n  ReconciledCommitted(receipt: Receipt)\n  ReconciledAbsent(witness: CleanupWitness)\n  ReconciledUnknown(reason: String)\n  ReconciledConflict(expected_digest: String, found_receipt: Receipt)\n}"
+    },
+    "response_decode_error_type": {
+      "definition": "pub type ResponseDecodeError {\n  ResponseDecodeError(\n    raw_response: String,\n    decode_error: String,\n    cleanup_witness: Option(CleanupWitness),\n    operation_id: String,\n    operation_digest: String,\n  )\n}",
+      "purpose": "A successful response that fails domain decode retains transport cleanup evidence and operation context without dropping them"
+    },
+    "transport_exchange_api": {
+      "signature": "pub fn exchange_with_cleanup(\n  config: LocalStoreConfig,\n  body: String,\n  operation_id: String,\n  operation_digest: String,\n) -> Result(String, #(Option(CleanupWitness), TransportError))"
+    },
+    "store_reconcile_api": {
+      "signature": "pub fn reconcile_operation(\n  config: LocalStoreConfig,\n  bot_id: Int,\n  operation_id: String,\n  candidate_digest: String,\n  witness: Option(CleanupWitness),\n) -> Result(ReconciliationOutcome, StoreError)"
+    }
+  },
+  "reconciliation_protocol": {
+    "phase_1_quiescence_check": [
+      "1. An operation returns uncertain from transport (e.g. timeout, port closed, or response decode failure).",
+      "2. Transport inspects guardian exit status: if exit is 126, port DOWN, or catch, witness is None.",
+      "3. If exit is 0, 124, or 125 with confirmed process tree reap: transport internally constructs Some(CleanupWitness) binding exact config, binary hashes, operation_id, and operation_digest.",
+      "4. The uncertain result is wrapped as StoreUncertainty(operation_id, candidate_digest, witness, reason)."
+    ],
+    "phase_2_fenced_database_lookup": [
+      "1. Supervised single-flight owner enters RECONCILING state; no new mutations may be dispatched.",
+      "2. If witness is None: reconciliation immediately returns Ok(ReconciledUnknown('writer_quiescence_unproven')). State remains held; supervisor intervention (cgroup cleanup) is required.",
+      "3. If witness is Some(w): owner verifies that w.config_db_digest, w.native_bin_digest, w.guardian_bin_digest, w.operation_id, and w.operation_digest exactly match the reconciliation arguments. If any mismatch, returns Error(StoreInvariantError('quiescence_witness_binding_mismatch')).",
+      "4. Owner dispatches a clean, non-mutating lookup query (lookup_operation or read_keys on receipt) using the frozen v4 wire protocol.",
+      "5. Case A (Post-Commit Lost Response): The receipt table contains operation_id with matching digest. Outcome: Ok(ReconciledCommitted(receipt)). Original durable transition is recovered intact.",
+      "6. Case B (Timeout Before Commit): The receipt table contains no row for operation_id. Because w proves the writer process tree was killed and reaped before this query, no background commit can occur. Outcome: Ok(ReconciledAbsent(w)). Non-commitment is mathematically established.",
+      "7. Case C (Digest Conflict): The receipt table contains operation_id with a differing digest. Outcome: Ok(ReconciledConflict(candidate_digest, receipt)) -> Invariant failure HOLD.",
+      "8. ReconciledAbsent proves non-commitment, but NEVER automatically initiates an external HTTP send or blind retry. Any retry decision belongs strictly to the L3 service supervisor."
+    ]
+  },
+  "falsifiers_and_test_plan": [
+    {
+      "id": "FAL-QUIESCENCE-01",
+      "title": "Actual worker timeout before commit",
+      "setup": "Fixture pauses before COMMIT, guardian reaches deadline and exits 124, child process tree confirmed dead via waitpid",
+      "action": "Reconciliation with Some(witness)",
+      "expected_outcome": "Receipt absent in SQLite -> Ok(ReconciledAbsent(witness))"
+    },
+    {
+      "id": "FAL-QUIESCENCE-02",
+      "title": "Actual postcommit lost response",
+      "setup": "Fixture commits transaction to SQLite WAL, then sleeps until deadline, guardian exits 124/125",
+      "action": "Reconciliation with Some(witness)",
+      "expected_outcome": "Receipt found in SQLite with matching digest -> Ok(ReconciledCommitted(receipt))"
+    },
+    {
+      "id": "FAL-QUIESCENCE-03",
+      "title": "Guardian exit 126 refuses proof",
+      "setup": "Fixture spawns stubborn child that ignores SIGTERM/SIGKILL, guardian cannot confirm reap within 0.5s and exits 126",
+      "action": "Transport returns witness = None",
+      "expected_outcome": "Reconciliation yields Ok(ReconciledUnknown('writer_quiescence_unproven')); no proof minted"
+    },
+    {
+      "id": "FAL-QUIESCENCE-04",
+      "title": "Helper crash / port DOWN refuses proof",
+      "setup": "Guardian executable terminates abnormally (SIGKILL) or port closes unexpectedly without exit status",
+      "action": "Transport catches DOWN / port_closed",
+      "expected_outcome": "Reconciliation yields Ok(ReconciledUnknown('writer_quiescence_unproven')); no proof minted"
+    },
+    {
+      "id": "FAL-QUIESCENCE-05",
+      "title": "Mismatched witness binding rejected",
+      "setup": "Valid witness constructed for op-1 on db-A presented to reconcile op-2 or db-B",
+      "action": "Store verifies witness field bindings against request context",
+      "expected_outcome": "Error(StoreInvariantError('quiescence_witness_binding_mismatch'))"
+    },
+    {
+      "id": "FAL-QUIESCENCE-06",
+      "title": "Caller forgery impossibility",
+      "setup": "External code attempts to instantiate CleanupWitness",
+      "expected_outcome": "Compile-time error: CleanupWitness constructor is opaque and private to telegram_store_transport"
+    },
+    {
+      "id": "FAL-QUIESCENCE-07",
+      "title": "Domain decode failure retains cleanup evidence",
+      "setup": "Guardian exits 0 with malformed JSON body or invalid domain payload",
+      "action": "Store decodes response",
+      "expected_outcome": "Returns ResponseDecodeError retaining raw response, decode error, Some(witness), and operation context"
+    },
+    {
+      "id": "FAL-QUIESCENCE-08",
+      "title": "Zero-blind-retry enforcement",
+      "setup": "Operation reconciles as ReconciledAbsent",
+      "expected_outcome": "Storage layer returns terminal absence; zero HTTP network requests or automatic resubmissions occur"
+    },
+    {
+      "id": "FAL-QUIESCENCE-09",
+      "title": "Single-flight serialization",
+      "setup": "Store owner actor has an in-flight operation in RECONCILING state; concurrent caller attempts new mutation",
+      "expected_outcome": "Owner rejects or queues mutation; concurrent in-flight dispatch to same database is barred"
+    }
+  ],
+  "implementation_scope_and_limits": [
+    "Design proposal only; zero modifications to telegram_store_transport.gleam or telegram_store_transport_ffi.erl until proposal is root-reviewed and approved",
+    "Uses existing pinned guardian executable and frozen v4 wire protocol; no native schema changes",
+    "Supervisor restart and cgroup recovery of unproven quiescence remains within service scope",
+    "No production effects, no release grant, no merge to main bookmark"
+  ]
+}
