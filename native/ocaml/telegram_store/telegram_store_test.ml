@@ -36,6 +36,29 @@ let with_temp_dir f =
     )
     (fun () -> f base)
 
+let make_apply_req ~db_path ~bot_id ~operation_id ~expected_generation ~read_set ~changes ~res_delta ~summary_json =
+  let digest =
+    compute_request_digest
+      ~bot_id
+      ~operation_id
+      ~expected_generation
+      ~read_set
+      ~changes
+      ~reservation_delta:res_delta
+      ~summary_json
+  in
+  {
+    db_path;
+    bot_id;
+    operation_id;
+    request_digest = digest;
+    expected_generation;
+    read_set_assertions = read_set;
+    changes;
+    reservation_delta = res_delta;
+    summary_json;
+  }
+
 (* ========================================== *)
 (* Test 1: Initialize New & Security Controls *)
 (* ========================================== *)
@@ -99,18 +122,15 @@ let test_initialize_and_security () =
         check "foreign_keys is ON (1)" (get_int "PRAGMA foreign_keys;" = 1);
         let page_size = get_int "PRAGMA page_size;" in
         let max_pages = get_int "PRAGMA max_page_count;" in
-        check "max_page_count bounds main DB to 256 MiB" (max_pages = (268435456 / page_size));
+        check "max_page_count bounds main DB to 256 MiB" (page_size * max_pages = max_db_main_bytes);
 
-        (* Test append-only trigger on receipts: insert one, then try update and delete *)
-        let ins_rc = Sqlite3.exec db "INSERT INTO receipts VALUES ('op_test', 'dig_test', 1, '{}', 100);" in
+        (* Append-Only Trigger test: receipts table *)
+        let ins_rc = Sqlite3.exec db "INSERT INTO receipts (operation_id, request_digest, generation, summary_json, committed_utc_us) VALUES ('op1', 'dig1', 1, '{}', 1000);" in
         check "insert receipt succeeds" (ins_rc = Sqlite3.Rc.OK);
-
-        let upd_rc = Sqlite3.exec db "UPDATE receipts SET generation = 2 WHERE operation_id = 'op_test';" in
-        check "trigger prevents UPDATE on receipts" (upd_rc = Sqlite3.Rc.CONSTRAINT || upd_rc = Sqlite3.Rc.ERROR);
-
-        let del_rc = Sqlite3.exec db "DELETE FROM receipts WHERE operation_id = 'op_test';" in
-        check "trigger prevents DELETE on receipts" (del_rc = Sqlite3.Rc.CONSTRAINT || del_rc = Sqlite3.Rc.ERROR);
-
+        let upd_rc = Sqlite3.exec db "UPDATE receipts SET summary_json = '{\"mutated\": true}' WHERE operation_id = 'op1';" in
+        check "trigger prevents UPDATE on receipts" (upd_rc <> Sqlite3.Rc.OK);
+        let del_rc = Sqlite3.exec db "DELETE FROM receipts WHERE operation_id = 'op1';" in
+        check "trigger prevents DELETE on receipts" (del_rc <> Sqlite3.Rc.OK);
         ignore (Sqlite3.db_close db)
   )
 
@@ -124,8 +144,8 @@ let test_read_keys_and_inbox () =
     let bot_id = "123456789" in
     assert (initialize_new db_path bot_id = Ok 1);
 
-    (* 1. Read non-existent keys *)
-    match read_keys db_path ["meta/nonexistent"; "inbox/req1"] with
+    (* Read non-existent keys *)
+    match read_keys db_path ["inbox/req_001"; "request/req_001/status"] with
     | Error e -> check ("read_keys failed: " ^ e) false
     | Ok (gen, rows) ->
         check "read_keys returns generation 1" (gen = 1);
@@ -135,25 +155,25 @@ let test_read_keys_and_inbox () =
         check "row 0 version is 0" (r0.version = 0);
         check "row 0 value is empty" (r0.canonical_value_base64 = "");
 
-    (* 2. Insert some rows via apply and read back *)
-    let val1 = "{\"chat_id\": 100, \"text\": \"hello\"}" in
-    let b64_1 = encode_canonical_base64 val1 in
-    let sha_1 = sha256_hex val1 in
-    let apply_req = {
-      db_path;
-      bot_id;
-      operation_id = "op_init_rows";
-      request_digest = "dig_init_rows";
-      expected_generation = 1;
-      read_set_assertions = [];
-      changes = [
-        { key = "inbox/req_002"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_1 };
-        { key = "inbox/req_001"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_1 };
-        { key = "request/req_001/input"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_1 };
-      ];
-      reservation_delta = { rows = 0; receipts = 0 };
-      summary_json = "{}";
-    } in
+    (* Insert test keys via apply *)
+    let val_1 = "{\"chat_id\": 12345, \"user_id\": 67890, \"text\": \"/start\"}" in
+    let b64_1 = encode_canonical_base64 val_1 in
+    let sha_1 = sha256_hex val_1 in
+    let changes_1 = [
+      { key = "inbox/req_002"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_1 };
+      { key = "inbox/req_001"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_1 };
+      { key = "request/req_001/input"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_1 };
+    ] in
+    let apply_req = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_init_keys"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:changes_1
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
     (match apply apply_req with
     | Error e -> check ("apply failed: " ^ e) false
     | Ok res ->
@@ -212,17 +232,16 @@ let test_apply_and_cas () =
     let sha_a = sha256_hex val_a in
 
     (* 1. First Apply: Create row *)
-    let req1 = {
-      db_path;
-      bot_id;
-      operation_id = "op_1";
-      request_digest = "dig_1";
-      expected_generation = 1;
-      read_set_assertions = [];
-      changes = [ { key = "request/1/status"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_a } ];
-      reservation_delta = { rows = 5; receipts = 10 };
-      summary_json = "{\"action\": \"create\"}";
-    } in
+    let req1 = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_1"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[ { key = "request/1/status"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_a } ]
+      ~res_delta:{ rows = 5; receipts = 10 }
+      ~summary_json:"{\"action\": \"create\"}"
+    in
     let res1 = match apply req1 with Ok r -> r | Error e -> failwith e in
     check "req1 replay is false" (not res1.replay);
     check "req1 generation is 2" (res1.receipt.generation = 2);
@@ -236,88 +255,101 @@ let test_apply_and_cas () =
         check "receipt generation matches original (2)" (res_rep.receipt.generation = 2);
         check "receipt summary matches" (res_rep.receipt.summary_json = "{\"action\": \"create\"}"));
 
-    (* 3. Collision Test: Same operation_id + DIFFERENT request_digest aborts *)
-    let req_collision = { req1 with request_digest = "different_digest_xyz" } in
+    (* 3. Request Digest Mismatch Test: Altering request without updating digest *)
+    let req_tampered = { req1 with expected_generation = 2 } in
+    (match apply req_tampered with
+    | Error "request_digest_mismatch" -> check "refuses tampered request with request_digest_mismatch" true
+    | _ -> check "failed to detect request digest mismatch" false);
+
+    (* 4. Collision Test: Same operation_id + DIFFERENT request (different changes) *)
+    let val_diff = "{\"status\": \"different\"}" in
+    let b64_diff = encode_canonical_base64 val_diff in
+    let req_collision = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_1"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[ { key = "request/1/status"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_diff } ]
+      ~res_delta:{ rows = 5; receipts = 10 }
+      ~summary_json:"{\"action\": \"create\"}"
+    in
     (match apply req_collision with
     | Error "operation_collision_digest_mismatch" -> check "refuses collision with operation_collision_digest_mismatch" true
     | _ -> check "failed to detect operation collision" false);
 
-    (* 4. Stale Generation Test: New op with old expected_generation (1 instead of 2) *)
-    let req_stale = {
-      db_path;
-      bot_id;
-      operation_id = "op_stale";
-      request_digest = "dig_stale";
-      expected_generation = 1; (* stale! Current is 2 *)
-      read_set_assertions = [];
-      changes = [];
-      reservation_delta = { rows = 0; receipts = 0 };
-      summary_json = "{}";
-    } in
+    (* 5. Stale Generation Test: New op with old expected_generation (1 instead of 2) *)
+    let req_stale = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_stale"
+      ~expected_generation:1 (* stale! Current is 2 *)
+      ~read_set:[]
+      ~changes:[]
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
     (match apply req_stale with
     | Error "stale_generation" -> check "refuses stale generation with stale_generation" true
     | _ -> check "failed to detect stale generation" false);
 
-    (* 5. CAS Conflict Test: Updating row with wrong version or wrong sha256 *)
+    (* 6. CAS Conflict Test: Updating row with wrong version or wrong sha256 *)
     let val_b = "{\"status\": \"sending\"}" in
     let b64_b = encode_canonical_base64 val_b in
-    let req_cas_wrong_ver = {
-      db_path;
-      bot_id;
-      operation_id = "op_cas_wrong";
-      request_digest = "dig_cas_wrong";
-      expected_generation = 2;
-      read_set_assertions = [];
-      changes = [ { key = "request/1/status"; expected_version = 99; expected_sha256 = sha_a; new_value_base64 = b64_b } ];
-      reservation_delta = { rows = 0; receipts = 0 };
-      summary_json = "{}";
-    } in
+    let req_cas_wrong_ver = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_cas_wrong"
+      ~expected_generation:2
+      ~read_set:[]
+      ~changes:[ { key = "request/1/status"; expected_version = 99; expected_sha256 = sha_a; new_value_base64 = b64_b } ]
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
     (match apply req_cas_wrong_ver with
     | Error "cas_conflict" -> check "refuses wrong version with cas_conflict" true
     | _ -> check "failed to detect wrong CAS version" false);
 
-    let req_cas_wrong_sha = {
-      req_cas_wrong_ver with
-      changes = [ { key = "request/1/status"; expected_version = 1; expected_sha256 = "bad_sha256"; new_value_base64 = b64_b } ];
-    } in
+    let req_cas_wrong_sha = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_cas_wrong_sha"
+      ~expected_generation:2
+      ~read_set:[]
+      ~changes:[ { key = "request/1/status"; expected_version = 1; expected_sha256 = "bad_sha256"; new_value_base64 = b64_b } ]
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
     (match apply req_cas_wrong_sha with
     | Error "cas_conflict" -> check "refuses wrong sha256 with cas_conflict" true
     | _ -> check "failed to detect wrong CAS sha" false);
 
-    (* 6. Read-Set Conflict Test *)
-    let req_rs_conflict = {
-      db_path;
-      bot_id;
-      operation_id = "op_rs_conflict";
-      request_digest = "dig_rs_conflict";
-      expected_generation = 2;
-      read_set_assertions = [
-        { key = "request/1/status"; expected_version = 1; expected_sha256 = "mismatched_sha" }
-      ];
-      changes = [];
-      reservation_delta = { rows = 0; receipts = 0 };
-      summary_json = "{}";
-    } in
+    (* 7. Read-Set Conflict Test *)
+    let req_rs_conflict = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_rs_conflict"
+      ~expected_generation:2
+      ~read_set:[ { key = "request/1/status"; expected_version = 1; expected_sha256 = "mismatched_sha" } ]
+      ~changes:[]
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
     (match apply req_rs_conflict with
     | Error "read_set_conflict" -> check "refuses mismatched read-set with read_set_conflict" true
     | _ -> check "failed to detect read-set conflict" false);
 
-    (* 7. Successful CAS update with valid read-set assertion *)
-    let req_valid_update = {
-      db_path;
-      bot_id;
-      operation_id = "op_valid_update";
-      request_digest = "dig_valid_update";
-      expected_generation = 2;
-      read_set_assertions = [
-        { key = "request/1/status"; expected_version = 1; expected_sha256 = sha_a }
-      ];
-      changes = [
-        { key = "request/1/status"; expected_version = 1; expected_sha256 = sha_a; new_value_base64 = b64_b }
-      ];
-      reservation_delta = { rows = -2; receipts = -5 }; (* partial release *)
-      summary_json = "{\"action\": \"advance_status\"}";
-    } in
+    (* 8. Successful CAS update with valid read-set assertion *)
+    let req_valid_update = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_valid_update"
+      ~expected_generation:2
+      ~read_set:[ { key = "request/1/status"; expected_version = 1; expected_sha256 = sha_a } ]
+      ~changes:[ { key = "request/1/status"; expected_version = 1; expected_sha256 = sha_a; new_value_base64 = b64_b } ]
+      ~res_delta:{ rows = -2; receipts = -5 } (* partial release *)
+      ~summary_json:"{\"action\": \"advance_status\"}"
+    in
     (match apply req_valid_update with
     | Error e -> check ("valid update failed: " ^ e) false
     | Ok res2 ->
@@ -341,36 +373,48 @@ let test_capacity_and_reservations () =
     assert (initialize_new db_path bot_id = Ok 1);
 
     (* 1. Negative: Invalid reservation delta (resulting in < 0) *)
-    let req_neg_res = {
-      db_path;
-      bot_id;
-      operation_id = "op_neg_res";
-      request_digest = "dig_neg_res";
-      expected_generation = 1;
-      read_set_assertions = [];
-      changes = [];
-      reservation_delta = { rows = -1; receipts = 0 }; (* cur is 0 -> 0 + (-1) = -1 < 0! *)
-      summary_json = "{}";
-    } in
+    let req_neg_res = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_neg_res"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[]
+      ~res_delta:{ rows = -1; receipts = 0 } (* cur is 0 -> 0 + (-1) = -1 < 0! *)
+      ~summary_json:"{}"
+    in
     (match apply req_neg_res with
     | Error "invalid_reservation_delta" -> check "refuses negative resulting reservation with invalid_reservation_delta" true
     | _ -> check "failed to refuse negative reservation" false);
 
-    (* 2. Negative: Capacity exhausted on reservation delta *)
-    let req_exhaust = {
-      db_path;
-      bot_id;
-      operation_id = "op_exhaust";
-      request_digest = "dig_exhaust";
-      expected_generation = 1;
-      read_set_assertions = [];
-      changes = [];
-      reservation_delta = { rows = 20001; receipts = 0 }; (* > 20000 limit! *)
-      summary_json = "{}";
-    } in
-    (match apply req_exhaust with
-    | Error "capacity_exhausted" -> check "refuses > 20000 rows with capacity_exhausted" true
-    | _ -> check "failed to refuse over-capacity reservation" false)
+    (* 2. Negative: Reservation delta exceeds adopted credits policy (>20 rows or >64 receipts) *)
+    let req_over_rows = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_over_rows"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[]
+      ~res_delta:{ rows = 21; receipts = 10 }
+      ~summary_json:"{}"
+    in
+    (match apply req_over_rows with
+    | Error "invalid_reservation_delta" -> check "refuses reservation delta rows > 20 with invalid_reservation_delta" true
+    | _ -> check "failed to refuse rows > 20" false);
+
+    let req_over_receipts = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_over_rec"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[]
+      ~res_delta:{ rows = 10; receipts = 65 }
+      ~summary_json:"{}"
+    in
+    (match apply req_over_receipts with
+    | Error "invalid_reservation_delta" -> check "refuses reservation delta receipts > 64 with invalid_reservation_delta" true
+    | _ -> check "failed to refuse receipts > 64" false)
   )
 
 (* ========================================== *)
@@ -385,17 +429,16 @@ let test_bounds_and_chunks () =
 
     (* 1. Strict Canonical Base64 rejection *)
     let non_canonical_b64 = "aGVsbG8=\n" in (* contains newline *)
-    let req_bad_b64 = {
-      db_path;
-      bot_id;
-      operation_id = "op_bad_b64";
-      request_digest = "dig_bad_b64";
-      expected_generation = 1;
-      read_set_assertions = [];
-      changes = [ { key = "k1"; expected_version = 0; expected_sha256 = ""; new_value_base64 = non_canonical_b64 } ];
-      reservation_delta = { rows = 0; receipts = 0 };
-      summary_json = "{}";
-    } in
+    let req_bad_b64 = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_bad_b64"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[ { key = "k1"; expected_version = 0; expected_sha256 = ""; new_value_base64 = non_canonical_b64 } ]
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
     (match apply req_bad_b64 with
     | Error "invalid_base64" -> check "refuses non-canonical base64 with invalid_base64" true
     | _ -> check "failed to refuse non-canonical base64" false);
@@ -403,19 +446,23 @@ let test_bounds_and_chunks () =
     (* 2. Single Value > 98304 bytes *)
     let huge_val = String.make 98305 'A' in
     let huge_b64 = encode_canonical_base64 huge_val in
-    let req_huge = {
-      req_bad_b64 with
-      changes = [ { key = "k_huge"; expected_version = 0; expected_sha256 = ""; new_value_base64 = huge_b64 } ];
-    } in
+    let req_huge = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_huge"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[ { key = "k_huge"; expected_version = 0; expected_sha256 = ""; new_value_base64 = huge_b64 } ]
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
     (match apply req_huge with
     | Error "value_too_large" -> check "refuses single value > 98304 bytes with value_too_large" true
     | _ -> check "failed to refuse oversized value" false);
 
     (* 3. Max Escaped 16 Chunks of 4096 bytes escaped domain JSON *)
-    (* 16 chunks * 4096 bytes = 65536 bytes (well within 524288 aggregate limit) *)
     let make_chunk idx =
       let payload = Printf.sprintf "{\"chunk_index\": %d, \"data\": \"%s\"}" idx (String.make 4000 'x') in
-      (* Pad to exact 4096 bytes *)
       let pad = String.make (4096 - String.length payload) ' ' in
       payload ^ pad
     in
@@ -430,17 +477,16 @@ let test_bounds_and_chunks () =
         new_value_base64 = b64;
       }
     ) in
-    let req_16_chunks = {
-      db_path;
-      bot_id;
-      operation_id = "op_16_chunks";
-      request_digest = "dig_16_chunks";
-      expected_generation = 1;
-      read_set_assertions = [];
-      changes = chunks;
-      reservation_delta = { rows = 16; receipts = 1 };
-      summary_json = "{\"action\": \"commit_16_chunks\"}";
-    } in
+    let req_16_chunks = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_16_chunks"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:chunks
+      ~res_delta:{ rows = 16; receipts = 1 }
+      ~summary_json:"{\"action\": \"commit_16_chunks\"}"
+    in
     (match apply req_16_chunks with
     | Error e -> check ("apply 16x4096 chunks failed: " ^ e) false
     | Ok res ->
@@ -456,10 +502,129 @@ let test_bounds_and_chunks () =
   )
 
 (* ========================================== *)
-(* Test 6: Redacted Error Codes & Framing     *)
+(* Test 6: Advanced Integrity & Hardening    *)
+(* ========================================== *)
+let test_advanced_integrity () =
+  Printf.printf "=== Test Suite 6: Advanced Integrity & Hardening ===\n%!";
+  with_temp_dir (fun dir ->
+    let db_path = Filename.concat dir "telegram.sqlite3" in
+    let bot_id = "888" in
+    assert (initialize_new db_path bot_id = Ok 1);
+
+    (* 1. Verify schema definition tampering detection *)
+    let db = Sqlite3.db_open db_path in
+    ignore (Sqlite3.exec db "CREATE TABLE unauthorized_extra (id INTEGER PRIMARY KEY);");
+    (match verify_schema db (Some bot_id) with
+    | Error "schema_mismatch" -> check "verify_schema catches unauthorized extra table with schema_mismatch" true
+    | _ -> check "failed to catch schema tampering" false);
+    ignore (Sqlite3.exec db "DROP TABLE unauthorized_extra;");
+    check "verify_schema restored after removing extra table" (verify_schema db (Some bot_id) = Ok (1, bot_id, 0, 0));
+    ignore (Sqlite3.db_close db);
+
+    (* 2. Verify bot_id and schema check precedes replay *)
+    let val_x = "{\"test\": true}" in
+    let b64_x = encode_canonical_base64 val_x in
+    let req_orig = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_orig"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[ { key = "k_orig"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_x } ]
+      ~res_delta:{ rows = 1; receipts = 1 }
+      ~summary_json:"{}"
+    in
+    let res_orig = match apply req_orig with Ok r -> r | Error e -> failwith e in
+    check "original apply committed" (res_orig.receipt.generation = 2);
+
+    (* Replay with WRONG bot_id must be refused with bot_id_mismatch, NOT replay! *)
+    let req_replay_wrong_bot_dig = make_apply_req
+      ~db_path
+      ~bot_id:"wrong_bot_id_999"
+      ~operation_id:"op_orig"
+      ~expected_generation:1
+      ~read_set:[]
+      ~changes:[ { key = "k_orig"; expected_version = 0; expected_sha256 = ""; new_value_base64 = b64_x } ]
+      ~res_delta:{ rows = 1; receipts = 1 }
+      ~summary_json:"{}"
+    in
+    (match apply req_replay_wrong_bot_dig with
+    | Error "bot_id_mismatch" -> check "replay with wrong bot_id refused with bot_id_mismatch before replay lookup" true
+    | _ -> check "failed to enforce bot_id check before replay" false);
+
+    (* 3. Corrupt row hash detection *)
+    let db2 = Sqlite3.db_open db_path in
+    ignore (Sqlite3.exec db2 "UPDATE kv_rows SET sha256 = 'corrupt_hash_1234567890abcdef' WHERE key = 'k_orig';");
+    ignore (Sqlite3.db_close db2);
+
+    (match read_keys db_path ["k_orig"] with
+    | Error "corrupt_row_hash" -> check "read_keys catches corrupt row hash with corrupt_row_hash" true
+    | _ -> check "failed to detect corrupt row hash in read_keys" false);
+
+    let req_cas_corrupt = make_apply_req
+      ~db_path
+      ~bot_id
+      ~operation_id:"op_cas_corrupt"
+      ~expected_generation:2
+      ~read_set:[]
+      ~changes:[ { key = "k_orig"; expected_version = 1; expected_sha256 = "corrupt_hash_1234567890abcdef"; new_value_base64 = b64_x } ]
+      ~res_delta:{ rows = 0; receipts = 0 }
+      ~summary_json:"{}"
+    in
+    (match apply req_cas_corrupt with
+    | Error "corrupt_row_hash" -> check "apply CAS catches corrupt row hash with corrupt_row_hash" true
+    | _ -> check "failed to detect corrupt row hash in apply CAS" false);
+
+    (* Restore valid row hash *)
+    let db3 = Sqlite3.db_open db_path in
+    let valid_sha = sha256_hex val_x in
+    let stmt_fix = Sqlite3.prepare db3 "UPDATE kv_rows SET sha256 = ? WHERE key = 'k_orig';" in
+    ignore (Sqlite3.bind_text stmt_fix 1 valid_sha);
+    ignore (Sqlite3.step stmt_fix);
+    ignore (Sqlite3.finalize stmt_fix);
+    ignore (Sqlite3.db_close db3);
+
+    (* 4. Inbox namespace boundary tests *)
+    (match read_inbox_index db_path 10 (Some "zebra") with
+    | Error "invalid_after_key" -> check "after_key not starting with inbox/ refused with invalid_after_key" true
+    | _ -> check "failed to refuse malicious after_key" false);
+
+    (match read_inbox_index db_path 10 (Some "inbox0") with
+    | Error "invalid_after_key" -> check "after_key >= inbox0 refused with invalid_after_key" true
+    | _ -> check "failed to refuse out-of-bound after_key" false);
+
+    (match read_inbox_index db_path 10 (Some "inbox/") with
+    | Error "invalid_after_key" -> check "after_key exactly 'inbox/' refused with invalid_after_key" true
+    | _ -> check "failed to refuse short after_key" false);
+
+    (* 5. Hard link detection test *)
+    let hardlink_path = Filename.concat dir "hardlink.sqlite3" in
+    Unix.link db_path hardlink_path;
+    (match read_keys db_path ["k_orig"] with
+    | Error "db_file_insecure" -> check "hard-linked db file refused with db_file_insecure" true
+    | _ -> check "failed to refuse hard-linked db file" false);
+    Unix.unlink hardlink_path;
+    check "normal db file accepted after unlinking hard link" (read_keys db_path ["k_orig"] <> Error "db_file_insecure");
+
+    (* 6. Symlink lock file test *)
+    let lock_path = db_path ^ ".process_lock" in
+    (try Unix.unlink lock_path with _ -> ());
+    let dummy_target = Filename.concat dir "dummy_target" in
+    let fd_dummy = Unix.openfile dummy_target [Unix.O_CREAT; Unix.O_WRONLY] 0o600 in
+    Unix.close fd_dummy;
+    Unix.symlink dummy_target lock_path;
+    (match read_keys db_path ["k_orig"] with
+    | Error "db_path_symlink" -> check "symlink process lock file refused with db_path_symlink" true
+    | _ -> check "failed to refuse symlink lock file" false);
+    Unix.unlink lock_path;
+    Unix.unlink dummy_target
+  )
+
+(* ========================================== *)
+(* Test 7: Redacted Error Codes & Framing     *)
 (* ========================================== *)
 let test_redacted_errors_and_framing () =
-  Printf.printf "=== Test Suite 6: Redacted Error Codes & Framing ===\n%!";
+  Printf.printf "=== Test Suite 7: Redacted Error Codes & Framing ===\n%!";
   (* Test run_command_json with canary tokens *)
   let canary = "PRIVATE_SECRET_TOKEN_XYZ_12345" in
   let malformed_req = Printf.sprintf "{\"command\": \"apply\", \"token\": \"%s\", \"db_path\": \"/nonexistent/path/db.sqlite3\"}" canary in
@@ -472,16 +637,21 @@ let test_redacted_errors_and_framing () =
   let resp_dup = run_command_json dup_key_json in
   check "duplicate key in JSON rejected with duplicate_json_keys" (String.contains resp_dup 'd' && String.contains resp_dup 'u' && String.contains resp_dup 'p');
 
+  (* Strict missing field checks: read_inbox_index without limit *)
+  let no_limit_json = "{\"command\": \"read_inbox_index\", \"db_path\": \"/tmp/db.sqlite3\"}" in
+  let resp_no_lim = run_command_json no_limit_json in
+  check "read_inbox_index without limit rejected with invalid_limit" (String.contains resp_no_lim 'l' && String.contains resp_no_lim 'i' && String.contains resp_no_lim 'm');
+
   (* Oversized request frame *)
   let oversized_req = String.make (max_request_json_bytes + 1) ' ' in
   let resp_over = run_command_json oversized_req in
   check "oversized request rejected with oversized_frame" (String.contains resp_over 'o' && String.contains resp_over 'v')
 
 (* ========================================== *)
-(* Test 7: Binary Pipe Framing (telegram_store_main) *)
+(* Test 8: Binary Pipe Framing (telegram_store_main) *)
 (* ========================================== *)
 let test_pipe_framing_process () =
-  Printf.printf "=== Test Suite 7: Binary Pipe Framing (telegram_store_main) ===\n%!";
+  Printf.printf "=== Test Suite 8: Binary Pipe Framing (telegram_store_main) ===\n%!";
   let exe =
     let candidates = [
       "./telegram_store_main.exe";
@@ -589,6 +759,7 @@ let () =
   test_apply_and_cas ();
   test_capacity_and_reservations ();
   test_bounds_and_chunks ();
+  test_advanced_integrity ();
   test_redacted_errors_and_framing ();
   test_pipe_framing_process ();
   Printf.printf "\nALL TESTS PASSED: %d/%d assertions passed successfully!\n%!" !pass_count !test_count
