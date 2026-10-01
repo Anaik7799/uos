@@ -18,6 +18,7 @@ pub fn identity() -> String {
     #("modules", json.object(list.map([
       "cognitive_runtime_cli", "cepaf_gleam@harness@cognitive_worker",
       "cepaf_gleam@harness@doctor_projection", "cepaf_gleam@harness@tool_fenced_dispatcher",
+      "cepaf_gleam@harness@direct_read_dispatch",
     ], fn(name) {
       #(name, json.string(metadata(atom.create(name), atom.create("module_info"), [atom.create("md5")])
         |> bit_array.base16_encode |> string.lowercase))
