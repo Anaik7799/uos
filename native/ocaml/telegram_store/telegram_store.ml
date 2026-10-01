@@ -958,7 +958,7 @@ let check_duplicate_keys json =
 let make_error_json (err : string) : string =
   Yojson.Safe.to_string (`Assoc [ ("ok", `Bool false); ("error", `String err) ])
 
-let run_command_json (input_str : string) : string =
+let run_command_json ?configured_db_path (input_str : string) : string =
   if String.length input_str > max_request_json_bytes then make_error_json "oversized_frame"
   else
     let parsed_opt =
@@ -984,12 +984,23 @@ let run_command_json (input_str : string) : string =
             | Some (`Int i) -> Some i
             | _ -> None
           in
+          let resolve_db_path obj =
+            match get_string "db_path" obj with
+            | Some p ->
+                (match configured_db_path with
+                | Some conf_p when not (String.equal p conf_p) -> Error "db_path_mismatch"
+                | _ -> Ok p)
+            | None ->
+                (match configured_db_path with
+                | Some conf_p -> Ok conf_p
+                | None -> Error "db_path_invalid")
+          in
           match get_string "command" json with
           | None -> make_error_json "unknown_command"
           | Some "initialize_new" ->
-              (match get_string "db_path" json with
-              | None -> make_error_json "db_path_invalid"
-              | Some db_path ->
+              (match resolve_db_path json with
+              | Error err -> make_error_json err
+              | Ok db_path ->
                   let bot_id_opt =
                     match get_field "bot_id" json with
                     | Some (`String s) -> Some s
@@ -1004,9 +1015,9 @@ let run_command_json (input_str : string) : string =
                       | Ok gen -> Yojson.Safe.to_string (`Assoc [ ("ok", `Bool true); ("generation", `Int gen) ])
                       | Error err -> make_error_json err)))
           | Some "read_keys" ->
-              (match get_string "db_path" json with
-              | None -> make_error_json "db_path_invalid"
-              | Some db_path ->
+              (match resolve_db_path json with
+              | Error err -> make_error_json err
+              | Ok db_path ->
                   (match get_field "keys" json with
                   | Some (`List key_nodes) ->
                       let keys =
@@ -1035,9 +1046,9 @@ let run_command_json (input_str : string) : string =
                         | Error err -> make_error_json err)
                   | _ -> make_error_json "invalid_json"))
           | Some "read_inbox_index" ->
-              (match get_string "db_path" json with
-              | None -> make_error_json "db_path_invalid"
-              | Some db_path ->
+              (match resolve_db_path json with
+              | Error err -> make_error_json err
+              | Ok db_path ->
                   (match get_int "limit" json with
                   | None -> make_error_json "invalid_limit"
                   | Some limit ->
@@ -1060,9 +1071,9 @@ let run_command_json (input_str : string) : string =
                               ])
                           | Error err -> make_error_json err)))
           | Some "lookup_operation" ->
-              (match get_string "db_path" json with
-              | None -> make_error_json "db_path_invalid"
-              | Some db_path ->
+              (match resolve_db_path json with
+              | Error err -> make_error_json err
+              | Ok db_path ->
                   (match get_string "operation_id" json with
                   | None -> make_error_json "invalid_operation_id"
                   | Some op_id ->
@@ -1086,9 +1097,9 @@ let run_command_json (input_str : string) : string =
                           ])
                       | Error err -> make_error_json err))
           | Some "apply" ->
-              (match get_string "db_path" json with
-              | None -> make_error_json "db_path_invalid"
-              | Some db_path ->
+              (match resolve_db_path json with
+              | Error err -> make_error_json err
+              | Ok db_path ->
                   let bot_id_opt =
                     match get_field "bot_id" json with
                     | Some (`String s) -> Some s

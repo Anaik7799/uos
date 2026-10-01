@@ -11,4 +11,5 @@
 (test
  (name telegram_store_test)
  (modules telegram_store_test)
+ (deps telegram_store_main.exe)
  (libraries telegram_store unix))

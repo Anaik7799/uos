@@ -664,8 +664,13 @@ let test_pipe_framing_process () =
     | None -> failwith "telegram_store_main.exe not found"
   in
 
-  let run_pipe input_bytes =
-    let (in_ch, out_ch) = Unix.open_process exe in
+  let run_pipe ?(args_override = None) input_bytes db_path =
+    let args =
+      match args_override with
+      | Some a -> a
+      | None -> [| exe; db_path |]
+    in
+    let (in_ch, out_ch) = Unix.open_process_args exe args in
     set_binary_mode_out out_ch true;
     set_binary_mode_in in_ch true;
     output_bytes out_ch input_bytes;
@@ -710,43 +715,61 @@ let test_pipe_framing_process () =
   with_temp_dir (fun dir ->
     let db_path = Filename.concat dir "framed.sqlite3" in
 
-    (* 1. Normal framed initialize_new *)
+    (* 1. Normal framed initialize_new with matching db_path in json *)
     let init_json = Printf.sprintf "{\"command\": \"initialize_new\", \"db_path\": \"%s\", \"bot_id\": \"888\"}" db_path in
-    let (status, resp_opt) = run_pipe (make_frame init_json) in
+    let (status, resp_opt) = run_pipe (make_frame init_json) db_path in
     check "framed process exits with code 0" (status = Unix.WEXITED 0);
     check "framed process returned response" (Option.is_some resp_opt);
     let resp = Option.get resp_opt in
     check "initialize_new via framing succeeded" (String.contains resp 't' && String.contains resp 'r' && String.contains resp 'u');
 
-    (* 2. Truncated frame: header says 100 bytes, send only 10 *)
+    (* 2. Command omitting db_path from JSON uses trusted argv DB locator *)
+    let read_no_db = "{\"command\": \"read_keys\", \"keys\": []}" in
+    let (status_read, resp_read_opt) = run_pipe (make_frame read_no_db) db_path in
+    check "command omitting db_path exits 0" (status_read = Unix.WEXITED 0);
+    let resp_read = Option.get resp_read_opt in
+    check "command omitting db_path succeeds using trusted argv locator" (String.contains resp_read 't' && String.contains resp_read 'r' && String.contains resp_read 'u');
+
+    (* 3. Command with conflicting db_path in JSON rejected with db_path_mismatch *)
+    let read_mismatch = "{\"command\": \"read_keys\", \"db_path\": \"/different/path.sqlite3\", \"keys\": []}" in
+    let (_, resp_mismatch_opt) = run_pipe (make_frame read_mismatch) db_path in
+    let resp_mismatch = Option.get resp_mismatch_opt in
+    check "mismatched db_path rejected with db_path_mismatch" (String.contains resp_mismatch 'm' && String.contains resp_mismatch 'i' && String.contains resp_mismatch 's');
+
+    (* 4. Worker launched without argv arguments rejected with invalid_command_line_arguments *)
+    let (_, resp_no_argv_opt) = run_pipe ~args_override:(Some [| exe |]) (make_frame read_no_db) db_path in
+    let resp_no_argv = Option.get resp_no_argv_opt in
+    check "worker launched without argv db locator rejected" (String.contains resp_no_argv 'a' && String.contains resp_no_argv 'r' && String.contains resp_no_argv 'g');
+
+    (* 5. Truncated frame: header says 100 bytes, send only 10 *)
     let trunc_b = Bytes.create 14 in
     Bytes.set trunc_b 0 '\000';
     Bytes.set trunc_b 1 '\000';
     Bytes.set trunc_b 2 '\000';
     Bytes.set trunc_b 3 (Char.chr 100);
     Bytes.blit_string "1234567890" 0 trunc_b 4 10;
-    let (_, resp_trunc_opt) = run_pipe trunc_b in
+    let (_, resp_trunc_opt) = run_pipe trunc_b db_path in
     check "truncated frame returned response" (Option.is_some resp_trunc_opt);
     let resp_trunc = Option.get resp_trunc_opt in
     check "truncated frame refused with truncated_frame" (String.contains resp_trunc 't' && String.contains resp_trunc 'r' && String.contains resp_trunc 'u');
 
-    (* 3. Trailing bytes after frame *)
+    (* 6. Trailing bytes after frame *)
     let normal_b = make_frame "{\"command\": \"unknown\"}" in
     let trailing_b = Bytes.create (Bytes.length normal_b + 5) in
     Bytes.blit normal_b 0 trailing_b 0 (Bytes.length normal_b);
     Bytes.blit_string "EXTRA" 0 trailing_b (Bytes.length normal_b) 5;
-    let (_, resp_trail_opt) = run_pipe trailing_b in
+    let (_, resp_trail_opt) = run_pipe trailing_b db_path in
     check "trailing bytes returned response" (Option.is_some resp_trail_opt);
     let resp_trail = Option.get resp_trail_opt in
     check "trailing bytes refused with trailing_bytes_after_frame" (String.contains resp_trail 't' && String.contains resp_trail 'r' && String.contains resp_trail 'a');
 
-    (* 4. Oversized frame: header says 2,000,000 bytes *)
+    (* 7. Oversized frame: header says 2,000,000 bytes *)
     let over_hdr = Bytes.create 4 in
     Bytes.set over_hdr 0 (Char.chr ((2000000 lsr 24) land 0xff));
     Bytes.set over_hdr 1 (Char.chr ((2000000 lsr 16) land 0xff));
     Bytes.set over_hdr 2 (Char.chr ((2000000 lsr 8) land 0xff));
     Bytes.set over_hdr 3 (Char.chr (2000000 land 0xff));
-    let (_, resp_over_opt) = run_pipe over_hdr in
+    let (_, resp_over_opt) = run_pipe over_hdr db_path in
     check "oversized frame returned response" (Option.is_some resp_over_opt);
     let resp_over = Option.get resp_over_opt in
     check "oversized frame refused with oversized_frame" (String.contains resp_over 'o' && String.contains resp_over 'v')

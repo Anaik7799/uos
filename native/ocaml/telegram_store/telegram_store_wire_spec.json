@@ -1,27 +1,35 @@
 {
   "schema": "uos.telegram-store-wire-spec.v1",
-  "published_at": "2026-10-01T12:38:36Z",
+  "published_at": "2026-10-01T12:43:00Z",
   "status": "FROZEN_CANDIDATE",
-  "git_revision": "4d1a884e",
+  "git_revision": "argv-locator-pinned",
   "kernel_paths": {
     "module": "native/ocaml/telegram_store/telegram_store.ml",
     "cli_entrypoint": "native/ocaml/telegram_store/telegram_store_main.ml",
     "dune_file": "native/ocaml/telegram_store/dune",
     "test_suite": "native/ocaml/telegram_store/telegram_store_test.ml",
     "binary": "native/ocaml/telegram_store/_build/default/telegram_store_main.exe",
-    "binary_sha256": "a546f548bb4ede0741509d0e5f6e859c90cf2a68aa626275c72746fbe33004e3"
+    "binary_sha256": "466253a583311dfef93523b8aef11965e0a1deb0bd384f7138b90d31665fbf61"
+  },
+  "process_invocation": {
+    "command_line": ["<binary_path>", "<absolute_configured_db_locator>"],
+    "rule": "Binary must be invoked with exactly one argument: the trusted absolute database file locator. If argument count is not exactly 2 (binary + locator), worker writes framed error 'invalid_command_line_arguments' and exits 0."
+  },
+  "db_locator_security": {
+    "authority": "argv[1] trusted configuration",
+    "json_db_path_semantics": "db_path in JSON requests is optional. If omitted, worker binds exclusively to argv[1]. If present, db_path must be identical to argv[1]; any mismatch is strictly rejected with 'db_path_mismatch'."
   },
   "framing": {
     "type": "big_endian_uint32_length_prefixed_json",
     "header_bytes": 4,
     "max_request_json_bytes": 1048572,
     "max_response_json_bytes": 1048572,
-    "stream_rule": "Exactly one frame per process invocation over stdin/stdout. Closing stdin after frame transmission signals EOF. Any trailing byte after frame length causes immediate exit with trailing_bytes_after_frame error."
+    "stream_rule": "Exactly one frame per process invocation over stdin/stdout. Closing stdin after frame transmission signals EOF. Any trailing byte after frame length causes immediate exit with 'trailing_bytes_after_frame' error."
   },
   "canonical_request_digest": {
     "algorithm": "sha256_hex",
     "format": "uos.telegram-store.apply.v1\\nbot:<bot_id>\\nop:<operation_id>\\ngen:<expected_generation>\\nread:<key>:<expected_version>:<expected_sha256>\\n(sorted by key ASC)...\\nchange:<key>:<expected_version>:<expected_sha256>:<new_value_base64>\\n(sorted by key ASC)...\\nres:<rows>:<receipts>\\nsummary:<summary_json>\\n",
-    "rule": "Derived independently in native kernel from decoded parameters. req.request_digest must match derived digest exactly or returns request_digest_mismatch. Stored receipt holds derived digest; replaying different changes under same operation_id returns operation_collision_digest_mismatch."
+    "rule": "Derived independently in native kernel from decoded parameters. req.request_digest must match derived digest exactly or returns 'request_digest_mismatch'. Stored receipt holds derived digest; replaying different changes under same operation_id returns 'operation_collision_digest_mismatch'."
   },
   "limits": {
     "max_key_bytes": 256,
@@ -44,7 +52,11 @@
   },
   "commands": {
     "initialize_new": {
-      "request": {
+      "request_trusted": {
+        "command": "initialize_new",
+        "bot_id": "123456789"
+      },
+      "request_explicit": {
         "command": "initialize_new",
         "db_path": "/home/an/var/telegram/telegram.sqlite3",
         "bot_id": "123456789"
@@ -61,7 +73,6 @@
     "read_keys": {
       "request": {
         "command": "read_keys",
-        "db_path": "/home/an/var/telegram/telegram.sqlite3",
         "keys": ["inbox/req_001", "request/req_001/status"]
       },
       "response_success": {
@@ -88,7 +99,6 @@
     "read_inbox_index": {
       "request": {
         "command": "read_inbox_index",
-        "db_path": "/home/an/var/telegram/telegram.sqlite3",
         "limit": 50,
         "after_key": "inbox/req_001"
       },
@@ -101,7 +111,6 @@
     "lookup_operation": {
       "request": {
         "command": "lookup_operation",
-        "db_path": "/home/an/var/telegram/telegram.sqlite3",
         "operation_id": "uos/telegram-service/boot/op_001"
       },
       "response_found": {
@@ -123,7 +132,6 @@
     "apply": {
       "request": {
         "command": "apply",
-        "db_path": "/home/an/var/telegram/telegram.sqlite3",
         "bot_id": "123456789",
         "operation_id": "uos/telegram-service/boot/op_002",
         "request_digest": "4a123f...",
@@ -178,6 +186,8 @@
     }
   },
   "error_codes": [
+    "invalid_command_line_arguments",
+    "db_path_mismatch",
     "db_path_invalid",
     "db_directory_insecure",
     "db_already_exists",
