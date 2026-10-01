@@ -5,6 +5,7 @@
 import gleam/dict
 import gleam/string
 import gleeunit/should
+import session_store_cli
 import simplifile
 import uos_swarm/session_authority as authority
 import uos_swarm/session_store as store
@@ -14,9 +15,10 @@ import uos_swarm/session_sync as sync
 fn unique_id() -> String
 
 fn fixture_isolated_db() -> #(String, String) {
-  let root = "/tmp/uos-session-provider-tests/" <> unique_id()
+  let root = "/tmp/uos-telegram-provider-stage-" <> unique_id()
   let assert Ok(_) = simplifile.create_directory_all(root)
-  let db = root <> "/events.sqlite3"
+  let assert Ok(_) = simplifile.set_permissions_octal(root, 0o700)
+  let db = root <> "/coordinator.sqlite3"
   let assert Ok(opened) = store.open(db)
   let assert Ok(_) =
     store.append(
@@ -25,6 +27,7 @@ fn fixture_isolated_db() -> #(String, String) {
       "bootstrap-register",
     )
   let assert Ok(_) = store.close(opened)
+  let assert Ok(_) = simplifile.set_permissions_octal(db, 0o600)
   #(root, db)
 }
 
@@ -84,7 +87,8 @@ pub fn isolated_db_service_registration_and_replay_test() {
       // Must fail because v1 trigger rejects 'service' with storage constraint 1811
       string.contains(err, "1811") |> should.equal(True)
     }
-    Ok(_) -> panic as "Service provider must be refused on v1 DB before migration"
+    Ok(_) ->
+      panic as "Service provider must be refused on v1 DB before migration"
   }
 
   // 4. Invalid provider is strictly refused on v1 DB
@@ -169,7 +173,8 @@ pub fn isolated_db_service_registration_and_replay_test() {
       string.contains(err, "provider must be claude, codex, agy, or service")
       |> should.equal(True)
     }
-    Ok(_) -> panic as "Invalid provider registration must still be refused after migration"
+    Ok(_) ->
+      panic as "Invalid provider registration must still be refused after migration"
   }
 
   // 10. Replay from isolated database succeeds and recovers registered service
@@ -193,3 +198,75 @@ pub fn main() {
   isolated_db_service_registration_and_replay_test()
 }
 
+pub fn operational_and_alias_paths_refused_test() {
+  store.migrate_to_service_provider(
+    "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+  )
+  |> should.be_error
+  session_store_cli.run([
+    "migrate-service-provider",
+    "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+  ])
+  |> should.be_error
+  let #(root, db) = fixture_isolated_db()
+  store.migrate_to_service_provider(root <> "/./coordinator.sqlite3")
+  |> should.be_error
+  let alias_root = "/tmp/uos-telegram-provider-stage-" <> unique_id()
+  let assert Ok(_) = simplifile.create_symlink(root, alias_root)
+  store.migrate_to_service_provider(alias_root <> "/coordinator.sqlite3")
+  |> should.be_error
+  let assert Ok(before) = store.open_existing(db)
+  let assert Ok(journal) = store.journal(before)
+  let assert Ok(_) = store.close(before)
+  let assert Ok(_) =
+    simplifile.write(db <> ".recovery-lock", "private_test_lock")
+  store.migrate_to_service_provider(db) |> should.be_error
+  store.migrate_to_service_provider(alias_root <> "/coordinator.sqlite3")
+  |> should.be_error
+  let assert Ok(_) = simplifile.delete(db <> ".recovery-lock")
+  let assert Ok(after) = store.open_existing(db)
+  store.journal(after) |> should.equal(Ok(journal))
+  let assert Ok(_) = store.close(after)
+}
+
+pub fn stage_permissions_refused_test() {
+  let #(root, db) = fixture_isolated_db()
+  let assert Ok(_) = simplifile.set_permissions_octal(root, 0o755)
+  store.migrate_to_service_provider(db) |> should.be_error
+  let assert Ok(_) = simplifile.set_permissions_octal(root, 0o700)
+  let assert Ok(_) = simplifile.set_permissions_octal(db, 0o644)
+  store.migrate_to_service_provider(db) |> should.be_error
+  let assert Ok(_) = simplifile.set_permissions_octal(db, 0o600)
+  store.migrate_to_service_provider(db) |> should.be_ok
+}
+
+pub fn migration_preserves_full_journal_test() {
+  let #(_root, db) = fixture_isolated_db()
+  let assert Ok(before) = store.open_existing(db)
+  let assert Ok(bytes) = store.journal(before)
+  let assert Ok(head) = store.head(before)
+  let assert Ok(_) = store.close(before)
+  store.migrate_to_service_provider(db) |> should.be_ok
+  let assert Ok(after) = store.open_existing(db)
+  store.journal(after) |> should.equal(Ok(bytes))
+  store.head(after) |> should.equal(Ok(head))
+  let assert Ok(report) = store.verify(after)
+  report.ok |> should.be_true
+  let assert Ok(_) = store.close(after)
+}
+
+pub fn file_symlink_and_hardlink_refused_test() {
+  let #(_root, db) = fixture_isolated_db()
+  let other = "/tmp/uos-telegram-provider-stage-" <> unique_id()
+  let assert Ok(_) = simplifile.create_directory(other)
+  let assert Ok(_) = simplifile.set_permissions_octal(other, 0o700)
+  let alias = other <> "/coordinator.sqlite3"
+  let assert Ok(_) = simplifile.create_symlink(db, alias)
+  store.migrate_to_service_provider(alias) |> should.be_error
+  let assert Ok(_) = simplifile.delete(alias)
+  let assert Ok(_) = simplifile.create_link(db, alias)
+  store.migrate_to_service_provider(alias) |> should.be_error
+  store.migrate_to_service_provider(db) |> should.be_error
+  let assert Ok(_) = simplifile.delete(alias)
+  store.migrate_to_service_provider(db) |> should.be_ok
+}

@@ -31,11 +31,17 @@ fn exact_database_path(path: String) -> Result(Nil, String) {
     ["", ..parts] -> Ok(parts)
     _ -> Error("database path must be absolute")
   })
-  use _ <- result.try(case list.any(parts, fn(p) { p == "" || p == "." || p == ".." }) {
-    True -> Error("database path aliases are refused")
-    False -> Ok(Nil)
-  })
-  let parent = "/" <> { parts |> list.reverse |> list.drop(1) |> list.reverse |> string.join("/") }
+  use _ <- result.try(
+    case list.any(parts, fn(p) { p == "" || p == "." || p == ".." }) {
+      True -> Error("database path aliases are refused")
+      False -> Ok(Nil)
+    },
+  )
+  let parent =
+    "/"
+    <> {
+      parts |> list.reverse |> list.drop(1) |> list.reverse |> string.join("/")
+    }
   use actual <- result.try(canonical_directory(parent))
   use _ <- result.try(case actual == parent {
     True -> Ok(Nil)
@@ -43,10 +49,11 @@ fn exact_database_path(path: String) -> Result(Nil, String) {
   })
   case simplifile.link_info(path) {
     Error(simplifile.Enoent) -> Ok(Nil)
-    Ok(info) -> case simplifile.file_info_type(info) == simplifile.File {
-      True -> Ok(Nil)
-      False -> Error("database must be a regular file")
-    }
+    Ok(info) ->
+      case simplifile.file_info_type(info) == simplifile.File {
+        True -> Ok(Nil)
+        False -> Error("database must be a regular file")
+      }
     Error(_) -> Error("database path cannot be observed")
   }
 }
@@ -105,10 +112,16 @@ fn with_store(
 ) -> Result(String, String) {
   use _ <- result.try(exact_database_path(db))
   use opened <- result.try(
-    { case db == "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3" {
-      True -> store.open_existing(db)
-      False -> store.open(db)
-    } } |> result.map_error(store.error_to_string),
+    {
+      case
+        db
+        == "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
+      {
+        True -> store.open_existing(db)
+        False -> store.open(db)
+      }
+    }
+    |> result.map_error(store.error_to_string),
   )
   let outcome = f(opened)
   let _ = store.close(opened)
@@ -208,22 +221,6 @@ fn run_other(args: List(String)) -> Result(String, String) {
           )
         })
       })
-    ["migrate-service-provider", db] -> {
-      use _ <- result.try(exact_database_path(db))
-      use _ <- result.try(
-        store.migrate_to_service_provider(db)
-        |> result.map_error(fn(error) { store.error_to_string(error) }),
-      )
-      Ok(
-        json.to_string(
-          json.object([
-            #("ok", json.bool(True)),
-            #("database", json.string(db)),
-            #("migrated", json.string("events_payload_v2_service_provider")),
-          ]),
-        ),
-      )
-    }
     ["export", db, out_root] ->
       with_store(db, fn(opened) {
         store.export(opened, out_root)
@@ -323,7 +320,6 @@ pub fn usage() -> String {
   <> "status | check <session> <resource> <epoch> | journal\n"
   <> "\n"
   <> "gleam run -m session_store_cli -- verify <absolute_sqlite3_path>\n"
-  <> "gleam run -m session_store_cli -- migrate-service-provider <absolute_sqlite3_path>\n"
   <> "gleam run -m session_store_cli -- migrate <events_dir> <absolute_sqlite3_path>\n"
   <> "gleam run -m session_store_cli -- export <absolute_sqlite3_path> <out_root>\n"
   <> "gleam run -m session_store_cli -- recover-stage <event_directory> <new_candidate_directory>\n"
