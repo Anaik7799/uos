@@ -208,6 +208,22 @@ fn run_other(args: List(String)) -> Result(String, String) {
           )
         })
       })
+    ["migrate-service-provider", db] -> {
+      use _ <- result.try(exact_database_path(db))
+      use _ <- result.try(
+        store.migrate_to_service_provider(db)
+        |> result.map_error(fn(error) { store.error_to_string(error) }),
+      )
+      Ok(
+        json.to_string(
+          json.object([
+            #("ok", json.bool(True)),
+            #("database", json.string(db)),
+            #("migrated", json.string("events_payload_v2_service_provider")),
+          ]),
+        ),
+      )
+    }
     ["export", db, out_root] ->
       with_store(db, fn(opened) {
         store.export(opened, out_root)
@@ -307,6 +323,7 @@ pub fn usage() -> String {
   <> "status | check <session> <resource> <epoch> | journal\n"
   <> "\n"
   <> "gleam run -m session_store_cli -- verify <absolute_sqlite3_path>\n"
+  <> "gleam run -m session_store_cli -- migrate-service-provider <absolute_sqlite3_path>\n"
   <> "gleam run -m session_store_cli -- migrate <events_dir> <absolute_sqlite3_path>\n"
   <> "gleam run -m session_store_cli -- export <absolute_sqlite3_path> <out_root>\n"
   <> "gleam run -m session_store_cli -- recover-stage <event_directory> <new_candidate_directory>\n"

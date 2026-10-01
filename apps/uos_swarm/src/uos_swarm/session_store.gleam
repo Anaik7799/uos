@@ -289,7 +289,7 @@ WHEN COALESCE(CASE
     AND NEW.operation IN ('register','heartbeat','claim','renew','release','send','ack','retire')
     AND length(NEW.digest) = 64 AND NEW.digest NOT GLOB '*[^0-9a-f]*'
     AND ((NEW.operation = 'register'
-      AND json_extract(NEW.command_json, '$.a') IN ('claude','codex','agy','service')
+      AND json_extract(NEW.command_json, '$.a') IN ('claude','codex','agy')
       AND substr(json_extract(NEW.command_json, '$.b'),1,1) = '/'
       AND NOT EXISTS (SELECT 1 FROM events WHERE actor=NEW.actor AND operation='register')) OR (
       NEW.operation <> 'register' AND (
@@ -748,6 +748,19 @@ fn required_trigger_sql() -> List(String) {
   })
 }
 
+pub fn events_payload_v1_sql() -> String {
+  let triggers = required_trigger_sql()
+  list.drop(triggers, 4) |> list.first |> result.unwrap("")
+}
+
+pub fn events_payload_v2_sql() -> String {
+  string.replace(
+    events_payload_v1_sql(),
+    "IN ('claude','codex','agy')",
+    "IN ('claude','codex','agy','service')",
+  )
+}
+
 pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   use rows <- result.try(
     run(
@@ -764,12 +777,25 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
     ),
   )
   let triggers_present = list.length(trigger_rows) == 5
-  let trigger_definitions_ok = list.all(required_trigger_sql(), fn(sql) {
+  let required_common = list.take(required_trigger_sql(), 4)
+  let common_triggers_ok = list.all(required_common, fn(sql) {
     list.any(trigger_rows, fn(row) { case row {
       [CellText(_), CellText(actual)] -> actual == sql
       _ -> False
     } })
   })
+  let payload_trigger_row = list.find(trigger_rows, fn(row) {
+    case row {
+      [CellText("events_payload"), CellText(_)] -> True
+      _ -> False
+    }
+  })
+  let payload_trigger_ok = case payload_trigger_row {
+    Ok([CellText(_), CellText(actual)]) ->
+      actual == events_payload_v1_sql() || actual == events_payload_v2_sql()
+    _ -> False
+  }
+  let trigger_definitions_ok = common_triggers_ok && payload_trigger_ok
   let #(_, _, failures, _) =
     list.fold(rows, #(0, sync.genesis, [], set.new()), fn(acc, row) {
       let #(expected_sequence, expected_previous, fails, seen_ops) = acc
@@ -1012,4 +1038,90 @@ pub fn quarantine(
     ),
   )
   Ok(Nil)
+}
+
+// ---------------------------------------------------------------------
+// Service Provider Migration (v1 -> v2)
+// ---------------------------------------------------------------------
+
+/// Explicit staged migration from v1 trigger schema ('claude','codex','agy')
+/// to v2 ('claude','codex','agy','service').
+///
+/// Preconditions:
+/// 1. Recovery clear (no recovery in progress)
+/// 2. Schema metadata matches genesis
+/// 3. Store independently verifies (chain, sequence, digests, triggers)
+/// 4. Current events_payload trigger matches events_payload_v1_sql() (or already v2)
+///
+/// Execution:
+/// Transactionally drop v1 trigger and create v2 trigger under BEGIN IMMEDIATE.
+///
+/// Postconditions:
+/// 1. Store independently verifies under v2
+/// 2. Event count and head digest are byte-for-byte identical (no history mutation)
+pub fn migrate_to_service_provider(path: String) -> Result(Nil, StoreError) {
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
+  use conn <- result.try(ffi_open_existing(path) |> result.map_error(OpenError))
+  let store = Store(conn, path, generation)
+  let outcome = {
+    use _ <- result.try(recovery_current(store))
+    use metadata <- result.try(run(store, "SELECT value FROM meta WHERE key = 'schema'", []))
+    use _ <- result.try(case metadata {
+      [[CellText(schema)]] if schema == sync.genesis -> Ok(Nil)
+      _ -> Error(SchemaError("operational_coordinator_schema_mismatch"))
+    })
+    use report <- result.try(verify(store))
+    use _ <- result.try(case report.ok {
+      True -> Ok(Nil)
+      False -> Error(CorruptError("coordinator_cannot_migrate_unverified_store"))
+    })
+    use trigger_rows <- result.try(
+      run(
+        store,
+        "SELECT sql FROM sqlite_master WHERE type = 'trigger' AND name = 'events_payload'",
+        [],
+      ),
+    )
+    let v1_sql = events_payload_v1_sql()
+    let v2_sql = events_payload_v2_sql()
+    case trigger_rows {
+      [[CellText(sql)]] -> {
+        case sql == v2_sql {
+          True -> Ok(Nil)
+          False -> {
+            case sql == v1_sql {
+              True -> {
+                use #(pre_count, pre_digest) <- result.try(head(store))
+                use _ <- result.try(
+                  transactionally(store, fn() {
+                    use _ <- result.try(run(store, "DROP TRIGGER events_payload", []))
+                    use _ <- result.try(
+                      ffi_exec(store.conn, v2_sql <> ";\n")
+                      |> result.map_error(SchemaError),
+                    )
+                    Ok(Nil)
+                  }),
+                )
+                use post_report <- result.try(verify(store))
+                use _ <- result.try(case post_report.ok {
+                  True -> Ok(Nil)
+                  False -> Error(CorruptError("post_migration_store_verification_failed"))
+                })
+                use #(post_count, post_digest) <- result.try(head(store))
+                case pre_count == post_count && pre_digest == post_digest {
+                  True -> Ok(Nil)
+                  False -> Error(CorruptError("post_migration_event_history_mismatch"))
+                }
+              }
+              False -> Error(SchemaError("precondition_failed_events_payload_trigger_unknown"))
+            }
+          }
+        }
+      }
+      _ -> Error(SchemaError("precondition_failed_events_payload_trigger_unknown"))
+    }
+  }
+  let _ = ffi_close(conn)
+  outcome
 }

@@ -49,20 +49,13 @@ pub fn provider_parse_and_render_test() {
 pub fn isolated_db_service_registration_and_replay_test() {
   let #(root, db) = fixture_isolated_db()
 
-  // 1. Service provider registration succeeds
-  let assert Ok(service_resp) =
-    authority.run_at(db, [
-      "register",
-      "telegram-service",
-      "service",
-      root,
-      "rev-service-1",
-      "-",
-      "op-reg-service",
-    ])
-  string.contains(service_resp, "\"ok\":true") |> should.equal(True)
+  // 1. Verify that open_existing succeeds on un-migrated v1 DB
+  let assert Ok(v1_store) = store.open_existing(db)
+  let assert Ok(v1_report) = store.verify(v1_store)
+  v1_report.ok |> should.equal(True)
+  let assert Ok(_) = store.close(v1_store)
 
-  // 2. Old 3 providers continue to register successfully
+  // 2. Old 3 providers register successfully on v1 DB
   let assert Ok(claude_resp) =
     authority.run_at(db, [
       "register",
@@ -75,6 +68,67 @@ pub fn isolated_db_service_registration_and_replay_test() {
     ])
   string.contains(claude_resp, "\"ok\":true") |> should.equal(True)
 
+  // 3. Service provider is refused on v1 DB before migration (trigger aborts with SQLITE_CONSTRAINT_TRIGGER 1811)
+  case
+    authority.run_at(db, [
+      "register",
+      "telegram-service",
+      "service",
+      root,
+      "rev-service-1",
+      "-",
+      "op-reg-service-premature",
+    ])
+  {
+    Error(err) -> {
+      // Must fail because v1 trigger rejects 'service' with storage constraint 1811
+      string.contains(err, "1811") |> should.equal(True)
+    }
+    Ok(_) -> panic as "Service provider must be refused on v1 DB before migration"
+  }
+
+  // 4. Invalid provider is strictly refused on v1 DB
+  case
+    authority.run_at(db, [
+      "register",
+      "bad-worker",
+      "unauthorized_agent",
+      root,
+      "rev-bad",
+      "-",
+      "op-reg-bad-1",
+    ])
+  {
+    Error(err) -> {
+      string.contains(err, "provider must be claude, codex, agy, or service")
+      |> should.equal(True)
+    }
+    Ok(_) -> panic as "Invalid provider registration must be refused"
+  }
+
+  // 5. Explicit staged migration to v2
+  let assert Ok(Nil) = store.migrate_to_service_provider(db)
+
+  // 6. Verify that open_existing succeeds on migrated v2 DB
+  let assert Ok(v2_store) = store.open_existing(db)
+  let assert Ok(v2_report) = store.verify(v2_store)
+  v2_report.ok |> should.equal(True)
+  let assert Ok(_) = store.close(v2_store)
+
+  // 7. Service provider registration now succeeds on migrated v2 DB
+  let assert Ok(service_resp) =
+    authority.run_at(db, [
+      "register",
+      "telegram-service",
+      "service",
+      root,
+      "rev-service-1",
+      "-",
+      "op-reg-service",
+    ])
+  string.contains(service_resp, "\"ok\":true") |> should.equal(True)
+
+  // 8. Other providers still register successfully after migration
   let assert Ok(codex_resp) =
     authority.run_at(db, [
       "register",
@@ -99,26 +153,26 @@ pub fn isolated_db_service_registration_and_replay_test() {
     ])
   string.contains(agy_resp, "\"ok\":true") |> should.equal(True)
 
-  // 3. Invalid provider is strictly refused
+  // 9. Invalid provider is still strictly refused after migration
   case
     authority.run_at(db, [
       "register",
-      "bad-worker",
+      "bad-worker-2",
       "unauthorized_agent",
       root,
-      "rev-bad",
+      "rev-bad-2",
       "-",
-      "op-reg-bad",
+      "op-reg-bad-2",
     ])
   {
     Error(err) -> {
       string.contains(err, "provider must be claude, codex, agy, or service")
       |> should.equal(True)
     }
-    Ok(_) -> panic as "Invalid provider registration must be refused"
+    Ok(_) -> panic as "Invalid provider registration must still be refused after migration"
   }
 
-  // 4. Replay from isolated database succeeds and recovers registered service
+  // 10. Replay from isolated database succeeds and recovers registered service
   let assert Ok(service_session) =
     authority.query_at(db, fn(state, _boot, _now) {
       case dict.get(state.sessions, "telegram-service") {
@@ -129,9 +183,13 @@ pub fn isolated_db_service_registration_and_replay_test() {
 
   service_session.provider |> should.equal("service")
   service_session.workspace |> should.equal(root)
+
+  // 11. Migration is idempotent
+  let assert Ok(Nil) = store.migrate_to_service_provider(db)
 }
 
 pub fn main() {
   provider_parse_and_render_test()
   isolated_db_service_registration_and_replay_test()
 }
+
