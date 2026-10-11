@@ -1,0 +1,48 @@
+const fs=require('fs'), crypto=require('crypto'), http=require('http');
+const base='http://nas-1.tail55d152.ts.net:49134', out=__dirname;
+const token='synthetic-mini-test-token', now=Math.floor(Date.now()/1000);
+function sign(user=42,date=now) {
+ const p={auth_date:String(date),user:JSON.stringify({id:user,first_name:'Fixture'})};
+ const secret=crypto.createHmac('sha256','WebAppData').update(token).digest();
+ p.hash=crypto.createHmac('sha256',secret).update(Object.keys(p).sort().map(k=>k+'='+p[k]).join('\n')).digest('hex');
+ return new URLSearchParams(p).toString();
+}
+const good=sign();fs.writeFileSync(out+'/http-fixture-identity.json',JSON.stringify({init_data:good,scope:'Synthetic identity for private HTTP/browser fixture only'})+'\n');
+const rows=[];
+async function check(name,path,expected,options={}) {
+ const r=await fetch(base+path,{...options,redirect:'manual',signal:AbortSignal.timeout(5000)});
+ const body=await r.text();const row={name,path,status:r.status,expected,pass:r.status===expected};
+ if(options.method==='POST'&&r.status===200)row.payload=JSON.parse(body);
+ if(!options.method&&path.startsWith('/mini-app/')&&!path.includes('does-not')) {
+  row.checkpoints=(body.match(/type="checkbox"/g)||[]).length;
+ }
+ rows.push(row);if(!row.pass)throw Error(JSON.stringify(row));
+ return {r,body};
+}
+(async()=>{
+ try {
+ const paths=['dashboard','health','alerts','immune','tasks','inference','chat','config','containers','federation','verify','fmea','telemetry','zenoh'];
+ for(const p of paths){const x=await check('public '+p,'/mini-app/'+p,200);if((x.body.match(/type="checkbox"/g)||[]).length!==18)throw Error('checklist missing '+p);if(x.body.includes('All Clear')||x.body.includes('>17<'))throw Error('fake defaults '+p);}
+ await check('unknown','/mini-app/does-not-exist',404);
+ await check('prefix alias','/mini-application',404);
+ await check('query boundary','/mini-app/tasks?probe=1',200);
+ await check('data method','/mini-app/api/data',405);
+ await check('public wrong method','/mini-app/tasks',405,{method:'DELETE'});
+ const post=(init=good,path='/mini-app/tasks')=>({method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({init_data:init,path})});
+ const result=await check('authenticated native private task snapshot','/mini-app/api/data',200,post());
+ const payload=JSON.parse(result.body);if(payload.status!=='observed'||payload.fields['Task FENCE']!=='executing (lease expired)')throw Error('native snapshot not actually observed '+result.body);
+ await check('forged signature','/mini-app/api/data',401,post(good+'0'));
+ await check('wrong user','/mini-app/api/data',401,post(sign(99)));
+ await check('expired identity','/mini-app/api/data',401,post(sign(42,now-301)));
+ await check('missing identity','/mini-app/api/data',400,{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+ await check('oversize body','/mini-app/api/data',413,{method:'POST',headers:{'content-type':'application/json'},body:'x'.repeat(8193)});
+ await check('wrong content type','/mini-app/api/data',415,{method:'POST',headers:{'content-type':'text/plain'},body:'{}'});
+ await check('other mutation still requires original auth','/api/v1/plan/update',401,{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+ const unintegrated=await check('unintegrated backend truth','/mini-app/api/data',200,post(good,'/mini-app/health'));
+ if(JSON.parse(unintegrated.body).status!=='unavailable')throw Error('unintegrated backend claimed available');
+ const chunked=await new Promise((resolve,reject)=>{const req=http.request(base+'/mini-app/api/data',{method:'POST',headers:{'transfer-encoding':'chunked','content-type':'application/json'},timeout:3000},r=>{r.resume();r.on('end',()=>resolve(r.statusCode));});req.on('error',reject);req.on('timeout',()=>req.destroy(Error('timeout')));req.end('{}');});
+ rows.push({name:'chunked refused',status:chunked,expected:400,pass:chunked===400});if(chunked!==400)throw Error('chunked accepted');
+ fs.writeFileSync(out+'/http-results.json',JSON.stringify({status:'PASS_PRIVATE_HTTP',observed_at:new Date().toISOString(),rows,scope:'Actual candidate server normal middleware, Mini ingress, auth and private native Sa-plan read; synthetic identity, no Bot API'},null,2)+'\n');
+ console.log(JSON.stringify({status:'PASS_PRIVATE_HTTP',checks:rows.length}));
+ }catch(error){fs.writeFileSync(out+'/http-results.json',JSON.stringify({status:'FAIL',observed_at:new Date().toISOString(),error:error.message,rows},null,2)+'\n');throw error;}
+})();
