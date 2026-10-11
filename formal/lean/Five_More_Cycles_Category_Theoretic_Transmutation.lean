@@ -70,10 +70,7 @@ theorem swarm_operad_associative_composition (t1 t2 t3 : OperadicTask) :
 theorem swarm_operad_deadlock_free_delegation (parent : OperadicTask) (sub : OperadicTask)
     (h_parent : parent.consumed_ns + sub.consumed_ns <= parent.budget_ns) :
     (operadic_compose parent [sub]).consumed_ns <= parent.budget_ns := by
-  dsimp [operadic_compose]
-  dsimp [List.foldl]
-  omega
-
+  simpa [operadic_compose] using h_parent
 
 /- =========================================================================
    3. Monoidal Closed Categorical Compilers & Linear Resource Boundedness
@@ -130,7 +127,8 @@ theorem kan_extension_left_universal_property (f : FractalRepresentation) (facto
     (h_factor : factor >= 1) :
     (left_kan_extend f factor).semantic_weight >= f.semantic_weight := by
   dsimp [left_kan_extend]
-  nlinarith
+  have h := Nat.mul_le_mul_left f.semantic_weight h_factor
+  simpa using h
 
 /-- THEOREM 7: Right Kan Extension (Ran) preserves bounded policy projection
     from constitutional L0 down to deterministic execution kernels. -/

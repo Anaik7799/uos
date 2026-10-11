@@ -66,13 +66,10 @@ theorem pull_task_preserves_wf (s s' : HeijunkaState)
     s'.wf := by
   unfold pull_task at hpull
   split at hpull
-  · cases hpull
-    unfold HeijunkaState.wf at hwf ⊢
-    rcases hwf with ⟨hmin_max, hmin_cap, hcap_max, _⟩
-    rename_i hcond
-    rcases hcond with ⟨hact_lt, _⟩
-    refine ⟨hmin_max, hmin_cap, hcap_max, ?_⟩
-    exact hact_lt
+  · rename_i hcond
+    cases hpull
+    rcases hwf with ⟨h1,h2,h3,h4⟩
+    exact ⟨h1,h2,h3,hcond.1⟩
   · contradiction
 
 /-- THEOREM 2: Completing a task preserves scheduler well-formedness. -/
@@ -101,23 +98,11 @@ theorem divergent_adaptation_monotone_contract (s : HeijunkaState)
 theorem adapt_capacity_preserves_wf (s : HeijunkaState)
     (hwf : s.wf) :
     (adapt_capacity s).wf := by
+  rcases hwf with ⟨h1,h2,h3,h4⟩
   unfold adapt_capacity
-  unfold HeijunkaState.wf at hwf ⊢
-  rcases hwf with ⟨hmin_max, hmin_cap, hcap_max, hact_cap⟩
   split
-  · refine ⟨hmin_max, Nat.le_refl _, hmin_max, ?_⟩
-    apply Nat.min_le_right
+  · exact ⟨h1, Nat.le_refl _, h1, Nat.min_le_right _ _⟩
   · unfold clamp_capacity
-    split
-    · refine ⟨hmin_max, Nat.le_refl _, hmin_max, ?_⟩
-      apply Nat.le_trans hact_cap (Nat.le_trans hmin_cap (Nat.le_refl _))
-    · split
-      · refine ⟨hmin_max, hmin_max, Nat.le_refl _, ?_⟩
-        apply Nat.le_trans hact_cap hcap_max
-      · refine ⟨hmin_max, ?_, ?_, ?_⟩
-        · apply Nat.le_trans hmin_cap (Nat.le_add_right s.capacity 1)
-        · rename_i _ hnot_gt
-          exact Nat.le_of_not_gt hnot_gt
-        · apply Nat.le_trans hact_cap (Nat.le_add_right s.capacity 1)
+    split <;> (try split) <;> simp only [HeijunkaState.wf] <;> omega
 
 end UOS.Concurrency

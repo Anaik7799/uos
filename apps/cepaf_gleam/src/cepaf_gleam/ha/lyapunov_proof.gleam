@@ -4,17 +4,17 @@
 //// <c3i-module>
 ////   <identity>
 ////     <module>cepaf_gleam/ha/lyapunov_proof</module>
-////     <fsharp-lineage>None — novel Gleam module for formal stability analysis (CTRL-3)</fsharp-lineage>
+////     <fsharp-lineage>None — Gleam module for finite health-trend observations (CTRL-3)</fsharp-lineage>
 ////   </identity>
 ////   <fractal-topology>
 ////     <layer>L0_CONSTITUTIONAL</layer>
 ////     <mesh-domain>
-////       Formal Lyapunov stability analysis for guard_grid OODA convergence.
-////       Determines whether the health metric trajectory is converging (stable)
-////       or diverging (unstable) using the standard Lyapunov direct method:
+////       Finite Lyapunov-inspired trend analysis for guard_grid POODAVR observations.
+////       Classifies the observed health step using finite differences.
+////       This does not prove asymptotic convergence or physical stability:
 ////
-////         Candidate function: V(x) = (x − x*)²   (quadratic, positive-definite)
-////         Stability condition: dV/dt < 0           (energy decreasing → convergence)
+////         Candidate function: V(x) = (x − x*)²   (quadratic in the exact reference model)
+////         Observed condition: ΔV/Δt < 0           (energy decreased in this step)
 ////         Exponent estimate:   λ ≈ (ΔV / V) / dt  (Lyapunov exponent approximation)
 ////
 ////         Stable   iff λ < 0 AND dV/dt < 0
@@ -39,20 +39,21 @@
 //// </c3i-module>
 //// =============================================================================
 ////
-//// LYAPUNOV PROOF — Formal stability analysis for guard_grid OODA (CTRL-3)
+//// LYAPUNOV OBSERVATION — Finite health-trend analysis for guard_grid POODAVR (CTRL-3)
 //// स्थिरता प्रमाण — Stability, the ground of right action (Gita 2.48)
 ////
-//// Lyapunov's Direct Method (Second Method):
+//// Exact mathematical motivation; the Float implementation does not prove these hypotheses:
 ////
 ////   For system dx/dt = f(x) and candidate V(x) = (x − x*)²:
 ////
-////   1. V(x) > 0  for all x ≠ x*   (positive-definite)       ← guaranteed by squaring
+////   1. V(x) > 0  for all x ≠ x*   (positive-definite)       ← exact model only; Float may underflow
 ////   2. V(x*) = 0 at equilibrium                               ← by construction
-////   3. dV/dt < 0 along trajectories → system is STABLE         ← the key check
+////   3. A Lyapunov stability theorem needs hypotheses on the full dynamics.
+////      One sampled negative finite difference does not establish them.
 ////
 ////   Exponent estimate: λ ≈ Δ(ln V) / Δt
 ////     λ < 0 : trajectory contracts toward setpoint (converging)
-////     λ = 0 : neutral / Lyapunov stable (not asymptotically)
+////     λ = 0 : locally neutral observation; no system stability conclusion
 ////     λ > 0 : trajectory expands away from setpoint (diverging)
 ////
 //// STAMP: SC-MATH-001, SC-OODA-001, SC-MUDA-001, SC-SIL4-001, SC-SATYA-001
@@ -149,7 +150,7 @@ pub fn init() -> LyapunovAnalysis {
 ///     <C> update(state, health, prev_health, dt) </C>
 ///     <Q> Post: samples = prev_samples + 1;
 ///              verdict ∈ {Stable, Unstable, Marginal};
-///              energy >= 0.0 (positive-definite) </Q>
+///              energy >= 0.0 (nonnegative rounded observation) </Q>
 ///   </formal-proof>
 /// </c3i-atomic>
 pub fn update(
@@ -201,7 +202,8 @@ pub fn update(
   )
 }
 
-/// Return True when the analysis indicates the system is asymptotically stable.
+/// Return True when this finite observation has negative exponent and derivative.
+/// This does not establish asymptotic stability of a physical system.
 ///
 /// Stability requires BOTH:
 ///   1. exponent < 0   (trajectory contracting)
@@ -212,7 +214,8 @@ pub fn is_stable(state: LyapunovAnalysis) -> Bool {
 
 /// Return the convergence rate — |λ| when stable, 0.0 otherwise.
 ///
-/// Interpretation: convergence rate ≈ 0.5 means the error halves each second.
+/// The magnitude is a sampled log-energy rate or a near-zero sentinel.
+/// It does not guarantee a physical error halving time.
 pub fn convergence_rate(state: LyapunovAnalysis) -> Float {
   case is_stable(state) {
     True ->
@@ -226,9 +229,10 @@ pub fn convergence_rate(state: LyapunovAnalysis) -> Float {
 /// Lyapunov candidate function V(x) = (x − setpoint)²
 ///
 /// Properties:
-///   V(x) >= 0 for all x           (positive semi-definite)
-///   V(setpoint) = 0               (zero at equilibrium)
-///   V(x) > 0 for x ≠ setpoint     (positive-definite off-equilibrium)
+///   V(x) >= 0 for bounded health and setpoint inputs in [0,1]
+///   V(setpoint) = 0 for that finite domain
+///   Rounded Float energy can underflow to zero away from the setpoint.
+///   Exact positive-definiteness belongs to the reference number model.
 pub fn energy_function(health: Float, setpoint: Float) -> Float {
   let diff = health -. setpoint
   diff *. diff
@@ -236,7 +240,7 @@ pub fn energy_function(health: Float, setpoint: Float) -> Float {
 
 /// dV/dt ≈ (V(x_now) − V(x_prev)) / dt
 ///
-/// Negative value indicates energy is decreasing → trajectory is converging.
+/// A negative value means measured energy decreased between the two samples.
 pub fn energy_derivative(
   health: Float,
   prev_health: Float,
@@ -332,5 +336,40 @@ fn pos_float_to_str(f: Float) -> String {
   case string.contains(float.to_string(f), ".") {
     True -> float.to_string(f)
     False -> float.to_string(f) <> ".0"
+  }
+}
+
+/// Validate the actual health-score domain before evaluating the Float kernel.
+/// Values outside [0,1], including NaN/Infinity on non-BEAM targets, refuse.
+pub fn checked_energy(health: Float, setpoint: Float) -> Result(Float, String) {
+  case
+    health >=. 0.0 && health <=. 1.0 && setpoint >=. 0.0 && setpoint <=. 1.0
+  {
+    True -> Ok(energy_function(health, setpoint))
+    False -> Error("invalid_health_score_domain")
+  }
+}
+
+/// Bounded observation interface. A successful verdict describes this observed
+/// step only; it is not a proof of asymptotic or physical system stability.
+/// Legacy update/4 remains the arithmetic kernel with documented preconditions.
+pub fn checked_update(
+  state: LyapunovAnalysis,
+  health: Float,
+  prev_health: Float,
+  dt: Float,
+) -> Result(LyapunovAnalysis, String) {
+  case
+    health >=. 0.0
+    && health <=. 1.0
+    && prev_health >=. 0.0
+    && prev_health <=. 1.0
+    && dt >=. 1.0e-9
+    && dt <=. 86_400.0
+    && state.samples >= 0
+    && state.samples <= 1_000_000_000_000
+  {
+    True -> Ok(update(state, health, prev_health, dt))
+    False -> Error("invalid_stability_observation_domain")
   }
 }
