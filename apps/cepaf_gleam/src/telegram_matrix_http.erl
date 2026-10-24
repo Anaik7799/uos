@@ -1,5 +1,5 @@
 -module(telegram_matrix_http).
--export([get/5]).
+-export([get/5,get_snapshot/5]).
 
 -define(ERR, {error, <<"matrix_http_unavailable">>}).
 -define(MAX_HEADERS, 32).
@@ -19,6 +19,17 @@ get(Host, Port, Path, TimeoutMs, MaxBody) ->
     catch
         _:_ -> ?ERR
     end.
+
+%% Larger snapshot budget is separate from the unchanged Matrix get/5 limit.
+get_snapshot(Host, Port, Path, TimeoutMs, MaxBody) ->
+    try
+        case valid_args(Host, Port, Path, TimeoutMs, 1) andalso
+             is_integer(MaxBody) andalso MaxBody >= 1 andalso MaxBody =< 131072 of
+            true -> connect_and_fetch(Host, Port, Path, MaxBody,
+                        erlang:monotonic_time(millisecond) + TimeoutMs);
+            false -> ?ERR
+        end
+    catch _:_ -> ?ERR end.
 
 connect_and_fetch(Host, Port, Path, MaxBody, Deadline) ->
     case rem_ms(Deadline) of
@@ -205,7 +216,7 @@ norm_field(F) when is_binary(F), byte_size(F) >= 1, byte_size(F) =< 128 ->
     {ok, lower_bin(F), byte_size(F)};
 norm_field(_) -> error.
 
-parse_cl(<<D, Rest/binary>> = Bin, MaxBody) when byte_size(Bin) =< 5, D >= $1, D =< $9 ->
+parse_cl(<<D, Rest/binary>> = Bin, MaxBody) when byte_size(Bin) =< 6, D >= $1, D =< $9 ->
     case all_digits(Rest) of
         true ->
             N = binary_to_integer(Bin),

@@ -26,6 +26,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_ecology_reader as ecology_reader
 import cepaf_gleam/harness/telegram_matrix_reader as matrix_reader
 import cepaf_gleam/harness/telegram_search_report as search_report
 import cepaf_gleam/harness/telegram_knowledge_reader as knowledge_reader
@@ -2312,6 +2313,7 @@ fn execute_guarded_dispatch(
                     )) -> {
                       let payload = case dir {
                         guard.PreservedDirective("/approval",selector) -> approval_status_reply(state,inbox_rec,selector)
+                        guard.DirectReadTool("query_ecology") -> ecology_reply(state)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
                         guard.DirectReadTool("query_fmea") -> fmea_reply(state,"")
@@ -5451,6 +5453,13 @@ fn search_reply(state: ServiceState, query: String) -> String {
   let documents=current_read(state,5000,fn(){knowledge_reader.observe("all",query)})
     |> result.try(fn(r){r})
   search_report.combine(tasks,documents)
+}
+
+fn ecology_reply(state: ServiceState) -> String {
+  case current_read(state,5000,ecology_reader.observe) {
+    Ok(Ok(raw)) -> raw
+    _ -> json.object([#("status",json.string("unavailable")),#("error",json.string("Ecology observation unavailable; service health is unverified.")),#("runtime_admission",json.string("NOT_GRANTED"))]) |> json.to_string
+  }
 }
 
 fn matrix_reply(state: ServiceState) -> String {

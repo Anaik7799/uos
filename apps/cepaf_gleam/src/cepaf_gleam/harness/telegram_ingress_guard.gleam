@@ -128,6 +128,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         case name {
           "/approval" -> approval_directive(args)
           "/doctor" -> read_directive("query_doctor", args)
+          "/ecology" -> read_directive("query_ecology", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" | "/health" -> read_directive("query_system_health", args)
           "/fmea" -> case read_directive("query_fmea",args) {
@@ -164,6 +165,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.CancelLease(job,reason)) -> PreservedDirective("/cancel_job_lease",[job,reason])
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
+              Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
               Ok(tool_command.Fmea("")) -> DirectReadTool("query_fmea")

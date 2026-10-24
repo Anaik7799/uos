@@ -2613,3 +2613,12 @@ pub fn e2e_fmea_absent_task_does_not_cross_scope_test() {
   exercise_configured_dispatch("/fmea absent-task","\"status\":\"unavailable\"",
     "/fmea lease-e2e-01","\"rpn\":36","disabled",10,"fresh")
 }
+
+pub fn e2e_ecology_and_tool_dispatch_test() {
+  exercise_automatic_command_dispatch("/ecology","local_participant_plane_not_service_admission",
+    "/tool query_ecology {}","\"service_health\":\"UNVERIFIED\"")
+}
+pub fn e2e_ecology_scope_refusal_test() {
+  exercise_automatic_command_dispatch("/ecology foreign","denied_mutation",
+    "/action query_ecology {\"url\":\"http://evil/\"}","denied_mutation")
+}

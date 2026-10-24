@@ -34,6 +34,7 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_fmea_report', 'cepaf_gleam@harness@telegram_fmea_reader',
             'cepaf_gleam@harness@telegram_knowledge_report',
       'cepaf_gleam@harness@telegram_search_report',
+      telegram_ecology_clock, 'cepaf_gleam@harness@telegram_ecology_report', 'cepaf_gleam@harness@telegram_ecology_reader',
       telegram_matrix_http, 'cepaf_gleam@harness@telegram_matrix_report', 'cepaf_gleam@harness@telegram_matrix_reader',
             'cepaf_gleam@harness@telegram_knowledge_reader',
             telegram_status_probe, telegram_coordination_binding,

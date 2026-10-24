@@ -38,3 +38,24 @@ deadline_and_input_refusal_test() ->
   ?assertMatch({error,_},telegram_matrix_http:get(<<"host">>,80,<<"/\r\nX:1">>,500,100)),
   ?assertMatch({error,_},telegram_matrix_http:get(<<"host">>,80,<<"/">>,2001,100)),
   ?assertMatch({error,_},telegram_matrix_http:get(<<"host">>,80,<<"/">>,500,16385)).
+
+snapshot_fixture(Reply,Delay,T,Max) ->
+  {ok,L}=gen_tcp:listen(0,[binary,{active,false},{reuseaddr,true},{ip,{127,0,0,1}}]),
+  {ok,{_,Port}}=inet:sockname(L),
+  Pid=spawn(fun()->case gen_tcp:accept(L,1000) of
+    {ok,S}->try {ok,_}=gen_tcp:recv(S,0,1000),timer:sleep(Delay),gen_tcp:send(S,Reply)
+      after gen_tcp:close(S) end;
+    _->ok end end),
+  try telegram_matrix_http:get_snapshot(<<"127.0.0.1">>,Port,<<"/versions">>,T,Max)
+  after gen_tcp:close(L),exit(Pid,kill) end.
+
+snapshot_budget_and_original_bound_test() ->
+  Body=binary:copy(<<"x">>,100000),
+  ?assertEqual({ok,Body},snapshot_fixture(response(Body),0,500,131072)),
+  ?assertMatch({error,_},fixture(response(Body),0,500)),
+  ?assertMatch({error,_},snapshot_fixture(response(binary:copy(<<"x">>,131073)),0,500,131072)),
+  ?assertMatch({error,_},telegram_matrix_http:get_snapshot(<<"host">>,80,<<"/">>,500,131073)).
+snapshot_framing_utf8_and_deadline_test() ->
+  ?assertMatch({error,_},snapshot_fixture(<<"HTTP/1.0 200 OK\r\nContent-Type: application/json\r\nTransfer-Encoding: chunked\r\n\r\n">>,0,500,131072)),
+  ?assertMatch({error,_},snapshot_fixture(response(<<255>>),0,500,131072)),
+  ?assertMatch({error,_},snapshot_fixture(response(<<"{}">>),500,100,131072)).

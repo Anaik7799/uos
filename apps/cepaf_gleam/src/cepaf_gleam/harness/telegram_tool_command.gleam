@@ -13,6 +13,7 @@ pub type Selection {
   Help
   CancelLease(job:String,reason:String)
   Doctor
+  Ecology
   Matrix
   SystemHealth
   Fmea(task: String)
@@ -27,6 +28,7 @@ pub type Selection {
 
 pub fn help() -> String {
   "Telegram tools (/action is an alias for /tool):\n"
+  <> "/tool query_ecology {} — local participant snapshot; service health unverified.\n"
   <> "/tool query_matrix_versions {} — observed Matrix client API versions.\n"
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
   <> "/tool query_fmea {} or {\"task_id\":\"TASK_ID\"} — recorded risk assessments in the configured plan.\n"
@@ -103,6 +105,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
   case name {
     "" | "help" -> empty_arguments(tail, Help)
     "cancel_job_lease" -> cancel_arguments(tail)
+    "query_ecology" -> empty_arguments(tail, Ecology)
     "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
