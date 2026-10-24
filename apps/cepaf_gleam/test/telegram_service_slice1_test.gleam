@@ -2217,3 +2217,91 @@ pub fn loop_queued_reply_before_timer_cannot_escape_expired_lifetime_test() {
   let assert Ok(process.ProcessDown(_, _, process.Normal)) = process.selector_receive(selector, 500)
   Nil
 }
+
+fn with_bootstrap_review_store(run: fn(transport.LocalConfiguration, String) -> Nil) {
+  let dir = "/tmp/uos_bootstrap_review_" <> int.to_string(service.ffi_system_now_utc_us())
+  let assert Ok(_) = simplifile.create_directory_all(dir)
+  let assert Ok(_) = simplifile.set_permissions_octal(dir, 0o700)
+  let cfg = transport.reviewed_local_configuration(
+    recovery_guardian_path, recovery_guardian_sha, recovery_worker_path,
+    recovery_worker_sha, dir <> "/store.sqlite3")
+  let assert Ok(2) = store.initialize_store(cfg, 991_771)
+  run(cfg, dir <> "/store.sqlite3")
+  let _ = simplifile.delete(dir)
+  Nil
+}
+
+fn seed_bootstrap_review_records(cfg: transport.LocalConfiguration, remaining: Int, generation: Int, orphan: Bool) {
+  case remaining <= 0 {
+    True -> Nil
+    False -> {
+      let update_id = 100_000 - remaining
+      let text = "{\"update_id\":" <> int.to_string(update_id)
+        <> ",\"message\":{\"message_id\":99,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false,\"first_name\":\"Test\"},\"text\":\"/doctor\",\"date\":1700000000}}"
+      let verdict = guard.evaluate_update(text, guard.Allowlist(991_771, [#(100, 200)]))
+      let assert Ok(#(wm, version, sha)) = store.read_watermark(cfg)
+      let assert Ok(pref) = store.commit_prefix(cfg, 991_771,
+        "prefix-" <> int.to_string(update_id), generation, wm, version, sha,
+        [verdict], 1_700_000_000_000)
+      case remaining == 1 && orphan {
+        True -> {
+          let assert [rec] = pref.admitted_records
+          let assert Ok(_) = store.claim_task_processing(cfg, 991_771, "orphan-last",
+            pref.receipt.generation, rec, 1, files.digest(codec.encode_inbox_record(rec)),
+            "dead-worker", 1, 1_700_000_001_000)
+          Nil
+        }
+        False -> seed_bootstrap_review_records(cfg, remaining - 1, pref.receipt.generation, orphan)
+      }
+    }
+  }
+}
+
+pub fn bootstrap_orphan_after_first_page_must_hold_test() {
+  use cfg, _ <- with_bootstrap_review_store()
+  seed_bootstrap_review_records(cfg, 11, 2, True)
+  let http = http_client.TelegramHttpConfiguration(
+    "http://nas-1.tail55d152.ts.net:1", "test-only", 10_000, 65_536)
+  let config = service.default_service_configuration(cfg, http, 991_771, [#(100, 200)], "worker-review", 1)
+  let assert Ok(#(state, _)) = service.init_service(config, None)
+  case state.writer_state {
+    lifecycle.ServiceWriterHold(reason) -> string.contains(reason, "in-flight operations detected") |> should.equal(True)
+    lifecycle.ServiceWriterClean -> panic as "orphan beyond first10 records admitted clean"
+  }
+}
+
+
+pub fn bootstrap_orphan_after_sixty_four_rows_must_hold_test() {
+  use cfg, _ <- with_bootstrap_review_store()
+  seed_bootstrap_review_records(cfg, 67, 2, True)
+  let http = http_client.TelegramHttpConfiguration("http://nas-1.tail55d152.ts.net:1", "test-only", 10_000, 65_536)
+  let config = service.default_service_configuration(cfg, http, 991_771, [#(100, 200)], "worker-review", 1)
+  let assert Ok(#(state, _)) = service.init_service(config, None)
+  let assert lifecycle.ServiceWriterHold(reason) = state.writer_state
+  string.contains(reason, "in-flight operations detected") |> should.equal(True)
+}
+
+pub fn bootstrap_clean_pending_pages_remain_usable_test() {
+  use cfg, _ <- with_bootstrap_review_store()
+  seed_bootstrap_review_records(cfg, 67, 2, False)
+  let http = http_client.TelegramHttpConfiguration("http://nas-1.tail55d152.ts.net:1", "test-only", 10_000, 65_536)
+  let config = service.default_service_configuration(cfg, http, 991_771, [#(100, 200)], "worker-review", 1)
+  let assert Ok(#(state, summary)) = service.init_service(config, None)
+  state.writer_state |> should.equal(lifecycle.ServiceWriterClean)
+  summary |> should.equal(service.RecoveryResult(0, 0, 67))
+  state.watermark.last_committed_offset |> should.equal(100_000)
+}
+
+@external(erlang, "telegram_test_authority", "delete_bootstrap_watermark")
+fn delete_bootstrap_watermark(path: String) -> Result(Nil, Dynamic)
+
+pub fn bootstrap_missing_watermark_refuses_instead_of_reset_test() {
+  use cfg, db <- with_bootstrap_review_store()
+  let assert Ok(_) = delete_bootstrap_watermark(db)
+  let http = http_client.TelegramHttpConfiguration("http://nas-1.tail55d152.ts.net:1", "test-only", 10_000, 65_536)
+  let config = service.default_service_configuration(cfg, http, 991_771, [#(100, 200)], "worker-review", 1)
+  case service.init_service(config, None) {
+    Error(reason) -> string.contains(reason, "first_bootstrap_watermark_read_failed") |> should.equal(True)
+    Ok(_) -> panic as "missing watermark was fabricated as clean"
+  }
+}

@@ -467,7 +467,7 @@ pub fn init_service(
       case config.service_epoch == 1 {
         True -> {
           // B2: Store must contain ZERO in-flight rows
-          case store.read_inbox_records(config.storage_config, 10, None) {
+          case scan_all_inbox_records(config.storage_config, None, None, 0, []) {
             Ok(#(cur_gen, records)) -> {
               let in_flight =
                 list.any(records, fn(row) {
@@ -508,16 +508,12 @@ pub fn init_service(
                 }
                 False -> {
                   // B3: Clean initial bootstrap at epoch 1
-                  let #(wm, wm_ver, wm_sha) = case
+                  use #(wm, wm_ver, wm_sha) <- result.try(
                     store.read_watermark(config.storage_config)
-                  {
-                    Ok(triple) -> triple
-                    Error(_) -> #(
-                      ledger.Watermark(0),
-                      1,
-                      "0000000000000000000000000000000000000000000000000000000000000000",
-                    )
-                  }
+                    |> result.map_error(fn(err) {
+                      "first_bootstrap_watermark_read_failed: " <> string.inspect(err)
+                    }),
+                  )
                   let state =
                     ServiceState(
                       config: config,
@@ -982,7 +978,7 @@ fn scan_all_inbox_records(
                 Ok(#(last_rec, _, _)) ->
                   scan_all_inbox_records(
                     storage_config,
-                    Some(last_rec.request_id),
+                    Some(codec.inbox_key(last_rec.request_id)),
                     Some(initial_gen),
                     page_count + 1,
                     new_acc,

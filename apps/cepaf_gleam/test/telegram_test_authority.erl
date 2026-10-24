@@ -1,6 +1,6 @@
 -module(telegram_test_authority).
 -export([
-    seed_test_sa_plan_task/6
+    seed_test_sa_plan_task/6, delete_bootstrap_watermark/1
 ]).
 
 %% @doc Seeds an executing task record into a test SQLite database for test verification.
@@ -57,3 +57,19 @@ seed_test_sa_plan_task(DbPath0, PlanId, TaskId, Worker, Attempt, LeaseUntilNs) -
 
 to_path_list(Path) when is_binary(Path) -> unicode:characters_to_list(Path);
 to_path_list(Path) when is_list(Path) -> Path.
+
+%% Test-only corruption injection confined to a newly created private fixture.
+delete_bootstrap_watermark(Path) when is_binary(Path) ->
+    case re:run(Path, <<"^/tmp/uos_bootstrap_review_[0-9]+/store\\.sqlite3$">>, [{capture, none}]) of
+        match ->
+            {ok, Conn} = esqlite3:open(binary_to_list(Path)),
+            try
+                ok = esqlite3:exec(Conn, "PRAGMA busy_timeout=500"),
+                [_] = esqlite3:q(Conn, "SELECT key FROM kv_rows WHERE key='meta/next_offset'"),
+                ok = esqlite3:exec(Conn, "DELETE FROM kv_rows WHERE key='meta/next_offset'"),
+                [] = esqlite3:q(Conn, "SELECT key FROM kv_rows WHERE key='meta/next_offset'"),
+                {ok, nil}
+            catch Class:Reason -> {error, {Class, Reason}}
+            after esqlite3:close(Conn) end;
+        nomatch -> {error, path_refused}
+    end.
