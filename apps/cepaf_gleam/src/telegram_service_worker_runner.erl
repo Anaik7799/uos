@@ -102,6 +102,29 @@ handle_standby_command(#{<<"action">> := <<"init_only">>} = Cmd, IpcDir, Config)
     end,
     standby_loop(IpcDir, Config);
 
+
+handle_standby_command(#{<<"action">> := <<"run_managed">>} = Cmd, IpcDir, Config) ->
+    Merged = maps:merge(Config, Cmd),
+    SvcConfig = build_service_configuration(Merged),
+    CurrentPath = maps:get(<<"current_control_registration_path">>, Merged),
+    Budget = {config, 2, maps:get(<<"loop_lifetime_ms">>, Merged, 6000), 10, 15000, 15000, 1},
+    {ok, Writer} = cepaf_gleam@harness@telegram_store_codec:decode_writer_registration(
+        maps:get(<<"writer_registration">>, Merged)),
+    Mode = case maps:get(<<"previous_writer_registration">>, Merged, null) of
+        null -> {fresh, Writer};
+        PrevJson ->
+            {ok, Previous} = cepaf_gleam@harness@telegram_store_codec:decode_writer_registration(PrevJson),
+            {some, Receipt} = build_receipt_opt(Merged),
+            {recover, Previous, Writer, Receipt}
+    end,
+    Outcome = case cepaf_gleam@harness@telegram_runtime:run(SvcConfig, CurrentPath, Mode, Budget) of
+        {ok, {terminal, Reason, Cycles}} ->
+            #{<<"status">> => <<"stopped_and_released">>, <<"reason">> => Reason, <<"completed_cycles">> => Cycles};
+        {error, Error} -> #{<<"status">> => <<"error">>, <<"reason">> => Error}
+    end,
+    write_json_file(filename:join([IpcDir, "resp.json"]), Outcome),
+    standby_loop(IpcDir, Config);
+
 handle_standby_command(#{<<"action">> := <<"start_actor">>} = Cmd, IpcDir, Config) ->
     MergedConfig = maps:merge(Config, Cmd),
     start_and_run_actor(MergedConfig, IpcDir);
@@ -464,27 +487,18 @@ build_service_configuration(Config) ->
     ObsSha = <<"5b9dab694c7486f39decb0f3db4238b74753941a659106d5e12fee3c0fe656e2"/utf8>>,
     GuardExe = <<"/home/an/NAS-setup/uos/tools/validation/obs_guardian.exe"/utf8>>,
     GuardSha = <<"b7bab1a85ffa3689a2548ff28a391e659c0537104dec7be0f774bae1820ec4be"/utf8>>,
-    {service_configuration,
-        StorageCfg,
-        HttpCfg,
-        BotId,
-        AllowedPairs,
-        PlanId,
-        TaskId,
-        WorkerId,
-        maps:get(<<"resource_id">>, Config, <<"task:", TaskId/binary>>),
-        WorkerId,
+    Base = cepaf_gleam@harness@telegram_service:operational_service_configuration(
+        StorageCfg, HttpCfg, BotId, AllowedPairs, PlanId, TaskId, WorkerId, WorkerId,
         maps:get(<<"expected_task_attempt">>, Config, 1),
-        maps:get(<<"coordinator_epoch">>, Config, 1),
-        ServiceEpoch,
-        10, % poll_limit
-        1,  % poll_timeout_s
-        ObsExe,
-        ObsSha,
-        GuardExe,
-        GuardSha,
-        AuthPaths,
-        CtrlPathOpt}.
+        maps:get(<<"coordinator_epoch">>, Config, 1), ServiceEpoch),
+    B1 = setelement(9, Base, maps:get(<<"resource_id">>, Config, <<"task:", TaskId/binary>>)),
+    B2 = setelement(15, B1, 1),
+    B3 = setelement(16, B2, ObsExe),
+    B4 = setelement(17, B3, ObsSha),
+    B5 = setelement(18, B4, GuardExe),
+    B6 = setelement(19, B5, GuardSha),
+    B7 = setelement(20, B6, AuthPaths),
+    setelement(21, B7, CtrlPathOpt).
 
 build_receipt_opt(Config) ->
     case maps:get(<<"cleanup_receipt">>, Config, null) of

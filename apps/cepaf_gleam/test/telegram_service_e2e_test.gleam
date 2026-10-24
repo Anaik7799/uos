@@ -2070,7 +2070,7 @@ fn writer_from_control(path: String, bot_id: Int, nonce: String) -> codec.Writer
     control.unit_invocation_id, control.registered_at_us)
 }
 
-fn exercise_managed_successor(start_predecessor: Bool) {
+fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
   fixture_set_mode(fixture_pid, "offset_aware")
@@ -2133,18 +2133,29 @@ fn exercise_managed_successor(start_predecessor: Bool) {
   string.contains(rejected, "recovery_predecessor_writer_control_mismatch") |> should.equal(True)
   store.read_keys(storage_config, [codec.writer_registration_key(), "meta/writer_start"])
     |> should.equal(before)
-  let recovered = send_runner_cmd(new_ipc, command)
-  string.contains(recovered, "\"action\":\"started\"") |> should.equal(True)
-  let duplicate = send_runner_cmd(new_ipc, "{\"action\":\"repeat_managed_start\"}")
-  string.contains(duplicate, "\"status\":\"refused\"") |> should.equal(True)
-  let assert Ok(#(_, [marker])) = store.read_keys(storage_config, ["meta/writer_start"])
-  let assert Ok(marker_raw) = codec.decode_row_value(marker)
-  codec.decode_writer_registration(marker_raw) |> should.equal(Ok(next))
   fixture_set_updates(fixture_pid, [
     "{\"update_id\":9601,\"message\":{\"message_id\":601,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/doctor\",\"date\":1700000000}}",
     "{\"update_id\":9602,\"message\":{\"message_id\":602,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/saplan\",\"date\":1700000000}}",
   ])
-  let terminal = send_runner_cmd(new_ipc, "{\"action\":\"finite_automatic_loop\"}")
+  let recovered = send_runner_cmd(new_ipc, case run_entry {
+    False -> command
+    True -> string.replace(command, "\"action\":\"start_actor\"", "\"action\":\"run_managed\"")
+  })
+  case run_entry {
+    True -> string.contains(recovered, "\"status\":\"stopped_and_released\"") |> should.equal(True)
+    False -> {
+      string.contains(recovered, "\"action\":\"started\"") |> should.equal(True)
+      let duplicate = send_runner_cmd(new_ipc, "{\"action\":\"repeat_managed_start\"}")
+      string.contains(duplicate, "\"status\":\"refused\"") |> should.equal(True)
+    }
+  }
+  let assert Ok(#(_, [marker])) = store.read_keys(storage_config, ["meta/writer_start"])
+  let assert Ok(marker_raw) = codec.decode_row_value(marker)
+  codec.decode_writer_registration(marker_raw) |> should.equal(Ok(next))
+  let terminal = case run_entry {
+    True -> recovered
+    False -> send_runner_cmd(new_ipc, "{\"action\":\"finite_automatic_loop\"}")
+  }
   string.contains(terminal, "\"completed_cycles\":2") |> should.equal(True)
   let assert Ok(#(_, [one, two])) = store.read_keys(storage_config, [
     codec.chunk_key(ledger.make_request_id(bot_id, 9601), 0),
@@ -2158,7 +2169,10 @@ fn exercise_managed_successor(start_predecessor: Bool) {
   let requests = fixture_requests_typed(fixture_pid)
   list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/sendMessage") })
     |> list.length |> should.equal(2)
-  let stopped = send_runner_cmd(new_ipc, "{\"action\":\"stop_managed_service\"}")
+  let stopped = case run_entry {
+    True -> recovered
+    False -> send_runner_cmd(new_ipc, "{\"action\":\"stop_managed_service\"}")
+  }
   string.contains(stopped, "\"status\":\"stopped_and_released\"") |> should.equal(True)
   let assert Ok(_) = coord_store.close(coordinator)
   fixture_stop(fixture_pid)
@@ -2167,9 +2181,80 @@ fn exercise_managed_successor(start_predecessor: Bool) {
 }
 
 pub fn e2e_managed_successor_recovers_predecessor_that_never_started_test() {
-  exercise_managed_successor(False)
+  exercise_managed_successor(False, False)
 }
 
 pub fn e2e_managed_successor_recovers_terminated_active_predecessor_test() {
-  exercise_managed_successor(True)
+  exercise_managed_successor(True, False)
+}
+
+pub fn e2e_runtime_entry_validates_before_start_runs_and_releases_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  fixture_set_mode(fixture_pid, "offset_aware")
+  let bot_id = 222_556
+  let assert Ok(fresh) = store.begin_new_writer_store(storage_config, bot_id)
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_poll1024_m" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-m" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  let control_path = mint_unit_registration(dir, slice_name, unit_name, db_path, 1)
+  let assert Ok(control_json) = simplifile.read(control_path)
+  let assert Ok(control) = lifecycle.decode_control_registration(control_json)
+  let writer = codec.WriterRegistration(
+    bot_id: bot_id, service_epoch: 1,
+    instance_token: files.digest("managed-start-" <> nonce),
+    control_digest: files.digest(lifecycle.encode_control_registration(control)),
+    store_incarnation_id: control.store_incarnation_id,
+    unit_invocation_id: control.unit_invocation_id,
+    registered_at_us: control.registered_at_us,
+  )
+  let assert Ok(2) = store.finish_new_writer_store(fresh, writer)
+  let assert Ok(coordinator) = coord_store.open(coord_db)
+  let assert Ok(#(_, False)) = coord_store.append(coordinator, sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "active-runtime-" <> nonce)
+  fixture_set_updates(fixture_pid, [
+    "{\"update_id\":9401,\"message\":{\"message_id\":501,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/doctor\",\"date\":1700000000}}",
+    "{\"update_id\":9402,\"message\":{\"message_id\":502,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/saplan\",\"date\":1700000000}}",
+  ])
+  let cmd = managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db, control_path, writer, "runtime:telegram-bridge")
+    |> string.replace("\"action\":\"start_actor\"", "\"action\":\"run_managed\"")
+  let invalid = "{\"loop_lifetime_ms\":0," <> string.drop_start(cmd, 1)
+  let refused = send_runner_cmd(ipc_dir, invalid)
+  string.contains(refused, "invalid_loop_configuration") |> should.equal(True)
+  let assert Ok(#(2, [unconsumed])) = store.read_keys(storage_config, ["meta/writer_start"])
+  unconsumed.exists |> should.be_false
+  let terminal = send_runner_cmd(ipc_dir, cmd)
+  string.contains(terminal, "\"status\":\"stopped_and_released\"") |> should.equal(True)
+  string.contains(terminal, "\"completed_cycles\":2") |> should.equal(True)
+  let request1 = ledger.make_request_id(bot_id, 9401)
+  let request2 = ledger.make_request_id(bot_id, 9402)
+  let assert Ok(#(_, [row1, row2])) = store.read_keys(storage_config, [
+    codec.chunk_key(request1, 0), codec.chunk_key(request2, 0),
+  ])
+  let assert Ok(raw1) = codec.decode_row_value(row1)
+  let assert Ok(raw2) = codec.decode_row_value(row2)
+  let assert Ok(chunk1) = codec.decode_chunk_value(raw1)
+  let assert Ok(chunk2) = codec.decode_chunk_value(raw2)
+  chunk1.status |> should.equal(ledger.OutboxDelivered(42))
+  chunk2.status |> should.equal(ledger.OutboxDelivered(42))
+  string.contains(chunk1.payload, "UNOBSERVED_RUNTIME") |> should.equal(True)
+  string.contains(chunk2.payload, "uos.sa_plan.observer.v1") |> should.equal(True)
+  let requests = fixture_requests_typed(fixture_pid)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/getUpdates") })
+    |> list.length |> should.equal(2)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/sendMessage") })
+    |> list.length |> should.equal(2)
+  let observed = coord_store.observe(coordinator, fn(state, boot, now) {
+    sync.check(state, "worker-e2e-01", "runtime:telegram-bridge", 1, boot, now)
+    |> result.map_error(coord_store.RefusedError)
+  })
+  result.is_error(observed) |> should.equal(True)
+  let assert Ok(_) = coord_store.close(coordinator)
+  fixture_stop(fixture_pid)
+  let assert Ok(_) = lifecycle.stop_and_verify_test_unit(slice_name, unit_name, db_path,
+    recovery_worker_sha, recovery_guardian_sha)
+}
+
+pub fn e2e_runtime_entry_recovers_runs_and_releases_test() {
+  exercise_managed_successor(True, True)
 }
