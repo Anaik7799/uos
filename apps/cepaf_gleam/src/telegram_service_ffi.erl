@@ -2,8 +2,7 @@
 -export([
     system_now_utc_us/0,
     system_now_ns/0,
-    new_worker_scope/0,
-    adopt_worker_scope/2,
+    ensure_worker_scope/0,
     set_worker_subject/3,
     get_worker_subject/2,
     clear_worker_subjects/1,
@@ -20,19 +19,17 @@ system_now_utc_us() ->
 system_now_ns() ->
     erlang:system_time(nanosecond).
 
-%% Anonymous ETS references are owned by the service supervisor after startup.
-%% OTP deletes the table on any owner termination, including kill.
--spec new_worker_scope() -> ets:tid().
-new_worker_scope() ->
-    ets:new(telegram_worker_subjects, [set, public]).
-
--spec adopt_worker_scope(ets:tid(), pid()) -> {ok, nil} | {error, binary()}.
-adopt_worker_scope(Scope, Owner) ->
-    try
-        true = ets:give_away(Scope, Owner, nil),
-        {ok, nil}
-    catch
-        error:badarg -> {error, <<"worker_scope_handoff_failed">>}
+%% Called only by child-start closures executing in their OTP supervisor.
+%% RestForOne restarts reuse this supervisor-local table; any supervisor death
+%% deletes it automatically. No global registry, handoff or cleanup process.
+-spec ensure_worker_scope() -> ets:tid().
+ensure_worker_scope() ->
+    case erlang:get(telegram_worker_scope) of
+        undefined ->
+            Scope = ets:new(telegram_worker_subjects, [set, public]),
+            erlang:put(telegram_worker_scope, Scope),
+            Scope;
+        Scope -> Scope
     end.
 
 -spec set_worker_subject(term(), binary(), term()) -> ok.
@@ -55,26 +52,18 @@ get_worker_subject(Scope, Role) ->
 
 -spec clear_worker_subjects(term()) -> ok.
 clear_worker_subjects(Scope) ->
-    %% Failed startup: the caller still owns the table. Successful handoff:
-    %% stop_instance waits for supervisor DOWN; OTP has already deleted it.
+    %% Compatibility cleanup for caller-owned test scopes; operational scope
+    %% lifetime belongs exclusively to the supervisor.
     try ets:delete(Scope) catch error:badarg -> ok end,
     ok.
 
--spec stop_supervisor(term()) -> {ok, nil} | {error, binary()}.
-stop_supervisor(Supervisor) ->
-    Pid = case Supervisor of
-        {supervisor, P} when is_pid(P) -> P;
-        P when is_pid(P) -> P;
-        _ -> undefined
-    end,
-    case Pid of
-        undefined -> {error, <<"invalid_supervisor_handle">>};
-        _ ->
-            try gen_server:stop(Pid, shutdown, 5000) of
-                ok -> {ok, nil}
-            catch
-                exit:noproc -> {ok, nil};
-                exit:{noproc, _} -> {ok, nil};
-                exit:Reason -> {error, iolist_to_binary(io_lib:format("supervisor_stop_failed: ~p", [Reason]))}
-            end
-    end.
+-spec stop_supervisor(pid()) -> {ok, nil} | {error, binary()}.
+stop_supervisor(Pid) when is_pid(Pid) ->
+    try gen_server:stop(Pid, shutdown, 5000) of
+        ok -> {ok, nil}
+    catch
+        exit:noproc -> {ok, nil};
+        exit:{noproc, _} -> {ok, nil};
+        exit:Reason -> {error, iolist_to_binary(io_lib:format("supervisor_stop_failed: ~p", [Reason]))}
+    end;
+stop_supervisor(_) -> {error, <<"invalid_supervisor_pid">>}.

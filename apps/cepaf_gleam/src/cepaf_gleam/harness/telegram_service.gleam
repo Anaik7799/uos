@@ -2904,11 +2904,8 @@ fn spawn_delivery_worker(
   ServiceState(..state, in_flight_workers: [worker_pid])
 }
 
-@external(erlang, "telegram_service_ffi", "new_worker_scope")
-fn new_worker_scope() -> reference.Reference
-
-@external(erlang, "telegram_service_ffi", "adopt_worker_scope")
-fn adopt_worker_scope(scope: reference.Reference, owner: Pid) -> Result(Nil, String)
+@external(erlang, "telegram_service_ffi", "ensure_worker_scope")
+fn ensure_worker_scope() -> reference.Reference
 
 @external(erlang, "telegram_service_ffi", "set_worker_subject")
 pub fn ffi_set_worker_subject(scope: a, role: String, subject: b) -> Nil
@@ -3734,14 +3731,14 @@ pub fn poller_worker_get_updates(
 fn supervised_worker_scoped(
   config: ServiceConfiguration,
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
-  bridge_subject: Option(Subject(Subject(ServiceMessage))),
-  scope: reference.Reference,
+  bridge_subject: Option(Subject(#(reference.Reference, Subject(ServiceMessage)))),
 ) -> supervision.ChildSpecification(Subject(ServiceMessage)) {
   supervision.worker(fn() {
+    let scope = ensure_worker_scope()
     case start_actor_scoped(config, cleanup_receipt, scope) {
       Ok(started) -> {
         case bridge_subject {
-          Some(subj) -> process.send(subj, started.data)
+          Some(subj) -> process.send(subj, #(scope, started.data))
           None -> Nil
         }
         Ok(started)
@@ -3755,21 +3752,23 @@ pub fn start_supervised_service(
   config: ServiceConfiguration,
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
 ) -> Result(SupervisedService, String) {
-  let scope = new_worker_scope()
   let bridge_subject = process.new_subject()
   let c1 = supervision.worker(fn() {
+    let scope = ensure_worker_scope()
     start_authority_worker_scoped(config, scope)
     |> result.map_error(actor.InitFailed)
   })
   let c2 = supervision.worker(fn() {
+    let scope = ensure_worker_scope()
     start_store_worker_scoped(config.storage_config, config.bot_id, scope)
     |> result.map_error(actor.InitFailed)
   })
   let c3 = supervision.worker(fn() {
+    let scope = ensure_worker_scope()
     start_poller_worker_scoped(config.http_config, config.bot_id, scope)
     |> result.map_error(actor.InitFailed)
   })
-  let c4 = supervised_worker_scoped(config, cleanup_receipt, Some(bridge_subject), scope)
+  let c4 = supervised_worker_scoped(config, cleanup_receipt, Some(bridge_subject))
   use sup_started <- result.try(
     static_supervisor.new(static_supervisor.RestForOne)
     |> static_supervisor.restart_tolerance(intensity: 3, period: 5)
@@ -3779,21 +3778,13 @@ pub fn start_supervised_service(
     |> static_supervisor.add(c4)
     |> static_supervisor.start()
     |> result.map_error(fn(err) {
-      ffi_clear_worker_subjects(scope)
       "start_service_supervisor_failed: " <> string.inspect(err)
     }),
   )
-  // Ownership follows the supervisor even on abnormal termination. No global
-  // registry entries or detached cleanup process survive the service tree.
-  use _ <- result.try(
-    adopt_worker_scope(scope, sup_started.pid)
-    |> result.map_error(fn(err) {
-      let cleanup = stop_instance(sup_started.data, sup_started.pid, scope)
-      err <> ": " <> string.inspect(cleanup)
-    }),
-  )
+  // Child start closures execute inside the owning supervisor. Its ETS scope
+  // is created there and dies there, without a handoff or bootstrap registry.
   case process.receive(bridge_subject, 3000) {
-    Ok(actor_subj) -> {
+    Ok(#(scope, actor_subj)) -> {
       case #(
         ffi_get_worker_subject(scope, "authority"),
         ffi_get_worker_subject(scope, "store"),
@@ -3810,36 +3801,31 @@ pub fn start_supervised_service(
             supervisor_pid: sup_started.pid,
           ))
         _ -> {
-          let cleanup = stop_instance(sup_started.data, sup_started.pid, scope)
+          let cleanup = stop_instance(sup_started.pid)
           Error("supervised_worker_subject_missing: " <> string.inspect(cleanup))
         }
       }
     }
     Error(_) -> {
-      let cleanup = stop_instance(sup_started.data, sup_started.pid, scope)
+      let cleanup = stop_instance(sup_started.pid)
       Error("timed_out_waiting_for_supervised_actor_subject: " <> string.inspect(cleanup))
     }
   }
 }
 
 @external(erlang, "telegram_service_ffi", "stop_supervisor")
-pub fn stop_supervisor(supervisor: static_supervisor.Supervisor) -> Result(Nil, String)
+pub fn stop_supervisor(pid: Pid) -> Result(Nil, String)
 
-fn stop_instance(
-  supervisor: static_supervisor.Supervisor,
-  pid: Pid,
-  scope: reference.Reference,
-) -> Result(Nil, String) {
+fn stop_instance(pid: Pid) -> Result(Nil, String) {
   let monitor = process.monitor(pid)
   let selector = process.new_selector()
     |> process.select_specific_monitor(monitor, fn(down) { down })
-  use _ <- result.try(stop_supervisor(supervisor) |> result.map_error(fn(err) {
+  use _ <- result.try(stop_supervisor(pid) |> result.map_error(fn(err) {
     process.demonitor_process(monitor)
     err
   }))
   case process.selector_receive(selector, 5000) {
     Ok(_) -> {
-      ffi_clear_worker_subjects(scope)
       Ok(Nil)
     }
     Error(_) -> {
@@ -3850,7 +3836,7 @@ fn stop_instance(
 }
 
 pub fn stop_supervised_service(svc: SupervisedService) -> Result(Nil, String) {
-  stop_instance(svc.supervisor, svc.supervisor_pid, svc.subject_scope)
+  stop_instance(svc.supervisor_pid)
 }
 
 pub fn handle_message(
