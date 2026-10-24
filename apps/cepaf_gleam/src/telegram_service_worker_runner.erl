@@ -202,6 +202,32 @@ actor_loop(Subj, IpcDir, SvcConfig) ->
             actor_loop(Subj, IpcDir, SvcConfig)
     end.
 
+handle_actor_command(#{<<"action">> := <<"enable_managed_authority">>} = Cmd, Subj, IpcDir, SvcConfig) ->
+    Result = case get(managed_supervised_service) of
+        undefined -> {error, <<"managed_supervisor_missing">>};
+        SupSvc -> cepaf_gleam@harness@telegram_service:enable_managed_authority(
+            SupSvc, maps:get(<<"ttl_us">>, Cmd, 30000000), maps:get(<<"interval_ms">>, Cmd, 10000))
+    end,
+    Reply = case Result of
+        {ok, _} -> #{<<"status">> => <<"enabled">>};
+        {error, Why} -> #{<<"status">> => <<"refused">>, <<"reason">> => Why}
+    end,
+    write_json_file(filename:join([IpcDir, "resp.json"]), Reply),
+    actor_loop(Subj, IpcDir, SvcConfig);
+
+handle_actor_command(#{<<"action">> := <<"get_authority_status">>}, Subj, IpcDir, SvcConfig) ->
+    SupSvc = get(managed_supervised_service),
+    Worker = element(4, SupSvc),
+    {Lease, Revoked} = gleam@erlang@process:call(Worker, 6000, fun(Reply) -> {get_authority_status, Reply} end),
+    State = gleam@erlang@process:call(Subj, 2000, fun(Reply) -> {get_state, Reply} end),
+    {LeaseId, Until} = case Lease of
+        {some, {authority_lease, Id, _, _, Expiry}} -> {Id, Expiry};
+        none -> {<<>>, 0}
+    end,
+    write_json_file(filename:join([IpcDir, "resp.json"]), #{<<"status">> => <<"ok">>,
+        <<"revoked">> => Revoked, <<"authority_revoked">> => element(4, State),
+        <<"lease_id">> => LeaseId, <<"valid_until_us">> => Until}),
+    actor_loop(Subj, IpcDir, SvcConfig);
 handle_actor_command(#{<<"action">> := <<"repeat_managed_start">>}, Subj, IpcDir, SvcConfig) ->
     Result = case get(managed_start_config) of
         undefined -> #{<<"status">> => <<"error">>, <<"reason">> => <<"managed_start_context_missing">>};

@@ -324,6 +324,7 @@ fn make_dummy_service_state(
     authority_worker: None,
     store_worker: None,
     poller_worker: None,
+      authority_managed: False,
   )
 }
 
@@ -584,6 +585,7 @@ pub fn service_dual_authority_attempt2_epoch7_positive_and_rejection_test() {
       authority_worker: None,
       store_worker: None,
       poller_worker: None,
+      authority_managed: False,
     )
   let res_ok = service.verify_authority(valid_state, 1_700_000_000_000)
   case res_ok {
@@ -1974,12 +1976,17 @@ fn observe_loop(mode: String, lease_ms: Int, config: loop.Config, stop_early: Bo
           let report = case mode == "lease_change" && polls > 0 {
             True -> service.ServiceState(..observed,
               authority: Some(service.AuthorityLease("changed", 1, 1, lease.valid_until_us)))
-            False -> observed
+            False -> case mode == "lease_renewal" && polls > 0 {
+              True -> service.ServiceState(..observed,
+                authority: Some(service.AuthorityLease(lease.lease_id, 1, 1, lease.valid_until_us + polls * 1_000_000)))
+              False -> observed
+            }
           }
           process.send(reply, report)
           actor.continue(state)
         }
         service.PollCycle(_, reply) -> {
+          case mode { "lease_renewal" -> process.sleep(40) _ -> Nil }
           process.send(events, "poll")
           case mode {
             "hang" -> actor.continue(#(observed, polls + 1))
@@ -2493,4 +2500,15 @@ pub fn non_parent_can_stop_supervised_service_test() {
   fixture_stop(fixture_pid)
   let _ = simplifile.delete(dir)
   Nil
+}
+
+pub fn loop_same_owner_renewal_extends_lease_not_work_budget_test() {
+  let #(report, _) = observe_loop("lease_renewal", 200, loop.Config(10, 2000, 10, 500, 500, 1), False)
+  report |> should.equal(loop.Terminal("max_cycles", 10))
+}
+
+pub fn loop_repeated_renewal_cannot_extend_work_budget_test() {
+  let #(report, _) = observe_loop("lease_renewal", 200, loop.Config(100, 250, 10, 500, 500, 1), False)
+  report.reason |> should.equal("lifetime_expired")
+  { report.completed_cycles > 0 && report.completed_cycles < 100 } |> should.equal(True)
 }

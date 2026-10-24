@@ -20,6 +20,7 @@ import cepaf_gleam/harness/telegram_store as store
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/dynamic.{type Dynamic}
+import gleam/dynamic/decode
 import gleam/erlang/process.{type Pid}
 import gleam/json
 import gleam/int
@@ -1859,4 +1860,108 @@ pub fn e2e_managed_preflight_hold_preserves_start_permit_test() {
   marker.exists |> should.equal(False)
   string.contains(reply, "managed_preflight_writer_hold") |> should.equal(True)
   requests |> should.equal([])
+}
+
+fn exercise_managed_authority_maintenance(failure_mode: String) {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  fixture_set_mode(fixture_pid, "offset_aware")
+  let bot_id = 222_556
+  let assert Ok(fresh) = store.begin_new_writer_store(storage_config, bot_id)
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_poll1024_m" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-m" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  let control_path = mint_unit_registration(dir, slice_name, unit_name, db_path, 1)
+  let assert Ok(control_json) = simplifile.read(control_path)
+  let assert Ok(control) = lifecycle.decode_control_registration(control_json)
+  let writer = codec.WriterRegistration(
+    bot_id: bot_id, service_epoch: 1,
+    instance_token: files.digest("managed-start-" <> nonce),
+    control_digest: files.digest(lifecycle.encode_control_registration(control)),
+    store_incarnation_id: control.store_incarnation_id,
+    unit_invocation_id: control.unit_invocation_id,
+    registered_at_us: control.registered_at_us,
+  )
+  let assert Ok(2) = store.finish_new_writer_store(fresh, writer)
+  let assert Ok(coordinator) = coord_store.open(coord_db)
+  let assert Ok(#(_, False)) = coord_store.append(coordinator, sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "maintenance-claim-" <> nonce)
+  let task_deadline = service.ffi_system_now_ns() + 5_000_000_000
+  case failure_mode {
+    "task_expiry" -> {
+      let assert Ok(_) = seed_test_sa_plan_task(sa_plan_db, "plan-e2e", "lease-e2e-01", "worker-e2e-01", 1, task_deadline)
+      Nil
+    }
+    _ -> Nil
+  }
+  let first = send_runner_cmd(ipc_dir, managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db, control_path, writer, "runtime:telegram-bridge"))
+  string.contains(first, "\"action\":\"started\"") |> should.equal(True)
+  let enabled = send_runner_cmd(ipc_dir, "{\"action\":\"enable_managed_authority\",\"ttl_us\":1500000,\"interval_ms\":100}")
+  string.contains(enabled, "\"status\":\"enabled\"") |> should.equal(True)
+  let before = send_runner_cmd(ipc_dir, "{\"action\":\"get_authority_status\"}")
+  let assert Ok(first_until) = json.parse(before, decode.field("valid_until_us", decode.int, decode.success))
+  let assert Ok(first_id) = json.parse(before, decode.field("lease_id", decode.string, decode.success))
+  process.sleep(1800)
+  let after = send_runner_cmd(ipc_dir, "{\"action\":\"get_authority_status\"}")
+  let assert Ok(next_until) = json.parse(after, decode.field("valid_until_us", decode.int, decode.success))
+  let assert Ok(next_id) = json.parse(after, decode.field("lease_id", decode.string, decode.success))
+  { service.ffi_system_now_utc_us() > first_until } |> should.equal(True)
+  { next_until > first_until } |> should.equal(True)
+  next_id |> should.equal(first_id)
+  case failure_mode { "task_expiry" -> { next_until <= task_deadline / 1000 } |> should.equal(True) _ -> Nil }
+  runner_set_authority(ipc_dir, "manual-override", 1, 1, 3_000_000_000_000_000)
+  let protected = send_runner_cmd(ipc_dir, "{\"action\":\"get_authority_status\"}")
+  let assert Ok(protected_id) = json.parse(protected, decode.field("lease_id", decode.string, decode.success))
+  protected_id |> should.equal(first_id)
+  string.contains(after, "\"revoked\":false") |> should.equal(True)
+  fixture_requests_typed(fixture_pid) |> should.equal([])
+  case failure_mode {
+    "runtime_release" -> {
+      let assert Ok(_) = coord_store.append(coordinator, sync.Release("worker-e2e-01", "runtime:telegram-bridge", 1), "maintenance-release-" <> nonce)
+      Nil
+    }
+    "task_expiry" -> Nil
+    _ -> {
+      let assert Ok(_) = seed_test_sa_plan_task(sa_plan_db, "plan-e2e", "lease-e2e-01", "worker-e2e-01", 2, 4_000_000_000_000_000_000)
+      Nil
+    }
+  }
+  let revoked = await_managed_revoked(ipc_dir, 100)
+  runner_set_authority(ipc_dir, "manual-resurrection", 1, 1, 3_000_000_000_000_000)
+  let still_revoked = send_runner_cmd(ipc_dir, "{\"action\":\"get_authority_status\"}")
+  let retry = send_runner_cmd(ipc_dir, "{\"action\":\"enable_managed_authority\",\"ttl_us\":1500000,\"interval_ms\":100}")
+  let refused = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+  let requests = fixture_requests_typed(fixture_pid)
+  fixture_stop(fixture_pid)
+  let _ = coord_store.close(coordinator)
+  let assert Ok(_) = lifecycle.stop_and_verify_test_unit(slice_name, unit_name, db_path, recovery_worker_sha, recovery_guardian_sha)
+  let assert Ok(True) = lifecycle.stop_test_slice(slice_name)
+  revoked |> should.equal(True)
+  string.contains(still_revoked, "\"authority_revoked\":true") |> should.equal(True)
+  string.contains(still_revoked, "\"revoked\":true") |> should.equal(True)
+  string.contains(retry, "\"status\":\"refused\"") |> should.equal(True)
+  string.contains(refused, "authority_lease_revoked") |> should.equal(True)
+  requests |> should.equal([])
+}
+
+fn await_managed_revoked(ipc_dir: String, remaining: Int) -> Bool {
+  let raw = send_runner_cmd(ipc_dir, "{\"action\":\"get_authority_status\"}")
+  case string.contains(raw, "\"authority_revoked\":true") && string.contains(raw, "\"revoked\":true") {
+    True -> True
+    False -> case remaining <= 0 {
+      True -> False
+      False -> { process.sleep(50) await_managed_revoked(ipc_dir, remaining - 1) }
+    }
+  }
+}
+
+pub fn e2e_managed_renewal_and_runtime_release_suspension_test() {
+  exercise_managed_authority_maintenance("runtime_release")
+}
+pub fn e2e_managed_renewal_and_changed_task_suspension_test() {
+  exercise_managed_authority_maintenance("changed_task")
+}
+
+pub fn e2e_managed_renewal_never_extends_parent_task_test() {
+  exercise_managed_authority_maintenance("task_expiry")
 }

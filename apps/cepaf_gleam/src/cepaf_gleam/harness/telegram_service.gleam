@@ -23,6 +23,7 @@ import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/bit_array
 import gleam/dynamic/decode
+import gleam/dict
 import gleam/erlang/process.{type Pid, type Subject}
 import gleam/erlang/reference
 import gleam/int
@@ -331,6 +332,7 @@ pub type ServiceState {
     authority_worker: Option(Subject(AuthorityWorkerMessage)),
     store_worker: Option(Subject(StoreWorkerMessage)),
     poller_worker: Option(Subject(PollerWorkerMessage)),
+    authority_managed: Bool,
   )
 }
 
@@ -504,6 +506,7 @@ pub fn init_service(
                       authority_worker: None,
                       store_worker: None,
                       poller_worker: None,
+      authority_managed: False,
                     )
                   Ok(#(state, RecoveryHold(reason)))
                 }
@@ -536,6 +539,7 @@ pub fn init_service(
                       authority_worker: None,
                       store_worker: None,
                       poller_worker: None,
+      authority_managed: False,
                     )
                   Ok(#(
                     state,
@@ -572,6 +576,7 @@ pub fn init_service(
                   authority_worker: None,
                   store_worker: None,
                   poller_worker: None,
+      authority_managed: False,
                 )
               Ok(#(state, RecoveryHold(reason)))
             }
@@ -603,6 +608,7 @@ pub fn init_service(
               authority_worker: None,
               store_worker: None,
               poller_worker: None,
+      authority_managed: False,
             )
           Ok(#(state, RecoveryHold(reason)))
         }
@@ -634,6 +640,7 @@ pub fn init_service(
               authority_worker: None,
               store_worker: None,
               poller_worker: None,
+      authority_managed: False,
             )
           Ok(#(
             state,
@@ -666,6 +673,7 @@ pub fn init_service(
                   authority_worker: None,
                   store_worker: None,
                   poller_worker: None,
+      authority_managed: False,
                 )
               Ok(#(state, RecoveryHold(hold_reason)))
             }
@@ -930,6 +938,7 @@ fn init_service_admitted(
       authority_worker: None,
       store_worker: None,
       poller_worker: None,
+      authority_managed: False,
     )
 
   let summary =
@@ -2809,6 +2818,8 @@ fn drain_chunks(
 
 pub type ServiceMessage {
   SetAuthority(AuthorityLease)
+  ManagedAuthorityRenewed(AuthorityLease)
+  ManagedAuthorityLost
   RevokeAuthority
   PollCycle(now_us: Int, reply_to: Subject(Result(ServiceStepResult, String)))
   AutomaticDispatchTick(
@@ -2990,6 +3001,8 @@ pub type SupervisedService {
 
 pub type AuthorityWorkerMessage {
   AuthorityPing(reply_to: Subject(String))
+  EnableManagedAuthority(coordinator: Subject(ServiceMessage), ttl_us: Int, interval_ms: Int, reply_to: Subject(Result(Nil, String)))
+  MaintenanceTick(sequence: Int)
   VerifyAuthority(
     now_us: Int,
     reply_to: Subject(Result(AuthorityWitness, String)),
@@ -2999,11 +3012,17 @@ pub type AuthorityWorkerMessage {
   GetAuthorityStatus(reply_to: Subject(#(Option(AuthorityLease), Bool)))
 }
 
+pub type ManagedAuthorityMaintenance {
+  ManagedAuthorityMaintenance(coordinator: Subject(ServiceMessage), ttl_us: Int, interval_ms: Int, lease_id: String, sequence: Int)
+}
+
 pub type AuthorityWorkerState {
   AuthorityWorkerState(
     config: ServiceConfiguration,
     lease: Option(AuthorityLease),
     revoked: Bool,
+    self: Subject(AuthorityWorkerMessage),
+    managed: Option(ManagedAuthorityMaintenance),
   )
 }
 
@@ -3017,12 +3036,40 @@ fn handle_authority_worker_message(
       actor.continue(state)
     }
     SetAuthorityLease(lease) -> {
-      actor.continue(
-        AuthorityWorkerState(..state, lease: Some(lease), revoked: False),
-      )
+      case state.managed {
+        Some(_) -> actor.continue(state)
+        None -> actor.continue(AuthorityWorkerState(..state, lease: Some(lease), revoked: False))
+      }
     }
-    RevokeAuthorityLease -> {
-      actor.continue(AuthorityWorkerState(..state, lease: None, revoked: True))
+    RevokeAuthorityLease -> actor.continue(suspend_managed_authority(state))
+    EnableManagedAuthority(coordinator, ttl_us, interval_ms, reply_to) -> {
+      let valid = case state.config.authority_paths {
+        CanonicalProductionPaths -> ttl_us == 30_000_000 && interval_ms == 10_000
+        IsolatedTestPaths(_, _) -> ttl_us >= 1_000_000 && ttl_us <= 30_000_000 && interval_ms >= 20 && interval_ms * 3_000 <= ttl_us
+      }
+      case state.managed, state.revoked, valid {
+        None, False, True -> {
+          let managed = ManagedAuthorityMaintenance(coordinator, ttl_us, interval_ms,
+            files.digest("managed-authority:" <> state.config.session_id <> ":" <> int.to_string(ffi_system_now_ns())), 0)
+          let candidate = AuthorityWorkerState(..state, managed: Some(managed))
+          case maintain_authority(candidate, managed) {
+            Ok(next) -> { process.send(reply_to, Ok(Nil)) actor.continue(next) }
+            Error(err) -> { process.send(reply_to, Error(err)) actor.continue(suspend_managed_authority(candidate)) }
+          }
+        }
+        _, _, _ -> { process.send(reply_to, Error("managed_authority_enable_refused")) actor.continue(state) }
+      }
+    }
+    MaintenanceTick(sequence) -> {
+      case state.managed, state.revoked {
+        Some(managed), False if managed.sequence == sequence -> {
+          case maintain_authority(state, managed) {
+            Ok(next) -> actor.continue(next)
+            Error(_) -> actor.continue(suspend_managed_authority(state))
+          }
+        }
+        _, _ -> actor.continue(state)
+      }
     }
     GetAuthorityStatus(reply_to) -> {
       process.send(reply_to, #(state.lease, state.revoked))
@@ -3087,6 +3134,8 @@ fn start_authority_worker_scoped(
       config: config,
       lease: None,
       revoked: False,
+      self: subject,
+      managed: None,
     ))
     |> actor.returning(subject)
     |> Ok
@@ -3114,7 +3163,7 @@ pub fn authority_worker_verify(
   now_us: Int,
   timeout_ms: Int,
 ) -> Result(AuthorityWitness, String) {
-  process.call(worker, timeout_ms, fn(reply_to) {
+  poll_rpc.call(worker, timeout_ms, fn(reply_to) {
     VerifyAuthority(now_us, reply_to)
   })
 }
@@ -3911,8 +3960,18 @@ fn handle_message_inner(
 ) -> actor.Next(ServiceState, ServiceMessage) {
   case msg {
     SetAuthority(lease) -> {
-      actor.continue(set_authority(state, lease))
+      case state.authority_managed {
+        True -> actor.continue(state)
+        False -> actor.continue(set_authority(state, lease))
+      }
     }
+    ManagedAuthorityRenewed(lease) -> {
+      case state.authority_revoked {
+        True -> actor.continue(state)
+        False -> actor.continue(ServiceState(..state, authority: Some(lease), authority_managed: True))
+      }
+    }
+    ManagedAuthorityLost -> handle_message_inner(ServiceState(..state, authority_managed: True), RevokeAuthority)
 
     RevokeAuthority -> {
       case state.authority_worker {
@@ -4622,4 +4681,230 @@ fn verify_managed_post_start(
   use _ <- result.try(lifecycle.verify_live_lifecycle_ownership(current))
   use _ <- result.try(verify_authority_config(config, ffi_system_now_ns()))
   Ok(Nil)
+}
+
+fn suspend_managed_authority(state: AuthorityWorkerState) -> AuthorityWorkerState {
+  case state.managed {
+    Some(managed) -> {
+      case state.revoked { False -> process.send(managed.coordinator, ManagedAuthorityLost) True -> Nil }
+      AuthorityWorkerState(..state, lease: None, revoked: True,
+        managed: Some(ManagedAuthorityMaintenance(..managed, sequence: managed.sequence + 1)))
+    }
+    None -> AuthorityWorkerState(..state, lease: None, revoked: True)
+  }
+}
+
+fn maintain_authority(state: AuthorityWorkerState, managed: ManagedAuthorityMaintenance) -> Result(AuthorityWorkerState, String) {
+  use lease <- result.try(renew_managed_authority(state.config, managed.lease_id, managed.ttl_us, managed.sequence))
+  let next = ManagedAuthorityMaintenance(..managed, sequence: managed.sequence + 1)
+  process.send(managed.coordinator, ManagedAuthorityRenewed(lease))
+  let _ = process.send_after(state.self, managed.interval_ms, MaintenanceTick(next.sequence))
+  Ok(AuthorityWorkerState(..state, lease: Some(lease), managed: Some(next)))
+}
+
+pub fn enable_managed_authority(svc: SupervisedService, ttl_us: Int, interval_ms: Int) -> Result(Nil, String) {
+  poll_rpc.call(svc.authority_worker, 5000, fn(reply) {
+    EnableManagedAuthority(svc.actor_subject, ttl_us, interval_ms, reply)
+  })
+}
+
+fn renew_managed_authority(
+  config: ServiceConfiguration,
+  lease_id: String,
+  ttl_us: Int,
+  sequence: Int,
+) -> Result(AuthorityLease, String) {
+  use _ <- result.try(case config.resource_id == "runtime:telegram-bridge" {
+    True -> Ok(Nil)
+    False -> Error("invalid authority resource_id: " <> config.resource_id)
+  })
+  use _ <- result.try(case string.trim(lease_id) != "" && sequence >= 0 {
+    True -> Ok(Nil)
+    False -> Error("invalid lease_id or negative sequence for renewal")
+  })
+  use _ <- result.try(case ttl_us >= 1_000_000 {
+    True -> Ok(Nil)
+    False -> Error("requested renewal ttl_us below minimum 1000000")
+  })
+  use initial_witness <- result.try(
+    verify_authority_config(config, ffi_system_now_ns()),
+  )
+  use initial_ttl_us <- result.try(
+    cap_ttl_to_task_deadline(ttl_us, initial_witness),
+  )
+  let coord_db_path = case config.authority_paths {
+    CanonicalProductionPaths ->
+      "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
+    IsolatedTestPaths(_, coord_db) -> coord_db
+  }
+  case coord_store.open_existing(coord_db_path) {
+    Error(err) -> Error(coord_store.error_to_string(err))
+    Ok(store) -> {
+      let outcome =
+        renew_with_open_store(
+          store,
+          config,
+          lease_id,
+          initial_ttl_us,
+          sequence,
+        )
+      case coord_store.close(store) {
+        Ok(Nil) -> outcome
+        Error(err) -> Error("renewal_store_close_failed: " <> coord_store.error_to_string(err))
+      }
+    }
+  }
+}
+
+fn cap_ttl_to_task_deadline(
+  requested_ttl_us: Int,
+  witness: AuthorityWitness,
+) -> Result(Int, String) {
+  let remaining_task_us =
+    { witness.lease_until_ns - ffi_system_now_ns() } / 1000
+  let effective_ttl_us = int.min(requested_ttl_us, remaining_task_us)
+  case effective_ttl_us >= 1_000_000 {
+    True -> Ok(effective_ttl_us)
+    False -> Error("capped renewal ttl_us below minimum 1000000")
+  }
+}
+
+fn renew_with_open_store(
+  store: coord_store.Store,
+  config: ServiceConfiguration,
+  lease_id: String,
+  initial_ttl_us: Int,
+  sequence: Int,
+) -> Result(AuthorityLease, String) {
+  use #(revision, refs) <- result.try(
+    coord_store.observe(store, fn(state, boot, now) {
+      case
+        sync.check(
+          state,
+          config.session_id,
+          config.resource_id,
+          config.coordinator_epoch,
+          boot,
+          now,
+        )
+      {
+        Error(reason) -> Error(coord_store.RefusedError(reason))
+        Ok(Nil) ->
+          case dict.get(state.sessions, config.session_id) {
+            Ok(session) -> Ok(#(session.revision, session.refs))
+            Error(_) ->
+              Error(coord_store.RefusedError(
+                "missing coordinator session: " <> config.session_id,
+              ))
+          }
+      }
+    })
+    |> result.map_error(coord_store.error_to_string),
+  )
+  let op_digest =
+    files.digest(
+      lease_id
+      <> int.to_string(sequence)
+      <> int.to_string(ffi_system_now_ns()),
+    )
+  use #(_hb_receipt, hb_duplicate) <- result.try(
+    coord_store.append(
+      store,
+      sync.Heartbeat(config.session_id, revision, refs),
+      "heartbeat:" <> op_digest,
+    )
+    |> result.map_error(coord_store.error_to_string),
+  )
+  use _ <- result.try(case hb_duplicate {
+    False -> Ok(Nil)
+    True -> Error("refused duplicate heartbeat operation")
+  })
+  use _ <- result.try(
+    coord_store.observe(store, fn(state, boot, now) {
+      case
+        sync.check(
+          state,
+          config.session_id,
+          config.resource_id,
+          config.coordinator_epoch,
+          boot,
+          now,
+        )
+      {
+        Ok(Nil) -> Ok(Nil)
+        Error(reason) -> Error(coord_store.RefusedError(reason))
+      }
+    })
+    |> result.map_error(coord_store.error_to_string),
+  )
+  use pre_renew_witness <- result.try(
+    verify_authority_config(config, ffi_system_now_ns()),
+  )
+  use renew_ttl_us <- result.try(
+    cap_ttl_to_task_deadline(initial_ttl_us, pre_renew_witness),
+  )
+  use #(renew_receipt, renew_duplicate) <- result.try(
+    coord_store.append(
+      store,
+      sync.Renew(
+        config.session_id,
+        config.resource_id,
+        config.coordinator_epoch,
+        renew_ttl_us,
+      ),
+      "renew:" <> op_digest,
+    )
+    |> result.map_error(coord_store.error_to_string),
+  )
+  use _ <- result.try(case renew_duplicate {
+    False -> Ok(Nil)
+    True -> Error("refused duplicate renew operation")
+  })
+  let sampled_utc_us = ffi_system_now_ns() / 1000
+  use remaining_boot_us <- result.try(
+    coord_store.observe(store, fn(state, boot, now) {
+      case
+        sync.check(
+          state,
+          config.session_id,
+          config.resource_id,
+          config.coordinator_epoch,
+          boot,
+          now,
+        )
+      {
+        Error(reason) -> Error(coord_store.RefusedError(reason))
+        Ok(Nil) -> {
+          let remaining = renew_receipt.expires_us - now
+          case remaining > 0 {
+            True -> Ok(remaining)
+            False ->
+              Error(coord_store.RefusedError(
+                "renewed lease already expired on boot clock",
+              ))
+          }
+        }
+      }
+    })
+    |> result.map_error(coord_store.error_to_string),
+  )
+  use final_witness <- result.try(
+    verify_authority_config(config, ffi_system_now_ns()),
+  )
+  let valid_until_us =
+    int.min(
+      final_witness.lease_until_ns / 1000,
+      sampled_utc_us + remaining_boot_us - 100_000,
+    )
+  let current_utc_us = ffi_system_now_ns() / 1000
+  case valid_until_us > current_utc_us {
+    True ->
+      Ok(AuthorityLease(
+        lease_id,
+        config.expected_task_attempt,
+        config.coordinator_epoch,
+        valid_until_us,
+      ))
+    False -> Error("renewed authority lease expired after safety margin")
+  }
 }

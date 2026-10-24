@@ -181,13 +181,20 @@ fn accept_state(state: State, observed: service.ServiceState) -> actor.Next(Stat
       lifecycle.ServiceWriterClean -> case observed.authority {
         None -> finish(state, "authority_unavailable")
         Some(lease) -> {
-          let unchanged = case state.lease { None -> True Some(prior) -> prior == lease }
+          let unchanged = case state.lease {
+            None -> True
+            Some(prior) -> prior.lease_id == lease.lease_id
+              && prior.expected_task_attempt == lease.expected_task_attempt
+              && prior.coordinator_epoch == lease.coordinator_epoch
+          }
           case unchanged {
             False -> finish(state, "authority_changed")
             True -> {
               let lease_left = { lease.valid_until_us - service.ffi_system_now_utc_us() } / 1000
-              let deadline = int.min(state.deadline_mono_ms, monotonic_time(Millisecond) + lease_left)
-              poll(State(..state, lease: Some(lease), deadline_mono_ms: deadline))
+              case lease_left > 0 {
+                False -> finish(state, "lifetime_expired")
+                True -> poll(State(..state, lease: Some(lease)))
+              }
             }
           }
         }
