@@ -17,6 +17,7 @@ import uos_swarm/openrouter_worker as model
 import cepaf_gleam/harness/doctor_projection
 import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
+import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
@@ -2311,6 +2312,7 @@ fn execute_guarded_dispatch(
                             ]) |> json.to_string
                           }
                         }
+                        guard.PreservedDirective("/tool_help", []) -> tool_command.help()
                         guard.PreservedDirective(name, _) -> {
                           let reference = case commands.parse(txt) {
                             Ok(invocation) -> commands.reference_reply(invocation)

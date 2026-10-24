@@ -1233,7 +1233,7 @@ fn exercise_conversation_dispatch(first_command: String, first_expected: String,
   // Queue a /doctor command update into the mock fixture
   let update_json =
     "{\"update_id\": 8001, \"message\": {\"message_id\": 501, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/doctor\", \"date\": 1700000000}}"
-  fixture_set_updates(fixture_pid, [string.replace(update_json, "/doctor", first_command)])
+  fixture_set_updates(fixture_pid, [string.replace(update_json, json.to_string(json.string("/doctor")), json.to_string(json.string(first_command)))])
 
   // 1. PollCycle polls update and stores input_key + inbox row
   let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_020_000)
@@ -1286,7 +1286,7 @@ fn exercise_conversation_dispatch(first_command: String, first_expected: String,
   // 4. Test /saplan automatic dispatch
   let saplan_update =
     "{\"update_id\": 8002, \"message\": {\"message_id\": 778, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/saplan\", \"date\": 1700000002}}"
-  fixture_set_updates(fixture_pid, [string.replace(saplan_update, "/saplan", second_command)])
+  fixture_set_updates(fixture_pid, [string.replace(saplan_update, json.to_string(json.string("/saplan")), json.to_string(json.string(second_command)))])
 
   let poll_res2 = runner_poll_cycle(ipc_dir, 1_700_000_022_000)
   echo #(mode, poll_res2)
@@ -2434,4 +2434,14 @@ pub fn e2e_memory_invalid_clear_preserves_exchange_test() {
 
 pub fn e2e_memory_commands_work_with_model_disabled_test() {
   exercise_automatic_command_dispatch("/memory","0 of 8","/messages","No stored conversation history")
+}
+
+pub fn e2e_tool_alias_and_task_dispatch_test() {
+  exercise_automatic_command_dispatch("/tool query_task {\"task_id\":\"lease-e2e-01\"}", "\"task_id\":\"lease-e2e-01\"", "/action\tquery_saplan\t{}", "uos.sa_plan.observer.v1")
+}
+pub fn e2e_tool_help_and_missing_task_test() {
+  exercise_automatic_command_dispatch("/tool", "query_task", "/action query_task {\"task_id\":\"missing-task\"}", "task_not_found")
+}
+pub fn e2e_tool_scope_override_and_mutation_refused_test() {
+  exercise_automatic_command_dispatch("/tool query_task {\"task_id\":\"lease-e2e-01\",\"plan\":\"foreign\"}", "denied_mutation", "/action rotate_keys {}", "denied_mutation")
 }

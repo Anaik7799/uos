@@ -3,6 +3,7 @@
 
 import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
+import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/files
 import gleam/dict
 import gleam/dynamic/decode
@@ -131,14 +132,12 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
             Error(_) -> DeniedMutation("/task", "Usage: /task <task_id>; reads only the configured plan.")
           }
           "/tool" -> {
-            let #(tool, tail) = case string.split_once(args, " ") {
-              Ok(#(t, a)) -> #(t, string.trim(a))
-              Error(_) -> #(args, "")
-            }
-            case tool {
-              "query_doctor" | "query_saplan" -> read_directive(tool, tail)
-              "" -> UnknownDirective("/tool")
-              _ -> DeniedMutation(tool, "Tool has no admitted Telegram adapter.")
+            case tool_command.parse(args) {
+              Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
+              Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
+              Ok(tool_command.Plan) -> DirectReadTool("query_saplan")
+              Ok(tool_command.Task(task_id)) -> PreservedDirective("/task", [task_id])
+              Error(reason) -> DeniedMutation("/tool", reason)
             }
           }
           _ -> case invocation.definition.kind {

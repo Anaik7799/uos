@@ -1,3 +1,4 @@
+import gleam/list
 import cepaf_gleam/harness/telegram_ingress_guard as g
 import gleam/json
 import gleam/string
@@ -222,4 +223,31 @@ pub fn task_read_is_scoped_and_validated_at_ingress_test() {
   let assert g.DeniedMutation("/task", _) = g.classify_directive("/task other task")
   let assert g.DeniedMutation("/task", _) = g.classify_directive("/task x;DROP")
   let assert g.DeniedMutation("/task", _) = g.classify_directive("/task plan:task")
+}
+
+pub fn tool_action_alias_and_scoped_task_test() {
+  g.classify_directive("/action\tquery_doctor\t{}")
+    |> should.equal(g.DirectReadTool("query_doctor"))
+  g.classify_directive("/tool query_saplan\n{}")
+    |> should.equal(g.DirectReadTool("query_saplan"))
+  g.classify_directive("/action query_task {\"task_id\":\"LEASE_1\"}")
+    |> should.equal(g.PreservedDirective("/task", ["LEASE_1"]))
+  g.classify_directive("/tool")
+    |> should.equal(g.PreservedDirective("/tool_help", []))
+  g.classify_directive("/action help")
+    |> should.equal(g.PreservedDirective("/tool_help", []))
+}
+pub fn tool_foreign_scope_and_mutations_refused_test() {
+  let inputs = [
+    "/tool query_task {\"task_id\":\"LEASE_1\",\"plan\":\"foreign\"}",
+    "/action query_task {\"task_id\":\"LEASE_1\",\"authority\":\"admin\"}",
+    "/tool rotate_keys {}",
+    "/action invoke_zigvm {}",
+  ]
+  list.each(inputs, fn(input) {
+    case g.classify_directive(input) {
+      g.DeniedMutation(..) -> Nil
+      _ -> panic as "unsafe tool accepted"
+    }
+  })
 }
