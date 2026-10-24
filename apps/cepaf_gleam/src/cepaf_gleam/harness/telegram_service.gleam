@@ -6126,8 +6126,11 @@ fn load_service_proposal(state:ServiceState,id:String) -> Result(proposal.Propos
   use #(gen,rows) <- result.try(svc_read_keys(state,[store.proposal_key(id)])
     |> result.map_error(fn(err){action_store_error(state,err)}))
   use row <- result.try(case rows {
-    [row] if gen==state.expected_generation && row.exists -> Ok(row)
-    _ -> Error(action_hold(state,"action_proposal_missing_or_stale"))
+    [row] if gen==state.expected_generation -> case row.exists {
+      True -> Ok(row)
+      False -> Error(action_hold(state,"action_proposal_missing"))
+    }
+    _ -> Error(action_hold(state,"action_generation_changed"))
   })
   use raw <- result.try(codec.decode_row_value(row)
     |> result.map_error(fn(_){action_hold(state,"action_proposal_invalid")}))
@@ -6249,9 +6252,12 @@ fn execute_configured_approval(state:ServiceState,p:action_profile.Profile,
           reply_without_reservation(next,query,version,sha,message)
         }
         Error(ServiceError(_,reason)) if reason=="action_partial_receipts_refused"
-          || reason=="action_receipt_replacement_refused" || reason=="invalid_action_proposal" ->
+          || reason=="action_receipt_replacement_refused" || reason=="invalid_action_proposal"
+          || reason=="action_proposal_missing" || reason=="action_proposal_input_refused"
+          || reason=="action_proposal_identity_refused" || reason=="action_target_refused"
+          || reason=="action_proposal_window_refused" ->
           reply_without_reservation(state,query,version,sha,
-            "Approval receipt or proposal is invalid, expired, or conflicts with an existing receipt. No action was executed. For an expired proposal, send a new /tool request; the original intent is never renewed.")
+            "Approval receipt or proposal is missing, invalid, expired, or conflicts with the original request. No action was executed. Create a valid proposal before submitting receipts. For an expired proposal, send a new /tool request; the original intent is never renewed.")
         Error(err) -> Error(err)
       }
     }

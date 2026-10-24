@@ -750,34 +750,48 @@ fn proposal_flow_fixture(initial:service.ServiceState,prefix:store.CommitPrefixR
    profile.digest(p),profile.context(p),root)
  let cfg=service.ServiceConfiguration(..cfg,http_config:http.default_configuration(url,"TEST_ONLY"),
    allowed_pairs:[#(100,200),#(100,201)])
+ let bad_text="/tool cancel_job_lease foreign-plan/job1 -- invalid target"
+ let bad_verdict=guard.AcceptedEnvelope(11,12,100,200,files.digest(bad_text),bad_text,
+   guard.classify_directive(bad_text),inbox.bot_id,None)
+ let assert Ok(#(wm,wv,wh))=store.read_watermark(cfg.storage_config)
+ let assert Ok(bad_prefix)=store.commit_prefix(cfg.storage_config,inbox.bot_id,"bad-target-prefix",
+   prefix.receipt.generation,wm,wv,wh,[bad_verdict],now)
+ let assert [bad_inbox]=bad_prefix.admitted_records
  let state=service.set_authority(service.ServiceState(..initial,config:cfg,
-   expected_generation:prefix.receipt.generation),
+   expected_generation:bad_prefix.receipt.generation),
    service.AuthorityLease("service-test",1,1,bridge_expiry / 1000))
- let plain=service.ServiceState(..state,config:service.ServiceConfiguration(..cfg,actions:Some(service.RecoveryActions(p))))
+ let #(after_bad,bad_reply)=approval_query(state,"/approval propose "<>bad_inbox.request_id,18,200,now)
+ string.contains(bad_reply,"invalid") |> should.be_true
+ row(cfg.storage_config,store.proposal_key(bad_inbox.request_id)).exists |> should.be_false
+ row(cfg.storage_config,store.cancellation_key(bad_inbox.request_id)).exists |> should.be_false
+ let plain=service.ServiceState(..after_bad,config:service.ServiceConfiguration(..cfg,actions:Some(service.RecoveryActions(p))))
  let #(plain_after,unconfigured)=approval_query(plain,"/approval propose "<>inbox.request_id,19,200,now)
  string.contains(unconfigured,"not configured") |> should.be_true
  let configured=service.ServiceState(..plain_after,config:cfg)
  let #(s1,denied)=approval_query(configured,"/approval propose "<>inbox.request_id,20,201,now)
  denied |> should.equal("No pending controlled action request found for this chat and user.")
  row(cfg.storage_config,store.proposal_key(inbox.request_id)).exists |> should.be_false
- let #(s2,challenge)=approval_query(s1,"/approval propose "<>inbox.request_id,21,200,now)
+ let #(before_proposal,missing)=approval_query(s1,"/approval submit "<>inbox.request_id<>" codex invalid",21,200,now)
+ string.contains(missing,"missing") |> should.be_true
+ row(cfg.storage_config,store.proposal_key(inbox.request_id)).exists |> should.be_false
+ let #(s2,challenge)=approval_query(before_proposal,"/approval propose "<>inbox.request_id,22,200,now)
  let assert Ok(raw)=codec.decode_row_value(row(cfg.storage_config,store.proposal_key(inbox.request_id)))
  let assert Ok(value)=proposal.decode(raw)
  string.contains(challenge,action.digest(proposal.intent(value))) |> should.be_true
  string.contains(challenge,action.canonical_json(proposal.intent(value))) |> should.be_true
- let #(s3,rejected)=approval_query(s2,"/approval submit "<>inbox.request_id<>" codex invalid",22,200,now)
+ let #(s3,rejected)=approval_query(s2,"/approval submit "<>inbox.request_id<>" codex invalid",23,200,now)
  string.contains(rejected,"invalid") |> should.be_true
  row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
  let assert Ok(observed)=clock.observe()
  let stamp=observed.sample.observed.utc_us / 1000
  let r1=proposal_receipt(p,value,approval.Codex,stamp)
- let #(s4,_)=approval_query(s3,"/approval submit "<>inbox.request_id<>" codex "<>r1.token,23,200,now)
+ let #(s4,_)=approval_query(s3,"/approval submit "<>inbox.request_id<>" codex "<>r1.token,24,200,now)
  row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
  let r2=proposal_receipt(p,value,approval.Agy,stamp)
- let #(s5,_)=approval_query(s4,"/approval submit "<>inbox.request_id<>" agy "<>r2.token,24,200,now)
+ let #(s5,_)=approval_query(s4,"/approval submit "<>inbox.request_id<>" agy "<>r2.token,25,200,now)
  row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
  let r3=proposal_receipt(p,value,approval.Operator,stamp)
- let #(s6,_)=approval_query(s5,"/approval submit "<>inbox.request_id<>" operator "<>r3.token,25,200,now)
+ let #(s6,_)=approval_query(s5,"/approval submit "<>inbox.request_id<>" operator "<>r3.token,26,200,now)
  let assert Ok(#(s7,_))=service.dispatch_cycle(s6,now*1000)
  let assert Ok(#(_,service.DispatchCycleResult(0,0)))=service.dispatch_cycle(s7,now*1000)
  let assert Ok(raw)=codec.decode_row_value(row(cfg.storage_config,codec.inbox_key(inbox.request_id)))
@@ -789,6 +803,6 @@ fn proposal_flow_fixture(initial:service.ServiceState,prefix:store.CommitPrefixR
  string.contains(chunk.payload,"revoked") |> should.be_true
  let requests=fixture_requests(pid)
  let _=fixture_stop(pid)
- list.length(requests) |> should.equal(8)
+ list.length(requests) |> should.equal(10)
  "approval_commands_to_quorum_native_and_http_once"
 }

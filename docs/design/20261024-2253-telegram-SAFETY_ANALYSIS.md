@@ -15,7 +15,7 @@ This development flow uses an already configured trusted action profile and sign
 5. Operator plus two sovereign approvals are required. Partial receipts are data only. The next dispatch verifies full quorum, current task/coordinator/profile/bridge/target fences, persists cancellation history, invokes the native guarded operation and delivers the precise result.
 6. Expired proposals are never renewed. Send a new /tool request if still needed. Invalid, foreign-user and unconfigured submissions receive truthful refusal; those input errors do not halt the service.
 
-The command revokes the exact native job lease; it does not claim worker-process termination. The current staged test delivers eight real local HTTP replies: recovery-only refusal, foreign-user refusal, challenge, invalid-receipt refusal, three receipt acknowledgements and one action result. Repeated dispatch sends no extra result. This is not a live Telegram account test.
+The command revokes the exact native job lease; it does not claim worker-process termination. The current staged test delivers ten real local HTTP replies: invalid-target refusal, recovery-only refusal, foreign-user refusal, missing-proposal refusal, challenge, invalid-receipt refusal, three receipt acknowledgements and one action result. Repeated dispatch sends no extra result. This is not a live Telegram account test.
 
 ## STPA and raw FMEA
 
@@ -46,6 +46,10 @@ Gleam owns proposal codec, partial cryptographic verification, current service p
 126focused Gleam checks pass. Native full suite passes12groups with13actual service scenarios, including the multi-message flow; final restored run receipt is bound in the checkpoint. Two fault injections are killed, source restored and rebuilt. Native worker bytes are reused from the accepted exact-target candidate. Read-after-reopen tests invoke fresh native processes on the same SQLite store; full managed service replacement across expired profiles remains pending.
 
 Preserved failures: an early whitespace test used an invalid delimiter and was corrected to the existing accepted grammar; the actual storage/execution whitespace mismatch was fixed by shared typed cancellation parsing with an added positive test. The longer multi-message fixture exceeded its original6.5second child bound; only that test child now has20seconds, with the same termination/reaping path. All other children remain6.5seconds and production deadlines are unchanged. An optional-argument OCaml compile error and an ingress type-name compile error were corrected; no failing evidence was discarded. A test temporarily removed all action configuration, allowing the pre-existing ordinary unconfigured-tool reply to consume the original request before the approval query; corrected the fixture to trusted recovery-only mode so the original remains pending while new approvals are refused.
+
+## Independent review correction
+
+AGY cbf521f0 held the initial candidate because submit-before-propose and invalid target/input could hold the service. Missing proposal is now distinct from generation mismatch. Only an explicit set of input refusal reasons becomes a truthful query reply; generation, store, clock, profile and authority failures still propagate. The staged flow verifies both invalid target and submit-before-propose, then completes valid independent approvals and one native result. Prior HOLD and all failed receipts remain preserved.
 
 ## Remaining obligations
 
