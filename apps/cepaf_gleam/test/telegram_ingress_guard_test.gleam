@@ -254,11 +254,33 @@ pub fn tool_foreign_scope_and_mutations_refused_test() {
 
 pub fn system_status_fixed_scope_test() {
   g.classify_directive("/status") |> should.equal(g.DirectReadTool("query_system_health"))
+  g.classify_directive("/health") |> should.equal(g.DirectReadTool("query_system_health"))
+  g.classify_directive("/health {}") |> should.equal(g.DirectReadTool("query_system_health"))
   g.classify_directive("/action query_system_health {}") |> should.equal(g.DirectReadTool("query_system_health"))
   case g.classify_directive("/status {\"url\":\"http://evil/\"}") {
     g.DeniedMutation(..) -> Nil
     _ -> panic as "status scope override accepted"
   }
+}
+
+pub fn health_command_fixed_scope_and_refusal_test() {
+  g.classify_directive("/health")
+  |> should.equal(g.DirectReadTool("query_system_health"))
+  g.classify_directive("/health { \n\t }")
+  |> should.equal(g.DirectReadTool("query_system_health"))
+  list.each(
+    [
+      "/health {\"url\":\"http://evil/\"}",
+      "/health {\"host\":\"evil\"}",
+      "/health check",
+    ],
+    fn(input) {
+      let assert g.DeniedMutation("query_system_health", reason) =
+        g.classify_directive(input)
+      string.contains(reason, "Read arguments must be absent or an empty JSON object.")
+      |> should.be_true
+    },
+  )
 }
 
 pub fn kernel_version_fixed_scope_test() {

@@ -129,7 +129,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
           "/approval" -> approval_directive(args)
           "/doctor" -> read_directive("query_doctor", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
-          "/status" -> read_directive("query_system_health", args)
+          "/status" | "/health" -> read_directive("query_system_health", args)
           "/search" -> case knowledge.validate_query(args) {
             Ok(query) -> PreservedDirective("/search",[query])
             Error(_) -> DeniedMutation(name,"Use a literal query of at most 128 bytes.")

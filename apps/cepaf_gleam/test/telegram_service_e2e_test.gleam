@@ -2496,6 +2496,14 @@ pub fn e2e_status_parameters_refused_test() {
   exercise_automatic_command_dispatch("/status {\"url\":\"http://evil/\"}", "denied_mutation",
     "/action query_system_health {\"host\":\"evil\"}", "denied_mutation")
 }
+pub fn e2e_health_and_status_operational_status_dispatch_test() {
+  exercise_automatic_command_dispatch("/health", "\"global_healthy\":null",
+    "/status", "uos.telegram.operational-status.v1")
+}
+pub fn e2e_health_parameters_refused_test() {
+  exercise_automatic_command_dispatch("/health {\"url\":\"http://evil/\"}", "denied_mutation",
+    "/health {\"host\":\"evil\"}", "denied_mutation")
+}
 
 pub fn e2e_kernel_version_alias_and_tool_test() {
   exercise_automatic_command_dispatch("/zigvm version", "\"version\":\"0.1.0\"",
