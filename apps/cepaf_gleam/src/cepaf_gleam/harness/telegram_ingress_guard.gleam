@@ -2,6 +2,7 @@
 //// authentication. Transport must bind the configured bot to its real identity.
 
 import cepaf_gleam/harness/telegram_commands as commands
+import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/files
 import gleam/dict
 import gleam/dynamic/decode
@@ -125,6 +126,10 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         case name {
           "/doctor" -> read_directive("query_doctor", args)
           "/plan" -> read_directive("query_saplan", args)
+          "/task" -> case task_command.parse_task_id(args) {
+            Ok(task_id) -> PreservedDirective("/task", [task_id])
+            Error(_) -> DeniedMutation("/task", "Usage: /task <task_id>; reads only the configured plan.")
+          }
           "/tool" -> {
             let #(tool, tail) = case string.split_once(args, " ") {
               Ok(#(t, a)) -> #(t, string.trim(a))

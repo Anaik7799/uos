@@ -10,6 +10,8 @@ import telegram_test_runner_binding as test_binding
 //// 5. Crash recovery & cgroup quiescence: Unquiesced in-flight processing task triggers
 ////    fail-closed in-memory ServiceWriterHold; cleared by valid UnitCleanupReceipt.
 
+import cepaf_gleam/harness/telegram_task_command as task_command
+import cepaf_gleam/harness/observer_policy as task_observer
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import cepaf_gleam/harness/telegram_http_client as http_client
@@ -2273,4 +2275,36 @@ pub fn e2e_runtime_entry_validates_before_start_runs_and_releases_test() {
 
 pub fn e2e_runtime_entry_recovers_runs_and_releases_test() {
   exercise_managed_successor(True, True)
+}
+
+pub fn e2e_task_detail_and_missing_dispatch_test() {
+  exercise_automatic_command_dispatch("/task lease-e2e-01", "\"task_id\":\"lease-e2e-01\"", "/task missing-task", "task_not_found")
+}
+
+pub fn e2e_task_invalid_and_real_plan_dispatch_test() {
+  exercise_automatic_command_dispatch("/task x;DROP", "denied_mutation", "/tasks", "uos.sa_plan.observer.v1")
+}
+
+pub fn e2e_task_observation_changes_and_recovers_test() {
+  use _storage_config, _db_path, sa_plan_db, _coord_db, _dir <- with_recovery_store()
+  let req = task_observer.ObserveRequest(
+    guardian_exe: service.canonical_guardian_exe,
+    guardian_sha256: service.canonical_guardian_sha256,
+    observer_exe: service.canonical_observer_exe,
+    observer_sha256: service.canonical_observer_sha256,
+    db_path: sa_plan_db, plan_id: "plan-e2e", task_id: task_observer.NoTask,
+    deadline_ms: 2500, max_bytes: 262_144,
+  )
+  let assert Ok(_) = seed_test_sa_plan_task(sa_plan_db, "plan-e2e", "DETAIL_TASK", "fixture-worker", 1, 4_000_000_000_000_000_000)
+  let assert Ok(first) = task_command.observe_task(req, "DETAIL_TASK")
+  string.contains(first, "\"attempt\":1") |> should.equal(True)
+  let assert Ok(_) = seed_test_sa_plan_task(sa_plan_db, "plan-e2e", "DETAIL_TASK", "fixture-worker", 2, 4_000_000_000_000_000_000)
+  let assert Ok(second) = task_command.observe_task(req, "DETAIL_TASK")
+  string.contains(second, "\"attempt\":2") |> should.equal(True)
+  assert first != second
+  task_command.observe_task(task_observer.ObserveRequest(..req, db_path: sa_plan_db <> ".missing"), "DETAIL_TASK")
+    |> should.equal(Error("task_observer_failed"))
+  let assert Ok(recovered) = task_command.observe_task(req, "DETAIL_TASK")
+  recovered |> should.equal(second)
+  task_command.observe_task(req, "ABSENT") |> should.equal(Error("task_not_found"))
 }

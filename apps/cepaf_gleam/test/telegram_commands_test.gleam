@@ -100,7 +100,7 @@ pub fn conservative_operator_and_model_kind_classification_test() {
     "/andon", "/approval", "/resuscitate", "/chaos", "/repro", "/merge",
     "/bisect", "/escalate", "/rotate-keys", "/migrate", "/rewind", "/lockbox",
     "/eco-schedule", "/sidecar", "/pair-voice", "/commitments", "/gameday",
-    "/task", "/agy", "/tool", "/action", "/verify", "/verification", "/zigvm",
+    "/agy", "/tool", "/action", "/verify", "/verification", "/zigvm",
   ]
 
   list.each(required_controlled_actions, fn(literal) {

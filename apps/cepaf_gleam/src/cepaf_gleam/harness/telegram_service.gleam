@@ -12,6 +12,7 @@
 
 import cepaf_gleam/harness/doctor_projection
 import cepaf_gleam/harness/telegram_commands as commands
+import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
@@ -2254,20 +2255,7 @@ fn execute_guarded_dispatch(
                           doctor_projection.project()
                           |> doctor_projection.to_json()
                         guard.DirectReadTool("query_saplan") -> {
-                          let req =
-                            obs_policy.ObserveRequest(
-                              guardian_exe: state.config.guardian_exe,
-                              guardian_sha256: state.config.guardian_sha256,
-                              observer_exe: state.config.observer_exe,
-                              observer_sha256: state.config.observer_sha256,
-                              db_path: resolve_sa_plan_db(
-                                state.config.authority_paths,
-                              ),
-                              plan_id: state.config.plan_id,
-                              task_id: obs_policy.NoTask,
-                              deadline_ms: 5000,
-                              max_bytes: 262_144,
-                            )
+                          let req = command_observer_request(state.config)
                           case obs_policy.observe(req) {
                             Ok(obs) ->
                               case bit_array.to_string(obs.payload) {
@@ -2289,6 +2277,15 @@ fn execute_guarded_dispatch(
                                 ),
                               ])
                               |> json.to_string
+                          }
+                        }
+                        guard.PreservedDirective("/task", [task_id]) -> {
+                          case task_command.observe_task(command_observer_request(state.config), task_id) {
+                            Ok(reply) -> reply
+                            Error(reason) -> json.object([
+                              #("status", json.string("observation_failed")),
+                              #("error", json.string(reason)),
+                            ]) |> json.to_string
                           }
                         }
                         guard.PreservedDirective(name, _) -> {
@@ -5014,4 +5011,18 @@ pub fn stop_managed_service(svc: SupervisedService) -> Result(Nil, String) {
   use _ <- result.try(closed)
   use #(_, replay) <- result.try(released)
   case replay { False -> Ok(Nil) True -> Error("managed_stop_release_replayed") }
+}
+
+fn command_observer_request(config: ServiceConfiguration) -> obs_policy.ObserveRequest {
+  obs_policy.ObserveRequest(
+    guardian_exe: config.guardian_exe,
+    guardian_sha256: config.guardian_sha256,
+    observer_exe: config.observer_exe,
+    observer_sha256: config.observer_sha256,
+    db_path: resolve_sa_plan_db(config.authority_paths),
+    plan_id: config.plan_id,
+    task_id: obs_policy.NoTask,
+    deadline_ms: 5000,
+    max_bytes: 262_144,
+  )
 }

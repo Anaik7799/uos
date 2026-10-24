@@ -24,6 +24,7 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_loop',
             'cepaf_gleam@harness@telegram_runtime',
             'cepaf_gleam@harness@telegram_commands',
+            'cepaf_gleam@harness@telegram_task_command',
             'cepaf_gleam@harness@telegram_ingress_guard',
             'cepaf_gleam@harness@telegram_store_codec',
             'cepaf_gleam@harness@telegram_store',

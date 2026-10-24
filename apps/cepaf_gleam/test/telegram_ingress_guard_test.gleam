@@ -215,3 +215,11 @@ pub fn rejection_fingerprint_test() {
 fn guard_hash(hash: String) {
   g.valid_digest(hash) |> should.be_true
 }
+
+pub fn task_read_is_scoped_and_validated_at_ingress_test() {
+  g.classify_directive("/task lease-e2e-01") |> should.equal(g.PreservedDirective("/task", ["lease-e2e-01"]))
+  let assert g.DeniedMutation("/task", _) = g.classify_directive("/task")
+  let assert g.DeniedMutation("/task", _) = g.classify_directive("/task other task")
+  let assert g.DeniedMutation("/task", _) = g.classify_directive("/task x;DROP")
+  let assert g.DeniedMutation("/task", _) = g.classify_directive("/task plan:task")
+}

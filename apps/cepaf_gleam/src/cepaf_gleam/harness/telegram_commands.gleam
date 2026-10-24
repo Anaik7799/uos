@@ -214,7 +214,7 @@ pub fn catalog() -> List(Definition) {
     ),
     Definition(literal: "/health", canonical: "/health", kind: ReadObservation),
     Definition(literal: "/tasks", canonical: "/plan", kind: ReadObservation),
-    Definition(literal: "/task", canonical: "/task", kind: ControlledAction),
+    Definition(literal: "/task", canonical: "/task", kind: ReadObservation),
     Definition(literal: "/search", canonical: "/search", kind: ReadObservation),
     Definition(literal: "/immune", canonical: "/immune", kind: ReadObservation),
     Definition(literal: "/fmea", canonical: "/fmea", kind: ConversationModel),
