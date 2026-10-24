@@ -2484,3 +2484,12 @@ pub fn e2e_knowledge_tool_and_scope_refusal_test() {
     "observed_document_corpus",
     "/action query_knowledge {\"root\":\"/etc\"}", "denied_mutation")
 }
+
+pub fn e2e_unified_search_task_and_document_test() {
+  exercise_automatic_command_dispatch("/search lease-e2e-01","\"task_id\":\"lease-e2e-01\"",
+    "/search 20260729-fractal-atlas","docs/zk/20260729-fractal-atlas.md")
+}
+pub fn e2e_search_tool_and_scope_refusal_test() {
+  exercise_automatic_command_dispatch("/tool query_search {\"query\":\"definitely-no-match-1749\"}","\"matched_total\":0",
+    "/action query_search {\"query\":\"uos\",\"plan\":\"foreign\"}","denied_mutation")
+}

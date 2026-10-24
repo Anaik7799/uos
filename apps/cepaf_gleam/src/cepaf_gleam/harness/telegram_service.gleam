@@ -19,6 +19,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_search_report as search_report
 import cepaf_gleam/harness/telegram_knowledge_reader as knowledge_reader
 import cepaf_gleam/harness/telegram_coordination_reader as coordination_reader
 import cepaf_gleam/harness/telegram_host_observation as host_observation
@@ -2280,6 +2281,7 @@ fn execute_guarded_dispatch(
                     )) -> {
                       let payload = case dir {
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.PreservedDirective("/search",[query]) -> search_reply(state,query)
                         guard.PreservedDirective("/knowledge",[view,query]) -> knowledge_reply(state,view,query)
                         guard.DirectReadTool("query_peers") -> coordination_reply(state, "peers")
                         guard.DirectReadTool("query_board") -> coordination_reply(state, "board")
@@ -5368,4 +5370,13 @@ fn knowledge_reply(state: ServiceState, view: String, query: String) -> String {
       #("runtime_admission",json.string("NOT_GRANTED")),
     ]) |> json.to_string
   }
+}
+
+fn search_reply(state: ServiceState, query: String) -> String {
+  let tasks=current_read(state,6000,fn(){
+    task_command.search_tasks(command_observer_request(state.config),query)
+  }) |> result.try(fn(r){r})
+  let documents=current_read(state,5000,fn(){knowledge_reader.observe("all",query)})
+    |> result.try(fn(r){r})
+  search_report.combine(tasks,documents)
 }

@@ -32,6 +32,7 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_host_observation',
             telegram_knowledge_files,
             'cepaf_gleam@harness@telegram_knowledge_report',
+      'cepaf_gleam@harness@telegram_search_report',
             'cepaf_gleam@harness@telegram_knowledge_reader',
             telegram_status_probe, telegram_coordination_binding,
             'cepaf_gleam@harness@telegram_coordination_report',
