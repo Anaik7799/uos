@@ -2445,3 +2445,12 @@ pub fn e2e_tool_help_and_missing_task_test() {
 pub fn e2e_tool_scope_override_and_mutation_refused_test() {
   exercise_automatic_command_dispatch("/tool query_task {\"task_id\":\"lease-e2e-01\",\"plan\":\"foreign\"}", "denied_mutation", "/action rotate_keys {}", "denied_mutation")
 }
+
+pub fn e2e_status_and_system_health_tool_dispatch_test() {
+  exercise_automatic_command_dispatch("/status", "uos.telegram.operational-status.v1",
+    "/tool query_system_health {}", "\"global_healthy\":null")
+}
+pub fn e2e_status_parameters_refused_test() {
+  exercise_automatic_command_dispatch("/status {\"url\":\"http://evil/\"}", "denied_mutation",
+    "/action query_system_health {\"host\":\"evil\"}", "denied_mutation")
+}

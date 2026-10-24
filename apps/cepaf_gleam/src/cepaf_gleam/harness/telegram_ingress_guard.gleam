@@ -126,6 +126,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         let args = invocation.args
         case name {
           "/doctor" -> read_directive("query_doctor", args)
+          "/status" -> read_directive("query_system_health", args)
           "/plan" -> read_directive("query_saplan", args)
           "/task" -> case task_command.parse_task_id(args) {
             Ok(task_id) -> PreservedDirective("/task", [task_id])
@@ -135,6 +136,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
             case tool_command.parse(args) {
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
+              Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
               Ok(tool_command.Plan) -> DirectReadTool("query_saplan")
               Ok(tool_command.Task(task_id)) -> PreservedDirective("/task", [task_id])
               Error(reason) -> DeniedMutation("/tool", reason)

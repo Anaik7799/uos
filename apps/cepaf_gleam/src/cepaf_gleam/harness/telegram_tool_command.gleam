@@ -11,6 +11,7 @@ import gleam/string
 pub type Selection {
   Help
   Doctor
+  SystemHealth
   Plan
   Task(String)
 }
@@ -18,6 +19,7 @@ pub type Selection {
 pub fn help() -> String {
   "Telegram tools (/action is an alias for /tool):\n"
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
+  <> "/tool query_system_health {} — bounded service reachability and local Telegram state.\n"
   <> "/tool query_saplan {} — current configured plan snapshot.\n"
   <> "/tool query_task {\"task_id\":\"TASK_ID\"} — task detail in the configured plan only.\n"
   <> "Arguments cannot change the plan, database, path or authority. Other tools are unavailable."
@@ -83,6 +85,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
   case name {
     "" | "help" -> empty_arguments(tail, Help)
     "query_doctor" -> empty_arguments(tail, Doctor)
+    "query_system_health" -> empty_arguments(tail, SystemHealth)
     "query_saplan" -> empty_arguments(tail, Plan)
     "query_task" -> task_arguments(tail)
     _ -> Error("Tool unavailable. Use /tool help for supported read tools.")

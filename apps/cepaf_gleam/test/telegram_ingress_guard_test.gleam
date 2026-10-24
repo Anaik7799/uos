@@ -251,3 +251,12 @@ pub fn tool_foreign_scope_and_mutations_refused_test() {
     }
   })
 }
+
+pub fn system_status_fixed_scope_test() {
+  g.classify_directive("/status") |> should.equal(g.DirectReadTool("query_system_health"))
+  g.classify_directive("/action query_system_health {}") |> should.equal(g.DirectReadTool("query_system_health"))
+  case g.classify_directive("/status {\"url\":\"http://evil/\"}") {
+    g.DeniedMutation(..) -> Nil
+    _ -> panic as "status scope override accepted"
+  }
+}

@@ -18,6 +18,7 @@ import cepaf_gleam/harness/doctor_projection
 import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
+import cepaf_gleam/harness/telegram_operational_status as operational_status
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
@@ -2275,6 +2276,24 @@ fn execute_guarded_dispatch(
                       ),
                     )) -> {
                       let payload = case dir {
+                        guard.DirectReadTool("query_system_health") -> {
+                          let local = operational_status.LocalState(
+                            observed_at_us: ffi_system_now_utc_us(),
+                            service_epoch: state.config.service_epoch,
+                            store_generation: gen1,
+                            next_update_offset: state.watermark.last_committed_offset,
+                            pending_recovery: option.is_some(state.pending_operation),
+                            conversation_configured: state.config.conversation != ConversationDisabled,
+                          )
+                          case operational_status.observe(local, operational_status.live_io(),
+                            fn() { conversation_authorize(state) }, 6000) {
+                            Ok(reply) -> reply
+                            Error(_) -> json.object([
+                              #("status", json.string("observation_failed")),
+                              #("error", json.string("Operational status could not be observed within current authority and budget.")),
+                            ]) |> json.to_string
+                          }
+                        }
                         guard.DirectReadTool("query_doctor") ->
                           doctor_projection.project()
                           |> doctor_projection.to_json()
