@@ -14,6 +14,7 @@
 ////   `UnitCleanupReceipt`, the service enters in-memory `ServiceWriterHold`,
 ////   strictly barring all disk mutations until explicit recovery.
 
+import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
 import gleam/bit_array
 import gleam/dynamic/decode
@@ -23,7 +24,6 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
-import simplifile
 
 pub opaque type UnitCleanupReceipt {
   UnitCleanupReceipt(
@@ -188,13 +188,19 @@ pub fn read_and_verify_prelaunch_control_bounded(
   expected_epoch: Int,
   max_age_us: Option(Int),
 ) -> Result(ControlRegistration, String) {
+  use _ <- result.try(case string.starts_with(path, "/") {
+    True -> Ok(Nil)
+    False -> Error("absolute_control_registration_path_required")
+  })
   use content <- result.try(
-    simplifile.read(path)
-    |> result.map_error(fn(err) {
-      "read_control_registration_failed: " <> string.inspect(err)
-    }),
+    files.read("/", string.drop_start(path, 1))
+    |> result.map_error(fn(err) { "read_control_registration_failed: " <> err }),
   )
   use reg <- result.try(decode_control_registration(content))
+  use _ <- result.try(case content == encode_control_registration(reg) {
+    True -> Ok(Nil)
+    False -> Error("noncanonical_control_registration")
+  })
   use _ <- result.try(validate_test_unit_name(reg.unit_name))
   use _ <- result.try(validate_test_slice_name(reg.slice_name))
   use _ <- result.try(case expected_epoch > 0 && reg.service_epoch == expected_epoch {

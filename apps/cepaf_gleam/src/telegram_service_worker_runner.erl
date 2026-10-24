@@ -142,7 +142,15 @@ handle_standby_command(Unknown, IpcDir, Config) ->
 start_and_run_actor(Config, IpcDir) ->
     SvcConfig = build_service_configuration(Config),
     ReceiptOpt = build_receipt_opt(Config),
-    StartRes = case maps:get(<<"supervised">>, Config, false) of
+    StartRes = case maps:get(<<"managed_start">>, Config, false) of
+        true ->
+            put(managed_start_config, Config),
+            case managed_start_result(Config) of
+                {ok, SupSvc} -> {ok, element(3, SupSvc)};
+                {error, Err} -> {error, Err}
+            end;
+        false ->
+            case maps:get(<<"supervised">>, Config, false) of
         true ->
             case cepaf_gleam@harness@telegram_service:start_supervised_service(SvcConfig, ReceiptOpt) of
                 {ok, SupSvc} -> {ok, element(3, SupSvc)};
@@ -152,6 +160,7 @@ start_and_run_actor(Config, IpcDir) ->
             case cepaf_gleam@harness@telegram_service:start_actor(SvcConfig, ReceiptOpt) of
                 {ok, Started} -> {ok, element(3, Started)};
                 {error, Err} -> {error, Err}
+            end
             end
     end,
     case StartRes of
@@ -169,6 +178,18 @@ start_and_run_actor(Config, IpcDir) ->
             standby_loop(IpcDir, Config)
     end.
 
+managed_start_result(Config) ->
+    SvcConfig = build_service_configuration(Config),
+    ReceiptOpt = build_receipt_opt(Config),
+    CurrentPath = maps:get(<<"current_control_registration_path">>, Config, <<>>),
+    WriterJson = maps:get(<<"writer_registration">>, Config, <<>>),
+    case cepaf_gleam@harness@telegram_store_codec:decode_writer_registration(WriterJson) of
+        {ok, Writer} ->
+            cepaf_gleam@harness@telegram_service:start_managed_service(
+                SvcConfig, CurrentPath, Writer, ReceiptOpt);
+        {error, Reason} -> {error, Reason}
+    end.
+
 actor_loop(Subj, IpcDir, SvcConfig) ->
     CmdPath = filename:join([IpcDir, "cmd.json"]),
     case file:read_file(CmdPath) of
@@ -180,6 +201,21 @@ actor_loop(Subj, IpcDir, SvcConfig) ->
             timer:sleep(20),
             actor_loop(Subj, IpcDir, SvcConfig)
     end.
+
+handle_actor_command(#{<<"action">> := <<"repeat_managed_start">>}, Subj, IpcDir, SvcConfig) ->
+    Result = case get(managed_start_config) of
+        undefined -> #{<<"status">> => <<"error">>, <<"reason">> => <<"managed_start_context_missing">>};
+        Config ->
+            case managed_start_result(Config) of
+                {error, Reason} -> #{<<"status">> => <<"refused">>, <<"reason">> => Reason};
+                {ok, Duplicate} ->
+                    Cleanup = cepaf_gleam@harness@telegram_service:stop_supervised_service(Duplicate),
+                    #{<<"status">> => <<"duplicate_admitted">>,
+                      <<"cleanup">> => list_to_binary(io_lib:format("~p", [Cleanup]))}
+            end
+    end,
+    write_json_file(filename:join([IpcDir, "resp.json"]), Result),
+    actor_loop(Subj, IpcDir, SvcConfig);
 
 handle_actor_command(#{<<"action">> := <<"set_authority">>} = Cmd, Subj, IpcDir, SvcConfig) ->
     LeaseId = maps:get(<<"lease_id">>, Cmd),
@@ -379,10 +415,10 @@ build_service_configuration(Config) ->
         PlanId,
         TaskId,
         WorkerId,
-        <<"task:", TaskId/binary>>,
+        maps:get(<<"resource_id">>, Config, <<"task:", TaskId/binary>>),
         WorkerId,
-        1, % expected_task_attempt
-        1, % coordinator_epoch
+        maps:get(<<"expected_task_attempt">>, Config, 1),
+        maps:get(<<"coordinator_epoch">>, Config, 1),
         ServiceEpoch,
         10, % poll_limit
         1,  % poll_timeout_s

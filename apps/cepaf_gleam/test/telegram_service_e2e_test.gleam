@@ -21,6 +21,7 @@ import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/dynamic.{type Dynamic}
 import gleam/erlang/process.{type Pid}
+import gleam/json
 import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -1694,5 +1695,122 @@ pub fn e2e_finite_automatic_loop_dispatches_without_manual_ticks_test() {
   // Retain unit invocation identity until lifecycle stop captures and verifies it.
   fixture_stop(fixture_pid)
   let assert Ok(_) = lifecycle.stop_and_verify_test_unit(slice_name, unit_name, db_path, recovery_worker_sha, recovery_guardian_sha)
+  let assert Ok(True) = lifecycle.stop_test_slice(slice_name)
+}
+
+fn managed_start_command(
+  db_path: String, base_url: String, bot_id: Int, sa_plan_db: String,
+  coord_db: String, current_path: String, writer: codec.WriterRegistration,
+  resource: String,
+) -> String {
+  let assert Ok(writer_json) = codec.encode_writer_registration(writer)
+  json.object([
+    #("action", json.string("start_actor")),
+    #("managed_start", json.bool(True)),
+    #("db_path", json.string(db_path)),
+    #("guardian_path", json.string(recovery_guardian_path)),
+    #("guardian_sha", json.string(recovery_guardian_sha)),
+    #("worker_path", json.string(recovery_worker_path)),
+    #("worker_sha", json.string(recovery_worker_sha)),
+    #("base_url", json.string(base_url)),
+    #("token", json.string("test-token-managed")),
+    #("bot_id", json.int(bot_id)),
+    #("worker_id", json.string("worker-e2e-01")),
+    #("task_id", json.string("lease-e2e-01")),
+    #("plan_id", json.string("plan-e2e")),
+    #("service_epoch", json.int(1)),
+    #("resource_id", json.string(resource)),
+    #("sa_plan_db", json.string(sa_plan_db)),
+    #("coord_db", json.string(coord_db)),
+    #("current_control_registration_path", json.string(current_path)),
+    #("writer_registration", json.string(writer_json)),
+  ]) |> json.to_string
+}
+
+pub fn e2e_managed_start_identity_authority_single_use_and_dispatch_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  fixture_set_mode(fixture_pid, "offset_aware")
+  let bot_id = 222_556
+  let assert Ok(fresh) = store.begin_new_writer_store(storage_config, bot_id)
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_poll1024_m" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-m" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  let control_path = mint_unit_registration(dir, slice_name, unit_name, db_path, 1)
+  let assert Ok(control_json) = simplifile.read(control_path)
+  let assert Ok(control) = lifecycle.decode_control_registration(control_json)
+  let writer = codec.WriterRegistration(
+    bot_id: bot_id, service_epoch: 1,
+    instance_token: files.digest("managed-start-" <> nonce),
+    control_digest: files.digest(lifecycle.encode_control_registration(control)),
+    store_incarnation_id: control.store_incarnation_id,
+    unit_invocation_id: control.unit_invocation_id,
+    registered_at_us: control.registered_at_us,
+  )
+  let assert Ok(2) = store.finish_new_writer_store(fresh, writer)
+  let cmd = managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db,
+    control_path, writer, "runtime:telegram-bridge")
+  // Current unit and registration are valid, but no runtime lease exists yet.
+  let missing_runtime = send_runner_cmd(ipc_dir, cmd)
+  string.contains(missing_runtime, "coordinator_fence_refused") |> should.equal(True)
+  let assert Ok(#(2, [unconsumed])) = store.read_keys(storage_config, ["meta/writer_start"])
+  unconsumed.exists |> should.equal(False)
+  let assert Ok(coordinator) = coord_store.open(coord_db)
+  let assert Ok(#(runtime_claim, False)) = coord_store.append(coordinator,
+    sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000),
+    "managed-runtime-" <> nonce)
+  runtime_claim.epoch |> should.equal(1)
+  let _ = coord_store.close(coordinator)
+  // A caller-changed control digest must not consume the durable start.
+  let wrong = codec.WriterRegistration(..writer, control_digest: files.digest("wrong-control"))
+  let bad_identity = send_runner_cmd(ipc_dir, managed_start_command(db_path, base_url,
+    bot_id, sa_plan_db, coord_db, control_path, wrong, "runtime:telegram-bridge"))
+  string.contains(bad_identity, "\"status\":\"error\"") |> should.equal(True)
+  let assert Ok(#(2, [still_unconsumed])) = store.read_keys(storage_config, ["meta/writer_start"])
+  still_unconsumed.exists |> should.equal(False)
+  let first = send_runner_cmd(ipc_dir, cmd)
+  string.contains(first, "\"action\":\"started\"") |> should.equal(True)
+  let assert Ok(#(3, [start_row])) = store.read_keys(storage_config, ["meta/writer_start"])
+  let assert Ok(start_value) = codec.decode_row_value(start_row)
+  codec.decode_writer_registration(start_value) |> should.equal(Ok(writer))
+  let duplicate = send_runner_cmd(ipc_dir, "{\"action\":\"repeat_managed_start\"}")
+  string.contains(duplicate, "\"status\":\"refused\"") |> should.equal(True)
+  string.contains(duplicate, "writer_start_already_consumed") |> should.equal(True)
+  let assert Ok(#(3, [unchanged_start])) = store.read_keys(storage_config, ["meta/writer_start"])
+  unchanged_start |> should.equal(start_row)
+  // Startup itself does not manufacture an authority lease or send HTTP.
+  fixture_requests_typed(fixture_pid) |> should.equal([])
+  let before = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(before, "authority_lease_missing") |> should.equal(True)
+  runner_set_authority(ipc_dir, "managed-runtime", 1, 1, 3_000_000_000_000_000)
+  fixture_set_updates(fixture_pid, [
+    "{\"update_id\":9201,\"message\":{\"message_id\":501,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/doctor\",\"date\":1700000000}}",
+    "{\"update_id\":9202,\"message\":{\"message_id\":502,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/saplan\",\"date\":1700000000}}",
+  ])
+  let terminal = send_runner_cmd(ipc_dir, "{\"action\":\"finite_automatic_loop\"}")
+  string.contains(terminal, "\"reason\":\"max_cycles\"") |> should.equal(True)
+  string.contains(terminal, "\"completed_cycles\":2") |> should.equal(True)
+  let request1 = ledger.make_request_id(bot_id, 9201)
+  let request2 = ledger.make_request_id(bot_id, 9202)
+  let assert Ok(#(_, [row1, row2])) = store.read_keys(storage_config, [
+    codec.chunk_key(request1, 0), codec.chunk_key(request2, 0),
+  ])
+  let assert Ok(raw1) = codec.decode_row_value(row1)
+  let assert Ok(raw2) = codec.decode_row_value(row2)
+  let assert Ok(chunk1) = codec.decode_chunk_value(raw1)
+  let assert Ok(chunk2) = codec.decode_chunk_value(raw2)
+  chunk1.status |> should.equal(ledger.OutboxDelivered(42))
+  chunk2.status |> should.equal(ledger.OutboxDelivered(42))
+  string.contains(chunk1.payload, "UNOBSERVED_RUNTIME") |> should.equal(True)
+  string.contains(chunk2.payload, "uos.sa_plan.observer.v1") |> should.equal(True)
+  let requests = fixture_requests_typed(fixture_pid)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/getUpdates") })
+    |> list.length |> should.equal(2)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/sendMessage") })
+    |> list.length |> should.equal(2)
+  fixture_stop(fixture_pid)
+  let assert Ok(_) = lifecycle.stop_and_verify_test_unit(slice_name, unit_name, db_path,
+    recovery_worker_sha, recovery_guardian_sha)
   let assert Ok(True) = lifecycle.stop_test_slice(slice_name)
 }

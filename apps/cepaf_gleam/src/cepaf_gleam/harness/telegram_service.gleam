@@ -2843,6 +2843,7 @@ pub type ServiceMessage {
   )
   WorkerDown(process.Down)
   GetState(reply_to: Subject(ServiceState))
+  GetManagedStartupState(reply_to: Subject(Result(ServiceState, String)))
   GetPendingOperation(reply_to: Subject(Option(store.PendingOperation)))
   Stop
 }
@@ -4407,6 +4408,10 @@ fn handle_message_inner(
       }
     }
 
+    GetManagedStartupState(reply_to) -> {
+      process.send(reply_to, Ok(state))
+      actor.continue(state)
+    }
     GetState(reply_to) -> {
       process.send(reply_to, state)
       actor.continue(state)
@@ -4432,5 +4437,151 @@ fn handle_message_inner(
       })
       actor.stop()
     }
+  }
+}
+
+/// Managed development entry: bind live unit, persisted writer, task and runtime
+/// authority before consuming the single start. Lease automation and operational
+/// entrypoint migration are separate remaining integration obligations.
+pub fn start_managed_service(
+  config: ServiceConfiguration,
+  current_control_path: String,
+  expected: codec.WriterRegistration,
+  cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
+) -> Result(SupervisedService, String) {
+  use _ <- result.try(case config.resource_id == "runtime:telegram-bridge" {
+    True -> Ok(Nil)
+    False ->
+      Error(
+        "invalid_managed_service_resource_id: "
+        <> config.resource_id,
+      )
+  })
+  use _ <- result.try(case config.bot_id > 0 {
+    True -> Ok(Nil)
+    False -> Error("invalid_service_bot_id")
+  })
+  use _ <- result.try(case config.service_epoch > 0 {
+    True -> Ok(Nil)
+    False -> Error("invalid_service_epoch")
+  })
+  use _ <- result.try(case expected.bot_id == config.bot_id {
+    True -> Ok(Nil)
+    False -> Error("expected_writer_bot_id_mismatch")
+  })
+  use _ <- result.try(case expected.service_epoch == config.service_epoch {
+    True -> Ok(Nil)
+    False -> Error("expected_writer_service_epoch_mismatch")
+  })
+  use _ <- result.try(case config.service_epoch {
+    1 ->
+      case cleanup_receipt, config.control_registration_path {
+        None, None -> Ok(Nil)
+        _, _ ->
+          Error("epoch_1_forbids_predecessor_cleanup_or_control_path")
+      }
+    _ ->
+      case cleanup_receipt, config.control_registration_path {
+        Some(_), Some(predecessor_path) ->
+          case string.trim(predecessor_path) != "" {
+            True -> Ok(Nil)
+            False -> Error("epoch_gt_1_empty_predecessor_control_path")
+          }
+        _, _ ->
+          Error("epoch_gt_1_requires_predecessor_cleanup_and_control_path")
+      }
+  })
+  use _ <- result.try(case string.trim(current_control_path) != "" {
+    True -> Ok(Nil)
+    False -> Error("empty_current_control_path")
+  })
+
+  use _ <- result.try(codec.encode_writer_registration(expected)
+    |> result.map_error(fn(err) { "invalid_expected_writer_registration: " <> err }))
+
+  let expected_db = ffi_storage_config_db_path(config.storage_config)
+  let expected_worker = ffi_storage_config_worker_sha(config.storage_config)
+  let expected_guardian =
+    ffi_storage_config_guardian_sha(config.storage_config)
+
+  use current_control <- result.try(
+    lifecycle.read_and_verify_prelaunch_control_bounded(
+      current_control_path,
+      "",
+      expected_db,
+      expected_worker,
+      expected_guardian,
+      config.service_epoch,
+      Some(60_000_000),
+    ),
+  )
+  use _ <- result.try(lifecycle.verify_live_lifecycle_ownership(current_control))
+
+  let actual_control_digest =
+    files.digest(lifecycle.encode_control_registration(current_control))
+  use _ <- result.try(case expected.control_digest == actual_control_digest {
+    True -> Ok(Nil)
+    False ->
+      Error(
+        "writer_registration_control_digest_mismatch: exp="
+        <> expected.control_digest
+        <> " actual="
+        <> actual_control_digest,
+      )
+  })
+  use _ <- result.try(
+    case expected.unit_invocation_id == current_control.unit_invocation_id {
+      True -> Ok(Nil)
+      False -> Error("writer_registration_unit_invocation_id_mismatch")
+    },
+  )
+  use _ <- result.try(
+    case expected.store_incarnation_id == current_control.store_incarnation_id {
+      True -> Ok(Nil)
+      False -> Error("writer_registration_store_incarnation_id_mismatch")
+    },
+  )
+  use _ <- result.try(
+    case expected.registered_at_us == current_control.registered_at_us {
+      True -> Ok(Nil)
+      False -> Error("writer_registration_registered_at_us_mismatch")
+    },
+  )
+
+  use _pre_cas_authority <- result.try(verify_authority_config(
+    config,
+    ffi_system_now_ns(),
+  ))
+
+  use _consumed_generation <- result.try(
+    store.consume_writer_start(config.storage_config, expected)
+    |> result.map_error(fn(err) {
+      "consume_writer_start_failed: " <> string.inspect(err)
+    }),
+  )
+
+  use _post_cas_authority <- result.try(verify_authority_config(
+    config,
+    ffi_system_now_ns(),
+  ))
+  use _ <- result.try(lifecycle.verify_live_lifecycle_ownership(current_control))
+
+  use svc <- result.try(start_supervised_service(config, cleanup_receipt))
+  case poll_rpc.call(svc.actor_subject, 5000, GetManagedStartupState) {
+    Error(err) -> abort_managed_start(svc, "managed_service_state_unavailable: " <> err)
+    Ok(state) -> case state.writer_state {
+      lifecycle.ServiceWriterClean -> Ok(svc)
+      lifecycle.ServiceWriterHold(reason) ->
+        abort_managed_start(svc, "managed_service_started_in_writer_hold: " <> reason)
+    }
+  }
+}
+
+fn abort_managed_start(
+  svc: SupervisedService, reason: String,
+) -> Result(SupervisedService, String) {
+  case stop_supervised_service(svc) {
+    Ok(Nil) -> Error(reason)
+    Error(err) -> Error(reason <> " (cleanup_unconfirmed: " <> err <> ")")
   }
 }
