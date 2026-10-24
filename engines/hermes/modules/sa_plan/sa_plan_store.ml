@@ -1284,6 +1284,127 @@ let claim_bridge_lease store ~mapping_id ~owner ~lease_id ~now_ns ~lease_ns =
         Ok { mapping_id; owner; lease_id; fencing_token; expires_at_ns;
              task_attempt = Some attempt })
 
+let bind_bridge_to_claimed_task
+    store
+    ~mapping_id
+    ~owner
+    ~expected_attempt
+    ~lease_id
+    ~now_ns
+    ~lease_ns
+  =
+  let open Result.Let_syntax in
+  let valid_identity s =
+    let stripped = String.strip s in
+    (not (String.is_empty stripped)) && String.equal s stripped
+  in
+  let%bind () =
+    if not (valid_identity mapping_id)
+    then Error "bridge_bind_invalid_mapping_id"
+    else if not (valid_identity owner)
+    then Error "bridge_bind_invalid_owner"
+    else if not (valid_identity lease_id)
+    then Error "bridge_bind_invalid_lease_id"
+    else if expected_attempt <= 0
+    then Error "bridge_bind_invalid_expected_attempt"
+    else if Int64.(now_ns < 0L)
+    then Error "bridge_bind_invalid_now_ns"
+    else if Int64.(lease_ns <= 0L)
+    then Error "bridge_bind_invalid_lease_ns"
+    else Ok ()
+  in
+  let%bind expires_at_ns = lease_deadline ~worker:owner ~now_ns ~lease_ns in
+  let attempt_i64 = Int64.of_int expected_attempt in
+  transaction store (fun () ->
+    let%bind mapping =
+      match%bind find_mapping_db store.db mapping_id with
+      | Some mapping -> Ok mapping
+      | None -> Error "bridge_bind_mapping_not_found"
+    in
+    let%bind () =
+      match mapping.domain with
+      | Sa_plan -> Ok ()
+      | Otp_parity | Infranodus | Documentation | Fdc ->
+        Error "bridge_bind_invalid_mapping_domain"
+    in
+    let%bind plan_id, task_id = mapped_task mapping in
+    let%bind () =
+      if not (valid_identity plan_id && valid_identity task_id)
+      then Error "bridge_bind_unmaterialized_task"
+      else Ok ()
+    in
+    let%bind task_lease_until_ns =
+      with_stmt
+        store.db
+        "SELECT lease_until_ns FROM sa_plan_task WHERE plan_id=? AND id=? AND state='executing' AND worker=? AND attempt=? AND lease_until_ns >?"
+        (fun stmt ->
+           let%bind () =
+             bind_values_result
+               "bind claimed sa_plan_task verification"
+               stmt
+               [ Sqlite3.Data.TEXT plan_id
+               ; Sqlite3.Data.TEXT task_id
+               ; Sqlite3.Data.TEXT owner
+               ; Sqlite3.Data.INT attempt_i64
+               ; Sqlite3.Data.INT now_ns
+               ]
+           in
+           match Sqlite3.step stmt with
+           | Sqlite3.Rc.ROW ->
+             (match Sqlite3.column stmt 0 with
+              | Sqlite3.Data.INT lease_until_ns -> Ok lease_until_ns
+              | Sqlite3.Data.NULL
+              | Sqlite3.Data.FLOAT _
+              | Sqlite3.Data.TEXT _
+              | Sqlite3.Data.BLOB _
+              | Sqlite3.Data.NONE -> Error "bridge_bind_task_lease_not_int")
+           | Sqlite3.Rc.DONE -> Error "bridge_bind_task_missing_or_not_owned"
+           | rc -> rc_error "step claimed sa_plan_task verification" rc)
+    in
+    let%bind () =
+      if Int64.(task_lease_until_ns <= now_ns || expires_at_ns > task_lease_until_ns)
+      then Error "bridge_bind_lease_exceeds_task_lease"
+      else Ok ()
+    in
+    let%bind prior_opt = find_bridge_lease_db store.db ~mapping_id in
+    let%bind fencing_token =
+      match prior_opt with
+      | None -> Ok 1L
+      | Some prior ->
+        if Int64.(prior.expires_at_ns > now_ns)
+        then Error "bridge_bind_lease_already_live"
+        else if Int64.(prior.fencing_token <= 0L || prior.fencing_token >= Int64.max_value)
+        then Error "bridge_bind_invalid_prior_fencing_token"
+        else Ok Int64.(prior.fencing_token + 1L)
+    in
+    let%bind () =
+      with_stmt
+        store.db
+        "INSERT INTO sa_plan_bridge_lease (mapping_id, owner, lease_id, fencing_token, expires_at_ns, task_attempt) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(mapping_id) DO UPDATE SET owner = excluded.owner, lease_id = excluded.lease_id, fencing_token = excluded.fencing_token, expires_at_ns = excluded.expires_at_ns, task_attempt = excluded.task_attempt"
+        (fun stmt ->
+           let%bind () =
+             bind_values_result
+               "bind sa_plan_bridge_lease upsert"
+               stmt
+               [ Sqlite3.Data.TEXT mapping_id
+               ; Sqlite3.Data.TEXT owner
+               ; Sqlite3.Data.TEXT lease_id
+               ; Sqlite3.Data.INT fencing_token
+               ; Sqlite3.Data.INT expires_at_ns
+               ; Sqlite3.Data.INT attempt_i64
+               ]
+           in
+           step_done "upsert sa_plan_bridge_lease" stmt)
+    in
+    Ok
+      { mapping_id
+      ; owner
+      ; lease_id
+      ; fencing_token
+      ; expires_at_ns
+      ; task_attempt = Some expected_attempt
+      })
+
 let complete_bridge_task store ~mapping_id ~owner ~lease_id ~fencing_token
     ~result ~now_ns =
   let open Result.Let_syntax in

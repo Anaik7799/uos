@@ -363,6 +363,49 @@ val claim_bridge_lease :
   lease_ns:int64 ->
   (bridge_lease, string) Result.t
 
+(** [bind_bridge_to_claimed_task store ~mapping_id ~owner ~expected_attempt
+    ~lease_id ~now_ns ~lease_ns] binds a Telegram cancellation bridge lease to
+    an already-claimed canonical [Sa_plan] task without mutating, creating,
+    reclaiming, or advancing the canonical task row or its attempt counter.
+
+    Laws:
+    - Canonical task non-mutation: never creates, mutates, reclaims, or advances
+      [sa_plan_task] or its [attempt]; [claim_bridge_lease] remains unchanged.
+    - Atomic observation and write: executes inside [transaction store]
+      ([BEGIN IMMEDIATE]), covering [mapping_id] lookup, live canonical task
+      ([worker = owner], [attempt = expected_attempt], [state = 'executing'],
+      [lease_until_ns]) observation, prior bridge inspection, and bridge write.
+    - Preconditions: requires valid non-empty identities ([mapping_id], [owner],
+      [lease_id]) without leading/trailing whitespace, [expected_attempt > 0],
+      [now_ns >= 0L], and positive [lease_ns > 0L] with overflow-checked
+      [expires_at_ns] via [lease_deadline ~worker:owner ~now_ns ~lease_ns].
+      Mapping must exist with domain [Sa_plan] and materialized plan/task IDs.
+    - Canonical task lease envelope: [sa_plan_task] must be in state
+      ['executing'] for [owner] at [expected_attempt] with SQLite [INT]
+      [lease_until_ns > now_ns] and [lease_until_ns >= expires_at_ns] (requested
+      bridge expiry beyond the canonical task lease is rejected, never clamped;
+      NULL/non-INT or stale/wrong-owner/wrong-attempt rows refuse with a named
+      redacted error).
+    - Bridge exclusivity and fencing: any existing live bridge row
+      ([expires_at_ns > now_ns]) unconditionally refuses even for the same
+      [owner] (callers resolve ambiguous prior outcomes via [find_bridge_lease]);
+      missing prior starts at [fencing_token = 1L]; expired prior requires
+      [0L < fencing_token < Int64.max_value] and advances to [fencing_token + 1L].
+      No existing row is altered on any refusal.
+    - Write effect and trust boundary: writes only [sa_plan_bridge_lease] with
+      [task_attempt = Some expected_attempt]. This is a trusted bounded store
+      operation, not runtime/signature admission; live callers must still hold
+      current coordinator, time, and profile fences. *)
+val bind_bridge_to_claimed_task
+  :  t
+  -> mapping_id:string
+  -> owner:string
+  -> expected_attempt:int
+  -> lease_id:string
+  -> now_ns:int64
+  -> lease_ns:int64
+  -> (bridge_lease, string) result
+
 val find_bridge_lease :
   t -> mapping_id:string -> (bridge_lease option, string) Result.t
 

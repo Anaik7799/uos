@@ -416,6 +416,123 @@ let () =
          && Poly.equal before (view store "race"))));
   Printf.printf "fencing: %d passed, 0 failed; 729 bounded oracle traces\n%!" !tests
 
+
+(* A running controller binds its bridge without a second task claim. *)
+let () =
+  let count = ref 0 in
+  let check name passed = incr count; require ("BRIDGE-BIND-" ^ name) passed in
+  let fixture run = with_fixture (fun path store ->
+    setup store; create store "controller";
+    let mapping = ok (Store.ensure_bridge_mapping store
+      { mapping_request with ooda_slice_id="bound-controller";
+        idempotency_key="bound-controller";sa_plan_id=Some "fence";
+        sa_task_id=Some "controller" }) in
+    run path store mapping) in
+  let bind store (mapping : Store.bridge_mapping) owner attempt lease now duration =
+    Store.bind_bridge_to_claimed_task store ~mapping_id:mapping.Store.id ~owner
+      ~expected_attempt:attempt ~lease_id:lease ~now_ns:now ~lease_ns:duration in
+  fixture (fun _path store mapping ->
+    let before = view store "controller" in
+    check "AVAILABLE-NOT-CLAIMED"
+      (Result.is_error (bind store mapping "owner" 1 "bridge" 100L 100L)
+       && Poly.equal before (view store "controller")
+       && Option.is_none (ok (Store.find_bridge_lease store ~mapping_id:mapping.id)));
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"controller"
+      ~worker:"owner" ~now_ns:100L ~lease_ns:1000L) in
+    let before = view store "controller" in
+    List.iter [
+      "WRONG-OWNER","other",claim.attempt,"bridge",101L,99L;
+      "STALE-ATTEMPT","owner",claim.attempt + 1,"bridge",101L,99L;
+      "ZERO-ATTEMPT","owner",0,"bridge",101L,99L;
+      "EMPTY-OWNER"," ",claim.attempt,"bridge",101L,99L;
+      "EMPTY-LEASE","owner",claim.attempt," ",101L,99L;
+      "NEGATIVE-TIME","owner",claim.attempt,"bridge",(-1L),99L;
+      "ZERO-DURATION","owner",claim.attempt,"bridge",101L,0L;
+      "NEGATIVE-DURATION","owner",claim.attempt,"bridge",101L,(-1L);
+      "OVERFLOW","owner",claim.attempt,"bridge",Int64.max_value,1L;
+      "OUTLIVES-TASK","owner",claim.attempt,"bridge",101L,1000L;
+      "AT-TASK-EXPIRY","owner",claim.attempt,"bridge",1100L,1L
+    ] ~f:(fun (name,owner,attempt,lease,now,duration) ->
+      check name (Result.is_error (bind store mapping owner attempt lease now duration)
+        && Poly.equal before (view store "controller")
+        && Option.is_none (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))));
+    check "MISSING-MAPPING"
+      (Result.is_error (Store.bind_bridge_to_claimed_task store ~mapping_id:"absent"
+        ~owner:"owner" ~expected_attempt:claim.attempt ~lease_id:"b"
+        ~now_ns:101L ~lease_ns:99L));
+    let lease = ok (bind store mapping "owner" claim.attempt "bridge" 101L 99L) in
+    check "FIRST-BIND-DOES-NOT-MUTATE-TASK"
+      (Poly.equal before (view store "controller")
+       && Poly.equal lease.task_attempt (Some claim.attempt) && Int64.equal lease.fencing_token 1L
+       && Int64.equal lease.expires_at_ns 200L);
+    check "LIVE-BRIDGE-REFUSED-EVEN-SAME-OWNER"
+      (Result.is_error (bind store mapping "owner" claim.attempt "bridge" 102L 98L)
+       && Poly.equal (Some lease) (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))
+       && Poly.equal before (view store "controller"));
+    let next = ok (bind store mapping "owner" claim.attempt "bridge2" 200L 900L) in
+    check "EXPIRED-BRIDGE-ADVANCES-FENCE-NOT-TASK"
+      (Int64.equal next.fencing_token 2L && Int64.equal next.expires_at_ns 1100L
+       && Poly.equal before (view store "controller"));
+    ok (Store.release_task store ~plan_id:"fence" ~task_id:"controller"
+      ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:201L);
+    let _replacement = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"controller"
+      ~worker:"owner" ~now_ns:202L ~lease_ns:2000L) in
+    let replacement_before = view store "controller" in
+    check "OLD-ATTEMPT-REFUSED-AFTER-RECLAIM"
+      (Result.is_error (bind store mapping "owner" claim.attempt "old" 1100L 1L)
+       && Poly.equal replacement_before (view store "controller")
+       && Poly.equal (Some next) (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))));
+  fixture (fun _path store mapping ->
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"controller"
+      ~worker:"owner" ~now_ns:100L ~lease_ns:1000L) in
+    let wrong = ok (Store.ensure_bridge_mapping store
+      { mapping_request with domain=Documentation;ooda_slice_id="wrong-domain";
+        idempotency_key="wrong-domain";sa_plan_id=Some "fence";sa_task_id=Some "controller" }) in
+    check "WRONG-DOMAIN" (Result.is_error (bind store wrong "owner" claim.attempt "b" 101L 99L));
+    ok (Store.complete_task store ~plan_id:"fence" ~task_id:"controller"
+      ~worker:"owner" ~expected_attempt:claim.attempt ~result:"done" ~now_ns:101L);
+    check "COMPLETED-TASK" (Result.is_error (bind store mapping "owner" claim.attempt "b" 102L 98L)));
+  fixture (fun path store mapping ->
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"controller"
+      ~worker:"owner" ~now_ns:100L ~lease_ns:1000L) in
+    let before = view store "controller" in
+    let peer = ok (Store.open_db path) in
+    Exn.protect ~finally:(fun () -> Store.close peer) ~f:(fun () ->
+      let other = Domain.spawn (fun () -> bind peer mapping "owner" claim.attempt "b" 101L 99L) in
+      let local = bind store mapping "owner" claim.attempt "a" 101L 99L in
+      let remote = Domain.join other in
+      check "TWO-CONNECTIONS-EXACTLY-ONE-WINNER"
+        (Bool.(Result.is_ok local <> Result.is_ok remote)
+         && Poly.equal before (view store "controller"))));
+  fixture (fun path store mapping ->
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"controller"
+      ~worker:"owner" ~now_ns:100L ~lease_ns:1000L) in
+    ignore (ok (bind store mapping "owner" claim.attempt "bridge" 101L 99L) : Store.bridge_lease);
+    let inject sql =
+      let db = Sqlite3.db_open path in
+      Exn.protect ~finally:(fun () -> ignore (Sqlite3.db_close db : bool))
+        ~f:(fun () -> if not (Poly.equal (Sqlite3.exec db sql) Sqlite3.Rc.OK)
+          then failwith ("bridge bind test SQL failed: " ^ Sqlite3.errmsg db)) in
+    List.iter [0L; Int64.max_value] ~f:(fun fence ->
+      (* Corrupt only this disposable fixture; production CHECK stays enforced. *)
+      inject ("PRAGMA ignore_check_constraints=ON; UPDATE sa_plan_bridge_lease SET fencing_token=" ^ Int64.to_string fence);
+      let before_task = view store "controller" in
+      let before_bridge = ok (Store.find_bridge_lease store ~mapping_id:mapping.id) in
+      check "INVALID-OR-EXHAUSTED-FENCE"
+        (Result.is_error (bind store mapping "owner" claim.attempt "next" 200L 100L)
+         && Poly.equal before_task (view store "controller")
+         && Poly.equal before_bridge (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))));
+    inject "UPDATE sa_plan_bridge_lease SET fencing_token=1";
+    let before_task = view store "controller" in
+    let before_bridge = ok (Store.find_bridge_lease store ~mapping_id:mapping.id) in
+    inject "CREATE TRIGGER reject_bridge_bind BEFORE INSERT ON sa_plan_bridge_lease BEGIN SELECT RAISE(ABORT,'fixture_bridge_failure'); END";
+    check "WRITE-FAILURE-PRESERVES-TASK-AND-PRIOR"
+      (Result.is_error (bind store mapping "owner" claim.attempt "next" 200L 100L)
+       && Poly.equal before_task (view store "controller")
+       && Poly.equal before_bridge (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))));
+  Printf.printf "bridge bind: %d checks passed\n%!" !count
+
+
 (* Controlled-action store mechanics. No approvals or process control are granted. *)
 module Cancellation = struct
   let hex c = String.make 64 c
@@ -436,8 +553,11 @@ module Cancellation = struct
           { mapping_request with ooda_slice_id="cancel-once";
             idempotency_key="cancel-once";sa_plan_id=Some "cancel-plan";
             sa_task_id=Some "controller" }) in
-        let lease = ok (Store.claim_bridge_lease store ~mapping_id:mapping.id
-          ~owner:"controller" ~lease_id:"control-lease" ~now_ns:100L ~lease_ns:29_900L) in
+        let claim = ok (Store.claim_task store ~plan_id:"cancel-plan" ~task_id:"controller"
+          ~worker:"controller" ~now_ns:100L ~lease_ns:29_900L) in
+        let lease = ok (Store.bind_bridge_to_claimed_task store ~mapping_id:mapping.id
+          ~owner:"controller" ~expected_attempt:claim.attempt ~lease_id:"control-lease"
+          ~now_ns:100L ~lease_ns:29_900L) in
         ignore (ok (Store.enqueue_job store ~id:"cancel-plan/job1" ~name:"cancel-plan/job1"
           ~queue:"cancel-target" ~worker:"job-worker" ~args:"{}" ~max_attempts:2 ~now_ns:1L)
           : Store.job_view);
