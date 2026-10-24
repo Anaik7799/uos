@@ -1627,3 +1627,151 @@ pub fn decode_chunk_value(
   json.parse(json_str, decoder)
   |> result.map_error(fn(_) { "invalid_chunk_payload" })
 }
+
+const writer_registration_schema = "uos.telegram-writer-registration.v1"
+
+const max_service_epoch = 2_147_483_647
+
+const max_registered_at_us = 9_007_199_254_740_991
+
+/// Storage identity codec record for Telegram writer registration.
+/// `control_digest` is the SHA-256 of the exact canonical external ControlRegistration
+/// binding unit/slice names and IDs, store path, and worker/guardian pins.
+/// `instance_token` is a unique identity token (not a secret or authority bearer).
+/// Full writer admission still requires live unit and current canonical task/runtime
+/// lease checks, exclusive fresh-store proof for first boot, and verified prior cleanup
+/// for recovery.
+pub type WriterRegistration {
+  WriterRegistration(
+    bot_id: Int,
+    service_epoch: Int,
+    instance_token: String,
+    control_digest: String,
+    store_incarnation_id: String,
+    unit_invocation_id: String,
+    registered_at_us: Int,
+  )
+}
+
+pub fn writer_registration_key() -> String {
+  "meta/writer_registration"
+}
+
+fn is_valid_lowercase_hex_64(value: String) -> Bool {
+  is_valid_hex_64(value) && string.lowercase(value) == value
+}
+
+fn is_valid_lowercase_hex_32(value: String) -> Bool {
+  string.byte_size(value) == 32
+  && is_valid_hex_64(value <> value)
+  && string.lowercase(value) == value
+}
+
+pub fn validate_writer_registration(
+  r: WriterRegistration,
+) -> Result(Nil, String) {
+  case guard.valid_positive_id(r.bot_id) {
+    False -> Error("invalid_writer_registration_bot_id")
+    True ->
+      case r.service_epoch >= 1 && r.service_epoch <= max_service_epoch {
+        False -> Error("invalid_writer_registration_service_epoch")
+        True ->
+          case is_valid_lowercase_hex_64(r.instance_token) {
+            False -> Error("invalid_writer_registration_instance_token")
+            True ->
+              case is_valid_lowercase_hex_64(r.control_digest) {
+                False -> Error("invalid_writer_registration_control_digest")
+                True ->
+                  case is_valid_lowercase_hex_64(r.store_incarnation_id) {
+                    False ->
+                      Error("invalid_writer_registration_store_incarnation_id")
+                    True ->
+                      case is_valid_lowercase_hex_32(r.unit_invocation_id) {
+                        False ->
+                          Error("invalid_writer_registration_unit_invocation_id")
+                        True ->
+                          case
+                            r.registered_at_us >= 1
+                            && r.registered_at_us <= max_registered_at_us
+                          {
+                            False ->
+                              Error("invalid_writer_registration_registered_at_us")
+                            True -> Ok(Nil)
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+}
+
+pub fn encode_writer_registration(
+  r: WriterRegistration,
+) -> Result(String, String) {
+  use _ <- result.try(validate_writer_registration(r))
+  let encoded =
+    json.object([
+      #("schema", json.string(writer_registration_schema)),
+      #("bot_id", json.int(r.bot_id)),
+      #("service_epoch", json.int(r.service_epoch)),
+      #("instance_token", json.string(r.instance_token)),
+      #("control_digest", json.string(r.control_digest)),
+      #("store_incarnation_id", json.string(r.store_incarnation_id)),
+      #("unit_invocation_id", json.string(r.unit_invocation_id)),
+      #("registered_at_us", json.int(r.registered_at_us)),
+    ])
+    |> json.to_string
+  case string.byte_size(encoded) <= max_value_bytes {
+    True -> Ok(encoded)
+    False -> Error("writer_registration_value_too_large")
+  }
+}
+
+fn writer_registration_decoder() -> decode.Decoder(#(String, WriterRegistration)) {
+  use schema <- decode.field("schema", decode.string)
+  use bot_id <- decode.field("bot_id", decode.int)
+  use service_epoch <- decode.field("service_epoch", decode.int)
+  use instance_token <- decode.field("instance_token", decode.string)
+  use control_digest <- decode.field("control_digest", decode.string)
+  use store_incarnation_id <- decode.field("store_incarnation_id", decode.string)
+  use unit_invocation_id <- decode.field("unit_invocation_id", decode.string)
+  use registered_at_us <- decode.field("registered_at_us", decode.int)
+  decode.success(#(
+    schema,
+    WriterRegistration(
+      bot_id: bot_id,
+      service_epoch: service_epoch,
+      instance_token: instance_token,
+      control_digest: control_digest,
+      store_incarnation_id: store_incarnation_id,
+      unit_invocation_id: unit_invocation_id,
+      registered_at_us: registered_at_us,
+    ),
+  ))
+}
+
+pub fn decode_writer_registration(
+  raw: String,
+) -> Result(WriterRegistration, String) {
+  let size = string.byte_size(raw)
+  case size > 0 && size <= max_value_bytes {
+    False -> Error("invalid_writer_registration_payload_size")
+    True ->
+      case json.parse(raw, writer_registration_decoder()) {
+        Error(_) -> Error("malformed_writer_registration_json")
+        Ok(#(schema, registration)) ->
+          case schema == writer_registration_schema {
+            False -> Error("invalid_writer_registration_schema")
+            True -> {
+              use _ <- result.try(validate_writer_registration(registration))
+              use canonical <- result.try(encode_writer_registration(registration))
+              case raw == canonical {
+                True -> Ok(registration)
+                False -> Error("non_canonical_writer_registration_json")
+              }
+            }
+          }
+      }
+  }
+}

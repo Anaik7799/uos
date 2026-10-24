@@ -399,6 +399,43 @@ pub fn initialize_store(
   }
 }
 
+
+/// Creates a new store exclusively and commits its writer identity with bootstrap
+/// metadata. Existing and partially initialized stores are refused, never resumed.
+/// This records storage identity only: callers must separately verify live unit,
+/// task/runtime authority, and canonical paths before enabling service effects.
+pub fn initialize_new_registered_store(
+  config: transport.LocalConfiguration,
+  registration: codec.WriterRegistration,
+) -> Result(Int, StoreError) {
+  use raw <- result.try(
+    codec.encode_writer_registration(registration)
+    |> result.map_error(StoreInvariantError),
+  )
+  use _ <- result.try(case registration.service_epoch == 1 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("first_writer_requires_epoch_one"))
+  })
+  let request = codec.encode_initialize_new_command(registration.bot_id, None)
+  use response <- result.try(wrap_transport(transport.exchange(config, request)))
+  use generation <- result.try(
+    codec.decode_initialize_new_response(response)
+    |> result.map_error(StoreBackendError),
+  )
+  use _ <- result.try(case generation == 1 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("fresh_store_generation_invalid"))
+  })
+  bootstrap_metadata_with_writer(config, registration.bot_id, generation, [
+    codec.Change(
+      key: codec.writer_registration_key(),
+      expected_version: 0,
+      expected_sha256: "",
+      new_value_base64: codec.encode_canonical_base64(raw),
+    ),
+  ])
+}
+
 fn resume_bootstrap(
   config: transport.LocalConfiguration,
   bot_id: Int,
@@ -436,6 +473,15 @@ fn bootstrap_metadata(
   bot_id: Int,
   gen: Int,
 ) -> Result(Int, StoreError) {
+  bootstrap_metadata_with_writer(config, bot_id, gen, [])
+}
+
+fn bootstrap_metadata_with_writer(
+  config: transport.LocalConfiguration,
+  bot_id: Int,
+  gen: Int,
+  writer_changes: List(codec.Change),
+) -> Result(Int, StoreError) {
   let bot_id_val = codec.encode_bot_identity_value(bot_id)
   let wm_val = codec.encode_watermark_value(ledger.Watermark(0))
 
@@ -454,6 +500,7 @@ fn bootstrap_metadata(
     ),
   ]
 
+  let changes = list.append(changes, writer_changes)
   let res_delta = codec.ReservationDelta(rows: 0, receipts: 0)
   let summary_json =
     json.object([
