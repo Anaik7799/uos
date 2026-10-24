@@ -7,7 +7,17 @@ import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_ingress_guard as guard
 import gleam/json
 import gleam/list
+import gleam/result
 import gleam/string
+
+pub type Execution {
+  Execution(
+    mapping_id: String,
+    lease_id: String,
+    fencing_token: Int,
+    profile_sha256: String,
+  )
+}
 
 pub type Binding {
   Binding(
@@ -23,6 +33,7 @@ pub type Binding {
     candidate_sha256: String,
     host: String,
     boot_id: String,
+    execution: Execution,
   )
 }
 
@@ -95,6 +106,14 @@ fn positive_attempt(value: Int) -> Bool {
   value > 0 && value <= max_attempt
 }
 
+fn valid_execution(value: Execution) -> Bool {
+  identifier(value.mapping_id)
+  && identifier(value.lease_id)
+  && value.fencing_token > 0
+  && value.fencing_token <= max_time
+  && guard.valid_digest(value.profile_sha256)
+}
+
 fn valid_binding(value: Binding) -> Bool {
   guard.valid_positive_id(value.bot_id)
   && guard.valid_chat_id(value.chat_id)
@@ -106,6 +125,7 @@ fn valid_binding(value: Binding) -> Bool {
   && guard.valid_digest(value.candidate_sha256)
   && valid_host(value.host)
   && valid_boot(value.boot_id)
+  && valid_execution(value.execution)
 }
 
 fn valid_window(value: Window) -> Bool {
@@ -177,9 +197,10 @@ fn payload(
   reason: String,
   nonce: String,
 ) -> String {
+  let execution = binding.execution
   json.array(
     [
-      json.string("uos.telegram.action-intent.v1"),
+      json.string("uos.telegram.action-intent.v2"),
       json.string("cancel_job_lease"),
       json.int(binding.bot_id),
       json.int(binding.chat_id),
@@ -193,6 +214,10 @@ fn payload(
       json.string(binding.candidate_sha256),
       json.string(binding.host),
       json.string(binding.boot_id),
+      json.string(execution.mapping_id),
+      json.string(execution.lease_id),
+      json.int(execution.fencing_token),
+      json.string(execution.profile_sha256),
       json.string(target.job),
       json.string(target.worker),
       json.int(target.attempt),
@@ -283,8 +308,93 @@ pub fn matches_binding(value: Intent, binding: Binding) -> Bool {
   value.binding == binding
 }
 
+pub fn matches_execution(value: Intent, expected: Execution) -> Bool {
+  value.binding.execution == expected
+}
+
 pub fn matches_target(value: Intent, target: Target) -> Bool {
   value.target == target
+}
+
+pub fn execution_profile(value: Intent) -> String {
+  value.binding.execution.profile_sha256
+}
+
+pub fn worker_artifact(value: Intent) -> String {
+  value.binding.candidate_sha256
+}
+
+pub fn native_request(
+  value: Intent,
+  expires_at_ms: Int,
+) -> Result(String, String) {
+  use _ <- result.try(native_deadline(value, expires_at_ms))
+  Ok(json.to_string(native_value(value, expires_at_ms)))
+}
+
+fn native_value(value: Intent, expires_at_ms: Int) -> json.Json {
+  let binding = value.binding
+  let execution = binding.execution
+  let target = value.target
+  json.object([
+    #("schema", json.string("uos.sa-plan.cancel-job-request.v1")),
+    #("mapping_id", json.string(execution.mapping_id)),
+    #("effect_id", json.string(value.effect_id)),
+    #("intent_sha256", json.string(value.digest)),
+    #("owner", json.string(binding.worker)),
+    #("lease_id", json.string(execution.lease_id)),
+    #("fencing_token", json.int(execution.fencing_token)),
+    #("target_job_id", json.string(target.job)),
+    #("target_worker", json.string(target.worker)),
+    #("target_attempt", json.int(target.attempt)),
+    #("target_lease_until_ns", json.int(target.lease_until_ns)),
+    #("reason", json.string(value.reason)),
+    #("expires_at_ns", json.int(expires_at_ms * 1_000_000)),
+  ])
+}
+
+/// Hash of the exact request and canonical mapping, not an execution grant.
+pub fn native_request_hash(
+  value: Intent,
+  expires_at_ms: Int,
+) -> Result(String, String) {
+  use _ <- result.try(native_deadline(value, expires_at_ms))
+  let binding = value.binding
+  let execution = binding.execution
+  let target = value.target
+  json.array(
+    [
+      json.string("uos.sa-plan.cancel-job-once.v1"),
+      json.string(execution.mapping_id),
+      json.string(value.effect_id),
+      json.string(value.digest),
+      json.string(binding.worker),
+      json.string(execution.lease_id),
+      json.int(execution.fencing_token),
+      json.string(target.job),
+      json.string(target.worker),
+      json.int(target.attempt),
+      json.int(target.lease_until_ns),
+      json.string(value.reason),
+      json.int(expires_at_ms * 1_000_000),
+      json.string(binding.plan),
+      json.string(binding.task),
+    ],
+    fn(item) { item },
+  )
+  |> json.to_string
+  |> files.digest
+  |> Ok
+}
+
+fn native_deadline(value: Intent, expires_at_ms: Int) -> Result(Nil, String) {
+  case
+    expires_at_ms > value.window.created_utc_ms
+    && expires_at_ms <= value.window.deadline_utc_ms
+  {
+    True -> Ok(Nil)
+    False -> Error("invalid_native_action_deadline")
+  }
 }
 
 /// Pure freshness predicate on supplied observations, never an execution grant.

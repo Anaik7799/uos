@@ -994,3 +994,43 @@ let () =
       (Poly.equal status (Lifetime_unix.WEXITED 0)
        && Poly.equal (Yojson.Safe.Util.member "status" (Yojson.Safe.from_string out)) (`String "rejected")));
   Printf.printf "native plus actual BEAM transport: %d checks passed\n%!" !tests
+
+(* End-to-end signed fixture: real Ed25519 verification, exact capped request,
+   strict response validation, pinned guardian/worker and isolated Sa-plan DB.
+   Fixture keys and clocks are test inputs; no live signer or Telegram claim. *)
+let () =
+  let dir=match Stdlib.Sys.getenv_opt "UOS_CANCEL_TRANSPORT_TEST_DIR" with
+    | Some p -> p | None -> failwith "cancel transport fixture is required" in
+  let gleam_root=match Stdlib.Sys.getenv_opt "UOS_CANCEL_GLEAM_TEST_ROOT" with
+    | Some p -> p | None -> failwith "signed Gleam fixture is required" in
+  let bin s = "<<" ^ String.concat ~sep:"," (List.map (String.to_list s)
+    ~f:(fun c -> Int.to_string (Char.to_int c))) ^ ">>" in
+  let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
+  let guardian=Filename.concat dir "guardian.exe" in
+  let worker=Filename.concat dir "worker.exe" in
+  Cancellation.with_case (fun path store request ->
+    let request=live_cancel_request path request in
+    let code=Printf.sprintf
+      "code:add_paths(filelib:wildcard(%S)),code:add_patha(%S), C='cepaf_gleam@harness@telegram_store_transport':reviewed_local_configuration(%s,%s,%s,%s,%s), R=telegram_cancellation_test:run_native(C,%s,%Ld,%Ld,%s),io:put_chars(R),halt(0)."
+      (Filename.concat gleam_root "lib/*/ebin") (Filename.concat gleam_root "build/ebin")
+      (bin guardian) (bin (sha guardian)) (bin worker) (bin (sha worker)) (bin path)
+      (bin request.mapping_id) request.fencing_token request.target_lease_until_ns (bin (sha worker)) in
+    let status,out,errors=run_cancellation_child
+      ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
+      ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";code]
+      ~database:path ~input:"" in
+    check "CANCEL-SIGNED-GLEAM-NATIVE-EXIT"
+      (Poly.equal status (Lifetime_unix.WEXITED 0) && String.is_empty errors);
+    let result=Yojson.Safe.from_string out in
+    let raw=Yojson.Safe.Util.member "request_json" result |> Yojson.Safe.Util.to_string in
+    let query=ok (Cancel_protocol.decode Lookup raw) in
+    let persisted=ok (Cancel_protocol.execute store query ~now_ns:Int64.max_value) in
+    let native_receipt=Yojson.Safe.Util.member "receipt" persisted in
+    check "CANCEL-SIGNED-GLEAM-NATIVE-EXACT-HASH"
+      (Poly.equal (Yojson.Safe.Util.member "request_hash" result)
+        (Yojson.Safe.Util.member "request_hash" native_receipt));
+    check "CANCEL-SIGNED-GLEAM-NATIVE-HISTORICAL-EFFECT"
+      (Poly.equal (Cancellation.job store).state Store.Job_cancelled
+       && Yojson.Safe.Util.to_bool (Yojson.Safe.Util.member "historical" persisted)
+       && String.equal (Yojson.Safe.Util.to_string (Yojson.Safe.Util.member "status" result)) "passed"));
+  Printf.printf "signed approval through native worker: %d checks passed\n%!" !tests

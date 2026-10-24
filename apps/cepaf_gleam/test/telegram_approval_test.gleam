@@ -30,6 +30,7 @@ fn intent() {
         string.repeat("a", 64),
         host,
         boot,
+        action.Execution("mapping-1", "lease-1", 3, string.repeat("d", 64)),
       ),
       action.Target("uos/example/job1", "worker", 2, 2_000_000_000_000),
       action.Window(1_000_000, 20_000, 1_060_000, 80_000),
@@ -451,6 +452,7 @@ pub fn recheck_rejects_clock_rollback_and_new_request_test() {
         string.repeat("a", 64),
         host,
         boot,
+        action.Execution("mapping-1", "lease-1", 3, string.repeat("d", 64)),
       ),
       action.Target("uos/example/job1", "worker", 2, 2_000_000_000_000),
       action.Window(1_000_000, 20_000, 1_060_000, 80_000),
@@ -482,4 +484,23 @@ pub fn correct_header_wrong_cryptographic_key_test() {
     ],
     p,
   )
+}
+
+pub fn native_deadline_includes_shorter_receipt_and_roster_test() {
+  let p = roster()
+  let shortened =
+    signed(
+      approval.Codex,
+      replace(fields(approval.Codex, p), "exp_ms", json.int(now + 1)),
+    )
+  let assert Ok(e) =
+    verify(p, [
+      shortened,
+      receipt(approval.Agy, p),
+      receipt(approval.Operator, p),
+    ])
+  approval.execution_deadline_ms(e) |> should.equal(now + 1)
+  let assert Ok(short_roster) = approval.new_roster(signers(), 900_000, now + 2)
+  let assert Ok(re) = verify(short_roster, receipts(short_roster))
+  approval.execution_deadline_ms(re) |> should.equal(now + 2)
 }

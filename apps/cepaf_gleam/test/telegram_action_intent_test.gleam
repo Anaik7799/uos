@@ -18,6 +18,7 @@ fn binding() {
     string.repeat("a", 64),
     "nas-1.tail55d152.ts.net",
     "boot-1",
+    action.Execution("mapping-1", "lease-1", 3, string.repeat("d", 64)),
   )
 }
 
@@ -53,11 +54,11 @@ fn made(b, t, w, reason, nonce) {
 pub fn canonical_golden_vector_test() {
   action.canonical_json(intent())
   |> should.equal(
-    "[\"uos.telegram.action-intent.v1\",\"cancel_job_lease\",7,-11,13,19,\"uos/example\",\"TASK\",\"operator\",6,9,\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"nas-1.tail55d152.ts.net\",\"boot-1\",\"uos/example/job1\",\"worker\",2,2000000000000,1000000,20000,1060000,80000,\"Operator requested cancellation\",\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"]",
+    "[\"uos.telegram.action-intent.v2\",\"cancel_job_lease\",7,-11,13,19,\"uos/example\",\"TASK\",\"operator\",6,9,\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"nas-1.tail55d152.ts.net\",\"boot-1\",\"mapping-1\",\"lease-1\",3,\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\"uos/example/job1\",\"worker\",2,2000000000000,1000000,20000,1060000,80000,\"Operator requested cancellation\",\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"]",
   )
   action.digest(intent())
   |> should.equal(
-    "e21dd694d105ee4b34894ac32b8c49a61b5c599a3768d2c2a3bb6523bd60ed3b",
+    "e260ea54e3a9e1a36278c0a00a770cf3b8e7c8d340ad2886bdaf3091db4bc4e4",
   )
   action.effect_id(intent())
   |> should.equal(
@@ -500,4 +501,85 @@ pub fn clock_jump_is_not_freshness_test() {
 
 fn different(actual: String, expected: String) {
   should.be_false(actual == expected)
+}
+
+pub fn execution_context_is_signed_and_effect_is_stable_test() {
+  let b = binding()
+  let e = b.execution
+  list.each(
+    [
+      action.Execution(..e, mapping_id: "mapping-2"),
+      action.Execution(..e, lease_id: "lease-2"),
+      action.Execution(..e, fencing_token: 4),
+      action.Execution(..e, profile_sha256: string.repeat("e", 64)),
+    ],
+    fn(changed) {
+      let i =
+        made(
+          action.Binding(..b, execution: changed),
+          target(),
+          window(),
+          "Operator requested cancellation",
+          string.repeat("b", 64),
+        )
+      action.digest(i) |> different(action.digest(intent()))
+      action.effect_id(i) |> should.equal(action.effect_id(intent()))
+      action.matches_execution(i, e) |> should.be_false
+    },
+  )
+  action.execution_profile(intent()) |> should.equal(string.repeat("d", 64))
+  action.worker_artifact(intent()) |> should.equal(string.repeat("a", 64))
+}
+
+pub fn execution_context_rejects_invalid_fields_test() {
+  let b = binding()
+  let e = b.execution
+  list.each(
+    [
+      action.Execution(..e, mapping_id: ""),
+      action.Execution(..e, lease_id: "../unsafe"),
+      action.Execution(..e, fencing_token: 0),
+      action.Execution(..e, fencing_token: 9_007_199_254_740_992),
+      action.Execution(..e, profile_sha256: string.repeat("D", 64)),
+    ],
+    fn(changed) {
+      make(
+        action.Binding(..b, execution: changed),
+        target(),
+        window(),
+        "Reason",
+        string.repeat("b", 64),
+      )
+      |> result.is_error
+      |> should.be_true
+    },
+  )
+}
+
+pub fn native_deadline_cannot_expand_intent_test() {
+  list.each([0, 1_000_000, 1_060_001], fn(deadline) {
+    action.native_request(intent(), deadline)
+    |> result.is_error
+    |> should.be_true
+    action.native_request_hash(intent(), deadline)
+    |> result.is_error
+    |> should.be_true
+  })
+  action.native_request(intent(), 1_000_001) |> result.is_ok |> should.be_true
+  action.native_request(intent(), 1_060_000) |> result.is_ok |> should.be_true
+  let assert Ok(a) = action.native_request_hash(intent(), 1_060_000)
+  let assert Ok(b) = action.native_request_hash(intent(), 1_030_000)
+  a |> different(b)
+}
+
+pub fn native_request_independent_golden_vector_test() {
+  let assert Ok(raw) = action.native_request(intent(), 1_030_000)
+  raw
+  |> should.equal(
+    "{\"schema\":\"uos.sa-plan.cancel-job-request.v1\",\"mapping_id\":\"mapping-1\",\"effect_id\":\"4718876da639ea2767fcc2578ffad8bc7a981b2414339b28ac7e35a557565899\",\"intent_sha256\":\"e260ea54e3a9e1a36278c0a00a770cf3b8e7c8d340ad2886bdaf3091db4bc4e4\",\"owner\":\"operator\",\"lease_id\":\"lease-1\",\"fencing_token\":3,\"target_job_id\":\"uos/example/job1\",\"target_worker\":\"worker\",\"target_attempt\":2,\"target_lease_until_ns\":2000000000000,\"reason\":\"Operator requested cancellation\",\"expires_at_ns\":1030000000000}",
+  )
+  action.native_request_hash(intent(), 1_030_000)
+  |> should.equal(Ok(
+    "717d84d1568e5e123bbbd42fbf0f2a7feb8b5b9356947f52a3d1687b15aed411",
+  ))
 }

@@ -118,6 +118,12 @@ pub fn roster_digest(roster: Roster) -> String {
   roster.digest
 }
 
+/// Native effect expiry must be capped at this verified receipt and roster deadline.
+/// The value is not a grant; still_valid and current canonical fences remain required.
+pub fn execution_deadline_ms(e: Verified) -> Int {
+  e.min_exp_ms
+}
+
 pub fn receipt_digests(e: Verified) -> List(String) {
   e.receipt_digests
 }
@@ -198,7 +204,7 @@ pub fn verify(
     effect_id: req_effect_id,
     roster_digest: roster.digest,
     receipt_digests: digests,
-    min_exp_ms: min_exp_ms,
+    min_exp_ms: int.min(min_exp_ms, roster.expires_at_ms),
     verified_utc_ms: now_utc_ms,
     verified_boot_ms: now_boot_ms,
   ))
