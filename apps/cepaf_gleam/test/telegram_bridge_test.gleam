@@ -1,5 +1,6 @@
 import cepaf_gleam/harness/telegram_bridge as bridge
 import cepaf_gleam/harness/telegram_store_transport as transport
+import cepaf_gleam/harness/files
 import gleam/json
 import gleam/list
 import gleam/result
@@ -304,4 +305,81 @@ pub fn restoration_refuses_noncanonical_or_unknown_fields_test() {
     ],
     fn(value) { bridge.restore(value) |> result.is_error |> should.be_true },
   )
+}
+
+fn target_response() -> String {
+ json.object([
+  #("schema",json.string("uos.telegram.cancel-transport-response.v1")),
+  #("status",json.string("ok")), #("error",json.null()),
+  #("result",json.object([
+   #("schema",json.string("uos.sa-plan.cancel-target-response.v1")),
+   #("controller_sha256",json.string(files.digest(bridge.request_json(request())))),
+   #("fencing_token",json.int(7)), #("observed_at_ns",json.int(100)),
+   #("target",json.object([
+     #("job_id",json.string("fence/job-1")),#("worker",json.string("job-worker")),
+     #("attempt",json.int(2)),#("lease_until_ns",json.int(900))
+   ]))
+  ]))
+ ]) |> json.to_string
+}
+pub fn target_request_scope_test() {
+ let assert Ok(raw)=bridge.target_envelope(request(),7,"fence/job-1")
+ string.contains(raw,"inspect-cancellation-target") |> should.be_true
+ list.each(["fence/","foreign/job","fence/../job","fence/job;DROP"],fn(job){
+  bridge.target_envelope(request(),7,job) |> should.be_error
+ })
+ list.each([0,-1,9223372036854775808],fn(fence){
+  bridge.target_envelope(request(),fence,"fence/job-1") |> should.be_error
+ })
+}
+pub fn target_exact_response_test() {
+ bridge.decode_target_response(request(),7,"fence/job-1",target_response(),101)
+ |> should.equal(Ok(bridge.TargetObservation("fence/job-1","job-worker",2,900,100)))
+}
+pub fn target_misbound_or_malformed_response_test() {
+ let raw=target_response()
+ list.each([
+  #("cancel-target-response.v1","cancel-target-response.future"),
+  #(files.digest(bridge.request_json(request())),string.repeat("0",64)),
+  #("\"fencing_token\":7","\"fencing_token\":8"),
+  #("\"observed_at_ns\":100","\"observed_at_ns\":102"),
+  #("fence/job-1","fence/job-2"),
+  #("job-worker","bad worker"),
+  #("\"attempt\":2","\"attempt\":0"),
+  #("\"lease_until_ns\":900","\"lease_until_ns\":101"),
+  #("\"attempt\":2","\"attempt\":2,\"secret\":true"),
+  #("\"attempt\":2","\"attempt\":2,\"attempt\":2"),
+  #("\"attempt\":2","\"attempt\":2.0"),
+  #("\"status\":\"ok\"","\"status\":\"rejected\""),
+ ],fn(pair){
+  bridge.decode_target_response(request(),7,"fence/job-1",
+    string.replace(raw,pair.0,pair.1),101)
+    |> should.equal(Error("invalid_target_response"))
+ })
+ list.each(["","{}","[]",raw <> "x",string.repeat("x",16385)],fn(s){
+  bridge.decode_target_response(request(),7,"fence/job-1",s,101) |> should.be_error
+ })
+}
+pub fn target_expiry_and_clock_test() {
+ list.each([-1,99,900,1000,9223372036854775808],fn(now){
+  bridge.decode_target_response(request(),7,"fence/job-1",target_response(),now)
+   |> should.be_error
+ })
+}
+
+pub fn inspect_native(config:transport.LocalConfiguration,mapping:String,
+ expiry:Int,target_expiry:Int) {
+ let assert Ok(r)=bridge.new(mapping,"cancel-plan","controller","controller",1,"control-lease",expiry)
+ let assert Ok(envelope)=bridge.target_envelope(r,1,"cancel-plan/job1")
+ let assert Ok(raw)=transport.exchange(config,envelope)
+ let assert Ok(bridge.TargetObservation(job,worker,attempt,lease,_))=
+  bridge.decode_target_response(r,1,"cancel-plan/job1",raw,time(Nanosecond))
+ job |> should.equal("cancel-plan/job1")
+ worker |> should.equal("job-worker")
+ attempt |> should.equal(1)
+ lease |> should.equal(target_expiry)
+ let assert Ok(wrong)=bridge.target_envelope(r,2,"cancel-plan/job1")
+ let assert Ok(raw)=transport.exchange(config,wrong)
+ bridge.decode_target_response(r,2,"cancel-plan/job1",raw,time(Nanosecond)) |> should.be_error
+ "exact_target_observed_no_mutation"
 }

@@ -185,9 +185,9 @@ pub fn strict_args_and_truthful_denial_test() {
     g.DeniedMutation(..) -> Nil
     _ -> panic as "array accepted"
   }
-  case g.classify_directive("/approval") {
+  case g.classify_directive("/approval approve") {
     g.DeniedMutation(_, reason) ->
-      string.contains(reason, "not implemented") |> should.be_true
+      string.contains(reason, "not integrated") |> should.be_true
     _ -> panic as "approval allowed"
   }
 }
@@ -277,4 +277,11 @@ pub fn coordination_scope_at_ingress_test() {
   list.each(["/peers private","/board send x","/tool query_peers {\"path\":\"evil\"}"], fn(input) {
     let assert g.DeniedMutation(..) = g.classify_directive(input)
   })
+}
+
+pub fn approval_status_ingress_test() {
+ g.classify_directive("/approval") |> should.equal(g.PreservedDirective("/approval",[]))
+ g.classify_directive("/approval list") |> should.equal(g.PreservedDirective("/approval",[]))
+ g.classify_directive("/approval tg-333444-10") |> should.equal(g.PreservedDirective("/approval",["tg-333444-10"]))
+ list.each(["/approval approve","/approval submit token","/approval ../file","/approval tg-1;DROP"],fn(text){let assert g.DeniedMutation(_,_) = g.classify_directive(text) Nil})
 }

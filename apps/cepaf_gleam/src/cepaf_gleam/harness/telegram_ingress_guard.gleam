@@ -126,6 +126,14 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         let name = invocation.definition.canonical
         let args = invocation.args
         case name {
+          "/approval" -> case args {
+            "" | "list" -> PreservedDirective("/approval",[])
+            id -> case string.byte_size(id)<=64 && string.starts_with(id,"tg-")
+              && list.all(string.to_graphemes(string.drop_start(id,3)),fn(c){string.contains("0123456789-",c)}) {
+              True -> PreservedDirective("/approval",[id])
+              False -> DeniedMutation("/approval","Usage: /approval [request_id]. Signed receipt submission is not integrated yet.")
+            }
+          }
           "/doctor" -> read_directive("query_doctor", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" -> read_directive("query_system_health", args)

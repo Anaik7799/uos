@@ -3,6 +3,8 @@
 //// never a signing, job execution or production admission grant.
 
 import cepaf_gleam/harness/telegram_store_codec as codec
+import cepaf_gleam/harness/files
+import gleam/int
 import gleam/json
 import gleam/list
 import gleam/result
@@ -377,3 +379,65 @@ pub fn expires_at_ns(r: Request) -> Int {
 pub fn matches_execution(r: Request, mapping: String, lease: String) -> Bool {
   r.mapping == mapping && r.lease == lease
 }
+
+//// Target observations are proposal inputs only; native effect still rechecks
+//// the original target attempt and lease after independently verified approvals.
+pub type TargetObservation {
+  TargetObservation(job:String, worker:String, attempt:Int, lease_until_ns:Int, observed_at_ns:Int)
+}
+pub fn target_envelope(r:Request,fence:Int,job:String) -> Result(String,String) {
+  use _ <- result.try(require(fence>0 && fence<=max_ns && token(job)
+    && string.starts_with(job,r.plan <> "/") && job!=r.plan <> "/",
+    "invalid_target_request"))
+  Ok(json.object([
+    #("schema",json.string("uos.telegram.cancel-transport.v1")),
+    #("operation",json.string("inspect-cancellation-target")),
+    #("request",json.object([
+      #("schema",json.string("uos.sa-plan.cancel-target-request.v1")),
+      #("controller_json",json.string(request_json(r))),
+      #("fencing_token",json.string(int.to_string(fence))),
+      #("target_job_id",json.string(job)),
+    ])),
+  ]) |> json.to_string)
+}
+
+pub fn decode_target_response(r:Request,fence:Int,job:String,raw:String,now_ns:Int)
+  -> Result(TargetObservation,String) {
+  decode_target(r,fence,job,raw,now_ns)
+    |> result.map_error(fn(_) { "invalid_target_response" })
+}
+fn decode_target(r:Request,fence:Int,job:String,raw:String,now_ns:Int)
+  -> Result(TargetObservation,String) {
+  use _ <- result.try(target_envelope(r,fence,job))
+  use _ <- result.try(require(string.byte_size(raw)>0 && string.byte_size(raw)<=16384
+    && now_ns>=0 && now_ns<=max_ns,invalid_response))
+  use parsed <- result.try(codec.parse_strict_json(raw))
+  use outer <- result.try(expect_exact_object(parsed,["schema","status","result","error"]))
+  use schema <- result.try(get_string(outer,"schema"))
+  use status <- result.try(get_string(outer,"status"))
+  use _ <- result.try(require(schema=="uos.telegram.cancel-transport-response.v1"
+    && status=="ok",invalid_response))
+  use _ <- result.try(expect_null(outer,"error"))
+  use body <- result.try(get_field(outer,"result"))
+  use body <- result.try(expect_exact_object(body,["schema","controller_sha256",
+    "fencing_token","observed_at_ns","target"]))
+  use schema <- result.try(get_string(body,"schema"))
+  use controller <- result.try(get_string(body,"controller_sha256"))
+  use actual_fence <- result.try(get_int(body,"fencing_token"))
+  use observed <- result.try(get_int(body,"observed_at_ns"))
+  use target <- result.try(get_field(body,"target"))
+  use target <- result.try(expect_exact_object(target,["job_id","worker","attempt","lease_until_ns"]))
+  use id <- result.try(get_string(target,"job_id"))
+  use worker <- result.try(get_string(target,"worker"))
+  use attempt <- result.try(get_int(target,"attempt"))
+  use expiry <- result.try(get_int(target,"lease_until_ns"))
+  use _ <- result.try(require(schema=="uos.sa-plan.cancel-target-response.v1"
+    && controller==files.digest(request_json(r)) && actual_fence==fence
+    && observed>=0 && observed<=now_ns && r.expiry>now_ns
+    && id==job && token(worker) && attempt>0 && attempt<=2147483647
+    && expiry>now_ns && expiry<=max_ns,invalid_response))
+  Ok(TargetObservation(id,worker,attempt,expiry,observed))
+}
+
+pub fn mapping_id(r:Request) -> String { r.mapping }
+pub fn lease_id(r:Request) -> String { r.lease }

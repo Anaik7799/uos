@@ -44,6 +44,8 @@ import gleam/dynamic/decode
 import gleam/dict
 import gleam/erlang/process.{type Pid, type Subject}
 import gleam/erlang/reference
+import gleam/crypto
+import cepaf_gleam/harness/telegram_action_intent as action_intent
 import gleam/int
 import gleam/json
 import gleam/list
@@ -2301,6 +2303,7 @@ fn execute_guarded_dispatch(
                       ),
                     )) -> {
                       let payload = case dir {
+                        guard.PreservedDirective("/approval",selector) -> approval_status_reply(state,inbox_rec,selector)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
                         guard.PreservedDirective("/search",[query]) -> search_reply(state,query)
@@ -5929,4 +5932,130 @@ fn execute_action_recovery_dispatch(state:ServiceState,inbox:ledger.InboxRecord,
   use p <- result.try(p)
   use #(next,committed) <- result.try(recover_cancellation(state,p,inbox,version,sha))
   finish_conversation(next,inbox,version,committed)
+}
+
+//// Build signable data from an exact persisted pending command and a fresh
+//// canonical target observation. No approvals, effect or proposal persistence
+//// occur here; callers must durably retain the returned bytes before review.
+pub fn propose_cancellation(state:ServiceState,p:action_profile.Profile,
+  inbox:ledger.InboxRecord) -> Result(action_intent.Intent,ServiceError) {
+  use before <- result.try(action_observe(state,p))
+  use _ <- result.try(case inbox.status==ledger.InboxPending
+    && inbox.bot_id==state.config.bot_id
+    && list.contains(state.config.allowed_pairs,#(inbox.chat_id,inbox.user_id)) {
+    True -> Ok(Nil)
+    False -> Error(action_hold(state,"action_proposal_identity_refused"))
+  })
+  use #(gen,rows) <- result.try(svc_read_keys(state,
+    [codec.inbox_key(inbox.request_id),codec.input_key(inbox.request_id)])
+    |> result.map_error(fn(err){action_store_error(state,err)}))
+  use #(stored,input) <- result.try(case rows {
+    [stored,input] if gen==state.expected_generation -> Ok(#(stored,input))
+    _ -> Error(action_hold(state,"action_generation_changed"))
+  })
+  use _ <- result.try(case stored.exists
+    && stored.sha256==files.digest(codec.encode_inbox_record(inbox)) && input.exists {
+    True -> Ok(Nil)
+    False -> Error(action_hold(state,"action_proposal_input_refused"))
+  })
+  use raw <- result.try(codec.decode_row_value(input)
+    |> result.map_error(fn(_){action_hold(state,"action_proposal_input_refused")}))
+  use #(rid,bot,update,verdict) <- result.try(codec.decode_input_verdict(raw)
+    |> result.map_error(fn(_){action_hold(state,"action_proposal_input_refused")}))
+  use #(job,reason) <- result.try(proposal_command(inbox,rid,bot,update,verdict)
+    |> result.map_error(fn(_){action_hold(state,"action_proposal_input_refused")}))
+  let request=action_profile.request(p)
+  use raw <- result.try(transport.exchange(action_profile.transport(p),
+    bridge.envelope(request,bridge.Lookup))
+    |> result.map_error(fn(_){action_hold(state,"action_bridge_unresolved")}))
+  let observed_ns=ffi_system_now_ns()
+  use fence <- result.try(case bridge.decode_response(request,bridge.Lookup,raw,observed_ns) {
+    Ok(bridge.Found(f,expiry,_,True)) if expiry>observed_ns -> Ok(f)
+    _ -> Error(action_hold(state,"action_bridge_not_current"))
+  })
+  use envelope <- result.try(bridge.target_envelope(request,fence,job)
+    |> result.map_error(fn(_){action_hold(state,"action_target_refused")}))
+  use raw <- result.try(transport.exchange(action_profile.transport(p),envelope)
+    |> result.map_error(fn(_){action_hold(state,"action_target_unresolved")}))
+  use after <- result.try(action_observe(state,p))
+  use _ <- result.try(checked_clock.continuity(before,after)
+    |> result.map_error(fn(_){action_hold(state,"action_clock_discontinuity")}))
+  use target <- result.try(bridge.decode_target_response(request,fence,job,raw,
+    after.sample.observed.utc_us*1000)
+    |> result.map_error(fn(_){action_hold(state,"action_target_refused")}))
+  let now=after.sample.observed.utc_us / 1000
+  let boot=after.sample.observed.boot_us / 1000
+  let duration=int.min(120_000,int.min(target.lease_until_ns / 1_000_000 - now - 1,
+    bridge.expires_at_ns(request) / 1_000_000 - now - 1))
+  let c=action_profile.context(p)
+  let binding=action_intent.Binding(c.bot,inbox.chat_id,inbox.user_id,inbox.update_id,
+    c.plan,c.task,c.worker,c.attempt,c.epoch,c.candidate,c.host,c.boot,
+    action_intent.Execution(bridge.mapping_id(request),bridge.lease_id(request),fence,
+      action_profile.digest(p)))
+  action_intent.new(binding,
+    action_intent.Target(target.job,target.worker,target.attempt,target.lease_until_ns),
+    action_intent.Window(now,boot,now+duration,boot+duration),reason,
+    crypto.strong_random_bytes(32) |> bit_array.base16_encode |> string.lowercase)
+    |> result.map_error(fn(_){action_hold(state,"action_proposal_window_refused")})
+}
+
+fn proposal_command(inbox:ledger.InboxRecord,rid:String,bot:Int,update:Int,
+  verdict:guard.IngressVerdict) -> Result(#(String,String),Nil) {
+  case verdict {
+    guard.AcceptedEnvelope(bot_id:b,chat_id:c,user_id:u,update_id:n,message_id:m,
+      text_hash:h,raw_text:text,callback_query_id:None,..) ->
+      case rid==inbox.request_id && bot==inbox.bot_id && update==inbox.update_id
+        && b==bot && c==inbox.chat_id && u==inbox.user_id && n==update
+        && m==inbox.message_id && h==inbox.text_hash && files.digest(text)==h {
+        True -> case commands.parse(text) {
+          Ok(inv) if inv.definition.canonical=="/tool" -> case tool_command.parse(inv.args) {
+            Ok(tool_command.CancelLease(job,reason)) -> Ok(#(job,reason))
+            _ -> Error(Nil)
+          }
+          _ -> Error(Nil)
+        }
+        False -> Error(Nil)
+      }
+    _ -> Error(Nil)
+  }
+}
+
+fn approval_status_reply(state:ServiceState,viewer:ledger.InboxRecord,
+  args:List(String)) -> String {
+  let selected=case args { [id] -> id _ -> "" }
+  case scan_all_inbox_records(state.config.storage_config,None,None,0,[]) {
+    Error(_) -> "Approval status is temporarily unavailable. No action was executed."
+    Ok(#(_,rows)) -> {
+      let eligible=rows
+        |> list.filter(fn(row) {
+          let rec=row.0
+          rec.bot_id==viewer.bot_id && rec.chat_id==viewer.chat_id
+          && rec.user_id==viewer.user_id
+          && {selected=="" || rec.request_id==selected}
+          && specialized_dispatch(state,rec.request_id)==CancellationDispatch
+        })
+        |> list.sort(fn(a,b){int.compare(b.0.created_at_ms,a.0.created_at_ms)})
+      let lines=eligible |> list.take(20) |> list.map(fn(row){
+        let rec=row.0
+        let label=case rec.status {
+          ledger.InboxPending -> "Pending: signed approval and execution are not confirmed."
+          ledger.InboxProcessing(_,_) -> "Processing or recovery pending; the effect is not confirmed by this view."
+          ledger.InboxResultReady(_) -> "Result recorded; reply delivery is pending."
+          ledger.InboxCompleted(_) -> "Reply delivered. See that reply for the precise action outcome."
+          ledger.InboxRejected(_) -> "Request rejected."
+          ledger.InboxHold(_) -> "Request held for reconciliation."
+        }
+        rec.request_id <> ": " <> label
+      })
+      case lines {
+        [] -> "No controlled action requests found for this chat and user."
+        _ -> "Controlled action requests for this chat and user:\n"
+          <> string.join(lines,"\n")
+          <> case list.length(eligible)>20 {
+            True -> "\nShowing the latest 20. Use /approval <request_id> for an older request."
+            False -> ""
+          }
+      }
+    }
+  }
 }

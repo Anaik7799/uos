@@ -3371,3 +3371,118 @@ FROM sa_plan_workflow ORDER BY created_at_ns, id
                           }
                           :: views)))
               |> Result.map ~f:List.rev))
+
+type cancellation_target = {
+  job_id : string;
+  target_worker : string;
+  target_attempt : int;
+  target_lease_until_ns : int64;
+}
+
+let cancellation_target_refused = "cancellation_target_refused"
+
+let inspect_cancellation_target_observed store ~mapping_id ~owner ~lease_id
+    ~fencing_token ~target_job_id ~observe_now =
+  let open Result.Let_syntax in
+  if not (List.for_all [mapping_id; owner; lease_id; target_job_id] ~f:cancellation_token
+          && Int64.(fencing_token > 0L))
+  then Error cancellation_target_refused
+  else
+    match
+      Or_error.try_with (fun () ->
+        transaction store (fun () ->
+          let now_ns = observe_now () in
+          let%bind () =
+            if Int64.(now_ns >= 0L) then Ok ()
+            else Error cancellation_target_refused
+          in
+          let%bind mapping = find_mapping_db store.db mapping_id in
+          let%bind mapping =
+            match mapping with
+            | Some mapping
+              when String.equal mapping.id mapping_id
+                   && Poly.equal mapping.domain Sa_plan -> Ok mapping
+            | _ -> Error cancellation_target_refused
+          in
+          let%bind plan_id, task_id = mapped_task mapping in
+          let prefix = plan_id ^ "/" in
+          let%bind () =
+            if String.is_prefix target_job_id ~prefix
+               && String.length target_job_id > String.length prefix
+            then Ok ()
+            else Error cancellation_target_refused
+          in
+          let%bind lease = find_bridge_lease_db store.db ~mapping_id in
+          let%bind lease =
+            match lease with
+            | Some lease
+              when String.equal lease.mapping_id mapping_id
+                   && String.equal lease.owner owner
+                   && String.equal lease.lease_id lease_id
+                   && Int64.equal lease.fencing_token fencing_token
+                   && Int64.(lease.expires_at_ns > now_ns) -> Ok lease
+            | _ -> Error cancellation_target_refused
+          in
+          let%bind task_attempt =
+            match lease.task_attempt with
+            | Some attempt when attempt > 0 && attempt <= 2_147_483_647 ->
+                Ok attempt
+            | _ -> Error cancellation_target_refused
+          in
+          let%bind () =
+            with_stmt store.db
+              {|SELECT 1 FROM sa_plan_task
+                WHERE plan_id=? AND id=? AND state='executing' AND worker=?
+                  AND attempt=? AND lease_until_ns>?|}
+              (fun stmt ->
+                let%bind () =
+                  bind_values_result "bind cancellation target task fence" stmt
+                    [TEXT plan_id; TEXT task_id; TEXT owner;
+                     INT (Int64.of_int task_attempt); INT now_ns]
+                in
+                match Sqlite3.step stmt with
+                | Sqlite3.Rc.ROW -> Ok ()
+                | _ -> Error cancellation_target_refused)
+          in
+          with_stmt store.db
+            {|SELECT id, worker, attempt, lease_owner, lease_until_ns, state
+              FROM sa_plan_job WHERE id=?|}
+            (fun stmt ->
+              let%bind () =
+                bind_values_result "bind cancellation target job" stmt
+                  [TEXT target_job_id]
+              in
+              match Sqlite3.step stmt with
+              | Sqlite3.Rc.ROW -> (
+                  match
+                    Sqlite3.column stmt 0,
+                    Sqlite3.column stmt 1,
+                    Sqlite3.column stmt 2,
+                    Sqlite3.column stmt 3,
+                    Sqlite3.column stmt 4,
+                    Sqlite3.column stmt 5
+                  with
+                  | TEXT job_id,
+                    TEXT target_worker,
+                    INT attempt_i64,
+                    TEXT lease_owner,
+                    INT target_lease_until_ns,
+                    TEXT state
+                    when String.equal job_id target_job_id
+                         && String.equal state "executing"
+                         && cancellation_token target_worker
+                         && Int64.(attempt_i64 >= 1L
+                                   && attempt_i64 <= 2_147_483_647L)
+                         && String.equal lease_owner target_worker
+                         && Int64.(target_lease_until_ns > now_ns) ->
+                      Ok {
+                        job_id;
+                        target_worker;
+                        target_attempt = Int64.to_int_exn attempt_i64;
+                        target_lease_until_ns;
+                      }
+                  | _ -> Error cancellation_target_refused)
+              | _ -> Error cancellation_target_refused)))
+    with
+    | Ok (Ok target) -> Ok target
+    | Ok (Error _) | Error _ -> Error cancellation_target_refused

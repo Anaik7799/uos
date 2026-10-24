@@ -7,7 +7,7 @@ val read_frame : in_channel -> (string, string) result
 (** Closed envelope with unique schema/operation/request keys. The nested
     request is decoded by Cancel_protocol or Bridge_protocol, each retaining
     its own closed schema. Operations are cancel-once, cancellation-result,
-    bind-controller-bridge and controller-bridge-result.
+    bind-controller-bridge, controller-bridge-result and inspect-cancellation-target.
     No clock, path, approval flag or executor policy is accepted in payload. *)
 type t
 

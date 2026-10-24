@@ -676,3 +676,34 @@ val list_workflows : t -> (workflow_view list, string) Result.t
 val lookup_job_cancellation :
   t -> job_cancellation -> now_ns:int64 ->
   (bridge_command_receipt option, string) Result.t
+
+(** Bounded read-only snapshot of an executing job target eligible for a
+    fenced cancellation approval proposal. *)
+type cancellation_target = {
+  job_id : string;
+  target_worker : string;
+  target_attempt : int;
+  target_lease_until_ns : int64;
+}
+
+(** [inspect_cancellation_target_observed store ~mapping_id ~owner ~lease_id
+    ~fencing_token ~target_job_id ~observe_now] validates bounded ASCII tokens
+    and a positive fence, enters an immediate SQLite transaction before calling
+    [observe_now ()] once, and verifies that [mapping_id] is a canonical
+    [Sa_plan] mapping whose current bridge lease and executing task match
+    [owner], [lease_id], [fencing_token], and original bounded [task_attempt]
+    with strictly future expiries at the observed nonnegative timestamp.
+    Queries only [id, worker, attempt, lease_owner, lease_until_ns, state] for
+    the exact [target_job_id] within the mapped plan prefix without loading
+    private [args] or [result] columns or mutating state. Returns
+    [Error "cancellation_target_refused"] on any validation, lookup, SQL, or
+    exception failure. *)
+val inspect_cancellation_target_observed :
+  t ->
+  mapping_id:string ->
+  owner:string ->
+  lease_id:string ->
+  fencing_token:int64 ->
+  target_job_id:string ->
+  observe_now:(unit -> int64) ->
+  (cancellation_target, string) result

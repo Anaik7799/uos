@@ -330,6 +330,8 @@ pub fn run_native(
     )
   let assert [inbox] = prefix.admitted_records
   case mode {
+    "approval_status" | "approval_foreign" -> approval_status_fixture(initial,prefix,inbox,p,root,bridge_expiry,now,mode)
+    "proposal" -> proposal_fixture(initial,prefix,inbox,p,bridge_expiry,target_lease)
     "dispatch" -> dispatch_fixture(initial,prefix,inbox,p,root,packet_text,bridge_expiry,now)
     _ -> {
   let assert Ok(#(receipt, inbox)) =
@@ -583,4 +585,81 @@ fn recovery_dispatch_fixture(state:service.ServiceState,p:profile.Profile,root:S
  let _=fixture_stop(pid)
  list.filter(requests,fn(r){let #(_,path,_,_)=r string.contains(path,"/sendMessage")}) |> list.length |> should.equal(1)
  "service_recovery_dispatched_delivered_once"
+}
+
+fn proposal_fixture(initial:service.ServiceState,prefix:store.CommitPrefixResult,
+  inbox:ledger.InboxRecord,p:profile.Profile,bridge_expiry:Int,target_lease:Int) {
+ let state=service.set_authority(service.ServiceState(..initial,expected_generation:prefix.receipt.generation),
+   service.AuthorityLease("service-test",1,1,bridge_expiry / 1000))
+ service.propose_cancellation(service.revoke_authority(state),p,inbox)
+   |> should.be_error
+ service.propose_cancellation(state,p,ledger.InboxRecord(..inbox,user_id:201))
+   |> should.be_error
+ service.propose_cancellation(state,p,ledger.InboxRecord(..inbox,message_id:999))
+   |> should.be_error
+ let assert Ok(proposed)=service.propose_cancellation(state,p,inbox)
+ let c=profile.context(p)
+ let expected=action.Binding(c.bot,inbox.chat_id,inbox.user_id,inbox.update_id,
+   c.plan,c.task,c.worker,c.attempt,c.epoch,c.candidate,c.host,c.boot,
+   action.Execution(bridge.mapping_id(profile.request(p)),"control-lease",1,profile.digest(p)))
+ action.matches_binding(proposed,expected) |> should.be_true
+ action.matches_target(proposed,action.Target("cancel-plan/job1","job-worker",1,target_lease)) |> should.be_true
+ action.command_args(proposed) |> should.equal("cancel_job_lease cancel-plan/job1 -- Operator requested cancellation")
+ let assert Ok(current)=clock.observe()
+ action.valid_at(proposed,c.host,c.boot,current.sample.observed.utc_us / 1000,
+   current.sample.observed.boot_us / 1000) |> should.be_true
+ let assert Ok(second)=service.propose_cancellation(state,p,inbox)
+ action.effect_id(proposed) |> should.equal(action.effect_id(second))
+ { action.digest(proposed)==action.digest(second) } |> should.be_false
+ let assert Ok(#(gen,rows))=store.read_keys(state.config.storage_config,
+   [codec.inbox_key(inbox.request_id),store.cancellation_key(inbox.request_id),codec.result_key(inbox.request_id)])
+ gen |> should.equal(prefix.receipt.generation)
+ let assert [_,cancel,result]=rows
+ cancel.exists |> should.be_false
+ result.exists |> should.be_false
+ "service_proposal_exact_target_no_effect"
+}
+
+fn approval_status_fixture(initial:service.ServiceState,prefix:store.CommitPrefixResult,
+  inbox:ledger.InboxRecord,p:profile.Profile,root:String,bridge_expiry:Int,
+  now:Int,mode:String) {
+ let assert Ok(#(pid,_,url))=fixture_start()
+ let assert Ok(cfg)=service.configure_actions(initial.config,root,"profile.json",
+   profile.digest(p),profile.context(p),root)
+ let cfg=service.ServiceConfiguration(..cfg,http_config:http.default_configuration(url,"TEST_ONLY"),
+   allowed_pairs:[#(100,200),#(100,201)])
+ let user=case mode { "approval_foreign" -> 201 _ -> 200 }
+ let text="/approval " <> inbox.request_id
+ let verdict=guard.AcceptedEnvelope(20,21,100,user,files.digest(text),text,
+   guard.classify_directive(text),inbox.bot_id,None)
+ let assert Ok(#(wm,v,h))=store.read_watermark(cfg.storage_config)
+ let assert Ok(next)=store.commit_prefix(cfg.storage_config,inbox.bot_id,"approval-prefix",
+   prefix.receipt.generation,wm,v,h,[verdict],now)
+ let assert [query]=next.admitted_records
+ let state=service.set_authority(service.ServiceState(..initial,config:cfg,
+   expected_generation:next.receipt.generation),
+   service.AuthorityLease("service-test",1,1,bridge_expiry / 1000))
+ let assert Ok(#(_,service.DispatchCycleResult(1,1)))=service.dispatch_cycle(state,now*1000)
+ let chunk=row(cfg.storage_config,codec.chunk_key(query.request_id,0))
+ let assert Ok(raw)=codec.decode_row_value(chunk)
+ let assert Ok(chunk)=codec.decode_chunk_value(raw)
+ let requests=fixture_requests(pid)
+ let _=fixture_stop(pid)
+ list.length(requests) |> should.equal(1)
+ let assert ledger.OutboxDelivered(_)=chunk.status
+ case mode {
+  "approval_foreign" -> {
+   string.contains(chunk.payload,inbox.request_id) |> should.be_false
+   chunk.payload |> should.equal("No controlled action requests found for this chat and user.")
+  }
+  _ -> {
+   string.contains(chunk.payload,inbox.request_id) |> should.be_true
+   string.contains(chunk.payload,"signed approval and execution are not confirmed") |> should.be_true
+  }
+ }
+ row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
+ let assert Ok(raw)=codec.decode_row_value(row(cfg.storage_config,codec.inbox_key(inbox.request_id)))
+ let assert Ok(original)=codec.decode_inbox_record(raw)
+ original.status |> should.equal(ledger.InboxPending)
+ "approval_status_scoped_delivered_no_effect"
 }

@@ -1,6 +1,7 @@
 type t =
   | Cancellation of Sa_plan_cancel_protocol.t
   | Bridge of Sa_plan_bridge_protocol.t
+  | Target of Sa_plan_target_protocol.t
 
 let max_frame_bytes = 16384
 let envelope_schema = "uos.telegram.cancel-transport.v1"
@@ -42,6 +43,8 @@ let decode_request op raw =
       (Sa_plan_bridge_protocol.decode Bind raw)
   | "controller-bridge-result" -> Result.map (fun value -> Bridge value)
       (Sa_plan_bridge_protocol.decode Lookup raw)
+  | "inspect-cancellation-target" -> Result.map (fun value -> Target value)
+      (Sa_plan_target_protocol.decode raw)
   | _ -> Error invalid_transport
 
 let extract_envelope_fields fields =
@@ -123,3 +126,5 @@ let execute_observed store command ~observe_now =
   match command with
   | Cancellation value -> Sa_plan_cancel_protocol.execute_observed store value ~observe_now
   | Bridge value -> Sa_plan_bridge_protocol.execute_observed store value ~observe_now
+  | Target value -> Sa_plan_target_protocol.execute_observed store value ~observe_now
+

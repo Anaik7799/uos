@@ -1402,7 +1402,7 @@ let () =
     ~f:(fun c->Int.to_string (Char.to_int c))) ^ ">>" in
   let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
   let guardian=Filename.concat dir "guardian.exe" and worker=Filename.concat dir "worker.exe" in
-  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator";"dispatch";"recover";"recover_absent";"recover_dispatch"] ~f:(fun mode->
+  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator";"dispatch";"recover";"recover_absent";"recover_dispatch";"proposal";"approval_status";"approval_foreign"] ~f:(fun mode->
     Cancellation.with_case (fun path store request->
       let request=live_cancel_request path request in
       let lease=some (ok (Store.find_bridge_lease store ~mapping_id:request.mapping_id)) in
@@ -1425,6 +1425,10 @@ let () =
       if String.equal mode "success" then
         check "SERVICE-ACTION-SIGNED-NATIVE-EFFECT-AND-OUTBOX"
           (String.equal out "service_signed_cancel_outbox" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
+      else if String.equal mode "approval_status" || String.equal mode "approval_foreign" then check ("SERVICE-APPROVAL-STATUS-" ^ mode)
+        (String.equal out "approval_status_scoped_delivered_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
+      else if String.equal mode "proposal" then check "SERVICE-PROPOSAL-EXACT-TARGET-NO-EFFECT"
+        (String.equal out "service_proposal_exact_target_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
       else if String.equal mode "dispatch" then check "SERVICE-COMMAND-NATIVE-HTTP-DELIVERY"
         (String.equal out "service_command_dispatched_delivered_once" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
       else if String.equal mode "recover_dispatch" then check "SERVICE-RECOVERY-HTTP-DELIVERED-ONCE"
@@ -1439,3 +1443,120 @@ let () =
         (String.equal out "changed_bridge_fence_refused" && Poly.equal (Cancellation.job store).state Store.Job_executing)
       else check "SERVICE-ACTION-PERSISTED-ABSENT-NO-REEXECUTION"
         (String.equal out "persisted_absent_not_reexecuted" && Poly.equal (Cancellation.job store).state Store.Job_executing)))
+
+module Target_protocol = Sa_plan.Target_protocol
+let target_json (r:Store.job_cancellation) =
+  let controller=Yojson.Safe.to_string (`Assoc [
+    "schema",`String "uos.sa-plan.bridge-bind-request.v1";
+    "mapping_id",`String r.mapping_id;"plan_id",`String "cancel-plan";
+    "task_id",`String "controller";"owner",`String r.owner;
+    "task_attempt",`Int 1;"lease_id",`String r.lease_id;
+    "expires_at_ns",`Int 30000]) in
+  `Assoc ["schema",`String "uos.sa-plan.cancel-target-request.v1";
+    "controller_json",`String controller;
+    "fencing_token",`String (Int64.to_string r.fencing_token);
+    "target_job_id",`String r.target_job_id]
+
+let () = Cancellation.with_case (fun _ store request ->
+  let before=Cancellation.job store in
+  let run r=Store.inspect_cancellation_target_observed store
+    ~mapping_id:r.Store.mapping_id ~owner:r.owner ~lease_id:r.lease_id
+    ~fencing_token:r.fencing_token ~target_job_id:r.target_job_id ~observe_now:(fun()->200L) in
+  let t=ok(run request) in
+  check "TARGET-EXACT-FOUR-FIELD-OBSERVATION"
+    (String.equal t.job_id request.target_job_id && String.equal t.target_worker request.target_worker
+      && t.target_attempt=request.target_attempt && Int64.equal t.target_lease_until_ns request.target_lease_until_ns);
+  List.iter [{request with owner="other"};{request with lease_id="other"};
+    {request with fencing_token=2L};{request with target_job_id="foreign/job"};
+    {request with target_job_id="cancel-plan/"};{request with target_job_id="cancel-plan/missing"}]
+    ~f:(fun r->check "TARGET-SCOPE-AND-FENCE-REFUSED" (Result.is_error(run r)));
+  check "TARGET-READS-PRESERVE-JOB" (Poly.equal before (Cancellation.job store) && Cancellation.no_effect store request);
+  let raw=Yojson.Safe.to_string(target_json request) in
+  let command=ok(Target_protocol.decode raw) in
+  let out=ok(Target_protocol.execute_observed store command ~observe_now:(fun()->200L)) in
+  let wire=Yojson.Safe.to_string out in
+  check "TARGET-PROTOCOL-REDACTED" (not(String.is_substring wire ~substring:"args")
+    && not(String.is_substring wire ~substring:"result") && not(String.is_substring wire ~substring:"reason"));
+  List.iter ["{}";"[]";raw^"x";String.make 8193 'x'] ~f:(fun s->
+    check "TARGET-PROTOCOL-MALFORMED-REFUSED" (Result.is_error(Target_protocol.decode s)));
+  let fields=Yojson.Safe.Util.to_assoc(target_json request) in
+  List.iter [`Assoc(("extra",`Bool true)::fields);`Assoc(("schema",`String "duplicate")::fields);
+    `Assoc(List.Assoc.add fields ~equal:String.equal "fencing_token" (`String "01"));
+    `Assoc(List.Assoc.add fields ~equal:String.equal "fencing_token" (`Int 1))]
+    ~f:(fun j->check "TARGET-PROTOCOL-CLOSED-SCHEMA"
+      (Result.is_error(Target_protocol.decode(Yojson.Safe.to_string j))));
+  let controller=Yojson.Safe.Util.(member "controller_json" (target_json request) |> to_string) in
+  List.iter ["task_id",`String "different";"task_attempt",`Int 2;
+    "expires_at_ns",`Int 30001;"plan_id",`String "foreign"] ~f:(fun (key,value)->
+      let inner=Yojson.Safe.Util.to_assoc(Yojson.Safe.from_string controller) in
+      let altered=Yojson.Safe.to_string(`Assoc(List.Assoc.add inner ~equal:String.equal key value)) in
+      let j=`Assoc(List.Assoc.add fields ~equal:String.equal "controller_json" (`String altered)) in
+      let command=ok(Target_protocol.decode(Yojson.Safe.to_string j)) in
+      check "TARGET-PROTOCOL-EXACT-CONTROLLER"
+        (Result.is_error(Target_protocol.execute_observed store command ~observe_now:(fun()->200L))));
+  check "TARGET-PROTOCOL-NO-MUTATION" (Poly.equal before (Cancellation.job store) && Cancellation.no_effect store request))
+
+let () = List.iter [
+ "UPDATE sa_plan_task SET attempt=2";
+ "UPDATE sa_plan_task SET worker='other'";
+ "UPDATE sa_plan_task SET state='available'";
+ "UPDATE sa_plan_task SET lease_until_ns=200";
+ "UPDATE sa_plan_bridge_lease SET task_attempt=NULL";
+ "UPDATE sa_plan_bridge_lease SET expires_at_ns=200";
+ "UPDATE sa_plan_bridge_lease SET fencing_token=2";
+ "UPDATE sa_plan_job SET state='completed'";
+ "UPDATE sa_plan_job SET lease_until_ns=200";
+ "UPDATE sa_plan_job SET lease_owner='other'";
+ "UPDATE sa_plan_job SET worker='bad worker'";
+ "UPDATE sa_plan_job SET attempt=2147483648"
+] ~f:(fun sql->Cancellation.with_case(fun path store r->
+  Cancellation.exec path sql;
+  let before=Cancellation.job store in
+  let observed=Store.inspect_cancellation_target_observed store ~mapping_id:r.mapping_id
+    ~owner:r.owner ~lease_id:r.lease_id ~fencing_token:r.fencing_token
+    ~target_job_id:r.target_job_id ~observe_now:(fun()->200L) in
+  check "TARGET-STALE-CONTROLLER-OR-JOB-REFUSED" (Result.is_error observed);
+  check "TARGET-REFUSAL-NO-MUTATION" (Poly.equal before (Cancellation.job store))))
+
+let () = Cancellation.with_case(fun path store r->
+ let peer=ok(Store.open_db path) in
+ let lock=Sqlite3.db_open path in
+ Exn.protect ~finally:(fun()->ignore(Sqlite3.exec lock "ROLLBACK":Sqlite3.Rc.t);
+   ignore(Sqlite3.db_close lock:bool);Store.close peer) ~f:(fun()->
+  require "TARGET-CONTENTION-LOCK" (Poly.equal(Sqlite3.exec lock "BEGIN IMMEDIATE") Sqlite3.Rc.OK);
+  let observed=Atomic.make false and now=Atomic.make 200L and started=Atomic.make false in
+  let worker=Domain.spawn(fun()->Atomic.set started true;
+    Store.inspect_cancellation_target_observed peer ~mapping_id:r.mapping_id
+    ~owner:r.owner ~lease_id:r.lease_id ~fencing_token:r.fencing_token
+    ~target_job_id:r.target_job_id ~observe_now:(fun()->Atomic.set observed true;Atomic.get now)) in
+  while not(Atomic.get started) do Lifetime_unix.sleepf 0.001 done;
+  Lifetime_unix.sleepf 0.05;
+  let premature=Atomic.get observed in
+  Atomic.set now 20000L;
+  require "TARGET-CONTENTION-UNLOCK" (Poly.equal(Sqlite3.exec lock "COMMIT") Sqlite3.Rc.OK);
+  let result=Domain.join worker in
+  check "TARGET-CLOCK-AFTER-LOCK" (not premature && Atomic.get observed);
+  check "TARGET-EXPIRED-DURING-LOCK-REFUSED" (Result.is_error result && Cancellation.no_effect store r)))
+
+let () = Cancellation.with_case(fun path store request->
+ let request=live_cancel_request path request in
+ let lease=some(ok(Store.find_bridge_lease store ~mapping_id:request.mapping_id)) in
+ let before=Cancellation.job store in
+ let dir=Stdlib.Sys.getenv "UOS_CANCEL_TRANSPORT_TEST_DIR"
+ and root=Stdlib.Sys.getenv "UOS_CANCEL_GLEAM_TEST_ROOT" in
+ let bin s="<<" ^ String.concat ~sep:"," (List.map(String.to_list s) ~f:(fun c->Int.to_string(Char.to_int c))) ^ ">>" in
+ let sha p=Digestif.SHA256.(to_hex(digest_string(In_channel.read_all p))) in
+ let guardian=Filename.concat dir "guardian.exe" and native=Filename.concat dir "worker.exe" in
+ let code=Printf.sprintf
+   "code:add_paths(filelib:wildcard(%S)),code:add_patha(%S),C='cepaf_gleam@harness@telegram_store_transport':reviewed_local_configuration(%s,%s,%s,%s,%s),R=telegram_bridge_test:inspect_native(C,%s,%Ld,%Ld),io:put_chars(R),halt(0)."
+   (Filename.concat root "lib/*/ebin") (Filename.concat root "build/ebin")
+   (bin guardian)(bin(sha guardian))(bin native)(bin(sha native))(bin path)
+   (bin request.mapping_id) lease.expires_at_ns request.target_lease_until_ns in
+ let status,out,errors=run_cancellation_child
+   ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
+   ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";code] ~database:path ~input:"" in
+ if not(Poly.equal status (Lifetime_unix.WEXITED 0)) then
+   Printf.eprintf "target native stdout=%s stderr=%s\n%!" out errors;
+ check "TARGET-GLEAM-NATIVE-ROUNDTRIP" (Poly.equal status (Lifetime_unix.WEXITED 0)
+   && String.is_empty errors && String.equal out "exact_target_observed_no_mutation");
+ check "TARGET-GLEAM-NATIVE-JOB-PRESERVED" (Poly.equal before (Cancellation.job store)))
