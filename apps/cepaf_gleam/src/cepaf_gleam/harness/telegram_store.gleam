@@ -2017,3 +2017,94 @@ pub fn commit_task_completion(
 
   Ok(#(apply_res.receipt, completed_inbox))
 }
+
+/// Durable single-start marker. This is storage exclusion, not authorization.
+/// The service must check live unit/control digest and current task/runtime leases
+/// before calling, keep the success private to its one supervisor factory, and
+/// never mint a fresh live permit from an operation replay or uncertain result.
+pub fn consume_writer_start(
+  config: transport.LocalConfiguration,
+  expected: codec.WriterRegistration,
+) -> Result(Int, StoreError) {
+  use raw <- result.try(codec.encode_writer_registration(expected)
+    |> result.map_error(StoreInvariantError))
+  use current_incarnation <- result.try(
+    lifecycle.compute_store_incarnation(ffi_config_database(config))
+    |> result.map_error(StoreInvariantError),
+  )
+  use _ <- result.try(case current_incarnation == expected.store_incarnation_id {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("writer_start_incarnation_mismatch"))
+  })
+  use #(generation, rows) <- result.try(read_keys(config, [
+    codec.bot_identity_key(), codec.writer_registration_key(), "meta/writer_start",
+  ]))
+  use bot <- result.try(list.find(rows, fn(row) { row.key == codec.bot_identity_key() })
+    |> result.map_error(fn(_) { StoreInvariantError("writer_start_missing_bot_row") }))
+  use writer <- result.try(list.find(rows, fn(row) { row.key == codec.writer_registration_key() })
+    |> result.map_error(fn(_) { StoreInvariantError("writer_start_missing_writer_row") }))
+  use start <- result.try(list.find(rows, fn(row) { row.key == "meta/writer_start" })
+    |> result.map_error(fn(_) { StoreInvariantError("writer_start_missing_start_row") }))
+  use _ <- result.try(case bot.exists {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("writer_start_missing_bot_row"))
+  })
+  use _ <- result.try(case writer.exists {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("writer_start_missing_writer_row"))
+  })
+  use bot_raw <- result.try(codec.decode_row_value(bot) |> result.map_error(StoreDecodeError))
+  use actual_bot <- result.try(codec.decode_bot_identity_value(bot_raw) |> result.map_error(StoreDecodeError))
+  use writer_raw <- result.try(codec.decode_row_value(writer) |> result.map_error(StoreDecodeError))
+  use actual_writer <- result.try(codec.decode_writer_registration(writer_raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case actual_bot == expected.bot_id && actual_writer == expected {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("writer_start_registration_mismatch"))
+  })
+  use _ <- result.try(case start.exists {
+    False -> case expected.service_epoch == 1 {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("writer_start_predecessor_missing"))
+    }
+    True -> {
+      use previous_raw <- result.try(codec.decode_row_value(start) |> result.map_error(StoreDecodeError))
+      use previous <- result.try(codec.decode_writer_registration(previous_raw) |> result.map_error(StoreDecodeError))
+      case previous.service_epoch >= expected.service_epoch {
+        True -> case previous == expected {
+          True -> Error(StoreInvariantError("writer_start_already_consumed"))
+          False -> Error(StoreInvariantError("writer_start_invalid_successor"))
+        }
+        False -> case
+          previous.service_epoch + 1 == expected.service_epoch
+          && previous.bot_id == expected.bot_id
+          && previous.store_incarnation_id == expected.store_incarnation_id
+          && previous.instance_token != expected.instance_token
+          && previous.unit_invocation_id != expected.unit_invocation_id
+        {
+          True -> Ok(Nil)
+          False -> Error(StoreInvariantError("writer_start_invalid_successor"))
+        }
+      }
+    }
+  })
+  let read_set = list.map(rows, fn(row) {
+    codec.ReadSetAssertion(row.key, row.version, row.sha256)
+  })
+  let summary = json.object([
+    #("op", json.string("writer_start")),
+    #("instance_token", json.string(expected.instance_token)),
+    #("service_epoch", json.int(expected.service_epoch)),
+  ]) |> json.to_string
+  use applied <- result.try(execute_apply(
+    config, expected.bot_id, "op-writer-start-" <> expected.instance_token,
+    generation, read_set,
+    [codec.Change("meta/writer_start", start.version, start.sha256,
+      codec.encode_canonical_base64(raw))],
+    codec.ReservationDelta(0, 0), summary,
+  ))
+  case applied.replay {
+    True -> Error(StoreInvariantError("writer_start_replay_not_admission"))
+    False -> Ok(applied.receipt.generation)
+  }
+}
+
