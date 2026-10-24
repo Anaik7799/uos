@@ -501,10 +501,16 @@ build_service_configuration(Config) ->
     B7 = setelement(20, B6, AuthPaths),
     B8 = setelement(21, B7, CtrlPathOpt),
     B9 = telegram_conversation_test_io:configure(B8, maps:get(<<"conversation_mode">>, Config, <<"disabled">>), maps:get(<<"conversation_daily_limit">>, Config, 10), DbPath),
-    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+    B10 = case maps:get(<<"test_risk_source">>, Config, null) of
         null -> B9;
+        RiskPath when is_binary(RiskPath) ->
+            {ok,RiskConfigured} = cepaf_gleam@harness@telegram_service:configure_risk_source(B9,RiskPath),
+            RiskConfigured
+    end,
+    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+        null -> B10;
         [Root, Digest] when is_binary(Root), is_binary(Digest) ->
-            {ok, Configured} = telegram_managed_action_test:configure(B9, Root, Digest),
+            {ok, Configured} = telegram_managed_action_test:configure(B10, Root, Digest),
             Configured
     end.
 

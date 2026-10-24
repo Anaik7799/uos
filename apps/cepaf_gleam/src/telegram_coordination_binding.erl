@@ -1,7 +1,7 @@
 %% Transport binding only: bind the isolated reader to the current build bytes.
 %% No database access or agent policy here. The native guardian owns/reaps child.
 -module(telegram_coordination_binding).
--export([launch_eval/2,launch_knowledge_eval/2,launch_matrix_eval/0]).
+-export([launch_eval/2,launch_knowledge_eval/2,launch_matrix_eval/0,launch_fmea_eval/3]).
 
 launch_eval(Db, View) ->
   try
@@ -19,6 +19,15 @@ launch_knowledge_eval(View, Query) ->
     bound_eval('cepaf_gleam@harness@telegram_knowledge_report',[View,Query])
   catch _:_ -> {error,<<"knowledge_binding_failed">>} end.
 launch_matrix_eval() -> bound_eval('cepaf_gleam@harness@telegram_matrix_report',[]).
+
+launch_fmea_eval(Path, Plan, Task) ->
+  try
+    true=is_binary(Path) andalso byte_size(Path)>0 andalso byte_size(Path)=<4096,
+    true=is_binary(Plan) andalso byte_size(Plan)>0 andalso byte_size(Plan)=<240,
+    true=is_binary(Task) andalso byte_size(Task)=<240,
+    lists:foreach(fun(B)->nomatch=binary:match(B,<<0>>) end,[Path,Plan,Task]),
+    bound_eval('cepaf_gleam@harness@telegram_fmea_reader',[Path,Plan,Task])
+  catch _:_ -> {error,<<"fmea_binding_failed">>} end.
 
 bound_eval(Entry, Args) ->
   try

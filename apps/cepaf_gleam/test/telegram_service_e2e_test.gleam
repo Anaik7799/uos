@@ -340,6 +340,10 @@ fn start_runner_actor_with_conversation(
     <> sup_str
     <> "}"
   let cmd = "{\"conversation_mode\":\"" <> conversation_mode <> "\",\"conversation_daily_limit\":" <> int.to_string(daily_limit) <> "," <> string.drop_start(cmd,1)
+  let cmd = case simplifile.is_file(db_path<>".risk.json") {
+    Ok(True) -> "{\"test_risk_source\":"<>json.to_string(json.string(db_path<>".risk.json"))<>","<>string.drop_start(cmd,1)
+    _ -> cmd
+  }
   let resp = send_runner_cmd(ipc_dir, cmd)
   case string.contains(resp, "\"status\":\"ok\"") {
     True -> Nil
@@ -993,6 +997,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       control_registration_path: None,
       conversation: service.ConversationDisabled,
       actions: None,
+      risk_source: None,
     )
 
   // 1. Commit an initial record to store
@@ -1190,7 +1195,18 @@ fn exercise_automatic_command_dispatch(first_command: String, first_expected: St
 }
 
 fn exercise_conversation_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String, mode: String, daily_limit: Int) {
+  exercise_configured_dispatch(first_command,first_expected,second_command,second_expected,mode,daily_limit,"")
+}
+
+@external(erlang,"telegram_fmea_test_io","fixture")
+fn risk_fixture(plan:String,variant:String)->String
+
+fn exercise_configured_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String, mode: String, daily_limit: Int,risk_case:String) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  case risk_case {
+    "" -> Nil
+    _ -> { let assert Ok(_) = simplifile.write(db_path<>".risk.json",risk_fixture("plan-e2e",risk_case)) Nil }
+  }
   let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
 
   let bot_id = 999_888
@@ -1232,6 +1248,10 @@ fn exercise_conversation_dispatch(first_command: String, first_expected: String,
     3_000_000_000_000_000,
   )
 
+  case risk_case {
+    "missing" -> { let assert Ok(_) = simplifile.delete(db_path<>".risk.json") Nil }
+    _ -> Nil
+  }
   // Queue a /doctor command update into the mock fixture
   let update_json =
     "{\"update_id\": 8001, \"message\": {\"message_id\": 501, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/doctor\", \"date\": 1700000000}}"
@@ -1285,6 +1305,10 @@ fn exercise_conversation_dispatch(first_command: String, first_expected: String,
   string.contains(delivered_chunk.payload, first_expected)
   |> should.equal(True)
 
+  case risk_case {
+    "refresh" -> { let assert Ok(_) = simplifile.write(db_path<>".risk.json",risk_fixture("plan-e2e","changed")) Nil }
+    _ -> Nil
+  }
   // 4. Test /saplan automatic dispatch
   let saplan_update =
     "{\"update_id\": 8002, \"message\": {\"message_id\": 778, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/saplan\", \"date\": 1700000002}}"
@@ -2562,4 +2586,30 @@ fn with_historical_action(command:String,historical:Option(#(String,String,Strin
 }
 pub fn e2e_managed_successor_preserves_expired_signed_action_and_allows_withdrawal_test() {
  exercise_managed_successor(True,False,True)
+}
+
+pub fn e2e_fmea_current_source_and_tool_refresh_test() {
+  exercise_configured_dispatch("/fmea","\"rpn\":36",
+    "/tool query_fmea {\"task_id\":\"lease-e2e-01\"}","\"rpn\":60","disabled",10,"refresh")
+}
+pub fn e2e_fmea_stale_and_scope_refusal_test() {
+  exercise_configured_dispatch("/fmea lease-e2e-01","\"freshness\":\"stale\"",
+    "/tool query_fmea {\"path\":\"/private\"}","denied_mutation","disabled",10,"stale")
+}
+pub fn e2e_fmea_invalid_source_and_absent_task_test() {
+  exercise_configured_dispatch("/fmea","\"status\":\"unavailable\"",
+    "/fmea missing-task","\"status\":\"unavailable\"","disabled",10,"malformed")
+}
+pub fn e2e_fmea_missing_source_is_not_zero_risk_test() {
+  exercise_configured_dispatch("/fmea","no zero-risk conclusion",
+    "/tool query_fmea {}","no zero-risk conclusion","disabled",10,"missing")
+}
+
+pub fn e2e_fmea_unconfigured_source_is_explicit_test() {
+  exercise_automatic_command_dispatch("/fmea","\"status\":\"unavailable\"",
+    "/tool query_fmea {}","no zero-risk conclusion")
+}
+pub fn e2e_fmea_absent_task_does_not_cross_scope_test() {
+  exercise_configured_dispatch("/fmea absent-task","\"status\":\"unavailable\"",
+    "/fmea lease-e2e-01","\"rpn\":36","disabled",10,"fresh")
 }

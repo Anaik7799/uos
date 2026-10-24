@@ -15,6 +15,7 @@ pub type Selection {
   Doctor
   Matrix
   SystemHealth
+  Fmea(task: String)
   KernelVersion
   Peers
   Board
@@ -28,6 +29,7 @@ pub fn help() -> String {
   "Telegram tools (/action is an alias for /tool):\n"
   <> "/tool query_matrix_versions {} — observed Matrix client API versions.\n"
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
+  <> "/tool query_fmea {} or {\"task_id\":\"TASK_ID\"} — recorded risk assessments in the configured plan.\n"
   <> "/tool query_system_health {} — bounded service reachability and local Telegram state.\n"
   <> "/tool query_zigvm_version {} — installed pinned executable version only.\n"
   <> "/tool query_peers {} — canonical session heartbeat observations.\n"
@@ -104,6 +106,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
     "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
+    "query_fmea" -> fmea_arguments(tail)
     "query_peers" -> empty_arguments(tail, Peers)
     "query_search" -> search_arguments(tail)
     "query_knowledge" -> knowledge_arguments(tail)
@@ -168,5 +171,15 @@ fn cancel_arguments(raw:String) -> Result(Selection,String) {
       }
     }
     _ -> Error("Use cancel_job_lease <job_id> -- <bounded reason>.")
+  }
+}
+
+fn fmea_arguments(raw:String)->Result(Selection,String) {
+  case empty_arguments(raw,Fmea("")) {
+    Ok(selected)->Ok(selected)
+    Error(_)->case task_arguments(raw) {
+      Ok(Task(task))->Ok(Fmea(task))
+      _->Error("Use query_fmea with no arguments or only task_id.")
+    }
   }
 }

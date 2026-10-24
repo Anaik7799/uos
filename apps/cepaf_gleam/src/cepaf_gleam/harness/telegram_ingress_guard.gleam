@@ -130,6 +130,13 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
           "/doctor" -> read_directive("query_doctor", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" | "/health" -> read_directive("query_system_health", args)
+          "/fmea" -> case read_directive("query_fmea",args) {
+            DirectReadTool(_) -> DirectReadTool("query_fmea")
+            _ -> case task_command.parse_task_id(args) {
+              Ok(task) -> PreservedDirective("/fmea",[task])
+              Error(_) -> DeniedMutation("/fmea","Use /fmea or /fmea <task_id>; source and plan are fixed.")
+            }
+          }
           "/search" -> case knowledge.validate_query(args) {
             Ok(query) -> PreservedDirective("/search",[query])
             Error(_) -> DeniedMutation(name,"Use a literal query of at most 128 bytes.")
@@ -159,6 +166,8 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.Fmea("")) -> DirectReadTool("query_fmea")
+              Ok(tool_command.Fmea(task)) -> PreservedDirective("/fmea",[task])
               Ok(tool_command.Search(query)) -> PreservedDirective("/search",[query])
               Ok(tool_command.Knowledge(view,query)) -> PreservedDirective("/knowledge",[view,query])
               Ok(tool_command.Peers) -> DirectReadTool("query_peers")

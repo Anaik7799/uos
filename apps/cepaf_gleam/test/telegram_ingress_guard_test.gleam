@@ -317,3 +317,16 @@ pub fn approval_propose_and_submit_ingress_test() {
 pub fn approval_withdrawal_route_is_exact_test() {
   g.classify_directive("/approval withdraw tg-333444-10") |> should.equal(g.PreservedDirective("/approval_manage",["withdraw","tg-333444-10"]))
 }
+
+pub fn fmea_scoped_ingress_test() {
+  list.each(["/fmea","/fmea {}","/tool query_fmea {}","/action query_fmea"],fn(t){
+    g.classify_directive(t) |> should.equal(g.DirectReadTool("query_fmea"))
+  })
+  list.each(["/fmea TASK","/tool query_fmea {\"task_id\":\"TASK\"}"],fn(t){
+    g.classify_directive(t) |> should.equal(g.PreservedDirective("/fmea",["TASK"]))
+  })
+  list.each(["/fmea TASK EXTRA","/fmea {\"path\":\"private\"}",
+    "/tool query_fmea {\"task_id\":\"TASK\",\"plan_id\":\"foreign\"}"],fn(t){
+      let assert g.DeniedMutation(_,_) = g.classify_directive(t) Nil
+  })
+}

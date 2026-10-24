@@ -1,8 +1,21 @@
 %% Bounded filesystem mechanics inside the isolated observation child.
 %% Gleam supplies fixed roots and budgets; this adapter never selects scope.
 -module(telegram_knowledge_files).
--export([catalog/5]).
+-export([catalog/5,read_one/2]).
 -include_lib("kernel/include/file.hrl").
+
+%% One bounded regular file, using the existing stable-handle mechanics.
+read_one(Path,MaxBytes) ->
+  try
+    true=is_binary(Path) andalso byte_size(Path)>0 andalso byte_size(Path)=<4096,
+    nomatch=binary:match(Path,<<0>>),
+    absolute=filename:pathtype(binary_to_list(Path)),
+    true=is_integer(MaxBytes) andalso MaxBytes>0 andalso MaxBytes=<1048576,
+    ok=ancestors(filename:dirname(binary_to_list(Path))),
+    {ok,Before=#file_info{type=regular}}=file:read_link_info(Path),
+    {[Doc],1,_,0,0,0}=document(Path,Path,Before,{1,MaxBytes,MaxBytes,0},{[],0,0,0,0,0}),
+    {ok,Doc}
+  catch _:_ -> {error,<<"bounded_file_unavailable">>} end.
 
 catalog(Roots,MaxFiles,MaxBytes,MaxFile,MaxDepth) ->
   try

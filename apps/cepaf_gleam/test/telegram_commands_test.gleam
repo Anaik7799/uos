@@ -111,7 +111,7 @@ pub fn conservative_operator_and_model_kind_classification_test() {
   let conversational_models = [
     "/sutra", "/adr", "/whatif", "/simulate", "/postmortem", "/canvas",
     "/babel", "/whiteboard", "/socratic", "/exec-brief", "/retro", "/aspects",
-    "/fmea", "/inference",
+    "/inference",
   ]
 
   list.each(conversational_models, fn(literal) {
@@ -233,4 +233,9 @@ pub fn parameters_not_shell_executed_and_reference_replies_safe_test() {
     let assert Ok(inv) = commands.parse(literal <> " " <> hostile_args)
     assert commands.reference_reply(inv) == Error(Nil)
   })
+}
+
+pub fn fmea_is_recorded_observation_not_model_test() {
+  let assert Ok(invocation)=commands.parse("/fmea")
+  assert invocation.definition.kind == commands.ReadObservation
 }

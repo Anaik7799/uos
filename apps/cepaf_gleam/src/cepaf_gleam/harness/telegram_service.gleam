@@ -48,6 +48,7 @@ import gleam/erlang/process.{type Pid, type Subject}
 import gleam/erlang/reference
 import gleam/crypto
 import cepaf_gleam/harness/telegram_action_intent as action_intent
+import cepaf_gleam/harness/telegram_fmea_reader as fmea_reader
 import gleam/int
 import gleam/json
 import gleam/list
@@ -220,6 +221,7 @@ pub type ServiceConfiguration {
     control_registration_path: Option(String),
     conversation: ConversationConfiguration,
     actions:Option(ActionConfiguration),
+    risk_source:Option(String),
   )
 }
 
@@ -259,6 +261,7 @@ pub fn operational_service_configuration(
     control_registration_path: None,
     conversation: ConversationDisabled,
     actions:None,
+    risk_source:None,
   )
 }
 
@@ -293,6 +296,7 @@ pub fn development_service_configuration(
     control_registration_path: None,
     conversation: ConversationDisabled,
     actions:None,
+    risk_source:None,
   )
 }
 
@@ -2310,6 +2314,8 @@ fn execute_guarded_dispatch(
                         guard.PreservedDirective("/approval",selector) -> approval_status_reply(state,inbox_rec,selector)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.DirectReadTool("query_fmea") -> fmea_reply(state,"")
+                        guard.PreservedDirective("/fmea",[task]) -> fmea_reply(state,task)
                         guard.PreservedDirective("/search",[query]) -> search_reply(state,query)
                         guard.PreservedDirective("/knowledge",[view,query]) -> knowledge_reply(state,view,query)
                         guard.DirectReadTool("query_peers") -> coordination_reply(state, "peers")
@@ -6318,5 +6324,34 @@ fn collected_dispatch_ready(state:ServiceState,p:action_profile.Profile,id:Strin
         _ -> False
       }
     _ -> False
+  }
+}
+
+//// Trusted launcher source configuration; never selected by Telegram text.
+pub fn configure_risk_source(config:ServiceConfiguration,path:String)->Result(ServiceConfiguration,String) {
+  let isolated=case config.authority_paths { IsolatedTestPaths(_,_) -> True _ -> False }
+  case fmea_reader.valid_source(path,isolated) {
+    True->Ok(ServiceConfiguration(..config,risk_source:Some(path)))
+    False->Error("risk_source_scope_refused")
+  }
+}
+fn fmea_reply(state:ServiceState,task:String)->String {
+  let isolated=case state.config.authority_paths { IsolatedTestPaths(_,_) -> True _ -> False }
+  let observation=case state.config.risk_source {
+    Some(path) -> case fmea_reader.valid_source(path,isolated) {
+      True -> current_read(state,5000,fn(){fmea_reader.observe(path,state.config.plan_id,task)})
+        |> result.try(fn(r){r})
+      False -> Error("risk_source_scope_refused")
+    }
+    None->Error("risk_source_not_configured")
+  }
+  case observation {
+    Ok(raw)->raw
+    Error(_)->json.object([
+      #("schema",json.string("uos.telegram.fmea.v1")),
+      #("status",json.string("unavailable")),
+      #("error",json.string("Configured risk assessment unavailable, invalid, or outside current authority; no zero-risk conclusion.")),
+      #("runtime_admission",json.string("NOT_GRANTED")),
+    ]) |> json.to_string
   }
 }
