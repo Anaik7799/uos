@@ -991,6 +991,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db),
       control_registration_path: None,
       conversation: service.ConversationDisabled,
+      actions: None,
     )
 
   // 1. Commit an initial record to store

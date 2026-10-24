@@ -16,6 +16,8 @@ import cepaf_gleam/harness/telegram_service as service
 import cepaf_gleam/harness/telegram_store as store
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
+import gleam/dynamic.{type Dynamic}
+import gleam/erlang/process
 import gleam/int
 import gleam/json
 import gleam/list
@@ -327,6 +329,9 @@ pub fn run_native(
       now,
     )
   let assert [inbox] = prefix.admitted_records
+  case mode {
+    "dispatch" -> dispatch_fixture(initial,prefix,inbox,p,root,packet_text,bridge_expiry,now)
+    _ -> {
   let assert Ok(#(receipt, inbox)) =
     store.claim_task_processing(
       tg,
@@ -426,6 +431,56 @@ pub fn run_native(
   row(tg, store.cancellation_key(inbox.request_id)).exists |> should.be_false
   row(tg, codec.result_key(inbox.request_id)).exists |> should.be_false
   case mode {
+
+    "recover" | "recover_absent" | "recover_dispatch" -> {
+      let assert Ok(res)=store.persist_cancellation(tg,state.expected_generation,inbox,v,h,c.worker,1,prepared)
+      let recovering=service.ServiceState(..state,
+        config:service.ServiceConfiguration(..state.config,service_epoch:2),
+        expected_generation:store.cancellation_generation(res))
+      case mode {
+        "recover_absent" -> {
+          service.recover_cancellation(recovering,p,inbox,v,h)
+            |> expect_error("action_store_refused")
+          row(tg,codec.result_key(inbox.request_id)).exists |> should.be_false
+          "service_recovery_absent_not_reexecuted"
+        }
+        _ -> {
+          let assert Ok(raw_effect)=transport.exchange(profile.transport(p),cancel.envelope(prepared,cancel.Cancel))
+          let assert Ok(observed_after)=clock.observe()
+          let now=observed_after.sample.observed.utc_us / 1000
+          let assert Ok(cancel.LeaseRevoked(_,_,False))=cancel.decode_response(prepared,cancel.Cancel,raw_effect,now)
+          // Same epoch cannot transfer to a different owner; malformed history is no result.
+          let assert Ok(history)=transport.exchange(profile.transport(p),cancel.recovery_envelope(cancel.recovery_record(prepared)))
+          store.commit_cancellation_lookup_for(res,history,now,"other",1) |> should.be_error
+          store.commit_cancellation_lookup_for(res,"{}",now,c.worker,2) |> should.be_error
+          service.recover_cancellation(service.revoke_authority(recovering),p,inbox,v,h)
+            |> expect_error("action_authority_refused")
+          let assert Ok(_)=simplifile.write(root <> "/profile.json",raw <> " ")
+          service.recover_cancellation(recovering,p,inbox,v,h) |> expect_error("action_profile_refused")
+          let assert Ok(_)=simplifile.write(root <> "/profile.json",raw)
+          // No packet is loaded in recovery and no fresh signatures are requested.
+          let assert Ok(_)=simplifile.write(root <> "/packet.json","{}")
+          case mode {
+            "recover_dispatch" -> recovery_dispatch_fixture(recovering,p,root,now)
+            _ -> {
+          let assert Ok(#(after,committed))=service.recover_cancellation(recovering,p,inbox,v,h)
+          let assert [chunk]=committed.chunks
+          let a=row(tg,codec.authority_key(inbox.request_id))
+          let assert Ok(a)=codec.decode_row_value(a)
+          let assert Ok(a)=codec.decode_authority_value(a)
+          a.epoch |> should.equal(2)
+          a.worker |> should.equal(c.worker)
+          let assert Ok(#(_,chunk))=store.commit_sending(tg,c.bot,"recovered-send",
+            after.expected_generation,committed.inbox_record,v+1,
+            files.digest(codec.encode_inbox_record(committed.inbox_record)),chunk,1,
+            files.digest(codec.encode_chunk_value(chunk)),c.worker,2)
+          let assert ledger.OutboxSending(_,2)=chunk.status
+          "service_recovery_new_epoch_outbox_sendable"
+            }
+          }
+        }
+      }
+    }
     "revoked_coordinator" -> {
       let assert Ok(co) = coord.open(coord_path)
       let assert Ok(_) =
@@ -479,4 +534,53 @@ pub fn run_native(
       "service_signed_cancel_outbox"
     }
   }
+}
+  }
+}
+
+@external(erlang, "telegram_http_test_fixture", "start")
+fn fixture_start() -> Result(#(process.Pid, Int, String), Dynamic)
+@external(erlang, "telegram_http_test_fixture", "stop")
+fn fixture_stop(pid: process.Pid) -> Dynamic
+@external(erlang, "telegram_http_test_fixture", "get_requests")
+fn fixture_requests(pid: process.Pid) -> List(#(String,String,String,String))
+
+fn dispatch_fixture(initial:service.ServiceState,prefix:store.CommitPrefixResult,
+  inbox:ledger.InboxRecord,p:profile.Profile,root:String,packet_text:String,
+  bridge_expiry:Int,now:Int) -> String {
+  let assert Ok(#(pid,_,url))=fixture_start()
+  let assert Ok(cfg)=service.configure_actions(initial.config,root,"profile.json",
+    profile.digest(p),profile.context(p),root)
+  let cfg=service.ServiceConfiguration(..cfg,http_config:http.default_configuration(url,"TEST_ONLY"))
+  let state=service.set_authority(service.ServiceState(..initial,config:cfg,
+    expected_generation:prefix.receipt.generation),
+    service.AuthorityLease("service-test",1,1,bridge_expiry / 1000))
+  // Missing approvals stay pending without claiming processing or making requests.
+  let assert Ok(#(same,service.DispatchCycleResult(0,0)))=service.dispatch_cycle(state,now*1000)
+  same.expected_generation |> should.equal(prefix.receipt.generation)
+  let ir=row(cfg.storage_config,codec.inbox_key(inbox.request_id))
+  let assert Ok(raw)=codec.decode_row_value(ir)
+  let assert Ok(pending)=codec.decode_inbox_record(raw)
+  pending.status |> should.equal(ledger.InboxPending)
+  fixture_requests(pid) |> should.equal([])
+  let assert Ok(_)=files.create(root,service.action_packet_filename(inbox.request_id),packet_text)
+  let assert Ok(#(done,service.DispatchCycleResult(1,1)))=service.dispatch_cycle(same,now*1000)
+  let assert Ok(#(_,service.DispatchCycleResult(0,0)))=service.dispatch_cycle(done,now*1000)
+  let requests=fixture_requests(pid)
+  let _=fixture_stop(pid)
+  list.filter(requests,fn(r){let #(_,path,_,_)=r string.contains(path,"/sendMessage")})
+    |> list.length |> should.equal(1)
+  "service_command_dispatched_delivered_once"
+}
+
+fn recovery_dispatch_fixture(state:service.ServiceState,p:profile.Profile,root:String,now:Int) -> String {
+ let assert Ok(#(pid,_,url))=fixture_start()
+ let assert Ok(cfg)=service.configure_action_recovery(state.config,root,"profile.json",profile.digest(p),profile.context(p))
+ let cfg=service.ServiceConfiguration(..cfg,http_config:http.default_configuration(url,"TEST_ONLY"))
+ let assert Ok(#(done,service.DispatchCycleResult(1,1)))=service.dispatch_cycle(service.ServiceState(..state,config:cfg),now*1000)
+ let assert Ok(#(_,service.DispatchCycleResult(0,0)))=service.dispatch_cycle(done,now*1000)
+ let requests=fixture_requests(pid)
+ let _=fixture_stop(pid)
+ list.filter(requests,fn(r){let #(_,path,_,_)=r string.contains(path,"/sendMessage")}) |> list.length |> should.equal(1)
+ "service_recovery_dispatched_delivered_once"
 }

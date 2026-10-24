@@ -3029,3 +3029,109 @@ pub fn commit_cancellation_lookup(
     0,
   )
 }
+
+/// Atomic reply-authority handoff after read-only history reconciliation.
+/// Caller must establish current writer authority and predecessor quiescence.
+pub fn commit_cancellation_lookup_for(
+  res: CancellationReservation,
+  response: String,
+  observed_utc_ms: Int,
+  new_worker: String,
+  new_epoch: Int,
+) -> Result(CommitResultResult, StoreError) {
+  case new_worker == res.worker && new_epoch == res.epoch {
+    True -> commit_cancellation_lookup(res, response, observed_utc_ms)
+    False -> {
+      use _ <- result.try(
+        case
+          ledger.valid_worker(new_worker, new_epoch)
+          && new_epoch > res.epoch
+          && observed_utc_ms >= 0
+          && observed_utc_ms <= 9_007_199_254_740_991
+        {
+          True -> Ok(Nil)
+          False ->
+            Error(
+              StoreInvariantError("invalid_cancellation_authority_transfer"),
+            )
+        },
+      )
+      use outcome <- result.try(
+        cancellation.decode_recovery_response(
+          res.saved,
+          response,
+          observed_utc_ms,
+        )
+        |> result.map_error(StoreDecodeError),
+      )
+      use payload <- result.try(case outcome {
+        cancellation.LeaseRevoked(_, _, True) ->
+          Ok(
+            "Cancellation recorded: the job lease was revoked. Worker termination is not confirmed.",
+          )
+        _ -> Error(StoreInvariantError("cancellation_outcome_unresolved"))
+      })
+      let auth_key = codec.authority_key(res.inbox.request_id)
+      use #(observed, auth_rows) <- result.try(read_keys(res.config, [auth_key]))
+      use auth_row <- result.try(case observed == res.generation, auth_rows {
+        True, [r] ->
+          case r.exists {
+            True -> Ok(r)
+            False -> Error(StoreInvariantError("authority_row_missing"))
+          }
+        _, _ -> Error(StoreInvariantError("cancellation_generation_mismatch"))
+      })
+      use auth_raw <- result.try(
+        codec.decode_row_value(auth_row)
+        |> result.map_error(StoreDecodeError),
+      )
+      use auth <- result.try(
+        codec.decode_authority_value(auth_raw)
+        |> result.map_error(StoreDecodeError),
+      )
+      use _ <- result.try(
+        case
+          auth.request_id == res.inbox.request_id
+          && auth.bot_id == res.inbox.bot_id
+          && auth.worker == res.worker
+          && auth.epoch == res.epoch
+        {
+          True -> Ok(Nil)
+          False -> Error(StoreInvariantError("cancellation_authority_mismatch"))
+        },
+      )
+      let new_auth =
+        codec.AuthorityRecord(
+          res.inbox.request_id,
+          res.inbox.bot_id,
+          new_worker,
+          new_epoch,
+          observed_utc_ms,
+        )
+      let authority_change =
+        codec.Change(
+          key: auth_key,
+          expected_version: auth_row.version,
+          expected_sha256: auth_row.sha256,
+          new_value_base64: codec.encode_canonical_base64(
+            codec.encode_authority_value(new_auth),
+          ),
+        )
+      commit_result_extended(
+        res.config,
+        res.inbox.bot_id,
+        "op-cancellation-result-" <> res.inbox.request_id,
+        res.generation,
+        res.inbox,
+        res.inbox_version,
+        res.inbox_sha,
+        [payload],
+        res.worker,
+        res.epoch,
+        [row_read_assertion(res.saved_row.key, res.saved_row)],
+        [authority_change],
+        0,
+      )
+    }
+  }
+}

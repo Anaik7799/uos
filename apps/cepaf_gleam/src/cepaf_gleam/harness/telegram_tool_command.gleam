@@ -11,6 +11,7 @@ import gleam/string
 
 pub type Selection {
   Help
+  CancelLease(job:String,reason:String)
   Doctor
   Matrix
   SystemHealth
@@ -35,6 +36,7 @@ pub fn help() -> String {
   <> "/tool query_search {\"query\":\"text\"} — configured task IDs/states and wiki/zk documents.\n"
   <> "/tool query_saplan {} — current configured plan snapshot.\n"
   <> "/tool query_task {\"task_id\":\"TASK_ID\"} — task detail in the configured plan only.\n"
+  <> "/tool cancel_job_lease <job_id> -- <reason> — requests an approved lease revocation; worker termination is separate.\n"
   <> "Arguments cannot change the plan, database, path or authority. Other tools are unavailable."
 }
 
@@ -97,6 +99,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
   let #(name, tail) = split_name(string.to_graphemes(invocation.args), [])
   case name {
     "" | "help" -> empty_arguments(tail, Help)
+    "cancel_job_lease" -> cancel_arguments(tail)
     "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
@@ -148,4 +151,21 @@ fn search_arguments(raw: String) -> Result(Selection,String) {
     Ok(q) -> decode.run(q,decode.string) |> result.replace_error("Invalid search query.")
   })
   knowledge.validate_query(query) |> result.map(Search)
+}
+
+fn cancel_arguments(raw:String) -> Result(Selection,String) {
+  case string.split(raw," -- ") {
+    [job,reason] -> {
+      let valid_job=string.byte_size(job)>0 && string.byte_size(job)<=240
+        && !string.contains(job,"..")
+        && list.all(string.to_graphemes(job),fn(c) {
+          string.contains("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_./:",c)
+        })
+      case valid_job && string.trim(reason)==reason && reason!="" && string.byte_size(reason)<=256 {
+        True -> Ok(CancelLease(job,reason))
+        False -> Error("Use cancel_job_lease <job_id> -- <bounded reason>.")
+      }
+    }
+    _ -> Error("Use cancel_job_lease <job_id> -- <bounded reason>.")
+  }
 }

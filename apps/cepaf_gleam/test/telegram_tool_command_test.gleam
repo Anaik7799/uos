@@ -53,3 +53,8 @@ pub fn no_echo_or_authority_test() {
   string.contains(tool.help(), "configured plan only") |> should.be_true
   string.contains(tool.help(), "/action") |> should.be_true
 }
+
+pub fn cancellation_grammar_test() {
+ tool.parse("cancel_job_lease p/job-1 -- Operator requested cancellation") |> should.equal(Ok(tool.CancelLease("p/job-1","Operator requested cancellation")))
+ list.each(["cancel_job_lease", "cancel_job_lease p/job", "cancel_job_lease ../job -- reason", "cancel_job_lease p/job -- ", "cancel_job_lease p/job -- a -- b", "cancel_job_lease p/job --  reason", "cancel_job_lease p/job;DROP -- reason", "cancel_job_lease p/job -- " <> string.repeat("x",257)],fn(s){tool.parse(s) |> should.be_error})
+}

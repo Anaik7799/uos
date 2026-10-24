@@ -1402,7 +1402,7 @@ let () =
     ~f:(fun c->Int.to_string (Char.to_int c))) ^ ">>" in
   let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
   let guardian=Filename.concat dir "guardian.exe" and worker=Filename.concat dir "worker.exe" in
-  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator"] ~f:(fun mode->
+  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator";"dispatch";"recover";"recover_absent";"recover_dispatch"] ~f:(fun mode->
     Cancellation.with_case (fun path store request->
       let request=live_cancel_request path request in
       let lease=some (ok (Store.find_bridge_lease store ~mapping_id:request.mapping_id)) in
@@ -1425,6 +1425,14 @@ let () =
       if String.equal mode "success" then
         check "SERVICE-ACTION-SIGNED-NATIVE-EFFECT-AND-OUTBOX"
           (String.equal out "service_signed_cancel_outbox" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
+      else if String.equal mode "dispatch" then check "SERVICE-COMMAND-NATIVE-HTTP-DELIVERY"
+        (String.equal out "service_command_dispatched_delivered_once" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
+      else if String.equal mode "recover_dispatch" then check "SERVICE-RECOVERY-HTTP-DELIVERED-ONCE"
+        (String.equal out "service_recovery_dispatched_delivered_once" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
+      else if String.equal mode "recover" then check "SERVICE-RECOVERY-NEW-EPOCH-OUTBOX-SENDABLE"
+        (String.equal out "service_recovery_new_epoch_outbox_sendable" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
+      else if String.equal mode "recover_absent" then check "SERVICE-RECOVERY-ABSENT-NO-REEXECUTION"
+        (String.equal out "service_recovery_absent_not_reexecuted" && Poly.equal (Cancellation.job store).state Store.Job_executing)
       else if String.equal mode "revoked_coordinator" then check "SERVICE-ACTION-REVOKED-COORDINATOR-NO-EFFECT"
         (String.equal out "revoked_coordinator_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
       else if String.equal mode "wrong_fence" then check "SERVICE-ACTION-CHANGED-FENCE-NO-EFFECT"

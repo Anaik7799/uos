@@ -153,6 +153,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
           }
           "/tool" -> {
             case tool_command.parse(args) {
+              Ok(tool_command.CancelLease(job,reason)) -> PreservedDirective("/cancel_job_lease",[job,reason])
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")

@@ -557,6 +557,7 @@ pub fn service_dual_authority_attempt2_epoch7_positive_and_rejection_test() {
       authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db),
       control_registration_path: None,
       conversation: service.ConversationDisabled,
+      actions: None,
     )
   let valid_lease =
     service.AuthorityLease(
@@ -1358,6 +1359,7 @@ pub fn authority_worker_independent_test() {
       authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db),
       control_registration_path: None,
       conversation: service.ConversationDisabled,
+      actions: None,
     )
   let assert Ok(started) = service.start_authority_worker(config)
   let worker = started.data

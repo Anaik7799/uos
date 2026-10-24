@@ -504,3 +504,9 @@ fn is_valid_absolute_path(path: String) -> Bool {
     _, _ -> False
   }
 }
+
+/// Re-read exact trusted historical bytes for lookup only. Expiry is deliberately
+/// not refreshed and this does not create an executable cancellation.
+pub fn reload_historical(p: Profile) -> Result(Profile, String) {
+  load(p.root, p.relative, p.digest, p.context)
+}

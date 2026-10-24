@@ -187,6 +187,11 @@ pub type ConversationConfiguration {
   IsolatedConversation(daily_requests: Int, timeout_ms: Int, io: model.Io)
 }
 
+pub type ActionConfiguration {
+  SignedActions(profile:action_profile.Profile,approvals_root:String)
+  RecoveryActions(profile:action_profile.Profile)
+}
+
 pub type ServiceConfiguration {
   ServiceConfiguration(
     storage_config: transport.LocalConfiguration,
@@ -210,6 +215,7 @@ pub type ServiceConfiguration {
     authority_paths: AuthorityPaths,
     control_registration_path: Option(String),
     conversation: ConversationConfiguration,
+    actions:Option(ActionConfiguration),
   )
 }
 
@@ -248,6 +254,7 @@ pub fn operational_service_configuration(
     authority_paths: CanonicalProductionPaths,
     control_registration_path: None,
     conversation: ConversationDisabled,
+    actions:None,
   )
 }
 
@@ -281,6 +288,7 @@ pub fn development_service_configuration(
     authority_paths: CanonicalProductionPaths,
     control_registration_path: None,
     conversation: ConversationDisabled,
+    actions:None,
   )
 }
 
@@ -2166,7 +2174,8 @@ pub fn dispatch_cycle(
                         list.filter(inbox_rows, fn(row) {
                           let #(rec, _, _) = row
                           case rec.status {
-                            ledger.InboxPending -> True
+                            ledger.InboxPending -> action_dispatch_ready(state,rec.request_id)
+                            ledger.InboxProcessing(_,_) -> action_recovery_ready(state,rec.request_id)
                             _ -> False
                           }
                         })
@@ -2180,7 +2189,10 @@ pub fn dispatch_cycle(
                             ),
                           ))
                         [#(inbox_rec, inbox_ver, inbox_sha), ..] -> {
-                          execute_guarded_dispatch(
+                          case inbox_rec.status {
+                            ledger.InboxProcessing(_,_) -> execute_action_recovery_dispatch(
+                              ServiceState(..state,expected_generation:cur_gen),inbox_rec,inbox_ver,inbox_sha)
+                            _ -> execute_guarded_dispatch(
                             state,
                             cur_gen,
                             inbox_rec,
@@ -2188,6 +2200,7 @@ pub fn dispatch_cycle(
                             inbox_sha,
                             now_us,
                           )
+                          }
                         }
                       }
                     }
@@ -2256,6 +2269,8 @@ fn execute_guarded_dispatch(
           let proc_sha = files.digest(codec.encode_inbox_record(processing_rec))
 
           case specialized_dispatch(state, inbox_rec.request_id) {
+            CancellationDispatch -> execute_action_dispatch(
+              ServiceState(..state, expected_generation: gen1),processing_rec,proc_ver,proc_sha)
             MemoryDispatch -> execute_memory_dispatch(
               ServiceState(..state, expected_generation: gen1),
               processing_rec, proc_ver, proc_sha,
@@ -3231,6 +3246,8 @@ pub fn authority_worker_revoke_lease(
 pub type StoreWorkerMessage {
   StorePersistCancellation(gen: Int,record:ledger.InboxRecord,version:Int,sha:String,worker:String,epoch:Int,p:cancellation.Prepared,reply_to:Subject(Result(store.CancellationReservation,store.StoreError)))
   StoreCommitCancellation(res:store.CancellationReservation,raw:String,now:Int,reply_to:Subject(Result(store.CommitResultResult,store.StoreError)))
+  StoreLoadCancellation(gen:Int,record:ledger.InboxRecord,version:Int,sha:String,worker:String,epoch:Int,reply_to:Subject(Result(store.CancellationReservation,store.StoreError)))
+  StoreCommitCancellationFor(res:store.CancellationReservation,raw:String,now:Int,worker:String,epoch:Int,reply_to:Subject(Result(store.CommitResultResult,store.StoreError)))
   StorePrepareMemory(
     gen: Int, record: ledger.InboxRecord, version: Int, sha: String,
     worker: String, epoch: Int, reply_to: Subject(Result(store.MemoryObservation,store.StoreError)),
@@ -3352,6 +3369,14 @@ fn handle_store_worker_message(
   case msg {
     StorePersistCancellation(gen,record,version,sha,worker,epoch,p,reply_to) -> {
       process.send(reply_to,store.persist_cancellation(state.config,gen,record,version,sha,worker,epoch,p))
+      actor.continue(state)
+    }
+    StoreLoadCancellation(gen,record,version,sha,worker,epoch,reply_to) -> {
+      process.send(reply_to,store.load_cancellation(state.config,gen,record,version,sha,worker,epoch))
+      actor.continue(state)
+    }
+    StoreCommitCancellationFor(res,raw,now,worker,epoch,reply_to) -> {
+      process.send(reply_to,store.commit_cancellation_lookup_for(res,raw,now,worker,epoch))
       actor.continue(state)
     }
     StoreCommitCancellation(res,raw,now,reply_to) -> {
@@ -5120,7 +5145,7 @@ fn command_observer_request(config: ServiceConfiguration) -> obs_policy.ObserveR
   )
 }
 
-type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch }
+type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch CancellationDispatch }
 
 fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedDispatch {
   case svc_read_keys(state, [codec.input_key(request_id)]) {
@@ -5128,6 +5153,7 @@ fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedD
       Ok(#(_, _, _, guard.AcceptedEnvelope(
         directive: guard.PreservedDirective(name, _), callback_query_id: None, ..
       ))) -> case name {
+        "/cancel_job_lease" -> CancellationDispatch
         "/memory" | "/history" | "/messages" -> MemoryDispatch
         "conversational" | "/agy" -> case state.config.conversation {
           ConversationDisabled -> RegularDispatch
@@ -5723,4 +5749,184 @@ fn svc_commit_cancellation(
       })
     None -> store.commit_cancellation_lookup(res, raw, now)
   }
+}
+
+
+/// Trusted local startup input only. Loading a profile does not provision a bridge
+/// or grant canonical execution authority; each effect rechecks current state.
+pub fn configure_actions(
+  config: ServiceConfiguration, root: String, relative: String,
+  digest: String, expected: action_profile.Context, approvals_root: String,
+) -> Result(ServiceConfiguration,String) {
+  use p <- result.try(action_profile.load(root,relative,digest,expected))
+  let c=action_profile.context(p)
+  case c.bot == config.bot_id && c.plan == config.plan_id && c.task == config.task_id
+    && c.worker == config.worker_id && c.attempt == config.expected_task_attempt
+    && c.epoch == config.coordinator_epoch && c.service_epoch == config.service_epoch
+    && ffi_storage_config_db_path(action_profile.transport(p)) == resolve_sa_plan_db(config.authority_paths)
+    && string.starts_with(approvals_root,"/") && !string.contains(approvals_root,"..")
+    && string.byte_size(approvals_root)<=4096 {
+    True -> Ok(ServiceConfiguration(..config,actions:Some(SignedActions(p,approvals_root))))
+    False -> Error("action_configuration_refused")
+  }
+}
+
+/// A deterministic identifier, never a caller-selected path.
+pub fn action_packet_filename(request_id:String) -> String {
+  files.digest(request_id) <> ".json"
+}
+
+fn action_dispatch_ready(state:ServiceState,request_id:String) -> Bool {
+  case specialized_dispatch(state,request_id),state.config.actions {
+    CancellationDispatch,Some(RecoveryActions(_)) -> False
+    CancellationDispatch,Some(SignedActions(_,root)) ->
+      case files.read(root,action_packet_filename(request_id)) {
+        Ok(_) -> True
+        Error(_) -> False
+      }
+    _,_ -> True
+  }
+}
+
+fn execute_action_dispatch(state:ServiceState,inbox:ledger.InboxRecord,version:Int,sha:String)
+  -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+  case state.config.actions {
+    Some(RecoveryActions(_)) -> Error(action_hold(state,"action_recovery_only"))
+    None -> reply_without_reservation(state,inbox,version,sha,
+      "Controlled actions are not configured. No action was executed.")
+    Some(SignedActions(p,root)) -> {
+      use #(next,committed) <- result.try(execute_approved_cancellation(
+        state,p,root,action_packet_filename(inbox.request_id),inbox,version,sha))
+      finish_conversation(next,inbox,version,committed)
+    }
+  }
+}
+
+/// Reconcile an immutable prior cancellation by native history lookup only.
+/// Current admitted writer/quiescence and canonical authority remain mandatory.
+/// Expired signatures, old boot identity and old service epoch are historical
+/// evidence, never refreshed authority to repeat the cancellation effect.
+pub fn recover_cancellation(
+  state: ServiceState,
+  historical: action_profile.Profile,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+) -> Result(#(ServiceState, store.CommitResultResult), ServiceError) {
+  use _ <- result.try(action_recovery_authority(state, historical))
+  use #(old_worker, old_epoch) <- result.try(case inbox.status {
+    ledger.InboxProcessing(worker, epoch) -> Ok(#(worker, epoch))
+    _ -> Error(action_hold(state, "action_recovery_not_processing"))
+  })
+  use res <- result.try(svc_load_cancellation(
+    state, inbox, version, sha, old_worker, old_epoch,
+  ) |> result.map_error(fn(err) { action_store_error(state, err) }))
+  let saved = store.cancellation_record_value(res)
+  let b = cancellation_record.binding(saved)
+  let c = action_profile.context(historical)
+  use _ <- result.try(case
+    b.bot_id == c.bot && b.plan == c.plan && b.task == c.task
+    && b.worker == c.worker && b.attempt == c.attempt && b.epoch == c.epoch
+    && b.candidate_sha256 == c.candidate && b.host == c.host
+    && b.boot_id == c.boot && old_worker == c.worker && old_epoch == c.service_epoch
+    && b.execution.profile_sha256 == action_profile.digest(historical)
+    && bridge.matches_execution(action_profile.request(historical),
+      b.execution.mapping_id, b.execution.lease_id)
+    && list.contains(state.config.allowed_pairs, #(b.chat_id,b.user_id)) {
+    True -> Ok(Nil)
+    False -> Error(action_hold(state, "action_recovery_binding_refused"))
+  })
+  use raw <- result.try(action_lookup(historical, saved)
+    |> result.map_error(fn(reason) { action_hold(state, reason) }))
+  use _ <- result.try(action_recovery_authority(state, historical))
+  use done <- result.try(svc_commit_cancellation_for(state,res,raw,
+    ffi_system_now_utc_us() / 1000)
+    |> result.map_error(fn(err) { action_store_error(state,err) }))
+  Ok(#(ServiceState(..state,expected_generation:done.receipt.generation),done))
+}
+
+fn action_recovery_authority(state:ServiceState,p:action_profile.Profile)
+  -> Result(Nil,ServiceError) {
+  use _ <- result.try(case state.pending_operation,state.authority_revoked {
+    None,False -> lifecycle.evaluate_writer_gate(state.writer_state)
+      |> result.map_error(fn(_) { action_hold(state,"action_writer_held") })
+    _,True -> Error(action_hold(state,"action_authority_refused"))
+    _,_ -> Error(action_hold(state,"action_writer_held"))
+  })
+  use _ <- result.try(verify_authority(state,ffi_system_now_utc_us())
+    |> result.map_error(fn(_) { action_hold(state,"action_authority_refused") }))
+  use _ <- result.try(action_profile.reload_historical(p)
+    |> result.map_error(fn(_) { action_hold(state,"action_profile_refused") }))
+  use observed <- result.try(checked_clock.observe()
+    |> result.map_error(fn(_) { action_hold(state,"action_clock_refused") }))
+  let c=action_profile.context(p)
+  case c.bot == state.config.bot_id && c.plan == state.config.plan_id
+    && c.task == state.config.task_id
+    && c.machine_id == observed.sample.observed.domain.host_id
+    && ffi_storage_config_db_path(action_profile.transport(p))
+      == resolve_sa_plan_db(state.config.authority_paths) {
+    True -> Ok(Nil)
+    False -> Error(action_hold(state,"action_recovery_scope_refused"))
+  }
+}
+
+fn svc_load_cancellation(state:ServiceState,inbox:ledger.InboxRecord,
+  version:Int,sha:String,worker:String,epoch:Int)
+  -> Result(store.CancellationReservation,store.StoreError) {
+  case state.store_worker {
+    Some(actor) -> process.call(actor,5000,fn(reply_to) {
+      StoreLoadCancellation(state.expected_generation,inbox,version,sha,worker,epoch,reply_to)
+    })
+    None -> store.load_cancellation(state.config.storage_config,
+      state.expected_generation,inbox,version,sha,worker,epoch)
+  }
+}
+
+fn svc_commit_cancellation_for(state:ServiceState,res:store.CancellationReservation,
+  raw:String,now:Int) -> Result(store.CommitResultResult,store.StoreError) {
+  case state.store_worker {
+    Some(actor) -> process.call(actor,5000,fn(reply_to) {
+      StoreCommitCancellationFor(res,raw,now,state.config.worker_id,
+        state.config.service_epoch,reply_to)
+    })
+    None -> store.commit_cancellation_lookup_for(res,raw,now,
+      state.config.worker_id,state.config.service_epoch)
+  }
+}
+
+/// Trusted startup mode for reconciling historical requests only. This mode
+/// cannot execute a new cancellation and does not refresh an expired profile.
+pub fn configure_action_recovery(config:ServiceConfiguration,root:String,
+  relative:String,digest:String,expected:action_profile.Context)
+  -> Result(ServiceConfiguration,String) {
+  use p <- result.try(action_profile.load(root,relative,digest,expected))
+  let c=action_profile.context(p)
+  case c.bot==config.bot_id && c.plan==config.plan_id && c.task==config.task_id
+    && c.service_epoch <= config.service_epoch
+    && ffi_storage_config_db_path(action_profile.transport(p))
+      ==resolve_sa_plan_db(config.authority_paths) {
+    True -> Ok(ServiceConfiguration(..config,actions:Some(RecoveryActions(p))))
+    False -> Error("action_recovery_configuration_refused")
+  }
+}
+
+fn action_recovery_ready(state:ServiceState,request_id:String) -> Bool {
+  case specialized_dispatch(state,request_id),state.config.actions {
+    CancellationDispatch,Some(_) -> case svc_read_keys(state,[store.cancellation_key(request_id)]) {
+      Ok(#(_,[row])) -> row.exists
+      _ -> False
+    }
+    _,_ -> False
+  }
+}
+
+fn execute_action_recovery_dispatch(state:ServiceState,inbox:ledger.InboxRecord,
+  version:Int,sha:String) -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+  let p=case state.config.actions {
+    Some(SignedActions(p,_)) | Some(RecoveryActions(p)) -> Ok(p)
+    None -> Error(action_hold(state,"action_recovery_configuration_refused"))
+  }
+  use p <- result.try(p)
+  use #(next,committed) <- result.try(recover_cancellation(state,p,inbox,version,sha))
+  finish_conversation(next,inbox,version,committed)
 }
