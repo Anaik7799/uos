@@ -4,6 +4,7 @@
 
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
+import cepaf_gleam/harness/telegram_lifecycle_adapter as lifecycle
 import cepaf_gleam/harness/telegram_ingress_guard as guard
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
@@ -400,12 +401,55 @@ pub fn initialize_store(
 }
 
 
-/// Creates a new store exclusively and commits its writer identity with bootstrap
-/// metadata. Existing and partially initialized stores are refused, never resumed.
-/// This records storage identity only: callers must separately verify live unit,
-/// task/runtime authority, and canonical paths before enabling service effects.
-pub fn initialize_new_registered_store(
+/// Evidence of successful exclusive native creation, bound to its observed inode
+/// and incarnation cookie. This is not a live-writer or effect-authority permit.
+pub opaque type FreshWriterStore {
+  FreshWriterStore(
+    config: transport.LocalConfiguration,
+    bot_id: Int,
+    generation: Int,
+    incarnation: String,
+  )
+}
+
+pub fn fresh_writer_store_incarnation(proof: FreshWriterStore) -> String {
+  proof.incarnation
+}
+
+/// First stage: create exclusively, then measure the actual file identity.
+/// An existing or partially created file never yields this proof.
+pub fn begin_new_writer_store(
   config: transport.LocalConfiguration,
+  bot_id: Int,
+) -> Result(FreshWriterStore, StoreError) {
+  use _ <- result.try(case guard.valid_positive_id(bot_id) {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("invalid_bot_id"))
+  })
+  let request = codec.encode_initialize_new_command(bot_id, None)
+  use response <- result.try(wrap_transport(transport.exchange(config, request)))
+  use generation <- result.try(
+    codec.decode_initialize_new_response(response)
+    |> result.map_error(StoreBackendError),
+  )
+  use _ <- result.try(case generation == 1 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("fresh_store_generation_invalid"))
+  })
+  use incarnation <- result.try(
+    lifecycle.compute_store_incarnation(ffi_config_database(config))
+    |> result.map_error(StoreInvariantError),
+  )
+  Ok(FreshWriterStore(config, bot_id, generation, incarnation))
+}
+
+/// Second stage: callers can now construct the external control registration
+/// from the real store/unit identity. This function commits storage metadata;
+/// live control binding, cleanup, task/runtime fencing and single-start ownership
+/// are separate obligations. Replay of identical metadata is not new admission.
+/// Losing the proof after creation requires explicit incomplete-store recovery.
+pub fn finish_new_writer_store(
+  proof: FreshWriterStore,
   registration: codec.WriterRegistration,
 ) -> Result(Int, StoreError) {
   use raw <- result.try(
@@ -416,17 +460,22 @@ pub fn initialize_new_registered_store(
     True -> Ok(Nil)
     False -> Error(StoreInvariantError("first_writer_requires_epoch_one"))
   })
-  let request = codec.encode_initialize_new_command(registration.bot_id, None)
-  use response <- result.try(wrap_transport(transport.exchange(config, request)))
-  use generation <- result.try(
-    codec.decode_initialize_new_response(response)
-    |> result.map_error(StoreBackendError),
-  )
-  use _ <- result.try(case generation == 1 {
+  use _ <- result.try(case registration.bot_id == proof.bot_id {
     True -> Ok(Nil)
-    False -> Error(StoreInvariantError("fresh_store_generation_invalid"))
+    False -> Error(StoreInvariantError("fresh_writer_bot_mismatch"))
   })
-  bootstrap_metadata_with_writer(config, registration.bot_id, generation, [
+  use current_incarnation <- result.try(
+    lifecycle.compute_store_incarnation(ffi_config_database(proof.config))
+    |> result.map_error(StoreInvariantError),
+  )
+  use _ <- result.try(case
+    current_incarnation == proof.incarnation
+    && registration.store_incarnation_id == proof.incarnation
+  {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("fresh_writer_incarnation_mismatch"))
+  })
+  bootstrap_metadata_with_writer(proof.config, proof.bot_id, proof.generation, [
     codec.Change(
       key: codec.writer_registration_key(),
       expected_version: 0,
