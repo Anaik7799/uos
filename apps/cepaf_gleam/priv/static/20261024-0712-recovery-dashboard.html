@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UOS Recovery • 2026-10-24 Operational Observation</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1018;--panel:#141d29;--line:#2a394b;--ink:#ecf2f9;--muted:#a8b8cb;--amber:#ffce73;--green:#86dfb2;--blue:#8bc3ff;--red:#ff8f8f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}a{color:var(--blue)}aside{position:fixed;inset:0 auto 0 0;width:225px;padding:24px 18px;border-right:1px solid var(--line);background:#101722;overflow-y:auto}aside strong{font-size:19px;display:block}aside small{display:block;color:var(--muted);margin:20px 0 6px;font-size:11px;letter-spacing:.04em}aside a{display:block;text-decoration:none;padding:6px 0;font-size:14px}main{margin-left:225px;padding:22px 32px;max-width:1600px}.top{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:12px;align-items:center}.tag,.pill{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}.tag{color:var(--amber);border-color:#715c37}.err{color:var(--red);border-color:#7a3b3b}.ok-obs{color:var(--green);border-color:#356950}.warn{color:var(--amber)}h1{font-size:34px;line-height:1.15;margin:22px 0 10px;letter-spacing:-.8px}h2{font-size:19px;margin:0 0 14px}h3{font-size:15px;margin:0 0 7px}p{margin:7px 0;color:var(--muted)}.lead{max-width:980px;margin-bottom:22px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}.metric b{display:block;font-size:22px;margin:5px 0}.metric span{color:var(--muted);font-size:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{margin-bottom:18px}.state-row{padding:11px 0;border-top:1px solid var(--line)}.state-row:first-child{border-top:0;padding-top:0}.state-row strong{display:block;color:var(--ink)}ul{padding-left:20px;margin:8px 0}li{padding:5px 0;color:var(--muted)}table{width:100%;border-collapse:collapse}th{text-align:left;color:var(--muted);font-size:12px;font-weight:600}td,th{padding:11px 10px 11px 0;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}td:first-child{min-width:130px}.completed{color:var(--green)}.executing{color:var(--amber)}.available{color:var(--muted)}.expired{color:var(--red);border-color:#7a3b3b}.scroll{overflow-x:auto}.note{font-size:12px;color:var(--muted)}button{background:transparent;color:var(--blue);border:1px solid var(--line);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px}details{border-top:1px solid var(--line);padding-top:12px;margin-top:10px}summary{cursor:pointer;color:var(--blue);font-weight:600}footer{padding:18px 0;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:18px}.navbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0}#source,.obs-pre{white-space:pre-wrap;max-height:420px;overflow:auto;font-size:12px;background:#0d141e;padding:12px;border-radius:8px;border:1px solid var(--line);color:var(--ink)}.badge-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+@media(max-width:950px){aside{position:static;width:100%;border-right:0;border-bottom:1px solid var(--line);padding:14px 18px}aside nav{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}aside small{width:100%;margin:10px 0 2px}aside a{display:inline-block;padding:4px 0}main{margin:0;padding:18px}.two{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}h1{font-size:28px}}
+@media(max-width:560px){.metrics{grid-template-columns:1fr}}
+</style></head><body>
+<aside aria-label="Primary Tailscale Navigation"><strong>UOS / Recovery</strong><nav><small>COMMAND &amp; CONTROL</small><a href="http://nas-1.tail55d152.ts.net:4100/">Cockpit</a><a href="http://nas-1.tail55d152.ts.net:4100/planning">Planning</a><a href="http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html">Current Recovery</a><a href="#tasks">Canonical Tasks</a><a href="#jobs">Agent Jobs</a><a href="#observations">Source Observations</a><small>KNOWLEDGE BASE</small><a href="http://nas-1.tail55d152.ts.net:4100/wiki">Hermes Wiki</a><a href="http://nas-1.tail55d152.ts.net:4100/zk">Zettelkasten</a><a href="#gaps">Telegram &amp; Learning Gaps</a><small>REPOSITORY &amp; GOVERNANCE</small><a href="http://nas-1.tail55d152.ts.net:4100/static/20260930-0633-restoration-dashboard.html">Historical Sep 30 Template</a><a href="#risks">Risks &amp; Mitigation</a><a href="#checklist">18-Point Checklist</a><a href="#raw-section">Raw Snapshot JSON</a></nav></aside>
+<main>
+<div class="top"><span>UOS / Operations / Recovery Observation (2026-10-24)</span><span><a id="self" href="http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html">http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html</a> <button id="copy" type="button">Copy URL</button></span></div>
+<h1>Recovery &amp; Operational Observation</h1>
+<div class="lead">
+  <div class="badge-row">
+    <span class="tag" id="overall">UNAVAILABLE — Waiting for initial snapshot</span>
+    <span class="pill warn" id="freshness">UNAVAILABLE</span>
+    <span class="pill warn" id="admission-pill">GLOBAL ADMISSION: NOT_ADMITTED (EV ceiling 93)</span>
+  </div>
+  <p>Observed AS-IS → TO-BE state, canonical task/job counts, live source observations, and verification gates. Task records and snapshots are observation, not execution authority. Never infer overall admission from component tests or task counts. Source observed template counts are historical and are not carried into current claims.</p>
+  <div class="note" id="timestamp">Producer observed_at: UNKNOWN · Age: UNKNOWN · Expiry: UNKNOWN</div>
+  <div class="note" id="refresh-meta">Client polls <code>/static/20261024-0712-recovery-state.json</code> every 5s while visible (and on visibility/focus). Backend refreshes observations every 300s or within its 5s task-completion poll. A successful HTTP fetch with an unchanged observation is NOT freshness.</div>
+</div>
+
+<div class="metrics">
+  <div class="metric"><span>TASK COUNTS (NOT %-FUNCTIONAL)</span><b id="task-counts">UNKNOWN</b><span id="task-breakdown">completed: UNKNOWN · available: UNKNOWN · expired: UNKNOWN</span></div>
+  <div class="metric"><span>OVERALL &amp; GOAL MET</span><b id="goal-state">PARTIALLY_OPERATIONAL</b><span id="goal-detail">goal_met: false · live_runtime_verified: false</span></div>
+  <div class="metric"><span>SNAPSHOT FRESHNESS &amp; EXPIRY</span><b id="freshness-metric">UNAVAILABLE</b><span id="expiry-detail">STALE &gt;330s · CLOCK_SKEW &gt;5s future</span></div>
+  <div class="metric"><span>AGENT JOBS &amp; GLOBAL SCOPE</span><b id="job-counts">UNKNOWN</b><span id="global-breakdown">global tasks/jobs/workflows observation</span></div>
+</div>
+
+<div class="two">
+  <section class="panel" id="as-is-section"><h2>AS-IS · Observed current state</h2><div id="as-is"><div class="state-row"><strong>Snapshot pending</strong><p>Awaiting valid <code>uos.restoration.snapshot.v1</code> payload from <code>/static/20261024-0712-recovery-state.json</code>.</p></div></div></section>
+  <section class="panel" id="to-be-section"><h2>TO-BE · Target acceptance conditions</h2><ul id="to-be"><li>Awaiting valid snapshot payload.</li></ul><p class="note">Goal remains unmet (<code>goal_met: false</code>) until required live runtime observations, independent review, task closure, and main integration are recorded.</p></section>
+</div>
+
+<section class="panel" id="tasks">
+  <h2>Canonical tasks (plan, ID, state, owner, expired, contribution)</h2>
+  <p class="note">Showing raw task counts and individual records (never percent-functional). Task records are observation only, not execution authority.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>PLAN</th><th>TASK ID &amp; TITLE</th><th>STATE</th><th>OWNER / WORKER</th><th>EXPIRED</th><th>CONTRIBUTION</th></tr></thead>
+      <tbody id="task-rows"><tr><td colspan="6">UNKNOWN — snapshot not yet loaded.</td></tr></tbody>
+    </table>
+  </div>
+  <div class="note" id="global-summary">Global observation lists — tasks: UNKNOWN · jobs: UNKNOWN · workflows: UNKNOWN</div>
+</section>
+
+<section class="panel" id="jobs">
+  <h2>Actual agent jobs</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>JOB ID</th><th>WORKER / OWNER</th><th>STATE</th><th>ATTEMPT</th><th>EXPIRED</th></tr></thead>
+      <tbody id="job-rows"><tr><td colspan="5">UNKNOWN — snapshot not yet loaded.</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="observations">
+  <h2>Source observations (Coordinator, Services, Forecast, Ecology, HTTP)</h2>
+  <p class="note">Missing source or error fields always display <code>UNKNOWN</code>, never healthy. An HTTP 200 fetch of a cached snapshot does not make underlying sources fresh.</p>
+  <div class="two">
+    <div class="state-row"><strong>Coordinator observation</strong><p id="obs-coordinator-meta">status: UNKNOWN · observed_at: UNKNOWN · error: UNKNOWN</p><pre class="obs-pre" id="obs-coordinator-data">UNKNOWN</pre></div>
+    <div class="state-row"><strong>Services observation</strong><p id="obs-services-meta">status: UNKNOWN · observed_at: UNKNOWN · error: UNKNOWN</p><pre class="obs-pre" id="obs-services-raw">UNKNOWN</pre></div>
+    <div class="state-row"><strong>Forecast observation</strong><p id="obs-forecast-meta">status: UNKNOWN · observed_at: UNKNOWN · error: UNKNOWN</p><pre class="obs-pre" id="obs-forecast-data">UNKNOWN</pre></div>
+    <div class="state-row"><strong>Ecology observation</strong><p id="obs-ecology-meta">status: UNKNOWN · observed_at: UNKNOWN · error: UNKNOWN</p><pre class="obs-pre" id="obs-ecology-data">UNKNOWN</pre></div>
+  </div>
+  <h3>HTTP endpoint observations</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>PATH</th><th>HTTP STATUS</th><th>OBSERVED AT</th><th>ERROR</th></tr></thead>
+      <tbody id="http-rows"><tr><td colspan="4">UNKNOWN — no HTTP observations loaded.</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="gaps">
+  <h2>Unresolved Telegram &amp; learning gaps</h2>
+  <div class="two">
+    <div>
+      <h3>Unresolved Telegram operational gaps</h3>
+      <ul id="telegram-gaps">
+        <li><strong>Live authorized Telegram cutover unverified:</strong> End-to-end production Telegram ingress, durable SQLite inbox/outbox store/transport integration, and supervised delivery acceptance remain unresolved and unverified in live runtime (<code>live_runtime_verified: false</code>).</li>
+        <li><strong>Authority &amp; replay boundaries:</strong> Task/snapshot observations do not authorize Telegram side effects; uncertain delivery states and lease/fencing refusals must remain fail-closed.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Unresolved learning, cognitive &amp; symbiosis gaps</h3>
+      <ul id="learning-gaps">
+        <li><strong>Learning &amp; memory feedback loop:</strong> Automated episodic-to-Hermes Wiki / Zettelkasten learning consolidation and closed-loop forecast/ecology calibration remain incomplete in live production.</li>
+        <li><strong>Symbiosis, MCP &amp; formal obligations:</strong> Unprobed MCP declarations, runtime symbiosis verification, and global formal corpus gates remain unresolved; all EV claims above 93 remain <code>NOT_ADMITTED</code>.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note" id="dynamic-gaps-note">Snapshot-derived Telegram and learning items will populate above when observed.</div>
+</section>
+
+<section class="panel" id="risks">
+  <h2>Risk, criticality &amp; mitigation approach</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>RISK</th><th>CRITICALITY / STATUS</th><th>MITIGATION</th></tr></thead>
+      <tbody id="risk-rows"><tr><td colspan="3">UNKNOWN — snapshot not yet loaded.</td></tr></tbody>
+    </table>
+  </div>
+  <p class="note" id="risk-score">Evidence risk summary: UNKNOWN</p>
+</section>
+
+<section class="panel" id="evidence-section">
+  <h2>Verification &amp; candidate evidence</h2>
+  <p id="evidence">Summary: UNKNOWN</p>
+  <p class="note" id="count-note">Counts note: UNKNOWN</p>
+  <p id="candidates">Coordinator candidate: UNKNOWN · Cycle candidate: UNKNOWN · live_runtime_verified: false · main_includes_candidate: false</p>
+  <p class="note">Historical template counts from earlier plans are historical only and are never carried into current claims. EV ceiling remains 93; all EV claims above 93 remain <code>NOT_ADMITTED</code>.</p>
+</section>
+
+<section class="panel" id="checklist">
+  <h2>Comprehensive verification checklist (18 checkpoints · 5 domains + provenance)</h2>
+  <p class="note">Do not mark all verified. Unverified, pending, or missing checkpoints remain explicitly unverified.</p>
+  <div id="check-domains">
+    <details class="chk-domain" open>
+      <summary>Domain 1 · Temporal, Network &amp; Fractal Governance (CHK-01 .. CHK-04) — NOT ALL VERIFIED</summary>
+      <ul id="chk-group-1">
+        <li data-chk="CHK-01">CHK-01 TIME: UNKNOWN (awaiting current snapshot observation; not verified)</li>
+        <li data-chk="CHK-02">CHK-02 TAIL: Full Tailscale navigation configured (http://nas-1.tail55d152.ts.net:4100); live endpoint verification pending</li>
+        <li data-chk="CHK-03">CHK-03 FRACT: Fractal L0–L9 authority boundaries — pending live acceptance</li>
+        <li data-chk="CHK-04">CHK-04 KM: Knowledge management &amp; learning loop continuity — unresolved learning gaps remain</li>
+      </ul>
+    </details>
+    <details class="chk-domain" open>
+      <summary>Domain 2 · Architecture, Boundaries &amp; Storage (CHK-05 .. CHK-07) — NOT ALL VERIFIED</summary>
+      <ul id="chk-group-2">
+        <li data-chk="CHK-05">CHK-05 MUDA: Dependency &amp; surface containment — unverified in live runtime</li>
+        <li data-chk="CHK-06">CHK-06 GRAPH: Module boundary conformance — unverified in live runtime</li>
+        <li data-chk="CHK-07">CHK-07 DRIVE: Durable storage &amp; workspace fence isolation — observation only</li>
+      </ul>
+    </details>
+    <details class="chk-domain" open>
+      <summary>Domain 3 · Interface, Formal &amp; Test Modalities (CHK-08 .. CHK-11) — NOT ALL VERIFIED</summary>
+      <ul id="chk-group-3">
+        <li data-chk="CHK-08">CHK-08 C1C8: Responsive &amp; mobile navigation accessibility — awaiting live browser acceptance</li>
+        <li data-chk="CHK-09">CHK-09 MATH: Formal specification &amp; invariant gates — NOT_ADMITTED</li>
+        <li data-chk="CHK-10">CHK-10 9MOD: Scoped test modalities — never used to infer overall admission</li>
+        <li data-chk="CHK-11">CHK-11 REGR: Live route &amp; UI regression checks — pending</li>
+      </ul>
+    </details>
+    <details class="chk-domain" open>
+      <summary>Domain 4 · Runtime, Messaging &amp; Telemetry (CHK-12 .. CHK-16) — NOT ALL VERIFIED</summary>
+      <ul id="chk-group-4">
+        <li data-chk="CHK-12">CHK-12 GLEAM: Gleam/OTP harness refresh interval (300s / 5s completion poll) — candidate unmerged</li>
+        <li data-chk="CHK-13">CHK-13 HERMES: Telegram ingress/delivery &amp; agent jobs — unresolved Telegram gaps remain</li>
+        <li data-chk="CHK-14">CHK-14 ZIGVM: Native kernel/port boundary gates — unverified</li>
+        <li data-chk="CHK-15">CHK-15 MAX: Forecast &amp; inference provider routing — observation only</li>
+        <li data-chk="CHK-16">CHK-16 OTEL: Coordinator, services, forecast, ecology &amp; HTTP correlation — observation only</li>
+      </ul>
+    </details>
+    <details class="chk-domain" open>
+      <summary>Domain 5 · Sovereignty, VCS &amp; Provenance (CHK-17 .. CHK-18) — NOT ALL VERIFIED</summary>
+      <ul id="chk-group-5">
+        <li data-chk="CHK-17">CHK-17 SOV: Independent review &amp; non-admission guardrails — NOT_ADMITTED</li>
+        <li data-chk="CHK-18">CHK-18 JJ: Standalone Jujutsu workspace isolation — main_includes_candidate: false</li>
+      </ul>
+    </details>
+  </div>
+  <p class="note" id="provenance-note"><strong>Provenance note:</strong> EV ceiling remains 93. All EV claims above 93 remain <code>NOT_ADMITTED</code>. Source observed template counts are historical and are not carried into current claims. Task records and snapshots are observation, not execution authority.</p>
+  <div id="raw-section">
+    <p><button id="toggle-source" type="button">Toggle Raw Snapshot JSON</button></p>
+    <details id="raw-details">
+      <summary>Raw source / snapshot JSON (<code>/static/20261024-0712-recovery-state.json</code>)</summary>
+      <pre id="source">UNAVAILABLE — no snapshot fetched yet.</pre>
+    </details>
+  </div>
+</section>
+
+<div class="navbottom">
+  <a href="http://nas-1.tail55d152.ts.net:4100/planning">← Planning</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/">Cockpit Home</a>
+  <a href="http://nas-1.tail55d152.ts.net:4100/static/20260930-0633-restoration-dashboard.html">Historical Restoration Dashboard (Sep 30) →</a>
+</div>
+<footer>UOS · Standalone Jujutsu · Gleam/OTP authority · Sa-plan observation · #fractal-l0 #fractal-l2 #fractal-l4 #fractal-l8 #zk-adr #zero-muda<br>Client polls <code>/static/20261024-0712-recovery-state.json</code> every 5s while visible and on visibility/focus. Backend refreshes all observations every 300s or within its 5s task-completion poll. An unchanged observation timestamp is an aging snapshot, NOT a fresh health assertion.</footer>
+</main>
+<script>
+const SNAPSHOT_URL = '/static/20261024-0712-recovery-state.json';
+const EXPECTED_SCHEMA = 'uos.restoration.snapshot.v1';
+let lastProducerUpdatedAt = null;
+let fetchCountForSameTimestamp = 0;
+
+const esc = s => String(s ?? 'UNKNOWN').replace(/[&<>"']/g, c => ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}[c]));
+
+const set = (id, text) => {
+  const el = document.getElementById(id);
+  if (el) el.textContent = String(text ?? 'UNKNOWN');
+};
+
+const valOrUnknown = v => (v === undefined || v === null || String(v).trim() === '') ? 'UNKNOWN' : String(v);
+
+const errOrUnknown = obj => {
+  if (!obj || typeof obj !== 'object' || !('error' in obj)) return 'UNKNOWN (missing error field)';
+  if (obj.error === null) return 'none (null)';
+  if (typeof obj.error === 'string' && obj.error.trim() !== '') return obj.error;
+  return 'UNKNOWN';
+};
+
+const statusOrUnknown = obj => {
+  if (!obj || typeof obj !== 'object' || typeof obj.status !== 'string' || obj.status.trim() === '') {
+    return 'UNKNOWN';
+  }
+  return obj.status;
+};
+
+function markUnavailable(reason) {
+  const msg = 'UNAVAILABLE — ' + String(reason || 'snapshot fetch/JSON/schema failure');
+  set('overall', msg);
+  document.getElementById('overall').className = 'tag err';
+  set('freshness', 'UNAVAILABLE');
+  document.getElementById('freshness').className = 'pill err';
+  set('freshness-metric', 'UNAVAILABLE');
+  set('timestamp', msg);
+  document.getElementById('timestamp').className = 'note err';
+}
+
+function renderSourceBlock(metaId, bodyId, src, isRawString) {
+  if (!src || typeof src !== 'object') {
+    set(metaId, 'status: UNKNOWN · observed_at: UNKNOWN · error: UNKNOWN (missing source object)');
+    set(bodyId, 'UNKNOWN');
+    return;
+  }
+  const st = statusOrUnknown(src);
+  const obsAt = valOrUnknown(src.observed_at);
+  const errText = errOrUnknown(src);
+  set(metaId, 'status: ' + st + ' · observed_at: ' + obsAt + ' · error: ' + errText);
+  if (isRawString) {
+    set(bodyId, typeof src.raw === 'string' && src.raw.trim() !== '' ? src.raw : 'UNKNOWN');
+  } else {
+    set(bodyId, src.data !== undefined && src.data !== null ? JSON.stringify(src.data, null, 2) : 'UNKNOWN (null/missing data)');
+  }
+}
+
+function renderChecks(checks) {
+  const normalized = [];
+  for (let i = 0; i < 18; i++) {
+    const code = 'CHK-' + String(i + 1).padStart(2, '0');
+    const raw = Array.isArray(checks) && typeof checks[i] === 'string' && checks[i].trim() !== ''
+      ? checks[i].trim()
+      : code + ': UNKNOWN (missing from snapshot — NOT VERIFIED)';
+    normalized.push(raw.startsWith(code) ? raw : (code + ' ' + raw));
+  }
+  const ranges = [
+    ['chk-group-1', 0, 4],
+    ['chk-group-2', 4, 7],
+    ['chk-group-3', 7, 11],
+    ['chk-group-4', 11, 16],
+    ['chk-group-5', 16, 18]
+  ];
+  ranges.forEach(([id, start, end]) => {
+    const ul = document.getElementById(id);
+    if (!ul) return;
+    ul.innerHTML = normalized.slice(start, end).map((item, idx) => {
+      const code = 'CHK-' + String(start + idx + 1).padStart(2, '0');
+      return '<li data-chk="' + esc(code) + '">' + esc(item) + '</li>';
+    }).join('');
+  });
+  const extraProvenance = Array.isArray(checks) && checks.length > 18
+    ? ' Snapshot note: ' + checks.slice(18).join(' | ')
+    : '';
+  set(
+    'provenance-note',
+    'Provenance note: EV ceiling remains 93. All EV claims above 93 remain NOT_ADMITTED. Source observed template counts are historical and are not carried into current claims. Task records and snapshots are observation, not execution authority.' + extraProvenance
+  );
+}
+
+function validateSchema(d) {
+  if (!d || typeof d !== 'object') return 'Payload is not a JSON object';
+  if (d.schema !== EXPECTED_SCHEMA) return 'Invalid schema: expected ' + EXPECTED_SCHEMA + ', got ' + String(d.schema);
+  if (typeof d.updated_at !== 'string' || Number.isNaN(Date.parse(d.updated_at))) return 'Invalid or missing updated_at ISO timestamp';
+  if (!Array.isArray(d.tasks) || !Array.isArray(d.as_is) || !Array.isArray(d.to_be) || !Array.isArray(d.risks) || !Array.isArray(d.checks)) {
+    return 'Missing required array fields (tasks, as_is, to_be, risks, checks)';
+  }
+  if (!d.counts || typeof d.counts !== 'object' || !d.evidence || typeof d.evidence !== 'object') {
+    return 'Missing required counts or evidence object';
+  }
+  if (!d.refresh || typeof d.refresh.expires_at !== 'string' || Number.isNaN(Date.parse(d.refresh.expires_at))) return 'Invalid or missing observer expiry';
+  return null;
+}
+
+async function refresh() {
+  try {
+    const r = await fetch(SNAPSHOT_URL, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const schemaErr = validateSchema(d);
+    if (schemaErr) {
+      set('source', JSON.stringify(d, null, 2));
+      markUnavailable(schemaErr);
+      return;
+    }
+
+    const nowMs = Date.now();
+    const observedMs = Date.parse(d.updated_at);
+    const ageSec = (nowMs - observedMs) / 1000;
+    const refreshObj = (d.refresh && typeof d.refresh === 'object') ? d.refresh : {};
+    const expiresAt = valOrUnknown(refreshObj.expires_at);
+    const expiresMs = Date.parse(expiresAt);
+    const expiryDeltaSec = Number.isNaN(expiresMs) ? null : Math.round((expiresMs - nowMs) / 1000);
+
+    if (lastProducerUpdatedAt === d.updated_at) {
+      fetchCountForSameTimestamp += 1;
+    } else {
+      lastProducerUpdatedAt = d.updated_at;
+      fetchCountForSameTimestamp = 0;
+    }
+
+    let freshnessState = 'OBSERVED';
+    let freshnessClass = 'pill ok-obs';
+    if (ageSec < -5) {
+      freshnessState = 'CLOCK_SKEW';
+      freshnessClass = 'pill err';
+    } else if (expiryDeltaSec !== null && expiryDeltaSec < 0) {
+      freshnessState = 'EXPIRED';
+      freshnessClass = 'pill err';
+    } else if (ageSec > 330) {
+      freshnessState = 'STALE';
+      freshnessClass = 'pill err';
+    } else if (fetchCountForSameTimestamp > 0) {
+      freshnessState = 'AGING_OBSERVATION (UNCHANGED FETCH #' + fetchCountForSameTimestamp + ')';
+      freshnessClass = 'pill warn';
+    }
+
+    const overallRaw = valOrUnknown(d.overall);
+    const overallBanner = (['STALE', 'CLOCK_SKEW', 'EXPIRED'].includes(freshnessState))
+      ? overallRaw + ' · ' + freshnessState
+      : overallRaw;
+    set('overall', overallBanner);
+    document.getElementById('overall').className = (['STALE', 'CLOCK_SKEW', 'EXPIRED'].includes(freshnessState)) ? 'tag err' : 'tag';
+    set('freshness', freshnessState);
+    document.getElementById('freshness').className = freshnessClass;
+    set('freshness-metric', freshnessState);
+
+    const expirySummary = expiresAt + (expiryDeltaSec === null ? '' : (expiryDeltaSec >= 0 ? ' (in ' + expiryDeltaSec + 's)' : ' (expired ' + Math.abs(expiryDeltaSec) + 's ago)'));
+    set(
+      'timestamp',
+      'Producer observed_at: ' + d.updated_at +
+      ' · Age: ' + ageSec + 's' +
+      ' · Expiry: ' + expirySummary +
+      ' · Plan: ' + valOrUnknown(d.plan) +
+      ' · Status: ' + freshnessState +
+      (fetchCountForSameTimestamp > 0 ? ' (HTTP poll succeeded, but producer observation is unchanged — NOT fresh)' : '')
+    );
+    document.getElementById('timestamp').className = 'note ' + ((ageSec < -5 || ageSec > 330) ? 'err' : 'warn');
+
+    set(
+      'refresh-meta',
+      'Backend refresh interval: ' + valOrUnknown(refreshObj.interval_seconds ?? 300) + 's · completion poll: ' +
+      valOrUnknown(refreshObj.poll_seconds ?? 5) + 's · reason: ' + valOrUnknown(refreshObj.reason) +
+      ' · expires_at: ' + expiresAt + '. Client polls every 5s while visible.'
+    );
+    set('expiry-detail', 'Age: ' + ageSec + 's · Expires: ' + expirySummary);
+
+    const cTotal = valOrUnknown(d.counts.total ?? d.tasks.length);
+    const cCompleted = valOrUnknown(d.counts.completed);
+    const cAvailable = valOrUnknown(d.counts.available);
+    const cExpired = valOrUnknown(d.counts.expired);
+    set('task-counts', 'Total ' + cTotal + ' tasks (completed: ' + cCompleted + ')');
+    set('task-breakdown', 'completed: ' + cCompleted + ' · available: ' + cAvailable + ' · expired: ' + cExpired + ' (counts only, not %-functional)');
+
+    const liveVerified = d.evidence.live_runtime_verified === true;
+    const mainIncludes = d.evidence.main_includes_candidate === true;
+    const goalMet = d.goal_met === true;
+    set('goal-state', overallRaw + ' (goal_met: ' + String(goalMet) + ')');
+    set('goal-detail', 'live_runtime_verified: ' + String(liveVerified) + ' · main_includes_candidate: ' + String(mainIncludes) + ' · Global admission: NOT_ADMITTED');
+
+    const jobsArr = Array.isArray(d.jobs) ? d.jobs : [];
+    const globalObj = (d.global && typeof d.global === 'object') ? d.global : {};
+    const gTasks = Array.isArray(globalObj.tasks) ? globalObj.tasks : [];
+    const gJobs = Array.isArray(globalObj.jobs) ? globalObj.jobs : [];
+    const gWorkflows = Array.isArray(globalObj.workflows) ? globalObj.workflows : [];
+    set('job-counts', jobsArr.length + ' recorded plan jobs');
+    const totalRows = rows => rows.reduce((sum, row) => sum + (Number.isFinite(row.n) ? row.n : 0), 0);
+    set('global-breakdown', 'global tasks: ' + totalRows(gTasks) + ' · global jobs: ' + totalRows(gJobs) + ' · workflows: ' + totalRows(gWorkflows));
+    set('global-summary', 'Global state groups — tasks: ' + gTasks.length + ' · jobs: ' + gJobs.length + ' · workflows: ' + gWorkflows.length);
+
+    document.getElementById('as-is').innerHTML = d.as_is.map(pair => {
+      const label = Array.isArray(pair) ? pair[0] : 'UNKNOWN';
+      const text = Array.isArray(pair) ? pair[1] : '';
+      return '<div class="state-row"><strong>' + esc(label) + '</strong><p>' + esc(text) + '</p></div>';
+    }).join('') || '<div class="state-row"><strong>UNKNOWN</strong><p>No AS-IS entries in snapshot.</p></div>';
+
+    document.getElementById('to-be').innerHTML = d.to_be.map(v => '<li>' + esc(v) + '</li>').join('') || '<li>UNKNOWN</li>';
+
+    const allTasks = d.tasks;
+    document.getElementById('task-rows').innerHTML = allTasks.map(t => {
+      const stateStr = valOrUnknown(t.state);
+      const stateCls = ['completed', 'executing', 'available'].includes(stateStr) ? stateStr : 'warn';
+      const workerStr = t.worker === null || t.worker === undefined || t.worker === '' ? 'unassigned (null)' : String(t.worker);
+      const attemptStr = t.attempt === undefined || t.attempt === null ? '—' : 'attempt ' + String(t.attempt);
+      const expBool = typeof t.expired === 'boolean' ? (t.expired ? 'true (EXPIRED)' : 'false') : 'UNKNOWN';
+      const expCls = t.expired === true ? 'pill expired' : 'pill';
+      return '<tr>' +
+        '<td><code>' + esc(t.plan_id ?? d.plan ?? 'UNKNOWN') + '</code></td>' +
+        '<td><strong>' + esc(t.id) + '</strong><p>' + esc(t.title) + '</p></td>' +
+        '<td><span class="pill ' + esc(stateCls) + '">' + esc(stateStr.toUpperCase()) + '</span></td>' +
+        '<td>' + esc(workerStr) + '<div class="note">' + esc(attemptStr) + '</div></td>' +
+        '<td><span class="' + esc(expCls) + '">' + esc(expBool) + '</span></td>' +
+        '<td>' + esc(t.contribution ?? t.detail ?? 'UNKNOWN') + '</td>' +
+        '</tr>';
+    }).join('') || '<tr><td colspan="6">No tasks observed in snapshot.</td></tr>';
+
+    const allJobs = jobsArr;
+    document.getElementById('job-rows').innerHTML = allJobs.map(j => {
+      const expBool = typeof j.expired === 'boolean' ? (j.expired ? 'true (EXPIRED)' : 'false') : 'UNKNOWN';
+      const expCls = j.expired === true ? 'pill expired' : 'pill';
+      return '<tr>' +
+        '<td><strong>' + esc(j.id) + '</strong></td>' +
+        '<td>' + esc(j.worker ?? 'UNKNOWN') + '</td>' +
+        '<td><span class="pill">' + esc(valOrUnknown(j.state).toUpperCase()) + '</span></td>' +
+        '<td>' + esc(j.attempt ?? 'UNKNOWN') + '</td>' +
+        '<td><span class="' + esc(expCls) + '">' + esc(expBool) + '</span></td>' +
+        '</tr>';
+    }).join('') || '<tr><td colspan="5">No agent jobs observed in snapshot.</td></tr>';
+
+    renderSourceBlock('obs-coordinator-meta', 'obs-coordinator-data', d.coordinator, false);
+    renderSourceBlock('obs-services-meta', 'obs-services-raw', d.services, true);
+    renderSourceBlock('obs-forecast-meta', 'obs-forecast-data', d.forecast, false);
+    renderSourceBlock('obs-ecology-meta', 'obs-ecology-data', d.ecology, false);
+
+    if (Array.isArray(d.http) && d.http.length > 0) {
+      document.getElementById('http-rows').innerHTML = d.http.map(h => {
+        if (!h || typeof h !== 'object') {
+          return '<tr><td>UNKNOWN</td><td>UNKNOWN</td><td>UNKNOWN</td><td>UNKNOWN</td></tr>';
+        }
+        const st = typeof h.status === 'number' ? String(h.status) : valOrUnknown(h.status);
+        return '<tr>' +
+          '<td><code>' + esc(valOrUnknown(h.path)) + '</code></td>' +
+          '<td>' + esc(st) + '</td>' +
+          '<td>' + esc(valOrUnknown(h.observed_at)) + '</td>' +
+          '<td>' + esc(errOrUnknown(h)) + '</td>' +
+          '</tr>';
+      }).join('');
+    } else {
+      document.getElementById('http-rows').innerHTML = '<tr><td colspan="4">UNKNOWN — missing or empty http observations array.</td></tr>';
+    }
+
+    document.getElementById('risk-rows').innerHTML = d.risks.map(rk => (
+      '<tr>' +
+      '<td><strong>' + esc(rk.name) + '</strong></td>' +
+      '<td><span class="warn">' + esc(rk.criticality) + '</span><p>' + esc(rk.status) + '</p></td>' +
+      '<td>' + esc(rk.mitigation) + '</td>' +
+      '</tr>'
+    )).join('') || '<tr><td colspan="3">UNKNOWN</td></tr>';
+
+    set('risk-score', 'Evidence risk note: ' + valOrUnknown(d.evidence.risk));
+    set('evidence', valOrUnknown(d.evidence.summary));
+    set('count-note', valOrUnknown(d.evidence.counts_note));
+    set(
+      'candidates',
+      'Coordinator candidate: ' + valOrUnknown(d.evidence.coordinator_candidate) +
+      ' · Cycle candidate: ' + valOrUnknown(d.evidence.cycle_candidate) +
+      ' · live_runtime_verified: ' + String(liveVerified) +
+      ' · main_includes_candidate: ' + String(mainIncludes)
+    );
+
+    const tgMatches = [];
+    const learnMatches = [];
+    d.as_is.forEach(pair => {
+      if (!Array.isArray(pair)) return;
+      const combined = String(pair[0] || '') + ': ' + String(pair[1] || '');
+      if (/telegram|ingress|outbox|inbox|delivery/i.test(combined)) tgMatches.push(combined);
+      if (/learn|wiki|zk|zettelkasten|hermes|forecast|ecology|symbiosis|formal/i.test(combined)) learnMatches.push(combined);
+    });
+    d.risks.forEach(rk => {
+      if (!rk || typeof rk !== 'object') return;
+      const combined = String(rk.name || '') + ' (' + String(rk.status || 'UNKNOWN') + ') — ' + String(rk.mitigation || '');
+      if (/telegram|ingress|delivery/i.test(combined)) tgMatches.push(combined);
+      if (/learn|guidance|symbiosis|formal|admission|forecast|ecology/i.test(combined)) learnMatches.push(combined);
+    });
+    if (tgMatches.length > 0) {
+      document.getElementById('telegram-gaps').innerHTML = tgMatches.map(m => '<li>' + esc(m) + '</li>').join('') +
+        '<li><strong>Live cutover gate:</strong> Production Telegram authority and delivery acceptance remain unverified (live_runtime_verified: ' + esc(String(liveVerified)) + ').</li>';
+    }
+    if (learnMatches.length > 0) {
+      document.getElementById('learning-gaps').innerHTML = learnMatches.map(m => '<li>' + esc(m) + '</li>').join('') +
+        '<li><strong>Learning &amp; provenance gate:</strong> Continuous learning consolidation and EV claims &gt;93 remain NOT_ADMITTED.</li>';
+    }
+    set('dynamic-gaps-note', 'Observed from snapshot updated_at ' + d.updated_at + '; unresolved Telegram and learning obligations prevent global admission.');
+
+    renderChecks(d.checks);
+    set('source', JSON.stringify(d, null, 2));
+  } catch (e) {
+    markUnavailable(e && e.message ? e.message : String(e));
+  }
+}
+
+document.getElementById('copy').onclick = () => {
+  const href = document.getElementById('self').href;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(href);
+  }
+};
+
+document.getElementById('toggle-source').onclick = () => {
+  const details = document.getElementById('raw-details');
+  if (details) details.open = !details.open;
+};
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') refresh();
+});
+window.addEventListener('focus', () => {
+  refresh();
+});
+
+refresh();
+setInterval(() => {
+  if (document.visibilityState !== 'hidden') refresh();
+}, 5000);
+</script></body></html>
