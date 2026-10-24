@@ -1,7 +1,7 @@
 %% =============================================================================
 %% [C3I-SIL6] telegram_http_test_fixture — Real Bounded Local HTTP Test Fixture
 %% =============================================================================
-%% Strictly local loopback HTTP fixture (127.0.0.1:<ephemeral_port>) for testing
+%% Local Tailnet HTTP fixture on an ephemeral port for testing
 %% the Telegram client and service without touching live Telegram endpoints.
 %%
 %% Supports programmable modes:
@@ -41,7 +41,8 @@ start(Port) ->
     case gen_server:start_link(?MODULE, [Port], []) of
         {ok, Pid} ->
             ActualPort = gen_server:call(Pid, get_port),
-            BaseUrl = list_to_binary(io_lib:format("http://nas-1.tail55d152.ts.net:~p", [ActualPort])),
+            %% Absolute DNS name prevents search-suffix retries after AAAA NODATA.
+            BaseUrl = list_to_binary(io_lib:format("http://nas-1.tail55d152.ts.net.:~p", [ActualPort])),
             {ok, {Pid, ActualPort, BaseUrl}};
         Error ->
             Error
