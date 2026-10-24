@@ -1814,3 +1814,49 @@ pub fn e2e_managed_start_identity_authority_single_use_and_dispatch_test() {
     recovery_worker_sha, recovery_guardian_sha)
   let assert Ok(True) = lifecycle.stop_test_slice(slice_name)
 }
+
+pub fn e2e_managed_preflight_hold_preserves_start_permit_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  fixture_set_mode(fixture_pid, "offset_aware")
+  let bot_id = 222_556
+  let assert Ok(fresh) = store.begin_new_writer_store(storage_config, bot_id)
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_poll1024_m" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-m" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  let control_path = mint_unit_registration(dir, slice_name, unit_name, db_path, 1)
+  let assert Ok(control_json) = simplifile.read(control_path)
+  let assert Ok(control) = lifecycle.decode_control_registration(control_json)
+  let writer = codec.WriterRegistration(
+    bot_id: bot_id, service_epoch: 1,
+    instance_token: files.digest("managed-start-" <> nonce),
+    control_digest: files.digest(lifecycle.encode_control_registration(control)),
+    store_incarnation_id: control.store_incarnation_id,
+    unit_invocation_id: control.unit_invocation_id,
+    registered_at_us: control.registered_at_us,
+  )
+  let assert Ok(2) = store.finish_new_writer_store(fresh, writer)
+  let assert Ok(#(wm, version, sha)) = store.read_watermark(storage_config)
+  let verdict = guard.evaluate_update(
+    "{\"update_id\":9301,\"message\":{\"message_id\":501,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/doctor\",\"date\":1700000000}}",
+    guard.Allowlist(bot_id, [#(100, 200)]))
+  let assert Ok(pref) = store.commit_prefix(storage_config, bot_id, "preflight-orphan-prefix", 2, wm, version, sha, [verdict], 1_700_000_000_000)
+  let assert [rec] = pref.admitted_records
+  let assert Ok(_) = store.claim_task_processing(storage_config, bot_id, "preflight-orphan-claim", pref.receipt.generation, rec, 1, files.digest(codec.encode_inbox_record(rec)), "dead-worker", 1, 1_700_000_001_000)
+  let assert Ok(coordinator) = coord_store.open(coord_db)
+  let assert Ok(#(_, False)) = coord_store.append(coordinator, sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "preflight-runtime-" <> nonce)
+  let _ = coord_store.close(coordinator)
+  let reply = send_runner_cmd(ipc_dir, managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db, control_path, writer, "runtime:telegram-bridge"))
+  let observed = store.read_keys(storage_config, ["meta/writer_start"])
+  let requests = fixture_requests_typed(fixture_pid)
+  fixture_stop(fixture_pid)
+  let assert Ok(_) = lifecycle.stop_and_verify_test_unit(slice_name, unit_name, db_path, recovery_worker_sha, recovery_guardian_sha)
+  let assert Ok(True) = lifecycle.stop_test_slice(slice_name)
+  // Cleanup precedes assertions so the negative baseline cannot leak its unit.
+  let assert Ok(#(generation, [marker])) = observed
+  generation |> should.equal(4)
+  marker.exists |> should.equal(False)
+  string.contains(reply, "managed_preflight_writer_hold") |> should.equal(True)
+  requests |> should.equal([])
+}

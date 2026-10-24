@@ -4483,7 +4483,7 @@ pub fn start_managed_service(
     _ ->
       case cleanup_receipt, config.control_registration_path {
         Some(_), Some(predecessor_path) ->
-          case string.trim(predecessor_path) != "" {
+          case string.trim(predecessor_path) != "" && predecessor_path != current_control_path {
             True -> Ok(Nil)
             False -> Error("epoch_gt_1_empty_predecessor_control_path")
           }
@@ -4548,6 +4548,18 @@ pub fn start_managed_service(
     },
   )
 
+  // Read-only preflight does not consume the predecessor cleanup receipt.
+  // Failures after CAS deliberately require recovery under a new epoch.
+  use #(preflight_state, _) <- result.try(case cleanup_receipt, config.control_registration_path {
+    None, None -> init_service(config, None)
+    Some(receipt), Some(path) -> init_service_admitted(config, receipt, path)
+    _, _ -> Error("managed_preflight_invalid_cleanup_pair")
+  })
+  use _ <- result.try(case preflight_state.writer_state {
+    lifecycle.ServiceWriterClean -> Ok(Nil)
+    lifecycle.ServiceWriterHold(reason) -> Error("managed_preflight_writer_hold: " <> reason)
+  })
+
   use _pre_cas_authority <- result.try(verify_authority_config(
     config,
     ffi_system_now_ns(),
@@ -4570,7 +4582,12 @@ pub fn start_managed_service(
   case poll_rpc.call(svc.actor_subject, 5000, GetManagedStartupState) {
     Error(err) -> abort_managed_start(svc, "managed_service_state_unavailable: " <> err)
     Ok(state) -> case state.writer_state {
-      lifecycle.ServiceWriterClean -> Ok(svc)
+      lifecycle.ServiceWriterClean -> {
+        case verify_managed_post_start(config, current_control_path, current_control) {
+          Ok(Nil) -> Ok(svc)
+          Error(err) -> abort_managed_start(svc, err)
+        }
+      }
       lifecycle.ServiceWriterHold(reason) ->
         abort_managed_start(svc, "managed_service_started_in_writer_hold: " <> reason)
     }
@@ -4584,4 +4601,25 @@ fn abort_managed_start(
     Ok(Nil) -> Error(reason)
     Error(err) -> Error(reason <> " (cleanup_unconfirmed: " <> err <> ")")
   }
+}
+
+fn verify_managed_post_start(
+  config: ServiceConfiguration,
+  current_control_path: String,
+  expected_control: lifecycle.ControlRegistration,
+) -> Result(Nil, String) {
+  use current <- result.try(lifecycle.read_and_verify_prelaunch_control_bounded(
+    current_control_path, expected_control.unit_name,
+    ffi_storage_config_db_path(config.storage_config),
+    ffi_storage_config_worker_sha(config.storage_config),
+    ffi_storage_config_guardian_sha(config.storage_config),
+    config.service_epoch, Some(60_000_000),
+  ))
+  use _ <- result.try(case current == expected_control {
+    True -> Ok(Nil)
+    False -> Error("managed_control_changed_during_startup")
+  })
+  use _ <- result.try(lifecycle.verify_live_lifecycle_ownership(current))
+  use _ <- result.try(verify_authority_config(config, ffi_system_now_ns()))
+  Ok(Nil)
 }

@@ -146,14 +146,14 @@ start_and_run_actor(Config, IpcDir) ->
         true ->
             put(managed_start_config, Config),
             case managed_start_result(Config) of
-                {ok, SupSvc} -> {ok, element(3, SupSvc)};
+                {ok, SupSvc} -> put(managed_supervised_service, SupSvc), {ok, element(3, SupSvc)};
                 {error, Err} -> {error, Err}
             end;
         false ->
             case maps:get(<<"supervised">>, Config, false) of
         true ->
             case cepaf_gleam@harness@telegram_service:start_supervised_service(SvcConfig, ReceiptOpt) of
-                {ok, SupSvc} -> {ok, element(3, SupSvc)};
+                {ok, SupSvc} -> put(managed_supervised_service, SupSvc), {ok, element(3, SupSvc)};
                 {error, Err} -> {error, Err}
             end;
         false ->
@@ -363,9 +363,18 @@ handle_actor_command(#{<<"action">> := <<"deliver_chunk_from_store">>} = Cmd, Su
     actor_loop(Subj, IpcDir, SvcConfig);
 
 handle_actor_command(#{<<"action">> := <<"stop">>}, Subj, IpcDir, _SvcConfig) ->
-    gleam@erlang@process:send(Subj, stop),
-    write_json_file(filename:join([IpcDir, "resp.json"]), #{<<"status">> => <<"stopped">>}),
-    erlang:halt(0);
+    Cleanup = case erase(managed_supervised_service) of
+        undefined -> gleam@erlang@process:send(Subj, stop), {ok, nil};
+        SupSvc -> cepaf_gleam@harness@telegram_service:stop_supervised_service(SupSvc)
+    end,
+    case Cleanup of
+        {ok, _} ->
+            write_json_file(filename:join([IpcDir, "resp.json"]), #{<<"status">> => <<"stopped">>}),
+            erlang:halt(0);
+        {error, Reason} ->
+            write_json_file(filename:join([IpcDir, "resp.json"]), #{<<"status">> => <<"cleanup_unconfirmed">>, <<"reason">> => Reason}),
+            erlang:halt(1)
+    end;
 
 handle_actor_command(Unknown, _Subj, IpcDir, SvcConfig) ->
     write_json_file(filename:join([IpcDir, "resp.json"]), #{

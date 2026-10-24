@@ -188,7 +188,7 @@ pub fn read_and_verify_prelaunch_control_bounded(
   expected_epoch: Int,
   max_age_us: Option(Int),
 ) -> Result(ControlRegistration, String) {
-  use _ <- result.try(case string.starts_with(path, "/") {
+  use _ <- result.try(case string.starts_with(path, "/") && path != "/" && !string.starts_with(path, "//") {
     True -> Ok(Nil)
     False -> Error("absolute_control_registration_path_required")
   })
