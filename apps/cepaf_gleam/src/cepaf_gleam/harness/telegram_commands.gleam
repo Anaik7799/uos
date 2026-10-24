@@ -237,7 +237,7 @@ pub fn catalog() -> List(Definition) {
     Definition(literal: "/nvme", canonical: "/storage", kind: ReadObservation),
     Definition(literal: "/doctor", canonical: "/doctor", kind: ReadObservation),
     Definition(literal: "/ev", canonical: "/doctor", kind: ReadObservation),
-    Definition(literal: "/agy", canonical: "/agy", kind: ControlledAction),
+    Definition(literal: "/agy", canonical: "/agy", kind: ConversationModel),
     Definition(literal: "/board", canonical: "/board", kind: ReadObservation),
     Definition(literal: "/peers", canonical: "/peers", kind: ReadObservation),
     Definition(literal: "/memory", canonical: "/memory", kind: ReadObservation),

@@ -2,6 +2,7 @@
 //// Spec: uos.telegram-durable-store-corrected-development-spec.v1
 //// Wire: uos.telegram-store-wire-v4.v1
 
+import cepaf_gleam/harness/telegram_conversation as conv
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import cepaf_gleam/harness/telegram_lifecycle_adapter as lifecycle
@@ -1431,6 +1432,24 @@ pub fn commit_result(
   worker: String,
   epoch: Int,
 ) -> Result(CommitResultResult, StoreError) {
+  commit_result_extended(config, bot_id, operation_id, expected_generation, inbox_record, inbox_version, inbox_sha, payloads, worker, epoch, [], [], 0)
+}
+
+fn commit_result_extended(
+  config: transport.LocalConfiguration,
+  bot_id: Int,
+  operation_id: String,
+  expected_generation: Int,
+  inbox_record: ledger.InboxRecord,
+  inbox_version: Int,
+  inbox_sha: String,
+  payloads: List(String),
+  worker: String,
+  epoch: Int,
+  extra_read_set: List(codec.ReadSetAssertion),
+  extra_changes: List(codec.Change),
+  extra_reserved_rows: Int,
+) -> Result(CommitResultResult, StoreError) {
   use _ <- result.try(
     case
       inbox_record.bot_id == bot_id
@@ -1533,7 +1552,7 @@ pub fn commit_result(
       )
     })
 
-  let changes = [inbox_change, result_change, ..chunk_changes]
+  let changes = list.append([inbox_change, result_change, ..chunk_changes], extra_changes)
 
   let chunk_read_assertions =
     list.map(chunks, fn(c) {
@@ -1544,7 +1563,7 @@ pub fn commit_result(
       )
     })
 
-  let read_set = [
+  let base_read_set = [
     codec.ReadSetAssertion(
       key: codec.inbox_key(inbox_record.request_id),
       expected_version: inbox_version,
@@ -1563,7 +1582,8 @@ pub fn commit_result(
     ..chunk_read_assertions
   ]
 
-  let res_delta = codec.ReservationDelta(rows: -17, receipts: -1)
+  let read_set = list.append(base_read_set, extra_read_set)
+  let res_delta = codec.ReservationDelta(rows: -17 - extra_reserved_rows, receipts: -1)
   let summary_json =
     json.object([
       #("op", json.string("commit_result")),
@@ -2195,4 +2215,384 @@ pub fn transition_writer_registration(
       Ok(applied.receipt.generation)
     }
   }
+}
+
+pub opaque type ConversationReservation {
+  ConversationReservation(
+    config: transport.LocalConfiguration,
+    generation: Int,
+    inbox_record: ledger.InboxRecord,
+    inbox_version: Int,
+    inbox_sha: String,
+    worker: String,
+    epoch: Int,
+    context: conv.Context,
+    prompt: String,
+    context_row: codec.RowResult,
+    budget_key: String,
+    budget_version: Int,
+    budget_sha: String,
+    reserved_context_rows: Int,
+  )
+}
+
+pub fn conversation_context(res: ConversationReservation) -> conv.Context {
+  res.context
+}
+
+pub fn conversation_prompt(res: ConversationReservation) -> String {
+  res.prompt
+}
+
+pub fn conversation_generation(res: ConversationReservation) -> Int {
+  res.generation
+}
+
+fn find_read_row(
+  rows: List(codec.RowResult),
+  key: String,
+) -> Result(codec.RowResult, StoreError) {
+  case list.find(rows, fn(r) { r.key == key }) {
+    Ok(row) ->
+      case row.exists {
+        True ->
+          case row.version > 0 && string.byte_size(row.sha256) == 64 {
+            True -> Ok(row)
+            False -> Error(StoreDecodeError("invalid_existing_row_metadata"))
+          }
+        False ->
+          case row.version == 0 && row.sha256 == "" {
+            True -> Ok(row)
+            False -> Error(StoreDecodeError("invalid_missing_row_metadata"))
+          }
+      }
+    Error(_) -> Error(StoreInvariantError("read_row_missing"))
+  }
+}
+
+fn row_version_and_sha(row: codec.RowResult) -> #(Int, String) {
+  case row.exists {
+    True -> #(row.version, row.sha256)
+    False -> #(0, "")
+  }
+}
+
+fn row_read_assertion(key: String, row: codec.RowResult) -> codec.ReadSetAssertion {
+  let #(ver, sha) = row_version_and_sha(row)
+  codec.ReadSetAssertion(
+    key: key,
+    expected_version: ver,
+    expected_sha256: sha,
+  )
+}
+
+pub fn reserve_conversation(
+  config: transport.LocalConfiguration,
+  expected_generation: Int,
+  record: ledger.InboxRecord,
+  inbox_version: Int,
+  inbox_sha: String,
+  worker: String,
+  epoch: Int,
+  day: Int,
+  daily_limit: Int,
+) -> Result(ConversationReservation, StoreError) {
+  use _ <- result.try(
+    case
+      expected_generation >= 0
+      && ledger.valid_record(record)
+      && record.status == ledger.InboxProcessing(worker, epoch)
+      && inbox_version > 0
+      && string.byte_size(inbox_sha) == 64
+    {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("invalid_inbox_binding"))
+    },
+  )
+
+  let expected_inbox_val = codec.encode_inbox_record(record)
+  use _ <- result.try(case files.digest(expected_inbox_val) == inbox_sha {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("inbox_record_sha_mismatch"))
+  })
+
+  let scope =
+    conv.Scope(
+      bot_id: record.bot_id,
+      chat_id: record.chat_id,
+      user_id: record.user_id,
+    )
+  use ctx_key <- result.try(
+    conv.context_key(scope)
+    |> result.map_error(StoreInvariantError),
+  )
+  use b_key <- result.try(
+    conv.budget_key(record.bot_id, day)
+    |> result.map_error(StoreInvariantError),
+  )
+  let auth_key = codec.authority_key(record.request_id)
+  let in_key = codec.input_key(record.request_id)
+
+  use #(gen, rows) <- result.try(
+    read_keys(config, [ctx_key, b_key, auth_key, in_key]),
+  )
+  use _ <- result.try(case gen == expected_generation {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("read_generation_mismatch"))
+  })
+  use _ <- result.try(case list.length(rows) == 4 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("read_row_count_mismatch"))
+  })
+
+  use ctx_row <- result.try(find_read_row(rows, ctx_key))
+  use budget_row <- result.try(find_read_row(rows, b_key))
+  use auth_row <- result.try(find_read_row(rows, auth_key))
+  use input_row <- result.try(find_read_row(rows, in_key))
+
+  use _ <- result.try(case auth_row.exists {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("authority_row_missing"))
+  })
+  use raw_auth <- result.try(
+    codec.decode_canonical_base64(auth_row.canonical_value_base64)
+    |> result.map_error(StoreDecodeError),
+  )
+  use auth <- result.try(
+    codec.decode_authority_value(raw_auth)
+    |> result.map_error(StoreDecodeError),
+  )
+  use _ <- result.try(
+    case
+      auth.bot_id == record.bot_id
+      && auth.request_id == record.request_id
+      && auth.worker == worker
+      && auth.epoch == epoch
+    {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("worker_epoch_authority_mismatch"))
+    },
+  )
+
+  use _ <- result.try(case input_row.exists {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("input_row_missing"))
+  })
+  use raw_input <- result.try(
+    codec.decode_canonical_base64(input_row.canonical_value_base64)
+    |> result.map_error(StoreDecodeError),
+  )
+  use #(in_req_id, in_bot, in_upd, verdict) <- result.try(
+    codec.decode_input_verdict(raw_input)
+    |> result.map_error(StoreDecodeError),
+  )
+  use raw_text <- result.try(case verdict {
+    guard.AcceptedEnvelope(
+      update_id: v_upd,
+      message_id: mid,
+      chat_id: cid,
+      user_id: uid_usr,
+      text_hash: hash,
+      raw_text: raw,
+      directive: _,
+      bot_id: v_bot,
+      callback_query_id: _,
+    ) ->
+      case
+        in_req_id == record.request_id
+        && in_bot == record.bot_id
+        && in_upd == record.update_id
+        && v_bot == record.bot_id
+        && v_upd == record.update_id
+        && mid == record.message_id
+        && cid == record.chat_id
+        && uid_usr == record.user_id
+        && hash == record.text_hash
+        && files.digest(raw) == record.text_hash
+      {
+        True -> Ok(raw)
+        False -> Error(StoreInvariantError("input_verdict_record_mismatch"))
+      }
+    _ -> Error(StoreInvariantError("input_verdict_not_accepted"))
+  })
+  use prompt <- result.try(
+    conv.prompt_for_text(raw_text)
+    |> result.map_error(StoreInvariantError),
+  )
+
+  use #(context, reserved_context_rows) <- result.try(case ctx_row.exists {
+    False -> Ok(#(conv.Context(scope: scope, turns: []), 1))
+    True -> {
+      use raw_ctx <- result.try(
+        codec.decode_canonical_base64(ctx_row.canonical_value_base64)
+        |> result.map_error(StoreDecodeError),
+      )
+      use decoded_ctx <- result.try(
+        conv.decode_context(raw_ctx, scope)
+        |> result.map_error(StoreDecodeError),
+      )
+      Ok(#(decoded_ctx, 0))
+    }
+  })
+
+  use current_budget <- result.try(case budget_row.exists {
+    False ->
+      Ok(conv.DailyBudget(
+        bot_id: record.bot_id,
+        utc_day: day,
+        reserved_requests: 0,
+      ))
+    True -> {
+      use raw_budget <- result.try(
+        codec.decode_canonical_base64(budget_row.canonical_value_base64)
+        |> result.map_error(StoreDecodeError),
+      )
+      conv.decode_budget(raw_budget, record.bot_id, day)
+      |> result.map_error(StoreDecodeError)
+    }
+  })
+
+  use next_budget <- result.try(
+    conv.reserve(current_budget, record.bot_id, day, daily_limit)
+    |> result.map_error(fn(reason) {
+      case reason {
+        "daily_request_budget_exhausted" -> StoreCapacityExceeded(reason)
+        _ -> StoreInvariantError(reason)
+      }
+    }),
+  )
+  use encoded_budget <- result.try(
+    conv.encode_budget(next_budget)
+    |> result.map_error(StoreInvariantError),
+  )
+
+  let #(budget_ver, budget_sha) = row_version_and_sha(budget_row)
+  let budget_change =
+    codec.Change(
+      key: b_key,
+      expected_version: budget_ver,
+      expected_sha256: budget_sha,
+      new_value_base64: codec.encode_canonical_base64(encoded_budget),
+    )
+
+  let read_set = [
+    codec.ReadSetAssertion(
+      key: codec.inbox_key(record.request_id),
+      expected_version: inbox_version,
+      expected_sha256: inbox_sha,
+    ),
+    row_read_assertion(auth_key, auth_row),
+    row_read_assertion(in_key, input_row),
+    row_read_assertion(ctx_key, ctx_row),
+    row_read_assertion(b_key, budget_row),
+  ]
+  let changes = [budget_change]
+  let res_delta =
+    codec.ReservationDelta(rows: reserved_context_rows, receipts: 0)
+  let operation_id = "op-conversation-reserve-" <> record.request_id
+  let summary_json =
+    json.object([
+      #("op", json.string("reserve_conversation")),
+      #("request_id", json.string(record.request_id)),
+      #("day", json.int(day)),
+      #("reserved_context_rows", json.int(reserved_context_rows)),
+    ])
+    |> json.to_string
+
+  use apply_res <- result.try(execute_apply(
+    config,
+    record.bot_id,
+    operation_id,
+    expected_generation,
+    read_set,
+    changes,
+    res_delta,
+    summary_json,
+  ))
+
+  Ok(ConversationReservation(
+    config: config,
+    generation: apply_res.receipt.generation,
+    inbox_record: record,
+    inbox_version: inbox_version,
+    inbox_sha: inbox_sha,
+    worker: worker,
+    epoch: epoch,
+    context: context,
+    prompt: prompt,
+    context_row: ctx_row,
+    budget_key: b_key,
+    budget_version: budget_ver + 1,
+    budget_sha: files.digest(encoded_budget),
+    reserved_context_rows: reserved_context_rows,
+  ))
+}
+
+pub fn commit_conversation_result(
+  res: ConversationReservation,
+  payloads: List(String),
+  successful_reply: Option(String),
+) -> Result(CommitResultResult, StoreError) {
+  let #(ctx_ver, ctx_sha) = row_version_and_sha(res.context_row)
+  let ctx_assert =
+    codec.ReadSetAssertion(
+      key: res.context_row.key,
+      expected_version: ctx_ver,
+      expected_sha256: ctx_sha,
+    )
+  let budget_assert =
+    codec.ReadSetAssertion(
+      key: res.budget_key,
+      expected_version: res.budget_version,
+      expected_sha256: res.budget_sha,
+    )
+
+  use extra_changes <- result.try(case successful_reply {
+    None -> Ok([])
+    Some(reply) -> {
+      use _ <- result.try(case reply == string.join(payloads, "") {
+        True -> Ok(Nil)
+        False ->
+          Error(StoreInvariantError("conversation_reply_payload_mismatch"))
+      })
+      let turn =
+        conv.Turn(
+          update_id: res.inbox_record.update_id,
+          prompt: res.prompt,
+          reply: reply,
+        )
+      use updated_ctx <- result.try(
+        conv.append(res.context, turn)
+        |> result.map_error(StoreInvariantError),
+      )
+      use encoded_ctx <- result.try(
+        conv.encode_context(updated_ctx)
+        |> result.map_error(StoreInvariantError),
+      )
+      Ok([
+        codec.Change(
+          key: res.context_row.key,
+          expected_version: ctx_ver,
+          expected_sha256: ctx_sha,
+          new_value_base64: codec.encode_canonical_base64(encoded_ctx),
+        ),
+      ])
+    }
+  })
+
+  commit_result_extended(
+    res.config,
+    res.inbox_record.bot_id,
+    "op-result-" <> res.inbox_record.request_id,
+    res.generation,
+    res.inbox_record,
+    res.inbox_version,
+    res.inbox_sha,
+    payloads,
+    res.worker,
+    res.epoch,
+    [ctx_assert, budget_assert],
+    extra_changes,
+    res.reserved_context_rows,
+  )
 }
