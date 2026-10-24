@@ -312,3 +312,18 @@ pub fn valid_at(
   && delta >= -2000
   && delta <= 2000
 }
+
+/// Pure receipt-time bounds in milliseconds, not authentication or authority.
+pub fn valid_receipt_window(
+  value: Intent,
+  now_utc_ms: Int,
+  issued_at_ms: Int,
+  not_before_ms: Int,
+  expires_at_ms: Int,
+) -> Bool {
+  value.window.created_utc_ms <= issued_at_ms
+  && issued_at_ms <= not_before_ms
+  && not_before_ms <= now_utc_ms
+  && now_utc_ms < expires_at_ms
+  && expires_at_ms <= value.window.deadline_utc_ms
+}
