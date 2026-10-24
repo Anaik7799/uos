@@ -21,6 +21,7 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_service',
             'cepaf_gleam@harness@telegram_http_client',
             'cepaf_gleam@harness@telegram_poll_rpc',
+            'cepaf_gleam@harness@telegram_loop',
             'cepaf_gleam@harness@telegram_store',
             'cepaf_gleam@harness@telegram_lifecycle_adapter'
         ],

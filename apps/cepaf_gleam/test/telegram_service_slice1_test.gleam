@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/telegram_loop as loop
 import telegram_test_runner_binding as test_binding
 //// Slice 1 Verification Test Suite for Telegram Service, Client & Lifecycle
 ////
@@ -1922,4 +1923,297 @@ pub fn service_current_delivery_completion_remains_accepted_test() {
   let final = state_after_message(state, service.DeliveryWorkerFinished(process.self(), Some(99), Some(lifecycle.ServiceWriterClean), None))
   final.expected_generation |> should.equal(99)
   final.in_flight_workers |> should.equal([])
+}
+
+fn loop_config(cycles: Int) -> loop.Config {
+  loop.Config(cycles, 5000, 10, 500, 500, 1)
+}
+
+fn collect_loop_events(events: process.Subject(String), left: Int) -> List(String) {
+  case left <= 0 {
+    True -> []
+    False -> case process.receive(events, 20) {
+      Ok(event) -> [event, ..collect_loop_events(events, left - 1)]
+      Error(_) -> []
+    }
+  }
+}
+
+fn observe_loop(mode: String, lease_ms: Int, config: loop.Config, stop_early: Bool)
+  -> #(loop.Terminal, List(String)) {
+  let events = process.new_subject()
+  let terminal = process.new_subject()
+  let lease = service.AuthorityLease("loop-fixture", 1, 1,
+    service.ffi_system_now_utc_us() + lease_ms * 1000)
+  let writer = case mode { "held" -> lifecycle.ServiceWriterHold("uncertain") _ -> lifecycle.ServiceWriterClean }
+  let initial = make_dummy_service_state(Some(lease), writer)
+  let base = case mode {
+    "revoked" -> service.ServiceState(..initial, authority_revoked: True)
+    "missing" -> service.ServiceState(..initial, authority: None)
+    _ -> initial
+  }
+  let assert Ok(fake) = actor.new(#(base, 0))
+    |> actor.on_message(fn(state, msg) {
+      let #(observed, polls) = state
+      case msg {
+        service.GetState(reply) -> {
+          process.send(events, "state")
+          let report = case mode == "lease_change" && polls > 0 {
+            True -> service.ServiceState(..observed,
+              authority: Some(service.AuthorityLease("changed", 1, 1, lease.valid_until_us)))
+            False -> observed
+          }
+          process.send(reply, report)
+          actor.continue(state)
+        }
+        service.PollCycle(_, reply) -> {
+          process.send(events, "poll")
+          case mode {
+            "hang" -> actor.continue(#(observed, polls + 1))
+            "service_down" -> actor.stop()
+            "late" -> {
+              let _ = process.send_after(reply, 200, Ok(service.PollEmpty))
+              actor.continue(#(observed, polls + 1))
+            }
+            _ -> {
+              let result = case mode {
+                "fatal" -> Error("unconfirmed_transport_error")
+                "wrong_poll" -> Ok(service.DispatchCycleResult(0, 0))
+                "timeouts" -> Error("http_poll_updates_failed: http_poll_network_error: timeout")
+                "timeout_once" -> case polls == 0 {
+                  True -> Error("http_poll_updates_failed: http_poll_network_error: timeout")
+                  False -> Ok(service.PollEmpty)
+                }
+                _ -> Ok(service.PollEmpty)
+              }
+              process.send(reply, result)
+              actor.continue(#(observed, polls + 1))
+            }
+          }
+        }
+        service.AutomaticDispatchTick(_, reply) -> {
+          process.send(events, "dispatch")
+          let result = case mode {
+            "dispatch_error" -> Error("store_uncertain_apply_pending")
+            "wrong_dispatch" -> Ok(service.PollEmpty)
+            _ -> Ok(service.DispatchCycleResult(0, 0))
+          }
+          process.send(reply, result)
+          actor.continue(state)
+        }
+        service.RevokeAuthority -> {
+          process.send(events, "revoke")
+          actor.continue(state)
+        }
+        _ -> actor.continue(state)
+      }
+    })
+    |> actor.start()
+  process.unlink(fake.pid)
+  let assert Ok(driver) = loop.start(fake.data, config, terminal)
+  process.unlink(driver.pid)
+  let monitor = process.monitor(driver.pid)
+  case stop_early {
+    True -> process.send(driver.data, loop.Stop)
+    False -> Nil
+  }
+  let outcome = process.receive(terminal, 4000)
+  let selector = process.new_selector() |> process.select_specific_monitor(monitor, fn(d) { d })
+  let down = process.selector_receive(selector, 1000)
+  case mode { "late" -> process.sleep(250) _ -> Nil }
+  let trace = collect_loop_events(events, 30)
+  process.kill(driver.pid)
+  process.kill(fake.pid)
+  let assert Ok(process.ProcessDown(_, _, process.Normal)) = down
+  let assert Ok(report) = outcome
+  #(report, trace)
+}
+
+pub fn loop_empty_poll_still_dispatches_finite_two_cycles_test() {
+  let #(report, trace) = observe_loop("normal", 10_000, loop_config(2), False)
+  report |> should.equal(loop.Terminal("max_cycles", 2))
+  trace |> should.equal(["state", "poll", "dispatch", "state", "poll", "dispatch", "revoke"])
+}
+
+pub fn loop_confirmed_timeout_recovers_test() {
+  let #(report, trace) = observe_loop("timeout_once", 10_000, loop_config(1), False)
+  report |> should.equal(loop.Terminal("max_cycles", 1))
+  trace |> should.equal(["state", "poll", "state", "poll", "dispatch", "revoke"])
+}
+
+pub fn loop_timeout_budget_exhaustion_test() {
+  let #(report, trace) = observe_loop("timeouts", 10_000, loop_config(1), False)
+  report |> should.equal(loop.Terminal("timeout_budget_exhausted", 0))
+  list.filter(trace, fn(e) { e == "poll" }) |> list.length |> should.equal(2)
+}
+
+pub fn loop_unknown_poll_error_never_retries_test() {
+  let #(report, trace) = observe_loop("fatal", 10_000, loop_config(1), False)
+  report |> should.equal(loop.Terminal("poll_error", 0))
+  trace |> should.equal(["state", "poll", "revoke"])
+}
+
+pub fn loop_dispatch_uncertainty_stops_test() {
+  let #(report, trace) = observe_loop("dispatch_error", 10_000, loop_config(2), False)
+  report |> should.equal(loop.Terminal("dispatch_error", 0))
+  trace |> should.equal(["state", "poll", "dispatch", "revoke"])
+}
+
+pub fn loop_unexpected_result_types_refused_test() {
+  let #(poll_report, _) = observe_loop("wrong_poll", 10_000, loop_config(1), False)
+  poll_report |> should.equal(loop.Terminal("unexpected_poll_result", 0))
+  let #(dispatch_report, _) = observe_loop("wrong_dispatch", 10_000, loop_config(1), False)
+  dispatch_report |> should.equal(loop.Terminal("unexpected_dispatch_result", 0))
+}
+
+pub fn loop_operation_timeout_and_late_reply_never_retries_test() {
+  let config = loop.Config(..loop_config(2), poll_deadline_ms: 50)
+  let #(report, trace) = observe_loop("late", 10_000, config, False)
+  report |> should.equal(loop.Terminal("operation_timeout", 0))
+  trace |> should.equal(["state", "poll", "revoke"])
+}
+
+pub fn loop_lifetime_clamps_backoff_test() {
+  let config = loop.Config(..loop_config(2), lifetime_ms: 150)
+  let #(report, trace) = observe_loop("timeouts", 10_000, config, False)
+  report |> should.equal(loop.Terminal("lifetime_expired", 0))
+  trace |> should.equal(["state", "poll", "revoke"])
+}
+
+pub fn loop_actual_lease_clamps_operation_test() {
+  let #(report, trace) = observe_loop("hang", 150, loop_config(2), False)
+  report |> should.equal(loop.Terminal("lifetime_expired", 0))
+  trace |> should.equal(["state", "poll", "revoke"])
+}
+
+pub fn loop_stop_is_responsive_test() {
+  let #(report, trace) = observe_loop("hang", 10_000, loop_config(2), True)
+  report |> should.equal(loop.Terminal("operator_stop", 0))
+  list.contains(trace, "revoke") |> should.equal(True)
+}
+
+pub fn loop_service_death_stops_test() {
+  let #(report, trace) = observe_loop("service_down", 10_000, loop_config(2), False)
+  report |> should.equal(loop.Terminal("service_down", 0))
+  trace |> should.equal(["state", "poll"])
+}
+
+pub fn loop_writer_hold_prevents_poll_test() {
+  let #(report, trace) = observe_loop("held", 10_000, loop_config(2), False)
+  report |> should.equal(loop.Terminal("writer_held", 0))
+  trace |> should.equal(["state", "revoke"])
+}
+
+pub fn loop_changed_lease_requires_new_driver_test() {
+  let #(report, trace) = observe_loop("lease_change", 10_000, loop_config(2), False)
+  report |> should.equal(loop.Terminal("authority_changed", 1))
+  trace |> should.equal(["state", "poll", "dispatch", "state", "revoke"])
+}
+
+pub fn loop_invalid_configuration_refused_test() {
+  loop.validate(loop_config(1)) |> should.equal(Ok(Nil))
+  list.each([
+    loop.Config(..loop_config(1), max_cycles: 0),
+    loop.Config(..loop_config(1), lifetime_ms: 3_600_001),
+    loop.Config(..loop_config(1), idle_ms: 0),
+    loop.Config(..loop_config(1), poll_deadline_ms: 300_001),
+    loop.Config(..loop_config(1), dispatch_deadline_ms: 0),
+    loop.Config(..loop_config(1), max_timeouts: 11),
+  ], fn(config) { loop.validate(config) |> should.equal(Error("invalid_loop_configuration")) })
+}
+
+pub fn loop_named_subject_refused_test() {
+  let target = process.named_subject(process.new_name("loop_named_refusal"))
+  let result = loop.start(target, loop_config(1), process.new_subject())
+  case result {
+    Error(reason) -> reason |> should.equal("named_service_subject_refused")
+    Ok(_) -> panic as "named subject accepted"
+  }
+}
+
+pub fn loop_dead_subject_refused_test() {
+  let handshake = process.new_subject()
+  let pid = process.spawn_unlinked(fn() {
+    let subject = process.new_subject()
+    process.send(handshake, subject)
+    process.sleep(5000)
+  })
+  let assert Ok(target) = process.receive(handshake, 500)
+  let monitor = process.monitor(pid)
+  process.kill(pid)
+  let selector = process.new_selector() |> process.select_specific_monitor(monitor, fn(d) { d })
+  let assert Ok(_) = process.selector_receive(selector, 500)
+  case loop.start(target, loop_config(1), process.new_subject()) {
+    Error(reason) -> reason |> should.equal("service_process_down")
+    Ok(_) -> panic as "dead subject accepted"
+  }
+}
+
+pub fn loop_revoked_or_missing_authority_prevents_poll_test() {
+  list.each(["revoked", "missing"], fn(mode) {
+    let #(report, trace) = observe_loop(mode, 10_000, loop_config(1), False)
+    report |> should.equal(loop.Terminal("authority_unavailable", 0))
+    trace |> should.equal(["state", "revoke"])
+  })
+}
+
+@external(erlang, "erlang", "suspend_process")
+fn suspend_loop(pid: process.Pid) -> Bool
+
+@external(erlang, "erlang", "resume_process")
+fn resume_loop(pid: process.Pid) -> Bool
+
+fn controlled_loop(config: loop.Config) -> #(
+  actor.Started(process.Subject(loop.Message)),
+  process.Subject(service.ServiceMessage),
+  process.Subject(loop.Terminal),
+  process.Subject(Result(service.ServiceStepResult, String)),
+) {
+  let target = process.new_subject()
+  let terminal = process.new_subject()
+  let assert Ok(driver) = loop.start(target, config, terminal)
+  process.unlink(driver.pid)
+  let assert Ok(service.GetState(reply)) = process.receive(target, 500)
+  let lease = service.AuthorityLease("controlled", 1, 1,
+    service.ffi_system_now_utc_us() + 10_000_000)
+  process.send(reply, make_dummy_service_state(Some(lease), lifecycle.ServiceWriterClean))
+  let assert Ok(service.PollCycle(_, poll_reply)) = process.receive(target, 500)
+  #(driver, target, terminal, poll_reply)
+}
+
+pub fn loop_stale_timer_and_reply_ignored_test() {
+  let #(driver, target, terminal, poll_reply) = controlled_loop(loop_config(1))
+  let monitor = process.monitor(driver.pid)
+  process.send(driver.data, loop.TimerFired(0))
+  process.send(driver.data, loop.PollCompleted(0, Ok(service.PollEmpty)))
+  process.send(driver.data, loop.DispatchCompleted(0, Ok(service.DispatchCycleResult(9, 9))))
+  process.send(driver.data, loop.StateObserved(0, make_dummy_service_state(None, lifecycle.ServiceWriterClean)))
+  process.receive(target, 20) |> should.equal(Error(Nil))
+  process.receive(terminal, 20) |> should.equal(Error(Nil))
+  process.send(poll_reply, Ok(service.PollEmpty))
+  let assert Ok(service.AutomaticDispatchTick(_, reply)) = process.receive(target, 500)
+  process.send(reply, Ok(service.DispatchCycleResult(0, 0)))
+  process.receive(terminal, 500) |> should.equal(Ok(loop.Terminal("max_cycles", 1)))
+  process.receive(target, 500) |> should.equal(Ok(service.RevokeAuthority))
+  let selector = process.new_selector() |> process.select_specific_monitor(monitor, fn(d) { d })
+  let assert Ok(process.ProcessDown(_, _, process.Normal)) = process.selector_receive(selector, 500)
+  Nil
+}
+
+pub fn loop_queued_reply_before_timer_cannot_escape_expired_lifetime_test() {
+  let config = loop.Config(..loop_config(1), lifetime_ms: 200)
+  let #(driver, target, terminal, poll_reply) = controlled_loop(config)
+  let monitor = process.monitor(driver.pid)
+  suspend_loop(driver.pid) |> should.equal(True)
+  // Queue success before expiry. Its position ahead of the deadline timer must
+  // not authorize a dispatch when the actor resumes after the duration ceiling.
+  process.send(poll_reply, Ok(service.PollEmpty))
+  process.sleep(250)
+  resume_loop(driver.pid) |> should.equal(True)
+  process.receive(terminal, 500) |> should.equal(Ok(loop.Terminal("lifetime_expired", 0)))
+  process.receive(target, 500) |> should.equal(Ok(service.RevokeAuthority))
+  process.receive(target, 20) |> should.equal(Error(Nil))
+  let selector = process.new_selector() |> process.select_specific_monitor(monitor, fn(d) { d })
+  let assert Ok(process.ProcessDown(_, _, process.Normal)) = process.selector_receive(selector, 500)
+  Nil
 }

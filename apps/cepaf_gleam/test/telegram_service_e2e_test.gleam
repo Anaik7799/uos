@@ -1647,3 +1647,52 @@ pub fn e2e_callback_ack_replay_and_denial_test() {
 
 @external(erlang, "telegram_http_test_fixture", "get_requests")
 fn fixture_requests_typed(pid: Pid) -> List(#(String, String, Dynamic, String))
+
+pub fn e2e_finite_automatic_loop_dispatches_without_manual_ticks_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  fixture_set_mode(fixture_pid, "offset_aware")
+  let bot_id = 222_555
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_poll1024_l" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-l" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  start_runner_actor(ipc_dir, db_path, base_url, "test-token-loop", bot_id,
+    "worker-e2e-01", "lease-e2e-01", 1, sa_plan_db, coord_db, None, None, True)
+  runner_set_authority(ipc_dir, "lease-loop", 1, 1, 3_000_000_000_000_000)
+  fixture_set_updates(fixture_pid, [
+    "{\"update_id\":9101,\"message\":{\"message_id\":501,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false,\"first_name\":\"Test\"},\"text\":\"/doctor\",\"date\":1700000000}}",
+    "{\"update_id\":9102,\"message\":{\"message_id\":502,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false,\"first_name\":\"Test\"},\"text\":\"/saplan\",\"date\":1700000000}}",
+  ])
+  // One start command: the Gleam driver owns all subsequent poll/dispatch scheduling.
+  let terminal = send_runner_cmd(ipc_dir, "{\"action\":\"finite_automatic_loop\"}")
+  string.contains(terminal, "\"reason\":\"max_cycles\"") |> should.equal(True)
+  string.contains(terminal, "\"completed_cycles\":2") |> should.equal(True)
+  let request1 = ledger.make_request_id(bot_id, 9101)
+  let request2 = ledger.make_request_id(bot_id, 9102)
+  let assert Ok(#(_, [row1, row2])) = store.read_keys(storage_config, [
+    codec.chunk_key(request1, 0), codec.chunk_key(request2, 0),
+  ])
+  let assert Ok(raw1) = codec.decode_row_value(row1)
+  let assert Ok(raw2) = codec.decode_row_value(row2)
+  let assert Ok(chunk1) = codec.decode_chunk_value(raw1)
+  let assert Ok(chunk2) = codec.decode_chunk_value(raw2)
+  chunk1.status |> should.equal(ledger.OutboxDelivered(42))
+  chunk2.status |> should.equal(ledger.OutboxDelivered(42))
+  string.contains(chunk1.payload, "UNOBSERVED_RUNTIME") |> should.equal(True)
+  string.contains(chunk2.payload, "uos.sa_plan.observer.v1") |> should.equal(True)
+  let requests = fixture_requests_typed(fixture_pid)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/getUpdates") })
+    |> list.length |> should.equal(2)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/sendMessage") })
+    |> list.length |> should.equal(2)
+  let stopped = runner_get_state(ipc_dir)
+  string.contains(stopped, "\"writer_state\":\"clean\"") |> should.equal(True)
+  string.contains(stopped, "\"pending_operation_present\":false") |> should.equal(True)
+  string.contains(stopped, "\"last_committed_offset\":9103") |> should.equal(True)
+  // Retain unit invocation identity until lifecycle stop captures and verifies it.
+  fixture_stop(fixture_pid)
+  let assert Ok(_) = lifecycle.stop_and_verify_test_unit(slice_name, unit_name, db_path, recovery_worker_sha, recovery_guardian_sha)
+  let assert Ok(True) = lifecycle.stop_test_slice(slice_name)
+}

@@ -225,6 +225,37 @@ handle_actor_command(#{<<"action">> := <<"automatic_dispatch_tick">>} = Cmd, Sub
     end,
     actor_loop(Subj, IpcDir, SvcConfig);
 
+handle_actor_command(#{<<"action">> := <<"finite_automatic_loop">>}, Subj, IpcDir, SvcConfig) ->
+    Observer = gleam@erlang@process:new_subject(),
+    Config = {config, 2, 6000, 10, 15000, 15000, 1},
+    Result = case cepaf_gleam@harness@telegram_loop:start(Subj, Config, Observer) of
+        {ok, {started, DriverPid, DriverSubject}} ->
+            unlink(DriverPid),
+            Mon = erlang:monitor(process, DriverPid),
+            Received = gleam@erlang@process:'receive'(Observer, 7000),
+            Down = receive {'DOWN', Mon, process, DriverPid, Why} -> {down, Why}
+                after 1000 -> unknown end,
+            case {Received, Down} of
+                {{ok, {terminal, Reason, Cycles}}, {down, normal}} ->
+                    #{<<"status">> => <<"ok">>, <<"reason">> => Reason,
+                      <<"completed_cycles">> => Cycles};
+                _ ->
+                    gleam@erlang@process:send(DriverSubject, stop),
+                    case Down of
+                        {down, _} -> ok;
+                        unknown ->
+                            exit(DriverPid, kill),
+                            receive {'DOWN', Mon, process, DriverPid, _} -> ok
+                            after 500 -> erlang:error(loop_cleanup_unconfirmed) end
+                    end,
+                    erlang:demonitor(Mon, [flush]),
+                    #{<<"status">> => <<"error">>, <<"reason">> => <<"loop_terminal_unconfirmed">>}
+            end;
+        {error, _} -> #{<<"status">> => <<"error">>, <<"reason">> => <<"loop_start_failed">>}
+    end,
+    write_json_file(filename:join([IpcDir, "resp.json"]), Result),
+    actor_loop(Subj, IpcDir, SvcConfig);
+
 handle_actor_command(#{<<"action">> := <<"get_state">>}, Subj, IpcDir, SvcConfig) ->
     State = gleam@erlang@process:call(Subj, 2000, fun(Reply) -> {get_state, Reply} end),
     Pending = gleam@erlang@process:call(Subj, 2000, fun(Reply) -> {get_pending_operation, Reply} end),

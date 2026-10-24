@@ -227,6 +227,27 @@ dispatch_response(Socket, malformed, _Method, _Path, _Body, _Presets) ->
 dispatch_response(Socket, wrong_chat, _Method, _Path, _Body, _Presets) ->
     send_json(Socket, 200, <<"{\"ok\":true,\"result\":{\"message_id\":42,\"chat\":{\"id\":99999999}}}">>);
 
+%% Positive-offset fixture mode for multi-cycle service acceptance. Normal mode
+%% deliberately retains repeated presets for adversarial replay tests.
+dispatch_response(Socket, offset_aware, Method, Path, Body, Presets) ->
+    case is_subpath(Path, <<"/getUpdates">>) of
+        false -> dispatch_response(Socket, normal, Method, Path, Body, Presets);
+        true ->
+            try
+                Request = json:decode(Body),
+                Offset = maps:get(<<"offset">>, Request, 0),
+                Limit = maps:get(<<"limit">>, Request, 100),
+                true = is_integer(Offset) andalso Offset >= 0,
+                true = is_integer(Limit) andalso Limit >= 1 andalso Limit =< 100,
+                Filtered = [I || I <- Presets,
+                    maps:get(<<"update_id">>, json:decode(I)) >= Offset],
+                dispatch_response(Socket, normal, Method, Path, Body,
+                    lists:sublist(Filtered, Limit))
+            catch _:_ ->
+                send_json(Socket, 400, <<"{\"ok\":false,\"error_code\":400}">>)
+            end
+    end;
+
 dispatch_response(Socket, normal, _Method, Path, Body, Presets) ->
     case is_subpath(Path, <<"/getUpdates">>) of
         true ->
