@@ -1693,13 +1693,13 @@ pub fn supervised_service_four_roles_and_rest_for_one_test() {
 
   // Check new subjects in persistent_term
   let assert Ok(new_auth) =
-    service.ffi_get_worker_subject(bot_id, "authority")
+    service.ffi_get_worker_subject(sup_svc.subject_scope, "authority")
   let assert Ok(new_store) =
-    service.ffi_get_worker_subject(bot_id, "store")
+    service.ffi_get_worker_subject(sup_svc.subject_scope, "store")
   let assert Ok(new_poller) =
-    service.ffi_get_worker_subject(bot_id, "poller")
+    service.ffi_get_worker_subject(sup_svc.subject_scope, "poller")
   let assert Ok(new_coord) =
-    service.ffi_get_worker_subject(bot_id, "coordinator")
+    service.ffi_get_worker_subject(sup_svc.subject_scope, "coordinator")
 
   // Verify newly restarted roles respond
   let new_auth_pong = process.call(new_auth, 5000, service.AuthorityPing)
@@ -1714,8 +1714,21 @@ pub fn supervised_service_four_roles_and_rest_for_one_test() {
   let new_coord_state = process.call(new_coord, 5000, service.GetState)
   new_coord_state.config.bot_id |> should.equal(bot_id)
 
-  // Clean shutdown
-  service.stop_supervised_service(sup_svc)
+  // Confirm the whole current tree is gone before references are erased.
+  let assert Ok(new_auth_pid) = process.subject_owner(new_auth)
+  let assert Ok(new_store_pid) = process.subject_owner(new_store)
+  let assert Ok(new_poller_pid) = process.subject_owner(new_poller)
+  let assert Ok(new_coord_pid) = process.subject_owner(new_coord)
+  service.stop_supervised_service(sup_svc) |> should.equal(Ok(Nil))
+  list.each([sup_svc.supervisor_pid, new_auth_pid, new_store_pid, new_poller_pid, new_coord_pid], fn(pid) {
+    process.is_alive(pid) |> should.equal(False)
+  })
+  list.each(["authority", "store", "poller", "coordinator"], fn(role) {
+    let found: Result(Dynamic, Nil) = service.ffi_get_worker_subject(sup_svc.subject_scope, role)
+    found |> should.equal(Error(Nil))
+  })
+  // Stopping an already terminated tree is also a confirmed cleanup.
+  service.stop_supervised_service(sup_svc) |> should.equal(Ok(Nil))
   fixture_stop(fixture_pid)
   let _ = simplifile.delete(dir)
   Nil
@@ -2304,4 +2317,74 @@ pub fn bootstrap_missing_watermark_refuses_instead_of_reset_test() {
     Error(reason) -> string.contains(reason, "first_bootstrap_watermark_read_failed") |> should.equal(True)
     Ok(_) -> panic as "missing watermark was fabricated as clean"
   }
+}
+
+pub fn supervised_instance_references_are_isolated_test() {
+  process.trap_exits(True)
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+  let dir =
+    "/tmp/uos-tg-slice1-isolated-"
+    <> int.to_string(service.ffi_system_now_utc_us())
+  let _ = simplifile.create_directory_all(dir)
+  let assert Ok(_) = simplifile.set_permissions_octal(dir, 0o700)
+  let db_path = dir <> "/supervised.db"
+  let storage_config =
+    transport.reviewed_local_configuration(
+      recovery_guardian_path,
+      recovery_guardian_sha,
+      recovery_worker_path,
+      recovery_worker_sha,
+      db_path,
+    )
+  let http_config =
+    http_client.TelegramHttpConfiguration(
+      base_url: base_url,
+      bot_token: "test-token-supervised",
+      timeout_ms: 10000,
+      max_response_bytes: 65_536,
+    )
+  let bot_id = 999_444
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let config =
+    service.default_service_configuration(
+      storage_config,
+      http_config,
+      bot_id,
+      [#(100, 200)],
+      "worker-sup-test",
+      5,
+    )
+
+
+  // Separate test stores deliberately reuse a bot identity. This checks reference
+  // isolation only, not permission for two operational writers of the same bot.
+  let second_storage = transport.reviewed_local_configuration(
+    recovery_guardian_path, recovery_guardian_sha,
+    recovery_worker_path, recovery_worker_sha, dir <> "/second.db",
+  )
+  let assert Ok(2) = store.initialize_store(second_storage, bot_id)
+  let second_config = service.ServiceConfiguration(..config, storage_config: second_storage)
+  let assert Ok(first) = service.start_supervised_service(config, None)
+  let assert Ok(second) = service.start_supervised_service(second_config, None)
+  { first.subject_scope == second.subject_scope } |> should.equal(False)
+  { first.supervisor_pid == second.supervisor_pid } |> should.equal(False)
+  let assert Ok(first_auth) = service.ffi_get_worker_subject(first.subject_scope, "authority")
+  let assert Ok(second_auth) = service.ffi_get_worker_subject(second.subject_scope, "authority")
+  first_auth |> should.equal(first.authority_worker)
+  second_auth |> should.equal(second.authority_worker)
+  service.stop_supervised_service(first) |> should.equal(Ok(Nil))
+  let removed: Result(Dynamic, Nil) = service.ffi_get_worker_subject(first.subject_scope, "authority")
+  removed |> should.equal(Error(Nil))
+  let assert Ok(retained) = service.ffi_get_worker_subject(second.subject_scope, "authority")
+  retained |> should.equal(second.authority_worker)
+  process.call(second.authority_worker, 5000, service.AuthorityPing) |> should.equal("pong")
+  process.call(second.store_worker, 5000, service.StorePing) |> should.equal("pong")
+  process.call(second.poller_worker, 5000, service.PollerPing) |> should.equal("pong")
+  let state = process.call(second.actor_subject, 5000, service.GetState)
+  state.config.storage_config |> should.equal(second_storage)
+  service.stop_supervised_service(second) |> should.equal(Ok(Nil))
+  fixture_stop(fixture_pid)
+  let _ = simplifile.delete(dir)
+  Nil
 }

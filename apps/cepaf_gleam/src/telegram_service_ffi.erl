@@ -18,12 +18,12 @@ system_now_utc_us() ->
 system_now_ns() ->
     erlang:system_time(nanosecond).
 
--spec set_worker_subject(integer(), binary(), term()) -> ok.
+-spec set_worker_subject(term(), binary(), term()) -> ok.
 set_worker_subject(BotId, Role, Subject) ->
     persistent_term:put({telegram_worker, BotId, Role}, Subject),
     ok.
 
--spec get_worker_subject(integer(), binary()) -> {ok, term()} | {error, nil}.
+-spec get_worker_subject(term(), binary()) -> {ok, term()} | {error, nil}.
 get_worker_subject(BotId, Role) ->
     try
         {ok, persistent_term:get({telegram_worker, BotId, Role})}
@@ -31,7 +31,7 @@ get_worker_subject(BotId, Role) ->
         error:badarg -> {error, nil}
     end.
 
--spec clear_worker_subjects(integer()) -> ok.
+-spec clear_worker_subjects(term()) -> ok.
 clear_worker_subjects(BotId) ->
     lists:foreach(fun(Role) ->
         try persistent_term:erase({telegram_worker, BotId, Role}) catch _:_ -> ok end

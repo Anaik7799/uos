@@ -24,6 +24,7 @@ import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/erlang/process.{type Pid, type Subject}
+import gleam/erlang/reference
 import gleam/int
 import gleam/json
 import gleam/list
@@ -2904,47 +2905,47 @@ fn spawn_delivery_worker(
 }
 
 @external(erlang, "telegram_service_ffi", "set_worker_subject")
-pub fn ffi_set_worker_subject(bot_id: Int, role: String, subject: a) -> Nil
+pub fn ffi_set_worker_subject(scope: a, role: String, subject: b) -> Nil
 
 @external(erlang, "telegram_service_ffi", "get_worker_subject")
-pub fn ffi_get_worker_subject(bot_id: Int, role: String) -> Result(a, Nil)
+pub fn ffi_get_worker_subject(scope: a, role: String) -> Result(b, Nil)
 
 @external(erlang, "telegram_service_ffi", "clear_worker_subjects")
-pub fn ffi_clear_worker_subjects(bot_id: Int) -> Nil
+pub fn ffi_clear_worker_subjects(scope: a) -> Nil
 
+/// Compatibility view of the fully supervised service. The returned PID owns
+/// the four-role tree; data is the coordinator subject. No fallback children.
 pub fn start_actor(
   config: ServiceConfiguration,
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
 ) -> Result(actor.Started(Subject(ServiceMessage)), String) {
+  use svc <- result.try(start_supervised_service(config, cleanup_receipt))
+  Ok(actor.Started(pid: svc.supervisor_pid, data: svc.actor_subject))
+}
+
+fn start_actor_scoped(
+  config: ServiceConfiguration,
+  cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
+  scope: reference.Reference,
+) -> Result(actor.Started(Subject(ServiceMessage)), String) {
   case init_service(config, cleanup_receipt) {
     Error(err) -> Error("service_init_failed: " <> err)
     Ok(#(initial_state, _recovery_summary)) -> {
-      let auth_subj = case ffi_get_worker_subject(config.bot_id, "authority") {
-        Ok(s) -> s
-        Error(_) -> {
-          let assert Ok(started) = start_authority_worker(config)
-          started.data
-        }
-      }
-      let store_subj = case ffi_get_worker_subject(config.bot_id, "store") {
-        Ok(s) -> s
-        Error(_) -> {
-          let assert Ok(started) =
-            start_store_worker(config.storage_config, config.bot_id)
-          started.data
-        }
-      }
-      let poller_subj = case ffi_get_worker_subject(config.bot_id, "poller") {
-        Ok(s) -> s
-        Error(_) -> {
-          let assert Ok(started) =
-            start_poller_worker(config.http_config, config.bot_id)
-          started.data
-        }
-      }
+      use auth_subj <- result.try(
+        ffi_get_worker_subject(scope, "authority")
+        |> result.map_error(fn(_) { "supervised_authority_subject_missing" }),
+      )
+      use store_subj <- result.try(
+        ffi_get_worker_subject(scope, "store")
+        |> result.map_error(fn(_) { "supervised_store_subject_missing" }),
+      )
+      use poller_subj <- result.try(
+        ffi_get_worker_subject(scope, "poller")
+        |> result.map_error(fn(_) { "supervised_poller_subject_missing" }),
+      )
 
       actor.new_with_initialiser(5000, fn(subject) {
-        ffi_set_worker_subject(config.bot_id, "coordinator", subject)
+        ffi_set_worker_subject(scope, "coordinator", subject)
         let state =
           ServiceState(
             ..initial_state,
@@ -2978,6 +2979,8 @@ pub type SupervisedService {
     authority_worker: Subject(AuthorityWorkerMessage),
     store_worker: Subject(StoreWorkerMessage),
     poller_worker: Subject(PollerWorkerMessage),
+    subject_scope: reference.Reference,
+    supervisor_pid: Pid,
   )
 }
 
@@ -3067,8 +3070,15 @@ fn handle_authority_worker_message(
 pub fn start_authority_worker(
   config: ServiceConfiguration,
 ) -> Result(actor.Started(Subject(AuthorityWorkerMessage)), String) {
+  start_authority_worker_scoped(config, config.bot_id)
+}
+
+fn start_authority_worker_scoped(
+  config: ServiceConfiguration,
+  scope: a,
+) -> Result(actor.Started(Subject(AuthorityWorkerMessage)), String) {
   actor.new_with_initialiser(5000, fn(subject) {
-    ffi_set_worker_subject(config.bot_id, "authority", subject)
+    ffi_set_worker_subject(scope, "authority", subject)
     actor.initialised(AuthorityWorkerState(
       config: config,
       lease: None,
@@ -3411,8 +3421,16 @@ pub fn start_store_worker(
   config: transport.LocalConfiguration,
   bot_id: Int,
 ) -> Result(actor.Started(Subject(StoreWorkerMessage)), String) {
+  start_store_worker_scoped(config, bot_id, bot_id)
+}
+
+fn start_store_worker_scoped(
+  config: transport.LocalConfiguration,
+  bot_id: Int,
+  scope: a,
+) -> Result(actor.Started(Subject(StoreWorkerMessage)), String) {
   actor.new_with_initialiser(5000, fn(subject) {
-    ffi_set_worker_subject(bot_id, "store", subject)
+    ffi_set_worker_subject(scope, "store", subject)
     actor.initialised(StoreWorkerState(config: config, bot_id: bot_id))
     |> actor.returning(subject)
     |> Ok
@@ -3649,8 +3667,16 @@ pub fn start_poller_worker(
   config: http_client.TelegramHttpConfiguration,
   bot_id: Int,
 ) -> Result(actor.Started(Subject(PollerWorkerMessage)), String) {
+  start_poller_worker_scoped(config, bot_id, bot_id)
+}
+
+fn start_poller_worker_scoped(
+  config: http_client.TelegramHttpConfiguration,
+  bot_id: Int,
+  scope: a,
+) -> Result(actor.Started(Subject(PollerWorkerMessage)), String) {
   actor.new_with_initialiser(5000, fn(subject) {
-    ffi_set_worker_subject(bot_id, "poller", subject)
+    ffi_set_worker_subject(scope, "poller", subject)
     actor.initialised(PollerWorkerState(config: config, bot_id: bot_id))
     |> actor.returning(subject)
     |> Ok
@@ -3699,13 +3725,14 @@ pub fn poller_worker_get_updates(
   })
 }
 
-pub fn supervised_worker(
+fn supervised_worker_scoped(
   config: ServiceConfiguration,
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
   bridge_subject: Option(Subject(Subject(ServiceMessage))),
+  scope: reference.Reference,
 ) -> supervision.ChildSpecification(Subject(ServiceMessage)) {
   supervision.worker(fn() {
-    case start_actor(config, cleanup_receipt) {
+    case start_actor_scoped(config, cleanup_receipt, scope) {
       Ok(started) -> {
         case bridge_subject {
           Some(subj) -> process.send(subj, started.data)
@@ -3722,12 +3749,22 @@ pub fn start_supervised_service(
   config: ServiceConfiguration,
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
 ) -> Result(SupervisedService, String) {
+  let scope = reference.new()
   let bridge_subject = process.new_subject()
-  let c1 = authority_worker(config)
-  let c2 = store_worker(config.storage_config, config.bot_id)
-  let c3 = poller_worker(config.http_config, config.bot_id)
-  let c4 = supervised_worker(config, cleanup_receipt, Some(bridge_subject))
-  use sup <- result.try(
+  let c1 = supervision.worker(fn() {
+    start_authority_worker_scoped(config, scope)
+    |> result.map_error(actor.InitFailed)
+  })
+  let c2 = supervision.worker(fn() {
+    start_store_worker_scoped(config.storage_config, config.bot_id, scope)
+    |> result.map_error(actor.InitFailed)
+  })
+  let c3 = supervision.worker(fn() {
+    start_poller_worker_scoped(config.http_config, config.bot_id, scope)
+    |> result.map_error(actor.InitFailed)
+  })
+  let c4 = supervised_worker_scoped(config, cleanup_receipt, Some(bridge_subject), scope)
+  use sup_started <- result.try(
     static_supervisor.new(static_supervisor.RestForOne)
     |> static_supervisor.restart_tolerance(intensity: 3, period: 5)
     |> static_supervisor.add(c1)
@@ -3735,42 +3772,68 @@ pub fn start_supervised_service(
     |> static_supervisor.add(c3)
     |> static_supervisor.add(c4)
     |> static_supervisor.start()
-    |> result.map(fn(started) { started.data })
     |> result.map_error(fn(err) {
+      ffi_clear_worker_subjects(scope)
       "start_service_supervisor_failed: " <> string.inspect(err)
     }),
   )
   case process.receive(bridge_subject, 3000) {
     Ok(actor_subj) -> {
-      let auth_subj = case ffi_get_worker_subject(config.bot_id, "authority") {
+      let auth_subj = case ffi_get_worker_subject(scope, "authority") {
         Ok(s) -> s
         Error(_) -> panic as "authority_worker_subject_not_found"
       }
-      let store_subj = case ffi_get_worker_subject(config.bot_id, "store") {
+      let store_subj = case ffi_get_worker_subject(scope, "store") {
         Ok(s) -> s
         Error(_) -> panic as "store_worker_subject_not_found"
       }
-      let poller_subj = case ffi_get_worker_subject(config.bot_id, "poller") {
+      let poller_subj = case ffi_get_worker_subject(scope, "poller") {
         Ok(s) -> s
         Error(_) -> panic as "poller_worker_subject_not_found"
       }
       Ok(SupervisedService(
-        supervisor: sup,
+        supervisor: sup_started.data,
         actor_subject: actor_subj,
         authority_worker: auth_subj,
         store_worker: store_subj,
         poller_worker: poller_subj,
+        subject_scope: scope,
+        supervisor_pid: sup_started.pid,
       ))
     }
-    Error(_) -> Error("timed_out_waiting_for_supervised_actor_subject")
+    Error(_) -> {
+      let cleanup = stop_instance(sup_started.data, sup_started.pid, scope)
+      Error("timed_out_waiting_for_supervised_actor_subject: " <> string.inspect(cleanup))
+    }
   }
 }
 
 @external(erlang, "telegram_service_ffi", "stop_supervisor")
 pub fn stop_supervisor(supervisor: static_supervisor.Supervisor) -> Nil
 
-pub fn stop_supervised_service(svc: SupervisedService) -> Nil {
-  stop_supervisor(svc.supervisor)
+fn stop_instance(
+  supervisor: static_supervisor.Supervisor,
+  pid: Pid,
+  scope: reference.Reference,
+) -> Result(Nil, String) {
+  let monitor = process.monitor(pid)
+  let selector = process.new_selector()
+    |> process.select_specific_monitor(monitor, fn(down) { down })
+  stop_supervisor(supervisor)
+  case process.selector_receive(selector, 5000) {
+    Ok(_) -> {
+      ffi_clear_worker_subjects(scope)
+      Ok(Nil)
+    }
+    Error(_) -> {
+      process.demonitor_process(monitor)
+      Error("supervisor_cleanup_unconfirmed")
+    }
+  }
+}
+
+pub fn stop_supervised_service(svc: SupervisedService) -> Result(Nil, String) {
+  stop_instance(svc.supervisor, svc.supervisor_pid, svc.subject_scope)
 }
 
 pub fn handle_message(
