@@ -1390,4 +1390,44 @@ let () = with_bridge_protocol (fun path store mapping ->
          && Poly.equal saved (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))
          && String.equal persisted (In_channel.read_all (Filename.concat profile_dir "profile.json"))
          && match saved with Some lease->Int64.equal lease.fencing_token 1L
-            && Int64.equal lease.expires_at_ns expiry | None->false)));
+            && Int64.equal lease.expires_at_ns expiry | None->false)))
+
+(* Actual service action stage: measured chrony clock, canonical coordinator/task,
+   public profile and signed receipts, OTP store actor, guardian/native effect,
+   and atomic truthful outbox. No real Telegram network recipient. *)
+let () =
+  let dir=Stdlib.Sys.getenv "UOS_CANCEL_TRANSPORT_TEST_DIR" in
+  let root=Stdlib.Sys.getenv "UOS_CANCEL_GLEAM_TEST_ROOT" in
+  let bin s="<<" ^ String.concat ~sep:"," (List.map (String.to_list s)
+    ~f:(fun c->Int.to_string (Char.to_int c))) ^ ">>" in
+  let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
+  let guardian=Filename.concat dir "guardian.exe" and worker=Filename.concat dir "worker.exe" in
+  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator"] ~f:(fun mode->
+    Cancellation.with_case (fun path store request->
+      let request=live_cancel_request path request in
+      let lease=some (ok (Store.find_bridge_lease store ~mapping_id:request.mapping_id)) in
+      let profile_dir=path ^ ".service" in
+      Lifetime_unix.mkdir profile_dir 0o700;
+      let code=Printf.sprintf
+        "code:add_paths(filelib:wildcard(%S)),code:add_patha(%S),{ok,_}=application:ensure_all_started(hackney),R=telegram_action_service_test:run_native(%s,%s,%s,%s,%s,%s,%s,%Ld,%Ld,%Ld,%s),io:put_chars(R),halt(0)."
+        (Filename.concat root "lib/*/ebin") (Filename.concat root "build/ebin")
+        (bin profile_dir) (bin path) (bin guardian) (bin (sha guardian))
+        (bin worker) (bin (sha worker)) (bin request.mapping_id)
+        (if String.equal mode "wrong_fence" then Int64.(request.fencing_token+1L) else request.fencing_token)
+        lease.expires_at_ns request.target_lease_until_ns (bin mode) in
+      let status,out,errors=run_cancellation_child
+        ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
+        ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";code] ~database:path ~input:"" in
+      if not (Poly.equal status (Lifetime_unix.WEXITED 0)) then
+        Printf.eprintf "service action %s stdout=%s stderr=%s\n%!" mode out errors;
+      check ("SERVICE-ACTION-" ^ mode ^ "-EXIT")
+        (Poly.equal status (Lifetime_unix.WEXITED 0) && String.is_empty errors);
+      if String.equal mode "success" then
+        check "SERVICE-ACTION-SIGNED-NATIVE-EFFECT-AND-OUTBOX"
+          (String.equal out "service_signed_cancel_outbox" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
+      else if String.equal mode "revoked_coordinator" then check "SERVICE-ACTION-REVOKED-COORDINATOR-NO-EFFECT"
+        (String.equal out "revoked_coordinator_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
+      else if String.equal mode "wrong_fence" then check "SERVICE-ACTION-CHANGED-FENCE-NO-EFFECT"
+        (String.equal out "changed_bridge_fence_refused" && Poly.equal (Cancellation.job store).state Store.Job_executing)
+      else check "SERVICE-ACTION-PERSISTED-ABSENT-NO-REEXECUTION"
+        (String.equal out "persisted_absent_not_reexecuted" && Poly.equal (Cancellation.job store).state Store.Job_executing)))

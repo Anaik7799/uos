@@ -25,6 +25,7 @@ pub fn context() {
     string.repeat("a", 64),
     "nas-1.tail55d152.ts.net",
     "test-boot",
+    string.repeat("d", 64),
   )
 }
 
@@ -71,7 +72,7 @@ pub fn raw(
       )
     })
   json.object([
-    #("schema", json.string("uos.telegram.action-profile.v1")),
+    #("schema", json.string("uos.telegram.action-profile.v2")),
     #(
       "context",
       json.array(
@@ -86,6 +87,7 @@ pub fn raw(
           json.string(c.candidate),
           json.string(c.host),
           json.string(c.boot),
+          json.string(c.machine_id),
         ],
         fn(x) { x },
       ),
@@ -180,6 +182,7 @@ pub fn every_context_field_is_bound_test() {
       profile.Context(..c, candidate: string.repeat("d", 64)),
       profile.Context(..c, host: "vm-1.tail55d152.ts.net"),
       profile.Context(..c, boot: "other-boot"),
+      profile.Context(..c, machine_id: string.repeat("e", 64)),
     ],
     fn(changed) {
       profile.load(root, "profile.json", files.digest(raw), changed)
@@ -194,7 +197,7 @@ pub fn invalid_context_and_schema_are_refused_test() {
   let raw = fixture()
   list.each(
     [
-      raw |> string.replace("\"uos.telegram.action-profile.v1\"", "\"future\""),
+      raw |> string.replace("\"uos.telegram.action-profile.v2\"", "\"future\""),
       raw |> string.replace("\"schema\":", "\"extra\":true,\"schema\":"),
       raw |> string.replace("\"context\":", "\"context\":[],\"context\":"),
       raw |> string.replace("[7,\"fence\"", "[0,\"fence\""),

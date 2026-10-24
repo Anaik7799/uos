@@ -372,3 +372,8 @@ pub fn matches_context(
 pub fn expires_at_ns(r: Request) -> Int {
   r.expiry
 }
+
+/// Match signed execution identity without exposing a mutable request.
+pub fn matches_execution(r: Request, mapping: String, lease: String) -> Bool {
+  r.mapping == mapping && r.lease == lease
+}

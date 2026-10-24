@@ -11,7 +11,7 @@ import gleam/list
 import gleam/result
 import gleam/string
 
-const schema_version = "uos.telegram.action-profile.v1"
+const schema_version = "uos.telegram.action-profile.v2"
 
 const max_raw_bytes = 16_384
 
@@ -39,6 +39,7 @@ pub type Context {
     candidate: String,
     host: String,
     boot: String,
+    machine_id: String,
   )
 }
 
@@ -268,6 +269,7 @@ fn parse_context(
       codec.JsonString(candidate),
       codec.JsonString(host),
       codec.JsonString(boot),
+      codec.JsonString(machine_id),
     ]) -> {
       let ctx =
         Context(
@@ -281,6 +283,7 @@ fn parse_context(
           candidate: candidate,
           host: host,
           boot: boot,
+          machine_id: machine_id,
         )
       case ctx == expected_context {
         True -> {
@@ -314,6 +317,7 @@ fn validate_context(ctx: Context) -> Result(Nil, String) {
     && is_valid_token(ctx.worker)
     && is_valid_token(ctx.boot)
     && is_valid_sha256(ctx.candidate)
+    && is_valid_sha256(ctx.machine_id)
   case valid_numbers && valid_host && valid_tokens {
     True -> {
       use _ <- result.try(

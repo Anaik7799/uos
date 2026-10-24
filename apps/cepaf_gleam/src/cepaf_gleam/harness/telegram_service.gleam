@@ -10,6 +10,11 @@
 //// 4. Quiescence gate: fail-closed in-memory ServiceWriterHold if unquiesced crash detected.
 //// 5. Delivery pipeline: commit_sending -> bounded http POST -> verify 200 OK -> commit_outcome.
 
+import cepaf_gleam/harness/telegram_action_profile as action_profile
+import cepaf_gleam/harness/telegram_action_packet as action_packet
+import cepaf_gleam/harness/telegram_bridge as bridge
+import cepaf_gleam/harness/telegram_cancellation as cancellation
+import cepaf_gleam/harness/telegram_cancellation_record as cancellation_record
 import cepaf_gleam/harness/clock as checked_clock
 import cepaf_gleam/harness/telegram_conversation as conversation
 import cepaf_gleam/harness/telegram_conversation_model as conversation_model
@@ -3224,6 +3229,8 @@ pub fn authority_worker_revoke_lease(
 }
 
 pub type StoreWorkerMessage {
+  StorePersistCancellation(gen: Int,record:ledger.InboxRecord,version:Int,sha:String,worker:String,epoch:Int,p:cancellation.Prepared,reply_to:Subject(Result(store.CancellationReservation,store.StoreError)))
+  StoreCommitCancellation(res:store.CancellationReservation,raw:String,now:Int,reply_to:Subject(Result(store.CommitResultResult,store.StoreError)))
   StorePrepareMemory(
     gen: Int, record: ledger.InboxRecord, version: Int, sha: String,
     worker: String, epoch: Int, reply_to: Subject(Result(store.MemoryObservation,store.StoreError)),
@@ -3343,6 +3350,14 @@ fn handle_store_worker_message(
   msg: StoreWorkerMessage,
 ) -> actor.Next(StoreWorkerState, StoreWorkerMessage) {
   case msg {
+    StorePersistCancellation(gen,record,version,sha,worker,epoch,p,reply_to) -> {
+      process.send(reply_to,store.persist_cancellation(state.config,gen,record,version,sha,worker,epoch,p))
+      actor.continue(state)
+    }
+    StoreCommitCancellation(res,raw,now,reply_to) -> {
+      process.send(reply_to,store.commit_cancellation_lookup(res,raw,now))
+      actor.continue(state)
+    }
     StorePrepareMemory(gen,record,version,sha,worker,epoch,reply_to) -> {
       process.send(reply_to,store.prepare_memory_command(state.config,gen,record,version,sha,worker,epoch))
       actor.continue(state)
@@ -5387,5 +5402,325 @@ fn matrix_reply(state: ServiceState) -> String {
   case current_read(state,5000,matrix_reader.observe) {
     Ok(Ok(raw)) -> raw
     _ -> json.object([#("status",json.string("unavailable")),#("error",json.string("Matrix version observation unavailable.")),#("runtime_admission",json.string("NOT_GRANTED"))]) |> json.to_string
+  }
+}
+
+
+/// Service-owned controlled cancellation stage. Profile and packet paths are
+/// trusted launcher input, never Telegram arguments. Caller owns the processing
+/// inbox under this service; no effect occurs before immutable store persistence.
+/// Returns a durable result for the existing delivery pipeline, not a sent reply.
+pub fn execute_approved_cancellation(
+  state: ServiceState,
+  p: action_profile.Profile,
+  packet_root: String,
+  packet_relative: String,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+) -> Result(#(ServiceState, store.CommitResultResult), ServiceError) {
+  use before <- result.try(action_observe(state, p))
+  let observed = action_observation(p, before)
+  use prepared <- result.try(
+    action_packet.load(p, packet_root, packet_relative, observed)
+    |> result.map_error(fn(_) { action_hold(state, "action_packet_invalid") }),
+  )
+  let saved = cancellation.recovery_record(prepared)
+  let binding = cancellation_record.binding(saved)
+  use _ <- result.try(
+    case
+      list.contains(state.config.allowed_pairs, #(
+        binding.chat_id,
+        binding.user_id,
+      ))
+    {
+      True -> Ok(Nil)
+      False -> Error(action_hold(state, "action_recipient_refused"))
+    },
+  )
+  // An existing durable request may only be reconciled, never blindly repeated.
+  use #(generation, rows) <- result.try(
+    svc_read_keys(state, [store.cancellation_key(inbox.request_id)])
+    |> result.map_error(fn(err) { action_store_error(state, err) }),
+  )
+  use existed <- result.try(case rows {
+    [row] if generation == state.expected_generation -> Ok(row.exists)
+    _ -> Error(action_hold(state, "action_generation_changed"))
+  })
+  use reservation <- result.try(
+    svc_persist_cancellation(state, inbox, version, sha, prepared)
+    |> result.map_error(fn(err) { action_store_error(state, err) }),
+  )
+  let persisted =
+    ServiceState(
+      ..state,
+      expected_generation: store.cancellation_generation(reservation),
+    )
+  use first_raw <- result.try(
+    action_lookup(p, saved)
+    |> result.map_error(fn(reason) { action_hold(persisted, reason) }),
+  )
+  use first <- result.try(
+    cancellation.decode_recovery_response(
+      saved,
+      first_raw,
+      ffi_system_now_utc_us() / 1000,
+    )
+    |> result.map_error(fn(_) {
+      action_hold(persisted, "action_lookup_invalid")
+    }),
+  )
+  case first {
+    cancellation.LeaseRevoked(_, _, True) ->
+      action_commit_lookup(persisted, reservation, first_raw)
+    cancellation.Absent if !existed -> {
+      use _ <- result.try(
+        action_bridge_current(p, binding.execution.fencing_token)
+        |> result.map_error(fn(reason) { action_hold(persisted, reason) }),
+      )
+      use after <- result.try(action_observe(persisted, p))
+      use _ <- result.try(
+        checked_clock.continuity(before, after)
+        |> result.map_error(fn(_) {
+          action_hold(persisted, "action_clock_discontinuity")
+        }),
+      )
+      use _ <- result.try(
+        case
+          cancellation.ready(
+            prepared,
+            action_profile.roster(p),
+            binding,
+            cancellation_record.target(saved),
+            action_observation(p, after),
+          )
+        {
+          True -> Ok(Nil)
+          False -> Error(action_hold(persisted, "action_approval_expired"))
+        },
+      )
+      case
+        transport.exchange(
+          action_profile.transport(p),
+          cancellation.envelope(prepared, cancellation.Cancel),
+        )
+      {
+        Error(transport.CleanupUnknown) ->
+          Error(action_hold(persisted, "action_cleanup_unknown"))
+        // A completed transport may still have an uncertain effect. Lookup only.
+        _ -> {
+          use raw <- result.try(
+            action_lookup(p, saved)
+            |> result.map_error(fn(reason) { action_hold(persisted, reason) }),
+          )
+          action_commit_lookup(persisted, reservation, raw)
+        }
+      }
+    }
+    _ -> Error(action_hold(persisted, "action_outcome_unresolved"))
+  }
+}
+
+/// Current canonical task/coordinator and measured machine/boot/clock are checked
+/// independently of the public packet. Logical Tailnet host names are pinned in
+/// the profile; measured machine fingerprints are a separate, non-aliasing field.
+fn action_observe(
+  state: ServiceState,
+  p: action_profile.Profile,
+) -> Result(checked_clock.Observation, ServiceError) {
+  use _ <- result.try(case state.pending_operation, state.authority_revoked {
+    None, False ->
+      lifecycle.evaluate_writer_gate(state.writer_state)
+      |> result.map_error(fn(_) { action_hold(state, "action_writer_held") })
+    _, True -> Error(action_hold(state, "action_authority_refused"))
+    _, _ -> Error(action_hold(state, "action_writer_held"))
+  })
+  use _ <- result.try(
+    verify_authority(state, ffi_system_now_utc_us())
+    |> result.map_error(fn(_) { action_hold(state, "action_authority_refused") }),
+  )
+  let c = action_profile.context(p)
+  use _ <- result.try(
+    case
+      c.bot == state.config.bot_id
+      && c.plan == state.config.plan_id
+      && c.task == state.config.task_id
+      && c.worker == state.config.worker_id
+      && c.attempt == state.config.expected_task_attempt
+      && c.epoch == state.config.coordinator_epoch
+      && c.service_epoch == state.config.service_epoch
+      && ffi_storage_config_db_path(action_profile.transport(p))
+      == resolve_sa_plan_db(state.config.authority_paths)
+    {
+      True -> Ok(Nil)
+      False -> Error(action_hold(state, "action_profile_context_refused"))
+    },
+  )
+  use observed <- result.try(
+    checked_clock.observe()
+    |> result.map_error(fn(_) { action_hold(state, "action_clock_refused") }),
+  )
+  use _ <- result.try(
+    case
+      observed.sample.observed.domain.host_id == c.machine_id
+      && observed.sample.observed.domain.boot_id == c.boot
+    {
+      True -> Ok(Nil)
+      False -> Error(action_hold(state, "action_host_boot_refused"))
+    },
+  )
+  use _ <- result.try(
+    action_profile.recheck(p, c, ffi_system_now_ns())
+    |> result.map_error(fn(_) { action_hold(state, "action_profile_refused") }),
+  )
+  Ok(observed)
+}
+
+fn action_observation(
+  p: action_profile.Profile,
+  o: checked_clock.Observation,
+) -> cancellation.Observation {
+  cancellation.Observation(
+    action_profile.context(p).host,
+    o.sample.observed.domain.boot_id,
+    o.sample.observed.utc_us / 1000,
+    o.sample.observed.boot_us / 1000,
+  )
+}
+
+fn action_bridge_current(
+  p: action_profile.Profile,
+  fence: Int,
+) -> Result(Nil, String) {
+  let request = action_profile.request(p)
+  use raw <- result.try(
+    transport.exchange(
+      action_profile.transport(p),
+      bridge.envelope(request, bridge.Lookup),
+    )
+    |> result.map_error(fn(err) {
+      case err {
+        transport.CleanupUnknown -> "action_cleanup_unknown"
+        _ -> "action_bridge_unresolved"
+      }
+    }),
+  )
+  use outcome <- result.try(
+    bridge.decode_response(request, bridge.Lookup, raw, ffi_system_now_ns())
+    |> result.map_error(fn(_) { "action_bridge_invalid" }),
+  )
+  case outcome {
+    bridge.Found(f, expiry, _, True) ->
+      case f == fence && expiry > ffi_system_now_ns() {
+        True -> Ok(Nil)
+        False -> Error("action_bridge_not_current")
+      }
+    _ -> Error("action_bridge_not_current")
+  }
+}
+
+fn action_lookup(
+  p: action_profile.Profile,
+  saved: cancellation_record.RecoveryRecord,
+) -> Result(String, String) {
+  transport.exchange(
+    action_profile.transport(p),
+    cancellation.recovery_envelope(saved),
+  )
+  |> result.map_error(fn(err) {
+    case err {
+      transport.CleanupUnknown -> "action_cleanup_unknown"
+      _ -> "action_lookup_unresolved"
+    }
+  })
+}
+
+fn action_commit_lookup(
+  state: ServiceState,
+  res: store.CancellationReservation,
+  raw: String,
+) -> Result(#(ServiceState, store.CommitResultResult), ServiceError) {
+  use _ <- result.try(
+    verify_authority(state, ffi_system_now_utc_us())
+    |> result.map_error(fn(_) { action_hold(state, "action_authority_refused") }),
+  )
+  use committed <- result.try(
+    svc_commit_cancellation(state, res, raw, ffi_system_now_utc_us() / 1000)
+    |> result.map_error(fn(err) { action_store_error(state, err) }),
+  )
+  Ok(#(
+    ServiceState(..state, expected_generation: committed.receipt.generation),
+    committed,
+  ))
+}
+
+fn action_hold(state: ServiceState, reason: String) -> ServiceError {
+  ServiceError(
+    ServiceState(..state, writer_state: lifecycle.ServiceWriterHold(reason)),
+    reason,
+  )
+}
+
+fn action_store_error(
+  state: ServiceState,
+  err: store.StoreError,
+) -> ServiceError {
+  case err {
+    store.StoreUncertainApply(pending) ->
+      action_hold(
+        ServiceState(..state, pending_operation: Some(pending)),
+        "action_store_uncertain",
+      )
+    _ -> action_hold(state, "action_store_refused")
+  }
+}
+
+fn svc_persist_cancellation(
+  state: ServiceState,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+  p: cancellation.Prepared,
+) -> Result(store.CancellationReservation, store.StoreError) {
+  case state.store_worker {
+    Some(worker) ->
+      process.call(worker, 5000, fn(reply_to) {
+        StorePersistCancellation(
+          state.expected_generation,
+          inbox,
+          version,
+          sha,
+          state.config.worker_id,
+          state.config.service_epoch,
+          p,
+          reply_to,
+        )
+      })
+    None ->
+      store.persist_cancellation(
+        state.config.storage_config,
+        state.expected_generation,
+        inbox,
+        version,
+        sha,
+        state.config.worker_id,
+        state.config.service_epoch,
+        p,
+      )
+  }
+}
+
+fn svc_commit_cancellation(
+  state: ServiceState,
+  res: store.CancellationReservation,
+  raw: String,
+  now: Int,
+) -> Result(store.CommitResultResult, store.StoreError) {
+  case state.store_worker {
+    Some(worker) ->
+      process.call(worker, 5000, fn(reply_to) {
+        StoreCommitCancellation(res, raw, now, reply_to)
+      })
+    None -> store.commit_cancellation_lookup(res, raw, now)
   }
 }
