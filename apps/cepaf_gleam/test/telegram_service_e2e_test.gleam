@@ -430,9 +430,10 @@ fn start_test_runner(
 
   let assert Ok(True) = lifecycle.start_test_slice(slice_name)
   let assert Ok(True) =
-    lifecycle.run_test_unit(
+    lifecycle.run_test_unit_bounded(
       slice_name,
       unit_name,
+      45, // Covers bounded multi-request fixture work; production is unchanged.
       lifecycle.canonical_beam_exe,
       [
         "+S", "1:1", "+A", "1", "-noshell", "-eval",
