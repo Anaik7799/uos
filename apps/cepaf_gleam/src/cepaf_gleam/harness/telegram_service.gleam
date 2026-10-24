@@ -19,6 +19,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_matrix_reader as matrix_reader
 import cepaf_gleam/harness/telegram_search_report as search_report
 import cepaf_gleam/harness/telegram_knowledge_reader as knowledge_reader
 import cepaf_gleam/harness/telegram_coordination_reader as coordination_reader
@@ -2280,6 +2281,7 @@ fn execute_guarded_dispatch(
                       ),
                     )) -> {
                       let payload = case dir {
+                        guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
                         guard.PreservedDirective("/search",[query]) -> search_reply(state,query)
                         guard.PreservedDirective("/knowledge",[view,query]) -> knowledge_reply(state,view,query)
@@ -5379,4 +5381,11 @@ fn search_reply(state: ServiceState, query: String) -> String {
   let documents=current_read(state,5000,fn(){knowledge_reader.observe("all",query)})
     |> result.try(fn(r){r})
   search_report.combine(tasks,documents)
+}
+
+fn matrix_reply(state: ServiceState) -> String {
+  case current_read(state,5000,matrix_reader.observe) {
+    Ok(Ok(raw)) -> raw
+    _ -> json.object([#("status",json.string("unavailable")),#("error",json.string("Matrix version observation unavailable.")),#("runtime_admission",json.string("NOT_GRANTED"))]) |> json.to_string
+  }
 }

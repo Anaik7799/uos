@@ -12,6 +12,7 @@ import gleam/string
 pub type Selection {
   Help
   Doctor
+  Matrix
   SystemHealth
   KernelVersion
   Peers
@@ -24,6 +25,7 @@ pub type Selection {
 
 pub fn help() -> String {
   "Telegram tools (/action is an alias for /tool):\n"
+  <> "/tool query_matrix_versions {} — observed Matrix client API versions.\n"
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
   <> "/tool query_system_health {} — bounded service reachability and local Telegram state.\n"
   <> "/tool query_zigvm_version {} — installed pinned executable version only.\n"
@@ -95,6 +97,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
   let #(name, tail) = split_name(string.to_graphemes(invocation.args), [])
   case name {
     "" | "help" -> empty_arguments(tail, Help)
+    "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
     "query_peers" -> empty_arguments(tail, Peers)

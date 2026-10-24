@@ -1,7 +1,7 @@
 %% Transport binding only: bind the isolated reader to the current build bytes.
 %% No database access or agent policy here. The native guardian owns/reaps child.
 -module(telegram_coordination_binding).
--export([launch_eval/2,launch_knowledge_eval/2]).
+-export([launch_eval/2,launch_knowledge_eval/2,launch_matrix_eval/0]).
 
 launch_eval(Db, View) ->
   try
@@ -18,6 +18,8 @@ launch_knowledge_eval(View, Query) ->
     nomatch=binary:match(Query,<<0>>),
     bound_eval('cepaf_gleam@harness@telegram_knowledge_report',[View,Query])
   catch _:_ -> {error,<<"knowledge_binding_failed">>} end.
+launch_matrix_eval() -> bound_eval('cepaf_gleam@harness@telegram_matrix_report',[]).
+
 bound_eval(Entry, Args) ->
   try
     Paths=[filename:absname(P)||P<-code:get_path()],

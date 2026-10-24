@@ -127,6 +127,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         let args = invocation.args
         case name {
           "/doctor" -> read_directive("query_doctor", args)
+          "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" -> read_directive("query_system_health", args)
           "/search" -> case knowledge.validate_query(args) {
             Ok(query) -> PreservedDirective("/search",[query])
@@ -154,6 +155,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
             case tool_command.parse(args) {
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
+              Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
               Ok(tool_command.Search(query)) -> PreservedDirective("/search",[query])
               Ok(tool_command.Knowledge(view,query)) -> PreservedDirective("/knowledge",[view,query])

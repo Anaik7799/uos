@@ -33,6 +33,7 @@ launch_eval(ConfigPath) ->
             telegram_knowledge_files,
             'cepaf_gleam@harness@telegram_knowledge_report',
       'cepaf_gleam@harness@telegram_search_report',
+      telegram_matrix_http, 'cepaf_gleam@harness@telegram_matrix_report', 'cepaf_gleam@harness@telegram_matrix_reader',
             'cepaf_gleam@harness@telegram_knowledge_reader',
             telegram_status_probe, telegram_coordination_binding,
             'cepaf_gleam@harness@telegram_coordination_report',

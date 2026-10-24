@@ -2493,3 +2493,12 @@ pub fn e2e_search_tool_and_scope_refusal_test() {
   exercise_automatic_command_dispatch("/tool query_search {\"query\":\"definitely-no-match-1749\"}","\"matched_total\":0",
     "/action query_search {\"query\":\"uos\",\"plan\":\"foreign\"}","denied_mutation")
 }
+
+pub fn e2e_matrix_versions_and_tool_test() {
+  exercise_automatic_command_dispatch("/sutra","matrix_client_versions_endpoint",
+    "/tool query_matrix_versions {}","supported_versions")
+}
+pub fn e2e_matrix_scope_refused_test() {
+  exercise_automatic_command_dispatch("/sutra foreign","denied_mutation",
+    "/action query_matrix_versions {\"host\":\"evil\"}","denied_mutation")
+}
