@@ -185,3 +185,10 @@ pub fn native_agy_prompt_is_bound_to_persisted_input_test() {
   reserve(config,gen2,rec2,10) |> should.be_error
   budget(config).reserved_requests |> should.equal(1)
 }
+
+pub fn with_reserved_for_model_test(run: fn(store.ConversationReservation) -> a) -> a {
+  use config <- with_store()
+  let #(gen,rec) = processing(config,10,100,200,"Hello")
+  let assert Ok(r) = reserve(config,gen,rec,10)
+  run(r)
+}

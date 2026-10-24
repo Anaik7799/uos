@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/telegram_conversation as conv
 import telegram_test_runner_binding as test_binding
 //// End-to-End Integration & Supervised OTP Test Suite for Telegram Service
 ////
@@ -244,7 +245,8 @@ fn send_runner_cmd(ipc_dir: String, cmd_json: String) -> String {
   let _ = simplifile.delete(resp_path)
   let assert Ok(_) = simplifile.write(cmd_tmp, cmd_json)
   let assert Ok(_) = simplifile.rename(cmd_tmp, cmd_path)
-  wait_for_file(resp_path, 160)
+  // Includes bounded model execution plus native store and delivery.
+  wait_for_file(resp_path, 520)
 }
 
 fn start_runner_actor(
@@ -261,6 +263,26 @@ fn start_runner_actor(
   reg_path: Option(String),
   receipt: Option(lifecycle.UnitCleanupReceipt),
   supervised: Bool,
+) -> Nil {
+  start_runner_actor_with_conversation(ipc_dir,db_path,base_url,token,bot_id,worker_id,task_id,epoch,sa_plan_db,coord_db,reg_path,receipt,supervised,"disabled",10)
+}
+
+fn start_runner_actor_with_conversation(
+  ipc_dir: String,
+  db_path: String,
+  base_url: String,
+  token: String,
+  bot_id: Int,
+  worker_id: String,
+  task_id: String,
+  epoch: Int,
+  sa_plan_db: String,
+  coord_db: String,
+  reg_path: Option(String),
+  receipt: Option(lifecycle.UnitCleanupReceipt),
+  supervised: Bool,
+  conversation_mode: String,
+  daily_limit: Int,
 ) -> Nil {
   let receipt_field = case receipt {
     None -> "\"cleanup_receipt_path\": null"
@@ -316,6 +338,7 @@ fn start_runner_actor(
     <> ", \"supervised\": "
     <> sup_str
     <> "}"
+  let cmd = "{\"conversation_mode\":\"" <> conversation_mode <> "\",\"conversation_daily_limit\":" <> int.to_string(daily_limit) <> "," <> string.drop_start(cmd,1)
   let resp = send_runner_cmd(ipc_dir, cmd)
   case string.contains(resp, "\"status\":\"ok\"") {
     True -> Nil
@@ -966,6 +989,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       guardian_sha256: service.canonical_guardian_sha256,
       authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db),
       control_registration_path: None,
+      conversation: service.ConversationDisabled,
     )
 
   // 1. Commit an initial record to store
@@ -1159,6 +1183,10 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
 }
 
 fn exercise_automatic_command_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String) {
+  exercise_conversation_dispatch(first_command,first_expected,second_command,second_expected,"disabled",10)
+}
+
+fn exercise_conversation_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String, mode: String, daily_limit: Int) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
 
@@ -1175,7 +1203,7 @@ fn exercise_automatic_command_dispatch(first_command: String, first_expected: St
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
 
   // Start supervised actor in runner inside transient unit
-  start_runner_actor(
+  start_runner_actor_with_conversation(
     ipc_dir,
     db_path,
     base_url,
@@ -1189,6 +1217,8 @@ fn exercise_automatic_command_dispatch(first_command: String, first_expected: St
     None,
     None,
     True,
+    mode,
+    daily_limit,
   )
 
   runner_set_authority(
@@ -1206,11 +1236,34 @@ fn exercise_automatic_command_dispatch(first_command: String, first_expected: St
 
   // 1. PollCycle polls update and stores input_key + inbox row
   let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_020_000)
+  echo #(mode, poll_res)
   string.contains(poll_res, "\"type\":\"poll_committed\"") |> should.equal(True)
   string.contains(poll_res, "\"new_watermark\":8002") |> should.equal(True)
 
   // 2. AutomaticDispatchTick autonomously claims, generates observation, commits result & sending, and delivers via HTTP
   let dispatch_res = runner_automatic_dispatch_tick(ipc_dir, 1_700_000_021_000)
+  echo #(mode, dispatch_res)
+
+  case mode == "expire" {
+    True -> {
+      string.contains(dispatch_res,"\"status\":\"error\"") |> should.be_true
+      let assert Ok(day) = conv.utc_day(service.ffi_system_now_utc_us() / 1000)
+      let assert Ok(budget_key) = conv.budget_key(bot_id,day)
+      let assert Ok(context_key) = conv.context_key(conv.Scope(bot_id,100,200))
+      let request = ledger.make_request_id(bot_id,8001)
+      let assert Ok(#(_, [b,c,r])) = store.read_keys(storage_config,[budget_key,context_key,codec.result_key(request)])
+      let assert Ok(raw) = codec.decode_row_value(b)
+      let assert Ok(budget) = conv.decode_budget(raw,bot_id,day)
+      budget.reserved_requests |> should.equal(1)
+      c.exists |> should.be_false
+      r.exists |> should.be_false
+      simplifile.is_file(db_path <> ".model-post") |> should.equal(Ok(False))
+      runner_stop(ipc_dir)
+      fixture_stop(fixture_pid)
+      let _ = lifecycle.stop_and_verify_test_unit(slice_name,unit_name,db_path,recovery_worker_sha,recovery_guardian_sha)
+      let _ = lifecycle.stop_test_slice(slice_name)
+    }
+    False -> {
   string.contains(dispatch_res, "\"type\":\"dispatch_cycle_result\"") |> should.equal(True)
   string.contains(dispatch_res, "\"processed_count\":1") |> should.equal(True)
   string.contains(dispatch_res, "\"delivered_count\":1") |> should.equal(True)
@@ -1235,10 +1288,12 @@ fn exercise_automatic_command_dispatch(first_command: String, first_expected: St
   fixture_set_updates(fixture_pid, [string.replace(saplan_update, "/saplan", second_command)])
 
   let poll_res2 = runner_poll_cycle(ipc_dir, 1_700_000_022_000)
+  echo #(mode, poll_res2)
   string.contains(poll_res2, "\"type\":\"poll_committed\"") |> should.equal(True)
   string.contains(poll_res2, "\"new_watermark\":8003") |> should.equal(True)
 
   let dispatch_res2 = runner_automatic_dispatch_tick(ipc_dir, 1_700_000_023_000)
+  echo #(mode, dispatch_res2)
   string.contains(dispatch_res2, "\"type\":\"dispatch_cycle_result\"") |> should.equal(True)
   string.contains(dispatch_res2, "\"processed_count\":1") |> should.equal(True)
   string.contains(dispatch_res2, "\"delivered_count\":1") |> should.equal(True)
@@ -1255,6 +1310,30 @@ fn exercise_automatic_command_dispatch(first_command: String, first_expected: St
   string.contains(delivered_chunk2.payload, second_expected)
   |> should.equal(True)
 
+
+  case mode {
+    "disabled" -> Nil
+    _ -> {
+      let assert Ok(day) = conv.utc_day(service.ffi_system_now_utc_us() / 1000)
+      let assert Ok(context_key) = conv.context_key(conv.Scope(bot_id,100,200))
+      let assert Ok(budget_key) = conv.budget_key(bot_id,day)
+      let assert Ok(#(_, [context_row,budget_row])) = store.read_keys(storage_config,[context_key,budget_key])
+      let assert Ok(budget_raw) = codec.decode_row_value(budget_row)
+      let assert Ok(budget) = conv.decode_budget(budget_raw,bot_id,day)
+      budget.reserved_requests |> should.equal(case mode { "empty" -> 1 _ -> int.min(2,daily_limit) })
+      case mode {
+        "fail" -> context_row.exists |> should.be_false
+        _ -> {
+          let assert Ok(context_raw) = codec.decode_row_value(context_row)
+          let assert Ok(context) = conv.decode_context(context_raw,conv.Scope(bot_id,100,200))
+          list.length(context.turns) |> should.equal(case mode { "empty" -> 1 _ -> int.min(2,daily_limit) })
+          let assert Ok(first) = list.first(context.turns)
+          first.prompt |> should.equal("Hello")
+          first.reply |> should.equal("Model reply")
+        }
+      }
+    }
+  }
   // Clean shutdown
   runner_stop(ipc_dir)
   fixture_stop(fixture_pid)
@@ -1267,6 +1346,8 @@ fn exercise_automatic_command_dispatch(first_command: String, first_expected: St
       recovery_guardian_sha,
     )
   let _ = lifecycle.stop_test_slice(slice_name)
+    }
+  }
 }
 
 pub fn e2e_automatic_dispatch_cycle_actor_test() {
@@ -2307,4 +2388,24 @@ pub fn e2e_task_observation_changes_and_recovers_test() {
   let assert Ok(recovered) = task_command.observe_task(req, "DETAIL_TASK")
   recovered |> should.equal(second)
   task_command.observe_task(req, "ABSENT") |> should.equal(Error("task_not_found"))
+}
+
+pub fn e2e_conversation_history_and_agy_dispatch_test() {
+  exercise_conversation_dispatch("Hello","Model reply","/agy follow up","Model reply","success",10)
+}
+
+pub fn e2e_conversation_daily_limit_test() {
+  exercise_conversation_dispatch("Hello","Model reply","/agy follow up","Daily conversation request limit reached","success",1)
+}
+
+pub fn e2e_conversation_failure_has_no_memory_test() {
+  exercise_conversation_dispatch("Hello","Assistant unavailable","/agy follow up","Assistant unavailable","fail",10)
+}
+
+pub fn e2e_conversation_authority_loss_blocks_model_post_test() {
+  exercise_conversation_dispatch("Hello","","","","expire",10)
+}
+
+pub fn e2e_conversation_empty_agy_does_not_poison_writer_test() {
+  exercise_conversation_dispatch("/agy","Use /agy","Hello","Model reply","empty",10)
 }

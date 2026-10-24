@@ -10,6 +10,10 @@
 //// 4. Quiescence gate: fail-closed in-memory ServiceWriterHold if unquiesced crash detected.
 //// 5. Delivery pipeline: commit_sending -> bounded http POST -> verify 200 OK -> commit_outcome.
 
+import cepaf_gleam/harness/clock as checked_clock
+import cepaf_gleam/harness/telegram_conversation as conversation
+import cepaf_gleam/harness/telegram_conversation_model as conversation_model
+import uos_swarm/openrouter_worker as model
 import cepaf_gleam/harness/doctor_projection
 import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
@@ -165,6 +169,12 @@ fn do_chunk_graphemes(
   }
 }
 
+pub type ConversationConfiguration {
+  ConversationDisabled
+  FreeConversation(daily_requests: Int, timeout_ms: Int)
+  IsolatedConversation(daily_requests: Int, timeout_ms: Int, io: model.Io)
+}
+
 pub type ServiceConfiguration {
   ServiceConfiguration(
     storage_config: transport.LocalConfiguration,
@@ -187,6 +197,7 @@ pub type ServiceConfiguration {
     guardian_sha256: String,
     authority_paths: AuthorityPaths,
     control_registration_path: Option(String),
+    conversation: ConversationConfiguration,
   )
 }
 
@@ -224,6 +235,7 @@ pub fn operational_service_configuration(
     guardian_sha256: canonical_guardian_sha256,
     authority_paths: CanonicalProductionPaths,
     control_registration_path: None,
+    conversation: ConversationDisabled,
   )
 }
 
@@ -256,6 +268,7 @@ pub fn development_service_configuration(
     guardian_sha256: canonical_guardian_sha256,
     authority_paths: CanonicalProductionPaths,
     control_registration_path: None,
+    conversation: ConversationDisabled,
   )
 }
 
@@ -2230,6 +2243,12 @@ fn execute_guarded_dispatch(
           let proc_ver = inbox_ver + 1
           let proc_sha = files.digest(codec.encode_inbox_record(processing_rec))
 
+          case conversation_requested(state, inbox_rec.request_id) {
+            True -> execute_conversation_dispatch(
+              ServiceState(..state, expected_generation: gen1),
+              processing_rec, proc_ver, proc_sha,
+            )
+            False -> {
           let #(response_payload, callback_query_id) = case
             svc_read_keys(state, [
               codec.input_key(inbox_rec.request_id),
@@ -2434,6 +2453,8 @@ fn execute_guarded_dispatch(
                   }
                 }
               }
+            }
+          }
             }
           }
         }
@@ -3179,6 +3200,15 @@ pub fn authority_worker_revoke_lease(
 }
 
 pub type StoreWorkerMessage {
+  StoreReserveConversation(
+    expected_gen: Int, record: ledger.InboxRecord, version: Int, sha: String,
+    worker: String, epoch: Int, day: Int, daily_limit: Int,
+    reply_to: Subject(Result(store.ConversationReservation, store.StoreError)),
+  )
+  StoreCommitConversation(
+    reservation: store.ConversationReservation, payloads: List(String), reply: Option(String),
+    reply_to: Subject(Result(store.CommitResultResult, store.StoreError)),
+  )
   StorePing(reply_to: Subject(String))
   StoreReadWatermark(
     reply_to: Subject(
@@ -3283,6 +3313,16 @@ fn handle_store_worker_message(
   msg: StoreWorkerMessage,
 ) -> actor.Next(StoreWorkerState, StoreWorkerMessage) {
   case msg {
+    StoreReserveConversation(gen, record, version, sha, worker, epoch, day, limit, reply_to) -> {
+      let res = store.reserve_conversation(state.config, gen, record, version, sha, worker, epoch, day, limit)
+      process.send(reply_to, res)
+      actor.continue(state)
+    }
+    StoreCommitConversation(reservation, payloads, reply, reply_to) -> {
+      let res = store.commit_conversation_result(reservation, payloads, reply)
+      process.send(reply_to, res)
+      actor.continue(state)
+    }
     StorePing(reply_to) -> {
       process.send(reply_to, "pong")
       actor.continue(state)
@@ -5025,4 +5065,160 @@ fn command_observer_request(config: ServiceConfiguration) -> obs_policy.ObserveR
     deadline_ms: 5000,
     max_bytes: 262_144,
   )
+}
+
+fn conversation_requested(state: ServiceState, request_id: String) -> Bool {
+  case state.config.conversation {
+    ConversationDisabled -> False
+    _ -> case svc_read_keys(state, [codec.input_key(request_id)]) {
+      Ok(#(_, [row])) -> case codec.decode_row_value(row) |> result.try(codec.decode_input_verdict) {
+        Ok(#(_, _, _, guard.AcceptedEnvelope(
+          directive: guard.PreservedDirective(name, _),
+          callback_query_id: None, ..
+        ))) -> name == "conversational" || name == "/agy"
+        _ -> False
+      }
+      _ -> False
+    }
+  }
+}
+
+fn conversation_settings(config: ServiceConfiguration) -> Result(#(Int, Int, model.Io), String) {
+  use #(limit, timeout, io) <- result.try(case config.conversation {
+    ConversationDisabled -> Error("conversation_disabled")
+    FreeConversation(limit, timeout) -> Ok(#(limit, timeout, conversation_model.live_io()))
+    IsolatedConversation(limit, timeout, io) -> case config.authority_paths {
+      IsolatedTestPaths(_, _) -> Ok(#(limit, timeout, io))
+      CanonicalProductionPaths -> Error("test_model_io_refused_in_production")
+    }
+  })
+  case limit >= 1 && limit <= 1000 && timeout >= 100 && timeout <= 15_000 {
+    True -> Ok(#(limit, timeout, io))
+    False -> Error("invalid_conversation_limits")
+  }
+}
+
+fn conversation_authorize(state: ServiceState) -> Result(Int, String) {
+  use witness <- result.try(verify_authority(state, ffi_system_now_utc_us()))
+  let task_remaining = { witness.lease_until_ns - ffi_system_now_ns() } / 1_000_000
+  let remaining = case state.authority {
+    Some(lease) -> int.min(task_remaining, { lease.valid_until_us - ffi_system_now_utc_us() } / 1000)
+    None -> 0
+  }
+  case remaining > 0 {
+    True -> Ok(remaining)
+    False -> Error("conversation_authority_expired")
+  }
+}
+
+fn svc_reserve_conversation(
+  state: ServiceState, record: ledger.InboxRecord, version: Int,
+  sha: String, day: Int, limit: Int,
+) -> Result(store.ConversationReservation, store.StoreError) {
+  case state.store_worker {
+    Some(worker) -> process.call(worker, 5000, fn(reply_to) {
+      StoreReserveConversation(state.expected_generation, record, version, sha,
+        state.config.worker_id, state.config.service_epoch, day, limit, reply_to)
+    })
+    None -> store.reserve_conversation(state.config.storage_config,
+      state.expected_generation, record, version, sha,
+      state.config.worker_id, state.config.service_epoch, day, limit)
+  }
+}
+
+fn svc_commit_conversation(
+  state: ServiceState, reservation: store.ConversationReservation,
+  payloads: List(String), reply: Option(String),
+) -> Result(store.CommitResultResult, store.StoreError) {
+  case state.store_worker {
+    Some(worker) -> process.call(worker, 5000, fn(reply_to) {
+      StoreCommitConversation(reservation, payloads, reply, reply_to)
+    })
+    None -> store.commit_conversation_result(reservation, payloads, reply)
+  }
+}
+
+fn conversation_store_failure(state: ServiceState, err: store.StoreError) -> ServiceError {
+  case err {
+    store.StoreUncertainApply(pending) -> ServiceError(
+      ServiceState(..state, pending_operation: Some(pending),
+        writer_state: lifecycle.ServiceWriterHold("store_uncertain_apply_pending")),
+      "store_uncertain_apply_pending")
+    _ -> ServiceError(
+      ServiceState(..state, writer_state: lifecycle.ServiceWriterHold("conversation_store_failed")),
+      "conversation_store_failed")
+  }
+}
+
+fn finish_conversation(
+  state: ServiceState, original: ledger.InboxRecord, processing_version: Int,
+  committed: store.CommitResultResult,
+) -> Result(#(ServiceState, ServiceStepResult), ServiceError) {
+  let ready = committed.inbox_record
+  case committed.chunks {
+    [] -> Error(ServiceError(state, "conversation_result_has_no_chunks"))
+    chunks -> drain_chunks(state, original, ready, processing_version + 1,
+      files.digest(codec.encode_inbox_record(ready)), committed.receipt.generation,
+      chunks, [], None)
+  }
+}
+
+fn execute_conversation_dispatch(
+  state: ServiceState, record: ledger.InboxRecord, version: Int, sha: String,
+) -> Result(#(ServiceState, ServiceStepResult), ServiceError) {
+  use #(limit, timeout, io) <- result.try(conversation_settings(state.config)
+    |> result.map_error(fn(reason) { ServiceError(state, reason) }))
+  use observed <- result.try(checked_clock.observe()
+    |> result.map_error(fn(_) { ServiceError(state, "conversation_clock_refused") }))
+  use day <- result.try(conversation.utc_day(observed.sample.observed.utc_us / 1000)
+    |> result.map_error(fn(reason) { ServiceError(state, reason) }))
+  use _ <- result.try(conversation_authorize(state)
+    |> result.map_error(fn(reason) { ServiceError(state, reason) }))
+  case svc_reserve_conversation(state, record, version, sha, day, limit) {
+
+    Error(store.StoreCapacityExceeded("daily_request_budget_exhausted")) ->
+      reply_without_reservation(state, record, version, sha,
+        "Daily conversation request limit reached. Please try again tomorrow.")
+    Error(store.StoreInvariantError("not_a_conversation_prompt"))
+    | Error(store.StoreInvariantError("invalid_conversation_prompt")) ->
+      reply_without_reservation(state, record, version, sha,
+        "Use /agy <message> or send a short text message.")
+    Error(err) -> Error(conversation_store_failure(state, err))
+    Ok(reservation) -> {
+      let reserved_state = ServiceState(..state,
+        expected_generation: store.conversation_generation(reservation))
+      let outcome = conversation_model.run(reservation, io,
+        fn() { conversation_authorize(reserved_state) }, timeout)
+      use _ <- result.try(conversation_authorize(reserved_state)
+        |> result.map_error(fn(reason) { ServiceError(reserved_state, reason) }))
+      let #(payloads, successful) = case outcome {
+        Ok(execution) -> {
+          let parts = chunk_payload_utf8(execution.reply)
+          case string.join(parts, "") == execution.reply
+            && list.all(parts, fn(p) { string.byte_size(p) <= max_chunk_bytes }) {
+            True -> #(parts, Some(execution.reply))
+            False -> #(["Assistant reply could not be delivered safely. Please try a shorter request."], None)
+          }
+        }
+        Error(_) -> #(["Assistant unavailable for this request. Please try again later."], None)
+      }
+      use committed <- result.try(svc_commit_conversation(reserved_state, reservation, payloads, successful)
+        |> result.map_error(fn(err) { conversation_store_failure(reserved_state, err) }))
+      finish_conversation(reserved_state, record, version, committed)
+    }
+  }
+}
+
+fn reply_without_reservation(
+  state: ServiceState, record: ledger.InboxRecord, version: Int,
+  sha: String, message: String,
+) -> Result(#(ServiceState, ServiceStepResult), ServiceError) {
+  use _ <- result.try(conversation_authorize(state)
+    |> result.map_error(fn(reason) { ServiceError(state, reason) }))
+  use committed <- result.try(svc_commit_result(state, state.config.bot_id,
+    "op-result-" <> record.request_id, state.expected_generation,
+    record, version, sha, [message],
+    state.config.worker_id, state.config.service_epoch)
+    |> result.map_error(fn(err) { conversation_store_failure(state, err) }))
+  finish_conversation(state, record, version, committed)
 }

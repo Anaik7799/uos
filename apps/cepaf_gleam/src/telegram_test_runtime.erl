@@ -15,7 +15,7 @@ launch_eval(ConfigPath) ->
         true = is_list(RunnerFile),
         Dir = filename:dirname(filename:absname(RunnerFile)),
         Modules = [
-            telegram_service_worker_runner, telegram_http_ffi,
+            telegram_service_worker_runner, telegram_conversation_test_io, telegram_http_ffi,
             telegram_store_transport_ffi, telegram_lifecycle_ffi,
             sa_plan_observer_ffi,
             'cepaf_gleam@harness@telegram_service',
@@ -24,6 +24,8 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_loop',
             'cepaf_gleam@harness@telegram_runtime',
             'cepaf_gleam@harness@telegram_commands',
+            'cepaf_gleam@harness@telegram_conversation',
+            'cepaf_gleam@harness@telegram_conversation_model',
             'cepaf_gleam@harness@telegram_task_command',
             'cepaf_gleam@harness@telegram_ingress_guard',
             'cepaf_gleam@harness@telegram_store_codec',

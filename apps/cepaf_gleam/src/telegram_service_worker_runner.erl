@@ -317,7 +317,7 @@ handle_actor_command(#{<<"action">> := <<"poll_cycle">>} = Cmd, Subj, IpcDir, Sv
 
 handle_actor_command(#{<<"action">> := <<"automatic_dispatch_tick">>} = Cmd, Subj, IpcDir, SvcConfig) ->
     NowUs = maps:get(<<"now_us">>, Cmd),
-    TickRes = gleam@erlang@process:call(Subj, 3000, fun(Reply) -> {automatic_dispatch_tick, NowUs, Reply} end),
+    TickRes = gleam@erlang@process:call(Subj, 25_000, fun(Reply) -> {automatic_dispatch_tick, NowUs, Reply} end),
     case TickRes of
         {ok, StepResult} ->
             write_json_file(filename:join([IpcDir, "resp.json"]), #{
@@ -498,7 +498,8 @@ build_service_configuration(Config) ->
     B5 = setelement(18, B4, GuardExe),
     B6 = setelement(19, B5, GuardSha),
     B7 = setelement(20, B6, AuthPaths),
-    setelement(21, B7, CtrlPathOpt).
+    B8 = setelement(21, B7, CtrlPathOpt),
+    telegram_conversation_test_io:configure(B8, maps:get(<<"conversation_mode">>, Config, <<"disabled">>), maps:get(<<"conversation_daily_limit">>, Config, 10), DbPath).
 
 build_receipt_opt(Config) ->
     case maps:get(<<"cleanup_receipt">>, Config, null) of

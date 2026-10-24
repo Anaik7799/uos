@@ -556,6 +556,7 @@ pub fn service_dual_authority_attempt2_epoch7_positive_and_rejection_test() {
       guardian_sha256: service.canonical_guardian_sha256,
       authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db),
       control_registration_path: None,
+      conversation: service.ConversationDisabled,
     )
   let valid_lease =
     service.AuthorityLease(
@@ -1356,6 +1357,7 @@ pub fn authority_worker_independent_test() {
       guardian_sha256: service.canonical_guardian_sha256,
       authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db),
       control_registration_path: None,
+      conversation: service.ConversationDisabled,
     )
   let assert Ok(started) = service.start_authority_worker(config)
   let worker = started.data
