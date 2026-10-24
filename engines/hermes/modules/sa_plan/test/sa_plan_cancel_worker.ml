@@ -1,6 +1,5 @@
 module Frame = Sa_plan.Cancel_frame
 module Store = Sa_plan.Store
-module Protocol = Sa_plan.Cancel_protocol
 
 let rejected_error = "cancel_request_rejected"
 
@@ -58,7 +57,7 @@ let () =
                       Fun.protect
                         ~finally:(fun () -> Store.close store)
                         (fun () ->
-                          Protocol.execute_observed store command
+                          Frame.execute_observed store command
                             ~observe_now:(fun () ->
                               Core.Time_ns.now ()
                               |> Core.Time_ns.to_int_ns_since_epoch

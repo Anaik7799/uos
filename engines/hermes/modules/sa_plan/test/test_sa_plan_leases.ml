@@ -1203,3 +1203,145 @@ let () =
          && String.equal out "Cancellation recorded: the job lease was revoked. Worker termination is not confirmed."
          && Poly.equal (Cancellation.job store).state Store.Job_cancelled)));
   Printf.printf "durable cancellation restart: %d checks passed\n%!" !tests
+
+module Bridge_protocol = Sa_plan.Bridge_protocol
+let bridge_request (mapping : Store.bridge_mapping) expiry = `Assoc [
+  "schema",`String "uos.sa-plan.bridge-bind-request.v1";
+  "mapping_id",`String mapping.id; "plan_id",`String "fence";
+  "task_id",`String "controller"; "owner",`String "owner";
+  "task_attempt",`Int 1; "lease_id",`String "runtime-bridge";
+  "expires_at_ns",`Intlit (Int64.to_string expiry)]
+let bridge_envelope operation request = Yojson.Safe.to_string (`Assoc [
+  "schema",`String "uos.telegram.cancel-transport.v1";
+  "operation",`String operation; "request",request])
+let with_bridge_protocol run = with_fixture (fun path store ->
+  setup store; create store "controller";
+  let mapping=ok (Store.ensure_bridge_mapping store {mapping_request with
+    ooda_slice_id="bridge-protocol";idempotency_key="bridge-protocol";
+    sa_plan_id=Some "fence";sa_task_id=Some "controller"}) in
+  ignore (ok (Store.claim_task store ~plan_id:"fence" ~task_id:"controller"
+    ~worker:"owner" ~now_ns:100L ~lease_ns:1_000_000_000_000L) : Store.claim);
+  run path store mapping)
+let () = with_bridge_protocol (fun _path store mapping ->
+  let request=bridge_request mapping 500L in
+  let raw=Yojson.Safe.to_string request in
+  let fields=match request with `Assoc xs->xs|_->assert false in
+  List.iter ["01";"1e0";"+1";"1.0"] ~f:(fun number ->
+    let malformed=String.substr_replace_all raw ~pattern:"\"task_attempt\":1" ~with_:("\"task_attempt\":" ^ number) in
+    check "BRIDGE-PROTOCOL-NONCANONICAL-INTEGER"
+      (Result.is_error (Bridge_protocol.decode Bind malformed));
+    let frame=bridge_envelope "bind-controller-bridge" request in
+    let malformed=String.substr_replace_all frame ~pattern:"\"task_attempt\":1" ~with_:("\"task_attempt\":" ^ number) in
+    check "BRIDGE-FRAME-NONCANONICAL-INTEGER"
+      (Result.is_error (Cancel_frame.decode malformed)));
+
+  let reject value=Result.is_error (Bridge_protocol.decode Bind (Yojson.Safe.to_string value)) in
+  List.iter fields ~f:(fun (name,value)->
+    check "BRIDGE-PROTOCOL-DUPLICATE-REFUSED" (reject (`Assoc ((name,value)::fields)));
+    check "BRIDGE-PROTOCOL-MISSING-REFUSED"
+      (reject (`Assoc (List.filter fields ~f:(fun (key,_)->not (String.equal key name))))));
+  List.iter [
+    "schema",`String "future"; "owner",`String "owner\nprivate";
+    "owner",`String "../owner"; "mapping_id",`String "";
+    "lease_id",`String (String.make 241 'x');
+    "task_attempt",`Float 1.; "task_attempt",`String "1";
+    "task_attempt",`Int 0; "task_attempt",`Intlit "2147483648";
+    "expires_at_ns",`Int 0; "expires_at_ns",`Intlit "9223372036854775808";
+    "expires_at_ns",`String "500"; "extra",`Bool true
+  ] ~f:(fun (key,value)->check "BRIDGE-PROTOCOL-STRICT-FIELDS"
+    (reject (`Assoc (List.Assoc.add fields ~equal:String.equal key value))));
+  List.iter ["";"[]";"{";"\255";String.make 4097 'x'] ~f:(fun invalid->
+    check "BRIDGE-PROTOCOL-BOUNDS" (Result.is_error (Bridge_protocol.decode Bind invalid)));
+  let command=ok (Bridge_protocol.decode Bind raw) in
+  let lookup=ok (Bridge_protocol.decode Lookup raw) in
+  let before=view store "controller" in
+  let absent=ok (Bridge_protocol.execute store lookup ~now_ns:101L) in
+  check "BRIDGE-PROTOCOL-ABSENT-IS-READONLY"
+    (Poly.equal (Yojson.Safe.Util.member "found" absent) (`Bool false)
+     && Poly.equal before (view store "controller")
+     && Option.is_none (ok (Store.find_bridge_lease store ~mapping_id:mapping.id)));
+  List.iter ["plan_id",`String "wrong";"task_id",`String "wrong";
+    "owner",`String "wrong";"task_attempt",`Int 2;
+    "expires_at_ns",`Intlit "300000000102"] ~f:(fun (key,value)->
+      let invalid=ok (Bridge_protocol.decode Bind (Yojson.Safe.to_string
+        (`Assoc (List.Assoc.add fields ~equal:String.equal key value)))) in
+      check "BRIDGE-PROTOCOL-CONTEXT-REFUSED"
+        (Result.is_error (Bridge_protocol.execute store invalid ~now_ns:101L)
+         && Option.is_none (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))));
+  check "BRIDGE-PROTOCOL-CLOCK-FAILURE"
+    (Result.is_error (Bridge_protocol.execute_observed store command
+      ~observe_now:(fun ()->failwith "private clock detail"))
+     && Option.is_none (ok (Store.find_bridge_lease store ~mapping_id:mapping.id)));
+  let bound=ok (Bridge_protocol.execute_observed store command ~observe_now:(fun ()->101L)) in
+  let saved=ok (Store.find_bridge_lease store ~mapping_id:mapping.id) in
+  check "BRIDGE-PROTOCOL-BOUND-EXACT-UNCHANGED-TASK"
+    (Poly.equal (Yojson.Safe.Util.member "found" bound) (`Bool true)
+     && Poly.equal (Yojson.Safe.Util.member "historical" bound) (`Bool false)
+     && (Poly.equal (Yojson.Safe.Util.member "observed_at_ns" bound) (`Intlit "101")
+       || Poly.equal (Yojson.Safe.Util.member "observed_at_ns" bound) (`Int 101))
+     && Poly.equal before (view store "controller"));
+  check "BRIDGE-PROTOCOL-LIVE-RETRY-REJECTS"
+    (Result.is_error (Bridge_protocol.execute store command ~now_ns:102L)
+     && Poly.equal saved (ok (Store.find_bridge_lease store ~mapping_id:mapping.id)));
+  let expired=ok (Bridge_protocol.execute store lookup ~now_ns:1000L) in
+  check "BRIDGE-PROTOCOL-EXPIRED-HISTORY"
+    (Poly.equal (Yojson.Safe.Util.member "historical" expired) (`Bool true)
+     && Poly.equal saved (ok (Store.find_bridge_lease store ~mapping_id:mapping.id)));
+  List.iter ["owner",`String "wrong";"task_attempt",`Int 2;
+    "lease_id",`String "wrong";"expires_at_ns",`Int 501] ~f:(fun (key,value)->
+      let invalid=ok (Bridge_protocol.decode Lookup (Yojson.Safe.to_string
+        (`Assoc (List.Assoc.add fields ~equal:String.equal key value)))) in
+      check "BRIDGE-PROTOCOL-LOOKUP-EXACT-OR-REJECT"
+        (Result.is_error (Bridge_protocol.execute store invalid ~now_ns:1000L)));
+  check "BRIDGE-PROTOCOL-FRAME-ACCEPTS-CLOSED-OPERATION"
+    (Result.is_ok (Cancel_frame.decode (bridge_envelope "bind-controller-bridge" request))
+     && Result.is_ok (Cancel_frame.decode (bridge_envelope "controller-bridge-result" request))))
+let () = with_bridge_protocol (fun path store mapping ->
+  let peer=ok (Store.open_db path) in
+  let lock=Sqlite3.db_open path in
+  Exn.protect ~finally:(fun ()->
+    ignore (Sqlite3.exec lock "ROLLBACK" : Sqlite3.Rc.t);
+    ignore (Sqlite3.db_close lock : bool);Store.close peer)
+    ~f:(fun ()->
+      require "BRIDGE-CONTENTION-LOCK" (Poly.equal (Sqlite3.exec lock "BEGIN IMMEDIATE") Sqlite3.Rc.OK);
+      let command=ok (Bridge_protocol.decode Bind (Yojson.Safe.to_string (bridge_request mapping 500L))) in
+      let now=Atomic.make 101L and started=Atomic.make false and observed=Atomic.make false in
+      let worker=Domain.spawn (fun ()->Atomic.set started true;
+        Bridge_protocol.execute_observed peer command ~observe_now:(fun ()->
+          Atomic.set observed true;Atomic.get now)) in
+      while not (Atomic.get started) do Lifetime_unix.sleepf 0.001 done;
+      Lifetime_unix.sleepf 0.05;
+      let premature=Atomic.get observed in
+      Atomic.set now 500L;
+      require "BRIDGE-CONTENTION-UNLOCK" (Poly.equal (Sqlite3.exec lock "COMMIT") Sqlite3.Rc.OK);
+      let outcome=Domain.join worker in
+      check "BRIDGE-CLOCK-AFTER-LOCK" (not premature && Atomic.get observed);
+      check "BRIDGE-EXPIRED-IN-LOCK-WAIT-REFUSED"
+        (Result.is_error outcome && Option.is_none (ok (Store.find_bridge_lease store ~mapping_id:mapping.id)))))
+let () = with_bridge_protocol (fun path store mapping ->
+  let now=Int64.of_float (Lifetime_unix.gettimeofday () *. 1_000_000_000.) in
+  let expiry=Int64.(now+60_000_000_000L) in
+  Cancellation.exec path ("UPDATE sa_plan_task SET lease_until_ns=" ^ Int64.to_string Int64.(now+120_000_000_000L));
+  let before=view store "controller" in
+  let dir=Stdlib.Sys.getenv "UOS_CANCEL_TRANSPORT_TEST_DIR" in
+  let root=Stdlib.Sys.getenv "UOS_CANCEL_GLEAM_TEST_ROOT" in
+  let bin s="<<" ^ String.concat ~sep:"," (List.map (String.to_list s) ~f:(fun c->Int.to_string (Char.to_int c))) ^ ">>" in
+  let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
+  let guardian=Filename.concat dir "guardian.exe" and native=Filename.concat dir "worker.exe" in
+  let code=Printf.sprintf
+    "code:add_paths(filelib:wildcard(%S)),code:add_patha(%S),C='cepaf_gleam@harness@telegram_store_transport':reviewed_local_configuration(%s,%s,%s,%s,%s),R=telegram_bridge_test:run_native(C,%s,%Ld),io:put_chars(R),halt(0)."
+    (Filename.concat root "lib/*/ebin") (Filename.concat root "build/ebin")
+    (bin guardian) (bin (sha guardian)) (bin native) (bin (sha native)) (bin path)
+    (bin mapping.id) expiry in
+  let status,out,errors=run_cancellation_child
+    ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
+    ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";code] ~database:path ~input:"" in
+  check "BRIDGE-GLEAM-NATIVE-ROUNDTRIP"
+    (Poly.equal status (Lifetime_unix.WEXITED 0) && String.is_empty errors
+     && String.equal out "bridge_bound_and_reconciled");
+  check "BRIDGE-GLEAM-NATIVE-PRESERVES-CONTROLLER"
+    (Poly.equal before (view store "controller")
+     && match ok (Store.find_bridge_lease store ~mapping_id:mapping.id) with
+       | Some lease -> Int64.equal lease.expires_at_ns expiry
+          && Int64.equal lease.fencing_token 1L && Poly.equal lease.task_attempt (Some 1)
+       | None -> false))

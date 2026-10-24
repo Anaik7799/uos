@@ -5,9 +5,20 @@
     inside the existing finite guardian/service supervision. *)
 val read_frame : in_channel -> (string, string) result
 (** Closed envelope with unique schema/operation/request keys. The nested
-    request is decoded by Cancel_protocol without changing its strict schema.
+    request is decoded by Cancel_protocol or Bridge_protocol, each retaining
+    its own closed schema. Operations are cancel-once, cancellation-result,
+    bind-controller-bridge and controller-bridge-result.
     No clock, path, approval flag or executor policy is accepted in payload. *)
-val decode : string -> (Sa_plan_cancel_protocol.t, string) result
+type t
+
+val decode : string -> (t, string) result
+
+(** Executes the decoded cancellation or existing-task bridge operation using
+    the trusted native observer after acquiring the canonical transaction.
+    No clock, path, signer or policy is supplied by the wire request. *)
+val execute_observed :
+  Sa_plan_store.t -> t -> observe_now:(unit -> int64) ->
+  (Yojson.Safe.t, string) result
 (** Domain rejection is represented inside a successful transport response;
     error text never echoes caller data. This does not imply success of effect. *)
 val response : (Yojson.Safe.t, string) result -> Yojson.Safe.t

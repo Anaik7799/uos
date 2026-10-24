@@ -1,3 +1,7 @@
+type t =
+  | Cancellation of Sa_plan_cancel_protocol.t
+  | Bridge of Sa_plan_bridge_protocol.t
+
 let max_frame_bytes = 16384
 let envelope_schema = "uos.telegram.cancel-transport.v1"
 let response_schema = "uos.telegram.cancel-transport-response.v1"
@@ -28,10 +32,17 @@ let read_frame (ic : in_channel) : (string, string) result =
       | exception End_of_file -> Ok payload
   with _ -> Error invalid_transport
 
-let parse_operation = function
-  | "cancel-once" -> Some Sa_plan_cancel_protocol.Cancel
-  | "cancellation-result" -> Some Sa_plan_cancel_protocol.Lookup
-  | _ -> None
+let decode_request op raw =
+  match op with
+  | "cancel-once" -> Result.map (fun value -> Cancellation value)
+      (Sa_plan_cancel_protocol.decode Cancel raw)
+  | "cancellation-result" -> Result.map (fun value -> Cancellation value)
+      (Sa_plan_cancel_protocol.decode Lookup raw)
+  | "bind-controller-bridge" -> Result.map (fun value -> Bridge value)
+      (Sa_plan_bridge_protocol.decode Bind raw)
+  | "controller-bridge-result" -> Result.map (fun value -> Bridge value)
+      (Sa_plan_bridge_protocol.decode Lookup raw)
+  | _ -> Error invalid_transport
 
 let extract_envelope_fields fields =
   let rec loop schema op req = function
@@ -49,7 +60,7 @@ let extract_envelope_fields fields =
   in
   loop None None None fields
 
-let decode (raw : string) : (Sa_plan_cancel_protocol.t, string) result =
+let decode (raw : string) : (t, string) result =
   let len = String.length raw in
   if len < 1 || len > max_frame_bytes || not (Stdlib.String.is_valid_utf_8 raw)
   then Error invalid_transport
@@ -60,13 +71,10 @@ let decode (raw : string) : (Sa_plan_cancel_protocol.t, string) result =
         match extract_envelope_fields fields with
         | Some (`String s, `String op_str, (`Assoc _ as req_json))
           when String.equal s envelope_schema -> (
-            match parse_operation op_str with
-            | None -> Error invalid_transport
-            | Some op -> (
-                let nested_raw = Yojson.Safe.to_string req_json in
-                match Sa_plan_cancel_protocol.decode op nested_raw with
-                | Ok cmd -> Ok cmd
-                | Error _ -> Error invalid_transport))
+            let nested_raw = Yojson.Safe.to_string req_json in
+            match decode_request op_str nested_raw with
+            | Ok cmd -> Ok cmd
+            | Error _ -> Error invalid_transport)
         | _ -> Error invalid_transport)
     | _ -> Error invalid_transport
 
@@ -110,3 +118,8 @@ let write_frame (oc : out_channel) (json : Yojson.Safe.t) : (unit, string) resul
       flush oc;
       Ok ())
   with _ -> Error transport_io_error
+
+let execute_observed store command ~observe_now =
+  match command with
+  | Cancellation value -> Sa_plan_cancel_protocol.execute_observed store value ~observe_now
+  | Bridge value -> Sa_plan_bridge_protocol.execute_observed store value ~observe_now
