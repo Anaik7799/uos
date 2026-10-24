@@ -4,20 +4,20 @@
 let require b m=if not b then failwith m
 let s x=`String x
 let root="/home/an/NAS-setup/uos"
-let routes=["/ecology-song";"/";"/planning";"/mirage";"/wiki";"/zk";"/homeostasis/evolution";"/homeostasis/components";"/homeostasis/terminal";"/static/20260930-0633-restoration-dashboard.html"]
+let routes=["/static/20261024-0712-recovery-dashboard.html";"/ecology-song";"/";"/planning";"/mirage";"/wiki";"/zk";"/homeostasis/evolution";"/homeostasis/components";"/homeostasis/terminal";"/static/20260930-0633-restoration-dashboard.html"]
 let sha x=Cryptokit.hash_string(Cryptokit.Hash.sha256())x|>Cryptokit.transform_string(Cryptokit.Hexa.encode())
 let save p bytes=
  let fd=Unix.openfile p [Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL;Unix.O_CLOEXEC]0o600 in
  let ch=Unix.out_channel_of_descr fd in
  Fun.protect(fun()->output_string ch bytes;flush ch;Unix.fsync fd)~finally:(fun()->close_out_noerr ch)
-let source_hash()=let ch=open_in_bin(root^"/tools/validation/restoration_browser_check.ml")in
+let source_hash()=let ch=open_in_bin __FILE__ in
  Fun.protect(fun()->sha(really_input_string ch(in_channel_length ch)))~finally:(fun()->close_in_noerr ch)
 let loc p selector=Playwright.Page.locator ~selector p
 let text p selector=Playwright.Locator.inner_text ~timeout:3000.(loc p selector)|>String.trim
 
 (* Policy is pure and independently falsifiable. Only exact public read dependencies. *)
 let origin port = "http://nas-1.tail55d152.ts.net:" ^ string_of_int port
-let read_paths = ["/static/dashboard-grid.js";"/static/material.css";"/static/sw-register.js";"/favicon.ico";
+let read_paths = ["/static/20261024-0712-recovery-state.json";"/static/dashboard-grid.js";"/static/material.css";"/static/sw-register.js";"/favicon.ico";
  "/api/v1/dashboard";"/api/v1/sse/mesh";"/api/v1/homeostasis/stream";
  "/api/v1/ecology/snapshot";"/static/20260930-0633-restoration-state.json"]
 let request_allowed ~port ~route ~url ~meth ~navigation ~redirected =
@@ -40,6 +40,7 @@ let requirements_match rows =
 let heading_for ~fixture = function
  | "/" -> "Indrajaal Swarm Dashboard"
  | "/mirage" -> "MirageOS Migration Projection Cockpit"
+ | "/static/20261024-0712-recovery-dashboard.html" -> "Recovery & Operational Observation"
  | "/static/20260930-0633-restoration-dashboard.html" -> "Restoration & recovery"
  | "/wiki" | "/zk" -> "Unified Knowledge, Wiki & ZK Explorer"
  | "/planning" -> "C3I Planning Cockpit"
@@ -216,6 +217,10 @@ let ()=
  check "HTTP200_exact_response_URL"(page_identity ~status ~expected_url:url ~actual_url:response_url);
  observations:=("http_status",`Int status)::("response_url",s response_url)::!observations;
  Eio.Time.sleep env#clock 0.5;
+ if route="/static/20261024-0712-recovery-dashboard.html" then begin
+ let top=Playwright.Page.screenshot ~type_:`Png ~full_page:false ~timeout:5000. page in
+ save(out^"/20261024-0752-top.png")top
+ end;
  let body=text page "body"in
  check "body_has_content"(String.length body>100);
  check "no_route_fallback"(not(List.exists(fun line->String.starts_with ~prefix:"No route matched:"(String.trim line))(String.split_on_char '\n' body)));
@@ -252,6 +257,39 @@ let ()=
   Playwright.Locator.press ~key:"Enter" ~timeout:3000. provenance;
   check "mirage_provenance_text"(text page(parent^" > .verification-provenance > p")="EV ceiling93; EV94..109 NOT_ADMITTED. No new EV identifier.");
   observations:=("checklist_profile",s"MIRAGE_UNVERIFIED_REQUIREMENTS_WITH_PROVENANCE")::!observations
+ end else if route="/static/20261024-0712-recovery-dashboard.html" then begin
+  check "recovery_observation_loaded" (not(String.starts_with ~prefix:"UNAVAILABLE"(text page "#freshness")));
+  check "recovery_not_stale" (not(List.mem (text page "#freshness")["STALE";"CLOCK_SKEW";"EXPIRED"]));
+  let domains=loc page "#checklist details.chk-domain" in
+  check "recovery_five_domains" (Playwright.Locator.count domains=5);
+  for i=0 to Playwright.Locator.count domains-1 do
+    let d=Playwright.Locator.nth i domains in
+    let summary=Playwright.Locator.nth i(loc page "#checklist details.chk-domain > summary") in
+    let before=Playwright.Locator.get_attribute ~name:"open" d in
+    Playwright.Locator.press ~key:"Enter" ~timeout:3000. summary;
+    let after=Playwright.Locator.get_attribute ~name:"open" d in
+    check ("recovery_domain_keyboard_"^string_of_int i) (before<>after);
+    if after=None then Playwright.Locator.press ~key:"Enter" ~timeout:3000. summary
+  done;
+  let rows=Playwright.Locator.all_inner_texts(loc page "#checklist li[data-chk]:visible") in
+  let has n=List.length(List.filter(fun row->String.starts_with ~prefix:(Printf.sprintf "CHK-%02d " n)(String.trim row))rows)=1 in
+  check "recovery_18_unique_visible" (List.length rows=18 && List.for_all has(List.init 18(fun i->i+1)));
+  let provenance=text page "#provenance-note" in
+  check "recovery_provenance" (String.starts_with ~prefix:"Provenance note: EV ceiling remains 93." provenance);
+  check "recovery_actual_tasks" (Playwright.Locator.count(loc page "#task-rows tr")>=100);
+  check "recovery_actual_jobs" (Playwright.Locator.count(loc page "#job-rows tr")>0);
+  let raw=loc page "#raw-details" in
+  check "raw_initially_closed" (Playwright.Locator.get_attribute ~name:"open" raw=None);
+  Playwright.Locator.press ~key:"Enter" ~timeout:3000.(loc page "#toggle-source");
+  check "raw_keyboard_open" (Playwright.Locator.get_attribute ~name:"open" raw<>None);
+  let payload=Yojson.Safe.from_string(text page "#source") in
+  check "raw_actual_schema" (Yojson.Safe.Util.(payload |> member "schema" |> to_string)="uos.restoration.snapshot.v1");
+  let count=Yojson.Safe.Util.(payload |> member "tasks" |> to_list |> List.length) in
+  check "exact_task_row_count" (Playwright.Locator.count(loc page "#task-rows tr")=count);
+  check "goal_remains_incomplete" (Yojson.Safe.Util.(payload |> member "goal_met" |> to_bool)=false);
+  Playwright.Locator.press ~key:"Enter" ~timeout:3000.(loc page "#toggle-source");
+  check "raw_keyboard_closed" (Playwright.Locator.get_attribute ~name:"open" raw=None);
+  observations:=("checklist_profile",s"RECOVERY_FRESH_OBSERVATIONS_NOT_GLOBAL_ADMISSION")::!observations
  end else if route="/static/20260930-0633-restoration-dashboard.html" then begin
   let summary=loc page "#checklist > details:first-of-type > summary" in
   check "one_restoration_checklist"(Playwright.Locator.count summary=1);
@@ -310,18 +348,21 @@ let ()=
   check "dashboard_task_rows"(Playwright.Locator.count(loc page "#task-rows > tr")>=17);
   check "dashboard_18_checks"(Playwright.Locator.count(loc page "#checks > li")>=18)
  end;
- if route="/" || route="/mirage" then begin
-  let selector=if route="/"then "#uos-recovery-cockpit"else ".uos-mirage-cockpit"in
+ if route="/" || route="/mirage" || route="/static/20261024-0712-recovery-dashboard.html" then begin
+  let selector=if route="/"then "#uos-recovery-cockpit"else if route="/mirage"then ".uos-mirage-cockpit"else "main"in
   let fits selector=match Playwright.Locator.bounding_box(Playwright.Locator.nth 0(loc page selector))with
    |None->false|Some rect->let j=Playwright.Rect.to_yojson rect in
     let number key=match Yojson.Safe.Util.member key j with `Float x->x|`Int x->float_of_int x|_->nan in
     number "x">= -.1. && number "x"+.number "width"<=float_of_int width+.1. in
   check "profile_container_within_viewport"(fits selector);
+  if route="/static/20261024-0712-recovery-dashboard.html" then begin check "recovery_URL_within_viewport"(fits "#self");check "recovery_scroll_container_within_viewport"(fits ".scroll")end;
   if route="/mirage"then check "mirage_table_within_viewport"(fits ".uos-mirage-cockpit table")
  end;
  let box=Playwright.Locator.bounding_box(loc page "body")in
  (match box with None->check "body_geometry"false|Some r->
   observations:=("body_geometry",Playwright.Rect.to_yojson r)::!observations);
+ Playwright.Locator.scroll_into_view_if_needed ~timeout:3000.(loc page "h1");
+ Eio.Time.sleep env#clock 0.3;
  let view=Playwright.Page.screenshot ~type_:`Png ~full_page:false ~timeout:5000. page in
  require(String.length view<=8388608)"viewport screenshot too large";
  save(out^"/20261001-1048-viewport.png")view;
