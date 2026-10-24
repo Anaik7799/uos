@@ -112,6 +112,21 @@ type task_view = {
   attempt : int;
 }
 
+type job_cancellation = {
+  mapping_id : string;
+  effect_id : string;
+  intent_sha256 : string;
+  owner : string;
+  lease_id : string;
+  fencing_token : int64;
+  target_job_id : string;
+  target_worker : string;
+  target_attempt : int;
+  target_lease_until_ns : int64;
+  reason : string;
+  expires_at_ns : int64;
+}
+
 type job_state =
   | Job_available
   | Job_executing
@@ -240,11 +255,25 @@ let exec db context sql =
   | Sqlite3.Rc.OK -> Ok ()
   | rc -> rc_error context rc
 
+(* sqlite3-ocaml5.4.1 releases the runtime in these C calls without rooting
+   their argument. Keep the wrapper live until AFTER each call returns. *)
+let close_db db =
+  let closed = Sqlite3.db_close db in
+  Gc.keep_alive db;
+  closed
+
+let finalize_statement stmt =
+  let rc = Sqlite3.finalize stmt in
+  Gc.keep_alive stmt;
+  rc
+
 let with_stmt db sql f =
   let stmt = Sqlite3.prepare db sql in
   Exn.protect
     ~f:(fun () -> f stmt)
-    ~finally:(fun () -> ignore (Sqlite3.finalize stmt : Sqlite3.Rc.t))
+    ~finally:(fun () ->
+      ignore (finalize_statement stmt : Sqlite3.Rc.t);
+      Gc.keep_alive db)
 
 let bind stmt index value =
   match Sqlite3.bind stmt index value with
@@ -740,7 +769,7 @@ let open_db path =
     | Ok () -> (
         match read_schema_version db with
         | Ok version when version > 7 ->
-            ignore (Sqlite3.db_close db : bool);
+            ignore (close_db db : bool);
             Error "unsupported future Sa-plan schema"
         | Ok version -> (
             let migrate_core =
@@ -751,7 +780,7 @@ let open_db path =
             in
             match migrate_core with
             | Error _ as error ->
-                ignore (Sqlite3.db_close db : bool);
+                ignore (close_db db : bool);
                 error
             | Ok () -> (
                 let migrate_bridge =
@@ -762,7 +791,7 @@ let open_db path =
                     let migrate_leases = if version < 5 then migrate_v5 db else Ok () in
                     match migrate_leases with
                     | Error _ as error ->
-                        ignore (Sqlite3.db_close db : bool);
+                        ignore (close_db db : bool);
                         error
                     | Ok () ->
                         let migrate_observations =
@@ -770,7 +799,7 @@ let open_db path =
                         in
                         (match migrate_observations with
                         | Error _ as error ->
-                            ignore (Sqlite3.db_close db : bool);
+                            ignore (close_db db : bool);
                             error
                         | Ok () -> (match
                           Result.bind
@@ -786,23 +815,23 @@ let open_db path =
                                   schema_version = 7;
                                 }
                           | Error _ as error ->
-                              ignore (Sqlite3.db_close db : bool);
+                              ignore (close_db db : bool);
                               error)))
                 | Error _ as error ->
-                    ignore (Sqlite3.db_close db : bool);
+                    ignore (close_db db : bool);
                     error))
         | Error _ as error ->
-            ignore (Sqlite3.db_close db : bool);
+            ignore (close_db db : bool);
             error)
     | Error _ as error ->
-        ignore (Sqlite3.db_close db : bool);
+        ignore (close_db db : bool);
         error
   with exn -> Error (Exn.to_string exn)
 
 let close store =
   if not store.closed then begin
     store.closed <- true;
-    ignore (Sqlite3.db_close store.db : bool)
+    ignore (close_db store.db : bool)
   end
 
 let schema_version store = store.schema_version
@@ -2749,6 +2778,147 @@ WHERE id = ? AND state IN ('available', 'executing', 'retry')
                                   | None ->
                                       Error
                                         "cancelled Sa-plan job disappeared")))))))
+
+
+(* Bounded persistence mechanics only. Authentication remains in Gleam. *)
+let cancellation_token value =
+  String.length value > 0 && String.length value <= 240
+  && not (String.is_substring value ~substring:"..")
+  && String.for_all value ~f:(fun c ->
+      Char.is_alphanum c || String.contains "-_./:" c)
+
+let cancellation_digest value =
+  String.length value = 64
+  && String.for_all value ~f:(fun c -> String.contains "0123456789abcdef" c)
+
+let cancellation_input (request : job_cancellation) ~now_ns =
+  List.for_all [request.mapping_id; request.owner; request.lease_id;
+                 request.target_job_id; request.target_worker] ~f:cancellation_token
+  && cancellation_digest request.effect_id
+  && cancellation_digest request.intent_sha256
+  && request.target_attempt > 0 && request.target_attempt <= 2_147_483_647
+  && Int64.(request.fencing_token > 0L && now_ns >= 0L
+            && request.expires_at_ns > now_ns
+            && request.expires_at_ns - now_ns <= 300_000_000_000L
+            && request.target_lease_until_ns > request.expires_at_ns)
+  && String.length request.reason > 0 && String.length request.reason <= 256
+  && not (String.is_empty (String.strip request.reason))
+  && Stdlib.String.is_valid_utf_8 request.reason
+  && String.for_all request.reason ~f:(fun c ->
+       let n = Char.to_int c in n >= 32 && n <> 127)
+
+let cancellation_hash (request : job_cancellation) ~plan_id ~task_id =
+  let i x = `Intlit (Int64.to_string x) in
+  let raw = Yojson.Safe.to_string (`List [
+    `String "uos.sa-plan.cancel-job-once.v1";
+    `String request.mapping_id; `String request.effect_id;
+    `String request.intent_sha256; `String request.owner;
+    `String request.lease_id; i request.fencing_token;
+    `String request.target_job_id; `String request.target_worker;
+    `Int request.target_attempt; i request.target_lease_until_ns;
+    `String request.reason; i request.expires_at_ns;
+    `String plan_id; `String task_id;
+  ]) in
+  Digestif.SHA256.(to_hex (digest_string raw))
+
+let cancellation_result (request : job_cancellation) =
+  Yojson.Safe.to_string (`Assoc [
+    "schema", `String "uos.sa-plan.cancel-job-once.receipt.v1";
+    "operation", `String "cancel_job_lease";
+    "status", `String "job_lease_revoked";
+    "effect_id", `String request.effect_id;
+    "intent_sha256", `String request.intent_sha256;
+    "job_id", `String request.target_job_id;
+    "matched_attempt", `Int request.target_attempt;
+    "job_lease_cleared", `Bool true;
+    "task_cancelled", `Bool false;
+    "process_quiesced", `Bool false;
+  ])
+
+let cancel_job_once store (request : job_cancellation) ~now_ns =
+  let open Result.Let_syntax in
+  if not (cancellation_input request ~now_ns) then
+    Error "invalid fenced job cancellation request"
+  else transaction store (fun () ->
+    let%bind mapping = find_mapping_db store.db request.mapping_id in
+    let%bind mapping = match mapping with
+      | Some mapping when Poly.equal mapping.domain Sa_plan -> Ok mapping
+      | _ -> Error "cancellation requires a canonical Sa-plan mapping" in
+    let%bind plan_id, task_id = mapped_task mapping in
+    let prefix = plan_id ^ "/" in
+    let%bind () =
+      if String.is_prefix request.target_job_id ~prefix
+         && String.length request.target_job_id > String.length prefix then Ok ()
+      else Error "cancellation target is outside mapped plan scope" in
+    let%bind lease = find_bridge_lease_db store.db ~mapping_id:request.mapping_id in
+    let%bind lease = match lease with
+      | Some lease when String.equal lease.owner request.owner
+          && String.equal lease.lease_id request.lease_id
+          && Int64.equal lease.fencing_token request.fencing_token
+          && Int64.(lease.expires_at_ns > now_ns
+                    && lease.expires_at_ns >= request.expires_at_ns) -> Ok lease
+      | _ -> Error "cancellation lost current bridge lease" in
+    let%bind attempt = match lease.task_attempt with
+      | Some attempt when attempt > 0 -> Ok attempt
+      | _ -> Error "cancellation lacks original task attempt" in
+    let%bind () = with_stmt store.db
+      {|SELECT 1 FROM sa_plan_task
+        WHERE plan_id=? AND id=? AND state='executing' AND worker=?
+          AND attempt=? AND lease_until_ns>? AND lease_until_ns>=?|}
+      (fun stmt ->
+        let%bind () = bind_values_result "bind cancellation task fence" stmt
+          [TEXT plan_id; TEXT task_id; TEXT request.owner;
+           INT (Int64.of_int attempt); INT now_ns; INT request.expires_at_ns] in
+        match Sqlite3.step stmt with
+        | Sqlite3.Rc.ROW -> Ok ()
+        | Sqlite3.Rc.DONE -> Error "cancellation lost current task attempt"
+        | rc -> rc_error "read cancellation task fence" rc) in
+    let command_id = "cancel-job:" ^ request.effect_id in
+    let request_hash = cancellation_hash request ~plan_id ~task_id in
+    let result = cancellation_result request in
+    let%bind prior = command_db store.db ~mapping_id:request.mapping_id ~command_id in
+    let%bind job = find_job_db store.db request.target_job_id in
+    let%bind job = match job with
+      | Some job when String.equal job.id request.target_job_id -> Ok job
+      | _ -> Error "cancellation target exact id is missing" in
+    match prior with
+    | Some receipt ->
+        if not (String.equal receipt.request_hash request_hash) then
+          Error "conflicting cancellation request"
+        else if not (String.equal receipt.result result)
+          || Int64.(receipt.recorded_at_ns < 0L || receipt.recorded_at_ns > now_ns
+                    || receipt.recorded_at_ns >= request.expires_at_ns)
+          || not (Poly.equal job.state Job_cancelled)
+          || not (String.equal job.worker request.target_worker)
+          || job.attempt <> request.target_attempt
+          || Option.is_some job.lease_owner || Option.is_some job.lease_until_ns
+          || not (Option.equal String.equal job.result (Some request.reason))
+        then Error "cancellation replay postcondition mismatch"
+        else Ok receipt
+    | None ->
+        if not (Poly.equal job.state Job_executing)
+          || not (String.equal job.worker request.target_worker)
+          || not (Option.equal String.equal job.lease_owner (Some request.target_worker))
+          || job.attempt <> request.target_attempt
+          || not (Option.equal Int64.equal job.lease_until_ns (Some request.target_lease_until_ns))
+        then Error "cancellation target attempt or lease mismatch"
+        else
+          let%bind () = with_stmt store.db
+            {|UPDATE sa_plan_job SET state='cancelled',result=?,
+                 lease_owner=NULL,lease_until_ns=NULL
+              WHERE id=? AND state='executing' AND worker=? AND lease_owner=?
+                AND attempt=? AND lease_until_ns=? AND lease_until_ns>?|}
+            (fun stmt ->
+              let%bind () = bind_values_result "bind one-shot job cancellation" stmt
+                [TEXT request.reason; TEXT request.target_job_id;
+                 TEXT request.target_worker; TEXT request.target_worker;
+                 INT (Int64.of_int request.target_attempt);
+                 INT request.target_lease_until_ns; INT now_ns] in
+              let%bind () = step_done "cancel exact job attempt" stmt in
+              if Sqlite3.changes store.db = 1 then Ok ()
+              else Error "cancellation lost target compare-and-set") in
+          record_command_db store.db ~mapping_id:request.mapping_id ~command_id
+            ~request_hash ~result ~recorded_at_ns:now_ns)
 
 let list_jobs store ~queue =
   match ensure_open store with

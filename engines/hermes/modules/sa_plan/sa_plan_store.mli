@@ -116,6 +116,21 @@ type task_view = {
   attempt : int;
 }
 
+type job_cancellation = {
+  mapping_id : string;
+  effect_id : string;
+  intent_sha256 : string;
+  owner : string;
+  lease_id : string;
+  fencing_token : int64;
+  target_job_id : string;
+  target_worker : string;
+  target_attempt : int;
+  target_lease_until_ns : int64;
+  reason : string;
+  expires_at_ns : int64;
+}
+
 type job_state =
   | Job_available
   | Job_executing
@@ -532,6 +547,34 @@ val cancel_job :
   reason:string ->
   now_ns:int64 ->
   (job_view, string) Result.t
+
+(** Atomic database mechanics for a caller already authorized by the Gleam
+    control plane. This function does NOT authenticate reviewer/operator
+    signatures, prove synchronized time, stop processes, or cancel tasks.
+    It is intentionally not exposed by the CLI or Telegram dispatcher.
+
+    Law: within one BEGIN IMMEDIATE transaction, both the mapped task's original
+    attempt and its bridge lease must still be current. The request deadline
+    must be future and at most 300 seconds from supplied [now_ns]. The exact
+    target id (not an alias), designated worker, lease owner, attempt and lease
+    deadline must match an executing job in the mapped plan namespace.
+    Only then is the job cancelled and its lease cleared, atomically with a
+    durable bridge command receipt. Designated [worker] is retained.
+
+    The namespaced command key is ["cancel-job:" ^ effect_id]. The store hashes
+    all request fields plus the mapped plan/task in fixed, typed JSON order.
+    Identical replay under the SAME current authority returns the original
+    receipt without writing, only if the cancelled postcondition and original
+    receipt payload still match. Changed request fields, missing/changed
+    target state, an independently cancelled job, stale authority and malformed
+    inputs return Error without a partial transition.
+    Idempotency is scoped to mapping_id plus effect_id; neither hashes nor
+    receipts prove approval authenticity. Expired/new-lease reconciliation
+    must use a separately authorized read, not a fresh cancellation.
+    All strings, counters and times are bounded before mutation. *)
+val cancel_job_once :
+  t -> job_cancellation -> now_ns:int64 ->
+  (bridge_command_receipt, string) Result.t
 
 val list_jobs : t -> queue:string option -> (job_view list, string) Result.t
 
