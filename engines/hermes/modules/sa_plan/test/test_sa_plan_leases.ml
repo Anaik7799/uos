@@ -1034,3 +1034,52 @@ let () =
        && Yojson.Safe.Util.to_bool (Yojson.Safe.Util.member "historical" persisted)
        && String.equal (Yojson.Safe.Util.to_string (Yojson.Safe.Util.member "status" result)) "passed"));
   Printf.printf "signed approval through native worker: %d checks passed\n%!" !tests
+
+(* A separate BEAM incarnation recovers an effect after the first incarnation
+   deliberately halts before writing any Telegram result/outbox row. *)
+let () =
+  let required name=match Stdlib.Sys.getenv_opt name with
+    | Some p -> p | None -> failwith ("missing fixture " ^ name) in
+  let dir=required "UOS_CANCEL_TRANSPORT_TEST_DIR" in
+  let gleam_root=required "UOS_CANCEL_GLEAM_TEST_ROOT" in
+  let bin s="<<" ^ String.concat ~sep:"," (List.map (String.to_list s)
+    ~f:(fun c -> Int.to_string (Char.to_int c))) ^ ">>" in
+  let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
+  let guardian=Filename.concat dir "guardian.exe" and worker=Filename.concat dir "worker.exe" in
+  Cancellation.with_case (fun path store request ->
+    let request=live_cancel_request path request in
+    let tg_dir=path ^ ".telegram-dir" in
+    Lifetime_unix.mkdir tg_dir 0o700;
+    let tg_path=Filename.concat tg_dir "telegram.sqlite3" in
+    Exn.protect ~finally:(fun () ->
+      List.iter [tg_path;tg_path ^ "-wal";tg_path ^ "-shm";tg_path ^ ".process_lock"] ~f:(fun p ->
+        if Stdlib.Sys.file_exists p then Stdlib.Sys.remove p);
+      Lifetime_unix.rmdir tg_dir) ~f:(fun () ->
+      let prefix=Printf.sprintf
+        "code:add_paths(filelib:wildcard(%S)),code:add_patha(%S),C='cepaf_gleam@harness@telegram_store_transport':reviewed_local_configuration(%s,%s,%s,%s,%s),"
+        (Filename.concat gleam_root "lib/*/ebin") (Filename.concat gleam_root "build/ebin")
+        (bin guardian) (bin (sha guardian)) (bin worker) (bin (sha worker)) (bin path) in
+      let run suffix=run_cancellation_child
+        ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
+        ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";prefix ^ suffix]
+        ~database:path ~input:"" in
+      let first=Printf.sprintf
+        "R=telegram_cancellation_record_test:execute_without_reply(C,%s,%s,%Ld,%Ld,%s),io:put_chars(R),erlang:halt(77)."
+        (bin tg_path) (bin request.mapping_id) request.fencing_token
+        request.target_lease_until_ns (bin (sha worker)) in
+      let status,out,errors=run first in
+      if not (Poly.equal status (Lifetime_unix.WEXITED 77)) then
+        Printf.eprintf "signed durable first child stdout=%s stderr=%s\n%!" out errors;
+      check "CANCEL-DURABLE-EFFECT-BEFORE-ABNORMAL-BEAM-EXIT"
+        (Poly.equal status (Lifetime_unix.WEXITED 77)
+         && String.equal out "effect_committed_reply_absent"
+         && Poly.equal (Cancellation.job store).state Store.Job_cancelled);
+      Cancellation.exec path "UPDATE sa_plan_bridge_lease SET expires_at_ns=0,fencing_token=99";
+      let second=Printf.sprintf
+        "R=telegram_cancellation_record_test:recover_and_reply(C,%s),io:put_chars(R),halt(0)." (bin tg_path) in
+      let status,out,_=run second in
+      check "CANCEL-DURABLE-FRESH-BEAM-HISTORICAL-LOOKUP-AND-OUTBOX"
+        (Poly.equal status (Lifetime_unix.WEXITED 0)
+         && String.equal out "Cancellation recorded: the job lease was revoked. Worker termination is not confirmed."
+         && Poly.equal (Cancellation.job store).state Store.Job_cancelled)));
+  Printf.printf "durable cancellation restart: %d checks passed\n%!" !tests

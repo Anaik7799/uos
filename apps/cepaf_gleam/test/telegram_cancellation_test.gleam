@@ -106,7 +106,7 @@ fn setup() {
   )
 }
 
-fn receipt(p, i, historical) {
+pub fn receipt(p, i, historical) {
   json.object([
     #("schema", json.string("uos.telegram.cancel-transport-response.v1")),
     #("status", json.string("ok")),

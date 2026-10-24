@@ -1,3 +1,7 @@
+import cepaf_gleam/harness/telegram_cancellation as cancellation
+import cepaf_gleam/harness/telegram_cancellation_record as cancellation_record
+import cepaf_gleam/harness/telegram_action_intent as action_intent
+import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_memory_command as memory_command
 //// High-assurance durable storage consumer for Telegram bot runtime v2.
 //// Spec: uos.telegram-durable-store-corrected-development-spec.v1
@@ -2688,4 +2692,340 @@ pub fn commit_memory_result(
     o.generation,o.record,o.version,o.sha,payloads,o.worker,o.epoch,
     [row_read_assertion(o.context_row.key,o.context_row),
       row_read_assertion(o.input_row.key,o.input_row)],changes,0)
+}
+
+pub opaque type CancellationReservation {
+  CancellationReservation(
+    config: transport.LocalConfiguration,
+    generation: Int,
+    inbox: ledger.InboxRecord,
+    inbox_version: Int,
+    inbox_sha: String,
+    worker: String,
+    epoch: Int,
+    saved: cancellation_record.RecoveryRecord,
+    saved_row: codec.RowResult,
+  )
+}
+
+pub fn cancellation_record_value(
+  res: CancellationReservation,
+) -> cancellation_record.RecoveryRecord {
+  res.saved
+}
+
+pub fn cancellation_generation(res: CancellationReservation) -> Int {
+  res.generation
+}
+
+pub fn cancellation_key(request_id: String) -> String {
+  "cancellation/" <> request_id
+}
+
+fn cancellation_context(
+  config: transport.LocalConfiguration,
+  generation: Int,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+  worker: String,
+  epoch: Int,
+) -> Result(#(List(codec.RowResult), String), StoreError) {
+  use _ <- result.try(
+    case
+      ledger.valid_record(inbox)
+      && inbox.status == ledger.InboxProcessing(worker, epoch)
+      && version > 0
+      && generation >= 0
+      && files.digest(codec.encode_inbox_record(inbox)) == sha
+    {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("invalid_cancellation_inbox"))
+    },
+  )
+  let ik = codec.inbox_key(inbox.request_id)
+  let ak = codec.authority_key(inbox.request_id)
+  let pk = codec.input_key(inbox.request_id)
+  let ck = cancellation_key(inbox.request_id)
+  use #(observed, rows) <- result.try(read_keys(config, [ik, ak, pk, ck]))
+  use _ <- result.try(case observed == generation && list.length(rows) == 4 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("cancellation_generation_mismatch"))
+  })
+  use ir <- result.try(find_read_row(rows, ik))
+  use ar <- result.try(find_read_row(rows, ak))
+  use pr <- result.try(find_read_row(rows, pk))
+  use _ <- result.try(
+    case
+      ir.exists
+      && ir.version == version
+      && ir.sha256 == sha
+      && ar.exists
+      && pr.exists
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(StoreInvariantError("cancellation_context_missing_or_stale"))
+    },
+  )
+  use auth_raw <- result.try(
+    codec.decode_row_value(ar) |> result.map_error(StoreDecodeError),
+  )
+  use auth <- result.try(
+    codec.decode_authority_value(auth_raw) |> result.map_error(StoreDecodeError),
+  )
+  use _ <- result.try(
+    case
+      auth.request_id == inbox.request_id
+      && auth.bot_id == inbox.bot_id
+      && auth.worker == worker
+      && auth.epoch == epoch
+    {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("cancellation_authority_mismatch"))
+    },
+  )
+  use input_raw <- result.try(
+    codec.decode_row_value(pr) |> result.map_error(StoreDecodeError),
+  )
+  use #(request_id, bot_id, update_id, verdict) <- result.try(
+    codec.decode_input_verdict(input_raw) |> result.map_error(StoreDecodeError),
+  )
+  use text <- result.try(case verdict {
+    guard.AcceptedEnvelope(
+      bot_id: b,
+      chat_id: c,
+      user_id: u,
+      update_id: n,
+      message_id: m,
+      text_hash: h,
+      raw_text: text,
+      ..,
+    ) -> {
+      case
+        request_id == inbox.request_id
+        && bot_id == inbox.bot_id
+        && update_id == inbox.update_id
+        && b == inbox.bot_id
+        && c == inbox.chat_id
+        && u == inbox.user_id
+        && n == inbox.update_id
+        && m == inbox.message_id
+        && h == inbox.text_hash
+        && files.digest(text) == h
+      {
+        True -> Ok(text)
+        False -> Error(StoreInvariantError("cancellation_input_mismatch"))
+      }
+    }
+    _ -> Error(StoreInvariantError("cancellation_input_not_accepted"))
+  })
+  Ok(#(rows, text))
+}
+
+fn cancellation_matches_input(
+  saved: cancellation_record.RecoveryRecord,
+  inbox: ledger.InboxRecord,
+  text: String,
+) -> Bool {
+  let b = cancellation_record.binding(saved)
+  b.bot_id == inbox.bot_id
+  && b.chat_id == inbox.chat_id
+  && b.user_id == inbox.user_id
+  && b.update_id == inbox.update_id
+  && case commands.parse(text) {
+    Ok(invocation) ->
+      invocation.definition.canonical == "/tool"
+      && invocation.args
+      == action_intent.command_args(cancellation_record.intent(saved))
+    Error(_) -> False
+  }
+}
+
+/// Persist exact approved bytes before effect. This stores data only; callers
+/// must recheck current approval/profile/canonical fences at the effect boundary.
+/// Uncertain store commits must reconcile through existing PendingOperation.
+pub fn persist_cancellation(
+  config: transport.LocalConfiguration,
+  generation: Int,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+  worker: String,
+  epoch: Int,
+  prepared: cancellation.Prepared,
+) -> Result(CancellationReservation, StoreError) {
+  let saved = cancellation.recovery_record(prepared)
+  use #(rows, text) <- result.try(cancellation_context(
+    config,
+    generation,
+    inbox,
+    version,
+    sha,
+    worker,
+    epoch,
+  ))
+  use _ <- result.try(
+    case
+      cancellation_matches_input(saved, inbox, text)
+      && cancellation_record.binding(saved).worker == worker
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(StoreInvariantError("cancellation_request_binding_mismatch"))
+    },
+  )
+  let key = cancellation_key(inbox.request_id)
+  use prior <- result.try(find_read_row(rows, key))
+  case prior.exists {
+    True -> {
+      use raw <- result.try(
+        codec.decode_row_value(prior) |> result.map_error(StoreDecodeError),
+      )
+      use original <- result.try(
+        cancellation_record.decode(raw) |> result.map_error(StoreDecodeError),
+      )
+      use _ <- result.try(
+        case cancellation_record.same_request(saved, original) {
+          True -> Ok(Nil)
+          False -> Error(StoreInvariantError("cancellation_request_collision"))
+        },
+      )
+      Ok(CancellationReservation(
+        config,
+        generation,
+        inbox,
+        version,
+        sha,
+        worker,
+        epoch,
+        original,
+        prior,
+      ))
+    }
+    False -> {
+      let raw = cancellation_record.encode(saved)
+      let change = codec.Change(key, 0, "", codec.encode_canonical_base64(raw))
+      let summary =
+        json.object([
+          #("op", json.string("persist_cancellation")),
+          #("request_id", json.string(inbox.request_id)),
+          #(
+            "request_hash",
+            json.string(cancellation_record.request_hash(saved)),
+          ),
+        ])
+        |> json.to_string
+      use applied <- result.try(execute_apply(
+        config,
+        inbox.bot_id,
+        "op-cancellation-" <> inbox.request_id,
+        generation,
+        list.map(rows, fn(row) { row_read_assertion(row.key, row) }),
+        [change],
+        codec.ReservationDelta(0, 0),
+        summary,
+      ))
+      let row =
+        codec.RowResult(
+          key,
+          True,
+          1,
+          codec.encode_canonical_base64(raw),
+          files.digest(raw),
+        )
+      Ok(CancellationReservation(
+        config,
+        applied.receipt.generation,
+        inbox,
+        version,
+        sha,
+        worker,
+        epoch,
+        saved,
+        row,
+      ))
+    }
+  }
+}
+
+/// Restore only read-only recovery data. No approval or executable Prepared is
+/// reconstructed. Original bytes remain immutable across process restarts.
+pub fn load_cancellation(
+  config: transport.LocalConfiguration,
+  generation: Int,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+  worker: String,
+  epoch: Int,
+) -> Result(CancellationReservation, StoreError) {
+  use #(rows, text) <- result.try(cancellation_context(
+    config,
+    generation,
+    inbox,
+    version,
+    sha,
+    worker,
+    epoch,
+  ))
+  use row <- result.try(find_read_row(rows, cancellation_key(inbox.request_id)))
+  use raw <- result.try(
+    codec.decode_row_value(row) |> result.map_error(StoreDecodeError),
+  )
+  use saved <- result.try(
+    cancellation_record.decode(raw) |> result.map_error(StoreDecodeError),
+  )
+  use _ <- result.try(case cancellation_matches_input(saved, inbox, text) {
+    True -> Ok(Nil)
+    False ->
+      Error(StoreInvariantError("cancellation_recovery_binding_mismatch"))
+  })
+  Ok(CancellationReservation(
+    config,
+    generation,
+    inbox,
+    version,
+    sha,
+    worker,
+    epoch,
+    saved,
+    row,
+  ))
+}
+
+/// Commit a fixed truthful reply only after exact historical lookup confirms
+/// the persisted request. Absence, rejection and malformed results leave the
+/// inbox unresolved and do not become permission to repeat the effect.
+pub fn commit_cancellation_lookup(
+  res: CancellationReservation,
+  response: String,
+  observed_utc_ms: Int,
+) -> Result(CommitResultResult, StoreError) {
+  use outcome <- result.try(
+    cancellation.decode_recovery_response(res.saved, response, observed_utc_ms)
+    |> result.map_error(StoreDecodeError),
+  )
+  use payload <- result.try(case outcome {
+    cancellation.LeaseRevoked(_, _, True) ->
+      Ok(
+        "Cancellation recorded: the job lease was revoked. Worker termination is not confirmed.",
+      )
+    _ -> Error(StoreInvariantError("cancellation_outcome_unresolved"))
+  })
+  commit_result_extended(
+    res.config,
+    res.inbox.bot_id,
+    "op-cancellation-result-" <> res.inbox.request_id,
+    res.generation,
+    res.inbox,
+    res.inbox_version,
+    res.inbox_sha,
+    [payload],
+    res.worker,
+    res.epoch,
+    [row_read_assertion(res.saved_row.key, res.saved_row)],
+    [],
+    0,
+  )
 }

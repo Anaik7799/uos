@@ -15,6 +15,7 @@
 
 import cepaf_gleam/harness/telegram_action_intent as action
 import cepaf_gleam/harness/telegram_approval as approval
+import cepaf_gleam/harness/telegram_cancellation_record as record
 import cepaf_gleam/harness/telegram_store_codec as codec
 import gleam/json
 import gleam/list
@@ -46,6 +47,7 @@ pub opaque type Prepared {
     request_json: String,
     request_hash: String,
     approval: approval.Verified,
+    recovery: record.RecoveryRecord,
   )
 }
 
@@ -108,8 +110,9 @@ pub fn prepare(
     observed.utc_ms < deadline,
     "approval_deadline_expired",
   ))
-  use req_json <- result.try(action.native_request(intent, deadline))
-  use req_hash <- result.try(action.native_request_hash(intent, deadline))
+  use saved <- result.try(record.new(intent, binding, target, deadline))
+  let req_json = record.request_json(saved)
+  let req_hash = record.request_hash(saved)
   Ok(Prepared(
     intent: intent,
     binding: binding,
@@ -118,6 +121,7 @@ pub fn prepare(
     request_json: req_json,
     request_hash: req_hash,
     approval: evidence,
+    recovery: saved,
   ))
 }
 
@@ -150,6 +154,10 @@ pub fn ready(
 /// Builds the closed 3-key transport envelope embedding the exact stored native
 /// request JSON without re-serialization drift.
 pub fn envelope(prepared: Prepared, operation: Operation) -> String {
+  build_envelope(prepared.request_json, operation)
+}
+
+fn build_envelope(native_json: String, operation: Operation) -> String {
   let operation_name = case operation {
     Cancel -> "cancel-once"
     Lookup -> "cancellation-result"
@@ -161,7 +169,7 @@ pub fn envelope(prepared: Prepared, operation: Operation) -> String {
   <> ",\"operation\":"
   <> operation_json
   <> ",\"request\":"
-  <> prepared.request_json
+  <> native_json
   <> "}"
 }
 
@@ -183,8 +191,34 @@ pub fn deadline_ms(prepared: Prepared) -> Int {
 /// revalidated against `now_utc_ms` to read history, and reading history never
 /// grants effect authority. Every receipt must still have been recorded prior
 /// to the prepared execution deadline and no later than `now_utc_ms`.
+pub fn recovery_record(prepared: Prepared) -> record.RecoveryRecord {
+  prepared.recovery
+}
+
+/// Read-only lookup envelope; no API accepts a restored record for Cancel.
+pub fn recovery_envelope(saved: record.RecoveryRecord) -> String {
+  build_envelope(record.request_json(saved), Lookup)
+}
+
 pub fn decode_response(
   prepared: Prepared,
+  op: Operation,
+  raw: String,
+  now_utc_ms: Int,
+) -> Result(Outcome, String) {
+  decode(prepared.recovery, op, raw, now_utc_ms)
+}
+
+pub fn decode_recovery_response(
+  saved: record.RecoveryRecord,
+  raw: String,
+  now_utc_ms: Int,
+) -> Result(Outcome, String) {
+  decode(saved, Lookup, raw, now_utc_ms)
+}
+
+fn decode(
+  prepared: record.RecoveryRecord,
   op: Operation,
   raw: String,
   now_utc_ms: Int,
@@ -236,7 +270,7 @@ pub fn decode_response(
 }
 
 fn decode_ok_result(
-  prepared: Prepared,
+  prepared: record.RecoveryRecord,
   op: Operation,
   result_value: codec.StrictJsonValue,
   now_utc_ms: Int,
@@ -284,7 +318,7 @@ fn decode_ok_result(
 }
 
 fn decode_receipt(
-  prepared: Prepared,
+  prepared: record.RecoveryRecord,
   receipt_value: codec.StrictJsonValue,
   now_utc_ms: Int,
   historical: Bool,
@@ -301,11 +335,11 @@ fn decode_receipt(
   )
   use mapping_id <- result.try(get_string(receipt, "mapping_id"))
   use _ <- result.try(require(
-    mapping_id == prepared.binding.execution.mapping_id,
+    mapping_id == record.binding(prepared).execution.mapping_id,
     invalid_response,
   ))
 
-  let expected_effect_id = action.effect_id(prepared.intent)
+  let expected_effect_id = action.effect_id(record.intent(prepared))
   let expected_command_id = "cancel-job:" <> expected_effect_id
   use command_id <- result.try(get_string(receipt, "command_id"))
   use _ <- result.try(require(
@@ -315,13 +349,13 @@ fn decode_receipt(
 
   use receipt_hash <- result.try(get_string(receipt, "request_hash"))
   use _ <- result.try(require(
-    receipt_hash == prepared.request_hash,
+    receipt_hash == record.request_hash(prepared),
     invalid_response,
   ))
 
   use recorded_at_ns <- result.try(get_int(receipt, "recorded_at_ns"))
   let max_now_ns = now_utc_ms * ns_per_ms
-  let deadline_ns = prepared.deadline_ms * ns_per_ms
+  let deadline_ns = record.deadline_ms(prepared) * ns_per_ms
   let recorded_ok =
     recorded_at_ns >= 0
     && recorded_at_ns <= max_now_ns
@@ -344,7 +378,7 @@ fn decode_receipt(
 }
 
 fn validate_nested_receipt_result(
-  prepared: Prepared,
+  prepared: record.RecoveryRecord,
   expected_effect_id: String,
   nested_value: codec.StrictJsonValue,
 ) -> Result(Nil, String) {
@@ -377,7 +411,7 @@ fn validate_nested_receipt_result(
   use effect_id <- result.try(get_string(nested, "effect_id"))
   use _ <- result.try(require(effect_id == expected_effect_id, invalid_response))
 
-  let expected_intent_sha256 = action.digest(prepared.intent)
+  let expected_intent_sha256 = action.digest(record.intent(prepared))
   use intent_sha256 <- result.try(get_string(nested, "intent_sha256"))
   use _ <- result.try(require(
     intent_sha256 == expected_intent_sha256,
@@ -385,11 +419,14 @@ fn validate_nested_receipt_result(
   ))
 
   use job_id <- result.try(get_string(nested, "job_id"))
-  use _ <- result.try(require(job_id == prepared.target.job, invalid_response))
+  use _ <- result.try(require(
+    job_id == record.target(prepared).job,
+    invalid_response,
+  ))
 
   use matched_attempt <- result.try(get_int(nested, "matched_attempt"))
   use _ <- result.try(require(
-    matched_attempt == prepared.target.attempt,
+    matched_attempt == record.target(prepared).attempt,
     invalid_response,
   ))
 

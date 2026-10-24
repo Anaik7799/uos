@@ -437,3 +437,8 @@ pub fn valid_receipt_window(
   && now_utc_ms < expires_at_ms
   && expires_at_ms <= value.window.deadline_utc_ms
 }
+
+/// Exact arguments approved for this request; command aliases use the shared parser.
+pub fn command_args(value: Intent) -> String {
+  "cancel_job_lease " <> value.target.job <> " -- " <> value.reason
+}
