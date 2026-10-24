@@ -107,7 +107,7 @@ handle_standby_command(#{<<"action">> := <<"run_managed">>} = Cmd, IpcDir, Confi
     Merged = maps:merge(Config, Cmd),
     SvcConfig = build_service_configuration(Merged),
     CurrentPath = maps:get(<<"current_control_registration_path">>, Merged),
-    Budget = {config, 2, maps:get(<<"loop_lifetime_ms">>, Merged, 6000), 10, 15000, 15000, 1},
+    Budget = {config, 2, maps:get(<<"loop_lifetime_ms">>, Merged, 20000), 10, 15000, 15000, 1},
     {ok, Writer} = cepaf_gleam@harness@telegram_store_codec:decode_writer_registration(
         maps:get(<<"writer_registration">>, Merged)),
     Mode = case maps:get(<<"previous_writer_registration">>, Merged, null) of
@@ -334,12 +334,13 @@ handle_actor_command(#{<<"action">> := <<"automatic_dispatch_tick">>} = Cmd, Sub
 
 handle_actor_command(#{<<"action">> := <<"finite_automatic_loop">>}, Subj, IpcDir, SvcConfig) ->
     Observer = gleam@erlang@process:new_subject(),
-    Config = {config, 2, 6000, 10, 15000, 15000, 1},
+    %% Native two-cycle fixtures have a finite budget above one step timeout.
+    Config = {config, 2, 20000, 10, 15000, 15000, 1},
     Result = case cepaf_gleam@harness@telegram_loop:start(Subj, Config, Observer) of
         {ok, {started, DriverPid, DriverSubject}} ->
             unlink(DriverPid),
             Mon = erlang:monitor(process, DriverPid),
-            Received = gleam@erlang@process:'receive'(Observer, 7000),
+            Received = gleam@erlang@process:'receive'(Observer, 21000),
             Down = receive {'DOWN', Mon, process, DriverPid, Why} -> {down, Why}
                 after 1000 -> unknown end,
             case {Received, Down} of
