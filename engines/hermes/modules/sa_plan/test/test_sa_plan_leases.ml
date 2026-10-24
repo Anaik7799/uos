@@ -613,3 +613,216 @@ let () =
       done);
   check "SQLITE-HANDLES-SURVIVE-CONCURRENT-GC" (!observed=1000);
   Printf.printf "lifetime: %d passed, 0 failed\n%!" !observed
+
+module Cancel_protocol = Sa_plan.Cancel_protocol
+
+let cancellation_json (r : Store.job_cancellation) =
+  let i n = `Intlit (Int64.to_string n) in
+  `Assoc [
+    "schema", `String "uos.sa-plan.cancel-job-request.v1";
+    "mapping_id", `String r.mapping_id; "effect_id", `String r.effect_id;
+    "intent_sha256", `String r.intent_sha256; "owner", `String r.owner;
+    "lease_id", `String r.lease_id; "fencing_token", i r.fencing_token;
+    "target_job_id", `String r.target_job_id; "target_worker", `String r.target_worker;
+    "target_attempt", `Int r.target_attempt;
+    "target_lease_until_ns", i r.target_lease_until_ns;
+    "reason", `String r.reason; "expires_at_ns", i r.expires_at_ns
+  ]
+
+let () =
+  Cancellation.with_case (fun path store request ->
+    let query () = Store.lookup_job_cancellation store request ~now_ns:40_000L in
+    check "CANCEL-LOOKUP-MISSING-NO-EFFECT"
+      (Option.is_none (ok (query ())) && Cancellation.no_effect store request);
+    let first=ok (Store.cancel_job_once store request ~now_ns:200L) in
+    Cancellation.exec path "UPDATE sa_plan_task SET attempt=99,worker='replacement',lease_until_ns=0";
+    Cancellation.exec path "UPDATE sa_plan_bridge_lease SET fencing_token=99,expires_at_ns=0";
+    Cancellation.exec path "CREATE TRIGGER no_lookup_job_write BEFORE UPDATE ON sa_plan_job BEGIN SELECT RAISE(ABORT,'lookup cannot update job'); END";
+    Cancellation.exec path "CREATE TRIGGER no_lookup_receipt_write BEFORE INSERT ON sa_plan_bridge_command BEGIN SELECT RAISE(ABORT,'lookup cannot insert receipt'); END";
+    let historical=some (ok (query ())) in
+    check "CANCEL-LOOKUP-EXPIRED-AUTHORITY-HISTORICAL-ONLY"
+      (String.equal first.result historical.result
+       && Int64.equal first.recorded_at_ns historical.recorded_at_ns
+       && historical.replayed
+       && Result.is_error (Store.cancel_job_once store request ~now_ns:40_000L));
+    check "CANCEL-LOOKUP-CHANGED-INTENT-REFUSED"
+      (Result.is_error (Store.lookup_job_cancellation store
+        { request with intent_sha256=Cancellation.hex 'b' } ~now_ns:40_000L));
+    check "CANCEL-LOOKUP-CHANGED-ORIGINAL-FENCE-REFUSED"
+      (Result.is_error (Store.lookup_job_cancellation store
+        { request with fencing_token=2L } ~now_ns:40_000L));
+    check "CANCEL-LOOKUP-FUTURE-RECEIPT-REFUSED"
+      (Result.is_error (Store.lookup_job_cancellation store request ~now_ns:199L));
+    check "CANCEL-LOOKUP-NEGATIVE-CLOCK-REFUSED"
+      (Result.is_error (Store.lookup_job_cancellation store request ~now_ns:(-1L))));
+  Cancellation.with_case (fun path store request ->
+    ignore (ok (Store.cancel_job_once store request ~now_ns:200L) : Store.bridge_command_receipt);
+    Cancellation.exec path "UPDATE sa_plan_bridge_command SET result='fabricated'";
+    check "CANCEL-LOOKUP-CORRUPT-RECEIPT-REFUSED"
+      (Result.is_error (Store.lookup_job_cancellation store request ~now_ns:40_000L)));
+  Cancellation.with_case (fun _ store request ->
+    let raw=Yojson.Safe.to_string (cancellation_json request) in
+    let query=ok (Cancel_protocol.decode Lookup raw) in
+    let missing=ok (Cancel_protocol.execute store query ~now_ns:200L) in
+    check "CANCEL-PROTOCOL-MISSING-IS-NOT-SUCCESS"
+      (Poly.equal (Yojson.Safe.Util.member "found" missing) (`Bool false)
+       && Cancellation.no_effect store request);
+    let command=ok (Cancel_protocol.decode Cancel raw) in
+    let first=ok (Cancel_protocol.execute store command ~now_ns:200L) in
+    check "CANCEL-PROTOCOL-EXECUTE-TRUTHFUL"
+      (Poly.equal (Yojson.Safe.Util.member "found" first) (`Bool true)
+       && Poly.equal (Yojson.Safe.Util.member "historical" first) (`Bool false)
+       && Poly.equal (Cancellation.job store).state Store.Job_cancelled);
+    let past=ok (Cancel_protocol.execute store query ~now_ns:40_000L) in
+    check "CANCEL-PROTOCOL-LOOKUP-HISTORICAL"
+      (Poly.equal (Yojson.Safe.Util.member "historical" past) (`Bool true)
+       && Poly.equal (Yojson.Safe.Util.member "process_quiesced"
+          (Yojson.Safe.Util.member "result" (Yojson.Safe.Util.member "receipt" past))) (`Bool false)));
+  Cancellation.with_case (fun _ _ request ->
+    let fields=match cancellation_json request with `Assoc fields -> fields | _ -> assert false in
+    let reject json = Result.is_error (Cancel_protocol.decode Cancel (Yojson.Safe.to_string json)) in
+    List.iter fields ~f:(fun (name, _) ->
+      check "CANCEL-PROTOCOL-MISSING-FIELD"
+        (reject (`Assoc (List.filter fields ~f:(fun (k,_) -> not (String.equal k name)))));
+      check "CANCEL-PROTOCOL-WRONG-TYPE"
+        (reject (`Assoc (List.map fields ~f:(fun (k,v) -> k,(if String.equal k name then `Bool true else v)))));
+      check "CANCEL-PROTOCOL-DUPLICATE-FIELD"
+        (reject (`Assoc ((name, `Null)::fields))));
+    List.iter [
+      "now_ns", `Int 200; "db_path", `String "/tmp/other";
+      "approved", `Bool true; "unused", `Null
+    ] ~f:(fun extra -> check "CANCEL-PROTOCOL-UNKNOWN-FIELD" (reject (`Assoc (extra::fields))));
+    List.iter [
+      "fencing_token", `String "1";
+      "target_attempt", `Float 1.0;
+      "target_attempt", `Intlit "2147483648";
+      "target_lease_until_ns", `Intlit "9223372036854775808";
+      "schema", `String "wrong";
+      "reason", `String "bad\ncontrol";
+      "effect_id", `String (String.make 64 'G');
+      "mapping_id", `String "../mapping"
+    ] ~f:(fun (name,value) ->
+      check "CANCEL-PROTOCOL-INVALID-VALUE"
+        (reject (`Assoc (List.map fields ~f:(fun (k,v) -> k,(if String.equal k name then value else v))))));
+    List.iter ["[]"; "null"; "{}junk"; String.make 8193 ' '; "\255"] ~f:(fun raw ->
+      check "CANCEL-PROTOCOL-MALFORMED-BOUNDED"
+        (Result.is_error (Cancel_protocol.decode Cancel raw))));
+  Printf.printf "cancellation protocol checks included: %d total passed\n%!" !tests
+
+(* Execute the actual CLI with isolated files, explicit DB, and a finite timeout.
+   Neither fixture setup nor child execution touches the canonical live store. *)
+let run_cancellation_cli ~database ~verb ~input =
+  let stdin_path=Stdlib.Filename.temp_file "uos-cancel-input-" ".json" in
+  let stdout_path=Stdlib.Filename.temp_file "uos-cancel-output-" ".json" in
+  let stderr_path=Stdlib.Filename.temp_file "uos-cancel-errors-" ".txt" in
+  let all=[stdin_path;stdout_path;stderr_path] in
+  Exn.protect ~finally:(fun () -> List.iter all ~f:(fun p ->
+    if Stdlib.Sys.file_exists p then Stdlib.Sys.remove p)) ~f:(fun () ->
+    Out_channel.write_all stdin_path ~data:input;
+    let fd_in=Lifetime_unix.openfile stdin_path [O_RDONLY] 0 in
+    let fd_out=Lifetime_unix.openfile stdout_path [O_WRONLY;O_TRUNC] 0 in
+    let fd_err=Lifetime_unix.openfile stderr_path [O_WRONLY;O_TRUNC] 0 in
+    let exe=Filename.concat (Filename.dirname Stdlib.Sys.executable_name) "sa_plan_main.exe" in
+    let env=Lifetime_unix.environment () |> Array.to_list
+      |> List.filter ~f:(fun s -> not (String.is_prefix s ~prefix:"UOS_SA_PLAN_DB="))
+      |> fun xs -> Array.of_list (("UOS_SA_PLAN_DB="^database)::xs) in
+    let pid=Exn.protect ~finally:(fun () ->
+      List.iter [fd_in;fd_out;fd_err] ~f:Lifetime_unix.close)
+      ~f:(fun () -> Lifetime_unix.create_process_env exe
+        [|exe;"job";verb|] env fd_in fd_out fd_err) in
+    let deadline=Lifetime_unix.gettimeofday () +. 5.0 in
+    let rec wait () =
+      match Lifetime_unix.waitpid [WNOHANG] pid with
+      | 0,_ ->
+          if Float.(Lifetime_unix.gettimeofday () >= deadline) then begin
+            Lifetime_unix.kill pid Stdlib.Sys.sigkill;
+            ignore (Lifetime_unix.waitpid [] pid : int * Lifetime_unix.process_status);
+            failwith "cancellation CLI fixture timed out"
+          end else (Lifetime_unix.sleepf 0.01; wait ())
+      | _,status -> status in
+    let status=wait () in
+    let output=In_channel.read_all stdout_path in
+    let errors=In_channel.read_all stderr_path in
+    if String.length output > 8192 || String.length errors > 32768 then
+      failwith "cancellation CLI fixture output exceeded bounds";
+    status,output,errors)
+
+let () =
+  Cancellation.with_case (fun path store request ->
+    let now=Int64.of_float (Lifetime_unix.gettimeofday () *. 1_000_000_000.) in
+    let expires=Int64.(now + 60_000_000_000L) in
+    let target_lease=Int64.(now + 120_000_000_000L) in
+    let control_lease=Int64.(now + 180_000_000_000L) in
+    Cancellation.exec path (Printf.sprintf
+      "UPDATE sa_plan_task SET lease_until_ns=%Ld; UPDATE sa_plan_bridge_lease SET expires_at_ns=%Ld; UPDATE sa_plan_job SET lease_until_ns=%Ld"
+      control_lease control_lease target_lease);
+    let request={ request with target_lease_until_ns=target_lease;expires_at_ns=expires } in
+    let input=Yojson.Safe.to_string (cancellation_json request) in
+    let status,output,_=run_cancellation_cli ~database:path ~verb:"cancel-once" ~input in
+    check "CANCEL-REAL-CLI-SUCCEEDED" (Poly.equal status (Lifetime_unix.WEXITED 0));
+    let json=Yojson.Safe.from_string output in
+    check "CANCEL-REAL-CLI-OBSERVED-EFFECT"
+      (Poly.equal (Cancellation.job store).state Store.Job_cancelled
+       && Poly.equal (Yojson.Safe.Util.member "found" json) (`Bool true));
+    let status,output,_=run_cancellation_cli ~database:path ~verb:"cancel-once" ~input in
+    let replay=Yojson.Safe.from_string output in
+    check "CANCEL-REAL-CLI-REPLAY"
+      (Poly.equal status (Lifetime_unix.WEXITED 0)
+       && Poly.equal (Yojson.Safe.Util.member "replayed"
+           (Yojson.Safe.Util.member "receipt" replay)) (`Bool true));
+    let status,output,_=run_cancellation_cli ~database:path ~verb:"cancellation-result" ~input in
+    check "CANCEL-REAL-CLI-HISTORICAL-QUERY"
+      (Poly.equal status (Lifetime_unix.WEXITED 0)
+       && Poly.equal (Yojson.Safe.Util.member "historical" (Yojson.Safe.from_string output)) (`Bool true));
+    let invalid=String.drop_suffix input 1 ^ ",\"now_ns\":200}" in
+    let status,output,errors=run_cancellation_cli ~database:path ~verb:"cancel-once" ~input:invalid in
+    check "CANCEL-REAL-CLI-CALLER-CLOCK-REFUSED"
+      (not (Poly.equal status (Lifetime_unix.WEXITED 0))
+       && String.is_empty output && not (String.is_substring errors ~substring:request.reason)));
+  let path=Stdlib.Filename.temp_file "uos-cancel-missing-store-" ".sqlite3" in
+  Stdlib.Sys.remove path;
+  let status,_,_=run_cancellation_cli ~database:path ~verb:"cancel-once" ~input:"{}" in
+  check "CANCEL-REAL-CLI-MALFORMED-DOES-NOT-CREATE-STORE"
+    (not (Poly.equal status (Lifetime_unix.WEXITED 0)) && not (Stdlib.Sys.file_exists path))
+
+let () = Cancellation.with_case (fun _ _ request ->
+  let path=Stdlib.Filename.temp_file "uos-cancel-valid-missing-" ".sqlite3" in
+  Stdlib.Sys.remove path;
+  let input=Yojson.Safe.to_string (cancellation_json request) in
+  let status,_,_=run_cancellation_cli ~database:path ~verb:"cancellation-result" ~input in
+  check "CANCEL-REAL-CLI-VALID-INPUT-REQUIRES-EXISTING-STORE"
+    (not (Poly.equal status (Lifetime_unix.WEXITED 0)) && not (Stdlib.Sys.file_exists path)))
+
+let () = Cancellation.with_case (fun path store request ->
+  let peer=ok (Store.open_db path) in
+  let lock=Sqlite3.db_open path in
+  Exn.protect ~finally:(fun () ->
+    ignore (Sqlite3.exec lock "ROLLBACK" : Sqlite3.Rc.t);
+    ignore (Sqlite3.db_close lock : bool); Store.close peer)
+    ~f:(fun () ->
+      require "CANCEL-CONTENTION-LOCK" (Poly.equal (Sqlite3.exec lock "BEGIN IMMEDIATE") Sqlite3.Rc.OK);
+      let command=ok (Cancel_protocol.decode Cancel (Yojson.Safe.to_string (cancellation_json request))) in
+      let now=Atomic.make 200L and started=Atomic.make false and observed=Atomic.make false in
+      let worker=Domain.spawn (fun () ->
+        Atomic.set started true;
+        Cancel_protocol.execute_observed peer command ~observe_now:(fun () ->
+          Atomic.set observed true; Atomic.get now)) in
+      while not (Atomic.get started) do Lifetime_unix.sleepf 0.001 done;
+      Lifetime_unix.sleepf 0.05;
+      let premature=Atomic.get observed in
+      Atomic.set now 40_000L;
+      require "CANCEL-CONTENTION-UNLOCK" (Poly.equal (Sqlite3.exec lock "COMMIT") Sqlite3.Rc.OK);
+      let outcome=Domain.join worker in
+      check "CANCEL-CLOCK-OBSERVED-AFTER-LOCK" (not premature && Atomic.get observed);
+      check "CANCEL-EXPIRY-DURING-LOCK-WAIT-REFUSED"
+        (Result.is_error outcome && Cancellation.no_effect store request)))
+
+let () = Cancellation.with_case (fun _ store request ->
+  let command=ok (Cancel_protocol.decode Cancel (Yojson.Safe.to_string (cancellation_json request))) in
+  check "CANCEL-CLOCK-OBSERVER-FAILURE-ROLLS-BACK"
+    (Result.is_error (Cancel_protocol.execute_observed store command
+       ~observe_now:(fun () -> failwith "test clock unavailable"))
+     && Cancellation.no_effect store request);
+  ignore (ok (Cancel_protocol.execute_observed store command ~observe_now:(fun () -> 200L))
+    : Yojson.Safe.t);
+  check "CANCEL-CLOCK-OBSERVER-RECOVERY" (Poly.equal (Cancellation.job store).state Store.Job_cancelled))

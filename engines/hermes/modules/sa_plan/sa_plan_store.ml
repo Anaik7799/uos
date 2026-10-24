@@ -2791,21 +2791,24 @@ let cancellation_digest value =
   String.length value = 64
   && String.for_all value ~f:(fun c -> String.contains "0123456789abcdef" c)
 
-let cancellation_input (request : job_cancellation) ~now_ns =
+let cancellation_shape (request : job_cancellation) =
   List.for_all [request.mapping_id; request.owner; request.lease_id;
                  request.target_job_id; request.target_worker] ~f:cancellation_token
   && cancellation_digest request.effect_id
   && cancellation_digest request.intent_sha256
   && request.target_attempt > 0 && request.target_attempt <= 2_147_483_647
-  && Int64.(request.fencing_token > 0L && now_ns >= 0L
-            && request.expires_at_ns > now_ns
-            && request.expires_at_ns - now_ns <= 300_000_000_000L
+  && Int64.(request.fencing_token > 0L && request.expires_at_ns > 0L
             && request.target_lease_until_ns > request.expires_at_ns)
   && String.length request.reason > 0 && String.length request.reason <= 256
   && not (String.is_empty (String.strip request.reason))
   && Stdlib.String.is_valid_utf_8 request.reason
   && String.for_all request.reason ~f:(fun c ->
        let n = Char.to_int c in n >= 32 && n <> 127)
+
+let cancellation_input request ~now_ns =
+  cancellation_shape request
+  && Int64.(now_ns >= 0L && request.expires_at_ns > now_ns
+            && request.expires_at_ns - now_ns <= 300_000_000_000L)
 
 let cancellation_hash (request : job_cancellation) ~plan_id ~task_id =
   let i x = `Intlit (Int64.to_string x) in
@@ -2919,6 +2922,34 @@ let cancel_job_once store (request : job_cancellation) ~now_ns =
               else Error "cancellation lost target compare-and-set") in
           record_command_db store.db ~mapping_id:request.mapping_id ~command_id
             ~request_hash ~result ~recorded_at_ns:now_ns)
+
+let lookup_job_cancellation store (request : job_cancellation) ~now_ns =
+  let open Result.Let_syntax in
+  if not (cancellation_shape request) || Int64.(now_ns < 0L) then
+    Error "invalid cancellation receipt lookup"
+  else transaction store (fun () ->
+    let%bind mapping = find_mapping_db store.db request.mapping_id in
+    let%bind mapping = match mapping with
+      | Some mapping when Poly.equal mapping.domain Sa_plan -> Ok mapping
+      | _ -> Error "cancellation lookup requires canonical mapping" in
+    let%bind plan_id, task_id = mapped_task mapping in
+    let prefix = plan_id ^ "/" in
+    let%bind () =
+      if String.is_prefix request.target_job_id ~prefix
+         && String.length request.target_job_id > String.length prefix then Ok ()
+      else Error "cancellation lookup target is outside mapped scope" in
+    let command_id = "cancel-job:" ^ request.effect_id in
+    let%bind prior = command_db store.db ~mapping_id:request.mapping_id ~command_id in
+    match prior with
+    | None -> Ok None
+    | Some receipt ->
+        if not (String.equal receipt.request_hash
+                  (cancellation_hash request ~plan_id ~task_id))
+           || not (String.equal receipt.result (cancellation_result request))
+           || Int64.(receipt.recorded_at_ns < 0L || receipt.recorded_at_ns > now_ns
+                     || receipt.recorded_at_ns >= request.expires_at_ns)
+        then Error "cancellation lookup receipt mismatch"
+        else Ok (Some receipt))
 
 let list_jobs store ~queue =
   match ensure_open store with

@@ -618,3 +618,13 @@ val workflow_history :
   t -> id_or_name:string -> (workflow_event list, string) Result.t
 
 val list_workflows : t -> (workflow_view list, string) Result.t
+
+(** Read-only historical cancellation receipt reconciliation. Matches the full
+    original request digest and fixed receipt payload under its canonical mapping.
+    The original request may be expired and its controller lease replaced.
+    This does not authenticate a caller, observe current job/process state,
+    extend authority, or authorize retrying an effect. A trusted read adapter
+    must authenticate and scope the caller before invoking it. *)
+val lookup_job_cancellation :
+  t -> job_cancellation -> now_ns:int64 ->
+  (bridge_command_receipt option, string) Result.t
