@@ -315,3 +315,60 @@ fn require(condition: Bool, message: String) -> Result(Nil, String) {
     False -> Error(message)
   }
 }
+
+/// Restore only the exact canonical original request for durable reconciliation.
+/// This grants no effect authority and does not renew its absolute expiry.
+pub fn restore(raw: String) -> Result(Request, String) {
+  use _ <- result.try(require(
+    string.byte_size(raw) > 0 && string.byte_size(raw) <= 4096,
+    "invalid_bridge_request",
+  ))
+  use root <- result.try(case codec.parse_strict_json(raw) {
+    Ok(value) -> Ok(value)
+    Error(_) -> Error("invalid_bridge_request")
+  })
+  use fields <- result.try(
+    expect_exact_object(root, [
+      "schema",
+      "mapping_id",
+      "plan_id",
+      "task_id",
+      "owner",
+      "task_attempt",
+      "lease_id",
+      "expires_at_ns",
+    ]),
+  )
+  use schema <- result.try(get_string(fields, "schema"))
+  use _ <- result.try(require(
+    schema == "uos.sa-plan.bridge-bind-request.v1",
+    "invalid_bridge_request",
+  ))
+  use mapping <- result.try(get_string(fields, "mapping_id"))
+  use plan <- result.try(get_string(fields, "plan_id"))
+  use task <- result.try(get_string(fields, "task_id"))
+  use owner <- result.try(get_string(fields, "owner"))
+  use attempt <- result.try(get_int(fields, "task_attempt"))
+  use lease <- result.try(get_string(fields, "lease_id"))
+  use expiry <- result.try(get_int(fields, "expires_at_ns"))
+  use r <- result.try(new(mapping, plan, task, owner, attempt, lease, expiry))
+  use _ <- result.try(require(
+    raw == request_json(r),
+    "noncanonical_bridge_request",
+  ))
+  Ok(r)
+}
+
+pub fn matches_context(
+  r: Request,
+  plan: String,
+  task: String,
+  owner: String,
+  attempt: Int,
+) -> Bool {
+  r.plan == plan && r.task == task && r.owner == owner && r.attempt == attempt
+}
+
+pub fn expires_at_ns(r: Request) -> Int {
+  r.expiry
+}

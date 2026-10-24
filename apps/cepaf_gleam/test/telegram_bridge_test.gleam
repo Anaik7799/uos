@@ -272,3 +272,36 @@ pub fn run_native(
   recovered_expiry |> should.equal(expiry)
   "bridge_bound_and_reconciled"
 }
+
+pub fn durable_exact_request_restoration_test() {
+  let original = bridge.request_json(request())
+  let assert Ok(restored) = bridge.restore(original)
+  bridge.request_json(restored) |> should.equal(original)
+  bridge.matches_context(restored, "fence", "controller", "owner", 1)
+  |> should.be_true
+  bridge.matches_context(restored, "fence", "controller", "owner", 2)
+  |> should.be_false
+  bridge.expires_at_ns(restored) |> should.equal(1000)
+}
+
+pub fn restoration_refuses_noncanonical_or_unknown_fields_test() {
+  let raw = bridge.request_json(request())
+  list.each(
+    [
+      " " <> raw,
+      raw <> " ",
+      raw
+        |> string.replace(
+          "\"task_attempt\":1",
+          "\"task_attempt\":1,\"extra\":true",
+        ),
+      raw
+        |> string.replace(
+          "\"owner\":\"owner\"",
+          "\"owner\":\"owner\",\"owner\":\"owner\"",
+        ),
+      raw |> string.replace("\"task_attempt\":1", "\"task_attempt\":1.0"),
+    ],
+    fn(value) { bridge.restore(value) |> result.is_error |> should.be_true },
+  )
+}

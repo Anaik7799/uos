@@ -1345,3 +1345,49 @@ let () = with_bridge_protocol (fun path store mapping ->
        | Some lease -> Int64.equal lease.expires_at_ns expiry
           && Int64.equal lease.fencing_token 1L && Poly.equal lease.task_attempt (Some 1)
        | None -> false))
+
+let () = with_bridge_protocol (fun path store mapping ->
+  let now=Int64.of_float (Lifetime_unix.gettimeofday () *. 1_000_000_000.) in
+  let expiry=Int64.(now+60_000_000_000L) in
+  Cancellation.exec path ("UPDATE sa_plan_task SET lease_until_ns=" ^ Int64.to_string Int64.(now+120_000_000_000L));
+  let before=view store "controller" in
+  let dir=Stdlib.Sys.getenv "UOS_CANCEL_TRANSPORT_TEST_DIR" in
+  let root=Stdlib.Sys.getenv "UOS_CANCEL_GLEAM_TEST_ROOT" in
+  let profile_dir=path ^ ".profile" in
+  Core_unix.mkdir profile_dir ~perm:0o700;
+  Exn.protect ~finally:(fun ()->
+    let file=Filename.concat profile_dir "profile.json" in
+    if Stdlib.Sys.file_exists file then Stdlib.Sys.remove file;
+    Core_unix.rmdir profile_dir)
+    ~f:(fun ()->
+      let bin s="<<" ^ String.concat ~sep:"," (List.map (String.to_list s) ~f:(fun c->Int.to_string (Char.to_int c))) ^ ">>" in
+      let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
+      let guardian=Filename.concat dir "guardian.exe" and native=Filename.concat dir "worker.exe" in
+      let prefix=Printf.sprintf "code:add_paths(filelib:wildcard(%S)),code:add_patha(%S),"
+        (Filename.concat root "lib/*/ebin") (Filename.concat root "build/ebin") in
+      let run code=run_cancellation_child
+        ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
+        ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";prefix ^ code] ~database:path ~input:"" in
+      let code=Printf.sprintf
+        "D=telegram_action_profile_test:persist_and_bind(%s,%s,%Ld,%s,%s,%s,%s,%s,%Ld),io:put_chars(D),halt(77)."
+        (bin profile_dir) (bin mapping.id) expiry (bin guardian) (bin (sha guardian))
+        (bin native) (bin (sha native)) (bin path) Int64.(now/1_000_000L) in
+      let status,digest,errors=run code in
+      require "PROFILE-PERSIST-BIND-PROCESS-EXIT"
+        (Poly.equal status (Lifetime_unix.WEXITED 77) && String.is_empty errors
+         && String.length digest=64 && String.for_all digest ~f:(fun c->
+           Char.is_digit c || (Char.(c >= 'a') && Char.(c <= 'f'))));
+      let persisted=In_channel.read_all (Filename.concat profile_dir "profile.json") in
+      let saved=ok (Store.find_bridge_lease store ~mapping_id:mapping.id) in
+      let status,out,errors=run (Printf.sprintf
+        "R=telegram_action_profile_test:recover_lookup(%s,%s),io:put_chars(R),halt(0)."
+        (bin profile_dir) (bin digest)) in
+      check "PROFILE-SECOND-BEAM-EXACT-RECOVERY"
+        (Poly.equal status (Lifetime_unix.WEXITED 0) && String.is_empty errors
+         && String.equal out "profile_reloaded_exact_bridge");
+      check "PROFILE-RECOVERY-NO-RENEWAL"
+        (Poly.equal before (view store "controller")
+         && Poly.equal saved (ok (Store.find_bridge_lease store ~mapping_id:mapping.id))
+         && String.equal persisted (In_channel.read_all (Filename.concat profile_dir "profile.json"))
+         && match saved with Some lease->Int64.equal lease.fencing_token 1L
+            && Int64.equal lease.expires_at_ns expiry | None->false)));
