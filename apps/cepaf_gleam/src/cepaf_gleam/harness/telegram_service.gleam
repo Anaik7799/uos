@@ -19,6 +19,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_coordination_reader as coordination_reader
 import cepaf_gleam/harness/telegram_host_observation as host_observation
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
@@ -2278,6 +2279,8 @@ fn execute_guarded_dispatch(
                     )) -> {
                       let payload = case dir {
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.DirectReadTool("query_peers") -> coordination_reply(state, "peers")
+                        guard.DirectReadTool("query_board") -> coordination_reply(state, "board")
                         guard.DirectReadTool("query_zigvm_version") -> {
                           case current_read(state, 3000, host_observation.kernel_report) {
                             Ok(report) -> json.to_string(report)
@@ -5334,5 +5337,22 @@ fn operational_status_reply(state: ServiceState, generation: Int) -> String {
         Error(_) -> status_failure()
       }
     }
+  }
+}
+
+
+fn coordination_reply(state: ServiceState, view: String) -> String {
+  let path = case state.config.authority_paths {
+    CanonicalProductionPaths -> "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
+    IsolatedTestPaths(_, db) -> db
+  }
+  case current_read(state, 5000, fn() { coordination_reader.observe(path, view) }) {
+    Ok(Ok(report)) -> report
+    _ -> json.object([
+      #("status",json.string("unavailable")),
+      #("view",json.string(view)),
+      #("error",json.string("Verified coordination observation unavailable.")),
+      #("runtime_admission",json.string("NOT_GRANTED")),
+    ]) |> json.to_string
   }
 }

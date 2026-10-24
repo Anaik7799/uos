@@ -2463,3 +2463,13 @@ pub fn e2e_kernel_eval_and_override_refused_test() {
   exercise_automatic_command_dispatch("/zigvm eval dangerous", "denied_mutation",
     "/action query_zigvm_version {\"path\":\"evil\"}", "denied_mutation")
 }
+
+
+pub fn e2e_coordination_peers_and_board_test() {
+  exercise_automatic_command_dispatch("/peers", "fresh-self-reported",
+    "/board", "\"scope\":\"metadata_counts_only\"")
+}
+pub fn e2e_coordination_tool_and_scope_refusal_test() {
+  exercise_automatic_command_dispatch("/tool query_peers {}", "\"session\":\"worker-e2e-01\"",
+    "/action query_board {\"path\":\"evil\"}", "denied_mutation")
+}

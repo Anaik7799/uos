@@ -13,6 +13,8 @@ pub type Selection {
   Doctor
   SystemHealth
   KernelVersion
+  Peers
+  Board
   Plan
   Task(String)
 }
@@ -22,6 +24,8 @@ pub fn help() -> String {
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
   <> "/tool query_system_health {} — bounded service reachability and local Telegram state.\n"
   <> "/tool query_zigvm_version {} — installed pinned executable version only.\n"
+  <> "/tool query_peers {} — canonical session heartbeat observations.\n"
+  <> "/tool query_board {} — verified coordination message metadata counts.\n"
   <> "/tool query_saplan {} — current configured plan snapshot.\n"
   <> "/tool query_task {\"task_id\":\"TASK_ID\"} — task detail in the configured plan only.\n"
   <> "Arguments cannot change the plan, database, path or authority. Other tools are unavailable."
@@ -88,6 +92,8 @@ pub fn parse(args: String) -> Result(Selection, String) {
     "" | "help" -> empty_arguments(tail, Help)
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
+    "query_peers" -> empty_arguments(tail, Peers)
+    "query_board" -> empty_arguments(tail, Board)
     "query_zigvm_version" -> empty_arguments(tail, KernelVersion)
     "query_saplan" -> empty_arguments(tail, Plan)
     "query_task" -> task_arguments(tail)

@@ -267,3 +267,14 @@ pub fn kernel_version_fixed_scope_test() {
   list.each(["/zigvm eval x", "/zigvm version --path=x", "/tool query_zigvm_version {\"path\":\"evil\"}"],
     fn(input) { let assert g.DeniedMutation(..) = g.classify_directive(input) })
 }
+
+
+pub fn coordination_scope_at_ingress_test() {
+  g.classify_directive("/peers") |> should.equal(g.DirectReadTool("query_peers"))
+  g.classify_directive("/board") |> should.equal(g.DirectReadTool("query_board"))
+  g.classify_directive("/tool query_peers {}") |> should.equal(g.DirectReadTool("query_peers"))
+  g.classify_directive("/action query_board {}") |> should.equal(g.DirectReadTool("query_board"))
+  list.each(["/peers private","/board send x","/tool query_peers {\"path\":\"evil\"}"], fn(input) {
+    let assert g.DeniedMutation(..) = g.classify_directive(input)
+  })
+}
