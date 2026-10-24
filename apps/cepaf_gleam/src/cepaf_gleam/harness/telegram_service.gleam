@@ -2243,12 +2243,16 @@ fn execute_guarded_dispatch(
           let proc_ver = inbox_ver + 1
           let proc_sha = files.digest(codec.encode_inbox_record(processing_rec))
 
-          case conversation_requested(state, inbox_rec.request_id) {
-            True -> execute_conversation_dispatch(
+          case specialized_dispatch(state, inbox_rec.request_id) {
+            MemoryDispatch -> execute_memory_dispatch(
               ServiceState(..state, expected_generation: gen1),
               processing_rec, proc_ver, proc_sha,
             )
-            False -> {
+            ConversationDispatch -> execute_conversation_dispatch(
+              ServiceState(..state, expected_generation: gen1),
+              processing_rec, proc_ver, proc_sha,
+            )
+            RegularDispatch -> {
           let #(response_payload, callback_query_id) = case
             svc_read_keys(state, [
               codec.input_key(inbox_rec.request_id),
@@ -3200,6 +3204,12 @@ pub fn authority_worker_revoke_lease(
 }
 
 pub type StoreWorkerMessage {
+  StorePrepareMemory(
+    gen: Int, record: ledger.InboxRecord, version: Int, sha: String,
+    worker: String, epoch: Int, reply_to: Subject(Result(store.MemoryObservation,store.StoreError)),
+  )
+  StoreCommitMemory(observation: store.MemoryObservation, payloads: List(String),
+    reply_to: Subject(Result(store.CommitResultResult,store.StoreError)))
   StoreReserveConversation(
     expected_gen: Int, record: ledger.InboxRecord, version: Int, sha: String,
     worker: String, epoch: Int, day: Int, daily_limit: Int,
@@ -3313,6 +3323,14 @@ fn handle_store_worker_message(
   msg: StoreWorkerMessage,
 ) -> actor.Next(StoreWorkerState, StoreWorkerMessage) {
   case msg {
+    StorePrepareMemory(gen,record,version,sha,worker,epoch,reply_to) -> {
+      process.send(reply_to,store.prepare_memory_command(state.config,gen,record,version,sha,worker,epoch))
+      actor.continue(state)
+    }
+    StoreCommitMemory(observation,payloads,reply_to) -> {
+      process.send(reply_to,store.commit_memory_result(observation,payloads))
+      actor.continue(state)
+    }
     StoreReserveConversation(gen, record, version, sha, worker, epoch, day, limit, reply_to) -> {
       let res = store.reserve_conversation(state.config, gen, record, version, sha, worker, epoch, day, limit)
       process.send(reply_to, res)
@@ -5067,19 +5085,24 @@ fn command_observer_request(config: ServiceConfiguration) -> obs_policy.ObserveR
   )
 }
 
-fn conversation_requested(state: ServiceState, request_id: String) -> Bool {
-  case state.config.conversation {
-    ConversationDisabled -> False
-    _ -> case svc_read_keys(state, [codec.input_key(request_id)]) {
-      Ok(#(_, [row])) -> case codec.decode_row_value(row) |> result.try(codec.decode_input_verdict) {
-        Ok(#(_, _, _, guard.AcceptedEnvelope(
-          directive: guard.PreservedDirective(name, _),
-          callback_query_id: None, ..
-        ))) -> name == "conversational" || name == "/agy"
-        _ -> False
+type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch }
+
+fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedDispatch {
+  case svc_read_keys(state, [codec.input_key(request_id)]) {
+    Ok(#(_, [row])) -> case codec.decode_row_value(row) |> result.try(codec.decode_input_verdict) {
+      Ok(#(_, _, _, guard.AcceptedEnvelope(
+        directive: guard.PreservedDirective(name, _), callback_query_id: None, ..
+      ))) -> case name {
+        "/memory" | "/history" | "/messages" -> MemoryDispatch
+        "conversational" | "/agy" -> case state.config.conversation {
+          ConversationDisabled -> RegularDispatch
+          _ -> ConversationDispatch
+        }
+        _ -> RegularDispatch
       }
-      _ -> False
+      _ -> RegularDispatch
     }
+    _ -> RegularDispatch
   }
 }
 
@@ -5221,4 +5244,36 @@ fn reply_without_reservation(
     state.config.worker_id, state.config.service_epoch)
     |> result.map_error(fn(err) { conversation_store_failure(state, err) }))
   finish_conversation(state, record, version, committed)
+}
+
+fn execute_memory_dispatch(
+  state: ServiceState, record: ledger.InboxRecord, version: Int, sha: String,
+) -> Result(#(ServiceState, ServiceStepResult), ServiceError) {
+  use _ <- result.try(conversation_authorize(state)
+    |> result.map_error(fn(reason) { ServiceError(state,reason) }))
+  use observation <- result.try(case state.store_worker {
+    Some(worker) -> process.call(worker,5000,fn(reply_to) {
+      StorePrepareMemory(state.expected_generation,record,version,sha,
+        state.config.worker_id,state.config.service_epoch,reply_to)
+    })
+    None -> store.prepare_memory_command(state.config.storage_config,
+      state.expected_generation,record,version,sha,
+      state.config.worker_id,state.config.service_epoch)
+  } |> result.map_error(fn(err) { conversation_store_failure(state,err) }))
+  let text = store.memory_reply(observation)
+  let payloads = chunk_payload_utf8(text)
+  use _ <- result.try(case string.join(payloads,"") == text
+    && list.all(payloads,fn(p) { string.byte_size(p) <= max_chunk_bytes }) {
+    True -> Ok(Nil)
+    False -> Error(ServiceError(state,"memory_reply_chunking_failed"))
+  })
+  use _ <- result.try(conversation_authorize(state)
+    |> result.map_error(fn(reason) { ServiceError(state,reason) }))
+  use committed <- result.try(case state.store_worker {
+    Some(worker) -> process.call(worker,5000,fn(reply_to) {
+      StoreCommitMemory(observation,payloads,reply_to)
+    })
+    None -> store.commit_memory_result(observation,payloads)
+  } |> result.map_error(fn(err) { conversation_store_failure(state,err) }))
+  finish_conversation(state,record,version,committed)
 }

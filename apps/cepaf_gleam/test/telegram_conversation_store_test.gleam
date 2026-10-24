@@ -1,3 +1,4 @@
+import gleam/string
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_conversation as conv
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
@@ -191,4 +192,95 @@ pub fn with_reserved_for_model_test(run: fn(store.ConversationReservation) -> a)
   let #(gen,rec) = processing(config,10,100,200,"Hello")
   let assert Ok(r) = reserve(config,gen,rec,10)
   run(r)
+}
+
+fn memory(config: transport.LocalConfiguration, gen: Int, rec: ledger.InboxRecord) {
+  store.prepare_memory_command(config,gen,rec,2,
+    files.digest(codec.encode_inbox_record(rec)),worker,1)
+}
+
+fn seed_memory(config: transport.LocalConfiguration) {
+  let #(gen,rec) = processing(config,10,100,200,"Hello")
+  let assert Ok(r) = reserve(config,gen,rec,10)
+  let assert Ok(_) = store.commit_conversation_result(r,["Hi"],Some("Hi"))
+  Nil
+}
+
+pub fn native_memory_clear_and_confirmation_are_atomic_test() {
+  use config <- with_store()
+  seed_memory(config)
+  let #(gen,rec) = processing(config,11,100,200,"/memory clear")
+  let assert Ok(observation) = memory(config,gen,rec)
+  list.length(context(config,100,200).turns) |> should.equal(1)
+  let text = store.memory_reply(observation)
+  let assert Ok(first) = store.commit_memory_result(observation,[text])
+  context(config,100,200).turns |> should.equal([])
+  budget(config).reserved_requests |> should.equal(1)
+  let assert Ok(raw) = codec.decode_row_value(row(config,codec.chunk_key(rec.request_id,0)))
+  let assert Ok(chunk) = codec.decode_chunk_value(raw)
+  chunk.payload |> should.equal(text)
+  let assert Ok(replay) = store.commit_memory_result(observation,[text])
+  replay.receipt.generation |> should.equal(first.receipt.generation)
+}
+
+pub fn native_memory_history_is_scoped_and_does_not_charge_test() {
+  use config <- with_store()
+  seed_memory(config)
+  let #(gen,rec) = processing(config,11,100,201,"/history")
+  let assert Ok(other) = memory(config,gen,rec)
+  string.contains(store.memory_reply(other),"No stored conversation history") |> should.equal(True)
+  let assert Ok(_) = store.commit_memory_result(other,[store.memory_reply(other)])
+  let #(gen2,rec2) = processing(config,12,100,200,"/messages 1")
+  let assert Ok(own) = memory(config,gen2,rec2)
+  string.contains(store.memory_reply(own),"You: Hello") |> should.equal(True)
+  string.contains(store.memory_reply(own),"Assistant: Hi") |> should.equal(True)
+  let assert Ok(_) = store.commit_memory_result(own,[store.memory_reply(own)])
+  budget(config).reserved_requests |> should.equal(1)
+  list.length(context(config,100,200).turns) |> should.equal(1)
+}
+
+pub fn native_memory_clear_conflict_keeps_history_and_no_confirmation_test() {
+  use config <- with_store()
+  seed_memory(config)
+  let #(gen,rec) = processing(config,11,100,200,"/memory reset")
+  let assert Ok(observation) = memory(config,gen,rec)
+  let _ = processing(config,12,100,201,"/memory")
+  store.commit_memory_result(observation,[store.memory_reply(observation)]) |> should.be_error
+  list.length(context(config,100,200).turns) |> should.equal(1)
+  row(config,codec.result_key(rec.request_id)).exists |> should.equal(False)
+  row(config,codec.chunk_key(rec.request_id,0)).exists |> should.equal(False)
+}
+
+pub fn native_memory_reply_mismatch_and_forged_scope_refused_test() {
+  use config <- with_store()
+  seed_memory(config)
+  let #(gen,rec) = processing(config,11,100,200,"/memory clear")
+  let forged = ledger.InboxRecord(..rec,user_id:201)
+  memory(config,gen,forged) |> should.be_error
+  let assert Ok(observation) = memory(config,gen,rec)
+  store.commit_memory_result(observation,["False confirmation"]) |> should.be_error
+  list.length(context(config,100,200).turns) |> should.equal(1)
+  row(config,codec.result_key(rec.request_id)).exists |> should.equal(False)
+}
+
+pub fn native_memory_empty_clear_allocates_no_context_or_quota_test() {
+  use config <- with_store()
+  let #(gen,rec) = processing(config,10,100,200,"/memory clear")
+  let assert Ok(observation) = memory(config,gen,rec)
+  let assert Ok(_) = store.commit_memory_result(observation,[store.memory_reply(observation)])
+  let assert Ok(ctx_key) = conv.context_key(conv.Scope(bot,100,200))
+  let assert Ok(quota_key) = conv.budget_key(bot,day)
+  row(config,ctx_key).exists |> should.equal(False)
+  row(config,quota_key).exists |> should.equal(False)
+}
+
+pub fn native_memory_invalid_arguments_leave_context_unchanged_test() {
+  use config <- with_store()
+  seed_memory(config)
+  let #(gen,rec) = processing(config,11,100,200,"/memory clear everything")
+  let assert Ok(observation) = memory(config,gen,rec)
+  string.contains(store.memory_reply(observation),"Usage:") |> should.equal(True)
+  let assert Ok(_) = store.commit_memory_result(observation,[store.memory_reply(observation)])
+  list.length(context(config,100,200).turns) |> should.equal(1)
+  budget(config).reserved_requests |> should.equal(1)
 }

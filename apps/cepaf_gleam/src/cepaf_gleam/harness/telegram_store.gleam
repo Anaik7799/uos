@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/telegram_memory_command as memory_command
 //// High-assurance durable storage consumer for Telegram bot runtime v2.
 //// Spec: uos.telegram-durable-store-corrected-development-spec.v1
 //// Wire: uos.telegram-store-wire-v4.v1
@@ -2595,4 +2596,96 @@ pub fn commit_conversation_result(
     extra_changes,
     res.reserved_context_rows,
   )
+}
+
+pub opaque type MemoryObservation {
+  MemoryObservation(
+    config: transport.LocalConfiguration, generation: Int,
+    record: ledger.InboxRecord, version: Int, sha: String,
+    worker: String, epoch: Int, context: conv.Context,
+    context_row: codec.RowResult, input_row: codec.RowResult,
+    response: memory_command.Reply,
+  )
+}
+
+pub fn memory_reply(observation: MemoryObservation) -> String {
+  observation.response.text
+}
+
+/// Read only. The service must recheck its live authority before committing.
+pub fn prepare_memory_command(
+  config: transport.LocalConfiguration, generation: Int,
+  record: ledger.InboxRecord, version: Int, sha: String,
+  worker: String, epoch: Int,
+) -> Result(MemoryObservation, StoreError) {
+  use _ <- result.try(case ledger.valid_record(record)
+    && record.status == ledger.InboxProcessing(worker, epoch)
+    && version > 0 && files.digest(codec.encode_inbox_record(record)) == sha {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("invalid_memory_inbox_binding"))
+  })
+  let scope = conv.Scope(record.bot_id, record.chat_id, record.user_id)
+  use key <- result.try(conv.context_key(scope) |> result.map_error(StoreInvariantError))
+  let input_key = codec.input_key(record.request_id)
+  use #(observed_generation, rows) <- result.try(read_keys(config, [key,input_key]))
+  use _ <- result.try(case observed_generation == generation && list.length(rows) == 2 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("memory_generation_or_rows_mismatch"))
+  })
+  use ctx_row <- result.try(find_read_row(rows,key))
+  use input_row <- result.try(find_read_row(rows,input_key))
+  use raw_input <- result.try(codec.decode_row_value(input_row) |> result.map_error(StoreDecodeError))
+  use #(request, bot, update, verdict) <- result.try(codec.decode_input_verdict(raw_input)
+    |> result.map_error(StoreDecodeError))
+  use raw <- result.try(case verdict {
+    guard.AcceptedEnvelope(
+      update_id: upd, message_id: mid, chat_id: chat, user_id: user,
+      text_hash: hash, raw_text: text, bot_id: vbot, callback_query_id: None, ..
+    ) -> case request == record.request_id && bot == record.bot_id
+      && update == record.update_id && upd == record.update_id && vbot == record.bot_id
+      && mid == record.message_id && chat == record.chat_id && user == record.user_id
+      && hash == record.text_hash && files.digest(text) == record.text_hash {
+      True -> Ok(text)
+      False -> Error(StoreInvariantError("memory_input_record_mismatch"))
+    }
+    _ -> Error(StoreInvariantError("memory_input_not_accepted_message"))
+  })
+  use context <- result.try(case ctx_row.exists {
+    False -> Ok(conv.Context(scope,[]))
+    True -> {
+      use encoded <- result.try(codec.decode_row_value(ctx_row) |> result.map_error(StoreDecodeError))
+      conv.decode_context(encoded,scope) |> result.map_error(StoreDecodeError)
+    }
+  })
+  // Syntax errors become useful, non-mutating replies; malformed state above fails closed.
+  let response = case memory_command.reply(raw,context) {
+    Ok(reply) -> reply
+    Error(usage) -> memory_command.Reply(usage,False)
+  }
+  Ok(MemoryObservation(config,generation,record,version,sha,worker,epoch,
+    context,ctx_row,input_row,response))
+}
+
+/// Clear and its durable confirmation are one CAS transaction; quota is untouched.
+pub fn commit_memory_result(
+  observation: MemoryObservation, payloads: List(String),
+) -> Result(CommitResultResult, StoreError) {
+  let o = observation
+  use _ <- result.try(case string.join(payloads,"") == o.response.text {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("memory_reply_payload_mismatch"))
+  })
+  use changes <- result.try(case o.response.clear && o.context_row.exists {
+    False -> Ok([])
+    True -> {
+      use empty <- result.try(conv.encode_context(conv.Context(o.context.scope,[]))
+        |> result.map_error(StoreInvariantError))
+      Ok([codec.Change(o.context_row.key,o.context_row.version,o.context_row.sha256,
+        codec.encode_canonical_base64(empty))])
+    }
+  })
+  commit_result_extended(o.config,o.record.bot_id,"op-result-" <> o.record.request_id,
+    o.generation,o.record,o.version,o.sha,payloads,o.worker,o.epoch,
+    [row_read_assertion(o.context_row.key,o.context_row),
+      row_read_assertion(o.input_row.key,o.input_row)],changes,0)
 }

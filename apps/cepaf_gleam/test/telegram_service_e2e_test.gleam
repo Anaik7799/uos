@@ -1321,16 +1321,21 @@ fn exercise_conversation_dispatch(first_command: String, first_expected: String,
       let assert Ok(#(_, [context_row,budget_row])) = store.read_keys(storage_config,[context_key,budget_key])
       let assert Ok(budget_raw) = codec.decode_row_value(budget_row)
       let assert Ok(budget) = conv.decode_budget(budget_raw,bot_id,day)
-      budget.reserved_requests |> should.equal(case mode { "empty" -> 1 _ -> int.min(2,daily_limit) })
+      budget.reserved_requests |> should.equal(case mode { "empty" | "memory_read" | "memory_clear" -> 1 _ -> int.min(2,daily_limit) })
       case mode {
         "fail" -> context_row.exists |> should.be_false
         _ -> {
           let assert Ok(context_raw) = codec.decode_row_value(context_row)
           let assert Ok(context) = conv.decode_context(context_raw,conv.Scope(bot_id,100,200))
-          list.length(context.turns) |> should.equal(case mode { "empty" -> 1 _ -> int.min(2,daily_limit) })
-          let assert Ok(first) = list.first(context.turns)
-          first.prompt |> should.equal("Hello")
-          first.reply |> should.equal("Model reply")
+          list.length(context.turns) |> should.equal(case mode { "memory_clear" -> 0 "empty" | "memory_read" -> 1 _ -> int.min(2,daily_limit) })
+          case mode {
+            "memory_clear" -> context.turns |> should.equal([])
+            _ -> {
+              let assert Ok(first) = list.first(context.turns)
+              first.prompt |> should.equal("Hello")
+              first.reply |> should.equal("Model reply")
+            }
+          }
         }
       }
     }
@@ -2409,4 +2414,24 @@ pub fn e2e_conversation_authority_loss_blocks_model_post_test() {
 
 pub fn e2e_conversation_empty_agy_does_not_poison_writer_test() {
   exercise_conversation_dispatch("/agy","Use /agy","Hello","Model reply","empty",10)
+}
+
+pub fn e2e_memory_history_reads_persisted_exchange_test() {
+  exercise_conversation_dispatch("Hello","Model reply","/history 1","You: Hello","memory_read",10)
+}
+
+pub fn e2e_memory_status_does_not_charge_model_budget_test() {
+  exercise_conversation_dispatch("Hello","Model reply","/memory","1 of 8","memory_read",10)
+}
+
+pub fn e2e_memory_clear_commits_before_confirmation_test() {
+  exercise_conversation_dispatch("Hello","Model reply","/memory clear","has been cleared","memory_clear",10)
+}
+
+pub fn e2e_memory_invalid_clear_preserves_exchange_test() {
+  exercise_conversation_dispatch("Hello","Model reply","/memory clear all","Usage:","memory_read",10)
+}
+
+pub fn e2e_memory_commands_work_with_model_disabled_test() {
+  exercise_automatic_command_dispatch("/memory","0 of 8","/messages","No stored conversation history")
 }
