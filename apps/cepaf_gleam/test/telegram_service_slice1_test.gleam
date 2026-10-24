@@ -2388,3 +2388,109 @@ pub fn supervised_instance_references_are_isolated_test() {
   let _ = simplifile.delete(dir)
   Nil
 }
+
+pub fn supervisor_death_erases_instance_references_test() {
+  process.trap_exits(True)
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+  let dir =
+    "/tmp/uos-tg-slice1-death-"
+    <> int.to_string(service.ffi_system_now_utc_us())
+  let _ = simplifile.create_directory_all(dir)
+  let assert Ok(_) = simplifile.set_permissions_octal(dir, 0o700)
+  let db_path = dir <> "/supervised.db"
+  let storage_config =
+    transport.reviewed_local_configuration(
+      recovery_guardian_path,
+      recovery_guardian_sha,
+      recovery_worker_path,
+      recovery_worker_sha,
+      db_path,
+    )
+  let http_config =
+    http_client.TelegramHttpConfiguration(
+      base_url: base_url,
+      bot_token: "test-token-supervised",
+      timeout_ms: 10000,
+      max_response_bytes: 65_536,
+    )
+  let bot_id = 999_444
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let config =
+    service.default_service_configuration(
+      storage_config,
+      http_config,
+      bot_id,
+      [#(100, 200)],
+      "worker-sup-test",
+      5,
+    )
+
+
+  let assert Ok(svc) = service.start_supervised_service(config, None)
+  let monitor = process.monitor(svc.supervisor_pid)
+  let selector = process.new_selector()
+    |> process.select_specific_monitor(monitor, fn(down) { down })
+  process.kill(svc.supervisor_pid)
+  let assert Ok(_) = process.selector_receive(selector, 5000)
+  list.each(["authority", "store", "poller", "coordinator"], fn(role) {
+    let found: Result(Dynamic, Nil) = service.ffi_get_worker_subject(svc.subject_scope, role)
+    found |> should.equal(Error(Nil))
+  })
+  fixture_stop(fixture_pid)
+  let _ = simplifile.delete(dir)
+  Nil
+}
+
+pub fn non_parent_can_stop_supervised_service_test() {
+  process.trap_exits(True)
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+  let dir =
+    "/tmp/uos-tg-slice1-nonparent-"
+    <> int.to_string(service.ffi_system_now_utc_us())
+  let _ = simplifile.create_directory_all(dir)
+  let assert Ok(_) = simplifile.set_permissions_octal(dir, 0o700)
+  let db_path = dir <> "/supervised.db"
+  let storage_config =
+    transport.reviewed_local_configuration(
+      recovery_guardian_path,
+      recovery_guardian_sha,
+      recovery_worker_path,
+      recovery_worker_sha,
+      db_path,
+    )
+  let http_config =
+    http_client.TelegramHttpConfiguration(
+      base_url: base_url,
+      bot_token: "test-token-supervised",
+      timeout_ms: 10000,
+      max_response_bytes: 65_536,
+    )
+  let bot_id = 999_444
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let config =
+    service.default_service_configuration(
+      storage_config,
+      http_config,
+      bot_id,
+      [#(100, 200)],
+      "worker-sup-test",
+      5,
+    )
+
+
+  let assert Ok(svc) = service.start_supervised_service(config, None)
+
+  let reply = process.new_subject()
+  let _ = process.spawn_unlinked(fn() {
+    process.send(reply, service.stop_supervised_service(svc))
+  })
+  process.receive(reply, 6000) |> should.equal(Ok(Ok(Nil)))
+  process.is_alive(svc.supervisor_pid) |> should.equal(False)
+  let found: Result(Dynamic, Nil) = service.ffi_get_worker_subject(svc.subject_scope, "authority")
+  found |> should.equal(Error(Nil))
+  fixture_stop(fixture_pid)
+  let _ = simplifile.delete(dir)
+  Nil
+}

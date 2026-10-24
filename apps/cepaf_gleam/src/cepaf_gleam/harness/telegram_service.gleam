@@ -2904,6 +2904,12 @@ fn spawn_delivery_worker(
   ServiceState(..state, in_flight_workers: [worker_pid])
 }
 
+@external(erlang, "telegram_service_ffi", "new_worker_scope")
+fn new_worker_scope() -> reference.Reference
+
+@external(erlang, "telegram_service_ffi", "adopt_worker_scope")
+fn adopt_worker_scope(scope: reference.Reference, owner: Pid) -> Result(Nil, String)
+
 @external(erlang, "telegram_service_ffi", "set_worker_subject")
 pub fn ffi_set_worker_subject(scope: a, role: String, subject: b) -> Nil
 
@@ -3749,7 +3755,7 @@ pub fn start_supervised_service(
   config: ServiceConfiguration,
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
 ) -> Result(SupervisedService, String) {
-  let scope = reference.new()
+  let scope = new_worker_scope()
   let bridge_subject = process.new_subject()
   let c1 = supervision.worker(fn() {
     start_authority_worker_scoped(config, scope)
@@ -3777,29 +3783,37 @@ pub fn start_supervised_service(
       "start_service_supervisor_failed: " <> string.inspect(err)
     }),
   )
+  // Ownership follows the supervisor even on abnormal termination. No global
+  // registry entries or detached cleanup process survive the service tree.
+  use _ <- result.try(
+    adopt_worker_scope(scope, sup_started.pid)
+    |> result.map_error(fn(err) {
+      let cleanup = stop_instance(sup_started.data, sup_started.pid, scope)
+      err <> ": " <> string.inspect(cleanup)
+    }),
+  )
   case process.receive(bridge_subject, 3000) {
     Ok(actor_subj) -> {
-      let auth_subj = case ffi_get_worker_subject(scope, "authority") {
-        Ok(s) -> s
-        Error(_) -> panic as "authority_worker_subject_not_found"
+      case #(
+        ffi_get_worker_subject(scope, "authority"),
+        ffi_get_worker_subject(scope, "store"),
+        ffi_get_worker_subject(scope, "poller")
+      ) {
+        #(Ok(auth_subj), Ok(store_subj), Ok(poller_subj)) ->
+          Ok(SupervisedService(
+            supervisor: sup_started.data,
+            actor_subject: actor_subj,
+            authority_worker: auth_subj,
+            store_worker: store_subj,
+            poller_worker: poller_subj,
+            subject_scope: scope,
+            supervisor_pid: sup_started.pid,
+          ))
+        _ -> {
+          let cleanup = stop_instance(sup_started.data, sup_started.pid, scope)
+          Error("supervised_worker_subject_missing: " <> string.inspect(cleanup))
+        }
       }
-      let store_subj = case ffi_get_worker_subject(scope, "store") {
-        Ok(s) -> s
-        Error(_) -> panic as "store_worker_subject_not_found"
-      }
-      let poller_subj = case ffi_get_worker_subject(scope, "poller") {
-        Ok(s) -> s
-        Error(_) -> panic as "poller_worker_subject_not_found"
-      }
-      Ok(SupervisedService(
-        supervisor: sup_started.data,
-        actor_subject: actor_subj,
-        authority_worker: auth_subj,
-        store_worker: store_subj,
-        poller_worker: poller_subj,
-        subject_scope: scope,
-        supervisor_pid: sup_started.pid,
-      ))
     }
     Error(_) -> {
       let cleanup = stop_instance(sup_started.data, sup_started.pid, scope)
@@ -3809,7 +3823,7 @@ pub fn start_supervised_service(
 }
 
 @external(erlang, "telegram_service_ffi", "stop_supervisor")
-pub fn stop_supervisor(supervisor: static_supervisor.Supervisor) -> Nil
+pub fn stop_supervisor(supervisor: static_supervisor.Supervisor) -> Result(Nil, String)
 
 fn stop_instance(
   supervisor: static_supervisor.Supervisor,
@@ -3819,7 +3833,10 @@ fn stop_instance(
   let monitor = process.monitor(pid)
   let selector = process.new_selector()
     |> process.select_specific_monitor(monitor, fn(down) { down })
-  stop_supervisor(supervisor)
+  use _ <- result.try(stop_supervisor(supervisor) |> result.map_error(fn(err) {
+    process.demonitor_process(monitor)
+    err
+  }))
   case process.selector_receive(selector, 5000) {
     Ok(_) -> {
       ffi_clear_worker_subjects(scope)
