@@ -127,6 +127,10 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         case name {
           "/doctor" -> read_directive("query_doctor", args)
           "/status" -> read_directive("query_system_health", args)
+          "/zigvm" -> case args {
+            "" | "version" -> DirectReadTool("query_zigvm_version")
+            _ -> DeniedMutation("/zigvm", "Only version observation is available; evaluation is not integrated.")
+          }
           "/plan" -> read_directive("query_saplan", args)
           "/task" -> case task_command.parse_task_id(args) {
             Ok(task_id) -> PreservedDirective("/task", [task_id])
@@ -137,6 +141,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.KernelVersion) -> DirectReadTool("query_zigvm_version")
               Ok(tool_command.Plan) -> DirectReadTool("query_saplan")
               Ok(tool_command.Task(task_id)) -> PreservedDirective("/task", [task_id])
               Error(reason) -> DeniedMutation("/tool", reason)

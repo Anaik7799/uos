@@ -19,6 +19,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_host_observation as host_observation
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
@@ -2276,22 +2277,11 @@ fn execute_guarded_dispatch(
                       ),
                     )) -> {
                       let payload = case dir {
-                        guard.DirectReadTool("query_system_health") -> {
-                          let local = operational_status.LocalState(
-                            observed_at_us: ffi_system_now_utc_us(),
-                            service_epoch: state.config.service_epoch,
-                            store_generation: gen1,
-                            next_update_offset: state.watermark.last_committed_offset,
-                            pending_recovery: option.is_some(state.pending_operation),
-                            conversation_configured: state.config.conversation != ConversationDisabled,
-                          )
-                          case operational_status.observe(local, operational_status.live_io(),
-                            fn() { conversation_authorize(state) }, 6000) {
-                            Ok(reply) -> reply
-                            Error(_) -> json.object([
-                              #("status", json.string("observation_failed")),
-                              #("error", json.string("Operational status could not be observed within current authority and budget.")),
-                            ]) |> json.to_string
+                        guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.DirectReadTool("query_zigvm_version") -> {
+                          case current_read(state, 3000, host_observation.kernel_report) {
+                            Ok(report) -> json.to_string(report)
+                            Error(_) -> status_failure()
                           }
                         }
                         guard.DirectReadTool("query_doctor") ->
@@ -5297,4 +5287,52 @@ fn execute_memory_dispatch(
     None -> store.commit_memory_result(observation,payloads)
   } |> result.map_error(fn(err) { conversation_store_failure(state,err) }))
   finish_conversation(state,record,version,committed)
+}
+
+fn current_read(
+  state: ServiceState, required_ms: Int, read: fn() -> a,
+) -> Result(a, String) {
+  use remaining <- result.try(conversation_authorize(state))
+  use _ <- result.try(case remaining >= required_ms {
+    True -> Ok(Nil)
+    False -> Error("observation_authority_window_too_short")
+  })
+  let observed = read()
+  use _ <- result.try(conversation_authorize(state))
+  Ok(observed)
+}
+
+fn status_failure() -> String {
+  json.object([
+    #("status", json.string("observation_failed")),
+    #("error", json.string("Observation unavailable within current authority and bounds.")),
+  ]) |> json.to_string
+}
+
+fn operational_status_reply(state: ServiceState, generation: Int) -> String {
+  let reports = {
+    use clock_report <- result.try(current_read(state, 3000, host_observation.clock_report))
+    use kernel_report <- result.try(current_read(state, 3000, host_observation.kernel_report))
+    Ok(#(clock_report, kernel_report))
+  }
+  case reports {
+    Error(_) -> status_failure()
+    Ok(#(clock_report, kernel_report)) -> {
+      let local = operational_status.LocalState(
+        observed_at_us: ffi_system_now_utc_us(),
+        service_epoch: state.config.service_epoch,
+        store_generation: generation,
+        next_update_offset: state.watermark.last_committed_offset,
+        pending_recovery: option.is_some(state.pending_operation),
+        conversation_configured: state.config.conversation != ConversationDisabled,
+        clock_report: clock_report,
+        kernel_report: kernel_report,
+      )
+      case operational_status.observe(local, operational_status.live_io(),
+        fn() { conversation_authorize(state) }, 6000) {
+        Ok(reply) -> reply
+        Error(_) -> status_failure()
+      }
+    }
+  }
 }

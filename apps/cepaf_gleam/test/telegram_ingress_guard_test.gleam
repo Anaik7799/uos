@@ -260,3 +260,10 @@ pub fn system_status_fixed_scope_test() {
     _ -> panic as "status scope override accepted"
   }
 }
+
+pub fn kernel_version_fixed_scope_test() {
+  list.each(["/zigvm", "/zigvm version", "/tool query_zigvm_version {}", "/action query_zigvm_version"],
+    fn(input) { g.classify_directive(input) |> should.equal(g.DirectReadTool("query_zigvm_version")) })
+  list.each(["/zigvm eval x", "/zigvm version --path=x", "/tool query_zigvm_version {\"path\":\"evil\"}"],
+    fn(input) { let assert g.DeniedMutation(..) = g.classify_directive(input) })
+}

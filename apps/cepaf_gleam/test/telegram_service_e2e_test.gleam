@@ -2447,10 +2447,19 @@ pub fn e2e_tool_scope_override_and_mutation_refused_test() {
 }
 
 pub fn e2e_status_and_system_health_tool_dispatch_test() {
-  exercise_automatic_command_dispatch("/status", "uos.telegram.operational-status.v1",
-    "/tool query_system_health {}", "\"global_healthy\":null")
+  exercise_automatic_command_dispatch("/status", "development_reference_1h_observation_only",
+    "/tool query_system_health {}", "\"version\":\"0.1.0\"")
 }
 pub fn e2e_status_parameters_refused_test() {
   exercise_automatic_command_dispatch("/status {\"url\":\"http://evil/\"}", "denied_mutation",
     "/action query_system_health {\"host\":\"evil\"}", "denied_mutation")
+}
+
+pub fn e2e_kernel_version_alias_and_tool_test() {
+  exercise_automatic_command_dispatch("/zigvm version", "\"version\":\"0.1.0\"",
+    "/tool query_zigvm_version {}", "installed_executable_version_only")
+}
+pub fn e2e_kernel_eval_and_override_refused_test() {
+  exercise_automatic_command_dispatch("/zigvm eval dangerous", "denied_mutation",
+    "/action query_zigvm_version {\"path\":\"evil\"}", "denied_mutation")
 }

@@ -10,7 +10,8 @@ pub type Io {
 
 pub type LocalState {
   LocalState(observed_at_us: Int, service_epoch: Int, store_generation: Int,
-    next_update_offset: Int, pending_recovery: Bool, conversation_configured: Bool)
+    next_update_offset: Int, pending_recovery: Bool, conversation_configured: Bool,
+    clock_report: json.Json, kernel_report: json.Json)
 }
 
 type TimeUnit { Millisecond }
@@ -101,7 +102,7 @@ pub fn observe(
       #("conversation_configured", json.bool(local.conversation_configured)),
       #("model_connectivity", json.string("not_probed")),
     ])),
-    #("zigvm_kernel", json.string("not_probed")),
-    #("clock_synchronization", json.string("not_probed")),
+    #("zigvm_kernel", local.kernel_report),
+    #("clock_synchronization", local.clock_report),
   ]) |> json.to_string)
 }

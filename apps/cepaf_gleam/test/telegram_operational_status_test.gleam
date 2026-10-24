@@ -7,7 +7,8 @@ import gleam/string
 import gleeunit/should
 
 fn local() -> status.LocalState {
-  status.LocalState(1_700_000_000_000_000, 2, 7, 8002, False, False)
+  status.LocalState(1_700_000_000_000_000, 2, 7, 8002, False, False,
+    json.string("not_probed"), json.string("not_probed"))
 }
 fn io(reply: Result(Int, String)) -> status.Io {
   status.Io(fn(_, t) { t |> should.equal(1200) reply }, fn() { -1000 })
