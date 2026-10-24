@@ -1965,3 +1965,99 @@ pub fn e2e_managed_renewal_and_changed_task_suspension_test() {
 pub fn e2e_managed_renewal_never_extends_parent_task_test() {
   exercise_managed_authority_maintenance("task_expiry")
 }
+
+fn exercise_active_managed_flow(new_epoch_before_stop: Bool) {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  fixture_set_mode(fixture_pid, "offset_aware")
+  let bot_id = 222_556
+  let assert Ok(fresh) = store.begin_new_writer_store(storage_config, bot_id)
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_poll1024_m" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-m" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  let control_path = mint_unit_registration(dir, slice_name, unit_name, db_path, 1)
+  let assert Ok(control_json) = simplifile.read(control_path)
+  let assert Ok(control) = lifecycle.decode_control_registration(control_json)
+  let writer = codec.WriterRegistration(
+    bot_id: bot_id, service_epoch: 1,
+    instance_token: files.digest("managed-start-" <> nonce),
+    control_digest: files.digest(lifecycle.encode_control_registration(control)),
+    store_incarnation_id: control.store_incarnation_id,
+    unit_invocation_id: control.unit_invocation_id,
+    registered_at_us: control.registered_at_us,
+  )
+  let assert Ok(2) = store.finish_new_writer_store(fresh, writer)
+  let assert Ok(coordinator) = coord_store.open(coord_db)
+  let assert Ok(#(_, False)) = coord_store.append(coordinator, sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "active-runtime-" <> nonce)
+  let cmd = managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db, control_path, writer, "runtime:telegram-bridge")
+    |> string.replace("\"managed_start\":true", "\"managed_start\":true,\"managed_auto\":true")
+  let started = send_runner_cmd(ipc_dir, cmd)
+  string.contains(started, "\"action\":\"started\"") |> should.equal(True)
+  let authority = send_runner_cmd(ipc_dir, "{\"action\":\"get_authority_status\"}")
+  let assert Ok(expiry) = json.parse(authority, decode.field("valid_until_us", decode.int, decode.success))
+  { expiry > service.ffi_system_now_utc_us() } |> should.equal(True)
+  string.contains(authority, "\"revoked\":false") |> should.equal(True)
+  // No manual set_authority/enable call: active startup supplies the observed lease.
+  fixture_set_updates(fixture_pid, [
+    "{\"update_id\":9401,\"message\":{\"message_id\":501,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/doctor\",\"date\":1700000000}}",
+    "{\"update_id\":9402,\"message\":{\"message_id\":502,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/saplan\",\"date\":1700000000}}",
+  ])
+  let terminal = send_runner_cmd(ipc_dir, "{\"action\":\"finite_automatic_loop\"}")
+  string.contains(terminal, "\"reason\":\"max_cycles\"") |> should.equal(True)
+  string.contains(terminal, "\"completed_cycles\":2") |> should.equal(True)
+  let request1 = ledger.make_request_id(bot_id, 9401)
+  let request2 = ledger.make_request_id(bot_id, 9402)
+  let assert Ok(#(_, [row1, row2])) = store.read_keys(storage_config, [
+    codec.chunk_key(request1, 0), codec.chunk_key(request2, 0),
+  ])
+  let assert Ok(raw1) = codec.decode_row_value(row1)
+  let assert Ok(raw2) = codec.decode_row_value(row2)
+  let assert Ok(chunk1) = codec.decode_chunk_value(raw1)
+  let assert Ok(chunk2) = codec.decode_chunk_value(raw2)
+  chunk1.status |> should.equal(ledger.OutboxDelivered(42))
+  chunk2.status |> should.equal(ledger.OutboxDelivered(42))
+  string.contains(chunk1.payload, "UNOBSERVED_RUNTIME") |> should.equal(True)
+  string.contains(chunk2.payload, "uos.sa_plan.observer.v1") |> should.equal(True)
+  let requests = fixture_requests_typed(fixture_pid)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/getUpdates") })
+    |> list.length |> should.equal(2)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/sendMessage") })
+    |> list.length |> should.equal(2)
+  case new_epoch_before_stop {
+    True -> {
+      let assert Ok(_) = coord_store.append(coordinator, sync.Release("worker-e2e-01", "runtime:telegram-bridge", 1), "replace-release-" <> nonce)
+      let assert Ok(#(claimed, False)) = coord_store.append(coordinator, sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "replace-claim-" <> nonce)
+      claimed.epoch |> should.equal(2)
+    }
+    False -> Nil
+  }
+  let stopped = send_runner_cmd(ipc_dir, "{\"action\":\"stop_managed_service\"}")
+  let observed_fence = coord_store.observe(coordinator, fn(state, boot, now) {
+    sync.check(state, "worker-e2e-01", "runtime:telegram-bridge", case new_epoch_before_stop { True -> 2 False -> 1 }, boot, now)
+    |> result.map_error(coord_store.RefusedError)
+  })
+  let _ = coord_store.close(coordinator)
+  fixture_stop(fixture_pid)
+  let assert Ok(_) = lifecycle.stop_and_verify_test_unit(slice_name, unit_name, db_path,
+    recovery_worker_sha, recovery_guardian_sha)
+  let assert Ok(True) = lifecycle.stop_test_slice(slice_name)
+  case new_epoch_before_stop {
+    False -> {
+      string.contains(stopped, "\"status\":\"stopped_and_released\"") |> should.equal(True)
+      result.is_error(observed_fence) |> should.equal(True)
+    }
+    True -> {
+      string.contains(stopped, "\"status\":\"cleanup_unconfirmed\"") |> should.equal(True)
+      observed_fence |> should.equal(Ok(Nil))
+    }
+  }
+}
+
+pub fn e2e_active_managed_start_dispatch_and_clean_release_test() {
+  exercise_active_managed_flow(False)
+}
+
+pub fn e2e_stale_shutdown_cannot_release_successor_runtime_test() {
+  exercise_active_managed_flow(True)
+}

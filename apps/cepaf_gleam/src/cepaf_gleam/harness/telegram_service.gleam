@@ -2996,6 +2996,7 @@ pub type SupervisedService {
     poller_worker: Subject(PollerWorkerMessage),
     subject_scope: reference.Reference,
     supervisor_pid: Pid,
+    configuration: ServiceConfiguration,
   )
 }
 
@@ -3849,6 +3850,7 @@ pub fn start_supervised_service(
             poller_worker: poller_subj,
             subject_scope: scope,
             supervisor_pid: sup_started.pid,
+            configuration: config,
           ))
         _ -> {
           let cleanup = stop_instance(sup_started.pid)
@@ -4907,4 +4909,49 @@ fn renew_with_open_store(
       ))
     False -> Error("renewed authority lease expired after safety margin")
   }
+}
+
+/// Active entry: current unit/writer admission plus automatic owned lease maintenance.
+/// The caller owns the bounded poll driver; startup itself never performs Telegram HTTP.
+pub fn start_active_managed_service(
+  config: ServiceConfiguration,
+  current_control_path: String,
+  expected: codec.WriterRegistration,
+  cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
+) -> Result(SupervisedService, String) {
+  use svc <- result.try(start_managed_service(config, current_control_path, expected, cleanup_receipt))
+  case enable_managed_authority(svc, 30_000_000, 10_000) {
+    Error(err) -> abort_managed_start(svc, "managed_authority_activation_failed: " <> err)
+    Ok(Nil) -> case poll_rpc.call(svc.actor_subject, 5000, GetManagedStartupState) {
+      Error(err) -> abort_managed_start(svc, "managed_activation_state_unavailable: " <> err)
+      Ok(state) -> case state.authority, state.authority_revoked {
+        Some(_), False -> Ok(svc)
+        _, _ -> abort_managed_start(svc, "managed_activation_not_observed")
+      }
+    }
+  }
+}
+
+/// Confirm the OTP tree stopped before releasing this exact runtime lease.
+/// Unit/cgroup quiescence remains a separate required predecessor recovery proof.
+pub fn stop_managed_service(svc: SupervisedService) -> Result(Nil, String) {
+  let config = svc.configuration
+  use _ <- result.try(case config.resource_id == "runtime:telegram-bridge" {
+    True -> Ok(Nil)
+    False -> Error("managed_stop_resource_mismatch")
+  })
+  use _ <- result.try(stop_supervised_service(svc))
+  let db = case config.authority_paths {
+    CanonicalProductionPaths -> "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
+    IsolatedTestPaths(_, path) -> path
+  }
+  use handle <- result.try(coord_store.open_existing(db) |> result.map_error(coord_store.error_to_string))
+  let released = coord_store.append(handle,
+    sync.Release(config.session_id, config.resource_id, config.coordinator_epoch),
+    "telegram-stop:" <> files.digest(config.session_id <> ":" <> int.to_string(config.coordinator_epoch) <> ":" <> int.to_string(ffi_system_now_ns())))
+    |> result.map_error(coord_store.error_to_string)
+  let closed = coord_store.close(handle) |> result.map_error(coord_store.error_to_string)
+  use _ <- result.try(closed)
+  use #(_, replay) <- result.try(released)
+  case replay { False -> Ok(Nil) True -> Error("managed_stop_release_replayed") }
 }
