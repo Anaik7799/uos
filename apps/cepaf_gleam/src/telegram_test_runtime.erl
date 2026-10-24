@@ -30,6 +30,9 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_tool_command',
             'cepaf_gleam@harness@telegram_operational_status',
             'cepaf_gleam@harness@telegram_host_observation',
+            telegram_knowledge_files,
+            'cepaf_gleam@harness@telegram_knowledge_report',
+            'cepaf_gleam@harness@telegram_knowledge_reader',
             telegram_status_probe, telegram_coordination_binding,
             'cepaf_gleam@harness@telegram_coordination_report',
             'cepaf_gleam@harness@telegram_coordination_reader',
@@ -40,19 +43,19 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_lifecycle_adapter'
         ],
         Pins = [pin(M, Dir) || M <- Modules],
-        Data = {Paths, [H || {_, H} <- Pins], ConfigPath},
+        Data = {Paths, [atom_to_binary(M,utf8) || M <- Modules], [H || {_, H} <- Pins], ConfigPath},
         true = byte_size(term_to_binary(Data)) =< 100000,
         Payload = base64:encode(term_to_binary(Data, [compressed])),
         Expr = io_lib:format(
-            "{P,H,C}=binary_to_term(base64:decode(~0p),[safe]),"
+            "{P,N,H,C}=binary_to_term(base64:decode(~0p),[safe]),"
             "true=code:set_path(P),"
             "lists:foreach(fun({M,D})->"
             "{M,B,F}=code:get_object_code(M),"
             "D=crypto:hash(sha256,B),"
             "{module,M}=code:load_binary(M,F,B)"
-            " end,lists:zip(~0p,H)),"
+            " end,lists:zip([binary_to_atom(M,utf8)||M<-N],H)),"
             "telegram_service_worker_runner:start([C]).",
-            [Payload, Modules]),
+            [Payload]),
         Binary = iolist_to_binary(Expr),
         true = byte_size(Binary) =< 4096,
         {ok, Binary}

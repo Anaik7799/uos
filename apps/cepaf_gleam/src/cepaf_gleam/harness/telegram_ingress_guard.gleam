@@ -7,6 +7,7 @@ import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/files
 import gleam/dict
 import gleam/dynamic/decode
+import cepaf_gleam/harness/telegram_knowledge_report as knowledge
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -127,6 +128,13 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         case name {
           "/doctor" -> read_directive("query_doctor", args)
           "/status" -> read_directive("query_system_health", args)
+          "/wiki" | "/zk" | "/km" -> {
+            let view = case name { "/wiki" -> "wiki" "/zk" -> "zk" _ -> "all" }
+            case knowledge.validate_query(args) {
+              Ok(query) -> PreservedDirective("/knowledge",[view,query])
+              Error(_) -> DeniedMutation(name,"Use a literal query of at most 128 bytes.")
+            }
+          }
           "/peers" -> read_directive("query_peers", args)
           "/board" -> read_directive("query_board", args)
           "/zigvm" -> case args {
@@ -143,6 +151,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.Knowledge(view,query)) -> PreservedDirective("/knowledge",[view,query])
               Ok(tool_command.Peers) -> DirectReadTool("query_peers")
               Ok(tool_command.Board) -> DirectReadTool("query_board")
               Ok(tool_command.KernelVersion) -> DirectReadTool("query_zigvm_version")

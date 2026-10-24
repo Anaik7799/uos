@@ -2473,3 +2473,14 @@ pub fn e2e_coordination_tool_and_scope_refusal_test() {
   exercise_automatic_command_dispatch("/tool query_peers {}", "\"session\":\"worker-e2e-01\"",
     "/action query_board {\"path\":\"evil\"}", "denied_mutation")
 }
+
+pub fn e2e_knowledge_wiki_and_zk_test() {
+  exercise_automatic_command_dispatch("/wiki uos-master-knowledge-graph-and-living-ontology",
+    "docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md",
+    "/zk 20260729-fractal-atlas", "docs/zk/20260729-fractal-atlas.md")
+}
+pub fn e2e_knowledge_tool_and_scope_refusal_test() {
+  exercise_automatic_command_dispatch("/tool query_knowledge {\"view\":\"all\",\"query\":\"20260729-fractal-atlas\"}",
+    "observed_document_corpus",
+    "/action query_knowledge {\"root\":\"/etc\"}", "denied_mutation")
+}

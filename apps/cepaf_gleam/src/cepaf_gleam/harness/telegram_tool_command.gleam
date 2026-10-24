@@ -1,6 +1,7 @@
 //// Pure Telegram tool selection. Selection never grants effect authority.
 import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
+import cepaf_gleam/harness/telegram_knowledge_report as knowledge
 import gleam/dict
 import gleam/dynamic/decode
 import gleam/json
@@ -15,6 +16,7 @@ pub type Selection {
   KernelVersion
   Peers
   Board
+  Knowledge(view: String, query: String)
   Plan
   Task(String)
 }
@@ -26,6 +28,7 @@ pub fn help() -> String {
   <> "/tool query_zigvm_version {} — installed pinned executable version only.\n"
   <> "/tool query_peers {} — canonical session heartbeat observations.\n"
   <> "/tool query_board {} — verified coordination message metadata counts.\n"
+  <> "/tool query_knowledge {\"view\":\"wiki\",\"query\":\"text\"} — observed wiki/zk documents.\n"
   <> "/tool query_saplan {} — current configured plan snapshot.\n"
   <> "/tool query_task {\"task_id\":\"TASK_ID\"} — task detail in the configured plan only.\n"
   <> "Arguments cannot change the plan, database, path or authority. Other tools are unavailable."
@@ -93,10 +96,35 @@ pub fn parse(args: String) -> Result(Selection, String) {
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
     "query_peers" -> empty_arguments(tail, Peers)
+    "query_knowledge" -> knowledge_arguments(tail)
     "query_board" -> empty_arguments(tail, Board)
     "query_zigvm_version" -> empty_arguments(tail, KernelVersion)
     "query_saplan" -> empty_arguments(tail, Plan)
     "query_task" -> task_arguments(tail)
     _ -> Error("Tool unavailable. Use /tool help for supported read tools.")
+  }
+}
+
+fn knowledge_arguments(raw: String) -> Result(Selection, String) {
+  let raw = case raw { "" -> "{}" _ -> raw }
+  use entries <- result.try(json.parse(raw,decode.dict(decode.string,decode.dynamic))
+    |> result.replace_error("Expected optional view and query fields."))
+  use _ <- result.try(case string.byte_size(raw) <= 1024
+    && list.all(dict.keys(entries),fn(key){key == "view" || key == "query"}) {
+    True -> Ok(Nil)
+    False -> Error("Knowledge scope overrides are refused.")
+  })
+  use view <- result.try(case dict.get(entries,"view") {
+    Error(_) -> Ok("all")
+    Ok(value) -> decode.run(value,decode.string) |> result.replace_error("Invalid view.")
+  })
+  use query <- result.try(case dict.get(entries,"query") {
+    Error(_) -> Ok("")
+    Ok(value) -> decode.run(value,decode.string) |> result.replace_error("Invalid query.")
+  })
+  use clean <- result.try(knowledge.validate_query(query))
+  case list.contains(["wiki","zk","all"],view) {
+    True -> Ok(Knowledge(view,clean))
+    False -> Error("View must be wiki, zk or all.")
   }
 }
