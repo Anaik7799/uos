@@ -1,3 +1,5 @@
+import cepaf_gleam/harness/telegram_action_proposal as proposal
+import cepaf_gleam/harness/telegram_approval as approval
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_action_intent as action
 import cepaf_gleam/harness/telegram_cancellation as cancel
@@ -380,4 +382,117 @@ pub fn recover_and_reply(
   let assert Ok(chunk) = codec.decode_chunk_value(raw)
   chunk.status |> should.equal(ledger.OutboxPending)
   chunk.payload
+}
+
+fn pending_proposal_input(c,update,raw) {
+  let assert Ok(#(gen,_))=store.read_keys(c,[codec.watermark_key()])
+  let assert Ok(#(wm,v,h))=store.read_watermark(c)
+  let verdict=guard.AcceptedEnvelope(update,update+1,100,200,files.digest(raw),raw,
+    guard.classify_directive(raw),bot,None)
+  let assert Ok(prefix)=store.commit_prefix(c,bot,"proposal-prefix-"<>int.to_string(update),
+    gen,wm,v,h,[verdict],1000)
+  let assert [inbox]=prefix.admitted_records
+  #(prefix.receipt.generation,inbox)
+}
+fn proposal_fixture(update) {
+  let #(_,i,r,_,_)=fixture(update)
+  let assert Ok(p)=proposal.new(ledger.make_request_id(bot,update),i,approval.roster_digest(r))
+  p
+}
+pub fn proposal_codec_roundtrip_bounds_and_non_authority_test() {
+  let p=proposal_fixture(10)
+  let raw=proposal.encode(p)
+  let assert Ok(decoded)=proposal.decode(raw)
+  proposal.encode(decoded) |> should.equal(raw)
+  proposal.receipts(decoded) |> should.equal([])
+  let one=approval.Receipt(approval.Codex,"data-not-authority")
+  let assert Ok(p1)=proposal.with_receipts(p,[one])
+  proposal.extends(p,p1) |> should.be_true
+  proposal.extends(p1,p) |> should.be_false
+  proposal.with_receipts(p,[one,one]) |> should.be_error
+  proposal.with_receipts(p,[approval.Receipt(approval.Codex,string.repeat("x",8193))])
+    |> should.be_error
+  list.each(["","{}",raw<>"[]",string.replace(raw,"action-proposal.v1","unknown"),
+    string.repeat("x",65537)],fn(x){proposal.decode(x) |> should.be_error})
+  proposal.new("tg-wrong",proposal.intent(p),proposal.roster_digest(p)) |> should.be_error
+}
+pub fn native_proposal_preserves_pending_and_reopens_exact_bytes_test() {
+  use c <- with_store()
+  let #(gen,inbox)=pending_proposal_input(c,10,text())
+  let p=proposal_fixture(10)
+  let assert Ok(next)=store.save_proposal(c,gen,inbox,p)
+  let saved=row(c,store.proposal_key(inbox.request_id))
+  let assert Ok(raw)=codec.decode_row_value(saved)
+  raw |> should.equal(proposal.encode(p))
+  // Every read is a new bounded native worker opening the same SQLite store.
+  row(c,store.proposal_key(inbox.request_id)) |> should.equal(saved)
+  store.save_proposal(c,next,inbox,p) |> should.equal(Ok(next))
+  row(c,codec.inbox_key(inbox.request_id)).sha256
+    |> should.equal(files.digest(codec.encode_inbox_record(inbox)))
+  row(c,codec.authority_key(inbox.request_id)).exists |> should.be_false
+  row(c,store.cancellation_key(inbox.request_id)).exists |> should.be_false
+  row(c,codec.result_key(inbox.request_id)).exists |> should.be_false
+}
+pub fn native_proposal_receipt_append_is_monotonic_and_idempotent_test() {
+  use c <- with_store()
+  let #(gen,inbox)=pending_proposal_input(c,10,text())
+  let p=proposal_fixture(10)
+  let assert Ok(p1)=proposal.with_receipts(p,[approval.Receipt(approval.Codex,"first")])
+  store.save_proposal(c,gen,inbox,p1) |> should.be_error
+  let assert Ok(g1)=store.save_proposal(c,gen,inbox,p)
+  let assert Ok(g2)=store.save_proposal(c,g1,inbox,p1)
+  let before=row(c,store.proposal_key(inbox.request_id))
+  store.save_proposal(c,g2,inbox,p1) |> should.equal(Ok(g2))
+  store.save_proposal(c,g2,inbox,p) |> should.be_error
+  let assert Ok(replaced)=proposal.with_receipts(p,[approval.Receipt(approval.Codex,"other")])
+  store.save_proposal(c,g2,inbox,replaced) |> should.be_error
+  row(c,store.proposal_key(inbox.request_id)) |> should.equal(before)
+  let assert Ok(p2)=proposal.with_receipts(p,[approval.Receipt(approval.Codex,"first"),
+    approval.Receipt(approval.Operator,"second")])
+  let assert Ok(_)=store.save_proposal(c,g2,inbox,p2)
+  let assert Ok(raw)=codec.decode_row_value(row(c,store.proposal_key(inbox.request_id)))
+  let assert Ok(restored)=proposal.decode(raw)
+  proposal.receipts(restored) |> should.equal(proposal.receipts(p2))
+}
+pub fn native_proposal_changed_intent_generation_user_and_input_refused_test() {
+  use c <- with_store()
+  let #(gen,inbox)=pending_proposal_input(c,10,text())
+  let p=proposal_fixture(10)
+  store.save_proposal(c,gen-1,inbox,p) |> should.be_error
+  store.save_proposal(c,gen,ledger.InboxRecord(..inbox,user_id:201),p) |> should.be_error
+  store.save_proposal(c,gen,inbox,proposal_fixture(11)) |> should.be_error
+  let assert Ok(g1)=store.save_proposal(c,gen,inbox,p)
+  let before=row(c,store.proposal_key(inbox.request_id))
+  let #(_,changed,_,_,_)=signed.fixture(binding(10),target(),1_000_000,1_020_000,"other reason")
+  let assert Ok(replaced)=proposal.new(inbox.request_id,changed,proposal.roster_digest(p))
+  store.save_proposal(c,g1,inbox,replaced) |> should.be_error
+  row(c,store.proposal_key(inbox.request_id)) |> should.equal(before)
+  let #(g2,other)=pending_proposal_input(c,11,"/status")
+  store.save_proposal(c,g2,other,proposal_fixture(11)) |> should.be_error
+  row(c,store.proposal_key(other.request_id)).exists |> should.be_false
+}
+pub fn native_proposal_cannot_modify_claimed_request_test() {
+  use c <- with_store()
+  let #(gen,inbox)=pending_proposal_input(c,10,text())
+  let p=proposal_fixture(10)
+  let assert Ok(g1)=store.save_proposal(c,gen,inbox,p)
+  let before=row(c,store.proposal_key(inbox.request_id))
+  let assert Ok(#(receipt,claimed))=store.claim_task_processing(c,bot,"proposal-claim",
+    g1,inbox,1,files.digest(codec.encode_inbox_record(inbox)),worker,1,2000)
+  store.save_proposal(c,receipt.generation,claimed,p) |> should.be_error
+  store.save_proposal(c,receipt.generation,inbox,p) |> should.be_error
+  row(c,store.proposal_key(inbox.request_id)) |> should.equal(before)
+}
+pub fn native_proposal_semantic_whitespace_command_matches_test() {
+  use c <- with_store()
+  let #(gen,inbox)=pending_proposal_input(c,10,
+    "/action  cancel_job_lease  cancel-plan/job1 -- "<>reason)
+  let assert Ok(_)=store.save_proposal(c,gen,inbox,proposal_fixture(10))
+}
+
+pub fn native_cancellation_semantic_whitespace_matches_test() {
+ use c <- with_store()
+ let #(gen,inbox)=processing(c,10,"/action  cancel_job_lease  cancel-plan/job1 -- "<>reason)
+ let #(p,_,_,_,_)=fixture(10)
+ let assert Ok(_)=save(c,gen,inbox,p)
 }

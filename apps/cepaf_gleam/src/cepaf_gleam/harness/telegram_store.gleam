@@ -1,3 +1,5 @@
+import cepaf_gleam/harness/telegram_action_proposal as proposal
+import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_cancellation as cancellation
 import cepaf_gleam/harness/telegram_cancellation_record as cancellation_record
 import cepaf_gleam/harness/telegram_action_intent as action_intent
@@ -2836,8 +2838,7 @@ fn cancellation_matches_input(
   && case commands.parse(text) {
     Ok(invocation) ->
       invocation.definition.canonical == "/tool"
-      && invocation.args
-      == action_intent.command_args(cancellation_record.intent(saved))
+      && cancellation_command_matches(cancellation_record.intent(saved),text)
     Error(_) -> False
   }
 }
@@ -3133,5 +3134,98 @@ pub fn commit_cancellation_lookup_for(
         0,
       )
     }
+  }
+}
+
+/// Pending proposal data has a separate namespace from executed cancellation history.
+pub fn proposal_key(request_id:String) -> String { "action-proposal/" <> request_id }
+
+/// Save exact signable bytes or append receipts without claiming the inbox,
+/// granting execution authority, or creating cancellation history.
+pub fn save_proposal(config:transport.LocalConfiguration,generation:Int,
+  inbox:ledger.InboxRecord,value:proposal.Proposal) -> Result(Int,StoreError) {
+  let binding=proposal.binding(value)
+  use _ <- result.try(case ledger.valid_record(inbox)
+    && inbox.status==ledger.InboxPending && generation>=0
+    && proposal.request_id(value)==inbox.request_id
+    && binding.bot_id==inbox.bot_id && binding.chat_id==inbox.chat_id
+    && binding.user_id==inbox.user_id && binding.update_id==inbox.update_id {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_identity_refused"))
+  })
+  let key=proposal_key(inbox.request_id)
+  use #(observed,rows) <- result.try(read_keys(config,[
+    codec.inbox_key(inbox.request_id),codec.input_key(inbox.request_id),
+    codec.authority_key(inbox.request_id),cancellation_key(inbox.request_id),key]))
+  use #(stored,input,prior) <- result.try(case rows {
+    [stored,input,authority,cancel,prior] if observed==generation -> {
+      case stored.exists && input.exists && !authority.exists && !cancel.exists
+        && stored.sha256==files.digest(codec.encode_inbox_record(inbox)) {
+        True -> Ok(#(stored,input,prior))
+        False -> Error(StoreInvariantError("proposal_context_refused"))
+      }
+    }
+    _ -> Error(StoreInvariantError("proposal_generation_refused"))
+  })
+  use raw <- result.try(codec.decode_row_value(input) |> result.map_error(StoreDecodeError))
+  use #(id,bot,update,verdict) <- result.try(
+    codec.decode_input_verdict(raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case verdict {
+    guard.AcceptedEnvelope(bot_id:b,chat_id:c,user_id:u,update_id:n,
+      message_id:m,text_hash:h,raw_text:text,callback_query_id:None,..) -> {
+      case id==inbox.request_id && bot==inbox.bot_id && update==inbox.update_id
+        && b==bot && c==inbox.chat_id && u==inbox.user_id && n==update
+        && m==inbox.message_id && h==inbox.text_hash && files.digest(text)==h
+        && proposal_input_matches(value,text) {
+        True -> Ok(Nil)
+        False -> Error(StoreInvariantError("proposal_input_refused"))
+      }
+    }
+    _ -> Error(StoreInvariantError("proposal_input_refused"))
+  })
+  let _=stored
+  let encoded=proposal.encode(value)
+  use unchanged <- result.try(case prior.exists {
+    False -> case proposal.receipts(value)==[] {
+      True -> Ok(False)
+      False -> Error(StoreInvariantError("proposal_initial_receipts_refused"))
+    }
+    True -> {
+      use raw <- result.try(codec.decode_row_value(prior) |> result.map_error(StoreDecodeError))
+      use previous <- result.try(proposal.decode(raw) |> result.map_error(StoreDecodeError))
+      case proposal.extends(previous,value) {
+        True -> Ok(raw==encoded)
+        False -> Error(StoreInvariantError("proposal_replacement_refused"))
+      }
+    }
+  })
+  case unchanged {
+    True -> Ok(generation)
+    False -> {
+      let change=codec.Change(key,prior.version,prior.sha256,codec.encode_canonical_base64(encoded))
+      let summary=json.object([#("op",json.string("save_action_proposal")),
+        #("request_id",json.string(inbox.request_id)),
+        #("intent_digest",json.string(action_intent.digest(proposal.intent(value)))),
+        #("receipt_count",json.int(list.length(proposal.receipts(value))))]) |> json.to_string
+      use applied <- result.try(execute_apply(config,inbox.bot_id,
+        "op-proposal-" <> files.digest(encoded),generation,
+        list.map(rows,fn(r){row_read_assertion(r.key,r)}),[change],
+        codec.ReservationDelta(0,0),summary))
+      Ok(applied.receipt.generation)
+    }
+  }
+}
+fn proposal_input_matches(p:proposal.Proposal,text:String) -> Bool {
+  cancellation_command_matches(proposal.intent(p),text)
+}
+fn cancellation_command_matches(intent:action_intent.Intent,text:String) -> Bool {
+  case commands.parse(text) {
+    Ok(inv) if inv.definition.canonical=="/tool" ->
+      case tool_command.parse(inv.args),tool_command.parse(action_intent.command_args(intent)) {
+        Ok(tool_command.CancelLease(job,reason)),Ok(tool_command.CancelLease(expected_job,expected_reason)) ->
+          job==expected_job && reason==expected_reason
+        _,_ -> False
+      }
+    _ -> False
   }
 }

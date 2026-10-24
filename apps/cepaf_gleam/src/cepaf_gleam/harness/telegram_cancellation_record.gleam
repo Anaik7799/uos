@@ -168,7 +168,8 @@ fn decode_outer_fields(
   }
 }
 
-fn decode_intent_json(
+/// Decode canonical signable data only; this grants no approval or effect authority.
+pub fn decode_intent_json(
   raw_intent_json: String,
 ) -> Result(#(action.Intent, action.Binding, action.Target), String) {
   let size = string.byte_size(raw_intent_json)

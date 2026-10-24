@@ -187,7 +187,7 @@ pub fn strict_args_and_truthful_denial_test() {
   }
   case g.classify_directive("/approval approve") {
     g.DeniedMutation(_, reason) ->
-      string.contains(reason, "not integrated") |> should.be_true
+      string.contains(reason, "Usage:") |> should.be_true
     _ -> panic as "approval allowed"
   }
 }
@@ -284,4 +284,10 @@ pub fn approval_status_ingress_test() {
  g.classify_directive("/approval list") |> should.equal(g.PreservedDirective("/approval",[]))
  g.classify_directive("/approval tg-333444-10") |> should.equal(g.PreservedDirective("/approval",["tg-333444-10"]))
  list.each(["/approval approve","/approval submit token","/approval ../file","/approval tg-1;DROP"],fn(text){let assert g.DeniedMutation(_,_) = g.classify_directive(text) Nil})
+}
+
+pub fn approval_propose_and_submit_ingress_test() {
+ g.classify_directive("/approval propose tg-333444-10") |> should.equal(g.PreservedDirective("/approval_manage",["propose","tg-333444-10"]))
+ g.classify_directive("/approval submit tg-333444-10 codex public.jwt.signature") |> should.equal(g.PreservedDirective("/approval_manage",["submit","tg-333444-10","codex","public.jwt.signature"]))
+ list.each(["/approval propose ../x","/approval submit tg-1 admin token","/approval submit tg-1 codex token extra","/approval tg-"],fn(t){let assert g.DeniedMutation(_,_) = g.classify_directive(t) Nil})
 }

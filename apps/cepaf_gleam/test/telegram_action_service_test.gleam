@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/telegram_action_proposal as proposal
 //// Test-only signed service fixture. No live recipient or production keys.
 
 import cepaf_gleam/harness/clock
@@ -331,6 +332,8 @@ pub fn run_native(
   let assert [inbox] = prefix.admitted_records
   case mode {
     "approval_status" | "approval_foreign" -> approval_status_fixture(initial,prefix,inbox,p,root,bridge_expiry,now,mode)
+    "proposal_flow" -> proposal_flow_fixture(initial,prefix,inbox,p,root,bridge_expiry,now)
+    "proposal_collect" -> proposal_collect_fixture(initial,prefix,inbox,p,bridge_expiry)
     "proposal" -> proposal_fixture(initial,prefix,inbox,p,bridge_expiry,target_lease)
     "dispatch" -> dispatch_fixture(initial,prefix,inbox,p,root,packet_text,bridge_expiry,now)
     _ -> {
@@ -662,4 +665,130 @@ fn approval_status_fixture(initial:service.ServiceState,prefix:store.CommitPrefi
  let assert Ok(original)=codec.decode_inbox_record(raw)
  original.status |> should.equal(ledger.InboxPending)
  "approval_status_scoped_delivered_no_effect"
+}
+
+fn proposal_receipt(p:profile.Profile,value:proposal.Proposal,role:approval.Role,now:Int) {
+ let n=approval.role_name(role)
+ approval.Receipt(role,sign(n,json.object([
+   #("version",json.string("uos.telegram.approval.v1")),
+   #("purpose",json.string("cancel_job_lease")),#("role",json.string(n)),
+   #("subject",json.string(n<>"-subject")),#("decision",json.string("approve")),
+   #("intent_digest",json.string(action.digest(proposal.intent(value)))),
+   #("effect_id",json.string(action.effect_id(proposal.intent(value)))),
+   #("iat_ms",json.int(now)),#("nbf_ms",json.int(now)),#("exp_ms",json.int(now+15_000)),
+   #("roster_digest",json.string(approval.roster_digest(profile.roster(p))))
+ ]) |> json.to_string))
+}
+fn proposal_collect_fixture(initial:service.ServiceState,prefix:store.CommitPrefixResult,
+ inbox:ledger.InboxRecord,p:profile.Profile,bridge_expiry:Int) {
+ let assert Ok(actor)=service.start_store_worker(initial.config.storage_config,inbox.bot_id)
+ let state=service.set_authority(service.ServiceState(..initial,
+   store_worker:Some(actor.data),expected_generation:prefix.receipt.generation),
+   service.AuthorityLease("service-test",1,1,bridge_expiry / 1000))
+ let assert Ok(#(s1,value))=service.begin_cancellation_proposal(state,p,inbox)
+ let assert Ok(#(same,again))=service.begin_cancellation_proposal(s1,p,inbox)
+ same.expected_generation |> should.equal(s1.expected_generation)
+ proposal.encode(again) |> should.equal(proposal.encode(value))
+ let assert Ok(observed)=clock.observe()
+ let now=observed.sample.observed.utc_us / 1000
+ let first=proposal_receipt(p,value,approval.Codex,now)
+ service.collect_cancellation_receipt(service.revoke_authority(s1),p,inbox,first)
+   |> should.be_error
+ service.collect_cancellation_receipt(s1,p,ledger.InboxRecord(..inbox,user_id:201),first)
+   |> should.be_error
+ service.collect_cancellation_receipt(s1,p,inbox,approval.Receipt(approval.Codex,first.token<>"A"))
+   |> should.be_error
+ let assert Ok(#(s2,v2))=service.collect_cancellation_receipt(s1,p,inbox,first)
+ let assert Ok(#(replay,_))=service.collect_cancellation_receipt(s2,p,inbox,first)
+ replay.expected_generation |> should.equal(s2.expected_generation)
+ list.length(proposal.receipts(v2)) |> should.equal(1)
+ service.execute_collected_cancellation(s2,p,inbox,1,
+   files.digest(codec.encode_inbox_record(inbox))) |> should.be_error
+ row(state.config.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
+ let assert Ok(#(s3,v3))=service.collect_cancellation_receipt(s2,p,inbox,
+   proposal_receipt(p,value,approval.Agy,now))
+ list.length(proposal.receipts(v3)) |> should.equal(2)
+ service.execute_collected_cancellation(s3,p,inbox,1,
+   files.digest(codec.encode_inbox_record(inbox))) |> should.be_error
+ let assert Ok(#(s4,v4))=service.collect_cancellation_receipt(s3,p,inbox,
+   proposal_receipt(p,value,approval.Operator,now))
+ list.length(proposal.receipts(v4)) |> should.equal(3)
+ // A fresh read from a separately invoked native worker restores the exact proposal.
+ let assert Ok(raw)=codec.decode_row_value(row(state.config.storage_config,store.proposal_key(inbox.request_id)))
+ let assert Ok(restored)=proposal.decode(raw)
+ proposal.encode(restored) |> should.equal(proposal.encode(v4))
+ let assert Ok(#(claimed,processing))=store.claim_task_processing(state.config.storage_config,
+   inbox.bot_id,"proposal-claimed",s4.expected_generation,inbox,1,
+   files.digest(codec.encode_inbox_record(inbox)),state.config.worker_id,1,now)
+ let current=service.ServiceState(..s4,expected_generation:claimed.generation)
+ let assert Ok(#(_,result))=service.execute_collected_cancellation(current,p,processing,2,
+   files.digest(codec.encode_inbox_record(processing)))
+ result.receipt.generation |> should.equal(claimed.generation+2)
+ row(state.config.storage_config,codec.result_key(inbox.request_id)).exists |> should.be_true
+ "durable_partial_receipts_quorum_executes_once"
+}
+
+fn approval_query(state:service.ServiceState,text:String,update:Int,user:Int,now:Int) {
+ let c=state.config.storage_config
+ let assert Ok(#(wm,v,h))=store.read_watermark(c)
+ let verdict=guard.AcceptedEnvelope(update,update+1,100,user,files.digest(text),text,
+   guard.classify_directive(text),state.config.bot_id,None)
+ let assert Ok(prefix)=store.commit_prefix(c,state.config.bot_id,"approval-query-"<>int.to_string(update),
+   state.expected_generation,wm,v,h,[verdict],now)
+ let assert [query]=prefix.admitted_records
+ let assert Ok(#(next,_))=service.dispatch_cycle(
+   service.ServiceState(..state,expected_generation:prefix.receipt.generation),now*1000)
+ let assert Ok(raw)=codec.decode_row_value(row(c,codec.chunk_key(query.request_id,0)))
+ let assert Ok(chunk)=codec.decode_chunk_value(raw)
+ let assert ledger.OutboxDelivered(_)=chunk.status
+ #(next,chunk.payload)
+}
+fn proposal_flow_fixture(initial:service.ServiceState,prefix:store.CommitPrefixResult,
+ inbox:ledger.InboxRecord,p:profile.Profile,root:String,bridge_expiry:Int,now:Int) {
+ let assert Ok(#(pid,_,url))=fixture_start()
+ let assert Ok(cfg)=service.configure_actions(initial.config,root,"profile.json",
+   profile.digest(p),profile.context(p),root)
+ let cfg=service.ServiceConfiguration(..cfg,http_config:http.default_configuration(url,"TEST_ONLY"),
+   allowed_pairs:[#(100,200),#(100,201)])
+ let state=service.set_authority(service.ServiceState(..initial,config:cfg,
+   expected_generation:prefix.receipt.generation),
+   service.AuthorityLease("service-test",1,1,bridge_expiry / 1000))
+ let plain=service.ServiceState(..state,config:service.ServiceConfiguration(..cfg,actions:Some(service.RecoveryActions(p))))
+ let #(plain_after,unconfigured)=approval_query(plain,"/approval propose "<>inbox.request_id,19,200,now)
+ string.contains(unconfigured,"not configured") |> should.be_true
+ let configured=service.ServiceState(..plain_after,config:cfg)
+ let #(s1,denied)=approval_query(configured,"/approval propose "<>inbox.request_id,20,201,now)
+ denied |> should.equal("No pending controlled action request found for this chat and user.")
+ row(cfg.storage_config,store.proposal_key(inbox.request_id)).exists |> should.be_false
+ let #(s2,challenge)=approval_query(s1,"/approval propose "<>inbox.request_id,21,200,now)
+ let assert Ok(raw)=codec.decode_row_value(row(cfg.storage_config,store.proposal_key(inbox.request_id)))
+ let assert Ok(value)=proposal.decode(raw)
+ string.contains(challenge,action.digest(proposal.intent(value))) |> should.be_true
+ string.contains(challenge,action.canonical_json(proposal.intent(value))) |> should.be_true
+ let #(s3,rejected)=approval_query(s2,"/approval submit "<>inbox.request_id<>" codex invalid",22,200,now)
+ string.contains(rejected,"invalid") |> should.be_true
+ row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
+ let assert Ok(observed)=clock.observe()
+ let stamp=observed.sample.observed.utc_us / 1000
+ let r1=proposal_receipt(p,value,approval.Codex,stamp)
+ let #(s4,_)=approval_query(s3,"/approval submit "<>inbox.request_id<>" codex "<>r1.token,23,200,now)
+ row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
+ let r2=proposal_receipt(p,value,approval.Agy,stamp)
+ let #(s5,_)=approval_query(s4,"/approval submit "<>inbox.request_id<>" agy "<>r2.token,24,200,now)
+ row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
+ let r3=proposal_receipt(p,value,approval.Operator,stamp)
+ let #(s6,_)=approval_query(s5,"/approval submit "<>inbox.request_id<>" operator "<>r3.token,25,200,now)
+ let assert Ok(#(s7,_))=service.dispatch_cycle(s6,now*1000)
+ let assert Ok(#(_,service.DispatchCycleResult(0,0)))=service.dispatch_cycle(s7,now*1000)
+ let assert Ok(raw)=codec.decode_row_value(row(cfg.storage_config,codec.inbox_key(inbox.request_id)))
+ let assert Ok(done)=codec.decode_inbox_record(raw)
+ let assert ledger.InboxCompleted(_)=done.status
+ let assert Ok(raw)=codec.decode_row_value(row(cfg.storage_config,codec.chunk_key(inbox.request_id,0)))
+ let assert Ok(chunk)=codec.decode_chunk_value(raw)
+ let assert ledger.OutboxDelivered(_)=chunk.status
+ string.contains(chunk.payload,"revoked") |> should.be_true
+ let requests=fixture_requests(pid)
+ let _=fixture_stop(pid)
+ list.length(requests) |> should.equal(8)
+ "approval_commands_to_quorum_native_and_http_once"
 }

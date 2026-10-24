@@ -504,3 +504,133 @@ pub fn native_deadline_includes_shorter_receipt_and_roster_test() {
   let assert Ok(re) = verify(short_roster, receipts(short_roster))
   approval.execution_deadline_ms(re) |> should.equal(now + 2)
 }
+
+fn validate_partial(policy, rs) {
+  approval.validate_partial(policy, intent(), host, boot, now, boot_now, rs)
+}
+
+fn partial_rejected(rs, policy) {
+  validate_partial(policy, rs) |> result.is_error |> should.be_true
+}
+
+pub fn partial_zero_one_two_succeed_while_full_verify_refuses_test() {
+  let p = roster()
+  list.each(
+    [
+      [],
+      [receipt(approval.Codex, p)],
+      [receipt(approval.Operator, p)],
+      [receipt(approval.Codex, p), receipt(approval.Agy, p)],
+      [receipt(approval.Codex, p), receipt(approval.Operator, p)],
+      [
+        receipt(approval.Codex, p),
+        receipt(approval.Agy, p),
+        receipt(approval.Claude, p),
+      ],
+    ],
+    fn(rs) {
+      let assert Ok(digests) = validate_partial(p, rs)
+      list.length(digests) |> should.equal(list.length(rs))
+      list.each(digests, fn(hash) {
+        string.length(hash) |> should.equal(64)
+        string.contains(hash, ".") |> should.be_false
+      })
+      rejected(rs, p)
+    },
+  )
+  let full_rs = receipts(p)
+  let assert Ok(partial_digests) = validate_partial(p, full_rs)
+  let assert Ok(evidence) = verify(p, full_rs)
+  partial_digests |> should.equal(approval.receipt_digests(evidence))
+}
+
+pub fn partial_rejects_stale_tampered_duplicate_declining_and_over_four_test() {
+  let p = roster()
+  let good = receipt(approval.Codex, p)
+  let declining =
+    signed(
+      approval.Codex,
+      replace(fields(approval.Codex, p), "decision", json.string("reject")),
+    )
+  let expired_receipt =
+    signed(
+      approval.Codex,
+      replace(fields(approval.Codex, p), "exp_ms", json.int(now)),
+    )
+  let wrong_intent =
+    signed(
+      approval.Codex,
+      replace(
+        fields(approval.Codex, p),
+        "intent_digest",
+        json.string(string.repeat("c", 64)),
+      ),
+    )
+  let wrong_roster =
+    signed(
+      approval.Codex,
+      replace(
+        fields(approval.Codex, p),
+        "roster_digest",
+        json.string(string.repeat("e", 64)),
+      ),
+    )
+  let wrong_sig =
+    approval.Receipt(
+      approval.Codex,
+      sign("stranger", json.to_string(json.object(fields(approval.Codex, p)))),
+    )
+  let tampered = approval.Receipt(approval.Codex, good.token <> "A")
+  let bad_header =
+    approval.Receipt(
+      approval.Codex,
+      sign_header(
+        "codex",
+        json.to_string(json.object(fields(approval.Codex, p))),
+        "{\"alg\":\"none\",\"kid\":\"codex-key\",\"typ\":\"JWT\"}",
+      ),
+    )
+  list.each(
+    [
+      [good, receipt(approval.Codex, p)],
+      [
+        receipt(approval.Codex, p),
+        receipt(approval.Agy, p),
+        receipt(approval.Claude, p),
+        receipt(approval.Operator, p),
+        receipt(approval.Operator, p),
+      ],
+      [declining],
+      [receipt(approval.Operator, p), declining],
+      [expired_receipt],
+      [wrong_intent],
+      [wrong_roster],
+      [wrong_sig],
+      [tampered],
+      [approval.Receipt(approval.Agy, good.token)],
+      [bad_header],
+      [approval.Receipt(approval.Codex, "")],
+      [approval.Receipt(approval.Codex, string.repeat("x", 8193))],
+    ],
+    fn(rs) { partial_rejected(rs, p) },
+  )
+  let assert Ok(expired_roster) = approval.new_roster(signers(), 900_000, now)
+  partial_rejected([], expired_roster)
+  partial_rejected([receipt(approval.Codex, expired_roster)], expired_roster)
+  let assert Ok(future_roster) =
+    approval.new_roster(signers(), now + 1, 1_200_000)
+  partial_rejected([], future_roster)
+  list.each(
+    [
+      #("other.tail55d152.ts.net", boot, now, boot_now),
+      #(host, "other-boot", now, boot_now),
+      #(host, boot, 999_999, 19_999),
+      #(host, boot, 1_060_000, 80_000),
+    ],
+    fn(t) {
+      approval.validate_partial(p, intent(), t.0, t.1, t.2, t.3, [])
+      |> result.is_error
+      |> should.be_true
+    },
+  )
+}

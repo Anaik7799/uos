@@ -126,14 +126,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         let name = invocation.definition.canonical
         let args = invocation.args
         case name {
-          "/approval" -> case args {
-            "" | "list" -> PreservedDirective("/approval",[])
-            id -> case string.byte_size(id)<=64 && string.starts_with(id,"tg-")
-              && list.all(string.to_graphemes(string.drop_start(id,3)),fn(c){string.contains("0123456789-",c)}) {
-              True -> PreservedDirective("/approval",[id])
-              False -> DeniedMutation("/approval","Usage: /approval [request_id]. Signed receipt submission is not integrated yet.")
-            }
-          }
+          "/approval" -> approval_directive(args)
           "/doctor" -> read_directive("query_doctor", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" -> read_directive("query_system_health", args)
@@ -321,5 +314,31 @@ fn evaluate_identified(
               )
           }
       }
+  }
+}
+fn approval_request_id(id:String) -> Bool {
+  string.byte_size(id)>3 && string.byte_size(id)<=64 && string.starts_with(id,"tg-")
+    && list.all(string.to_graphemes(string.drop_start(id,3)),fn(c){string.contains("0123456789-",c)})
+}
+fn approval_directive(args:String) -> ParsedDirective {
+  case args {
+    "" | "list" -> PreservedDirective("/approval",[])
+    _ -> case string.split(args," ") {
+      [id] -> case approval_request_id(id) {
+        True -> PreservedDirective("/approval",[id])
+        False -> DeniedMutation("/approval","Usage: /approval [request_id], propose <request_id>, or submit <request_id> <role> <signed_receipt>.")
+      }
+      ["propose",id] if id!="" -> case approval_request_id(id) {
+        True -> PreservedDirective("/approval_manage",["propose",id])
+        False -> DeniedMutation("/approval","Invalid request identifier.")
+      }
+      ["submit",id,role,token] -> case approval_request_id(id)
+        && list.contains(["codex","agy","claude","operator"],role)
+        && token!="" && string.byte_size(token)<=8192 {
+        True -> PreservedDirective("/approval_manage",["submit",id,role,token])
+        False -> DeniedMutation("/approval","Invalid signed receipt submission.")
+      }
+      _ -> DeniedMutation("/approval","Use propose or submit with an exact request identifier; unsigned approve text cannot authorize an action.")
+    }
   }
 }

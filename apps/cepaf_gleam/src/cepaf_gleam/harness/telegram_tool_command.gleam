@@ -37,6 +37,7 @@ pub fn help() -> String {
   <> "/tool query_saplan {} — current configured plan snapshot.\n"
   <> "/tool query_task {\"task_id\":\"TASK_ID\"} — task detail in the configured plan only.\n"
   <> "/tool cancel_job_lease <job_id> -- <reason> — requests an approved lease revocation; worker termination is separate.\n"
+  <> "/approval list — find pending controlled requests; /approval propose <request_id> — view the exact signing challenge; /approval submit <request_id> <role> <signed_receipt> — collect independent signatures.\n"
   <> "Arguments cannot change the plan, database, path or authority. Other tools are unavailable."
 }
 

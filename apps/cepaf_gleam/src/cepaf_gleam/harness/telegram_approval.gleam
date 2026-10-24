@@ -505,3 +505,54 @@ fn min_int(values: List(Int), err: String) -> Result(Int, String) {
     [] -> Error(err)
   }
 }
+
+/// Validates 0..4 partial approval receipts as input-collection data only.
+/// Returns cryptographic token digests without granting Verified or execution authority.
+pub fn validate_partial(
+  roster: Roster,
+  request: intent.Intent,
+  host: String,
+  boot: String,
+  now_utc_ms: Int,
+  now_boot_ms: Int,
+  receipts: List(Receipt),
+) -> Result(List(String), String) {
+  use _ <- result.try(check_roster_active(roster, now_utc_ms))
+  use _ <- result.try(
+    case intent.valid_at(request, host, boot, now_utc_ms, now_boot_ms) {
+      True -> Ok(Nil)
+      False -> Error("intent_not_valid_at_now")
+    },
+  )
+  let req_digest = intent.digest(request)
+  let req_effect_id = intent.effect_id(request)
+  use _ <- result.try(case req_digest != "" && req_effect_id != "" {
+    True -> Ok(Nil)
+    False -> Error("intent_identity_invalid")
+  })
+  use bounded_receipts <- result.try(bound_zero_to_four(
+    receipts,
+    "receipt_count_invalid",
+  ))
+  use _ <- result.try(precheck_receipts(bounded_receipts, []))
+  use verified_items <- result.try(
+    list.try_map(bounded_receipts, fn(receipt) {
+      verify_single_receipt(
+        roster,
+        request,
+        req_digest,
+        req_effect_id,
+        now_utc_ms,
+        receipt,
+      )
+    }),
+  )
+  Ok(list.map(verified_items, fn(item) { item.0 }))
+}
+
+fn bound_zero_to_four(items: List(a), err: String) -> Result(List(a), String) {
+  case items {
+    [] | [_] | [_, _] | [_, _, _] | [_, _, _, _] -> Ok(items)
+    _ -> Error(err)
+  }
+}

@@ -831,7 +831,7 @@ let () =
 
 (* Execute the actual CLI with isolated files, explicit DB, and a finite timeout.
    Neither fixture setup nor child execution touches the canonical live store. *)
-let run_cancellation_child ~program ~arguments ~database ~input =
+let run_cancellation_child_bounded ~timeout_seconds ~program ~arguments ~database ~input =
   let stdin_path=Stdlib.Filename.temp_file "uos-cancel-input-" ".json" in
   let stdout_path=Stdlib.Filename.temp_file "uos-cancel-output-" ".json" in
   let stderr_path=Stdlib.Filename.temp_file "uos-cancel-errors-" ".txt" in
@@ -850,7 +850,7 @@ let run_cancellation_child ~program ~arguments ~database ~input =
       List.iter [fd_in;fd_out;fd_err] ~f:Lifetime_unix.close)
       ~f:(fun () -> Lifetime_unix.create_process_env exe
         (Array.of_list (exe :: arguments)) env fd_in fd_out fd_err) in
-    let deadline=Lifetime_unix.gettimeofday () +. 6.5 in
+    let deadline=Lifetime_unix.gettimeofday () +. timeout_seconds in
     let rec wait () =
       match Lifetime_unix.waitpid [WNOHANG] pid with
       | 0,_ ->
@@ -866,6 +866,9 @@ let run_cancellation_child ~program ~arguments ~database ~input =
     if String.length output > 8192 || String.length errors > 32768 then
       failwith "cancellation CLI fixture output exceeded bounds";
     status,output,errors)
+
+let run_cancellation_child ~program ~arguments ~database ~input =
+  run_cancellation_child_bounded ~timeout_seconds:6.5 ~program ~arguments ~database ~input
 
 let run_cancellation_cli ~database ~verb ~input =
   run_cancellation_child ~program:"sa_plan_main.exe" ~arguments:["job";verb] ~database ~input
@@ -1402,7 +1405,7 @@ let () =
     ~f:(fun c->Int.to_string (Char.to_int c))) ^ ">>" in
   let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
   let guardian=Filename.concat dir "guardian.exe" and worker=Filename.concat dir "worker.exe" in
-  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator";"dispatch";"recover";"recover_absent";"recover_dispatch";"proposal";"approval_status";"approval_foreign"] ~f:(fun mode->
+  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator";"dispatch";"recover";"recover_absent";"recover_dispatch";"proposal";"proposal_collect";"proposal_flow";"approval_status";"approval_foreign"] ~f:(fun mode->
     Cancellation.with_case (fun path store request->
       let request=live_cancel_request path request in
       let lease=some (ok (Store.find_bridge_lease store ~mapping_id:request.mapping_id)) in
@@ -1415,7 +1418,8 @@ let () =
         (bin worker) (bin (sha worker)) (bin request.mapping_id)
         (if String.equal mode "wrong_fence" then Int64.(request.fencing_token+1L) else request.fencing_token)
         lease.expires_at_ns request.target_lease_until_ns (bin mode) in
-      let status,out,errors=run_cancellation_child
+      let status,out,errors=run_cancellation_child_bounded
+        ~timeout_seconds:(if String.equal mode "proposal_flow" then 20.0 else 6.5)
         ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
         ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";code] ~database:path ~input:"" in
       if not (Poly.equal status (Lifetime_unix.WEXITED 0)) then
@@ -1429,6 +1433,10 @@ let () =
         (String.equal out "approval_status_scoped_delivered_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
       else if String.equal mode "proposal" then check "SERVICE-PROPOSAL-EXACT-TARGET-NO-EFFECT"
         (String.equal out "service_proposal_exact_target_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
+      else if String.equal mode "proposal_flow" then check "SERVICE-PROPOSAL-COMMAND-FLOW"
+        (String.equal out "approval_commands_to_quorum_native_and_http_once" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
+      else if String.equal mode "proposal_collect" then check "SERVICE-PROPOSAL-RECEIPTS-QUORUM"
+        (String.equal out "durable_partial_receipts_quorum_executes_once" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
       else if String.equal mode "dispatch" then check "SERVICE-COMMAND-NATIVE-HTTP-DELIVERY"
         (String.equal out "service_command_dispatched_delivered_once" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
       else if String.equal mode "recover_dispatch" then check "SERVICE-RECOVERY-HTTP-DELIVERED-ONCE"

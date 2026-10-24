@@ -1,3 +1,5 @@
+import cepaf_gleam/harness/telegram_action_proposal as proposal
+import cepaf_gleam/harness/telegram_approval as approval
 //// Supervised Telegram Service: Polling, Durable Storage, & Bounded Delivery
 ////
 //// Implements the coordinated runtime loop:
@@ -2271,6 +2273,8 @@ fn execute_guarded_dispatch(
           let proc_sha = files.digest(codec.encode_inbox_record(processing_rec))
 
           case specialized_dispatch(state, inbox_rec.request_id) {
+            ApprovalDispatch -> execute_approval_dispatch(
+              ServiceState(..state,expected_generation:gen1),processing_rec,proc_ver,proc_sha)
             CancellationDispatch -> execute_action_dispatch(
               ServiceState(..state, expected_generation: gen1),processing_rec,proc_ver,proc_sha)
             MemoryDispatch -> execute_memory_dispatch(
@@ -3247,6 +3251,7 @@ pub fn authority_worker_revoke_lease(
 }
 
 pub type StoreWorkerMessage {
+  StoreSaveProposal(gen:Int,inbox:ledger.InboxRecord,value:proposal.Proposal,reply_to:Subject(Result(Int,store.StoreError)))
   StorePersistCancellation(gen: Int,record:ledger.InboxRecord,version:Int,sha:String,worker:String,epoch:Int,p:cancellation.Prepared,reply_to:Subject(Result(store.CancellationReservation,store.StoreError)))
   StoreCommitCancellation(res:store.CancellationReservation,raw:String,now:Int,reply_to:Subject(Result(store.CommitResultResult,store.StoreError)))
   StoreLoadCancellation(gen:Int,record:ledger.InboxRecord,version:Int,sha:String,worker:String,epoch:Int,reply_to:Subject(Result(store.CancellationReservation,store.StoreError)))
@@ -3370,6 +3375,10 @@ fn handle_store_worker_message(
   msg: StoreWorkerMessage,
 ) -> actor.Next(StoreWorkerState, StoreWorkerMessage) {
   case msg {
+    StoreSaveProposal(gen,inbox,value,reply_to) -> {
+      process.send(reply_to,store.save_proposal(state.config,gen,inbox,value))
+      actor.continue(state)
+    }
     StorePersistCancellation(gen,record,version,sha,worker,epoch,p,reply_to) -> {
       process.send(reply_to,store.persist_cancellation(state.config,gen,record,version,sha,worker,epoch,p))
       actor.continue(state)
@@ -5148,7 +5157,7 @@ fn command_observer_request(config: ServiceConfiguration) -> obs_policy.ObserveR
   )
 }
 
-type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch CancellationDispatch }
+type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch CancellationDispatch ApprovalDispatch }
 
 fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedDispatch {
   case svc_read_keys(state, [codec.input_key(request_id)]) {
@@ -5156,6 +5165,7 @@ fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedD
       Ok(#(_, _, _, guard.AcceptedEnvelope(
         directive: guard.PreservedDirective(name, _), callback_query_id: None, ..
       ))) -> case name {
+        "/approval_manage" -> ApprovalDispatch
         "/cancel_job_lease" -> CancellationDispatch
         "/memory" | "/history" | "/messages" -> MemoryDispatch
         "conversational" | "/agy" -> case state.config.conversation {
@@ -5454,6 +5464,12 @@ pub fn execute_approved_cancellation(
     action_packet.load(p, packet_root, packet_relative, observed)
     |> result.map_error(fn(_) { action_hold(state, "action_packet_invalid") }),
   )
+  execute_prepared_cancellation(state,p,before,prepared,inbox,version,sha)
+}
+
+fn execute_prepared_cancellation(state:ServiceState,p:action_profile.Profile,
+  before:checked_clock.Observation,prepared:cancellation.Prepared,inbox:ledger.InboxRecord,
+  version:Int,sha:String) -> Result(#(ServiceState,store.CommitResultResult),ServiceError) {
   let saved = cancellation.recovery_record(prepared)
   let binding = cancellation_record.binding(saved)
   use _ <- result.try(
@@ -5782,10 +5798,10 @@ pub fn action_packet_filename(request_id:String) -> String {
 fn action_dispatch_ready(state:ServiceState,request_id:String) -> Bool {
   case specialized_dispatch(state,request_id),state.config.actions {
     CancellationDispatch,Some(RecoveryActions(_)) -> False
-    CancellationDispatch,Some(SignedActions(_,root)) ->
-      case files.read(root,action_packet_filename(request_id)) {
-        Ok(_) -> True
-        Error(_) -> False
+    CancellationDispatch,Some(SignedActions(p,root)) ->
+      case svc_read_keys(state,[store.proposal_key(request_id)]) {
+        Ok(#(_,[row])) if row.exists -> collected_dispatch_ready(state,p,request_id)
+        _ -> case files.read(root,action_packet_filename(request_id)) { Ok(_) -> True Error(_) -> False }
       }
     _,_ -> True
   }
@@ -5798,8 +5814,10 @@ fn execute_action_dispatch(state:ServiceState,inbox:ledger.InboxRecord,version:I
     None -> reply_without_reservation(state,inbox,version,sha,
       "Controlled actions are not configured. No action was executed.")
     Some(SignedActions(p,root)) -> {
-      use #(next,committed) <- result.try(execute_approved_cancellation(
-        state,p,root,action_packet_filename(inbox.request_id),inbox,version,sha))
+      use #(next,committed) <- result.try(case svc_read_keys(state,[store.proposal_key(inbox.request_id)]) {
+        Ok(#(_,[row])) if row.exists -> execute_collected_cancellation(state,p,inbox,version,sha)
+        _ -> execute_approved_cancellation(state,p,root,action_packet_filename(inbox.request_id),inbox,version,sha)
+      })
       finish_conversation(next,inbox,version,committed)
     }
   }
@@ -6038,7 +6056,7 @@ fn approval_status_reply(state:ServiceState,viewer:ledger.InboxRecord,
       let lines=eligible |> list.take(20) |> list.map(fn(row){
         let rec=row.0
         let label=case rec.status {
-          ledger.InboxPending -> "Pending: signed approval and execution are not confirmed."
+          ledger.InboxPending -> "Pending: signed approval and execution are not confirmed. Use /approval propose " <> rec.request_id <> " to view the signing challenge."
           ledger.InboxProcessing(_,_) -> "Processing or recovery pending; the effect is not confirmed by this view."
           ledger.InboxResultReady(_) -> "Result recorded; reply delivery is pending."
           ledger.InboxCompleted(_) -> "Reply delivered. See that reply for the precise action outcome."
@@ -6057,5 +6075,198 @@ fn approval_status_reply(state:ServiceState,viewer:ledger.InboxRecord,
           }
       }
     }
+  }
+}
+
+/// Preserve one signable proposal for the pending request; repeated calls return
+/// the original nonce and bytes. Stale proposals require explicit reconciliation.
+pub fn begin_cancellation_proposal(state:ServiceState,p:action_profile.Profile,
+  inbox:ledger.InboxRecord) -> Result(#(ServiceState,proposal.Proposal),ServiceError) {
+  use _ <- result.try(action_observe(state,p))
+  use #(generation,rows) <- result.try(svc_read_keys(state,[store.proposal_key(inbox.request_id)])
+    |> result.map_error(fn(err){action_store_error(state,err)}))
+  use value <- result.try(case rows {
+    [row] if generation==state.expected_generation -> case row.exists {
+      True -> {
+        use raw <- result.try(codec.decode_row_value(row)
+          |> result.map_error(fn(_){action_hold(state,"action_proposal_invalid")}))
+        proposal.decode(raw) |> result.map_error(fn(_){action_hold(state,"action_proposal_invalid")})
+      }
+      False -> {
+        use intent <- result.try(propose_cancellation(state,p,inbox))
+        proposal.new(inbox.request_id,intent,approval.roster_digest(action_profile.roster(p)))
+          |> result.map_error(fn(_){action_hold(state,"action_proposal_invalid")})
+      }
+    }
+    _ -> Error(action_hold(state,"action_generation_changed"))
+  })
+  use _ <- result.try(current_proposal(state,p,inbox,value))
+  save_service_proposal(state,inbox,value)
+}
+
+/// The service caller must supply the original pending inbox. The canonical
+/// store rechecks that input; crypto binds each signer to the original intent.
+pub fn collect_cancellation_receipt(state:ServiceState,p:action_profile.Profile,
+  inbox:ledger.InboxRecord,receipt:approval.Receipt)
+  -> Result(#(ServiceState,proposal.Proposal),ServiceError) {
+  use value <- result.try(load_service_proposal(state,inbox.request_id))
+  use _ <- result.try(current_proposal(state,p,inbox,value))
+  let rs=proposal.receipts(value)
+  let next=case list.find(rs,fn(r){r.role==receipt.role}) {
+    Ok(original) if original==receipt -> Ok(value)
+    Ok(_) -> Error("action_receipt_replacement_refused")
+    Error(_) -> proposal.with_receipts(value,list.append(rs,[receipt]))
+  }
+  use next <- result.try(next |> result.map_error(fn(reason){action_hold(state,reason)}))
+  use _ <- result.try(current_proposal(state,p,inbox,next))
+  save_service_proposal(state,inbox,next)
+}
+
+fn load_service_proposal(state:ServiceState,id:String) -> Result(proposal.Proposal,ServiceError) {
+  use #(gen,rows) <- result.try(svc_read_keys(state,[store.proposal_key(id)])
+    |> result.map_error(fn(err){action_store_error(state,err)}))
+  use row <- result.try(case rows {
+    [row] if gen==state.expected_generation && row.exists -> Ok(row)
+    _ -> Error(action_hold(state,"action_proposal_missing_or_stale"))
+  })
+  use raw <- result.try(codec.decode_row_value(row)
+    |> result.map_error(fn(_){action_hold(state,"action_proposal_invalid")}))
+  proposal.decode(raw) |> result.map_error(fn(_){action_hold(state,"action_proposal_invalid")})
+}
+fn current_proposal(state:ServiceState,p:action_profile.Profile,inbox:ledger.InboxRecord,
+  value:proposal.Proposal) -> Result(checked_clock.Observation,ServiceError) {
+  use observed <- result.try(action_observe(state,p))
+  let b=proposal.binding(value)
+  let c=action_profile.context(p)
+  use _ <- result.try(case proposal.request_id(value)==inbox.request_id
+    && b.bot_id==inbox.bot_id && b.chat_id==inbox.chat_id && b.user_id==inbox.user_id
+    && b.update_id==inbox.update_id && b.bot_id==c.bot && b.plan==c.plan && b.task==c.task
+    && b.worker==c.worker && b.attempt==c.attempt && b.epoch==c.epoch
+    && b.candidate_sha256==c.candidate && b.host==c.host && b.boot_id==c.boot
+    && b.execution.profile_sha256==action_profile.digest(p)
+    && bridge.matches_execution(action_profile.request(p),b.execution.mapping_id,b.execution.lease_id)
+    && proposal.roster_digest(value)==approval.roster_digest(action_profile.roster(p))
+    && list.contains(state.config.allowed_pairs,#(inbox.chat_id,inbox.user_id)) {
+      True -> Ok(Nil)
+      False -> Error(action_hold(state,"action_proposal_binding_refused"))
+  })
+  use _ <- result.try(approval.validate_partial(action_profile.roster(p),
+    proposal.intent(value),c.host,c.boot,observed.sample.observed.utc_us / 1000,
+    observed.sample.observed.boot_us / 1000,proposal.receipts(value))
+    |> result.map_error(fn(_){action_hold(state,"action_partial_receipts_refused")}))
+  Ok(observed)
+}
+fn save_service_proposal(state:ServiceState,inbox:ledger.InboxRecord,value:proposal.Proposal)
+  -> Result(#(ServiceState,proposal.Proposal),ServiceError) {
+  use generation <- result.try(case state.store_worker {
+    Some(actor) -> process.call(actor,5000,fn(reply_to){
+      StoreSaveProposal(state.expected_generation,inbox,value,reply_to)})
+    None -> store.save_proposal(state.config.storage_config,state.expected_generation,inbox,value)
+  } |> result.map_error(fn(err){action_store_error(state,err)}))
+  Ok(#(ServiceState(..state,expected_generation:generation),value))
+}
+
+/// Full quorum is reverified from durable data; partial collection alone cannot
+/// construct Prepared. Exact effect and canonical fences remain in shared path.
+pub fn execute_collected_cancellation(state:ServiceState,p:action_profile.Profile,
+  inbox:ledger.InboxRecord,version:Int,sha:String)
+  -> Result(#(ServiceState,store.CommitResultResult),ServiceError) {
+  use #(before,prepared) <- result.try(prepare_collected_cancellation(state,p,inbox))
+  execute_prepared_cancellation(state,p,before,prepared,inbox,version,sha)
+}
+
+fn prepare_collected_cancellation(state:ServiceState,p:action_profile.Profile,inbox:ledger.InboxRecord)
+  -> Result(#(checked_clock.Observation,cancellation.Prepared),ServiceError) {
+  use value <- result.try(load_service_proposal(state,inbox.request_id))
+  use before <- result.try(current_proposal(state,p,inbox,value))
+  let o=action_observation(p,before)
+  use evidence <- result.try(approval.verify(action_profile.roster(p),proposal.intent(value),
+    o.host,o.boot,o.utc_ms,o.boot_ms,proposal.receipts(value))
+    |> result.map_error(fn(_){action_hold(state,"action_approval_incomplete_or_invalid")}))
+  use prepared <- result.try(cancellation.prepare(proposal.intent(value),evidence,
+    action_profile.roster(p),proposal.binding(value),proposal.target(value),o)
+    |> result.map_error(fn(_){action_hold(state,"action_approval_incomplete_or_invalid")}))
+  Ok(#(before,prepared))
+}
+
+fn execute_approval_dispatch(state:ServiceState,query:ledger.InboxRecord,
+  version:Int,sha:String) -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+  case state.config.actions {
+    Some(SignedActions(p,_)) -> execute_configured_approval(state,p,query,version,sha)
+    _ -> reply_without_reservation(state,query,version,sha,
+      "Controlled action approvals are not configured. No action was executed.")
+  }
+}
+fn execute_configured_approval(state:ServiceState,p:action_profile.Profile,
+  query:ledger.InboxRecord,version:Int,sha:String)
+  -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+  use #(gen,rows) <- result.try(svc_read_keys(state,[codec.input_key(query.request_id)])
+    |> result.map_error(fn(err){action_store_error(state,err)}))
+  use args <- result.try(case rows {
+    [row] if gen==state.expected_generation -> case codec.decode_row_value(row)
+      |> result.try(codec.decode_input_verdict) {
+      Ok(#(_,_,_,guard.AcceptedEnvelope(directive:guard.PreservedDirective("/approval_manage",args),..))) -> Ok(args)
+      _ -> Error(action_hold(state,"action_approval_input_refused"))
+    }
+    _ -> Error(action_hold(state,"action_generation_changed"))
+  })
+  let id=case args { [_,id,..] -> id _ -> "" }
+  use #(gen,rows) <- result.try(svc_read_keys(state,[codec.inbox_key(id)])
+    |> result.map_error(fn(err){action_store_error(state,err)}))
+  let original=case rows {
+    [row] if gen==state.expected_generation && row.exists ->
+      codec.decode_row_value(row) |> result.try(codec.decode_inbox_record)
+    _ -> Error("not_found")
+  }
+  case original {
+    Ok(inbox) if inbox.bot_id==query.bot_id && inbox.chat_id==query.chat_id
+      && inbox.user_id==query.user_id && inbox.status==ledger.InboxPending -> {
+      let result=case args {
+        ["propose",_] -> begin_cancellation_proposal(state,p,inbox)
+        ["submit",_,role,token] -> {
+          use role <- result.try(case role {
+            "codex" -> Ok(approval.Codex) "agy" -> Ok(approval.Agy)
+            "claude" -> Ok(approval.Claude) "operator" -> Ok(approval.Operator)
+            _ -> Error(action_hold(state,"action_partial_receipts_refused"))
+          })
+          collect_cancellation_receipt(state,p,inbox,approval.Receipt(role,token))
+        }
+        _ -> Error(action_hold(state,"action_partial_receipts_refused"))
+      }
+      case result {
+        Ok(#(next,value)) -> {
+          let message=case args {
+            ["propose",_] -> "Approval proposal for " <> id
+              <> "\nNo action has been executed. Sign the exact intent below with the trusted roster."
+              <> "\nIntent digest: " <> action_intent.digest(proposal.intent(value))
+              <> "\nRoster digest: " <> proposal.roster_digest(value)
+              <> "\n" <> action_intent.canonical_json(proposal.intent(value))
+              <> "\nSubmit each signature with /approval submit " <> id <> " <role> <signed_receipt>."
+            _ -> "Receipt recorded for " <> id <> ". "
+              <> int.to_string(list.length(proposal.receipts(value)))
+              <> " signed receipts collected. Execution is not yet confirmed; operator and two sovereign approvals are required."
+          }
+          reply_without_reservation(next,query,version,sha,message)
+        }
+        Error(ServiceError(_,reason)) if reason=="action_partial_receipts_refused"
+          || reason=="action_receipt_replacement_refused" || reason=="invalid_action_proposal" ->
+          reply_without_reservation(state,query,version,sha,
+            "Approval receipt or proposal is invalid, expired, or conflicts with an existing receipt. No action was executed. For an expired proposal, send a new /tool request; the original intent is never renewed.")
+        Error(err) -> Error(err)
+      }
+    }
+    _ -> reply_without_reservation(state,query,version,sha,
+      "No pending controlled action request found for this chat and user.")
+  }
+}
+
+fn collected_dispatch_ready(state:ServiceState,p:action_profile.Profile,id:String) -> Bool {
+  case svc_read_keys(state,[codec.inbox_key(id)]) {
+    Ok(#(gen,[row])) if gen==state.expected_generation && row.exists ->
+      case codec.decode_row_value(row) |> result.try(codec.decode_inbox_record) {
+        Ok(inbox) -> prepare_collected_cancellation(state,p,inbox) |> result.is_ok
+        _ -> False
+      }
+    _ -> False
   }
 }
