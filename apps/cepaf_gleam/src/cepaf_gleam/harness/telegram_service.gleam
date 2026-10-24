@@ -11,6 +11,7 @@
 //// 5. Delivery pipeline: commit_sending -> bounded http POST -> verify 200 OK -> commit_outcome.
 
 import cepaf_gleam/harness/doctor_projection
+import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
@@ -2290,13 +2291,21 @@ fn execute_guarded_dispatch(
                               |> json.to_string
                           }
                         }
-                        guard.PreservedDirective(name, _) ->
-                          json.object([
-                            #("directive", json.string(name)),
-                            #("request_id", json.string(inbox_rec.request_id)),
-                            #("text", json.string(txt)),
-                          ])
-                          |> json.to_string
+                        guard.PreservedDirective(name, _) -> {
+                          let reference = case commands.parse(txt) {
+                            Ok(invocation) -> commands.reference_reply(invocation)
+                            Error(_) -> Error(Nil)
+                          }
+                          case reference {
+                            Ok(reply) -> reply
+                            Error(_) -> json.object([
+                              #("status", json.string("backend_unavailable")),
+                              #("directive", json.string(name)),
+                              #("request_id", json.string(inbox_rec.request_id)),
+                              #("error", json.string("Command adapter is not integrated; no action executed.")),
+                            ]) |> json.to_string
+                          }
+                        }
                         guard.DeniedMutation(tool, reason) ->
                           json.object([
                             #(

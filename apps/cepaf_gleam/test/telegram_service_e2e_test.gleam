@@ -1156,7 +1156,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
   let _ = lifecycle.stop_test_slice(slice_name)
 }
 
-pub fn e2e_automatic_dispatch_cycle_actor_test() {
+fn exercise_automatic_command_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
 
@@ -1200,7 +1200,7 @@ pub fn e2e_automatic_dispatch_cycle_actor_test() {
   // Queue a /doctor command update into the mock fixture
   let update_json =
     "{\"update_id\": 8001, \"message\": {\"message_id\": 501, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/doctor\", \"date\": 1700000000}}"
-  fixture_set_updates(fixture_pid, [update_json])
+  fixture_set_updates(fixture_pid, [string.replace(update_json, "/doctor", first_command)])
 
   // 1. PollCycle polls update and stores input_key + inbox row
   let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_020_000)
@@ -1224,13 +1224,13 @@ pub fn e2e_automatic_dispatch_cycle_actor_test() {
   let assert Ok(chunk_raw) = codec.decode_row_value(chunk_row)
   let assert Ok(delivered_chunk) = codec.decode_chunk_value(chunk_raw)
   delivered_chunk.status |> should.equal(ledger.OutboxDelivered(42))
-  string.contains(delivered_chunk.payload, "UNOBSERVED_RUNTIME")
+  string.contains(delivered_chunk.payload, first_expected)
   |> should.equal(True)
 
   // 4. Test /saplan automatic dispatch
   let saplan_update =
     "{\"update_id\": 8002, \"message\": {\"message_id\": 778, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/saplan\", \"date\": 1700000002}}"
-  fixture_set_updates(fixture_pid, [saplan_update])
+  fixture_set_updates(fixture_pid, [string.replace(saplan_update, "/saplan", second_command)])
 
   let poll_res2 = runner_poll_cycle(ipc_dir, 1_700_000_022_000)
   string.contains(poll_res2, "\"type\":\"poll_committed\"") |> should.equal(True)
@@ -1250,7 +1250,7 @@ pub fn e2e_automatic_dispatch_cycle_actor_test() {
   let assert Ok(chunk_raw2) = codec.decode_row_value(chunk_row2)
   let assert Ok(delivered_chunk2) = codec.decode_chunk_value(chunk_raw2)
   delivered_chunk2.status |> should.equal(ledger.OutboxDelivered(42))
-  string.contains(delivered_chunk2.payload, "uos.sa_plan.observer.v1")
+  string.contains(delivered_chunk2.payload, second_expected)
   |> should.equal(True)
 
   // Clean shutdown
@@ -1265,6 +1265,22 @@ pub fn e2e_automatic_dispatch_cycle_actor_test() {
       recovery_guardian_sha,
     )
   let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+pub fn e2e_automatic_dispatch_cycle_actor_test() {
+  exercise_automatic_command_dispatch("/doctor", "UNOBSERVED_RUNTIME", "/saplan", "uos.sa_plan.observer.v1")
+}
+
+pub fn e2e_catalog_help_and_tasks_dispatch_test() {
+  exercise_automatic_command_dispatch("/help", "/cockpit", "/tasks", "uos.sa_plan.observer.v1")
+}
+
+pub fn e2e_catalog_start_and_plan_dispatch_test() {
+  exercise_automatic_command_dispatch("/start", "/help", "/plan", "uos.sa_plan.observer.v1")
+}
+
+pub fn e2e_catalog_cockpit_and_tasks_dispatch_test() {
+  exercise_automatic_command_dispatch("/cockpit", "http://nas-1.tail55d152.ts.net:4100/", "/tasks", "uos.sa_plan.observer.v1")
 }
 
 pub fn unrelated_cleanup_receipt_should_not_admit_writer_test() {

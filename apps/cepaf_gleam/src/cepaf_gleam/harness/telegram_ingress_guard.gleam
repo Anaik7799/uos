@@ -1,6 +1,7 @@
 //// Pure bounded Telegram decoder. Configuration is trusted local input, not
 //// authentication. Transport must bind the configured bot to its real identity.
 
+import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/files
 import gleam/dict
 import gleam/dynamic/decode
@@ -113,50 +114,35 @@ fn read_directive(tool: String, args: String) -> ParsedDirective {
 
 pub fn classify_directive(raw_text: String) -> ParsedDirective {
   let text = string.trim(raw_text)
-  let #(cmd, args) = case string.split_once(text, " ") {
-    Ok(#(c, a)) -> #(c, string.trim(a))
-    Error(_) -> #(text, "")
-  }
-  case cmd {
-    "/doctor" | "/ev" -> read_directive("query_doctor", args)
-    "/plan" | "/saplan" -> read_directive("query_saplan", args)
-    "/tool" -> {
-      let #(tool, tail) = case string.split_once(args, " ") {
-        Ok(#(t, a)) -> #(t, string.trim(a))
-        Error(_) -> #(args, "")
-      }
-      case tool {
-        "query_doctor" | "query_saplan" -> read_directive(tool, tail)
-        "" -> UnknownDirective("/tool")
-        _ ->
-          DeniedMutation(
-            tool,
-            "Unsupported at Telegram ingress; mutation and approval workflows are not implemented.",
-          )
+  case string.starts_with(text, "/") {
+    False -> PreservedDirective("conversational", [text])
+    True -> case commands.parse(raw_text) {
+      Error(commands.InvalidInput) -> DeniedMutation("invalid_input", "Invalid bounded command input.")
+      Error(commands.UnknownCommand(name)) -> UnknownDirective(name)
+      Ok(invocation) -> {
+        let name = invocation.definition.canonical
+        let args = invocation.args
+        case name {
+          "/doctor" -> read_directive("query_doctor", args)
+          "/plan" -> read_directive("query_saplan", args)
+          "/tool" -> {
+            let #(tool, tail) = case string.split_once(args, " ") {
+              Ok(#(t, a)) -> #(t, string.trim(a))
+              Error(_) -> #(args, "")
+            }
+            case tool {
+              "query_doctor" | "query_saplan" -> read_directive(tool, tail)
+              "" -> UnknownDirective("/tool")
+              _ -> DeniedMutation(tool, "Tool has no admitted Telegram adapter.")
+            }
+          }
+          _ -> case invocation.definition.kind {
+            commands.ControlledAction -> DeniedMutation(name, "Action is not implemented yet; current effect authority will also be required.")
+            _ -> PreservedDirective(name, case args { "" -> [] _ -> [args] })
+          }
+        }
       }
     }
-    "/status" | "/checklist" | "/storage" | "/start" | "/help" | "/cockpit" ->
-      PreservedDirective(cmd, case args {
-        "" -> []
-        _ -> [args]
-      })
-    "/approval"
-    | "/andon"
-    | "/resuscitate"
-    | "/chaos"
-    | "/rotate_keys"
-    | "/repro"
-    | "/merge"
-    | "/zigvm" ->
-      DeniedMutation(
-        cmd,
-        "Unsupported at Telegram ingress; mutation and approval workflows are not implemented.",
-      )
-    _ ->
-      case string.starts_with(text, "/") {
-        True -> UnknownDirective(cmd)
-        False -> PreservedDirective("conversational", [text])
-      }
   }
 }
 
