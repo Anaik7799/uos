@@ -399,7 +399,7 @@ pub fn writer_start_accepts_only_next_registered_epoch_once_test() {
   let next = codec.WriterRegistration(..previous, service_epoch: 2,
     instance_token: string.repeat("e", 64), unit_invocation_id: string.repeat("e", 32),
     control_digest: string.repeat("f", 64))
-  replace_writer_fixture(config, next) |> should.equal(4)
+  store.transition_writer_registration(config, previous, next) |> should.equal(Ok(4))
   store.consume_writer_start(config, previous)
   |> should.equal(Error(store.StoreInvariantError("writer_start_registration_mismatch")))
   store.consume_writer_start(config, next) |> should.equal(Ok(5))
@@ -458,15 +458,127 @@ pub fn writer_start_classifies_epoch_regression_as_invalid_successor_test() {
   let first = registration_for(proof)
   store.finish_new_writer_store(proof, first) |> should.equal(Ok(2))
   store.consume_writer_start(config, first) |> should.equal(Ok(3))
-  let second = codec.WriterRegistration(..first, service_epoch: 2,
+  let second = codec.WriterRegistration(..first, service_epoch: 2, control_digest: string.repeat("f", 64),
     instance_token: string.repeat("e", 64), unit_invocation_id: string.repeat("e", 32))
-  replace_writer_fixture(config, second) |> should.equal(4)
+  store.transition_writer_registration(config, first, second) |> should.equal(Ok(4))
   store.consume_writer_start(config, second) |> should.equal(Ok(5))
   let assert Ok(#(5, [row])) = store.read_keys(config, ["meta/writer_start"])
-  row.version |> should.equal(2)
+  row.version |> should.equal(3)
   replace_writer_fixture(config, first) |> should.equal(6)
   store.consume_writer_start(config, first)
   |> should.equal(Error(store.StoreInvariantError("writer_start_invalid_successor")))
   let assert Ok(#(6, [after])) = store.read_keys(config, ["meta/writer_start"])
   after |> should.equal(row)
+}
+
+fn successor_of(previous: codec.WriterRegistration, token: String) -> codec.WriterRegistration {
+  codec.WriterRegistration(..previous, service_epoch: previous.service_epoch + 1,
+    instance_token: string.repeat(token, 64), unit_invocation_id: string.repeat(token, 32),
+    control_digest: string.repeat(token, 64), registered_at_us: previous.registered_at_us + 1)
+}
+
+pub fn prepared_codec_is_strict_and_cannot_represent_invalid_successor_test() {
+  let previous = registration()
+  let next = successor_of(previous, "e")
+  let p = codec.PreparedWriterStart(previous, next)
+  let assert Ok(raw) = codec.encode_prepared_writer_start(p)
+  codec.decode_prepared_writer_start(raw) |> should.equal(Ok(p))
+  list.each(["", "null", " " <> raw, raw <> "\n",
+    string.replace(raw, "{", "{\"extra\":true,"),
+    string.replace(raw, "\"schema\":", "\"schema\":\"uos.telegram-writer-prepared.v1\",\"schema\":"),
+    string.replace(raw, "uos.telegram-writer-prepared.v1", "unsupported"),
+  ], fn(invalid) { codec.decode_prepared_writer_start(invalid) |> should.be_error })
+  list.each([
+    codec.WriterRegistration(..next, bot_id: 124),
+    codec.WriterRegistration(..next, service_epoch: 3),
+    codec.WriterRegistration(..next, instance_token: previous.instance_token),
+    codec.WriterRegistration(..next, control_digest: previous.control_digest),
+    codec.WriterRegistration(..next, unit_invocation_id: previous.unit_invocation_id),
+    codec.WriterRegistration(..next, store_incarnation_id: string.repeat("f", 64)),
+    codec.WriterRegistration(..next, registered_at_us: previous.registered_at_us - 1),
+  ], fn(invalid) {
+    codec.encode_prepared_writer_start(codec.PreparedWriterStart(previous, invalid)) |> should.be_error
+  })
+}
+
+pub fn recovery_before_first_start_prepares_without_inventing_started_record_test() {
+  use config, _ <- with_store
+  let assert Ok(proof) = store.begin_new_writer_store(config, 123)
+  let previous = registration_for(proof)
+  store.finish_new_writer_store(proof, previous) |> should.equal(Ok(2))
+  let next = successor_of(previous, "e")
+  store.transition_writer_registration(config, previous, next) |> should.equal(Ok(3))
+  let assert Ok(#(3, [row])) = store.read_keys(config, ["meta/writer_start"])
+  let assert Ok(raw) = codec.decode_row_value(row)
+  codec.decode_writer_registration(raw) |> should.be_error
+  codec.decode_prepared_writer_start(raw) |> should.equal(Ok(codec.PreparedWriterStart(previous, next)))
+  // Storage reconciliation is repeatable; it does not itself consume or grant startup.
+  store.transition_writer_registration(config, previous, next) |> should.equal(Ok(3))
+  store.consume_writer_start(config, previous) |> should.be_error
+  store.consume_writer_start(config, next) |> should.equal(Ok(4))
+  store.transition_writer_registration(config, previous, next)
+  |> should.equal(Error(store.StoreInvariantError("writer_transition_repeat_not_prepared")))
+  store.consume_writer_start(config, next) |> should.be_error
+}
+
+pub fn recovery_after_preparation_can_advance_without_false_start_history_test() {
+  use config, _ <- with_store
+  let assert Ok(proof) = store.begin_new_writer_store(config, 123)
+  let first = registration_for(proof)
+  store.finish_new_writer_store(proof, first) |> should.equal(Ok(2))
+  let second = successor_of(first, "e")
+  let third = successor_of(second, "f")
+  store.transition_writer_registration(config, first, second) |> should.equal(Ok(3))
+  store.transition_writer_registration(config, second, third) |> should.equal(Ok(4))
+  store.consume_writer_start(config, second) |> should.be_error
+  store.consume_writer_start(config, third) |> should.equal(Ok(5))
+  let assert Ok(#(5, [row])) = store.read_keys(config, ["meta/writer_start"])
+  let assert Ok(raw) = codec.decode_row_value(row)
+  codec.decode_writer_registration(raw) |> should.equal(Ok(third))
+}
+
+pub fn transition_rejects_mismatched_history_and_identity_without_mutation_test() {
+  use config, _ <- with_store
+  let assert Ok(proof) = store.begin_new_writer_store(config, 123)
+  let previous = registration_for(proof)
+  store.finish_new_writer_store(proof, previous) |> should.equal(Ok(2))
+  let next = successor_of(previous, "e")
+  let before = store.read_keys(config, [codec.writer_registration_key(), "meta/writer_start"])
+  store.transition_writer_registration(config,
+    codec.WriterRegistration(..previous, instance_token: string.repeat("f", 64)), next) |> should.be_error
+  store.transition_writer_registration(config, previous,
+    codec.WriterRegistration(..next, service_epoch: 3)) |> should.be_error
+  store.read_keys(config, [codec.writer_registration_key(), "meta/writer_start"]) |> should.equal(before)
+  // Raw registration replacement cannot create transition history.
+  replace_writer_fixture(config, next) |> should.equal(3)
+  store.transition_writer_registration(config, next, successor_of(next, "f"))
+  |> should.equal(Error(store.StoreInvariantError("writer_transition_missing_history")))
+}
+
+pub fn concurrent_distinct_writer_transitions_have_one_winner_test() {
+  use config, _ <- with_store
+  let assert Ok(proof) = store.begin_new_writer_store(config, 123)
+  let previous = registration_for(proof)
+  store.finish_new_writer_store(proof, previous) |> should.equal(Ok(2))
+  let one = successor_of(previous, "e")
+  let two = successor_of(previous, "f")
+  let replies = process.new_subject()
+  list.each([one, two], fn(next) {
+    process.spawn(fn() {
+      process.send(replies, store.transition_writer_registration(config, previous, next))
+    })
+  })
+  let assert Ok(a) = process.receive(replies, 5000)
+  let assert Ok(b) = process.receive(replies, 5000)
+  list.filter([a, b], fn(r) { case r { Ok(_) -> True Error(_) -> False } })
+  |> list.length |> should.equal(1)
+  let assert Ok(#(3, [writer, marker])) = store.read_keys(config,
+    [codec.writer_registration_key(), "meta/writer_start"])
+  let assert Ok(writer_raw) = codec.decode_row_value(writer)
+  let assert Ok(marker_raw) = codec.decode_row_value(marker)
+  let assert Ok(current) = codec.decode_writer_registration(writer_raw)
+  let assert Ok(prepared) = codec.decode_prepared_writer_start(marker_raw)
+  current |> should.equal(prepared.next)
+  prepared.previous |> should.equal(previous)
+  store.consume_writer_start(config, current) |> should.equal(Ok(4))
 }

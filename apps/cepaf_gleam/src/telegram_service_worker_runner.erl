@@ -185,9 +185,18 @@ managed_start_result(Config) ->
     WriterJson = maps:get(<<"writer_registration">>, Config, <<>>),
     case cepaf_gleam@harness@telegram_store_codec:decode_writer_registration(WriterJson) of
         {ok, Writer} ->
-            case maps:get(<<"managed_auto">>, Config, false) of
-                true -> cepaf_gleam@harness@telegram_service:start_active_managed_service(SvcConfig, CurrentPath, Writer, ReceiptOpt);
-                false -> cepaf_gleam@harness@telegram_service:start_managed_service(SvcConfig, CurrentPath, Writer, ReceiptOpt)
+            case maps:get(<<"previous_writer_registration">>, Config, null) of
+                null ->
+                    case maps:get(<<"managed_auto">>, Config, false) of
+                        true -> cepaf_gleam@harness@telegram_service:start_active_managed_service(SvcConfig, CurrentPath, Writer, ReceiptOpt);
+                        false -> cepaf_gleam@harness@telegram_service:start_managed_service(SvcConfig, CurrentPath, Writer, ReceiptOpt)
+                    end;
+                PrevJson ->
+                    case {cepaf_gleam@harness@telegram_store_codec:decode_writer_registration(PrevJson), ReceiptOpt} of
+                        {{ok, Previous}, {some, Receipt}} ->
+                            cepaf_gleam@harness@telegram_service:recover_active_managed_service(SvcConfig, CurrentPath, Previous, Writer, Receipt);
+                        _ -> {error, <<"invalid_recovery_fixture">>}
+                    end
             end;
         {error, Reason} -> {error, Reason}
     end.
@@ -204,7 +213,7 @@ actor_loop(Subj, IpcDir, SvcConfig) ->
             actor_loop(Subj, IpcDir, SvcConfig)
     end.
 
-handle_actor_command(#{<<"action">> := <<"stop_managed_service">>}, Subj, IpcDir, SvcConfig) ->
+handle_actor_command(#{<<"action">> := <<"stop_managed_service">>}, _Subj, IpcDir, _SvcConfig) ->
     Result = case erase(managed_supervised_service) of
         undefined -> {error, <<"managed_supervisor_missing">>};
         SupSvc -> cepaf_gleam@harness@telegram_service:stop_managed_service(SupSvc)

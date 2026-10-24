@@ -1775,3 +1775,107 @@ pub fn decode_writer_registration(
       }
   }
 }
+
+const prepared_writer_start_schema = "uos.telegram-writer-prepared.v1"
+
+pub type PreparedWriterStart {
+  PreparedWriterStart(
+    previous: WriterRegistration,
+    next: WriterRegistration,
+  )
+}
+
+pub fn validate_writer_successor(
+  previous: WriterRegistration,
+  next: WriterRegistration,
+) -> Result(Nil, String) {
+  use _ <- result.try(validate_writer_registration(previous))
+  use _ <- result.try(validate_writer_registration(next))
+  case next.bot_id == previous.bot_id {
+    False -> Error("writer_successor_bot_id_mismatch")
+    True ->
+      case next.store_incarnation_id == previous.store_incarnation_id {
+        False -> Error("writer_successor_store_incarnation_mismatch")
+        True ->
+          case next.service_epoch == previous.service_epoch + 1 {
+            False -> Error("invalid_writer_successor_service_epoch")
+            True ->
+              case next.instance_token != previous.instance_token {
+                False -> Error("duplicate_writer_successor_instance_token")
+                True ->
+                  case next.unit_invocation_id != previous.unit_invocation_id {
+                    False ->
+                      Error("duplicate_writer_successor_unit_invocation_id")
+                    True ->
+                      case next.control_digest != previous.control_digest {
+                        False ->
+                          Error("duplicate_writer_successor_control_digest")
+                        True ->
+                          case
+                            next.registered_at_us >= previous.registered_at_us
+                          {
+                            False ->
+                              Error("writer_successor_registered_at_regression")
+                            True -> Ok(Nil)
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+}
+
+pub fn encode_prepared_writer_start(
+  p: PreparedWriterStart,
+) -> Result(String, String) {
+  use _ <- result.try(validate_writer_successor(p.previous, p.next))
+  use previous_json <- result.try(encode_writer_registration(p.previous))
+  use next_json <- result.try(encode_writer_registration(p.next))
+  let encoded =
+    json.object([
+      #("schema", json.string(prepared_writer_start_schema)),
+      #("previous", json.string(previous_json)),
+      #("next", json.string(next_json)),
+    ])
+    |> json.to_string
+  case string.byte_size(encoded) <= max_value_bytes {
+    True -> Ok(encoded)
+    False -> Error("prepared_writer_start_value_too_large")
+  }
+}
+
+fn prepared_writer_start_decoder() -> decode.Decoder(#(String, String, String)) {
+  use schema <- decode.field("schema", decode.string)
+  use previous_raw <- decode.field("previous", decode.string)
+  use next_raw <- decode.field("next", decode.string)
+  decode.success(#(schema, previous_raw, next_raw))
+}
+
+pub fn decode_prepared_writer_start(
+  raw: String,
+) -> Result(PreparedWriterStart, String) {
+  let size = string.byte_size(raw)
+  case size > 0 && size <= max_value_bytes {
+    False -> Error("invalid_prepared_writer_start_payload_size")
+    True ->
+      case json.parse(raw, prepared_writer_start_decoder()) {
+        Error(_) -> Error("malformed_prepared_writer_start_json")
+        Ok(#(schema, previous_raw, next_raw)) ->
+          case schema == prepared_writer_start_schema {
+            False -> Error("invalid_prepared_writer_start_schema")
+            True -> {
+              use previous <- result.try(decode_writer_registration(previous_raw))
+              use next <- result.try(decode_writer_registration(next_raw))
+              let prepared = PreparedWriterStart(previous: previous, next: next)
+              use _ <- result.try(validate_writer_successor(previous, next))
+              use canonical <- result.try(encode_prepared_writer_start(prepared))
+              case raw == canonical {
+                True -> Ok(prepared)
+                False -> Error("non_canonical_prepared_writer_start_json")
+              }
+            }
+          }
+      }
+  }
+}

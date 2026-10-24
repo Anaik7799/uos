@@ -35,7 +35,6 @@ import gleam/otp/static_supervisor
 import gleam/otp/supervision
 import gleam/result
 import gleam/string
-import simplifile
 import uos_swarm/session_store as coord_store
 import uos_swarm/session_sync as sync
 
@@ -725,19 +724,9 @@ fn init_service_admitted(
     },
   )
 
-  // A1: Read predecessor control registration
-  use reg_content <- result.try(
-    simplifile.read(ctrl_path)
-    |> result.map_error(fn(err) {
-      "read_control_registration_failed: " <> string.inspect(err)
-    }),
-  )
-  use reg <- result.try(
-    lifecycle.decode_control_registration(reg_content)
-    |> result.map_error(fn(err) {
-      "stale_or_invalid_control_registration_refused: " <> err
-    }),
-  )
+  // The predecessor is historical but its file and content remain bounded and canonical.
+  use reg <- result.try(lifecycle.read_and_verify_prelaunch_control_bounded(
+    ctrl_path, "", expected_db, expected_w, expected_g, config.service_epoch - 1, None))
 
   // A6: Monotone successor check: config.service_epoch == reg.service_epoch + 1
   use _ <- result.try(case config.service_epoch == reg.service_epoch + 1 {
@@ -4510,6 +4499,30 @@ pub fn start_managed_service(
   expected: codec.WriterRegistration,
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
 ) -> Result(SupervisedService, String) {
+  start_managed_service_with_transition(config, current_control_path, expected, cleanup_receipt, None)
+}
+
+/// Recover a stopped predecessor into one live successor. Preparation in storage
+/// is not startup: only the subsequent single-use CAS grants this instance a start.
+pub fn recover_active_managed_service(
+  config: ServiceConfiguration,
+  current_control_path: String,
+  previous: codec.WriterRegistration,
+  expected: codec.WriterRegistration,
+  cleanup_receipt: lifecycle.UnitCleanupReceipt,
+) -> Result(SupervisedService, String) {
+  use svc <- result.try(start_managed_service_with_transition(
+    config, current_control_path, expected, Some(cleanup_receipt), Some(previous)))
+  activate_managed_service(svc)
+}
+
+fn start_managed_service_with_transition(
+  config: ServiceConfiguration,
+  current_control_path: String,
+  expected: codec.WriterRegistration,
+  cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
+  previous_writer: Option(codec.WriterRegistration),
+) -> Result(SupervisedService, String) {
   use _ <- result.try(case config.resource_id == "runtime:telegram-bridge" {
     True -> Ok(Nil)
     False ->
@@ -4625,6 +4638,39 @@ pub fn start_managed_service(
     config,
     ffi_system_now_ns(),
   ))
+
+
+  use _ <- result.try(case previous_writer {
+    None -> case config.service_epoch == 1 {
+      True -> Ok(Nil)
+      False -> Error("managed_successor_requires_recovery_entry")
+    }
+    Some(previous) -> {
+      use _ <- result.try(codec.validate_writer_successor(previous, expected))
+      use path <- result.try(case config.control_registration_path {
+        Some(path) -> Ok(path)
+        None -> Error("recovery_missing_predecessor_control")
+      })
+      use predecessor <- result.try(lifecycle.read_and_verify_prelaunch_control_bounded(
+        path, "", expected_db, expected_worker, expected_guardian,
+        previous.service_epoch, None))
+      use _ <- result.try(case
+        previous.control_digest == files.digest(lifecycle.encode_control_registration(predecessor))
+        && previous.unit_invocation_id == predecessor.unit_invocation_id
+        && previous.store_incarnation_id == predecessor.store_incarnation_id
+        && previous.registered_at_us == predecessor.registered_at_us
+      {
+        True -> Ok(Nil)
+        False -> Error("recovery_predecessor_writer_control_mismatch")
+      })
+      // Recheck ownership immediately before the storage mutation.
+      use _ <- result.try(verify_authority_config(config, ffi_system_now_ns()))
+      use _ <- result.try(lifecycle.verify_live_lifecycle_ownership(current_control))
+      store.transition_writer_registration(config.storage_config, previous, expected)
+      |> result.map(fn(_) { Nil })
+      |> result.map_error(fn(err) { "prepare_writer_successor_failed: " <> string.inspect(err) })
+    }
+  })
 
   use _consumed_generation <- result.try(
     store.consume_writer_start(config.storage_config, expected)
@@ -4920,6 +4966,10 @@ pub fn start_active_managed_service(
   cleanup_receipt: Option(lifecycle.UnitCleanupReceipt),
 ) -> Result(SupervisedService, String) {
   use svc <- result.try(start_managed_service(config, current_control_path, expected, cleanup_receipt))
+  activate_managed_service(svc)
+}
+
+fn activate_managed_service(svc: SupervisedService) -> Result(SupervisedService, String) {
   case enable_managed_authority(svc, 30_000_000, 10_000) {
     Error(err) -> abort_managed_start(svc, "managed_authority_activation_failed: " <> err)
     Ok(Nil) -> case poll_rpc.call(svc.actor_subject, 5000, GetManagedStartupState) {

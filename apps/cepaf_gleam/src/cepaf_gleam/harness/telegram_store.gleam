@@ -2067,22 +2067,18 @@ pub fn consume_writer_start(
       False -> Error(StoreInvariantError("writer_start_predecessor_missing"))
     }
     True -> {
-      use previous_raw <- result.try(codec.decode_row_value(start) |> result.map_error(StoreDecodeError))
-      use previous <- result.try(codec.decode_writer_registration(previous_raw) |> result.map_error(StoreDecodeError))
-      case previous.service_epoch >= expected.service_epoch {
-        True -> case previous == expected {
+      use marker_raw <- result.try(codec.decode_row_value(start) |> result.map_error(StoreDecodeError))
+      case codec.decode_writer_registration(marker_raw) {
+        Ok(previous) -> case previous == expected {
           True -> Error(StoreInvariantError("writer_start_already_consumed"))
           False -> Error(StoreInvariantError("writer_start_invalid_successor"))
         }
-        False -> case
-          previous.service_epoch + 1 == expected.service_epoch
-          && previous.bot_id == expected.bot_id
-          && previous.store_incarnation_id == expected.store_incarnation_id
-          && previous.instance_token != expected.instance_token
-          && previous.unit_invocation_id != expected.unit_invocation_id
-        {
-          True -> Ok(Nil)
-          False -> Error(StoreInvariantError("writer_start_invalid_successor"))
+        Error(_) -> {
+          use prepared <- result.try(codec.decode_prepared_writer_start(marker_raw) |> result.map_error(StoreDecodeError))
+          case prepared.next == expected {
+            True -> Ok(Nil)
+            False -> Error(StoreInvariantError("writer_start_prepared_mismatch"))
+          }
         }
       }
     }
@@ -2108,3 +2104,95 @@ pub fn consume_writer_start(
   }
 }
 
+
+/// Atomically prepare the next registration and its unconsumed start marker.
+/// This is a storage transition only. The service must prove predecessor
+/// quiescence and current authority before invoking it; no live permit is returned.
+pub fn transition_writer_registration(
+  config: transport.LocalConfiguration,
+  previous: codec.WriterRegistration,
+  next: codec.WriterRegistration,
+) -> Result(Int, StoreError) {
+  let prepared = codec.PreparedWriterStart(previous, next)
+  use prepared_raw <- result.try(codec.encode_prepared_writer_start(prepared)
+    |> result.map_error(StoreInvariantError))
+  use next_raw <- result.try(codec.encode_writer_registration(next)
+    |> result.map_error(StoreInvariantError))
+  use incarnation <- result.try(lifecycle.compute_store_incarnation(ffi_config_database(config))
+    |> result.map_error(StoreInvariantError))
+  use _ <- result.try(case incarnation == previous.store_incarnation_id {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("writer_transition_incarnation_mismatch"))
+  })
+  use #(generation, rows) <- result.try(read_keys(config, [
+    codec.bot_identity_key(), codec.writer_registration_key(), "meta/writer_start",
+  ]))
+  use bot <- result.try(list.find(rows, fn(row) { row.key == codec.bot_identity_key() })
+    |> result.map_error(fn(_) { StoreInvariantError("writer_transition_missing_bot") }))
+  use writer <- result.try(list.find(rows, fn(row) { row.key == codec.writer_registration_key() })
+    |> result.map_error(fn(_) { StoreInvariantError("writer_transition_missing_writer") }))
+  use start <- result.try(list.find(rows, fn(row) { row.key == "meta/writer_start" })
+    |> result.map_error(fn(_) { StoreInvariantError("writer_transition_missing_start_row") }))
+  use _ <- result.try(case bot.exists && writer.exists {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("writer_transition_uninitialized"))
+  })
+  use bot_raw <- result.try(codec.decode_row_value(bot) |> result.map_error(StoreDecodeError))
+  use actual_bot <- result.try(codec.decode_bot_identity_value(bot_raw) |> result.map_error(StoreDecodeError))
+  use writer_raw <- result.try(codec.decode_row_value(writer) |> result.map_error(StoreDecodeError))
+  use actual_writer <- result.try(codec.decode_writer_registration(writer_raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case actual_bot == previous.bot_id {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("writer_transition_bot_mismatch"))
+  })
+  case actual_writer == next {
+    True -> {
+      use marker <- result.try(codec.decode_row_value(start) |> result.map_error(StoreDecodeError))
+      case start.exists && marker == prepared_raw {
+        True -> Ok(generation)
+        False -> Error(StoreInvariantError("writer_transition_repeat_not_prepared"))
+      }
+    }
+    False -> {
+      use _ <- result.try(case actual_writer == previous {
+        True -> Ok(Nil)
+        False -> Error(StoreInvariantError("writer_transition_previous_mismatch"))
+      })
+      use _ <- result.try(case start.exists {
+        False -> case previous.service_epoch == 1 {
+          True -> Ok(Nil)
+          False -> Error(StoreInvariantError("writer_transition_missing_history"))
+        }
+        True -> {
+          use marker <- result.try(codec.decode_row_value(start) |> result.map_error(StoreDecodeError))
+          case codec.decode_writer_registration(marker) {
+            Ok(started) -> case started == previous {
+              True -> Ok(Nil)
+              False -> Error(StoreInvariantError("writer_transition_started_mismatch"))
+            }
+            Error(_) -> {
+              use earlier <- result.try(codec.decode_prepared_writer_start(marker) |> result.map_error(StoreDecodeError))
+              case earlier.next == previous {
+                True -> Ok(Nil)
+                False -> Error(StoreInvariantError("writer_transition_prepared_mismatch"))
+              }
+            }
+          }
+        }
+      })
+      let reads = list.map(rows, fn(row) { codec.ReadSetAssertion(row.key, row.version, row.sha256) })
+      let summary = json.object([
+        #("op", json.string("writer_prepare")),
+        #("instance_token", json.string(next.instance_token)),
+        #("service_epoch", json.int(next.service_epoch)),
+      ]) |> json.to_string
+      use applied <- result.try(execute_apply(config, next.bot_id,
+        "op-writer-prepare-" <> next.instance_token, generation, reads,
+        [
+          codec.Change(writer.key, writer.version, writer.sha256, codec.encode_canonical_base64(next_raw)),
+          codec.Change(start.key, start.version, start.sha256, codec.encode_canonical_base64(prepared_raw)),
+        ], codec.ReservationDelta(0, 0), summary))
+      Ok(applied.receipt.generation)
+    }
+  }
+}

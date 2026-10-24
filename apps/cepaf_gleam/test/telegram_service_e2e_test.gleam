@@ -2061,3 +2061,115 @@ pub fn e2e_active_managed_start_dispatch_and_clean_release_test() {
 pub fn e2e_stale_shutdown_cannot_release_successor_runtime_test() {
   exercise_active_managed_flow(True)
 }
+
+fn writer_from_control(path: String, bot_id: Int, nonce: String) -> codec.WriterRegistration {
+  let assert Ok(raw) = simplifile.read(path)
+  let assert Ok(control) = lifecycle.decode_control_registration(raw)
+  codec.WriterRegistration(bot_id, control.service_epoch, files.digest(nonce),
+    files.digest(lifecycle.encode_control_registration(control)), control.store_incarnation_id,
+    control.unit_invocation_id, control.registered_at_us)
+}
+
+fn exercise_managed_successor(start_predecessor: Bool) {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  fixture_set_mode(fixture_pid, "offset_aware")
+  let bot_id = 222_558
+  let assert Ok(fresh) = store.begin_new_writer_store(storage_config, bot_id)
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let old_slice = "app-uos_tg_test_poll1024_r1" <> nonce <> ".slice"
+  let old_unit = "uos-tg-store-test-poll1024-r1" <> nonce <> ".service"
+  let old_ipc = start_test_runner(dir, old_slice, old_unit)
+  let old_control = mint_unit_registration(dir, old_slice, old_unit, db_path, 1)
+  let previous = writer_from_control(old_control, bot_id, "old-" <> nonce)
+  let assert Ok(2) = store.finish_new_writer_store(fresh, previous)
+  let assert Ok(coordinator) = coord_store.open(coord_db)
+  let assert Ok(_) = coord_store.append(coordinator,
+    sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "recover-claim1-" <> nonce)
+  case start_predecessor {
+    False -> Nil
+    True -> {
+      let old_cmd = managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db,
+        old_control, previous, "runtime:telegram-bridge")
+        |> string.replace("\"managed_start\":true", "\"managed_start\":true,\"managed_auto\":true")
+      let started = send_runner_cmd(old_ipc, old_cmd)
+      string.contains(started, "\"action\":\"started\"") |> should.equal(True)
+    }
+  }
+  // Whole-unit termination proves quiescence, including all descendants.
+  let assert Ok(receipt) = lifecycle.stop_and_verify_test_unit_epoch(old_slice, old_unit,
+    db_path, recovery_worker_sha, recovery_guardian_sha, 1)
+  let assert Ok(_) = coord_store.append(coordinator,
+    sync.Release("worker-e2e-01", "runtime:telegram-bridge", 1), "recover-release1-" <> nonce)
+  let assert Ok(#(grant, False)) = coord_store.append(coordinator,
+    sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "recover-claim2-" <> nonce)
+  grant.epoch |> should.equal(2)
+  let new_slice = "app-uos_tg_test_poll1024_r2" <> nonce <> ".slice"
+  let new_unit = "uos-tg-store-test-poll1024-r2" <> nonce <> ".service"
+  let new_ipc = start_test_runner(dir, new_slice, new_unit)
+  let new_control = mint_unit_registration(dir, new_slice, new_unit, db_path, 2)
+  let next = writer_from_control(new_control, bot_id, "next-" <> nonce)
+  let assert Ok(previous_json) = codec.encode_writer_registration(previous)
+  let receipt_path = dir <> "/recovery-cleanup.json"
+  let assert Ok(_) = simplifile.write(receipt_path, lifecycle.encode_unit_cleanup_receipt(receipt))
+  let extra = [
+    #("previous_writer_registration", json.string(previous_json)),
+    #("control_registration_path", json.string(old_control)),
+    #("cleanup_receipt_path", json.string(receipt_path)),
+    #("coordinator_epoch", json.int(2)),
+  ] |> json.object |> json.to_string
+  let command = managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db,
+    new_control, next, "runtime:telegram-bridge")
+    |> string.replace("\"service_epoch\":1", "\"service_epoch\":2")
+    |> string.drop_end(1)
+    |> fn(prefix) { prefix <> "," <> string.drop_start(extra, 1) }
+  let before = store.read_keys(storage_config, [codec.writer_registration_key(), "meta/writer_start"])
+  // Incorrect predecessor identity must not mutate the store or burn the receipt.
+  let assert Ok(wrong_previous) = codec.encode_writer_registration(
+    codec.WriterRegistration(..previous, control_digest: files.digest("wrong-control")))
+  let rejected = send_runner_cmd(new_ipc,
+    string.replace(command, json.to_string(json.string(previous_json)),
+      json.to_string(json.string(wrong_previous))))
+  string.contains(rejected, "recovery_predecessor_writer_control_mismatch") |> should.equal(True)
+  store.read_keys(storage_config, [codec.writer_registration_key(), "meta/writer_start"])
+    |> should.equal(before)
+  let recovered = send_runner_cmd(new_ipc, command)
+  string.contains(recovered, "\"action\":\"started\"") |> should.equal(True)
+  let duplicate = send_runner_cmd(new_ipc, "{\"action\":\"repeat_managed_start\"}")
+  string.contains(duplicate, "\"status\":\"refused\"") |> should.equal(True)
+  let assert Ok(#(_, [marker])) = store.read_keys(storage_config, ["meta/writer_start"])
+  let assert Ok(marker_raw) = codec.decode_row_value(marker)
+  codec.decode_writer_registration(marker_raw) |> should.equal(Ok(next))
+  fixture_set_updates(fixture_pid, [
+    "{\"update_id\":9601,\"message\":{\"message_id\":601,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/doctor\",\"date\":1700000000}}",
+    "{\"update_id\":9602,\"message\":{\"message_id\":602,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/saplan\",\"date\":1700000000}}",
+  ])
+  let terminal = send_runner_cmd(new_ipc, "{\"action\":\"finite_automatic_loop\"}")
+  string.contains(terminal, "\"completed_cycles\":2") |> should.equal(True)
+  let assert Ok(#(_, [one, two])) = store.read_keys(storage_config, [
+    codec.chunk_key(ledger.make_request_id(bot_id, 9601), 0),
+    codec.chunk_key(ledger.make_request_id(bot_id, 9602), 0),
+  ])
+  list.each([one, two], fn(row) {
+    let assert Ok(raw) = codec.decode_row_value(row)
+    let assert Ok(chunk) = codec.decode_chunk_value(raw)
+    chunk.status |> should.equal(ledger.OutboxDelivered(42))
+  })
+  let requests = fixture_requests_typed(fixture_pid)
+  list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/sendMessage") })
+    |> list.length |> should.equal(2)
+  let stopped = send_runner_cmd(new_ipc, "{\"action\":\"stop_managed_service\"}")
+  string.contains(stopped, "\"status\":\"stopped_and_released\"") |> should.equal(True)
+  let assert Ok(_) = coord_store.close(coordinator)
+  fixture_stop(fixture_pid)
+  let assert Ok(_) = lifecycle.stop_and_verify_test_unit_epoch(new_slice, new_unit, db_path,
+    recovery_worker_sha, recovery_guardian_sha, 2)
+}
+
+pub fn e2e_managed_successor_recovers_predecessor_that_never_started_test() {
+  exercise_managed_successor(False)
+}
+
+pub fn e2e_managed_successor_recovers_terminated_active_predecessor_test() {
+  exercise_managed_successor(True)
+}
