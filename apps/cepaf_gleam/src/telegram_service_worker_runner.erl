@@ -193,7 +193,7 @@ handle_actor_command(#{<<"action">> := <<"set_authority">>} = Cmd, Subj, IpcDir,
 
 handle_actor_command(#{<<"action">> := <<"poll_cycle">>} = Cmd, Subj, IpcDir, SvcConfig) ->
     NowUs = maps:get(<<"now_us">>, Cmd),
-    PollRes = gleam@erlang@process:call(Subj, 2000, fun(Reply) -> {poll_cycle, NowUs, Reply} end),
+    PollRes = gleam@erlang@process:call(Subj, 15000, fun(Reply) -> {poll_cycle, NowUs, Reply} end),
     case PollRes of
         {ok, StepResult} ->
             write_json_file(filename:join([IpcDir, "resp.json"]), #{
@@ -227,6 +227,7 @@ handle_actor_command(#{<<"action">> := <<"automatic_dispatch_tick">>} = Cmd, Sub
 
 handle_actor_command(#{<<"action">> := <<"get_state">>}, Subj, IpcDir, SvcConfig) ->
     State = gleam@erlang@process:call(Subj, 2000, fun(Reply) -> {get_state, Reply} end),
+    Pending = gleam@erlang@process:call(Subj, 2000, fun(Reply) -> {get_pending_operation, Reply} end),
     Watermark = element(7, State),
     LastOffset = element(2, Watermark),
     Gen = element(10, State),
@@ -235,6 +236,7 @@ handle_actor_command(#{<<"action">> := <<"get_state">>}, Subj, IpcDir, SvcConfig
         <<"status">> => <<"ok">>,
         <<"last_committed_offset">> => LastOffset,
         <<"expected_generation">> => Gen,
+        <<"pending_operation_present">> => Pending =/= none,
         <<"writer_state">> => WriterStateStr
     }),
     actor_loop(Subj, IpcDir, SvcConfig);

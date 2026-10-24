@@ -1,3 +1,4 @@
+import telegram_test_runner_binding as test_binding
 //// Slice 1 Verification Test Suite for Telegram Service, Client & Lifecycle
 ////
 //// Tests:
@@ -8,7 +9,7 @@
 ////    - getUpdates JSON decoding & answerCallbackQuery
 //// 2. Lifecycle adapter & cgroup Poka-Yoke:
 ////    - Refuses non-test units (herdr.service, user@1000.service, app.slice)
-////    - Accepts valid test unit pattern (uos-tg-store-test-*)
+////    - Accepts valid test unit pattern (uos-tg-store-test-poll1024-*)
 ////    - Enforces in-memory ServiceWriterHold fail-closed gate
 //// 3. Authority leasing & fencing:
 ////    - Rejects missing authority lease
@@ -31,6 +32,7 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
+import gleam/otp/actor
 import gleeunit/should
 import simplifile
 import uos_swarm/session_store as coord_store
@@ -202,11 +204,11 @@ pub fn http_fixture_ambiguous_socket_drop_test() {
 
 pub fn lifecycle_poka_yoke_unit_name_test() {
   // Valid test unit names
-  lifecycle.validate_test_unit_name("uos-tg-store-test-alpha")
-  |> should.equal(Ok("uos-tg-store-test-alpha"))
+  lifecycle.validate_test_unit_name("uos-tg-store-test-poll1024-alpha")
+  |> should.equal(Ok("uos-tg-store-test-poll1024-alpha"))
 
-  lifecycle.validate_test_unit_name("uos-tg-store-test-12345")
-  |> should.equal(Ok("uos-tg-store-test-12345"))
+  lifecycle.validate_test_unit_name("uos-tg-store-test-poll1024-12345")
+  |> should.equal(Ok("uos-tg-store-test-poll1024-12345"))
 
   // Strictly refused production / host units
   lifecycle.validate_test_unit_name("herdr.service")
@@ -227,11 +229,11 @@ pub fn lifecycle_poka_yoke_unit_name_test() {
 
 pub fn lifecycle_poka_yoke_slice_name_test() {
   // Valid test slice names
-  lifecycle.validate_test_slice_name("app-uos_tg_test_alpha.slice")
-  |> should.equal(Ok("app-uos_tg_test_alpha.slice"))
+  lifecycle.validate_test_slice_name("app-uos_tg_test_poll1024_alpha.slice")
+  |> should.equal(Ok("app-uos_tg_test_poll1024_alpha.slice"))
 
-  lifecycle.validate_test_slice_name("app-uos_tg_test_12345")
-  |> should.equal(Ok("app-uos_tg_test_12345"))
+  lifecycle.validate_test_slice_name("app-uos_tg_test_poll1024_12345")
+  |> should.equal(Ok("app-uos_tg_test_poll1024_12345"))
 
   // Strictly refused production / host slices
   lifecycle.validate_test_slice_name("app.slice")
@@ -288,7 +290,7 @@ fn make_dummy_service_state(
     http_client.TelegramHttpConfiguration(
       base_url: "http://127.0.0.1:9999",
       bot_token: "fake-token",
-      timeout_ms: 5000,
+      timeout_ms: 10000,
       max_response_bytes: 65_536,
     )
   let config =
@@ -525,7 +527,7 @@ pub fn service_dual_authority_attempt2_epoch7_positive_and_rejection_test() {
     http_client.TelegramHttpConfiguration(
       base_url: "http://127.0.0.1:9999",
       bot_token: "fake-token",
-      timeout_ms: 5000,
+      timeout_ms: 10000,
       max_response_bytes: 65_536,
     )
 
@@ -649,8 +651,8 @@ pub fn lifecycle_prelaunch_control_registration_positive_and_refusal_test() {
 
   let valid_reg =
     lifecycle.ControlRegistration(
-      unit_name: "uos-tg-store-test-worker-1",
-      slice_name: "app-uos_tg_test_slice-1.slice",
+      unit_name: "uos-tg-store-test-poll1024-worker-1",
+      slice_name: "app-uos_tg_test_poll1024_slice-1.slice",
       unit_invocation_id: "inv-unit-1",
       slice_invocation_id: "inv-slice-1",
       store_incarnation_id: inc,
@@ -666,15 +668,15 @@ pub fn lifecycle_prelaunch_control_registration_positive_and_refusal_test() {
   let read_res =
     lifecycle.read_and_verify_prelaunch_control(
       ctrl_path,
-      "uos-tg-store-test-worker-1",
+      "uos-tg-store-test-poll1024-worker-1",
       db_path,
       "0000000000000000000000000000000000000000000000000000000000000000",
       "0000000000000000000000000000000000000000000000000000000000000000",
       1,
     )
   let assert Ok(reg) = read_res
-  reg.unit_name |> should.equal("uos-tg-store-test-worker-1")
-  reg.slice_name |> should.equal("app-uos_tg_test_slice-1.slice")
+  reg.unit_name |> should.equal("uos-tg-store-test-poll1024-worker-1")
+  reg.slice_name |> should.equal("app-uos_tg_test_poll1024_slice-1.slice")
   reg.unit_invocation_id |> should.equal("inv-unit-1")
   reg.slice_invocation_id |> should.equal("inv-slice-1")
   reg.store_incarnation_id |> should.equal(inc)
@@ -683,7 +685,7 @@ pub fn lifecycle_prelaunch_control_registration_positive_and_refusal_test() {
   let mismatch_unit_res =
     lifecycle.read_and_verify_prelaunch_control(
       ctrl_path,
-      "uos-tg-store-test-worker-99",
+      "uos-tg-store-test-poll1024-worker-99",
       db_path,
       "0000000000000000000000000000000000000000000000000000000000000000",
       "0000000000000000000000000000000000000000000000000000000000000000",
@@ -698,7 +700,7 @@ pub fn lifecycle_prelaunch_control_registration_positive_and_refusal_test() {
   let mismatch_db_res =
     lifecycle.read_and_verify_prelaunch_control(
       ctrl_path,
-      "uos-tg-store-test-worker-1",
+      "uos-tg-store-test-poll1024-worker-1",
       "/tmp/other.db",
       "0000000000000000000000000000000000000000000000000000000000000000",
       "0000000000000000000000000000000000000000000000000000000000000000",
@@ -715,7 +717,7 @@ pub fn lifecycle_prelaunch_control_registration_positive_and_refusal_test() {
   let assert Ok(_) = lifecycle.write_prelaunch_control(ctrl_path, empty_inc_reg)
   lifecycle.read_and_verify_prelaunch_control(
     ctrl_path,
-    "uos-tg-store-test-worker-1",
+    "uos-tg-store-test-poll1024-worker-1",
     db_path,
     "0000000000000000000000000000000000000000000000000000000000000000",
     "0000000000000000000000000000000000000000000000000000000000000000",
@@ -729,7 +731,7 @@ pub fn lifecycle_prelaunch_control_registration_positive_and_refusal_test() {
   let assert Ok(_) = lifecycle.write_prelaunch_control(ctrl_path, empty_unit_reg)
   lifecycle.read_and_verify_prelaunch_control(
     ctrl_path,
-    "uos-tg-store-test-worker-1",
+    "uos-tg-store-test-poll1024-worker-1",
     db_path,
     "0000000000000000000000000000000000000000000000000000000000000000",
     "0000000000000000000000000000000000000000000000000000000000000000",
@@ -743,7 +745,7 @@ pub fn lifecycle_prelaunch_control_registration_positive_and_refusal_test() {
   let assert Ok(_) = lifecycle.write_prelaunch_control(ctrl_path, empty_slice_reg)
   lifecycle.read_and_verify_prelaunch_control(
     ctrl_path,
-    "uos-tg-store-test-worker-1",
+    "uos-tg-store-test-poll1024-worker-1",
     db_path,
     "0000000000000000000000000000000000000000000000000000000000000000",
     "0000000000000000000000000000000000000000000000000000000000000000",
@@ -806,8 +808,8 @@ pub fn lifecycle_store_incarnation_test() {
 
 pub fn lifecycle_live_ownership_positive_and_refusal_test() {
   let nonce = int.to_string(int.random(1_000_000_000))
-  let unit_name = "uos-tg-store-test-act-" <> nonce <> ".service"
-  let slice_name = "app-uos_tg_test_act_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-act-" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_act_" <> nonce <> ".slice"
 
   let assert Ok(True) = lifecycle.start_test_slice(slice_name)
   let assert Ok(True) =
@@ -940,7 +942,7 @@ pub fn lifecycle_live_ownership_positive_and_refusal_test() {
   let cfg_file = ipc_dir <> "/worker_config.json"
   let assert Ok(_) = simplifile.write(cfg_file, cfg_json)
 
-  let beam_unit_name = "uos-tg-store-test-act-b" <> nonce <> ".service"
+  let beam_unit_name = "uos-tg-store-test-poll1024-act-b" <> nonce <> ".service"
   let assert Ok(True) = lifecycle.start_test_slice(slice_name)
   let assert Ok(True) =
     lifecycle.run_test_unit(
@@ -949,9 +951,7 @@ pub fn lifecycle_live_ownership_positive_and_refusal_test() {
       lifecycle.canonical_beam_exe,
       [
         "+S", "1:1", "+A", "1", "-noshell", "-eval",
-        "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), telegram_service_worker_runner:start([\""
-        <> cfg_file
-        <> "\"]).",
+        test_binding.launch_eval(cfg_file),
       ],
     )
 
@@ -1328,7 +1328,7 @@ pub fn authority_worker_independent_test() {
     http_client.TelegramHttpConfiguration(
       base_url: "http://127.0.0.1:9999",
       bot_token: "fake-token",
-      timeout_ms: 5000,
+      timeout_ms: 10000,
       max_response_bytes: 65_536,
     )
   let config =
@@ -1578,7 +1578,7 @@ pub fn poller_worker_independent_test() {
     http_client.TelegramHttpConfiguration(
       base_url: base_url,
       bot_token: "test-token-poller",
-      timeout_ms: 5000,
+      timeout_ms: 10000,
       max_response_bytes: 65_536,
     )
   let bot_id = 999_555
@@ -1637,7 +1637,7 @@ pub fn supervised_service_four_roles_and_rest_for_one_test() {
     http_client.TelegramHttpConfiguration(
       base_url: base_url,
       bot_token: "test-token-supervised",
-      timeout_ms: 5000,
+      timeout_ms: 10000,
       max_response_bytes: 65_536,
     )
   let bot_id = 999_444
@@ -1720,3 +1720,206 @@ pub fn supervised_service_four_roles_and_rest_for_one_test() {
   Nil
 }
 
+
+
+
+fn with_poll_authority(run: fn(service.ServiceState) -> Nil) {
+  let dir = "/tmp/uos_tg_poll_failure_" <> int.to_string(service.ffi_system_now_utc_us())
+  let assert Ok(_) = simplifile.create_directory_all(dir)
+  let sa_plan_db = dir <> "/sa_plan.sqlite3"
+  let coord_db = dir <> "/coord.sqlite3"
+  let plan_id = "plan-poll-failure"
+  let task_id = "poll-failure-task"
+  let worker_id = "worker-poll-failure"
+  let resource = "task:" <> task_id
+  let assert Ok(_) = seed_test_sa_plan_task(sa_plan_db, plan_id, task_id, worker_id, 2, 4_000_000_000_000_000_000)
+  let assert Ok(_) = init_coordinator_epoch7(coord_db, worker_id, resource)
+  let lease = service.AuthorityLease("poll-failure-lease", 2, 7, 3_000_000_000_000_000)
+  let base = make_dummy_service_state(Some(lease), lifecycle.ServiceWriterClean)
+  let http_config = http_client.TelegramHttpConfiguration(..base.config.http_config, base_url: "http://nas-1.tail55d152.ts.net:1", timeout_ms: 1000)
+  let config = service.ServiceConfiguration(..base.config,
+    http_config: http_config, poll_timeout_s: 0,
+    plan_id: plan_id, task_id: task_id, worker_id: worker_id,
+    session_id: worker_id, resource_id: resource,
+    expected_task_attempt: 2, coordinator_epoch: 7,
+    authority_paths: service.IsolatedTestPaths(sa_plan_db, coord_db))
+  run(service.ServiceState(..base, config: config))
+  let _ = simplifile.delete(dir)
+  Nil
+}
+
+fn observe_poll_failure(mode: String, expect_hold: Bool) {
+  use base <- with_poll_authority()
+  let handshake = process.new_subject()
+  let observed = process.new_subject()
+  let fake_pid = process.spawn_unlinked(fn() {
+    let worker = process.new_subject()
+    process.send(handshake, worker)
+    let assert Ok(service.PollerGetUpdates(_, _, _, reply_to)) = process.receive(worker, 5000)
+    process.send(observed, "one_request")
+    case mode {
+      "dead" -> Nil
+      "silent" -> process.sleep(5000)
+      err -> {
+        process.send(reply_to, Error(err))
+        process.sleep(5000)
+      }
+    }
+  })
+  let assert Ok(worker) = process.receive(handshake, 500)
+  let state = service.ServiceState(..base, poller_worker: Some(worker))
+  let outcome = service.poll_cycle(state, service.ffi_system_now_utc_us())
+  process.kill(fake_pid)
+  let assert Error(service.ServiceError(failed_state, error)) = outcome
+  let expected_error = case mode {
+    "dead" -> "poller_worker_down"
+    "silent" -> "poller_worker_timeout"
+    err -> err
+  }
+  string.contains(error, expected_error) |> should.equal(True)
+  process.receive(observed, 100) |> should.equal(Ok("one_request"))
+  case expect_hold {
+    True -> {
+      let assert lifecycle.ServiceWriterHold(_) = failed_state.writer_state
+      let assert Error(service.ServiceError(_, second_error)) =
+        service.poll_cycle(failed_state, service.ffi_system_now_utc_us())
+      string.contains(second_error, "service_writer_held") |> should.equal(True)
+    }
+    False -> {
+      let assert lifecycle.ServiceWriterClean = failed_state.writer_state
+      Nil
+    }
+  }
+  process.receive(observed, 20) |> should.equal(Error(Nil))
+  Nil
+}
+
+pub fn service_cleanup_unknown_blocks_second_poll_test() {
+  observe_poll_failure("http_poll_network_error: cleanup_unknown", True)
+}
+
+pub fn service_rpc_timeout_blocks_second_poll_test() {
+  observe_poll_failure("silent", True)
+}
+
+pub fn service_rpc_death_blocks_second_poll_test() {
+  observe_poll_failure("dead", True)
+}
+
+pub fn service_confirmed_http_timeout_preserves_clean_state_test() {
+  observe_poll_failure("http_poll_network_error: timeout", False)
+}
+
+pub fn service_real_http_timeout_then_success_test() {
+  use base <- with_poll_authority()
+  let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
+  let config = service.ServiceConfiguration(..base.config,
+    http_config: http_client.TelegramHttpConfiguration(..base.config.http_config,
+      base_url: base_url, timeout_ms: 1000))
+  let assert Ok(started) = service.start_poller_worker(config.http_config, 777_123)
+  process.unlink(started.pid)
+  let state = service.ServiceState(..base, config: config, poller_worker: Some(started.data))
+  fixture_set_mode(fixture_pid, "delay")
+  let outcome = service.poll_cycle(state, service.ffi_system_now_utc_us())
+  fixture_set_mode(fixture_pid, "normal")
+  let recovery = case outcome {
+    Error(service.ServiceError(failed, _)) ->
+      service.poll_cycle(failed, service.ffi_system_now_utc_us())
+    Ok(_) -> panic as "expected real HTTP timeout"
+  }
+  let monitor = process.monitor(started.pid)
+  process.kill(started.pid)
+  let selector = process.new_selector()
+    |> process.select_specific_monitor(monitor, fn(down) { down })
+  let assert Ok(_) = process.selector_receive(selector, 1000)
+  fixture_stop(fixture_pid)
+  let assert Error(service.ServiceError(failed, err)) = outcome
+  err |> should.equal("http_poll_updates_failed: http_poll_network_error: timeout")
+  let assert lifecycle.ServiceWriterClean = failed.writer_state
+  let assert Ok(#(recovered, service.PollEmpty)) = recovery
+  let assert lifecycle.ServiceWriterClean = recovered.writer_state
+  Nil
+}
+
+
+pub fn service_dispatch_refused_while_poll_active_test() {
+  let reply = process.new_subject()
+  let base = make_dummy_service_state(None, lifecycle.ServiceWriterClean)
+  let state = service.ServiceState(..base, in_flight_poll: True)
+  let _ = service.handle_message(state, service.AutomaticDispatchTick(0, reply))
+  process.receive(reply, 100) |> should.equal(Ok(Error("service_effect_in_flight")))
+}
+
+pub fn service_poll_refused_while_dispatch_active_test() {
+  let reply = process.new_subject()
+  let base = make_dummy_service_state(None, lifecycle.ServiceWriterClean)
+  let state = service.ServiceState(..base, dispatch_worker: Some(process.self()))
+  let _ = service.handle_message(state, service.PollCycle(0, reply))
+  process.receive(reply, 100) |> should.equal(Ok(Error("service_effect_in_flight")))
+}
+
+pub fn service_revoke_inflight_holds_after_reauthorization_test() {
+  let worker = process.spawn_unlinked(fn() { process.sleep(5000) })
+  let base = make_dummy_service_state(None, lifecycle.ServiceWriterClean)
+  let state = service.ServiceState(..base, dispatch_worker: Some(worker))
+  let assert Ok(started) = actor.new(state)
+    |> actor.on_message(service.handle_message)
+    |> actor.start()
+  process.unlink(started.pid)
+  process.send(started.data, service.RevokeAuthority)
+  process.send(started.data, service.SetAuthority(service.AuthorityLease("renewed", 1, 1, 3000000000000000)))
+  let reply = process.new_subject()
+  process.send(started.data, service.GetState(reply))
+  let result = process.receive(reply, 500)
+  process.send(started.data, service.Stop)
+  process.kill(worker)
+  let assert Ok(final) = result
+  let assert lifecycle.ServiceWriterHold(_) = final.writer_state
+  Nil
+}
+
+
+fn state_after_message(state: service.ServiceState, msg: service.ServiceMessage) -> service.ServiceState {
+  let assert Ok(started) = actor.new(state)
+    |> actor.on_message(service.handle_message)
+    |> actor.start()
+  process.unlink(started.pid)
+  process.send(started.data, msg)
+  let reply = process.new_subject()
+  process.send(started.data, service.GetState(reply))
+  let observed = process.receive(reply, 500)
+  process.send(started.data, service.Stop)
+  let assert Ok(final) = observed
+  final
+}
+
+pub fn service_stale_delivery_completion_preserves_hold_and_generation_test() {
+  let state = make_dummy_service_state(None, lifecycle.ServiceWriterHold("prior_uncertainty"))
+  let final = state_after_message(state, service.DeliveryWorkerFinished(process.self(), Some(999), Some(lifecycle.ServiceWriterClean), None))
+  final.writer_state |> should.equal(lifecycle.ServiceWriterHold("prior_uncertainty"))
+  final.expected_generation |> should.equal(state.expected_generation)
+}
+
+pub fn service_idle_revoke_preserves_clean_state_test() {
+  let state = make_dummy_service_state(None, lifecycle.ServiceWriterClean)
+  let final = state_after_message(state, service.RevokeAuthority)
+  final.writer_state |> should.equal(lifecycle.ServiceWriterClean)
+  final.authority_revoked |> should.equal(True)
+}
+
+pub fn service_revoke_preserves_existing_hold_reason_test() {
+  let worker = process.spawn_unlinked(fn() { process.sleep(5000) })
+  let base = make_dummy_service_state(None, lifecycle.ServiceWriterHold("prior_uncertainty"))
+  let state = service.ServiceState(..base, dispatch_worker: Some(worker))
+  let final = state_after_message(state, service.RevokeAuthority)
+  process.kill(worker)
+  final.writer_state |> should.equal(lifecycle.ServiceWriterHold("prior_uncertainty"))
+}
+
+pub fn service_current_delivery_completion_remains_accepted_test() {
+  let base = make_dummy_service_state(None, lifecycle.ServiceWriterClean)
+  let state = service.ServiceState(..base, in_flight_workers: [process.self()])
+  let final = state_after_message(state, service.DeliveryWorkerFinished(process.self(), Some(99), Some(lifecycle.ServiceWriterClean), None))
+  final.expected_generation |> should.equal(99)
+  final.in_flight_workers |> should.equal([])
+}

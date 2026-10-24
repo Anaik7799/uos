@@ -1,3 +1,4 @@
+import telegram_test_runner_binding as test_binding
 //// End-to-End Integration & Supervised OTP Test Suite for Telegram Service
 ////
 //// Tests complete conversation and recovery workflows:
@@ -408,9 +409,7 @@ fn start_test_runner(
       lifecycle.canonical_beam_exe,
       [
         "+S", "1:1", "+A", "1", "-noshell", "-eval",
-        "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), telegram_service_worker_runner:start([\""
-        <> cfg_file
-        <> "\"]).",
+        test_binding.launch_eval(cfg_file),
       ],
     )
 
@@ -468,8 +467,8 @@ pub fn e2e_full_conversation_lifecycle_test() {
   init_gen |> should.equal(2)
 
   let nonce = int.to_string(service.ffi_system_now_utc_us())
-  let slice_name = "app-uos_tg_test_conv_" <> nonce <> ".slice"
-  let unit_name = "uos-tg-store-test-conv-" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_conv_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-conv-" <> nonce <> ".service"
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
 
   // Start actor in runner inside transient unit
@@ -637,8 +636,8 @@ pub fn e2e_unauthorized_user_rejection_test() {
   let assert Ok(2) = store.initialize_store(storage_config, bot_id)
 
   let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
-  let slice_name = "app-uos_tg_test_u" <> nonce <> ".slice"
-  let unit_name = "uos-tg-store-test-u" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_u" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-u" <> nonce <> ".service"
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
 
   start_runner_actor(
@@ -707,8 +706,8 @@ pub fn e2e_delivery_failure_bad_request_test() {
   let assert Ok(2) = store.initialize_store(storage_config, bot_id)
 
   let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
-  let slice_name = "app-uos_tg_test_b" <> nonce <> ".slice"
-  let unit_name = "uos-tg-store-test-b" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_b" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-b" <> nonce <> ".service"
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
 
   start_runner_actor(
@@ -819,8 +818,8 @@ pub fn e2e_delivery_ambiguous_socket_drop_test() {
   let assert Ok(2) = store.initialize_store(storage_config, bot_id)
 
   let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
-  let slice_name = "app-uos_tg_test_d" <> nonce <> ".slice"
-  let unit_name = "uos-tg-store-test-d" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_d" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-d" <> nonce <> ".service"
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
 
   start_runner_actor(
@@ -988,8 +987,8 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
 
   // 2. Start transient unit 1 running telegram_service_worker_runner
   let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
-  let slice_name = "app-uos_tg_test_r" <> nonce <> ".slice"
-  let unit_name1 = "uos-tg-store-test-r1" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_r" <> nonce <> ".slice"
+  let unit_name1 = "uos-tg-store-test-poll1024-r1" <> nonce <> ".service"
   let ipc_dir1 = dir <> "/ipc_" <> unit_name1
   let assert Ok(_) = simplifile.create_directory_all(ipc_dir1)
   let cfg_json1 = "{\"mode\": \"standby\", \"ipc_dir\": \"" <> ipc_dir1 <> "\"}"
@@ -1004,9 +1003,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       lifecycle.canonical_beam_exe,
       [
         "+S", "1:1", "+A", "1", "-noshell", "-eval",
-        "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), telegram_service_worker_runner:start([\""
-        <> cfg_file1
-        <> "\"]).",
+        test_binding.launch_eval(cfg_file1),
       ],
     )
   let _ = wait_for_file(ipc_dir1 <> "/worker.ready", 80)
@@ -1085,7 +1082,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
     )
 
   // 6. Start transient unit 2 running telegram_service_worker_runner
-  let unit_name2 = "uos-tg-store-test-r2" <> nonce <> ".service"
+  let unit_name2 = "uos-tg-store-test-poll1024-r2" <> nonce <> ".service"
   let ipc_dir2 = dir <> "/ipc_" <> unit_name2
   let assert Ok(_) = simplifile.create_directory_all(ipc_dir2)
   let cfg_json2 = "{\"mode\": \"standby\", \"ipc_dir\": \"" <> ipc_dir2 <> "\"}"
@@ -1100,9 +1097,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       lifecycle.canonical_beam_exe,
       [
         "+S", "1:1", "+A", "1", "-noshell", "-eval",
-        "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), telegram_service_worker_runner:start([\""
-        <> cfg_file2
-        <> "\"]).",
+        test_binding.launch_eval(cfg_file2),
       ],
     )
   let _ = wait_for_file(ipc_dir2 <> "/worker.ready", 80)
@@ -1171,8 +1166,8 @@ pub fn e2e_automatic_dispatch_cycle_actor_test() {
   let assert Ok(2) = store.initialize_store(storage_config, bot_id)
 
   let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
-  let slice_name = "app-uos_tg_test_a" <> nonce <> ".slice"
-  let unit_name = "uos-tg-store-test-a" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_a" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-a" <> nonce <> ".service"
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
 
   // Start supervised actor in runner inside transient unit
@@ -1284,12 +1279,12 @@ pub fn unrelated_cleanup_receipt_should_not_admit_writer_test() {
   init_gen |> should.equal(2)
 
   let nonce = int.to_string(service.ffi_system_now_utc_us())
-  let slice_name = "app-uos_tg_test_unrel_" <> nonce <> ".slice"
-  let unit_name = "uos-tg-store-test-unrel-" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_unrel_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-unrel-" <> nonce <> ".service"
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
   let reg_path = mint_unit_registration(dir, slice_name, unit_name, db_path, epoch)
-  let unrelated_slice = "app-uos_tg_test_unrel_slp_" <> nonce <> ".slice"
-  let unrelated_unit = "uos-tg-store-test-unrel-sleep-" <> nonce <> ".service"
+  let unrelated_slice = "app-uos_tg_test_poll1024_unrel_slp_" <> nonce <> ".slice"
+  let unrelated_unit = "uos-tg-store-test-poll1024-unrel-sleep-" <> nonce <> ".service"
   let receipt = mint_test_cleanup_receipt(unrelated_slice, unrelated_unit, db_path)
 
   // Start actor in runner inside transient unit with unrelated receipt (epoch 1) offered for epoch 7
@@ -1330,8 +1325,8 @@ pub fn large_saplan_result_is_chunked_and_delivered_test() {
   let assert Ok(2) = store.initialize_store(storage_config, bot_id)
 
   let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
-  let slice_name = "app-uos_tg_test_large_" <> nonce <> ".slice"
-  let unit_name = "uos-tg-store-test-large-" <> nonce <> ".service"
+  let slice_name = "app-uos_tg_test_poll1024_large_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-large-" <> nonce <> ".service"
   let ipc_dir = start_test_runner(dir, slice_name, unit_name)
 
   list.each([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30], fn(i) {
@@ -1385,3 +1380,270 @@ pub fn large_saplan_result_is_chunked_and_delivered_test() {
   fixture_stop(fixture_pid)
   lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
 }
+
+pub fn e2e_supervised_six_second_poll_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 888_111
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+
+  // Initialize store schema & watermark
+  let assert Ok(init_gen) = store.initialize_store(storage_config, bot_id)
+  init_gen |> should.equal(2)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us())
+  let slice_name = "app-uos_tg_test_poll1024_slow_" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-slow-" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  // Start actor in runner inside transient unit
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-e2e",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    True,
+  )
+
+  // 1. Without authority lease: poll fails closed
+  let err_res = runner_poll_cycle(ipc_dir, 1_700_000_000_000)
+  case string.contains(err_res, "authority_lease_missing") {
+    True -> Nil
+    False -> panic as { "err_res unexpected: " <> err_res }
+  }
+
+  // 2. Set valid authority lease
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-01",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+  // 3. Ingress: queue update from authorized user (chat 100, user 200)
+  let update_json =
+    "{\"update_id\": 7001, \"message\": {\"message_id\": 88, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"text\": \"/status\", \"date\": 1700000000}}"
+  fixture_set_updates(fixture_pid, [update_json])
+
+  fixture_set_mode(fixture_pid, "slow_valid")
+  // 4. Poll cycle via actor inside runner
+  let poll_res = runner_poll_cycle(ipc_dir, 1_700_000_001_000)
+  fixture_set_mode(fixture_pid, "normal")
+  case string.contains(poll_res, "\"type\":\"poll_committed\"") {
+    True -> Nil
+    False -> panic as { "poll_res unexpected: " <> poll_res }
+  }
+  string.contains(poll_res, "\"count\":1") |> should.equal(True)
+  string.contains(poll_res, "\"new_watermark\":7002") |> should.equal(True)
+
+  // Verify actor state inside runner
+  let state_json = runner_get_state(ipc_dir)
+  string.contains(state_json, "\"last_committed_offset\":7002") |> should.equal(True)
+  string.contains(state_json, "\"expected_generation\":3") |> should.equal(True)
+  string.contains(state_json, "\"writer_state\":\"clean\"") |> should.equal(True)
+
+  // 5. Read inbox record from store
+  let assert Ok(#(gen1, [inbox_row])) =
+    store.read_inbox_records(storage_config, 10, None)
+  gen1 |> should.equal(3)
+  let #(inbox_rec, inbox_ver1, inbox_sha1) = inbox_row
+  inbox_rec.update_id |> should.equal(7001)
+  inbox_ver1 |> should.equal(1)
+  let assert ledger.InboxPending = inbox_rec.status
+
+  // 6. Claim task for processing
+  let assert Ok(#(claim_rcpt, processing_rec)) =
+    store.claim_task_processing(
+      storage_config,
+      bot_id,
+      "op-claim-7001",
+      gen1,
+      inbox_rec,
+      inbox_ver1,
+      inbox_sha1,
+      worker_id,
+      epoch,
+      1_700_000_002_000,
+    )
+  claim_rcpt.generation |> should.equal(4)
+  let assert ledger.InboxProcessing(w, ep) = processing_rec.status
+  w |> should.equal(worker_id)
+  ep |> should.equal(epoch)
+
+  // 7. Commit result ready with response payload
+  let response_payload = "System operational. All 7 engines nominal."
+  let processing_ver = 2
+  let processing_sha = files.digest(codec.encode_inbox_record(processing_rec))
+  let assert Ok(res_result) =
+    store.commit_result(
+      storage_config,
+      bot_id,
+      "op-result-7001",
+      claim_rcpt.generation,
+      processing_rec,
+      processing_ver,
+      processing_sha,
+      [response_payload],
+      worker_id,
+      epoch,
+    )
+  res_result.receipt.generation |> should.equal(5)
+  let assert [_chunk0] = res_result.chunks
+  let ready_rec = res_result.inbox_record
+  let ready_ver = 3
+  let ready_sha = files.digest(codec.encode_inbox_record(ready_rec))
+
+  // 8. Deliver chunk via service actor inside runner
+  let deliver_res = runner_deliver_chunk_from_store(ipc_dir, inbox_rec.request_id, 1_700_000_003_000)
+  string.contains(deliver_res, "\"type\":\"delivery_step_success\"") |> should.equal(True)
+  string.contains(deliver_res, "\"message_id\":42") |> should.equal(True)
+
+  // 9. Verify delivered chunk in SQLite store
+  let assert Ok(#(_, [chunk_row])) =
+    store.read_keys(storage_config, [codec.chunk_key(inbox_rec.request_id, 0)])
+  chunk_row.exists |> should.equal(True)
+  chunk_row.version |> should.equal(3)
+  let assert Ok(chunk_raw) = codec.decode_row_value(chunk_row)
+  let assert Ok(delivered_chunk) = codec.decode_chunk_value(chunk_raw)
+  delivered_chunk.status |> should.equal(ledger.OutboxDelivered(42))
+
+  // 10. Commit task completion
+  let after_deliver_gen = 7
+  let assert Ok(#(comp_rcpt, completed_rec)) =
+    store.commit_task_completion(
+      storage_config,
+      bot_id,
+      "op-comp-7001",
+      after_deliver_gen,
+      ready_rec,
+      ready_ver,
+      ready_sha,
+      [delivered_chunk],
+    )
+  comp_rcpt.generation |> should.equal(8)
+  let assert ledger.InboxCompleted(_digest) = completed_rec.status
+
+  // 11. Empty poll returns PollEmpty
+  fixture_set_updates(fixture_pid, [])
+  let empty_res = runner_poll_cycle(ipc_dir, 1_700_000_004_000)
+  string.contains(empty_res, "\"type\":\"poll_empty\"") |> should.equal(True)
+
+  // Clean shutdown
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  let _ =
+    lifecycle.stop_and_verify_test_unit(
+      slice_name,
+      unit_name,
+      db_path,
+      recovery_worker_sha,
+      recovery_guardian_sha,
+    )
+  let _ = lifecycle.stop_test_slice(slice_name)
+}
+
+
+pub fn e2e_callback_ack_replay_and_denial_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 444_333
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce = int.to_string(service.ffi_system_now_utc_us()) <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_poll1024_a" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-poll1024-a" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  // Start supervised actor in runner inside transient unit
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-auto",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    True,
+  )
+
+  runner_set_authority(
+    ipc_dir,
+    "lease-e2e-auto-01",
+    1,
+    1,
+    3_000_000_000_000_000,
+  )
+
+
+  let update_json =
+    "{\"update_id\":9001,\"callback_query\":{\"id\":\"callback-9001\",\"from\":{\"id\":200,\"is_bot\":false,\"first_name\":\"Fixture\"},\"message\":{\"message_id\":501,\"chat\":{\"id\":100,\"type\":\"private\"}},\"data\":\"/saplan\"}}"
+  fixture_set_updates(fixture_pid, [update_json])
+  let poll = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(poll, "\"type\":\"poll_committed\"") |> should.equal(True)
+  let dispatch = runner_automatic_dispatch_tick(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(dispatch, "\"processed_count\":1") |> should.equal(True)
+  let requests = fixture_requests_typed(fixture_pid)
+  let callbacks = list.filter(requests, fn(r) {
+    let #(_, path, _, _) = r
+    string.ends_with(path, "/answerCallbackQuery")
+  })
+  let assert [#(_, _, _, callback_body)] = callbacks
+  string.contains(callback_body, "\"callback_query_id\":\"callback-9001\"")
+    |> should.equal(True)
+  let sends = list.filter(requests, fn(r) {
+    let #(_, path, _, _) = r
+    string.ends_with(path, "/sendMessage")
+  }) |> list.length
+  { sends > 0 } |> should.equal(True)
+  let assert Ok(#(_, [inbox_row])) = store.read_inbox_records(storage_config, 10, None)
+  let #(inbox, _, _) = inbox_row
+  let assert ledger.InboxCompleted(_) = inbox.status
+  let replay = runner_automatic_dispatch_tick(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(replay, "\"processed_count\":0") |> should.equal(True)
+
+  let denied =
+    "{\"update_id\":9002,\"callback_query\":{\"id\":\"callback-denied\",\"from\":{\"id\":999,\"is_bot\":false},\"message\":{\"message_id\":502,\"chat\":{\"id\":100,\"type\":\"private\"}},\"data\":\"/saplan\"}}"
+  fixture_set_updates(fixture_pid, [denied])
+  let _ = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+  let denied_dispatch = runner_automatic_dispatch_tick(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(denied_dispatch, "\"processed_count\":0") |> should.equal(True)
+  let after = fixture_requests_typed(fixture_pid)
+  let callbacks_after = list.filter(after, fn(r) {
+    let #(_, path, _, _) = r
+    string.ends_with(path, "/answerCallbackQuery")
+  }) |> list.length
+  let sends_after = list.filter(after, fn(r) {
+    let #(_, path, _, _) = r
+    string.ends_with(path, "/sendMessage")
+  }) |> list.length
+  callbacks_after |> should.equal(1)
+  sends_after |> should.equal(sends)
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
+}
+
+@external(erlang, "telegram_http_test_fixture", "get_requests")
+fn fixture_requests_typed(pid: Pid) -> List(#(String, String, Dynamic, String))

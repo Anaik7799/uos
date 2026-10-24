@@ -252,12 +252,73 @@ fn sanitize_rejection_description(error_code: Int, raw_desc: String) -> String {
 @external(erlang, "telegram_http_ffi", "extract_telegram_updates")
 fn extract_telegram_updates(body: BitArray) -> Result(List(String), String)
 
+pub const max_http_timeout_ms = 60_000
+
+pub const max_allowed_response_bytes = 10_485_760
+
+/// Declared local transport margin (in milliseconds) required between
+/// `timeout_seconds * 1000` and the HTTP client timeout (`timeout_ms`).
+/// This is a local client transport invariant, not a Telegram Bot API upper-limit claim.
+pub const local_poll_transport_margin_ms = 1000
+
+pub fn validate_poll_configuration(
+  config: TelegramHttpConfiguration,
+  limit: Int,
+  timeout_seconds: Int,
+) -> Result(Nil, String) {
+  case config.timeout_ms < 1 {
+    True -> Error("invalid_poll_config: timeout_ms_below_min")
+    False ->
+      case config.timeout_ms > max_http_timeout_ms {
+        True -> Error("invalid_poll_config: timeout_ms_exceeds_max")
+        False ->
+          case config.max_response_bytes < 1 {
+            True -> Error("invalid_poll_config: max_response_bytes_below_min")
+            False ->
+              case config.max_response_bytes > max_allowed_response_bytes {
+                True ->
+                  Error("invalid_poll_config: max_response_bytes_exceeds_max")
+                False ->
+                  case limit < 1 {
+                    True -> Error("invalid_poll_config: limit_below_min")
+                    False ->
+                      case timeout_seconds < 0 {
+                        True ->
+                          Error(
+                            "invalid_poll_config: poll_timeout_seconds_negative",
+                          )
+                        False ->
+                          case
+                            timeout_seconds
+                            * 1000
+                            + local_poll_transport_margin_ms
+                            <= config.timeout_ms
+                          {
+                            True -> Ok(Nil)
+                            False ->
+                              Error(
+                                "invalid_poll_config: http_timeout_ms_insufficient_for_poll_margin",
+                              )
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+}
+
 pub fn poll_updates(
   config: TelegramHttpConfiguration,
   offset: Int,
   limit: Int,
   timeout_seconds: Int,
 ) -> Result(List(String), String) {
+  use _ <- result.try(validate_poll_configuration(
+    config,
+    limit,
+    timeout_seconds,
+  ))
   let url = config.base_url <> "/bot" <> config.bot_token <> "/getUpdates"
   let body_fields = [
     #("offset", json.int(offset)),

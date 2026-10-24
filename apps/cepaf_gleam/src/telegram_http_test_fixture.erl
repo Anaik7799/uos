@@ -41,7 +41,7 @@ start(Port) ->
     case gen_server:start_link(?MODULE, [Port], []) of
         {ok, Pid} ->
             ActualPort = gen_server:call(Pid, get_port),
-            BaseUrl = list_to_binary(io_lib:format("http://127.0.0.1:~p", [ActualPort])),
+            BaseUrl = list_to_binary(io_lib:format("http://nas-1.tail55d152.ts.net:~p", [ActualPort])),
             {ok, {Pid, ActualPort, BaseUrl}};
         Error ->
             Error
@@ -79,7 +79,7 @@ init([Port]) ->
         {packet, raw},
         {active, false},
         {reuseaddr, true},
-        {ip, {127, 0, 0, 1}},
+        {ip, {100, 87, 7, 78}},
         {backlog, 64}
     ],
     case gen_tcp:listen(Port, Opts) of
@@ -203,6 +203,10 @@ parse_headers([Line | Rest], Acc) ->
 
 dispatch_response(Socket, drop, _Method, _Path, _Body, _Presets) ->
     gen_tcp:close(Socket);
+
+dispatch_response(Socket, slow_valid, Method, Path, Body, Presets) ->
+    timer:sleep(6000),
+    dispatch_response(Socket, normal, Method, Path, Body, Presets);
 
 dispatch_response(Socket, delay, Method, Path, Body, Presets) ->
     timer:sleep(15000),

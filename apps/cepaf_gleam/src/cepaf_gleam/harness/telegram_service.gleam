@@ -17,6 +17,7 @@ import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import cepaf_gleam/harness/telegram_http_client as http_client
 import cepaf_gleam/harness/telegram_ingress_guard as guard
 import cepaf_gleam/harness/telegram_lifecycle_adapter as lifecycle
+import cepaf_gleam/harness/telegram_poll_rpc as poll_rpc
 import cepaf_gleam/harness/telegram_store as store
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
@@ -75,7 +76,8 @@ pub fn chunk_payload_utf8_bounded(
     True -> ["(empty)"]
     False -> {
       let graphemes = string.to_graphemes(cleaned)
-      let chunks = do_chunk_graphemes(graphemes, max_bytes, max_chunks, "", 0, [])
+      let chunks =
+        do_chunk_graphemes(graphemes, max_bytes, max_chunks, "", 0, [])
       case list.filter(chunks, fn(c) { string.trim(c) != "" }) {
         [] -> ["(empty)"]
         valid_chunks -> valid_chunks
@@ -358,7 +360,9 @@ fn ffi_storage_config_db_path(config: transport.LocalConfiguration) -> String
 fn ffi_storage_config_worker_sha(config: transport.LocalConfiguration) -> String
 
 @external(erlang, "telegram_lifecycle_ffi", "storage_config_guardian_sha")
-fn ffi_storage_config_guardian_sha(config: transport.LocalConfiguration) -> String
+fn ffi_storage_config_guardian_sha(
+  config: transport.LocalConfiguration,
+) -> String
 
 @external(erlang, "telegram_service_ffi", "system_now_utc_us")
 pub fn ffi_system_now_utc_us() -> Int
@@ -504,15 +508,16 @@ pub fn init_service(
                 }
                 False -> {
                   // B3: Clean initial bootstrap at epoch 1
-                  let #(wm, wm_ver, wm_sha) =
-                    case store.read_watermark(config.storage_config) {
-                      Ok(triple) -> triple
-                      Error(_) -> #(
-                        ledger.Watermark(0),
-                        1,
-                        "0000000000000000000000000000000000000000000000000000000000000000",
-                      )
-                    }
+                  let #(wm, wm_ver, wm_sha) = case
+                    store.read_watermark(config.storage_config)
+                  {
+                    Ok(triple) -> triple
+                    Error(_) -> #(
+                      ledger.Watermark(0),
+                      1,
+                      "0000000000000000000000000000000000000000000000000000000000000000",
+                    )
+                  }
                   let state =
                     ServiceState(
                       config: config,
@@ -730,61 +735,53 @@ fn init_service_admitted(
   )
 
   // A6: Monotone successor check: config.service_epoch == reg.service_epoch + 1
-  use _ <- result.try(
-    case config.service_epoch == reg.service_epoch + 1 {
-      True -> Ok(Nil)
-      False ->
-        Error(
-          "service_epoch_not_monotone_successor: config epoch="
-          <> int.to_string(config.service_epoch)
-          <> " reg epoch="
-          <> int.to_string(reg.service_epoch),
-        )
-    },
-  )
+  use _ <- result.try(case config.service_epoch == reg.service_epoch + 1 {
+    True -> Ok(Nil)
+    False ->
+      Error(
+        "service_epoch_not_monotone_successor: config epoch="
+        <> int.to_string(config.service_epoch)
+        <> " reg epoch="
+        <> int.to_string(reg.service_epoch),
+      )
+  })
 
   // A5: Strict epoch equality between receipt and registration
   let rcpt_epoch = lifecycle.receipt_service_epoch(receipt)
-  use _ <- result.try(
-    case rcpt_epoch == reg.service_epoch {
-      True -> Ok(Nil)
-      False ->
-        Error(
-          "cleanup_receipt_service_epoch_mismatch: receipt epoch="
-          <> int.to_string(rcpt_epoch)
-          <> " reg epoch="
-          <> int.to_string(reg.service_epoch),
-        )
-    },
-  )
+  use _ <- result.try(case rcpt_epoch == reg.service_epoch {
+    True -> Ok(Nil)
+    False ->
+      Error(
+        "cleanup_receipt_service_epoch_mismatch: receipt epoch="
+        <> int.to_string(rcpt_epoch)
+        <> " reg epoch="
+        <> int.to_string(reg.service_epoch),
+      )
+  })
 
   // A4b: Predecessor unit and slice Invocation ID association
   let rcpt_inv = lifecycle.receipt_invocation_id(receipt)
   let rcpt_slice_inv = lifecycle.receipt_slice_invocation_id(receipt)
-  use _ <- result.try(
-    case rcpt_inv == reg.unit_invocation_id {
-      True -> Ok(Nil)
-      False ->
-        Error(
-          "predecessor_unit_invocation_id_mismatch: receipt="
-          <> rcpt_inv
-          <> " registration="
-          <> reg.unit_invocation_id,
-        )
-    },
-  )
-  use _ <- result.try(
-    case rcpt_slice_inv == reg.slice_invocation_id {
-      True -> Ok(Nil)
-      False ->
-        Error(
-          "predecessor_slice_invocation_id_mismatch: receipt="
-          <> rcpt_slice_inv
-          <> " registration="
-          <> reg.slice_invocation_id,
-        )
-    },
-  )
+  use _ <- result.try(case rcpt_inv == reg.unit_invocation_id {
+    True -> Ok(Nil)
+    False ->
+      Error(
+        "predecessor_unit_invocation_id_mismatch: receipt="
+        <> rcpt_inv
+        <> " registration="
+        <> reg.unit_invocation_id,
+      )
+  })
+  use _ <- result.try(case rcpt_slice_inv == reg.slice_invocation_id {
+    True -> Ok(Nil)
+    False ->
+      Error(
+        "predecessor_slice_invocation_id_mismatch: receipt="
+        <> rcpt_slice_inv
+        <> " registration="
+        <> reg.slice_invocation_id,
+      )
+  })
 
   // A4c: Predecessor unit must be confirmed stopped in systemd
   use predecessor_status <- result.try(
@@ -830,9 +827,7 @@ fn init_service_admitted(
   // A3 & A4d: Store incarnation equality evaluated NOW on disk
   use actual_inc <- result.try(
     lifecycle.compute_store_incarnation(expected_db)
-    |> result.map_error(fn(err) {
-      "compute_store_incarnation_failed: " <> err
-    }),
+    |> result.map_error(fn(err) { "compute_store_incarnation_failed: " <> err }),
   )
   use _ <- result.try(
     case
@@ -855,18 +850,14 @@ fn init_service_admitted(
   // A8: Binary hash matching for both receipt and registration
   let rcpt_w = lifecycle.receipt_worker_hash(receipt)
   let rcpt_g = lifecycle.receipt_guardian_hash(receipt)
-  use _ <- result.try(
-    case rcpt_w == expected_w && rcpt_g == expected_g {
-      True -> Ok(Nil)
-      False ->
-        Error("cleanup_receipt_binary_hash_mismatch_with_storage_config")
-    },
-  )
+  use _ <- result.try(case rcpt_w == expected_w && rcpt_g == expected_g {
+    True -> Ok(Nil)
+    False -> Error("cleanup_receipt_binary_hash_mismatch_with_storage_config")
+  })
   use _ <- result.try(
     case reg.worker_hash == expected_w && reg.guardian_hash == expected_g {
       True -> Ok(Nil)
-      False ->
-        Error("registration_binary_hash_mismatch_with_storage_config")
+      False -> Error("registration_binary_hash_mismatch_with_storage_config")
     },
   )
 
@@ -875,7 +866,9 @@ fn init_service_admitted(
     case lifecycle.receipt_stopped_at_us(receipt) >= reg.registered_at_us {
       True -> Ok(Nil)
       False ->
-        Error("cleanup_receipt_stopped_before_registration: causality violation")
+        Error(
+          "cleanup_receipt_stopped_before_registration: causality violation",
+        )
     },
   )
 
@@ -888,13 +881,9 @@ fn init_service_admitted(
   )
 
   // 4. Generation-coherent inbox scan across all pages (cursor pagination)
-  use #(gen, records) <- result.try(scan_all_inbox_records(
-    config.storage_config,
-    None,
-    None,
-    0,
-    [],
-  ))
+  use #(gen, records) <- result.try(
+    scan_all_inbox_records(config.storage_config, None, None, 0, []),
+  )
 
   // 5. Recover in-flight operations (D6) & retain recovered records
   let #(held_count, active_count, recovered_acc) =
@@ -902,17 +891,18 @@ fn init_service_admitted(
       let #(rec, _, _) = row
       case rec.status {
         ledger.InboxProcessing(_, _) -> {
-          let #(rec_rec, chunks_rec) =
-            case recover_inflight_record(config.storage_config, rec) {
-              Ok(pair) -> pair
-              Error(_) -> #(
-                ledger.InboxRecord(
-                  ..rec,
-                  status: ledger.InboxHold("unrecoverable_inflight_state"),
-                ),
-                [],
-              )
-            }
+          let #(rec_rec, chunks_rec) = case
+            recover_inflight_record(config.storage_config, rec)
+          {
+            Ok(pair) -> pair
+            Error(_) -> #(
+              ledger.InboxRecord(
+                ..rec,
+                status: ledger.InboxHold("unrecoverable_inflight_state"),
+              ),
+              [],
+            )
+          }
           #(acc.0 + 1, acc.1, [#(rec_rec, chunks_rec), ..acc.2])
         }
         ledger.InboxHold(_) -> #(acc.0 + 1, acc.1, [#(rec, []), ..acc.2])
@@ -1010,7 +1000,10 @@ fn scan_all_inbox_records(
 // Authority Management
 // -----------------------------------------------------------------------------
 
-pub fn set_authority(state: ServiceState, lease: AuthorityLease) -> ServiceState {
+pub fn set_authority(
+  state: ServiceState,
+  lease: AuthorityLease,
+) -> ServiceState {
   case state.authority_worker {
     Some(aw) -> authority_worker_set_lease(aw, lease)
     None -> Nil
@@ -1163,7 +1156,9 @@ pub fn check_coordinator_fence(
       case outcome {
         Ok(Nil) -> Ok(Nil)
         Error(err) ->
-          Error("coordinator_fence_refused: " <> coord_store.error_to_string(err))
+          Error(
+            "coordinator_fence_refused: " <> coord_store.error_to_string(err),
+          )
       }
     }
   }
@@ -1237,11 +1232,18 @@ pub fn verify_authority(
               case lease.valid_until_us <= effective_now_us {
                 True -> Error("authority_lease_invalid_or_expired")
                 False -> {
-                  case lease.expected_task_attempt == state.config.expected_task_attempt {
+                  case
+                    lease.expected_task_attempt
+                    == state.config.expected_task_attempt
+                  {
                     False -> Error("authority_lease_task_attempt_mismatch")
                     True -> {
-                      case lease.coordinator_epoch == state.config.coordinator_epoch {
-                        False -> Error("authority_lease_coordinator_epoch_mismatch")
+                      case
+                        lease.coordinator_epoch
+                        == state.config.coordinator_epoch
+                      {
+                        False ->
+                          Error("authority_lease_coordinator_epoch_mismatch")
                         True -> {
                           let now_ns = effective_now_us * 1000
                           verify_authority_config(state.config, now_ns)
@@ -1266,7 +1268,12 @@ fn svc_poll_updates(
   timeout_s: Int,
 ) -> Result(List(String), String) {
   case state.poller_worker {
-    Some(pw) -> poller_worker_get_updates(pw, offset, limit, timeout_s, 5000)
+    Some(pw) -> {
+      use deadline_ms <- result.try(poll_rpc.deadline(
+        state.config.http_config.timeout_ms,
+      ))
+      poller_worker_get_updates(pw, offset, limit, timeout_s, deadline_ms)
+    }
     None ->
       http_client.poll_updates(
         state.config.http_config,
@@ -1586,8 +1593,21 @@ pub fn poll_cycle(
 
                   case poll_res {
                     Error(err) -> {
+                      let next_writer_state = case err {
+                        "http_poll_network_error: cleanup_unknown"
+                        | "poller_worker_timeout"
+                        | "poller_worker_down" ->
+                          lifecycle.ServiceWriterHold(
+                            "poll_cleanup_unconfirmed: " <> err,
+                          )
+                        _ -> state_in_flight.writer_state
+                      }
                       let state_idle =
-                        ServiceState(..state_in_flight, in_flight_poll: False)
+                        ServiceState(
+                          ..state_in_flight,
+                          in_flight_poll: False,
+                          writer_state: next_writer_state,
+                        )
                       Error(ServiceError(
                         state_idle,
                         "http_poll_updates_failed: " <> err,
@@ -1647,9 +1667,13 @@ pub fn poll_cycle(
                               ))
                             }
                             Ok(#(current_gen, _)) -> {
-                              let fresh_now_us_pre_prefix = ffi_system_now_utc_us()
-                              let effective_pre_prefix_us = int.max(now_us, fresh_now_us_pre_prefix)
-                              case verify_authority(state, effective_pre_prefix_us) {
+                              let fresh_now_us_pre_prefix =
+                                ffi_system_now_utc_us()
+                              let effective_pre_prefix_us =
+                                int.max(now_us, fresh_now_us_pre_prefix)
+                              case
+                                verify_authority(state, effective_pre_prefix_us)
+                              {
                                 Error(auth_err) -> {
                                   let state_idle =
                                     ServiceState(
@@ -1658,7 +1682,8 @@ pub fn poll_cycle(
                                     )
                                   Error(ServiceError(
                                     state_idle,
-                                    "authority_expired_before_commit_prefix: " <> auth_err,
+                                    "authority_expired_before_commit_prefix: "
+                                      <> auth_err,
                                   ))
                                 }
                                 Ok(_) -> {
@@ -1677,38 +1702,21 @@ pub fn poll_cycle(
                                     )
 
                                   case commit_res {
-                                Error(store.StoreUncertainApply(pending)) -> {
-                                  let state_held =
-                                    ServiceState(
-                                      ..state_in_flight,
-                                      in_flight_poll: False,
-                                      pending_operation: Some(pending),
-                                      writer_state: lifecycle.ServiceWriterHold(
+                                    Error(store.StoreUncertainApply(pending)) -> {
+                                      let state_held =
+                                        ServiceState(
+                                          ..state_in_flight,
+                                          in_flight_poll: False,
+                                          pending_operation: Some(pending),
+                                          writer_state: lifecycle.ServiceWriterHold(
+                                            "store_uncertain_apply_pending",
+                                          ),
+                                        )
+                                      Error(ServiceError(
+                                        state_held,
                                         "store_uncertain_apply_pending",
-                                      ),
-                                    )
-                                  Error(ServiceError(
-                                    state_held,
-                                    "store_uncertain_apply_pending",
-                                  ))
-                                }
-                                Error(err) -> {
-                                  let state_idle =
-                                    ServiceState(
-                                      ..state_in_flight,
-                                      in_flight_poll: False,
-                                    )
-                                  Error(ServiceError(
-                                    state_idle,
-                                    "store_commit_prefix_failed: "
-                                      <> string.inspect(err),
-                                  ))
-                                }
-                                Ok(prefix_outcome) -> {
-                                  // Refresh watermark for exact CAS version and SHA
-                                  case
-                                    svc_read_watermark(state)
-                                  {
+                                      ))
+                                    }
                                     Error(err) -> {
                                       let state_idle =
                                         ServiceState(
@@ -1717,29 +1725,50 @@ pub fn poll_cycle(
                                         )
                                       Error(ServiceError(
                                         state_idle,
-                                        "store_read_watermark_failed: "
+                                        "store_commit_prefix_failed: "
                                           <> string.inspect(err),
                                       ))
                                     }
-                                    Ok(#(fresh_wm, fresh_wm_ver, fresh_wm_sha)) -> {
-                                      let next_state =
-                                        ServiceState(
-                                          ..state_in_flight,
-                                          watermark: fresh_wm,
-                                          watermark_version: fresh_wm_ver,
-                                          watermark_sha: fresh_wm_sha,
-                                          expected_generation: prefix_outcome.receipt.generation,
-                                          in_flight_poll: False,
-                                        )
-                                      Ok(#(
-                                        next_state,
-                                        PollCommitted(
-                                          count: list.length(
-                                            prefix_outcome.admitted_records,
-                                          ),
-                                          new_watermark: fresh_wm.last_committed_offset,
-                                        ),
-                                      ))
+                                    Ok(prefix_outcome) -> {
+                                      // Refresh watermark for exact CAS version and SHA
+                                      case svc_read_watermark(state) {
+                                        Error(err) -> {
+                                          let state_idle =
+                                            ServiceState(
+                                              ..state_in_flight,
+                                              in_flight_poll: False,
+                                            )
+                                          Error(ServiceError(
+                                            state_idle,
+                                            "store_read_watermark_failed: "
+                                              <> string.inspect(err),
+                                          ))
+                                        }
+                                        Ok(#(
+                                          fresh_wm,
+                                          fresh_wm_ver,
+                                          fresh_wm_sha,
+                                        )) -> {
+                                          let next_state =
+                                            ServiceState(
+                                              ..state_in_flight,
+                                              watermark: fresh_wm,
+                                              watermark_version: fresh_wm_ver,
+                                              watermark_sha: fresh_wm_sha,
+                                              expected_generation: prefix_outcome.receipt.generation,
+                                              in_flight_poll: False,
+                                            )
+                                          Ok(#(
+                                            next_state,
+                                            PollCommitted(
+                                              count: list.length(
+                                                prefix_outcome.admitted_records,
+                                              ),
+                                              new_watermark: fresh_wm.last_committed_offset,
+                                            ),
+                                          ))
+                                        }
+                                      }
                                     }
                                   }
                                 }
@@ -1756,9 +1785,7 @@ pub fn poll_cycle(
           }
         }
       }
-    }
   }
-}
 }
 
 // -----------------------------------------------------------------------------
@@ -1814,12 +1841,10 @@ pub fn deliver_chunk(
                   let pre_commit_now = ffi_system_now_utc_us()
                   case verify_authority(state, pre_commit_now) {
                     Error(err) ->
-                      Error(
-                        ServiceError(
-                          state,
-                          "authority_expired_before_commit_sending: " <> err,
-                        ),
-                      )
+                      Error(ServiceError(
+                        state,
+                        "authority_expired_before_commit_sending: " <> err,
+                      ))
                     Ok(_) -> {
                       let send_res =
                         svc_commit_sending(
@@ -1855,7 +1880,8 @@ pub fn deliver_chunk(
                         Error(err) ->
                           Error(ServiceError(
                             state,
-                            "store_commit_sending_failed: " <> string.inspect(err),
+                            "store_commit_sending_failed: "
+                              <> string.inspect(err),
                           ))
                         Ok(#(send_receipt, sending_chunk)) -> {
                           let state_sending =
@@ -1874,7 +1900,8 @@ pub fn deliver_chunk(
                             Error(auth_err) ->
                               Error(ServiceError(
                                 state_sending,
-                                "authority_expired_before_http_send: " <> auth_err,
+                                "authority_expired_before_http_send: "
+                                  <> auth_err,
                               ))
                             Ok(_) -> {
                               let delivery_outcome =
@@ -1885,174 +1912,184 @@ pub fn deliver_chunk(
                                   None,
                                 )
 
-                      // Recheck Authority after HTTP send wait, before outcome commit
-                      let fresh_now_us = ffi_system_now_utc_us()
-                      let post_now_us = int.max(now_us, fresh_now_us)
-                      case verify_authority(state_sending, post_now_us) {
-                        Error(auth_err) ->
-                          Error(ServiceError(
-                            state_sending,
-                            "authority_expired_after_http_send: " <> auth_err,
-                          ))
-                        Ok(_witness2) -> {
-                          // Step 3: Map Outcome & Commit to SQLite
-                          let op_outcome =
-                            "outcome-"
-                            <> chunk.request_id
-                            <> "-"
-                            <> int.to_string(chunk.chunk_index)
-                            <> "-"
-                            <> int.to_string(post_now_us)
-
-                          case delivery_outcome {
-                            http_client.Delivered(msg_id, _) -> {
-                              let outcome_res =
-                                svc_commit_outcome(
-                                  state_sending,
-                                  state.config.bot_id,
-                                  op_outcome,
-                                  state_sending.expected_generation,
-                                  sending_chunk,
-                                  sending_chunk_version,
-                                  sending_chunk_sha,
-                                  ledger.OutboxDelivered(msg_id),
-                                )
-                              case outcome_res {
-                                Error(store.StoreUncertainApply(pending)) -> {
-                                  let state_held =
-                                    ServiceState(
-                                      ..state_sending,
-                                      writer_state: lifecycle.ServiceWriterHold(
-                                        "store_uncertain_apply_pending",
-                                      ),
-                                      pending_operation: Some(pending),
-                                    )
-                                  Error(ServiceError(
-                                    state_held,
-                                    "store_uncertain_apply_pending",
-                                  ))
-                                }
-                                Error(err) ->
+                              // Recheck Authority after HTTP send wait, before outcome commit
+                              let fresh_now_us = ffi_system_now_utc_us()
+                              let post_now_us = int.max(now_us, fresh_now_us)
+                              case
+                                verify_authority(state_sending, post_now_us)
+                              {
+                                Error(auth_err) ->
                                   Error(ServiceError(
                                     state_sending,
-                                    "store_commit_outcome_delivered_failed: "
-                                      <> string.inspect(err),
+                                    "authority_expired_after_http_send: "
+                                      <> auth_err,
                                   ))
-                                Ok(#(outcome_receipt, _delivered_chunk)) -> {
-                                  let next_state =
-                                    ServiceState(
-                                      ..state_sending,
-                                      expected_generation: outcome_receipt.generation,
-                                    )
-                                  Ok(#(
-                                    next_state,
-                                    DeliveryStepSuccess(
-                                      chunk.request_id,
-                                      msg_id,
-                                    ),
-                                  ))
-                                }
-                              }
-                            }
+                                Ok(_witness2) -> {
+                                  // Step 3: Map Outcome & Commit to SQLite
+                                  let op_outcome =
+                                    "outcome-"
+                                    <> chunk.request_id
+                                    <> "-"
+                                    <> int.to_string(chunk.chunk_index)
+                                    <> "-"
+                                    <> int.to_string(post_now_us)
 
-                            http_client.ProvenRejection(code, desc) -> {
-                              let err_str =
-                                "http_rejected_"
-                                <> int.to_string(code)
-                                <> ": "
-                                <> desc
-                              let outcome_res =
-                                svc_commit_outcome(
-                                  state_sending,
-                                  state.config.bot_id,
-                                  op_outcome,
-                                  state_sending.expected_generation,
-                                  sending_chunk,
-                                  sending_chunk_version,
-                                  sending_chunk_sha,
-                                  ledger.OutboxFailed(err_str),
-                                )
-                              case outcome_res {
-                                Error(store.StoreUncertainApply(pending)) -> {
-                                  let state_held =
-                                    ServiceState(
-                                      ..state_sending,
-                                      writer_state: lifecycle.ServiceWriterHold(
-                                        "store_uncertain_apply_pending",
-                                      ),
-                                      pending_operation: Some(pending),
-                                    )
-                                  Error(ServiceError(
-                                    state_held,
-                                    "store_uncertain_apply_pending",
-                                  ))
-                                }
-                                Error(err) ->
-                                  Error(ServiceError(
-                                    state_sending,
-                                    "store_commit_outcome_failed_failed: "
-                                      <> string.inspect(err),
-                                  ))
-                                Ok(#(outcome_receipt, _failed_chunk)) -> {
-                                  let next_state =
-                                    ServiceState(
-                                      ..state_sending,
-                                      expected_generation: outcome_receipt.generation,
-                                    )
-                                  Ok(#(
-                                    next_state,
-                                    DeliveryStepFailed(chunk.request_id, err_str),
-                                  ))
-                                }
-                              }
-                            }
+                                  case delivery_outcome {
+                                    http_client.Delivered(msg_id, _) -> {
+                                      let outcome_res =
+                                        svc_commit_outcome(
+                                          state_sending,
+                                          state.config.bot_id,
+                                          op_outcome,
+                                          state_sending.expected_generation,
+                                          sending_chunk,
+                                          sending_chunk_version,
+                                          sending_chunk_sha,
+                                          ledger.OutboxDelivered(msg_id),
+                                        )
+                                      case outcome_res {
+                                        Error(store.StoreUncertainApply(pending)) -> {
+                                          let state_held =
+                                            ServiceState(
+                                              ..state_sending,
+                                              writer_state: lifecycle.ServiceWriterHold(
+                                                "store_uncertain_apply_pending",
+                                              ),
+                                              pending_operation: Some(pending),
+                                            )
+                                          Error(ServiceError(
+                                            state_held,
+                                            "store_uncertain_apply_pending",
+                                          ))
+                                        }
+                                        Error(err) ->
+                                          Error(ServiceError(
+                                            state_sending,
+                                            "store_commit_outcome_delivered_failed: "
+                                              <> string.inspect(err),
+                                          ))
+                                        Ok(#(outcome_receipt, _delivered_chunk)) -> {
+                                          let next_state =
+                                            ServiceState(
+                                              ..state_sending,
+                                              expected_generation: outcome_receipt.generation,
+                                            )
+                                          Ok(#(
+                                            next_state,
+                                            DeliveryStepSuccess(
+                                              chunk.request_id,
+                                              msg_id,
+                                            ),
+                                          ))
+                                        }
+                                      }
+                                    }
 
-                            http_client.AmbiguousOutcome(reason) -> {
-                              let outcome_res =
-                                svc_commit_outcome(
-                                  state_sending,
-                                  state.config.bot_id,
-                                  op_outcome,
-                                  state_sending.expected_generation,
-                                  sending_chunk,
-                                  sending_chunk_version,
-                                  sending_chunk_sha,
-                                  ledger.OutboxUncertain(reason),
-                                )
-                              case outcome_res {
-                                Error(store.StoreUncertainApply(pending)) -> {
-                                  let state_held =
-                                    ServiceState(
-                                      ..state_sending,
-                                      writer_state: lifecycle.ServiceWriterHold(
-                                        "store_uncertain_apply_pending",
-                                      ),
-                                      pending_operation: Some(pending),
-                                    )
-                                  Error(ServiceError(
-                                    state_held,
-                                    "store_uncertain_apply_pending",
-                                  ))
-                                }
-                                Error(err) ->
-                                  Error(ServiceError(
-                                    state_sending,
-                                    "store_commit_outcome_uncertain_failed: "
-                                      <> string.inspect(err),
-                                  ))
-                                Ok(#(outcome_receipt, _uncertain_chunk)) -> {
-                                  let next_state =
-                                    ServiceState(
-                                      ..state_sending,
-                                      expected_generation: outcome_receipt.generation,
-                                    )
-                                  Ok(#(
-                                    next_state,
-                                    DeliveryStepUncertain(
-                                      chunk.request_id,
-                                      reason,
-                                    ),
-                                  ))
+                                    http_client.ProvenRejection(code, desc) -> {
+                                      let err_str =
+                                        "http_rejected_"
+                                        <> int.to_string(code)
+                                        <> ": "
+                                        <> desc
+                                      let outcome_res =
+                                        svc_commit_outcome(
+                                          state_sending,
+                                          state.config.bot_id,
+                                          op_outcome,
+                                          state_sending.expected_generation,
+                                          sending_chunk,
+                                          sending_chunk_version,
+                                          sending_chunk_sha,
+                                          ledger.OutboxFailed(err_str),
+                                        )
+                                      case outcome_res {
+                                        Error(store.StoreUncertainApply(pending)) -> {
+                                          let state_held =
+                                            ServiceState(
+                                              ..state_sending,
+                                              writer_state: lifecycle.ServiceWriterHold(
+                                                "store_uncertain_apply_pending",
+                                              ),
+                                              pending_operation: Some(pending),
+                                            )
+                                          Error(ServiceError(
+                                            state_held,
+                                            "store_uncertain_apply_pending",
+                                          ))
+                                        }
+                                        Error(err) ->
+                                          Error(ServiceError(
+                                            state_sending,
+                                            "store_commit_outcome_failed_failed: "
+                                              <> string.inspect(err),
+                                          ))
+                                        Ok(#(outcome_receipt, _failed_chunk)) -> {
+                                          let next_state =
+                                            ServiceState(
+                                              ..state_sending,
+                                              expected_generation: outcome_receipt.generation,
+                                            )
+                                          Ok(#(
+                                            next_state,
+                                            DeliveryStepFailed(
+                                              chunk.request_id,
+                                              err_str,
+                                            ),
+                                          ))
+                                        }
+                                      }
+                                    }
+
+                                    http_client.AmbiguousOutcome(reason) -> {
+                                      let outcome_res =
+                                        svc_commit_outcome(
+                                          state_sending,
+                                          state.config.bot_id,
+                                          op_outcome,
+                                          state_sending.expected_generation,
+                                          sending_chunk,
+                                          sending_chunk_version,
+                                          sending_chunk_sha,
+                                          ledger.OutboxUncertain(reason),
+                                        )
+                                      case outcome_res {
+                                        Error(store.StoreUncertainApply(pending)) -> {
+                                          let state_held =
+                                            ServiceState(
+                                              ..state_sending,
+                                              writer_state: lifecycle.ServiceWriterHold(
+                                                "store_uncertain_apply_pending",
+                                              ),
+                                              pending_operation: Some(pending),
+                                            )
+                                          Error(ServiceError(
+                                            state_held,
+                                            "store_uncertain_apply_pending",
+                                          ))
+                                        }
+                                        Error(err) ->
+                                          Error(ServiceError(
+                                            state_sending,
+                                            "store_commit_outcome_uncertain_failed: "
+                                              <> string.inspect(err),
+                                          ))
+                                        Ok(#(outcome_receipt, _uncertain_chunk)) -> {
+                                          let next_state =
+                                            ServiceState(
+                                              ..state_sending,
+                                              expected_generation: outcome_receipt.generation,
+                                            )
+                                          Ok(#(
+                                            next_state,
+                                            DeliveryStepUncertain(
+                                              chunk.request_id,
+                                              reason,
+                                            ),
+                                          ))
+                                        }
+                                      }
+                                    }
+                                  }
                                 }
                               }
                             }
@@ -2067,11 +2104,7 @@ pub fn deliver_chunk(
           }
         }
       }
-    }
   }
-}
-}
-}
 }
 
 pub fn dispatch_cycle(
@@ -2083,12 +2116,10 @@ pub fn dispatch_cycle(
     False -> {
       case state.pending_operation {
         Some(_) ->
-          Error(
-            ServiceError(
-              state,
-              "service_writer_held: pending_unreconciled_operation_in_state",
-            ),
-          )
+          Error(ServiceError(
+            state,
+            "service_writer_held: pending_unreconciled_operation_in_state",
+          ))
         None -> {
           case lifecycle.evaluate_writer_gate(state.writer_state) {
             Error(err) -> Error(ServiceError(state, err))
@@ -2106,12 +2137,7 @@ pub fn dispatch_cycle(
                     )
                   {
                     Error(err) ->
-                      Error(
-                        ServiceError(
-                          state,
-                          "read_inbox_failed: " <> err,
-                        ),
-                      )
+                      Error(ServiceError(state, "read_inbox_failed: " <> err))
                     Ok(#(cur_gen, inbox_rows)) -> {
                       let pending_rows =
                         list.filter(inbox_rows, fn(row) {
@@ -2125,7 +2151,10 @@ pub fn dispatch_cycle(
                         [] ->
                           Ok(#(
                             state,
-                            DispatchCycleResult(processed_count: 0, delivered_count: 0),
+                            DispatchCycleResult(
+                              processed_count: 0,
+                              delivered_count: 0,
+                            ),
                           ))
                         [#(inbox_rec, inbox_ver, inbox_sha), ..] -> {
                           execute_guarded_dispatch(
@@ -2162,12 +2191,10 @@ fn execute_guarded_dispatch(
   let effective_now = int.max(now_us, pre_claim_now)
   case verify_authority(state, effective_now) {
     Error(err) ->
-      Error(
-        ServiceError(
-          state,
-          "authority_expired_before_claim_task_processing: " <> err,
-        ),
-      )
+      Error(ServiceError(
+        state,
+        "authority_expired_before_claim_task_processing: " <> err,
+      ))
     Ok(_) -> {
       let op_claim_id = "op-claim-" <> inbox_rec.request_id
       case
@@ -2183,208 +2210,226 @@ fn execute_guarded_dispatch(
           state.config.service_epoch,
           effective_now,
         )
-  {
-    Error(store.StoreUncertainApply(pending)) -> {
-      let state_held =
-        ServiceState(
-          ..state,
-          pending_operation: Some(pending),
-          writer_state: lifecycle.ServiceWriterHold(
-            "store_uncertain_apply_pending",
-          ),
-        )
-      Error(ServiceError(state_held, "store_uncertain_apply_pending"))
-    }
-    Error(err) ->
-      Error(
-        ServiceError(
-          state,
-          "claim_task_processing_failed: " <> string.inspect(err),
-        ),
-      )
-    Ok(#(claim_rcpt, processing_rec)) -> {
-      let gen1 = claim_rcpt.generation
-      let proc_ver = inbox_ver + 1
-      let proc_sha = files.digest(codec.encode_inbox_record(processing_rec))
+      {
+        Error(store.StoreUncertainApply(pending)) -> {
+          let state_held =
+            ServiceState(
+              ..state,
+              pending_operation: Some(pending),
+              writer_state: lifecycle.ServiceWriterHold(
+                "store_uncertain_apply_pending",
+              ),
+            )
+          Error(ServiceError(state_held, "store_uncertain_apply_pending"))
+        }
+        Error(err) ->
+          Error(ServiceError(
+            state,
+            "claim_task_processing_failed: " <> string.inspect(err),
+          ))
+        Ok(#(claim_rcpt, processing_rec)) -> {
+          let gen1 = claim_rcpt.generation
+          let proc_ver = inbox_ver + 1
+          let proc_sha = files.digest(codec.encode_inbox_record(processing_rec))
 
-      let #(response_payload, callback_query_id) =
-        case
-          svc_read_keys(state, [
-            codec.input_key(inbox_rec.request_id),
-          ])
-        {
-          Ok(#(_, [row])) -> {
-            case codec.decode_row_value(row) {
-              Ok(raw_json) -> {
-                case codec.decode_input_verdict(raw_json) {
-                  Ok(#(
-                    _,
-                    _,
-                    _,
-                    guard.AcceptedEnvelope(
-                      raw_text: txt,
-                      directive: dir,
-                      callback_query_id: cb_id,
-                      ..,
-                    ),
-                  )) -> {
-                    let payload = case dir {
-                      guard.DirectReadTool("query_doctor") ->
-                        doctor_projection.project() |> doctor_projection.to_json()
-                      guard.DirectReadTool("query_saplan") -> {
-                        let req =
-                          obs_policy.ObserveRequest(
-                            guardian_exe: state.config.guardian_exe,
-                            guardian_sha256: state.config.guardian_sha256,
-                            observer_exe: state.config.observer_exe,
-                            observer_sha256: state.config.observer_sha256,
-                            db_path: resolve_sa_plan_db(state.config.authority_paths),
-                            plan_id: state.config.plan_id,
-                            task_id: obs_policy.NoTask,
-                            deadline_ms: 5000,
-                            max_bytes: 262_144,
-                          )
-                        case obs_policy.observe(req) {
-                          Ok(obs) ->
-                            case bit_array.to_string(obs.payload) {
-                              Ok(payload_str) -> payload_str
-                              Error(_) ->
-                                json.object([
-                                  #("error", json.string("observer_payload_not_utf8")),
-                                ])
-                                |> json.to_string
-                            }
-                          Error(err) ->
-                            json.object([
-                              #("error", json.string("observer_failed: " <> err)),
-                            ])
-                            |> json.to_string
+          let #(response_payload, callback_query_id) = case
+            svc_read_keys(state, [
+              codec.input_key(inbox_rec.request_id),
+            ])
+          {
+            Ok(#(_, [row])) -> {
+              case codec.decode_row_value(row) {
+                Ok(raw_json) -> {
+                  case codec.decode_input_verdict(raw_json) {
+                    Ok(#(
+                      _,
+                      _,
+                      _,
+                      guard.AcceptedEnvelope(
+                        raw_text: txt,
+                        directive: dir,
+                        callback_query_id: cb_id,
+                        ..,
+                      ),
+                    )) -> {
+                      let payload = case dir {
+                        guard.DirectReadTool("query_doctor") ->
+                          doctor_projection.project()
+                          |> doctor_projection.to_json()
+                        guard.DirectReadTool("query_saplan") -> {
+                          let req =
+                            obs_policy.ObserveRequest(
+                              guardian_exe: state.config.guardian_exe,
+                              guardian_sha256: state.config.guardian_sha256,
+                              observer_exe: state.config.observer_exe,
+                              observer_sha256: state.config.observer_sha256,
+                              db_path: resolve_sa_plan_db(
+                                state.config.authority_paths,
+                              ),
+                              plan_id: state.config.plan_id,
+                              task_id: obs_policy.NoTask,
+                              deadline_ms: 5000,
+                              max_bytes: 262_144,
+                            )
+                          case obs_policy.observe(req) {
+                            Ok(obs) ->
+                              case bit_array.to_string(obs.payload) {
+                                Ok(payload_str) -> payload_str
+                                Error(_) ->
+                                  json.object([
+                                    #(
+                                      "error",
+                                      json.string("observer_payload_not_utf8"),
+                                    ),
+                                  ])
+                                  |> json.to_string
+                              }
+                            Error(err) ->
+                              json.object([
+                                #(
+                                  "error",
+                                  json.string("observer_failed: " <> err),
+                                ),
+                              ])
+                              |> json.to_string
+                          }
                         }
+                        guard.PreservedDirective(name, _) ->
+                          json.object([
+                            #("directive", json.string(name)),
+                            #("request_id", json.string(inbox_rec.request_id)),
+                            #("text", json.string(txt)),
+                          ])
+                          |> json.to_string
+                        guard.DeniedMutation(tool, reason) ->
+                          json.object([
+                            #(
+                              "error",
+                              json.string(
+                                "denied_mutation: "
+                                <> tool
+                                <> " ("
+                                <> reason
+                                <> ")",
+                              ),
+                            ),
+                          ])
+                          |> json.to_string
+                        guard.UnknownDirective(name) ->
+                          json.object([
+                            #(
+                              "error",
+                              json.string("unknown_directive_refused: " <> name),
+                            ),
+                          ])
+                          |> json.to_string
+                        _ ->
+                          json.object([
+                            #("observation", json.string(txt)),
+                            #("request_id", json.string(inbox_rec.request_id)),
+                          ])
+                          |> json.to_string
                       }
-                      guard.PreservedDirective(name, _) ->
-                        json.object([
-                          #("directive", json.string(name)),
-                          #("request_id", json.string(inbox_rec.request_id)),
-                          #("text", json.string(txt)),
-                        ])
-                        |> json.to_string
-                      guard.DeniedMutation(tool, reason) ->
-                        json.object([
-                          #(
-                            "error",
-                            json.string("denied_mutation: " <> tool <> " (" <> reason <> ")"),
-                          ),
-                        ])
-                        |> json.to_string
-                      guard.UnknownDirective(name) ->
-                        json.object([
-                          #("error", json.string("unknown_directive_refused: " <> name)),
-                        ])
-                        |> json.to_string
-                      _ ->
-                        json.object([
-                          #("observation", json.string(txt)),
-                          #("request_id", json.string(inbox_rec.request_id)),
-                        ])
-                        |> json.to_string
+                      #(payload, cb_id)
                     }
-                    #(payload, cb_id)
+                    _ -> #(
+                      "Observation: request_id="
+                        <> inbox_rec.request_id
+                        <> ", message_id="
+                        <> int.to_string(inbox_rec.message_id),
+                      None,
+                    )
                   }
-                  _ -> #(
-                    "Observation: request_id="
+                }
+                _ -> #(
+                  "Observation: request_id="
                     <> inbox_rec.request_id
                     <> ", message_id="
                     <> int.to_string(inbox_rec.message_id),
-                    None,
-                  )
-                }
+                  None,
+                )
               }
-              _ -> #(
-                "Observation: request_id="
+            }
+            _ -> #(
+              "Observation: request_id="
                 <> inbox_rec.request_id
                 <> ", message_id="
                 <> int.to_string(inbox_rec.message_id),
-                None,
-              )
-            }
-          }
-          _ -> #(
-            "Observation: request_id="
-            <> inbox_rec.request_id
-            <> ", message_id="
-            <> int.to_string(inbox_rec.message_id),
-            None,
-          )
-        }
-
-      // AUTO-01: Re-verify authority before effect commits (after tool observation)
-      let pre_res_now = ffi_system_now_utc_us()
-      case verify_authority(state, pre_res_now) {
-        Error(err) ->
-          Error(
-            ServiceError(
-              state,
-              "authority_expired_before_commit_result: " <> err,
-            ),
-          )
-        Ok(_) -> {
-          let op_result_id = "op-result-" <> inbox_rec.request_id
-          let chunk_payloads = chunk_payload_utf8(response_payload)
-          case
-            svc_commit_result(
-              state,
-              state.config.bot_id,
-              op_result_id,
-              gen1,
-              processing_rec,
-              proc_ver,
-              proc_sha,
-              chunk_payloads,
-              state.config.worker_id,
-              state.config.service_epoch,
+              None,
             )
-          {
-            Error(store.StoreUncertainApply(pending)) -> {
-              let state_held =
-                ServiceState(
-                  ..state,
-                  pending_operation: Some(pending),
-                  writer_state: lifecycle.ServiceWriterHold(
-                    "store_uncertain_apply_pending",
-                  ),
-                )
-              Error(ServiceError(state_held, "store_uncertain_apply_pending"))
-            }
-            Error(err) ->
-              Error(
-                ServiceError(
-                  state,
-                  "commit_result_failed: " <> string.inspect(err),
-                ),
-              )
-            Ok(res_result) -> {
-              let gen2 = res_result.receipt.generation
-              let ready_rec = res_result.inbox_record
-              let ready_ver = proc_ver + 1
-              let ready_sha = files.digest(codec.encode_inbox_record(ready_rec))
+          }
 
-              case res_result.chunks {
-                [] ->
-                  Error(
-                    ServiceError(state, "commit_result_produced_zero_chunks"),
-                  )
-                chunks -> {
-                  drain_chunks(
+          // AUTO-01: Re-verify authority before effect commits (after tool observation)
+          let pre_res_now = ffi_system_now_utc_us()
+          case verify_authority(state, pre_res_now) {
+            Error(err) ->
+              Error(ServiceError(
+                state,
+                "authority_expired_before_commit_result: " <> err,
+              ))
+            Ok(_) -> {
+              let op_result_id = "op-result-" <> inbox_rec.request_id
+              let chunk_payloads = chunk_payload_utf8(response_payload)
+              case
+                svc_commit_result(
+                  state,
+                  state.config.bot_id,
+                  op_result_id,
+                  gen1,
+                  processing_rec,
+                  proc_ver,
+                  proc_sha,
+                  chunk_payloads,
+                  state.config.worker_id,
+                  state.config.service_epoch,
+                )
+              {
+                Error(store.StoreUncertainApply(pending)) -> {
+                  let state_held =
+                    ServiceState(
+                      ..state,
+                      pending_operation: Some(pending),
+                      writer_state: lifecycle.ServiceWriterHold(
+                        "store_uncertain_apply_pending",
+                      ),
+                    )
+                  Error(ServiceError(
+                    state_held,
+                    "store_uncertain_apply_pending",
+                  ))
+                }
+                Error(err) ->
+                  Error(ServiceError(
                     state,
-                    inbox_rec,
-                    ready_rec,
-                    ready_ver,
-                    ready_sha,
-                    gen2,
-                    chunks,
-                    [],
-                    callback_query_id,
-                  )
+                    "commit_result_failed: " <> string.inspect(err),
+                  ))
+                Ok(res_result) -> {
+                  let gen2 = res_result.receipt.generation
+                  let ready_rec = res_result.inbox_record
+                  let ready_ver = proc_ver + 1
+                  let ready_sha =
+                    files.digest(codec.encode_inbox_record(ready_rec))
+
+                  case res_result.chunks {
+                    [] ->
+                      Error(ServiceError(
+                        state,
+                        "commit_result_produced_zero_chunks",
+                      ))
+                    chunks -> {
+                      drain_chunks(
+                        state,
+                        inbox_rec,
+                        ready_rec,
+                        ready_ver,
+                        ready_sha,
+                        gen2,
+                        chunks,
+                        [],
+                        callback_query_id,
+                      )
+                    }
+                  }
                 }
               }
             }
@@ -2393,8 +2438,6 @@ fn execute_guarded_dispatch(
       }
     }
   }
-}
-}
 }
 
 fn drain_chunks(
@@ -2414,12 +2457,10 @@ fn drain_chunks(
       let pre_comp_now = ffi_system_now_utc_us()
       case verify_authority(state, pre_comp_now) {
         Error(err) ->
-          Error(
-            ServiceError(
-              state,
-              "authority_expired_before_commit_task_completion: " <> err,
-            ),
-          )
+          Error(ServiceError(
+            state,
+            "authority_expired_before_commit_task_completion: " <> err,
+          ))
         Ok(_) -> {
           // AUTO-05: Preserve and answer provider callback query if present.
           let cb_res = case callback_query_id {
@@ -2433,22 +2474,15 @@ fn drain_chunks(
           }
           case cb_res {
             Error(err) ->
-              Error(
-                ServiceError(
-                  state,
-                  "answer_callback_query_failed: " <> err,
-                ),
-              )
+              Error(ServiceError(state, "answer_callback_query_failed: " <> err))
             Ok(_) -> {
               let post_cb_now = ffi_system_now_utc_us()
               case verify_authority(state, post_cb_now) {
                 Error(err) ->
-                  Error(
-                    ServiceError(
-                      state,
-                      "authority_expired_after_callback_answer: " <> err,
-                    ),
-                  )
+                  Error(ServiceError(
+                    state,
+                    "authority_expired_after_callback_answer: " <> err,
+                  ))
                 Ok(_) -> {
                   let op_complete_id = "op-complete-" <> inbox_rec.request_id
                   case
@@ -2472,22 +2506,20 @@ fn drain_chunks(
                             "store_uncertain_apply_pending",
                           ),
                         )
-                      Error(ServiceError(state_held, "store_uncertain_apply_pending"))
+                      Error(ServiceError(
+                        state_held,
+                        "store_uncertain_apply_pending",
+                      ))
                     }
                     Error(err) ->
-                      Error(
-                        ServiceError(
-                          state,
-                          "commit_task_completion_failed: " <> string.inspect(err),
-                        ),
-                      )
+                      Error(ServiceError(
+                        state,
+                        "commit_task_completion_failed: " <> string.inspect(err),
+                      ))
                     Ok(#(comp_rcpt, _completed_rec)) -> {
                       let final_gen = comp_rcpt.generation
                       let next_state =
-                        ServiceState(
-                          ..state,
-                          expected_generation: final_gen,
-                        )
+                        ServiceState(..state, expected_generation: final_gen)
                       Ok(#(
                         next_state,
                         DispatchCycleResult(
@@ -2517,12 +2549,10 @@ fn drain_chunks(
       let pre_send_now = ffi_system_now_utc_us()
       case verify_authority(state, pre_send_now) {
         Error(err) ->
-          Error(
-            ServiceError(
-              state,
-              "authority_expired_before_commit_sending: " <> err,
-            ),
-          )
+          Error(ServiceError(
+            state,
+            "authority_expired_before_commit_sending: " <> err,
+          ))
         Ok(_) -> {
           case
             svc_commit_sending(
@@ -2552,12 +2582,10 @@ fn drain_chunks(
               Error(ServiceError(state_held, "store_uncertain_apply_pending"))
             }
             Error(err) ->
-              Error(
-                ServiceError(
-                  state,
-                  "commit_sending_failed: " <> string.inspect(err),
-                ),
-              )
+              Error(ServiceError(
+                state,
+                "commit_sending_failed: " <> string.inspect(err),
+              ))
             Ok(#(sending_rcpt, sending_chunk)) -> {
               let gen3 = sending_rcpt.generation
               let chunk_ver2 = chunk_ver + 1
@@ -2568,12 +2596,10 @@ fn drain_chunks(
               let pre_http_now = ffi_system_now_utc_us()
               case verify_authority(state, pre_http_now) {
                 Error(err) ->
-                  Error(
-                    ServiceError(
-                      state,
-                      "authority_expired_before_http_send: " <> err,
-                    ),
-                  )
+                  Error(ServiceError(
+                    state,
+                    "authority_expired_before_http_send: " <> err,
+                  ))
                 Ok(_) -> {
                   let send_outcome =
                     http_client.send_message(
@@ -2588,12 +2614,10 @@ fn drain_chunks(
                       let post_send_now = ffi_system_now_utc_us()
                       case verify_authority(state, post_send_now) {
                         Error(err) ->
-                          Error(
-                            ServiceError(
-                              state,
-                              "authority_expired_after_http_send: " <> err,
-                            ),
-                          )
+                          Error(ServiceError(
+                            state,
+                            "authority_expired_after_http_send: " <> err,
+                          ))
                         Ok(_) -> {
                           let op_outcome_id =
                             "op-outcome-"
@@ -2621,15 +2645,16 @@ fn drain_chunks(
                                     "store_uncertain_apply_pending",
                                   ),
                                 )
-                              Error(ServiceError(state_held, "store_uncertain_apply_pending"))
+                              Error(ServiceError(
+                                state_held,
+                                "store_uncertain_apply_pending",
+                              ))
                             }
                             Error(err) ->
-                              Error(
-                                ServiceError(
-                                  state,
-                                  "commit_outcome_failed: " <> string.inspect(err),
-                                ),
-                              )
+                              Error(ServiceError(
+                                state,
+                                "commit_outcome_failed: " <> string.inspect(err),
+                              ))
                             Ok(#(outcome_rcpt, delivered_chunk)) -> {
                               let gen4 = outcome_rcpt.generation
                               let state_updated =
@@ -2654,12 +2679,10 @@ fn drain_chunks(
                       let post_send_now = ffi_system_now_utc_us()
                       case verify_authority(state, post_send_now) {
                         Error(err) ->
-                          Error(
-                            ServiceError(
-                              state,
-                              "authority_expired_before_outcome_commit: " <> err,
-                            ),
-                          )
+                          Error(ServiceError(
+                            state,
+                            "authority_expired_before_outcome_commit: " <> err,
+                          ))
                         Ok(_) -> {
                           let err = int.to_string(code) <> ": " <> desc
                           let op_outcome_id =
@@ -2688,31 +2711,25 @@ fn drain_chunks(
                                     "store_uncertain_apply_pending",
                                   ),
                                 )
-                              Error(
-                                ServiceError(
-                                  state_held,
-                                  "store_uncertain_apply_pending",
-                                ),
-                              )
+                              Error(ServiceError(
+                                state_held,
+                                "store_uncertain_apply_pending",
+                              ))
                             }
                             Error(commit_err) ->
-                              Error(
-                                ServiceError(
-                                  state,
-                                  "commit_outcome_failed: "
-                                    <> string.inspect(commit_err),
-                                ),
-                              )
+                              Error(ServiceError(
+                                state,
+                                "commit_outcome_failed: "
+                                  <> string.inspect(commit_err),
+                              ))
                             Ok(#(outcome_rcpt, _failed_chunk)) -> {
                               let gen4 = outcome_rcpt.generation
                               let state_updated =
                                 ServiceState(..state, expected_generation: gen4)
-                              Error(
-                                ServiceError(
-                                  state_updated,
-                                  "http_delivery_rejected: " <> err,
-                                ),
-                              )
+                              Error(ServiceError(
+                                state_updated,
+                                "http_delivery_rejected: " <> err,
+                              ))
                             }
                           }
                         }
@@ -2722,13 +2739,11 @@ fn drain_chunks(
                       let post_send_now = ffi_system_now_utc_us()
                       case verify_authority(state, post_send_now) {
                         Error(auth_err) ->
-                          Error(
-                            ServiceError(
-                              state,
-                              "authority_expired_before_outcome_commit: "
-                                <> auth_err,
-                            ),
-                          )
+                          Error(ServiceError(
+                            state,
+                            "authority_expired_before_outcome_commit: "
+                              <> auth_err,
+                          ))
                         Ok(_) -> {
                           let op_outcome_id =
                             "op-outcome-unc-"
@@ -2756,31 +2771,25 @@ fn drain_chunks(
                                     "store_uncertain_apply_pending",
                                   ),
                                 )
-                              Error(
-                                ServiceError(
-                                  state_held,
-                                  "store_uncertain_apply_pending",
-                                ),
-                              )
+                              Error(ServiceError(
+                                state_held,
+                                "store_uncertain_apply_pending",
+                              ))
                             }
                             Error(commit_err) ->
-                              Error(
-                                ServiceError(
-                                  state,
-                                  "commit_outcome_failed: "
-                                    <> string.inspect(commit_err),
-                                ),
-                              )
+                              Error(ServiceError(
+                                state,
+                                "commit_outcome_failed: "
+                                  <> string.inspect(commit_err),
+                              ))
                             Ok(#(outcome_rcpt, _unc_chunk)) -> {
                               let gen4 = outcome_rcpt.generation
                               let state_updated =
                                 ServiceState(..state, expected_generation: gen4)
-                              Error(
-                                ServiceError(
-                                  state_updated,
-                                  "http_delivery_uncertain: " <> err,
-                                ),
-                              )
+                              Error(ServiceError(
+                                state_updated,
+                                "http_delivery_uncertain: " <> err,
+                              ))
                             }
                           }
                         }
@@ -2895,10 +2904,7 @@ fn spawn_delivery_worker(
       }
     })
   let _mon = process.monitor(worker_pid)
-  ServiceState(
-    ..state,
-    in_flight_workers: [worker_pid],
-  )
+  ServiceState(..state, in_flight_workers: [worker_pid])
 }
 
 @external(erlang, "telegram_service_ffi", "set_worker_subject")
@@ -2981,7 +2987,10 @@ pub type SupervisedService {
 
 pub type AuthorityWorkerMessage {
   AuthorityPing(reply_to: Subject(String))
-  VerifyAuthority(now_us: Int, reply_to: Subject(Result(AuthorityWitness, String)))
+  VerifyAuthority(
+    now_us: Int,
+    reply_to: Subject(Result(AuthorityWitness, String)),
+  )
   SetAuthorityLease(AuthorityLease)
   RevokeAuthorityLease
   GetAuthorityStatus(reply_to: Subject(#(Option(AuthorityLease), Bool)))
@@ -3010,9 +3019,7 @@ fn handle_authority_worker_message(
       )
     }
     RevokeAuthorityLease -> {
-      actor.continue(
-        AuthorityWorkerState(..state, lease: None, revoked: True),
-      )
+      actor.continue(AuthorityWorkerState(..state, lease: None, revoked: True))
     }
     GetAuthorityStatus(reply_to) -> {
       process.send(reply_to, #(state.lease, state.revoked))
@@ -3030,11 +3037,18 @@ fn handle_authority_worker_message(
               case lease.valid_until_us <= effective_now_us {
                 True -> Error("authority_lease_invalid_or_expired")
                 False -> {
-                  case lease.expected_task_attempt == state.config.expected_task_attempt {
+                  case
+                    lease.expected_task_attempt
+                    == state.config.expected_task_attempt
+                  {
                     False -> Error("authority_lease_task_attempt_mismatch")
                     True -> {
-                      case lease.coordinator_epoch == state.config.coordinator_epoch {
-                        False -> Error("authority_lease_coordinator_epoch_mismatch")
+                      case
+                        lease.coordinator_epoch
+                        == state.config.coordinator_epoch
+                      {
+                        False ->
+                          Error("authority_lease_coordinator_epoch_mismatch")
                         True -> {
                           let now_ns = effective_now_us * 1000
                           verify_authority_config(state.config, now_ns)
@@ -3059,9 +3073,11 @@ pub fn start_authority_worker(
 ) -> Result(actor.Started(Subject(AuthorityWorkerMessage)), String) {
   actor.new_with_initialiser(5000, fn(subject) {
     ffi_set_worker_subject(config.bot_id, "authority", subject)
-    actor.initialised(
-      AuthorityWorkerState(config: config, lease: None, revoked: False),
-    )
+    actor.initialised(AuthorityWorkerState(
+      config: config,
+      lease: None,
+      revoked: False,
+    ))
     |> actor.returning(subject)
     |> Ok
   })
@@ -3088,11 +3104,9 @@ pub fn authority_worker_verify(
   now_us: Int,
   timeout_ms: Int,
 ) -> Result(AuthorityWitness, String) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) { VerifyAuthority(now_us, reply_to) },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    VerifyAuthority(now_us, reply_to)
+  })
 }
 
 pub fn authority_worker_set_lease(
@@ -3111,7 +3125,9 @@ pub fn authority_worker_revoke_lease(
 pub type StoreWorkerMessage {
   StorePing(reply_to: Subject(String))
   StoreReadWatermark(
-    reply_to: Subject(Result(#(ledger.Watermark, Int, String), store.StoreError)),
+    reply_to: Subject(
+      Result(#(ledger.Watermark, Int, String), store.StoreError),
+    ),
   )
   StoreCommitPrefix(
     bot_id: Int,
@@ -3134,7 +3150,9 @@ pub type StoreWorkerMessage {
     worker_id: String,
     service_epoch: Int,
     now_ms: Int,
-    reply_to: Subject(Result(#(codec.Receipt, ledger.InboxRecord), store.StoreError)),
+    reply_to: Subject(
+      Result(#(codec.Receipt, ledger.InboxRecord), store.StoreError),
+    ),
   )
   StoreCommitResult(
     bot_id: Int,
@@ -3160,7 +3178,9 @@ pub type StoreWorkerMessage {
     chunk_sha: String,
     worker_id: String,
     service_epoch: Int,
-    reply_to: Subject(Result(#(codec.Receipt, ledger.OutboxChunk), store.StoreError)),
+    reply_to: Subject(
+      Result(#(codec.Receipt, ledger.OutboxChunk), store.StoreError),
+    ),
   )
   StoreCommitOutcome(
     bot_id: Int,
@@ -3170,7 +3190,9 @@ pub type StoreWorkerMessage {
     chunk_version: Int,
     chunk_sha: String,
     outcome: ledger.OutboxStatus,
-    reply_to: Subject(Result(#(codec.Receipt, ledger.OutboxChunk), store.StoreError)),
+    reply_to: Subject(
+      Result(#(codec.Receipt, ledger.OutboxChunk), store.StoreError),
+    ),
   )
   StoreCommitTaskCompletion(
     bot_id: Int,
@@ -3180,7 +3202,9 @@ pub type StoreWorkerMessage {
     record_version: Int,
     record_sha: String,
     delivered_chunks: List(ledger.OutboxChunk),
-    reply_to: Subject(Result(#(codec.Receipt, ledger.InboxRecord), store.StoreError)),
+    reply_to: Subject(
+      Result(#(codec.Receipt, ledger.InboxRecord), store.StoreError),
+    ),
   )
   StoreReadKeys(
     keys: List(String),
@@ -3188,15 +3212,14 @@ pub type StoreWorkerMessage {
   )
   StoreRecoverInflightRecord(
     record: ledger.InboxRecord,
-    reply_to: Subject(Result(#(ledger.InboxRecord, List(ledger.OutboxChunk)), String)),
+    reply_to: Subject(
+      Result(#(ledger.InboxRecord, List(ledger.OutboxChunk)), String),
+    ),
   )
 }
 
 pub type StoreWorkerState {
-  StoreWorkerState(
-    config: transport.LocalConfiguration,
-    bot_id: Int,
-  )
+  StoreWorkerState(config: transport.LocalConfiguration, bot_id: Int)
 }
 
 fn handle_store_worker_message(
@@ -3429,7 +3452,9 @@ pub fn store_worker_read_keys(
   keys: List(String),
   timeout_ms: Int,
 ) -> Result(#(Int, List(codec.RowResult)), store.StoreError) {
-  process.call(worker, timeout_ms, fn(reply_to) { StoreReadKeys(keys, reply_to) })
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreReadKeys(keys, reply_to)
+  })
 }
 
 pub fn store_worker_commit_prefix(
@@ -3444,23 +3469,19 @@ pub fn store_worker_commit_prefix(
   now_ms: Int,
   timeout_ms: Int,
 ) -> Result(store.CommitPrefixResult, store.StoreError) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) {
-      StoreCommitPrefix(
-        bot_id,
-        operation_id,
-        expected_gen,
-        watermark,
-        watermark_version,
-        watermark_sha,
-        verdicts,
-        now_ms,
-        reply_to,
-      )
-    },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreCommitPrefix(
+      bot_id,
+      operation_id,
+      expected_gen,
+      watermark,
+      watermark_version,
+      watermark_sha,
+      verdicts,
+      now_ms,
+      reply_to,
+    )
+  })
 }
 
 pub fn store_worker_claim_task_processing(
@@ -3476,24 +3497,20 @@ pub fn store_worker_claim_task_processing(
   now_ms: Int,
   timeout_ms: Int,
 ) -> Result(#(codec.Receipt, ledger.InboxRecord), store.StoreError) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) {
-      StoreClaimTaskProcessing(
-        bot_id,
-        operation_id,
-        expected_gen,
-        inbox_record,
-        record_version,
-        record_sha,
-        worker_id,
-        service_epoch,
-        now_ms,
-        reply_to,
-      )
-    },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreClaimTaskProcessing(
+      bot_id,
+      operation_id,
+      expected_gen,
+      inbox_record,
+      record_version,
+      record_sha,
+      worker_id,
+      service_epoch,
+      now_ms,
+      reply_to,
+    )
+  })
 }
 
 pub fn store_worker_commit_result(
@@ -3509,24 +3526,20 @@ pub fn store_worker_commit_result(
   service_epoch: Int,
   timeout_ms: Int,
 ) -> Result(store.CommitResultResult, store.StoreError) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) {
-      StoreCommitResult(
-        bot_id,
-        operation_id,
-        expected_gen,
-        inbox_record,
-        record_version,
-        record_sha,
-        response_chunks,
-        worker_id,
-        service_epoch,
-        reply_to,
-      )
-    },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreCommitResult(
+      bot_id,
+      operation_id,
+      expected_gen,
+      inbox_record,
+      record_version,
+      record_sha,
+      response_chunks,
+      worker_id,
+      service_epoch,
+      reply_to,
+    )
+  })
 }
 
 pub fn store_worker_commit_sending(
@@ -3544,26 +3557,22 @@ pub fn store_worker_commit_sending(
   service_epoch: Int,
   timeout_ms: Int,
 ) -> Result(#(codec.Receipt, ledger.OutboxChunk), store.StoreError) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) {
-      StoreCommitSending(
-        bot_id,
-        operation_id,
-        expected_gen,
-        inbox_record,
-        record_version,
-        record_sha,
-        chunk,
-        chunk_version,
-        chunk_sha,
-        worker_id,
-        service_epoch,
-        reply_to,
-      )
-    },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreCommitSending(
+      bot_id,
+      operation_id,
+      expected_gen,
+      inbox_record,
+      record_version,
+      record_sha,
+      chunk,
+      chunk_version,
+      chunk_sha,
+      worker_id,
+      service_epoch,
+      reply_to,
+    )
+  })
 }
 
 pub fn store_worker_commit_outcome(
@@ -3577,22 +3586,18 @@ pub fn store_worker_commit_outcome(
   outcome: ledger.OutboxStatus,
   timeout_ms: Int,
 ) -> Result(#(codec.Receipt, ledger.OutboxChunk), store.StoreError) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) {
-      StoreCommitOutcome(
-        bot_id,
-        operation_id,
-        expected_gen,
-        chunk,
-        chunk_version,
-        chunk_sha,
-        outcome,
-        reply_to,
-      )
-    },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreCommitOutcome(
+      bot_id,
+      operation_id,
+      expected_gen,
+      chunk,
+      chunk_version,
+      chunk_sha,
+      outcome,
+      reply_to,
+    )
+  })
 }
 
 pub fn store_worker_commit_task_completion(
@@ -3606,22 +3611,18 @@ pub fn store_worker_commit_task_completion(
   delivered_chunks: List(ledger.OutboxChunk),
   timeout_ms: Int,
 ) -> Result(#(codec.Receipt, ledger.InboxRecord), store.StoreError) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) {
-      StoreCommitTaskCompletion(
-        bot_id,
-        operation_id,
-        expected_gen,
-        inbox_record,
-        record_version,
-        record_sha,
-        delivered_chunks,
-        reply_to,
-      )
-    },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreCommitTaskCompletion(
+      bot_id,
+      operation_id,
+      expected_gen,
+      inbox_record,
+      record_version,
+      record_sha,
+      delivered_chunks,
+      reply_to,
+    )
+  })
 }
 
 pub fn store_worker_recover_inflight_record(
@@ -3629,11 +3630,9 @@ pub fn store_worker_recover_inflight_record(
   record: ledger.InboxRecord,
   timeout_ms: Int,
 ) -> Result(#(ledger.InboxRecord, List(ledger.OutboxChunk)), String) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) { StoreRecoverInflightRecord(record, reply_to) },
-  )
+  process.call(worker, timeout_ms, fn(reply_to) {
+    StoreRecoverInflightRecord(record, reply_to)
+  })
 }
 
 pub type PollerWorkerMessage {
@@ -3647,10 +3646,7 @@ pub type PollerWorkerMessage {
 }
 
 pub type PollerWorkerState {
-  PollerWorkerState(
-    config: http_client.TelegramHttpConfiguration,
-    bot_id: Int,
-  )
+  PollerWorkerState(config: http_client.TelegramHttpConfiguration, bot_id: Int)
 }
 
 pub fn start_poller_worker(
@@ -3670,7 +3666,8 @@ pub fn start_poller_worker(
         actor.continue(state)
       }
       PollerGetUpdates(offset, limit, timeout_s, reply_to) -> {
-        let res = http_client.poll_updates(state.config, offset, limit, timeout_s)
+        let res =
+          http_client.poll_updates(state.config, offset, limit, timeout_s)
         process.send(reply_to, res)
         actor.continue(state)
       }
@@ -3701,13 +3698,9 @@ pub fn poller_worker_get_updates(
   timeout_s: Int,
   timeout_ms: Int,
 ) -> Result(List(String), String) {
-  process.call(
-    worker,
-    timeout_ms,
-    fn(reply_to) {
-      PollerGetUpdates(offset, limit, timeout_s, reply_to)
-    },
-  )
+  poll_rpc.call(worker, timeout_ms, fn(reply_to) {
+    PollerGetUpdates(offset, limit, timeout_s, reply_to)
+  })
 }
 
 pub fn supervised_worker(
@@ -3785,6 +3778,71 @@ pub fn stop_supervised_service(svc: SupervisedService) -> Nil {
 }
 
 pub fn handle_message(
+  state: ServiceState,
+  msg: ServiceMessage,
+) -> actor.Next(ServiceState, ServiceMessage) {
+  let poll_active = state.in_flight_poll || state.poll_worker != None
+  let dispatch_active = state.dispatch_worker != None
+  let delivery_active =
+    state.in_flight_workers != [] || state.delivery_queue != []
+
+  case msg {
+    PollCycle(_, reply) ->
+      case dispatch_active || delivery_active {
+        True -> {
+          process.send(reply, Error("service_effect_in_flight"))
+          actor.continue(state)
+        }
+        False -> handle_message_inner(state, msg)
+      }
+
+    AutomaticDispatchTick(_, reply) ->
+      case poll_active || delivery_active {
+        True -> {
+          process.send(reply, Error("service_effect_in_flight"))
+          actor.continue(state)
+        }
+        False -> handle_message_inner(state, msg)
+      }
+
+    DeliverChunk(_, _, _, _, _, _, _, reply) ->
+      case poll_active || dispatch_active {
+        True -> {
+          process.send(reply, Error("service_effect_in_flight"))
+          actor.continue(state)
+        }
+        False -> handle_message_inner(state, msg)
+      }
+
+    RevokeAuthority -> {
+      let next_state = case poll_active || dispatch_active || delivery_active {
+        True ->
+          case state.writer_state {
+            lifecycle.ServiceWriterHold(_) -> state
+            _ ->
+              ServiceState(
+                ..state,
+                writer_state: lifecycle.ServiceWriterHold(
+                  "authority_revoked_with_inflight_effect",
+                ),
+              )
+          }
+        False -> state
+      }
+      handle_message_inner(next_state, msg)
+    }
+
+    DeliveryWorkerFinished(pid, _, _, _) ->
+      case list.contains(state.in_flight_workers, pid) {
+        True -> handle_message_inner(state, msg)
+        False -> actor.continue(state)
+      }
+
+    _ -> handle_message_inner(state, msg)
+  }
+}
+
+fn handle_message_inner(
   state: ServiceState,
   msg: ServiceMessage,
 ) -> actor.Next(ServiceState, ServiceMessage) {
@@ -4026,9 +4084,7 @@ pub fn handle_message(
           case state.authority_revoked {
             True -> {
               process.send(reply_to, Error("authority_lease_revoked"))
-              actor.continue(
-                ServiceState(..state, dispatch_worker: None),
-              )
+              actor.continue(ServiceState(..state, dispatch_worker: None))
             }
             False -> {
               case outcome {
@@ -4121,14 +4177,18 @@ pub fn handle_message(
                             )
                           case list.is_empty(state.in_flight_workers) {
                             True -> {
-                              let next_state = spawn_delivery_worker(state, task)
+                              let next_state =
+                                spawn_delivery_worker(state, task)
                               actor.continue(next_state)
                             }
                             False -> {
                               let next_queue =
                                 list.append(state.delivery_queue, [task])
                               actor.continue(
-                                ServiceState(..state, delivery_queue: next_queue),
+                                ServiceState(
+                                  ..state,
+                                  delivery_queue: next_queue,
+                                ),
                               )
                             }
                           }
@@ -4213,7 +4273,11 @@ pub fn handle_message(
             True -> {
               case reason == process.Normal {
                 True ->
-                  ServiceState(..state, poll_worker: None, in_flight_poll: False)
+                  ServiceState(
+                    ..state,
+                    poll_worker: None,
+                    in_flight_poll: False,
+                  )
                 False -> {
                   ServiceState(
                     ..state,
@@ -4231,8 +4295,7 @@ pub fn handle_message(
           let state2 = case state1.dispatch_worker == Some(pid) {
             True -> {
               case reason == process.Normal {
-                True ->
-                  ServiceState(..state1, dispatch_worker: None)
+                True -> ServiceState(..state1, dispatch_worker: None)
                 False -> {
                   ServiceState(
                     ..state1,
