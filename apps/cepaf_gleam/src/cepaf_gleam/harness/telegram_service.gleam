@@ -3302,6 +3302,11 @@ pub type StoreWorkerMessage {
       Result(#(codec.Receipt, ledger.InboxRecord), store.StoreError),
     ),
   )
+  StoreWithdrawProposal(
+    generation: Int, query: ledger.InboxRecord, version: Int, sha: String,
+    worker: String, epoch: Int, original_id: String, payloads: List(String),
+    reply_to: Subject(Result(store.CommitResultResult,store.StoreError)),
+  )
   StoreCommitResult(
     bot_id: Int,
     operation_id: String,
@@ -3474,6 +3479,11 @@ fn handle_store_worker_message(
           now_ms,
         )
       process.send(reply_to, res)
+      actor.continue(state)
+    }
+    StoreWithdrawProposal(generation,query,version,sha,worker,epoch,id,payloads,reply_to) -> {
+      let res=store.commit_proposal_withdrawal(state.config,generation,query,version,sha,worker,epoch,id,payloads)
+      process.send(reply_to,res)
       actor.continue(state)
     }
     StoreCommitResult(
@@ -6060,6 +6070,7 @@ fn approval_status_reply(state:ServiceState,viewer:ledger.InboxRecord,
           ledger.InboxProcessing(_,_) -> "Processing or recovery pending; the effect is not confirmed by this view."
           ledger.InboxResultReady(_) -> "Result recorded; reply delivery is pending."
           ledger.InboxCompleted(_) -> "Reply delivered. See that reply for the precise action outcome."
+          ledger.InboxRejected("withdrawn_by_requester") -> "Request withdrawn by requester; no action executed."
           ledger.InboxRejected(_) -> "Request rejected."
           ledger.InboxHold(_) -> "Request held for reconciliation."
         }
@@ -6192,27 +6203,60 @@ fn prepare_collected_cancellation(state:ServiceState,p:action_profile.Profile,in
   Ok(#(before,prepared))
 }
 
-fn execute_approval_dispatch(state:ServiceState,query:ledger.InboxRecord,
-  version:Int,sha:String) -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
-  case state.config.actions {
-    Some(SignedActions(p,_)) -> execute_configured_approval(state,p,query,version,sha)
-    _ -> reply_without_reservation(state,query,version,sha,
-      "Controlled action approvals are not configured. No action was executed.")
-  }
-}
-fn execute_configured_approval(state:ServiceState,p:action_profile.Profile,
-  query:ledger.InboxRecord,version:Int,sha:String)
-  -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+fn approval_management_args(state:ServiceState,query:ledger.InboxRecord)
+  -> Result(List(String),ServiceError) {
   use #(gen,rows) <- result.try(svc_read_keys(state,[codec.input_key(query.request_id)])
     |> result.map_error(fn(err){action_store_error(state,err)}))
-  use args <- result.try(case rows {
+  case rows {
     [row] if gen==state.expected_generation -> case codec.decode_row_value(row)
       |> result.try(codec.decode_input_verdict) {
       Ok(#(_,_,_,guard.AcceptedEnvelope(directive:guard.PreservedDirective("/approval_manage",args),..))) -> Ok(args)
       _ -> Error(action_hold(state,"action_approval_input_refused"))
     }
     _ -> Error(action_hold(state,"action_generation_changed"))
-  })
+  }
+}
+
+fn execute_approval_dispatch(state:ServiceState,query:ledger.InboxRecord,
+  version:Int,sha:String) -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+  use args <- result.try(approval_management_args(state,query))
+  case args {
+    ["withdraw",id] -> execute_proposal_withdrawal(state,query,version,sha,id)
+    _ -> case state.config.actions {
+      Some(SignedActions(p,_)) -> execute_configured_approval(state,p,query,version,sha,args)
+      _ -> reply_without_reservation(state,query,version,sha,
+        "Controlled action approvals are not configured. No action was executed.")
+    }
+  }
+}
+
+// Local requester withdrawal is available even after a signing profile expires.
+// It never authorizes a native effect; original state and acknowledgement share a CAS.
+fn execute_proposal_withdrawal(state:ServiceState,query:ledger.InboxRecord,
+  version:Int,sha:String,id:String) -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+  use _ <- result.try(conversation_authorize(state)
+    |> result.map_error(fn(reason){ServiceError(state,reason)}))
+  let payloads=["Pending request " <> id <> " withdrawn. No action was executed. Its approval history is retained."]
+  let committed=case state.store_worker {
+    Some(worker) -> process.call(worker,5000,fn(reply_to){
+      StoreWithdrawProposal(state.expected_generation,query,version,sha,
+        state.config.worker_id,state.config.service_epoch,id,payloads,reply_to)})
+    None -> store.commit_proposal_withdrawal(state.config.storage_config,
+      state.expected_generation,query,version,sha,state.config.worker_id,
+      state.config.service_epoch,id,payloads)
+  }
+  case committed {
+    Ok(value) -> finish_conversation(state,query,version,value)
+    Error(store.StoreInvariantError("proposal_withdrawal_refused")) ->
+      reply_without_reservation(state,query,version,sha,
+        "No unexecuted pending controlled request found for this chat and user. Executing or completed requests cannot be withdrawn.")
+    Error(err) -> Error(conversation_store_failure(state,err))
+  }
+}
+
+fn execute_configured_approval(state:ServiceState,p:action_profile.Profile,
+  query:ledger.InboxRecord,version:Int,sha:String,args:List(String))
+  -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
   let id=case args { [_,id,..] -> id _ -> "" }
   use #(gen,rows) <- result.try(svc_read_keys(state,[codec.inbox_key(id)])
     |> result.map_error(fn(err){action_store_error(state,err)}))

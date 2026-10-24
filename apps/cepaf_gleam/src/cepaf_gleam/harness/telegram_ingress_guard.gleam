@@ -326,7 +326,11 @@ fn approval_directive(args:String) -> ParsedDirective {
     _ -> case string.split(args," ") {
       [id] -> case approval_request_id(id) {
         True -> PreservedDirective("/approval",[id])
-        False -> DeniedMutation("/approval","Usage: /approval [request_id], propose <request_id>, or submit <request_id> <role> <signed_receipt>.")
+        False -> DeniedMutation("/approval","Usage: /approval [request_id], propose <request_id>, withdraw <request_id>, or submit <request_id> <role> <signed_receipt>.")
+      }
+      ["withdraw",id] -> case approval_request_id(id) {
+        True -> PreservedDirective("/approval_manage",["withdraw",id])
+        False -> DeniedMutation("/approval","Invalid request identifier.")
       }
       ["propose",id] if id!="" -> case approval_request_id(id) {
         True -> PreservedDirective("/approval_manage",["propose",id])
@@ -338,7 +342,7 @@ fn approval_directive(args:String) -> ParsedDirective {
         True -> PreservedDirective("/approval_manage",["submit",id,role,token])
         False -> DeniedMutation("/approval","Invalid signed receipt submission.")
       }
-      _ -> DeniedMutation("/approval","Use propose or submit with an exact request identifier; unsigned approve text cannot authorize an action.")
+      _ -> DeniedMutation("/approval","Use propose, submit, or withdraw with an exact request identifier; unsigned approve text cannot authorize an action.")
     }
   }
 }

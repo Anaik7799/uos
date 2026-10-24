@@ -332,6 +332,7 @@ pub fn run_native(
   let assert [inbox] = prefix.admitted_records
   case mode {
     "approval_status" | "approval_foreign" -> approval_status_fixture(initial,prefix,inbox,p,root,bridge_expiry,now,mode)
+    "withdrawal_flow" -> withdrawal_flow_fixture(initial,prefix,inbox,p,root,bridge_expiry,now)
     "proposal_flow" -> proposal_flow_fixture(initial,prefix,inbox,p,root,bridge_expiry,now)
     "proposal_collect" -> proposal_collect_fixture(initial,prefix,inbox,p,bridge_expiry)
     "proposal" -> proposal_fixture(initial,prefix,inbox,p,bridge_expiry,target_lease)
@@ -805,4 +806,42 @@ fn proposal_flow_fixture(initial:service.ServiceState,prefix:store.CommitPrefixR
  let _=fixture_stop(pid)
  list.length(requests) |> should.equal(10)
  "approval_commands_to_quorum_native_and_http_once"
+}
+
+fn withdrawal_flow_fixture(initial:service.ServiceState,prefix:store.CommitPrefixResult,
+ inbox:ledger.InboxRecord,p:profile.Profile,root:String,bridge_expiry:Int,now:Int) {
+ let assert Ok(#(pid,_,url))=fixture_start()
+ let assert Ok(cfg)=service.configure_actions(initial.config,root,"profile.json",
+   profile.digest(p),profile.context(p),root)
+ let cfg=service.ServiceConfiguration(..cfg,http_config:http.default_configuration(url,"TEST_ONLY"),
+   allowed_pairs:[#(100,200),#(100,201)])
+ let state=service.set_authority(service.ServiceState(..initial,config:cfg,
+   expected_generation:prefix.receipt.generation),
+   service.AuthorityLease("service-test",1,1,bridge_expiry / 1000))
+ let #(s1,challenge)=approval_query(state,"/approval propose "<>inbox.request_id,20,200,now)
+ string.contains(challenge,"Approval proposal") |> should.be_true
+ let saved=row(cfg.storage_config,store.proposal_key(inbox.request_id))
+ let #(s2,foreign)=approval_query(s1,"/approval withdraw "<>inbox.request_id,21,201,now)
+ string.contains(foreign,"No unexecuted pending") |> should.be_true
+ let #(s3,missing)=approval_query(s2,"/approval withdraw tg-333444-999",22,200,now)
+ string.contains(missing,"No unexecuted pending") |> should.be_true
+ // Withdrawal uses current service authority but needs no usable signing profile.
+ let recovery=service.ServiceState(..s3,config:service.ServiceConfiguration(..cfg,
+   actions:Some(service.RecoveryActions(p))))
+ let #(s4,withdrawn)=approval_query(recovery,"/approval withdraw "<>inbox.request_id,23,200,now)
+ string.contains(withdrawn,"withdrawn. No action was executed") |> should.be_true
+ let assert Ok(raw)=codec.decode_row_value(row(cfg.storage_config,codec.inbox_key(inbox.request_id)))
+ let assert Ok(done)=codec.decode_inbox_record(raw)
+ done.status |> should.equal(ledger.InboxRejected("withdrawn_by_requester"))
+ row(cfg.storage_config,store.proposal_key(inbox.request_id)) |> should.equal(saved)
+ row(cfg.storage_config,store.cancellation_key(inbox.request_id)).exists |> should.be_false
+ row(cfg.storage_config,codec.authority_key(inbox.request_id)).exists |> should.be_false
+ let signed_state=service.ServiceState(..s4,config:cfg)
+ let #(s5,repeated)=approval_query(signed_state,"/approval withdraw "<>inbox.request_id,24,200,now)
+ string.contains(repeated,"No unexecuted pending") |> should.be_true
+ let assert Ok(#(_,service.DispatchCycleResult(0,0)))=service.dispatch_cycle(s5,now*1000)
+ let requests=fixture_requests(pid)
+ let _=fixture_stop(pid)
+ list.length(requests) |> should.equal(5)
+ "withdrawal_scoped_atomic_http_no_effect"
 }

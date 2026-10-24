@@ -1124,6 +1124,7 @@ pub fn commit_prefix(
                 && stored_inbox.user_id == proposed.user_id
                 && stored_inbox.text_hash == proposed.text_hash
                 && case stored_inbox.status, proposed.status {
+                  ledger.InboxRejected("withdrawn_by_requester"), ledger.InboxPending -> True
                   ledger.InboxRejected(x), ledger.InboxRejected(y) -> x == y
                   ledger.InboxRejected(_), _ | _, ledger.InboxRejected(_) ->
                     False
@@ -1439,7 +1440,7 @@ pub fn commit_result(
   worker: String,
   epoch: Int,
 ) -> Result(CommitResultResult, StoreError) {
-  commit_result_extended(config, bot_id, operation_id, expected_generation, inbox_record, inbox_version, inbox_sha, payloads, worker, epoch, [], [], 0)
+  commit_result_extended(config, bot_id, operation_id, expected_generation, inbox_record, inbox_version, inbox_sha, payloads, worker, epoch, [], [], 0, 0)
 }
 
 fn commit_result_extended(
@@ -1456,6 +1457,7 @@ fn commit_result_extended(
   extra_read_set: List(codec.ReadSetAssertion),
   extra_changes: List(codec.Change),
   extra_reserved_rows: Int,
+  extra_reserved_receipts: Int,
 ) -> Result(CommitResultResult, StoreError) {
   use _ <- result.try(
     case
@@ -1590,7 +1592,7 @@ fn commit_result_extended(
   ]
 
   let read_set = list.append(base_read_set, extra_read_set)
-  let res_delta = codec.ReservationDelta(rows: -17 - extra_reserved_rows, receipts: -1)
+  let res_delta = codec.ReservationDelta(rows: -17 - extra_reserved_rows, receipts: -1 - extra_reserved_receipts)
   let summary_json =
     json.object([
       #("op", json.string("commit_result")),
@@ -2601,6 +2603,7 @@ pub fn commit_conversation_result(
     [ctx_assert, budget_assert],
     extra_changes,
     res.reserved_context_rows,
+    0,
   )
 }
 
@@ -2693,7 +2696,7 @@ pub fn commit_memory_result(
   commit_result_extended(o.config,o.record.bot_id,"op-result-" <> o.record.request_id,
     o.generation,o.record,o.version,o.sha,payloads,o.worker,o.epoch,
     [row_read_assertion(o.context_row.key,o.context_row),
-      row_read_assertion(o.input_row.key,o.input_row)],changes,0)
+      row_read_assertion(o.input_row.key,o.input_row)],changes,0,0)
 }
 
 pub opaque type CancellationReservation {
@@ -3028,6 +3031,7 @@ pub fn commit_cancellation_lookup(
     [row_read_assertion(res.saved_row.key, res.saved_row)],
     [],
     0,
+    0,
   )
 }
 
@@ -3132,6 +3136,7 @@ pub fn commit_cancellation_lookup_for(
         [row_read_assertion(res.saved_row.key, res.saved_row)],
         [authority_change],
         0,
+        0,
       )
     }
   }
@@ -3227,5 +3232,86 @@ fn cancellation_command_matches(intent:action_intent.Intent,text:String) -> Bool
         _,_ -> False
       }
     _ -> False
+  }
+}
+
+
+/// Requester withdrawal is a local data transition, never native effect authority.
+/// Original Pending -> Rejected, query result/outbox, and the original reservation
+/// release are one generation-bound CAS. Proposal and input history stay intact.
+pub fn commit_proposal_withdrawal(
+  config:transport.LocalConfiguration,generation:Int,query:ledger.InboxRecord,
+  version:Int,sha:String,worker:String,epoch:Int,original_id:String,
+  payloads:List(String),
+) -> Result(CommitResultResult,StoreError) {
+  use _ <- result.try(case ledger.valid_record(query)
+    && query.request_id==ledger.make_request_id(query.bot_id,query.update_id)
+    && original_id!=query.request_id && original_id!="" && string.byte_size(original_id)<=64 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+  })
+  use #(observed,rows) <- result.try(read_keys(config,[
+    codec.inbox_key(original_id),codec.input_key(original_id),
+    codec.authority_key(original_id),cancellation_key(original_id),
+    codec.result_key(original_id),codec.input_key(query.request_id)]))
+  use _ <- result.try(case observed==generation {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_generation_changed"))
+  })
+  use #(original_row,input_row,query_input) <- result.try(case rows {
+    [inbox,input,authority,cancel,reply,query_input]
+      if inbox.exists && input.exists && query_input.exists
+        && !authority.exists && !cancel.exists && !reply.exists ->
+      Ok(#(inbox,input,query_input))
+    [_,_,_,_,_,_] -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+    _ -> Error(StoreInvariantError("proposal_withdrawal_snapshot_invalid"))
+  })
+  use raw <- result.try(codec.decode_row_value(original_row) |> result.map_error(StoreDecodeError))
+  use original <- result.try(codec.decode_inbox_record(raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case ledger.valid_record(original)
+    && original.request_id==original_id
+    && original_id==ledger.make_request_id(original.bot_id,original.update_id)
+    && original.bot_id==query.bot_id && original.chat_id==query.chat_id
+    && original.user_id==query.user_id && original.status==ledger.InboxPending {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+  })
+  use original_text <- result.try(withdrawal_bound_input(original,input_row))
+  use query_text <- result.try(withdrawal_bound_input(query,query_input))
+  let original_is_cancel=case commands.parse(original_text) {
+    Ok(inv) if inv.definition.canonical=="/tool" -> case tool_command.parse(inv.args) {
+      Ok(tool_command.CancelLease(_,_)) -> True
+      _ -> False
+    }
+    _ -> False
+  }
+  use _ <- result.try(case original_is_cancel
+    && guard.classify_directive(query_text)==guard.PreservedDirective("/approval_manage",["withdraw",original_id]) {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+  })
+  let rejected=ledger.InboxRecord(..original,status:ledger.InboxRejected("withdrawn_by_requester"))
+  let change=codec.Change(original_row.key,original_row.version,original_row.sha256,
+    codec.encode_canonical_base64(codec.encode_inbox_record(rejected)))
+  commit_result_extended(config,query.bot_id,"op-result-"<>query.request_id,
+    generation,query,version,sha,payloads,worker,epoch,
+    list.map(rows,fn(row){row_read_assertion(row.key,row)}),[change],18,63)
+}
+fn withdrawal_bound_input(inbox:ledger.InboxRecord,row:codec.RowResult) -> Result(String,StoreError) {
+  use raw <- result.try(codec.decode_row_value(row) |> result.map_error(StoreDecodeError))
+  use #(id,bot,update,verdict) <- result.try(
+    codec.decode_input_verdict(raw) |> result.map_error(StoreDecodeError))
+  case verdict {
+    guard.AcceptedEnvelope(bot_id:b,chat_id:c,user_id:u,update_id:n,
+      message_id:m,text_hash:h,raw_text:text,directive:directive,callback_query_id:None) -> {
+      case id==inbox.request_id && bot==inbox.bot_id && update==inbox.update_id
+        && b==bot && c==inbox.chat_id && u==inbox.user_id && n==update
+        && m==inbox.message_id && h==inbox.text_hash && files.digest(text)==h
+        && directive==guard.classify_directive(text) {
+        True -> Ok(text)
+        False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+      }
+    }
+    _ -> Error(StoreInvariantError("proposal_withdrawal_refused"))
   }
 }

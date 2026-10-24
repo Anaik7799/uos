@@ -1405,7 +1405,7 @@ let () =
     ~f:(fun c->Int.to_string (Char.to_int c))) ^ ">>" in
   let sha p=Digestif.SHA256.(to_hex (digest_string (In_channel.read_all p))) in
   let guardian=Filename.concat dir "guardian.exe" and worker=Filename.concat dir "worker.exe" in
-  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator";"dispatch";"recover";"recover_absent";"recover_dispatch";"proposal";"proposal_collect";"proposal_flow";"approval_status";"approval_foreign"] ~f:(fun mode->
+  List.iter ["success";"existing_absent";"wrong_fence";"revoked_coordinator";"dispatch";"recover";"recover_absent";"recover_dispatch";"proposal";"proposal_collect";"proposal_flow";"withdrawal_flow";"approval_status";"approval_foreign"] ~f:(fun mode->
     Cancellation.with_case (fun path store request->
       let request=live_cancel_request path request in
       let lease=some (ok (Store.find_bridge_lease store ~mapping_id:request.mapping_id)) in
@@ -1419,7 +1419,7 @@ let () =
         (if String.equal mode "wrong_fence" then Int64.(request.fencing_token+1L) else request.fencing_token)
         lease.expires_at_ns request.target_lease_until_ns (bin mode) in
       let status,out,errors=run_cancellation_child_bounded
-        ~timeout_seconds:(if String.equal mode "proposal_flow" then 20.0 else 6.5)
+        ~timeout_seconds:(if (String.equal mode "proposal_flow" || String.equal mode "withdrawal_flow") then 20.0 else 6.5)
         ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
         ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";code] ~database:path ~input:"" in
       if not (Poly.equal status (Lifetime_unix.WEXITED 0)) then
@@ -1433,6 +1433,17 @@ let () =
         (String.equal out "approval_status_scoped_delivered_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
       else if String.equal mode "proposal" then check "SERVICE-PROPOSAL-EXACT-TARGET-NO-EFFECT"
         (String.equal out "service_proposal_exact_target_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing)
+      else if String.equal mode "withdrawal_flow" then (
+        check "SERVICE-WITHDRAWAL-NO-EFFECT"
+          (String.equal out "withdrawal_scoped_atomic_http_no_effect" && Poly.equal (Cancellation.job store).state Store.Job_executing);
+        let db=Sqlite3.db_open ~mode:`READONLY (Filename.concat profile_dir "telegram.sqlite3") in
+        Exn.protect ~finally:(fun ()->ignore(Sqlite3.db_close db:bool)) ~f:(fun ()->
+          let stmt=Sqlite3.prepare db "SELECT value FROM meta WHERE key IN ('reserved_rows','reserved_receipts') ORDER BY key" in
+          Exn.protect ~finally:(fun ()->ignore(Sqlite3.finalize stmt:Sqlite3.Rc.t)) ~f:(fun ()->
+            for _=1 to 2 do
+              check "SERVICE-WITHDRAWAL-RESERVATION-RECLAIM"
+                (Poly.equal (Sqlite3.step stmt) Sqlite3.Rc.ROW && String.equal (Sqlite3.column_text stmt 0) "0")
+            done)))
       else if String.equal mode "proposal_flow" then check "SERVICE-PROPOSAL-COMMAND-FLOW"
         (String.equal out "approval_commands_to_quorum_native_and_http_once" && Poly.equal (Cancellation.job store).state Store.Job_cancelled)
       else if String.equal mode "proposal_collect" then check "SERVICE-PROPOSAL-RECEIPTS-QUORUM"

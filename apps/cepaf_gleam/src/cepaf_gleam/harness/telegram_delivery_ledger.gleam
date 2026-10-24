@@ -109,6 +109,9 @@ pub fn valid_record(r: InboxRecord) -> Bool {
     _ -> True
   }
   && case r.status {
+    InboxRejected("withdrawn_by_requester") ->
+      guard.valid_positive_id(r.message_id) && guard.valid_positive_id(r.user_id)
+      && guard.valid_chat_id(r.chat_id)
     InboxRejected(reason) -> reason != "" && string.byte_size(reason) <= 128
     _ ->
       guard.valid_positive_id(r.message_id)
@@ -185,6 +188,7 @@ fn same_identity(a: InboxRecord, b: InboxRecord) -> Bool {
   && a.user_id == b.user_id
   && a.text_hash == b.text_hash
   && case a.status, b.status {
+    InboxRejected("withdrawn_by_requester"), InboxPending -> True
     InboxRejected(x), InboxRejected(y) -> x == y
     InboxRejected(_), _ | _, InboxRejected(_) -> False
     _, _ -> True

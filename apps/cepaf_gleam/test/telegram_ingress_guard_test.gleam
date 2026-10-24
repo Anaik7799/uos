@@ -291,3 +291,7 @@ pub fn approval_propose_and_submit_ingress_test() {
  g.classify_directive("/approval submit tg-333444-10 codex public.jwt.signature") |> should.equal(g.PreservedDirective("/approval_manage",["submit","tg-333444-10","codex","public.jwt.signature"]))
  list.each(["/approval propose ../x","/approval submit tg-1 admin token","/approval submit tg-1 codex token extra","/approval tg-"],fn(t){let assert g.DeniedMutation(_,_) = g.classify_directive(t) Nil})
 }
+
+pub fn approval_withdrawal_route_is_exact_test() {
+  g.classify_directive("/approval withdraw tg-333444-10") |> should.equal(g.PreservedDirective("/approval_manage",["withdraw","tg-333444-10"]))
+}

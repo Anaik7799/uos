@@ -496,3 +496,88 @@ pub fn native_cancellation_semantic_whitespace_matches_test() {
  let #(p,_,_,_,_)=fixture(10)
  let assert Ok(_)=save(c,gen,inbox,p)
 }
+
+fn withdraw(c,gen,query,id) {
+ store.commit_proposal_withdrawal(c,gen,query,2,
+   files.digest(codec.encode_inbox_record(query)),worker,1,id,["withdrawn"])
+}
+pub fn native_withdrawal_atomic_history_replay_and_no_execution_test() {
+ use c <- with_store
+ let #(gen,original)=pending_proposal_input(c,10,text())
+ let p=proposal_fixture(10)
+ let assert Ok(g1)=store.save_proposal(c,gen,original,p)
+ let assert Ok(full)=proposal.with_receipts(p,[approval.Receipt(approval.Codex,"signed-codex"),
+   approval.Receipt(approval.Agy,"signed-agy"),approval.Receipt(approval.Operator,"signed-operator")])
+ let assert Ok(_)=store.save_proposal(c,g1,original,full)
+ let saved=row(c,store.proposal_key(original.request_id))
+ let #(g2,query)=processing(c,11,"/approval withdraw "<>original.request_id)
+ let before=row(c,codec.inbox_key(original.request_id))
+ withdraw(c,g2-1,query,original.request_id) |> should.be_error
+ row(c,codec.inbox_key(original.request_id)) |> should.equal(before)
+ let assert Ok(done)=withdraw(c,g2,query,original.request_id)
+ let assert Ok(raw)=codec.decode_row_value(row(c,codec.inbox_key(original.request_id)))
+ let assert Ok(rejected)=codec.decode_inbox_record(raw)
+ rejected.status |> should.equal(ledger.InboxRejected("withdrawn_by_requester"))
+ let assert ledger.InboxResultReady(_)=done.inbox_record.status
+ row(c,store.proposal_key(original.request_id)) |> should.equal(saved)
+ row(c,store.cancellation_key(original.request_id)).exists |> should.be_false
+ row(c,codec.authority_key(original.request_id)).exists |> should.be_false
+ row(c,codec.chunk_key(query.request_id,0)).exists |> should.be_true
+ store.claim_task_processing(c,bot,"withdrawn-cannot-claim",done.receipt.generation,
+   rejected,2,files.digest(raw),worker,1,3000) |> should.be_error
+ store.claim_task_processing(c,bot,"stale-pending-cannot-claim",done.receipt.generation,
+   original,1,before.sha256,worker,1,3000) |> should.be_error
+ store.save_proposal(c,done.receipt.generation,original,full) |> should.be_error
+ let assert Ok(#(wm,wv,wh))=store.read_watermark(c)
+ let verdict=guard.AcceptedEnvelope(10,11,100,200,files.digest(text()),text(),
+   guard.classify_directive(text()),bot,None)
+ let assert Ok(replay)=store.commit_prefix(c,bot,"withdrawn-update-replay",
+   done.receipt.generation,wm,wv,wh,[verdict],1000)
+ replay.admitted_records |> should.equal([rejected])
+ ledger.ingest_single(verdict,1000,[rejected]) |> should.equal(Ok(rejected))
+ row(c,store.proposal_key(original.request_id)) |> should.equal(saved)
+}
+pub fn native_withdrawal_refuses_foreign_missing_non_tool_and_processing_test() {
+ use c <- with_store
+ let #(_,original)=pending_proposal_input(c,10,text())
+ let #(g1,query)=processing(c,11,"/approval withdraw "<>original.request_id)
+ let before=row(c,codec.inbox_key(original.request_id))
+ withdraw(c,g1,ledger.InboxRecord(..query,user_id:201),original.request_id) |> should.be_error
+ withdraw(c,g1,query,ledger.make_request_id(bot,999)) |> should.be_error
+ withdraw(c,g1,query,query.request_id) |> should.be_error
+ row(c,codec.inbox_key(original.request_id)) |> should.equal(before)
+ let assert Ok(#(_,claimed))=store.claim_task_processing(c,bot,"claim-original-before-withdraw",
+   g1,original,1,before.sha256,worker,1,3000)
+ let assert Ok(#(g2,_))=store.read_keys(c,[codec.inbox_key(original.request_id)])
+ withdraw(c,g2,query,original.request_id) |> should.be_error
+ let assert Ok(raw)=codec.decode_row_value(row(c,codec.inbox_key(original.request_id)))
+ raw |> should.equal(codec.encode_inbox_record(claimed))
+ let #(_,ordinary)=pending_proposal_input(c,12,"/status")
+ let #(g3,q2)=processing(c,13,"/approval withdraw "<>ordinary.request_id)
+ withdraw(c,g3,q2,ordinary.request_id) |> should.be_error
+ let assert Ok(raw)=codec.decode_row_value(row(c,codec.inbox_key(ordinary.request_id)))
+ raw |> should.equal(codec.encode_inbox_record(ordinary))
+ row(c,codec.result_key(q2.request_id)).exists |> should.be_false
+}
+pub fn native_withdrawal_query_input_must_name_exact_original_test() {
+ use c <- with_store
+ let #(_,original)=pending_proposal_input(c,10,text())
+ let #(gen,query)=processing(c,11,"/approval propose "<>original.request_id)
+ withdraw(c,gen,query,original.request_id) |> should.be_error
+ row(c,codec.result_key(query.request_id)).exists |> should.be_false
+ let assert Ok(raw)=codec.decode_row_value(row(c,codec.inbox_key(original.request_id)))
+ raw |> should.equal(codec.encode_inbox_record(original))
+}
+
+pub fn withdrawal_codec_preserves_identity_and_rejects_bad_terminal_shape_test() {
+ let original=ledger.InboxRecord(10,11,100,200,files.digest(text()),
+   ledger.InboxRejected("withdrawn_by_requester"),1000,bot,ledger.make_request_id(bot,10))
+ codec.decode_inbox_record(codec.encode_inbox_record(original)) |> should.equal(Ok(original))
+ codec.decode_inbox_record(codec.encode_inbox_record(ledger.InboxRecord(..original,
+   user_id:0,chat_id:0,message_id:0))) |> should.be_error
+ codec.decode_inbox_record(codec.encode_inbox_record(ledger.InboxRecord(..original,
+   status:ledger.InboxRejected("unknown_rejection")))) |> should.be_error
+ let changed=guard.AcceptedEnvelope(10,11,100,201,files.digest(text()),text(),
+   guard.classify_directive(text()),bot,None)
+ ledger.ingest_single(changed,1000,[original]) |> should.be_error
+}
