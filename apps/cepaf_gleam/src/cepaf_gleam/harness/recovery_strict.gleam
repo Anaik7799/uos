@@ -1,3 +1,6 @@
+//// Finite coordinator-only recovery for 20261024-0544. Historical656events
+//// remain preserved; no prior command or lease is re-signed or activated.
+//// Reuses reviewed transition kernel; old September30 grants are not accepted.
 //// Reviewed, finite one-time restoration entrypoint. The AGY implementation is
 //// preserved as low-level development evidence; this module owns effect policy.
 //// Failure after lock acquisition retains HOLD. Originals and terminal receipts
@@ -20,10 +23,7 @@ import restoration_runtime_cli as runtime
 import simplifile
 import uos_swarm/session_store as store
 
-pub const private_root = "/home/an/uos-recovery-candidates/20260930-0421-fractal-rca"
-
-pub const cycle_oracle = dev.root
-  <> "/var/recovery-runtime/20260930/cycle_verify.exe"
+pub const private_root = "/home/an/uos-recovery-candidates/20261024-0544-coordinator"
 
 @external(erlang, "erlang", "apply")
 fn metadata(
@@ -109,30 +109,28 @@ pub fn canonical_target(kind: io.TargetKind, target: String) -> Bool {
   case kind {
     io.CoordinatorStore ->
       target == dev.root <> "/var/coordination/tri-agent/coordinator.sqlite3"
-    io.KmCycleStore -> target == dev.root <> "/var/km/provenance-cycles.sqlite3"
     _ -> False
   }
 }
 
-fn finite(intent: io.ActivationIntent) -> Result(Nil, String) {
+pub fn finite(intent: io.ActivationIntent) -> Result(Nil, String) {
   use _ <- result.try(a.require(
     canonical_target(intent.target_kind, intent.target_path),
-    "only_two_canonical_targets",
+    "coordinator_canonical_target",
   ))
-  let candidate = case intent.target_kind {
-    io.CoordinatorStore -> private_root <> "/coordinator-fresh-20260930.sqlite3"
-    io.KmCycleStore -> private_root <> "/cycles-prefix332.sqlite3"
-    _ -> ""
-  }
+  let candidate = private_root <> "/coordinator-fresh-20261024.sqlite3"
   a.require(
     intent.candidate_path == candidate
       && intent.backup_dir == private_root
       && a.intent_valid(intent.intent_id)
-      && intent.plan == "uos/full-restoration/20260930-0515"
+      && intent.plan == "uos/coordinator-incident/20261024-0544"
       && intent.task == "RESTORE"
-      && intent.worker == "codex-full-restoration-20260930"
+      && intent.worker == "codex-analysis-20261024"
       && intent.attempt > 0
-      && a.digest_valid(intent.candidate_sha256),
+      && a.digest_valid(intent.candidate_sha256)
+      && intent.operator_scope == "coordinator"
+      && intent.review_receipt_sha256
+      == "bound-by-independent-full-grant-review",
     "finite_restoration_binding",
   )
 }
@@ -225,24 +223,26 @@ fn snapshot_matches(
   })
 }
 
-fn candidate_valid(intent: io.ActivationIntent) -> Result(Nil, String) {
+pub fn sidecars_absent(path: String, prefix: String) -> Result(Nil, String) {
+  list.try_each(["-wal", "-shm"], fn(suffix) {
+    case simplifile.link_info(path <> suffix) {
+      Error(simplifile.Enoent) -> Ok(Nil)
+      _ -> Error(prefix <> suffix)
+    }
+  })
+}
+
+pub fn candidate_valid(intent: io.ActivationIntent) -> Result(Nil, String) {
   use _ <- result.try(bounded_file(intent.candidate_path))
   use hash <- result.try(io.sha256_file(intent.candidate_path))
   use _ <- result.try(a.require(
     hash == intent.candidate_sha256,
     "candidate_changed",
   ))
-  use _ <- result.try(
-    case simplifile.link_info(intent.candidate_path <> "-wal") {
-      Error(simplifile.Enoent) -> Ok(Nil)
-      Ok(info) ->
-        a.require(
-          simplifile.file_info_type(info) == simplifile.File && info.size == 0,
-          "candidate_wal_not_empty",
-        )
-      _ -> Error("candidate_wal_unknown")
-    },
-  )
+  use _ <- result.try(sidecars_absent(
+    intent.candidate_path,
+    "candidate_sidecar_present",
+  ))
   use _ <- result.try(io.sqlite_verify_integrity(intent.candidate_path))
   use _ <- result.try(case intent.target_kind {
     io.CoordinatorStore -> {
@@ -255,23 +255,12 @@ fn candidate_valid(intent: io.ActivationIntent) -> Result(Nil, String) {
         "fresh_coordinator_epoch_required",
       )
     }
-    io.KmCycleStore -> {
-      use output <- result.try(dev.bounded(
-        cycle_oracle,
-        [intent.candidate_path],
-        10_000,
-      ))
-      use report <- result.try(parse(output))
-      a.require(
-        v.get(report, "ok") == Ok(v.Boolean(True))
-          && v.get(report, "rows") == Ok(v.Integer(332))
-          && v.get(report, "holds") == Ok(v.Integer(24))
-          && v.get(report, "releases") == Ok(v.Integer(0)),
-        "cycle_prefix_and_holds_required",
-      )
-    }
     _ -> Error("unsupported_target")
   })
+  use _ <- result.try(sidecars_absent(
+    intent.candidate_path,
+    "candidate_sidecar_present",
+  ))
   use after <- result.try(io.sha256_file(intent.candidate_path))
   a.require(after == hash, "candidate_changed_during_verification")
 }
@@ -294,6 +283,9 @@ fn load(
     |> result.map_error(fn(_) { "intent_schema" }),
   )
   use reviewer <- result.try(text(review, "reviewer"))
+  // One-way review.grant_sha256 binds the complete grant (and intent); reciprocal
+  // hashes between grant and review receipt would be circular, so intent carries
+  // review_receipt_sha256 == "bound-by-independent-full-grant-review" enforced in finite.
   use _ <- result.try(a.require(
     v.get(grant, "schema") == Ok(v.Text("uos.recovery-strict-grant.v1"))
       && v.get(grant, "operation") == Ok(v.Text("activate"))
@@ -313,7 +305,6 @@ fn load(
   use _ <- result.try(
     list.try_each(
       [
-        cycle_oracle,
         dev.root <> "/tools/ecology_process.ml",
         dev.root <> "/toolchains/opam-ocaml/bin/ocaml",
         "/usr/bin/fuser",
@@ -404,6 +395,23 @@ pub fn transition(
   }
 }
 
+/// The held recovery lock intentionally prevents normal store replay. Exact
+/// byte equality to the already typed-verified candidate plus absent sidecars
+/// preserves that evidence; recheck both after the SQLite integrity observation.
+pub fn post_swap_valid(
+  path: String,
+  expected: String,
+) -> Result(String, String) {
+  use _ <- result.try(sidecars_absent(path, "post_swap_sidecar_present"))
+  use before <- result.try(io.sha256_file(path))
+  use _ <- result.try(a.require(before == expected, "post_swap_digest"))
+  use _ <- result.try(io.sqlite_verify_integrity(path))
+  use _ <- result.try(sidecars_absent(path, "post_swap_sidecar_present"))
+  use after <- result.try(io.sha256_file(path))
+  use _ <- result.try(a.require(after == expected, "post_verify_digest"))
+  Ok(after)
+}
+
 pub fn activate(
   grant_name: String,
   review_name: String,
@@ -461,12 +469,10 @@ pub fn activate(
           intent.target_path,
           intent.candidate_sha256,
         ))
-        use actual <- result.try(io.sha256_file(intent.target_path))
-        use _ <- result.try(a.require(
-          actual == intent.candidate_sha256,
-          "post_swap_digest",
+        use actual <- result.try(post_swap_valid(
+          intent.target_path,
+          intent.candidate_sha256,
         ))
-        use _ <- result.try(io.sqlite_verify_integrity(intent.target_path))
         use _ <- result.try(phase(intent, "VERIFIED", actual))
         Ok(actual)
       },
