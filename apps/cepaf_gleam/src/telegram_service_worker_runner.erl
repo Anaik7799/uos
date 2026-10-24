@@ -500,7 +500,13 @@ build_service_configuration(Config) ->
     B6 = setelement(19, B5, GuardSha),
     B7 = setelement(20, B6, AuthPaths),
     B8 = setelement(21, B7, CtrlPathOpt),
-    telegram_conversation_test_io:configure(B8, maps:get(<<"conversation_mode">>, Config, <<"disabled">>), maps:get(<<"conversation_daily_limit">>, Config, 10), DbPath).
+    B9 = telegram_conversation_test_io:configure(B8, maps:get(<<"conversation_mode">>, Config, <<"disabled">>), maps:get(<<"conversation_daily_limit">>, Config, 10), DbPath),
+    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+        null -> B9;
+        [Root, Digest] when is_binary(Root), is_binary(Digest) ->
+            {ok, Configured} = telegram_managed_action_test:configure(B9, Root, Digest),
+            Configured
+    end.
 
 build_receipt_opt(Config) ->
     case maps:get(<<"cleanup_receipt">>, Config, null) of

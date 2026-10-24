@@ -39,7 +39,7 @@ const reason = "Operator requested cancellation"
 
 const text = "/tool cancel_job_lease cancel-plan/job1 -- Operator requested cancellation"
 
-fn profile_raw(
+pub fn profile_raw(
   c: profile.Context,
   mapping,
   expiry,
@@ -668,7 +668,7 @@ fn approval_status_fixture(initial:service.ServiceState,prefix:store.CommitPrefi
  "approval_status_scoped_delivered_no_effect"
 }
 
-fn proposal_receipt(p:profile.Profile,value:proposal.Proposal,role:approval.Role,now:Int) {
+pub fn proposal_receipt(p:profile.Profile,value:proposal.Proposal,role:approval.Role,now:Int) {
  let n=approval.role_name(role)
  approval.Receipt(role,sign(n,json.object([
    #("version",json.string("uos.telegram.approval.v1")),

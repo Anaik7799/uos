@@ -1,3 +1,4 @@
+import telegram_managed_action_test as managed_action
 import cepaf_gleam/harness/telegram_conversation as conv
 import telegram_test_runner_binding as test_binding
 //// End-to-End Integration & Supervised OTP Test Suite for Telegram Service
@@ -2176,7 +2177,7 @@ fn writer_from_control(path: String, bot_id: Int, nonce: String) -> codec.Writer
     control.unit_invocation_id, control.registered_at_us)
 }
 
-fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
+fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool, expired_action: Bool) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   let assert Ok(#(fixture_pid, _, base_url)) = fixture_start()
   fixture_set_mode(fixture_pid, "offset_aware")
@@ -2189,6 +2190,10 @@ fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
   let old_control = mint_unit_registration(dir, old_slice, old_unit, db_path, 1)
   let previous = writer_from_control(old_control, bot_id, "old-" <> nonce)
   let assert Ok(2) = store.finish_new_writer_store(fresh, previous)
+  let historical=case expired_action {
+    True -> Some(managed_action.seed_pending(storage_config,sa_plan_db,dir,bot_id))
+    False -> None
+  }
   let assert Ok(coordinator) = coord_store.open(coord_db)
   let assert Ok(_) = coord_store.append(coordinator,
     sync.Claim("worker-e2e-01", "runtime:telegram-bridge", 3_600_000_000), "recover-claim1-" <> nonce)
@@ -2198,6 +2203,7 @@ fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
       let old_cmd = managed_start_command(db_path, base_url, bot_id, sa_plan_db, coord_db,
         old_control, previous, "runtime:telegram-bridge")
         |> string.replace("\"managed_start\":true", "\"managed_start\":true,\"managed_auto\":true")
+        |> with_historical_action(historical,dir)
       let started = send_runner_cmd(old_ipc, old_cmd)
       string.contains(started, "\"action\":\"started\"") |> should.equal(True)
     }
@@ -2229,6 +2235,7 @@ fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
     |> string.replace("\"service_epoch\":1", "\"service_epoch\":2")
     |> string.drop_end(1)
     |> fn(prefix) { prefix <> "," <> string.drop_start(extra, 1) }
+    |> with_historical_action(historical,dir)
   let before = store.read_keys(storage_config, [codec.writer_registration_key(), "meta/writer_start"])
   // Incorrect predecessor identity must not mutate the store or burn the receipt.
   let assert Ok(wrong_previous) = codec.encode_writer_registration(
@@ -2239,10 +2246,24 @@ fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
   string.contains(rejected, "recovery_predecessor_writer_control_mismatch") |> should.equal(True)
   store.read_keys(storage_config, [codec.writer_registration_key(), "meta/writer_start"])
     |> should.equal(before)
+  case historical {
+    None -> {
   fixture_set_updates(fixture_pid, [
     "{\"update_id\":9601,\"message\":{\"message_id\":601,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/doctor\",\"date\":1700000000}}",
     "{\"update_id\":9602,\"message\":{\"message_id\":602,\"chat\":{\"id\":100,\"type\":\"private\"},\"from\":{\"id\":200,\"is_bot\":false},\"text\":\"/saplan\",\"date\":1700000000}}",
   ])
+    }
+    Some(#(_,id,_,_)) -> fixture_set_updates(fixture_pid,[
+      json.object([#("update_id",json.int(9601)),#("message",json.object([
+        #("message_id",json.int(601)),#("chat",json.object([#("id",json.int(100)),#("type",json.string("private"))])),
+        #("from",json.object([#("id",json.int(200)),#("is_bot",json.bool(False))])),
+        #("text",json.string("/approval propose "<>id)),#("date",json.int(1700000000))]))]) |> json.to_string,
+      json.object([#("update_id",json.int(9602)),#("message",json.object([
+        #("message_id",json.int(602)),#("chat",json.object([#("id",json.int(100)),#("type",json.string("private"))])),
+        #("from",json.object([#("id",json.int(200)),#("is_bot",json.bool(False))])),
+        #("text",json.string("/approval withdraw "<>id)),#("date",json.int(1700000000))]))]) |> json.to_string,
+    ])
+  }
   let recovered = send_runner_cmd(new_ipc, case run_entry {
     False -> command
     True -> string.replace(command, "\"action\":\"start_actor\"", "\"action\":\"run_managed\"")
@@ -2272,6 +2293,26 @@ fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
     let assert Ok(chunk) = codec.decode_chunk_value(raw)
     chunk.status |> should.equal(ledger.OutboxDelivered(42))
   })
+  case historical {
+    None -> Nil
+    Some(#(_,id,original_proposal,original_profile)) -> {
+      let assert Ok(#(_, [inbox_row,proposal_row,cancel_row,authority_row]))=store.read_keys(storage_config,[
+        codec.inbox_key(id),store.proposal_key(id),store.cancellation_key(id),codec.authority_key(id)])
+      let assert Ok(inbox_raw)=codec.decode_row_value(inbox_row)
+      let assert Ok(inbox)=codec.decode_inbox_record(inbox_raw)
+      inbox.status |> should.equal(ledger.InboxRejected("withdrawn_by_requester"))
+      codec.decode_row_value(proposal_row) |> should.equal(Ok(original_proposal))
+      simplifile.read(dir<>"/historical-profile.json") |> should.equal(Ok(original_profile))
+      cancel_row.exists |> should.be_false
+      authority_row.exists |> should.be_false
+      let assert Ok(first_raw)=codec.decode_row_value(one)
+      let assert Ok(first)=codec.decode_chunk_value(first_raw)
+      string.contains(first.payload,"not configured") |> should.be_true
+      let assert Ok(second_raw)=codec.decode_row_value(two)
+      let assert Ok(second)=codec.decode_chunk_value(second_raw)
+      string.contains(second.payload,"withdrawn. No action was executed") |> should.be_true
+    }
+  }
   let requests = fixture_requests_typed(fixture_pid)
   list.filter(requests, fn(r) { let #(_, path, _, _) = r string.contains(path, "/sendMessage") })
     |> list.length |> should.equal(2)
@@ -2287,11 +2328,11 @@ fn exercise_managed_successor(start_predecessor: Bool, run_entry: Bool) {
 }
 
 pub fn e2e_managed_successor_recovers_predecessor_that_never_started_test() {
-  exercise_managed_successor(False, False)
+  exercise_managed_successor(False, False, False)
 }
 
 pub fn e2e_managed_successor_recovers_terminated_active_predecessor_test() {
-  exercise_managed_successor(True, False)
+  exercise_managed_successor(True, False, False)
 }
 
 pub fn e2e_runtime_entry_validates_before_start_runs_and_releases_test() {
@@ -2362,7 +2403,7 @@ pub fn e2e_runtime_entry_validates_before_start_runs_and_releases_test() {
 }
 
 pub fn e2e_runtime_entry_recovers_runs_and_releases_test() {
-  exercise_managed_successor(True, True)
+  exercise_managed_successor(True, True, False)
 }
 
 pub fn e2e_task_detail_and_missing_dispatch_test() {
@@ -2502,4 +2543,15 @@ pub fn e2e_matrix_versions_and_tool_test() {
 pub fn e2e_matrix_scope_refused_test() {
   exercise_automatic_command_dispatch("/sutra foreign","denied_mutation",
     "/action query_matrix_versions {\"host\":\"evil\"}","denied_mutation")
+}
+
+fn with_historical_action(command:String,historical:Option(#(String,String,String,String)),root:String) -> String {
+ case historical {
+   None -> command
+   Some(#(sha,_,_,_)) -> string.drop_end(command,1)
+     <> ",\"test_historical_action_profile\":" <> json.to_string(json.array([root,sha],json.string)) <> "}"
+ }
+}
+pub fn e2e_managed_successor_preserves_expired_signed_action_and_allows_withdrawal_test() {
+ exercise_managed_successor(True,False,True)
 }
