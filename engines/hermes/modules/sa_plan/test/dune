@@ -72,3 +72,8 @@
  (name test_sa_plan_observation)
  (modules test_sa_plan_observation)
  (libraries core core_unix sa_plan))
+
+(executable
+ (name sa_plan_cancel_worker)
+ (modules sa_plan_cancel_worker)
+ (libraries core core_unix sa_plan yojson unix))

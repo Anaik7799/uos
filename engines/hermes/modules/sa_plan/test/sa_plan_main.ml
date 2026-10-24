@@ -542,7 +542,9 @@ let main () =
   if Option.is_some cancellation_input
      && (not (Stdlib.Sys.file_exists path) || Stdlib.Sys.is_directory path)
   then fail "cancellation_requires_existing_store";
-  let store = measured "store_open" (fun () -> or_fail (Store.open_db path)) in
+  let store = measured "store_open" (fun () ->
+    or_fail (if Option.is_some cancellation_input then Store.open_existing path
+             else Store.open_db path)) in
   match
     try
       measured "dispatch" (fun () -> dispatch store format argv cancellation_input);

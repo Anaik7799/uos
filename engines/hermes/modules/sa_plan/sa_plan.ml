@@ -8,6 +8,7 @@ module Temporal = Sa_plan_temporal
 module Management = Sa_plan_management
 module Store = Sa_plan_store
 module Cancel_protocol = Sa_plan_cancel_protocol
+module Cancel_frame = Sa_plan_cancel_frame
 module Name = Sa_plan_name
 module Observability = Sa_plan_observability
 module Observation = Sa_plan_observation

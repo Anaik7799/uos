@@ -253,6 +253,11 @@ type session_observation_store_outcome =
   | Observation_reconciliation of session_reconciliation
 
 val open_db : string -> (t, string) Result.t
+
+(** Open an existing exact-v7 store without creating a file, initializing DDL or
+    migrating schema. Missing/old/future/corrupt stores refuse. The caller must
+    protect the path and directory; this is not principal authentication. *)
+val open_existing : string -> (t, string) Result.t
 val close : t -> unit
 val schema_version : t -> int
 

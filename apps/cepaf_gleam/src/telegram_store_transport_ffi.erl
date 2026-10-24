@@ -2,6 +2,8 @@
 -export([request/6, request_with_cleanup/6, request_config_with_cleanup/2, config_database/1, config_guardian_hash/1, config_worker_hash/1]).
 -include_lib("kernel/include/file.hrl").
 -define(MAX,1048572).
+%% Bounded native Core/SQLite executables exceed16MiB; hashing shares request deadline.
+-define(MAX_EXECUTABLE_BYTES,67108864).
 %% Only the typed local configuration supplies these paths/hashes.
 request(Guardian,GuardianHash,Worker,WorkerHash,Db,Body) ->
  case request_with_cleanup(Guardian,GuardianHash,Worker,WorkerHash,Db,Body) of
@@ -23,7 +25,7 @@ request_with_cleanup(Guardian,GuardianHash,Worker,WorkerHash,Db,Body)
    PM=monitor(process,Parent),
    Result=try
      true=valid_path(Db),true=valid_path(Guardian),true=valid_path(Worker),
-     ok=pinned(Guardian,GuardianHash),ok=pinned(Worker,WorkerHash),
+     ok=pinned(Guardian,GuardianHash,Deadline),ok=pinned(Worker,WorkerHash,Deadline),
      Remaining=Deadline-erlang:monotonic_time(millisecond),
      true=Remaining>0,
      Port=open_port({spawn_executable,binary_to_list(Guardian)},
@@ -47,16 +49,19 @@ valid_path(P) when is_binary(P),byte_size(P)>0,byte_size(P)=<4096 ->
  filename:pathtype(P)=:=absolute andalso binary:match(P,<<0>>)=:=nomatch
  andalso not lists:any(fun(X)->X=:= <<"..">> orelse X=:= <<".">>end,filename:split(P));
 valid_path(_)->false.
-pinned(Path,Expected) ->
+pinned(Path,Expected,Deadline) ->
+ true=erlang:monotonic_time(millisecond)<Deadline,
  true=is_binary(Expected) andalso byte_size(Expected)=:=64,
  {ok,#file_info{type=regular,links=1,size=N,mode=M}}=file:read_link_info(Path),
- true=N>0 andalso N=<16777216 andalso M band 8#111=/=0,
+ true=N>0 andalso N=< ?MAX_EXECUTABLE_BYTES andalso M band 8#111=/=0,
  {ok,F}=file:open(Path,[read,binary,raw]),
- Actual=try hash(F,crypto:hash_init(sha256),N)after file:close(F)end,
+ Actual=try hash(F,crypto:hash_init(sha256),N,Deadline)after file:close(F)end,
  true=Actual=:=Expected,ok.
-hash(F,H,N)->case file:read(F,65536)of
+hash(F,H,N,Deadline)->
+ true=erlang:monotonic_time(millisecond)<Deadline,
+ case file:read(F,65536)of
  eof when N=:=0->binary:encode_hex(crypto:hash_final(H),lowercase);
- {ok,B}when byte_size(B)=<N->hash(F,crypto:hash_update(H,B),N-byte_size(B));
+ {ok,B}when byte_size(B)=<N->hash(F,crypto:hash_update(H,B),N-byte_size(B),Deadline);
  _->error(changed)
  end.
 collect_with_cleanup(Port,Deadline,PM,Size,Chunks)->

@@ -828,6 +828,23 @@ let open_db path =
         error
   with exn -> Error (Exn.to_string exn)
 
+let open_existing path =
+  try
+    let db = Sqlite3.db_open ~mode:`NO_CREATE ~uri:false path in
+    let result =
+      try
+        Sqlite3.busy_timeout db 5_000;
+        Result.bind (read_schema_version db) ~f:(fun version ->
+          if version <> 7 then Error "existing Sa-plan v7 schema required"
+          else Result.map (audit_v7_shape db) ~f:(fun () ->
+            { db; closed = false; transaction_active = false; schema_version = 7 }))
+      with _ -> Error "existing Sa-plan store unavailable"
+    in
+    (match result with
+     | Ok _ -> result
+     | Error _ -> ignore (close_db db : bool); result)
+  with _ -> Error "existing Sa-plan store unavailable"
+
 let close store =
   if not store.closed then begin
     store.closed <- true;

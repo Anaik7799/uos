@@ -1,6 +1,6 @@
 -module(telegram_store_transport_test).
 -include_lib("eunit/include/eunit.hrl").
-base()->"/home/an/NAS-setup/uos/var/recovery-runtime/20261001-1238-store-transport".
+base()->case os:getenv("UOS_CANCEL_TRANSPORT_TEST_DIR") of false->"/home/an/NAS-setup/uos/var/recovery-runtime/20261001-1238-store-transport";Path->Path end.
 hash(P)->{ok,B}=file:read_file(P),binary:encode_hex(crypto:hash(sha256,B),lowercase).
 call(Mode,Body)->
  G=list_to_binary(base()++"/guardian"),W=list_to_binary(base()++"/fixture"),
@@ -57,3 +57,10 @@ caller_death_cleanup_test_()->{timeout,3,fun()->
  timer:sleep(1100),?assertEqual(false,filelib:is_file(base()++"/"++Mode++".marker"))
  end}.
 
+
+executable_upper_bound_test()->
+ P=base()++"/oversize-worker-"++integer_to_list(erlang:unique_integer([positive])),
+ {ok,F}=file:open(P,[write,binary,raw]),{ok,_}=file:position(F,{bof,67108864}),ok=file:write(F,<<0>>),ok=file:close(F),ok=file:change_mode(P,8#700),
+ try G=list_to_binary(base()++"/guardian"),
+  ?assertEqual({error,<<"transport_configuration_or_spawn">>},telegram_store_transport_ffi:request(G,hash(G),list_to_binary(P),hash(P),<<"/tmp/no-effect">>,<<"{}">>))
+ after file:delete(P) end.

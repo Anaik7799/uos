@@ -711,7 +711,7 @@ let () =
 
 (* Execute the actual CLI with isolated files, explicit DB, and a finite timeout.
    Neither fixture setup nor child execution touches the canonical live store. *)
-let run_cancellation_cli ~database ~verb ~input =
+let run_cancellation_child ~program ~arguments ~database ~input =
   let stdin_path=Stdlib.Filename.temp_file "uos-cancel-input-" ".json" in
   let stdout_path=Stdlib.Filename.temp_file "uos-cancel-output-" ".json" in
   let stderr_path=Stdlib.Filename.temp_file "uos-cancel-errors-" ".txt" in
@@ -722,15 +722,15 @@ let run_cancellation_cli ~database ~verb ~input =
     let fd_in=Lifetime_unix.openfile stdin_path [O_RDONLY] 0 in
     let fd_out=Lifetime_unix.openfile stdout_path [O_WRONLY;O_TRUNC] 0 in
     let fd_err=Lifetime_unix.openfile stderr_path [O_WRONLY;O_TRUNC] 0 in
-    let exe=Filename.concat (Filename.dirname Stdlib.Sys.executable_name) "sa_plan_main.exe" in
+    let exe=if Filename.is_relative program then Filename.concat (Filename.dirname Stdlib.Sys.executable_name) program else program in
     let env=Lifetime_unix.environment () |> Array.to_list
       |> List.filter ~f:(fun s -> not (String.is_prefix s ~prefix:"UOS_SA_PLAN_DB="))
       |> fun xs -> Array.of_list (("UOS_SA_PLAN_DB="^database)::xs) in
     let pid=Exn.protect ~finally:(fun () ->
       List.iter [fd_in;fd_out;fd_err] ~f:Lifetime_unix.close)
       ~f:(fun () -> Lifetime_unix.create_process_env exe
-        [|exe;"job";verb|] env fd_in fd_out fd_err) in
-    let deadline=Lifetime_unix.gettimeofday () +. 5.0 in
+        (Array.of_list (exe :: arguments)) env fd_in fd_out fd_err) in
+    let deadline=Lifetime_unix.gettimeofday () +. 6.5 in
     let rec wait () =
       match Lifetime_unix.waitpid [WNOHANG] pid with
       | 0,_ ->
@@ -746,6 +746,9 @@ let run_cancellation_cli ~database ~verb ~input =
     if String.length output > 8192 || String.length errors > 32768 then
       failwith "cancellation CLI fixture output exceeded bounds";
     status,output,errors)
+
+let run_cancellation_cli ~database ~verb ~input =
+  run_cancellation_child ~program:"sa_plan_main.exe" ~arguments:["job";verb] ~database ~input
 
 let () =
   Cancellation.with_case (fun path store request ->
@@ -826,3 +829,168 @@ let () = Cancellation.with_case (fun _ store request ->
   ignore (ok (Cancel_protocol.execute_observed store command ~observe_now:(fun () -> 200L))
     : Yojson.Safe.t);
   check "CANCEL-CLOCK-OBSERVER-RECOVERY" (Poly.equal (Cancellation.job store).state Store.Job_cancelled))
+
+(* Existing-store opener: missing or obsolete stores never initialize/migrate. *)
+let () =
+  let path=Stdlib.Filename.temp_file "uos-existing-only-" ".sqlite3" in
+  Exn.protect ~finally:(fun () -> if Stdlib.Sys.file_exists path then Stdlib.Sys.remove path)
+    ~f:(fun () ->
+      check "CANCEL-EXISTING-EMPTY-REFUSED" (Result.is_error (Store.open_existing path));
+      check "CANCEL-EXISTING-EMPTY-NO-DDL" (Int64.equal (Lifetime_unix.LargeFile.stat path).st_size 0L);
+      Stdlib.Sys.remove path;
+      check "CANCEL-EXISTING-MISSING-REFUSED" (Result.is_error (Store.open_existing path));
+      check "CANCEL-EXISTING-NO-CREATE" (not (Stdlib.Sys.file_exists path)));
+  Cancellation.with_case (fun path _ _ ->
+    let reopened=ok (Store.open_existing path) in
+    check "CANCEL-EXISTING-V7-OPEN" (Store.schema_version reopened=7);
+    Store.close reopened;
+    List.iter [6;8] ~f:(fun version ->
+      Cancellation.exec path (Printf.sprintf "UPDATE sa_plan_schema_meta SET version=%d" version);
+      check "CANCEL-EXISTING-NO-MIGRATION" (Result.is_error (Store.open_existing path)));
+    Cancellation.exec path "UPDATE sa_plan_schema_meta SET version=7")
+
+module Cancel_frame = Sa_plan.Cancel_frame
+
+let with_frame_input raw run =
+  let path=Stdlib.Filename.temp_file "uos-cancel-frame-" ".bin" in
+  Exn.protect ~finally:(fun () -> if Stdlib.Sys.file_exists path then Stdlib.Sys.remove path)
+    ~f:(fun () ->
+      Out_channel.write_all path ~data:raw;
+      let ch=Stdlib.open_in_bin path in
+      Exn.protect ~finally:(fun () -> Stdlib.close_in_noerr ch) ~f:(fun () -> run ch))
+
+let framed_string raw =
+  let n=String.length raw in
+  let header=Stdlib.String.init 4 (fun i -> Stdlib.Char.chr ((n lsr ((3-i)*8)) land 255)) in
+  header ^ raw
+
+let cancel_envelope operation request =
+  Yojson.Safe.to_string (`Assoc [
+    "schema",`String "uos.telegram.cancel-transport.v1";
+    "operation",`String operation;
+    "request",cancellation_json request])
+
+let frame_read raw = with_frame_input raw Cancel_frame.read_frame
+let frame_json raw = Yojson.Safe.from_string (ok (frame_read raw))
+
+let () =
+  check "CANCEL-FRAME-EXACT" (Poly.equal (frame_read (framed_string "body")) (Ok "body"));
+  List.iter ["";"x";"xxx";"\000\000\000\000";"\255\255\255\255";
+      framed_string "body" ^ "trailer";
+      framed_string "body" ^ framed_string "two";
+      "\000\000\000\004abc";
+      framed_string (String.make 16385 'x')] ~f:(fun bad ->
+    check "CANCEL-FRAME-BAD-LENGTH-OR-TRAILING" (Result.is_error (frame_read bad)));
+  Cancellation.with_case (fun _ store request ->
+    let raw=cancel_envelope "cancel-once" request in
+    check "CANCEL-FRAME-VALID-ENVELOPE" (Result.is_ok (Cancel_frame.decode raw));
+    let fields=match Yojson.Safe.from_string raw with `Assoc xs->xs|_->assert false in
+    let bad_fields=[
+      ("extra",`Bool true)::fields;
+      ("operation",`String "cancel-once")::fields;
+      List.filter fields ~f:(fun (k,_)->not (String.equal k "operation"));
+      List.Assoc.add fields ~equal:String.equal "operation" (`String "eval");
+      List.Assoc.add fields ~equal:String.equal "request" (`String "{}");
+      List.Assoc.add fields ~equal:String.equal "schema" (`String "future");
+      List.Assoc.add fields ~equal:String.equal "request" (`Assoc (
+        ("reason",`String "duplicate") :: (match cancellation_json request with `Assoc xs->xs|_->[])))] in
+    List.iter bad_fields ~f:(fun xs ->
+      check "CANCEL-FRAME-CLOSED-ENVELOPE" (Result.is_error (Cancel_frame.decode (Yojson.Safe.to_string (`Assoc xs)))));
+    List.iter [String.make 16385 'x';"[]";"{";"\255";""] ~f:(fun bad ->
+      check "CANCEL-FRAME-INVALID-BODY" (Result.is_error (Cancel_frame.decode bad)));
+    check "CANCEL-FRAME-DECODE-NO-EFFECT" (Cancellation.no_effect store request));
+  let rejection=Cancel_frame.response (Error "private secret/path must not leak") |> Yojson.Safe.to_string in
+  check "CANCEL-FRAME-REDACTED" (not (String.is_substring rejection ~substring:"private")
+    && Poly.equal (Yojson.Safe.Util.member "status" (Yojson.Safe.from_string rejection)) (`String "rejected"))
+
+let live_cancel_request path request =
+  let now=Int64.of_float (Lifetime_unix.gettimeofday () *. 1_000_000_000.) in
+  let expires=Int64.(now+60_000_000_000L) in
+  let target_lease=Int64.(now+120_000_000_000L) in
+  let control=Int64.(now+180_000_000_000L) in
+  Cancellation.exec path (Printf.sprintf
+    "UPDATE sa_plan_task SET lease_until_ns=%Ld; UPDATE sa_plan_bridge_lease SET expires_at_ns=%Ld; UPDATE sa_plan_job SET lease_until_ns=%Ld"
+    control control target_lease);
+  {request with Store.target_lease_until_ns=target_lease;expires_at_ns=expires}
+
+let run_cancel_worker path input =
+  run_cancellation_child ~program:"sa_plan_cancel_worker.exe" ~arguments:[path] ~database:path ~input
+
+let () =
+  Cancellation.with_case (fun path store request ->
+    let request=live_cancel_request path request in
+    let call operation request =
+      let status,output,errors=run_cancel_worker path (framed_string (cancel_envelope operation request)) in
+      check "CANCEL-WORKER-FRAME-EXIT" (Poly.equal status (Lifetime_unix.WEXITED 0) && String.is_empty errors);
+      frame_json output in
+    let first=call "cancel-once" request in
+    check "CANCEL-WORKER-ACTUAL-EFFECT" (Poly.equal (Cancellation.job store).state Store.Job_cancelled
+      && Poly.equal (Yojson.Safe.Util.member "status" first) (`String "ok"));
+    let recovered=call "cancellation-result" request in
+    check "CANCEL-WORKER-EXACT-RECOVERY"
+      (Poly.equal (Yojson.Safe.Util.member "historical" (Yojson.Safe.Util.member "result" recovered)) (`Bool true));
+    let rejected=call "cancel-once" {request with reason="different request"} in
+    check "CANCEL-WORKER-DOMAIN-REFUSAL-IS-TRANSPORT-SUCCESS"
+      (Poly.equal (Yojson.Safe.Util.member "status" rejected) (`String "rejected")
+       && Poly.equal (Cancellation.job store).state Store.Job_cancelled));
+  Cancellation.with_case (fun path store request ->
+    let before=Cancellation.job store in
+    let status,out,_=run_cancel_worker path (framed_string (cancel_envelope "cancel-once" request)^"extra") in
+    check "CANCEL-WORKER-TRAILER-BEFORE-EFFECT"
+      (not (Poly.equal status (Lifetime_unix.WEXITED 0)) && String.is_empty out
+       && Poly.equal before (Cancellation.job store));
+    let status,out,_=run_cancel_worker path (framed_string "{}") in
+    check "CANCEL-WORKER-BAD-ENVELOPE"
+      (Poly.equal status (Lifetime_unix.WEXITED 0)
+       && Poly.equal (Yojson.Safe.Util.member "status" (frame_json out)) (`String "rejected")
+       && Cancellation.no_effect store request));
+  Cancellation.with_case (fun _ _ request ->
+    let missing=Stdlib.Filename.temp_file "uos-cancel-worker-missing-" ".sqlite3" in
+    Stdlib.Sys.remove missing;
+    let status,out,_=run_cancel_worker missing (framed_string (cancel_envelope "cancellation-result" request)) in
+    check "CANCEL-WORKER-MISSING-STORE-NOT-CREATED"
+      (Poly.equal status (Lifetime_unix.WEXITED 0) && not (Stdlib.Sys.file_exists missing)
+       && Poly.equal (Yojson.Safe.Util.member "status" (frame_json out)) (`String "rejected")));
+  Printf.printf "framed cancellation checks included: %d total passed\n%!" !tests
+
+(* Real BEAM transport over a protected isolated fixture. The verification
+   harness supplies the candidate transport directory; absence fails closed. *)
+let () =
+  let dir=match Stdlib.Sys.getenv_opt "UOS_CANCEL_TRANSPORT_TEST_DIR" with
+    | Some path -> path | None -> failwith "cancel transport fixture is required" in
+  let gleam_root=match Stdlib.Sys.getenv_opt "UOS_CANCEL_GLEAM_TEST_ROOT" with
+    | Some path -> path | None -> failwith "Gleam transport fixture is required" in
+  let bin s = "<<" ^ String.concat ~sep:"," (List.map (String.to_list s)
+      ~f:(fun c -> Int.to_string (Char.to_int c))) ^ ">>" in
+  let sha path = Digestif.SHA256.(to_hex (digest_string (In_channel.read_all path))) in
+  let guardian=Filename.concat dir "guardian.exe" in
+  let worker=Filename.concat dir "worker.exe" in
+  let guardian_sha=sha guardian and worker_sha=sha worker in
+  let call path body hash =
+    let code=Printf.sprintf
+      "code:add_paths(filelib:wildcard(%S)),code:add_patha(%S),code:add_patha(%S), C='cepaf_gleam@harness@telegram_store_transport':reviewed_local_configuration(%s,%s,%s,%s,%s),R='cepaf_gleam@harness@telegram_store_transport':exchange(C,%s), case R of {ok,B}->io:put_chars(B),halt(0); _->io:put_chars(<<\"transport_not_confirmed\">>),halt(3) end."
+      (Filename.concat gleam_root "lib/*/ebin") (Filename.concat gleam_root "build/ebin") dir (bin guardian) (bin guardian_sha) (bin worker) (bin hash) (bin path) (bin body) in
+    run_cancellation_child
+      ~program:"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"
+      ~arguments:["+S";"2:2";"+A";"2";"-noshell";"-eval";code]
+      ~database:path ~input:"" in
+  Cancellation.with_case (fun path store request ->
+    let request=live_cancel_request path request in
+    let body=cancel_envelope "cancel-once" request in
+    let status,_,_=call path body (String.make 64 '0') in
+    check "CANCEL-BEAM-PIN-REFUSES-BEFORE-EFFECT"
+      (not (Poly.equal status (Lifetime_unix.WEXITED 0)) && Cancellation.no_effect store request);
+    let status,out,_=call path body worker_sha in
+    check "CANCEL-BEAM-GUARDIAN-WORKER-REAL-EFFECT"
+      (Poly.equal status (Lifetime_unix.WEXITED 0)
+       && Poly.equal (Yojson.Safe.Util.member "status" (Yojson.Safe.from_string out)) (`String "ok")
+       && Poly.equal (Cancellation.job store).state Store.Job_cancelled);
+    let status,out,_=call path (cancel_envelope "cancellation-result" request) worker_sha in
+    check "CANCEL-BEAM-READONLY-RECOVERY"
+      (Poly.equal status (Lifetime_unix.WEXITED 0)
+       && Poly.equal (Yojson.Safe.Util.member "historical" (Yojson.Safe.Util.member "result" (Yojson.Safe.from_string out))) (`Bool true));
+    let status,out,_=call path (cancel_envelope "cancel-once" {request with reason="altered"}) worker_sha in
+    check "CANCEL-BEAM-DOMAIN-REJECT-PRESERVED"
+      (Poly.equal status (Lifetime_unix.WEXITED 0)
+       && Poly.equal (Yojson.Safe.Util.member "status" (Yojson.Safe.from_string out)) (`String "rejected")));
+  Printf.printf "native plus actual BEAM transport: %d checks passed\n%!" !tests
