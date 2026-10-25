@@ -32,6 +32,7 @@ import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/otp_app
 import cepaf_gleam/planning/safety_kernel
+import cepaf_gleam/telegram/mini_control
 import cepaf_gleam/telegram/mini_api
 import cepaf_gleam/telegram/mini_telemetry
 import cepaf_gleam/ui/wisp/router
@@ -1414,7 +1415,7 @@ fn ws_426_response() -> response.Response(mist.ResponseData) {
 fn handle_normal_http_inner(
   req: request.Request(mist.Connection),
 ) -> response.Response(mist.ResponseData) {
-  case req.path == mini_api.data_path {
+  case req.path == mini_api.data_path || mini_control.owns(req.path) {
     True -> mini_http.handle(req)
     False -> handle_non_mini_http_inner(req)
   }

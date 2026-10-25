@@ -92,16 +92,79 @@ pub fn public_page(page: types.MiniAppPage) -> String {
             [h.text("Load current data")],
           ),
           case page {
-            types.MiniZenohBrowser -> h.div([a.id("mini-topic-controls")], [
-              h.label([a.for("mini-topic")], [h.text("Topic")]),
-              h.select([a.id("mini-topic"), a.disabled(True)], [
-                h.option([a.value("")], "Load your allowed topics first"),
-              ]),
-              h.button([a.id("mini-live"), a.type_("button"), a.disabled(True), a.class("tg-btn")],
-                [h.text("Start live refresh")]),
-              h.p([a.id("mini-live-status"), a.attribute("role", "status")],
-                [h.text("Live refresh polls every two seconds for at most five minutes. It is not a native Zenoh subscription.")]),
-            ])
+            types.MiniTelemetry ->
+              h.div([a.id("mini-control")], [
+                h.h3([], [h.text("VM log level")]),
+                h.p([], [
+                  h.text(
+                    "Controls require a separate grant. Current implementation is limited to an owned development VM.",
+                  ),
+                ]),
+                h.label([a.for("mini-control-level")], [h.text("New level")]),
+                h.select([a.id("mini-control-level")], [
+                  h.option([a.value("debug")], "Debug"),
+                  h.option([a.value("info")], "Info"),
+                  h.option([a.value("notice")], "Notice"),
+                  h.option([a.value("warning")], "Warning"),
+                  h.option([a.value("error")], "Error"),
+                ]),
+                h.button(
+                  [
+                    a.id("mini-control-apply"),
+                    a.type_("button"),
+                    a.disabled(True),
+                    a.class("tg-btn"),
+                  ],
+                  [h.text("Set VM log level")],
+                ),
+                h.button(
+                  [
+                    a.id("mini-control-receipt"),
+                    a.type_("button"),
+                    a.disabled(True),
+                    a.class("tg-btn"),
+                  ],
+                  [h.text("Check request receipt")],
+                ),
+                h.button(
+                  [
+                    a.id("mini-control-reset"),
+                    a.type_("button"),
+                    a.disabled(True),
+                    a.class("tg-btn"),
+                  ],
+                  [h.text("Close earlier request")],
+                ),
+                h.p(
+                  [
+                    a.id("mini-control-status"),
+                    a.attribute("role", "status"),
+                    a.attribute("aria-live", "polite"),
+                  ],
+                  [h.text("Load current data before making a change.")],
+                ),
+              ])
+            types.MiniZenohBrowser ->
+              h.div([a.id("mini-topic-controls")], [
+                h.label([a.for("mini-topic")], [h.text("Topic")]),
+                h.select([a.id("mini-topic"), a.disabled(True)], [
+                  h.option([a.value("")], "Load your allowed topics first"),
+                ]),
+                h.button(
+                  [
+                    a.id("mini-live"),
+                    a.type_("button"),
+                    a.disabled(True),
+                    a.class("tg-btn"),
+                  ],
+                  [h.text("Start live refresh")],
+                ),
+                h.p([a.id("mini-live-status"), a.attribute("role", "status")], [
+                  h.text(
+                    "Live refresh polls every two seconds for at most five minutes. It is not a native Zenoh subscription.",
+                  ),
+                ]),
+              ])
             _ -> h.div([], [])
           },
           h.dl([a.id("mini-fields")], []),

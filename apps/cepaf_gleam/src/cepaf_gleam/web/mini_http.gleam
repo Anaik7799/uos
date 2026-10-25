@@ -2,6 +2,7 @@
 //// Mist's max-body helper trusts Content-Length. Reject transfer coding and
 //// ambiguous/missing lengths before reading, then verify the returned byte count.
 
+import cepaf_gleam/telegram/mini_control
 import cepaf_gleam/telegram/mini_api
 import cepaf_gleam/ui/wisp/mini_app_routes
 import gleam/bit_array
@@ -69,7 +70,7 @@ fn refused(status: Int) -> response.Response(mist.ResponseData) {
 pub fn handle(
   req: request.Request(mist.Connection),
 ) -> response.Response(mist.ResponseData) {
-  case req.path != mini_api.data_path {
+  case req.path != mini_api.data_path && !mini_control.owns(req.path) {
     True -> refused(404)
     False ->
       case body_policy(req.method, req.headers) {

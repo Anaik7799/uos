@@ -261,7 +261,7 @@ pub fn observe() -> api.Observation {
         "20 newest completed spans; 128 inflight; 30-second inflight expiry.",
       ),
       #("VM logger level", level),
-      #("Log level controls", "Not implemented; displayed level is read-only."),
+      #("Log level controls", "Implemented for owned development fixtures with a separate control grant; production activation pending."),
       #("Distributed span ingestion", "Not implemented."),
       #(
         "Rate limit configuration",

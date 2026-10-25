@@ -1,17 +1,39 @@
 //// Private development HTTP fixture; no Telegram API calls or runtime deployment.
 
+import cepaf_gleam/telegram/mini_control
 import cepaf_gleam/telegram/mini_telemetry
 import cepaf_gleam/web/server
 import gleam/bytes_tree
 import gleam/erlang/process
 import gleam/http/response
+import gleam/int
 import gleam/string
 import mist
 
 @external(erlang, "cepaf_gleam_ffi", "get_env")
 fn get_env(name: String) -> Result(String, Nil)
 
+@external(erlang, "mini_control_test_ffi", "kill_actor")
+fn kill_actor() -> Nil
+
 pub fn main() {
+  case get_env("UOS_MINI_FIXTURE_CONTROL_CRASH_AFTER_MS") {
+    Ok(raw) -> case int.parse(raw) {
+      Ok(ms) if ms > 0 && ms <= 30_000 -> {
+        let _ = process.spawn_unlinked(fn() { process.sleep(ms) kill_actor() })
+        Nil
+      }
+      _ -> panic as "invalid private fixture crash timer"
+    }
+    Error(_) -> Nil
+  }
+  case get_env("UOS_MINI_CONTROL_FIXTURE_PROFILE") {
+    Ok(_) -> {
+      let assert Ok(_) = mini_control.start_development_fixture()
+      Nil
+    }
+    Error(_) -> Nil
+  }
   case get_env("UOS_MINI_FIXTURE_TELEMETRY_DISABLED") {
     Ok("1") -> Nil
     _ -> {

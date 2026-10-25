@@ -33,7 +33,8 @@ let with_driver ~env ~sw f =
 
 (* A Playwright route callback is not re-entered for every redirect.
    Chromium's response-stage interception pauses before following Location. *)
-let refuse_redirects ~sw ~context ~page on_refusal =
+let base_control_action="http://nas-1.tail55d152.ts.net:49134/mini-app/api/action"
+let refuse_redirects ?(drop_action_response=(fun()->false)) ~sw ~context ~page on_refusal =
  let cdp=Playwright.BrowserContext.new_cdp_session ~page context in
  Playwright.CDPSession.on_event cdp(fun event->
  if event.method_="Fetch.requestPaused"then
@@ -43,9 +44,10 @@ let refuse_redirects ~sw ~context ~page on_refusal =
  let id=p|>member"requestId"|>to_string in
  let status=match p|>member"responseStatusCode"with `Int x->x|_->0 in
  let redirect=(p|>member"redirectUrl")<>`Null || status>=300&&status<400 in
+ let drop_action=drop_action_response() && (try p|>member"request"|>member"url"|>to_string=base_control_action with _->false)in
  let fields=["requestId",s id]in
- let fields=if redirect then(on_refusal();("errorReason",s"Aborted")::fields)else fields in
- ignore(Playwright.CDPSession.send ~method_:(if redirect then "Fetch.failRequest"else "Fetch.continueResponse") ~params:(`Assoc fields)cdp)));
+ let fields=if redirect || drop_action then(if redirect then on_refusal();("errorReason",s"Aborted")::fields)else fields in
+ ignore(Playwright.CDPSession.send ~method_:(if redirect || drop_action then "Fetch.failRequest"else "Fetch.continueResponse") ~params:(`Assoc fields)cdp)));
  ignore(Playwright.CDPSession.send ~method_:"Fetch.enable"
  ~params:(`Assoc["patterns",`List[`Assoc["urlPattern",s"*";"requestStage",s"Response"]]])cdp)
 
@@ -63,11 +65,12 @@ let png_width bytes =
 let base="http://nas-1.tail55d152.ts.net:49134"
 let () =
  require(Array.length Sys.argv=3 || Array.length Sys.argv=4)"usage: mini_browser OUT SIGNED_FIXTURE_JSON [--unavailable]";
+ let control_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--control" in
  let telemetry_failure=Array.length Sys.argv=4 && Sys.argv.(3)="--telemetry-unavailable" in
  let zenoh_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--zenoh" in
  let failure_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--unavailable" in
  let history_long=Array.length Sys.argv=4 && Sys.argv.(3)="--history-long" in
- require(Array.length Sys.argv=3 || failure_mode || history_long || zenoh_mode || telemetry_failure)"unknown scenario";
+ require(Array.length Sys.argv=3 || failure_mode || history_long || zenoh_mode || telemetry_failure || control_mode)"unknown scenario";
  let out=Sys.argv.(1)in require(not(Sys.file_exists out))"new output required";Unix.mkdir out 0o700;
  let init_data=Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"init_data"|>to_string)in
  let sdk_for denied="window.Telegram={WebApp:{initData:"^Yojson.Safe.to_string(`String (if denied then init_data^"0" else init_data))^",ready:function(){},expand:function(){}}};"in
@@ -81,7 +84,7 @@ let () =
  let context=Playwright.Browser.new_context ~viewport:Playwright.Browser.Viewport.{width;height}
  ~service_workers:`Block ~accept_downloads:`Deny browser in
  Fun.protect ~finally:(fun()->Playwright.BrowserContext.close context)(fun()->
- let denied=ref[]and posts=ref 0 and fail_posts=ref false in
+ let denied=ref[]and posts=ref 0 and fail_posts=ref false and control_posts=ref 0 and abort_control=ref false and drop_response=ref false in
  let patterns=[|Playwright.BrowserContext.Patterns.{glob=Some"**/*";regex_source=None;regex_flags=None;url_pattern=None}|]in
  Playwright.BrowserContext.on_route context(fun event->Eio.Fiber.fork ~sw(fun()->
  let i=observed_initializer conn(Playwright.Request.to_yojson(Playwright.Route.request event.route))Playwright.Request.Initializer.of_yojson in
@@ -89,15 +92,15 @@ let () =
  Playwright.Route.fulfill ~status:200 ~headers:[|Playwright.NameValue.{name="content-type";value="text/javascript"}|] ~body:(sdk_for(mode="identity-denied")) event.route
  else if Option.is_none i.redirected_from &&
  ((i.method_="GET"&&(i.url=base^page_path||i.url=base^"/mini-app/client.js"))||
- (i.method_="POST"&&i.url=base^"/mini-app/api/data"))
- then(if i.method_="POST"then incr posts;if !fail_posts && i.method_="POST" then Playwright.Route.abort event.route else Playwright.Route.continue ~is_fallback:false event.route)
+ (i.method_="POST"&&(i.url=base^"/mini-app/api/data" || control_mode && (i.url=base^"/mini-app/api/action" || i.url=base^"/mini-app/api/action-receipt"))))
+ then(if i.url=base^"/mini-app/api/action" then incr control_posts;if i.method_="POST"then incr posts;if (!abort_control && i.url=base^"/mini-app/api/action") || !fail_posts && i.method_="POST" then Playwright.Route.abort event.route else Playwright.Route.continue ~is_fallback:false event.route)
  else(denied:=(i.method_^" "^i.url)::!denied;Playwright.Route.abort event.route)));
  Playwright.BrowserContext.set_network_interception_patterns ~patterns context;
  Playwright.BrowserContext.on_web_socket_route context(fun event->Eio.Fiber.fork ~sw(fun()->Playwright.WebSocketRoute.close_page ~code:1008 ~reason:"private fixture disallows sockets" ~was_clean:true event.web_socket_route));
  Playwright.BrowserContext.set_web_socket_interception_patterns ~patterns context;
  if zenoh_mode then Playwright.BrowserContext.clock_install context;
  let page=Playwright.BrowserContext.new_page context in
- refuse_redirects ~sw ~context ~page(fun()->denied:="redirect"::!denied);
+ refuse_redirects ~drop_action_response:(fun()-> !drop_response) ~sw ~context ~page(fun()->denied:="redirect"::!denied);
  let response=Playwright.Page.goto ~url:(base^page_path) ~timeout:7000. page in
  let status=match response with None->0|Some r->(observed_initializer conn(Playwright.Response.to_yojson r)Playwright.Response.Initializer.of_yojson).status in
  require(status=200)"HTTP status";
@@ -122,6 +125,46 @@ let () =
  else if page_path="/mini-app/chat" then(require(contains fields "Retained private reply42")"history absent";require(not(contains fields "OTHER_USER_SECRET"))"other user leak";require(contains fields "Only this user")"history scope absent";if history_long then require(contains fields "LONG_HISTORY_TEXT_")"long history missing")
  else if page_path="/mini-app/containers" then(require(contains fields "Local Podman inventory")"Podman scope absent";require(contains fields "Container count")"Podman count absent";require(contains fields "Rootless")"Podman namespace absent")
  else(require(String.starts_with ~prefix:"Candidate" fields)"candidate must precede details";require(contains fields "CHK-18-JJ")"verification catalog incomplete";require(contains fields "UNKNOWN")"missing evidence hidden")));
+
+ if control_mode then (
+   let rec await_control prefix n = let value=text page "#mini-control-status" in
+     if String.starts_with ~prefix value then value else if n=0 then failwith("control UI timeout: "^value)
+     else(Eio.Time.sleep env#clock 0.05;await_control prefix(n-1)) in
+   let select value=ignore(Playwright.Locator.select_option ~options:[|Playwright.Frame.Options.{value_or_label=None;value=Some value;label=None;index=None}|] ~timeout:2000.(loc page "#mini-control-level"))in
+   let current=text page "#mini-fields" in
+   let target=if contains current "notice" then "info" else "notice" in
+   select target;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-control-apply");
+   let confirmed=await_control "Confirmed:" 160 in
+   require(!control_posts=1)"one explicit control POST";
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");
+   let rec await_read n = if String.starts_with ~prefix:"Observed at "(text page "#mini-status")then()else if n=0 then failwith"control readback"else(Eio.Time.sleep env#clock 0.05;await_read(n-1))in
+   await_read 100;
+   require(contains(text page "#mini-fields")target)"logger readback absent";
+   select "warning";drop_response:=true;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-control-apply");
+   ignore(await_control "The request outcome is unknown." 100);
+   drop_response:=false;
+   require(!control_posts=2)"lost response resubmitted effect";
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-control-receipt");
+   ignore(await_control "Confirmed:" 100);
+   require(!control_posts=2)"terminal receipt resubmitted effect";
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");
+   await_read 100;
+   select "error";abort_control:=true;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-control-apply");
+   ignore(await_control "The request outcome is unknown." 100);
+   Eio.Time.sleep env#clock 0.25;require(!control_posts=3)"uncertain request automatically retried";
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-control-receipt");
+   ignore(await_control "Receipt: receipt_not_found." 100);
+   require(!control_posts=3)"receipt lookup repeated mutation";
+   ignore(Playwright.Page.reload ~timeout:5000. page);
+   ignore(await_control "An earlier request needs a receipt check." 100);
+   require(!control_posts=3)"reload repeated mutation";
+   save(out^"/"^mode^"-control.json")(Yojson.Safe.pretty_to_string(`Assoc[
+     "status",s"PASS";"confirmed",s confirmed;"single_submission",`Bool true;
+     "unknown_not_retried",`Bool true;"receipt_only_lookup",`Bool true;"reload_preserves_pending",`Bool true]));
+ );
 
  if zenoh_mode then (
    let select key=ignore(Playwright.Locator.select_option ~options:[|Playwright.Frame.Options.{value_or_label=None;value=Some key;label=None;index=None}|] ~timeout:2000. (loc page "#mini-topic")) in
@@ -175,7 +218,7 @@ let () =
  require(actual_width=width)"horizontal overflow beyond viewport";
  let errors=Array.to_list(Playwright.Page.page_errors page)in require(errors=[])"page script errors";
  rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"full_page_png_width",`Int actual_width;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
- ))(if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
+ ))(if control_mode then ["mobile-control",390,844,"/mini-app/telemetry";"desktop-control",1280,800,"/mini-app/telemetry"] else if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
  )))));
  let report=`Assoc["status",s"PASS_PRIVATE_BROWSER_FIXTURE";"observed_utc",`Float(Unix.gettimeofday());"scope",s"Actual Chromium, Mist ingress, Gleam authentication and native private Sa-plan reader; Telegram SDK identity supplied by explicit synthetic fixture, not real Telegram acceptance";"rows",`List(List.rev !rows)]in
  save(out^"/report.json")(Yojson.Safe.pretty_to_string report);print_endline(Yojson.Safe.to_string report)
