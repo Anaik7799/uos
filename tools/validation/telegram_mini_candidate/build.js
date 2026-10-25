@@ -8,6 +8,7 @@ const out=process.argv[2];
 if(!out||!path.isAbsolute(out)||!out.startsWith(canonical+'/var/recovery-runtime/')||fs.existsSync(out))throw Error('new absolute recovery output required');
 fs.mkdirSync(out,{recursive:true});
 const modules=[
+ 'cepaf_gleam/config/mesh_source.gleam','cepaf_gleam/config/mesh_config.gleam','cepaf_gleam/telegram/mini_config.gleam',
  'cepaf_gleam/telegram/auth.gleam','cepaf_gleam/telegram/types.gleam','cepaf_gleam/telegram/theme.gleam',
  'cepaf_gleam/telegram/mini_api.gleam','cepaf_gleam/telegram/mini_runtime.gleam','cepaf_gleam/telegram/mini_view.gleam',
  'cepaf_gleam/ui/wisp/mini_app_routes.gleam','cepaf_gleam/ui/wisp/router.gleam',

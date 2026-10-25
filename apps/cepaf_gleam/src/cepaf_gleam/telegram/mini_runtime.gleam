@@ -2,6 +2,8 @@ import cepaf_gleam/harness/files
 //// Server-owned Mini App configuration and bounded read adapters.
 //// No credential or initData is returned to the browser or placed on the bus.
 
+import cepaf_gleam/config/mesh_source
+import cepaf_gleam/telegram/mini_config
 import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/harness/telegram_coordination_reader as coordination
@@ -313,10 +315,10 @@ fn observe_backend(read: api.AuthorizedRead) -> api.Observation {
     types.MiniZenohBrowser -> observe_zenoh(read)
     types.MiniDashboard -> mini_dashboard.observe(dashboard_io())
     types.MiniHealthGrid -> observe_health() |> result.unwrap(api.Unavailable("health_observation_failed"))
+    types.MiniConfig -> mini_config.project(mesh_source.load(),clock())
     types.MiniCockpit
     | types.MiniImmune
     | types.MiniInference
-    | types.MiniConfig
     | types.MiniFederation
     | types.MiniTelemetry -> api.Unavailable("backend_not_integrated")
   }
