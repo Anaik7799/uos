@@ -1,0 +1,23 @@
+(library
+ (name gospel_lint)
+ (modules gospel_lint)
+ (libraries unix)
+ ; Coverage instrumentation is opt-in: `dune build --instrument-with bisect_ppx`.
+ ; Normal builds carry no ppx and keep the zero-dependency property.
+ (instrumentation
+  (backend bisect_ppx)))
+
+(executable
+ (name gospel_lint_cli)
+ (modules gospel_lint_cli)
+ (libraries gospel_lint))
+
+(test
+ (name test_gospel_lint)
+ (modules test_gospel_lint)
+ (libraries gospel_lint unix))
+
+; Coverage analysis stays in OCaml too: no Python anywhere in this toolchain.
+(executable
+ (name coverage_points)
+ (modules coverage_points))

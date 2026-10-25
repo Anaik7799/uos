@@ -1,0 +1,4175 @@
+{
+  "schema": "uos-source-ingestion/v1",
+  "manifest_id": "20261025-1953-agent-skill-ingestion",
+  "plan_id": "uos/claude-handover/20261025-1953",
+  "task_id": "AGENT_SURFACE",
+  "actor": "claude-fable-l0-35600f5c",
+  "observed_at": "2026-10-25T19:54:24Z",
+  "base_revision": "2303b48c73e366e18ec647439d07c8ecfd298704",
+  "purpose": "Replace absolute home-directory skill links on .claude/.gemini/.agents/.codex with in-repository copies so every agent resolves the same skills in every workspace without host-specific state.",
+  "status": "IMPORTED_NOT_ADMITTED",
+  "status_note": "Copies are agent guidance only. Imported text is advisory; UOS-local rules override it (for example jj workspaces replace git worktrees). No skill grants execution, release or admission authority.",
+  "ingestion_controls": {
+    "text_only": true,
+    "max_file_bytes": 1048575,
+    "pruned_directory_names": [
+      ".git",
+      "node_modules",
+      "__pycache__",
+      "_build",
+      ".coverage"
+    ],
+    "inner_symlinks": "not followed; none present after pruning",
+    "secret_screen": {
+      "patterns": "private keys, GitHub, OpenAI/Anthropic, AWS, Slack, Google API, Telegram bot tokens, key/secret/token/password assignments",
+      "files_scanned": 439,
+      "true_positives": 0,
+      "false_positives": "9 code examples in allium (PasswordResetToken, secrets.token_urlsafe)"
+    },
+    "writer_quiescence": "NOT_VERIFIED: external trees were read while their writers may be active; dirty entries recorded per skill",
+    "external_trees_mutated": false,
+    "home_directories_mutated": false,
+    "execute_bits": "cleared on every vendored file; scripts are inert evidence (IMPORTED_NOT_ADMITTED) and Python stays confined to services/inference/max for runtime use"
+  },
+  "removed_surface_entries": [
+    {
+      "name": ".pre-sync-20260810T094206+0200",
+      "reason": "Backup snapshot directory, no SKILL.md, 38 MB; not a skill"
+    }
+  ],
+  "added_surface_entries": [
+    {
+      "name": "diagnosing-superpowers",
+      "reason": "Part of Superpowers 7.0.1; previously not linked"
+    }
+  ],
+  "superpowers": {
+    "name": "superpowers",
+    "version": "7.0.1",
+    "license": "MIT",
+    "repository": "https://github.com/obra/superpowers",
+    "source": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1",
+    "destination": "plugins/superpowers",
+    "replaces": "Superpowers 6.3.0 links, broken since that cache version was removed"
+  },
+  "surfaces": {
+    ".claude": 176,
+    ".gemini": 176,
+    ".agents": 176,
+    ".codex": 176,
+    "broken": 0,
+    "absolute": 0,
+    "identical": true
+  },
+  "entries": [
+    {
+      "name": "abm-campaign",
+      "destination": "governance/agents/20261025-1953-imported-skills/abm-campaign",
+      "source_path": "/home/an/.gemini/config/skills/abm-campaign",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/abm-campaign",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4627,
+          "sha256": "1572310ecb0c1b337c2eae2286e1b2efa3e3741f8d1086d6044f089114103f6e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "accidental-data-loss-prevention",
+      "destination": "governance/agents/20261025-1953-imported-skills/accidental-data-loss-prevention",
+      "source_path": "/home/an/.gemini/config/skills/accidental-data-loss-prevention",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/accidental-data-loss-prevention",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1316,
+          "sha256": "82769e3c99fbbae081420ea62d6e3318eaf80b9c97da12a62c1cf97049826878"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "agentic-ui-evolve",
+      "destination": "governance/agents/20261025-1953-imported-skills/agentic-ui-evolve",
+      "source_path": "/home/an/.gemini/config/skills/agentic-ui-evolve",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/agentic-ui-evolve",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 12342,
+          "sha256": "aec764fc62061b7917d423984c391280bf1078b40aeef0c87b352f7d5f3685c7"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "algebra-driven-beam",
+      "destination": "governance/agents/20261025-1953-imported-skills/algebra-driven-beam",
+      "source_path": "/home/an/.claude/skills/algebra-driven-beam",
+      "source_kind": "home-claude-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/algebra-driven-beam",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "assets/severity_algebra.erl",
+          "bytes": 4556,
+          "sha256": "de9f32d960dfb13a28c305058c62134f68a505d29a7f6cab3ea18dfd176f169a"
+        },
+        {
+          "path": "assets/severity_final.erl",
+          "bytes": 287,
+          "sha256": "da2dc60dbbdcc814c6958614a1267e926c21d2125af572275dc28618014e8b02"
+        },
+        {
+          "path": "assets/severity_initial.erl",
+          "bytes": 492,
+          "sha256": "a6dbf1760fa314ac913521d5c131708eda01d3e564d8e51ccd932051e24d1a1b"
+        },
+        {
+          "path": "references/algebra-catalog.md",
+          "bytes": 5320,
+          "sha256": "a6b34e5aee52609222d61cfac0201b715a097fc7116243e9be015a02ac7df127"
+        },
+        {
+          "path": "references/beam-idioms.md",
+          "bytes": 11096,
+          "sha256": "62cbebf60cc831e7e81aeb6b0062cb9b72adee0a75dba9b76b02611569d2d5d6"
+        },
+        {
+          "path": "references/canvas_algebra.erl",
+          "bytes": 8208,
+          "sha256": "fb6948f73c593d201d70b35a33bb0c73a154e0e7d452cbafda1bff850b1e2e5c"
+        },
+        {
+          "path": "references/canvas_final.erl",
+          "bytes": 750,
+          "sha256": "73e34b3e488c641f74c281333f5bf146dd85403f3900c243324fe903736f0e24"
+        },
+        {
+          "path": "references/canvas_initial.erl",
+          "bytes": 1332,
+          "sha256": "496b33d4505f594fa1a31066724be968b862f38dfb100910be5d8314b2f1c9f4"
+        },
+        {
+          "path": "references/methodology.md",
+          "bytes": 10219,
+          "sha256": "cde24a3ba85894d56cbb889d2503de42232f2d370fb6f3344cb379082941ce52"
+        },
+        {
+          "path": "scripts/run_beam_tests.sh",
+          "bytes": 805,
+          "sha256": "b77288352755274ec676e3d8e92bc35ee13d41ff5351aeb63379efd6aa0a265f"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 9132,
+          "sha256": "a58a828726fc44437382b8d20aee97babc90b17823faca341b3035ada33cbb34"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "algebra-driven-ocaml",
+      "destination": "governance/agents/20261025-1953-imported-skills/algebra-driven-ocaml",
+      "source_path": "/home/an/dev/ver/zigvm/skills/algebra-driven-ocaml",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/algebra-driven-ocaml",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 306,
+          "sha256": "4fd789e47390fbe7d68d5c4a6903ea8d8e36e48a4c8c2dcb5a11538ea12abdea"
+        },
+        {
+          "path": "references/artifact-templates.md",
+          "bytes": 6089,
+          "sha256": "ffb4c526ae523b8bd8358ada47ffb551773eed17df44f8f6ea2c8c6769e98c23"
+        },
+        {
+          "path": "references/law-catalog.md",
+          "bytes": 4394,
+          "sha256": "66691c04645d78e6a6426569dd2d94109004863715f8f5f1cfc1bc09853ca45b"
+        },
+        {
+          "path": "references/literature-directives.md",
+          "bytes": 4373,
+          "sha256": "bfcf5f3d6f4c9bbf23d8a180a83fe4cd0bf974bd6b1f1c046580e2402cddcd21"
+        },
+        {
+          "path": "references/phase-gates.md",
+          "bytes": 6120,
+          "sha256": "3f5b3cada6c1ade4411fa1ae8322cc585cf198e1b5858679d674f45f08efcef8"
+        },
+        {
+          "path": "references/source-prompt.jsonl",
+          "bytes": 76108,
+          "sha256": "e22c31ae877e9778de9d99ffba7ff1a3deab75c8f6fa9bbc1a4ffff45b520c37"
+        },
+        {
+          "path": "references/source-prompt.md",
+          "bytes": 2004,
+          "sha256": "27a63bf98bdf698a3383d53d86fad3cef80aa06ca42c4037c09308a15b190421"
+        },
+        {
+          "path": "references/system-qualities.md",
+          "bytes": 9991,
+          "sha256": "44bd513d0cd786c556c339c784c9b5611ab31c4ba59d0c6d1dcfcc3a2b0ba7f4"
+        },
+        {
+          "path": "references/zigvm-integration.md",
+          "bytes": 10405,
+          "sha256": "a4af5b76b92a3bcfccbcbcfe138e5157162d600b7b9437c7b3a7fe8e58ae2886"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 9126,
+          "sha256": "32b8138068aee52b65e389e56d39cacee49d8996237aba2efd80268e42e1cb57"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "algebra-driven-zig",
+      "destination": "governance/agents/20261025-1953-imported-skills/algebra-driven-zig",
+      "source_path": "/home/an/.claude/skills/algebra-driven-zig",
+      "source_kind": "home-claude-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/algebra-driven-zig",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "assets/algebra_template.zig",
+          "bytes": 8094,
+          "sha256": "2a447c4876aea29c313f53dfe9730cd4f5baf86deaf5e7bdb36b1d7098f6ec22"
+        },
+        {
+          "path": "references/algebra-catalog.md",
+          "bytes": 5148,
+          "sha256": "725a668b3b360879c2a79a116b691d6f899d58e153fce10ee5d651069e5e943b"
+        },
+        {
+          "path": "references/canvas_algebra.zig",
+          "bytes": 10877,
+          "sha256": "80b3e47555b076a5caa578e90cd2234c939fd39fbee533bad18580a97d2c16c4"
+        },
+        {
+          "path": "references/methodology.md",
+          "bytes": 9908,
+          "sha256": "d56d10a7235f93d6472296123e999981ddba3a1ab52b0632b52482deef6d9d02"
+        },
+        {
+          "path": "references/zig-idioms.md",
+          "bytes": 12036,
+          "sha256": "34b34c44480f0c0b524c99cfbc987f0edd91f7983d422d50218b03f283cbd148"
+        },
+        {
+          "path": "scripts/run_zig_tests.sh",
+          "bytes": 661,
+          "sha256": "92e2c822e3c6aec80592dbfb2729825fb7c287e549bb09788f9ac2be2c769c73"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 9949,
+          "sha256": "2c94e552685eb15e88aa57ae74b1641102b524770de046cb18dab687823bb54b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "algebraic-fractal-structures",
+      "destination": "governance/agents/20261025-1953-imported-skills/algebraic-fractal-structures",
+      "source_path": "/home/an/dev/ver/zigvm/skills/algebraic-fractal-structures",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/algebraic-fractal-structures",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9007,
+          "sha256": "758e9506ec6293a7c4baa0904988788519e4fe287f47fea3ca63e21741b8764b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "allium",
+      "destination": "governance/agents/20261025-1953-imported-skills/allium",
+      "source_path": "/home/an/dev/ver/c3i/.agents/skills/allium",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/allium",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "LICENSE",
+          "bytes": 1065,
+          "sha256": "6d4b654eaa990b380aa2b6488a9de259265576809d8022f66bed6c243956e531"
+        },
+        {
+          "path": "README.md",
+          "bytes": 19813,
+          "sha256": "406d1660e9245dbe97d9e28da2095ae4a65b3b368372dc198705156fdf90cc13"
+        },
+        {
+          "path": "references/language-reference.md",
+          "bytes": 104294,
+          "sha256": "16d79405a0970dd38c53ec083887081ac833e7af28672e193c50a1b733d06b00"
+        },
+        {
+          "path": "references/migration-v1-to-v2.md",
+          "bytes": 13804,
+          "sha256": "62fbe27570a62ecd168e55e0d6336e86c1b53d9f98211238b6198e6842d4af8e"
+        },
+        {
+          "path": "references/migration-v2-to-v3.md",
+          "bytes": 14698,
+          "sha256": "5a0a06832bca27d5105a9ba8ba3f89b69a62311ef0d6b71a3f8a141669dfe9d0"
+        },
+        {
+          "path": "references/patterns.md",
+          "bytes": 88412,
+          "sha256": "1e291a87b46cd23340b50de77b38f91bdbbe1d729413b7500e83fe98829d2aea"
+        },
+        {
+          "path": "references/test-generation.md",
+          "bytes": 10230,
+          "sha256": "11b9ffd17f1efc1f21cc1769ff7b85b54eb617e17d24fb03c4afdc766cc4c128"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 12712,
+          "sha256": "b3a76b450224edb5ec2861d4e3d44ecf86860dcc8f002fa6648e3c8c09b03b5a"
+        },
+        {
+          "path": "skills/distill/references/worked-examples.md",
+          "bytes": 29423,
+          "sha256": "3a13d5088a1edb1606c0ed1ab03ca20c51d076cfc2037be9395ad74477877b14"
+        },
+        {
+          "path": "skills/distill/SKILL.md",
+          "bytes": 28102,
+          "sha256": "c155e1f2bc3b621541bdbbd4938e7bfac1c602aa591bb95533d004d149d03e67"
+        },
+        {
+          "path": "skills/elicit/references/library-spec-signals.md",
+          "bytes": 4849,
+          "sha256": "fc7877e710521fb1b8413acec754892f3bbc5cd116cc82f75bb8e7d75ea88602"
+        },
+        {
+          "path": "skills/elicit/SKILL.md",
+          "bytes": 14844,
+          "sha256": "8e3c20b55a52af054464a8a214338a77330296228de0575b3c1d58cdfa235513"
+        },
+        {
+          "path": "skills/propagate/SKILL.md",
+          "bytes": 14227,
+          "sha256": "c6ab36c2a47d4fc5891654c1da326afbddadda99e5f8f106d7b206fccd04b1d9"
+        },
+        {
+          "path": "VERSION",
+          "bytes": 2,
+          "sha256": "1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "approach-b-zero-muda-observability",
+      "destination": "governance/agents/20261025-1953-imported-skills/approach-b-zero-muda-observability",
+      "source_path": "/home/an/dev/ver/zigvm/skills/approach-b-zero-muda-observability",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/approach-b-zero-muda-observability",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3855,
+          "sha256": "cee0a117a28dc908c2979e008c4c855dc4b41fcf61d2c06ae10ce845b2144dd7"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "artifact-sync",
+      "destination": "governance/agents/20261025-1953-imported-skills/artifact-sync",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/artifact-sync",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/artifact-sync",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4062,
+          "sha256": "4fcfadc59227403c1370a6dd69e799b063626a0979e1724ce078e453e776cf1c"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "bigquery-ai-ml",
+      "destination": "governance/agents/20261025-1953-imported-skills/bigquery-ai-ml",
+      "source_path": "/home/an/.gemini/config/skills/bigquery-ai-ml",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/bigquery-ai-ml",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "OWNERS",
+          "bytes": 69,
+          "sha256": "e1c6aa09264bfa9e45caf2fc0ee37429fe2a66e7532eae7e168e2709516a1a64"
+        },
+        {
+          "path": "references/ai_agg.md",
+          "bytes": 3621,
+          "sha256": "8c48d0d0df592cc5d6af22557df19312571d35fe207b53980fd98f66e9cbaedd"
+        },
+        {
+          "path": "references/ai_classify.md",
+          "bytes": 3800,
+          "sha256": "372531829a6e6036957e3ef67abb34905ee236d2ac437f65030295ef1bc3b8ab"
+        },
+        {
+          "path": "references/ai_detect_anomalies.md",
+          "bytes": 4657,
+          "sha256": "60c873f1272f117f6fffa1a3d243ab7f4585804f3942408f510940a2c5507892"
+        },
+        {
+          "path": "references/ai_evaluate.md",
+          "bytes": 2227,
+          "sha256": "5b195fc893ec4649577a32c410e9a1e1afb2c5f2ab7db41fb9eec0c05d1232b7"
+        },
+        {
+          "path": "references/ai_forecast.md",
+          "bytes": 6671,
+          "sha256": "818f36c1f92277b4efcd8116b7e4c4a6f350a93ebc0df3ec1ebe048fd08f1891"
+        },
+        {
+          "path": "references/ai_function_best_practices.md",
+          "bytes": 2836,
+          "sha256": "546c3770d1ef56d31468f8472e9311dc745e6cceb5d7f2e15b7841622fcda571"
+        },
+        {
+          "path": "references/ai_generate_embedding.md",
+          "bytes": 1685,
+          "sha256": "7f8522cc9973a71f79b952558bee03e4cdf5e15b48ddf2c24eb35606265b3092"
+        },
+        {
+          "path": "references/ai_generate.md",
+          "bytes": 4040,
+          "sha256": "cd89d035d3d37de8ec99cb22b730297b0869a264c26f3e0279da48c02fd7707c"
+        },
+        {
+          "path": "references/ai_generate_table.md",
+          "bytes": 3018,
+          "sha256": "49de655028ca350182208605ee98792a4d38d329889c309012adf73b54f9e1c8"
+        },
+        {
+          "path": "references/ai_if.md",
+          "bytes": 2051,
+          "sha256": "c833954f58ca1e6d21b7155cf90299e53236f01cf2568a23d990865a059c7e9d"
+        },
+        {
+          "path": "references/ai_key_drivers.md",
+          "bytes": 4147,
+          "sha256": "2d5eb5d30814d37aa253af4eb4579478b9b49bdf5fea26c0618721ec73ee2b06"
+        },
+        {
+          "path": "references/ai_score.md",
+          "bytes": 1922,
+          "sha256": "2d473f9850d502735dd8d876853296ae5a9f2e7b3c02736b9dd5815a6789aee4"
+        },
+        {
+          "path": "references/ai_search.md",
+          "bytes": 3752,
+          "sha256": "44ab2b704113f646827fe97b470890339201639ff2e31cdfbc8f22e84afd5d7f"
+        },
+        {
+          "path": "references/ai_similarity.md",
+          "bytes": 2812,
+          "sha256": "52f54d47c68f873546472977eeb379ec468127342c899256b42b84f5a8dcb503"
+        },
+        {
+          "path": "references/ml_contribution_analysis.md",
+          "bytes": 4944,
+          "sha256": "e6b4d0c705b437eebea236ab52d9caa5a4e7ed580dbfcc83ca6cf1c27b4d33ea"
+        },
+        {
+          "path": "references/remote_models.md",
+          "bytes": 871,
+          "sha256": "58f7405ab59f6038222a5b95967739f41be568f736c22c9bd2240c307b6cd28e"
+        },
+        {
+          "path": "references/vector_search.md",
+          "bytes": 4147,
+          "sha256": "80c73327841576c2a5b220b4007354cf9a4e139fbd579f91f18fc651bdc7f4e6"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 2908,
+          "sha256": "a04522dc259281d59ffba134828ab610a05cbdae6898ba7bb02e12692987ddfd"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "bigquery-bigframes",
+      "destination": "governance/agents/20261025-1953-imported-skills/bigquery-bigframes",
+      "source_path": "/home/an/.gemini/config/skills/bigquery-bigframes",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/bigquery-bigframes",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "OWNERS",
+          "bytes": 69,
+          "sha256": "e1c6aa09264bfa9e45caf2fc0ee37429fe2a66e7532eae7e168e2709516a1a64"
+        },
+        {
+          "path": "references/BIGFRAMES.md",
+          "bytes": 2666,
+          "sha256": "a461eb3ddfc9963956ca5d4e5d8c66f475eabfe36862fafdc4bc60eb8c5a4487"
+        },
+        {
+          "path": "references/linear_regression.md",
+          "bytes": 1392,
+          "sha256": "bcd20a496ab3b39a6f60522ef594cee0169fcbaddf75e87a3b5c4bf96f59aef3"
+        },
+        {
+          "path": "references/logistic_regression.md",
+          "bytes": 1076,
+          "sha256": "0627160ffa1a37ca290830e5a15851bbc3455cb059c79923f28b7b0f078e26a1"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 5100,
+          "sha256": "d2ff0937f7e50d5975623d8995b5e35c5ebba3535582a7e79d321439c55cad28"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "bigquery-data-transfer-service",
+      "destination": "governance/agents/20261025-1953-imported-skills/bigquery-data-transfer-service",
+      "source_path": "/home/an/.gemini/config/skills/bigquery-data-transfer-service",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/bigquery-data-transfer-service",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "scripts/bigquery_dts.py",
+          "bytes": 4984,
+          "sha256": "df119b061911407d874ec62732fba3e7659b58dcd759eef444d82f379df0eb5c"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 7139,
+          "sha256": "8b34bf814948ecbc1bc4fa4cd3aa1da829339efbf95347cbe75985665e78bb27"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "bigquery-graph",
+      "destination": "governance/agents/20261025-1953-imported-skills/bigquery-graph",
+      "source_path": "/home/an/.gemini/config/skills/bigquery-graph",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/bigquery-graph",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "OWNERS",
+          "bytes": 69,
+          "sha256": "e1c6aa09264bfa9e45caf2fc0ee37429fe2a66e7532eae7e168e2709516a1a64"
+        },
+        {
+          "path": "references/graph_queries.md",
+          "bytes": 18320,
+          "sha256": "6eeb373e3a09fdce09c9a8ba2475f143349a38c125bd21ee70703c00006ddc3d"
+        },
+        {
+          "path": "references/graph-schema/best_practices.md",
+          "bytes": 6727,
+          "sha256": "0ade6ef67dfdac4773e7c014992b933738dd83c1adda017a788d8e5d2fe6b4c4"
+        },
+        {
+          "path": "references/graph-schema/ddl_reference.md",
+          "bytes": 7664,
+          "sha256": "719fa91ba910fa0f4ab5b49e1399c99c68b29fa5c386989d5b0e234150150dc3"
+        },
+        {
+          "path": "references/graph-schema/feature_parity.md",
+          "bytes": 4903,
+          "sha256": "e9925f47b273f5a7fe7c4ff8c246cf2f0a3d732570646d054cfdda36ab10ab98"
+        },
+        {
+          "path": "references/graph-schema/graph_schema_ddl_advisor.md",
+          "bytes": 4203,
+          "sha256": "525a6c6d5fa5c5a1d1d0f7ed28c4dc38ba1074d78df15f0b0878e9cd0a731bd1"
+        },
+        {
+          "path": "references/semantic_queries.md",
+          "bytes": 2955,
+          "sha256": "bdacaa335d88f75d1bf1d1dbbdaed4843a7d9ab67a702c082d43bc93465327db"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 1417,
+          "sha256": "122ecc3a45d8278da0c58704fe4fe9c38515c79929e649a28ebb4faff32c738a"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "bigquery-sql",
+      "destination": "governance/agents/20261025-1953-imported-skills/bigquery-sql",
+      "source_path": "/home/an/.gemini/config/skills/bigquery-sql",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/bigquery-sql",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "OWNERS",
+          "bytes": 69,
+          "sha256": "e1c6aa09264bfa9e45caf2fc0ee37429fe2a66e7532eae7e168e2709516a1a64"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 1803,
+          "sha256": "c19905ded910223db0716588426254523c1b5b5e3fbfe0656f73510369c0d4c7"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "bonsai-ui-development",
+      "destination": "governance/agents/20261025-1953-imported-skills/bonsai-ui-development",
+      "source_path": "/home/an/dev/ver/zigvm/skills/bonsai-ui-development",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/bonsai-ui-development",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4261,
+          "sha256": "256a6c34fb53b34be65553aead06122416e59287fc731a580f1c9c8b92a07c1e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "building-data-apps",
+      "destination": "governance/agents/20261025-1953-imported-skills/building-data-apps",
+      "source_path": "/home/an/.gemini/config/skills/building-data-apps",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/building-data-apps",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "examples/express_chat.ts",
+          "bytes": 5108,
+          "sha256": "79ee5db7270cf6a8b3607b0bfea2d693c72daa192c8812ad1c9d849241dcd76a"
+        },
+        {
+          "path": "examples/fastapi_chat.py",
+          "bytes": 4774,
+          "sha256": "7dd0bf8bef98d24375362205e36705d256fc1a48d9b625a29718b428d35b3a09"
+        },
+        {
+          "path": "examples/react_chat_panel.jsx",
+          "bytes": 11937,
+          "sha256": "8e811a6e21d30ed2f0dd1ccb0c8b1acf712d82d2b1dbc639d22d81c06832242c"
+        },
+        {
+          "path": "references/chat_integration.md",
+          "bytes": 4389,
+          "sha256": "d5f8daaf7a040ef733fe0cdb1f25f95f48d71518e7b5bd87f159456989f862a5"
+        },
+        {
+          "path": "references/react_framework.md",
+          "bytes": 10348,
+          "sha256": "31c8abefb2dd0577bf979553f667a8015f1b645bac272f4e61b980d9a35a86aa"
+        },
+        {
+          "path": "references/shared_design_system.md",
+          "bytes": 1159,
+          "sha256": "aab74a43b3a3cd764d1c827dab484cb42a03e52607de27fba0f8935b10932f20"
+        },
+        {
+          "path": "references/streamlit_framework.md",
+          "bytes": 8491,
+          "sha256": "da541ad658b125d925a4e457d05775911f69c4e489d5c44e3bcd4fbb081b2b15"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6317,
+          "sha256": "a9153d270f9d50b3d265be48b778255f9b955fa0f1609c269220038d5880732f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "business-analysis",
+      "destination": "governance/agents/20261025-1953-imported-skills/business-analysis",
+      "source_path": "/home/an/.gemini/config/skills/business-analysis",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/business-analysis",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1946,
+          "sha256": "32b1352277577c50f8e292481c1203128c717d542bb4c9c10a660596cdade5b9"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "c3i-page-evolution",
+      "destination": "governance/agents/20261025-1953-imported-skills/c3i-page-evolution",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/c3i-page-evolution",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/c3i-page-evolution",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 13230,
+          "sha256": "7cbf5ec96a9364f76ec7e2712dc1c62488ed4f2c945175e049f1c8a088c6b9fa"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "c3i-temporal-orchestration",
+      "destination": "governance/agents/20261025-1953-imported-skills/c3i-temporal-orchestration",
+      "source_path": "/home/an/dev/ver/zigvm/skills/c3i-temporal-orchestration",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/c3i-temporal-orchestration",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 5313,
+          "sha256": "e55cb869b9cc19eab4e036d61600089adad8ee4c12a44e9c6427caf6977337ed"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "capability-eq-flip",
+      "destination": "governance/agents/20261025-1953-imported-skills/capability-eq-flip",
+      "source_path": "/home/an/dev/ver/zigvm/skills/capability-eq-flip",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/capability-eq-flip",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 6620,
+          "sha256": "ad5fccff1d08d6c273aec97b92b4cee93f862b66559f8f00ef490d215b13f7e1"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "cepaf-planning-expert",
+      "destination": "governance/agents/20261025-1953-imported-skills/cepaf-planning-expert",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/cepaf-planning-expert",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/cepaf-planning-expert",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2069,
+          "sha256": "de643a268a5b1a40e37446625487f38c5ba60b546e2bc111f6c6dab068432aa7"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "cepaf-podman-expert",
+      "destination": "governance/agents/20261025-1953-imported-skills/cepaf-podman-expert",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/cepaf-podman-expert",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/cepaf-podman-expert",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2373,
+          "sha256": "04f912972aeb69a2703652e462b2a9d148122d2f3269f0adf75d50b551190971"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "cepaf-zenoh-expert",
+      "destination": "governance/agents/20261025-1953-imported-skills/cepaf-zenoh-expert",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/cepaf-zenoh-expert",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/cepaf-zenoh-expert",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2111,
+          "sha256": "4a275feaa133a9e08f3273b4e93811775786e371efd67a577d5fa8a7c90c4495"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "channel-strategy",
+      "destination": "governance/agents/20261025-1953-imported-skills/channel-strategy",
+      "source_path": "/home/an/.gemini/config/skills/channel-strategy",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/channel-strategy",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3443,
+          "sha256": "2b63943cc2c9a9835198a422bc63fac14e976ff14bffe4fc227c89e56ca61071"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "codex-symbiosis",
+      "destination": "governance/agents/20261025-1953-imported-skills/codex-symbiosis",
+      "source_path": "/home/an/dev/ver/zigvm/skills/codex-symbiosis",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/codex-symbiosis",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2345,
+          "sha256": "104028580080d9bd515b4759d0912e77ab104262ca56c7856883140297405bd9"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "competitive-intel",
+      "destination": "governance/agents/20261025-1953-imported-skills/competitive-intel",
+      "source_path": "/home/an/.gemini/config/skills/competitive-intel",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/competitive-intel",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2694,
+          "sha256": "7c8428b17e82438380da10a1b16376a59bc970213d3d02d33163ab9d96d3d328"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "crm-hygiene",
+      "destination": "governance/agents/20261025-1953-imported-skills/crm-hygiene",
+      "source_path": "/home/an/.gemini/config/skills/crm-hygiene",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/crm-hygiene",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2001,
+          "sha256": "d177b7f5ed57f109154e2bb3d478582ecbb08d7e8e2ef839e0190e9b82ab1762"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "data-autocleaning",
+      "destination": "governance/agents/20261025-1953-imported-skills/data-autocleaning",
+      "source_path": "/home/an/.gemini/config/skills/data-autocleaning",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/data-autocleaning",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "scripts/dataplex_scanner.py",
+          "bytes": 7528,
+          "sha256": "c8ffbe895ead22329f07bd38c236dfd499f6313d652274e5848ddc7ce72b16c0"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 12134,
+          "sha256": "2d4339a699687f70e8ee87420fcb8a892b510aef1f5def97fa3f75dc8a33219e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "dataform-bigquery",
+      "destination": "governance/agents/20261025-1953-imported-skills/dataform-bigquery",
+      "source_path": "/home/an/.gemini/config/skills/dataform-bigquery",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/dataform-bigquery",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 12282,
+          "sha256": "9e71d551917757cb22ed378dcd23a655bea8d90c2efa7ad10e1e186b59e5dc92"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "dbt-bigquery",
+      "destination": "governance/agents/20261025-1953-imported-skills/dbt-bigquery",
+      "source_path": "/home/an/.gemini/config/skills/dbt-bigquery",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/dbt-bigquery",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 11757,
+          "sha256": "ea301dab1547e603f8219ec3b42de04b3777552122829172d60ce88aa399e9be"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "deal-review",
+      "destination": "governance/agents/20261025-1953-imported-skills/deal-review",
+      "source_path": "/home/an/.gemini/config/skills/deal-review",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/deal-review",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1943,
+          "sha256": "deb65198ae172ec2b721f1116b16a69822d6e3b05ef2f2cccf3d9962ed822aa7"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "demand-forecast",
+      "destination": "governance/agents/20261025-1953-imported-skills/demand-forecast",
+      "source_path": "/home/an/.gemini/config/skills/demand-forecast",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/demand-forecast",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4001,
+          "sha256": "58793be6613a347fd28921a61178d006efa47c0707066d621a5b8690d000007a"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "design-win-tracker",
+      "destination": "governance/agents/20261025-1953-imported-skills/design-win-tracker",
+      "source_path": "/home/an/.gemini/config/skills/design-win-tracker",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/design-win-tracker",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3305,
+          "sha256": "c48d87550e0350a960e7263f3527e15913cf50c660eebcdb20a20a036c5c0c81"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "discovering-gcp-data-assets",
+      "destination": "governance/agents/20261025-1953-imported-skills/discovering-gcp-data-assets",
+      "source_path": "/home/an/.gemini/config/skills/discovering-gcp-data-assets",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/discovering-gcp-data-assets",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9919,
+          "sha256": "558a0e0738a9d9448463193371400a3a82c6e17d24b6915cd35477f5329d3bd4"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "docs-design",
+      "destination": "governance/agents/20261025-1953-imported-skills/docs-design",
+      "source_path": "/home/an/dev/ver/zigvm/skills/docs-design",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/docs-design",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4177,
+          "sha256": "3aa25a40e629a812bcd50e8fd5497e9cfe49df4ff03050af9963b448645d1f36"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "effect-ts-architect",
+      "destination": "governance/agents/20261025-1953-imported-skills/effect-ts-architect",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/effect-ts-architect",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/effect-ts-architect",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "references/artifacts.md",
+          "bytes": 5611,
+          "sha256": "c9133c3b40c85341a9a437e857fd85f870c1cd6879ffca3c3b6e8cde8298f36f"
+        },
+        {
+          "path": "references/patterns.md",
+          "bytes": 4620,
+          "sha256": "2f5b6d038d7e753de0f1fc2a7995db841ea68a4f2a27f0026b80e56c84e3de5d"
+        },
+        {
+          "path": "references/review-checklist.md",
+          "bytes": 1215,
+          "sha256": "a46d3e3fd13313d329c566a9aac51a6d69d346dfe0a91aac868d5f1bea5d904c"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 2119,
+          "sha256": "4f7b867dfbd1dc5ab49c6c6e3792eaa10105d3eb9aaa83674db79b5754cafa14"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "effect-ts-iife-enforcer",
+      "destination": "governance/agents/20261025-1953-imported-skills/effect-ts-iife-enforcer",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/effect-ts-iife-enforcer",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/effect-ts-iife-enforcer",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1287,
+          "sha256": "a14a16e23418512bf8f5b806ede85fae9a74be284ce62b70d7fe9832dd88f67c"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "enforcing-resource-attribution",
+      "destination": "governance/agents/20261025-1953-imported-skills/enforcing-resource-attribution",
+      "source_path": "/home/an/.gemini/config/skills/enforcing-resource-attribution",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/enforcing-resource-attribution",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3883,
+          "sha256": "36dbfb0f7085d16a9ea3854752cb7906b0bbe775ea8d98e00c9bbcb94541f638"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "evolve",
+      "destination": "governance/agents/20261025-1953-imported-skills/evolve",
+      "source_path": "/home/an/.gemini/config/skills/evolve",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/evolve",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2797,
+          "sha256": "c60899cc7760ded39340dad930023d75d9d84e85fee9e752130072fba6abb24b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fast-evolve",
+      "destination": "governance/agents/20261025-1953-imported-skills/fast-evolve",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/fast-evolve",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/fast-evolve",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2992,
+          "sha256": "4a2f6d620d4fd88fc0651462ceb583bec6163c43c48e67b558fe0085001e786d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "feature-evolution",
+      "destination": "governance/agents/20261025-1953-imported-skills/feature-evolution",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/feature-evolution",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/feature-evolution",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1041,
+          "sha256": "73c90ce959f28649e25b5b28cbad146ca075c27868a4e769667358fbb468be15"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "federate-lakehouse-catalog",
+      "destination": "governance/agents/20261025-1953-imported-skills/federate-lakehouse-catalog",
+      "source_path": "/home/an/.gemini/config/skills/federate-lakehouse-catalog",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/federate-lakehouse-catalog",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10330,
+          "sha256": "5b3e2480a91c8fe92c92b26c14447d1415cc31794272160e4bcf90882baf58cf"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl",
+      "source_path": "/home/an/.agents/skills/firecrawl",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "rules/install.md",
+          "bytes": 1828,
+          "sha256": "a1fe98fc4d1ea121cdb034d161855d4c4a2d092d63bd08af304f09debfe5f925"
+        },
+        {
+          "path": "rules/security.md",
+          "bytes": 1395,
+          "sha256": "fba03f974ad7ad2e411b1d549a48f7b975dd87c12b391959f007812bae0e1cfa"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6904,
+          "sha256": "4d2e8614a69a8fc0de57c408767f2da101b030cf6280b3f625f1118751930dbc"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-agent",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-agent",
+      "source_path": "/home/an/.agents/skills/firecrawl-agent",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-agent",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2756,
+          "sha256": "9a8badff132ebea1b049ebb8404a4bc5f52e4485f9136e27b4a6e92584306324"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-build-interact",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-build-interact",
+      "source_path": "/home/an/.agents/skills/firecrawl-build-interact",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-build-interact",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2946,
+          "sha256": "f79851f64eb6f9a54c2dc3bc6074141d04c019fc02bf1c2bf802208af13d7f78"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-build-onboarding",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-build-onboarding",
+      "source_path": "/home/an/.agents/skills/firecrawl-build-onboarding",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-build-onboarding",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/auth-flow.md",
+          "bytes": 1062,
+          "sha256": "401a3bb5a63bab7577d06c1eeb4c360e134bf5461e2bcafdd59d5c7b878e7d78"
+        },
+        {
+          "path": "references/project-setup.md",
+          "bytes": 495,
+          "sha256": "446096a353b0dae066bd35517fdc98a7b749a3f990cfe23f4904b9428571f8dd"
+        },
+        {
+          "path": "references/sdk-installation.md",
+          "bytes": 330,
+          "sha256": "27e186a31e5ebea6d6dc7a973af3a4e3ea3487100f456bc4903bddf39759a254"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 4676,
+          "sha256": "252e7eb581129c8d33e1e77941bf84ce39aed4ac9f988762f3837d48f4e4631b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-build-scrape",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-build-scrape",
+      "source_path": "/home/an/.agents/skills/firecrawl-build-scrape",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-build-scrape",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3109,
+          "sha256": "902502698be11f1e7b7c131a88893b888cec7a559c7693edcff353df8965bf0b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-build-search",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-build-search",
+      "source_path": "/home/an/.agents/skills/firecrawl-build-search",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-build-search",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3101,
+          "sha256": "7e5efad1e78c3e3aae7e818ed9dff6038a9aa46f9a6e864454fdfecde829f8a1"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-crawl",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-crawl",
+      "source_path": "/home/an/.agents/skills/firecrawl-crawl",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-crawl",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2713,
+          "sha256": "667c0c2bd834c28f6fa41da0e5926a5d6ed7d278961d9e1b7a3a3854187f3969"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-download",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-download",
+      "source_path": "/home/an/.agents/skills/firecrawl-download",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-download",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3105,
+          "sha256": "8c734be50e335cf8d371a32a691d3bedd09c78b2a9b2698fc5a5a62ae416a867"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-interact",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-interact",
+      "source_path": "/home/an/.agents/skills/firecrawl-interact",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-interact",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3942,
+          "sha256": "4adcb69f9e0c0150f90093b5e654e97a187e4bc34ad3fa99f8c8c5d83f6a47fb"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-map",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-map",
+      "source_path": "/home/an/.agents/skills/firecrawl-map",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-map",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2158,
+          "sha256": "fba70222f88939f3cb00876b70ae280d7326ec7e98384f18ad843665acf20f31"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-scrape",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-scrape",
+      "source_path": "/home/an/.agents/skills/firecrawl-scrape",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-scrape",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3655,
+          "sha256": "d7cf3b8a87c32cf6831378fa82e779780b82b73e60c0d0a69f21856b671e6ca5"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "firecrawl-search",
+      "destination": "governance/agents/20261025-1953-imported-skills/firecrawl-search",
+      "source_path": "/home/an/.agents/skills/firecrawl-search",
+      "source_kind": "home-agents-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/firecrawl-search",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2999,
+          "sha256": "e50936d2120bbbc345418231fef014bcad8ea651e01ee41e8a799dbbaeb1afcb"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "formal-technique-selection",
+      "destination": "governance/agents/20261025-1953-imported-skills/formal-technique-selection",
+      "source_path": "/home/an/dev/ver/zigvm/skills/formal-technique-selection",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/formal-technique-selection",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 17074,
+          "sha256": "05f40b159c8b47dab38fee326d15c2b2504a5f3f8000f9dc8f2a79024f114725"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "formal-verification-pipeline",
+      "destination": "governance/agents/20261025-1953-imported-skills/formal-verification-pipeline",
+      "source_path": "/home/an/dev/ver/zigvm/skills/formal-verification-pipeline",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/formal-verification-pipeline",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4543,
+          "sha256": "a8ed7169e825069c1ca267bd6872b4c768becc4379e0be1926da9d4aa0b5523c"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fp-core-rust-architect",
+      "destination": "governance/agents/20261025-1953-imported-skills/fp-core-rust-architect",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/fp-core-rust-architect",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/fp-core-rust-architect",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "references/artifacts.md",
+          "bytes": 1457,
+          "sha256": "01892c56c6287394af65b5cf8b075cd6873eb489c539ee9d64c3edbccf1ddbd5"
+        },
+        {
+          "path": "references/patterns.md",
+          "bytes": 1908,
+          "sha256": "96a02c14b694145f16c4bf5418fe3adcec3c35abae227a3302709c721290ff8a"
+        },
+        {
+          "path": "references/review-checklist.md",
+          "bytes": 1258,
+          "sha256": "d5f2999b13c2bc627a62e24882b9968a528e0320aeaafd31ea97e8ba803f9925"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 1383,
+          "sha256": "0d5746e064b496daf1584b15f7b1a690432232f1441088928af202f796119421"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fractal-autopilot",
+      "destination": "governance/agents/20261025-1953-imported-skills/fractal-autopilot",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/fractal-autopilot",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/fractal-autopilot",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1186,
+          "sha256": "774b89f7cc927a865cd8d8ddfb3cdfee869d8a17a161c09c007ed9d1f507a85e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fractal-decision-calculus",
+      "destination": "governance/agents/20261025-1953-imported-skills/fractal-decision-calculus",
+      "source_path": "/home/an/dev/ver/zigvm/skills/fractal-decision-calculus",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/fractal-decision-calculus",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 14271,
+          "sha256": "9d4d96c17f0609b23ba538c0928580880cfebc3ca76e52cb8ff0beb04a9a4b49"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fractal-workspace-audit",
+      "destination": "governance/agents/20261025-1953-imported-skills/fractal-workspace-audit",
+      "source_path": "/home/an/dev/ver/zigvm/skills/fractal-workspace-audit",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/fractal-workspace-audit",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4189,
+          "sha256": "8bdc239c873cb28b5ba072129b85ecdfd2bfe7bf8f50d2232bdfab136cafbb82"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-account-sprint",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-account-sprint",
+      "source_path": "/home/an/.gemini/config/skills/fy27-account-sprint",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-account-sprint",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2651,
+          "sha256": "66120d328b7d196cbc22e0e4d8331ca4d0c0d6913a50213e0dadc543ea5e1a55"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-competitive-war-room",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-competitive-war-room",
+      "source_path": "/home/an/.gemini/config/skills/fy27-competitive-war-room",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-competitive-war-room",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2930,
+          "sha256": "6ebb1fbf70411c2d061ddd0474a46911e19a2395e5dd16cc9486f0faca2df505"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-csv-export",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-csv-export",
+      "source_path": "/home/an/.gemini/config/skills/fy27-csv-export",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-csv-export",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4062,
+          "sha256": "5583b1f24b9a50defca27b0fd865e8f5668541a868bf90370bb2717640d9de8f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-deal-accelerator",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-deal-accelerator",
+      "source_path": "/home/an/.gemini/config/skills/fy27-deal-accelerator",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-deal-accelerator",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2763,
+          "sha256": "c51e422e5c66d58efacbdd0f82a9edbf146e43614613d4f6ff1408870e021b4b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-linkedin-ops",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-linkedin-ops",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/fy27-linkedin-ops",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-linkedin-ops",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 13955,
+          "sha256": "c17cbb08d1ab31c1bb5e68630b35008aef555688df18b8b354898832a38b39f1"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-log",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-log",
+      "source_path": "/home/an/.gemini/config/skills/fy27-log",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-log",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2169,
+          "sha256": "2c39a3dd242f53862e874a18ef279c16d44ecfb6c0ac58f5bb3e01516951a01f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-obsidian-sync",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-obsidian-sync",
+      "source_path": "/home/an/.gemini/config/skills/fy27-obsidian-sync",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-obsidian-sync",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1530,
+          "sha256": "4990ded9fe3921ea09f89219be1c5b17b9c41b683fc0b9405e0dbe936e01757c"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-pipeline-review",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-pipeline-review",
+      "source_path": "/home/an/.gemini/config/skills/fy27-pipeline-review",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-pipeline-review",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2748,
+          "sha256": "c266eab0327212049e3e0a263e176cad499fd608d25ba544d68239fc41dbb2b7"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-salesnav-ops",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-salesnav-ops",
+      "source_path": "/home/an/.gemini/config/skills/fy27-salesnav-ops",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-salesnav-ops",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 17439,
+          "sha256": "5c0e7ccdb13bc9380d79d0bf0e38b11f1ec7566b8b579188092784d9a285ac67"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-status",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-status",
+      "source_path": "/home/an/.gemini/config/skills/fy27-status",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-status",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2647,
+          "sha256": "d31183c45047e542e6e055b43a48fdee70283e4bd7ad281ee2288cfbd04714b8"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-weekly-rhythm",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-weekly-rhythm",
+      "source_path": "/home/an/.gemini/config/skills/fy27-weekly-rhythm",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-weekly-rhythm",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2267,
+          "sha256": "d75c306bf8eb3f6cca21c243857f18143cb4afc390ca960b1d783263a61beb96"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy27-zk-brief",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy27-zk-brief",
+      "source_path": "/home/an/.gemini/config/skills/fy27-zk-brief",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy27-zk-brief",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1523,
+          "sha256": "e8660201b46418e2ff0e6811c3dc3e926cb798ad45c0504577815c2b554ce721"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "fy-annual-plan",
+      "destination": "governance/agents/20261025-1953-imported-skills/fy-annual-plan",
+      "source_path": "/home/an/.gemini/config/skills/fy-annual-plan",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/fy-annual-plan",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7821,
+          "sha256": "afba9285e89d84cff00b3d9c63a38079ee37277b575f684c3671a9c8e6a8dc27"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcloud-auth-verification",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcloud-auth-verification",
+      "source_path": "/home/an/.gemini/config/skills/gcloud-auth-verification",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcloud-auth-verification",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1982,
+          "sha256": "fcdd8ae4407ebc1cea71d06853decc9cebc356d4498b8b17347ecb6e9cce78b3"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-composer-troubleshooting",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-composer-troubleshooting",
+      "source_path": "/home/an/.gemini/config/skills/gcp-composer-troubleshooting",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-composer-troubleshooting",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9089,
+          "sha256": "5d9490d56980b30f29451a0e342b4a52420532c145e67dd1fa5488adf0e7e822"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-dataflow",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-dataflow",
+      "source_path": "/home/an/.gemini/config/skills/gcp-dataflow",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-dataflow",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/bottlenecks_and_parallelism_context.md",
+          "bytes": 5094,
+          "sha256": "d04d12f0ad8fc481775f597525b53b3eaf7d98b031d2718c44bf9b7bc826994d"
+        },
+        {
+          "path": "references/dataflow_diagnostics_reference.md",
+          "bytes": 3495,
+          "sha256": "631979ecfe793cc3dcd64ed7719ae82ca4f386e11a2631dbf8b8c834a3923831"
+        },
+        {
+          "path": "references/dataflow_metrics_bigquery.md",
+          "bytes": 447,
+          "sha256": "7a91f78acc2da1f5cd82d08a36eae39fdbcf324f1eb4f6962b5da1362a4502bd"
+        },
+        {
+          "path": "references/dataflow_metrics_core_job.md",
+          "bytes": 6915,
+          "sha256": "e1f2e3bd4a18093fb27649fdcc26e7f22ff1438f6d8387ec35d21769cbfc3fea"
+        },
+        {
+          "path": "references/dataflow_metrics_pubsub.md",
+          "bytes": 3388,
+          "sha256": "3fd6710d0d75bb2857138cff821f430b09d1a93e886f2cc0810ad7ac214c8276"
+        },
+        {
+          "path": "references/dataflow_metrics_streaming_engine.md",
+          "bytes": 5108,
+          "sha256": "dea16eb4194737f8cb200142e9eb654fd79f1bbdc49e30a692f31ade4e9dd726"
+        },
+        {
+          "path": "references/python_flex_template_reference.md",
+          "bytes": 1933,
+          "sha256": "9c35060eccd8096d14be0137994bd650012ec3be0c87e92d66793ebc294f905e"
+        },
+        {
+          "path": "references/streaming_horizontal_autoscaling_analysis.md",
+          "bytes": 4674,
+          "sha256": "9f46bd512fb6589e58889e725d8352631f553f52eca7f29153f253051965b9bf"
+        },
+        {
+          "path": "references/streaming_job_health.md",
+          "bytes": 2755,
+          "sha256": "75cd1f44e27dedfcb453ca5585577027e403b503b88a70085ff6c1379a831e83"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 21343,
+          "sha256": "9abf6cb8d9aaec574b8576bd41efe27a3c8d3b5079ff3a3328cd65298a1998ff"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-data-pipelines",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-data-pipelines",
+      "source_path": "/home/an/.gemini/config/skills/gcp-data-pipelines",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-data-pipelines",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9494,
+          "sha256": "9320eb3940628c68265fce533c8cc57a62626595cebf894e5c0855de5248fa9b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-managed-airflow-dag-authoring",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-managed-airflow-dag-authoring",
+      "source_path": "/home/an/.gemini/config/skills/gcp-managed-airflow-dag-authoring",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-managed-airflow-dag-authoring",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 5899,
+          "sha256": "b4983d1a11b17b6a6ab563bf3bd6a0dbc1d5274f3afc453bc9ad471c62c9e231"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-managed-airflow-migrations",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-managed-airflow-migrations",
+      "source_path": "/home/an/.gemini/config/skills/gcp-managed-airflow-migrations",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-managed-airflow-migrations",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/airflow-3.md",
+          "bytes": 8141,
+          "sha256": "6ab7a9fa70409e11550077a828faf8223059dbdff4accf706983c4b435ea515c"
+        },
+        {
+          "path": "references/environment-inspection.md",
+          "bytes": 2985,
+          "sha256": "5f15bac6c91b0cd2e4c71fb50b383cf05f15dc1a5255150fca4bb36cbeeccd24"
+        },
+        {
+          "path": "references/local-development-environment.md",
+          "bytes": 919,
+          "sha256": "32f1a5a26bb358b7aef7a97470c6e9f1be8a586a53a16b5f8b4a90a9963acac6"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 11695,
+          "sha256": "f092d155b4de596bd64ab560f97a182476f4f4251f7a7aefd329e7cdff3a691f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-managed-airflow-recommendations",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-managed-airflow-recommendations",
+      "source_path": "/home/an/.gemini/config/skills/gcp-managed-airflow-recommendations",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-managed-airflow-recommendations",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/gcloud_reference.md",
+          "bytes": 1719,
+          "sha256": "942ce54b4d3a4c9808fe8ffc19137863286f7ba93c69c0cf3078685f61d537c0"
+        },
+        {
+          "path": "scripts/dag_parsing_stats.py",
+          "bytes": 4259,
+          "sha256": "6a650ef9acea95224c47cb9b5b7faf23ff070ec9fa1b4306226f26ebca683f63"
+        },
+        {
+          "path": "scripts/environment_health.py",
+          "bytes": 4247,
+          "sha256": "be4d45307688528ba63c6ae9086a463c450463e135aebb4ce6480d87194078fb"
+        },
+        {
+          "path": "scripts/lib/flagutils.py",
+          "bytes": 1398,
+          "sha256": "02d4742a0bf6c545ead2ee7e716554d067b8ec96948a021014339f3d638bd9d0"
+        },
+        {
+          "path": "scripts/lib/__init__.py",
+          "bytes": 575,
+          "sha256": "1f6067abc177ec63fae2df22866be4618f8f40ee1ce94fd73dc9560c1fbe5083"
+        },
+        {
+          "path": "scripts/lib/monitoring.py",
+          "bytes": 2355,
+          "sha256": "c5b5de3f55cf9cc885fe6ac4a53da17a02335dd6cfda97631db8170957ddf3a9"
+        },
+        {
+          "path": "scripts/workload_cpu_usage.py",
+          "bytes": 4710,
+          "sha256": "3be7621ab7c0969ba306d598fc8bb185a1e633bde95029f2b6810fba8fc78390"
+        },
+        {
+          "path": "scripts/workload_disk_usage.py",
+          "bytes": 4756,
+          "sha256": "7dbea573dd600fbd6664a2090a88592f9ce0d159bd016353582a8455f11bf13f"
+        },
+        {
+          "path": "scripts/workload_memory_usage.py",
+          "bytes": 4770,
+          "sha256": "2d80c99de4c738bca5e2f55ec6dea8f2730ad0329e5f66d024b6d13074f1ee73"
+        },
+        {
+          "path": "scripts/workload_restarts.py",
+          "bytes": 4561,
+          "sha256": "1e52aa99a1263f8232023ab0099f86b77a510b6818a6eb9f0892869f66047623"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6394,
+          "sha256": "62b82de20b01ee5ac1ecd4288e5bad03f9aab748f48fd6d9d4ac6454eb34ce42"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-pipeline-orchestration",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-pipeline-orchestration",
+      "source_path": "/home/an/.gemini/config/skills/gcp-pipeline-orchestration",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-pipeline-orchestration",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/orchestration-pipelines-schema.md",
+          "bytes": 14445,
+          "sha256": "812ab0ff64f2274fd6473e59abde4ec2e2fe674c9f6271cb09cca476e8986f19"
+        },
+        {
+          "path": "scripts/trigger/airflow_trigger.py",
+          "bytes": 4582,
+          "sha256": "f4122cf0245dd74cf259defd38de94597ee596ac0c6503a2555d9f050aeefeaf"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 17134,
+          "sha256": "197afdeb6d5a0767c44aac04eba6e3eeae15ec3b0b80c42eb9197509a1e87498"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-pipeline-resource-provisioning",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-pipeline-resource-provisioning",
+      "source_path": "/home/an/.gemini/config/skills/gcp-pipeline-resource-provisioning",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-pipeline-resource-provisioning",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/gcp_pipeline_resource_provisioning_spec.md",
+          "bytes": 3362,
+          "sha256": "6317e740d1bfae7fea202b4255bd50acfe73132c0ce25011409b82d4f7e5b241"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6528,
+          "sha256": "375d3a13d9fa91ee42b55ea5af7e57569c9ea702d46158573eec8f0055955ac9"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcp-spark",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcp-spark",
+      "source_path": "/home/an/.gemini/config/skills/gcp-spark",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcp-spark",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/gcloud_dataproc.md",
+          "bytes": 7578,
+          "sha256": "971f4f13b8c02e9fae9140416c96762e057c8a0867e78b2208bc291e54389e6f"
+        },
+        {
+          "path": "references/ml_tasks.md",
+          "bytes": 1895,
+          "sha256": "8959f9d7ebc0c2ab20ae78348d967be64c4232da368a915c282d62478d6c54cf"
+        },
+        {
+          "path": "references/read_write_data.md",
+          "bytes": 14612,
+          "sha256": "90454d29019aaa82ab26be9129a0b853b1f08601307e0d92a04d89b3d69b1c1d"
+        },
+        {
+          "path": "references/schema_direct_inspection.md",
+          "bytes": 1166,
+          "sha256": "810fe04030216fa3896275090986f95f9789543edd5d9914a985069c7d45197f"
+        },
+        {
+          "path": "references/spark_optimizations.md",
+          "bytes": 322,
+          "sha256": "0202c45a7e1467cb73e39a1224141b71f84741dbe0480dca627510f7a29d563e"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 4787,
+          "sha256": "45c6322d60938ed1b2114ddf5a98465ec4d027487c8cf6acb716c6919fcd609a"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gcs-security-assessment",
+      "destination": "governance/agents/20261025-1953-imported-skills/gcs-security-assessment",
+      "source_path": "/home/an/.gemini/config/skills/gcs-security-assessment",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gcs-security-assessment",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "examples/sample_assessment.md",
+          "bytes": 7090,
+          "sha256": "028ee7cc453226606e1711fcbb90cbc81792e4841e859208cd90454a4b3e1c12"
+        },
+        {
+          "path": "references/baseline_security.md",
+          "bytes": 4200,
+          "sha256": "af2cacfac27a627c6855be46f5fa997fbef61d0b7371fd792c68156f29f39754"
+        },
+        {
+          "path": "references/bucket_classification.md",
+          "bytes": 4676,
+          "sha256": "56b2124a377b9b5db52025c9b63904c14655e3c5419d8341013b7ecc4d8554c0"
+        },
+        {
+          "path": "references/phases/baseline.md",
+          "bytes": 810,
+          "sha256": "673112a279bae2f67828477a55cdf386af39ac57180d47c141dd1195a3c69a7d"
+        },
+        {
+          "path": "references/phases/classification.md",
+          "bytes": 727,
+          "sha256": "9e4667085d73933b8240de958f5049319f7ef0f0500b0af4020497c6c53a4ac4"
+        },
+        {
+          "path": "references/phases/discover.md",
+          "bytes": 8467,
+          "sha256": "edd26e4d6d56a7a5e15a0b6d8209aa2f7b5e45039340c09db4ac6749a8914aec"
+        },
+        {
+          "path": "references/phases/output.md",
+          "bytes": 11943,
+          "sha256": "22151edfe0ed70a76201dd469dfa6365dea4ad2578fa0e11792dacbe9e98afa8"
+        },
+        {
+          "path": "references/phases/toxic_analysis.md",
+          "bytes": 1828,
+          "sha256": "eff0b18024acd9570a4f8aef9cca3b8eb270f82b4d02cdd3d49c4688e9c97140"
+        },
+        {
+          "path": "references/saif_risk_factors.md",
+          "bytes": 3738,
+          "sha256": "de396bb52a56ab9054a2a12d221803064604dc7b3ff04f5f108f389374e563d1"
+        },
+        {
+          "path": "references/telemetry_signals.md",
+          "bytes": 4487,
+          "sha256": "43c8665232b79728c29a34e44573163c4af458397fbfa4b9d86c67df9f1fa279"
+        },
+        {
+          "path": "references/toxic_combinations.md",
+          "bytes": 16191,
+          "sha256": "f98f0c05b67df2666be0c8dc19b15577d043054affe8c4edb23078d8901f0762"
+        },
+        {
+          "path": "scripts/cloud_rest_helpers_nodeps.py",
+          "bytes": 21435,
+          "sha256": "89c97bc39871c132864016b16674b61e007f3333731b895feea0d30c22a1a3b5"
+        },
+        {
+          "path": "scripts/evaluate_project_security_posture.py",
+          "bytes": 16929,
+          "sha256": "150e84439a91e51c8272af20d5d039b0961c9dca0a8cf6aa8609fd7792264470"
+        },
+        {
+          "path": "scripts/fetch_bucket_telemetry.py",
+          "bytes": 7101,
+          "sha256": "5ddad859cd5e17287598b0dc91bbf02288d0393693051b25ecf173d80e46f80d"
+        },
+        {
+          "path": "scripts/fetch_object_telemetry.py",
+          "bytes": 5881,
+          "sha256": "8de89579037cee4636bf2afdbd52c3397cd260595fb95308808388cef28d85fc"
+        },
+        {
+          "path": "scripts/list_datasets.py",
+          "bytes": 7398,
+          "sha256": "ef58474c27c75075edf2b90a82f7e9509725480db4f606718f8d3eb3922137bb"
+        },
+        {
+          "path": "scripts/preflight_permissions.py",
+          "bytes": 12617,
+          "sha256": "48828a934b5447cefb3a445b50321137d10237c9b29a5c5655c5a0b69b4ed889"
+        },
+        {
+          "path": "scripts/validation.py",
+          "bytes": 3045,
+          "sha256": "4aef5457045586459e9761463035502d2341594f45e6c921421bcc096a6a9573"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6817,
+          "sha256": "589526bdfb9efba2f3d3a35fb25e56fde49abb2381aefa4c52a9a9d999c08d6d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gleam-expert",
+      "destination": "governance/agents/20261025-1953-imported-skills/gleam-expert",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/gleam-expert",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/gleam-expert",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "references/BEAM_INTEGRATION.md",
+          "bytes": 1221,
+          "sha256": "026077cbc0ea0349d80ab155f35d9d04a0a0043de92d855ef6dc9615e6208036"
+        },
+        {
+          "path": "references/DYNAMIC_DECODER.md",
+          "bytes": 957,
+          "sha256": "999356aaaa8fc35f820ca64fe8756d6cbd6cd284ee4a78b834375f88d5b14899"
+        },
+        {
+          "path": "references/FSHARP_MIGRATION.md",
+          "bytes": 1365,
+          "sha256": "d2d09b02d08f3d438c2c75dedeafbaabd6844dc4eb85b1109789916c7dd505bc"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 4321,
+          "sha256": "ec49b900574bfdea07c7da82a638731edf6adbce5a4a89fc80095222b1b95227"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "google-cloud-storage-basics",
+      "destination": "governance/agents/20261025-1953-imported-skills/google-cloud-storage-basics",
+      "source_path": "/home/an/.gemini/config/skills/google-cloud-storage-basics",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/google-cloud-storage-basics",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/cli-api-usage.md",
+          "bytes": 7936,
+          "sha256": "44931180b04471795cf296129bebb5d61fbc480ea804c7a9b55afca692d70304"
+        },
+        {
+          "path": "references/client-library-usage.md",
+          "bytes": 4872,
+          "sha256": "e5d1ee2d53e0c213c8f32c44f01b110919112595dff8a3caf31f0a780b4a2251"
+        },
+        {
+          "path": "references/core-concepts.md",
+          "bytes": 7697,
+          "sha256": "0dbb6dd209765ccc5d133a56ed571a589c0101527079df9be37d09602a39bf69"
+        },
+        {
+          "path": "references/data-management.md",
+          "bytes": 21338,
+          "sha256": "3a6f1b8dc5862747013a5f0c4e802eb62f52fa28ab5238d5b2330a54f99e7c0e"
+        },
+        {
+          "path": "references/data-transfer.md",
+          "bytes": 12103,
+          "sha256": "507636195b891f92cc66a4c9ef3214a8753cfe38161878e956ef8b846fe0dcc5"
+        },
+        {
+          "path": "references/gcsfuse.md",
+          "bytes": 21652,
+          "sha256": "19781e242a47821a2bf8099f63e266dc310694734e09637ae1a636c3410e9da2"
+        },
+        {
+          "path": "references/high-performance-storage.md",
+          "bytes": 11451,
+          "sha256": "4eb42b8d93754987cad3a1821940561443bd8bb2c235ab7186cf2f4359371f81"
+        },
+        {
+          "path": "references/iac-usage.md",
+          "bytes": 9662,
+          "sha256": "2a8661301a7c2c861cbf159d065bb526df3fda7e5d53c99973ab03ea9fe66ceb"
+        },
+        {
+          "path": "references/mcp-usage.md",
+          "bytes": 11552,
+          "sha256": "1d249026b2b8283fce5354fa4a5e4c29df5c648e214e6713749da2c2350a9835"
+        },
+        {
+          "path": "references/storage-intelligence.md",
+          "bytes": 15639,
+          "sha256": "51f79102548dd652b8c1bbe64dba5ed9141a59b12f3f660c56273d8dcdd8f776"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 7845,
+          "sha256": "2f058b6917a7d8eab7fe09f45782bd3d2924c6b1cdb82e17944e9e928c4ffb1b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "gtm-strategy",
+      "destination": "governance/agents/20261025-1953-imported-skills/gtm-strategy",
+      "source_path": "/home/an/.gemini/config/skills/gtm-strategy",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/gtm-strategy",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4465,
+          "sha256": "9612b8991bf3403078fb068d98ae9bf88ebe8687028dc12abd2adae9fadbda0d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "harness-supervisor",
+      "destination": "governance/agents/20261025-1953-imported-skills/harness-supervisor",
+      "source_path": "/home/an/dev/ver/zigvm/skills/harness-supervisor",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/harness-supervisor",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 6415,
+          "sha256": "646d9b72dd1a80a40b026036c1922458dbdd694f1b322e2fe7c8599ed18a981a"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "infranodus-design-superset",
+      "destination": "governance/agents/20261025-1953-imported-skills/infranodus-design-superset",
+      "source_path": "/home/an/dev/ver/zigvm/skills/infranodus-design-superset",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/infranodus-design-superset",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "references/execution-character.md",
+          "bytes": 7701,
+          "sha256": "d224b511c2206689dbdd60d655eb576f018eca45bc69fa39f56105dd8d646469"
+        },
+        {
+          "path": "references/journal-contract.md",
+          "bytes": 2165,
+          "sha256": "6101c5256e37145f553f0b5701dbf60017894e43ad42624ca5721a9930bd901b"
+        },
+        {
+          "path": "references/profile-contract.md",
+          "bytes": 1721,
+          "sha256": "7dc5fe90d8d49d039a447c449fd070110b89dd6c677d40a187d51f595eddb227"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 8442,
+          "sha256": "b552729974aee3183442dc4ea397e5cb55000f35b6b31f15c63c527f73f9c339"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "journal-artifact-publisher",
+      "destination": "governance/agents/20261025-1953-imported-skills/journal-artifact-publisher",
+      "source_path": "/home/an/.gemini/config/skills/journal-artifact-publisher",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/journal-artifact-publisher",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "references/artifact-contract.md",
+          "bytes": 2676,
+          "sha256": "9755892c20f78da71be4be14d381019da405f634523b04e4338c69c819eed5d6"
+        },
+        {
+          "path": "references/email-payload.md",
+          "bytes": 1238,
+          "sha256": "745bbca35bebf43667611dc0cb09f7e8c36cea36fba3f3e30c87fa30b53b6213"
+        },
+        {
+          "path": "references/fractal-closure-checklist.md",
+          "bytes": 4135,
+          "sha256": "7f4f3bd0a2f94c949ba90fdbe11ada3465493ec3d8feb081b7a946ef2b90d2ac"
+        },
+        {
+          "path": "references/html-report.md",
+          "bytes": 1107,
+          "sha256": "881bac66dc71b326af8bcddad9d63a996cf3f014da4b96eed46b9b83650c348f"
+        },
+        {
+          "path": "references/journal-template.md",
+          "bytes": 1396,
+          "sha256": "1159832a51b5893317ea6fd783db528e135bf94eb71b53d0b880a0805becfa68"
+        },
+        {
+          "path": "references/link-validation.md",
+          "bytes": 2042,
+          "sha256": "b7ffef0e1616cc796ceb25fc08f57914ddff4ff7ed16d2667f5a5b88ed09a036"
+        },
+        {
+          "path": "references/sa-plan-workflow.md",
+          "bytes": 2457,
+          "sha256": "0f28d7801cb7dead5c19fcb9328edeeb44899d05fafa1dd080f48c754f897eb6"
+        },
+        {
+          "path": "references/slide-deck.md",
+          "bytes": 755,
+          "sha256": "7911bb085d070839b3255a11b2c0ff654cd4396ac39b44979eb30ed14a936beb"
+        },
+        {
+          "path": "references/task-management-integration.md",
+          "bytes": 2126,
+          "sha256": "69e10d769265184f025b30175674316817bb7bacb94ad447169dfca63d5ad094"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 3171,
+          "sha256": "ebeefad4953867e37fa88ccae6292c8d56447119879ede1935ada08e6aecb396"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "journal-protocol",
+      "destination": "governance/agents/20261025-1953-imported-skills/journal-protocol",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/journal-protocol",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/journal-protocol",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2277,
+          "sha256": "bf293a7662ab605c367c30d97a6d44ac70696f79034735bb483821d7b2973ddd"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "learn-rule",
+      "destination": "governance/agents/20261025-1953-imported-skills/learn-rule",
+      "source_path": "/home/an/.gemini/config/skills/learn-rule",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/learn-rule",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 776,
+          "sha256": "6ad5775d9eaaedd6296b9f0afe905c0ad15441d13143f00924e29e278cffb8ea"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "linkedin-outreach",
+      "destination": "governance/agents/20261025-1953-imported-skills/linkedin-outreach",
+      "source_path": "/home/an/.gemini/config/skills/linkedin-outreach",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/linkedin-outreach",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2912,
+          "sha256": "4b47898e5040913db6e6edc6277c3819ab646c3887bc872898834c87f58f751f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "living-ontology",
+      "destination": "governance/agents/20261025-1953-imported-skills/living-ontology",
+      "source_path": "/home/an/dev/ver/zigvm/skills/living-ontology",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/living-ontology",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 8995,
+          "sha256": "dcf2c03f466516ee13284af6d3cec3b732a8d086d409f8b173e8a0a46be59c6d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "lustre-gleam-ui-expert",
+      "destination": "governance/agents/20261025-1953-imported-skills/lustre-gleam-ui-expert",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/lustre-gleam-ui-expert",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/lustre-gleam-ui-expert",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 12523,
+          "sha256": "97656bb5f029426a0f848aa739b54b7a419bc5545d2ab0b51a2bb5c3d6557cf9"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "managing-python-dependencies",
+      "destination": "governance/agents/20261025-1953-imported-skills/managing-python-dependencies",
+      "source_path": "/home/an/.gemini/config/skills/managing-python-dependencies",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/managing-python-dependencies",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2757,
+          "sha256": "7ad459a5a8188fa0f2b8cf3e5e479825e7d7e93e1724750cd1707d896cbd7a05"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "marionette-explore",
+      "destination": "governance/agents/20261025-1953-imported-skills/marionette-explore",
+      "source_path": "/home/an/.gemini/config/skills/marionette-explore",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/marionette-explore",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3452,
+          "sha256": "88fd387217ca59986b68a9def1e6a886a9add953cf7f1f1a331864373c16086d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "mesh-resurrection",
+      "destination": "governance/agents/20261025-1953-imported-skills/mesh-resurrection",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/mesh-resurrection",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/mesh-resurrection",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2347,
+          "sha256": "0f527a8c8d513bdbb0d5cce8cbcc7d2e2e8f65eb5a85ec6de918969120101f07"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "ml-best-practices",
+      "destination": "governance/agents/20261025-1953-imported-skills/ml-best-practices",
+      "source_path": "/home/an/.gemini/config/skills/ml-best-practices",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/ml-best-practices",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9805,
+          "sha256": "ae010fd52e6b29f9c18302c4bdb36ce444bfc5581a52a0e036ae1f0b6ab44473"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "mobile-first-adaptive-ui",
+      "destination": "governance/agents/20261025-1953-imported-skills/mobile-first-adaptive-ui",
+      "source_path": "/home/an/dev/ver/zigvm/skills/mobile-first-adaptive-ui",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/mobile-first-adaptive-ui",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2507,
+          "sha256": "436c2f91a43007c1e2bd70f04eef7050d398e8be62c18e12e6954af6d7028139"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "multilayer-swarm",
+      "destination": "governance/agents/20261025-1953-imported-skills/multilayer-swarm",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/multilayer-swarm",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/multilayer-swarm",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2139,
+          "sha256": "20fe648d4f1df49ea855fbff3432c9fa33d843840f616381443b112e61362ccb"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "notebook-guidance",
+      "destination": "governance/agents/20261025-1953-imported-skills/notebook-guidance",
+      "source_path": "/home/an/.gemini/config/skills/notebook-guidance",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/notebook-guidance",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 15100,
+          "sha256": "bddf53b2c3ab71eee53e83ef5c357adbe2f216ff324585f719da04e315a9862e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "observe",
+      "destination": "governance/agents/20261025-1953-imported-skills/observe",
+      "source_path": "/home/an/.gemini/config/skills/observe",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/observe",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 890,
+          "sha256": "08098e86ced8ce12fec372683cff51f0047c76aaa1170f207535e0407658e027"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "ocaml-figma-control",
+      "destination": "governance/agents/20261025-1953-imported-skills/ocaml-figma-control",
+      "source_path": "/home/an/dev/ver/zigvm/skills/ocaml-figma-control",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/ocaml-figma-control",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4036,
+          "sha256": "9a327402b021d83caa5b41b82cce8a5a44b1b9ec3dd9ba62beaff54af45a541c"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "ocaml-scripting",
+      "destination": "governance/agents/20261025-1953-imported-skills/ocaml-scripting",
+      "source_path": "/home/an/dev/ver/zigvm/skills/ocaml-scripting",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/ocaml-scripting",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 8406,
+          "sha256": "f49cb522447460181c4771cd6ba03e5eb5226ba1eea3554fb015492d4dfdd70e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "otp-conformance-protocol",
+      "destination": "governance/agents/20261025-1953-imported-skills/otp-conformance-protocol",
+      "source_path": "/home/an/dev/ver/zigvm/skills/otp-conformance-protocol",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/otp-conformance-protocol",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7442,
+          "sha256": "607f7f11cf2fa0b832ec003048aae3cc55446784a718d9a77ca8119c727c058a"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "parity-scenario-authoring",
+      "destination": "governance/agents/20261025-1953-imported-skills/parity-scenario-authoring",
+      "source_path": "/home/an/.claude/skills/parity-scenario-authoring",
+      "source_kind": "home-claude-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/parity-scenario-authoring",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 6136,
+          "sha256": "d81a225ec637b68d04f5d67f7176625a21c1d52bf9ccac568d918880a2f5f14d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "pass5-auto",
+      "destination": "governance/agents/20261025-1953-imported-skills/pass5-auto",
+      "source_path": "/home/an/.gemini/config/skills/pass5-auto",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/pass5-auto",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1816,
+          "sha256": "e4d8d77cab62c1b6c97d200142756d1726f92839ac505ef5a9666676c2f39de1"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "patrol-marionette-test",
+      "destination": "governance/agents/20261025-1953-imported-skills/patrol-marionette-test",
+      "source_path": "/home/an/.gemini/config/skills/patrol-marionette-test",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/patrol-marionette-test",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2799,
+          "sha256": "7d97ae36a2f57d4419e87738628b0533f244455457e473ee4d7bd5830ce2e548"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "pi-prompt",
+      "destination": "governance/agents/20261025-1953-imported-skills/pi-prompt",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/pi-prompt",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/pi-prompt",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2130,
+          "sha256": "e80a89c4ad31f9c343a8bb2383ec70a50cebb2e83f4c64d6d56bb78eac7c8d3f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "pi-symbiosis-evolve",
+      "destination": "governance/agents/20261025-1953-imported-skills/pi-symbiosis-evolve",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/pi-symbiosis-evolve",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/pi-symbiosis-evolve",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1954,
+          "sha256": "0b1aad0a208835ff0f373d8a33f0d28841993dc6c5744a217c2b60daff79b03e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "pi-verify",
+      "destination": "governance/agents/20261025-1953-imported-skills/pi-verify",
+      "source_path": "/home/an/.gemini/config/skills/pi-verify",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/pi-verify",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2129,
+          "sha256": "7377ac88bae5e508f63834732868beb1100d12f7d1ee503a3ca34248bf9a5920"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "predict",
+      "destination": "governance/agents/20261025-1953-imported-skills/predict",
+      "source_path": "/home/an/.gemini/config/skills/predict",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/predict",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 952,
+          "sha256": "a922cda044dd1b739e7432869d517296ce725efa6ec58a4256e3d9cc07e940de"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "pricing-strategy",
+      "destination": "governance/agents/20261025-1953-imported-skills/pricing-strategy",
+      "source_path": "/home/an/.gemini/config/skills/pricing-strategy",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/pricing-strategy",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4885,
+          "sha256": "2ec946fe4add61712576b43e91536b72f4106598acef332d080ae281fc64a883"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "proposal-builder",
+      "destination": "governance/agents/20261025-1953-imported-skills/proposal-builder",
+      "source_path": "/home/an/.gemini/config/skills/proposal-builder",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/proposal-builder",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2426,
+          "sha256": "79a50b4420e76b3b271e96dc727143e6c28201ef96120987ef757ba08a3d4062"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "qbr-template",
+      "destination": "governance/agents/20261025-1953-imported-skills/qbr-template",
+      "source_path": "/home/an/.gemini/config/skills/qbr-template",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/qbr-template",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2975,
+          "sha256": "9bc115d0a82ffa697f0a15e369949774a5f0842226e71b267be82c6100b82bd1"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "raven-ml-substrate",
+      "destination": "governance/agents/20261025-1953-imported-skills/raven-ml-substrate",
+      "source_path": "/home/an/dev/ver/zigvm/skills/raven-ml-substrate",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/raven-ml-substrate",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4518,
+          "sha256": "61dfffab5bc35f427f48433025905c01275687a7e402a52b190cbd67b3ef1f7e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "resource-preflight",
+      "destination": "governance/agents/20261025-1953-imported-skills/resource-preflight",
+      "source_path": "/home/an/.claude/skills/resource-preflight",
+      "source_kind": "home-claude-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/resource-preflight",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7019,
+          "sha256": "e66c9d6f21f80c6d2021070ceda78d86a54325e66bca0d9118c0370598451bf5"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "revenue-ops",
+      "destination": "governance/agents/20261025-1953-imported-skills/revenue-ops",
+      "source_path": "/home/an/.gemini/config/skills/revenue-ops",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/revenue-ops",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4917,
+          "sha256": "d4aa39a44d572e84b0c2ad38f10ed1796e0e99941ac8abed1179f7b4a8cd3d4f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "safe-rust-x-safety",
+      "destination": "governance/agents/20261025-1953-imported-skills/safe-rust-x-safety",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/safe-rust-x-safety",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/safe-rust-x-safety",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3236,
+          "sha256": "82f3b4767e5c66a7ef4530b61c3f16007b2fb506542db94a596f686ddfac5b01"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/sales",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1845,
+          "sha256": "232830d55dbbd55fddc902abfbe3818be6a39e58a016a8db285e8f17faf7bd11"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales-analyze",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales-analyze",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/sales-analyze",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales-analyze",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1874,
+          "sha256": "0af220e66e84a901556786663eae748251ee1f9dc7cc61217ec64162c9b6d5e6"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales-brief",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales-brief",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/sales-brief",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales-brief",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1628,
+          "sha256": "0a168e883614f8ad3d627ad88f5694a29a0cc6b72a099f19a8b53243aadd8caa"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales-call-prep",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales-call-prep",
+      "source_path": "/home/an/.gemini/config/skills/sales-call-prep",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales-call-prep",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2114,
+          "sha256": "f307347144cb0dca7fa20884e73c59758847518ecf8abd74af407c5ca4a661da"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales-email",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales-email",
+      "source_path": "/home/an/.gemini/config/skills/sales-email",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales-email",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1499,
+          "sha256": "0baf5ca508d5bdb13fcce78c009144ebd4b8910e7e3228148b28054ea0447059"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales-forecast",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales-forecast",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/sales-forecast",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales-forecast",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1377,
+          "sha256": "a21d45cf45b075a9992bf36cdad8ea3e9b7c69ae2ce08b8e30b13f5a1e32ff90"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales-hunt",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales-hunt",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/sales-hunt",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales-hunt",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1709,
+          "sha256": "f89ed9cc29e8f0e4512e99389f8449acdc04ad65331520032efd3a252bb2e7be"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "sales-prospecting",
+      "destination": "governance/agents/20261025-1953-imported-skills/sales-prospecting",
+      "source_path": "/home/an/.gemini/config/skills/sales-prospecting",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/sales-prospecting",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1832,
+          "sha256": "43195ce369b99f7862614e418d9b3831816510a0cda735c3efc88a55157db919"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "semi-market-intel",
+      "destination": "governance/agents/20261025-1953-imported-skills/semi-market-intel",
+      "source_path": "/home/an/.gemini/config/skills/semi-market-intel",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/semi-market-intel",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3948,
+          "sha256": "01c8de9e18040e221cd66b0abc1435bfeec5143835817734226b7b3428d135d7"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "skill-repair",
+      "destination": "governance/agents/20261025-1953-imported-skills/skill-repair",
+      "source_path": "/home/an/.gemini/config/skills/skill-repair",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/skill-repair",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1777,
+          "sha256": "7ed4b7eb5d82d14686967967159aa472869313bd9804ced44b16eab4884b7f00"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "smp-concurrency-slice",
+      "destination": "governance/agents/20261025-1953-imported-skills/smp-concurrency-slice",
+      "source_path": "/home/an/dev/ver/zigvm/skills/smp-concurrency-slice",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/smp-concurrency-slice",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10805,
+          "sha256": "0c1d556ffe908d5c51e80c412e98bdc36368450b6f53852404674b44322d56c0"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "smtml-solver-substrate",
+      "destination": "governance/agents/20261025-1953-imported-skills/smtml-solver-substrate",
+      "source_path": "/home/an/dev/ver/zigvm/skills/smtml-solver-substrate",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/smtml-solver-substrate",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7634,
+          "sha256": "b8bd9502113cea46be50bc68bc405f479b1eb00f816db6f9fcbc9d93dd727cf4"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "stan-probabilistic-substrate",
+      "destination": "governance/agents/20261025-1953-imported-skills/stan-probabilistic-substrate",
+      "source_path": "/home/an/dev/ver/zigvm/skills/stan-probabilistic-substrate",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/stan-probabilistic-substrate",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10229,
+          "sha256": "7337377e6a7c4bebb38fed541a08f0b51cc782dc031a8f8f9988bd2f14ec2b91"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "stpa-safety-protocol",
+      "destination": "governance/agents/20261025-1953-imported-skills/stpa-safety-protocol",
+      "source_path": "/home/an/dev/ver/zigvm/skills/stpa-safety-protocol",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/stpa-safety-protocol",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 6041,
+          "sha256": "282d80278a72c7c1061693b442ba8989f2a93fc52442d4004c2f062f12041c0f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "strategic-account-plan",
+      "destination": "governance/agents/20261025-1953-imported-skills/strategic-account-plan",
+      "source_path": "/home/an/.gemini/config/skills/strategic-account-plan",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/strategic-account-plan",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4221,
+          "sha256": "f58a4b0754d9567641549fdae21ad45df585d04007f7258ebdc945329e148e2c"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "swarm-verification-expert",
+      "destination": "governance/agents/20261025-1953-imported-skills/swarm-verification-expert",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/swarm-verification-expert",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/swarm-verification-expert",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2106,
+          "sha256": "9aa1bca11aa2df2cbfd5b470414cfc39fcb4e0d49804cd029592ca389e7d153f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "system-engineering-sop",
+      "destination": "governance/agents/20261025-1953-imported-skills/system-engineering-sop",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/system-engineering-sop",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/system-engineering-sop",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4524,
+          "sha256": "c2441225990fc97bd36fe231c375e4f936cac1612a637f63c1ed30c24f8c0a56"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "tam-sizing",
+      "destination": "governance/agents/20261025-1953-imported-skills/tam-sizing",
+      "source_path": "/home/an/.gemini/config/skills/tam-sizing",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/tam-sizing",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3603,
+          "sha256": "3c384d8106bdec61ec7d9828281057e955c1057677cc40cef0dacea4433f86e8"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "territory-plan",
+      "destination": "governance/agents/20261025-1953-imported-skills/territory-plan",
+      "source_path": "/home/an/.gemini/config/skills/territory-plan",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/territory-plan",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2658,
+          "sha256": "e38a52b0e51f8204760d6fec697cdf07ec4fd8dbabb235122410a8f0d1d78a04"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "timestamp-sync",
+      "destination": "governance/agents/20261025-1953-imported-skills/timestamp-sync",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/timestamp-sync",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/timestamp-sync",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2164,
+          "sha256": "227785fd74a592783f008fbaeca5a7f746bfb9add58f472de9e81acd2dfdbfc9"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "tyxml-conversion",
+      "destination": "governance/agents/20261025-1953-imported-skills/tyxml-conversion",
+      "source_path": "/home/an/dev/ver/zigvm/skills/tyxml-conversion",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/tyxml-conversion",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7279,
+          "sha256": "103a5e2f1e75717ac1ff72962a752b862365fef87eea23bad2d83b203699a02e"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "ui-report-quality",
+      "destination": "governance/agents/20261025-1953-imported-skills/ui-report-quality",
+      "source_path": "/home/an/dev/ver/c3i/.claude/skills/ui-report-quality",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/ui-report-quality",
+      "source_git_revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "source_dirty_entries_in_path": 1,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4747,
+          "sha256": "cbb00f04cdd9449c73d7ad634168e89a34fb4948144a7a38741bde90de6011f8"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "using-jj-workspaces",
+      "destination": "governance/agents/20261025-1953-imported-skills/using-jj-workspaces",
+      "source_path": "/home/an/.gemini/config/skills/using-jj-workspaces",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/using-jj-workspaces",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2189,
+          "sha256": "9f9f1919059f948b921ee7b069acb3f9809d21c70e1a6c26353c1c3320be5518"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "wiki-design",
+      "destination": "governance/agents/20261025-1953-imported-skills/wiki-design",
+      "source_path": "/home/an/dev/ver/zigvm/skills/wiki-design",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/wiki-design",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 14244,
+          "sha256": "5d7d8fcf1ff8b0c696c7b53736e34a70ef75189715c25d5dd691e7699d46fb7d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "win-loss-analysis",
+      "destination": "governance/agents/20261025-1953-imported-skills/win-loss-analysis",
+      "source_path": "/home/an/.gemini/config/skills/win-loss-analysis",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/win-loss-analysis",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2329,
+          "sha256": "57308619c7f3b67d0c2109c3ace72ec77753cdc91777726e220c2ed68d083e21"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "writing-gospel-specifications",
+      "destination": "governance/agents/20261025-1953-imported-skills/writing-gospel-specifications",
+      "source_path": "/home/an/.claude/skills/writing-gospel-specifications",
+      "source_kind": "home-claude-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/writing-gospel-specifications",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "gospel-0.3.1-ocaml-5.5.0.patch",
+          "bytes": 3881,
+          "sha256": "9b2ca22f360f07d273a974eabd2a2f689217c3953d59c03583614dec775712f2"
+        },
+        {
+          "path": "gospel-lint",
+          "bytes": 307,
+          "sha256": "110a1e4bf2324575d4cdc724ee2c528ec6c638ca22fbd4c4b34a131c6f026a90"
+        },
+        {
+          "path": "gospel_lint/coverage_points.ml",
+          "bytes": 4484,
+          "sha256": "1db20ab16251988db0675fd922b8e9df581d9f8263ffb221f350af41dfb8f933"
+        },
+        {
+          "path": "gospel_lint/dune",
+          "bytes": 588,
+          "sha256": "9eaf294015eb14396e88451ab2e8202d2e9adc2bddafc8c85f9801662e68e2b3"
+        },
+        {
+          "path": "gospel_lint/dune-project",
+          "bytes": 16,
+          "sha256": "7683bde65ffaf55487d5882de93926e803a30ed5cf3bf4af705804120cd53d5b"
+        },
+        {
+          "path": "gospel_lint/gospel_lint_cli.ml",
+          "bytes": 42,
+          "sha256": "16454ebbc6b90651659a389c863259b662b27b4578892b0c197bd40f4e2eafda"
+        },
+        {
+          "path": "gospel_lint/gospel_lint.ml",
+          "bytes": 43350,
+          "sha256": "6bbc3151c09a948394f116564ad514fed390f064a2e64ba09212318122a9f9f3"
+        },
+        {
+          "path": "gospel_lint/test_gospel_lint.ml",
+          "bytes": 31890,
+          "sha256": "75c5177bd7e3b456f5c03840d361cf16455735ecbef41a72739aebdfdc537a4b"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 11370,
+          "sha256": "799b3af5664ee31838f6aa40dc992151466461c926b850aedc5fb653d19b7b43"
+        },
+        {
+          "path": "templates.mli",
+          "bytes": 6100,
+          "sha256": "2b6797e75e5bc5ef1b5b710f51e9fc9979f168df5330ef37c5d6322d6e82224f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "zigvm-harness-reuse",
+      "destination": "governance/agents/20261025-1953-imported-skills/zigvm-harness-reuse",
+      "source_path": "/home/an/.claude/skills/zigvm-harness-reuse",
+      "source_kind": "home-claude-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/zigvm-harness-reuse",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 3893,
+          "sha256": "7197e59168ea8cd79921593fb9b02371831455054bf03c2c7bfb4a3468bdb20b"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "zk-cost",
+      "destination": "governance/agents/20261025-1953-imported-skills/zk-cost",
+      "source_path": "/home/an/.gemini/config/skills/zk-cost",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/zk-cost",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 624,
+          "sha256": "406497e87937d22c207ca0ea03477bcd379734fb970c51b82b8232749eb10488"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "zk-knowledge-base",
+      "destination": "governance/agents/20261025-1953-imported-skills/zk-knowledge-base",
+      "source_path": "/home/an/dev/ver/zigvm/skills/zk-knowledge-base",
+      "source_kind": "external-evidence-tree",
+      "original_surface_link": "/home/an/.gemini/config/skills/zk-knowledge-base",
+      "source_git_revision": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "source_dirty_entries_in_path": 0,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7209,
+          "sha256": "cce17275a93e7726fb3dbee7c301e78b7e0e2536ab32388f097972d51f4c6d89"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "zk-learn",
+      "destination": "governance/agents/20261025-1953-imported-skills/zk-learn",
+      "source_path": "/home/an/.gemini/config/skills/zk-learn",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/zk-learn",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1066,
+          "sha256": "e9e350d5e8e3d934dba5bb42348c4511c3b1c379ec7127cac6e2dcdb5ce7e78d"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "zk-recall",
+      "destination": "governance/agents/20261025-1953-imported-skills/zk-recall",
+      "source_path": "/home/an/.gemini/config/skills/zk-recall",
+      "source_kind": "home-gemini-skills",
+      "original_surface_link": "/home/an/.gemini/config/skills/zk-recall",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 1157,
+          "sha256": "95a963df9539fe57762dcb981037cc175a150697acef5824a7b1e638b8d5586f"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "brainstorming",
+      "destination": "plugins/superpowers/skills/brainstorming",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/brainstorming",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/brainstorming (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 129,
+          "sha256": "90585d2a09289aaff7eba1271596e8500c7328437b94839f2d39699a41689195"
+        },
+        {
+          "path": "builder-check-prompt.md",
+          "bytes": 881,
+          "sha256": "36d51a4723d6f0a3ce5811a0ea3b3a8424f07533947e1355f5d8cb8cce40c55e"
+        },
+        {
+          "path": "scripts/frame-template.html",
+          "bytes": 8094,
+          "sha256": "6a8a4e58bd6a44b904e2e3c57de774481d909204597e1498de53f1b2fecc4c4e"
+        },
+        {
+          "path": "scripts/helper.js",
+          "bytes": 5615,
+          "sha256": "43c6d69954a46ec34a2a262bcc62a9a7e83e839c739f199cb72646d397c686e3"
+        },
+        {
+          "path": "scripts/server.cjs",
+          "bytes": 25699,
+          "sha256": "763abf96510e0b892a1141397b31aa82ef900cf87ed34dde94bc8782baf4a7ca"
+        },
+        {
+          "path": "scripts/start-server.sh",
+          "bytes": 6908,
+          "sha256": "a4e5ae84275bcaacd2f84345afeabe59cf7b00ba080e123da7cc1fb226f12847"
+        },
+        {
+          "path": "scripts/stop-server.sh",
+          "bytes": 3263,
+          "sha256": "0b5ccbbd57f62d3ed88993f7940b5ee0e5c0fc9b21c550c623da4f6292e47daf"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 13602,
+          "sha256": "61a7ef918652108c76a3fd01e02dd92d39996c6b46d4cb2819cbd03f6c45e46a"
+        },
+        {
+          "path": "visual-companion.md",
+          "bytes": 13413,
+          "sha256": "6ffcb038b53254bd31debaa15e12dcd4ff24bd63d690e0b644ac6396701cf2e2"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "diagnosing-superpowers",
+      "destination": "plugins/superpowers/skills/diagnosing-superpowers",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/diagnosing-superpowers",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/diagnosing-superpowers (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 127,
+          "sha256": "870134aaf221d744d6f6a7c81d5175453bdd912362e03f1979fb77afd2820993"
+        },
+        {
+          "path": "prompts/analyst-common.md",
+          "bytes": 1582,
+          "sha256": "88801c36070be2a54a8a9a29632b01ab21db053e2e76ee49b5252a9b74ca4090"
+        },
+        {
+          "path": "prompts/cost-and-time.md",
+          "bytes": 1640,
+          "sha256": "fe97a66d4db3b436816ef82694bda413b522b3a862dd41978da01e358fffecc4"
+        },
+        {
+          "path": "prompts/plan-adherence.md",
+          "bytes": 1637,
+          "sha256": "1dcbab82033598a2e9c9ee42e950d4b1822d2c871c02cef9e102cdd5cbbda113"
+        },
+        {
+          "path": "prompts/quality-evidence.md",
+          "bytes": 1476,
+          "sha256": "749d11cf678f379ed77a29274cad456634e0284aa523639a1a214a9f2b986eb1"
+        },
+        {
+          "path": "prompts/repeated-work.md",
+          "bytes": 1469,
+          "sha256": "895027f2dfa4b1b8bcdb7ac9aec8d45a80bff212fad6ec6cad5ab38fa68322f5"
+        },
+        {
+          "path": "prompts/request-conflicts.md",
+          "bytes": 1011,
+          "sha256": "e800e38d8b7752c212c76c5c3ed75cd78b749684263ea0c313586f26af6f4b5c"
+        },
+        {
+          "path": "prompts/scrub-audit.md",
+          "bytes": 1363,
+          "sha256": "5cc48f05a7f81f5f7e05e0c7ceafc0fb8774bcaf75fe88dcb5c7e408026c70ad"
+        },
+        {
+          "path": "prompts/scrub.md",
+          "bytes": 1471,
+          "sha256": "854cb3320cc5377b493cea2f72519d67983464882db68a0f408a7d0a0f040b8c"
+        },
+        {
+          "path": "prompts/similar-session.md",
+          "bytes": 1711,
+          "sha256": "b190f713b463df2bb5ec3914647e204074d1bd50643a53159db6d13cace916c1"
+        },
+        {
+          "path": "prompts/skill-timeline.md",
+          "bytes": 1646,
+          "sha256": "45d604d583b57a77b9033eced8eb875ef342af70fcd66cf7d15c6dc89964890f"
+        },
+        {
+          "path": "prompts/stumbles.md",
+          "bytes": 1330,
+          "sha256": "1f2d1f048aff7b8b400006301f1ce8c232ecc7e9d5f705af27a849b2c03ea2e7"
+        },
+        {
+          "path": "references/context-safety.md",
+          "bytes": 990,
+          "sha256": "e6be2bd3495f454d4bedee9484d728d245d1fa656e11fc4ceec5693c16e4730a"
+        },
+        {
+          "path": "references/github-issues.md",
+          "bytes": 1636,
+          "sha256": "d26ef9197b4a6ae5159ae6d11abd162bcc624d95fc7ccf508e07b68f916a1b19"
+        },
+        {
+          "path": "references/redaction-policy.md",
+          "bytes": 2243,
+          "sha256": "96b16f47074838fe2d7e609577d6f8b0ad460f8378b281a3f96ee23cb5a08bde"
+        },
+        {
+          "path": "references/session-discovery.md",
+          "bytes": 1859,
+          "sha256": "6d1dced083e5d978448a78df298cf515531b0eb39b2854a4a2afbffeb69a7435"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6941,
+          "sha256": "3143de8695c5a2d63e8b1675f33837578076f464deb127c2ebdd0b46fceef886"
+        },
+        {
+          "path": "templates/bundle-README.md",
+          "bytes": 3672,
+          "sha256": "2e6ddc6b106028d5ebd00a50ad93a77111d675c219ee1273cd0857869e8d51ec"
+        },
+        {
+          "path": "templates/case.md",
+          "bytes": 2983,
+          "sha256": "597892462be83bc478536ec91f7c285f6dd25d119c560734a3a180fe8471301d"
+        },
+        {
+          "path": "templates/issue.md",
+          "bytes": 2680,
+          "sha256": "afd21779e5de5bc5adfe2f5a50a04e44ab8d50d9ad0f829243de248d6f023eed"
+        },
+        {
+          "path": "templates/report.md",
+          "bytes": 2359,
+          "sha256": "38295d0fd785e8608f330815c59ebd7047942002ec7085aecbed54681f56b0c1"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "destination": "plugins/superpowers/skills/dispatching-parallel-agents",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/dispatching-parallel-agents",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/dispatching-parallel-agents (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 126,
+          "sha256": "55e5cdae31b34dcafb3cdeb7ca6e154ad3a1ab56da7e6b0d4cc8e1e098ecb5da"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6078,
+          "sha256": "1968923066f3b707eb01d1992cdf4c42284c3855f70253b9cd5000ff45fca13c"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "executing-plans",
+      "destination": "plugins/superpowers/skills/executing-plans",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/executing-plans",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/executing-plans (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 129,
+          "sha256": "c9884a11c9c4721b838ad0b526590efdf677065fb20af0ac3b2bd2ea55cf8786"
+        },
+        {
+          "path": "scripts/task-done",
+          "bytes": 1692,
+          "sha256": "d0d4f2397c85a4426443ea955e699ef12568b41b408ec6122d4ec2433ee3a5f6"
+        },
+        {
+          "path": "scripts/task-start",
+          "bytes": 963,
+          "sha256": "f833693c8fce3700fc9f841562d80f8015cd40f652c168a3405ac3e46947a1fe"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 18103,
+          "sha256": "e4649e59880ef2643d1da128e3d607e87e3f969410d72095a5bf65811b6036dc"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "destination": "plugins/superpowers/skills/finishing-a-development-branch",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/finishing-a-development-branch",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/finishing-a-development-branch (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 149,
+          "sha256": "74ab618a66f23e8e29015f4ab14db2dd0f639e98c6fdc25fb912fb6a82ed593d"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 7781,
+          "sha256": "8db5a922b242dd4e1bf824cb91c13b3e8d8e8a86d6ceaf7f0774eb9cce909d65"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "receiving-code-review",
+      "destination": "plugins/superpowers/skills/receiving-code-review",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/receiving-code-review",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/receiving-code-review (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 127,
+          "sha256": "f5515fdf668d22fffc4fd367f990318b2c1ba1a73d9b3ba5661c40e02deedfbc"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6203,
+          "sha256": "091df1629510af1b92fc4abd6f96732ebedb4cb2c0f3457e8f2740b0504a2438"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "requesting-code-review",
+      "destination": "plugins/superpowers/skills/requesting-code-review",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/requesting-code-review",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/requesting-code-review (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 118,
+          "sha256": "1917e3cf2c957e7512343e622b002a873f325fbf931bed77d71afb5a02ca431d"
+        },
+        {
+          "path": "code-reviewer.md",
+          "bytes": 6449,
+          "sha256": "82e370be6b3447523816286195571e4216ba56ba1ad6ad0e87862294c4c78dcb"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 2974,
+          "sha256": "2180e14a448e9410bec88e6646a2d1f0ce7fdd58de27388c1e052e929679d2bc"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "subagent-driven-development",
+      "destination": "plugins/superpowers/skills/subagent-driven-development",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/subagent-driven-development",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/subagent-driven-development (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 138,
+          "sha256": "58ef494a996998f2a486a0764b769bdf02e9c148b050b38603dbcdb364ae2771"
+        },
+        {
+          "path": "implementer-prompt.md",
+          "bytes": 6335,
+          "sha256": "81dd9d5a3fb0b09b96b5829f03b9796842f3199ef7591d1ba1c2db2a515f64d0"
+        },
+        {
+          "path": "references/batching.md",
+          "bytes": 583,
+          "sha256": "b54dc7e23dbfb90db89bcb2fb3af591aabf6a271a165fbc0da4c6f9439980eac"
+        },
+        {
+          "path": "references/cannot-verify.md",
+          "bytes": 513,
+          "sha256": "e698713a15e0eabf1a2ab26ffe1bb04bf70c9d6d2e2060d44a0f9a1bdd4408bf"
+        },
+        {
+          "path": "references/final-review.md",
+          "bytes": 2447,
+          "sha256": "2fd999d86e5dd0b9b32aaf93f2a41663ef30b3e3cb78fb2fd5cb450eb59eb9de"
+        },
+        {
+          "path": "references/fix-loop.md",
+          "bytes": 4249,
+          "sha256": "eafff1f801af2ced86e8761f3eeef04b701860d986ba5d0a8b20d506a75104bb"
+        },
+        {
+          "path": "references/handling-reports.md",
+          "bytes": 1062,
+          "sha256": "8f759cdd4936220c38aab05b6d6c48c6df8ac8f146b0f37a6d2facbf87133c67"
+        },
+        {
+          "path": "references/preflight.md",
+          "bytes": 1353,
+          "sha256": "3ea21c5fc1af1a190ac8a9d19ceb0849b47bf2ffe27b87dffcc21b6a0539776c"
+        },
+        {
+          "path": "references/resuming.md",
+          "bytes": 614,
+          "sha256": "ff6e38bde2276faa2a7e93513086caded0ea10edbf2ec7f349a7e3b0d7c668c4"
+        },
+        {
+          "path": "re-review-prompt.md",
+          "bytes": 4761,
+          "sha256": "0828a5e9cbb12ba49f14621dd8c3953c48c0fc383e75bb5494f055ed0d6d824f"
+        },
+        {
+          "path": "scripts/review-package",
+          "bytes": 2029,
+          "sha256": "f9275175b2276b1d5fdb1bae0bedaadd2a950659b7c6f311ea37ff85e1861b1f"
+        },
+        {
+          "path": "scripts/sdd-workspace",
+          "bytes": 3684,
+          "sha256": "4fd9770e7a49b6bde488c0e92bac1b3bd01fcbdaf8f06b6c4efbe3a1abd99f86"
+        },
+        {
+          "path": "scripts/task-brief",
+          "bytes": 1322,
+          "sha256": "cc563538e09abf719b34ddf4b2fa7a65cf3b301729039dbfa923cb060f729146"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 19506,
+          "sha256": "ba41f697136cba88a7962d60c8e2f97488ba04a8688b1d0fbeb27f6953808e75"
+        },
+        {
+          "path": "task-reviewer-prompt.md",
+          "bytes": 9031,
+          "sha256": "bfed55c8f19d0ff6ed57b0fe09127c92890e9311c6c73917129598826bf9ebe8"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "systematic-debugging",
+      "destination": "plugins/superpowers/skills/systematic-debugging",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/systematic-debugging",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/systematic-debugging (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 114,
+          "sha256": "a1ec2b63eb6ac4f79bdea5e0ac4dd9688ead473dbc0ff8aa791f9142778b5386"
+        },
+        {
+          "path": "condition-based-waiting-example.ts",
+          "bytes": 5054,
+          "sha256": "40ae5ebe497fdf310200e43fe986552546d0a22837c0d39e855db1cfd33eb88e"
+        },
+        {
+          "path": "condition-based-waiting.md",
+          "bytes": 3516,
+          "sha256": "e89fec8400d6cd50f43407cec9fab50976ba4d55d0ec2eb51c0bd68036b54c26"
+        },
+        {
+          "path": "CREATION-LOG.md",
+          "bytes": 4257,
+          "sha256": "c24733a5b1821bd6bed1fc950261f0b9f4e90097e0bbb96459d8179713730789"
+        },
+        {
+          "path": "defense-in-depth.md",
+          "bytes": 3650,
+          "sha256": "1e175fb86fc357e58c6aebf5441e481e1b7868b4380c0456b63a17eefbd18ba7"
+        },
+        {
+          "path": "find-polluter.sh",
+          "bytes": 1986,
+          "sha256": "dd7b8f13c4cc2a24b33ff87b18da9248f3e1c80a085c3316224f69ff0fa5c43c"
+        },
+        {
+          "path": "root-cause-tracing.md",
+          "bytes": 5321,
+          "sha256": "75b933b6a8c40bdb2031b10f21654395b56ec6ab6bc7b018c18d3fe57aeb7fb8"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 9530,
+          "sha256": "51c6435d98c83c42c96ba7c35725a0b2c376cd487fb1a4e6bd0ddbe7e33ef202"
+        },
+        {
+          "path": "test-academic.md",
+          "bytes": 653,
+          "sha256": "fe2ba480d78ac0d686dc025f41c2a32a43d642bf533f91b0c6053a04d35d6486"
+        },
+        {
+          "path": "test-pressure-1.md",
+          "bytes": 1900,
+          "sha256": "0b6a915db0054577819834c79be9eb614e97bddba10d73768e1fbe91cfed048a"
+        },
+        {
+          "path": "test-pressure-2.md",
+          "bytes": 2283,
+          "sha256": "b2030aeffba07050e8ad573ddf87486457c4a016a786bb326235bebd856f2016"
+        },
+        {
+          "path": "test-pressure-3.md",
+          "bytes": 2692,
+          "sha256": "96b50a52e2c7989c9cf20fb752c47c1e9a3a70dc362f8f7989f8f5b64dac7708"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "test-driven-development",
+      "destination": "plugins/superpowers/skills/test-driven-development",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/test-driven-development",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/test-driven-development (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 137,
+          "sha256": "d1fd223b137ce6eca628d521031213a2dc002a97865f00e2f6fce03529b9ca05"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 9578,
+          "sha256": "64b03fce4aee5a97a93160cea8111f3ba13a17b7c001db4bd5836d67fd10705d"
+        },
+        {
+          "path": "writing-good-tests.md",
+          "bytes": 8268,
+          "sha256": "51471c853306ff92ca8bb41dcaea05f31c0e46b03651f8f3c99754b7172f4ae1"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "using-git-worktrees",
+      "destination": "plugins/superpowers/skills/using-git-worktrees",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-git-worktrees",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/using-git-worktrees (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 128,
+          "sha256": "00bb3e4d6f3448a0c406d3bffc714d5ed597248514646c2f13ef532b93041773"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 6813,
+          "sha256": "8cfb86f121269e8f7f12361e6795c4f6738828340e28964c9229d365666c9edd"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "using-superpowers",
+      "destination": "plugins/superpowers/skills/using-superpowers",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/using-superpowers (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 119,
+          "sha256": "3c5813a85ca812acc399c3081ab73699dce4740b068ab0be73710a58465bfeaa"
+        },
+        {
+          "path": "references/antigravity-tools.md",
+          "bytes": 1495,
+          "sha256": "4880f6de3da4e32f9659ebe7a72b9e0ebfff04e028c2ed96173f86d0387a04c0"
+        },
+        {
+          "path": "references/claude-code-tools.md",
+          "bytes": 1469,
+          "sha256": "21479a3fee27448cab8748a3b5687e53bb257883bda9c070426f9a1ab5cebf1b"
+        },
+        {
+          "path": "references/codex-tools.md",
+          "bytes": 4762,
+          "sha256": "1a38ad9b188c393052f58d95657a1c35ea6aafc8b5a27f198f3922912f70bbe7"
+        },
+        {
+          "path": "references/gemini-tools.md",
+          "bytes": 4598,
+          "sha256": "62b9157bcb0ee3c6784e3d0da0798ddfa5872f9e0c34bea48f3079dabea71965"
+        },
+        {
+          "path": "references/hermes-tools.md",
+          "bytes": 1964,
+          "sha256": "e2185c976a3c87503910e05e2aea58cc89bc8e569bb624b93df9958ac47a9190"
+        },
+        {
+          "path": "references/muse-tools.md",
+          "bytes": 1908,
+          "sha256": "5a1da5c575fe18456ca71cd47ebfd8a38c745f8d82a67fe64d5b83080000eeb3"
+        },
+        {
+          "path": "references/pi-tools.md",
+          "bytes": 1242,
+          "sha256": "703dbc83d23ecab9c6f388460c38abc482e9dee2fe6772a8c7a255152ad3a4d5"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 3192,
+          "sha256": "82c5c8866ad7f5dd4440ce66bd7806ba48a2f13771beae5cf112e53f08fe36ba"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "verification-before-completion",
+      "destination": "plugins/superpowers/skills/verification-before-completion",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/verification-before-completion",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/verification-before-completion (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 147,
+          "sha256": "0eaad1a982ab8c95d8b938f1567f207dbc6fd9d172707b1e268e0cc8ab999705"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 3646,
+          "sha256": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "writing-plans",
+      "destination": "plugins/superpowers/skills/writing-plans",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/writing-plans",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/writing-plans (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 123,
+          "sha256": "de6a2f3d9de78d9c5027512ab1abab998f9acbef70960ecdbad525f4dce2e1bb"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 10335,
+          "sha256": "a6c67c1900064347c2a329990dd3c555657c51c3ec53b259a08aa01a2c26139a"
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "name": "writing-skills",
+      "destination": "plugins/superpowers/skills/writing-skills",
+      "source_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/writing-skills",
+      "source_kind": "superpowers-7.0.1-mit",
+      "original_surface_link": "/home/an/.gemini/config/skills/writing-skills (broken; was superpowers 6.3.0)",
+      "source_git_revision": null,
+      "source_dirty_entries_in_path": null,
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 110,
+          "sha256": "c4fafd8a5f3d60328fbf000562dce12d99ec0f25dd016fc0d362ecce9fc02042"
+        },
+        {
+          "path": "references/anthropic-best-practices.md",
+          "bytes": 46197,
+          "sha256": "217629b356c09c9bd11017c9788e8fc654ca1b32c92d4a51cd490e16dd65e59a"
+        },
+        {
+          "path": "references/bulletproofing.md",
+          "bytes": 2577,
+          "sha256": "9397023e6bc85b556a57f3097371363bf03e28e755c57f403f470bcda90e0a23"
+        },
+        {
+          "path": "references/CLAUDE_MD_TESTING.md",
+          "bytes": 5423,
+          "sha256": "0b379a3415e185d3c434b3ad283d8aa132f3022c2a4f210f168865b5986bcef0"
+        },
+        {
+          "path": "references/discovery.md",
+          "bytes": 7616,
+          "sha256": "c6bbc74af3be90f693f7cbc986af6fa94e8df75f65109b52e96032587f5b92af"
+        },
+        {
+          "path": "references/flowcharts.md",
+          "bytes": 1262,
+          "sha256": "8b1f542391f274f0d33f3457ac099a3d317d6877eaa3b8d3b1ebef151b55fda7"
+        },
+        {
+          "path": "references/graphviz-conventions.dot",
+          "bytes": 5970,
+          "sha256": "e2890a593c91370e384b42f2f67b1a6232c9e69dddea7891a0c1c46d7b20b694"
+        },
+        {
+          "path": "references/persuasion-principles.md",
+          "bytes": 5901,
+          "sha256": "a51bc9bf75189ea73a27b3fb504a2fdfdb966fb1f7f1cdf03203230a216ccc03"
+        },
+        {
+          "path": "references/testing-skills-with-subagents.md",
+          "bytes": 12557,
+          "sha256": "ed8a6862c085900135962390530d9dc7637ad6d650b4324ce3b051287a5c3f22"
+        },
+        {
+          "path": "render-graphs.js",
+          "bytes": 4968,
+          "sha256": "c7f412cc629461c4d10287e668731874c0497707023e3e3f74a5355eb2cee196"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 16738,
+          "sha256": "8cb3ac68c6d8c4bb46886b998b09af7989643cab8bd0e46ee86dd62e64546bbe"
+        }
+      ],
+      "excluded": []
+    }
+  ]
+}

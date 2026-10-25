@@ -1,0 +1,818 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-handover-handover_ack-20261025",
+    "plan_id": "uos/claude-handover/20261025-1953",
+    "task_id": "HANDOVER_ACK",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Register a Claude coordinator session and ACK handover message operator-pause-handover-board-1725; no VCS, runtime or Sa-plan task effects beyond this plan",
+    "phase": "implementation",
+    "fractal_layer": 6,
+    "observed_at": "2026-10-25T19:49:49Z",
+    "valid_until": "2026-10-25T20:44:49Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-25T19:49:07Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 2303b48c; fable-l0 change ypnnzlsr on main; coordinator sequence 2589",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
+          "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T19:49:49Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Operator directed takeover of paused work; ownership is currently unassigned",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA in ownership/authority transfer or agent capability resolution",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Highest mode band from fmea_modes",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Resumption of Telegram COMMAND_IMPL and all agent work depends on this",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Several agent surfaces and the paused Telegram programme benefit",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-ACK-AUTHORITY",
+        "cause": "Board ACK read as execution authority",
+        "effect": "Paused work resumes without fresh claim",
+        "controls": "Report states no resumption; COMMAND_IMPL needs new claim",
+        "s": 4,
+        "o": 2,
+        "det": 3,
+        "rpn": 24,
+        "band": 4
+      },
+      {
+        "id": "FM-ACK-IMPERSONATION",
+        "cause": "Writing under another session identity",
+        "effect": "Attribution corruption as in 2026-09-07 incident",
+        "controls": "Distinct Claude session id; never reuse Codex identity",
+        "s": 4,
+        "o": 1,
+        "det": 2,
+        "rpn": 8,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Claude takeover session",
+      "control_action": "Acknowledge Codex pause handover as Claude",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Handover left unacknowledged; ownership unknown",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Register and ACK 2588 with a Report naming scope"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "ACK treated as authority to resume COMMAND_IMPL or deploy",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "ACK grants nothing; new reviewed Sa-plan claim required for COMMAND_IMPL"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "X before observation",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Observe current coordinator/VCS state immediately before each write"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Ownership held after session ends",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Bounded TTL claims; release on completion"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 432,
+    "score_interval": [
+      432,
+      432
+    ],
+    "decision": {
+      "summary": "Acknowledge Codex pause handover as Claude",
+      "alternatives": [
+        "ACK and report now: chosen (operator instruction)",
+        "Stay paused: rejected by operator"
+      ],
+      "counterevidence": [
+        "A board ACK is self-reported and grants no authority",
+        "Skill presence is not runtime admission"
+      ],
+      "assumptions": [
+        "Coordinator store accepts session_store_cli writes from the dev build"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task completes within 60 minutes with all acceptance checks observed",
+      "falsifier": "Any acceptance check fails or coordinator refuses the write",
+      "acceptance": [
+        "Claude session registered",
+        "ACK recorded for operator-pause-handover-board-1725",
+        "Takeover Report on board"
+      ],
+      "rollback": "Retire the Claude session; ACK is append-only and is superseded by a later Report",
+      "reviewer": "operator",
+      "budget": "Local deterministic commands only; no paid model calls",
+      "residuals": [
+        "Self-reported ACK; no cryptographic workload identity"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-handover-agent_surface-20261025",
+    "plan_id": "uos/claude-handover/20261025-1953",
+    "task_id": "AGENT_SURFACE",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "In fable-l0 change on main only: vendor text-only copies of every linked skill into the repository, relink all four surfaces relatively, write provenance manifest; no main move without integration/main lease",
+    "phase": "implementation",
+    "fractal_layer": 2,
+    "observed_at": "2026-10-25T19:49:49Z",
+    "valid_until": "2026-10-25T20:44:49Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-25T19:49:07Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 2303b48c; fable-l0 change ypnnzlsr on main; coordinator sequence 2589",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
+          "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T19:49:49Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Operator directed takeover of paused work; ownership is currently unassigned",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA in ownership/authority transfer or agent capability resolution",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Highest mode band from fmea_modes",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Resumption of Telegram COMMAND_IMPL and all agent work depends on this",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Several agent surfaces and the paused Telegram programme benefit",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-SKILL-SECRET",
+        "cause": "Copied skill contains credential or private data",
+        "effect": "Secret enters VCS and off-host push",
+        "controls": "Secret pattern screen, binary exclusion, manifest review before landing",
+        "s": 5,
+        "o": 1,
+        "det": 2,
+        "rpn": 10,
+        "band": 5
+      },
+      {
+        "id": "FM-SKILL-BROKEN",
+        "cause": "Relative link wrong or surface drift",
+        "effect": "Agents silently lose skills",
+        "controls": "Mechanical check: zero broken, zero absolute links, four-surface equality",
+        "s": 3,
+        "o": 2,
+        "det": 1,
+        "rpn": 6,
+        "band": 3
+      },
+      {
+        "id": "FM-SKILL-OVERRIDE",
+        "cause": "Imported upstream text contradicts UOS policy (git worktrees vs jj)",
+        "effect": "Agent follows barred workflow",
+        "controls": "UOS-local rules override imported text; noted in manifest",
+        "s": 3,
+        "o": 3,
+        "det": 3,
+        "rpn": 27,
+        "band": 3
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Claude takeover session",
+      "control_action": "Make skills, Superpowers, rules and plugins resolvable in-project",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Skills remain unresolvable or home-dependent",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "All four surfaces resolve every skill inside the repository"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Secrets, binaries or external live state copied into repo",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Text-only copy; secret screen; size cap; provenance manifest; external trees read-only"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "X before observation",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Observe current coordinator/VCS state immediately before each write"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Ownership held after session ends",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Bounded TTL claims; release on completion"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "HANDOVER_ACK"
+    ],
+    "score": 720,
+    "score_interval": [
+      720,
+      720
+    ],
+    "decision": {
+      "summary": "Make skills, Superpowers, rules and plugins resolvable in-project",
+      "alternatives": [
+        "Vendor into repo with manifest: chosen",
+        "Repair home-directory links: rejected (outside project, parity scope)",
+        "Leave as-is: rejected"
+      ],
+      "counterevidence": [
+        "A board ACK is self-reported and grants no authority",
+        "Skill presence is not runtime admission"
+      ],
+      "assumptions": [
+        "Coordinator store accepts session_store_cli writes from the dev build"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task completes within 60 minutes with all acceptance checks observed",
+      "falsifier": "Any acceptance check fails or coordinator refuses the write",
+      "acceptance": [
+        "0 broken and 0 absolute skill links on four surfaces",
+        "Four surfaces identical",
+        "Secret screen clean",
+        "Manifest with source locators and digests"
+      ],
+      "rollback": "Abandon own fable-l0 change; main untouched",
+      "reviewer": "operator",
+      "budget": "Local deterministic commands only; no paid model calls",
+      "residuals": [
+        "Self-reported ACK; no cryptographic workload identity"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-handover-artifact_index-20261025",
+    "plan_id": "uos/claude-handover/20261025-1953",
+    "task_id": "ARTIFACT_INDEX",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Read-only inventory of Codex and AGY workspaces, unlanded commits, bookmarks and evidence; write an index and a pointer rule in fable-l0; add preserved/ bookmarks only for unbookmarked non-empty peer working copies; never describe, rebase, squash or abandon peer commits",
+    "phase": "implementation",
+    "fractal_layer": 2,
+    "observed_at": "2026-10-25T19:57:04Z",
+    "valid_until": "2026-10-25T20:52:04Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-25T19:57:04Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 2303b48c; fable-l0 change ypnnzlsr on main; coordinator sequence 2589",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
+          "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T19:49:49Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Operator directed takeover of paused work; ownership is currently unassigned",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA in ownership/authority transfer or agent capability resolution",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Highest mode band from fmea_modes",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Resumption of Telegram COMMAND_IMPL and all agent work depends on this",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Several agent surfaces and the paused Telegram programme benefit",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-PEER-MUTATION",
+        "cause": "Indexing step rewrites or re-describes a peer commit",
+        "effect": "Attribution corruption (INV-WS-02/03)",
+        "controls": "Read-only jj with --ignore-working-copy; only bookmark creation on peer heads",
+        "s": 4,
+        "o": 1,
+        "det": 2,
+        "rpn": 8,
+        "band": 4
+      },
+      {
+        "id": "FM-INDEX-STALE",
+        "cause": "Peers change after indexing",
+        "effect": "Claude reads outdated pointer",
+        "controls": "Index records commit ids and observation time; regenerate on use",
+        "s": 2,
+        "o": 3,
+        "det": 2,
+        "rpn": 12,
+        "band": 2
+      },
+      {
+        "id": "FM-SECRET-INDEX",
+        "cause": "Index lists private key or credential paths in a way that invites reading",
+        "effect": "Secret exposure",
+        "controls": "Presence-only entries for barred paths; no content hashes of secrets",
+        "s": 5,
+        "o": 1,
+        "det": 2,
+        "rpn": 10,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Claude takeover session",
+      "control_action": "Make skills, Superpowers, rules and plugins resolvable in-project",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Skills remain unresolvable or home-dependent",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "All four surfaces resolve every skill inside the repository"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Secrets, binaries or external live state copied into repo",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Text-only copy; secret screen; size cap; provenance manifest; external trees read-only"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "X before observation",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Observe current coordinator/VCS state immediately before each write"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Ownership held after session ends",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Bounded TTL claims; release on completion"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "AGENT_SURFACE"
+    ],
+    "score": 540,
+    "score_interval": [
+      540,
+      540
+    ],
+    "decision": {
+      "summary": "Index Codex and AGY artifacts for Claude",
+      "alternatives": [
+        "Vendor into repo with manifest: chosen",
+        "Repair home-directory links: rejected (outside project, parity scope)",
+        "Leave as-is: rejected"
+      ],
+      "counterevidence": [
+        "A board ACK is self-reported and grants no authority",
+        "Skill presence is not runtime admission"
+      ],
+      "assumptions": [
+        "Coordinator store accepts session_store_cli writes from the dev build"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task completes within 60 minutes with all acceptance checks observed",
+      "falsifier": "Any acceptance check fails or coordinator refuses the write",
+      "acceptance": [
+        "Every codex-* and agy-* workspace listed with head commit, emptiness, bookmarks and main ancestry",
+        "Every unlanded non-empty peer head has a bookmark",
+        "Pointer rule on all four surfaces"
+      ],
+      "rollback": "Abandon own fable-l0 change; delete only bookmarks this task created",
+      "reviewer": "operator",
+      "budget": "Local deterministic commands only; no paid model calls",
+      "residuals": [
+        "Self-reported ACK; no cryptographic workload identity"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-handover-land_main-20261025",
+    "plan_id": "uos/claude-handover/20261025-1953",
+    "task_id": "LAND_MAIN",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Hold integration/main; verify main unchanged at 2303b48c; gate candidate (path classification, credential scan, build, tests, km-gate, journal, diagram, surface links); move main to the candidate; local only, no GitHub push without operator approval",
+    "phase": "release",
+    "fractal_layer": 2,
+    "observed_at": "2026-10-25T20:05:32Z",
+    "valid_until": "2026-10-25T21:00:32Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-25T20:05:32Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 2303b48c; fable-l0 change ypnnzlsr on main; coordinator sequence 2589",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
+          "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T19:49:49Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T19:49:49Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Operator directed takeover of paused work; ownership is currently unassigned",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA in ownership/authority transfer or agent capability resolution",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Highest mode band from fmea_modes",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Resumption of Telegram COMMAND_IMPL and all agent work depends on this",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Several agent surfaces and the paused Telegram programme benefit",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-MAIN-BROKEN",
+        "cause": "main moved to a tree that does not build or test",
+        "effect": "All agents start from a broken main",
+        "controls": "Build and tests at candidate before move; candidate has zero compiled-source paths",
+        "s": 4,
+        "o": 1,
+        "det": 2,
+        "rpn": 8,
+        "band": 4
+      },
+      {
+        "id": "FM-MAIN-RACE",
+        "cause": "Another writer moves main during landing",
+        "effect": "Lost update or silent sibling",
+        "controls": "Hold integration/main lease; recheck main == 2303b48c immediately before move; fast-forward only",
+        "s": 4,
+        "o": 1,
+        "det": 1,
+        "rpn": 4,
+        "band": 4
+      },
+      {
+        "id": "FM-MAIN-SECRET",
+        "cause": "Vendored text carries a credential",
+        "effect": "Secret on main and later off-host",
+        "controls": "Credential scan over full diff; no push in this task",
+        "s": 5,
+        "o": 1,
+        "det": 2,
+        "rpn": 10,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Claude takeover session",
+      "control_action": "Make skills, Superpowers, rules and plugins resolvable in-project",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Skills remain unresolvable or home-dependent",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "All four surfaces resolve every skill inside the repository"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Secrets, binaries or external live state copied into repo",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Text-only copy; secret screen; size cap; provenance manifest; external trees read-only"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "X before observation",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Observe current coordinator/VCS state immediately before each write"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Ownership held after session ends",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Bounded TTL claims; release on completion"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "ARTIFACT_INDEX"
+    ],
+    "score": 960,
+    "score_interval": [
+      960,
+      960
+    ],
+    "decision": {
+      "summary": "Land in-project agent surfaces and artifact index on main",
+      "alternatives": [
+        "Vendor into repo with manifest: chosen",
+        "Repair home-directory links: rejected (outside project, parity scope)",
+        "Leave as-is: rejected"
+      ],
+      "counterevidence": [
+        "A board ACK is self-reported and grants no authority",
+        "Skill presence is not runtime admission"
+      ],
+      "assumptions": [
+        "Coordinator store accepts session_store_cli writes from the dev build"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task completes within 60 minutes with all acceptance checks observed",
+      "falsifier": "Any acceptance check fails or coordinator refuses the write",
+      "acceptance": [
+        "main fast-forwards to the gated candidate",
+        "build PASS and tests no worse than main baseline",
+        "credential scan clean",
+        "integration/main released"
+      ],
+      "rollback": "Point main back to 2303b48c73e366e18ec647439d07c8ecfd298704 under the same lease (bookmark move only)",
+      "reviewer": "operator",
+      "budget": "Local deterministic commands only; no paid model calls",
+      "residuals": [
+        "Self-reported ACK; no cryptographic workload identity"
+      ],
+      "supersedes": null
+    }
+  }
+]

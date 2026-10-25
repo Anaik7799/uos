@@ -1,0 +1,6 @@
+interface:
+  display_name: "Algebra-Driven OCaml"
+  short_description: "Build law-governed OCaml systems"
+  default_prompt: "Use $algebra-driven-ocaml to derive this OCaml system from observations, laws, oracle and final interpretations, and seeded verification."
+policy:
+  allow_implicit_invocation: true

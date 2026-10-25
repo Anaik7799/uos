@@ -1,0 +1,87 @@
+--- /tmp/gospel-orig/src/typing.ml	2026-08-08 00:05:03.651437553 +0200
++++ /tmp/gospel-5.5/src/typing.ml	2026-08-08 00:04:24.527371710 +0200
+@@ -580,6 +580,11 @@
+   type_spec spec.ty_ephemeral fields invariants spec.ty_text spec.ty_loc
+ 
+ (* TODO compare manifest with td_kind *)
++(* Depth of imported-interface loading. Recovery from unmodellable
++   declarations applies only while this is positive, never in the file the user
++   asked to check. *)
++let importing = ref 0
++
+ let type_type_declaration kid crcm ns r tdl =
+   let add_new tdm td =
+     if Mstr.mem td.tname.txt tdm then
+@@ -624,7 +629,20 @@
+     | Ptyp_extension _ -> W.(error ~loc (Unsupported "type extension"))
+     | Ptyp_object _ -> W.(error ~loc (Unsupported "object type"))
+     | Ptyp_package _ -> W.(error ~loc (Unsupported "first class module"))
+-    | Ptyp_poly _ -> W.(error ~loc (Unsupported "polymorphic type"))
++    (* An explicitly quantified type ['a 'b. ty]. Gospel's type system is
++       prenex and the quantified variables already occur as [Ptyp_var] inside
++       the body, so the quantifier carries no extra information here. *)
++    | Ptyp_poly (vars, body) ->
++        (* Bind the explicitly quantified variables before descending, so the
++           [Ptyp_var] occurrences inside the body resolve. Gospel's type system
++           is prenex, so the quantifier itself carries no further information. *)
++        let tvl =
++          List.fold_left
++            (fun tvl (var : string Location.loc) ->
++              Mstr.add var.txt (tv_of_string ~loc:var.loc var.txt) tvl)
++            tvl vars
++        in
++        parse_core alias tvl body
+     | Ptyp_open _ -> W.(error ~loc (Unsupported "local open on type"))
+     | Ptyp_variant _ -> W.(error ~loc (Unsupported "polymorphic variant"))
+   and visit ~alias s td =
+@@ -1161,8 +1179,12 @@
+     muc
+ 
+ and module_as_file ~loc penv muc nm =
+-  try open_file ~loc penv muc nm
+-  with Not_found -> W.error ~loc (W.Module_not_found nm)
++  incr importing;
++  Fun.protect
++    ~finally:(fun () -> decr importing)
++    (fun () ->
++      try open_file ~loc penv muc nm
++      with Not_found -> W.error ~loc (W.Module_not_found nm))
+ 
+ and process_open ~loc ?(ghost = Nonghost) penv muc od =
+   let qd = flatten_exn od.popen_expr in
+@@ -1375,7 +1397,23 @@
+   in
+   let rec process_and_import si muc =
+     try process_sig_item si muc
+-    with Ns_not_found (loc, s) ->
++    with
++    | W.Error (_, (W.Unsupported _ | W.Symbol_not_found _))
++      when !importing > 0
++           && match si with
++              | Uast.Sig_type _ | Uast.Sig_val _ -> true
++              | _ -> false ->
++        (* An imported OCaml interface contains a declaration Gospel cannot
++           model -- a polymorphic variant, an object type -- or a value whose
++           type mentions one that was itself skipped. Dropping just that
++           declaration keeps the rest of the interface usable and stays sound:
++           the name never enters Gospel's namespace, so a specification that
++           mentions it still fails with a precise error. Without this, one
++           unmodellable declaration anywhere in the transitive OCaml stdlib
++           makes every file uncheckable -- which is what capped gospel at
++           OCaml 5.3.0, since 5.5.0 added CamlinternalFormatBasics.neutral_concat. *)
++        (muc, mk_sig_item (Sig_use "gospel-skipped-unmodellable") sloc)
++    | Ns_not_found (loc, s) ->
+       (* if a namespace does not exist we try to load
+          a file with the same name *)
+       let muc = module_as_file ~loc penv muc s in
+--- /tmp/gospel-orig/gospel.opam	2026-08-08 00:05:03.650793693 +0200
++++ /tmp/gospel-5.5/gospel.opam	2026-08-08 00:00:00.155874791 +0200
+@@ -33,7 +33,7 @@
+   ]
+ ]
+ depends: [
+-  "ocaml" {>= "4.11" & <= "5.3.0" }
++  "ocaml" {>= "4.11" & < "5.6.0" }
+   "ocamlfind"
+   "dune" {>= "3.0.0"}
+   "dune-build-info"

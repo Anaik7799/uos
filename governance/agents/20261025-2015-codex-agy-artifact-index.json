@@ -1,0 +1,1823 @@
+{
+  "schema": "uos-peer-artifact-index/v1",
+  "index_id": "20261025-2015-codex-agy-artifact-index",
+  "observed_at": "2026-10-25T19:59:56Z",
+  "plan_id": "uos/claude-handover/20261025-1953",
+  "task_id": "ARTIFACT_INDEX",
+  "actor": "claude-fable-l0-35600f5c",
+  "purpose": "Single place for Claude (and any agent) to find every Codex and AGY artifact. Pointers only; nothing here grants authority or admission. Regenerate before relying on it: commit ids are exact, workspace heads move.",
+  "main": "2303b48c73e366e18ec647439d07c8ecfd298704",
+  "how_to_read": {
+    "committed_work": "jj --ignore-working-copy log -r <bookmark-or-commit>; jj --ignore-working-copy file show -r <commit> <path>",
+    "workspace_files": "Read files under the workspace path directly; never run a snapshotting jj command inside another agent workspace",
+    "evidence": "var/ is canonical-only (INV-WS-05); read /home/an/NAS-setup/uos/var/... by absolute path",
+    "coordinator": "session_store_cli status|journal against var/coordination/tri-agent/coordinator.sqlite3 (session_sync_cli refuses the current store)",
+    "sa_plan": "UOS_SA_PLAN_DB=/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3 tools/sa-plan task list <plan>"
+  },
+  "handover": {
+    "from": "codex 01a0f051-84d4-7be0-be4b-2c1055e89dd3",
+    "journal_live": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
+    "journal_copy": "governance/agents/20261025-2015-peer-artifacts/codex-01a0f051/docs/journal/20261025-1706-claude-pause-status-handover.md",
+    "copy_sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
+    "copy_reason": "The live file was never snapshotted by jj; the copy is byte-identical, authored by Codex, preserved by Claude",
+    "board": {
+      "handover_event": 2588,
+      "claude_ack_event": 2595,
+      "claude_report_event": 2596
+    }
+  },
+  "preserved_by_this_task": [
+    {
+      "bookmark": "preserved/agy-telemetry-20261024",
+      "commit": "622edd3792fa",
+      "agent": "agy",
+      "reason": "Only reachable from agy-telemetry-20261024 working copy; 5 files differ from main"
+    },
+    {
+      "bookmark": "preserved/codex-agy-ops-20261024",
+      "commit": "39794f705360",
+      "agent": "codex",
+      "reason": "Only reachable from codex-agy-ops-20261024 working copy; 1 file differs from main"
+    },
+    {
+      "bookmark": "preserved/codex-merge-wip-20261025",
+      "commit": "9fc7eb6724c9",
+      "agent": "codex",
+      "reason": "Codex pause WIP: 11 planning/journal files not on main"
+    }
+  ],
+  "workspaces": [
+    {
+      "workspace": "agy-dashboard-20261024",
+      "path": ".uos-workspaces/agy-dashboard-20261024",
+      "agent": "agy",
+      "head_commit": "a026c484658e2b8f6978f0623329d57a057f4eca",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 2,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-24T05:38Z feat(dashboard): pure Gleam read-only restoration dashboard and bounded "
+    },
+    {
+      "workspace": "agy-direct-fix-20261001",
+      "path": ".uos-workspaces/agy-direct-fix-20261001",
+      "agent": "agy",
+      "head_commit": "14785b6745aecae04a7c7efd044896490b927046",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-direct-tools-20261001",
+      "path": ".uos-workspaces/agy-direct-tools-20261001",
+      "agent": "agy",
+      "head_commit": "c72513b8f2b4971d44ae9fd65002d4152b177f31",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-fractal-dispatch-20261001",
+      "path": ".uos-workspaces/agy-fractal-dispatch-20261001",
+      "agent": "agy",
+      "head_commit": "b546f7e8e47533e4595505677ba8493fd62b95eb",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-fractal-doctor-20261001",
+      "path": ".uos-workspaces/agy-fractal-doctor-20261001",
+      "agent": "agy",
+      "head_commit": "73bb7d3c90b5483484aecc796cd86650845f9241",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-full-restoration-20260930",
+      "path": ".uos-workspaces/agy-full-restoration-20260930",
+      "agent": "agy",
+      "head_commit": "32990422e48293cdf8904e867fb642ad69ecd98c",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 7,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z fix(ecology): enforce zero-cost free receipts and truthful catalog routi"
+    },
+    {
+      "workspace": "agy-history-helpers-20260930",
+      "path": ".uos-workspaces/agy-history-helpers-20260930",
+      "agent": "agy",
+      "head_commit": "57493b178cff9b5b8524271e993357479c2a53fd",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-history-receipt-20260930",
+      "path": ".uos-workspaces/agy-history-receipt-20260930",
+      "agent": "agy",
+      "head_commit": "d5b57d052233504960826f7ff9cc11d154116a76",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-history-reconciliation-20260930",
+      "path": ".uos-workspaces/agy-history-reconciliation-20260930",
+      "agent": "agy",
+      "head_commit": "e5b8ded56ae6e3e521ea3a8601bccb2d08e6e882",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-history-superset-20260930",
+      "path": ".uos-workspaces/agy-history-superset-20260930",
+      "agent": "agy",
+      "head_commit": "9c41344754f847b48a33be64a46e4d6135fbd02c",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-l3",
+      "path": ".uos-workspaces/agy-l3",
+      "agent": "agy",
+      "head_commit": "67d5d57b4a0f7e3be6f042530e39d7bd8a88f9c5",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-08T08:54Z "
+    },
+    {
+      "workspace": "agy-telegram-admission-20261001",
+      "path": ".uos-workspaces/agy-telegram-admission-20261001",
+      "agent": "agy",
+      "head_commit": "ba1353c837cda6c108266ed319a7e398c802f7d3",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 5,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "agy-telemetry-20261024",
+      "path": ".uos-workspaces/agy-telemetry-20261024",
+      "agent": "agy",
+      "head_commit": "622edd3792fa1f35383b1638d067633e629b4511",
+      "head_state": "nonempty",
+      "head_in_main": false,
+      "commits_not_in_main": 2,
+      "head_changed_files": 5,
+      "bookmarks": [],
+      "head_summary": "2026-10-24T05:37Z fix(telemetry): pure Gleam typed evidence projection and truthful freshn"
+    },
+    {
+      "workspace": "codex-action-boundaries",
+      "path": ".uos-workspaces/codex-action-boundaries",
+      "agent": "codex",
+      "head_commit": "1353e6584342fd7c6fe825a864b2d26ed440cc84",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 5,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T08:39Z feat(swarm): require reviewable decision records for actions"
+    },
+    {
+      "workspace": "codex-action-kpi-integration",
+      "path": ".uos-workspaces/codex-action-kpi-integration",
+      "agent": "codex",
+      "head_commit": "31207adba558d200dcec854809d6bbfc00b860b9",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T10:15Z "
+    },
+    {
+      "workspace": "codex-agy-ops-20261024",
+      "path": ".uos-workspaces/codex-agy-ops-20261024",
+      "agent": "codex",
+      "head_commit": "39794f705360a4b8f9c96d79cc03594dc047f8bb",
+      "head_state": "nonempty",
+      "head_in_main": false,
+      "commits_not_in_main": 5,
+      "head_changed_files": 1,
+      "bookmarks": [],
+      "head_summary": "2026-10-24T07:52Z test(browser): verify live recovery dashboard on desktop and mobile"
+    },
+    {
+      "workspace": "codex-ainf-design",
+      "path": ".uos-workspaces/codex-ainf-design",
+      "agent": "codex",
+      "head_commit": "2624cff0250247e5675db515f11e7202eb4b1665",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T12:11Z "
+    },
+    {
+      "workspace": "codex-astra",
+      "path": ".uos-workspaces/codex-astra",
+      "agent": "codex",
+      "head_commit": "5b9b9388f7adce3a27acae3c048a5312220967d1",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-08T08:54Z "
+    },
+    {
+      "workspace": "codex-auth-framing-review",
+      "path": ".uos-workspaces/codex-auth-framing-review",
+      "agent": "codex",
+      "head_commit": "f8c38071ab579f4b7dd718f8d899c1a2ee6376d8",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T14:55Z work: bounded auth framing review frozen; no rollout authority"
+    },
+    {
+      "workspace": "codex-auth-ingress",
+      "path": ".uos-workspaces/codex-auth-ingress",
+      "agent": "codex",
+      "head_commit": "3ee0188be49a6b91d551efebe364e4241342b203",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T14:48Z "
+    },
+    {
+      "workspace": "codex-auth-ingress-review",
+      "path": ".uos-workspaces/codex-auth-ingress-review",
+      "agent": "codex",
+      "head_commit": "1753727c53b64e6651a271be68959da8d65cb252",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T14:38Z work: ingress 6b033f37 review frozen pending bounded reader repair"
+    },
+    {
+      "workspace": "codex-board-insights",
+      "path": ".uos-workspaces/codex-board-insights",
+      "agent": "codex",
+      "head_commit": "ada45ee774d2d58d8dca39c8934faa270daacf3a",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 5,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T08:51Z feat(swarm): scoped board discovery reporting and telemetry correlation"
+    },
+    {
+      "workspace": "codex-board-strict-validate",
+      "path": ".uos-workspaces/codex-board-strict-validate",
+      "agent": "codex",
+      "head_commit": "e0b50cdce6fdb08e945984a119f4214c25893a5e",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 2,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T10:17Z fix(board): fail closed on invalid validation input"
+    },
+    {
+      "workspace": "codex-capability-restoration-20260930",
+      "path": ".uos-workspaces/codex-capability-restoration-20260930",
+      "agent": "codex",
+      "head_commit": "b1484ad34a9d3e5beab28e0bd0371199a6e8d8f3",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-30T08:11Z chore: next isolated work after reviewed reclaim fix"
+    },
+    {
+      "workspace": "codex-clock-guard",
+      "path": ".uos-workspaces/codex-clock-guard",
+      "agent": "codex",
+      "head_commit": "c1841115ba3b2baf5597ca624c9f69fc9c22e6eb",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:37Z "
+    },
+    {
+      "workspace": "codex-clock-provenance",
+      "path": ".uos-workspaces/codex-clock-provenance",
+      "agent": "codex",
+      "head_commit": "4a5e1fa3681afb66109874b526c549fec2821d89",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:54Z "
+    },
+    {
+      "workspace": "codex-coordination-formal",
+      "path": ".uos-workspaces/codex-coordination-formal",
+      "agent": "codex",
+      "head_commit": "6d1cda9ad199a6cfad04b5d9fb5ca01587c5b156",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 3,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T08:18Z formal: refine durable session journal crash and authority model"
+    },
+    {
+      "workspace": "codex-coordination-impl",
+      "path": ".uos-workspaces/codex-coordination-impl",
+      "agent": "codex",
+      "head_commit": "a0c3fd11ea96eeb9a757e668a2cf365abae58b93",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:21Z "
+    },
+    {
+      "workspace": "codex-coordinator-recovery-20261024",
+      "path": ".uos-workspaces/codex-coordinator-recovery-20261024",
+      "agent": "codex",
+      "head_commit": "fd85fe743c7476c58ef34586f367caafecd6d1e8",
+      "head_state": "nonempty",
+      "head_in_main": false,
+      "commits_not_in_main": 2,
+      "head_changed_files": 2,
+      "bookmarks": [],
+      "head_summary": "2026-10-24T06:32Z fix(recovery): finite coordinator incident recovery and isolated worker "
+    },
+    {
+      "workspace": "codex-ev-admission-20260909-0210",
+      "path": ".uos-workspaces/codex-ev-admission-20260909-0210",
+      "agent": "codex",
+      "head_commit": "d9bd28497f84a5dc62cbc84eeeaa8e841fc6655f",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 2,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-09T21:06Z "
+    },
+    {
+      "workspace": "codex-full-restoration-20260930",
+      "path": ".uos-workspaces/codex-full-restoration-20260930",
+      "agent": "codex",
+      "head_commit": "e96b14c6e9849ce23f38dcfd1caf1cfc3b20af95",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 76,
+      "bookmarks": [],
+      "head_summary": "2026-09-30T06:12Z integration: reconcile preserved UOS branch code for full restoration"
+    },
+    {
+      "workspace": "codex-hive-projection",
+      "path": ".uos-workspaces/codex-hive-projection",
+      "agent": "codex",
+      "head_commit": "4e6632fcad35cd664899efb798cb33748424f2e8",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 4,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T08:46Z feat(swarm): add deterministic hive awareness projection"
+    },
+    {
+      "workspace": "codex-homeostasis-interface-repair",
+      "path": ".uos-workspaces/codex-homeostasis-interface-repair",
+      "agent": "codex",
+      "head_commit": "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 52,
+      "bookmarks": [
+        "review/codex-side-homeostasis-20260908-0045"
+      ],
+      "head_summary": "2026-09-08T02:02Z fix(homeostasis): wire test and observed UI modes with bounded verificat"
+    },
+    {
+      "workspace": "codex-homeostasis-release-20260908-0551",
+      "path": ".uos-workspaces/codex-homeostasis-release-20260908-0551",
+      "agent": "codex",
+      "head_commit": "45435f5b215d9cf5932a67d8d22e8c7ef7ed958b",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [
+        "preserved/div-owuunmmlvuts-45435f5b215d"
+      ],
+      "head_summary": "2026-09-08T08:16Z work(unification): thirty bounded evidence cycles and artifact synchroni"
+    },
+    {
+      "workspace": "codex-live-evolution",
+      "path": ".uos-workspaces/codex-live-evolution",
+      "agent": "codex",
+      "head_commit": "78d8fef66199f1c5c82a7013efd43099d04437be",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 1,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:33Z feat(swarm): connect live evolution watchers to bounded board fetch"
+    },
+    {
+      "workspace": "codex-manual-ui-20260908-1150",
+      "path": ".uos-workspaces/codex-manual-ui-20260908-1150",
+      "agent": "codex",
+      "head_commit": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 13,
+      "bookmarks": [
+        "preserved/div-zosuwowvmzst-c5a0d3e69067",
+        "review/codex-manual-ui"
+      ],
+      "head_summary": "2026-09-08T12:44Z docs(testing): add manual GUI/TUI guide and candidate-bound verification"
+    },
+    {
+      "workspace": "codex-mcp-catalog",
+      "path": ".uos-workspaces/codex-mcp-catalog",
+      "agent": "codex",
+      "head_commit": "b99598309dc0eaa8925862aca7c305201f1b51d1",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 4,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:16Z mcp: expose adapter availability and fail closed on unbound tools; prese"
+    },
+    {
+      "workspace": "codex-mcp-runtime-check",
+      "path": ".uos-workspaces/codex-mcp-runtime-check",
+      "agent": "codex",
+      "head_commit": "cb625f48c9e3b7ab70fa6c1b8797f400302ad599",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 5,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:34Z mcp: gate native adapters on runtime load evidence"
+    },
+    {
+      "workspace": "codex-mcp-stdio-runtime",
+      "path": ".uos-workspaces/codex-mcp-stdio-runtime",
+      "agent": "codex",
+      "head_commit": "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 3,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:40Z mcp: preserve JSON-RPC framing on stdio"
+    },
+    {
+      "workspace": "codex-mcp-wave34-tests",
+      "path": ".uos-workspaces/codex-mcp-wave34-tests",
+      "agent": "codex",
+      "head_commit": "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 1,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T09:53Z test(mcp): expect fail-closed system tools without NIF"
+    },
+    {
+      "workspace": "codex-merge-20261025",
+      "path": ".uos-workspaces/codex-merge-20261025",
+      "agent": "codex",
+      "head_commit": "9fc7eb6724c92266c3cb1b44222a13c62c11859a",
+      "head_state": "nonempty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 11,
+      "bookmarks": [],
+      "head_summary": "2026-10-25T17:19Z "
+    },
+    {
+      "workspace": "codex-merge-execute-20260908-1925",
+      "path": ".uos-workspaces/codex-merge-execute-20260908-1925",
+      "agent": "codex",
+      "head_commit": "4719d3f4dce6d85899b1b82636bb4186f404fcf3",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-08T20:29Z work: Codex consolidation preserved; mainline held on ABI and review gat"
+    },
+    {
+      "workspace": "codex-merge-plan-20260908-1439",
+      "path": ".uos-workspaces/codex-merge-plan-20260908-1439",
+      "agent": "codex",
+      "head_commit": "2473ea54a72bc75ed69e5f57c8791efaa4982abd",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 7,
+      "bookmarks": [
+        "review/codex-mainline-merge-plan-20260908-1439"
+      ],
+      "head_summary": "2026-09-08T15:04Z docs(plan): inventory Codex sources and define verified mainline consoli"
+    },
+    {
+      "workspace": "codex-mirage-audit",
+      "path": ".uos-workspaces/codex-mirage-audit",
+      "agent": "codex",
+      "head_commit": "b63169a3eea4792c0b4b690ff23a45be8dcef6db",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T10:49Z chore: preserve Mirage repair candidate"
+    },
+    {
+      "workspace": "codex-mirage-audit-action-boundary",
+      "path": ".uos-workspaces/codex-mirage-audit-action-boundary",
+      "agent": "codex",
+      "head_commit": "02d43656ad7ac562277714e8864a7fb3ceb56b47",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T11:10Z "
+    },
+    {
+      "workspace": "codex-mirage-benchmark-review",
+      "path": ".uos-workspaces/codex-mirage-benchmark-review",
+      "agent": "codex",
+      "head_commit": "a7b479618b4a6f003aefeb435fe53a0807f63af4",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T11:04Z review: pin final Mirage composition"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": ".uos-workspaces/codex-mirage-evidence-audit",
+      "agent": "codex",
+      "head_commit": "fe542cb830e917354f0845ddf6d70d809fe9bcab",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T10:37Z "
+    },
+    {
+      "workspace": "codex-mirage-feature",
+      "path": ".uos-workspaces/codex-mirage-feature",
+      "agent": "codex",
+      "head_commit": "4aec1c8e1bd19521b66ab03de8ccf2077b05ae0b",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T11:19Z work: Mirage handoff complete; integration held"
+    },
+    {
+      "workspace": "codex-mirage-governance-failclosed",
+      "path": ".uos-workspaces/codex-mirage-governance-failclosed",
+      "agent": "codex",
+      "head_commit": "c5960ff123cb1218d9a43775082d7ace8fd356a1",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T10:55Z "
+    },
+    {
+      "workspace": "codex-mirage-metrics",
+      "path": ".uos-workspaces/codex-mirage-metrics",
+      "agent": "codex",
+      "head_commit": "9962d6d17d5ec1ec0557cae6100d24a293f01bbc",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T15:01Z "
+    },
+    {
+      "workspace": "codex-mirage-tenders-audit",
+      "path": ".uos-workspaces/codex-mirage-tenders-audit",
+      "agent": "codex",
+      "head_commit": "b10e553273ad520e18aceeae345bdf1d83baf63c",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T12:58Z work: Mirage tender review completed; candidate preserved"
+    },
+    {
+      "workspace": "codex-mirage-verification",
+      "path": ".uos-workspaces/codex-mirage-verification",
+      "agent": "codex",
+      "head_commit": "72c7552b181fc44f6e30d5611efd84f3b18b9417",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T13:40Z work: Mirage model evidence frozen; implementation remains unapproved"
+    },
+    {
+      "workspace": "codex-mirage-workorder",
+      "path": ".uos-workspaces/codex-mirage-workorder",
+      "agent": "codex",
+      "head_commit": "059afa533f2efefdf809756b84da67b98112f6a3",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T14:39Z work: runtime component staging evidence frozen for integration"
+    },
+    {
+      "workspace": "codex-observation-bridge",
+      "path": ".uos-workspaces/codex-observation-bridge",
+      "agent": "codex",
+      "head_commit": "e95cdf75fa43627d24969d13bbd08d2a915c8120",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 11,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T08:01Z hermes: add durable typed session observation ingestion"
+    },
+    {
+      "workspace": "codex-oidc-auth-review",
+      "path": ".uos-workspaces/codex-oidc-auth-review",
+      "agent": "codex",
+      "head_commit": "294ebc47342ac372b886d22656fbd9103f1d5f12",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T14:13Z work: OIDC independent review frozen; ingress gaps remain open"
+    },
+    {
+      "workspace": "codex-oidc-verifier",
+      "path": ".uos-workspaces/codex-oidc-verifier",
+      "agent": "codex",
+      "head_commit": "10ead02d11d8ffcbaf133702c87244d38b650210",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T13:44Z "
+    },
+    {
+      "workspace": "codex-reuse-ops",
+      "path": ".uos-workspaces/codex-reuse-ops",
+      "agent": "codex",
+      "head_commit": "e5572657abeeba9c6eaca2bdf9e24d77bf5603dc",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T10:26Z "
+    },
+    {
+      "workspace": "codex-session-durability",
+      "path": ".uos-workspaces/codex-session-durability",
+      "agent": "codex",
+      "head_commit": "de84ada81054f23ea06193ba0c92e124166a9fb8",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T07:54Z "
+    },
+    {
+      "workspace": "codex-side-hive-fencing",
+      "path": ".uos-workspaces/codex-side-hive-fencing",
+      "agent": "codex",
+      "head_commit": "311d2b12368d65c9b0f27f3d6adca315b94bbc62",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 21,
+      "bookmarks": [
+        "review/codex-side-hive-fencing-20260907-1854"
+      ],
+      "head_summary": "2026-09-07T19:32Z fix(sa-plan): fence completion by original claim attempt"
+    },
+    {
+      "workspace": "codex-side-interface-skills",
+      "path": ".uos-workspaces/codex-side-interface-skills",
+      "agent": "codex",
+      "head_commit": "efbaea22367d3363df94ee0e36924ce1bfe2585f",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 32,
+      "bookmarks": [
+        "review/codex-side-interface-skills-20260907-2312"
+      ],
+      "head_summary": "2026-09-07T23:50Z skills(ui): add repository-local GUI TUI rules and verification workflow"
+    },
+    {
+      "workspace": "codex-side-resource-controls",
+      "path": ".uos-workspaces/codex-side-resource-controls",
+      "agent": "codex",
+      "head_commit": "7c162d0f8d83825679c2badcb6703decccd3581e",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T20:22Z docs(plan): prepare dependency-gated hive stabilization"
+    },
+    {
+      "workspace": "codex-solo5-source-review",
+      "path": ".uos-workspaces/codex-solo5-source-review",
+      "agent": "codex",
+      "head_commit": "52f8034f75bb60bf845d77c5ad5a4c250b47146f",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T15:47Z work: Solo5 source review frozen; candidate remains unapproved"
+    },
+    {
+      "workspace": "codex-solo5-toolchain",
+      "path": ".uos-workspaces/codex-solo5-toolchain",
+      "agent": "codex",
+      "head_commit": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 3,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T16:01Z work: Solo5 0.13.0 candidate frozen for independent review"
+    },
+    {
+      "workspace": "codex-telegram-authority-20261001",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001",
+      "agent": "codex",
+      "head_commit": "4d04f601dcd33bddfc9b4a408aa72b65662f8df8",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-11T16:37Z "
+    },
+    {
+      "workspace": "codex-telegram-formal-20261011",
+      "path": ".uos-workspaces/codex-telegram-formal-20261011",
+      "agent": "codex",
+      "head_commit": "d75fe43304baf32f611cf775a510e676535f0dc1",
+      "head_state": "nonempty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 27,
+      "bookmarks": [
+        "preserved/g3-numeric-formal-20261025"
+      ],
+      "head_summary": "2026-10-11T20:28Z work: isolated numeric specification repair candidate"
+    },
+    {
+      "workspace": "codex-telegram-mainline-20261025",
+      "path": ".uos-workspaces/codex-telegram-mainline-20261025",
+      "agent": "codex",
+      "head_commit": "52e2b5bdf09f8f66d9e232429fb0168a79a5174d",
+      "head_state": "nonempty",
+      "head_in_main": false,
+      "commits_not_in_main": 1,
+      "head_changed_files": 6,
+      "bookmarks": [
+        "preserved/mini-config-wip-20261025"
+      ],
+      "head_summary": "2026-10-25T07:47Z "
+    },
+    {
+      "workspace": "codex-telegram-mini-20261011",
+      "path": ".uos-workspaces/codex-telegram-mini-20261011",
+      "agent": "codex",
+      "head_commit": "f34473666902d7af46f313ac470cff5b81b70c23",
+      "head_state": "nonempty",
+      "head_in_main": false,
+      "commits_not_in_main": 80,
+      "head_changed_files": 12,
+      "bookmarks": [
+        "integration/telegram-mini-health-20261025",
+        "preserved/trunk-a2-20261025"
+      ],
+      "head_summary": "2026-10-25T06:45Z Complete Mini health observations with real runtime evidence"
+    },
+    {
+      "workspace": "codex-telegram-poll-20261024",
+      "path": ".uos-workspaces/codex-telegram-poll-20261024",
+      "agent": "codex",
+      "head_commit": "8a8e648a79e086e8f32ece7f7aeedba252be4477",
+      "head_state": "empty",
+      "head_in_main": false,
+      "commits_not_in_main": 64,
+      "head_changed_files": 0,
+      "bookmarks": [],
+      "head_summary": "2026-10-25T02:40Z "
+    },
+    {
+      "workspace": "codex-telemetry-repair",
+      "path": ".uos-workspaces/codex-telemetry-repair",
+      "agent": "codex",
+      "head_commit": "8180c73608373b00b46f7836af71f50ce6f40de7",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 3,
+      "bookmarks": [],
+      "head_summary": "2026-09-07T10:15Z fix(telemetry): preserve truthful OTel route discovery"
+    },
+    {
+      "workspace": "codex-unification-20260908-0753",
+      "path": ".uos-workspaces/codex-unification-20260908-0753",
+      "agent": "codex",
+      "head_commit": "9bbc5217a740ff03791d68c11913c0cc1823ff4b",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 201,
+      "bookmarks": [
+        "review/codex-unification-20260908-0753"
+      ],
+      "head_summary": "2026-09-08T08:20Z feat(assurance): record thirty risk-ranked cycles with lossless board/Ze"
+    },
+    {
+      "workspace": "codex-unification-50-20260908-0852",
+      "path": ".uos-workspaces/codex-unification-50-20260908-0852",
+      "agent": "codex",
+      "head_commit": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 21,
+      "bookmarks": [
+        "review/codex-unification-50"
+      ],
+      "head_summary": "2026-09-08T10:08Z docs(assurance): close fifty verified focuses with explicit ABI and inte"
+    },
+    {
+      "workspace": "codex-unification-integration-20260908-0821",
+      "path": ".uos-workspaces/codex-unification-integration-20260908-0821",
+      "agent": "codex",
+      "head_commit": "0114d3063109d120b04b958acf1db1445ba19fed",
+      "head_state": "nonempty",
+      "head_in_main": true,
+      "commits_not_in_main": 0,
+      "head_changed_files": 16,
+      "bookmarks": [],
+      "head_summary": "2026-09-08T08:44Z docs(assurance): retain final merge tests, decision boundaries and coord"
+    }
+  ],
+  "sa_plan": {
+    "tasks_by_agent_state": [
+      {
+        "agent": "agy",
+        "state": "completed",
+        "n": 312
+      },
+      {
+        "agent": "agy",
+        "state": "executing",
+        "n": 2
+      },
+      {
+        "agent": "codex",
+        "state": "completed",
+        "n": 313
+      },
+      {
+        "agent": "codex",
+        "state": "executing",
+        "n": 16
+      },
+      {
+        "agent": "other",
+        "state": "completed",
+        "n": 695
+      },
+      {
+        "agent": "other",
+        "state": "executing",
+        "n": 4
+      }
+    ],
+    "plans_touched_by_codex_or_agy": [
+      {
+        "plan_id": "uos/agy-operations/20261024-0642",
+        "n": 10,
+        "done": 10
+      },
+      {
+        "plan_id": "uos/full-merge/20261025-0638",
+        "n": 9,
+        "done": 9
+      },
+      {
+        "plan_id": "uos/telegram-completion/20261024-0809",
+        "n": 37,
+        "done": 37
+      },
+      {
+        "plan_id": "uos/telegram-runtime/20261001-1150",
+        "n": 52,
+        "done": 52
+      },
+      {
+        "plan_id": "uos/telegram-poll-repair/20261024-0737",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/telegram-current-review/20261024-0526",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/coordinator-incident/20261024-0544",
+        "n": 4,
+        "done": 4
+      },
+      {
+        "plan_id": "uos/telemetry-repair/20261024-0518",
+        "n": 3,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/project-analysis/20261024-0512",
+        "n": 2,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/telegram-reclaim-tool/20261012-0226",
+        "n": 4,
+        "done": 4
+      },
+      {
+        "plan_id": "uos/telegram-resume/20261012-0216",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/telegram-dashboard/20261012-0230",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/telegram-tools/20261011-1115",
+        "n": 9,
+        "done": 9
+      },
+      {
+        "plan_id": "uos/telegram-admission/20261001-1015",
+        "n": 25,
+        "done": 25
+      },
+      {
+        "plan_id": "uos/direct-dispatch/20261001-0440",
+        "n": 13,
+        "done": 13
+      },
+      {
+        "plan_id": "uos/fractal-recheck/20261001-0226",
+        "n": 10,
+        "done": 10
+      },
+      {
+        "plan_id": "uos/capability-restoration/20260930-0734",
+        "n": 14,
+        "done": 14
+      },
+      {
+        "plan_id": "uos/claim-recovery/20260930-0758",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/full-restoration/20260930-0515",
+        "n": 8,
+        "done": 8
+      },
+      {
+        "plan_id": "uos/fractal-recovery/20260930-0421",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/stabilization/20260930-0311",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/system-mcp-features/20260919-1642",
+        "n": 4,
+        "done": 4
+      },
+      {
+        "plan_id": "plan-superpowers-20260919",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "sciviz-plan-20260919",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/codex-full-feature-surface-testing/20260919",
+        "n": 6,
+        "done": 6
+      },
+      {
+        "plan_id": "uos/sciviz-167-interactive-filtering/20260917-2030",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/sciviz-167-complete-and-media/20260916-2100",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/burst-bench-and-rdma-design/20260916-1950",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/implement-all-features-five-cycles/20260916-1200",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/master-feat-all-evol-five-cycles/20260916-1130",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/crit-stpa-evol-five-cycles/20260916-1030",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/risk-evolution-five-cycles/20260916-1000",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/five-more-evolutionary-cycles/20260916-0950",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/topos-double-category-upgrades/20260916-0945",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/five-evolutionary-cycles-transmutation/20260916-0505",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/predictive-poodavr-upgrades/20260916-0455",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/poodavr-fprime-mapping/20260916-0450",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/substrate-category-theory/20260916-0445",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/systemic-category-theory/20260916-0435",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/evolutionary-category-theory/20260916-0425",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/fractal-holonic-category-theory/20260916-0418",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/category-theory-universal-composability/20260915-1415",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "test-parallel-plan",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "km-web-plan",
+        "n": 4,
+        "done": 4
+      },
+      {
+        "plan_id": "uos-razr15-deploy-reboot",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/fractal-aspects-integration/20260910-0830",
+        "n": 9,
+        "done": 9
+      },
+      {
+        "plan_id": "gemma4-directive-system-wiring",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "uos/ev02-successor-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev86-ingress-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev02-harness-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/component-composition-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev01-bootstrap/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev01-bootstrap-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "zenoh-cog-cognitive-worker-20260909",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "telegram-gleam-harness-spec-20260909",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "uos/telegram-gleam-harness/20260909-2028",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "uos/ev107-rete/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev104-remediation/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev107-rete-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev104-remediation-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev107-digest/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev101-graph-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev107-digest-review/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev101-graph-integrity/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev98-sync-status/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev98-wire-codec/20260909",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/ev98-peer-loop/20260909",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/ev98-health-formal/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/telegram-matrix-zigvm-symbiosis/20260909-1335",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "uos/ev-evidence-campaign/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology/20260909-0146",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/harness-tracking/bootstrap",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-harness-authority-implementation/20260909-0555",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/telegram-mojo-ocaml/20260909-0755",
+        "n": 4,
+        "done": 4
+      },
+      {
+        "plan_id": "uos/harness-schema-review/bootstrap",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/sutra-telegram-zigvm-c3i/20260909-0745",
+        "n": 4,
+        "done": 4
+      },
+      {
+        "plan_id": "uos/ev-rag-freshness/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev-delta-freshness/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-harness-development-review/20260909-0535",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/c3i-vm1-daemons/20260909-0720",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-harness-bootstrap-review/20260909-0412",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/indrajaal-vm1-holarchy/20260909-0705",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-clock-review/20260909-0439",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev-scheduler-repair/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev-receipt-validation/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev-control-bounds/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-evaluation-review/20260909-0331",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-budget/20260909-0309",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ev-homeostasis-repair/20260909",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-model-profiles/20260909-0358",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-router-review/20260909-0345",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-browser/20260909-0228",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-vm1-compare/20260909-0256",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-jidoka/20260909-0241",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-openrouter-diagnostic/20260909-0247",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-supervision/20260909-0146",
+        "n": 2,
+        "done": 2
+      },
+      {
+        "plan_id": "uos/ecology-release/20260909-0243",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-transport/20260909-0211",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-capabilities/20260909-0146",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/ecology-hooks/20260909-0146",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/codex-mainline-merge/20260908-1925",
+        "n": 6,
+        "done": 6
+      },
+      {
+        "plan_id": "uos/codex-mainline-merge/20260908-1439",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/pure-gleam-intent-atlas-full-testing/20260908-1614",
+        "n": 20,
+        "done": 20
+      },
+      {
+        "plan_id": "uos/denotational-intent-atlas-full-testing/20260908-1600",
+        "n": 20,
+        "done": 20
+      },
+      {
+        "plan_id": "uos/design-implementation-approach/20260908-1540",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "uos/manual-ui/20260908-1150",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/unification-50/20260908-0852",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/claude-holon-review-atlas-evolution/20260908-1130",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/algebraic-atlas-intent-evolution/20260908-1115",
+        "n": 10,
+        "done": 10
+      },
+      {
+        "plan_id": "uos/holon-constitution-evolution-phase2/20260908-1105",
+        "n": 10,
+        "done": 10
+      },
+      {
+        "plan_id": "uos/holon-constitution-evolution/20260908-1055",
+        "n": 10,
+        "done": 10
+      },
+      {
+        "plan_id": "uos/unification-integration/20260908-0821",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/holon-evolution/20260908-1035",
+        "n": 10,
+        "done": 10
+      },
+      {
+        "plan_id": "uos/unification-cycles/20260908-0701",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/c3i-parity-analysis/20260908-0955",
+        "n": 6,
+        "done": 6
+      },
+      {
+        "plan_id": "uos/c3i-indrajaal-mirror/20260908-0950",
+        "n": 6,
+        "done": 6
+      },
+      {
+        "plan_id": "uos-cybernetic-orchestra-20260908-0955",
+        "n": 6,
+        "done": 6
+      },
+      {
+        "plan_id": "uos-fractal-cadence-20260908-0950",
+        "n": 6,
+        "done": 6
+      },
+      {
+        "plan_id": "uos-hive-synchrony-20260908-0940",
+        "n": 7,
+        "done": 7
+      },
+      {
+        "plan_id": "uos-swarm-monitoring-20260908-0935",
+        "n": 6,
+        "done": 6
+      },
+      {
+        "plan_id": "uos/homeostasis-release/20260908-0551",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/homeostasis-ui/20260908-0045",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/interface-skills/20260907-2312",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/stabilization/20260907-2013",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/agentic-product/20260907-1837",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/hive-stabilization/20260907-2036",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/fast-ooda-convergence/20260907-2225",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "uos/resource-controls/20260907-1906",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/swarm-initiation/20260907-2220",
+        "n": 5,
+        "done": 5
+      },
+      {
+        "plan_id": "uos/hive-fencing/20260907-1854",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "ev-104",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-103",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-102",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-101",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-100",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-99",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-98",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-97",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-96",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-95",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-94",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "ev-93",
+        "n": 3,
+        "done": 3
+      },
+      {
+        "plan_id": "uos/risk-checkers/20260907-1631",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/mirage-security/20260907-1310",
+        "n": 15,
+        "done": 15
+      },
+      {
+        "plan_id": "uos/risk-sop/20260907-1559",
+        "n": 1,
+        "done": 1
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "n": 27,
+        "done": 19
+      },
+      {
+        "plan_id": "uos/full-implementation/20260906-1655",
+        "n": 7,
+        "done": 4
+      },
+      {
+        "plan_id": "uos/ecology-openrouter-engine/20260909-0340",
+        "n": 1,
+        "done": 0
+      },
+      {
+        "plan_id": "uos/ev86-audio-serving/20260909",
+        "n": 1,
+        "done": 0
+      },
+      {
+        "plan_id": "uos/harness-admission-repair/20260909-1751",
+        "n": 1,
+        "done": 0
+      },
+      {
+        "plan_id": "uos/openrouter-evaluation/20260909-0323",
+        "n": 1,
+        "done": 0
+      },
+      {
+        "plan_id": "uos/restoration-dashboard/20261024-0535",
+        "n": 1,
+        "done": 0
+      }
+    ]
+  },
+  "evidence_dirs": {
+    "var/recovery-runtime": {
+      "owner": "mostly codex; agy-* named dirs are AGY",
+      "by_day": [
+        {
+          "day": "20260930",
+          "dirs": 1
+        },
+        {
+          "day": "20261001",
+          "dirs": 1671
+        },
+        {
+          "day": "20261011",
+          "dirs": 82
+        },
+        {
+          "day": "20261012",
+          "dirs": 9
+        },
+        {
+          "day": "20261024",
+          "dirs": 76
+        },
+        {
+          "day": "20261025",
+          "dirs": 198
+        }
+      ],
+      "size": "~20G",
+      "agy_named": [
+        "20261011-2320-agy-numeric-baseline",
+        "20261011-2320-agy-numeric-candidate",
+        "20261011-2320-agy-numeric-lean",
+        "20261011-2320-agy-numeric-mutant-empty",
+        "20261011-2320-agy-numeric-mutant-scale",
+        "20261024-0651-agy-dispatch",
+        "20261025-0109-agy-collection"
+      ],
+      "latest_codex": [
+        "var/recovery-runtime/20261025-1707-verify-contract-final",
+        "var/recovery-runtime/20261025-1707-verify-contract-full",
+        "var/recovery-runtime/20261025-1649-brief-fault-final"
+      ]
+    },
+    "var/coordination/tri-agent": {
+      "content": "coordinator.sqlite3 (append-only), legacy board JSONL"
+    },
+    "var/telegram": {
+      "content": "Telegram runtime state; read-only for analysis"
+    },
+    "var/releases": {
+      "content": "OTP 29 release capsules incl. session_sync builds"
+    }
+  },
+  "repo_tracked_on_main": {
+    "paths_named_codex": 369,
+    "paths_named_agy": 187,
+    "note": "Plus most governance/planning/*, docs/journal/2026102* and docs/plans/* files authored by Codex today"
+  },
+  "outside_repository_presence_only": [
+    {
+      "path": "/home/an/.gemini/antigravity",
+      "agent": "agy",
+      "content": "AGY conversations, brain, knowledge, summaries DB",
+      "policy": "Private home state; not imported. Reference conversation ids only (e.g. 2642d4f4-7340-4420-8ac4-67d3b8e655db, 8541cc3a-1037-4c35-aec0-d92fd90545cd)"
+    },
+    {
+      "path": "/home/an/.codex",
+      "agent": "codex",
+      "content": "Codex sessions, plugin cache (Superpowers 7.0.1 source of plugins/superpowers)",
+      "policy": "Private home state; not imported"
+    }
+  ],
+  "barred": [
+    {
+      "path": "/home/an/uos-backups/20261025-0747/backup.key",
+      "policy": "Never read, hash or export"
+    },
+    {
+      "path": "tools/telegram_stream_monitor.py:27",
+      "policy": "Legacy credential fallback; presence-only"
+    }
+  ],
+  "holds": [
+    "8 .agents-only 20260916 ratification rules not mirrored to other surfaces",
+    "default working copy refresh requires operator decision D5"
+  ]
+}
