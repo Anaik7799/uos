@@ -2814,3 +2814,12 @@ pub fn e2e_socratic_empty_does_not_spend_test(){
 pub fn e2e_socratic_unconfigured_and_scope_test(){
  exercise_conversation_dispatch("/socratic Hello","not integrated","/tool socratic_dialogue {\"topic\":\"x\",\"model\":\"paid\"}","overrides refused","disabled",10)
 }
+
+pub fn e2e_exec_brief_command_and_tool_test() {
+  exercise_automatic_command_dispatch("/exec-brief","uos.telegram.exec-brief.v1",
+    "/tool query_exec_brief {}","uos.telegram.exec-brief.v1")
+}
+pub fn e2e_exec_brief_scope_refusal_test() {
+  exercise_automatic_command_dispatch("/exec-brief other-plan","Read arguments",
+    "/action query_exec_brief {\"plan\":\"foreign\"}","empty JSON object")
+}

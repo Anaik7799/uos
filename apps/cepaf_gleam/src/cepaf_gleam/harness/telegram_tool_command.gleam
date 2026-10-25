@@ -25,6 +25,7 @@ pub type Selection {
   Ecology
   Matrix
   SystemHealth
+  ExecBrief
   Ha
   Finops
   Socratic(topic:String)
@@ -49,6 +50,7 @@ pub fn help() -> String {
   <> "/tool query_matrix_versions {} — observed Matrix client API versions.\n"
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
   <> "/tool query_fmea {} or {\"task_id\":\"TASK_ID\"} — recorded risk assessments in the configured plan.\n"
+  <> "/tool query_exec_brief {} — current configured-plan progress and service reachability; not global health or feature completion.\n"
   <> "/tool query_system_health {} — bounded service reachability and local Telegram state.\n"
   <> "/tool query_zenoh {} or {\"topic\":\"exact/key\"} — explicitly granted user/chat topic reads only.\n"
   <> "/tool query_blast_radius {\"module\":\"cepaf_gleam/harness/telegram_service\"} — static compiled dependencies only.\n"
@@ -134,6 +136,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
     "query_ecology" -> empty_arguments(tail, Ecology)
     "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)
+    "query_exec_brief" -> empty_arguments(tail, ExecBrief)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
     "socratic_dialogue" -> dialogue.tool_topic(tail) |> result.map(Socratic)
     "query_blast_radius" -> impact.tool_selector(tail) |> result.map(BlastRadius)

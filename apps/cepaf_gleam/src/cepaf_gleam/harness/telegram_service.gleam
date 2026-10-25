@@ -27,6 +27,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_brief_report as brief_report
 import cepaf_gleam/harness/telegram_ha_report as ha_report
 import cepaf_gleam/harness/telegram_storage_report as storage_report
 import cepaf_gleam/harness/telegram_rete_report as rete_report
@@ -2308,6 +2309,7 @@ fn execute_guarded_dispatch(
                         guard.DirectReadTool("query_ecology") -> ecology_reply(state)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.DirectReadTool("query_exec_brief") -> executive_brief_reply(state, gen1)
                         guard.PreservedDirective("/blast-radius",[module]) -> impact_reply(state,module)
                         guard.PreservedDirective("/zenoh",[topic]) -> zenoh_reply(state,request_user,request_chat,topic)
                         guard.DirectReadTool("query_finops") -> budget_reply(state)
@@ -6460,4 +6462,30 @@ fn impact_reply(state:ServiceState,module:String)->String {
   None->Error("impact_source_not_configured")
  }
  case observation {Ok(raw)->raw Error(_)->impact_report.unavailable()}
+}
+
+/// Sequential current observations; no cached or historical-health fallback.
+/// The existing isolated reads are individually bounded; the aggregate window
+/// and authority are checked before and after all observations.
+fn executive_brief_reply(state: ServiceState, generation: Int) -> String {
+  let io = operational_status.live_io()
+  let started_ms = io.now_ms()
+  let started_us = ffi_system_now_utc_us()
+  let observed = current_read(state, 20_000, fn() {
+    use observation <- result.try(obs_policy.observe(command_observer_request(state.config))
+      |> result.replace_error("brief_plan_unavailable"))
+    use tasks <- result.try(bit_array.to_string(observation.payload)
+      |> result.replace_error("brief_plan_unavailable"))
+    let status = operational_status_reply(state, generation)
+    let finished_ms = io.now_ms()
+    use _ <- result.try(case finished_ms >= started_ms && finished_ms-started_ms <= 20_000 {
+      True -> Ok(Nil)
+      False -> Error("brief_deadline_refused")
+    })
+    brief_report.project(state.config.plan_id,tasks,status,started_us,ffi_system_now_utc_us())
+  })
+  case observed {
+    Ok(Ok(report)) -> report
+    _ -> status_failure()
+  }
 }
