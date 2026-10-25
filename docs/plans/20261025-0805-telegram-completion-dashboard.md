@@ -4,13 +4,13 @@
 
 Observed 2026-10-25T16:48:03.239Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
 
-**AS-IS:** Main and GitHub match 5d6b9be8;253 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
+**AS-IS:** Main and GitHub match 3d2822db;254 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
 
 **TO-BE:** All adopted Telegram commands, Mini App actions and media operate through guarded supervised dispatch; real Telegram and browser acceptance pass on the released candidate; applicable branch deltas are integrated and GitHub readback matches main.
 
 | Task | State | Contribution and acceptance | Risk / mitigation |
 |---|---|---|---|
-| G8_IMPROVE | Completed; live desktop/mobile PASS | Current task projection, finite refresh and truthful demonstration | High: reviewed exact bytes/config, preserved originals, renewed finite observer until17:05:00Z |
+| G8_IMPROVE | Completed; live desktop/mobile PASS | Current task projection, finite refresh and truthful demonstration | High: reviewed exact bytes/config, preserved originals, renewed finite observer until17:50:00Z |
 | MINI_API_IMPL → MINI_API_REVIEW | Attempt8 cleanly released; acknowledgement published504b17f1 with core/UI/integration reviews PASS; three other data adapters remain | Authenticated data/actions reflect actual state; denial/recovery and browser checks | High: exact episode/nonce/fence checks, durable receipt recovery and independent source review |
 | COMMAND_IMPL → COMMAND_REVIEW | Attempt16 active: briefing orchestration fault hardening published5d6b9be8 (441tests,18new cases,2service scenarios PASS); AGY candidate-verification design advice received; /exec-brief publisheda5dddfc0; Socratic source published54e5374b. Prior increments: /blast-radius source reviewed PASS,399tests/5service scenarios and full build PASS; published f6c3c5eb. Zenoh exact-topic source reviewed PASS,384checks and4service scenarios PASS; published f6b67e48. Previous attempt14 cleanly released before expiry; /ha publishedf59d3335. Finops/budget published1da695e2:362 checks,11 native ledger checks,4 service scenarios and full build PASS. AGY7370b5c5 source review PASS; fixture-discovery HOLD resolved by actual staged/loaded beam proof. Latest published compiled inventory:39/77 handler routes connected,16 backend_unavailable,22 not_implemented; route coverage is not feature acceptance | Every adopted command maps to typed dispatcher and backend | Critical: effect-time owner/task fence and receipts |
 | MEDIA_IMPL → MEDIA_REVIEW | Pending | Bounded media ingestion and delivery | High: size/type validation and hostile-input checks |
@@ -23,7 +23,7 @@ G0–G7 source and evidence consolidation is published. All 101 workspaces were 
 
 Config now uses shared validated declarations with12 current tests,16 HTTP cases,9 actual Chromium scenarios and4 startup checks passing. AGY4fdd0402 approved exact source; source-only publication verified12:03:37Z. Synthetic test identity does not prove real Telegram acceptance.
 
-Alerts read increment now has23 focused tests,319 prior combined checks,8 HTTP executions across two collector profiles and4 real Chromium scenarios; AGY51fcfe4f/126a1f5c PASS. Source-only publication verified12:39:13UTC at6f883356; full-page/task completion remains open. Acknowledgement follow-up now has343 combined checks,48 full-app checks,11 HTTP cases and11 final Chromium executions (7distinct scenarios) passing; core AGYea1542c9 PASS, corrected UI/test review05439728 PASS. This does not close the Mini task or production release. Observer replaced before expiry; current snapshot2026-10-25T15:42:01Z; successor expiry17:05:00UTC.
+Alerts read increment now has23 focused tests,319 prior combined checks,8 HTTP executions across two collector profiles and4 real Chromium scenarios; AGY51fcfe4f/126a1f5c PASS. Source-only publication verified12:39:13UTC at6f883356; full-page/task completion remains open. Acknowledgement follow-up now has343 combined checks,48 full-app checks,11 HTTP cases and11 final Chromium executions (7distinct scenarios) passing; core AGYea1542c9 PASS, corrected UI/test review05439728 PASS. This does not close the Mini task or production release. Observer replaced before expiry; current snapshot2026-10-25T15:42:01Z; successor expiry17:50:00UTC.
 
 Finops reports daily reserved liability, not invoiced provider spending or global account budget. Source publication verified14:29:46UTC at1da695e2; no deployment. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1406-telegram-finops-command.json).
 
@@ -51,6 +51,8 @@ Operational brief publisheda5dddfc0 at16:30:02UTC: AGY partial source preserved 
 Briefing recovery candidate: actual service composition now shares fault-tested authority/deadline orchestration. Initial service failure from an overstrict deadline check is preserved and corrected. Source review PASS; published5d6b9be8 at16:51:25UTC; no new command reachability claimed. [Recovery evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1603-telegram-brief-fault-recovery.json).
 
 [Full current status journal](http://nas-1.tail55d152.ts.net:4100/files/.uos-workspaces/codex-merge-20261025/docs/journal/20261025-1637-uos-full-project-status.md) — task, command, publication and admission counts are separately scoped. Content verified over Tailnet 2026-10-25T16:54:57.182Z.
+
+Verification contract groundwork:456combined tests/15new cases and full930bindingcompile PASS; purecontractonly, actualexecutor/commandintegration remainpending. AGYcodeattempttimeoutnofiles; Codex implementation. Observerreplacementepoch10 running withfreshproducer, expiry17:50UTC. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/.uos-workspaces/codex-merge-20261025/governance/planning/20261025-1747-telegram-verification-contract.json).
 
 ## Verification checklist
 
