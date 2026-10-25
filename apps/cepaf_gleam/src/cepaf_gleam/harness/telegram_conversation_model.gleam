@@ -68,12 +68,30 @@ pub fn run(
   authorize: fn() -> Result(Int, String),
   budget_ms: Int,
 ) -> Result(Execution, String) {
+  run_context(store.conversation_context(reservation),store.conversation_prompt(reservation),
+    io,authorize,budget_ms)
+}
+
+/// This entrypoint still requires an opaque, newly committed native reservation.
+/// The authenticated control owner must never retry an uncertain model call.
+pub fn run_mini(
+  reservation: store.MiniChatReservation,
+  io: model.Io,
+  authorize: fn() -> Result(Int,String),
+  budget_ms: Int,
+) -> Result(Execution,String) {
+  run_context(store.mini_chat_context(reservation),store.mini_chat_prompt(reservation),
+    io,authorize,budget_ms)
+}
+
+fn run_context(
+  context: conv.Context, prompt: String, io: model.Io,
+  authorize: fn() -> Result(Int,String), budget_ms: Int,
+) -> Result(Execution,String) {
   use _ <- result.try(case budget_ms >= 100 && budget_ms <= 15_000 {
     True -> Ok(Nil)
     False -> Error("conversation_invalid_budget")
   })
-  let context = store.conversation_context(reservation)
-  let prompt = store.conversation_prompt(reservation)
   use request <- result.try(conv.prepare_request(context, prompt))
   let started = io.now_ms()
   let deadline = started + budget_ms

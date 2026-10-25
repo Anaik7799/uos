@@ -33,7 +33,7 @@ const tests=['mini_memory_test.gleam','mini_control_test_ffi.erl','mini_control_
 const pollingTests=['telegram_commands_test','telegram_delivery_ledger_test','telegram_ingress_guard_test','telegram_task_command_test','telegram_conversation_test','telegram_memory_command_test','telegram_tool_command_test','telegram_cancellation_test','telegram_cancellation_record_test','telegram_action_intent_test','telegram_action_profile_test','telegram_approval_test'];
 for(const name of pollingTests)tests.push(name+'.gleam');
 tests.push('telegram_approval_test_crypto.erl','telegram_conversation_store_test.gleam');
-tests.push('telegram_service_e2e_test.gleam','telegram_conversation_test_io.gleam');
+tests.push('telegram_conversation_model_test.gleam','telegram_service_e2e_test.gleam','telegram_conversation_test_io.gleam');
 // Include candidate test helpers transitively; child fixtures bind the actual loaded candidate beams.
 for(let i=0;i<tests.length;i++){const body=fs.readFileSync(sourceRoot+'/apps/cepaf_gleam/test/'+tests[i],'utf8');for(const match of body.matchAll(/^import ([a-z_]+)(?:\s|$)/gm)){const name=match[1]+'.gleam';if(fs.existsSync(sourceRoot+'/apps/cepaf_gleam/test/'+name)&&!tests.includes(name))tests.push(name);}}
 for(const name of fs.readdirSync(sourceRoot+'/apps/cepaf_gleam/test').filter(x=>x.startsWith('telegram_')&&x.endsWith('.erl')))if(!tests.includes(name))tests.push(name);

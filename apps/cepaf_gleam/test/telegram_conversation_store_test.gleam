@@ -461,3 +461,11 @@ pub fn mini_native_invalid_reply_and_other_scope_receipt_test() {
   let assert Ok(other)=store.mini_chat_receipt(config,conv.Scope(bot,100,201),mini_nonce)
   other.found |> should.be_false
 }
+
+pub fn with_mini_reserved_for_model_test(run: fn(store.MiniChatReservation) -> a) -> a {
+  use config <- with_store()
+  let _=seed_mixed(config)
+  let assert Ok(draft)=mini_prepare(config,mini_nonce2,10)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  run(res)
+}
