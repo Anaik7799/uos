@@ -83,8 +83,15 @@ absolute_path(P) ->
     true = length(Absolute) =< 4096,
     Absolute.
 
+%% Every pinned module must come from the same build root as the runner. A flat
+%% candidate build places them in one ebin; `gleam test` places dependency
+%% modules (e.g. uos_swarm's uos_openrouter_ffi) in sibling <package>/ebin dirs.
 pin(M, Dir) ->
     {M, Beam, File} = code:get_object_code(M),
     true = byte_size(Beam) =< 8388608,
-    Dir = filename:dirname(filename:absname(File)),
+    ModDir = filename:dirname(filename:absname(File)),
+    Root = filename:dirname(filename:dirname(Dir)),
+    true = ModDir =:= Dir orelse
+        (filename:basename(ModDir) =:= "ebin" andalso
+         filename:dirname(filename:dirname(ModDir)) =:= Root),
     {M, crypto:hash(sha256, Beam)}.

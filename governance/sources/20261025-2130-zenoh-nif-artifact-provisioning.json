@@ -1,0 +1,57 @@
+{
+  "schema": "uos-source-ingestion/v1",
+  "manifest_id": "20261025-2130-zenoh-nif-artifact-provisioning",
+  "observed_at": "2026-10-25T20:46:24Z",
+  "plan_id": "uos/claude-handover/20261025-1953",
+  "task_id": "NIF_FUNCTIONAL",
+  "actor": "claude-fable-l0-35600f5c",
+  "artifact": {
+    "path": "apps/cepaf_gleam/priv/zenoh_nif.so",
+    "sha256": "d3ba91c18229f435d19be1cf186a4435ace87821be970630bad97bf624597035",
+    "tracked": false,
+    "pin": "apps/cepaf_gleam/priv/zenoh_nif.sha256",
+    "source_binary": "/home/an/dev/ver/c3i/sub-projects/c3i/priv/native/zenoh_nif.so",
+    "source_tree_revision": "47f93223 (C3I git, read-only)",
+    "source_path_dirty_entries": 0,
+    "source_crate": "sub-projects/c3i/native/zenoh_nif (rustler 0.37, zenoh =1.8.0)",
+    "rustler_module": "Elixir.Indrajaal.Native.Zenoh"
+  },
+  "alternative_binary": {
+    "path": "/home/an/NAS-setup/c3i/sub-projects/c3i/priv/native/zenoh_nif.so",
+    "sha256_prefix": "23f5f2b2fe6aa04a",
+    "used": false,
+    "reason": "Not the read-only evidence-tree build"
+  },
+  "host_module": "apps/cepaf_gleam/src/Elixir.Indrajaal.Native.Zenoh.erl (17 fail-closed stubs + open_session/1 alias; loads only priv/zenoh_nif)",
+  "removed": "cepaf_gleam_ffi:try_load_zenoh_nif/0 fallback that loaded /home/an/dev/ver/c3i/... at runtime and always failed with bad_lib (module name mismatch)",
+  "verification": {
+    "nif_mapped_in_beam": true,
+    "classify_tier": "bypass",
+    "isolated_session": {
+      "config": "{connect:[],mode:peer,multicast_scouting:false}",
+      "subscribe": "ok",
+      "puts": 3,
+      "received": 3,
+      "dropped": 0,
+      "ffi_put": "ok",
+      "close": "ok"
+    },
+    "shared_mesh_touched": false
+  },
+  "canonical_priv_drift": {
+    "note": "Canonical checkout priv/ holds unpinned Sep 6 rebuilds; pinned bytes are in /home/an/NAS-setup/c3i/lib/cepaf_gleam/priv. Not changed here: runtime owner decision.",
+    "files": [
+      {
+        "name": "c3i_nif.so",
+        "canonical_sha256_prefix": "c6b6cd061c3e",
+        "pin_prefix": "f4f6885a8af6"
+      },
+      {
+        "name": "rule_engine_nif.so",
+        "canonical_sha256_prefix": "ff52628df5a5",
+        "pin_prefix": "ffd159d7d864"
+      }
+    ]
+  },
+  "status": "IMPORTED_NOT_ADMITTED"
+}

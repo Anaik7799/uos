@@ -283,19 +283,16 @@ sqlite_close(Conn) ->
 
 try_load_zenoh_nif() ->
     %% Try Elixir module first (Mix app context)
+    %% The Rustler library only loads into 'Elixir.Indrajaal.Native.Zenoh', whose
+    %% on_load resolves priv/zenoh_nif.so. No fallback into external evidence trees.
     case code:ensure_loaded('Elixir.Indrajaal.Native.Zenoh') of
-        {module, _} -> {ok, <<"elixir_rustler_loaded">>};
-        _ ->
-            %% Fallback: load NIF directly into this module
-            NifPath = case filelib:is_file("/home/an/dev/ver/c3i/sub-projects/c3i/priv/native/zenoh_nif.so") of
-                true -> "/home/an/dev/ver/c3i/sub-projects/c3i/priv/native/zenoh_nif";
-                false -> "/home/an/dev/ver/c3i/sub-projects/c3i/target/debug/libzenoh_nif"
-            end,
-            case erlang:load_nif(NifPath, 0) of
-                ok -> {ok, <<"direct_nif_loaded">>};
-                {error, {reload, _}} -> {ok, <<"nif_already_loaded">>};
-                {error, Reason} -> {error, unicode:characters_to_binary(io_lib:format("nif_load_failed: ~p", [Reason]))}
-            end
+        {module, _} ->
+            try 'Elixir.Indrajaal.Native.Zenoh':zenoh_classify_tier(<<"probe">>) of
+                _ -> {ok, <<"priv_nif_loaded">>}
+            catch
+                error:nif_not_loaded -> {error, <<"nif_load_failed: priv/zenoh_nif.so not loaded">>}
+            end;
+        _ -> {error, <<"nif_load_failed: Elixir.Indrajaal.Native.Zenoh module missing">>}
     end.
 
 %% Internal: resolve which module has the NIF functions

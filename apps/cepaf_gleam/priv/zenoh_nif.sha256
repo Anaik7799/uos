@@ -1,0 +1,1 @@
+d3ba91c18229f435d19be1cf186a4435ace87821be970630bad97bf624597035  apps/cepaf_gleam/priv/zenoh_nif.so  host-provisioned 2026-10-25: copied from /home/an/dev/ver/c3i/sub-projects/c3i/priv/native/zenoh_nif.so (C3I git 47f93223, zenoh_nif source path clean; rustler 0.37, zenoh =1.8.0); provenance governance/sources/20261025-2130-zenoh-nif-artifact-provisioning.json; never committed

@@ -9,8 +9,8 @@
     "scope": "Register a Claude coordinator session and ACK handover message operator-pause-handover-board-1725; no VCS, runtime or Sa-plan task effects beyond this plan",
     "phase": "implementation",
     "fractal_layer": 6,
-    "observed_at": "2026-10-25T19:49:49Z",
-    "valid_until": "2026-10-25T20:44:49Z",
+    "observed_at": "2026-10-25T20:46:07Z",
+    "valid_until": "2026-10-25T21:41:07Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T19:49:07Z",
     "snapshot": {
@@ -20,17 +20,17 @@
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
           "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         }
       ]
     },
@@ -202,8 +202,8 @@
     "scope": "In fable-l0 change on main only: vendor text-only copies of every linked skill into the repository, relink all four surfaces relatively, write provenance manifest; no main move without integration/main lease",
     "phase": "implementation",
     "fractal_layer": 2,
-    "observed_at": "2026-10-25T19:49:49Z",
-    "valid_until": "2026-10-25T20:44:49Z",
+    "observed_at": "2026-10-25T20:46:07Z",
+    "valid_until": "2026-10-25T21:41:07Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T19:49:07Z",
     "snapshot": {
@@ -213,17 +213,17 @@
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
           "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         }
       ]
     },
@@ -410,8 +410,8 @@
     "scope": "Read-only inventory of Codex and AGY workspaces, unlanded commits, bookmarks and evidence; write an index and a pointer rule in fable-l0; add preserved/ bookmarks only for unbookmarked non-empty peer working copies; never describe, rebase, squash or abandon peer commits",
     "phase": "implementation",
     "fractal_layer": 2,
-    "observed_at": "2026-10-25T19:57:04Z",
-    "valid_until": "2026-10-25T20:52:04Z",
+    "observed_at": "2026-10-25T20:46:07Z",
+    "valid_until": "2026-10-25T21:41:07Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T19:57:04Z",
     "snapshot": {
@@ -421,17 +421,17 @@
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
           "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         }
       ]
     },
@@ -617,8 +617,8 @@
     "scope": "Hold integration/main; verify main unchanged at 2303b48c; gate candidate (path classification, credential scan, build, tests, km-gate, journal, diagram, surface links); move main to the candidate; local only, no GitHub push without operator approval",
     "phase": "release",
     "fractal_layer": 2,
-    "observed_at": "2026-10-25T20:05:32Z",
-    "valid_until": "2026-10-25T21:00:32Z",
+    "observed_at": "2026-10-25T20:46:07Z",
+    "valid_until": "2026-10-25T21:41:07Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T20:05:32Z",
     "snapshot": {
@@ -628,17 +628,17 @@
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
           "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         }
       ]
     },
@@ -825,9 +825,9 @@
     "scope": "Add impact_source: None to two ServiceConfiguration test constructions in apps/cepaf_gleam/test/telegram_service_slice1_test.gleam; build and run full cepaf_gleam suite on OTP 29; land under integration/main",
     "phase": "implementation",
     "fractal_layer": 2,
-    "observed_at": "2026-10-25T20:13:47Z",
-    "valid_until": "2026-10-25T21:08:47Z",
-    "task_state": "executing",
+    "observed_at": "2026-10-25T20:46:07Z",
+    "valid_until": "2026-10-25T21:41:07Z",
+    "task_state": "completed",
     "ready_since": "2026-10-25T20:13:47Z",
     "snapshot": {
       "kind": "working_tree",
@@ -836,17 +836,17 @@
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
           "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T19:49:49Z"
+          "observed_at": "2026-10-25T20:46:07Z"
         }
       ]
     },
@@ -1003,6 +1003,214 @@
         "landed on main"
       ],
       "rollback": "Revert the two-line test change",
+      "reviewer": "operator",
+      "budget": "Local deterministic commands only; no paid model calls",
+      "residuals": [
+        "Self-reported ACK; no cryptographic workload identity"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-handover-nif_functional-20261025",
+    "plan_id": "uos/claude-handover/20261025-1953",
+    "task_id": "NIF_FUNCTIONAL",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Workspace-only provisioning of pinned NIF artifacts and toolchain links (gitignored); add Elixir.Indrajaal.Native.Zenoh host module, remove external-tree NIF fallback, relax test binding to same build root; land source on main under integration/main. Canonical priv and running services untouched.",
+    "phase": "implementation",
+    "fractal_layer": 2,
+    "observed_at": "2026-10-25T20:46:07Z",
+    "valid_until": "2026-10-25T21:41:07Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-25T20:45:45Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 2303b48c; fable-l0 change ypnnzlsr on main; coordinator sequence 2589",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md",
+          "sha256": "4894eea493d908fab01e05998aa287740ca85f6e468728ee1cf4cd3f13d9a70f",
+          "observed_at": "2026-10-25T20:46:07Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T20:46:07Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T20:46:07Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Operator directed takeover of paused work; ownership is currently unassigned",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA in ownership/authority transfer or agent capability resolution",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Highest mode band from fmea_modes",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Resumption of Telegram COMMAND_IMPL and all agent work depends on this",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Several agent surfaces and the paused Telegram programme benefit",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/journal/20261025-1706-claude-pause-status-handover.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-NIF-UNPINNED",
+        "cause": "Loading a NIF whose bytes do not match its pin",
+        "effect": "Unverified native code in BEAM",
+        "controls": "sha256 equality with pin before load; mismatched canonical copies not used",
+        "s": 5,
+        "o": 1,
+        "det": 2,
+        "rpn": 10,
+        "band": 5
+      },
+      {
+        "id": "FM-NIF-SILENT",
+        "cause": "on_load falls back silently",
+        "effect": "NIF reported present but absent",
+        "controls": "/proc maps check plus functional calls",
+        "s": 4,
+        "o": 2,
+        "det": 2,
+        "rpn": 16,
+        "band": 4
+      },
+      {
+        "id": "FM-EXT-RUNTIME",
+        "cause": "Runtime loads from external evidence tree",
+        "effect": "Barred dependency, drift",
+        "controls": "External fallback removed; priv only",
+        "s": 4,
+        "o": 2,
+        "det": 2,
+        "rpn": 16,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Claude takeover session",
+      "control_action": "Make skills, Superpowers, rules and plugins resolvable in-project",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Skills remain unresolvable or home-dependent",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "All four surfaces resolve every skill inside the repository"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Secrets, binaries or external live state copied into repo",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Text-only copy; secret screen; size cap; provenance manifest; external trees read-only"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "X before observation",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Observe current coordinator/VCS state immediately before each write"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Ownership held after session ends",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Bounded TTL claims; release on completion"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "TEST_COMPILE_FIX"
+    ],
+    "score": 960,
+    "score_interval": [
+      960,
+      960
+    ],
+    "decision": {
+      "summary": "All NIFs loaded and functional",
+      "alternatives": [
+        "Vendor into repo with manifest: chosen",
+        "Repair home-directory links: rejected (outside project, parity scope)",
+        "Leave as-is: rejected"
+      ],
+      "counterevidence": [
+        "A board ACK is self-reported and grants no authority",
+        "Skill presence is not runtime admission"
+      ],
+      "assumptions": [
+        "Coordinator store accepts session_store_cli writes from the dev build"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task completes within 60 minutes with all acceptance checks observed",
+      "falsifier": "Any acceptance check fails or coordinator refuses the write",
+      "acceptance": [
+        "every priv NIF sha256 equals its pin",
+        "every NIF mapped in BEAM",
+        "Zenoh publish/subscribe round-trip",
+        "all NIF test modules pass"
+      ],
+      "rollback": "Revert source change; remove workspace-only provisioning",
       "reviewer": "operator",
       "budget": "Local deterministic commands only; no paid model calls",
       "residuals": [
