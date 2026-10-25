@@ -135,8 +135,8 @@ let run_audit ?active ?reclaim ?reclaim_set ?plan_id ?selection_review path sele
   let reviewed = match selection_review, selected with
     | None, _ -> None
     | Some review_path, Some task ->
-        require(active=None && reclaim=None && reclaim_set=None)
-          "reviewed selection cannot combine active or reclaim modes";
+        require(active=None && reclaim_set=None)
+          "reviewed selection cannot combine active or reclaim-set modes";
         require(String.starts_with ~prefix:"governance/planning/" review_path)
           "selection review must be a governance planning artifact";
         let review_bytes=Bounded.evidence ~root review_path in
@@ -319,6 +319,9 @@ let () =
     | [_;"--preflight";path;task] -> run_audit path (Some task)
     | [_;"--preflight-reviewed";path;task;review] ->
         run_audit ~selection_review:review path (Some task)
+    | [_;"--reclaim-preflight-reviewed";path;task;worker;attempt;lease;review] ->
+        run_audit ~reclaim:(task,worker,int_of_string attempt,Int64.of_string lease)
+          ~selection_review:review path (Some task)
     | [_;"--reclaim-preflight";path;task;worker;attempt;lease] ->
         run_audit ~reclaim:(task,worker,int_of_string attempt,Int64.of_string lease) path (Some task)
     | [_;"--reclaim-set-preflight";path;task;raw_bindings] ->
@@ -354,7 +357,7 @@ let () =
             "effective_class",`String ("P"^string_of_int r.effective_class);
             "effective_score",`Int r.effective_score;
             "origins",`List (List.map (fun s->`String s) r.origins)]) ranked)])
-    | _ -> prerr_endline "Usage: risk-priority-check --all | --selftest | --adversarial | --package | --record FILE | --rank FILE | --audit PORTFOLIO | --preflight PORTFOLIO TASK | --preflight-reviewed PORTFOLIO TASK REVIEW_FILE | --reclaim-preflight PORTFOLIO TASK WORKER PREVIOUS_ATTEMPT PREVIOUS_LEASE_NS | --reclaim-set-preflight PORTFOLIO TASK BINDINGS_JSON | --reclaim-metadata-observe PORTFOLIO BINDINGS_JSON | --active-check PORTFOLIO TASK WORKER ATTEMPT | --plan PLAN | --receipt FILE";exit 2
+    | _ -> prerr_endline "Usage: risk-priority-check --all | --selftest | --adversarial | --package | --record FILE | --rank FILE | --audit PORTFOLIO | --preflight PORTFOLIO TASK | --preflight-reviewed PORTFOLIO TASK REVIEW_FILE | --reclaim-preflight PORTFOLIO TASK WORKER PREVIOUS_ATTEMPT PREVIOUS_LEASE_NS | --reclaim-preflight-reviewed PORTFOLIO TASK WORKER PREVIOUS_ATTEMPT PREVIOUS_LEASE_NS REVIEW_FILE | --reclaim-set-preflight PORTFOLIO TASK BINDINGS_JSON | --reclaim-metadata-observe PORTFOLIO BINDINGS_JSON | --active-check PORTFOLIO TASK WORKER ATTEMPT | --plan PLAN | --receipt FILE";exit 2
   with
   | Invalid message -> print_json (`Assoc ["status",`String "HOLD";"authority",`String "NONE";
       "rule",`String "RP-INVALID";"detail",`String message]);exit 1

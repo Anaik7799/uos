@@ -99,4 +99,49 @@ let run () =
     reject "review expires during observation" (fun()->verify "2026-10-25T01:30:00Z");
     Sys.remove pp;Unix.symlink rp pp;
     reject "proof symlink rejected" (fun()->verify now));
+
+  (* Compose original-byte review with the exact expired-claim projection.
+     The projection is ranking evidence, never a changed stored task. *)
+  let expired_records=List.map(fun r->if text "task_id" r="B" then
+    change "task_state" (`String "executing") r else r) records in
+  let expired_raw=Yojson.Basic.to_string(`List expired_records) in
+  let live:Live_plan.task list=[
+    {id="A";state="available";worker=None;lease=None;attempt=0;
+     completed=None;result_present=false;dependencies=[]};
+    {id="B";state="executing";worker=Some "producer";lease=Some 90L;attempt=2;
+     completed=None;result_present=false;dependencies=[]}] in
+  let binding=("B","producer",2,90L) in
+  let projected=Checker.reclaim_projection ~now_ns:100L binding expired_records live in
+  let projected_ranked=rank ~now (List.map candidate projected) in
+  let projected_report:Checker.report={ranked=projected_ranked;
+    findings=Checker.analysis ~now projected projected_ranked;evidence=[]} in
+  let rr,rp=seal(change "portfolio_sha256" (`String(Bounded.sha256 expired_raw)) review) in
+  let composed ?(input=expired_raw) ?(task="B") ?(rep=projected_report) ?(evidence=rp) r =
+    Reviewed_selection.apply ~now ~raw:input ~records:expired_records ~selected:task
+      ~report:rep ~review:r ~proof:evidence in
+  let accepted=composed rr in
+  check "reclaim plus review selects expired top peer" (
+    List.map(fun(r:ranked)->r.task.id) accepted.ranked=["B";"A"] &&
+    accepted.findings=[] && text "task_state" (List.nth expired_records 1)="executing" &&
+    text "task_state" (List.nth projected 1)="available");
+  List.iter(fun(name,b)->reject name(fun()->
+    Checker.reclaim_projection ~now_ns:100L b expired_records live))
+    ["reclaim wrong worker",("B","other",2,90L);
+     "reclaim wrong attempt",("B","producer",3,90L);
+     "reclaim wrong deadline",("B","producer",2,91L);
+     "reclaim wrong task",("A","producer",2,90L)];
+  reject "reclaim before expiry" (fun()->
+    Checker.reclaim_projection ~now_ns:89L binding expired_records live);
+  reject "reclaim assessment actor mismatch" (fun()->
+    Checker.reclaim_projection ~now_ns:100L binding
+      (List.map(change "actor" (`String "other")) expired_records) live);
+  reject "reclaim reused preprojection portfolio approval" (fun()->composed review);
+  reject "reclaim reviewed projected bytes instead of original" (fun()->
+    composed ~input:(Yojson.Basic.to_string(`List projected)) rr);
+  reject "reclaim review wrong selected task" (fun()->composed ~task:"A" rr);
+  let bad_group,bad_proof=seal(change "tied_tasks" (`List[`String "B"]) rr) in
+  reject "reclaim review omitted peer" (fun()->composed ~evidence:bad_proof bad_group);
+  let other=Checker.issue "RP-SA-PLAN" "A" "another expired task" "repair" in
+  check "reclaim review retains non-tie hold"
+    ((composed ~rep:{projected_report with findings=other::projected_report.findings} rr).findings=[other]);
   !count
