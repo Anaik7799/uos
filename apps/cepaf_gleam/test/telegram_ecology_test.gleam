@@ -73,3 +73,8 @@ pub fn submillisecond_future_is_not_fresh_test() {
  let assert Ok(raw)=report.project(string.replace(fixture(),"100000000","100000001"),100000)
  string.contains(raw,"\"freshness\":\"future\"") |> should.be_true
 }
+
+pub fn top_level_binding_is_checked_independently_test() {
+ let changed=string.replace(fixture(),"\"hosting\":\"one_shared_ecology_actor\",\"external_system_binding\":false","\"hosting\":\"one_shared_ecology_actor\",\"external_system_binding\":true")
+ report.project(changed,100000) |> result.is_error |> should.be_true
+}
