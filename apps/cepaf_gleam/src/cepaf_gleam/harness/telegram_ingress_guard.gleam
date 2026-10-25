@@ -143,6 +143,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
           "/ecology" -> read_directive("query_ecology", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" | "/health" -> read_directive("query_system_health", args)
+          "/ha" -> read_directive("query_ha", args)
           "/fmea" -> case read_directive("query_fmea",args) {
             DirectReadTool(_) -> DirectReadTool("query_fmea")
             _ -> case task_command.parse_task_id(args) {
@@ -184,6 +185,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.Ha) -> DirectReadTool("query_ha")
               Ok(tool_command.Fmea("")) -> DirectReadTool("query_fmea")
               Ok(tool_command.Fmea(task)) -> PreservedDirective("/fmea",[task])
               Ok(tool_command.Search(query)) -> PreservedDirective("/search",[query])

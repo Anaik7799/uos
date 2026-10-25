@@ -330,3 +330,11 @@ pub fn fmea_scoped_ingress_test() {
       let assert g.DeniedMutation(_,_) = g.classify_directive(t) Nil
   })
 }
+
+
+pub fn ha_observation_scope_test() {
+  assert g.classify_directive("/ha") == g.DirectReadTool("query_ha")
+  assert g.classify_directive("/tool query_ha {}") == g.DirectReadTool("query_ha")
+  let assert g.DeniedMutation(_, _) = g.classify_directive("/ha reset")
+  let assert g.DeniedMutation(_, _) = g.classify_directive("/action query_ha {\"host\":\"other\"}")
+}

@@ -41,7 +41,7 @@ Runtime61/71, admission25/33 unchanged; preparation6/6 and consolidation9/9.343 
 Unsafe provision: no forged healthy or cleared condition, current authority checked after probe. Omission: missing coverage explicit and unknown receipts retained. Timing: signed identity, fresh collection, exact-set precondition and effect-time job fence. Duration: finite profiles, bounded probes/deadlines and no automatic resend. Raw FMEA S4 O3 Det3 RPN36 retained for false assurance/authority risks. EV ceiling93 unchanged. Independent review grants no production admission.
 
 ## 13. Conclusion
-The advertised acknowledgement path now executes and persists evidence in development. Forecast: finalize independent UI/test review and source-only publication during attempt8, then continue remaining Mini adapters/actions. Falsifiers include adverse review, changed source bindings, stale authority or failed candidate gates. Brier calibration UNRUN. Full goal remains open.
+The advertised acknowledgement path now executes and persists evidence in development. Source-only candidate504b17f1 was merged and GitHub verified at13:45:40UTC,245commits since806c2739. Forecast: finalize independent UI/test review and source-only publication during attempt8, then continue remaining Mini adapters/actions. Falsifiers include adverse review, changed source bindings, stale authority or failed candidate gates. Brier calibration UNRUN. Full goal remains open.
 
 ## Verification checklist
 <details><summary>Domain 1 — Metadata and navigation</summary>
@@ -49,7 +49,7 @@ The advertised acknowledgement path now executes and persists evidence in develo
 - [x] CHK-01-TIME: host UTC and required filename prefix.
 - [x] CHK-02-TAIL: full Tailnet links.
 - [x] CHK-03-FRACT: scoped fractal tags.
-- [ ] CHK-04-KM: final candidate gate pending.
+- [x] CHK-04-KM: exact candidate504b17f1 provenance gate PASS; runtime admission not granted.
 
 </details>
 <details><summary>Domain 2 — Purity and storage</summary>

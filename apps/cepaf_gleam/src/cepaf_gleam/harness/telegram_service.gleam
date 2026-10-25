@@ -26,6 +26,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_ha_report as ha_report
 import cepaf_gleam/harness/telegram_storage_report as storage_report
 import cepaf_gleam/harness/telegram_rete_report as rete_report
 import cepaf_gleam/harness/telegram_ecology_reader as ecology_reader
@@ -2324,6 +2325,12 @@ fn execute_guarded_dispatch(
                         guard.DirectReadTool("query_ecology") -> ecology_reply(state)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.DirectReadTool("query_ha") -> {
+                          case ha_report.observe(ha_report.live_io(),fn() { conversation_authorize(state) }) {
+                            Ok(report) -> report
+                            Error(_) -> status_failure()
+                          }
+                        }
                         guard.DirectReadTool("query_checklist") -> verification_reply(state,"checklist","")
                         guard.PreservedDirective("/aspects",[selector]) -> verification_reply(state,"aspects",selector)
                         guard.DirectReadTool("query_fmea") -> fmea_reply(state,"")

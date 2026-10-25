@@ -58,3 +58,9 @@ pub fn cancellation_grammar_test() {
  tool.parse("cancel_job_lease p/job-1 -- Operator requested cancellation") |> should.equal(Ok(tool.CancelLease("p/job-1","Operator requested cancellation")))
  list.each(["cancel_job_lease", "cancel_job_lease p/job", "cancel_job_lease ../job -- reason", "cancel_job_lease p/job -- ", "cancel_job_lease p/job -- a -- b", "cancel_job_lease p/job --  reason", "cancel_job_lease p/job;DROP -- reason", "cancel_job_lease p/job -- " <> string.repeat("x",257)],fn(s){tool.parse(s) |> should.be_error})
 }
+
+
+pub fn ha_direct_tool_scope_test() {
+  assert tool.parse("query_ha {}") == Ok(tool.Ha)
+  let assert Error(_) = tool.parse("query_ha {\"host\":\"other\"}")
+}

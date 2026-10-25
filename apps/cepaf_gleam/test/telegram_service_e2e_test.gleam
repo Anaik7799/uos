@@ -2691,3 +2691,14 @@ fn chunk_keys(request:String,index:Int,count:Int)->List(String) {
 pub fn e2e_checklist_full_record_chunks_test() {
  exercise_configured_dispatch("/checklist","RECORDED_PASS","/aspects A17","UNKNOWN","disabled",10,"verification_all")
 }
+
+
+pub fn e2e_ha_observation_dispatch_test() {
+  exercise_automatic_command_dispatch("/ha", "uos.telegram.ha.v1",
+    "/tool query_ha {}", "current_telegram_beam_vm")
+}
+
+pub fn e2e_ha_scope_override_refusal_test() {
+  exercise_automatic_command_dispatch("/ha reset", "denied_mutation",
+    "/action query_ha {\"host\":\"other\"}", "denied_mutation")
+}
