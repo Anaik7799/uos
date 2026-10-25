@@ -1,3 +1,4 @@
+import telegram_verification_report_test as evidence_fixture
 import telegram_managed_action_test as managed_action
 import cepaf_gleam/harness/telegram_conversation as conv
 import telegram_test_runner_binding as test_binding
@@ -342,6 +343,10 @@ fn start_runner_actor_with_conversation(
   let cmd = "{\"conversation_mode\":\"" <> conversation_mode <> "\",\"conversation_daily_limit\":" <> int.to_string(daily_limit) <> "," <> string.drop_start(cmd,1)
   let cmd = case simplifile.is_file(db_path<>".risk.json") {
     Ok(True) -> "{\"test_risk_source\":"<>json.to_string(json.string(db_path<>".risk.json"))<>","<>string.drop_start(cmd,1)
+    _ -> cmd
+  }
+  let cmd = case simplifile.read(db_path<>".verification.json") {
+    Ok(raw) -> "{\"test_verification_source\":"<>json.to_string(json.array([db_path<>".verification.json",files.digest(raw),evidence_fixture.candidate],json.string))<>","<>string.drop_start(cmd,1)
     _ -> cmd
   }
   let resp = send_runner_cmd(ipc_dir, cmd)
@@ -998,6 +1003,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       conversation: service.ConversationDisabled,
       actions: None,
       risk_source: None,
+      verification_source: None,
     )
 
   // 1. Commit an initial record to store
@@ -1205,6 +1211,11 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   case risk_case {
     "" -> Nil
+    "verification" | "verification_changed" | "verification_stale" | "verification_foreign" | "verification_missing" | "verification_all" -> {
+      let variant=case risk_case {"verification_stale"->"stale" "verification_foreign"->"foreign" "verification_all"->"all" _->"empty"}
+      let assert Ok(_) = simplifile.write(db_path<>".verification.json",evidence_fixture.fixture(service.ffi_system_now_utc_us()/1000,variant))
+      Nil
+    }
     _ -> { let assert Ok(_) = simplifile.write(db_path<>".risk.json",risk_fixture("plan-e2e",risk_case)) Nil }
   }
   let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
@@ -1250,6 +1261,7 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
 
   case risk_case {
     "missing" -> { let assert Ok(_) = simplifile.delete(db_path<>".risk.json") Nil }
+    "verification_missing" -> { let assert Ok(_) = simplifile.delete(db_path<>".verification.json") Nil }
     _ -> Nil
   }
   // Queue a /doctor command update into the mock fixture
@@ -1289,24 +1301,27 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
     False -> {
   string.contains(dispatch_res, "\"type\":\"dispatch_cycle_result\"") |> should.equal(True)
   string.contains(dispatch_res, "\"processed_count\":1") |> should.equal(True)
-  string.contains(dispatch_res, "\"delivered_count\":1") |> should.equal(True)
+  let delivered_count=delivery_count(dispatch_res)
 
   // Wait briefly for delivery worker to finish
   ffi_sleep_ms(100)
 
   // 3. Verify chunk delivered in SQLite store
   let req_id = ledger.make_request_id(bot_id, 8001)
-  let assert Ok(#(_, [chunk_row])) =
-    store.read_keys(storage_config, [codec.chunk_key(req_id, 0)])
-  chunk_row.exists |> should.equal(True)
-  let assert Ok(chunk_raw) = codec.decode_row_value(chunk_row)
-  let assert Ok(delivered_chunk) = codec.decode_chunk_value(chunk_raw)
-  delivered_chunk.status |> should.equal(ledger.OutboxDelivered(42))
-  string.contains(delivered_chunk.payload, first_expected)
-  |> should.equal(True)
+  let first_payload=delivered_payload(storage_config,req_id,delivered_count)
+  string.contains(first_payload,first_expected) |> should.be_true
+  case first_command=="/checklist" && list.contains(["verification","verification_all"],risk_case) {
+    True -> {
+      string.contains(first_payload,"CHK-18-JJ") |> should.be_true
+      let assert Ok(18)=json.parse(first_payload,decode.field("selected_count",decode.int,decode.success))
+      {delivered_count>1} |> should.be_true
+    }
+    False->Nil
+  }
 
   case risk_case {
     "refresh" -> { let assert Ok(_) = simplifile.write(db_path<>".risk.json",risk_fixture("plan-e2e","changed")) Nil }
+    "verification_changed" -> { let assert Ok(_) = simplifile.write(db_path<>".verification.json","{}") Nil }
     _ -> Nil
   }
   // 4. Test /saplan automatic dispatch
@@ -1323,19 +1338,13 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
   echo #(mode, dispatch_res2)
   string.contains(dispatch_res2, "\"type\":\"dispatch_cycle_result\"") |> should.equal(True)
   string.contains(dispatch_res2, "\"processed_count\":1") |> should.equal(True)
-  string.contains(dispatch_res2, "\"delivered_count\":1") |> should.equal(True)
+  let delivered_count2=delivery_count(dispatch_res2)
 
   ffi_sleep_ms(100)
 
   let req_id2 = ledger.make_request_id(bot_id, 8002)
-  let assert Ok(#(_, [chunk_row2])) =
-    store.read_keys(storage_config, [codec.chunk_key(req_id2, 0)])
-  chunk_row2.exists |> should.equal(True)
-  let assert Ok(chunk_raw2) = codec.decode_row_value(chunk_row2)
-  let assert Ok(delivered_chunk2) = codec.decode_chunk_value(chunk_raw2)
-  delivered_chunk2.status |> should.equal(ledger.OutboxDelivered(42))
-  string.contains(delivered_chunk2.payload, second_expected)
-  |> should.equal(True)
+  let second_payload=delivered_payload(storage_config,req_id2,delivered_count2)
+  string.contains(second_payload,second_expected) |> should.be_true
 
 
   case mode {
@@ -2639,4 +2648,46 @@ pub fn e2e_storage_and_nvme_alias_test() {
 pub fn e2e_storage_tool_and_scope_refusal_test() {
  exercise_automatic_command_dispatch("/tool query_storage {}","\"osd_allocation_authority\":\"NOT_GRANTED\"",
  "/action query_storage {\"path\":\"/dev/nvme0n1\"}","denied_mutation")
+}
+
+pub fn e2e_checklist_and_aspect_records_test() {
+ exercise_configured_dispatch("/checklist","uos.telegram.verification.v1","/aspects A01","RECORDED_PARTIAL","disabled",10,"verification")
+}
+pub fn e2e_verification_changed_source_refuses_test() {
+ exercise_configured_dispatch("/tool query_aspects {\"aspect\":\"A01\"}","RECORDED_PARTIAL","/tool query_checklist {}","unavailable","disabled",10,"verification_changed")
+}
+pub fn e2e_verification_stale_and_scope_refusal_test() {
+ exercise_configured_dispatch("/aspects A01","STALE","/tool query_aspects {\"candidate\":\"foreign\"}","Expected only an aspect code","disabled",10,"verification_stale")
+}
+pub fn e2e_verification_foreign_candidate_refuses_test() {
+ exercise_configured_dispatch("/checklist","unavailable","/aspects","unavailable","disabled",10,"verification_foreign")
+}
+pub fn e2e_verification_missing_source_refuses_test() {
+ exercise_configured_dispatch("/checklist","unavailable","/aspects","unavailable","disabled",10,"verification_missing")
+}
+
+fn delivery_count(raw:String)->Int {
+ let assert Ok(count)=json.parse(raw,decode.subfield(["result","delivered_count"],decode.int,decode.success))
+ {count>=1 && count<=16} |> should.be_true
+ count
+}
+fn delivered_payload(config:transport.LocalConfiguration,request:String,count:Int)->String {
+ let keys=chunk_keys(request,0,count)
+ let assert Ok(#(_,rows))=store.read_keys(config,keys)
+ list.length(rows) |> should.equal(count)
+ list.map(rows,fn(row){
+  row.exists |> should.be_true
+  let assert Ok(raw)=codec.decode_row_value(row)
+  let assert Ok(chunk)=codec.decode_chunk_value(raw)
+  chunk.status |> should.equal(ledger.OutboxDelivered(42))
+  chunk.payload
+ }) |> string.concat
+}
+
+fn chunk_keys(request:String,index:Int,count:Int)->List(String) {
+ case index>=count {True->[] False->[codec.chunk_key(request,index),..chunk_keys(request,index+1,count)]}
+}
+
+pub fn e2e_checklist_full_record_chunks_test() {
+ exercise_configured_dispatch("/checklist","RECORDED_PASS","/aspects A17","UNKNOWN","disabled",10,"verification_all")
 }

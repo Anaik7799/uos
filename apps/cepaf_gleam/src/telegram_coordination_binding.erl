@@ -1,7 +1,7 @@
 %% Transport binding only: bind the isolated reader to the current build bytes.
 %% No database access or agent policy here. The native guardian owns/reaps child.
 -module(telegram_coordination_binding).
--export([launch_eval/2,launch_knowledge_eval/2,launch_matrix_eval/0,launch_ecology_eval/0,launch_fmea_eval/3]).
+-export([launch_eval/2,launch_knowledge_eval/2,launch_matrix_eval/0,launch_ecology_eval/0,launch_fmea_eval/3,launch_verification_eval/5]).
 
 launch_eval(Db, View) ->
   try
@@ -29,6 +29,17 @@ launch_fmea_eval(Path, Plan, Task) ->
     lists:foreach(fun(B)->nomatch=binary:match(B,<<0>>) end,[Path,Plan,Task]),
     bound_eval('cepaf_gleam@harness@telegram_fmea_reader',[Path,Plan,Task])
   catch _:_ -> {error,<<"fmea_binding_failed">>} end.
+
+launch_verification_eval(Path,Sha,Candidate,View,Selector) ->
+ try
+  true=is_binary(Path) andalso byte_size(Path)>0 andalso byte_size(Path)=<4096,
+  true=is_binary(Sha) andalso byte_size(Sha)=:=64,
+  true=is_binary(Candidate) andalso byte_size(Candidate)=:=40,
+  true=lists:member(View,[<<"checklist">>,<<"aspects">>]),
+  true=is_binary(Selector) andalso byte_size(Selector)=<3,
+  lists:foreach(fun(B)->nomatch=binary:match(B,<<0>>) end,[Path,Sha,Candidate,View,Selector]),
+  bound_eval('cepaf_gleam@harness@telegram_verification_reader',[Path,Sha,Candidate,View,Selector])
+ catch _:_ -> {error,<<"verification_binding_failed">>} end.
 
 bound_eval(Entry, Args) ->
   try

@@ -507,10 +507,16 @@ build_service_configuration(Config) ->
             {ok,RiskConfigured} = cepaf_gleam@harness@telegram_service:configure_risk_source(B9,RiskPath),
             RiskConfigured
     end,
-    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+    B11 = case maps:get(<<"test_verification_source">>,Config,null) of
         null -> B10;
+        [EvidencePath,EvidenceSha,EvidenceCandidate] ->
+            {ok,EvidenceConfigured}=cepaf_gleam@harness@telegram_service:configure_verification_source(B10,EvidencePath,EvidenceSha,EvidenceCandidate),
+            EvidenceConfigured
+    end,
+    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+        null -> B11;
         [Root, Digest] when is_binary(Root), is_binary(Digest) ->
-            {ok, Configured} = telegram_managed_action_test:configure(B10, Root, Digest),
+            {ok, Configured} = telegram_managed_action_test:configure(B11, Root, Digest),
             Configured
     end.
 

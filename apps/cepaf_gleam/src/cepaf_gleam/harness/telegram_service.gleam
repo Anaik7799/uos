@@ -52,6 +52,7 @@ import gleam/erlang/reference
 import gleam/crypto
 import cepaf_gleam/harness/telegram_action_intent as action_intent
 import cepaf_gleam/harness/telegram_fmea_reader as fmea_reader
+import cepaf_gleam/harness/telegram_verification_reader as verification_reader
 import gleam/int
 import gleam/json
 import gleam/list
@@ -225,6 +226,7 @@ pub type ServiceConfiguration {
     conversation: ConversationConfiguration,
     actions:Option(ActionConfiguration),
     risk_source:Option(String),
+    verification_source:Option(verification_reader.Source),
   )
 }
 
@@ -265,6 +267,7 @@ pub fn operational_service_configuration(
     conversation: ConversationDisabled,
     actions:None,
     risk_source:None,
+    verification_source:None,
   )
 }
 
@@ -300,6 +303,7 @@ pub fn development_service_configuration(
     conversation: ConversationDisabled,
     actions:None,
     risk_source:None,
+    verification_source:None,
   )
 }
 
@@ -2320,6 +2324,8 @@ fn execute_guarded_dispatch(
                         guard.DirectReadTool("query_ecology") -> ecology_reply(state)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.DirectReadTool("query_checklist") -> verification_reply(state,"checklist","")
+                        guard.PreservedDirective("/aspects",[selector]) -> verification_reply(state,"aspects",selector)
                         guard.DirectReadTool("query_fmea") -> fmea_reply(state,"")
                         guard.PreservedDirective("/fmea",[task]) -> fmea_reply(state,task)
                         guard.PreservedDirective("/search",[query]) -> search_reply(state,query)
@@ -6380,5 +6386,32 @@ fn storage_reply(state:ServiceState)->String {
  case current_read(state,5000,storage_report.read) {
    Ok(Ok(raw))->raw
    _->json.object([#("status",json.string("unavailable")),#("error",json.string("Storage observation unavailable; protection is not established.")),#("runtime_admission",json.string("NOT_GRANTED"))]) |> json.to_string
+ }
+}
+
+pub fn configure_verification_source(config:ServiceConfiguration,path:String,sha:String,candidate:String)->Result(ServiceConfiguration,String) {
+ let source=verification_reader.Source(path,sha,candidate)
+ let isolated=case config.authority_paths {IsolatedTestPaths(_,_) -> True _->False}
+ case verification_reader.valid_source(source,isolated) {
+  True->Ok(ServiceConfiguration(..config,verification_source:Some(source)))
+  False->Error("verification_source_scope_refused")
+ }
+}
+fn verification_reply(state:ServiceState,view:String,selector:String)->String {
+ let isolated=case state.config.authority_paths {IsolatedTestPaths(_,_) -> True _->False}
+ let observation=case state.config.verification_source {
+  Some(source)->case verification_reader.valid_source(source,isolated) {
+   True->current_read(state,5000,fn(){verification_reader.observe(source,view,selector)}) |> result.try(fn(r){r})
+   False->Error("verification_source_scope_refused")
+  }
+  None->Error("verification_source_not_configured")
+ }
+ case observation {
+  Ok(raw)->raw
+  Error(_)->json.object([
+   #("schema",json.string("uos.telegram.verification.v1")),#("status",json.string("unavailable")),
+   #("error",json.string("Configured candidate record unavailable, changed, invalid or outside current authority. No passing conclusion.")),
+   #("authority",json.string("observation_only")),#("runtime_admission",json.string("NOT_GRANTED")),
+  ]) |> json.to_string
  }
 }

@@ -559,6 +559,7 @@ pub fn service_dual_authority_attempt2_epoch7_positive_and_rejection_test() {
       conversation: service.ConversationDisabled,
       actions: None,
       risk_source: None,
+      verification_source: None,
     )
   let valid_lease =
     service.AuthorityLease(
@@ -1362,6 +1363,7 @@ pub fn authority_worker_independent_test() {
       conversation: service.ConversationDisabled,
       actions: None,
       risk_source: None,
+      verification_source: None,
     )
   let assert Ok(started) = service.start_authority_worker(config)
   let worker = started.data
