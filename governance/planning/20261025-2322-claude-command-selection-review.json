@@ -1,0 +1,30 @@
+{
+  "schema": "uos.reviewed-tie-selection.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "portfolio_sha256": "6ac9e8851871b7f06c9d3c180da3ee2e60879d8db01d72145cf0bb19e65b6b57",
+  "selected_task": "COMMAND_IMPL",
+  "tied_tasks": [
+    "COMMAND_IMPL",
+    "MINI_API_IMPL"
+  ],
+  "observed_at": "2026-10-25T23:45:48Z",
+  "valid_until": "2026-10-26T00:40:48Z",
+  "reviewer": "claude-subagent-tie-review-20261026",
+  "reason": "Resume the handover-named next increment: trusted hash-pinned /verify profile loading and a unique durable inbox reservation. Development source only; executor, Telegram dispatch and review remain required. No deployment or admission from selection.",
+  "comparisons": [
+    {
+      "task_id": "COMMAND_IMPL",
+      "benefit": "Exact candidate binding and durable single-request boundary needed by the later verification executor",
+      "cost_bound_seconds": 3600,
+      "basis": "Analyst estimate for loader and reservation with focused tests; reuses files.gleam and the reviewed pure contract. Full task ETA unknown."
+    },
+    {
+      "task_id": "MINI_API_IMPL",
+      "benefit": "Complete remaining Mini App data producers and controls",
+      "cost_bound_seconds": 3600,
+      "basis": "Analyst estimate for next producer increment; Immune/Inference/Federation owners still missing. No claim of total task time."
+    }
+  ],
+  "review_evidence_path": "governance/planning/20261025-2322-claude-command-selection-proof.json",
+  "review_evidence_sha256": "d30a4e534d1013122cacfab295c56aaa51b3a6fae8d928eaf74091eb9dc1cc2f"
+}

@@ -1,0 +1,234 @@
+{
+  "schema": "uos.telegram-store-wire-spec.v1",
+  "published_at": "2026-10-01T12:43:00Z",
+  "status": "FROZEN_CANDIDATE",
+  "git_revision": "argv-locator-pinned",
+  "kernel_paths": {
+    "module": "native/ocaml/telegram_store/telegram_store.ml",
+    "cli_entrypoint": "native/ocaml/telegram_store/telegram_store_main.ml",
+    "dune_file": "native/ocaml/telegram_store/dune",
+    "test_suite": "native/ocaml/telegram_store/telegram_store_test.ml",
+    "binary": "native/ocaml/telegram_store/_build/default/telegram_store_main.exe",
+    "binary_sha256": "466253a583311dfef93523b8aef11965e0a1deb0bd384f7138b90d31665fbf61"
+  },
+  "process_invocation": {
+    "command_line": ["<binary_path>", "<absolute_configured_db_locator>"],
+    "rule": "Binary must be invoked with exactly one argument: the trusted absolute database file locator. If argument count is not exactly 2 (binary + locator), worker writes framed error 'invalid_command_line_arguments' and exits 0."
+  },
+  "db_locator_security": {
+    "authority": "argv[1] trusted configuration",
+    "json_db_path_semantics": "db_path in JSON requests is optional. If omitted, worker binds exclusively to argv[1]. If present, db_path must be identical to argv[1]; any mismatch is strictly rejected with 'db_path_mismatch'."
+  },
+  "framing": {
+    "type": "big_endian_uint32_length_prefixed_json",
+    "header_bytes": 4,
+    "max_request_json_bytes": 1048572,
+    "max_response_json_bytes": 1048572,
+    "stream_rule": "Exactly one frame per process invocation over stdin/stdout. Closing stdin after frame transmission signals EOF. Any trailing byte after frame length causes immediate exit with 'trailing_bytes_after_frame' error."
+  },
+  "canonical_request_digest": {
+    "algorithm": "sha256_hex",
+    "format": "uos.telegram-store.apply.v1\\nbot:<bot_id>\\nop:<operation_id>\\ngen:<expected_generation>\\nread:<key>:<expected_version>:<expected_sha256>\\n(sorted by key ASC)...\\nchange:<key>:<expected_version>:<expected_sha256>:<new_value_base64>\\n(sorted by key ASC)...\\nres:<rows>:<receipts>\\nsummary:<summary_json>\\n",
+    "rule": "Derived independently in native kernel from decoded parameters. req.request_digest must match derived digest exactly or returns 'request_digest_mismatch'. Stored receipt holds derived digest; replaying different changes under same operation_id returns 'operation_collision_digest_mismatch'."
+  },
+  "limits": {
+    "max_key_bytes": 256,
+    "max_operation_id_bytes": 128,
+    "max_request_digest_bytes": 128,
+    "max_value_bytes": 98304,
+    "max_aggregate_decoded_values": 524288,
+    "max_changes": 128,
+    "max_read_set_assertions": 128,
+    "max_read_keys": 64,
+    "max_receipt_summary_bytes": 65536,
+    "max_reservation_delta_rows": 20,
+    "max_reservation_delta_receipts": 64,
+    "max_rows_capacity": 20000,
+    "max_receipts_capacity": 20000,
+    "max_db_main_bytes": 268435456,
+    "max_inbox_index_limit": 100,
+    "sqlite_busy_timeout_ms": 250,
+    "schema_version": "uos.telegram-store.v1"
+  },
+  "commands": {
+    "initialize_new": {
+      "request_trusted": {
+        "command": "initialize_new",
+        "bot_id": "123456789"
+      },
+      "request_explicit": {
+        "command": "initialize_new",
+        "db_path": "/home/an/var/telegram/telegram.sqlite3",
+        "bot_id": "123456789"
+      },
+      "response_success": {
+        "ok": true,
+        "generation": 1
+      },
+      "response_error": {
+        "ok": false,
+        "error": "db_already_exists"
+      }
+    },
+    "read_keys": {
+      "request": {
+        "command": "read_keys",
+        "keys": ["inbox/req_001", "request/req_001/status"]
+      },
+      "response_success": {
+        "ok": true,
+        "generation": 2,
+        "rows": [
+          {
+            "key": "inbox/req_001",
+            "exists": true,
+            "version": 1,
+            "canonical_value_base64": "eyJjaGF0X2lkIjogMTIzNDV9",
+            "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+          },
+          {
+            "key": "request/req_001/status",
+            "exists": false,
+            "version": 0,
+            "canonical_value_base64": "",
+            "sha256": ""
+          }
+        ]
+      }
+    },
+    "read_inbox_index": {
+      "request": {
+        "command": "read_inbox_index",
+        "limit": 50,
+        "after_key": "inbox/req_001"
+      },
+      "response_success": {
+        "ok": true,
+        "generation": 2,
+        "keys": ["inbox/req_002", "inbox/req_003"]
+      }
+    },
+    "lookup_operation": {
+      "request": {
+        "command": "lookup_operation",
+        "operation_id": "uos/telegram-service/boot/op_001"
+      },
+      "response_found": {
+        "ok": true,
+        "found": true,
+        "receipt": {
+          "operation_id": "uos/telegram-service/boot/op_001",
+          "request_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "generation": 2,
+          "summary_json": "{\"action\":\"ingress\"}",
+          "committed_utc_us": 1788812700000000
+        }
+      },
+      "response_not_found": {
+        "ok": true,
+        "found": false
+      }
+    },
+    "apply": {
+      "request": {
+        "command": "apply",
+        "bot_id": "123456789",
+        "operation_id": "uos/telegram-service/boot/op_002",
+        "request_digest": "4a123f...",
+        "expected_generation": 2,
+        "read_set_assertions": [
+          {
+            "key": "inbox/req_001",
+            "expected_version": 1,
+            "expected_sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+          }
+        ],
+        "changes": [
+          {
+            "key": "request/req_001/status",
+            "expected_version": 0,
+            "expected_sha256": "",
+            "new_value_base64": "eyJzdGF0dXMiOiAicGVuZGluZyJ9"
+          }
+        ],
+        "reservation_delta": {
+          "rows": 1,
+          "receipts": 1
+        },
+        "summary_json": "{\"action\":\"ingress_admission\"}"
+      },
+      "response_committed": {
+        "ok": true,
+        "replay": false,
+        "receipt": {
+          "operation_id": "uos/telegram-service/boot/op_002",
+          "request_digest": "4a123f...",
+          "generation": 3,
+          "summary_json": "{\"action\":\"ingress_admission\"}",
+          "committed_utc_us": 1788812700100000
+        }
+      },
+      "response_replay": {
+        "ok": true,
+        "replay": true,
+        "receipt": {
+          "operation_id": "uos/telegram-service/boot/op_002",
+          "request_digest": "4a123f...",
+          "generation": 3,
+          "summary_json": "{\"action\":\"ingress_admission\"}",
+          "committed_utc_us": 1788812700100000
+        }
+      },
+      "response_error": {
+        "ok": false,
+        "error": "cas_conflict"
+      }
+    }
+  },
+  "error_codes": [
+    "invalid_command_line_arguments",
+    "db_path_mismatch",
+    "db_path_invalid",
+    "db_directory_insecure",
+    "db_already_exists",
+    "db_not_found",
+    "db_path_symlink",
+    "db_file_insecure",
+    "db_locked",
+    "db_file_replaced",
+    "fsync_failed",
+    "invalid_bot_id",
+    "bot_id_mismatch",
+    "schema_mismatch",
+    "stale_generation",
+    "read_set_too_many",
+    "changes_too_many",
+    "read_keys_too_many",
+    "key_too_long",
+    "value_too_large",
+    "aggregate_values_too_large",
+    "duplicate_change_key",
+    "invalid_base64",
+    "corrupt_row_hash",
+    "request_digest_invalid",
+    "request_digest_mismatch",
+    "operation_collision_digest_mismatch",
+    "read_set_conflict",
+    "cas_conflict",
+    "invalid_reservation_delta",
+    "capacity_exhausted",
+    "receipt_too_large",
+    "invalid_after_key",
+    "invalid_limit",
+    "invalid_operation_id",
+    "invalid_json",
+    "duplicate_json_keys",
+    "unknown_command",
+    "oversized_frame",
+    "truncated_frame",
+    "trailing_bytes_after_frame",
+    "sqlite_busy",
+    "sqlite_error",
+    "pragma_verification_failed"
+  ]
+}
