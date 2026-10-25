@@ -186,3 +186,12 @@ let () =
         (Sa_plan_cli.normalize [|"sa-plan";noun;verb;"q";worker|]))))
       ["--version";"--unknown";"";" "])
     ["job","claim";"job","run";"oban","claim";"oban","run"]
+
+let () =
+  List.iter (fun (verb,flag) ->
+    require "LAW CLI-CANCELLATION-NORMALIZE"
+      (array_equal (Sa_plan_cli.normalize [|"sa-plan";"job";verb|]) [|"sa-plan";flag|]);
+    require "LAW CLI-CANCELLATION-EXACT-ARGS"
+      (Sa_plan_cli.validate [|"sa-plan";flag|] = Ok ()
+       && Result.is_error (Sa_plan_cli.validate [|"sa-plan";flag;"{}"|])))
+    ["cancel-once","--job-cancel-once";"cancellation-result","--job-cancellation-result"]

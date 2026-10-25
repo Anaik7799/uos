@@ -1,5 +1,6 @@
 //// Bounded REST publication/query policy. Reachability is not subscription,
 //// native-session, durability, or effect authority. No shared key is deleted.
+
 import gleam/bit_array
 import gleam/dynamic.{type Dynamic}
 import gleam/dynamic/decode
@@ -9,10 +10,15 @@ import gleam/result
 import gleam/string
 
 pub const backend = "zenoh_rest"
+
 pub const endpoint = "http://nas-1.tail55d152.ts.net:8080"
 
 @external(erlang, "zenoh_rest_ffi", "request")
-fn request(method: String, key: String, body: String) -> Result(#(Int, String), String)
+fn request(
+  method: String,
+  key: String,
+  body: String,
+) -> Result(#(Int, String), String)
 
 @external(erlang, "zenoh_rest_ffi", "encode_json")
 fn encode_json(value: Dynamic) -> String
@@ -21,21 +27,30 @@ pub fn valid_key(key: String) -> Bool {
   bit_array.byte_size(bit_array.from_string(key)) <= 512
   && list.all(string.split(key, "/"), fn(p) { p != "" && p != "." && p != ".." })
   && list.all(string.to_graphemes(key), fn(c) {
-    string.contains("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/_.-", c)
+    string.contains(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/_.-",
+      c,
+    )
   })
 }
 
 pub fn valid_config(config: String) -> Bool {
   // Legacy callers use these empty/client selectors. Arbitrary endpoints and
   // native configuration are deliberately not silently ignored.
-  config == "{}" || config == "{\"mode\": \"client\"}" || config == "{\"mode\":\"client\"}"
+  config == "{}"
+  || config == "{\"mode\": \"client\"}"
+  || config == "{\"mode\":\"client\"}"
 }
 
 pub fn probe(config: String) -> Result(Nil, String) {
   case valid_config(config) {
     False -> Error("unsupported_zenoh_rest_config")
     True -> {
-      use reply <- result.try(request("GET", "c3i/recovery/capability/reachability", ""))
+      use reply <- result.try(request(
+        "GET",
+        "c3i/recovery/capability/reachability",
+        "",
+      ))
       use body <- result.try(http_ok(reply))
       // Empty storage is valid reachability, not a successful query.
       json.parse(body, decode.list(sample_decoder()))
@@ -61,9 +76,12 @@ pub fn publication_ok(reply: #(Int, String)) -> Result(Nil, String) {
 
 pub fn put(key: String, payload: String) -> Result(Nil, String) {
   // Coordinator envelopes must use the typed board publisher, never raw text.
-  case valid_key(key) && key != "c3i/a2a"
+  case
+    valid_key(key)
+    && key != "c3i/a2a"
     && !string.starts_with(key, "c3i/a2a/")
-    && bit_array.byte_size(bit_array.from_string(payload)) <= 65536 {
+    && bit_array.byte_size(bit_array.from_string(payload)) <= 65_536
+  {
     False -> Error("invalid_zenoh_key_or_payload_bound")
     True -> {
       use reply <- result.try(request("PUT", key, payload))

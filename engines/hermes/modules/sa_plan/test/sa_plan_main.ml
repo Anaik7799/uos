@@ -15,7 +15,7 @@ let ensure_parent_dir path =
   if not (String.equal dir "" || String.equal dir ".") then
     try Core_unix.mkdir_p dir with _ -> ()
 
-let db_path () =
+let db_path ?(create_parent = true) () =
   let path =
     match Sys.getenv "UOS_SA_PLAN_DB" with
     | Some p -> p
@@ -27,7 +27,7 @@ let db_path () =
             | Some r -> Filename.concat (Filename.concat r "state") "sa_plan.sqlite3"
             | None -> "state/sa_plan.sqlite3"))
   in
-  ensure_parent_dir path;
+  if create_parent then ensure_parent_dir path;
   path
 
 let work_root =
@@ -75,7 +75,7 @@ Usage: sa-plan [--format text|json] <noun> <verb> [arguments]
 
   plan      create | show | register | status | list | tree | watch
   task      create | show | list | rename | claim | complete | select
-  job|oban enqueue | claim | complete | list
+  job|oban enqueue | claim | complete | list | cancel-once | cancellation-result
   workflow|temporal start | activity | complete | fail | history
   work      path | materialize
   docs      validate | render | publish
@@ -88,7 +88,7 @@ work/plans/zigvm/documentation/sa-plan-unified-manual/manual.md|}
 let contextual_help = function
   | "plan" -> print_endline "plan create ID NAME TITLE | show ID_OR_NAME | rename ID_OR_NAME NEW_NAME | register | status | list | tree | watch [SECONDS]"
   | "task" -> print_endline "task create PLAN ID NAME TITLE [PARENT|-] [DEPS] [PRIORITY] | show PLAN ID_OR_NAME | list PLAN | rename PLAN ID_OR_NAME NEW_NAME | claim WORKER [PLAN] [LEASE_NS] [TASK_ID] | release PLAN TASK WORKER ATTEMPT | complete PLAN TASK WORKER ATTEMPT RESULT | select PLAN TASK ACTOR PRIORITY STPA FMEA CRITICALITY DEPENDENCY STANDARDS AGENT_FIT RATIONALE"
-  | "job" | "oban" -> print_endline "job|oban enqueue ID NAME QUEUE WORKER ARGS [MAX_ATTEMPTS] | claim QUEUE WORKER [LEASE_NS] | complete ID_OR_NAME WORKER ATTEMPT OK|ERROR RESULT | list [QUEUE]"
+  | "job" | "oban" -> print_endline "job|oban enqueue ID NAME QUEUE WORKER ARGS [MAX_ATTEMPTS] | claim QUEUE WORKER [LEASE_NS] | complete ID_OR_NAME WORKER ATTEMPT OK|ERROR RESULT | list [QUEUE] | cancel-once | cancellation-result (bounded JSON stdin, JSON response)"
   | "workflow" | "temporal" -> print_endline "workflow|temporal start ID NAME KIND INPUT | activity WORKFLOW ACTIVITY NAME KEY RESULT | complete WORKFLOW RESULT | fail WORKFLOW ERROR | history WORKFLOW"
   | "work" -> print_endline "work path KIND NAME | materialize KIND ID NAME TITLE CONTENT_FILE"
   | "docs" -> print_endline "docs validate MARKDOWN | render MARKDOWN HTML | publish HTML DASHBOARD_PATH | verify URL"
@@ -186,7 +186,22 @@ let render_manual_validation format path =
   | [] -> emit format [ "validation", "green"; "path", path ]
   | errors -> fail ("manual validation failed: " ^ String.concat ~sep:"; " errors)
 
-let dispatch store format argv =
+let read_cancellation_input operation =
+  let chunk = Bytes.create 4096 in
+  let buffer = Buffer.create 4096 in
+  let rec loop total =
+    let count = Stdlib.input Stdlib.stdin chunk 0 (Bytes.length chunk) in
+    if count = 0 then
+      or_fail (Sa_plan.Cancel_protocol.decode operation (Buffer.contents buffer))
+    else if total + count > 8192 then fail "cancellation_input_too_large"
+    else begin
+      Buffer.add_subbytes buffer chunk ~pos:0 ~len:count;
+      loop (total + count)
+    end
+  in
+  loop 0
+
+let dispatch store format argv cancellation_input =
   let command = argv.(1) in
   match command with
   | "--help" when Array.length argv > 2 -> contextual_help argv.(2)
@@ -371,6 +386,12 @@ let dispatch store format argv =
       in
       Store.complete_job store ~id_or_name:argv.(2) ~worker:argv.(3)
         ~expected_attempt:(Int.of_string argv.(4)) ~outcome ~now_ns:(now_ns ()) |> or_fail |> emit_job format
+  | "--job-cancel-once" | "--job-cancellation-result" ->
+      let request = match cancellation_input with
+        | Some request -> request
+        | None -> fail "missing_cancellation_input" in
+      Sa_plan.Cancel_protocol.execute_observed store request ~observe_now:now_ns
+      |> or_fail |> Yojson.Safe.to_string |> print_endline
   | "--job-list" ->
       let queue = if Array.length argv > 2 then Some argv.(2) else None in
       or_fail (Store.list_jobs store ~queue) |> List.iter ~f:(emit_job format)
@@ -512,10 +533,21 @@ let main () =
     log_pipeline ();
     exit 0
   end;
-  let store = measured "store_open" (fun () -> or_fail (Store.open_db (db_path ()))) in
+  let cancellation_input = measured "cancellation_decode" (fun () ->
+    match command with
+    | "--job-cancel-once" -> Some (read_cancellation_input Sa_plan.Cancel_protocol.Cancel)
+    | "--job-cancellation-result" -> Some (read_cancellation_input Sa_plan.Cancel_protocol.Lookup)
+    | _ -> None) in
+  let path = db_path ~create_parent:(Option.is_none cancellation_input) () in
+  if Option.is_some cancellation_input
+     && (not (Stdlib.Sys.file_exists path) || Stdlib.Sys.is_directory path)
+  then fail "cancellation_requires_existing_store";
+  let store = measured "store_open" (fun () ->
+    or_fail (if Option.is_some cancellation_input then Store.open_existing path
+             else Store.open_db path)) in
   match
     try
-      measured "dispatch" (fun () -> dispatch store format argv);
+      measured "dispatch" (fun () -> dispatch store format argv cancellation_input);
       Ok ()
     with exn -> Error exn
   with

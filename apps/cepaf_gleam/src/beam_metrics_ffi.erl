@@ -8,7 +8,7 @@
 %% erlang:statistics(io) returns {{input, N}, {output, N}} — we extract the inner
 %% integers directly rather than pattern-matching the outer pair.
 -module(beam_metrics_ffi).
--export([snapshot/0]).
+-export([snapshot/0,snapshot_checked/1]).
 
 snapshot() ->
     Mem = erlang:memory(),
@@ -29,3 +29,10 @@ snapshot() ->
      erlang:system_info(atom_count),
      erlang:system_info(port_count)
     }.
+
+%% Short bounded sampling facade; Gleam supplies the per-step budget.
+snapshot_checked(T) when is_integer(T), T >= 1, T =< 100 ->
+    uos_openrouter_ffi:bounded_call(fun(_Deadline) ->
+        try {ok,snapshot()} catch _:_ -> {error, <<"beam_metrics_unavailable">>} end
+    end,T);
+snapshot_checked(_) -> {error, <<"invalid_metrics_budget">>}.

@@ -32,8 +32,12 @@ import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/otp_app
 import cepaf_gleam/planning/safety_kernel
+import cepaf_gleam/telegram/mini_control
+import cepaf_gleam/telegram/mini_api
+import cepaf_gleam/telegram/mini_telemetry
 import cepaf_gleam/ui/wisp/router
 import cepaf_gleam/ui/wisp/secret_api as vault_secret_api
+import cepaf_gleam/web/mini_http
 import gleam/bytes_tree
 import gleam/erlang/process
 import gleam/http
@@ -1081,6 +1085,8 @@ fn generic_ws_on_close(_state: PageWsState) -> Nil {
 // ---------------------------------------------------------------------------
 
 pub fn start(port: Int) -> Result(Nil, String) {
+  // Collector failure leaves other HTTP functions available.
+  let _ = mini_telemetry.start()
   io.println("  Gleam HTTP+WS on 0.0.0.0:" <> int.to_string(port))
 
   let handler = fn(req: request.Request(mist.Connection)) {
@@ -1279,7 +1285,8 @@ pub fn start(port: Int) -> Result(Nil, String) {
 // the standard RBAC + wisp router dispatch.
 // ---------------------------------------------------------------------------
 
-fn handle_normal_http(
+/// Shared normal HTTP entrypoint for the production listener and bounded development verification.
+pub fn handle_normal_http(
   req: request.Request(mist.Connection),
 ) -> response.Response(mist.ResponseData) {
   // SC-HTTP-WS-426 (Pass-124) — RFC 7231 §6.5.15: a /ws/* path
@@ -1397,6 +1404,15 @@ fn ws_426_response() -> response.Response(mist.ResponseData) {
 }
 
 fn handle_normal_http_inner(
+  req: request.Request(mist.Connection),
+) -> response.Response(mist.ResponseData) {
+  case req.path == mini_api.data_path || mini_control.owns(req.path) {
+    True -> mini_http.handle(req)
+    False -> handle_non_mini_http_inner(req)
+  }
+}
+
+fn handle_non_mini_http_inner(
   req: request.Request(mist.Connection),
 ) -> response.Response(mist.ResponseData) {
   // Phase 2: Bearer Token RBAC Middleware for L5_Operator
