@@ -10,7 +10,7 @@ import gleam/option.{None, Some}
 import gleam/string
 import simplifile
 
-fn config(path: String) {
+pub fn config(path: String) {
   let assert True = string.starts_with(path,"/home/an/uos-agent-runtime/20261024-0555/mini-history-")
     && string.ends_with(path,"/history.sqlite3") && !string.contains(path,"..")
   transport.reviewed_local_configuration(

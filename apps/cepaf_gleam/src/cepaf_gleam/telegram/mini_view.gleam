@@ -144,6 +144,16 @@ pub fn public_page(page: types.MiniAppPage) -> String {
                   [h.text("Load current data before making a change.")],
                 ),
               ])
+            types.MiniConversation ->
+              h.div([a.id("mini-memory-controls")], [
+                h.h3([], [h.text("Retained conversation context")]),
+                h.p([], [h.text("Clear and reset both remove retained context for this user and chat. Telegram messages and quota usage stay unchanged. Development controls require a separate grant.")]),
+                h.button([a.id("mini-memory-clear"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Clear history")]),
+                h.button([a.id("mini-memory-reset"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Reset context")]),
+                h.button([a.id("mini-memory-receipt"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Check clear receipt")]),
+                h.button([a.id("mini-memory-close"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Close earlier request")]),
+                h.p([a.id("mini-memory-status"),a.attribute("role","status"),a.attribute("aria-live","polite")],[h.text("Load current data before clearing context.")]),
+              ])
             types.MiniZenohBrowser ->
               h.div([a.id("mini-topic-controls")], [
                 h.label([a.for("mini-topic")], [h.text("Topic")]),

@@ -118,6 +118,8 @@ pub fn from_rows(scope: conv.Scope, generation: Int, rows: List(codec.RowResult)
     #("Chat", int.to_string(scope.chat_id)),
     #("User", int.to_string(scope.user_id)),
     #("Generation", int.to_string(generation)),
+    #("Context version", int.to_string(context_row.version)),
+    #("Context SHA256", context_row.sha256),
     #("Stored exchanges", int.to_string(list.length(context.turns))),
     #("Maximum exchanges", int.to_string(conv.max_turns)),
     #("History", case context.turns { [] -> "No stored complete exchanges" _ -> "Complete retained exchanges, oldest first; long text is split into numbered parts" }),

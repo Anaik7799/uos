@@ -2596,3 +2596,80 @@ pub fn commit_conversation_result(
     res.reserved_context_rows,
   )
 }
+
+//// Mini clear is a distinct operation namespace, never a fabricated Telegram update.
+pub opaque type MiniClearReservation {
+  MiniClearReservation(
+    config: transport.LocalConfiguration, scope: conv.Scope,
+    generation: Int, operation: String, context_row: codec.RowResult,
+    bot_row: codec.RowResult, empty: String, summary: String,
+  )
+}
+
+pub fn mini_clear_summary(scope: conv.Scope, version: Int, sha: String) -> String {
+  json.to_string(json.object([
+    #("status", json.string("history_cleared")),
+    #("bot", json.int(scope.bot_id)), #("chat", json.int(scope.chat_id)),
+    #("user", json.int(scope.user_id)), #("prior_version", json.int(version)),
+    #("prior_sha256", json.string(sha)), #("effect_count", json.int(1)),
+  ]))
+}
+
+/// Read phase only. Caller must recheck live authority immediately before commit.
+pub fn prepare_mini_clear(
+  config: transport.LocalConfiguration, scope: conv.Scope, operation: String,
+  expected_version: Int, expected_sha: String,
+) -> Result(MiniClearReservation, StoreError) {
+  use key <- result.try(conv.context_key(scope) |> result.map_error(StoreInvariantError))
+  use _ <- result.try(case string.starts_with(operation, "mini-clear-")
+    && string.byte_size(operation) == 75
+    && guard.valid_digest(string.drop_start(operation,11))
+    && expected_version >= 0
+    && case expected_version { 0 -> expected_sha == "" _ -> guard.valid_digest(expected_sha) } {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("invalid_mini_clear_request"))
+  })
+  let bot_key = codec.bot_identity_key()
+  use #(generation, rows) <- result.try(read_keys(config,[bot_key,key]))
+  use bot_row <- result.try(find_read_row(rows,bot_key))
+  use context_row <- result.try(find_read_row(rows,key))
+  use bot_raw <- result.try(codec.decode_row_value(bot_row) |> result.map_error(StoreDecodeError))
+  use bot <- result.try(codec.decode_bot_identity_value(bot_raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case generation > 0 && list.length(rows) == 2
+    && bot_row.exists && bot_row.version > 0 && files.digest(bot_raw) == bot_row.sha256
+    && bot == scope.bot_id && context_row.version == expected_version
+    && context_row.sha256 == expected_sha {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("mini_clear_snapshot_mismatch"))
+  })
+  use _ <- result.try(case context_row.exists {
+    True -> {
+      use raw <- result.try(codec.decode_row_value(context_row) |> result.map_error(StoreDecodeError))
+      use _ <- result.try(conv.decode_context(raw,scope) |> result.map_error(StoreDecodeError))
+      case files.digest(raw) == context_row.sha256 {
+        True -> Ok(Nil)
+        False -> Error(StoreInvariantError("mini_clear_digest_mismatch"))
+      }
+    }
+    False -> case context_row.version == 0 && context_row.sha256 == ""
+      && context_row.canonical_value_base64 == "" {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("mini_clear_absent_mismatch"))
+    }
+  })
+  use empty <- result.try(conv.encode_context(conv.Context(scope,[]))
+    |> result.map_error(StoreInvariantError))
+  Ok(MiniClearReservation(config,scope,generation,operation,context_row,bot_row,
+    empty,mini_clear_summary(scope,expected_version,expected_sha)))
+}
+
+/// Empty contexts are written too: this fences an in-flight reservation on an absent row.
+/// Context and native receipt commit atomically; budget rows are untouched.
+pub fn commit_mini_clear(res: MiniClearReservation) -> Result(codec.ApplyResult, StoreError) {
+  execute_apply(res.config,res.scope.bot_id,res.operation,res.generation,
+    [row_read_assertion(res.bot_row.key,res.bot_row),
+     row_read_assertion(res.context_row.key,res.context_row)],
+    [codec.Change(res.context_row.key,res.context_row.version,res.context_row.sha256,
+      codec.encode_canonical_base64(res.empty))],
+    codec.ReservationDelta(0,0),res.summary)
+}

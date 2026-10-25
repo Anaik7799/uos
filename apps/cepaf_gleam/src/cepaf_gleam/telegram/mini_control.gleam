@@ -4,6 +4,8 @@
 
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/telegram_store as history_store
+import cepaf_gleam/telegram/mini_memory
 import cepaf_gleam/planning/sa_plan_bridge as ledger
 import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/types
@@ -50,11 +52,13 @@ type Profile {
     expires: Int,
     digest: String,
     bot: String,
+    memory: Option(mini_memory.Configuration),
   )
 }
 
 pub opaque type Intent {
   Intent(
+    action: String,
     user: Int,
     chat: Option(Int),
     nonce: String,
@@ -65,6 +69,7 @@ pub opaque type Intent {
 
 pub type Outcome {
   Applied(String, String)
+  Cleared(String)
   Refused(String)
   Uncertain
 }
@@ -147,55 +152,50 @@ pub fn parse(
     api.authorize(body, config, now)
     |> result.map_error(fn(_) { "unauthorized" }),
   )
+  use action <- result.try(json.parse(body,{ use a <- decode.field("action",decode.string) decode.success(a) })
+    |> result.replace_error("invalid_request"))
+  let memory = action == "clear_history" || action == "reset_history"
   use _ <- result.try(require(
-    api.page(read) == types.MiniTelemetry,
-    "invalid_page",
-  ))
+    case memory { True -> api.page(read) == types.MiniConversation
+      False -> api.page(read) == types.MiniTelemetry && action == "set_vm_logger_level" },
+    "invalid_page_or_action"))
   let decoder = {
-    use action <- decode.field("action", decode.string)
-    use nonce <- decode.field("request_id", decode.string)
-    use expected <- decode.field("expected_level", decode.string)
-    use target <- decode.field("target_level", decode.string)
-    decode.success(#(action, nonce, expected, target))
+    use nonce <- decode.field("request_id",decode.string)
+    use expected <- decode.field(
+      case memory { True -> "expected_version" False -> "expected_level" },
+      case memory { True -> decode.map(decode.int,int.to_string) False -> decode.string })
+    use target <- decode.field(case memory { True -> "expected_sha256" False -> "target_level" },decode.string)
+    decode.success(#(nonce,expected,target))
   }
-  use #(action, nonce, expected, target) <- result.try(
-    json.parse(body, decoder)
-    |> result.map_error(fn(_) { "invalid_request" }),
-  )
-  use fields <- result.try(
-    json.parse(body, decode.dict(decode.string, decode.dynamic))
-    |> result.map_error(fn(_) { "invalid_request" }),
-  )
-  use _ <- result.try(require(
-    dict.size(fields) == 6
-      && list.all(dict.keys(fields), fn(k) {
-      list.contains(
-        [
-          "init_data",
-          "path",
-          "action",
-          "request_id",
-          "expected_level",
-          "target_level",
-        ],
-        k,
-      )
-    })
-      && action == "set_vm_logger_level"
-      && hex(nonce, 32)
-      && level(expected)
-      && level(target)
-      && expected != target,
-    "invalid_request",
-  ))
-  Ok(Intent(api.user_id(read), api.chat_id(read), nonce, expected, target))
+  use #(nonce,expected,target) <- result.try(json.parse(body,decoder)
+    |> result.replace_error("invalid_request"))
+  use fields <- result.try(json.parse(body,decode.dict(decode.string,decode.dynamic))
+    |> result.replace_error("invalid_request"))
+  let keys = case memory {
+    True -> ["init_data","path","action","request_id","expected_version","expected_sha256"]
+    False -> ["init_data","path","action","request_id","expected_level","target_level"]
+  }
+  use _ <- result.try(require(dict.size(fields) == 6
+    && list.all(dict.keys(fields),fn(k) { list.contains(keys,k) }) && hex(nonce,32)
+    && case memory {
+      True -> case int.parse(expected) {
+        Ok(0) -> target == ""
+        Ok(v) if v > 0 && v <= 9_007_199_254_740_991 -> hex(target,64)
+        _ -> False
+      }
+      False -> level(expected) && level(target) && expected != target
+    }, "invalid_request"))
+  Ok(Intent(action,api.user_id(read),api.chat_id(read),nonce,expected,target))
 }
 
 pub fn request_key(bot: String, intent: Intent) -> String {
   "mini-control/"
   <> files.digest(
     json.to_string(json.array(
-      [bot, int.to_string(intent.user), "set_vm_logger_level", intent.nonce],
+      case intent.action {
+        "set_vm_logger_level" -> [bot,int.to_string(intent.user),intent.action,intent.nonce]
+        _ -> [bot,int.to_string(intent.user),intent.action,intent.nonce,case intent.chat { None -> int.to_string(intent.user) Some(c) -> int.to_string(c) }]
+      },
       json.string,
     )),
   )
@@ -209,6 +209,7 @@ fn arguments(p: Profile, i: Intent) -> String {
       #("candidate", json.string(p.candidate)),
       #("boot", json.string(p.boot)),
       #("user", json.int(i.user)),
+      #("action", json.string(i.action)),
       #("chat", case i.chat {
         None -> json.null()
         Some(id) -> json.int(id)
@@ -300,6 +301,7 @@ pub fn outcome_json(outcome: Outcome) -> json.Json {
         #("observed_level", json.string(after)),
         #("effect_count", json.int(1)),
       ])
+    Cleared(raw) -> json.object([#("status",json.string("history_cleared")),#("effect_count",json.int(1)),#("native_receipt",json.string(raw))])
     Refused(reason) ->
       json.object([
         #("status", json.string(reason)),
@@ -327,11 +329,21 @@ fn existing(
         Some(raw) -> json.string(raw)
         None -> json.null()
       }
-      let status = case job.state {
+      let recovered = case p.memory, intent.action {
+        Some(c), action if action != "set_vm_logger_level" ->
+          case mini_memory.receipt(c,intent.user,intent.chat,id,
+            int.parse(intent.expected) |> result.unwrap(-1),intent.target) {
+            Ok(Some(raw)) -> Some(raw)
+            _ -> None
+          }
+        _, _ -> None
+      }
+      let receipt = case recovered { Some(raw) -> json.string(raw) None -> receipt }
+      let status = case recovered { Some(_) -> "terminal_receipt" None -> case job.state {
         "completed" | "discarded" -> "terminal_receipt"
         "available" -> "unclaimed_no_replay"
         _ -> "uncertain_no_replay"
-      }
+      }}
       reply(200, status, id, json.int(0), receipt)
     }
     Ok(None) -> reply(404, "receipt_not_found", id, json.int(0), json.null())
@@ -359,7 +371,7 @@ fn finish(
 ) -> response.Response(String) {
   let payload = outcome_json(outcome)
   let code = case outcome {
-    Applied(_, _) -> "OK"
+    Applied(_, _) | Cleared(_) -> "OK"
     _ -> "ERROR"
   }
   case
@@ -374,7 +386,7 @@ fn finish(
   {
     Ok(_) ->
       case outcome {
-        Applied(_, _) -> reply(200, "applied", id, json.int(1), payload)
+        Applied(_, _) | Cleared(_) -> reply(200, "applied", id, json.int(1), payload)
         Refused(reason) -> reply(409, reason, id, json.int(0), payload)
         Uncertain -> reply(202, "uncertain_no_replay", id, json.null(), payload)
       }
@@ -458,18 +470,7 @@ fn execute(
                                 False ->
                                   finish(p, id, Refused("identity_changed"))
                                 True ->
-                                  case
-                                    change_logger(
-                                      intent.expected,
-                                      intent.target,
-                                    )
-                                  {
-                                    Ok(#(before, after)) ->
-                                      finish(p, id, Applied(before, after))
-                                    Error("level_mismatch") ->
-                                      finish(p, id, Refused("level_mismatch"))
-                                    Error(_) -> finish(p, id, Uncertain)
-                                  }
+                                  apply_effect(p,intent,id,body,deadline)
                               }
                             }
                           }
@@ -488,6 +489,49 @@ fn execute(
               }
             }
           }
+      }
+    }
+  }
+}
+
+fn memory_job_current(p: Profile, id: String, deadline: Int) -> Bool {
+  case read_job(id) {
+    Ok(Some(j)) -> j.state == "executing" && j.attempt == 1 && j.owner == Some(worker(p))
+      && mono(Millisecond) < deadline && case j.deadline {
+        Some(until) -> until > {wall(Second) + 10} * 1_000_000_000
+        None -> False
+      }
+    _ -> False
+  }
+}
+
+fn apply_effect(p: Profile, intent: Intent, id: String, body: String, deadline: Int) -> response.Response(String) {
+  case intent.action {
+    "set_vm_logger_level" -> case change_logger(intent.expected,intent.target) {
+      Ok(#(before,after)) -> finish(p,id,Applied(before,after))
+      Error("level_mismatch") -> finish(p,id,Refused("level_mismatch"))
+      Error(_) -> finish(p,id,Uncertain)
+    }
+    _ -> case p.memory {
+      None -> finish(p,id,Refused("history_control_unavailable"))
+      Some(c) -> case mini_memory.prepare(c,intent.user,intent.chat,id,
+        int.parse(intent.expected) |> result.unwrap(-1),intent.target) {
+        Error(reason) -> finish(p,id,Refused(reason))
+        Ok(reservation) -> case fresh(p,body,deadline) {
+          Error(reason) -> finish(p,id,Refused(reason))
+          Ok(current) -> case current == intent {
+            False -> finish(p,id,Refused("identity_changed"))
+            True -> case memory_job_current(p,id,deadline) {
+              False -> finish(p,id,Refused("job_lease_expired"))
+              True -> case history_store.commit_mini_clear(reservation) {
+              Ok(r) -> finish(p,id,Cleared(r.receipt.summary_json))
+              Error(history_store.StoreBackendError(_)) ->
+                finish(p,id,Refused("history_store_refused"))
+              Error(_) -> finish(p,id,Uncertain)
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -606,8 +650,9 @@ pub fn start_development_fixture() -> Result(Nil, String) {
     )
     |> result.map_error(fn(_) { "fixture_control_grants" }),
   )
+  use memory <- result.try(mini_memory.configuration(raw,token))
   let p =
-    Profile(config, binding, candidate, boot, host, expires, expected, bot)
+    Profile(config, binding, candidate, boot, host, expires, expected, bot, memory)
   use fence <- result.try(dev.fence_for(binding, 25_000))
   use _ <- result.try(require(
     fence.clock.sample.observed.domain.boot_id == boot

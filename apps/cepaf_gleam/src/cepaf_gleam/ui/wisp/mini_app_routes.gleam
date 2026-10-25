@@ -1,5 +1,6 @@
 //// Exact public shell and authenticated Mini App data routing.
 
+import cepaf_gleam/telegram/mini_memory_view
 import cepaf_gleam/telegram/mini_control_view
 import cepaf_gleam/telegram/mini_control
 import cepaf_gleam/telegram/mini_api
@@ -66,7 +67,7 @@ pub fn handle(req: request.Request(String)) -> response.Response(String) {
           let response = case req.path {
             "/mini-app/client.js" ->
               public_response(
-                client_script() <> "\n" <> mini_control_view.script(),
+                client_script() <> "\n" <> mini_control_view.script() <> "\n" <> mini_memory_view.script(),
                 200,
                 "text/javascript; charset=utf-8",
               )

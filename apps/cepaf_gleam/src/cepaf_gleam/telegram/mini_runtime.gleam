@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/files
 //// Server-owned Mini App configuration and bounded read adapters.
 //// No credential or initData is returned to the browser or placed on the bus.
 
@@ -11,6 +12,7 @@ import cepaf_gleam/harness/telegram_verification_reader as verification
 import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/mini_dashboard
 import cepaf_gleam/telegram/mini_evidence
+import cepaf_gleam/telegram/mini_memory
 import cepaf_gleam/telegram/mini_history
 import cepaf_gleam/telegram/mini_podman
 import cepaf_gleam/telegram/mini_telemetry
@@ -177,7 +179,7 @@ fn observe_podman() -> Result(api.Observation, Nil) {
   mini_podman.observe(mini_podman.live_io(sha)) |> result.replace_error(Nil)
 }
 
-fn observe_history(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
+fn observe_history_environment(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
   use token <- result.try(get_env("UOS_TELEGRAM_MINI_BOT_TOKEN"))
   use raw <- result.try(get_env("UOS_TELEGRAM_MINI_HISTORY_GRANTS"))
   use _ <- result.try(case string.byte_size(raw) <= 8192 {
@@ -316,5 +318,21 @@ fn observe_backend(read: api.AuthorizedRead) -> api.Observation {
     | types.MiniConfig
     | types.MiniFederation
     | types.MiniTelemetry -> api.Unavailable("backend_not_integrated")
+  }
+}
+
+fn observe_history(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
+  case get_env("UOS_MINI_CONTROL_FIXTURE_PROFILE") {
+    Error(_) -> observe_history_environment(read)
+    Ok(raw) -> {
+      use expected <- result.try(get_env("UOS_MINI_CONTROL_FIXTURE_SHA256"))
+      use _ <- result.try(case files.digest(raw) == expected {True -> Ok(Nil) False -> Error(Nil)})
+      use token <- result.try(get_env("UOS_TELEGRAM_MINI_BOT_TOKEN"))
+      use config <- result.try(mini_memory.configuration(raw,token) |> result.replace_error(Nil))
+      case config {
+        None -> observe_history_environment(read)
+        Some(c) -> mini_memory.observe(c,api.user_id(read),api.chat_id(read),clock()) |> result.replace_error(Nil)
+      }
+    }
   }
 }
