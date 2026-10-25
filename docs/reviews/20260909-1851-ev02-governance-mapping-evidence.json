@@ -1,0 +1,87 @@
+{
+  "schema": "uos.ev02-governance-mapping-evidence/v1",
+  "authority": "REPORT_ONLY",
+  "admission": "NOT_GRANTED",
+  "source_commit": "031fda129c2afec809af01fa4eecfc187379c3f2",
+  "base_commit": "8152a497929d68f830385a1a887570f94ccebd77",
+  "historical_lineage": "MISSING_HISTORICAL_LINEAGE",
+  "sources": [
+    {
+      "path": "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025"
+    },
+    {
+      "path": "tools/ev02_governance/policy_surface_gate.ml",
+      "sha256": "d5a1ba4af12a4a57cae994d2387bbe9b8f0365ff32f7b026964263070f7ef374"
+    },
+    {
+      "path": "tools/ev02_governance/directive_mapping_gate.ml",
+      "sha256": "cb171b939b29282676daf66f40ea2199248e0f635b54c6a08d3371d23ee7a81c"
+    },
+    {
+      "path": "tools/ev02_governance/run_checks.ml",
+      "sha256": "76cfd76e743efb9a1fffb81a65f7a17a6e968a3e892f53f77bcf6d45261e0c4b"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/reviews/20260909-1842-ev02-governance-checks.json",
+      "sha256": "33f4b4159be96df5593b5836e974f77ba58d67a0f953a358c6d3e06f15f6cbe7"
+    },
+    {
+      "path": "docs/reviews/20260909-1842-ev02-policy-selftest.out",
+      "sha256": "85cb122fe5594e777f33894b3201bfcb974039cd5d793482953e257e87fb0d9a"
+    },
+    {
+      "path": "docs/reviews/20260909-1842-ev02-policy-observation.out",
+      "sha256": "156e35518f546f8ea7bc164051a91a0ad3cfc4ba1672eaf3d45b040ccf7564f2"
+    },
+    {
+      "path": "docs/reviews/20260909-1842-ev02-mapping-selftest.out",
+      "sha256": "50b98e5136f27b1cd90174d22819c5205476db0b16b5d0b76a5be707251da46b"
+    },
+    {
+      "path": "docs/reviews/20260909-1842-ev02-mapping-observation.out",
+      "sha256": "983aee54764596c0b2b1f5d13ca8aac7bfe70100138e3bcc2d88b3965e00a2ab"
+    },
+    {
+      "path": "docs/reviews/20260909-1842-ev02-km-gate.out",
+      "sha256": "3942ddbbbd8cf4bb61cdfc04f29b4311ced20887cbec4cdb2fb27ce780b946ed"
+    },
+    {
+      "path": "docs/reviews/20260909-1842-ev02-km-ev-selftest.out",
+      "sha256": "187d881ad962469b937a7f45c0e458cea615f387c1e2e28c4a7e6c93ed89adc3"
+    },
+    {
+      "path": "docs/reviews/20260909-1850-ev02-governance-mapping-risk.json",
+      "sha256": "13f35a36ed70d5279dfd7d1f55359b5c0c20c6d7bf2201972a61225feb89c94a"
+    },
+    {
+      "path": "docs/journal/20260909-1853-ev02-governance-mapping-journal.md",
+      "sha256": "bb49ef8281331bcbb4971aee9ef2b8d08e868f090d3ea695ebbd67f10e10faf8"
+    }
+  ],
+  "active_check": {
+    "path": "/tmp/ev02-governance-active-mapping-attempt2-20260909-1850.json",
+    "sha256": "a57430db32640faca267093150730001f35df6ce4c66f67eb1442fcce2999810"
+  },
+  "agy_advice": {
+    "marker": "AGY_ADVICE_EV_1758",
+    "session": "abe9bd8d",
+    "corrected_advice": {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-corrected-advice.txt",
+      "sha256": "a34dde1e0208348f68d2f04c25d5a91ccd16b0f719b75e31d76410e577d7ee2d"
+    },
+    "observation": {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json",
+      "sha256": "6b342cdd30450ed1cfe89edfdede60eaee5454e0c66c2a8b9cc5ffff0378eeff"
+    }
+  },
+  "holds": [
+    "DIR-AUTH-001 full normalized body differs across policy surfaces",
+    "DIR-TOOL-001 full normalized body differs across policy surfaces",
+    "Current amendment is not independent semantic review",
+    "Historical design and implementation-plan lineage remains missing",
+    "KM entropy gate remains HOLD and is not relabeled"
+  ]
+}

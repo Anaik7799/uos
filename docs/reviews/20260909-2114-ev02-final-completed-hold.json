@@ -1,0 +1,42 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe",
+    "task", "complete", "uos/ev02-successor-review/20260909", "REVIEW",
+    "codex-ev02-successor-review", "1",
+    "Completed independent review disposition with HOLD_UNRUN, not candidate approval. Final sourcefe5cddbb70f965a63f54402a4ab6cf3bf6d0d2dc; report docs/reviews/20260909-2112-ev02-final-hold.json SHA35bbfe1f6aeda2d6b82d9a1d49c4219b0a790c11fbbc7a8b74fcafd5e6ddd79e. Zero final2108runtime cases; pre-ACTIVE chronyc refusal then automatic safety classification stopped sequence.131declared inputs, static directory-set concern untested. No retries/source repairs/network/admission. Earlier authority-limited observations preserved."
+  ],
+  "utc_started": 1788988483.539333,
+  "utc_finished": 1788988483.579368,
+  "elapsed_seconds": 0.040032254,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "completed=true plan_id=uos/ev02-successor-review/20260909 task=REVIEW attempt=1\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788988483553372695\",\"command\":\"--complete\",\"authority\":\"report_only\",\"total_ns\":4442138,\"server_timing\":\"decode;dur=0.002, normalize;dur=0.002, validate;dur=0.002, store_open;dur=2.271, dispatch;dur=1.640, store_close;dur=0.510, total;dur=4.442\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1853,\"duration_ms\":0.001853},{\"name\":\"normalize\",\"duration_ns\":1883,\"duration_ms\":0.001883},{\"name\":\"validate\",\"duration_ns\":1613,\"duration_ms\":0.001613},{\"name\":\"store_open\",\"duration_ns\":2271254,\"duration_ms\":2.271254},{\"name\":\"dispatch\",\"duration_ns\":1639555,\"duration_ms\":1.639555},{\"name\":\"store_close\",\"duration_ns\":509939,\"duration_ms\":0.509939}]}\n",
+  "output_sha256": "a76c4630b49b74f5e64c8aadb9d8191085260d37007fe703ae8b81ebf73adb06",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-de44c2:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

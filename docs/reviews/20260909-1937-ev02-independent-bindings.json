@@ -1,0 +1,25 @@
+{
+  "candidate": "e11692afdd54e39b5d2232389bcdc64f93ed0a61",
+  "sources": [
+    {
+      "path": "tools/ev02_governance/run_checks.ml",
+      "staged": "/tmp/ev02-independent-review-1932/run_checks.ml",
+      "sha256": "0ca986d341eced4cfa1d4aadeeb6e0557caa72b08c7b556d99f065d4d6f84e8c"
+    },
+    {
+      "path": "tools/ev02_governance/directive_mapping_gate.ml",
+      "staged": "/tmp/ev02-independent-review-1932/directive_mapping_gate.ml",
+      "sha256": "9888e5203918ce1f0b608fd39a25fe6add73734459304bc1ca5ecdfb8d56b6c8"
+    },
+    {
+      "path": "tools/ev02_governance/policy_surface_gate.ml",
+      "staged": "/tmp/ev02-independent-review-1932/policy_surface_gate.ml",
+      "sha256": "266f3c9b46ff25c9d564e6ceb4cf7fb897c4b9d295c628e89af2b2c0f9b6dfe8"
+    },
+    {
+      "path": "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "staged": "/tmp/ev02-independent-review-1932/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025"
+    }
+  ]
+}

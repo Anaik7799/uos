@@ -1,0 +1,5 @@
+Listening on http://127.0.0.1:56587
+EV86_PRIVATE_HTTP_READY 56587
+=INFO REPORT==== 9-Sep-2026::22:15:22.722697 ===
+SIGTERM received - shutting down
+

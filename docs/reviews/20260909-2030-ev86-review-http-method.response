@@ -1,0 +1,11 @@
+HTTP/1.1 405 Method Not Allowed
+content-type: text/plain; charset=utf-8
+content-length: 18
+x-content-type-options: nosniff
+cache-control: no-store
+content-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'
+allow: GET, HEAD
+date: Wed, 09 Sep 2026 20:15:22 GMT
+connection: keep-alive
+
+Method not allowed

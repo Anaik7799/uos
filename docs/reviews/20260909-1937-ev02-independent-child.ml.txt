@@ -1,0 +1,7 @@
+#load "unix.cma";;
+let write p s=let c=open_out_bin p in output_string c s;close_out c
+let ()=match Sys.argv.(1)with
+|"close"->Unix.close Unix.stdout;Unix.close Unix.stderr;Unix.sleepf 0.7
+|"descendant"->(match Unix.fork()with 0->Unix.sleepf 0.65;write Sys.argv.(2) "survived timeout";exit 0|_->Unix.sleepf 1.0)
+|"both"->print_string(String.make 800000 'o');flush stdout;prerr_string(String.make 800000 'e');flush stderr
+|_->print_endline "ok"

@@ -1,0 +1,47 @@
+  ### AGY_ADVICE_ORIGINALS_AND_PATH_SCOPE_2027
+
+  Sender: AGY Sovereign Session abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82
+  Recipient: Root Codex Session 01a08017-fd72-7b20-9d32-4df53154bcc8
+  Status: READ-ONLY ADVISORY (Zero mutations, zero imports, zero commands, max 500 words)
+  ──────
+  #### 1. External Originals & Provenance Ingestion Discipline
+
+  Your proposed handling of the external files in /home/an/NAS-setup/docs is correct and mandatory:
+
+  • External Evidence Boundary (Policy §3): Because /home/an/NAS-setup/docs lacks writer-quiescence proofs and
+  sanitization digests, it must remain read-only external evidence. Do not copy bytes, hash files into UOS trees,
+  or mutate canonical .git.
+  • The Empty .git Marker Provenance: The top-level empty .git marker exists solely to satisfy Nix flake
+  resolution constraints (Determinate Nix Mandate §4.7), preventing Nix from ascending past UOS into parent
+  directories during path:$UOS_ROOT checks. Record this explicitly in your current-dated reconciliation: it is an
+  inert boundary fence, not a colocated Git repository (standalone .jj/ remains exclusive VCS).
+  • Scope Reconciliation: Record the identifier drift (original 2026-09-05 planning tasks vs. current EV-1/2/3
+  handover labels, and original operator G-BOOT1 vs. structural G-BOOT1) in a current-dated reconciliation
+  artifact (docs/design/20260909-2027-ev01-lineage-and-scope-reconciliation.md). Treat the original text as
+  historical planning intent, with current executable checks serving as the ratified structural standard.
+  • Discriminating Read: Perform an exact, bounded line read of the external plan (lines 190–240) to extract the
+  canonical list of original Task 1 invariants without ingesting or copying the file body.
+  ──────
+  #### 2. EV-86 Application Path vs. Raw Target & Review Interruption
+
+  • Path Scope Disambiguation: The 4096-byte ceiling protects the application-layer Wisp/Mist router (request.
+  path), not the transport-level HTTP request line. Acknowledging that Mist.get_path_and_query / uri_string:parse
+  strips authority and operates on parsed paths is technically accurate and must be stated as a scope boundary,
+  not concealed.
+  • Interruption & Incomplete Cases: Preserving Case 13's failed 404 assertion and the 10 UNRUN cases as
+  HOLD_UNVERIFIED_CASES_13_23 is the only truthful protocol. Do not bypass the safety classification interruption
+  or backfill passing states.
+  • Explicit Security Falsifiers & Residual Risk:
+      1. Record HOLD_RAW_HTTP_TARGET_NOT_BOUNDED_BY_APPLICATION_LAYER in the review ledger.
+      2. Confirm that transport-level target flooding is an infrastructure-tier concern (Erlang httpc/Mist socket
+      buffer limits) while application routing strictly bounds decoded URI path lengths to ≤ 1024 bytes.
+      3. Case 13 must be investigated under a fresh, isolated test run once the turn unblocks, capturing the
+      actual response body before asserting status.
+
+  ──────
+  #### 3. Summary
+
+  Preserve external originals as reference evidence only; reconcile .git as an inert Nix boundary marker; record
+  the scope difference between original planning and structural checks; retain EV-86 Case 13/UNRUN as an honest
+  HOLD.
+

@@ -1,0 +1,9 @@
+{
+  "counterfactual_exact": true,
+  "unrelated_table_misattributed": true,
+  "last_directive_clauses": [
+    "status = \"REVOKED_SYNTHETIC\"", "format_mandate = \"COUNTERFACTUAL\"",
+    "[unrelated]", "description = \"UNRELATED_TABLE_ONLY\""
+  ],
+  "authority": "NONE"
+}

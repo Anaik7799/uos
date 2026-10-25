@@ -1,0 +1,23 @@
+{
+  "schema": "uos.review-completion.v1",
+  "plan": "uos/ev02-harness-review/20260909",
+  "task": "REVIEW",
+  "attempt": 1,
+  "worker": "codex-ev02-review",
+  "state": "completed",
+  "verdict": "HOLD_CONCRETE_DEFECTS",
+  "source": "e11692afdd54e39b5d2232389bcdc64f93ed0a61",
+  "evidence": "a38f1c6799793adef02c5bc25e640fca2ba7f11b",
+  "report_sha256": "13c3ba90872099e220216b7f3a561f102ef21e9c4c3d7c6de7dcdddb8b6bae77",
+  "authority": "NONE",
+  "records": [
+    {
+      "durable": "docs/reviews/20260909-2005-ev02-review-active.json",
+      "sha256": "472978225eae80a518c708fc2ce5b55e7c91e0d9f101b949ec931d9373905ea9"
+    },
+    {
+      "durable": "docs/reviews/20260909-2005-ev02-review-completed-hold.json",
+      "sha256": "56be35e3b7985b5ede7416c0a2a55feaf712c06083cc003407990ba0e095a899"
+    }
+  ]
+}

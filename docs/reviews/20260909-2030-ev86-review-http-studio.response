@@ -1,0 +1,621 @@
+HTTP/1.1 200 OK
+content-type: text/html; charset=utf-8
+content-length: 44124
+x-content-type-options: nosniff
+cache-control: no-store
+content-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'
+date: Wed, 09 Sep 2026 20:15:22 GMT
+connection: keep-alive
+
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>22-Shruti studio: recorded previews</title></head><body><header><a href='http://nas-1.tail55d152.ts.net:4100/'>UOS</a> · <a href='http://nas-1.tail55d152.ts.net:4100/docs/music/player'>Player</a> · <a href='http://nas-1.tail55d152.ts.net:4100/docs/music/studio'>Studio</a></header><aside><nav aria-label='Grouped navigation'><section><h2>Command &amp; Control</h2><a href='http://nas-1.tail55d152.ts.net:4100/'>Cockpit</a> · <a href='http://nas-1.tail55d152.ts.net:4100/planning'>Planning</a></section><section><h2>Knowledge Base</h2><a href='http://nas-1.tail55d152.ts.net:4100/wiki'>Wiki</a> · <a href='http://nas-1.tail55d152.ts.net:4100/zk'>Zettelkasten</a></section><section><h2>Repository &amp; Governance</h2><a href='http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md'>Policy</a> · <a href='http://nas-1.tail55d152.ts.net:56587/docs/music/player'>Music documents</a></section></nav></aside><section aria-label='Status bar'><p>Recorded previews only · live synthesis unverified · no admission change</p><a href='http://nas-1.tail55d152.ts.net:56587/docs/music/studio'>http://nas-1.tail55d152.ts.net:56587/docs/music/studio</a><p>URL text can be selected manually; automatic copy is unavailable.</p></section><nav aria-label='Breadcrumb'><a href='http://nas-1.tail55d152.ts.net:4100/'>UOS</a> / <a href='http://nas-1.tail55d152.ts.net:56587/docs/music/player'>Music</a> / Recorded preview</nav><main id='rendered'><h1>22-Shruti studio: recorded previews</h1><p>Historical recorded previews from the preserved player document. Interactive synthesis is not available on this page.</p><nav aria-label='Document view'><a href='http://nas-1.tail55d152.ts.net:56587/docs/music/studio#rendered'>Rendered preview</a> · <a href='http://nas-1.tail55d152.ts.net:56587/docs/music/studio#raw-source'>Raw source</a></nav><section><h2>Historical enhanced recording</h2><audio controls preload='none'><source src='http://nas-1.tail55d152.ts.net:56587/media/music/historical-enhanced.mp3' type='audio/mpeg'></audio></section><section><h2>Historical baseline recording</h2><audio controls preload='none'><source src='http://nas-1.tail55d152.ts.net:56587/media/music/historical-baseline.mp3' type='audio/mpeg'></audio></section><details id='raw-source'><summary>Raw source: preserved document (historical claims)</summary><pre># Cybernetic Rāga Durgā &amp; 22-Shruti Microtonal Music Studio
+
+- **Document ID**: `DOC-MUSIC-STUDIO-001`
+- **Tailscale Web FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1145-cybernetic-raga-durga-and-22-shruti-studio.md](http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1145-cybernetic-raga-durga-and-22-shruti-studio.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l3` `#fractal-l5` `#fractal-l7`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#checklist-nav` `#tailscale-web`
+- **Transclusions**: [[zk:20260905-1801-moc-uos-unified-master]] [[wiki:20260905-1801-uos-zk-km-corpus-index]]
+- **Timestamp**: `20260907-1145-`
+
+---
+
+## Comprehensive Verification Checklist (SC-CHECKLIST-001)
+
+### Domain 1: Metadata, Timestamp &amp; Tailscale Navigation
+- [x] **CHK-01-TIME**: Mandatory `YYYYMMDD-HHSS-` timestamp prefix active (`20260907-1145-`).
+- [x] **CHK-02-TAIL**: Universal Tailscale FQDN clickable link format (`http://nas-1.tail55d152.ts.net:4100/...`).
+- [x] **CHK-03-FRACT**: Standardized fractal layer tags (`#fractal-l0`, `#fractal-l3`, `#fractal-l5`, `#fractal-l7`) assigned.
+- [x] **CHK-04-KM**: Knowledge Management transclusions active (`[[wiki:...]]` and `[[zk:...]]`).
+
+### Domain 2: Zero-Muda Purity &amp; Hardware Storage Safety
+- [x] **CHK-05-MUDA**: Strict Zero-Muda: 0 Bevy, 0 Graphite across all code, dependencies, and history (`SC-MUDA-001`).
+- [x] **CHK-06-GRAPH**: Graphene is NOT required; pure Erlang/Gleam and Hermes OCaml math engine with zero foreign NIFs.
+- [x] **CHK-07-DRIVE**: Hardware Root Drive Interlock: Host OS NVMe serial `HARD_DENIED_SYSTEM_OS_SERIAL = &quot;25503L801736&quot;` strictly locked.
+
+### Domain 3: Testing Gold Standard &amp; Mathematical Gates
+- [x] **CHK-08-C1C8**: C3I 8-Category Gold Standard satisfied (C1 Structure through C8 Action Interlock).
+- [x] **CHK-09-MATH**: All 4 Mathematical Gates strictly verified:
+  - Shannon Entropy: $H = 2.67\text{ bits} \ge 2.50\text{ bits}$
+  - Cyclomatic Complexity: $CCM \ge 90.0\%$
+  - Trajectory Divergence: $D_{EA} \le 10.0\%$
+  - Integrated Test Quality Score: $ITQS \ge 0.85$
+- [x] **CHK-10-9MOD**: Full 9-Modality Test Protocol 100% Green.
+- [x] **CHK-11-REGR**: 381 Comprehensive UI Regression tests passing with 30-second continuous monitoring.
+
+### Domain 4: Cross-Language Control &amp; Observability
+- [x] **CHK-12-GLEAM**: Gleam / BEAM OTP 29 owns supervision tree (`uos_sup.gleam`) and microtonal synthesis engine (`raga_cybernetic_synthesis.gleam`).
+- [x] **CHK-13-HERMES**: Hermes OCaml owns differential parity oracles, Gospel specifications, and TyXML wiki renderer.
+- [x] **CHK-14-ZIGVM**: ZigVM deterministic kernel provides descriptor-relative VFS and ADD fractal engine mappings.
+- [x] **CHK-15-MAX**: Modular MAX / Mojo isolated daemon executing SOTA tensor inference kernels at 49,500 QPS.
+- [x] **CHK-16-OTEL**: Universal C3I Telemetry with microsecond UTC ISO 8601 timestamps ending in `Z` and 128-bit W3C trace contexts.
+
+### Domain 5: Tri-Sovereign Governance &amp; VCS Purity
+- [x] **CHK-17-SOV**: Tri-sovereign multi-agent review consensus (Antigravity/AGY, Claude, and Codex) verified and ratified.
+- [x] **CHK-18-JJ**: Standalone non-colocated Jujutsu repository (`.jj/`) with 0 native Git mutations; EV-01..EV-86 PASS.
+
+---
+
+## 1. Executive Summary &amp; Aesthetic Architecture
+
+The **Cybernetic Rāga Durgā &amp; 22-Shruti Microtonal Music Studio** is an interactive, browser-playable microtonal acoustics laboratory implemented directly within the UOS knowledge mesh. It unites ancient Indian classical musicology (*Gandharva Veda*, Bharata&#39;s *Natya Shastra*, and Sarangadeva&#39;s *Sangita Ratnakara*) with contemporary complex systems cybernetics (Luis M. Rocha&#39;s biosemiotics, Gordon Pask&#39;s conversation theory, and W. Ross Ashby&#39;s law of requisite variety).
+
+Operating under strict Zero-Muda and OTP 29 supervision, this studio enables operators, researchers, and autonomous agent swarms to synthesize, explore, and audition pure just intonation intervals, acoustic bamboo flute (*Bānsurī*) timbres with natural *Meend* (continuous portamento glide), organic four-string *Tanpura* harmonic drone cascades with non-linear *Jawari* buzzing, and authentic 16-beat *Teentaal* rhythms on the *Tabla* (featuring modulated pitch-sliding *Bayan* strokes).
+
+```
+                      +---------------------------------------+
+                      |       C3I OPERATOR / AGENT SWARM      |
+                      +-------------------+-------------------+
+                                          |
+                        [Play / Modulate / Audition]
+                                          |
+                                          v
++-----------------------------------------------------------------------------------+
+|               CYBERNETIC RĀGA DURGĀ &amp; 22-SHRUTI MICROTONAL STUDIO                 |
+|                                                                                   |
+|  +---------------------------+   +-----------------------+   +-----------------+  |
+|  |     TANPURA QUAD DRONE    |   |    BĀNSURĪ LEAD SYNTH |   | TEENTAAL TABLA  |  |
+|  | Pa (196Hz) - Sa - Sa - Sa |   | 22-Shruti Pure Ratios |   | 16-Beat Cycles  |  |
+|  | Non-Linear Jawari Overtones|   | 140ms Meend Portamento|   | Dayan (Sa Ring) |  |
+|  | Microtonal Chorusing      |   | 5.2Hz Andolan Vibrato |   | Bayan (Ghe Slide|  |
+|  +-------------+-------------+   +-----------+-----------+   +--------+--------+  |
+|                |                             |                        |           |
+|                +---------------------+       |       +----------------+           |
+|                                      |       |       |                            |
+|                                      v       v       v                            |
+|                          +-------------------------------+                        |
+|                          |    STEREO BAITHAK CONCERT     |                        |
+|                          |    HALL REVERBERATOR (RT60)   |                        |
+|                          +---------------+---------------+                        |
+|                                          |                                        |
+|                                          v                                        |
+|                          +-------------------------------+                        |
+|                          |   LYAPUNOV STABILITY MONITOR  |                        |
+|                          |      lambda = -3.732 &lt; 0      |                        |
+|                          |       H = 2.67 bits           |                        |
+|                          +-------------------------------+                        |
++-----------------------------------------------------------------------------------+
+```
+
+---
+
+## 2. Interactive Live Web Audio Studio
+
+Click the controls below to engage the real-time Web Audio API synthesizer directly in your browser over Tailscale:
+
+&lt;div style=&quot;background:#0d1117;border:2px solid #58a6ff;border-radius:12px;padding:2rem;margin:2rem 0;box-shadow:0 8px 32px rgba(0,0,0,0.8);font-family:system-ui,-apple-system,sans-serif;&quot;&gt;
+
+  &lt;!-- Studio Header --&gt;
+  &lt;div style=&quot;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #30363d;padding-bottom:1rem;margin-bottom:1.5rem;&quot;&gt;
+    &lt;div&gt;
+      &lt;h2 style=&quot;color:#f0f6fc;margin:0;font-size:1.6rem;letter-spacing:0.5px;&quot;&gt;🪈 Rāga Durgā Cybernetic Synthesizer&lt;/h2&gt;
+      &lt;p style=&quot;color:#8b949e;margin:0.3rem 0 0 0;font-size:0.9rem;&quot;&gt;Bilawal Thaat &amp;bull; Pentatonic (Varjita Ga/Ni) &amp;bull; Vadi Dha (5/3) &amp;bull; Samvadi Re (9/8)&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div style=&quot;text-align:right;&quot;&gt;
+      &lt;span style=&quot;background:#23863622;border:1px solid #238636;color:#3fb950;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:bold;display:inline-block;margin-bottom:0.2rem;&quot;&gt;LIVE WEB AUDIO API&lt;/span&gt;
+      &lt;div style=&quot;color:#8b949e;font-size:0.75rem;font-family:monospace;&quot;&gt;STABILITY: &amp;lambda; = -3.732 (STABLE)&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Master Controls Grid --&gt;
+  &lt;div style=&quot;display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.5rem;margin-bottom:2rem;&quot;&gt;
+    
+    &lt;!-- Module 1: Tanpura Drone --&gt;
+    &lt;div style=&quot;background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.2rem;&quot;&gt;
+      &lt;div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;&quot;&gt;
+        &lt;span style=&quot;color:#58a6ff;font-weight:bold;font-size:1rem;&quot;&gt;1. Tanpura Quad-Drone&lt;/span&gt;
+        &lt;button id=&quot;btn-tanpura-toggle&quot; onclick=&quot;toggleTanpura()&quot; style=&quot;background:#238636;color:white;border:none;padding:0.4rem 1rem;border-radius:6px;font-weight:bold;cursor:pointer;font-size:0.85rem;&quot;&gt;START DRONE&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;p style=&quot;color:#8b949e;font-size:0.8rem;margin:0 0 0.8rem 0;line-height:1.4;&quot;&gt;
+        Tuned to &lt;strong&gt;Pa (196.22 Hz) - Sa (261.63 Hz) - Sa - Kharaj Sa (130.81 Hz)&lt;/strong&gt; with simulated thread Jawari overtone resonance.
+      &lt;/p&gt;
+      &lt;div style=&quot;display:flex;align-items:center;gap:0.8rem;&quot;&gt;
+        &lt;span style=&quot;color:#c9d1d9;font-size:0.8rem;&quot;&gt;Volume:&lt;/span&gt;
+        &lt;input type=&quot;range&quot; id=&quot;tanpura-vol&quot; min=&quot;0&quot; max=&quot;1&quot; step=&quot;0.05&quot; value=&quot;0.4&quot; onchange=&quot;setTanpuraVolume(this.value)&quot; style=&quot;flex:1;accent-color:#58a6ff;&quot;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Module 2: Teentaal Tabla --&gt;
+    &lt;div style=&quot;background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.2rem;&quot;&gt;
+      &lt;div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;&quot;&gt;
+        &lt;span style=&quot;color:#f0883e;font-weight:bold;font-size:1rem;&quot;&gt;2. Teentaal 16-Beat Tabla&lt;/span&gt;
+        &lt;button id=&quot;btn-tabla-toggle&quot; onclick=&quot;toggleTabla()&quot; style=&quot;background:#238636;color:white;border:none;padding:0.4rem 1rem;border-radius:6px;font-weight:bold;cursor:pointer;font-size:0.85rem;&quot;&gt;START TABLA&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;p style=&quot;color:#8b949e;font-size:0.8rem;margin:0 0 0.8rem 0;line-height:1.4;&quot;&gt;
+        4 Vibhags: &lt;strong&gt;Dha Dhin Dhin Dha (X) | Dha Dhin Dhin Dha (2) | Dha Tin Tin Ta (0) | Ta Dhin Dhin Dha (3)&lt;/strong&gt;.
+      &lt;/p&gt;
+      &lt;div style=&quot;display:flex;align-items:center;gap:0.8rem;margin-bottom:0.5rem;&quot;&gt;
+        &lt;span style=&quot;color:#c9d1d9;font-size:0.8rem;&quot;&gt;Tempo:&lt;/span&gt;
+        &lt;input type=&quot;range&quot; id=&quot;tabla-bpm&quot; min=&quot;50&quot; max=&quot;160&quot; step=&quot;2&quot; value=&quot;80&quot; oninput=&quot;setTablaBpm(this.value)&quot; style=&quot;flex:1;accent-color:#f0883e;&quot;&gt;
+        &lt;span id=&quot;bpm-readout&quot; style=&quot;color:#f0883e;font-family:monospace;font-size:0.85rem;min-width:55px;&quot;&gt;80 BPM&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div id=&quot;bol-display&quot; style=&quot;color:#c9d1d9;font-size:0.85rem;font-family:monospace;background:#0d1117;padding:0.4rem 0.6rem;border-radius:4px;text-align:center;border:1px solid #30363d;&quot;&gt;
+        Beat: &lt;span id=&quot;beat-num&quot; style=&quot;color:#58a6ff;font-weight:bold;&quot;&gt;-&lt;/span&gt; &amp;bull; Bol: &lt;span id=&quot;beat-bol&quot; style=&quot;color:#3fb950;font-weight:bold;&quot;&gt;Ready&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+
+  &lt;!-- Module 3: Playable Swara Keyboard &amp; Bansuri Flute --&gt;
+  &lt;div style=&quot;background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.5rem;margin-bottom:1.5rem;&quot;&gt;
+    &lt;div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;&quot;&gt;
+      &lt;span style=&quot;color:#3fb950;font-weight:bold;font-size:1.1rem;&quot;&gt;3. Bānsurī Virtual Swara Keyboard (22-Shruti Microtonal Ratios)&lt;/span&gt;
+      &lt;div style=&quot;display:flex;gap:0.5rem;&quot;&gt;
+        &lt;button onclick=&quot;playSthayiMelody()&quot; style=&quot;background:#1f6feb;color:white;border:none;padding:0.35rem 0.8rem;border-radius:4px;font-size:0.8rem;cursor:pointer;font-weight:bold;&quot;&gt;▶ Play Sthayi&lt;/button&gt;
+        &lt;button onclick=&quot;playAntaraMelody()&quot; style=&quot;background:#8957e5;color:white;border:none;padding:0.35rem 0.8rem;border-radius:4px;font-size:0.8rem;cursor:pointer;font-weight:bold;&quot;&gt;▶ Play Antara&lt;/button&gt;
+        &lt;button onclick=&quot;playTaanMelody()&quot; style=&quot;background:#d29922;color:white;border:none;padding:0.35rem 0.8rem;border-radius:4px;font-size:0.8rem;cursor:pointer;font-weight:bold;&quot;&gt;▶ Play Drut Taan&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;p style=&quot;color:#8b949e;font-size:0.85rem;margin:0 0 1.2rem 0;line-height:1.4;&quot;&gt;
+      Touch or click a swara pad to play the bamboo flute with authentic 140ms &lt;em&gt;Meend&lt;/em&gt; portamento and 5.2 Hz &lt;em&gt;Andolan&lt;/em&gt; vibrato. Ga and Ni are strictly varjita (omitted) in Rāga Durgā.
+    &lt;/p&gt;
+
+    &lt;!-- Swara Buttons Grid --&gt;
+    &lt;div style=&quot;display:grid;grid-template-columns:repeat(6, 1fr);gap:0.8rem;margin-bottom:1.2rem;&quot;&gt;
+      
+      &lt;!-- Shadja --&gt;
+      &lt;button onclick=&quot;playSwara(&#39;Sa&#39;, 261.63, &#39;1/1&#39;, &#39;0 cents&#39;)&quot; style=&quot;background:#0d1117;border:2px solid #58a6ff;border-radius:8px;padding:1rem 0.5rem;color:#f0f6fc;cursor:pointer;text-align:center;transition:all 0.1s;&quot;&gt;
+        &lt;div style=&quot;font-size:1.4rem;font-weight:bold;color:#58a6ff;&quot;&gt;Sa (सा)&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.75rem;color:#8b949e;margin-top:0.3rem;&quot;&gt;261.63 Hz&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.7rem;color:#3fb950;font-family:monospace;&quot;&gt;1/1 &amp;bull; 0¢&lt;/div&gt;
+      &lt;/button&gt;
+
+      &lt;!-- Rishabha --&gt;
+      &lt;button onclick=&quot;playSwara(&#39;Re&#39;, 294.33, &#39;9/8&#39;, &#39;203.91 cents&#39;)&quot; style=&quot;background:#0d1117;border:2px solid #3fb950;border-radius:8px;padding:1rem 0.5rem;color:#f0f6fc;cursor:pointer;text-align:center;transition:all 0.1s;&quot;&gt;
+        &lt;div style=&quot;font-size:1.4rem;font-weight:bold;color:#3fb950;&quot;&gt;Re (रे)&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.75rem;color:#8b949e;margin-top:0.3rem;&quot;&gt;294.33 Hz&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.7rem;color:#3fb950;font-family:monospace;&quot;&gt;9/8 &amp;bull; 204¢ (Samvadi)&lt;/div&gt;
+      &lt;/button&gt;
+
+      &lt;!-- Madhyama --&gt;
+      &lt;button onclick=&quot;playSwara(&#39;Ma&#39;, 348.83, &#39;4/3&#39;, &#39;498.04 cents&#39;)&quot; style=&quot;background:#0d1117;border:2px solid #d29922;border-radius:8px;padding:1rem 0.5rem;color:#f0f6fc;cursor:pointer;text-align:center;transition:all 0.1s;&quot;&gt;
+        &lt;div style=&quot;font-size:1.4rem;font-weight:bold;color:#d29922;&quot;&gt;Ma (म)&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.75rem;color:#8b949e;margin-top:0.3rem;&quot;&gt;348.83 Hz&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.7rem;color:#3fb950;font-family:monospace;&quot;&gt;4/3 &amp;bull; 498¢&lt;/div&gt;
+      &lt;/button&gt;
+
+      &lt;!-- Panchama --&gt;
+      &lt;button onclick=&quot;playSwara(&#39;Pa&#39;, 392.44, &#39;3/2&#39;, &#39;701.96 cents&#39;)&quot; style=&quot;background:#0d1117;border:2px solid #58a6ff;border-radius:8px;padding:1rem 0.5rem;color:#f0f6fc;cursor:pointer;text-align:center;transition:all 0.1s;&quot;&gt;
+        &lt;div style=&quot;font-size:1.4rem;font-weight:bold;color:#58a6ff;&quot;&gt;Pa (प)&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.75rem;color:#8b949e;margin-top:0.3rem;&quot;&gt;392.44 Hz&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.7rem;color:#3fb950;font-family:monospace;&quot;&gt;3/2 &amp;bull; 702¢&lt;/div&gt;
+      &lt;/button&gt;
+
+      &lt;!-- Dhaivata --&gt;
+      &lt;button onclick=&quot;playSwara(&#39;Dha&#39;, 436.04, &#39;5/3&#39;, &#39;884.36 cents&#39;)&quot; style=&quot;background:#0d1117;border:2px solid #f85149;border-radius:8px;padding:1rem 0.5rem;color:#f0f6fc;cursor:pointer;text-align:center;transition:all 0.1s;&quot;&gt;
+        &lt;div style=&quot;font-size:1.4rem;font-weight:bold;color:#f85149;&quot;&gt;Dha (ध)&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.75rem;color:#8b949e;margin-top:0.3rem;&quot;&gt;436.04 Hz&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.7rem;color:#f85149;font-family:monospace;&quot;&gt;5/3 &amp;bull; 884¢ (VADI)&lt;/div&gt;
+      &lt;/button&gt;
+
+      &lt;!-- Taar Shadja --&gt;
+      &lt;button onclick=&quot;playSwara(&#39;Sa\&#39;&#39;, 523.25, &#39;2/1&#39;, &#39;1200.00 cents&#39;)&quot; style=&quot;background:#0d1117;border:2px solid #a371f7;border-radius:8px;padding:1rem 0.5rem;color:#f0f6fc;cursor:pointer;text-align:center;transition:all 0.1s;&quot;&gt;
+        &lt;div style=&quot;font-size:1.4rem;font-weight:bold;color:#a371f7;&quot;&gt;S&#39; (सां)&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.75rem;color:#8b949e;margin-top:0.3rem;&quot;&gt;523.25 Hz&lt;/div&gt;
+        &lt;div style=&quot;font-size:0.7rem;color:#3fb950;font-family:monospace;&quot;&gt;2/1 &amp;bull; 1200¢&lt;/div&gt;
+      &lt;/button&gt;
+
+    &lt;/div&gt;
+
+    &lt;!-- Live Telemetry Readout --&gt;
+    &lt;div style=&quot;display:flex;justify-content:space-between;align-items:center;background:#0d1117;padding:0.8rem 1.2rem;border-radius:6px;border:1px solid #30363d;font-family:monospace;font-size:0.85rem;&quot;&gt;
+      &lt;div style=&quot;color:#c9d1d9;&quot;&gt;Current Swara: &lt;span id=&quot;current-swara&quot; style=&quot;color:#58a6ff;font-weight:bold;&quot;&gt;None&lt;/span&gt;&lt;/div&gt;
+      &lt;div style=&quot;color:#c9d1d9;&quot;&gt;Frequency: &lt;span id=&quot;current-freq&quot; style=&quot;color:#3fb950;font-weight:bold;&quot;&gt;-&lt;/span&gt;&lt;/div&gt;
+      &lt;div style=&quot;color:#c9d1d9;&quot;&gt;Ratio: &lt;span id=&quot;current-ratio&quot; style=&quot;color:#f0883e;font-weight:bold;&quot;&gt;-&lt;/span&gt;&lt;/div&gt;
+      &lt;div style=&quot;color:#c9d1d9;&quot;&gt;Microtonal Cents: &lt;span id=&quot;current-cents&quot; style=&quot;color:#a371f7;font-weight:bold;&quot;&gt;-&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Module 4: Pre-Rendered High-Fidelity Master Recordings --&gt;
+  &lt;div style=&quot;background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.2rem;&quot;&gt;
+    &lt;h3 style=&quot;color:#f0f6fc;margin:0 0 0.8rem 0;font-size:1.1rem;&quot;&gt;4. Pre-Rendered Master Recordings (Dual-Track A/B Comparison)&lt;/h3&gt;
+    &lt;p style=&quot;color:#8b949e;font-size:0.85rem;margin:0 0 1rem 0;&quot;&gt;
+      Listen to the pre-rendered psychoacoustic masters synthesized with continuous multi-pole acoustic simulation and Baithak stereo reverberation:
+    &lt;/p&gt;
+    &lt;div style=&quot;display:flex;gap:1rem;flex-wrap:wrap;&quot;&gt;
+      &lt;a href=&quot;http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1052-swarm-durga-player.md&quot; style=&quot;background:#238636;color:white;text-decoration:none;padding:0.6rem 1.2rem;border-radius:6px;font-weight:bold;font-size:0.9rem;display:inline-flex;align-items:center;gap:0.5rem;&quot;&gt;
+        🎧 Open Full Dual-Track Web Player (Track A &amp;amp; Track B)
+      &lt;/a&gt;
+      &lt;span style=&quot;color:#8b949e;font-size:0.85rem;display:flex;align-items:center;&quot;&gt;
+        Includes base64 embedded MP3s for instant mobile &amp;amp; desktop playback over Tailscale.
+      &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;!-- Real-time Web Audio API JavaScript Implementation --&gt;
+&lt;script&gt;
+// Audio Context Singleton
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContextClass();
+  }
+  if (audioCtx.state === &#39;suspended&#39;) {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+// -------------------------------------------------------------
+// 1. TANPURA QUAD-DRONE SYNTHESIZER
+// -------------------------------------------------------------
+let isTanpuraRunning = false;
+let tanpuraTimer = null;
+let tanpuraMasterGain = null;
+const tanpuraPitches = [
+  { note: &#39;Pa&#39;, freq: 196.219, oct: 3 },
+  { note: &#39;Sa&#39;, freq: 261.626, oct: 4 },
+  { note: &#39;Sa&#39;, freq: 261.626, oct: 4 },
+  { note: &#39;Kharaj Sa&#39;, freq: 130.813, oct: 3 }
+];
+let currentString = 0;
+
+function toggleTanpura() {
+  const btn = document.getElementById(&#39;btn-tanpura-toggle&#39;);
+  const ctx = getAudioContext();
+  
+  if (!isTanpuraRunning) {
+    isTanpuraRunning = true;
+    btn.textContent = &#39;STOP DRONE&#39;;
+    btn.style.background = &#39;#da3633&#39;;
+    
+    if (!tanpuraMasterGain) {
+      tanpuraMasterGain = ctx.createGain();
+      const vol = document.getElementById(&#39;tanpura-vol&#39;).value;
+      tanpuraMasterGain.gain.setValueAtTime(parseFloat(vol), ctx.currentTime);
+      tanpuraMasterGain.connect(ctx.destination);
+    }
+    
+    currentString = 0;
+    pluckNextTanpuraString();
+  } else {
+    isTanpuraRunning = false;
+    btn.textContent = &#39;START DRONE&#39;;
+    btn.style.background = &#39;#238636&#39;;
+    if (tanpuraTimer) clearTimeout(tanpuraTimer);
+  }
+}
+
+function setTanpuraVolume(val) {
+  if (tanpuraMasterGain &amp;&amp; audioCtx) {
+    tanpuraMasterGain.gain.setValueAtTime(parseFloat(val), audioCtx.currentTime);
+  }
+}
+
+function pluckNextTanpuraString() {
+  if (!isTanpuraRunning) return;
+  const ctx = getAudioContext();
+  const pitch = tanpuraPitches[currentString];
+  
+  // Pluck individual string with non-linear Jawari overtones
+  const osc = ctx.createOscillator();
+  const oscGain = ctx.createGain();
+  
+  // Complex sawtooth with slight detune creates authentic thread buzzing
+  osc.type = &#39;sawtooth&#39;;
+  osc.frequency.setValueAtTime(pitch.freq, ctx.currentTime);
+  
+  // Low-pass filter simulating the curved wooden bridge (Jawari)
+  const filter = ctx.createBiquadFilter();
+  filter.type = &#39;lowpass&#39;;
+  filter.frequency.setValueAtTime(pitch.freq * 12, ctx.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(pitch.freq * 2.5, ctx.currentTime + 3.5);
+  filter.Q.setValueAtTime(4.0, ctx.currentTime);
+  
+  // Envelope
+  oscGain.gain.setValueAtTime(0.001, ctx.currentTime);
+  oscGain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.08);
+  oscGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 4.0);
+  
+  osc.connect(filter);
+  filter.connect(oscGain);
+  oscGain.connect(tanpuraMasterGain);
+  
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 4.2);
+  
+  currentString = (currentString + 1) % tanpuraPitches.length;
+  tanpuraTimer = setTimeout(pluckNextTanpuraString, 1100);
+}
+
+// -------------------------------------------------------------
+// 2. TEENTAAL TABLA LOOP (16 BEATS)
+// -------------------------------------------------------------
+let isTablaRunning = false;
+let tablaTimer = null;
+let currentBeat = 0;
+let tablaBpm = 80;
+
+const teentaalBols = [
+  { num: 1, bol: &#39;Dhā&#39;, type: &#39;sam&#39;, bayan: true, dayan: true, mark: &#39;X&#39; },
+  { num: 2, bol: &#39;Dhin&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 3, bol: &#39;Dhin&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 4, bol: &#39;Dhā&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 5, bol: &#39;Dhā&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;2&#39; },
+  { num: 6, bol: &#39;Dhin&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 7, bol: &#39;Dhin&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 8, bol: &#39;Dhā&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 9, bol: &#39;Dhā&#39;, type: &#39;khali&#39;, bayan: false, dayan: true, mark: &#39;0&#39; },
+  { num: 10, bol: &#39;Tin&#39;, type: &#39;khali&#39;, bayan: false, dayan: true, mark: &#39;&#39; },
+  { num: 11, bol: &#39;Tin&#39;, type: &#39;khali&#39;, bayan: false, dayan: true, mark: &#39;&#39; },
+  { num: 12, bol: &#39;Tā&#39;, type: &#39;khali&#39;, bayan: false, dayan: true, mark: &#39;&#39; },
+  { num: 13, bol: &#39;Tā&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;3&#39; },
+  { num: 14, bol: &#39;Dhin&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 15, bol: &#39;Dhin&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; },
+  { num: 16, bol: &#39;Dhā&#39;, type: &#39;tali&#39;, bayan: true, dayan: true, mark: &#39;&#39; }
+];
+
+function toggleTabla() {
+  const btn = document.getElementById(&#39;btn-tabla-toggle&#39;);
+  if (!isTablaRunning) {
+    isTablaRunning = true;
+    btn.textContent = &#39;STOP TABLA&#39;;
+    btn.style.background = &#39;#da3633&#39;;
+    currentBeat = 0;
+    playNextTablaBeat();
+  } else {
+    isTablaRunning = false;
+    btn.textContent = &#39;START TABLA&#39;;
+    btn.style.background = &#39;#238636&#39;;
+    if (tablaTimer) clearTimeout(tablaTimer);
+    document.getElementById(&#39;beat-num&#39;).textContent = &#39;-&#39;;
+    document.getElementById(&#39;beat-bol&#39;).textContent = &#39;Ready&#39;;
+  }
+}
+
+function setTablaBpm(bpm) {
+  tablaBpm = parseInt(bpm, 10);
+  document.getElementById(&#39;bpm-readout&#39;).textContent = bpm + &#39; BPM&#39;;
+}
+
+function playNextTablaBeat() {
+  if (!isTablaRunning) return;
+  const ctx = getAudioContext();
+  const beat = teentaalBols[currentBeat];
+  
+  // UI Update
+  document.getElementById(&#39;beat-num&#39;).textContent = beat.num + (beat.mark ? &#39; (&#39; + beat.mark + &#39;)&#39; : &#39;&#39;);
+  document.getElementById(&#39;beat-bol&#39;).textContent = beat.bol;
+  
+  // Synthesize Dayan (Treble drum tuned to Sa = 261.63 Hz)
+  if (beat.dayan) {
+    const dOsc = ctx.createOscillator();
+    const dGain = ctx.createGain();
+    dOsc.type = &#39;sine&#39;;
+    dOsc.frequency.setValueAtTime(261.63, ctx.currentTime);
+    
+    // Slight pitch rise and harmonic ring
+    dOsc.frequency.exponentialRampToValueAtTime(268.0, ctx.currentTime + 0.03);
+    dOsc.frequency.exponentialRampToValueAtTime(261.63, ctx.currentTime + 0.3);
+    
+    dGain.gain.setValueAtTime(0.25, ctx.currentTime);
+    dGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+    
+    dOsc.connect(dGain);
+    dGain.connect(ctx.destination);
+    dOsc.start(ctx.currentTime);
+    dOsc.stop(ctx.currentTime + 0.3);
+  }
+  
+  // Synthesize Bayan (Bass drum with pitch modulation &quot;Ghe&quot; downward slide)
+  if (beat.bayan) {
+    const bOsc = ctx.createOscillator();
+    const bGain = ctx.createGain();
+    bOsc.type = &#39;triangle&#39;;
+    
+    // Pitch drops from 110Hz to 65Hz simulating the heel of the palm pressure
+    bOsc.frequency.setValueAtTime(110.0, ctx.currentTime);
+    bOsc.frequency.exponentialRampToValueAtTime(65.0, ctx.currentTime + 0.35);
+    
+    bGain.gain.setValueAtTime(0.4, ctx.currentTime);
+    bGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    
+    bOsc.connect(bGain);
+    bGain.connect(ctx.destination);
+    bOsc.start(ctx.currentTime);
+    bOsc.stop(ctx.currentTime + 0.42);
+  }
+  
+  currentBeat = (currentBeat + 1) % 16;
+  const intervalMs = (60.0 / tablaBpm) * 1000;
+  tablaTimer = setTimeout(playNextTablaBeat, intervalMs);
+}
+
+// -------------------------------------------------------------
+// 3. BĀNSURĪ VIRTUAL FLUTE SYNTHESIZER WITH MEEND &amp; ANDOLAN
+// -------------------------------------------------------------
+let bansuriOsc = null;
+let bansuriGain = null;
+let lfoOsc = null;
+let lastFreq = 261.63;
+
+function playSwara(name, freq, ratio, cents) {
+  const ctx = getAudioContext();
+  
+  // UI Telemetry update
+  document.getElementById(&#39;current-swara&#39;).textContent = name;
+  document.getElementById(&#39;current-freq&#39;).textContent = freq.toFixed(2) + &#39; Hz&#39;;
+  document.getElementById(&#39;current-ratio&#39;).textContent = ratio;
+  document.getElementById(&#39;current-cents&#39;).textContent = cents;
+  
+  // Continuous Monophonic Flute Voice with 140ms Meend portamento glide
+  if (!bansuriOsc) {
+    bansuriOsc = ctx.createOscillator();
+    bansuriGain = ctx.createGain();
+    
+    // Triangle wave provides soft, hollow bamboo harmonics
+    bansuriOsc.type = &#39;triangle&#39;;
+    bansuriOsc.frequency.setValueAtTime(freq, ctx.currentTime);
+    
+    // 5.2 Hz Andolan vibrato LFO
+    lfoOsc = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfoOsc.frequency.setValueAtTime(5.2, ctx.currentTime);
+    lfoGain.gain.setValueAtTime(2.5, ctx.currentTime); // ~12 cents modulation
+    lfoOsc.connect(lfoGain);
+    lfoGain.connect(bansuriOsc.frequency);
+    lfoOsc.start(ctx.currentTime);
+    
+    // Envelope
+    bansuriGain.gain.setValueAtTime(0.001, ctx.currentTime);
+    bansuriGain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.08);
+    
+    bansuriOsc.connect(bansuriGain);
+    bansuriGain.connect(ctx.destination);
+    bansuriOsc.start(ctx.currentTime);
+  } else {
+    // Portamento Meend glide from last frequency to new frequency
+    bansuriOsc.frequency.cancelScheduledValues(ctx.currentTime);
+    bansuriOsc.frequency.setValueAtTime(lastFreq, ctx.currentTime);
+    bansuriOsc.frequency.exponentialRampToValueAtTime(freq, ctx.currentTime + 0.14);
+    
+    // Refresh gain envelope
+    bansuriGain.gain.cancelScheduledValues(ctx.currentTime);
+    bansuriGain.gain.setValueAtTime(0.35, ctx.currentTime);
+  }
+  
+  lastFreq = freq;
+  
+  // Gentle release if no subsequent note is pressed within 1.2 seconds
+  bansuriGain.gain.setValueAtTime(0.35, ctx.currentTime + 0.8);
+  bansuriGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.4);
+}
+
+// -------------------------------------------------------------
+// 4. PRESET BANDISH MELODIES (STHAYI, ANTARA, DRUT TAAN)
+// -------------------------------------------------------------
+const sthayiPhrase = [
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 600 },
+  { name: &#39;Ma&#39;, freq: 348.83, ratio: &#39;4/3&#39;, cents: &#39;498.04 cents&#39;, dur: 450 },
+  { name: &#39;Re&#39;, freq: 294.33, ratio: &#39;9/8&#39;, cents: &#39;203.91 cents&#39;, dur: 600 },
+  { name: &#39;Pa&#39;, freq: 392.44, ratio: &#39;3/2&#39;, cents: &#39;701.96 cents&#39;, dur: 450 },
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 450 },
+  { name: &#39;Sa\&#39;&#39;, freq: 523.25, ratio: &#39;2/1&#39;, cents: &#39;1200.00 cents&#39;, dur: 900 },
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 450 },
+  { name: &#39;Ma&#39;, freq: 348.83, ratio: &#39;4/3&#39;, cents: &#39;498.04 cents&#39;, dur: 450 },
+  { name: &#39;Re&#39;, freq: 294.33, ratio: &#39;9/8&#39;, cents: &#39;203.91 cents&#39;, dur: 600 },
+  { name: &#39;Sa&#39;, freq: 261.63, ratio: &#39;1/1&#39;, cents: &#39;0 cents&#39;, dur: 1200 }
+];
+
+const antaraPhrase = [
+  { name: &#39;Ma&#39;, freq: 348.83, ratio: &#39;4/3&#39;, cents: &#39;498.04 cents&#39;, dur: 400 },
+  { name: &#39;Pa&#39;, freq: 392.44, ratio: &#39;3/2&#39;, cents: &#39;701.96 cents&#39;, dur: 400 },
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 600 },
+  { name: &#39;Sa\&#39;&#39;, freq: 523.25, ratio: &#39;2/1&#39;, cents: &#39;1200.00 cents&#39;, dur: 800 },
+  { name: &#39;Re&#39;, freq: 294.33 * 2, ratio: &#39;9/4&#39;, cents: &#39;1403.91 cents&#39;, dur: 500 },
+  { name: &#39;Sa\&#39;&#39;, freq: 523.25, ratio: &#39;2/1&#39;, cents: &#39;1200.00 cents&#39;, dur: 600 },
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 500 },
+  { name: &#39;Pa&#39;, freq: 392.44, ratio: &#39;3/2&#39;, cents: &#39;701.96 cents&#39;, dur: 500 },
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 800 }
+];
+
+const drutTaan = [
+  { name: &#39;Sa&#39;, freq: 261.63, ratio: &#39;1/1&#39;, cents: &#39;0 cents&#39;, dur: 220 },
+  { name: &#39;Re&#39;, freq: 294.33, ratio: &#39;9/8&#39;, cents: &#39;203.91 cents&#39;, dur: 220 },
+  { name: &#39;Ma&#39;, freq: 348.83, ratio: &#39;4/3&#39;, cents: &#39;498.04 cents&#39;, dur: 220 },
+  { name: &#39;Pa&#39;, freq: 392.44, ratio: &#39;3/2&#39;, cents: &#39;701.96 cents&#39;, dur: 220 },
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 220 },
+  { name: &#39;Sa\&#39;&#39;, freq: 523.25, ratio: &#39;2/1&#39;, cents: &#39;1200.00 cents&#39;, dur: 350 },
+  { name: &#39;Sa\&#39;&#39;, freq: 523.25, ratio: &#39;2/1&#39;, cents: &#39;1200.00 cents&#39;, dur: 220 },
+  { name: &#39;Dha&#39;, freq: 436.04, ratio: &#39;5/3&#39;, cents: &#39;884.36 cents&#39;, dur: 220 },
+  { name: &#39;Pa&#39;, freq: 392.44, ratio: &#39;3/2&#39;, cents: &#39;701.96 cents&#39;, dur: 220 },
+  { name: &#39;Ma&#39;, freq: 348.83, ratio: &#39;4/3&#39;, cents: &#39;498.04 cents&#39;, dur: 220 },
+  { name: &#39;Re&#39;, freq: 294.33, ratio: &#39;9/8&#39;, cents: &#39;203.91 cents&#39;, dur: 220 },
+  { name: &#39;Sa&#39;, freq: 261.63, ratio: &#39;1/1&#39;, cents: &#39;0 cents&#39;, dur: 800 }
+];
+
+function playSequence(phrase) {
+  let idx = 0;
+  function step() {
+    if (idx &gt;= phrase.length) return;
+    const note = phrase[idx];
+    playSwara(note.name, note.freq, note.ratio, note.cents);
+    idx++;
+    setTimeout(step, note.dur);
+  }
+  step();
+}
+
+function playSthayiMelody() { playSequence(sthayiPhrase); }
+function playAntaraMelody() { playSequence(antaraPhrase); }
+function playTaanMelody() { playSequence(drutTaan); }
+&lt;/script&gt;
+
+---
+
+## 3. Mathematical &amp; Cybernetic Foundations
+
+### 3.1 The 22 Shrutis &amp; Pure Harmonic Ratios
+In Indian classical music, an octave is divided into 22 unequal microtonal intervals (*Shrutis*), derived through successive cycles of pure fifths (*Panchama-bhāva*, $3/2$) and pure fourths (*Madhyama-bhāva*, $4/3$), collapsed by octaves ($1/2$). This produces three fundamental microtonal step sizes:
+1. **Pramāna Shruti** (Comma of Didymus): $\frac{81}{80} \approx 21.51\text{ cents}$
+2. **Upabichitra / Nyūna Shruti** (Minor semitone): $\frac{25}{24} \approx 70.67\text{ cents}$
+3. **Pūrna Shruti** (Major semitone): $\frac{16}{15} \approx 111.73\text{ cents}$
+
+In Rāga Durgā (Bilawal Thāat), the pentatonic scale utilizes the following five microtonal coordinates:
+
+$$\begin{aligned}
+\text{Ṣaḍja (Sa)} &amp;= \frac{1}{1} = 0.00\text{ cents} \quad (261.63\text{ Hz}) \\
+\text{Triśruti Riṣabha (Re)} &amp;= \frac{9}{8} = 203.91\text{ cents} \quad (294.33\text{ Hz}) \quad [\text{Samvādi}] \\
+\text{Śuddha Madhyama (Ma)} &amp;= \frac{4}{3} = 498.04\text{ cents} \quad (348.83\text{ Hz}) \\
+\text{Pañcama (Pa)} &amp;= \frac{3}{2} = 701.96\text{ cents} \quad (392.44\text{ Hz}) \\
+\text{Catuḥśruti Dhaivata (Dha)} &amp;= \frac{5}{3} = 884.36\text{ cents} \quad (436.04\text{ Hz}) \quad [\text{Vādi}]
+\end{aligned}$$
+
+Notice that the Vādi (dominant tone) is Chatushruti Dhaivata ($5/3$, $884.36\text{ cents}$), which is exactly 15.64 cents lower than Western 12-TET A4 (900 cents). This microtonal difference removes the acoustic beating that occurs in equal temperament, allowing the Bānsurī to merge flawlessly into the Tanpura&#39;s high harmonics.
+
+### 3.2 Lyapunov Non-Chaotic Resonance
+The acoustic interaction between the continuous flute trajectory $x(t)$ and the Tanpura drone harmonic series $y(t)$ is modeled as a non-linear dynamical system:
+
+$$\frac{d}{dt} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} -\gamma_1 &amp; \omega_0 \\ -\omega_0 &amp; -\gamma_2 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} + \mathbf{F}_{\text{coupling}}(x, y)$$
+
+The maximal Lyapunov exponent of this system is:
+
+$$\lambda_{\max} = -3.732 &lt; 0$$
+
+Because $\lambda_{\max} &lt; 0$, any transient phase disturbance or pitch deviation contracts exponentially toward the limit cycle attractor at rate $e^{-3.732 t}$. The trajectory is mathematically non-chaotic and homeostatic, explaining why Rāga Durgā produces a profound psychoacoustic sense of serenity, stability, and cognitive clarity.
+
+---
+
+## 4. Rocha Semiotic &amp; Cybernetic Architecture
+
+In the biosemiotic framework of Luis M. Rocha:
+1. **The Semiotic Cut**: The separation between passive symbol (*Bandish notation*, swara symbols $S, R, M, P, D$) and active dynamic construction (*Web Audio oscillators, Meend portamento, physical air column resonance*).
+2. **Requisite Variety (Ashby&#39;s Law)**: For an autonomous agent swarm to regulate complex environments, its internal cognitive variety $V_{\text{internal}}$ must equal or exceed external environmental disturbance variety $V_{\text{external}}$. Music synthesis provides a bounded, multi-layered generator of non-trivial harmonic variety ($H = 2.67\text{ bits}$).
+3. **Pask Conversation Loop**: The listener&#39;s ear, the autonomous agent, and the musical synthesizer participate in an ongoing cybernetic feedback loop where musical intent is continuously negotiated and stabilized.
+
+---
+
+## 5. Tailscale Living System Navigation Block
+
+- **Current Living Studio**: [http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1145-cybernetic-raga-durga-and-22-shruti-studio.md](http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1145-cybernetic-raga-durga-and-22-shruti-studio.md)
+- **Master Dual-Track Web Player**: [http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1052-swarm-durga-player.md](http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1052-swarm-durga-player.md)
+- **C3I Cockpit Dashboard**: [http://nas-1.tail55d152.ts.net:4100/](http://nas-1.tail55d152.ts.net:4100/)
+- **Planning Cockpit**: [http://nas-1.tail55d152.ts.net:4100/planning](http://nas-1.tail55d152.ts.net:4100/planning)
+- **Zettelkasten Master MOC**: [http://nas-1.tail55d152.ts.net:4100/zk](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Master Index**: [http://nas-1.tail55d152.ts.net:4100/wiki](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Comprehensive Checklist Contract**: [http://nas-1.tail55d152.ts.net:4100/docs/contracts/rules/comprehensive-checklist-contract.md](http://nas-1.tail55d152.ts.net:4100/docs/contracts/rules/comprehensive-checklist-contract.md)
+- **Modular MAX &amp; Mojo Architecture**: [http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-1110-modular-mojo-max-ai-ml-architecture-and-synthesis.md](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-1110-modular-mojo-max-ai-ml-architecture-and-synthesis.md)
+- **ZigVM ADD Fractal Spec**: [http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-1130-zigvm-add-fractal-mapping-and-sublimation-spec.md](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-1130-zigvm-add-fractal-mapping-and-sublimation-spec.md)
+</pre></details><details><summary>18-point verification checklist — no runtime or admission claim</summary><details><summary>Metadata and navigation</summary><ul><li>01 Timestamp: historical source retained</li><li>02 Navigation: full Tailnet links provided</li><li>03 Fractal trace: bounded document surface</li><li>04 Evidence: source view provided</li></ul></details><details><summary>Purity and storage</summary><ul><li>05 Purity: no page script required</li><li>06 Native interfaces: no new NIF</li><li>07 Storage: read-only route; hardware interlock untested</li></ul></details><details><summary>Testing and mathematical gates</summary><ul><li>08 C1-C8: full acceptance pending</li><li>09 Mathematics: musical proof pending</li><li>10 Runtime modalities: unverified</li><li>11 Regression: candidate evidence required</li></ul></details><details><summary>Cross-language control</summary><ul><li>12 Gleam: typed document and media response</li><li>13 Hermes: native evidence outside this page</li><li>14 ZigVM: not exercised</li><li>15 MAX: not exercised</li><li>16 Telemetry: live correlation unverified</li></ul></details><details><summary>Governance and Jujutsu</summary><ul><li>17 Sovereign review: no admission granted</li><li>18 Jujutsu: source revision requires separate evidence</li></ul></details><details><summary>Domain 6: Provenance</summary><p>EV94–109 remain NOT_ADMITTED. Historical source claims are preserved as evidence, not current runtime or admission authority. This page does not demonstrate live synthesis or musical authenticity. The configured origin is syntax-validated, not authenticated.</p></details></details><nav aria-label='Previous and next'><a rel='prev' href='http://nas-1.tail55d152.ts.net:56587/docs/music/player'>Previous: Player</a> · <a rel='next' href='http://nas-1.tail55d152.ts.net:56587/docs/music/studio'>Next: Studio</a></nav></main><footer><a href='http://nas-1.tail55d152.ts.net:4100/planning'>Planning</a> · Recorded previews; no musical authenticity or quality claim.</footer></body></html>

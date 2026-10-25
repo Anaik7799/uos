@@ -1,0 +1,242 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "assessment_id": "ev02-governance-20260909-1851",
+    "plan_id": "uos/ev02-governance/20260909",
+    "task_id": "VERIFY",
+    "actor": "codex-ev02-governance",
+    "task_state": "executing",
+    "phase": "implementation",
+    "scope": "Bounded current directive-to-rule mapping and strict full-body policy-surface normalization for EV-02. It preserves missing historical lineage and reports unresolved body differences as HOLD. No admission, policy-ceiling mutation, CLI/bootstrap edit, external ingestion, or runtime effect.",
+    "class": "P1",
+    "score": 2000,
+    "score_interval": [ 2000, 2000 ],
+    "observed_at": "2026-09-09T18:52:03Z",
+    "ready_since": "2026-09-09T18:52:03Z",
+    "valid_until": "2026-09-09T19:52:03Z",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "source candidate 4e3dc68a884d55ce5e73c9cd4be73f4414aeac5a descended from immutable root 8152a497929d68f830385a1a887570f94ccebd77",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/docs/design/20260906-1649-codex-master-session-handover.md",
+          "sha256": "0174e48cf2a7a64d0330f578d9ffc3d944633fc81b5eaa67426ce083e2eb4882",
+          "observed_at": "2026-09-09T18:52:03Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+          "observed_at": "2026-09-09T18:52:03Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_gate.ml",
+          "sha256": "ede21fc625208b62c44b57d207946cdcde69e8c8c20999d9e14987a36301a7f4",
+          "observed_at": "2026-09-09T18:52:03Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_metrics.ml",
+          "sha256": "d0f532f1ea6b87d03b62702a83cca8a1f51324c52aeff42d4dc958fc72ce8e91",
+          "observed_at": "2026-09-09T18:52:03Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          "sha256": "3259b22365936320d65aa89a2b32010de3baac0132a93fa06a765b8a03a30768",
+          "observed_at": "2026-09-09T18:52:03Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          "sha256": "87832840f881b50007d5884239cb32851357723e652fabd6a3884b9f75e98acd",
+          "observed_at": "2026-09-09T18:52:03Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+          "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025",
+          "observed_at": "2026-09-09T18:52:03Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml",
+          "sha256": "76cfd76e743efb9a1fffb81a65f7a17a6e968a3e892f53f77bcf6d45261e0c4b",
+          "observed_at": "2026-09-09T18:52:03Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "False governance closure could misstate authority for the EV-02 historical claim.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/docs/design/20260906-1649-codex-master-session-handover.md",
+          ".uos-workspaces/ev98-health-formal-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_metrics.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Governance check output is an advisory control input and must fail closed.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/docs/design/20260906-1649-codex-master-session-handover.md",
+          ".uos-workspaces/ev98-health-formal-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_metrics.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "File-presence or selftest-only interpretations could claim 38-policy closure without provenance.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/docs/design/20260906-1649-codex-master-session-handover.md",
+          ".uos-workspaces/ev98-health-formal-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_metrics.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Uses realized local OCaml gate and immutable policy sources; independent review remains external.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/docs/design/20260906-1649-codex-master-session-handover.md",
+          ".uos-workspaces/ev98-health-formal-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_metrics.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Creates evidence only; no admission or runtime effect.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/docs/design/20260906-1649-codex-master-session-handover.md",
+          ".uos-workspaces/ev98-health-formal-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/km_metrics.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-PRESENCE-CLAIM",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5,
+        "cause": "Existing policy files or a 38-count are counted as proof of the historical directive superset.",
+        "effect": "False governance closure.",
+        "controls": "Exact ID-set and anchor validation plus full-body normalization that rejects unsupported policy differences."
+      },
+      {
+        "id": "FM-REPORT-ADMISSION",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5,
+        "cause": "Report-only KM output is treated as admission.",
+        "effect": "Unauthorized EV admission assertion.",
+        "controls": "Explicit authority and ceiling assertions plus negative gate outcome."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "EV-02 governance verifier",
+      "control_action": "Classify directive-superset evidence and report bounded gate result",
+      "losses": [ "L-FALSE-GOVERNANCE-CLOSURE" ],
+      "hazards": [ "H-GOV-FALSE-CLOSURE" ],
+      "ucas": [
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Missing or unbound policy family",
+          "hazard_ids": [ "H-GOV-FALSE-CLOSURE" ],
+          "constraint": "Do not report complete superset closure."
+        },
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "A valid immutable missing/duplicate falsifier",
+          "hazard_ids": [ "H-GOV-FALSE-CLOSURE" ],
+          "constraint": "Report the failure evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Stale source binding",
+          "hazard_ids": [ "H-GOV-FALSE-CLOSURE" ],
+          "constraint": "Refresh source hashes before classification."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Report-only gate output",
+          "hazard_ids": [ "H-GOV-FALSE-CLOSURE" ],
+          "constraint": "Retain NOT_GRANTED and no-admission scope."
+        }
+      ]
+    },
+    "decision": {
+      "summary": "Execute a bounded source-bound 38-ID mapping verifier and full-body allowlist normalizer; retain unresolved surface differences and independent review as HOLD.",
+      "alternatives": [
+        "Treat policy filenames as proof",
+        "Modify EV-01 bootstrap CLI owned by another task"
+      ],
+      "assumptions": [
+        "The historical 38-family claim is scoped but not verified.",
+        "Current provenance gate is report-only by its own contract."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "A passing local document metric cannot authenticate prior external policy sources or independent review."
+      ],
+      "forecast": "The existing gate will preserve the EV ceiling and expose corpus HOLD; a new bounded verifier will refuse incomplete/duplicated manifest inputs.",
+      "falsifier": "Any verifier accepting a missing, duplicated, unbound, missing-anchor, or non-normalized policy body; or any output asserting admission.",
+      "acceptance": [
+        "38-ID anchor rows and strict full-body surface comparison",
+        "Duplicate/set/anchor/header/prose falsifiers",
+        "Current active risk check and independent review"
+      ],
+      "rollback": "Preserve negative receipts; do not integrate or admit.",
+      "budget": "Realized OCaml/Gleam tools, no downloads or external writes.",
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": [
+        "Missing historical original design/implementation-plan lineage.",
+        "DIR-AUTH-001 and DIR-TOOL-001 have unresolved full-body surface differences.",
+        "No independent semantic review, two-key admission evidence, or sovereign admission decision."
+      ],
+      "supersedes": "None"
+    }
+  }
+]

@@ -1,0 +1,105 @@
+{
+  "schema": "uos.ev02-governance-checks/v1",
+  "authority": "REPORT_ONLY",
+  "admission": "NOT_GRANTED",
+  "source_commit": "51617780380ecadf8535538a074a564d72258b0c",
+  "rows": [
+    {
+      "id": "policy-selftest",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+        "--selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "output_path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1842-ev02-policy-selftest.out",
+      "output_sha256": "85cb122fe5594e777f33894b3201bfcb974039cd5d793482953e257e87fb0d9a"
+    },
+    {
+      "id": "policy-observation",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+        "--observe",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "control_pass": true,
+      "output_path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1842-ev02-policy-observation.out",
+      "output_sha256": "156e35518f546f8ea7bc164051a91a0ad3cfc4ba1672eaf3d45b040ccf7564f2"
+    },
+    {
+      "id": "mapping-selftest",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+        "--selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "output_path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1842-ev02-mapping-selftest.out",
+      "output_sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864"
+    },
+    {
+      "id": "mapping-fixture-selftest",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+        "--fixture-selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "output_path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1842-ev02-mapping-fixture-selftest.out",
+      "output_sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864"
+    },
+    {
+      "id": "mapping-observation",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+        "--observe",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "control_pass": true,
+      "output_path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1842-ev02-mapping-observation.out",
+      "output_sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864"
+    },
+    {
+      "id": "km-gate",
+      "argv": [
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/_build/default/km_gate.exe",
+        "--gate"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "control_pass": true,
+      "output_path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1842-ev02-km-gate.out",
+      "output_sha256": "82db318f9b142b5c232c07e361eb5c6a5c2a67459caa76e5e476ffcfde78b399"
+    },
+    {
+      "id": "km-ev-selftest",
+      "argv": [
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/km_provenance/_build/default/km_gate.exe",
+        "--ev-selftest"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "control_pass": true,
+      "output_path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/docs/reviews/20260909-1842-ev02-km-ev-selftest.out",
+      "output_sha256": "187d881ad962469b937a7f45c0e458cea615f387c1e2e28c4a7e6c93ed89adc3"
+    }
+  ]
+}

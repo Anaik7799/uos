@@ -1,13 +1,14 @@
 {
-  "observed_at": "2026-10-25T09:23:06.532Z",
+  "observed_at": "2026-10-25T09:46:26.249Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
     "G1_ACCEPT",
     "G2_REMAINING",
-    "G3_AUTHORITY"
+    "G3_AUTHORITY",
+    "G4_EVIDENCE"
   ],
-  "main": "54888bd6de7bcb3dd0fe1117e75852e79487617a",
+  "main": "32d43f9afe069948fcdbeb4b5e631448f8d1fa0d",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -18,7 +19,7 @@
   "telegram_runtime_total": 71,
   "telegram_commands_reachable": 32,
   "telegram_commands_total": 77,
-  "next": "G4 evidence, G5 archive, G6 branch deltas, G7 preserved workspace reconciliation, G8 measured controls",
+  "next": "G5 archive, G6 branch deltas, G7 default/runtime consumer reconciliation, G8 measured controls",
   "risks": [
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
@@ -26,9 +27,9 @@
     "Expired MINI_API_IMPL claim requires recovery; not actively executing"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G4_EVIDENCE attempt1: 1006 paths classified;281 historical evidence files restored; source review pending",
-  "github_verified_at": "2026-10-25T09:06:53.453Z",
-  "github_new_commits_uploaded": 236,
+  "working_on": "G5_ARCHIVE attempt1: 24 heads accounted,362 historical versions restored; KM/review pending",
+  "github_verified_at": "2026-10-25T09:27:50.531Z",
+  "github_new_commits_uploaded": 237,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -78,14 +79,14 @@
       "status": "PENDING"
     }
   ],
-  "merged_paths_latest": 17,
-  "latest_receipt": "var/recovery-runtime/20261025-0843-merge-g3/merge-receipt.json",
-  "merge_completed": 4,
+  "merged_paths_latest": 288,
+  "latest_receipt": "var/recovery-runtime/20261025-0912-merge-g4/merge-receipt.json",
+  "merge_completed": 5,
   "merge_total": 9,
   "agents": {
-    "codex": "G4 reconciliation and verification",
-    "agy": "G4 review next; G3 source-only review complete",
-    "claude": "v6 preservation plan advisory; newer v7 G4 guidance inspected"
+    "codex": "G5 archive verification",
+    "agy": "G5 independent review next; G4 review complete",
+    "claude": "Archive plan advisory retained"
   },
   "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
   "g3_ledger": "governance/planning/20261025-0901-merge-g3-ledger.json",
@@ -102,6 +103,16 @@
     "excluded_preserved": 2,
     "source_checks": "983 regular files match source;16 symlinks equal main;5 existing binaries equal main;2 exclusions retained",
     "source_ledger": "governance/planning/20261025-0918-default-evidence-ledger.json",
-    "default_transition_task": "G7_PRUNE"
+    "default_transition_task": "G7_PRUNE",
+    "status": "MERGED_AND_UPLOADED"
+  },
+  "g5": {
+    "heads": 24,
+    "code_observations": 79,
+    "restored_original_paths": 352,
+    "restored_versions": 362,
+    "runtime_source_changes": 0,
+    "ledger": "governance/planning/20261025-0926-september-archive-ledger.json",
+    "g6_followup": "apps/cepaf_gleam/priv/static/tui_evolution/player.html"
   }
 }

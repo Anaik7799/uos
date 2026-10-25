@@ -1,0 +1,37 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,str";;
+let run="/tmp/ev86-capture-fixtures-f45813"
+let public_base="http://nas-1.tail55d152.ts.net:4100"
+let require p s=if not p then failwith s
+let write p b=let c=open_out_bin p in Fun.protect ~finally:(fun()->close_out_noerr c)(fun()->output_string c b)
+let sha b=Cryptokit.hash_string(Cryptokit.Hash.sha256())b |> Cryptokit.transform_string(Cryptokit.Hexa.encode())
+let check_response name method_ path expected mime raw = let i=Str.search_forward(Str.regexp_string"\r\n\r\n")raw 0 in let head=String.sub raw 0 i and body=String.sub raw(i+4)(String.length raw-i-4)in
+let lines=String.split_on_char '\n' head |> List.map String.trim in let status=Scanf.sscanf(List.hd lines)"HTTP/1.1 %d"(fun x->x)in require(status=expected)(name^" status");
+let header k=let prefix=String.lowercase_ascii k^":"in List.find_map(fun l->let low=String.lowercase_ascii l in if String.starts_with ~prefix low then Some(String.trim(String.sub l(String.length prefix)(String.length l-String.length prefix)))else None)lines in
+Option.iter(fun m->require(header"content-type"=Some m)(name^" MIME"))mime;
+let length=Option.map int_of_string(header"content-length")in if method_<>"HEAD"then require(length=Some(String.length body))(name^" length");
+if name="player"||name="studio"then(require(try ignore(Str.search_forward(Str.regexp_string"<audio controls")body 0);true with Not_found->false)"audio missing";require(not(try ignore(Str.search_forward(Str.regexp_string"<script")body 0);true with Not_found->false))"script active");
+if name="player"||name="studio"then(require(try ignore(Str.search_forward(Str.regexp_string("src='"^public_base^"/media/music/"))body 0);true with Not_found->false)"configured full same-origin media URL missing");
+if method_="HEAD"then require(body="")"HEAD returned body";
+if name="mp3"then require(sha body="d5e2e97ae5787b60bc0ec8adf3dbde0e2a08484d4e81a203130ef41da4f32d9a")"MP3 exact source bytes";
+if name="wav"then require(sha body="b281fc8bd0b681603de1c15a37e1d1b3fe863181214119b2f8d8238b5baa1ef6")"WAV exact source bytes";
+write(run^"/http-"^name^".response")raw;`Assoc["case",`String name;"method",`String method_;"path",`String path;"status",`Int status;"content_type",(match header"content-type"with Some s->`String s|None->`Null);"body_bytes",`Int(String.length body);"body_sha256",`String(sha body);"raw_sha256",`String(sha raw)]
+
+let read p=let c=open_in_bin p in Fun.protect ~finally:(fun()->close_in_noerr c)(fun()->really_input_string c(in_channel_length c))
+let checks=ref []
+let fixture name method_ raw expected mime should_reject =
+ let rejected=try ignore(check_response name method_ "/fixture" expected mime raw);false with _->true in
+ require(rejected=should_reject)(name^" validation outcome");
+ let p=run^"/http-"^name^".response" in
+ require(Sys.file_exists p)("EV86_CAPTURE_BEFORE_ASSERT:"^name);
+ require(read p=raw)("EV86_CAPTURE_EXACT_BYTES:"^name);
+ checks:=`Assoc["case",`String name;"raw_sha256",`String(sha raw);"rejected",`Bool rejected]::!checks
+let ()=
+ fixture "wrong-status" "GET" "HTTP/1.1 200 OK\r\ncontent-length: 3\r\n\r\na\000b" 404 None true;
+ fixture "missing-separator" "GET" "malformed-response\000" 404 None true;
+ fixture "malformed-status" "GET" "not-HTTP\r\ncontent-length: 0\r\n\r\n" 404 None true;
+ fixture "wrong-mime" "GET" "HTTP/1.1 404 Missing\r\ncontent-length: 3\r\ncontent-type: other\r\n\r\nfoo" 404 (Some "text/plain") true;
+ fixture "wrong-length" "GET" "HTTP/1.1 404 Missing\r\ncontent-length: 9\r\n\r\nfoo" 404 None true;
+ fixture "head-body" "HEAD" "HTTP/1.1 404 Missing\r\ncontent-length: 3\r\n\r\nfoo" 404 None true;
+ fixture "valid" "GET" "HTTP/1.1 404 Missing\r\ncontent-length: 3\r\ncontent-type: text/plain\r\n\r\nfoo" 404 (Some "text/plain") false;
+ Yojson.Safe.to_file(run^"/checks.json")(`List(List.rev!checks)); print_endline "PASS 7 local static-response capture fixtures"

@@ -1,0 +1,185 @@
+[
+  {
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen source79a4, verify immutable bytes before execution",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_component_composition.ml",
+          "sha256": "85c262a3b597abe2fc59263d2d55b5092e9bcd0bc2343ad44e7f5f89c91877ca",
+          "observed_at": "2026-09-09T19:02:10Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_component_composition_runner.gleam",
+          "sha256": "63e0c1304d06fa8006a288e0f732954d0d75f63f600ac17ff0232c66c637805a",
+          "observed_at": "2026-09-09T19:02:10Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json",
+          "sha256": "6b342cdd30450ed1cfe89edfdede60eaee5454e0c66c2a8b9cc5ffff0378eeff",
+          "observed_at": "2026-09-09T19:02:10Z"
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COMPOSITION",
+        "s": 3,
+        "o": 4,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "Source drift, stale dependency closure or unsafe staging path",
+        "effect": "False component approval or unintended filesystem effects",
+        "controls": "Immutable parity, approved fixed inventory and private path probes"
+      }
+    ],
+    "stpa_analysis": {
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Dependency or source parity omitted",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Verify exact bytes against immutable approved inventory"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unsafe path or false passing runtime accepted",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Private refusal controls and raw receipt verification"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Moving candidate or stale authority reused",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Source binding and fresh Sa observation"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Native command hangs or shell launcher runs",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Bounded adapter and trace audit"
+        }
+      ],
+      "control_action": "Approve bounded source parity and captured native composition behavior",
+      "controller": "Independent component composition reviewer",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE" ]
+    },
+    "decision": {
+      "falsifier": "Candidate/source/dependency mismatch accepted, paths escape inventory, or trace contains shell execution",
+      "forecast": "Fixed recipe stages reviewed bytes and rejects unsafe dependency paths without shared build inputs",
+      "residuals": [
+        "No fullEV or admission",
+        "No cryptographic producer authentication or dynamic-library release closure",
+        "Filesystem operation checks are cooperative, not hostile-race proof"
+      ],
+      "counterevidence": [
+        "Original @ dependency basename refusal retained",
+        "ptrace sandbox refusal preserved; permitted trace separately observed"
+      ],
+      "acceptance": [
+        "Exact immutable source parity against reviewed candidates",
+        "13source+runner+168private dependencies rehashed",
+        "Review and probe local path grammar, refusal and captured outcomes",
+        "Audit successful traced execs ELF identity and raw-bytecode/directERTS commands",
+        "Bounded53Gleam+18OCaml evidence only, no global suite or release closure"
+      ],
+      "assumptions": [
+        "Parent authorizes independent review under peer workspace epoch2 through19:39",
+        "Production graph/Rete/remediation/digest bytes remain previously reviewed",
+        "Cooperative local filesystem; no canonical observer invocation or source mutation"
+      ],
+      "summary": "Review exact79a4 composition recipe and runner after AGY advice; read-only source, private fixtures only.",
+      "supersedes": "New bootstrap REVIEW; all prior component tasks completed",
+      "alternatives": [
+        "Keep heuristic metrics and merely adjust displayed count",
+        "Bound and validate graph operations, then compare with independent finite edge-set oracle"
+      ],
+      "confidence": "analyst_estimate",
+      "rollback": "Preserve immutable base and failures; isolate child and do not integrate or rewrite history.",
+      "budget": "Pure Gleam only; native OCaml staging; realized Gleam/directERTS; private stages; <=2 schedulers and <=30second bounded native child; no network/package downloads.",
+      "reviewer": "Parent independent bounded source review; no admission from this component."
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "Bounded independent source parity, staging path and native execution review; false positive composition and unsafe paths are the review hazards.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_component_composition.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_component_composition_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "stpa": {
+        "rationale": "Bounded independent source parity, staging path and native execution review; false positive composition and unsafe paths are the review hazards.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_component_composition.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_component_composition_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "fmea": {
+        "rationale": "Bounded independent source parity, staging path and native execution review; false positive composition and unsafe paths are the review hazards.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_component_composition.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_component_composition_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json"
+        ],
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "dependency": {
+        "rationale": "Bounded independent source parity, staging path and native execution review; false positive composition and unsafe paths are the review hazards.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_component_composition.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_component_composition_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json"
+        ],
+        "value": 2,
+        "low": 2,
+        "high": 2
+      },
+      "impact": {
+        "rationale": "Bounded independent source parity, staging path and native execution review; false positive composition and unsafe paths are the review hazards.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_component_composition.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev_component_composition_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      }
+    },
+    "valid_until": "2026-09-09T20:02:10Z",
+    "ready_since": "2026-09-09T19:02:10Z",
+    "observed_at": "2026-09-09T19:02:10Z",
+    "scope": "Independent bounded composition source79a4 review; private OCaml/Gleam fixtures and own evidence only",
+    "task_state": "ready",
+    "actor": "codex-component-review",
+    "plan_id": "uos/component-composition-review/20260909",
+    "assessment_id": "composition-review-1788980531",
+    "phase": "review",
+    "task_id": "REVIEW",
+    "score_interval": [ 216, 216 ],
+    "score": 216,
+    "class": "P2",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": []
+  }
+]

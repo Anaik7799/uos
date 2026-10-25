@@ -1,0 +1,192 @@
+[[directive]]
+id = "DIR-TIME-001"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-02"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-03"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-04"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-05"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-06"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-07"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-08"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-09"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-10"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-11"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-12"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-13"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-14"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-15"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-16"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-17"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-18"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-19"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-20"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-21"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-22"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-23"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-24"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-25"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-26"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-27"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-28"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-29"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-30"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-31"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-32"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-33"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-34"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-35"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-36"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-37"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[[directive]]
+id = "DIR-38"
+status = "REVOKED_SYNTHETIC"
+format_mandate = "COUNTERFACTUAL"
+
+[unrelated]
+description = "UNRELATED_TABLE_ONLY"

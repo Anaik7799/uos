@@ -1,0 +1,43 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os";;
+(* @agent_intent: Invoke the already reviewed immutable Bootstrap observer
+   against the canonical repository, keeping observer-code revision distinct
+   from observed repository revision. No deployment or admission effect. *)
+let stage="/tmp/ev01-bootstrap-campaign-401cb2";;
+let candidate="b112a47c40cf04c37a282366ee976cb5aba86f9c";;
+let read path=let c=open_in_bin path in Fun.protect ~finally:(fun()->close_in_noerr c)(fun()->
+ let n=in_channel_length c in if n>1_048_576 then failwith"input byte bound";really_input_string c n);;
+let sha bytes=Cryptokit.hash_string(Cryptokit.Hash.sha256())bytes|>Cryptokit.transform_string(Cryptokit.Hexa.encode());;
+let f=Yojson.Basic.Util.member and text=Yojson.Basic.Util.to_string;;
+let v=Yojson.Basic.from_string(read(stage^"/verification.json"));;
+let ()=if f "candidate" v<>`String candidate || f "status" v<>`String "COMPONENT_OBSERVATIONS_PASS"then failwith"candidate scope mismatch";;
+let artifacts=Yojson.Basic.Util.to_list(f "artifacts" v);;
+let modules=[stage^"/model-build/default/bootstrap_model.cma";stage^"/model-build/default/bootstrap_observer.cma"];;
+let ()=List.iter(fun path->let row=List.find(fun x->f "path" x=`String path)artifacts in
+ if sha(read path)<>text(f "sha256" row)then failwith"compiled observer changed")modules;;
+let ()=List.iter(fun x->let source=text(f "source" x)in
+ if String.starts_with ~prefix:"candidate:tools/bootstrap/" source then
+ if sha(read(text(f "staged" x)))<>text(f "sha256" x)then failwith"staged source changed")
+ (Yojson.Basic.Util.to_list(f "source_dependencies" v));;
+#directory "/tmp/ev01-bootstrap-campaign-401cb2/model-build/default/.bootstrap_model.objs/byte";;
+#directory "/tmp/ev01-bootstrap-campaign-401cb2/model-build/default/.bootstrap_observer.objs/byte";;
+#load "/tmp/ev01-bootstrap-campaign-401cb2/model-build/default/bootstrap_model.cma";;
+#load "/tmp/ev01-bootstrap-campaign-401cb2/model-build/default/bootstrap_observer.cma";;
+let cwd=Sys.getcwd();;
+let before=Unix.gettimeofday();;
+let observation=Bootstrap_observer.observe "/home/an/NAS-setup/uos";;
+let ()=if Sys.getcwd()<>cwd then failwith"caller cwd changed";;
+let code,details=match observation with
+ |Error reason->1,`Assoc["status",`String "REFUSED";"reason",`String reason]
+ |Ok o->match Bootstrap_model.verify o.facts with
+  |Error _->1,`Assoc["status",`String "REFUSED";"reason",`String "bounded predicate refused"]
+  |Ok verified->0,`Assoc["status",`String "OBSERVED_STANDALONE_JJ";
+   "observed_repository_root",`String o.root;"observed_repository_revision",`String o.revision;
+   "facts",`List(List.map(fun x->`String(Bootstrap_model.name x))(Bootstrap_model.observed verified));
+   "markers",`List(List.map(function Bootstrap_observer.Absent path->`Assoc["path",`String path;"kind",`String "ABSENT"]
+    |Bootstrap_observer.Empty_directory(path,mode,mtime,ctime)->`Assoc["path",`String path;"kind",`String "UNEXPLAINED_EMPTY_DIRECTORY";"mode",`Int mode;"mtime",`Float mtime;"ctime",`Float ctime])o.markers)]in
+ let result=`Assoc["schema",`String "uos.canonical-bootstrap-observation.v1";"observer_code_revision",`String candidate;
+ "started_epoch",`Float before;"finished_epoch",`Float(Unix.gettimeofday());"caller_cwd",`String cwd;
+ "caller_cwd_preserved",`Bool true;"details",details;"admission",`String "NOT_GRANTED";
+ "scope",`String "Nine cooperative structural facts only; original operator gate, absent-marker wording, whole-system census and historical lineage remain separate"]in
+ print_endline(Yojson.Basic.to_string result);exit code

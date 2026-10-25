@@ -1,0 +1,281 @@
+{
+  "schema": "uos.ev86.capture-scope-repair.v1",
+  "observed_at_epoch": 1788986278.561023,
+  "candidate": "7db92a8d1bbb1b280c8dc120fd1d54eba4187f09",
+  "reviewed_candidate": "7774d111070091c49c8af2a08cb430f8153bf59d",
+  "prior_evidence": "6cf007d69273a91b26401debfc7fc91b796f0a20",
+  "status": "HOLD_ORIGINAL_ACCEPTANCE_INCOMPLETE",
+  "repair_status": "LOCAL_CAPTURE_ORDER_FIX_VERIFIED_PENDING_REVIEW",
+  "authority": {
+    "plan": "uos/ev86-audio-serving/20260909",
+    "task": "ROUTE",
+    "worker": "codex-ev86-audio-serving",
+    "attempt": 2,
+    "lease_until_ns": "1788987234279189522",
+    "state": "executing"
+  },
+  "independent_results": {
+    "direct_groups_passed": 17,
+    "http_saved_preceding_responses": 12,
+    "failed_case": "doubled-leading-slash",
+    "expected_status": 404,
+    "actual_status": null,
+    "actual_status_evidence": "UNKNOWN: comparison failed and raw response was not saved",
+    "subsequent_unrun": [
+      "dot-prefix", "encoded-leading", "encoded-slash", "overlimit-post",
+      "mixed-case", "exact-path", "above-path", "long-normalized-music",
+      "long-head", "malformed-mixed"
+    ],
+    "long_original_target_bypass": "NOT_DEMONSTRATED"
+  },
+  "capture_controls": {
+    "old_behavior": "Designated static assertion EV86_CAPTURE_BEFORE_ASSERT:wrong-status failed",
+    "new_behavior": "Exact raw response is written before delimiter/status parsing and all acceptance assertions",
+    "passed_fixtures": 7,
+    "execution_scope": "Only exact post-receive source projection and local supplied response strings executed. Original driver top-level socket/process setup was never evaluated."
+  },
+  "boundary": {
+    "application_limit_bytes": 4096,
+    "applies_to": "Mist's parsed request.path",
+    "original_wire_target_limit": "UNESTABLISHED",
+    "raw_lexical_alias_contract": "UNRESOLVED",
+    "source_chain": [
+      "mist@internal@http.erl:414 receives abs_path;444 invokes get_path_and_query;453 binds parsed path/query;523 installs parsed path",
+      "mist_ffi.erl:97-109 invokes uri_string:parse and returns only path/query",
+      "stdlib-8.0.3/src/uri_string.erl:1115-1128 treats leading // as authority syntax"
+    ]
+  },
+  "obligations_preserved": [
+    "Reject malformed original music request targets without normalization creating accepted lexical aliases",
+    "Establish the intended4096-byte original request-target bound at the correct layer",
+    "Capture actual case13 response and execute all pending controls only if separately authorized",
+    "No upstream transport protection is assumed from incomplete saved observations"
+  ],
+  "restrictions": [
+    "Automatic security classification interrupted independent review. This follow-up uses source and saved artifacts plus local static capture fixtures only.",
+    "No HTTP requests, transport probes, parser/dependency changes, deployment, playback, synthesis or admission.",
+    "AGY2027 was relayed by parent; exact archived binding remains parent-owned. AGY1956 original decision is preserved, with its raw-target assertion explicitly unfulfilled.",
+    "Large existing response bytes remain untouched in private evidence; hashes and exact saved headers are retained here."
+  ],
+  "saved_http_responses": [
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-backslash.response",
+      "status_observed_from_saved_bytes": 404,
+      "raw_sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816",
+      "raw_bytes": 334,
+      "headers": "HTTP/1.1 404 Not Found\r\ncontent-type: text/plain; charset=utf-8\r\ncontent-length: 24\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-exact-unrelated-fallback.response",
+      "status_observed_from_saved_bytes": 599,
+      "raw_sha256": "bf39953b7b522e63ca181e04feb14dbccfd33fa603e01a943c6205e020d7f5b1",
+      "raw_bytes": 140,
+      "headers": "HTTP/1.1 599 Unknown HTTP Status\r\ncontent-length: 23\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-head.response",
+      "status_observed_from_saved_bytes": 200,
+      "raw_sha256": "43c96252021830128c4a42594cf9b0491b9bfb941a6e4d6390a7dd054cadfd21",
+      "raw_bytes": 292,
+      "headers": "HTTP/1.1 200 OK\r\ncontent-type: audio/mpeg\r\ncontent-length: 480696\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-method.response",
+      "status_observed_from_saved_bytes": 405,
+      "raw_sha256": "f823a1fd5ca94b422d8fc0569849b1c3a2d2d5ff43155a07b85d9c673b2f6440",
+      "raw_bytes": 355,
+      "headers": "HTTP/1.1 405 Method Not Allowed\r\ncontent-type: text/plain; charset=utf-8\r\ncontent-length: 18\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\nallow: GET, HEAD\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-missing.response",
+      "status_observed_from_saved_bytes": 404,
+      "raw_sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816",
+      "raw_bytes": 334,
+      "headers": "HTTP/1.1 404 Not Found\r\ncontent-type: text/plain; charset=utf-8\r\ncontent-length: 24\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-mp3.response",
+      "status_observed_from_saved_bytes": 200,
+      "raw_sha256": "d5b9b05b0b7d98a4ad1d2988eafafb5869783d282a191ddbdec13a6505a9e278",
+      "raw_bytes": 480988,
+      "headers": "HTTP/1.1 200 OK\r\ncontent-type: audio/mpeg\r\ncontent-length: 480696\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-percent.response",
+      "status_observed_from_saved_bytes": 404,
+      "raw_sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816",
+      "raw_bytes": 334,
+      "headers": "HTTP/1.1 404 Not Found\r\ncontent-type: text/plain; charset=utf-8\r\ncontent-length: 24\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-player.response",
+      "status_observed_from_saved_bytes": 200,
+      "raw_sha256": "d71669bbdafacaf668f344e924bce77481678d6d21a418299d3287701ba0acbf",
+      "raw_bytes": 1302107,
+      "headers": "HTTP/1.1 200 OK\r\ncontent-type: text/html; charset=utf-8\r\ncontent-length: 1301800\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-studio.response",
+      "status_observed_from_saved_bytes": 200,
+      "raw_sha256": "f7d153e16366dd4508305241f6c5516919fbd197aca9526900e97fafce6f3b48",
+      "raw_bytes": 44429,
+      "headers": "HTTP/1.1 200 OK\r\ncontent-type: text/html; charset=utf-8\r\ncontent-length: 44124\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-traversal.response",
+      "status_observed_from_saved_bytes": 404,
+      "raw_sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816",
+      "raw_bytes": 334,
+      "headers": "HTTP/1.1 404 Not Found\r\ncontent-type: text/plain; charset=utf-8\r\ncontent-length: 24\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-unrelated-fallback.response",
+      "status_observed_from_saved_bytes": 599,
+      "raw_sha256": "bf39953b7b522e63ca181e04feb14dbccfd33fa603e01a943c6205e020d7f5b1",
+      "raw_bytes": 140,
+      "headers": "HTTP/1.1 599 Unknown HTTP Status\r\ncontent-length: 23\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-77d306/http-wav.response",
+      "status_observed_from_saved_bytes": 200,
+      "raw_sha256": "06784026943d4608c1edc1b7f2e34183e0b21bc1aa5198ffd5a7c805b272054b",
+      "raw_bytes": 2646336,
+      "headers": "HTTP/1.1 200 OK\r\ncontent-type: audio/wav\r\ncontent-length: 2646044\r\nx-content-type-options: nosniff\r\ncache-control: no-store\r\ncontent-security-policy: default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\ndate: Wed, 09 Sep 2026 20:15:22 GMT\r\nconnection: keep-alive"
+    }
+  ],
+  "comment_only_gleam_bindings": [
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/music_files.gleam",
+      "before_sha256": "9326ecbbd022ebe30d92ff01b9131fb623d5dbea44c83a0922b610fcb0378aa0",
+      "after_sha256": "c5d34b2b7876ba3a91bafb8916d98635229c7fcc2690659a056a0aadf32d5718",
+      "comment_lines_only": true
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "before_sha256": "a1e421a4167731bb5c6eba81dbd7c412e00f8fa7a0da6e0ae0fc8897a68df1da",
+      "after_sha256": "1ea39bcc1c1eca528c8462793985a90db0f91d432035602f5c21a9af2eaa50f1",
+      "comment_lines_only": true
+    }
+  ],
+  "parser_source_bindings": [
+    {
+      "path": "/tmp/ev86-ingress-green-2003/full-lib/mist/_gleam_artefacts/mist@internal@http.erl",
+      "sha256": "1e316e2603e70ac62a6a2eb83328f9280e9c632c0737e06874ccb5b6cd41afad",
+      "bytes": 40792
+    },
+    {
+      "path": "/tmp/ev86-ingress-green-2003/full-lib/mist/_gleam_artefacts/mist_ffi.erl",
+      "sha256": "b6ffd52630d7827580aa88b913f67c5f42a76e1c3005a21c2e3336b0ed705ca0",
+      "bytes": 2869
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/lib/stdlib-8.0.3/src/uri_string.erl",
+      "sha256": "75aa660e1a85a7875cd39c2e5d66d3cf59fa7e003e8513699e8eaafe57fde19a",
+      "bytes": 101527
+    }
+  ],
+  "changed_ocaml_bindings": [
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/tools/ev86_music_http.ml",
+      "sha256": "6c2387aa55fa7389952c2e092bdca49676c1a01ff814023c29e121a66d906348",
+      "bytes": 7343
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/tools/test_ev86_capture.ml",
+      "sha256": "6724ff75f661dde6f91e8a3e908e0d003e8448e7b7b07c7ccddbb5ec92640bd3",
+      "bytes": 4807
+    }
+  ],
+  "records": [
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-fence-hold.json",
+      "origin": "/tmp/ev86-capture-repair-workspace-check.json",
+      "sha256": "288b4977d9848815aae34470e4591f6e5200832506d1266949daa150278ec9fc"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-fence-pass.json",
+      "origin": "/tmp/ev86-capture-repair-workspace-check-retry.json",
+      "sha256": "f5ee04074264d53a22002dc8d1843f3854523827e4687a5fd0b882a1e1b8c944"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-task.json",
+      "origin": "/tmp/ev86-capture-repair-task-show.json",
+      "sha256": "e069bf7dc804c2dffbf90430bd2acc968f298a906fdbcc83d8edfb3e26936de8"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-active-start.json",
+      "origin": "/tmp/ev86-capture-repair-active.json",
+      "sha256": "f7ba9e2361ba07bea67eb4540eae482719ebeedd8fa11aa62e94ae940f3b7b39"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-active-final.json",
+      "origin": "/tmp/ev86-capture-final-active.json",
+      "sha256": "d250ed62a3b15d439e25447907f0feba3708e9f2f1bf003e0f7164020ff70ba4"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-independent-http-failure.json",
+      "origin": "/tmp/ev86-review-http.json",
+      "sha256": "fa065e383bb16025a99b671126ee4823da4501280cc3a66b4f5224bed54dce60"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-independent-direct-tests.json",
+      "origin": "/tmp/ev86-review-tests.json",
+      "sha256": "6dd519fe7cd7cb53af92c7b3faafbd2fd957c26c1b34f2d738ffe02719ce2291"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-independent-http-driver.ml.txt",
+      "origin": "/tmp/ev86-independent-2016/review_http.ml",
+      "sha256": "1b684b596651f4d2477657fdf44182b4403c58ffab70a50fea4b2130c20fd17a"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-red-invocation.json",
+      "origin": "/tmp/ev86-capture-order-red.json",
+      "sha256": "c55a85f767135b7a09cb5e786ad2e34781e1644f8c55aa0684bce41646a7fe6b"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-red.json",
+      "origin": "/tmp/ev86-capture-fixtures-f45813/verification.json",
+      "sha256": "765cfb0cd10372318bd6158b365a9166a2146ce866d0deb329cec9d2f918bd30"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-red-projection.ml.txt",
+      "origin": "/tmp/ev86-capture-fixtures-f45813/capture_fixture.ml",
+      "sha256": "61261a64380e6a6f20e0555fd52b114d679939945fac20fc6e167bbe503c48f7"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-green-invocation.json",
+      "origin": "/tmp/ev86-capture-order-green.json",
+      "sha256": "1420d21f319329dbcbdea633ef477f7d4eab5bc9ec65acd677df549106bc86dd"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-green.json",
+      "origin": "/tmp/ev86-capture-fixtures-01099a/verification.json",
+      "sha256": "13ce3de4b0942358f6f12ffe1d40afc016fc73dfa1a4c8e3bcd5e58a45c1a918"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-green-cases.json",
+      "origin": "/tmp/ev86-capture-fixtures-01099a/checks.json",
+      "sha256": "4bad566d276bbaeadfdf950d08af78b2d52cdf39b91b7384ba520b61f0d5cb5c"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-green-projection.ml.txt",
+      "origin": "/tmp/ev86-capture-fixtures-01099a/capture_fixture.ml",
+      "sha256": "552342314aa74bb2804b95cb4fea6f0648ac4574501f0b54014bfbfff9d44a15"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-sealer.ml.txt",
+      "origin": "/tmp/ev86-seal-capture-repair.ml",
+      "sha256": "fa66fbdd911dddc9d670b324ee1b089b28edb91cf0c08008e7433178a0960ce0"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-agy1956-observation.json",
+      "origin": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-2023-bootstrap-composition-agy-observation.json",
+      "sha256": "9a606ba83e3ec0d309a144c6bad99949c69e3c6bbcd6c6fe37eec800de7f5314"
+    },
+    {
+      "path": "docs/reviews/20260909-2058-ev86-capture-scope-agy1956-advice.txt",
+      "origin": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-2023-bootstrap-composition-agy-advice.txt",
+      "sha256": "2dd4301928f0196a85f03f84c9c7811fa353f31159e5baef2a5211f38c23e695"
+    }
+  ]
+}

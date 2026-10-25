@@ -1,0 +1,195 @@
+[
+  {
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "1e2f28d24d9f8ac11f7461a81455a8d97560f331 exact immutable staging required before execution",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml",
+          "sha256": "abb375337e0b65122084539c9d479cec669859188f3f51317f08787ec8e64321",
+          "observed_at": "2026-09-09T20:33:12Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          "sha256": "8adf821936740e8c629634057e884eb5998276c9fced08aea9910e0d99098a2c",
+          "observed_at": "2026-09-09T20:33:12Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          "sha256": "4fab4af6d6dc066010f32c74712afee57dfdc7c8d3861960fcbce7936f14abcd",
+          "observed_at": "2026-09-09T20:33:12Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+          "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025",
+          "observed_at": "2026-09-09T20:33:12Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+        ],
+        "rationale": "Independent EV2 governance harness review; unbounded waits and falsely validated mapping are concrete hazards.",
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+        ],
+        "rationale": "Independent EV2 governance harness review; unbounded waits and falsely validated mapping are concrete hazards.",
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "fmea": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+        ],
+        "rationale": "Independent EV2 governance harness review; unbounded waits and falsely validated mapping are concrete hazards.",
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+        ],
+        "rationale": "Independent EV2 governance harness review; unbounded waits and falsely validated mapping are concrete hazards.",
+        "value": 2,
+        "low": 2,
+        "high": 2
+      },
+      "impact": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/run_checks.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+          ".uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+        ],
+        "rationale": "Independent EV2 governance harness review; unbounded waits and falsely validated mapping are concrete hazards.",
+        "value": 3,
+        "low": 3,
+        "high": 3
+      }
+    },
+    "decision": {
+      "counterevidence": [
+        "Old e116 four reproduced defects preserved",
+        "Author successor reports8controls; independent replay pending"
+      ],
+      "acceptance": [
+        "Pin immutable4source bytes and actual output hashes",
+        "Recheck early EOF, descendants and FD cleanup",
+        "Retired policy observer refuses FIFO without reading",
+        "Counterfactual clauses track actual TOML bytes",
+        "Meaningful candidate mismatch and output limits reject"
+      ],
+      "budget": "Finite private OCaml fixtures under outer native30second deadline, no shell/linker/network; child sleeps <=1second",
+      "alternatives": [
+        "Independently replay four prior defects and controls",
+        "Author PASS alone is insufficient"
+      ],
+      "assumptions": [
+        "Parent authorizes review; authentic peer epoch2 current fence required",
+        "Prior actual AGY1912 cleanup/source-attribution advice; root obtaining scoped followup",
+        "Private OCaml only; no network, no author mutations"
+      ],
+      "supersedes": "Separate successor review; old e116 REVIEW completed HOLD",
+      "summary": "Independent1e2f28 successor; local bounded lifecycle and source-attribution review",
+      "residuals": [
+        "Only finite bounded probes, no clock mutation",
+        "No wholeEV approval or runtime release",
+        "Author owns repairs; reviewer does not modify production"
+      ],
+      "falsifier": "Harness returns after deadline as ordinary exit, leaks descriptors/descendants, or accepts unsupported mapping as policy proof",
+      "forecast": "Private probes will distinguish timeout refusal from actual child lifetime and descriptor cleanup",
+      "confidence": "analyst_estimate",
+      "rollback": "Preserve immutable base and failures; isolate child and do not integrate or rewrite history.",
+      "reviewer": "Parent independent bounded source review; no admission from this component."
+    },
+    "valid_until": "2026-09-09T21:33:12Z",
+    "ready_since": "2026-09-09T20:33:12Z",
+    "observed_at": "2026-09-09T20:33:12Z",
+    "scope": "Independent exact1e2f28 EV2 local subprocess and TOML attribution successor review",
+    "task_state": "executing",
+    "actor": "codex-ev02-successor-review",
+    "plan_id": "uos/ev02-successor-review/20260909",
+    "assessment_id": "ev02-successor-1788985992",
+    "stpa_analysis": {
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Cleanup missing",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Probe direct and descendant process lifetime"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Truncated or unsupported evidence accepted",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Exact outputs and explicit HOLD retained"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Wallclock or stale lease changes deadline",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Outer monotonic bounded native adapter and current task"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Closed pipes followed by unbounded wait",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Finite early-close child and timeout comparison"
+        }
+      ],
+      "control_action": "Review native harness outcomes and policy amendment observation",
+      "controller": "Independent component composition reviewer",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE" ]
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COMPOSITION",
+        "s": 3,
+        "o": 4,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "Source drift, stale dependency closure or unsafe staging path",
+        "effect": "False component approval or unintended filesystem effects",
+        "controls": "Immutable parity, approved fixed inventory and private path probes"
+      }
+    ],
+    "phase": "review",
+    "task_id": "REVIEW",
+    "score_interval": [ 216, 216 ],
+    "score": 216,
+    "class": "P2",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": []
+  }
+]

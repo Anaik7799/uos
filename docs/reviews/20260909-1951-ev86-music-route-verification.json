@@ -1,0 +1,428 @@
+{
+  "schema": "uos.ev86.music-route-verification.v1",
+  "observed_at_epoch": 1788983511.724774,
+  "source_candidate": "9c59632d7951153d43f01a3b7e54940480436f7d",
+  "base_candidate": "79a4ab732ec7af350db3e3eb66fcb8cde6f03d5f",
+  "status": "COMPONENT_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+  "whole_ev86": "LIVE_AUDIO_UNESTABLISHED",
+  "formal": "UNAVAILABLE_FOR_WHOLE_EV86",
+  "admission": "NOT_GRANTED",
+  "scope": "Closed music-only serving in existing Indrajaal; explicit UOS_MUSIC_ROOT, exact document aliases and four media routes, server-rendered historical previews, no JS execution",
+  "plan": "uos/ev86-audio-serving/20260909",
+  "task": "ROUTE",
+  "worker": "codex-ev86-audio-serving",
+  "attempt": 1,
+  "task_state": "executing",
+  "authority_lease_until": "2026-09-09T20:06:13Z",
+  "workspace_epoch": 2,
+  "workspace_renewal": "/tmp/ev-workspace-renew-codec-1915.json",
+  "input_bindings_rehashed": 3794,
+  "compiled_artifacts": 54,
+  "direct_groups": 15,
+  "private_filesystem_fixture_roots": 18,
+  "actual_http_cases": 10,
+  "document_limit_bytes": 2097152,
+  "media_limit_bytes": 4194304,
+  "passing_trace_executions": 19,
+  "passing_trace_paths_by_phase": [ 7, 6, 5 ],
+  "source_staging_scope": "17 immutable source/media inputs plus realized dependency bytes; full Indrajaal compile, selected handlers only executed",
+  "legacy_failures": [
+    "Immutable MIME helper designated assertion failed with application/octet-stream",
+    "Oversized embedded source refused by risk checker; bounded source hash observation used",
+    "Reserved keyword and probe type annotations failed before correction",
+    "OTP close/1 atom return mismatch refused valid file before correction",
+    "HTTP harness EOF wait timed out; corrected to declared response length",
+    "Mistyped trace argv invoked OCaml shim then failed before HTTP harness; that trace is WRAPPER_DEPENDENT and excluded from passing native evidence"
+  ],
+  "remaining_gaps": [
+    "Live4100 belongs to older external C3I tree; no deployment, restart, runtime ownership or playback activation",
+    "Interactive studio synthesis and actual acoustic/musical authenticity/quality remain unmet",
+    "Generic document reader hardcoded root, ambiguity and containment issues are outside this closed route slice",
+    "Filesystem checks are cooperative snapshots, not hostile descriptor-relative VFS or atomic source fencing",
+    "MPEG signature and PCM container checks do not constitute a full MP3 decoder or synthesis proof",
+    "Shared-library closure and invocation authentication are not established",
+    "Large HTTP payloads remain in private temporary evidence with exact hashes; source media is bound to immutable revision, no compiled cache is imported"
+  ],
+  "http_artifacts": [
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-backslash.response",
+      "sha256": "55f43d9159e0e8e4d049fa7ee7ba5d9c4bdd7d811cd6ce9314aa1b01fefe1969",
+      "bytes": 334
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-head.response",
+      "sha256": "b3081ffbdd75a530f14c06a72c85d9d34ec3c208f0407791114004cbe9a6844e",
+      "bytes": 292
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-method.response",
+      "sha256": "a43e52a6f1df44707a90aa9614f001b7a86888a24b52ccf1da1c86b04b9ebd8a",
+      "bytes": 355
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-missing.response",
+      "sha256": "55f43d9159e0e8e4d049fa7ee7ba5d9c4bdd7d811cd6ce9314aa1b01fefe1969",
+      "bytes": 334
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-mp3.response",
+      "sha256": "b35dab3fa7f78fd03b2bfbc660b25ebbbf84f8e76115a39293fc6eaaf523e699",
+      "bytes": 480988
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-percent.response",
+      "sha256": "55f43d9159e0e8e4d049fa7ee7ba5d9c4bdd7d811cd6ce9314aa1b01fefe1969",
+      "bytes": 334
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-player.response",
+      "sha256": "bab17eb90a65721e56e2113a04ab49f67b6636028397912bf0d1d7297e8e38c8",
+      "bytes": 1300090
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-server.log",
+      "sha256": "97de2214b9ff0d3b49693c8023bdd814d87f258e9148fa57d623f1f3e1049da8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-studio.response",
+      "sha256": "8b240304484faef045dcad17f0602be4b6492feced2690b4ba8d47f44793001f",
+      "bytes": 42412
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-traversal.response",
+      "sha256": "55f43d9159e0e8e4d049fa7ee7ba5d9c4bdd7d811cd6ce9314aa1b01fefe1969",
+      "bytes": 334
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-verification.json",
+      "sha256": "f08d981410a3407039ac06b352a90a791b7705cf5a917b42a70ff05a76c9a6ed",
+      "bytes": 5343
+    },
+    {
+      "path": "/tmp/ev86-http-observation-8c5ab4/http-wav.response",
+      "sha256": "e404db0c72a1daf2cc8ab9ca4dc690fe2852132e4046faf6287c59782ccfa53f",
+      "bytes": 2646336
+    }
+  ],
+  "records": [
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-0.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-0.json",
+      "sha256": "4dfdda58b72933f9bcd292c911ca4a64ba5e676afd009e584b0655fe4a3bc207",
+      "bytes": 78087
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-1.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-1.json",
+      "sha256": "46f375dbc5518263664318c00b9e0e6b01ecb3543de4be4450f461b5e4687b25",
+      "bytes": 79792
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-2.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-2.json",
+      "sha256": "fe8e11e12df473cbfb4b8d8d1053fc7a6d6ab5f4f89c737db5f10d47925ea801",
+      "bytes": 88033
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-3.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-3.json",
+      "sha256": "0d9004f8d6296e61d737dba800107a51ae30070f090c071e09d7503abd1baa83",
+      "bytes": 90829
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-4.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-4.json",
+      "sha256": "173e9c57a4d659d987b83a0fda81fca16b636921035ffe0a8fe127fd22d55ab7",
+      "bytes": 90885
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-5.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-5.json",
+      "sha256": "c695923eb2e0ac4d838d71c02b2899a81c4740acb47e5ec25697291bac97d1b8",
+      "bytes": 91010
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-6.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-6.json",
+      "sha256": "fedbdb9aa900ba227878e96ae7c5bb20821263189d4621488f82cb4f650fec28",
+      "bytes": 90979
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-7.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-7.json",
+      "sha256": "b561669cffdca816c83c06d28f6c6850c450586906d1d2e273fdcb16cf30d32f",
+      "bytes": 90851
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-8.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-8.json",
+      "sha256": "28bcef5b8bccca4942ee3398475a799ba01469b200b16aa76a678de8e825e90e",
+      "bytes": 90993
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-9.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-9.json",
+      "sha256": "6611635ee79c65a1574d909f0e1c4543078b4b0c0938a5575a06aad5f5dfdc72",
+      "bytes": 90779
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-10.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-10.json",
+      "sha256": "173eb22c01531435a616a5e9523767ac09538d3f9c8139c518df907ac3787fa9",
+      "bytes": 84964
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-11.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-11.json",
+      "sha256": "0d932f8e82b1aef18675e2c1b3763a890a39a7f9ac677df0c45d6dc17a6bd321",
+      "bytes": 83847
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-12.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-12.json",
+      "sha256": "788b1935d054b10e2f3ec92e119acd47eb35421c233dad86512a88a7262cbe39",
+      "bytes": 83192
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-13.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-13.json",
+      "sha256": "ac156c3ff148c36c0c3a8f28f6300bd0d138051ec7309091b5a1a32ede0a363a",
+      "bytes": 81017
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-bindings-14.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-bindings-14.json",
+      "sha256": "42aed6578dc6845b820d8e058da8a82024e88f457d313ae7c7b9a4d2ce3b69a5",
+      "bytes": 63182
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-compiled-artifacts.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-compiled-artifacts.json",
+      "sha256": "3539ad18e24af0f86363fdc5b574ff8e34d542a4c4e288169c68f0c0db678e1e",
+      "bytes": 10220
+    },
+    {
+      "origin": "/tmp/ev86-route-plan-create.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-plan-create.json",
+      "sha256": "31cc9bc2450a82e1b0c6d6dc6c8508a88ae4351c95f959981bc66ff43254c03f",
+      "bytes": 3148
+    },
+    {
+      "origin": "/tmp/ev86-route-task-create.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-task-create.json",
+      "sha256": "257bf425d880c6a14d8a8c4fe99319bda4fd0e45cda955c013c24de6de3ac580",
+      "bytes": 3233
+    },
+    {
+      "origin": "/tmp/ev86-route-preflight.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-preflight-hold.json",
+      "sha256": "486da3fb09b701cf2fcf73618651ae2287f2b654581d4c95f859394ce325edf6",
+      "bytes": 4263
+    },
+    {
+      "origin": "/tmp/ev86-route-preflight-bounded.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-preflight-pass.json",
+      "sha256": "200646779ddcf555580936cf36f3806474b99b16de1989a2a28ce9f41e138e9d",
+      "bytes": 3871
+    },
+    {
+      "origin": "/tmp/ev86-route-claim.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-claim.json",
+      "sha256": "05a051dde7edb1996242e27a76f17dac29af51eba8daab9405256c29eea3af69",
+      "bytes": 3061
+    },
+    {
+      "origin": "/tmp/ev86-route-active.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-active.json",
+      "sha256": "54b6f6f0282f0446ea879f069f88478892d6dda159da2374c09d84e05848e9b0",
+      "bytes": 3872
+    },
+    {
+      "origin": "/tmp/ev86-source-freeze-active.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-source-freeze-active.json",
+      "sha256": "8c030492ac5627a27d2339da38357f1b20f33d0b271fd0c20a55d81afc716be3",
+      "bytes": 3865
+    },
+    {
+      "origin": "/tmp/ev86-baseline-mime-compile.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-baseline-compile.json",
+      "sha256": "890a3b118a49c769ae81ce00cac8a8ec0949a15a38c5b3d847fc5446ba85c276",
+      "bytes": 2305
+    },
+    {
+      "origin": "/tmp/ev86-baseline-mime-red.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-baseline-red.json",
+      "sha256": "238b72d29a2ca25848bb25ac67b2d1c7c53d63d274c7ef993cb4491ed15d0600",
+      "bytes": 5765
+    },
+    {
+      "origin": "/tmp/ev86-route-stage-1922/bindings.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-baseline-bindings.json",
+      "sha256": "5f6383354469e83506be7df8238d061e7c9af79b2d46b88151b7d0b7cc86912d",
+      "bytes": 66971
+    },
+    {
+      "origin": "/tmp/ev86-first-compile.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-first-compile-failure.json",
+      "sha256": "f07adc00bd69c5837d462011870cf4f54c137cfaabfacc6d34a5243f77201171",
+      "bytes": 2644
+    },
+    {
+      "origin": "/tmp/ev86-first-tests.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-first-tests-failure.json",
+      "sha256": "81bbf706364c231c3de8f8a9d52d364ffe1e4f9680b5e3809475ada4e0704032",
+      "bytes": 4121
+    },
+    {
+      "origin": "/tmp/ev86-identity-tests.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-close-type-failure.json",
+      "sha256": "bc0368ee6d85b19a9d910867a134d2281e80b0feb963dd082667e8641e5710b8",
+      "bytes": 3984
+    },
+    {
+      "origin": "/tmp/ev86-http-first.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-http-framing-failure.json",
+      "sha256": "0b698428fe281da7d050452fffb8c5108bc25b60b82d0a28d024480830030c07",
+      "bytes": 2292
+    },
+    {
+      "origin": "/tmp/ev86-full-compile-first.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-full-probe-type-failure.json",
+      "sha256": "0b8b1cec33c5829e0a28a0241b39d4a8dae8bdd49b6faaefb5e25fcc67819039",
+      "bytes": 3986
+    },
+    {
+      "origin": "/tmp/ev86-final-traced-http.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-wrapper-invocation-failure.json",
+      "sha256": "500d620c3bbdc97e09b1af71cee10e876631c529d8b275677e341d4250353ea3",
+      "bytes": 2585
+    },
+    {
+      "origin": "/tmp/ev86-immutable-stage.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-immutable-stage.json",
+      "sha256": "aca2b9cdb8851f12d7061bda82379e82c6b2af6e57d4e72b6f6b2ddfd36c85eb",
+      "bytes": 2386
+    },
+    {
+      "origin": "/tmp/ev86-final-fixtures.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-fixtures.json",
+      "sha256": "f5bbfcb9e947e174ee30bff2d9f58a5f64e28d025dab2f526696264241e57f8f",
+      "bytes": 2346
+    },
+    {
+      "origin": "/tmp/ev86-final-compile.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-compile.json",
+      "sha256": "df3376395dffe40fd58db92e730ea37e7eef776461acc83603bad0d9ee81bb61",
+      "bytes": 2330
+    },
+    {
+      "origin": "/tmp/ev86-final-tests.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-tests.json",
+      "sha256": "fa8d5e991998ea82994b17da0aa014814f63f34ec5bd1d314056a3b0aa573290",
+      "bytes": 4856
+    },
+    {
+      "origin": "/tmp/ev86-final-traced-http-corrected.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-http-native.json",
+      "sha256": "071d2e77b44d90810db554b82e0d86fa7fbb0d0816b33a14633af778efa3689c",
+      "bytes": 2515
+    },
+    {
+      "origin": "/tmp/ev86-http-observation-8c5ab4/http-verification.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-http-verification.json",
+      "sha256": "f08d981410a3407039ac06b352a90a791b7705cf5a917b42a70ff05a76c9a6ed",
+      "bytes": 5343
+    },
+    {
+      "origin": "/tmp/ev86-final-compile-audit.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-compile-audit.json",
+      "sha256": "1e25ebc9a57bc19230007f2a238af65036992996dddcc4a97bff975242d19d3a",
+      "bytes": 2532
+    },
+    {
+      "origin": "/tmp/ev86-final-tests-audit.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-tests-audit.json",
+      "sha256": "142f4d765611d6e8882993b0e1a2e5ce44ed3de4892e1a9f2ad305bbf7fbed25",
+      "bytes": 2166
+    },
+    {
+      "origin": "/tmp/ev86-final-http-audit.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-http-audit.json",
+      "sha256": "a49441c48051914573410c089660f3d89119ed25bb776445f0ade4c5a80dbd97",
+      "bytes": 1995
+    },
+    {
+      "origin": "/tmp/ev86-route-source-inspection.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-source-inspection.json",
+      "sha256": "6a761b2e1bf723df5f6860e84e667a5ed7a8be82f3f5274dfd6ecc4ba665a571",
+      "bytes": 1871
+    },
+    {
+      "origin": "/tmp/ev86-media-container-inspection.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-media-container-inspection.json",
+      "sha256": "46fb93b21ebc91437f6b33d4a18afa01c54ad722db154a70d48724e897d4e4a0",
+      "bytes": 1458
+    },
+    {
+      "origin": "/tmp/ev86-format-final-source.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-format.json",
+      "sha256": "021765159dcc57848cef297f272cdd9cd2bfce92f1637288b1084d110942c38d",
+      "bytes": 2325
+    },
+    {
+      "origin": "/tmp/ev86-run.ml",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-unit-driver.ml.txt",
+      "sha256": "56d60672cf7a4bde8789e2a018d078105c3ccbeaede5dc5293ae8153ad4b0bc8",
+      "bytes": 948
+    },
+    {
+      "origin": "/tmp/ev01-trace-audit.ml",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-trace-auditor.ml.txt",
+      "sha256": "7f96ff325416ed123e799a8e27b8026379d230c958716abd0524f1a929db59db",
+      "bytes": 2511
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-compile-trace.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-compile-trace.json",
+      "sha256": "db40367ad5f6a95da17db7462ff24a0f87ad2de2c2b7f0263be053597441663d",
+      "bytes": 4716
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-tests-trace.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-tests-trace.json",
+      "sha256": "ef6f9c4d7d3b39b6a4d42861f1cc36dcd6ba30862e361062ab3b67bba91ade36",
+      "bytes": 12700
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-http-trace.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-http-trace.json",
+      "sha256": "ccd72909ca617a08442391cad0cd707c0f2e480a43103158eb1a5801b59e2769",
+      "bytes": 7542
+    },
+    {
+      "origin": "/tmp/20260909-1951-ev86-music-route-wrapper-failure-trace.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-wrapper-failure-trace.json",
+      "sha256": "06c1b903d6e5c1025e761ba5d49705859bf015961b38f7ad6e3641b3957dbb40",
+      "bytes": 1575
+    },
+    {
+      "origin": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1922-agy-music-and-ev02-advice-observation.json",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-agy-observation.json",
+      "sha256": "95aa30445688bc553ac59fa127a1a206c3b71f128edd897a3468b1aa9765cce7",
+      "bytes": 4205
+    },
+    {
+      "origin": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1922-agy-music-and-ev02-advice-audio1841.txt",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-agy-audio1841.txt",
+      "sha256": "e54941f240169d895e49c1aae6f94193523c7143ed744050dc0dae09cab97238",
+      "bytes": 5174
+    },
+    {
+      "origin": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1922-agy-music-and-ev02-advice-repairs1912.txt",
+      "path": "docs/reviews/20260909-1951-ev86-music-route-agy-repairs1912.txt",
+      "sha256": "5a5fb94f05b09749ed92ff9158fe59269e2c87c2c533d9da1ca8340b85d239d0",
+      "bytes": 7793
+    }
+  ]
+}

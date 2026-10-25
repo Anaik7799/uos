@@ -1,0 +1,156 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+(* @agent_intent: Preserve an already executed canonical read-only observation.
+   @laws: exact raw receipt hashes, fresh task/lease observations, O_EXCL output,
+   explicit observer revision versus observed repository revision. *)
+let ws="/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210"
+let root="/home/an/NAS-setup/uos"
+let require=Receipt_validator.require
+let sha=Receipt_validator.sha
+let f=Yojson.Basic.Util.member
+let text=Yojson.Basic.Util.to_string
+let budget=Receipt_validator.make_budget ~seconds:60. ~bytes:4_194_304 ()
+let read=Ev_campaign.read_file budget
+let raw=read "/tmp/ev-root-canonical-bootstrap-2042.json"
+let receipt=Yojson.Basic.from_string raw
+let observed=Yojson.Basic.from_string(text(f "output" receipt))
+let candidate="b112a47c40cf04c37a282366ee976cb5aba86f9c"
+let ()=require(Sys.getcwd()=ws)"wrong cwd";
+ require(f "exit_code" receipt=`Int 0 && f "failure" receipt=`Null)"outer receipt failed";
+ require(sha(text(f "output" receipt))=text(f "output_sha256" receipt))"output hash changed";
+ require(f "observer_code_revision" observed=`String candidate)"observer revision changed";
+ require(f "caller_cwd_preserved" observed=`Bool true)"cwd changed";
+ require(f "status"(f "details" observed)=`String "OBSERVED_STANDALONE_JJ")"structural observation refused";
+ require(List.length(Yojson.Basic.Util.to_list(f "facts"(f "details" observed)))=9)"fact count changed"
+let invoke args=Receipt_validator.run ~seconds:30. ~limit:1_048_576 (root^"/toolchains/opam-ocaml/bin/ocamlrun")
+ ((root^"/toolchains/opam-ocaml/bin/ocaml")::(ws^"/tools/ev_native.ml")::"--"::args)
+let active=invoke["risk";"--active-check";".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-2057-ev-admission-native-risk-1788984357.json";"PROGRAM";"codex-ev-admission-01a08017";"7"]
+let ()=require(f "status"(Yojson.Basic.from_string active)=`String "ACTIVE_OBSERVATION_PASS")"active refused"
+let session="01a08017-fd72-7b20-9d32-4df53154bcc8"
+let heartbeat=invoke["coordinator";"heartbeat";session;candidate;"task:PROGRAM-attempt7,canonical-observation-archive";"ev-root-archive-canonical-"^Printf.sprintf "%.0f"(Unix.gettimeofday()*.1e6)]
+let ()=require(f "ok"(Yojson.Basic.from_string heartbeat)=`Bool true)"heartbeat refused"
+let fence=invoke["coordinator";"check";session;"workspace:"^ws;"3"]
+let ()=require(f "ok"(Yojson.Basic.from_string fence)=`Bool true)"fence refused"
+let ()=
+ let now=Unix.gettimeofday()in let g=Unix.gmtime now in
+ let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_sec in
+ let utc=Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_min g.tm_sec in
+ let prefix="docs/reviews/"^stamp^"-canonical-bootstrap-observation"in
+ let paths=["-receipt.json",raw;"-driver.ml.txt",read "/tmp/ev_observe_canonical_bootstrap_2041.ml";
+ "-recorder.ml.txt",read "/tmp/ev_archive_canonical_2043.ml";
+ "-scope-recorder-sandbox-refusal.json",read "/tmp/ev-root-original-scope-record-2033.json";
+ "-scope-recorder-permitted.json",read "/tmp/ev-root-original-scope-record-permitted-2034.json"]in
+ let artifacts=List.map(fun(suffix,bytes)->let path=prefix^suffix in Ev_campaign.write(ws^"/"^path)bytes;
+ `Assoc["path",`String path;"sha256",`String(sha bytes)])paths in
+ let record=`Assoc["schema",`String "uos.canonical-bootstrap-archival.v1";"archived_at",`String utc;
+ "observation",observed;"raw_receipt_sha256",`String(sha raw);"artifacts",`List artifacts;
+ "whole_ev1",`String "HOLD";"policy_ceiling",`Int 93;"new_admissions",`Int 0;
+ "scope_reconciliation",`String "docs/reviews/20260909-2021-original-governing-scope-reconciliation.json";
+ "limits",`List(List.map(fun x->`String x)["The observer code is b112, while observed canonical source is f01c3fb123811e1726d646bb477d287058115072; neither is substituted for the other.";"Nine cooperative structural facts pass; this is not full working-tree cleanliness, source census, snapshot conservation or original G-BOOT1 operator authorization.";"The top-level.git is an observed empty0555 directory. Its timestamp is recorded, but creator/purpose and original required absence are not established.";"Metadata was stable during the bounded observer window; continuous quiescence and hostile-race noninterference are not established.";"No canonical source, metadata cleanup, runtime deployment or admission mutation was requested by this driver."]);
+ "fresh_archive_checks",`Assoc["active_stdout",`String active;"heartbeat_stdout",`String heartbeat;"fence_stdout",`String fence]]in
+ let manifest=prefix^".json"in Ev_campaign.write(ws^"/"^manifest)(Yojson.Basic.pretty_to_string record^"\n");
+ let journal="docs/journal/"^stamp^"-canonical-bootstrap-observation.md"in
+ let body="# "^stamp^" Canonical Bootstrap observation\n\nObserved host UTC: "^utc^". #fractal-l0 #fractal-l1 #zk-adr #zero-muda\n\n[Evidence](http://nas-1.tail55d152.ts.net:4100/files/"^manifest^") · [Scope reconciliation](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-2021-original-governing-scope-reconciliation.json) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning). Private artifacts; live publication unverified.\n\n"^{|## 1. Scope & Trigger
+
+Close the missing fresh canonical structural observation using already reviewed immutable Bootstrap code.
+
+## 2. Pre-State Assessment
+
+Private40-check/61-invocation campaign and two-repository CWD regression passed at b112; the canonical observation remained unrun.
+
+## 3. Execution Detail
+
+Rechecked the staged source and two compiled module hashes, loaded their raw OCaml libraries, and observed the canonical path with a five-second/64KiB subprocess budget. The caller CWD was preserved.
+
+## 4. Root Cause Analysis
+
+Private fixtures establish behavior under their inputs but do not supply current canonical facts. A separate observation is needed, with observer and observed-root revisions distinguished.
+
+## 5. Fix Taxonomy
+
+Bounded observation and append-only archival; no production algorithm or repository metadata was edited by the driver.
+
+## 6. Patterns & Anti-Patterns Discovered
+
+The current root revision f01c3fb differs from observer code b112. A structural pass cannot be relabeled as whole-EV admission or original operator authorization.
+
+## 7. Verification Matrix
+
+Nine cooperative structural facts passed at20:42:14UTC. The observed empty0555.git marker remains unexplained and does not satisfy original absence wording. Original census, snapshot conservation, authorization and semantic scope remain HOLD.
+
+## 8. Files Modified
+
+New observation receipt, local driver/recorder copies, preserved archival refusal and success, manifest and this journal in the private root workspace.
+
+## 9. Architectural Observations
+
+The OCaml interpreter validates actual JJ observations against a closed predicate. Its facts do not encode every original bootstrap or all-EV obligation.
+
+## 10. Remaining Gaps
+
+Historical scope/provenance, original absent-marker requirement, complete source/target/prohibited-set identity, cycle conservation and sovereign admission remain open.
+
+## 11. Metrics Summary
+
+One fresh canonical observation, nine facts, two rehashed compiled libraries, zero newEVadmissions and policy ceiling93 unchanged.
+
+## 12. STAMP & Constitutional Alignment
+
+Child CWD binding, secure-config preflight and before/after metadata comparisons constrain wrong-target and configuration-write hazards. These cooperative checks do not prove continuous quiescence or hostile-race freedom. Fresh task and workspace checks precede archival effects.
+
+## 13. Conclusion
+
+The canonical structural observation gap is closed for this invocation. WholeEV1 remains HOLD under the recorded wider obligations.
+
+## Comprehensive verification checklist
+
+<details><summary>Domain1 — Metadata and navigation</summary>
+
+- [x] CHK-01-TIME — Host UTC and fresh clock observation.
+- [x] CHK-02-TAIL — Full Tailnet links; delivery unverified.
+- [x] CHK-03-FRACT — Relevant fractal tags.
+- [x] CHK-04-KM — Scope and evidence linked.
+
+</details>
+<details><summary>Domain2 — Purity and storage</summary>
+
+- [x] CHK-05-MUDA — OCaml only, no Bash.
+- [ ] CHK-06-GRAPH — Fleet purity unrun.
+- [ ] CHK-07-DRIVE — Storage interlock unrun.
+
+</details>
+<details><summary>Domain3 — Tests and mathematics</summary>
+
+- [ ] CHK-08-C1C8 — Full release categories open.
+- [ ] CHK-09-MATH — Bounded predicate only; whole conservation open.
+- [ ] CHK-10-9MOD — Whole-system modalities open.
+- [x] CHK-11-REGR — Fresh actual canonical observation after private regressions.
+
+</details>
+<details><summary>Domain4 — Runtime and observability</summary>
+
+- [ ] CHK-12-GLEAM — No new production OTP test.
+- [x] CHK-13-HERMES — Actual bounded OCaml/JJ execution.
+- [ ] CHK-14-ZIGVM — Kernel acceptance separate.
+- [ ] CHK-15-MAX — Inference acceptance separate.
+- [ ] CHK-16-OTEL — Production trace correlation open.
+
+</details>
+<details><summary>Domain5 — Governance and VCS</summary>
+
+- [ ] CHK-17-SOV — WholeEV1 not admitted.
+- [x] CHK-18-JJ — Actual independent JJ root observed.
+
+</details>
+<details><summary>Domain6 — Provenance</summary>
+
+Observer source, observed root and original scope remain distinct. Existing failed evidence and historical records are preserved. No newEVnumber or ceiling change.
+
+</details>
+
+[Planning](http://nas-1.tail55d152.ts.net:4100/planning). UOS footer: bounded observation only; admission pending.
+|}in
+ Ev_campaign.write(ws^"/"^journal)body;
+ Printf.printf "%s\n%s\nsha256 %s\n"manifest journal(sha(Yojson.Basic.pretty_to_string record^"\n"))

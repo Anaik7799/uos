@@ -1,0 +1,43 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/tmp/ev86-route-stage-1922/package",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/ev86-route-stage-1922/package", "--out",
+    "/tmp/ev86-route-stage-1922/compiled", "--lib",
+    "/tmp/ev86-route-stage-1922/lib"
+  ],
+  "utc_started": 1788981711.670387,
+  "utc_finished": 1788981711.700132,
+  "elapsed_seconds": 0.029742851999999986,
+  "deadline_seconds": 60.0,
+  "exit_code": 1,
+  "output": "error: Syntax error\n   ┌─ /tmp/ev86-route-stage-1922/package/test/music_files_test.gleam:10:24\n   │\n10 │ fn check(name: String, test: fn() -> Nil) { test() io.println(\"PASS \" <> name) }\n   │                        ^^^^ I was not expecting this\n\nFound the keyword `test`, expected one of: \n- `)`\n- a function parameter\n\n",
+  "output_sha256": "9a54a086290eabf38be338eb5f487cd791ebe172a547d1a39015303823a3c1c3",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-7a2066:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

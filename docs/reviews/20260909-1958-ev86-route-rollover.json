@@ -1,0 +1,50 @@
+{
+  "schema": "uos.ev86.route-lease-rollover.v1",
+  "observed_at_epoch": 1788983698.067301,
+  "source_candidate": "9c59632d7951153d43f01a3b7e54940480436f7d",
+  "verification_evidence": "bf205154ccd86a8e6eba98c332f09f7ba3372766",
+  "plan": "uos/ev86-audio-serving/20260909",
+  "task": "ROUTE",
+  "worker": "codex-ev86-audio-serving",
+  "attempt": 2,
+  "lease_until_ns": "1788987234279189522",
+  "state": "executing",
+  "scope": "Quiescent source; exact pre-expiry release, available preflight, reclaim and active observation. Pending independent bounded route review; no live effect or admission.",
+  "records": [
+    {
+      "source": "/tmp/ev86-route-roll-active-1954.json",
+      "path": "docs/reviews/20260909-1958-ev86-route-rollover-before-active.json",
+      "sha256": "dcfa75cb21ea7b03c7200eafa287d64da737e03a18cc1043a9cea3d6bd8d0c0c"
+    },
+    {
+      "source": "/tmp/ev86-route-release-attempt1.json",
+      "path": "docs/reviews/20260909-1958-ev86-route-rollover-release.json",
+      "sha256": "b09cbfecaeada8242c95263b58ba373dfe0fad2f91659dad4a91e0c179fc0a1d"
+    },
+    {
+      "source": "/tmp/ev86-route-roll-preflight.json",
+      "path": "docs/reviews/20260909-1958-ev86-route-rollover-available-preflight.json",
+      "sha256": "2b7728df7a839471fcfd79a732a521a9ee19d3073842fe857bf569992e9285fc"
+    },
+    {
+      "source": "/tmp/ev86-route-claim-attempt2.json",
+      "path": "docs/reviews/20260909-1958-ev86-route-rollover-claim.json",
+      "sha256": "9a2922efa77876b47c1b5319a4a3a8ae8eb774f7cf5e62668a581236d45c8701"
+    },
+    {
+      "source": "/tmp/ev86-route-active-attempt2.json",
+      "path": "docs/reviews/20260909-1958-ev86-route-rollover-active.json",
+      "sha256": "59ca705c189bb90033f2d388b5be52c8d8f50ed3c02dc21cfe6bbdb5deb3dcbb"
+    },
+    {
+      "source": "/tmp/ev-workspace-renew-codec-1915.json",
+      "path": "docs/reviews/20260909-1958-ev86-route-rollover-workspace-renewal.json",
+      "sha256": "712fe103aef4a7b03990cfd054334bbfbddb70005ea75e316be6b945234e8fd0"
+    },
+    {
+      "source": "/tmp/ev86-seal-evidence.ml",
+      "path": "docs/reviews/20260909-1958-ev86-route-rollover-evidence-sealer.ml.txt",
+      "sha256": "e8d9ed8237b07569652d98845f14e304c130677004e07eb9056b52ff7508aeae"
+    }
+  ]
+}

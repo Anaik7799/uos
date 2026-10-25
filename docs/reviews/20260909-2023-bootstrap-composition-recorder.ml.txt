@@ -1,0 +1,206 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os,str";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+let ws="/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210"
+let candidate="b112a47c40cf04c37a282366ee976cb5aba86f9c"
+let bootstrap="3c13ba3b3e210e98c289147a2041aadcdcc72ebd"
+let session="01a08017-fd72-7b20-9d32-4df53154bcc8"
+let agy="abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82"
+let require=Receipt_validator.require
+let sha=Receipt_validator.sha
+let f=Yojson.Basic.Util.member
+let text=Yojson.Basic.Util.to_string
+let list=Yojson.Basic.Util.to_list
+(* The seven measured tool files alone total about118MB. This archival read
+   budget covers their hashes plus source/receipt bindings; it is not a runtime
+   service or input admission limit. *)
+let budget=Receipt_validator.make_budget ~seconds:90. ~bytes:201_326_592 ()
+let read=Ev_campaign.read_file budget
+let ()=require(Sys.getcwd()=ws)"wrong recorder cwd"
+let campaign_path="/tmp/ev01-bootstrap-campaign-401cb2/verification.json"
+let cwd_path="/tmp/ev01-cwd-regression-eb678c/verification.json"
+let campaign=Yojson.Basic.from_string(read campaign_path)
+let cwd=Yojson.Basic.from_string(read cwd_path)
+let ()=require(f "candidate" campaign=`String candidate && f "checks" campaign=`Int 40 && f "status" campaign=`String "COMPONENT_OBSERVATIONS_PASS")"campaign scope/result mismatch";
+ require(List.length(list(f "observations" campaign))=61)"expected61 invocations";
+ require(f "source_revision" cwd=`String candidate && f "status" cwd=`String "PRESERVATION_PASS" && f "canonical_observer_invocations" cwd=`Int 0)"cwd scope/result mismatch"
+let pairs=list(f "source_dependencies" campaign)
+let ()=List.iter(fun b->let expected=text(f "sha256" b)in require(sha(read(text(f "staged" b)))=expected)"staged input changed";
+ let source=text(f "source" b) in
+ if String.starts_with ~prefix:"candidate:" source then (
+  let path=String.sub source 10(String.length source-10)in
+  require(sha(Receipt_validator.candidate_bytes ws candidate path)=expected && sha(Receipt_validator.candidate_bytes ws bootstrap path)=expected && sha(read(ws^"/"^path))=expected)("Bootstrap source parity differs "^path))
+ else require(sha(read source)=expected)("dependency changed "^source))pairs;
+ List.iter(fun b->require(sha(read(text(f "path" b)))=text(f "sha256" b))"compiled artifact changed")(list(f "artifacts" campaign));
+ List.iter(fun b->require(sha(read(text(f "actual" b)))=text(f "sha256" b))"tool changed")(list(f "tools" campaign))
+let prior_composition=Yojson.Basic.from_string(read "/tmp/ev-component-composition-1854/bindings.json")
+let ()=List.iter(fun row->let b=f "binding" row in let source=text(f "source" b) in let path=String.sub source 10(String.length source-10)in
+ require(sha(Receipt_validator.candidate_bytes ws candidate path)=text(f "sha256" b))"prior reviewed component changed") (list(f "sources" prior_composition))
+let review_path="docs/reviews/20260909-1848-ev01-bootstrap-independent-approval.json"
+let review_bytes=Receipt_validator.candidate_bytes ws "5652cf10b7feddb4a0187aef3591d53c58392b3b" review_path
+let ()=require(sha review_bytes="4a8947c03e46765ba0a8ea8472a14c1b329355b30a18617e1371b2a2b7470798")"independent review digest changed"
+let transcript=read "/tmp/ev-agy-compose1956-tool-transcript.json"
+let t=Yojson.Basic.from_string transcript
+let identity part=f part t|>f "output"|>text|>Yojson.Basic.from_string|>f "result"|>f "agent"|>f "agent_session"|>f "value"|>text
+let ()=require(identity "before"=agy && identity "after"=agy)"AGY capture identity differs"
+let raw=f "pane" t|>f "output"|>text
+let marker="  ### AGY_ADVICE_EV_COMPOSE_1956\n"
+let start=try Str.search_backward(Str.regexp_string marker)raw(String.length raw)with Not_found->failwith"actual AGY reply absent"
+let stop=try Str.search_forward(Str.regexp_string "────────────────────────────────")raw(start+String.length marker)with Not_found->String.length raw
+let advice=String.sub raw start(stop-start)
+let contains body needle=try ignore(Str.search_forward(Str.regexp_string needle)body 0);true with Not_found->false
+let ()=List.iter(fun s->require(contains advice s)("advice incomplete "^s))[agy;"HOLD_MISSING_HISTORICAL_GOVERNING_DOCS";"Early Fail-Closed";"No Lineage Backdating"]
+let bindings=ref[]
+let capture path=let bytes=read path in let entry=`Assoc["source",`String path;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes);"raw",`String bytes]in bindings:=entry::!bindings
+let native path=
+ let bytes=read path in let j=Yojson.Basic.from_string bytes in require(f "exit_code" j=`Int 0 && f "failure" j=`Null)"outer native run failed";
+ require(sha(text(f "output" j))=text(f "output_sha256" j))"native output changed";capture path
+let ()=List.iter native["/tmp/ev-root-bootstrap-composed-campaign-2002.json";"/tmp/ev-root-bootstrap-composed-cwd-2002.json";"/tmp/ev-root-bootstrap-compose-2000.json"];
+ List.iter(fun e->let path=text(f "receipt" e)in require(sha(read path)=text(f "sha256" e))"campaign receipt changed";capture path)(list(f "observations" campaign));
+ List.iter(fun e->let path=text(f "path" e)in require(sha(read path)=text(f "sha256" e))"cwd receipt changed";capture path)(list(f "observations" cwd));
+ List.iter capture[campaign_path;cwd_path;"/tmp/ev-root-program-release-attempt6-2007.json";"/tmp/ev-root-program-claim-attempt7-2006.json";"/tmp/ev-root-active-stale-assessment-1955-tool.json";"/tmp/ev-root-bootstrap-composition-record-2012.json"]
+let ocamlrun="/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun"
+let ocaml="/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml"
+let invoke args=Receipt_validator.run ~seconds:30. ~limit:1_048_576 ocamlrun(ocaml::(ws^"/tools/ev_native.ml")::"--"::args)
+let active=invoke["risk";"--active-check";".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-2057-ev-admission-native-risk-1788984357.json";"PROGRAM";"codex-ev-admission-01a08017";"7"]
+let ()=require(f "status"(Yojson.Basic.from_string active)=`String "ACTIVE_OBSERVATION_PASS")"active refused"
+let op="ev-bootstrap-record-"^Printf.sprintf "%.0f"(Unix.gettimeofday()*.1_000_000.)
+let heartbeat=invoke["coordinator";"heartbeat";session;candidate;"task:PROGRAM-attempt7,source:"^candidate;op]
+let ()=require(f "ok"(Yojson.Basic.from_string heartbeat)=`Bool true)"heartbeat refused"
+let fence=invoke["coordinator";"check";session;"workspace:"^ws;"3"]
+let ()=require(f "ok"(Yojson.Basic.from_string fence)=`Bool true)"fence refused"
+let ()=
+let now=Unix.gettimeofday() in let g=Unix.gmtime now in
+let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_sec in
+let utc=Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_min g.tm_sec in
+let prefix="docs/reviews/"^stamp^"-bootstrap-composition" in
+let artifact suffix bytes=let path=prefix^suffix in Ev_campaign.write(ws^"/"^path)bytes;`Assoc["path",`String path;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]in
+let bundle=Yojson.Basic.pretty_to_string(`Assoc["schema",`String "uos.lossless-observation-bundle.v1";"observations",`List(List.rev!bindings);"active_stdout",`String active;"heartbeat_stdout",`String heartbeat;"fence_stdout",`String fence])^"\n"in
+let artifacts=[artifact "-observations.json" bundle;artifact "-agy-transcript.json" transcript;artifact "-agy-advice.txt" advice;artifact "-recorder.ml.txt"(read "/tmp/ev_record_bootstrap_composition_2009.ml")]in
+let advice_record=`Assoc["schema",`String "uos.observed-agy-advice.v1";"observed_at",`String utc;"observer_session",`String session;"reviewer_session",`String agy;"marker",`String "AGY_ADVICE_EV_COMPOSE_1956";"authority",`String "NONE";"artifacts",`List artifacts;
+ "decisions",`List(List.map(fun s->`String s)["Compose the bounded Bootstrap dossier repair and prior reviews, preserving historical lineage and canonical-observer HOLDs.";"After the actual long-path bypass was reproduced, reject raw requests above4096 bytes before normalization or generic dispatch; ordinary unrelated paths retain behavior.";"Improve semantic navigation and Domain6 provenance, with validated full Tailnet public media URLs and no autoplay or authored script."]);
+ "qualifications",`List(List.map(fun s->`String s)["AGY assertion that two-key verification is satisfied is not adopted: task/review completion does not itself establish all formal or whole-EV obligations.";"AGY asserted disjointness without running a merge. Actual JJ merge and source byte checks are separately observed here.";"AGY1024-byte example was not adopted; the existing4096-byte ceiling is retained and now fails closed before normalization.";"AGY root-relative URL suggestion does not satisfy the full Tailnet mandate; validated absolute same-origin public URLs are required.";"Do not advertise byte ranges, click-to-copy or decoder integrity without actual implementation and tests. Serving matching bytes is not decoding, acoustic playback or synthesis proof.";"Captured unrelated Telegram claims are not adopted as build or runtime evidence. This pane is unsigned cooperative advice, not admission authority."])]in
+let advice_path=prefix^"-agy-observation.json"in
+Ev_campaign.write(ws^"/"^advice_path)(Yojson.Basic.pretty_to_string advice_record^"\n");
+let manifest=prefix^"-verification.json"in
+let record=`Assoc["schema",`String "uos.bootstrap-composition-verification.v1";"observed_at",`String utc;"candidate",`String candidate;
+ "parents",`List(List.map(fun s->`String s)["0501050026e6157d7dbe84039477a053aa728b90";"9f2ce9bd5c14317826e4d2059ce0e8affeef5cb1";"5652cf10b7feddb4a0187aef3591d53c58392b3b"]);
+ "bootstrap_source",`String bootstrap;"scope",`String "Bounded observer, G-BOOT1 and private composition observations";"status",`String "COMPONENT_OBSERVATIONS_PASS";"whole_ev1",`String "HOLD";"admission",`String "NOT_GRANTED";"new_ev_admissions",`Int 0;"policy_ceiling",`Int 93;
+ "campaign_checks",`Int 40;"campaign_native_invocations",`Int 61;"source_dependency_bindings",`Int(List.length pairs);"prior_component_source_pairs_unchanged",`Int 13;"canonical_observer_invocations",`Int 0;
+ "programme",`Assoc["plan",`String "uos/ev-admission/20260909-0210";"task",`String "PROGRAM";"worker",`String "codex-ev-admission-01a08017";"attempt",`Int 7;"lease_until_ns",`String "1788991557218033706"];
+ "artifacts",`List artifacts;"advice_record",`String advice_path;
+ "remaining",`List(List.map(fun s->`String s)["Missing original governing design/plan lineage, without invented backdated supersession.";"No fresh final-candidate canonical observer observation; all new observer fixtures are private.";"No whole-EV sovereign admission or complete release closure.";"Cooperative filesystem and bounded Boolean-model scope remain; no hostile-race or general noninterference proof.";"Current risk assessment expired at19:55 and correctly returned HOLD before dependent renew/seal operations. It was refreshed and passed before those operations.";"Programme attempt6 was released before expiry, available preflight passed, attempt7 claimed and ACTIVE passed; no task-completion claim."])]in
+Ev_campaign.write(ws^"/"^manifest)(Yojson.Basic.pretty_to_string record^"\n");
+let journal="docs/journal/"^stamp^"-bootstrap-composition-verification.md"in
+let body="# "^stamp^" Bootstrap composition verification\n\nObserved UTC: "^utc^". #fractal-l0 #fractal-l5 #zk-adr #zero-muda\n\n[Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Evidence](http://nas-1.tail55d152.ts.net:4100/files/"^manifest^") · [AGY advice](http://nas-1.tail55d152.ts.net:4100/files/"^advice_path^"). Private candidate; live publication unverified.\n\n"^{|
+## 1. Scope & Trigger
+
+Continue the all-EV programme using Gleam and OCaml without Bash. Compose the reviewed Bootstrap dossier repair with the previously verified components, preserving all whole-EV blockers.
+
+## 2. Pre-State Assessment
+
+Bootstrap source3c13 had independent bounded approval and completed dossier tasks. The component source79a4 had separately verified graph, forward-chaining, remediation and digest composition. Neither observation granted a whole-EV admission.
+
+## 3. Execution Detail
+
+The standalone JJ merge includes explicit author and reviewer completion parents. Fourteen Bootstrap campaign source inputs match3c13, and thirteen prior component source pairs remain unchanged. The new immutable candidate b112 was compiled and executed in fresh private fixtures:40 checks and61 native invocations passed. The independent-startup-CWD regression also passed with both private repositories and configuration fingerprints preserved.
+
+## 4. Root Cause Analysis
+
+Separate reviewed branches lacked a common observed candidate. Bootstrap previously selected a repository without first changing the observer child working directory, allowing startup configuration in another repository to affect the observation. The repaired child binds its CWD before exec and preserves the caller CWD; the composed candidate retains that behavior. The first archival verifier refused its64MiB aggregate read quota before writing: the seven measured tool files alone total about118MB. The archival budget is now192MiB; no runtime input or service limit changed.
+
+## 5. Fix Taxonomy
+
+Immutable composition, byte parity checks, finite predicate testing, private real-JJ execution, typed refusal and source-bound observations. Existing runtime deployment and admission state were not changed.
+
+## 6. Patterns & Anti-Patterns Discovered
+
+An empty .git directory is an explicitly unexplained nonoperational marker, not lineage evidence. Passing private observations cannot replace a fresh canonical observation. AGY advice must be qualified when its claims exceed the evidence or conflict with the operator URL mandate.
+
+## 7. Verification Matrix
+
+| Observation | Result | Scope |
+|---|---|---|
+| Bootstrap source parity |Matches3c13 |Fourteen campaign source inputs |
+| Prior component parity |13 unchanged source pairs |Previously reviewed composition |
+| Fresh Bootstrap campaign |40 checks,61 native invocations pass |Private repositories and designated compiled mutants |
+| Two-private CWD control |Preservation pass |Selected/startup/config fingerprints and missing-CWD refusal |
+| Canonical observer |Not run |Remains a whole-EV gap |
+| Programme rollover |Attempt7 active after preflight |Attempt6 released before expiry |
+| Whole EV1 admission |HOLD |Lineage, canonical observation and sovereign requirements remain |
+
+## 8. Files Modified
+
+The merge incorporates the already reviewed Bootstrap model, observer, G-BOOT1 entry and test drivers, plus their evidence. This record adds a lossless bundle containing the fresh raw invocation records, AGY transcript and scoped qualifications. No new production algorithm was authored by this composition step.
+
+## 9. Architectural Observations
+
+Gleam routes the gate; the native OCaml observer binds actual JJ facts to a closed Boolean predicate. The test campaign uses raw bytecode and native ERTS. Tool and artifact hashes bind these observations but do not establish cryptographic producer identity or complete dynamic-library closure.
+
+## 10. Remaining Gaps
+
+Historical governing design/plan paths remain unresolved. No repaired-source canonical observer was run here. Whole-EV authority, complete release categories and hostile-filesystem noninterference remain unproved. EV2 supervision/source-attribution fixes and EV86 independent route review continue separately.
+
+## 11. Metrics Summary
+
+40 checks,61 campaign invocations and one distinct two-private regression pass at b112.135 campaign source/dependency inputs and the prior13 component pairs were rechecked. Counts overlap in assurance scope. New EV admissions: zero; policy ceiling:93.
+
+## 12. STAMP & Constitutional Alignment
+
+Child CWD binding constrains wrong-target observations; fail-closed fact validation constrains malformed and duplicate evidence. Private fixtures contain side effects. Fresh task and workspace checks precede these archival writes. A stale risk assessment correctly stopped dependent operations and was refreshed before proceeding.
+
+## 13. Conclusion
+
+The bounded Bootstrap repair remains passing in the composed candidate. The programme continues under attempt7; whole EV1 admission remains on hold.
+
+## Comprehensive verification checklist
+
+<details><summary>Domain1 — Metadata and navigation</summary>
+
+- [x] CHK-01-TIME — Host UTC and fresh clock observation.
+- [x] CHK-02-TAIL — Full Tailnet links; publication unverified.
+- [x] CHK-03-FRACT — Applicable fractal tags.
+- [x] CHK-04-KM — Immutable source and advice references.
+
+</details>
+<details><summary>Domain2 — Purity and storage</summary>
+
+- [x] CHK-05-MUDA — Gleam and OCaml; no Bash.
+- [ ] CHK-06-GRAPH — Fleet-wide purity outside this record.
+- [ ] CHK-07-DRIVE — Hardware interlock not exercised.
+
+</details>
+<details><summary>Domain3 — Tests and mathematics</summary>
+
+- [ ] CHK-08-C1C8 — Full release categories open.
+- [ ] CHK-09-MATH — Bounded predicate verified; general refinement open.
+- [ ] CHK-10-9MOD — Whole-EV acceptance open.
+- [x] CHK-11-REGR — Fresh regression and compiled adverse controls.
+
+</details>
+<details><summary>Domain4 — Runtime and observability</summary>
+
+- [x] CHK-12-GLEAM — Actual private ERTS execution.
+- [x] CHK-13-HERMES — Actual native OCaml observation.
+- [ ] CHK-14-ZIGVM — Kernel acceptance separate.
+- [ ] CHK-15-MAX — Inference acceptance separate.
+- [ ] CHK-16-OTEL — Production trace correlation unverified.
+
+</details>
+<details><summary>Domain5 — Governance and VCS</summary>
+
+- [ ] CHK-17-SOV — No whole-EV sovereign admission.
+- [x] CHK-18-JJ — Immutable standalone JJ composition.
+
+</details>
+<details><summary>Domain6 — Provenance</summary>
+
+Historical failure records and quarantine provenance remain preserved. No backdated lineage, substituted source clauses, new EV identifier or ceiling change is claimed.
+
+</details>
+
+[Previous composition](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-1907-component-composition-verification.md) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning). UOS footer: private component observations pass; system admission pending.
+|}in
+Ev_campaign.write(ws^"/"^journal)body;
+Printf.printf "%s\n%s\n%s\nAGY SHA %s\n%d lossless observations preserved\n"manifest journal advice_path(sha(Yojson.Basic.pretty_to_string advice_record^"\n"))(List.length!bindings)

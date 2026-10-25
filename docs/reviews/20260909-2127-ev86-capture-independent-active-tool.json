@@ -1,0 +1,10 @@
+{
+  "schema": "uos.tool-transcript-copy.v1",
+  "result": {
+    "chunk_id": "3673cc",
+    "wall_time_seconds": 0.282522441,
+    "exit_code": 0,
+    "original_token_count": 365,
+    "output": "{\"status\":\"ACTIVE_OBSERVATION_PASS\",\"authority\":\"NONE\",\"runtime_admission\":\"NOT_GRANTED\",\"observed_at\":\"2026-09-09T21:04:25Z\",\"completed_at\":\"2026-09-09T21:04:25Z\",\"elapsed_monotonic_seconds\":0.049516285,\"clock_start\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":1.9e-08,\"uncertainty_seconds\":0.020275353,\"reference_age_seconds\":799.8619654178619,\"stratum\":3},\"clock_end\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":1.9e-08,\"uncertainty_seconds\":0.020275426,\"reference_age_seconds\":799.9058015346527,\"stratum\":3},\"assessment_sha256\":\"09d609b7f79489665f181241df35e5d436d86a4c4a7cdbb44b481bf9942055b4\",\"evidence_files_checked\":143,\"sa_plan\":{\"plan_id\":\"uos/ev-admission/20260909-0210\",\"snapshot_sha256\":\"f4dc07a17f5a989925d2133c92e13e8f09c89eadf058905856c680ca554ce987\",\"tasks\":[{\"task_id\":\"PROGRAM\",\"state\":\"executing\",\"worker\":\"codex-ev-admission-01a08017\",\"lease_until_ns\":\"1788991557218033706\",\"attempt\":7,\"completed_at_ns\":null,\"result_present\":false,\"dependencies\":[]}],\"mode\":\"READONLY\",\"lease_fencing_authority\":\"NOT_GRANTED\"},\"order\":[],\"findings\":[],\"limits\":[\"Listed byte equality does not prove source completeness, runtime behavior or signed provenance.\",\"Analysis prose, class judgments, cost ties and control effectiveness require qualified review.\",\"Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.\",\"Snapshot is confined to one complete plan; no global optimum is asserted.\"]}\n"
+  }
+}

@@ -1,0 +1,26 @@
+#use "topfind";;
+#require "unix,str,yojson,cryptokit";;
+let read p=let c=open_in_bin p in Fun.protect ~finally:(fun()->close_in_noerr c)(fun()->really_input_string c(in_channel_length c))
+let sha s=Cryptokit.hash_string(Cryptokit.Hash.sha256())s|>Cryptokit.transform_string(Cryptokit.Hexa.encode())
+let contains s p=try ignore(Str.search_forward(Str.regexp_string p)s 0);true with Not_found->false
+let path=Sys.argv.(1)
+let bytes=read path
+let successes=ref[]and failures=ref[]and pending=Hashtbl.create 16
+let start=Str.regexp "^\\([0-9]+\\) +execve(\"\\([^\"]+\\)\""
+let resumed=Str.regexp "^\\([0-9]+\\) +<\\.\\.\\. execve resumed>"
+let finish executable line=if String.ends_with ~suffix:"= 0"line then successes:=executable::!successes else if contains line "= -1 "then failures:=line::!failures else failwith("unclassified:"^line)
+let ()=
+ String.split_on_char '\n'bytes|>List.iter(fun line->
+  if Str.string_match start line 0 then(let pid=Str.matched_group 1 line and exe=Str.matched_group 2 line in
+   if contains line "<unfinished ...>" then (if Hashtbl.mem pending pid then failwith "duplicate pending";Hashtbl.add pending pid exe)else finish exe line)
+  else if Str.string_match resumed line 0 then(let pid=Str.matched_group 1 line in let exe=Hashtbl.find pending pid in Hashtbl.remove pending pid;finish exe line)
+  else if contains line "execve"then failwith("unsupported:"^line));
+ if Hashtbl.length pending<>0 then failwith "unfinished trace";
+ let paths=List.sort_uniq String.compare !successes in
+ let refs=List.map(fun p->let resolved=Unix.realpath p in let b=read resolved in
+  if List.mem(Filename.basename p)["sh";"bash";"dash";"zsh"]then failwith("shell observed:"^p);
+  if not(String.starts_with ~prefix:"\127ELF"b)then failwith("nonELF:"^p);
+  `Assoc["path",`String p;"resolved",`String resolved;"sha256",`String(sha b)])paths in
+ let report=`Assoc["schema",`String "uos.ev01-native-trace.v1";"status",`String "PASS";"trace",`String path;"trace_sha256",`String(sha bytes);"successful_execs",`Int(List.length !successes);"failed_lookups",`Int(List.length !failures);"executables",`List refs;"scope",`String "Actual successful execve paths and current ELF bytes; no shared-library release-closure or hostile-host authenticity claim"]in
+ let c=open_out_bin Sys.argv.(2)in output_string c(Yojson.Safe.pretty_to_string report);close_out c;
+ Printf.printf "PASS %d successful executions over %d ELF paths; %d failed lookups\n"(List.length !successes)(List.length paths)(List.length !failures)

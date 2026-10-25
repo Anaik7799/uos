@@ -1,0 +1,24 @@
+#use "topfind";;
+#require "unix,str";;
+let base="/tmp/ev02-independent-review-1932"
+let read p=let c=open_in_bin p in let b=really_input_string c(in_channel_length c)in close_in c;b
+let write p b=let c=open_out_gen[Open_wronly;Open_creat;Open_excl]0o600 p in output_string c b;close_out c
+let ()=
+ let repaired_fixture=Str.global_replace(Str.regexp_string "String.length both.stdout+String.length both.stderr=1600000")"String.length both.stdout=800000 && String.length both.stderr>=800000"(read(base^"/probe.ml"))in
+ Unix.mkdir(base^"/probe-repeat")0o700;write(base^"/probe-repeat/probe.ml")repaired_fixture;
+ let mapping=read(base^"/directive_mapping_gate.ml")in
+ let stop=Str.search_forward(Str.regexp_string "let () =\n  match Array.to_list Sys.argv")mapping 0 in
+ let code=String.sub mapping 0 stop in
+ let extra={|
+let ()=
+ let root=Sys.argv.(1)in Unix.mkdir root 0o700;
+ build_fixture root ~all_surfaces:true ~body:"# Anchor\nsynthetic body\n";
+ let ids="DIR-TIME-001"::List.tl ids in
+ let toml=List.map(fun id->"[[directive]]\nid = \""^id^"\"\nformat_mandate = \"COUNTERFACTUAL\"\nstatus = \"REVOKED_SYNTHETIC\"\n")ids|>String.concat "\n"in
+ write(root^"/governance/agents/policy/superset.toml")toml;
+ let mapping=root^"/mapping.json"in write mapping(mapping_text(List.map(fun id->id,"rule.md","# Anchor")ids));
+ print(observe root mapping)
+|}in write(base^"/mapping-source-probe.ml")(code^extra);
+ let fifo=base^"/fifo-fixture"in Unix.mkdir fifo 0o700;
+ List.iter(fun surface->let dir=fifo^"/"^surface in Unix.mkdir(Filename.dirname dir)0o700;Unix.mkdir dir 0o700;Unix.mkfifo(dir^"/rule.md")0o600)[".agents/rules";".claude/rules";".gemini/rules";".codex/rules"];
+ print_endline "additional wholly private fixtures prepared"

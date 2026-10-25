@@ -1,0 +1,43 @@
+{
+  "schema": "uos.observed-agy-advice.v1",
+  "observed_at": "2026-09-09T20:13:23Z",
+  "observer_session": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "marker": "AGY_ADVICE_EV_COMPOSE_1956",
+  "authority": "NONE",
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-observations.json",
+      "sha256": "9d7a2b8966513af60e45628472e1ef3061fa095ce953dc66801ef20823105180",
+      "bytes": 638236
+    },
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-agy-transcript.json",
+      "sha256": "e5b99c6c07b52d4589cce1df8545e0feb1e0c746326bba49622549ab86039bed",
+      "bytes": 17493
+    },
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-agy-advice.txt",
+      "sha256": "2dd4301928f0196a85f03f84c9c7811fa353f31159e5baef2a5211f38c23e695",
+      "bytes": 6365
+    },
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-recorder.ml.txt",
+      "sha256": "371cc38826851f6246cda7f488cca6d53b550b8d1e688b116bd17fd2e6684302",
+      "bytes": 18709
+    }
+  ],
+  "decisions": [
+    "Compose the bounded Bootstrap dossier repair and prior reviews, preserving historical lineage and canonical-observer HOLDs.",
+    "After the actual long-path bypass was reproduced, reject raw requests above4096 bytes before normalization or generic dispatch; ordinary unrelated paths retain behavior.",
+    "Improve semantic navigation and Domain6 provenance, with validated full Tailnet public media URLs and no autoplay or authored script."
+  ],
+  "qualifications": [
+    "AGY assertion that two-key verification is satisfied is not adopted: task/review completion does not itself establish all formal or whole-EV obligations.",
+    "AGY asserted disjointness without running a merge. Actual JJ merge and source byte checks are separately observed here.",
+    "AGY1024-byte example was not adopted; the existing4096-byte ceiling is retained and now fails closed before normalization.",
+    "AGY root-relative URL suggestion does not satisfy the full Tailnet mandate; validated absolute same-origin public URLs are required.",
+    "Do not advertise byte ranges, click-to-copy or decoder integrity without actual implementation and tests. Serving matching bytes is not decoding, acoustic playback or synthesis proof.",
+    "Captured unrelated Telegram claims are not adopted as build or runtime evidence. This pane is unsigned cooperative advice, not admission authority."
+  ]
+}

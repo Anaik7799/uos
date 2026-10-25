@@ -1,0 +1,29 @@
+{
+  "schema": "uos.ev02.current-directive-rule-amendment/v1",
+  "authority": "CURRENT_AMENDMENT_PROPOSAL",
+  "historical_lineage": "MISSING_HISTORICAL_LINEAGE",
+  "admission": "NOT_GRANTED",
+  "normalization_base": ".claude/rules",
+  "rules": [
+    ["DIR-AUTH-001","20260907-1330-iam-ferriskey-nif-rule.md","## Mandate"], ["DIR-READ-001","uos-governance.md","# UOS Monorepo Governance Rule"],
+    ["DIR-LANG-001","full-symbiosis.md","## Runtime Language Rules"], ["DIR-VCS-001","uos-governance.md","# UOS Monorepo Governance Rule"],
+    ["DIR-AUTO-001","sdlc-sre-verification-process-contract.md","## 1. The 5-Tier Fractal Lifecycle"], ["DIR-AGT-001","full-symbiosis.md","## Change Protocol"],
+    ["DIR-SYM-001","full-symbiosis.md","## Surface Coverage Matrix"], ["DIR-SKL-001","full-symbiosis.md","## Surface Coverage Matrix"],
+    ["DIR-SUP-001","c3i-cross-language-control-contract.md","## 1. Domain Separation Invariant"], ["DIR-HOOK-001","full-symbiosis.md","## Change Protocol"],
+    ["DIR-TOOL-001","20260908-2142-determinate-nix-devenv-mandate.md","## 3. Machine Enforcement"], ["DIR-PLAN-001","20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md","## 2. Fractal Jidoka & Andon Stop Line (`SC-JIDOKA-001`)"],
+    ["DIR-GATE-001","20260907-1559-risk-prioritization-sop.md","# 20260907-1559 — Risk prioritization standard operating procedure"], ["DIR-TEST-001","sdlc-sre-verification-process-contract.md","## 4. Multi-Paradigm Testing Disciplines"],
+    ["DIR-UI-001","comprehensive-checklist-contract.md","# Comprehensive Web & Markdown Checklist Contract"], ["DIR-AGUI-001","comprehensive-checklist-contract.md","# Comprehensive Web & Markdown Checklist Contract"],
+    ["DIR-A2UI-001","comprehensive-checklist-contract.md","# Comprehensive Web & Markdown Checklist Contract"], ["DIR-OBS-001","swarm-monitoring-protocol.md","# Swarm Monitoring & Information Sharing Protocol (SC-MONITOR-001)"],
+    ["DIR-MCP-001","20260907-0653-tri-agent-coordination.md","## Coordination rules"], ["DIR-CONFIG-001","workspace-isolation-contract.md","## 2. Workspace ownership"],
+    ["DIR-DB-001","provenance-integrity-contract.md","## 5. Durable cycle journal"], ["DIR-SWARM-001","swarm-monitoring-protocol.md","# Swarm Monitoring & Information Sharing Protocol (SC-MONITOR-001)"],
+    ["DIR-ALG-001","denotational-intent-algebraic-atlas-contract.md","## Core Mathematical Invariants"], ["DIR-FORMAL-001","denotational-intent-algebraic-atlas-contract.md","## Core Mathematical Invariants"],
+    ["DIR-RULE-001","uos-governance.md","# UOS Monorepo Governance Rule"], ["DIR-BAYES-001","20260907-0811-hive-decision-forecast-kpi-mandate.md","## Forecasting and shared-state laws"],
+    ["DIR-SAFE-001","full-symbiosis.md","## L0-L7 Gate"], ["DIR-SEC-001","provenance-integrity-contract.md","## 4. Machine enforcement"],
+    ["DIR-HA-001","hive-synchrony-protocol.md","# Hive Synchrony & Harmonic Resonance Protocol (SC-HIVE-SYNC-001)"], ["DIR-INF-001","intelligence-routing-rule.md","## Rule"],
+    ["DIR-BROWSER-001","mirage-production-integration-contract.md","## 2. Triple-Interface Architecture & System Topology"], ["DIR-FIGMA-001","comprehensive-checklist-contract.md","# Comprehensive Web & Markdown Checklist Contract"],
+    ["DIR-TIME-001","timestamp-mandate.md","# Mandatory YYYYMMDD-HHSS- Timestamp Rule Mandate"], ["DIR-JOURNAL-001","sdlc-sre-verification-process-contract.md","## 1. The 5-Tier Fractal Lifecycle"],
+    ["DIR-PKM-001","km-wiki-zk-contract.md","## Contract Invariants"], ["DIR-SRE-001","sdlc-sre-verification-process-contract.md","## 3. STPA Safety & Reliability Envelope"],
+    ["DIR-DOC-001","rocha-semiotics-cybernetics-contract.md","## 2. Invariants for Every Markdown Document (`.md`)"], ["DIR-INTF-001","c3i-cross-language-control-contract.md","## 2. Invariants & Communication Protocols"]
+  ],
+  "limits": ["This maps current adapted rule anchors for normalization review only.","It does not authenticate historical external sources or establish admission.","Each mapping remains HOLD until independent semantic review validates its full normalized rule body."]
+}

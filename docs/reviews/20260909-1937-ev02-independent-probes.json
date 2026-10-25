@@ -1,0 +1,42 @@
+{
+  "schema": "uos.ev02.harness-independent-probes.v1",
+  "rows": [
+    {
+      "case": "normal",
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed": 0.046681880950927734,
+      "stdout_bytes": 3,
+      "stderr_bytes": 454
+    },
+    {
+      "case": "closed-streams-before-exit",
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed": 0.7485458850860596,
+      "stdout_bytes": 0,
+      "stderr_bytes": 454,
+      "deadline": 0.1,
+      "deadline_bypassed": true
+    },
+    {
+      "case": "descendant-writer",
+      "termination": { "kind": "timeout" },
+      "elapsed": 0.11409807205200195,
+      "stdout_bytes": 0,
+      "stderr_bytes": 454,
+      "fd_before": 6,
+      "fd_after": 8,
+      "fd_growth": 2,
+      "marker_absent_at_return": true,
+      "descendant_effect_after_return": true
+    },
+    {
+      "case": "combined-stream-size",
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed": 0.051912784576416016,
+      "stdout_bytes": 800000,
+      "stderr_bytes": 800454
+    }
+  ],
+  "authority": "NONE",
+  "source_prefix_sha256": "cc380eb1f95670afaddcf8b6142ce295176bd09f4c220384b64f143afeb1fcf5"
+}

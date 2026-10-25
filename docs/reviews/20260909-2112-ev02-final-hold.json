@@ -1,0 +1,77 @@
+{
+  "schema": "uos.ev02.final-review-disposition.v1",
+  "observed_date": "2026-09-09",
+  "candidate": "fe5cddbb70f965a63f54402a4ab6cf3bf6d0d2dc",
+  "author_evidence": "8f80accd787f66acce99d2d7339e36ec32f9f00c",
+  "verdict": "HOLD_UNRUN",
+  "authority": "NONE",
+  "candidate_approval": false,
+  "admission": "NOT_GRANTED",
+  "declared_input_count": 131,
+  "declared_regular_inputs": 127,
+  "declared_unstaged_symlinks": 4,
+  "denominator_scope": "Counts read from the strict saved author summary; supersedes the inaccurate 82 regular plus 4 symlink message. Independent source and inventory preparation occurred, but final runtime verification did not.",
+  "final_2108_runtime_cases_executed": 0,
+  "final_2108_runtime_cases_unrun": 5,
+  "stopped_sequence": {
+    "first_operation": "pre-ACTIVE governance observation",
+    "result": "HOLD",
+    "reason": "chronyc unavailable or timed out; sandbox could not connect to daemon",
+    "offset_observation": "UNAVAILABLE; no clock offset or synchronization failure inferred",
+    "guard_behavior": "Exited before all runtime cases and stopped dependent operations",
+    "receipt": "/tmp/ev02-final-sequence-2108-pre-active.json",
+    "receipt_sha256": "b7f5b0791ffdee6d93145c8bb08345e17f3001e6ee16a2e47194cb81b171440e"
+  },
+  "automatic_safety_interruption": "Parent coordinator reported automatic classification after the stopped sequence and prohibited retry, rephrasing, further probes, test execution, network and source changes. No such retry or new runtime case occurred. Subsequent work is saved-record/source reading and explicitly authorized governance-only archival/completion.",
+  "static_unresolved_concern": {
+    "status": "STATIC_ONLY_UNTESTED",
+    "description": "verify_staged_manifest iterates recorded regular files and checks their bytes, but does not compare directory entry sets or require UNSTAGED paths to remain absent. The observer enumerates those directories. Whether an additional staged directory entry changes observation while the verifier accepts remains untested.",
+    "source_lines": [
+      "tools/ev02_governance/run_checks.ml:246",
+      "tools/ev02_governance/run_checks.ml:296",
+      "tools/ev02_governance/run_checks.ml:298",
+      "tools/ev02_governance/directive_mapping_gate.ml:56",
+      "tools/ev02_governance/directive_mapping_gate.ml:225"
+    ],
+    "not_claimed": "No reproduced final-candidate tamper bypass or new passing control"
+  },
+  "saved_bindings": [
+    {
+      "path": "/tmp/ev02-final-independent-2105/bindings.json",
+      "sha256": "30fd58eeffaecce25575fdf0f5ddc0fcb1d45fa0f847379581c16a9cd4e94529"
+    },
+    {
+      "path": "/tmp/ev02-final-independent-2105/candidate-inventory-reference.json",
+      "sha256": "43c1af4d2f5dde12fd6ea73e814a09407d7969e958de318342cd7a75d31f3e6c"
+    },
+    {
+      "path": "/tmp/ev02-governance-harness-2130/summary.json",
+      "sha256": "0bc342858f14208a7a68bcc9a6d0162c2cdc48f32ffd975ca003e0e657749fc9"
+    }
+  ],
+  "authority_for_archival_only": {
+    "plan": "uos/ev02-successor-review/20260909",
+    "task": "REVIEW",
+    "worker": "codex-ev02-successor-review",
+    "attempt": 1,
+    "active_observation": "Parent-observed ACTIVE_PASS 2026-09-09T21:11:52Z",
+    "active_artifact": "/tmp/ev02-disposition-active-2112-tool.json",
+    "active_artifact_kind": "Unsigned tool transcript copy, not native invocation receipt",
+    "assessment_sha256": "a05e9a580d75401917d7300619de3dbaa6cca40f34cb154db60678f56d871bef",
+    "workspace_epoch": 2,
+    "workspace_fence_receipt": "/tmp/ev02-disposition-fence-2112.json",
+    "coordinator_checked_boot_us": 70659800000
+  },
+  "prior_observation_limits": [
+    "Earlier 20:36 source1e2 lifecycle observations remain actual observations after the parent120s heartbeat freshness window; no retroactive authority or final-source parity is asserted.",
+    "The earlier batch continued only private staging after a source-mismatch ACTIVE HOLD. That lapse remains preserved in da8482322281694c8febb7af3027e30d99b7b2c7.",
+    "No earlier component count replaces final fe5c runtime verification."
+  ],
+  "remaining_holds": [
+    "Final independent runtime review UNRUN",
+    "Static directory-set integrity concern unresolved",
+    "Four symlink inputs explicitly UNSTAGED_HOLD",
+    "Historical lineage and sovereign semantic coverage unresolved",
+    "No full TOML compliance, complete release closure, whole EV2 approval or admission"
+  ]
+}
