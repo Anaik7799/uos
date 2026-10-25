@@ -22,7 +22,7 @@ async function check(name,path,expected,options={}) {
 (async()=>{
  try {
  const failureMode=process.argv.includes('--unavailable');
- if(failureMode){for(const page of ['fmea','verify']){const item=await check('unavailable '+page,'/mini-app/api/data',200,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({init_data:good,path:'/mini-app/'+page})});const payload=JSON.parse(item.body);if(payload.status!=='unavailable'||Object.keys(payload.fields).length!==0)throw Error('backend failure disguised '+page);}fs.writeFileSync(out+'/http-failures.json',JSON.stringify({status:'PASS_BACKEND_REFUSALS',observed_at:new Date().toISOString(),rows},null,2));console.log({status:'PASS_BACKEND_REFUSALS',checks:rows.length});return;}
+ if(failureMode){for(const page of ['fmea','verify','containers']){const item=await check('unavailable '+page,'/mini-app/api/data',200,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({init_data:good,path:'/mini-app/'+page})});const payload=JSON.parse(item.body);if(payload.status!=='unavailable'||Object.keys(payload.fields).length!==0)throw Error('backend failure disguised '+page);}fs.writeFileSync(out+'/http-failures.json',JSON.stringify({status:'PASS_BACKEND_REFUSALS',observed_at:new Date().toISOString(),rows},null,2));console.log({status:'PASS_BACKEND_REFUSALS',checks:rows.length});return;}
  const paths=['dashboard','health','alerts','immune','tasks','inference','chat','config','containers','federation','verify','fmea','telemetry','zenoh'];
  for(const p of paths){const x=await check('public '+p,'/mini-app/'+p,200);if((x.body.match(/type="checkbox"/g)||[]).length!==18)throw Error('checklist missing '+p);if(x.body.includes('All Clear')||x.body.includes('>17<'))throw Error('fake defaults '+p);}
  await check('unknown','/mini-app/does-not-exist',404);
@@ -34,6 +34,10 @@ async function check(name,path,expected,options={}) {
  const result=await check('authenticated native private task snapshot','/mini-app/api/data',200,post());
  const payload=JSON.parse(result.body);if(payload.status!=='observed'||payload.fields['Task FENCE']!=='executing (lease expired)')throw Error('native snapshot not actually observed '+result.body);
  for(const page of ['fmea','verify']){const item=await check('authenticated actual '+page+' record','/mini-app/api/data',200,post(good,'/mini-app/'+page));const value=JSON.parse(item.body),text=JSON.stringify(value.fields);if(value.status!=='observed'||!text.includes('NOT_GRANTED'))throw Error('missing actual scoped record '+page+' '+item.body);if(page==='fmea'&&(!text.includes('uos/telegram-runtime/20261001-1150')||!text.includes('RPN')))throw Error('FMEA records absent');if(page==='verify'&&(!text.includes('CHK-18-JJ')||!text.includes('UNKNOWN')||text.includes('RECORDED_PASS')))throw Error('verification evidence inflated');await check('unauthorized '+page,'/mini-app/api/data',401,post(sign(99),'/mini-app/'+page));}
+ const inventory=await check('authenticated local Podman inventory','/mini-app/api/data',200,post(good,'/mini-app/containers'));
+ const inventoryPayload=JSON.parse(inventory.body);
+ if(inventoryPayload.status!=='observed'||inventoryPayload.source!=='local_podman_cli'||!Object.hasOwn(inventoryPayload.fields,'Container count')||inventoryPayload.fields['Runtime admission']!=='NOT_GRANTED')throw Error('Podman inventory not observed');
+ await check('unauthorized containers','/mini-app/api/data',401,post(sign(99),'/mini-app/containers'));
  await check('forged signature','/mini-app/api/data',401,post(good+'0'));
  await check('wrong user','/mini-app/api/data',401,post(sign(99)));
  await check('expired identity','/mini-app/api/data',401,post(sign(42,now-301)));

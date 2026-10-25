@@ -4,6 +4,7 @@
 import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/mini_evidence
+import cepaf_gleam/telegram/mini_podman
 import cepaf_gleam/harness/telegram_fmea_reader as fmea
 import cepaf_gleam/harness/telegram_verification_reader as verification
 import cepaf_gleam/telegram/types
@@ -149,6 +150,12 @@ fn observe_verification() -> Result(api.Observation, Nil) {
   mini_evidence.verification(raw, candidate, clock()) |> result.replace_error(Nil)
 }
 
+fn observe_podman() -> Result(api.Observation, Nil) {
+  use sha <- result.try(get_env("UOS_TELEGRAM_MINI_PODMAN_SHA256"))
+  use _ <- result.try(case observer.valid_digest(sha) { True -> Ok(Nil) False -> Error(Nil) })
+  mini_podman.observe(mini_podman.live_io(sha)) |> result.replace_error(Nil)
+}
+
 pub fn observe(read: api.AuthorizedRead) -> api.Observation {
   case api.page(read) {
     types.MiniPlanning ->
@@ -158,6 +165,8 @@ pub fn observe(read: api.AuthorizedRead) -> api.Observation {
       observe_fmea() |> result.unwrap(api.Unavailable("fmea_observation_failed"))
     types.MiniVerification ->
       observe_verification() |> result.unwrap(api.Unavailable("verification_observation_failed"))
+    types.MiniPodman ->
+      observe_podman() |> result.unwrap(api.Unavailable("podman_observation_failed"))
     types.MiniDashboard
     | types.MiniHealthGrid
     | types.MiniCockpit
@@ -165,7 +174,6 @@ pub fn observe(read: api.AuthorizedRead) -> api.Observation {
     | types.MiniInference
     | types.MiniConversation
     | types.MiniConfig
-    | types.MiniPodman
     | types.MiniFederation
     | types.MiniTelemetry
     | types.MiniZenohBrowser -> api.Unavailable("backend_not_integrated")

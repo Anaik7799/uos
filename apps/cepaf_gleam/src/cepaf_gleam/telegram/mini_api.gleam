@@ -200,6 +200,8 @@ fn error_response(status: Int, code: String) -> response.Response(String) {
 
 fn detail_field(key: String) -> Bool {
   string.starts_with(key, "Assessment ") || string.starts_with(key, "CHK-")
+  || { string.starts_with(key, "Container ") && key != "Container count" }
+  || { string.starts_with(key, "Image ") && key != "Image references" }
 }
 
 fn render_observation(
