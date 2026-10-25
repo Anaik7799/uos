@@ -101,7 +101,7 @@ let portfolio path =
   let records=List.map (check_record s) xs in
   require (records<>[]) "empty portfolio";
   bytes,records
-let run_audit ?active ?reclaim ?reclaim_set ?plan_id path selected =
+let run_audit ?active ?reclaim ?reclaim_set ?plan_id ?selection_review path selected =
   ignore (check_package ());
   let timer=Mtime_clock.counter () and wall_start=Unix.gettimeofday () in
   let raw,records=portfolio path in
@@ -131,7 +131,33 @@ let run_audit ?active ?reclaim ?reclaim_set ?plan_id path selected =
         | None -> None
   in
   let ranking_records=Option.fold ~none:records ~some:snd initial_reclaim in
-  let report=Checker.audit ~root ~now ranking_records in
+  let original_report=Checker.audit ~root ~now ranking_records in
+  let reviewed = match selection_review, selected with
+    | None, _ -> None
+    | Some review_path, Some task ->
+        require(active=None && reclaim=None && reclaim_set=None)
+          "reviewed selection cannot combine active or reclaim modes";
+        require(String.starts_with ~prefix:"governance/planning/" review_path)
+          "selection review must be a governance planning artifact";
+        let review_bytes=Bounded.evidence ~root review_path in
+        require(String.length review_bytes<=32768) "selection review exceeds 32KiB";
+        let review=Bounded.json_text review_bytes in unique review;
+        let proof_path=text "review_evidence_path" review in
+        require(String.starts_with ~prefix:"governance/planning/" proof_path)
+          "selection review proof must be a governance planning artifact";
+        let proof_bytes=Bounded.evidence ~root proof_path in
+        require(String.length proof_bytes<=65536) "selection proof exceeds 64KiB";
+        let report=Reviewed_selection.apply ~now ~raw ~records ~selected:task
+          ~report:original_report ~review ~proof:proof_bytes in
+        Some(report,review_path,review_bytes,review,proof_path,proof_bytes)
+    | Some _, None -> raise(Invalid "reviewed selection requires task")
+  in
+  let report=match reviewed with None->original_report | Some(r,_,_,_,_,_)->r in
+  let verify_review ended =
+    Option.iter(fun(_,rp,rb,r,pp,pb)->
+      Reviewed_selection.verify_again ~root ~now:ended ~review_path:rp
+        ~review_bytes:rb ~proof_path:pp ~proof_bytes:pb ~review:r) reviewed
+  in
   let findings=ref report.findings in
   let live_observation=ref None in
   let live_info=match selected with
@@ -173,6 +199,7 @@ let run_audit ?active ?reclaim ?reclaim_set ?plan_id path selected =
   Option.iter (fun live->findings:= !findings @ Checker.coherence ?reclaim ?reclaim_set ~now_ns:final_ns records live)
     !live_observation;
   findings:= !findings @ Checker.final_time_findings ~now:ended records;
+  verify_review ended;
   findings:=List.sort_uniq compare !findings;
   let elapsed=Mtime.Span.to_float_ns (Mtime_clock.count timer) /. 1e9 in
   Host_clock.consistent ~wall_start ~elapsed ~wall_end:(Unix.gettimeofday ());
@@ -212,6 +239,16 @@ let run_audit ?active ?reclaim ?reclaim_set ?plan_id path selected =
     "observed_at",`String now;"completed_at",`String ended;"elapsed_monotonic_seconds",`Float elapsed;
     "clock_start",Host_clock.to_json clock;"clock_end",Host_clock.to_json clock_end;
     "assessment_sha256",`String (Bounded.sha256 raw);
+    "selection_review",(match reviewed with
+      | None -> `Null
+      | Some(_,path,bytes,review,proof_path,proof_bytes) -> `Assoc [
+          "path",`String path;"sha256",`String(Bounded.sha256 bytes);
+          "proof_path",`String proof_path;"proof_sha256",`String(Bounded.sha256 proof_bytes);
+          "selected_task",field "selected_task" review;
+          "valid_until",field "valid_until" review;
+          "reviewer_authenticated",`Bool false;
+          "scope",`String "Exact-byte independent review record; cooperative local provenance; no effect authority"]);
+
     "evidence_files_checked",`Int (List.length report.evidence);
     "sa_plan",live_info;"order",Checker.order_json report.ranked;
     "findings",Checker.findings_json !findings;
@@ -265,8 +302,10 @@ let () =
     match Array.to_list Sys.argv with
     | [_;"--all"] ->
         let base=selftest () and adversarial=Adversarial.run () in
+        let reviewed_selection=Reviewed_selection_test.run () in
         let package=check_package () in
         print_json (`Assoc ["status",`String "PASS";"authority",`String "NONE";
+          "reviewed_selection_checks",`Int reviewed_selection;
           "baseline_checks",`Int base;"adversarial_checks",`Int adversarial;
           "independent_dag_scenarios",`Int 32768;"package",package;
           "runtime_admission",`String "NOT_GRANTED";"live_agent_tests",`String "UNRUN"])
@@ -278,6 +317,8 @@ let () =
     | [_;"--audit";path] -> run_audit path None
     | [_;"--receipt";path] -> verify_receipt path
     | [_;"--preflight";path;task] -> run_audit path (Some task)
+    | [_;"--preflight-reviewed";path;task;review] ->
+        run_audit ~selection_review:review path (Some task)
     | [_;"--reclaim-preflight";path;task;worker;attempt;lease] ->
         run_audit ~reclaim:(task,worker,int_of_string attempt,Int64.of_string lease) path (Some task)
     | [_;"--reclaim-set-preflight";path;task;raw_bindings] ->
@@ -313,7 +354,7 @@ let () =
             "effective_class",`String ("P"^string_of_int r.effective_class);
             "effective_score",`Int r.effective_score;
             "origins",`List (List.map (fun s->`String s) r.origins)]) ranked)])
-    | _ -> prerr_endline "Usage: risk-priority-check --all | --selftest | --adversarial | --package | --record FILE | --rank FILE | --audit PORTFOLIO | --preflight PORTFOLIO TASK | --reclaim-preflight PORTFOLIO TASK WORKER PREVIOUS_ATTEMPT PREVIOUS_LEASE_NS | --reclaim-set-preflight PORTFOLIO TASK BINDINGS_JSON | --reclaim-metadata-observe PORTFOLIO BINDINGS_JSON | --active-check PORTFOLIO TASK WORKER ATTEMPT | --plan PLAN | --receipt FILE";exit 2
+    | _ -> prerr_endline "Usage: risk-priority-check --all | --selftest | --adversarial | --package | --record FILE | --rank FILE | --audit PORTFOLIO | --preflight PORTFOLIO TASK | --preflight-reviewed PORTFOLIO TASK REVIEW_FILE | --reclaim-preflight PORTFOLIO TASK WORKER PREVIOUS_ATTEMPT PREVIOUS_LEASE_NS | --reclaim-set-preflight PORTFOLIO TASK BINDINGS_JSON | --reclaim-metadata-observe PORTFOLIO BINDINGS_JSON | --active-check PORTFOLIO TASK WORKER ATTEMPT | --plan PLAN | --receipt FILE";exit 2
   with
   | Invalid message -> print_json (`Assoc ["status",`String "HOLD";"authority",`String "NONE";
       "rule",`String "RP-INVALID";"detail",`String message]);exit 1
