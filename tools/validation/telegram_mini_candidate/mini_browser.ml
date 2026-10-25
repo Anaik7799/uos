@@ -133,6 +133,11 @@ let () =
    let rec await_posts count n=if !posts>=count && String.starts_with ~prefix:"Observed at "(text page "#mini-status") then ()
      else if n=0 then failwith"polling did not query"else(Eio.Time.sleep env#clock 0.05;await_posts count(n-1))in
    await_posts(first_posts+2)100;
+   let before_manual= !posts in
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");
+   await_posts(before_manual+1)100;
+   Eio.Time.sleep env#clock 2.3;
+   require(!posts=before_manual+2)"manual refresh left a duplicate polling timer";
    Playwright.Locator.click ~timeout:2000.(loc page "#mini-live");
    let stopped= !posts in Eio.Time.sleep env#clock 2.3;
    require(!posts=stopped)"stop left polling active";
@@ -152,7 +157,7 @@ let () =
    let failed_posts= !posts in Eio.Time.sleep env#clock 2.3;
    require(!posts=failed_posts)"failed request left polling active";
    save(out^"/zenoh-interactions.json")(Yojson.Safe.pretty_to_string(`Assoc[
-     "status",s"PASS";"selection",`Bool true;"polling",`Bool true;"manual_stop",`Bool true;
+     "status",s"PASS";"selection",`Bool true;"polling",`Bool true;"manual_stop",`Bool true;"manual_refresh_single_timer",`Bool true;
      "five_minute_stop",`Bool true;"literal_payload",`Bool true;"network_failure_stops",`Bool true;"posts",`Int !posts]));
  );
  for n=1 to 6 do Playwright.Locator.click ~timeout:1000.(loc page(Printf.sprintf"section details:nth-of-type(%d) summary"n))done;
