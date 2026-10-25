@@ -3,7 +3,7 @@
   "plan": "uos/full-merge/20261025-0638",
   "task": "G3_AUTHORITY",
   "source_only": true,
-  "status": "VERIFIED_PENDING_INDEPENDENT_REVIEW",
+  "status": "MERGED_AND_UPLOADED",
   "groups": [
     {
       "group": "C1",
@@ -36,5 +36,30 @@
     "No runtime release or global admission",
     "Same-UID hostile filesystem changes are not proven safe by private-stage checks",
     "Other branch groups G4-G8 remain"
-  ]
+  ],
+  "completion": {
+    "at": "2026-10-25T09:06:53.453Z",
+    "plan": "uos/full-merge/20261025-0638",
+    "task": "G3_AUTHORITY",
+    "candidate": "54888bd6de7bcb3dd0fe1117e75852e79487617a",
+    "base": "a7a8d3682bf123cb5b15b72e38d9718eb5e9b520",
+    "integration_epoch": 5,
+    "source_only": true,
+    "github_verified": true,
+    "refs": {
+      "main": "54888bd6de7bcb3dd0fe1117e75852e79487617a",
+      "main@origin": "54888bd6de7bcb3dd0fe1117e75852e79487617a"
+    },
+    "paths": 17,
+    "new_commits": 7,
+    "uploaded_commits_since_original_origin": 236,
+    "agy_review": "19f57437-5ec2-458a-9943-5502055f16ff",
+    "checks": {
+      "swarm": 66,
+      "telegram": 62,
+      "source_bindings": 1617,
+      "journal": "10/10 mechanical"
+    },
+    "remaining": "G4-G8, Telegram runtime10 and admission8 task records; production remains HOLD"
+  }
 }

@@ -1,0 +1,114 @@
+{
+  "schema": "uos.telegram.withdrawal-checkpoint.v1",
+  "goal_met": false,
+  "candidate": "75c500c3633a78bb171e721592bd75a60b2be82d",
+  "accepted_parent": "ef2db89df99ee67632d531f2bff4d4cf88273ebd",
+  "bookmark": "integration/telegram-withdrawal-20261024-2315",
+  "state": "SCOPED_DEVELOPMENT_VERIFIED",
+  "authority": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 11,
+    "coordinator_epoch": 11,
+    "workspace_epoch": 2
+  },
+  "implemented": [
+    "Requester-scoped /approval withdraw for pending cancel_job_lease input",
+    "Atomic original terminal state, query acknowledgement/outbox and original reservation reclamation",
+    "Exact persisted input, recipient, generation and no-existing-effect assertions",
+    "Identity-preserving withdrawal codec subtype and duplicate-update replay",
+    "Withdrawal without usable signing profile under current service authority"
+  ],
+  "tests": {
+    "gleam_distinct": 131,
+    "gleam_receipt": "withdrawal-frozen-scoped-regression.json",
+    "native_suites": 12,
+    "native_failed": 0,
+    "native_skipped": 0,
+    "native_receipt": "withdrawal-frozen-native.json",
+    "native_seconds": 45,
+    "service_native_scenarios": 14,
+    "scenarios_included_in_native": true,
+    "withdrawal_flow_http_replies": 5,
+    "native_job_state_after": "executing_unchanged",
+    "reserved_rows_after": 0,
+    "reserved_receipts_after": 0,
+    "mutants_killed": 2,
+    "mutants_survived": 0,
+    "mutants_void_final": 0,
+    "mutation_receipt": "withdrawal-mutations-final.json",
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "scope": "Isolated native stores, OTP actor and real local HTTP fixtures; not live Telegram or full managed restart"
+  },
+  "reviews": {
+    "code_job": {
+      "state": "discarded",
+      "reason": "180-second timeout with empty response; no code accepted"
+    },
+    "independent": {
+      "model": "gemini-4-argon-high",
+      "conversation": "9f9b40c9-d4a7-4234-a94e-b05a26a0ff79",
+      "seconds": 27.742140603,
+      "verdict": "PASS",
+      "findings": [],
+      "receipt": "agy-review-raw.json"
+    },
+    "all_jobs_terminal": true
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2307-withdrawal/artifact-manifest.json",
+    "source_pairs": 157,
+    "files": 1279,
+    "untraversed_symlinks": 123,
+    "native_worker_unchanged": true
+  },
+  "retained_failures": [
+    "AGY empty-response timeout",
+    "withdrawal-store-first.json (codec refused authenticated withdrawal identity)",
+    "withdrawal-mutation-reservation.json initial stdout-only classifier VOID; exact named failure in stderr supports corrected KILLED"
+  ],
+  "excluded_acceptance": [
+    "withdrawal-native-first.json ran while a subsequent build changed artifacts; frozen native receipt used instead"
+  ],
+  "evidence_root": "var/recovery-runtime/20261024-2307-withdrawal",
+  "risk": {
+    "criticality": "Critical",
+    "mitigation": "Same requester and exact input; Pending/no-effect CAS; terminal replay; one atomic reservation release; existing uncertainty containment",
+    "residual": "Dedicated withdrawal uncertain-commit fault injection not separately run; shared uncertain-commit service checks passed; full managed restart and live acceptance remain open"
+  },
+  "main": {
+    "commit": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+    "merged": false
+  },
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "contribution": "Users can abandon their unexecuted controlled request through Telegram without leaving executable approval state or reserved capacity.",
+  "remaining": [
+    "Managed restart across expired or rotated action profiles",
+    "Remaining command backends across adopted 77 literals",
+    "13 remaining Mini App backends and browser acceptance",
+    "Seven media types and gateway",
+    "Provider availability and authorized live Telegram acceptance",
+    "Independent release/global admission and stabilized applicable main integration"
+  ],
+  "observed_at": "2026-10-24T23:16:47.645Z",
+  "dashboard": {
+    "http_status": 200,
+    "observed_at": "2026-10-24T23:16:59.193Z",
+    "snapshot_updated_at": "2026-10-24T23:13:40Z",
+    "producer": {
+      "job": "uos/agy-operations/20261024-0642/live-dashboard23",
+      "session": "dashboard-observer-20261024-0730"
+    },
+    "url": "http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html"
+  }
+}

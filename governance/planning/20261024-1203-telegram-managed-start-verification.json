@@ -1,0 +1,52 @@
+{
+  "schema": "uos.telegram.managed-start.verification.v1",
+  "observed_at": "2026-10-24T12:03:12.577Z",
+  "candidate": "b02cbd0a5c6088f110bfa74a822788ef2c1e437c",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "SERVICE_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 12,
+    "state": "executing"
+  },
+  "status": "SCOPED_RUNTIME_PASS_INDEPENDENT_REVIEW_HOLD",
+  "tests": {
+    "unit_service_fault": 157,
+    "staged_e2e": 12,
+    "full_telegram_acceptance": false
+  },
+  "evidence": [
+    "var/recovery-runtime/20261024-1154-managed-start/managed-start-first.json",
+    "var/recovery-runtime/20261024-1154-managed-start/suite-unit-final.json",
+    "var/recovery-runtime/20261024-1154-managed-start/suite-e2e.json",
+    "var/recovery-runtime/20261024-1154-managed-start/artifact-manifest.json",
+    "var/recovery-runtime/20261024-1154-managed-start/compile-corrections.json",
+    "var/recovery-runtime/20261024-1154-managed-start/agy-code.json"
+  ],
+  "changes": [
+    "Managed entry binds actual unit, strict canonical control registration, persisted writer, current Sa-plan task and runtime coordinator authority before starting workers",
+    "Single-use writer permit is atomically consumed; duplicates refused",
+    "Control file reads bounded to 262144 bytes through existing safe file adapter",
+    "Bounded monitored startup query and confirmed shutdown on Hold"
+  ],
+  "remaining": [
+    "Runtime lease acquisition/renewal and proactive suspension",
+    "Recovery registration transition and managed successor acceptance",
+    "Operational entrypoint migration and exact production unit profile",
+    "All command, Mini App, media/gateway and full live/browser acceptance",
+    "Independent release/global admission and applicable main integration"
+  ],
+  "independent_review": {
+    "state": "HOLD",
+    "conversation_id": "5e635d83-7708-4ff9-8dba-a59cfc84fa23",
+    "evidence": "var/recovery-runtime/20261024-1154-managed-start/agy-review.json",
+    "findings": {
+      "high": 2,
+      "medium": 1,
+      "low": 1
+    }
+  },
+  "goal_met": false,
+  "main_changed": false,
+  "runtime_admission": false
+}

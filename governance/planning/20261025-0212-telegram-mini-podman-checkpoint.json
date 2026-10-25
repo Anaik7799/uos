@@ -1,0 +1,117 @@
+{
+  "schema": "uos.telegram.mini-podman.checkpoint.v1",
+  "observed_at": "2026-10-25T02:12:05.576Z",
+  "candidate": "a17f582dbfb0c68cb9f134c5530a0add914a01d8",
+  "parent": "50ce74fff6c87161077f2f4874562503af719137",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "canonical_task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "MINI_API_IMPL",
+    "attempt": 1,
+    "state": "executing"
+  },
+  "scope": [
+    "Authenticated local Podman inventory read",
+    "Pinned executable and fixed read-only argv under bounded guardian",
+    "Whole-observation monotonic deadline and strict row validation",
+    "Mobile identifier wrapping with full-page PNG width regression"
+  ],
+  "test_counts": {
+    "unit": 29,
+    "http": 38,
+    "browser": 10,
+    "state_change_scenarios": 1,
+    "state_change_observations": 4,
+    "distinct": 78,
+    "full_system_suite": false
+  },
+  "review": {
+    "ack": true,
+    "candidate": "a17f582dbfb0c68cb9f134c5530a0add914a01d8",
+    "parent": "39249d526e75a8fca9ed24a9859966b2dd688305",
+    "verdict": "PASS",
+    "limitations": [
+      "Full Telegram end-to-end platform acceptance and global/production runtime admission are NOT claimed (Runtime admission remains NOT_GRANTED; browser harness uses synthetic signed fixtures).",
+      "Document-level full-page PNG IHDR width equality verifies absence of page-level horizontal expansion at 1x scale factor, rather than per-element scrollWidth/clientWidth if internal overflow-x clipping/scrolling were introduced in future CSS.",
+      "Container mutating actions and the remaining 10 Mini App backends remain unintegrated (backend_not_integrated), and C0/C1 control character safety beyond NUL/LF/CR/TAB/ESC/DEL continues to rely on plain-text DOM rendering."
+    ],
+    "conversation": "aea9923f-b98a-4454-abca-974446ad1c78",
+    "seconds": 76.032468043,
+    "observed_at": "2026-10-25T02:11:17.421Z",
+    "own_visual_review": "PASS: full mobile screenshot inspected, identifiers wrap with no clipping",
+    "parent_review": "372bc279-a798-4891-a172-8066c18de27d",
+    "scope": "Scoped development only"
+  },
+  "source_matches": 34,
+  "evidence_root": "var/recovery-runtime/20261025-0206-mini-podman-build4",
+  "backend_scope": "Current local rootless service-account namespace; not fleet health; read-only API, not container actions",
+  "coverage": {
+    "commands": {
+      "reachable": 32,
+      "total": 77,
+      "remaining": 45
+    },
+    "mini_read_paths": {
+      "available": 4,
+      "total": 14,
+      "paths": [
+        "tasks",
+        "fmea",
+        "verify",
+        "containers"
+      ],
+      "remaining": 10,
+      "qualification": "Scoped read paths; full page actions remain incomplete"
+    }
+  },
+  "remaining_backends": [
+    "dashboard",
+    "health",
+    "alerts",
+    "immune",
+    "inference",
+    "chat",
+    "config",
+    "federation",
+    "telemetry",
+    "zenoh"
+  ],
+  "remaining": [
+    "Full Mini interactions and candidate gate execution",
+    "45command literals",
+    "7media types plus gateway",
+    "Working privacy-compliant free model route",
+    "Authorized live Telegram recipient and real WebApp acceptance",
+    "Integrated release/admission/main"
+  ],
+  "main_merged": false,
+  "production_release": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "goal_met": false,
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "resolved_hold": {
+    "parent": "39249d526e75a8fca9ed24a9859966b2dd688305",
+    "defect": "Unbroken container/image identifiers expanded390px viewport to636px",
+    "resolution": "Actual wrapped390px screenshot, content preserved, all10browser scenarios enforce PNG width equals viewport"
+  },
+  "residuals": [
+    "Full Telegram end-to-end platform acceptance and global/production runtime admission are NOT claimed (Runtime admission remains NOT_GRANTED; browser harness uses synthetic signed fixtures).",
+    "Document-level full-page PNG IHDR width equality verifies absence of page-level horizontal expansion at 1x scale factor, rather than per-element scrollWidth/clientWidth if internal overflow-x clipping/scrolling were introduced in future CSS.",
+    "Container mutating actions and the remaining 10 Mini App backends remain unintegrated (backend_not_integrated), and C0/C1 control character safety beyond NUL/LF/CR/TAB/ESC/DEL continues to rely on plain-text DOM rendering."
+  ],
+  "journal": "docs/journal/20261025-0213-telegram-mini-podman.md",
+  "journal_checks": {
+    "mechanical": 10,
+    "total": 10,
+    "seven_engines_executed": false
+  },
+  "task_observation": "var/recovery-runtime/20261025-0206-mini-podman-build4/task-status.json"
+}

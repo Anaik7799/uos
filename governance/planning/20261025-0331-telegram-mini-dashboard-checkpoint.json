@@ -1,0 +1,171 @@
+{
+  "schema": "uos.telegram.mini-dashboard.checkpoint.v1",
+  "observed_at": "2026-10-25T03:32:21.577Z",
+  "candidate": "bfc2d8bcc561a9760f47fcaaf02f4f89a26cf985",
+  "parent": "103ebc28b3ec04655440618926a9f97739ad9940",
+  "feature_candidate": "d40ba96780bee64e7f6ad8207481e0daa4015bcb",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "canonical_task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "MINI_API_IMPL",
+    "attempt": 2,
+    "state": "executing"
+  },
+  "scope": [
+    "Actual local Podman inventory counts",
+    "Readonly coordinator registered-session counts and ledger identity",
+    "Fixed HTTP reachability observations",
+    "Bounded local BEAM VM counters",
+    "Partial failure and unknown health remain explicit"
+  ],
+  "test_counts": {
+    "unit": 76,
+    "http": 46,
+    "browser": 10,
+    "state_change": 1,
+    "native_deadline_recovery": 1
+  },
+  "distinct_tests": 134,
+  "source_matches": 69,
+  "evidence_root": "var/recovery-runtime/20261025-0332-mini-dashboard-build5",
+  "evidence_manifest": "var/recovery-runtime/20261025-0332-mini-dashboard-build5/evidence-manifest.json",
+  "test_summary": "var/recovery-runtime/20261025-0332-mini-dashboard-build5/test-summary.json",
+  "reuse": {
+    "manifest": "var/recovery-runtime/20261025-0318-mini-dashboard/reuse-manifest.json",
+    "count": 6
+  },
+  "review": {
+    "full": {
+      "ack": true,
+      "candidate": "d40ba96780bee64e7f6ad8207481e0daa4015bcb",
+      "verdict": "PASS",
+      "findings": [
+        "mini_dashboard.observe enforces a 4500ms whole-read monotonic deadline with non-regression checks (before >= last, after >= before, after < deadline) and a >=100ms minimum remaining budget before each sequential step: podman (1200ms cap), coordinator peers (1500ms cap), four fixed HTTP probes matrix/cockpit/zenoh/peer_runtime (300ms cap each), and local BEAM metrics (100ms cap).",
+        "Global health is hardcoded to UNKNOWN and Runtime admission to NOT_GRANTED; private container rows and session payloads are stripped so only bounded summary counts, sequence, digest, HTTP status classes, and VM counters (<=100 fields, keys <=128B, values <=2048B) are projected.",
+        "Partial failures are explicitly reported in Observation completeness and per-source fallback fields, while failure of all six external operational sources (Podman, coordinator, and four HTTP probes) returns Unavailable(\"dashboard_sources_unavailable\") even when local BEAM VM metrics succeed.",
+        "mini_podman.observe_with_budget (100..4000ms) and telegram_coordination_reader.observe_with_budget (100..3000ms) enforce caller-supplied budgets down to obs_guardian.exe while preserving existing default 4000ms and 3000ms entry points.",
+        "podman_counts enforces local_podman_cli provenance, 10s timestamp freshness, canonical integer formatting in 0..128, and running <= total; peers_fields enforces <=32768B size, uos.telegram.coordination.v1 peers envelope, NOT_GRANTED admission, valid SHA-256 journal digest, total_sessions in 0..256, and exact session list length matching min(total, 20)."
+      ],
+      "limitations": [
+        "BEAM VM metrics (beam_metrics_ffi:snapshot/0) sample only the serving BEAM node sequentially rather than atomically across a fleet, truncate memory and cumulative I/O counters via integer division by 1048576 (MiB), and do not catch potential FFI exceptions inside dashboard_io.",
+        "Podman dashboard observation requires three sequential CLI invocations (ps, images, info) via obs_guardian.exe to complete within the single shared 1200ms step budget with >=100ms remaining before each sub-query, and reflects only the local service-account inventory.",
+        "Coordinator observation reflects only the read-only session ledger snapshot (capped at 256 total sessions and 20 displayed records) without verifying process liveness, and HTTP probes inspect status codes (200..599) on four fixed targets without following redirects or verifying application health.",
+        "Reused dependencies (telegram_status_probe.erl, telegram_coordination_report.gleam, uos_swarm/session_store.gleam, mini_api.gleam) were not included inline in this prompt and are relied upon via the cited candidate SHA-256 evidence, and full browser/regression and failure-recovery runs were still in progress at review time."
+      ],
+      "conversation": "71219936-93a7-40a7-b592-22d411d847cb",
+      "seconds": 53.581742735
+    },
+    "delta": {
+      "ack": true,
+      "candidate": "bfc2d8bcc561a9760f47fcaaf02f4f89a26cf985",
+      "verdict": "PASS",
+      "findings": [
+        "beam_metrics_ffi:snapshot_checked/1 enforces an integer budget in 1..100ms (returning {error, <<\"invalid_metrics_budget\">>} otherwise) and delegates execution to uos_openrouter_ffi:bounded_call/2 with child process monitoring, deadline guardian kill/reap, and inner try/catch exception handling that maps faults to {error, <<\"beam_metrics_unavailable\">>} while preserving snapshot/0 unchanged.",
+        "mini_dashboard.Io.metrics and mini_runtime.dashboard_metrics now bind to beam_metrics_ffi:snapshot_checked/1 with a Result(BeamMetrics, String) return type, and mini_dashboard.collect invokes io.metrics through step(io, t3, deadline, 100, io.metrics) under the whole-read 4500ms monotonic deadline and >=100ms remaining-budget gate.",
+        "mini_dashboard.metrics_part composes Result(BeamMetrics, String) with metrics_fields via result.try so FFI exceptions, worker timeouts, and counter validation failures all fail closed to Part([#(\"VM observation\", \"Unavailable; counters unknown\")], False) and mark Observation completeness as Partial when other operational sources succeed.",
+        "mini_dashboard_test.gleam verifies snapshot_checked budget bounds (0 and 101 refused with Error(\"invalid_metrics_budget\"), 100 succeeding), 100ms step budget propagation, and fail-closed projection when the metrics callback returns Error.",
+        "Prior parent guarantees in mini_dashboard.gleam and mini_runtime.gleam remain intact: Global health stays UNKNOWN, Runtime admission stays NOT_GRANTED, private container and session fields are stripped, and all six external operational sources failing still returns Unavailable(\"dashboard_sources_unavailable\") even if local VM metrics succeed."
+      ],
+      "limitations": [
+        "beam_metrics_ffi:snapshot/0 still samples only the serving BEAM VM sequentially rather than atomically across a fleet and truncates memory and cumulative I/O counters via integer division by 1048576 (MiB).",
+        "Because mini_dashboard.step requires deadline - before >= 100 before invoking the reader and caps the metrics step at 100ms, int.min(100, deadline - before) always supplies 100ms during normal dashboard collection while 1..99ms budgets in snapshot_checked/1 are reachable only by direct callers.",
+        "Podman observation still requires three sequential local CLI invocations within the shared 1200ms step budget, coordinator observation reflects only the read-only session ledger snapshot (capped at 256 total and 20 shown) without process liveness verification, and HTTP probes inspect status codes (200..599) on four fixed targets without following redirects.",
+        "Unchanged sibling modules (mini_podman.gleam, telegram_coordination_reader.gleam, telegram_status_probe.erl) are relied upon from the parent review, and the full 10-page browser rerun was still underway at review time."
+      ],
+      "conversation": "a13fef69-ced9-42d3-aaf7-581ac70f107a",
+      "seconds": 30.945470329
+    },
+    "conditions_resolved": [
+      "Final10Chromium scenarios passed",
+      "Actual failed sources and recovery passedHTTP",
+      "Actual2->3->2containercount with ownedfixturecleanup",
+      "Boundednativecoordinator refusal/recovery passed",
+      "69source/test bindings match"
+    ],
+    "own_visual_inspection": "Actual390pxdashboard screenshot inspected; fields wrap, no horizontaloverflow, unknownhealth and unavailablepeer clearly visible",
+    "scope": "SCOPED_DEVELOPMENT_ONLY"
+  },
+  "journal": "docs/journal/20261025-0331-telegram-mini-dashboard.md",
+  "coverage": {
+    "mini_read_paths": {
+      "available": 7,
+      "total": 14,
+      "paths": [
+        "tasks",
+        "fmea",
+        "verify",
+        "containers",
+        "chat",
+        "zenoh",
+        "dashboard"
+      ],
+      "remaining": 7,
+      "qualification": "Scoped development read adapters, not complete page actions or application-health proof"
+    },
+    "commands": {
+      "reachable": 32,
+      "total": 77,
+      "remaining": 45
+    }
+  },
+  "remaining_backends": [
+    "health",
+    "alerts",
+    "immune",
+    "inference",
+    "config",
+    "federation",
+    "telemetry"
+  ],
+  "remaining": [
+    "Application and fleethealth verification; dashboardoverallhealthUNKNOWN",
+    "NativeZenoh subscriptions andpublishing",
+    "Allpageactions andgateexecution",
+    "45commandroutes",
+    "Sevenmedia types andgateway",
+    "Privacy-compatible freeprovider route",
+    "AuthorizedliveTelegram/WebAppacceptance",
+    "Integratedrelease/admission/main"
+  ],
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "main_merged": false,
+  "production_release": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "goal_met": false,
+  "failures": [
+    {
+      "kind": "sourcegeneration",
+      "conversation": "e97b92b7-7c5e-43c0-bf1a-ce29ed21974b",
+      "result": "180s empty SUCCESS; semanticcollectrejected;jobdiscarded;no source accepted"
+    },
+    {
+      "kind": "build",
+      "result": "Canonicaldependency lacked readonlyobserve_file;adopted exactpreviouslyreviewedb2e3 source; no writable fallback"
+    },
+    {
+      "kind": "agentqueue",
+      "result": "Two prior collected reviews lackedjobterminalization. Expiredclaims recovered anddiscarded withoutnewmodel; newclaimID/attemptassertion and immediatejobclosure operationallyverified; nativeexpiredreclaimmax_attempts issue remains."
+    }
+  ],
+  "live_observations": {
+    "containers": 2,
+    "registered_sessions": 2,
+    "peer_runtime": "unavailable_or_refused_with300msbudget",
+    "overall_health": "UNKNOWN",
+    "count_change": [
+      2,
+      3,
+      2
+    ],
+    "native_deadline_refusal_elapsed_ms": 153,
+    "native_recovery_bytes": 711
+  }
+}

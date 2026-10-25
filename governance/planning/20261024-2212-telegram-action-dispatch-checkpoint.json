@@ -1,0 +1,46 @@
+{
+  "schema": "uos.telegram.action-dispatch.checkpoint.v1",
+  "observed_at": "2026-10-24T22:12:31.692Z",
+  "candidate": "04e060e0c4345ae82c942707c05cb5e7b7ebdb23",
+  "parent": "eca2700cd37eb52a55548dda29d36e2f0096bc60",
+  "task": "COMMAND_IMPL",
+  "attempt": 10,
+  "state": "SCOPED_DEVELOPMENT_PASS",
+  "goal_met": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "tests": {
+    "gleam": 111,
+    "native_suites": 12,
+    "native_service_scenarios": 8,
+    "failed": 0,
+    "skipped": 0,
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "mutants_killed": 2,
+    "survived": 0,
+    "void": 0
+  },
+  "manifest": {
+    "source_matches": 154,
+    "files": 1255,
+    "untraversed_symlinks": 117
+  },
+  "independent_review": {
+    "conversation": "78d7e1a7-4060-4b65-b025-d15a949f5f82",
+    "verdict": "PASS",
+    "findings": [],
+    "duration_seconds": 67.174224438
+  },
+  "evidence_root": "var/recovery-runtime/20261024-2157-action-dispatch",
+  "remaining": [
+    "Asynchronous approval intent and receipt workflow",
+    "User-visible pending and unresolved outcomes",
+    "Full managed-restart with expired historical profiles",
+    "Remaining commands and MiniApp/media/gateway",
+    "Browser and authorized live Telegram acceptance",
+    "Independent release/global admission/main"
+  ]
+}

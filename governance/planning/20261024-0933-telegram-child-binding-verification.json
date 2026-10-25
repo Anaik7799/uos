@@ -1,0 +1,37 @@
+{
+  "schema": "uos.telegram.child-binding-verification.v1",
+  "observed_at": "2026-10-24T09:33:10.227Z",
+  "candidate": "9b7507b710939c86c382f873514cfad53eb055a0",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "goal_met": false,
+  "correction": "governance/planning/20261024-0940-telegram-e2e-binding-correction.json",
+  "tests": {
+    "suite": "var/recovery-runtime/20261024-0908-service-bound/suite-v3.json",
+    "passed": 107,
+    "failed": 0,
+    "environment": "Controlled HTTP fixture, real OTP, isolated native store and test systemd units; not live Telegram"
+  },
+  "binding_controls": "var/recovery-runtime/20261024-0908-service-bound/binding-controls-v3/results.json",
+  "artifact_manifest": "var/recovery-runtime/20261024-0908-service-bound/artifact-manifest-v3.json",
+  "source_reconciliation": "var/recovery-runtime/20261024-0908-service-bound/closure-recheck-v3.json",
+  "source_counts": {
+    "canonical_equal": 31,
+    "private_fault_experiment_modules": 4,
+    "unchanged_artifacts": 267
+  },
+  "review": {
+    "actual_model": "gemini-4-argon-high",
+    "conversation": "f9a8f2f1-1098-4b89-8bf1-d8c9499b473a",
+    "verdict": "PASS",
+    "scope": "test-only binding helper and callback assertions",
+    "receipt": "var/recovery-runtime/20261024-0908-service-bound/agy-binding-packet-review.json",
+    "failed_predecessor": "var/recovery-runtime/20261024-0908-service-bound/agy-binding-review-timeout.json"
+  },
+  "limitations": [
+    "10 selected on-disk modules pinned; not complete dependency hermeticity or loaded parent identity attestation",
+    "No full service, live acceptance, release, global admission or main merge",
+    "Automatic finite loop remains missing; serialization/revocation concerns now have failing baseline tests in0932 evidence"
+  ],
+  "main_changed": false,
+  "ev_ceiling": 93
+}

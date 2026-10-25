@@ -1,0 +1,43 @@
+{
+  "schema": "uos.telegram.action-service.checkpoint.v1",
+  "observed_at": "2026-10-24T21:53:37.187Z",
+  "candidate": "eca2700cd37eb52a55548dda29d36e2f0096bc60",
+  "parent": "212b058180ccf68f4ae17fd359bc1f1f983cdd1c",
+  "task": "COMMAND_IMPL",
+  "attempt": 10,
+  "state": "SCOPED_DEVELOPMENT_PASS",
+  "goal_met": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "tests": {
+    "gleam": 104,
+    "native_suites": 12,
+    "service_native_scenarios": 4,
+    "native_failed": 0,
+    "native_skipped": 0,
+    "native_reaped": 12,
+    "native_residual": 0,
+    "optional_telemetry_missing": 11,
+    "service_mutants_killed": 3,
+    "survived": 0,
+    "void": 0
+  },
+  "manifest": {
+    "source_matches": 154,
+    "files": 1250,
+    "untraversed_symlinks": 117
+  },
+  "author": "AGYee3e893b packet; Codex API adaptation, service integration and tests",
+  "independent_review": "AGY8e79d0f1 PASS no findings",
+  "evidence_root": "var/recovery-runtime/20261024-2137-action-service",
+  "remaining": [
+    "Trusted startup configuration and Telegram command dispatch",
+    "Asynchronous intent approval and signed receipt collection",
+    "Historical service recovery after expiry",
+    "Explicit persisted absence/rejection resolution",
+    "Full delivery and live acceptance",
+    "Other command/MiniApp/media/gateway scope",
+    "Independent release/global admission/main integration"
+  ]
+}

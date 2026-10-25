@@ -1,0 +1,129 @@
+{
+  "schema": "uos.telegram.mini-history.checkpoint.v1",
+  "observed_at": "2026-10-25T02:28:01.819Z",
+  "candidate": "4a8aea86e63c7ee7781a93aceeff3d294d26a991",
+  "parent": "a17f582dbfb0c68cb9f134c5530a0add914a01d8",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "canonical_task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "MINI_API_IMPL",
+    "attempt": 1,
+    "state": "executing"
+  },
+  "scope": [
+    "Authenticated scoped retained conversation history",
+    "Token-derived bot identity and initializedDBbinding",
+    "Explicit user/chat grants",
+    "Lossless2048byteUTF8fields and metadatafirst rendering"
+  ],
+  "test_counts": {
+    "unit": 41,
+    "http": 45,
+    "browser": 13,
+    "state_change": 1
+  },
+  "distinct_tests": 100,
+  "source_matches": 51,
+  "reuse": {
+    "count": 14,
+    "candidate": "71fa89ead730bca2f53cdccfe438499fb64bd57a",
+    "manifest": "var/recovery-runtime/20261025-0219-mini-history/reuse-manifest.json"
+  },
+  "review": {
+    "ack": true,
+    "candidate": "4a8aea86e63c7ee7781a93aceeff3d294d26a991",
+    "verdict": "PASS",
+    "findings": [
+      "Three-dimensional identity isolation (bot_id, chat_id, user_id) is enforced at scope resolution, store key derivation, database bot-identity row verification, and inner decoded context verification.",
+      "Bot namespace is canonically bound to the numeric prefix of UOS_TELEGRAM_MINI_BOT_TOKEN (rejecting leading zeros, non-positive IDs, and empty secrets) and cross-checked against the store's bot_identity_key row.",
+      "Server-side grants are validated (1..256 unique entries, positive user_id, valid chat_id) and checked prior to invoking fetch; absent signed chat_id only permits a private chat grant where chat_id == user_id.",
+      "Native store failure vs. empty history is cleanly distinguished: empty history requires a live positive generation, a verified matching bot-identity row, and a canonically absent context row (exists=False, version=0, empty sha256/base64), while transport or validation errors map to api.Unavailable(\"history_observation_failed\") with zero data exposure.",
+      "UTF-8 codepoint chunking preserves exact byte sequences while bounding every field value to <=2048 bytes and keys to <=128 bytes."
+    ],
+    "limitations": [
+      "Source verdict is conditional on receipt of the currently running final full browser and backend-failure test suites passing.",
+      "Review covers the provided candidate sources only; the 14 reused dependency modules and native guardian/worker binaries are assumed byte-identical to accepted candidate 71fa89ead730bca2f53cdccfe438499fb64bd57a as stated.",
+      "UOS_TELEGRAM_MINI_BOT_TOKEN and UOS_TELEGRAM_MINI_HISTORY_GRANTS are re-read from environment per history observation; same-UID environment/launcher integrity is a trusted boundary.",
+      "Telegram live runtime and global admission remain NOT_GRANTED."
+    ],
+    "conversation": "65f79209-e7cc-4b53-9a8c-07e4c7d5f8d7",
+    "seconds": 21.602161921,
+    "observed_at": "2026-10-25T02:28:00.844Z",
+    "conditions_resolved": [
+      "Final8browser+4negativebrowser+1longbrowserPASS",
+      "Final41positive/denialHTTP+4backendfailurePASS",
+      "14reusedsources hashes checked; nativeguardian/worker hashes observed matching reviewed values"
+    ],
+    "own_visual_inspection": "PASS: actual390pxlonghistory screenshot; fulltext intact; no horizontal overflow",
+    "scope": "SCOPED_DEVELOPMENT_ONLY"
+  },
+  "evidence_root": "var/recovery-runtime/20261025-0228-mini-history-build6",
+  "journal": "docs/journal/20261025-0230-telegram-mini-history.md",
+  "coverage": {
+    "mini_read_paths": {
+      "available": 5,
+      "total": 14,
+      "paths": [
+        "tasks",
+        "fmea",
+        "verify",
+        "containers",
+        "chat"
+      ],
+      "remaining": 9,
+      "qualification": "Scopedreadsonly; fullactions andliveacceptance remain"
+    },
+    "commands": {
+      "reachable": 32,
+      "total": 77,
+      "remaining": 45
+    }
+  },
+  "remaining_backends": [
+    "dashboard",
+    "health",
+    "alerts",
+    "immune",
+    "inference",
+    "config",
+    "federation",
+    "telemetry",
+    "zenoh"
+  ],
+  "remaining": [
+    "Fullpageactions and gateexecution",
+    "45commandliterals",
+    "7mediatypes andgateway",
+    "Privacy-compliant freeprovider route",
+    "Authorized liveTelegram recipient andWebAppacceptance",
+    "Integratedrelease/admission/main"
+  ],
+  "main_merged": false,
+  "production_release": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "goal_met": false,
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "failure_history": [
+    {
+      "kind": "AGYdesign",
+      "conversation": "c6cd2d23-4000-4e2c-a9aa-b7bab40d7016",
+      "result": "110secondprinttimeoutempty;discarded;noadviceaccepted"
+    },
+    {
+      "kind": "fixture",
+      "result": "Group-writable ancestor DBrefused; switchedto newprivate runtimepath without changing workerpolicy"
+    },
+    {
+      "kind": "build",
+      "result": "Two test/fixture typeerrors corrected before finalchecks"
+    }
+  ]
+}

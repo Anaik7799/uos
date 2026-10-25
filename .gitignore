@@ -135,3 +135,6 @@ toolchains/
 # Node deployment runtime archives (served dynamically via HTTP)
 ops/nodes/*/*.tar.gz
 *.tar.gz
+
+# Built validation executables are regenerated from reviewed source.
+/tools/validation/*.exe

@@ -1,0 +1,55 @@
+{
+  "schema": "uos.telegram.supervisor-lifetime.verification.v1",
+  "observed_at": "2026-10-24T11:39:03.910Z",
+  "candidate": "2585aedb6110476f842ae644d45737c4f8d26037",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "SERVICE_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 12,
+    "state": "executing"
+  },
+  "status": "SCOPED_RUNTIME_PASS_AGY_PASS_WITH_LOW_FINDINGS",
+  "tests": {
+    "unit_service_fault": 157,
+    "staged_e2e": 11,
+    "full_telegram_acceptance": false
+  },
+  "evidence": [
+    "var/recovery-runtime/20261024-1130-supervisor-lifetime/suite-unit-final.json",
+    "var/recovery-runtime/20261024-1130-supervisor-lifetime/suite-e2e.json",
+    "var/recovery-runtime/20261024-1130-supervisor-lifetime/artifact-manifest.json",
+    "var/recovery-runtime/20261024-1130-supervisor-lifetime/supervisor-death-before.json",
+    "var/recovery-runtime/20261024-1130-supervisor-lifetime/supervisor-lifetime-stop.json"
+  ],
+  "changes": [
+    "Per-instance worker subjects; no unmanaged fallback worker creation",
+    "Supervisor-owned ETS removes references on normal or abnormal termination",
+    "Bounded gen_server stop works from non-parent callers",
+    "Typed startup lookup/handoff errors trigger cleanup"
+  ],
+  "remaining": [
+    "ETS-TRANSFER creates an unexpected-message supervisor diagnostic; tree remains alive in observed tests",
+    "Durable writer-start token must be wired into actual managed startup/recovery with current-unit/control/task/runtime checks",
+    "Automatic lease renewal and proactive loss suspension",
+    "All remaining commands, Mini App, media/gateway and full live/browser acceptance",
+    "Independent release/global admission and applicable main integration"
+  ],
+  "agent_management": {
+    "authority": "Existing Sa-plan and Gleam dispatcher; no competing scheduler",
+    "single_writer": "Canonical task+workspace ownership; serialized integration",
+    "completion": "Nonempty reviewed output and candidate-bound tests; model exit success alone rejected",
+    "timeout_observation": "Two 110-second print timeouts returned empty SUCCESS. Classified incomplete, canonical jobs discarded after terminal unit observation. No final review recoverable from conversation records.",
+    "adaptation": "Current independent review uses 7417-byte lifecycle packet and bounded240second runtime; empirical change, not claim of optimal policy",
+    "current_review_job": "uos/telegram-runtime/20261001-1150/agy-supervisor-lifetime-review-20261024"
+  },
+  "goal_met": false,
+  "main_changed": false,
+  "runtime_admission": false,
+  "independent_review": {
+    "conversation_id": "55be1bd3-1191-45c0-9545-6b9affb4c9b9",
+    "verdict": "PASS",
+    "findings": 3,
+    "evidence": "var/recovery-runtime/20261024-1130-supervisor-lifetime/agy-review.json"
+  }
+}

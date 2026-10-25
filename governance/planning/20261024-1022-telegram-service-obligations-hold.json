@@ -1,0 +1,70 @@
+{
+  "observed_at": "2026-10-24T10:22:14.978Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "attempt": 9,
+  "candidate": "1b6f230f31dbfcb84f179989c34c4987e4d88883",
+  "status": "HOLD_OVERALL_SERVICE_ACCEPTANCE",
+  "actual_agy_session": "f2f34c3b-7c69-4736-8dc6-9ce70e0ef0d7",
+  "source_review": {
+    "verdict": "REJECTED_FOR_ACCEPTANCE_AND_PRODUCTION_RELEASE. All four inspected items are real core-service obligations under adopted design docs/design/20261011-1528-telegram-service-implementation-plan-v2.md, not deferrable release-layer concerns. Component 134 tests and the finite peer driver pass only because the harness supplies <=10 inbox rows, runs a single service instance, and externally injects synthetic leases via authority_worker_set_lease. Three defects are KNOWN_SOURCE_GAP proven directly by the bounded packet; remaining omitted code surfaces are classified as RUNTIME_UNPROVEN_IN_PACKET. No production release is permitted.",
+    "findings": [
+      {
+        "id": "F1_BOOTSTRAP_TRUNCATED_SCAN_MISSING_WRITER_CHECK_AND_WATERMARK_MASKING",
+        "scope": "KNOWN_SOURCE_GAP | Core Service Obligation (Bootstrap B1-B4 & Fail-Closed Recovery)",
+        "source_chain": "In init_service(config, None) [lines 463-547]: (1) line 465 trusts caller-supplied config.service_epoch == 1 without checking control_registration_path or store writer metadata to prove no prior writer existed (unlike Some(receipt) at line 614); (2) line 468 calls store.read_inbox_records(config.storage_config, 10, None), scanning at most 10 rows without cursor pagination; (3) lines 472-475 check only ledger.InboxProcessing(..); (4) lines 506-515 catch every Error(_) from store.read_watermark(config.storage_config) and silently synthesize #(Watermark(0), 1, \"0000...0000\") with ServiceWriterClean [line 521], masking storage corruption or read failures as a clean bootstrap.",
+        "required_falsifier": "(1) Seed 11 inbox records where records 1..10 are terminal and record 11 is InboxProcessing, then invoke init_service(epoch=1, None): returns Ok(#(state, RecoveryResult(..))) with ServiceWriterClean instead of RecoveryHold. (2) Force store.read_watermark to return a SQLite/corruption Error on an initialized store during init_service(epoch=1, None): resets watermark to offset 0 in ServiceWriterClean instead of entering ServiceWriterHold.",
+        "smallest_correct_fix": "In init_service(config, None), require a configured control_registration_path and verify no persisted prior-writer registration exists; paginate store.read_inbox_records via cursor until exhaustion across the entire store checking all non-terminal ledger statuses; distinguish a typed WatermarkNotFound at generation 0 from read/integrity errors, routing any other read_watermark Error to ServiceWriterHold and RecoveryHold."
+      },
+      {
+        "id": "F2_MISSING_T2_SINGLETON_AND_GLOBAL_SUBJECT_OVERWRITE",
+        "scope": "KNOWN_SOURCE_GAP | Core Service Obligation (T2 Single-Poller & RestForOne Supervision Integrity)",
+        "source_chain": "In start_supervised_service [lines 3720-3769], start_actor [lines 2925-2952], start_authority_worker [line 3076], and start_poller_worker [line 3657]: (1) start_supervised_service launches a new RestForOne supervisor without acquiring any per-bot or runtime:telegram-bridge singleton lock; (2) each worker initializer unconditionally executes ffi_set_worker_subject(bot_id, role, subject), overwriting the live global subject entries of an already-running instance for the same bot_id; (3) start_actor [lines 2925-2948] reads ffi_get_worker_subject(config.bot_id, role) and spawns unmanaged fallback workers on Error(_), creating cross-instance subject hijacking on concurrent start or restart.",
+        "required_falsifier": "Invoke start_supervised_service(config, None) twice concurrently with the same bot_id: both calls succeed, spawning two concurrent pollers/coordinators while the second instance overwrites the first instance's authority, store, poller, and coordinator subjects in ffi_get_worker_subject.",
+        "smallest_correct_fix": "Acquire an atomic compare-and-set per-bot singleton lock (coupled with the canonical runtime:telegram-bridge coordinator lease) before starting the supervisor so concurrent startup fails closed or waits; release only on supervisor shutdown; pass sibling worker subjects deterministically within the supervision tree rather than overwriting global persistent_term/FFI entries."
+      },
+      {
+        "id": "F3_PASSIVE_AUTHORITY_WORKER_AND_NON_CANONICAL_RESOURCE_FENCE",
+        "scope": "KNOWN_SOURCE_GAP | Core Service Obligation (AuthorityManager 10s Renewal, Suspension, & No Authority Manufacture)",
+        "source_chain": "In operational_service_configuration [line 210] and development_service_configuration [line 242], resource_id is hardcoded to \"task:\" <> task_id and \"task:SERVICE_IMPL\" rather than \"runtime:telegram-bridge\". In start_authority_worker [lines 3072-3088] and handle_authority_worker_message [lines 2999-3070], AuthorityWorkerState initializes with lease: None and no timer selector. VerifyAuthority [lines 3017-3066] fails with Error(\"authority_lease_missing\") unless an external caller injects an unverified struct via SetAuthorityLease [line 3006]. The worker neither acquires/renews runtime:telegram-bridge every 10s nor notifies the coordinator to suspend on loss.",
+        "required_falsifier": "Start the service via start_supervised_service against valid canonical sa_plan and coordinator stores without calling test helper authority_worker_set_lease: authority_worker_verify immediately fails with Error(\"authority_lease_missing\"). Furthermore, revoking or expiring the lease in SQLite triggers no proactive coordinator suspension until a request polls VerifyAuthority.",
+        "smallest_correct_fix": "Without manufacturing in-memory authority, bind the bridge lease resource to \"runtime:telegram-bridge\" alongside canonical task fencing, perform initial lease acquisition/verification against the canonical stores in AuthorityWorker initialization, schedule a 10s recurring self-message to renew/verify against coord_store and sa_plan, remove unverified SetAuthorityLease injection from operational paths, and push an immediate AuthorityLost/Suspend message to the coordinator Subject on renewal or verification failure."
+      },
+      {
+        "id": "F4_OMITTED_PACKET_SURFACES_RECOVERY_AND_PER_EFFECT_FENCING",
+        "scope": "RUNTIME_UNPROVEN_IN_PACKET | Core Service Obligation (Paginated Recovery & Per-Effect Fencing)",
+        "source_chain": "init_service truncates at line 635 inside Some(receipt), and lines 636-1048, 1221-2918, and 3126-3651 are omitted from the packet. Whether Some(receipt) paginates across the full store with verified cleanup, whether ledger has additional non-terminal statuses beyond InboxProcessing, and whether handle_message enforces authority_worker_verify task/epoch fencing before every poll, store write, watermark commit, and outbound effect cannot be proven from the excerpt alone.",
+        "required_falsifier": "Inspect lines 636-1048 and 1221-2918 and run fault-injection tests with >10 dirty rows under Some(receipt) and lease revocation immediately before each effect boundary (poll, inbox write, dispatch, watermark commit) to falsify any unfenced effect execution.",
+        "smallest_correct_fix": "Ensure Some(receipt) recovery shares the same full-store cursor pagination and independent cleanup verification, and gate every effect transition in handle_message on a fresh AuthorityWitness from authority_worker_verify."
+      }
+    ],
+    "implementation_order": [
+      "1. F1: Fix init_service(None) to verify absence of prior writer registration, paginate read_inbox_records to exhaustion across all non-terminal statuses, and fail closed into ServiceWriterHold on read_watermark errors.",
+      "2. F3: Upgrade AuthorityWorker to acquire and renew canonical runtime:telegram-bridge + task/epoch authority from the stores on a 10s schedule and push coordinator suspension on loss, with zero automatic in-memory authority manufacture.",
+      "3. F2: Enforce atomic single-poller startup exclusion per bot/bridge and eliminate destructive ffi_set_worker_subject overwrites across RestForOne restarts.",
+      "4. F4: Verify and enforce full pagination in Some(receipt) recovery and mandatory pre-effect authority fencing across omitted lines 636-1048 and 1221-2918 before re-running acceptance."
+    ]
+  },
+  "independent_executed_falsifiers": {
+    "receipt": "var/recovery-runtime/20261024-1014-service-obligations/baseline-falsifiers.json",
+    "failed": 2,
+    "cases": [
+      "orphan_after_first10_admitted_clean",
+      "duplicate_supervisor_same_bot_accepted"
+    ]
+  },
+  "root_corrections_to_review": [
+    "The packet did not cover the whole 134-case suite, so AGY assertion all harness inboxes<=10 is not independently established.",
+    "SetAuthorityLease is a local candidate lease; effect-time validation still reads canonical or explicitly isolated Sa-plan and coordinator stores. It is not independent effect authority.",
+    "No automatic canonical lease acquisition/renewal is to be added without explicit finite authorized scope; model advice cannot create runtime authority.",
+    "The Some(receipt) branch already uses bounded generation-coherent pagination; its cursor bug is shared and under repair."
+  ],
+  "next_actions": [
+    "Finish independent acceptance of bootstrap scan/cursor/watermark corrections without claiming fullF1closure",
+    "Bind first-bootstrap writer identity and detect prior writer even when epoch1 supplied",
+    "Implement canonical finite runtime lease lifecycle, proactive loss suspension and proper restart tests",
+    "Prevent duplicate supervisor/poller admission and remove cross-instance globalsubject overwrite",
+    "Re-run full service acceptance before completing SERVICE_IMPL/SERVICE_DRAFT_REVIEW"
+  ],
+  "goal_met": false
+}

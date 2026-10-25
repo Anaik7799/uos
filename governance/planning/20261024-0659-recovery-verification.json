@@ -1,0 +1,52 @@
+{
+  "observed_at": "2026-10-24T06:33:27.515Z",
+  "candidate": "fd85fe743c7476c58ef34586f367caafecd6d1e8",
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "command": "eunit:test(recovery_strict_test,[verbose]) with fresh verified/build/ebin first",
+    "scope": "Six prior rehearsal cases plus finite wrong bindings, empty WAL/SHM refusal, post-swap hash/sidecar under recovery lock"
+  },
+  "sources": [
+    {
+      "path": "src/cepaf_gleam/harness/recovery_strict.gleam",
+      "sha256": "704bae346f171e8380b2ed6e80610f70aeb76c3212e8c246f367d7973702d987"
+    },
+    {
+      "path": "test/recovery_strict_test.gleam",
+      "sha256": "38d0539c8d1f31355c22bb73daa04e5fd1f762eb72a1b86e0ad2d6792bceb233"
+    }
+  ],
+  "controls": {
+    "runtime_closure": {
+      "restoration_runtime_cli": "65f323843b4b67c14f4f22081a347bb7",
+      "cepaf_gleam@harness@development": "8d5524924abff3e6f7d966879e65136b",
+      "cepaf_gleam@harness@admission": "7120e07d22d18c4f658826b581c48046",
+      "cepaf_gleam@harness@files": "69192a6867b8cf847ef0ed67546c9d6d",
+      "cepaf_gleam@harness@clock": "6e21df69597143f30286a0f7a003bf26",
+      "cepaf_gleam@harness@value": "a0b2c57ba385f4d02a7ff07f11b959a6",
+      "cepaf_gleam@planning@sa_plan_bridge": "522f8e982ae5cd78ec21cca8572d9593",
+      "ecology_capability_ffi": "954060f594b4e88d995d821efc56fced",
+      "recovery_activation_ffi": "4b1eebebb27d52f88d04c1267ba53615",
+      "uos_swarm@session_authority": "d8153c8d0bf51a760f2be24312c7ca17",
+      "uos_swarm@session_store": "2d5fb7205199fe2e59c23a7d80663767",
+      "uos_swarm@session_sync": "4921d9b7fca91a254838eb02cb5fb318",
+      "session_store_ffi": "640bb2d1f550cc52743f13ec5efec3b4",
+      "session_sync_ffi": "84df5c4ac97f59dfd224b70cd9b21701",
+      "uos_swarm@coord": "2ce7f6544e5041b1c4ad73486b066cb0",
+      "uos_swarm@board": "a703e22b5da3afd1894e818a4f085e0b",
+      "uos_swarm_ffi": "c10aa59407df5842db9d2d0bdf100f50",
+      "esqlite3": "559df945b9931ff4d5dfb312c46b240e",
+      "esqlite3_nif": "5b3ef93e642fff3efc7e69f45de83cbf",
+      "uos_swarm@clock_guard": "b7a397d7e7cbd5ad0155331ad0c66d13",
+      "uos_swarm@clock_contract": "5052227d7d46cf70efb170b90871b8ff",
+      "clock_guard_ffi": "5f7a342c86af57a0945007a322a5c2df"
+    },
+    "strict": "35E56474CC878CE6AD0314EFF338E627",
+    "io_types": "0C4E095A468FCC05B4461B210A7DEEAF",
+    "cli": "E962D6C29B13B2A1EE4392831883F72E"
+  },
+  "activation": "NOT_RUN",
+  "review": "PENDING",
+  "agy": "Partial actual edits preserved; root completed post-swap checks and tests; CLI empty SUCCESS treated as timeout"
+}

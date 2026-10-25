@@ -1,0 +1,38 @@
+{
+  "observed_at": "2026-10-24T08:25:49.439Z",
+  "status": "PASS_FINITE_RENEWAL",
+  "source_candidate": "b5afe12bd09ff1c621b98b40615c8a9e56422cc7",
+  "config_sha256": "3a068800c8316194c0bcdb348087cd3e79b334fd4d99d432828c68bd7426eb93",
+  "expires_at": "2026-10-24T09:16:00.872Z",
+  "peer_conversation": "3221dfb6-c159-4b78-8bea-8f01f2b8243a",
+  "unit": "uos-recovery-dashboard-20261024-r2.service",
+  "invocation_id": "27e89dca1ccf4d528745f2dff75774d8",
+  "old_unit_observed": "inactive/dead MainPID0 before successor start",
+  "new_unit_observed": "active/running MainPID2639481 NRestarts0",
+  "first_snapshot": "2026-10-24T08:24:37Z",
+  "http_status": 200,
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261024-0725-dashboard-observer/renewal-proposal.json",
+      "sha256": "1c68c154ca56896d78a32562736f8cb614a6d7114f3f6fc4e877fa819a2ce5d9"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0725-dashboard-observer/renewal-agy-review.json",
+      "sha256": "33e039c46914e50b5920c7d0dbd019af987f10bf896828182a759e6196b50a1c"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0725-dashboard-observer/before-renewal-snapshot.json",
+      "sha256": "ad60090e703056ec0cadf2ffc8e8c02128af08df4efe7609386d519f6e502fff"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0725-dashboard-observer/after-renewal-snapshot.json",
+      "sha256": "4d968d9371fce659cfd1470ceef95d1487a4ee29f240998b341b6c2d02f59862"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0725-dashboard-observer/after-renewal-http-snapshot.json",
+      "sha256": "4d968d9371fce659cfd1470ceef95d1487a4ee29f240998b341b6c2d02f59862"
+    }
+  ],
+  "global_admission": false,
+  "review_correction": "Peer UTC rendering was five minutes late; actual reviewed numericexpiry resolves09:16:00.872Z and unchanged hash was verified."
+}

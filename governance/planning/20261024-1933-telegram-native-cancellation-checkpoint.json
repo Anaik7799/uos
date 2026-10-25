@@ -1,0 +1,58 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T19:33:40.604Z",
+  "candidate": "2779b7f24141e60c88dadff2fc2289c0b67aa160",
+  "parent": "4b6ed682aa3ba2812a717afcd3eeea6e55dcd075",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 7,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Existing native CLI cancellation and exact read-only historical lookup; clock observed after acquiring transaction",
+  "tests": {
+    "native_suites": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0,
+    "actual_cli_invocations": 6,
+    "mutants_killed": 3,
+    "mutants_survived": 0,
+    "mutants_void_final": 0,
+    "initial_voids_preserved": 2,
+    "full_system": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-1922-cancel-protocol/artifact-manifest.json",
+    "source_matches": 56,
+    "files": 597,
+    "unhashed_links": 104
+  },
+  "native_executable": {
+    "path": "/home/an/NAS-setup/uos/var/recovery-runtime/20261024-1922-cancel-protocol/native/_build/default/modules/sa_plan/test/sa_plan_main.exe",
+    "sha256": "c949301f41983e8dd1f4917f23ead3d9ae05f75667e660627f0ac390de7e69f7"
+  },
+  "code_author": "AGY1ec874c2-e2aa-4dd6-ba3b-e611cb49f9f3 with Codex corrections/integration",
+  "independent_review": {
+    "conversation": "0932fff2-4e10-4c29-aa1e-9995b7e6b8cd",
+    "duration_seconds": 41.267217662,
+    "verdict": "PASS",
+    "residual_risks": [
+      "Native CLI commands (cancel-once, cancellation-result) provide bounded local IPC mechanics only; authenticated Telegram ingress, principal authorization, protected signer/receipt outbox, and coordinator/host-boot admission remain unimplemented obligations of the future supervising Gleam adapter.",
+      "Database path selection relies on environment configuration (UOS_SA_PLAN_DB/UOS_ROOT); the supervising adapter must supply a pinned executable and protected database path with strict OS permissions.",
+      "Cancellation receipts record SQLite job lease revocation only (job_lease_cleared=true, task_cancelled=false, process_quiesced=false) and do not establish worker process termination or task cancellation.",
+      "Historical lookup (lookup_job_cancellation) intentionally succeeds after original lease/request expiry to support read-only reconciliation; the caller adapter must enforce authorization before exposing lookup results externally and must never treat historical receipts as live authority or current worker state."
+    ]
+  },
+  "runtime": {
+    "completed": 61,
+    "total": 71
+  },
+  "release": {
+    "completed": 25,
+    "total": 33
+  },
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false,
+  "next": "Trusted Gleam adapter: protected artifact/database/roster, authenticated ingress, current coordinator/host-boot and approvals, then native execution and durable outcome delivery. Other command/MiniApp/media/gateway scope retained."
+}

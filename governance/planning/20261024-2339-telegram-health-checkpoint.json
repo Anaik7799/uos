@@ -1,0 +1,89 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "candidate": "d0491cd16fd7befa1322a4fa250ddbe4b820c303",
+  "parent": "890c1df5b742d9a96958305957c277fc952c4606",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 12,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "/health reaches existing bounded operational observations; absent/empty-object args, current fences, explicit partial state",
+  "evidence_root": "var/recovery-runtime/20261024-2334-health",
+  "tests": {
+    "distinct": 64,
+    "unit": 60,
+    "service": 4,
+    "failed": 0,
+    "full_suite": false,
+    "runs": [
+      "unit-regression.json",
+      "health-service-regression.json"
+    ],
+    "actual_local_http_replies": 8
+  },
+  "review": {
+    "conversation": "d967100e-97f7-43f7-8804-e8287b25fccf",
+    "verdict": "PASS",
+    "findings": [],
+    "duration_seconds": 14.096448292,
+    "scope": "Complete candidate diff and exact supporting parser/authority/report/test-helper source supplied in hashed15329byte packet",
+    "raw": "agy-review-packet-raw.json"
+  },
+  "discarded_jobs": [
+    {
+      "job": "health-code2333",
+      "conversation": "88cb70c6",
+      "reason": "CLI print timeout truncated final response; actual edits independently inspected, built, tested and subsequently reviewed"
+    },
+    {
+      "job": "health-review2336",
+      "conversation": "017a2435",
+      "reason": "CLI print timeout; empty verdict"
+    }
+  ],
+  "agent_management": {
+    "new_scheduler": false,
+    "work_in_progress_limit": 1,
+    "authority": "Existing Gleam + Sa-plan attempt12/task epoch12/workspace epoch2",
+    "improvement": "Exact hashed review packet replaces open-ended repository discovery for scoped deltas; retain independent verdict and bounded execution.",
+    "observed_comparison": {
+      "open_review_seconds": 105.798312272,
+      "open_review_tokens": 117365,
+      "packet_review_seconds": 14.096448292,
+      "packet_review_tokens": 13345,
+      "qualification": "One observation; not a calibrated general performance guarantee"
+    }
+  },
+  "command_coverage": {
+    "literals": 77,
+    "reachable": 25,
+    "backend_unavailable": 30,
+    "not_implemented": 22,
+    "acceptance_not_implied": true,
+    "artifact": "governance/planning/20261024-2336-telegram-command-reachability.json"
+  },
+  "manifest": {
+    "source_pairs": 91,
+    "files": 620,
+    "untraversed_links": 1
+  },
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "main_merged": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "goal_met": false,
+  "remaining": [
+    "52 missing command routes; full77literal feature acceptance",
+    "13MiniAppbackends and browser acceptance",
+    "Sevenmedia types and gateway",
+    "Real provider availability and authorized live Telegram",
+    "Independent release/global admission and stabilized applicable main integration"
+  ],
+  "observed_at": "2026-10-24T23:39:25.810Z"
+}

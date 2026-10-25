@@ -1,0 +1,14 @@
+{
+  "observed_at": "2026-10-24T13:30:41.578Z",
+  "review": "ad2684d6-73f3-44d1-8605-6efa912df940",
+  "status": "HOLD_REVIEW_EVIDENCE_INACCURATE",
+  "candidate": "ba20f3e039c6317b7c4e35fa3a0d08562162adeb",
+  "corrections": [
+    "telegram_runtime exports run, not run_from_env/run_with_options",
+    "runtime entry tests are validates_before_start_runs_and_releases and recovers_runs_and_releases; claimed refuses_bad_authority test absent",
+    "lifecycle-seven has 3renewal,2active/shutdown,2successor tests; claimed3successor/inflight tests absent",
+    "suite-unit-final module list excludes telegram_http_client_test and telegram_lifecycle_adapter_test; review incorrectly attributed their counts",
+    "HTTP chat mismatch classification must be read from actual source; do not cite invented DeliveryTerminalFailure or OutboxSent constructors"
+  ],
+  "scope": "Source/test attribution inaccuracies require corrected bounded independent review; no completion or source defect inferred."
+}

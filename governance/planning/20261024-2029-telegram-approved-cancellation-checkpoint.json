@@ -1,0 +1,100 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T20:29:46.336Z",
+  "candidate": "a2912902554198bd8d51248979994b2048b11380",
+  "parent": "384a18f7e8af577613431e2b8328a1a4f7950ae8",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 8,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Signed execution context and approval-capped exact native requests, strict result decoder and actual signed-fixture/native cancellation+historical lookup",
+  "tests": {
+    "focused": 62,
+    "intent": 17,
+    "approval": 18,
+    "cancellation": 5,
+    "ingress": 22,
+    "native_suites": 12,
+    "native_failed": 0,
+    "native_skipped": 0,
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "signed_native_integration": true,
+    "mutants_killed": 3,
+    "mutants_survived": 0,
+    "mutants_void": 0,
+    "full_system": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2010-cancel-context/artifact-manifest.json",
+    "source_matches": 144,
+    "files": 1185,
+    "unhashed_symlinks": 111
+  },
+  "code_authors": [
+    {
+      "agent": "AGY",
+      "conversation": "fa8221a3-ef62-4977-9562-104bdf927795",
+      "duration_seconds": 67.291412637
+    },
+    {
+      "agent": "AGY",
+      "conversation": "84ac3963-8fec-44a9-8e6f-9cf05ad5dc5d",
+      "duration_seconds": 134.904250473
+    },
+    {
+      "agent": "Codex",
+      "scope": "expiry cap adaptation, digest API correction, tests and integration"
+    }
+  ],
+  "independent_review": {
+    "conversation": "fb138d18-c0ad-4ee0-8eb2-53f6474e4e0d",
+    "duration_seconds": 36.986537943,
+    "verdict": "PASS",
+    "findings": [],
+    "residual_risks": [
+      "Prepared cancellation requests (request_json, request_hash) and logical effect_id uniqueness are not yet durably persisted before effect dispatch; the live store/executor must atomically record and enforce single-request-per-effect before invoking the native worker.",
+      "telegram_action_intent, telegram_approval, and telegram_cancellation perform pure validation over caller-supplied observations; live integration must still authenticate the protected signer roster and execution profile_sha256, supply synchronized UTC/boot clocks, and verify current canonical supervisor fences (mapping_id, lease_id, fencing_token, candidate_sha256, and target job/worker/attempt) at execution time.",
+      "LeaseRevoked strictly attests only to job-lease revocation (job_lease_cleared: true, task_cancelled: false, process_quiesced: false); task cancellation, worker process quiescence, and transactional Telegram outbox/restart replay integration remain pending."
+    ],
+    "authority_collection": "Ok"
+  },
+  "preserved_failures": [
+    {
+      "status": "HOLD",
+      "reason": "review request exceeded65536-byte budget; refused before process launch"
+    },
+    {
+      "conversation": "d35d5d10-f455-4a82-8083-76efb05e6703",
+      "status": "DISCARDED",
+      "reason": "empty response classified execution timed out; MainPID0 observed before new job"
+    }
+  ],
+  "dashboard": {
+    "observed_at": "2026-10-24T20:28:45Z",
+    "producer": {
+      "job": "uos/agy-operations/20261024-0642/live-dashboard19",
+      "session": "dashboard-observer-20261024-0730"
+    },
+    "refresh": {
+      "interval_seconds": 300,
+      "poll_seconds": 5,
+      "reason": "300_seconds",
+      "expires_at": "2026-10-24T20:40:58.463000Z"
+    }
+  },
+  "runtime": {
+    "completed": 61,
+    "total": 71
+  },
+  "release": {
+    "completed": 25,
+    "total": 33
+  },
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false,
+  "next": "Persist original request before effect; restore read-only recovery after restart; connect protected actual approval ingress, bridge/current fences and existing outbox. Full command/MiniApp/media/gateway scope retained."
+}

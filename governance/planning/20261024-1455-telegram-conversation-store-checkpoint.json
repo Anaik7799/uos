@@ -1,0 +1,73 @@
+{
+  "schema": "uos.telegram.conversation-store-checkpoint.v1",
+  "observed_at": "2026-10-24T14:56:08.460Z",
+  "candidate": "71fa89ead730bca2f53cdccfe438499fb64bd57a",
+  "parent": "329dff6ca090a9a506f2f085fe9bf66ab99390a1",
+  "bookmark": "integration/telegram-conversation-store-20261024-1455",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "COMMAND_IMPL",
+    "attempt": 2,
+    "worker": "codex-analysis-20261024",
+    "state": "executing"
+  },
+  "implemented": [
+    "Opaque reservation only after native CAS persists daily request quota",
+    "Exact persisted input, bot/chat/user, worker/epoch and inbox hash binding",
+    "Atomic successful conversation pair plus inbox/result/outbox transaction",
+    "Failed model keeps prior context and consumed quota",
+    "Context-row capacity reservation and release",
+    "Explicit /agy classified as conversation; other slash commands refused by conversation parser"
+  ],
+  "verification": {
+    "unit_service_fault": 181,
+    "baseline_e2e": 13,
+    "lifecycle": 7,
+    "runtime_entry": 2,
+    "additional_command_e2e": 6,
+    "conversation_pure": 11,
+    "conversation_native": 8,
+    "total_distinct": 228,
+    "evidence_root": "var/recovery-runtime/20261024-1435-conversation-store",
+    "manifest": "var/recovery-runtime/20261024-1435-conversation-store/artifact-manifest.json",
+    "source_matches": 5
+  },
+  "review": {
+    "verdict": "PASS",
+    "candidate": "71fa89ead730bca2f53cdccfe438499fb64bd57a",
+    "findings": [],
+    "residuals": [
+      "Uncertain apply during reserve_conversation cannot be replayed by re-invoking reserve_conversation because read_keys observes the post-apply generation and incremented budget row before execute_apply can match the op-conversation-reserve-<request_id> receipt; service integration must handle uncertain reserve outcomes fail-closed or via recovery inspection.",
+      "commit_conversation_result pins expected_generation to res.generation as well as budget_version/budget_sha, so the service runner must maintain single-writer store serialization across reservation, model execution, and result commit.",
+      "Daily UTC bucket calculation (utc_day) and model request preparation (prepare_request) are pure helpers not yet wired into reserve_conversation; the service boundary must supply a validated clock and enforce prepare_request policy before network execution."
+    ],
+    "conversation_id": "38bfc967-d974-417c-bf64-f5e4f4b5c0c7",
+    "executed_tests": false
+  },
+  "runtime_integrated": false,
+  "goal_met": false,
+  "remaining": [
+    "Current authority and clock before bounded model GET/POST",
+    "Serialized store actor integration through model/result stages",
+    "Fail-closed uncertain reservation recovery",
+    "Actual model and end-to-end service acceptance",
+    "Remaining commands, Mini App APIs/actions, media/gateway",
+    "Real Telegram/browser acceptance, independent release, global admission evaluation and main integration"
+  ],
+  "main_merged": false,
+  "dashboard": {
+    "unit": "uos-recovery-dashboard-20261024-r12.service",
+    "invocation": "00881dce7a52475c9204bdef6ced66f5",
+    "config_sha256": "a901078d05b447389b80b933f50d9db741fdc2b71e101707964ea6a35e0b6dff",
+    "review": "3a4b92eb-6561-40cb-b6dc-1b111f84bb12",
+    "fresh_http": "2026-10-24T14:52:33Z",
+    "expires_at": "2026-10-24T15:44:35.732Z",
+    "interval_seconds": 300,
+    "task_completion_refresh": true
+  },
+  "limitations": [
+    "Native tests use isolated SQLite and pinned real worker; model/network remains unrun",
+    "AGY code collection retained stale-authority hold for insufficient remaining runtime margin; terminal output adopted only as development source and independently reviewed",
+    "An accidental baseline rerun against older1305candidate is excluded; current candidate receipts above are exact-source-bound"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T19:00:44.054Z",
+  "candidate": "667a8775f6e2a6b28523083742a1404154a5d98b",
+  "parent": "c7cfd4a1df7506a6a802983661d03bbefa5a0197",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 6,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Atomic fenced job cancellation persistence primitive and SQLite wrapper lifetime repair",
+  "implementation": {
+    "new_queue": false,
+    "new_schema": false,
+    "telegram_routed": false,
+    "reviewer_authentication": false,
+    "process_quiescence": false
+  },
+  "tests": {
+    "suites": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0,
+    "mutation": {
+      "killed": 3,
+      "survived": 0,
+      "void": 0
+    },
+    "concurrent_gc_lifecycles": 1000,
+    "full_system": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-1836-cancellation/artifact-manifest.json",
+    "files": 594,
+    "unhashed_links": 99,
+    "source_matches": 3
+  },
+  "review": {
+    "conversation": "a0ca1544-98da-46c7-afc6-c0d660f93272",
+    "duration_seconds": 58.670879328,
+    "verdict": "PASS",
+    "raw": "var/recovery-runtime/20261024-1836-cancellation/agy-independent-review-raw.json",
+    "residual_risks": [
+      {
+        "id": "RR-01-SQLITE-FFI-AUDIT-SCOPE",
+        "source": "engines/hermes/modules/sa_plan/sa_plan_store.ml:close_db,finalize_statement,with_stmt",
+        "detail": "Gc.keep_alive guards Sqlite3.finalize and Sqlite3.db_close where crashes occurred, but is not a full audit of all runtime-releasing C stubs in sqlite3-ocaml 5.4.1 (e.g., step, exec, prepare) if handles are not otherwise stack-rooted by callers."
+      },
+      {
+        "id": "RR-02-UNAUTHENTICATED-CALLER-BOUNDARY",
+        "source": "engines/hermes/modules/sa_plan/sa_plan_store.mli:cancel_job_once",
+        "detail": "cancel_job_once is a store-level primitive trusting caller-supplied now_ns and control-plane fields; reviewer cryptographic receipt authentication, clock synchronization, and Telegram routing remain unimplemented future Gleam work."
+      },
+      {
+        "id": "RR-03-LEASE-ONLY-REVOCATION",
+        "source": "engines/hermes/modules/sa_plan/sa_plan_store.ml:cancellation_result",
+        "detail": "Cancellation clears only the SQLite job lease (job_lease_cleared=true, task_cancelled=false, process_quiesced=false); worker process termination and post-expiry reconciliation require separate supervision and authorized read paths."
+      },
+      {
+        "id": "RR-04-REPLAY-REQUIRES-LIVE-AUTHORITY",
+        "source": "engines/hermes/modules/sa_plan/sa_plan_store.ml:cancel_job_once",
+        "detail": "Replay checks execute after bridge/task lease validation and before expires_at_ns; retries after lease or request expiry fail closed and require a separate read query to inspect prior receipts."
+      }
+    ]
+  },
+  "receipts": [
+    "var/recovery-runtime/20261024-1836-cancellation/final-build.json",
+    "var/recovery-runtime/20261024-1836-cancellation/final-offload.json",
+    "var/recovery-runtime/20261024-1836-cancellation/mutation-results.json",
+    "var/recovery-runtime/20261024-1836-cancellation/baseline-lifetime-probe-v3.json",
+    "var/recovery-runtime/20261024-1836-cancellation/native-lifetime-probe-v3.json"
+  ],
+  "runtime_completed": 61,
+  "runtime_total": 71,
+  "release_completed": 25,
+  "release_total": 33,
+  "main_merged": false,
+  "global_admission": false,
+  "goal_met": false,
+  "next": "Authenticated exact-intent approvals and trusted Gleam adapter, then observed controlled-action outcomes and Telegram routing"
+}

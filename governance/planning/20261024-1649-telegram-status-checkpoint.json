@@ -1,0 +1,35 @@
+{
+  "candidate": "e0328195cc203767d985feaf1eaa6c44823ebc71",
+  "observed_at": "2026-10-24T16:51:16.704Z",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "distinct_tests": 87,
+  "executions": 87,
+  "runs": [
+    "status-unit-final.json",
+    "status-e2e-final.json",
+    "task-e2e-seven.json",
+    "conversation-e2e-five.json",
+    "memory-e2e-0.json",
+    "memory-e2e-2.json",
+    "authority-recovery.json"
+  ],
+  "independent_review": "4c30c164-3fae-4ad1-ad93-f4fd6fe09e16 PASS",
+  "native_code_author": "AGY b9ccc0f7-879e-4592-8e00-6900fa3aeb66",
+  "live_probe": "live-probe.json",
+  "live_telegram": false,
+  "global_admission": false,
+  "full_feature_complete": false,
+  "task": "COMMAND_IMPL",
+  "attempt": 4,
+  "remaining_status": [
+    "zigvm kernel",
+    "clock synchronization",
+    "peer endpoint connectivity"
+  ],
+  "observer": {
+    "job": "uos/agy-operations/20261024-0642/live-dashboard14",
+    "expires_at": "2026-10-24T17:25:44.787Z",
+    "review": "aaf71d0b-371c-4110-a7ba-649d43c5da7d PASS",
+    "config_sha256": "36b9101a088cefb86363b1d8c173f48546a6dfc5c2777a556a00559cfca6443c"
+  }
+}

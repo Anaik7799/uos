@@ -1,0 +1,104 @@
+{
+  "schema": "uos.telegram.ecology.checkpoint.v1",
+  "observed_at": "2026-10-25T00:12:49.699Z",
+  "candidate": "8cc89aaaf8a2f82777c61ecf31b1bedc7e812cc0",
+  "source_candidate": "1ada2b87d1c237b997ea6f935a143764f54f8a4c",
+  "parent": "509d993f1496d7f74425f42798d523f28c4838f3",
+  "task": "COMMAND_IMPL",
+  "attempt": 12,
+  "coordinator_epoch": 12,
+  "workspace_epoch": 2,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "commands": [
+    "/ecology",
+    "/tool query_ecology"
+  ],
+  "scope": "Fixed local ecology participant snapshot and historical ANDON records; service health explicitly UNVERIFIED",
+  "distinct_checks": 57,
+  "unit_native": 52,
+  "service": 3,
+  "authority": 2,
+  "mutants": {
+    "killed": 2,
+    "survived": 0,
+    "initial_survivor": "Top-level binding test was masked by a global replacement of nested binding; strengthened separately, full receipt retained"
+  },
+  "runs": [
+    "unit-final.json",
+    "ecology-service-first.json",
+    "authority-regression.json",
+    "mutation-results.json"
+  ],
+  "independent_reviews": [
+    {
+      "conversation": "a8a25c02-f597-42a7-9fc6-f0364dd39143",
+      "candidate": "1ada2b87d1c237b997ea6f935a143764f54f8a4c",
+      "verdict": "PASS",
+      "seconds": 34.710591446
+    },
+    {
+      "conversation": "f4e1921b-fb75-468e-a4c7-22224050c37e",
+      "candidate": "8cc89aaaf8a2f82777c61ecf31b1bedc7e812cc0",
+      "verdict": "PASS",
+      "seconds": 14.028100912
+    }
+  ],
+  "code_author": "Codex; actual AGY66c9002f code-generation response truncated and discarded",
+  "live": {
+    "observed_at": "2026-10-25T00:08:42.258Z",
+    "participants": 26,
+    "source_epoch_us": 1792886922141576,
+    "age_ms": 91,
+    "output_bytes": 3422,
+    "service_health": "UNVERIFIED"
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261025-0008-ecology/artifact-manifest.json",
+    "canonical_pairs": 101,
+    "files": 663,
+    "untraversed_links": 1
+  },
+  "coverage": {
+    "reachable": 27,
+    "total": 77,
+    "backend_unavailable": 28,
+    "not_implemented": 22,
+    "artifact": "governance/planning/20261025-0013-telegram-command-reachability.json"
+  },
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "full_feature_complete": false,
+  "live_telegram": false,
+  "production_release": false,
+  "global_admission": false,
+  "main_merged": false,
+  "evidence_root": "var/recovery-runtime/20261025-0008-ecology",
+  "observer": {
+    "producer": 25,
+    "unit": "uos-recovery-dashboard-20261025-r25.service",
+    "invocation": "7b776413a56344afa7cf237de3a75dfa",
+    "config_sha256": "7dd4e73894d0cc5697529ee8c9e863a838a45ff67ecdbb3bba470bfd136c36d8",
+    "config": "20261025-0008-dashboard-config.json",
+    "review": "AGY ed740c34 PASS",
+    "snapshot": "2026-10-25T00:15:05Z",
+    "expires_at": "2026-10-25T00:56:54.837Z",
+    "interval_seconds": 300,
+    "task_completion_refresh": true,
+    "old_unit_main_pid": 0,
+    "canonical_task": "OBSERVE22 completed attempt1",
+    "final_http_observed_at": "2026-10-25T00:15:23.193Z"
+  },
+  "remaining": [
+    "50command routes",
+    "13MiniAppbackends and browser acceptance",
+    "7media types and gateway",
+    "working provider and authorized live Telegram acceptance",
+    "independent release/global admission/applicable main integration"
+  ]
+}

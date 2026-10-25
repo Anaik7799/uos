@@ -1,0 +1,72 @@
+{
+  "schema": "uos.telegram.verification-record.v1",
+  "candidate": "eb075041b37a369e4128ea457762f8d9b17c753e",
+  "observed_at_ms": 1792889019233,
+  "expires_at_ms": 1792892619233,
+  "checkpoints": [
+    {
+      "id": "CHK-07-DRIVE",
+      "outcome": "PARTIAL",
+      "runtime_sha256": "dd0cd4e7f6efde1681d51c814db85461a65bac0c6b9b9d646ea12441cceb2d47",
+      "formal_sha256": null,
+      "reason": "Bounded policy tests only. Production enforcement unestablished"
+    },
+    {
+      "id": "CHK-11-REGR",
+      "outcome": "PARTIAL",
+      "runtime_sha256": "e946a6af75422c31764fabae6568a17669c112e919495e680e9a5d120673580c",
+      "formal_sha256": null,
+      "reason": "Storage component regression only. Full system regression unrun"
+    },
+    {
+      "id": "CHK-17-SOV",
+      "outcome": "PARTIAL",
+      "runtime_sha256": "4973b9c40ca29cbc28afe6ba59b022fc2c4633eb3cc0dced87605287e9a2ea2b",
+      "formal_sha256": null,
+      "reason": "Independent component review only. Global admission pending"
+    }
+  ],
+  "aspects": [
+    {
+      "id": "A01",
+      "outcome": "PARTIAL",
+      "runtime_sha256": "dd0cd4e7f6efde1681d51c814db85461a65bac0c6b9b9d646ea12441cceb2d47",
+      "formal_sha256": null,
+      "reason": "Storage policy tests only. Hardware enforcement unestablished"
+    },
+    {
+      "id": "A06",
+      "outcome": "PARTIAL",
+      "runtime_sha256": "e946a6af75422c31764fabae6568a17669c112e919495e680e9a5d120673580c",
+      "formal_sha256": null,
+      "reason": "Component test evidence only. Formal obligations remain"
+    },
+    {
+      "id": "A15",
+      "outcome": "PARTIAL",
+      "runtime_sha256": "4973b9c40ca29cbc28afe6ba59b022fc2c4633eb3cc0dced87605287e9a2ea2b",
+      "formal_sha256": null,
+      "reason": "Component review only. Global checklist unrun"
+    }
+  ],
+  "provenance": {
+    "type": "development_reporting_projection",
+    "original_checkpoint": "governance/planning/20261025-0043-telegram-storage-checkpoint.json",
+    "evidence_sources": [
+      {
+        "path": "var/recovery-runtime/20261025-0032-storage/native-tests-and-mutants.json",
+        "sha256": "dd0cd4e7f6efde1681d51c814db85461a65bac0c6b9b9d646ea12441cceb2d47"
+      },
+      {
+        "path": "var/recovery-runtime/20261025-0032-storage/unit-final.json",
+        "sha256": "e946a6af75422c31764fabae6568a17669c112e919495e680e9a5d120673580c"
+      },
+      {
+        "path": "var/recovery-runtime/20261025-0032-storage/agy-review-final.json",
+        "sha256": "4973b9c40ca29cbc28afe6ba59b022fc2c4633eb3cc0dced87605287e9a2ea2b"
+      }
+    ],
+    "source_bytes_rechecked_at": "2026-10-25T00:56:44.645Z",
+    "admission": false
+  }
+}

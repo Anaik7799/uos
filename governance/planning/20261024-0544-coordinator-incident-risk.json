@@ -1,0 +1,935 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "coordinator-incident-diag-20261024",
+    "plan_id": "uos/coordinator-incident/20261024-0544",
+    "task_id": "DIAG",
+    "actor": "codex-analysis-20261024",
+    "scope": "Read-only incident diagnosis and immutable evidence preservation; no coordinator writes",
+    "phase": "incident",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T06:29:20Z",
+    "valid_until": "2026-10-24T06:44:20Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T05:42:50Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live coordinator typed replay failed at656events; raw byte digest and SQL guards pass. Preserve all history; no live mutation or forced pass.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "sha256": "5402b29debbbd63459e19f05328480ab0901485b5b7a9732bcda9cc0a6277b51",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "sha256": "28a938fc3af7ebbaf89e64059675d2128f2ae64dbd94f9e43890c2f443c42317",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "62591f1318e9f16bff649f73cc6355cc9e875b5ce50a21556dedb294e8f4029d",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T06:29:20Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-RAW-WRITER",
+        "cause": "SQL append permission permits envelopes outside canonical typed encoder and clock",
+        "effect": "Typed replay refuses ledger and blocks all legitimate coordinator commands",
+        "controls": "Stop writers, preserve evidence, independently validate exact bytes and implement bounded writer boundary",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam coordinator",
+      "control_action": "Append typed coordination event",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Read-only incident diagnosis and immutable evidence preservation; no coordinator writes",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "SQLite chain and raw digest checks pass; typed replay still fails"
+      ],
+      "assumptions": [
+        "First invalid event and responsible writer require independent verification"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Prefix through652 will replay;653 will be first mismatch",
+      "falsifier": "Prefix652 fails, or653 canonical digest matches",
+      "acceptance": [
+        "Preserve all656events with source identity",
+        "Find first invalid typed event and compare stored/canonical digest",
+        "Record writer provenance and authority gap",
+        "No production/main change until independent recovery review"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Cooperative local filesystem boundary does not prevent same-user raw SQL writes",
+        "Other services can run while coordinator admission is unavailable"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "coordinator-incident-fix-20261024",
+    "plan_id": "uos/coordinator-incident/20261024-0544",
+    "task_id": "FIX",
+    "actor": "codex-analysis-20261024",
+    "scope": "Development-only bounded recovery and writer-boundary implementation; no live replacement Includes report lint correction and explicit diagnostic completion-before-lint gap; no production mutation.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T06:29:20Z",
+    "valid_until": "2026-10-24T07:29:20Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T05:42:50Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live coordinator typed replay failed at656events; raw byte digest and SQL guards pass. Preserve all history; no live mutation or forced pass.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "sha256": "5402b29debbbd63459e19f05328480ab0901485b5b7a9732bcda9cc0a6277b51",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "sha256": "28a938fc3af7ebbaf89e64059675d2128f2ae64dbd94f9e43890c2f443c42317",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "62591f1318e9f16bff649f73cc6355cc9e875b5ce50a21556dedb294e8f4029d",
+          "observed_at": "2026-10-24T06:29:20Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T06:29:20Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-RAW-WRITER",
+        "cause": "SQL append permission permits envelopes outside canonical typed encoder and clock",
+        "effect": "Typed replay refuses ledger and blocks all legitimate coordinator commands",
+        "controls": "Stop writers, preserve evidence, independently validate exact bytes and implement bounded writer boundary",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam coordinator",
+      "control_action": "Append typed coordination event",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "DIAG"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Development-only bounded recovery and writer-boundary implementation; no live replacement Includes report lint correction and explicit diagnostic completion-before-lint gap; no production mutation.",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "SQLite chain and raw digest checks pass; typed replay still fails"
+      ],
+      "assumptions": [
+        "First invalid event and responsible writer require independent verification"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Prefix through652 will replay;653 will be first mismatch",
+      "falsifier": "Prefix652 fails, or653 canonical digest matches",
+      "acceptance": [
+        "Preserve all656events with source identity",
+        "Find first invalid typed event and compare stored/canonical digest",
+        "Record writer provenance and authority gap",
+        "No production/main change until independent recovery review"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Cooperative local filesystem boundary does not prevent same-user raw SQL writes",
+        "Other services can run while coordinator admission is unavailable"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "coordinator-incident-review-20261024",
+    "plan_id": "uos/coordinator-incident/20261024-0544",
+    "task_id": "REVIEW",
+    "actor": "codex-analysis-20261024",
+    "scope": "Independent exact-candidate recovery and recurrence tests",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T06:35:43Z",
+    "valid_until": "2026-10-24T07:35:43Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T06:35:30Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live coordinator typed replay failed at656events; raw byte digest and SQL guards pass. Preserve all history; no live mutation or forced pass.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "sha256": "5402b29debbbd63459e19f05328480ab0901485b5b7a9732bcda9cc0a6277b51",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "sha256": "28a938fc3af7ebbaf89e64059675d2128f2ae64dbd94f9e43890c2f443c42317",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "62591f1318e9f16bff649f73cc6355cc9e875b5ce50a21556dedb294e8f4029d",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-coordinator-recovery-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "sha256": "704bae346f171e8380b2ed6e80610f70aeb76c3212e8c246f367d7973702d987",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-coordinator-recovery-20261024/apps/cepaf_gleam/test/recovery_strict_test.gleam",
+          "sha256": "38d0539c8d1f31355c22bb73daa04e5fd1f762eb72a1b86e0ad2d6792bceb233",
+          "observed_at": "2026-10-24T06:35:43Z"
+        },
+        {
+          "path": "governance/planning/20261024-0659-recovery-verification.json",
+          "sha256": "c302178c3cd2f8292be2273e6afe3b9357ba9e7f16bb1c5bfa053cc9e51e94b6",
+          "observed_at": "2026-10-24T06:35:43Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-RAW-WRITER",
+        "cause": "SQL append permission permits envelopes outside canonical typed encoder and clock",
+        "effect": "Typed replay refuses ledger and blocks all legitimate coordinator commands",
+        "controls": "Stop writers, preserve evidence, independently validate exact bytes and implement bounded writer boundary",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam coordinator",
+      "control_action": "Append typed coordination event",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "FIX"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Independent exact-candidate recovery and recurrence tests",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "SQLite chain and raw digest checks pass; typed replay still fails"
+      ],
+      "assumptions": [
+        "First invalid event and responsible writer require independent verification"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Historical first-invalid653 forecast DISCONFIRMED:653 passes,654 fails. New review is unresolved; no calibrated probability asserted.",
+      "falsifier": "Prefix652 fails, or653 canonical digest matches",
+      "acceptance": [
+        "Independently inspect exact fd85fe source and nine executed regression tests",
+        "AGY fresh-conversation review of exact full grant bytes and candidate identity",
+        "Effect-time finite grant, live task, clock, preimage, hash and quiescence checks remain mandatory",
+        "No activation or system admission during review"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Cooperative local filesystem boundary does not prevent same-user raw SQL writes",
+        "Other services can run while coordinator admission is unavailable"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "coordinator-incident-restore-20261024",
+    "plan_id": "uos/coordinator-incident/20261024-0544",
+    "task_id": "RESTORE",
+    "actor": "codex-analysis-20261024",
+    "scope": "Execute independently reviewed finite coordinator recovery, preserve original656records, observe typed1event replay and lock release; no application/global admission",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T06:39:41Z",
+    "valid_until": "2026-10-24T07:09:41Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-24T06:39:41Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live coordinator typed replay failed at656events; raw byte digest and SQL guards pass. Preserve all history; no live mutation or forced pass.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T06:39:41Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959",
+          "observed_at": "2026-10-24T06:39:41Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "sha256": "5402b29debbbd63459e19f05328480ab0901485b5b7a9732bcda9cc0a6277b51",
+          "observed_at": "2026-10-24T06:39:41Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "sha256": "28a938fc3af7ebbaf89e64059675d2128f2ae64dbd94f9e43890c2f443c42317",
+          "observed_at": "2026-10-24T06:39:41Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "62591f1318e9f16bff649f73cc6355cc9e875b5ce50a21556dedb294e8f4029d",
+          "observed_at": "2026-10-24T06:39:41Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T06:39:41Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Integrity failure blocks valid coordination and restoration; isolate read-only diagnosis before reviewed recovery.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-RAW-WRITER",
+        "cause": "SQL append permission permits envelopes outside canonical typed encoder and clock",
+        "effect": "Typed replay refuses ledger and blocks all legitimate coordinator commands",
+        "controls": "Stop writers, preserve evidence, independently validate exact bytes and implement bounded writer boundary",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam coordinator",
+      "control_action": "Append typed coordination event",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Invalid, missing, stale or prolonged coordination authority can mislead task ownership",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require canonical typed encoding and clock; never rewrite historical events or bypass replay"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "REVIEW"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Reviewed finite recovery grant with backup, rollback and post-check; no history rewriting",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "SQLite chain and raw digest checks pass; typed replay still fails"
+      ],
+      "assumptions": [
+        "First invalid event and responsible writer require independent verification"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Conditional prediction: reviewed finite recovery should yield typed1event PASS; do not score without timestamped post-activation observation.",
+      "falsifier": "Prefix652 fails, or653 canonical digest matches",
+      "acceptance": [
+        "Exact grant7d2738c and independent AGY review PASS bound to fd85fe source/control hashes",
+        "Prepare and activate through recovery_strict with fresh task/clock/preimage/quiescence checks",
+        "Durable preserved main/WAL/SHM manifest and VERIFIED receipt before unlock",
+        "Fresh live typed replay PASS; no historical authority imported"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Cooperative local filesystem boundary does not prevent same-user raw SQL writes",
+        "Other services can run while coordinator admission is unavailable"
+      ],
+      "supersedes": null
+    }
+  }
+]

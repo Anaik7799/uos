@@ -656,7 +656,7 @@
     "fractal_layer": 5,
     "observed_at": "2026-10-25T08:41:31Z",
     "valid_until": "2026-10-25T09:41:31Z",
-    "task_state": "executing",
+    "task_state": "completed",
     "ready_since": "2026-10-25T08:42:29Z",
     "snapshot": {
       "kind": "working_tree",
@@ -867,13 +867,13 @@
     "plan_id": "uos/full-merge/20261025-0638",
     "task_id": "G4_EVIDENCE",
     "actor": "codex-analysis-20261024",
-    "scope": "Integrate reconciled default evidence; preserve all versions",
+    "scope": "Inventory both preserved default variants and current on-disk differences; integrate missing vetted code/evidence without overwriting newer main; preserve all variants and avoid default reset until exact coverage and runtime consumers are verified",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T08:41:31Z",
-    "valid_until": "2026-10-25T09:41:31Z",
-    "task_state": "available",
-    "ready_since": "2026-10-25T07:46:38Z",
+    "observed_at": "2026-10-25T09:10:48Z",
+    "valid_until": "2026-10-25T10:10:48Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-25T09:10:48Z",
     "snapshot": {
       "kind": "working_tree",
       "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
@@ -1032,10 +1032,8 @@
       ]
     },
     "class": "P2",
-    "readiness": "blocked",
-    "blockers": [
-      "Predecessor G3_AUTHORITY is not completed"
-    ],
+    "readiness": "ready",
+    "blockers": [],
     "dependencies": [
       "G3_AUTHORITY"
     ],
@@ -1045,27 +1043,31 @@
       2000
     ],
     "decision": {
-      "summary": "Dependency-gated future generation: Integrate reconciled default evidence; preserve all versions",
+      "summary": "Inventory both preserved default variants and current on-disk differences; integrate missing vetted code/evidence without overwriting newer main; preserve all variants and avoid default reset until exact coverage and runtime consumers are verified",
       "alternatives": [
         "Chosen: preserve and verify before requested GitHub push",
         "Deferred: further Mini config code until consolidation checkpoint",
         "Rejected: all-bookmark push or blind trunk merge"
       ],
       "counterevidence": [
-        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
-        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+        "G3 completed and main/origin verified54888bd6; 236commits uploaded",
+        "Default998path count is historical; current delta must be measured",
+        "Foreign-writer and live-state evidence are never blindly accepted"
       ],
       "assumptions": [
         "Existing origin is intended target as explicitly requested by user"
       ],
       "confidence": "analyst_estimate",
-      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "forecast": "Within one active hour classify default variants and land an evidence/code tranche if review permits",
       "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
       "acceptance": [
-        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+        "Every path in both default variants and fresh on-disk delta classified with source locator and disposition",
+        "No newer main implementation or historical evidence lost; secret/live/binary paths remain excluded",
+        "Changed code builds and relevant tests pass; independent AGY review exact candidate",
+        "JJ main push/readback verified; any default-workspace transition separately fenced after consumer checks"
       ],
       "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
-      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "reviewer": "Codex integration; AGY independent review",
       "budget": "One-hour claimed task; bounded processes; no new packages",
       "residuals": [
         "Pattern scan cannot prove absence of all secrets",

@@ -1,0 +1,286 @@
+{
+  "schema": "uos-project-analysis-observations/v1",
+  "contract": "SC-RELEASE-ASSURANCE-001",
+  "timestamp": "2026-10-24T05:17:00Z",
+  "plan_id": "uos/project-analysis/20261024-0512",
+  "task_id": "AGY_AUDIT",
+  "worker": "agy-analysis-20261024",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "terminal_pane": "w2:p9",
+  "canonical_workspace": "/home/an/NAS-setup/uos",
+  "active_workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+  "execution_mode": "BOUNDED_READ_ONLY_ANALYSIS",
+  "acknowledgements": {
+    "raw_coordinator_insert": "CONFIRMED_ZERO: No raw coordinator SQL INSERT was ever executed, attempted, or designed by AGY. The coordinator SQLite store is structurally protected by append-only triggers (events_no_update, events_no_delete, events_chain, events_no_replace, events_payload). Zero chain corruption verified.",
+    "production_release_status": "CONFIRMED_HOLD: Zero production admission claimed. Production deployment remains strictly on HOLD pending complete sovereign review.",
+    "expired_claims": "CONFIRMED_EXPIRED: SERVICE_IMPL (attempt 8) in uos/telegram-runtime/20261001-1150 lease expired; no authority exercised to resume it.",
+    "vcs_discipline": "CONFIRMED_NO_MUTATIONS: Standalone JJ preserved; main at a8adcc69 unchanged; no commits, merges, or working-tree snapshots created."
+  },
+  "runtime_observations": {
+    "host": {
+      "utc_timestamp": "2026-10-24T05:17:00Z",
+      "chrony_tracking": {
+        "source": "chronyc tracking",
+        "abs_ntp_offset_seconds": 0.000631,
+        "uncertainty_seconds": 0.013995,
+        "stratum": 3
+      }
+    },
+    "core_systemd_user_services": {
+      "uos_ecology_templated": {
+        "unit": "uos-ecology@20260930-0807-5fdb0051061cf1c2dd7cf6e8a5af8f842df205d4c10d6ae04cd41fe1397f2872.service",
+        "status": "active (running)",
+        "uptime": "since Wed 2026-09-30 10:36:50 CEST (3 weeks 2 days)",
+        "restarts": 0,
+        "main_pid": 292729,
+        "memory_rss": "54.6M",
+        "endpoints": [
+          "http://100.87.7.78:4110",
+          "http://nas-1.tail55d152.ts.net:4110/ecology"
+        ]
+      },
+      "c3i_gleam_server": {
+        "unit": "c3i-gleam-server.service",
+        "status": "active (running)",
+        "uptime": "since Wed 2026-09-30 10:37:24 CEST (3 weeks 2 days)",
+        "restarts": 0,
+        "main_pid": 293276,
+        "memory_rss": "94.3M",
+        "endpoints": [
+          "http://0.0.0.0:4100",
+          "https://0.0.0.0:4101"
+        ]
+      },
+      "c3i_zenoh_router": {
+        "unit": "c3i-zenoh-router-1.service",
+        "status": "active (running)",
+        "uptime": "since Wed 2026-09-30 04:22:01 CEST (3 weeks 3 days)",
+        "restarts": 0,
+        "main_pid": 9954,
+        "memory_rss": "18M",
+        "type": "Podman conmon container"
+      },
+      "c3i_sa_plan_http": {
+        "unit": "c3i-sa-plan-http.service",
+        "status": "active (running)",
+        "uptime": "since Wed 2026-09-30 04:22:01 CEST (3 weeks 3 days)",
+        "restarts": 0,
+        "main_pid": 9026,
+        "memory_rss": "15.7M",
+        "port": 4200
+      },
+      "uos_telegram_bridge": {
+        "unit": "uos-telegram-bridge.service",
+        "status": "active (running)",
+        "uptime": "since Wed 2026-09-30 04:22:01 CEST (3 weeks 3 days)",
+        "restarts": 0,
+        "main_pid": 10219,
+        "memory_rss": "76.1M",
+        "binary": "/home/an/NAS-setup/uos/tools/telegram_client.exe"
+      },
+      "ecology_untemplated_note": "Untemplated ecology.service is not loaded; this is intentional systemd template design, not an outage."
+    },
+    "telemetry_credibility_gap": {
+      "endpoint": "http://127.0.0.1:4100/health",
+      "observed_response": {
+        "container_count": 0,
+        "healthy_count": 0,
+        "threat_level": "unknown",
+        "zenoh_connected": false
+      },
+      "root_cause_code_location": "apps/cepaf_gleam/src/c3i_nif.erl:57",
+      "code_snippet": "system_health() -> <<\"{\\\"container_count\\\":0,\\\"healthy_count\\\":0,\\\"threat_level\\\":\\\"unknown\\\",\\\"zenoh_connected\\\":false}\">>.",
+      "finding": "The /health endpoint returns an Erlang static constant stub and does not query the active Zenoh router (unit c3i-zenoh-router-1 is active and running). Transport status must not be inferred from this endpoint."
+    },
+    "ecology_swarm_telemetry": {
+      "endpoint": "http://100.87.7.78:4110/api/v1/ecology/swarm",
+      "cycle_counter": 2059468,
+      "total_holons": 11,
+      "successful_invocations": 79210,
+      "unavailable_invocations": 0,
+      "masked_invocations": 0,
+      "homeostatic_error": 0.001,
+      "lyapunov_energy": 5e-7
+    }
+  },
+  "coordinator_and_provenance": {
+    "coordinator_db": "var/coordination/tri-agent/coordinator.sqlite3",
+    "total_events": 634,
+    "latest_sequence": 634,
+    "latest_event_time_utc": "2026-10-12 04:00:40",
+    "latest_event_operation": "release",
+    "latest_event_actor": "claude-telegram-lifecycle-20261012",
+    "trigger_protection": [
+      "events_no_update",
+      "events_no_delete",
+      "events_chain",
+      "events_no_replace",
+      "events_payload"
+    ],
+    "admitted_ev_ceiling": 93,
+    "highest_ev_claimed": 109,
+    "status_above_ceiling": "NOT_ADMITTED",
+    "km_gate_status": "PASS",
+    "cycle_chain": "CHAIN_INTACT",
+    "adr_total": 137,
+    "quarantined_total": 16,
+    "quarantined_range": "ADR-071..ADR-086 (EV-94..EV-109)"
+  },
+  "sa_plan_global_metrics": {
+    "total_plans": 267,
+    "total_tasks": 1475,
+    "task_breakdown": {
+      "completed": 1247,
+      "available": 207,
+      "executing": 21
+    },
+    "expired_executing_tasks": 20,
+    "total_oban_jobs": 186,
+    "job_breakdown": {
+      "available": 129,
+      "completed": 46,
+      "executing": 11
+    },
+    "total_temporal_workflows": 196,
+    "workflow_breakdown": {
+      "completed": 108,
+      "running": 86,
+      "failed": 2
+    }
+  },
+  "telegram_goal_plans_summary": {
+    "uos/telegram-runtime/20261001-1150": {
+      "total_tasks": 55,
+      "completed": 43,
+      "available": 10,
+      "executing_expired": 2,
+      "expired_details": [
+        "SERVICE_IMPL (attempt 8, worker agy-telegram-20261012)",
+        "SERVICE_DRAFT_REVIEW (attempt 7, worker codex-telegram-20261012)"
+      ]
+    },
+    "uos/telegram-admission/20261001-1015": {
+      "total_tasks": 12,
+      "completed": 10,
+      "available": 2,
+      "available_details": ["SOURCE_REVIEW", "TELEGRAM_ACCEPT"]
+    },
+    "uos/telegram-tools/20261011-1115": {
+      "total_tasks": 10,
+      "completed": 10,
+      "available": 0
+    },
+    "uos/telegram-reclaim-tool/20261012-0226": {
+      "total_tasks": 4,
+      "completed": 4,
+      "available": 0
+    },
+    "uos/telegram-resume/20261012-0216": {
+      "total_tasks": 3,
+      "completed": 3,
+      "available": 0
+    },
+    "uos/telegram-dashboard/20261012-0230": {
+      "total_tasks": 1,
+      "completed": 1,
+      "available": 0
+    }
+  },
+  "jujutsu_vcs_state": {
+    "parent_commit": "xmovsnno a8adcc69 main* | restore: verified canonical direct reads, AGY RCA and independent release closure",
+    "parent_main_status": "UNCHANGED",
+    "working_copy": "suukkrkq c29b1127 feat(telegram): implement Slice 2 supervised OTP actor API and end-to-end integration tests",
+    "working_copy_diffstat": "723 files, 116356 insertions, 6567 deletions (development candidate edits; uncommitted; no snapshots created)",
+    "git_mutations": "ZERO (prohibited under canonical policy)"
+  },
+  "source_pins_verification": {
+    "reference_manifest": "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+    "verified_pins_count": 11,
+    "matched_pins_count": 11,
+    "all_pins_match": true,
+    "digests": {
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam": "89bff24203c254037ad2384c99ecaed84a3d6a31406f4e311adfb51a482807ae",
+      "apps/cepaf_gleam/src/telegram_service_ffi.erl": "be2e0dba51fda4664557b83dc65fce8f006e9bd6ee7807f380329fa17210fba3",
+      "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam": "235ffa5536f21e64917372b0fc69fbb326fbd87ecbe7170d5772e3852350f331",
+      "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam": "a43004b326d1d268b9f6b7274a04adcbce1d0e437fc878d95799dae64ac3e225",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938",
+      "apps/cepaf_gleam/src/telegram_http_ffi.erl": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam": "37c591e8a7df18d46f77f08735d9c3af2d765042f2de4e691f7bbb04290d0ede",
+      "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam": "b758894d49a049a8e1cf95d7f827ed148a2a567b9f1639429ae94c07836a1656",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam": "11d853c053ee2c25f9986f2d4767ba7c8c9f968312a5359075f4627acf41e18a",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam": "5179ae66592be576495a51f9a740abead29bcf5debdabc85258f56b831f3a809"
+    }
+  },
+  "release_assurance_17_aspects": {
+    "1_version_and_build_authority": {
+      "status": "PASS",
+      "evidence": "OTP 29.0.5 erts-17.0.5, Gleam 1.16.0, JJ 0.44.0 under tools/lib/uos-toolchain.sh."
+    },
+    "2_clean_source_tree_and_workspace_isolation": {
+      "status": "HOLD",
+      "evidence": "Working copy holds 723 modified files; main is a8adcc69; no unreviewed commits."
+    },
+    "3_unit_test_coverage": {
+      "status": "PASS_DEVELOPMENT_ONLY",
+      "evidence": "Fresh candidate tests passed 78/78 in candidate harness; global test suites unrun in audit."
+    },
+    "4_integration_and_e2e_verification": {
+      "status": "HOLD",
+      "evidence": "Slice 2 mock E2E passed (8/8); real live Telegram send acceptance remains on HOLD."
+    },
+    "5_formal_verification_and_gospel_z3": {
+      "status": "PASS_BOUNDED",
+      "evidence": "Traceability.lean and TwoLattice_STM.lean active; bounded Z3 solvers."
+    },
+    "6_performance_and_latency": {
+      "status": "PASS",
+      "evidence": "Ecology homeostatic error 0.001, Lyapunov energy 5e-7; 79,210 invocations with 0 unavailable."
+    },
+    "7_memory_and_leak_profiling": {
+      "status": "PASS",
+      "evidence": "Systemd RSS memory nominal: ecology 54.6MB, gleam server 94.3MB, sa-plan 15.7MB."
+    },
+    "8_concurrency_and_smp_safety": {
+      "status": "PASS_CANDIDATE",
+      "evidence": "StoreWorker serializes SQLite mutations; RestForOne supervision handles restarts."
+    },
+    "9_failure_injection_and_resilience": {
+      "status": "PASS_TESTED",
+      "evidence": "RestForOne kill cascade verified in supervised_service_four_roles_and_rest_for_one_test."
+    },
+    "10_security_and_secrets_management": {
+      "status": "PASS",
+      "evidence": "Strict Zero-Muda; zero hardcoded bot tokens or secret keys in source."
+    },
+    "11_telemetry_and_observability": {
+      "status": "HOLD_CREDIBILITY_GAP",
+      "evidence": "/health static stub in c3i_nif.erl:57 requires refactoring to report live Zenoh connectivity."
+    },
+    "12_multi_agent_coordination": {
+      "status": "PASS",
+      "evidence": "Coordinator SQLite store intact with 634 append-only events; 0 corruptions."
+    },
+    "13_storage_and_vfs_integrity": {
+      "status": "PASS",
+      "evidence": "SQLite WAL journals clean; zero corruptions across sa-plan and coordinator."
+    },
+    "14_network_and_transport_boundary": {
+      "status": "PASS",
+      "evidence": "Tailscale FQDN nas-1.tail55d152.ts.net reachable; Zenoh router unit active."
+    },
+    "15_deployment_and_release_packaging": {
+      "status": "PASS_TEMPLATED",
+      "evidence": "Systemd template uos-ecology@ active with 23+ days uptime."
+    },
+    "16_rollback_and_recovery_discipline": {
+      "status": "PASS",
+      "evidence": "Sa-plan claim recovery and expired claim accounting verified."
+    },
+    "17_production_admission_status": {
+      "status": "HOLD",
+      "evidence": "Final admission ceiling remains EV-93; Telegram production release strictly HOLD."
+    }
+  }
+}

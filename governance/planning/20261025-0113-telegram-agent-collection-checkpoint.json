@@ -1,0 +1,96 @@
+{
+  "schema": "uos.telegram.agent-collection.checkpoint.v1",
+  "observed_at": "2026-10-25T01:14:07.185Z",
+  "candidate": "8110970849ac239f81c8ae247bcfc929d1bc7c54",
+  "parent": "0c9e0ddfddc73f7668ad3e81928c9c404924be32",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "task": "COMMAND_IMPL",
+  "attempt": 13,
+  "scope": "AGY terminal collection reserves40seconds plus30second margin instead of another full model runtime; current leases/identity/epoch/clock checks preserved.",
+  "tests": {
+    "distinct": 16,
+    "full_suite": false
+  },
+  "review": {
+    "conversation": "5c37776b-c5ed-4d7c-9c10-05a2d6f2ff59",
+    "seconds": 32.624196889,
+    "ack": true,
+    "candidate": "8110970849ac239f81c8ae247bcfc929d1bc7c54",
+    "verdict": "PASS",
+    "findings": [
+      "Launch preserves full requested runtime plus 30s safety margin across both pre-launch fences while TerminalCollection uses a 40s runtime (70s total horizon with 30s margin) only after systemd SubState is confirmed terminal (exited, failed, or dead).",
+      "All three lease domains (session_authority workspace lease in boot_us, parent task_ns/coordinator_us via dev.fence_for(70000) and long_job_window, and sa_plan_job lease_until_ns via outcome.authorize) plus identity, epoch, clock continuity, active-job receipt matching, and invalid duration rejection (outside 30..900s) remain fail-closed with no expiry bypass.",
+      "The 16 EUnit tests genuinely cover pure validation, binding, sandbox, classification, fence_runtime phase selection, and 70s boundary checks for long_job_window and outcome.authorize, with the limitation that effectful fence/launch/collect paths (live session_authority workspace lease lookup, SQLite read_job, clock continuity, and systemd interactions) are not exercised in unit tests."
+    ]
+  },
+  "live": {
+    "conversation": "02710f07-441c-4008-8a3d-076b51cb6e23",
+    "collector": "MODEL_RESPONSE_COMPLETE_REVIEW_REQUIRED",
+    "authority": "Ok(Nil)",
+    "horizon": {
+      "observed_at": "2026-10-25T01:12:54.091Z",
+      "lease_until_ns": "1792890907845273579",
+      "remaining_ns": "133754273579",
+      "original_runtime_seconds": 120,
+      "old_collection_horizon_seconds": 150,
+      "new_collection_horizon_seconds": 70,
+      "old_job_lease_check_would_pass": false,
+      "new_job_lease_check_would_pass": true
+    }
+  },
+  "plan_review": {
+    "observed_at": "2026-10-25T01:13:16.772Z",
+    "conversation": "02710f07-441c-4008-8a3d-076b51cb6e23",
+    "seconds": 16.517252067,
+    "ack": true,
+    "verdict": "ADOPT",
+    "next_task": "Close /agy collector fix 81109708 after live test passes, release COMMAND_IMPL claim as incomplete, and claim MINI_API_IMPL in the existing workspace.",
+    "reason": "The plan preserves full release scope and honest accounting—keeping 45 Telegram commands, 13 MiniApp backends, and 7 media/gateway items open without completion or optimality claims—while removing artificial serialization between unfinished Telegram commands and dependency-ready MINI_API_IMPL work (INTEGRATION_DESIGN and MINI_AUTH_VERIFY complete, 21/21 source hashes matching 76360aa3, risk preflight PASS).",
+    "conditions": [
+      "Finish and close live collector verification for 81109708 before transitioning claims.",
+      "Release COMMAND_IMPL explicitly as incomplete so all 45 missing commands remain open in scope tracking.",
+      "Re-verify clean JJ state and 21/21 source hash match to accepted 76360aa3 when claiming MINI_API_IMPL.",
+      "Reuse accepted FMEA/verification read adapters and execute authenticated HTTP and browser positive, denial, and failure tests.",
+      "Enforce single AGY process, independent Codex verification, and serialized integration within Sa-plan/Gleam/JJ boundaries."
+    ],
+    "qualification": "Advisory plan review, not admission. Seven media types plus gateway are separate obligations; do not reduce to seven combined items."
+  },
+  "evidence_root": "var/recovery-runtime/20261025-0109-agy-collection",
+  "coverage": {
+    "reachable": 32,
+    "total": 77,
+    "backend_unavailable": 23,
+    "not_implemented": 22,
+    "changed": false
+  },
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "live_telegram": false,
+  "production_release": false,
+  "global_admission": false,
+  "main_merged": false,
+  "full_feature_complete": false,
+  "management": {
+    "active_assignments_limit": 1,
+    "next_task": "MINI_API_IMPL",
+    "canonical_authority": "Sa-plan/Gleam",
+    "no_new_scheduler": true,
+    "mini_source_matches": 21
+  },
+  "failed_plan_review": {
+    "job": "completion-plan0107",
+    "status": "INCOMPLETE_OR_FAILED",
+    "reason": "execution timed out"
+  },
+  "residuals": [
+    "70second collection horizon still requires timely supervision; expired jobs fail closed.",
+    "Only current bounded development dispatcher selected; not a production deployment.",
+    "Full Telegram command/MiniApp/media/gateway/live acceptance remain."
+  ]
+}

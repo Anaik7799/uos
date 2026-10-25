@@ -1,0 +1,124 @@
+{
+  "observed_at": "2026-10-24T07:01:23.957Z",
+  "plan": "uos/agy-operations/20261024-0642",
+  "task": "RUNNER",
+  "worker": "codex-analysis-20261024",
+  "attempt": 1,
+  "candidate": "c9b9c6a08d4a68fc2b1e13ec3628509a6209831b",
+  "sources": [
+    {
+      "path": "src/cepaf_gleam/harness/agy_dispatch.gleam",
+      "sha256": "3395e4409e717bf216b3d8c4a39524319d2ccd0901c5917d7100d8d76d18e8a1"
+    },
+    {
+      "path": "src/cepaf_gleam/harness/agy_job_result.gleam",
+      "sha256": "d217f686d524e7f28f6720e11d2909794f6839d180ae46f60cbaa76b94656070"
+    },
+    {
+      "path": "src/agy_dispatch_cli.gleam",
+      "sha256": "3dae3e0ca4c1ba60f7ff3906bd84d25c75f1197721eab9a94cc1513070f766e6"
+    },
+    {
+      "path": "test/agy_dispatch_test.gleam",
+      "sha256": "4b4bc91f8ce295422f59a9ebab0b74677ec91aa1e6fa4311009cc81ec6e53057"
+    },
+    {
+      "path": "test/agy_job_result_test.gleam",
+      "sha256": "2d15e47dc8cb9fd9858a3ac599dab93463414b1a194a625b062b4be5612e27cd"
+    }
+  ],
+  "tests": {
+    "chunk_id": "eae2b9",
+    "wall_time_seconds": 0.392113661,
+    "exit_code": 0,
+    "original_token_count": 349,
+    "output": "======================== EUnit ========================\nmodule 'agy_job_result_test'\n  agy_job_result_test: classify_valid_success_response_test...[0.025 s] ok\n  agy_job_result_test: classify_rejects_actual_empty_success_timeout_failure_test...ok\n  agy_job_result_test: classify_rejects_explicit_and_diagnostic_timeout_test...ok\n  agy_job_result_test: classify_rejects_nonzero_exit_test...ok\n  agy_job_result_test: classify_rejects_malformed_and_missing_json_fields_test...ok\n  agy_job_result_test: classify_stdout_byte_limit_boundary_test...[0.005 s] ok\n  agy_job_result_test: authorize_valid_and_boundary_runtime_test...ok\n  agy_job_result_test: authorize_rejects_wrong_owner_id_attempt_state_test...ok\n  agy_job_result_test: authorize_rejects_expired_or_insufficient_lease_and_invalid_now_test...ok\n  [done in 0.057 s]\nmodule 'agy_dispatch_test'\n  agy_dispatch_test: request_refuses_path_escape_sql_and_scope_confusion_test...[0.003 s] ok\n  agy_dispatch_test: canonical_job_must_bind_parent_task_attempt_workspace_and_mode_test...ok\n  agy_dispatch_test: review_has_no_writable_workspace_and_hides_global_mcp_configuration_test...ok\n  agy_dispatch_test: operation_identity_binds_exact_request_bytes_test...[0.008 s] ok\n  agy_dispatch_test: longer_jobs_require_both_clock_domain_leases_test...ok\n  [done in 0.026 s]\n=======================================================\n  All 14 tests passed.\n"
+  },
+  "negative_launch": {
+    "chunk_id": "67be14",
+    "wall_time_seconds": 0.924545248,
+    "exit_code": 1,
+    "original_token_count": 19,
+    "output": "backend_exit:1\n{\"status\":\"HOLD\",\"error\":\"invalid or mismatched attempt\"}\n"
+  },
+  "actual_launch": {
+    "chunk_id": "c5b0ba",
+    "wall_time_seconds": 1.6030717399999999,
+    "exit_code": 0,
+    "original_token_count": 69,
+    "output": "{\"status\":\"DISPATCHED_NOT_COMPLETE\",\"unit\":\"uos-agy-2bbcd9c38b3ea94b8d60350c\",\"job\":\"uos/agy-operations/20261024-0642/dispatch-review2\",\"request_sha256\":\"2bbcd9c38b3ea94b8d60350c24b8653c7d8695e5784f310b507de3adf063bc9f\",\"model\":\"gemini-4-argon-high\",\"runtime_seconds\":240}\n"
+  },
+  "actual_collect": {
+    "chunk_id": "8362c1",
+    "wall_time_seconds": 1.243671972,
+    "exit_code": 0,
+    "original_token_count": 117,
+    "output": "{\"status\":\"MODEL_RESPONSE_COMPLETE_REVIEW_REQUIRED\",\"job\":\"uos/agy-operations/20261024-0642/dispatch-review2\",\"request_sha256\":\"2bbcd9c38b3ea94b8d60350c24b8653c7d8695e5784f310b507de3adf063bc9f\",\"unit_result\":\"success\",\"exit_code\":0,\"classification\":{\"conversation_id\":\"1b7c9e5a-df5a-4b63-b996-ad9de1250f7b\",\"response_sha256\":\"2c2f6912e09a0320b349617139449b58fbf6da5b33a3a7bfd5aaf2d8db5ee403\"},\"authority\":\"Ok(Nil)\",\"task_completion\":false,\"runtime_admission\":false}\n"
+  },
+  "independent_review": {
+    "verdict": "PASS",
+    "candidate": "c9b9c6a08d4a68fc2b1e13ec3628509a6209831b",
+    "findings": [],
+    "scope": {
+      "files_reviewed": [
+        "src/cepaf_gleam/harness/agy_dispatch.gleam",
+        "src/cepaf_gleam/harness/agy_job_result.gleam",
+        "src/agy_dispatch_cli.gleam",
+        "test/agy_dispatch_test.gleam",
+        "test/agy_job_result_test.gleam"
+      ],
+      "root_tests_observed": {
+        "chunk_id": "eae2b9",
+        "exit_code": 0,
+        "tests_passed": 14
+      },
+      "verified_properties": [
+        "Request validation enforces strict identifier allowlists, path-component checks on workspace and request filenames, positive epoch/attempt bounds, mode restriction (review or code), runtime bounds (30..900s), and prompt byte bounds (1..65536).",
+        "Canonical job lookup binds job ID prefix to plan, enforces single-row decoding, and matches job args JSON against parent plan, task, worker, attempt, workspace, and mode.",
+        "Dual clock-domain fencing verifies continuity and requires both UTC task lease and boot-domain coordinator/workspace leases to cover runtime_seconds plus a 30s safety margin before launch and at collection.",
+        "Sandbox configuration mounts root read-only, hides global /home/an/.gemini via tmpfs while mounting only the private profile and config, isolates /run/user/1000 to expose only the filtered org.freedesktop.secrets D-Bus proxy socket read-only, and binds the workspace writable only in code mode.",
+        "Exclusive active-job.json and per-unit output/receipt creation prevent automatic retry after ambiguous launch while preserving evidence for operator reconciliation.",
+        "Result classification fails closed on systemd non-success results, non-zero exit codes, stderr print-timeout diagnostics, stdout exceeding 1 MiB, malformed JSON, non-SUCCESS status, or empty/whitespace response and conversation_id, while never granting automatic task completion or runtime admission."
+      ]
+    },
+    "limits": [
+      "Review is static over the supplied source files and provided EUnit output (chunk eae2b9); no tools were invoked and no additional runtime tests were executed.",
+      "External harness modules (cepaf_gleam/harness/admission, development, files, clock, and uos_swarm session modules) were evaluated only at their call boundaries.",
+      "Same-user hostile host interference outside the bwrap/systemd user unit boundary and lease expiration when collection occurs after remaining lease drops below runtime_seconds + 30s are outside the stated isolation and launch-lease guarantees."
+    ]
+  },
+  "model": {
+    "name": "gemini-4-argon-high",
+    "conversation": "1b7c9e5a-df5a-4b63-b996-ad9de1250f7b",
+    "duration_seconds": 48.534685274,
+    "usage": {
+      "input_tokens": 19539,
+      "output_tokens": 4271,
+      "thinking_tokens": 3707,
+      "cache_read_tokens": 0,
+      "total_tokens": 23810
+    }
+  },
+  "limits": [
+    "Development only; no production/global admission",
+    "Same-user hostile host not confined",
+    "Caller maintains coordinator heartbeat; collection needs fresh authority",
+    "Task completion remains explicit and requires independent result review",
+    "Private pre-provisioned profile and installed host tools are finite dependencies"
+  ],
+  "task_completion": false,
+  "invocation": {
+    "executable": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl",
+    "argv": [
+      "+S",
+      "2:2",
+      "-noshell",
+      "-eval",
+      "code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/var/recovery-runtime/20261024-0527-telegram-independent/lib/*/ebin\")),code:add_patha(\"/home/an/NAS-setup/uos/var/recovery-runtime/20261024-0651-agy-dispatch/build/ebin\"),agy_dispatch_cli:main(),halt().",
+      "-extra",
+      "launch",
+      "20261024-0657-dispatch-review.json"
+    ],
+    "collect_operation": "replace launch with collect, preserving the same request filename"
+  }
+}

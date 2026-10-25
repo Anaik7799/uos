@@ -1,0 +1,12 @@
+{
+  "schema": "uos.telegram.poll-boundary.v1",
+  "observed_at": "2026-10-24T07:37:45Z",
+  "authority": "PRIVATE_DEVELOPMENT_OBSERVATION_ONLY",
+  "source_sha256": "89bff24203c254037ad2384c99ecaed84a3d6a31406f4e311adfb51a482807ae",
+  "fixture_sha256": "f123b0e87664001d7242c8dc62638ffe6d195ffd632ef59ee0651c5518995304",
+  "result": "five_second_result={raised,error,\n                           #{function => <<\"perform_call\">>,line => 630,\n                             message =>\n                                 <<\"callee did not send reply before timeout\">>,\n                             module => <<\"gleam/erlang/process\">>,\n                             start => 21766,\n                             value => {error,nil},\n                             file => <<\"src/gleam/erlang/process.gleam\">>,\n                             'end' => 21794,gleam_error => let_assert,\n                             pattern_end => 21786,pattern_start => 21777}} elapsed_ms=5001\neleven_second_result={ok,[]} elapsed_ms=6007\n",
+  "negative_setup": "five_second_result={returned,{error,<<\"http_poll_network_error: hackney_not_started\">>}} elapsed_ms=6\neleven_second_result={error,<<\"http_poll_network_error: hackney_not_started\">>} elapsed_ms=0\n",
+  "finding": "Valid HTTP getUpdates response after6s is rejected by the fixed5s poller RPC with a raised assertion. Sameworker, sameHTTPconfig,11sRPC returns Ok([]) after6007ms. Service full public-flow fix still required.",
+  "external_telegram_contact": false,
+  "live_messages_sent": 0
+}

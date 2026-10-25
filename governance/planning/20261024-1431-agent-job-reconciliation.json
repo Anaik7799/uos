@@ -1,0 +1,21 @@
+{
+  "observed_at": "2026-10-24T14:31:35.194Z",
+  "status": "RECONCILED_NO_MODEL_RERUN",
+  "jobs": [
+    {
+      "id": "uos/telegram-runtime/20261001-1150/command-catalog-20261024-1335",
+      "original_conversation": "e6af1a74-16fc-45b6-91f9-3ad8fc8d083f",
+      "unit": "uos-agy-be61fc4939a714f105945daa"
+    },
+    {
+      "id": "uos/telegram-runtime/20261001-1150/command-review-20261024-1345",
+      "original_conversation": "6009b683-74c0-4f70-b347-108e460be72f",
+      "unit": "uos-agy-337e9a5b0edb95c9fdb4931c"
+    }
+  ],
+  "process_observation": "both inactive/dead/MainPID0",
+  "administrative_attempt": 2,
+  "worker": "codex-analysis-20261024",
+  "reason": "Original accepted output was collected but canonical job completion omitted; expired completion correctly rejected. Canonical reclaim permitted reconciliation with terminal process evidence.",
+  "remaining_executing_command_jobs": 0
+}

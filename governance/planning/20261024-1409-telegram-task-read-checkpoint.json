@@ -1,0 +1,70 @@
+{
+  "schema": "uos.telegram.command-checkpoint.v1",
+  "observed_at": "2026-10-24T14:11:10.428Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 1,
+  "worker": "codex-analysis-20261024",
+  "status": "VERIFIED_PARTIAL_IMPLEMENTATION_TASK_REMAINS_OPEN",
+  "candidate": "211a5356f1e90875bb82f3696fc53395b1c19f2b",
+  "parent": "5d6dc9ef2d662773f7f8d2ffddfd1f6de4e12a0b",
+  "source_author": "Codex; AGY code request timed out without code",
+  "independent_review": {
+    "model": "gemini-4-argon-high",
+    "conversation_id": "0bd922cf-0cd1-4ce9-b5ef-2aa33e8423bd",
+    "verdict": "PASS",
+    "findings": [],
+    "executed_tests": false
+  },
+  "tests": {
+    "unit_service_fault": 181,
+    "baseline_e2e": 13,
+    "managed_lifecycle": 7,
+    "runtime_entry": 2,
+    "additional_command_e2e": 6,
+    "total_distinct": 209
+  },
+  "new_functionality": [
+    "Read-only /task <id> against configured plan through pinned native observer",
+    "Safe task metadata projection; no private worker/result fields",
+    "Changing backend state, missing task, database outage/recovery and real durable HTTP delivery verified"
+  ],
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/artifact-manifest.json",
+      "sha256": "bdbcc6e408586f47712192cfcf0f2414e0cdd3349edbdf17f4faafb2881a129d"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/agy-review-raw.json",
+      "sha256": "5b8945bdf6466b4a7cff6a86038afdaadd64ace9df47ab830b9459a08f4eb9e7"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/agy-review.json",
+      "sha256": "c2d8643ce028ffc80617cabbd68269cac5daa0f49e827e23bf606a08d0c86c63"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/suite-unit.json",
+      "sha256": "9e7a4b88f2d427cbc140276d1d8680df37d68b231abaabb78c22b9e68970e022"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/suite-e2e-baseline.json",
+      "sha256": "ce643a380ca740722515131d47265c6ac88b7b39c6b32ee3e18fe792720232f5"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/lifecycle-seven.json",
+      "sha256": "8497e63c21f00163f84cbc134c1401b167b02d044115f2871774a70f18673db2"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/runtime-entry-focused.json",
+      "sha256": "a5db18a657eedd53221d3d28f175cfcc4cfac62c2b50d1d38916a055b4e3622f"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1400-task-command/task-e2e-final.json",
+      "sha256": "f25b098cefcec4e7a4a64b95fda0653c9f3fd000c4663ca11e0f60c6d23bee89"
+    }
+  ],
+  "goal_met": false,
+  "main_merged": false,
+  "runtime_admission": "NOT_GRANTED",
+  "remaining": "Full command/conversation adapters; Mini App; media; gateway; integrated browser/live acceptance; release/admission/main."
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T20:03:43.456Z",
+  "candidate": "384a18f7e8af577613431e2b8328a1a4f7950ae8",
+  "parent": "2779b7f24141e60c88dadff2fc2289c0b67aa160",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 8,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Typed Gleam transport to real framed native cancellation and historical recovery; existing-only schema7 store",
+  "tests": {
+    "native_suites": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0,
+    "reaped": 12,
+    "residual": 0,
+    "legacy_cli_invocations": 6,
+    "framed_worker_invocations": 6,
+    "typed_gleam_native_calls": 4,
+    "transport_regression": 19,
+    "mutants_killed": 3,
+    "mutants_survived": 0,
+    "mutants_void": 0,
+    "full_system": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-1944-cancel-frame/artifact-manifest.json",
+    "source_matches": 66,
+    "files": 644,
+    "unhashed_links": 110
+  },
+  "native_executable": {
+    "observed_at": "2026-10-24T19:59:02.861Z",
+    "source": "var/recovery-runtime/20261024-1944-cancel-frame/native/_build/default/modules/sa_plan/test/sa_plan_cancel_worker.exe",
+    "artifact": "var/recovery-runtime/20261024-1944-cancel-frame/transport/worker.exe",
+    "bytes": 39073592,
+    "sha256": "49d6475f03b7d141ead54befbcbf7f567a95bf0dc0c17e57ee5f6bd8e1fb44d5",
+    "stripping_adopted": false
+  },
+  "independent_review": {
+    "conversation": "b03f650b-cca3-42b9-977f-74b3ab892219",
+    "duration_seconds": 32.74620905,
+    "verdict": "PASS",
+    "authority_collection": "Ok",
+    "residual_risks": [
+      "Component-level acceptance only: this review covers frozen candidate 384a18f7e8af577613431e2b8328a1a4f7950ae8 (parent 2779b7f2, under reclaimed COMMAND_IMPL attempt 8 / coordinator 8) in isolated fixtures and does not grant live admission or resolve effect-time authority.",
+      "End-to-end live governance gates remain unfulfilled by this transport increment: authenticated protected roster and signer ingress, effect-time coordinator and host-boot admission checks, durable pre-effect request persistence, and durable Telegram outbox/reply integration are still required.",
+      "Ambiguous transport outcomes (nonzero worker exit, framing/stdout failure, timeout, or guardian/port uncertainty) do not prove effect absence and forbid blind retry; callers must persist the exact request prior to invocation and reconcile via read-only cancellation-result lookup.",
+      "Cooperative OS boundary: terminal symlink, link-count (st_nlink = 1), regular-file, and 64MiB SHA-256 pinning checks happen in user space prior to open/exec; parent-directory traversal and same-UID concurrent replacement remain a trusted local launcher boundary rather than an OS-adversary proof.",
+      "Semantic scope of cancellation: a successful worker response only records durable database job-lease revocation (task_cancelled=false, process_quiesced=false) and does not terminate or prove quiescence of an already-spawned OS process or task.",
+      "Platform assumption: worker wall-clock observation uses Core.Time_ns.to_int_ns_since_epoch |> Stdlib.Int64.of_int, which relies on 64-bit native OCaml target integers."
+    ]
+  },
+  "preserved_hold": {
+    "conversation": "f8a10b94-049e-4935-a34d-ab88e6925953",
+    "model_verdict": "PASS",
+    "collection": "STALE_AUTHORITY_HOLD parent_lease_too_short_for_job",
+    "job_disposition": "discarded",
+    "repair": "Release/reclaim parent attempt8/coordinator8, actual current-authority independent revalidation"
+  },
+  "observer": {
+    "task": "OBSERVE16",
+    "state": "completed",
+    "job": "uos/agy-operations/20261024-0642/live-dashboard19",
+    "review": "7bf91058-87c4-47cc-8428-4165ad612183",
+    "expires_at": "2026-10-24T20:40:58.463Z",
+    "unit": "uos-recovery-dashboard-20261024-r19.service",
+    "invocation": "a245ea2ac9704b1b97cf446518c912f0"
+  },
+  "runtime": {
+    "completed": 61,
+    "total": 71
+  },
+  "release": {
+    "completed": 25,
+    "total": 33
+  },
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false,
+  "next": "Connect protected signer/approval ingress and current effect-time fences to the verified transport; persist original request and recover/deliver result through existing Telegram outbox. Remaining full command/MiniApp/media/gateway scope retained."
+}

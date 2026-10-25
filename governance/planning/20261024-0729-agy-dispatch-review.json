@@ -1,0 +1,47 @@
+{
+  "observed_at": "2026-10-24T07:04:51.496Z",
+  "plan": "uos/agy-operations/20261024-0642",
+  "task": "REVIEW",
+  "worker": "codex-analysis-20261024",
+  "attempt": 1,
+  "candidate": "c9b9c6a08d4a68fc2b1e13ec3628509a6209831b",
+  "verdict": "PASS_DEVELOPMENT_ONLY",
+  "independent_peer": {
+    "verdict": "PASS",
+    "candidate": "c9b9c6a08d4a68fc2b1e13ec3628509a6209831b",
+    "findings": [],
+    "scope": {
+      "files_reviewed": [
+        "src/cepaf_gleam/harness/agy_dispatch.gleam",
+        "src/cepaf_gleam/harness/agy_job_result.gleam",
+        "src/agy_dispatch_cli.gleam",
+        "test/agy_dispatch_test.gleam",
+        "test/agy_job_result_test.gleam"
+      ],
+      "root_tests_observed": {
+        "chunk_id": "eae2b9",
+        "exit_code": 0,
+        "tests_passed": 14
+      },
+      "verified_properties": [
+        "Request validation enforces strict identifier allowlists, path-component checks on workspace and request filenames, positive epoch/attempt bounds, mode restriction (review or code), runtime bounds (30..900s), and prompt byte bounds (1..65536).",
+        "Canonical job lookup binds job ID prefix to plan, enforces single-row decoding, and matches job args JSON against parent plan, task, worker, attempt, workspace, and mode.",
+        "Dual clock-domain fencing verifies continuity and requires both UTC task lease and boot-domain coordinator/workspace leases to cover runtime_seconds plus a 30s safety margin before launch and at collection.",
+        "Sandbox configuration mounts root read-only, hides global /home/an/.gemini via tmpfs while mounting only the private profile and config, isolates /run/user/1000 to expose only the filtered org.freedesktop.secrets D-Bus proxy socket read-only, and binds the workspace writable only in code mode.",
+        "Exclusive active-job.json and per-unit output/receipt creation prevent automatic retry after ambiguous launch while preserving evidence for operator reconciliation.",
+        "Result classification fails closed on systemd non-success results, non-zero exit codes, stderr print-timeout diagnostics, stdout exceeding 1 MiB, malformed JSON, non-SUCCESS status, or empty/whitespace response and conversation_id, while never granting automatic task completion or runtime admission."
+      ]
+    },
+    "limits": [
+      "Review is static over the supplied source files and provided EUnit output (chunk eae2b9); no tools were invoked and no additional runtime tests were executed.",
+      "External harness modules (cepaf_gleam/harness/admission, development, files, clock, and uos_swarm session modules) were evaluated only at their call boundaries.",
+      "Same-user hostile host interference outside the bwrap/systemd user unit boundary and lease expiration when collection occurs after remaining lease drops below runtime_seconds + 30s are outside the stated isolation and launch-lease guarantees."
+    ]
+  },
+  "source_hashes_unchanged": true,
+  "response_hash_verified": true,
+  "owned_units": "ActiveState=inactive\nSubState=dead\n\nActiveState=inactive\nSubState=dead\n",
+  "active_receipt_removed": true,
+  "global_admission": false,
+  "journal": "docs/journal/20261024-0745-agy-operational-mechanism.md"
+}

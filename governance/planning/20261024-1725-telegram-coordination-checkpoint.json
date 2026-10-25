@@ -1,0 +1,48 @@
+{
+  "candidate": "b2e3dcd5af1bca8b31d561962f5aaf6dcccdec01",
+  "observed_at": "2026-10-24T17:25:11.115Z",
+  "distinct_tests": 72,
+  "executions": 72,
+  "runs": [
+    "coord-unit-settled.json",
+    "coord-service-final.json",
+    "coord-authority-final.json"
+  ],
+  "complete": true,
+  "full_suite": false,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "independent_review": [
+    "e85ed1a5-a057-4b4b-a844-e8eba5711763 PASS production/source",
+    "3020a0b7-5b98-4c00-9a7c-6c0897d3ccc2 PASS test-only delta"
+  ],
+  "code_author": "AGY 41fb6417-8f2f-4c23-bcba-fb88dbb221ee",
+  "evidence_root": "var/recovery-runtime/20261024-1713-coordination",
+  "task": "COMMAND_IMPL",
+  "attempt": 5,
+  "live_telegram": false,
+  "global_admission": false,
+  "full_feature_complete": false,
+  "commands": [
+    "/peers",
+    "/board",
+    "/tool query_peers",
+    "/tool query_board"
+  ],
+  "scope": "Canonical heartbeat freshness and metadata counts; process liveness and private message contents not reported",
+  "manifest": {
+    "files": 10481,
+    "canonical_matches": 30,
+    "unhashed_directory_links": 3
+  },
+  "observer": {
+    "state": "OBSERVE13_COMPLETED",
+    "job": "uos/agy-operations/20261024-0642/live-dashboard15",
+    "unit": "uos-recovery-dashboard-20261024-r15.service",
+    "invocation": "53e004c71d6c4d38b3d292fe16bb509c",
+    "review": "cead730a-0d1e-49dc-ac8f-4b7f11ecda23 PASS",
+    "config_sha256": "dc4078b6ce136d7145f63547253be4e5f71c65caf6ca2d2aa0c0267dfd0a34ce",
+    "snapshot_at": "2026-10-24T17:28:36Z",
+    "expires_at": "2026-10-24T18:19:03.431Z",
+    "stale_gap": "Previous grant expired17:25:44Z; replacement fresh17:28:36Z after discarded truncated review."
+  }
+}

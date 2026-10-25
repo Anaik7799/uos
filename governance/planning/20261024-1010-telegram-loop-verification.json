@@ -1,0 +1,86 @@
+{
+  "observed_at": "2026-10-24T10:10:32.423Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_IMPL",
+  "attempt": 10,
+  "candidate": "1b6f230f31dbfcb84f179989c34c4987e4d88883",
+  "bookmark": "integration/telegram-loop-verified-20261024-1010",
+  "status": "VERIFIED_DEVELOPMENT_COMPONENT",
+  "scope": "Finite opt-in automatic poll/dispatch loop with actual two-command supervised service integration",
+  "cases": {
+    "unit_service_fault": 123,
+    "e2e": 11,
+    "total": 134,
+    "failed": 0
+  },
+  "source_binding": {
+    "canonical_sources_equal": 32,
+    "hashed_artifacts": 279,
+    "private_fault_modules": 4,
+    "child_core_modules_pinned": 11,
+    "full_transitive_closure_pinned": false
+  },
+  "reviewers": [
+    "agy849de0ce core driver",
+    "agya2bfb0d2 integration",
+    "agy356e5661 D2/D3 follow-up",
+    "Codex observed regressions"
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/suite-unit-final.json",
+      "sha256": "d9df1e1e9d907569a27dbb5217b28ea3f779a9e76a0b8371f13cff997eee8428"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/suite-e2e-final.json",
+      "sha256": "4c27cd740ffa4628cca21900f7f7389a381634d8a613a4bfa67f2ef8a4a159ec"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/artifact-manifest-final.json",
+      "sha256": "c953ffc777c17e36052c7e1c800f56d024a9d3046a5c4fd6ddf459e7dfb31bc3"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/agy-source-review.json",
+      "sha256": "ccedb54e58b47b852333c03e9b5193088462513b42ac625d53b5db30ac2e1548"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/agy-integration-review.json",
+      "sha256": "2a6a9fa12f56cac87fc7d29f5720e1e4d1c1947113e21c35de46323df7d6f19f"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/agy-hardening-review.json",
+      "sha256": "dd13d610a8a9ea0d695a0afa185df7737f7cc3601a4f2b98e242c34a4760512b"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/service-integration.json",
+      "sha256": "b8b2422f56508c352cc043885b2fb9b40f94cc2e11677658adbbdaa75309d65c"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/service-integration-review-hardening.json",
+      "sha256": "e9f1d12dc696fdffd96a26625debd2f35d28d1777b8d3188a8a7948b2d538533"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0948-telegram-loop/service-integration-confirmed-cleanup.json",
+      "sha256": "c086b071cd6468105e4136dca22d0d8110daa8ce224c858249240709e07b3c81"
+    }
+  ],
+  "rca": [
+    "Normal replay fixture ignored positiveoffset; new opt-in offset_aware mode preserves replaytest semantics and permits actual2cycle progress.",
+    "Cleanup result was discarded; assertingit exposed runnerstop erased unit invocation before observation. Verified lifecycle stop now owns cleanup."
+  ],
+  "forecast_resolution": {
+    "prior": "docs/journal/20261024-0943-telegram-serialization-verification.md",
+    "probability": 0.7,
+    "horizon_minutes": 60,
+    "prediction": "finite driver compiles and passes real-actor two-cycle fixture",
+    "outcome": true,
+    "brier": 0.09
+  },
+  "remaining": [
+    "Overall service requirement review including single-poller admission, authority loss/restart and ownership",
+    "Production startup/release wiring and independently reviewed recovery",
+    "Command/media/gateway/MiniApp completion, live acceptance and finalbrowser tests",
+    "Globaladmission and mainlineintegration"
+  ],
+  "goal_met": false
+}

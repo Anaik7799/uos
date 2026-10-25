@@ -1,0 +1,56 @@
+{
+  "observed_at": "2026-10-24T08:45:47.669Z",
+  "plan": "uos/telegram-completion/20261024-0809",
+  "task": "RECOVER",
+  "worker": "codex-analysis-20261024",
+  "attempt": 1,
+  "status": "VERIFIED_METADATA_RECOVERY",
+  "goal_met": false,
+  "source_candidate": "9d61cb381cf36bee6c77c8a5f8431847708a29f1",
+  "peer": {
+    "observed_at": "2026-10-24T08:44:15.447Z",
+    "proposal_sha256": "126e806dc96667684d687b9a29c3093e397d9b80506dd82b5949ea2cfc02da03",
+    "review": {
+      "conversation_id": "b09112e3-b2ad-4a81-91ba-01055aabae89",
+      "status": "SUCCESS",
+      "response": "{\n  \"supplied_proposal_sha256\": \"126e806dc96667684d687b9a29c3093e397d9b80506dd82b5949ea2cfc02da03\",\n  \"digest_acknowledgement\": \"Acknowledged root-supplied SHA256 digest for /home/an/NAS-setup/uos/var/recovery-runtime/20261024-0836-service-recovery/review-proposal.json without claiming independent hash computation.\",\n  \"decision\": \"PASS\",\n  \"scope_reviewed\": \"Exact two-claim administrative metadata recovery on plan uos/telegram-runtime/20261001-1150 by root worker codex-analysis-20261024: SERVICE_DRAFT_REVIEW (codex-telegram-20261012 attempt 7 expired -> attempt 8) and SERVICE_IMPL (agy-telegram-20261012 attempt 8 expired -> attempt 9).\",\n  \"conditions\": [\n    \"Verify root RECOVER authority (uos/telegram-completion/20261024-0809, attempt 1) and active workspace coordinator lease (epoch 2) are current and unexpired before executing any claim.\",\n    \"Re-verify the exact old binding tuple (worker, attempt, expired lease_until_ns, state executing, result null, completed_at_ns null) immediately prior to each canonical tools/sa-plan task claim; abort immediately on any mismatch, live lease, or recorded result.\",\n    \"Execute only the two canonical tools/sa-plan task claim commands as codex-analysis-20261024 with no worker impersonation, direct SQLite writes, product edits, or release effects.\",\n    \"Confirm resulting attempts match expected values (SERVICE_DRAFT_REVIEW attempt 8, SERVICE_IMPL attempt 9) while preserving prior worker history and untouched tasks (including STORE_REVIEW).\",\n    \"Run ordinary active validation, freshness, and admission checks in the isolated workspace (codex-telegram-poll-20261024) under fresh coordinator fencing before any subsequent product work.\"\n  ]\n}\n",
+      "duration_seconds": 59.633826198,
+      "num_turns": 1,
+      "usage": {
+        "input_tokens": 11767,
+        "output_tokens": 2160,
+        "thinking_tokens": 1582,
+        "cache_read_tokens": 7806,
+        "total_tokens": 13927
+      }
+    },
+    "scope": "metadata-only"
+  },
+  "claims": {
+    "draft": {
+      "chunk_id": "e4a3e3",
+      "wall_time_seconds": 0.163290577,
+      "exit_code": 0,
+      "original_token_count": 194,
+      "output": "claimed=true task=SERVICE_DRAFT_REVIEW attempt=8 lease_until_ns=1792835067870582359\nsa-plan-pipeline {\"request_id\":\"sa-plan-1792831467867630227\",\"command\":\"--claim\",\"authority\":\"report_only\",\"total_ns\":13444053,\"server_timing\":\"decode;dur=0.002, normalize;dur=0.002, validate;dur=0.001, store_open;dur=2.930, dispatch;dur=9.864, store_close;dur=0.629, total;dur=13.444\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1743,\"duration_ms\":0.001743},{\"name\":\"normalize\",\"duration_ns\":1503,\"duration_ms\":0.001503},{\"name\":\"validate\",\"duration_ns\":862,\"duration_ms\":0.000862},{\"name\":\"store_open\",\"duration_ns\":2929980,\"duration_ms\":2.92998},{\"name\":\"dispatch\",\"duration_ns\":9864221,\"duration_ms\":9.864221000000001},{\"name\":\"store_close\",\"duration_ns\":628732,\"duration_ms\":0.628732}]}\n"
+    },
+    "implementation": {
+      "chunk_id": "8a62e3",
+      "wall_time_seconds": 0.113664069,
+      "exit_code": 0,
+      "original_token_count": 191,
+      "output": "claimed=true task=SERVICE_IMPL attempt=9 lease_until_ns=1792835068610177416\nsa-plan-pipeline {\"request_id\":\"sa-plan-1792831468607241715\",\"command\":\"--claim\",\"authority\":\"report_only\",\"total_ns\":14407906,\"server_timing\":\"decode;dur=0.001, normalize;dur=0.001, validate;dur=0.001, store_open;dur=2.913, dispatch;dur=10.447, store_close;dur=1.024, total;dur=14.408\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1342,\"duration_ms\":0.001342},{\"name\":\"normalize\",\"duration_ns\":1443,\"duration_ms\":0.001443},{\"name\":\"validate\",\"duration_ns\":661,\"duration_ms\":0.000661},{\"name\":\"store_open\",\"duration_ns\":2913389,\"duration_ms\":2.913389},{\"name\":\"dispatch\",\"duration_ns\":10447387,\"duration_ms\":10.447387},{\"name\":\"store_close\",\"duration_ns\":1023505,\"duration_ms\":1.023505}]}\n"
+    }
+  },
+  "checks": [
+    "metadata-before-first-claim-full-set.json",
+    "metadata-before-impl-claim.json",
+    "SERVICE_DRAFT_REVIEW-active-compact.json",
+    "SERVICE_IMPL-active-compact.json"
+  ],
+  "limitations": [
+    "No product runtime acceptance or release granted",
+    "All original source and failed receipts preserved",
+    "Task ownership is separate from runtime authority"
+  ]
+}

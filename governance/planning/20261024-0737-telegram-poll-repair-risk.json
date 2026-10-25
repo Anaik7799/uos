@@ -1,0 +1,672 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-poll-fix-20261024",
+    "plan_id": "uos/telegram-poll-repair/20261024-0737",
+    "task_id": "FIX",
+    "actor": "codex-analysis-20261024",
+    "scope": "AGY code repair of reproduced nested Telegram poll timeout in owned sibling workspace, bounded tests only; no live send or production release.",
+    "phase": "implementation",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T07:37:45Z",
+    "valid_until": "2026-10-24T08:37:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T07:37:45Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Valid HTTP getUpdates response after6s is rejected by the fixed5s poller RPC with a raised assertion. Sameworker, sameHTTPconfig,11sRPC returns Ok([]) after6007ms. Service full public-flow fix still required.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "sha256": "21cf5597f9340d18bd4e38fafd326dfde59e6b97afd0537ddbd538ac53fb4d31",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "sha256": "89bff24203c254037ad2384c99ecaed84a3d6a31406f4e311adfb51a482807ae",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "sha256": "be2e0dba51fda4664557b83dc65fce8f006e9bd6ee7807f380329fa17210fba3",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "sha256": "235ffa5536f21e64917372b0fc69fbb326fbd87ecbe7170d5772e3852350f331",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "sha256": "a43004b326d1d268b9f6b7274a04adcbce1d0e437fc878d95799dae64ac3e225",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "sha256": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "sha256": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "sha256": "37c591e8a7df18d46f77f08735d9c3af2d765042f2de4e691f7bbb04290d0ede",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "sha256": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "sha256": "b758894d49a049a8e1cf95d7f827ed148a2a567b9f1639429ae94c07836a1656",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "sha256": "11d853c053ee2c25f9986f2d4767ba7c8c9f968312a5359075f4627acf41e18a",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "sha256": "5179ae66592be576495a51f9a740abead29bcf5debdabc85258f56b831f3a809",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "sha256": "fda20795bc8b79e5232ec0cd0b6667d5f859606c627edd8e9168d3244d549b70",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "sha256": "69692cc7f8680395b6513798b2ffb83c366b277cc8e55f59594578dc8a4ad6ed",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "tools/validation/telegram_store_recovery_worker.ml",
+          "sha256": "d6d1cc6211c467eb32e6e7225ca41d271a14556db8f605ad70170304eb71da8d",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "governance/planning/20261024-0737-telegram-poll-boundary.json",
+          "sha256": "5df3f6725d81ea411ff5434d97258d4f75b29c7dd208888afc5947e435230e23",
+          "observed_at": "2026-10-24T07:37:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36 band4: authority loss or uncertain delivery can cause wrong or duplicated effects.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-SERVICE-AUTHORITY-UNCERTAINTY",
+        "cause": "Authority changes or uncertain storage outcomes race message delivery.",
+        "effect": "Unauthorized or duplicated effect, lost result, false completion.",
+        "controls": "Private copied authority DB, local HTTP fixture only, exact-source independent falsifiers and preserved receipts.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam Telegram delivery controller",
+      "control_action": "Authorize request processing and commit delivery outcome",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing telemetry is hidden rather than surfaced.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unavailable stub response is reported fresh or healthy.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old or future-dated sample is called current.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cached success remains green after its evidence expires.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "AGY code repair of reproduced nested Telegram poll timeout in owned sibling workspace, bounded tests only; no live send or production release.",
+      "alternatives": [
+        "Typed honest unavailable/unknown projection with actual evidence where present: selected.",
+        "Keep string-length success or make every route falsely green: rejected."
+      ],
+      "counterevidence": [
+        "Actual5sRPC raises while6svalidresponse is within10sHTTPdeadline"
+      ],
+      "assumptions": [
+        "Known service APIs may lack observation timestamps; those stay UNKNOWN rather than fabricate freshness."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Expect derived finite deadline to accept valid6sresponse without weakening stale authority controls; unverified until actual test.",
+      "falsifier": "6svalidresponse fails or timeout kills/hangs service after repair",
+      "acceptance": [
+        "Reproduce valid6sreply failure before fixing",
+        "Derive bounded RPC deadline from actual HTTP timeout with scheduling margin; do not reduce requested long-poll duration to mask failure",
+        "Timeout/death returns typed error without hanging service; keep authority recheck after HTTP before side effects",
+        "Real delayed HTTP success and HTTP timeout negatives plus service regressions",
+        "Independent exact-source review before stable integration"
+      ],
+      "rollback": "Keep deployed capsule/main unchanged; preserve own isolated candidate on failure.",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "LiveTelegramacceptance remains unrun",
+        "Otherfeatures andglobaladmission remain pending"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-poll-review-20261024",
+    "plan_id": "uos/telegram-poll-repair/20261024-0737",
+    "task_id": "REVIEW",
+    "actor": "codex-analysis-20261024",
+    "scope": "Independent real HTTP delay/timeout and full service regressions at exact fixed candidate; no live send or production release.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T07:37:45Z",
+    "valid_until": "2026-10-24T08:37:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T07:37:45Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Valid HTTP getUpdates response after6s is rejected by the fixed5s poller RPC with a raised assertion. Sameworker, sameHTTPconfig,11sRPC returns Ok([]) after6007ms. Service full public-flow fix still required.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "sha256": "21cf5597f9340d18bd4e38fafd326dfde59e6b97afd0537ddbd538ac53fb4d31",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "sha256": "89bff24203c254037ad2384c99ecaed84a3d6a31406f4e311adfb51a482807ae",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "sha256": "be2e0dba51fda4664557b83dc65fce8f006e9bd6ee7807f380329fa17210fba3",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "sha256": "235ffa5536f21e64917372b0fc69fbb326fbd87ecbe7170d5772e3852350f331",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "sha256": "a43004b326d1d268b9f6b7274a04adcbce1d0e437fc878d95799dae64ac3e225",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "sha256": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "sha256": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "sha256": "37c591e8a7df18d46f77f08735d9c3af2d765042f2de4e691f7bbb04290d0ede",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "sha256": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "sha256": "b758894d49a049a8e1cf95d7f827ed148a2a567b9f1639429ae94c07836a1656",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "sha256": "11d853c053ee2c25f9986f2d4767ba7c8c9f968312a5359075f4627acf41e18a",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "sha256": "5179ae66592be576495a51f9a740abead29bcf5debdabc85258f56b831f3a809",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "sha256": "fda20795bc8b79e5232ec0cd0b6667d5f859606c627edd8e9168d3244d549b70",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "sha256": "69692cc7f8680395b6513798b2ffb83c366b277cc8e55f59594578dc8a4ad6ed",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "tools/validation/telegram_store_recovery_worker.ml",
+          "sha256": "d6d1cc6211c467eb32e6e7225ca41d271a14556db8f605ad70170304eb71da8d",
+          "observed_at": "2026-10-24T07:37:45Z"
+        },
+        {
+          "path": "governance/planning/20261024-0737-telegram-poll-boundary.json",
+          "sha256": "5df3f6725d81ea411ff5434d97258d4f75b29c7dd208888afc5947e435230e23",
+          "observed_at": "2026-10-24T07:37:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36 band4: authority loss or uncertain delivery can cause wrong or duplicated effects.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Verified delivery and authority prerequisites block full Telegram completion; scoped independent review is ready.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+          "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+          "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+          "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+          "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+          "tools/validation/telegram_store_recovery_worker.ml"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-SERVICE-AUTHORITY-UNCERTAINTY",
+        "cause": "Authority changes or uncertain storage outcomes race message delivery.",
+        "effect": "Unauthorized or duplicated effect, lost result, false completion.",
+        "controls": "Private copied authority DB, local HTTP fixture only, exact-source independent falsifiers and preserved receipts.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam Telegram delivery controller",
+      "control_action": "Authorize request processing and commit delivery outcome",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing telemetry is hidden rather than surfaced.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unavailable stub response is reported fresh or healthy.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old or future-dated sample is called current.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cached success remains green after its evidence expires.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "FIX"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Independent real HTTP delay/timeout and full service regressions at exact fixed candidate; no live send or production release.",
+      "alternatives": [
+        "Typed honest unavailable/unknown projection with actual evidence where present: selected.",
+        "Keep string-length success or make every route falsely green: rejected."
+      ],
+      "counterevidence": [
+        "Actual5sRPC raises while6svalidresponse is within10sHTTPdeadline"
+      ],
+      "assumptions": [
+        "Known service APIs may lack observation timestamps; those stay UNKNOWN rather than fabricate freshness."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Expect derived finite deadline to accept valid6sresponse without weakening stale authority controls; unverified until actual test.",
+      "falsifier": "6svalidresponse fails or timeout kills/hangs service after repair",
+      "acceptance": [
+        "Reproduce valid6sreply failure before fixing",
+        "Derive bounded RPC deadline from actual HTTP timeout with scheduling margin; do not reduce requested long-poll duration to mask failure",
+        "Timeout/death returns typed error without hanging service; keep authority recheck after HTTP before side effects",
+        "Real delayed HTTP success and HTTP timeout negatives plus service regressions",
+        "Independent exact-source review before stable integration"
+      ],
+      "rollback": "Keep deployed capsule/main unchanged; preserve own isolated candidate on failure.",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "LiveTelegramacceptance remains unrun",
+        "Otherfeatures andglobaladmission remain pending"
+      ],
+      "supersedes": null
+    }
+  }
+]

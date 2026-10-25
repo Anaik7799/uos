@@ -1,0 +1,35 @@
+{
+  "observed_at": "2026-10-24T07:39:38.881Z",
+  "candidate": "b5afe12bd09ff1c621b98b40615c8a9e56422cc7",
+  "config_sha256": "785e13547d68cf06e66bcbc64827d14844ed34c0215f00530f6f10c47c1114f7",
+  "source_files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/restoration_observer.gleam",
+      "sha256": "6ec4d95ddfb1603db30c9bcdbe9541d2795e081bc92c1a2101b82491522ff05d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/dashboard_refresh.gleam",
+      "sha256": "1a063c3678e5fa1c384d7638f561911feae635782626691200692a45b1498372"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/restoration_observer_cli.gleam",
+      "sha256": "afa1cc6a120fdb649d7ea5b07de0c1db5b47b45a0c47d34c448c119ccae478d9"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/dashboard_refresh_test.gleam",
+      "sha256": "9234b29258b98cee898927857351716769b2d0a3ca6d6102ac51fbe4edeebdcf"
+    },
+    {
+      "path": "apps/cepaf_gleam/priv/static/20261024-0712-recovery-dashboard.html",
+      "sha256": "4a9e98b5ae8e5ccd484bf00e8c8b64e452d6ac074214f1af40a43a52243d7db2"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/restoration_observer_test.gleam",
+      "sha256": "768e612d993756ef3d2c924bb3858015e7a475fa20a6560ce604b7e53c26691a"
+    }
+  ],
+  "review_conversation": "e45d4213-30ef-47a1-9467-2706bbde43ba",
+  "review_verdict": "PASS_SCOPED",
+  "tests": 24,
+  "application_admitted": false
+}

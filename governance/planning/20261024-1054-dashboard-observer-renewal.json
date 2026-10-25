@@ -1,0 +1,31 @@
+{
+  "observed_at": "2026-10-24T10:54:23Z",
+  "plan": "uos/telegram-completion/20261024-0809",
+  "task": "OBSERVE4",
+  "attempt": 1,
+  "status": "VERIFIED_FINITE_OBSERVER_RENEWAL",
+  "task_resource": "task:d98913bb844f05fd97db0d1d0e380c0ec17b3aacf1657085a255cde6568f5258",
+  "config_sha256": "5a6172f79856ca3a82cf0bfdf3613ae184493e1077f3d51ece8f2cc6b229fb78",
+  "expires_us": 1792842345878000,
+  "old_stopped": {
+    "chunk_id": "f306a9",
+    "wall_time_seconds": 0.130033433,
+    "exit_code": 0,
+    "original_token_count": 15,
+    "output": "ActiveState=inactive\nSubState=dead\nMainPID=0\nResult=success\n"
+  },
+  "new_started": {
+    "chunk_id": "9561b6",
+    "wall_time_seconds": 0.172274822,
+    "exit_code": 0,
+    "original_token_count": 28,
+    "output": "Running as unit: uos-recovery-dashboard-20261024-r5.service; invocation ID: 92c205b1462247328db5ff3242befa83\n"
+  },
+  "snapshot_ref": "var/recovery-runtime/20261024-1032-writer-admission/dashboard5-startup.json",
+  "review_ref": "var/recovery-runtime/20261024-1032-writer-admission/dashboard5-review.json",
+  "limits": [
+    "Unchanged observer code,31controlIDs andHTML",
+    "Read-only finite observation; noTelegram release oradmission",
+    "Serialized stop/start; no overlapping writers; brief restart interval"
+  ]
+}

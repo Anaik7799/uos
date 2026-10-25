@@ -1,0 +1,147 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T20:59:58.482Z",
+  "candidate": "259402d211b463c7f5793e0668f37a494305602f",
+  "parent": "6930ed7499c22990ba3d7c5a03dfeaf25df15cdd",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 9,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Bind cancellation bridge to an already-claimed canonical controller without reclaim or task mutation",
+  "tests": {
+    "native_suites": 12,
+    "failed": 0,
+    "skipped": 0,
+    "new_bridge_assertions": 23,
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "mutants_killed": 5,
+    "mutants_survived": 0,
+    "mutants_void": 0,
+    "restored": true,
+    "full_system": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2052-bridge-bind/artifact-manifest.json",
+    "source_matches": 146,
+    "files": 1199,
+    "unhashed_symlinks": 111
+  },
+  "code_author": {
+    "agent": "AGY Gemini4ArgonHigh",
+    "conversation": "b22b4d3e-55f4-4cf9-bf77-8a5e7f042634",
+    "duration_seconds": 99.905182033
+  },
+  "independent_review": {
+    "conversation": "6135d77a-751a-474e-a4ee-c103437c6884",
+    "duration_seconds": 33.480822701,
+    "verdict": "PASS",
+    "findings": [],
+    "residual_risks": [
+      "Scoped native SQLite primitive only: protected bridge provisioning transport, runtime controller binding, signer/profile authentication, and effect-time coordinator/clock/host verification remain unintegrated obligations before live Telegram cancellation can be enabled.",
+      "Unconditional live-lease exclusion (`prior.expires_at_ns > now_ns`) rejects same-owner retries with `bridge_bind_lease_already_live`; runtime callers recovering from ambiguous outcomes must reconcile state via `find_bridge_lease` rather than blind retry.",
+      "`transaction store` tracks a flat `store.transaction_active` flag without nested SQLite `SAVEPOINT`s, so invoking `bind_bridge_to_claimed_task` inside an existing outer store transaction will abort the enclosing transaction if the bind returns `Error`."
+    ],
+    "authority_collection": "Ok"
+  },
+  "preserved_failures": [
+    {
+      "cause": "Test record label inferred workflow_view",
+      "resolution": "Explicit Store.bridge_mapping annotation"
+    },
+    {
+      "cause": "Zero-fence raw fixture injection correctly refused by SQLite CHECK",
+      "resolution": "Disposable corruption fixture only uses explicit local ignore_check_constraints; production CHECK untouched"
+    }
+  ],
+  "runtime": {
+    "completed": 61,
+    "total": 71,
+    "remaining": [
+      {
+        "id": "RETURN",
+        "state": "available"
+      },
+      {
+        "id": "MINI_API_IMPL",
+        "state": "available"
+      },
+      {
+        "id": "MINI_API_REVIEW",
+        "state": "available"
+      },
+      {
+        "id": "COMMAND_IMPL",
+        "state": "executing"
+      },
+      {
+        "id": "COMMAND_REVIEW",
+        "state": "available"
+      },
+      {
+        "id": "MEDIA_IMPL",
+        "state": "available"
+      },
+      {
+        "id": "MEDIA_REVIEW",
+        "state": "available"
+      },
+      {
+        "id": "GATEWAY_IMPL",
+        "state": "available"
+      },
+      {
+        "id": "GATEWAY_REVIEW",
+        "state": "available"
+      },
+      {
+        "id": "TELEGRAM_E2E",
+        "state": "available"
+      }
+    ]
+  },
+  "release": {
+    "completed": 25,
+    "total": 33,
+    "remaining": [
+      {
+        "id": "AGY_IMPL",
+        "state": "available"
+      },
+      {
+        "id": "SOURCE_REVIEW",
+        "state": "available"
+      },
+      {
+        "id": "PREP",
+        "state": "available"
+      },
+      {
+        "id": "RELEASE_REVIEW",
+        "state": "available"
+      },
+      {
+        "id": "RELEASE",
+        "state": "available"
+      },
+      {
+        "id": "TELEGRAM_ACCEPT",
+        "state": "available"
+      },
+      {
+        "id": "ADMISSION",
+        "state": "available"
+      },
+      {
+        "id": "CLOSE",
+        "state": "available"
+      }
+    ]
+  },
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false,
+  "next": "Protected bridge provisioning transport, actual signer/profile ingress, effect-time coordinator/host/clock fences and live cancellation route with uncertain/absent reconciliation. Remaining commands/MiniApp/media/gateway then browser/live acceptance, independent release/admission/main."
+}

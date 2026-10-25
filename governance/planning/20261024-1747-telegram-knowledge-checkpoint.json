@@ -1,0 +1,35 @@
+{
+  "candidate": "8b39e341d32b0356b43c079a1e2b4ee666f148a4",
+  "observed_at": "2026-10-24T17:45:46.405Z",
+  "distinct_tests": 74,
+  "executions": 74,
+  "runs": [
+    "knowledge-unit-first.json",
+    "knowledge-routing-regression.json",
+    "knowledge-service-final.json",
+    "knowledge-authority-final.json"
+  ],
+  "complete": true,
+  "full_suite": false,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "independent_review": "4d3ab3b5-69f5-4abf-8160-004ed5b1e929 PASS",
+  "code_author": "Codex; AGY code attempt timed out and was discarded",
+  "evidence_root": "var/recovery-runtime/20261024-1732-knowledge",
+  "task": "COMMAND_IMPL",
+  "attempt": 5,
+  "live_telegram": false,
+  "global_admission": false,
+  "full_feature_complete": false,
+  "commands": [
+    "/wiki",
+    "/zk",
+    "/km",
+    "/tool query_knowledge"
+  ],
+  "scope": "Observed canonical Markdown corpus; no atomic snapshot or document-claim admission",
+  "manifest": {
+    "files": 10505,
+    "canonical_matches": 35,
+    "unhashed_directory_links": 3
+  }
+}

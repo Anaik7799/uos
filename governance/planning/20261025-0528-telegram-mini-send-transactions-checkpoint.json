@@ -1,0 +1,34 @@
+{
+  "schema": "uos.telegram.mini-send-transactions.checkpoint.v1",
+  "observed_at": "2026-10-25T05:37:28.964Z",
+  "candidate": "a02cee6a8785753601f0d9e1688d9474d5cba883",
+  "parent": "c126c69c49b3f0b9fb94fe1b409c628dfea1e123",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "MINI_API_IMPL",
+  "attempt": 4,
+  "state": "SCOPED_DEVELOPMENT_ACCEPTED_PREREQUISITES",
+  "scope": "Native send reservation/completion and bounded model adapter; full HTTP/UI send pending",
+  "checks": {
+    "at": "2026-10-25T05:35:22.589Z",
+    "candidate": "a02cee6a8785753601f0d9e1688d9474d5cba883",
+    "combined": 267,
+    "native_store": 25,
+    "model": 18,
+    "total_distinct": 310,
+    "source_bindings": 160,
+    "source_mismatches": 0,
+    "scope": "Native Mini send reservation/completion plus existing bounded model adapter; no HTTP/UI send acceptance",
+    "live_provider": false,
+    "production_changed": false,
+    "main_merged": false
+  },
+  "reviews": [
+    "781ffad6 PASS",
+    "53737a4b PASS"
+  ],
+  "failed_review": "Design92b43f3f execution timed out; discarded, not passing",
+  "journal": "docs/journal/20261025-0528-telegram-mini-send-transactions.md",
+  "goal_met": false,
+  "production_changed": false,
+  "main_merged": false
+}

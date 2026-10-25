@@ -1,0 +1,38 @@
+{
+  "schema": "uos.telegram.mini-health.checkpoint.v1",
+  "observed_at": "2026-10-25T06:48:53.103Z",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "goal_met": false,
+  "candidate": "f34473666902d7af46f313ac470cff5b81b70c23",
+  "bookmark": "integration/telegram-mini-health-20261025",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "MINI_API_IMPL",
+    "attempt": 6,
+    "worker": "codex-analysis-20261024",
+    "state": "executing"
+  },
+  "evidence_root": "var/recovery-runtime/20261025-0640-mini-health-final2",
+  "counts": {
+    "regressions": 276,
+    "native": 18,
+    "safety": 4,
+    "truncated_projection": 1,
+    "http_unique": 4,
+    "browser": 2,
+    "source_bindings": 169,
+    "mismatches": 0
+  },
+  "review": {
+    "conversation": "3e77dabf-0bbd-4e3d-969d-d9effaf8bec4",
+    "verdict": "PASS",
+    "file": "var/recovery-runtime/20261025-0640-mini-health-final2/agy-review.json"
+  },
+  "browser": "var/recovery-runtime/20261025-0644-mini-health-browser-final2/report.json",
+  "journal": "docs/journal/20261025-0655-telegram-mini-health.md",
+  "real_telegram": false,
+  "main_merged": false,
+  "production_enabled": false,
+  "global_admission": false,
+  "fixtures_stopped": true
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "uos.telegram.action-profile.checkpoint.v1",
+  "observed_at": "2026-10-24T21:34:03.601Z",
+  "candidate": "212b058180ccf68f4ae17fd359bc1f1f983cdd1c",
+  "parent": "666fd25388cc699f921d1f12284bf6cc7ec77ffa",
+  "task": "COMMAND_IMPL",
+  "attempt": 9,
+  "state": "SCOPED_DEVELOPMENT_PASS",
+  "goal_met": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "source_files": 6,
+  "tests": {
+    "gleam": 100,
+    "native_suites": 12,
+    "native_failed": 0,
+    "native_skipped": 0,
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "gleam_mutants_killed": 4,
+    "mutants_survived": 0,
+    "mutants_void": 0
+  },
+  "manifest": {
+    "source_matches": 152,
+    "files": 1237,
+    "untraversed_symlinks": 117
+  },
+  "author": "AGY4ca7305a plus Codex adaptation/tests",
+  "independent_review": "AGY97cdea0d PASS no findings",
+  "evidence_root": "var/recovery-runtime/20261024-2122-action-profile",
+  "remaining": [
+    "Trusted launcher/profile connection",
+    "Authentic signer receipts",
+    "Current effect-time host/boot/coordinator/clock fences",
+    "Live service route and absent-outcome recovery",
+    "Other command backends",
+    "MiniApp/media/gateway/browser/live acceptance",
+    "Reviewed release/global admission/main integration"
+  ]
+}

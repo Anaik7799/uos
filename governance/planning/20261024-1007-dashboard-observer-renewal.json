@@ -1,0 +1,31 @@
+{
+  "observed_at": "2026-10-24T10:06:04Z",
+  "plan": "uos/telegram-completion/20261024-0809",
+  "task": "OBSERVE3",
+  "attempt": 1,
+  "status": "VERIFIED_FINITE_OBSERVER_RENEWAL",
+  "task_resource": "task:bfe5ebeb2fca7f688ce0b8c414cccd76f36fa98691ae64f41b371ebf5a07acbd",
+  "config_sha256": "c7b06742b8522e6429d48abb9215d17f135a09b7c99e36acc6db1d634165dbef",
+  "expires_us": 1792839542690000,
+  "old_stopped": {
+    "chunk_id": "e687b3",
+    "wall_time_seconds": 0.13098258,
+    "exit_code": 0,
+    "original_token_count": 16,
+    "output": "ActiveState=failed\nSubState=failed\nMainPID=0\nResult=exit-code\n"
+  },
+  "new_started": {
+    "chunk_id": "18db6a",
+    "wall_time_seconds": 0.13971762,
+    "exit_code": 0,
+    "original_token_count": 28,
+    "output": "Running as unit: uos-recovery-dashboard-20261024-r4.service; invocation ID: 7e87b7002ad341f282cb5ba96f762290\n"
+  },
+  "snapshot_ref": "var/recovery-runtime/20261024-0948-telegram-loop/dashboard4-startup.json",
+  "review_ref": "var/recovery-runtime/20261024-0948-telegram-loop/dashboard-renewal-review.json",
+  "limits": [
+    "Unchanged observer code, all31controlIDs and HTML",
+    "Finite observation only; no Telegram release or global admission",
+    "Brief expiry gap preserved, not uninterrupted observation"
+  ]
+}

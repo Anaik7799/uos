@@ -1,0 +1,41 @@
+{
+  "schema": "uos.telegram.serialization-verification.v1",
+  "observed_at": "2026-10-24T09:43:19.458Z",
+  "candidate": "44a26193d52c69e81032bb66bc245e69b6edcd9a",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "tests": {
+    "suite": "var/recovery-runtime/20261024-0932-service-serialization/full-suite.json",
+    "passed": 114,
+    "failed": 0,
+    "baseline": "var/recovery-runtime/20261024-0932-service-serialization/baseline-seven-valid.json",
+    "old_service_controls": {
+      "failed": 4,
+      "passed": 3
+    }
+  },
+  "implementation": {
+    "producer": "AGY gemini-4-argon-high",
+    "conversation": "498ef958-4700-4af5-9a21-a4990b66576b",
+    "receipt": "var/recovery-runtime/20261024-0932-service-serialization/agy-fix.json",
+    "independent_verifier": "Codex",
+    "changes": [
+      "Cross-path poll/dispatch/delivery busy guards",
+      "Writer HOLD preserved on in-flight revocation and reauthorization",
+      "Stale delivery completion cannot clear HOLD or mutate generation"
+    ]
+  },
+  "artifact_manifest": "var/recovery-runtime/20261024-0932-service-serialization/artifact-manifest.json",
+  "limits": [
+    "Seven targeted actor/state tests plus existing fixture suite; not full live acceptance",
+    "No finite automatic driver implementation yet; design advice2b17da1c needs UTC/monotonic correction",
+    "Task114suite not fullfeaturepercentage; service tasks remain incomplete",
+    "No live bot change, global admission, main merge or EV admission"
+  ],
+  "forecast": {
+    "prior": 0.8,
+    "event": "three reproduced guards pass within30min",
+    "observed": true,
+    "brier": 0.04
+  },
+  "main_changed": false
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "uos.telegram.shared-conversation.checkpoint.v1",
+  "observed_at": "2026-10-25T05:23:58.176Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "MINI_API_IMPL",
+  "attempt": 4,
+  "candidate": "c126c69c49b3f0b9fb94fe1b409c628dfea1e123",
+  "parents": [
+    "709c91b8a44f0c205e7bd62973ba5e8433794210",
+    "7c5acf7b6a5b1f35fd57574649536456e864800e"
+  ],
+  "state": "SCOPED_DEVELOPMENT_ACCEPTED_SHARED_SCHEMA",
+  "checks": {
+    "observed_at": "2026-10-25T05:23:05.226Z",
+    "candidate": "c126c69c49b3f0b9fb94fe1b409c628dfea1e123",
+    "unit_native": 267,
+    "native_conversation": 17,
+    "native_memory": 11,
+    "http_baseline": 41,
+    "http_telemetry": 7,
+    "http_memory": 11,
+    "native_receipt_recovery": 2,
+    "http_logger": 9,
+    "browser_baseline": 12,
+    "browser_memory": 2,
+    "supervised_conversation": 5,
+    "supervised_memory": 5,
+    "total_distinct": 389,
+    "source_bindings": 159,
+    "source_mismatches": 0,
+    "primary_build": "var/recovery-runtime/20261025-0518-mini-schema-build5",
+    "additional_runtime_evidence": "var/recovery-runtime/20261025-0517-mini-schema-build4",
+    "repeated_unit_runs_not_double_counted": true,
+    "real_telegram_acceptance": false
+  },
+  "scope": "Shared ordered mixed conversation schema and polling/Mini feature merge; not Mini chat send",
+  "review": {
+    "plan": "5349e4ef PROCEED",
+    "source": "4754f249 PASS",
+    "test_builder": "0ddeb711-00d9-4b00-a863-453d4880e519 PASS"
+  },
+  "journal": "docs/journal/20261025-0505-telegram-shared-conversation.md",
+  "main_merged": false,
+  "production_changed": false,
+  "goal_met": false,
+  "broader_history_blanket_admission": false,
+  "runtime_admission": false,
+  "bookmark": "integration/telegram-shared-conversation-20261025-0505",
+  "invariants": [
+    {
+      "id": "TCM-01",
+      "claim": "Existing Telegram-only contexts retain exact v1 bytes",
+      "evidence": "telegram_conversation_test legacy_v1_encoding_bytes_unchanged_test"
+    },
+    {
+      "id": "TCM-02",
+      "claim": "Mini and Telegram identities are disjoint and history is uniformly ordered/bounded",
+      "evidence": "mixed schema unit tests"
+    },
+    {
+      "id": "TCM-03",
+      "claim": "Polling and memory commands consume stored v2; stale completion cannot undo Mini clear",
+      "evidence": "native-conversation-results.json"
+    },
+    {
+      "id": "TCM-04",
+      "claim": "Actual signed private browser requests preserve clear/reset and receipt-only recovery",
+      "evidence": "browser-memory/report.json"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "uos.telegram.mini-memory.checkpoint.v1",
+  "observed_at": "2026-10-25T05:02:40.924Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "MINI_API_IMPL",
+  "attempt": 4,
+  "candidate": "709c91b8a44f0c205e7bd62973ba5e8433794210",
+  "parent": "be56afb562b046acc85cc684b230a7979ee4e6c0",
+  "bookmark": "integration/telegram-mini-memory-20261025-0540",
+  "state": "SCOPED_DEVELOPMENT_ACCEPTED_CLEAR_RESET",
+  "scope": "Retained conversation clear/reset; no Telegram message deletion or quota reset",
+  "evidence": "var/recovery-runtime/20261025-0457-mini-memory-build8",
+  "checks": {
+    "at": "2026-10-25T05:00:37.211Z",
+    "candidate": "709c91b8a44f0c205e7bd62973ba5e8433794210",
+    "unit": 93,
+    "native": 11,
+    "http_baseline": 41,
+    "http_telemetry": 7,
+    "http_memory": 11,
+    "native_recovery": 2,
+    "http_logger_regression": 9,
+    "browser_baseline": 12,
+    "browser_memory": 2,
+    "total_distinct": 188,
+    "source_bindings": 91,
+    "source_mismatches": 0
+  },
+  "source_bindings": 91,
+  "source_mismatches": 0,
+  "review": {
+    "design": "5a98c637 PROCEED",
+    "core": "710fc678 PASS",
+    "ui": "614ef530 PASS",
+    "qualification": "Final test-only interrupted-completion helper/script independently executed by Codex; not included in prior AGY packet"
+  },
+  "invariants": [
+    {
+      "id": "MC-01",
+      "claim": "Only signed control user plus explicit bot/user/chat grant may clear",
+      "evidence": "memory-http.json"
+    },
+    {
+      "id": "MC-02",
+      "claim": "Every clear advances context row; older reservations cannot restore it",
+      "evidence": "native-seed-results.json"
+    },
+    {
+      "id": "MC-03",
+      "claim": "Native effect and receipt atomic; unknown never automatically replayed",
+      "evidence": "memory-native-recovery.json"
+    },
+    {
+      "id": "MC-04",
+      "claim": "Quota and Telegram watermark unchanged",
+      "evidence": "native-seed-results.json"
+    },
+    {
+      "id": "MC-05",
+      "claim": "Pending browser identity and nonce preserved; receipt-only recovery",
+      "evidence": "browser-memory/report.json"
+    }
+  ],
+  "runtime_admission": false,
+  "production_changed": false,
+  "main_merged": false,
+  "goal_met": false,
+  "observer": {
+    "unit": "uos-recovery-dashboard-20261025-r32",
+    "job": "uos/agy-operations/20261024-0642/live-dashboard32",
+    "review": "AGY0c0c5a07 PASS",
+    "expires_at": "2026-10-25T05:55:01.432Z",
+    "interval_seconds": 300,
+    "task_completion_refresh": true,
+    "static_as_is_historical": true
+  }
+}

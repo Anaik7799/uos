@@ -1,0 +1,37 @@
+{
+  "candidate": "f3645128695b853a3696cad41318d15d3770c005",
+  "observed_at": "2026-10-24T17:05:25.012Z",
+  "distinct_tests": 59,
+  "executions": 60,
+  "runs": [
+    "host-unit.json",
+    "host-e2e.json",
+    "host-status-final.json",
+    "authority-recovery.json"
+  ],
+  "complete": true,
+  "full_suite": false,
+  "qualification": "Focused affected code; one status test rerun with stronger assertions after test-only change.",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "independent_review": "f696779e-fc79-48af-ba04-f6d19a6ab8ef PASS",
+  "code_author": "AGY 0a3a6815-b82b-4b29-87ec-68bbd5acc6fa",
+  "evidence_root": "var/recovery-runtime/20261024-1657-host-observations",
+  "task": "COMMAND_IMPL",
+  "attempt": 4,
+  "live_telegram": false,
+  "global_admission": false,
+  "full_feature_complete": false,
+  "commands": [
+    "/status",
+    "/zigvm version",
+    "/tool query_zigvm_version"
+  ],
+  "scope": "Fresh validated development clock observation and pinned installed executable version; no kernel workload or production clock admission",
+  "remaining": [
+    "Other command backends and controlled actions",
+    "Real provider completion",
+    "MiniApp 13 remaining data backends and browser acceptance",
+    "Seven media types and gateway",
+    "Integrated/live acceptance, independently reviewed release, global admission and main integration"
+  ]
+}

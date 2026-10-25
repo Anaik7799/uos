@@ -1,0 +1,68 @@
+{
+  "schema": "uos.telegram.action-intent.checkpoint.v1",
+  "observed_at": "2026-10-24T18:26:15.531Z",
+  "candidate": "c7cfd4a1df7506a6a802983661d03bbefa5a0197",
+  "parent": "3b863f826036708d1a0f79649e19de050d020a6e",
+  "task": "COMMAND_IMPL",
+  "attempt": 6,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Pure immutable controlled-action request binding; no service route, authenticated approval, durable consumption or executor",
+  "distinct_tests": 41,
+  "executions": 41,
+  "runs": [
+    "intent-unit-first.json",
+    "intent-guard-regression.json"
+  ],
+  "complete": true,
+  "full_suite": false,
+  "independent_review": {
+    "conversation": "7c61e7cf-ef49-4796-bf27-9b162529cded",
+    "verdict": "PASS",
+    "findings": [
+      {
+        "severity": "info",
+        "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_action_intent.gleam",
+        "detail": "Opaque Intent constructor and pure predicates enforce syntactic invariants, fixed 24-element typed JSON array serialization, domain-separated SHA-256 request/effect digests, dual-clock (UTC and monotonic boot) window and 2000ms drift bounds, control-character/byte-length reason filtering, and constant-string error redaction ('invalid_controlled_action_request') without claiming execution authority."
+      },
+      {
+        "severity": "info",
+        "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_action_intent.gleam",
+        "detail": "Minor syntactic permissiveness (non-blocking): identifier/1 permits leading, trailing, or consecutive slashes (e.g. '//' in plan or target.job). This does not introduce serialization ambiguity or digest collision because all fields are JSON-encoded as distinct array elements and matched exactly."
+      },
+      {
+        "severity": "info",
+        "file": "apps/cepaf_gleam/test/telegram_action_intent_test.gleam",
+        "detail": "13 deterministic unit tests cover golden canonical JSON/SHA-256 vectors, per-field sensitivity across Binding/Target/Window/reason/nonce, effect_id stability across retry fences and sensitivity to identity/job changes, identifier/host/boot/digest/window/reason rejection bounds, and valid_at expiry, domain, and clock-jump boundaries."
+      },
+      {
+        "severity": "info",
+        "file": "docs/design/20261024-1822-telegram-SAFETY_ANALYSIS.md",
+        "detail": "Safety delta accurately scopes the change as a pure data descriptor prerequisite, preserves the 4 STPA UCA categories and unreduced 1-5 FMEA ratings, records all design review b6ee7573 corrections, and leaves checklist obligations and EV-94..109 admission states unclaimed."
+      }
+    ]
+  },
+  "code_author": "Codex; actual AGY code attempt3846919b timedoutempty and was discarded",
+  "design_review": "b6ee7573-f853-4bd3-9bfe-f6eb4c9dc4a2 with explicit corrections",
+  "production_enabled": false,
+  "full_feature_complete": false,
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "main_merged": false,
+  "manifest": "var/recovery-runtime/20261024-1818-control/artifact-manifest.json",
+  "safety_delta": ".uos-workspaces/codex-telegram-poll-20261024/docs/design/20261024-1822-telegram-SAFETY_ANALYSIS.md",
+  "remaining": [
+    "Authentic2oo3/operator receipts and trusted adapters",
+    "Canonical durable uniqueness and atomic consumption",
+    "Real executor postconditions and cross-store delivery reconciliation",
+    "All remaining command backends and provider completion",
+    "MiniApp13backends/browser acceptance",
+    "Seven media types and gateway",
+    "Integrated/live acceptance and independently reviewed release/global admission/main"
+  ]
+}

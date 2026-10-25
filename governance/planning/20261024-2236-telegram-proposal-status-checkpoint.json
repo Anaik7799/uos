@@ -1,0 +1,92 @@
+{
+  "schema": "uos.telegram.proposal-status-checkpoint.v1",
+  "observed_at": "2026-10-24T22:36:43.415Z",
+  "goal_met": false,
+  "authority": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 10,
+    "coordinator_epoch": 10,
+    "workspace_epoch": 2
+  },
+  "candidate": "76fadebe5c2d7219f3731f5d415eedb26a7c7573",
+  "parent": "04e060e0c4345ae82c942707c05cb5e7b7ebdb23",
+  "bookmark": "integration/telegram-proposal-status-20261024-2236",
+  "state": "SCOPED_DEVELOPMENT_VERIFIED",
+  "implemented": [
+    "Read-only exact native cancellation target, current controller/task/bridge/target checks and clock observed after database lock",
+    "Strict bounded Gleam/native target protocol",
+    "Signable proposal from exact persisted pending Telegram input and current measured service/profile authority; no effect or persistence",
+    "Requester-scoped /approval list or request status with actual local HTTP delivery and foreign-user refusal"
+  ],
+  "tests": {
+    "gleam_distinct": 116,
+    "gleam_receipt": "proposal-final-scoped-regression.json",
+    "native_suites": 12,
+    "native_passed": 12,
+    "native_failed": 0,
+    "native_skipped": 0,
+    "native_receipt": "proposal-restored-native-final.json",
+    "service_native_scenarios": 11,
+    "service_scenarios_included_in_native_suites": true,
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "mutations_killed": 3,
+    "mutations_void": 1,
+    "mutations": [
+      "mutation-0.json",
+      "mutation-1.json",
+      "approval-status-mutations-retry.json"
+    ],
+    "retained_nonpassing": [
+      "approval-status-mutations.json",
+      "approval-status-ingress.json",
+      "proposal-final-unit-regression.json"
+    ],
+    "scope": "Component development evidence; no browser or live Telegram acceptance"
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2217-action-proposal/artifact-manifest.json",
+    "source_pairs": 156,
+    "files": 1272,
+    "untraversed_symlinks": 123,
+    "worker_sha256": "b800eff783cf78a643f39f3445f73a8068cae5ed4bd7047c272070cfabc1fdc0"
+  },
+  "agy": {
+    "model": "gemini-4-argon-high",
+    "code_conversation": "7cdfdd22-dec9-41c2-bfd2-798754da16d2",
+    "review_conversation": "53989414-13b8-4b9a-a74a-f478fcfa22ee",
+    "review": "PASS",
+    "findings": [],
+    "review_seconds": 47.799713636,
+    "jobs_terminal": true
+  },
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "main_merged": false,
+  "remaining": [
+    "Durable proposal storage and signed receipt collection",
+    "End-to-end asynchronous approval and rejection/expiry/replacement handling",
+    "Managed restart across expired historical profiles",
+    "Remaining command backends",
+    "13 remaining Mini App backends and actual browser acceptance",
+    "Seven media types and gateway",
+    "Provider availability and authorized live Telegram acceptance",
+    "Independent release/global admission and stabilized applicable main integration"
+  ],
+  "risk": {
+    "criticality": "Critical",
+    "mitigation": "Current authority and exact scope before any effect; partial approvals cannot execute; preserve uncertain outcomes; candidate-bound independent review",
+    "residual": "Full asynchronous workflow and live acceptance incomplete"
+  },
+  "contribution": "Supplies the exact signable target and user-visible private pending status required by the complete Telegram approval flow.",
+  "evidence_root": "var/recovery-runtime/20261024-2217-action-proposal"
+}

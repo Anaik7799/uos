@@ -1,0 +1,27 @@
+{
+  "schema": "uos.telegram.job-budget.checkpoint.v1",
+  "observed_at": "2026-10-25T07:29:11.579Z",
+  "status": "SOURCE_ONLY_MAINLINE_INTEGRATED",
+  "candidate": "2ab401652a9f2122d58663157821ca7fde909254",
+  "parent": "8169e1b988aeb246779c0a50fd74acf596393ed4",
+  "bookmark": "main",
+  "changed_paths": 3,
+  "tests": {
+    "focused": 26,
+    "native_regression": 3383,
+    "automatic_runtest": true,
+    "red_on_parent": true,
+    "native_bindings": 62,
+    "mismatches": 0
+  },
+  "review": [
+    "4384289d-9382-4484-a17e-77818dde8ffe",
+    "5093ed55-3300-4801-a37a-1cf32f54c9a2"
+  ],
+  "evidence_root": "var/recovery-runtime/20261025-0723-job-budget-green",
+  "journal": "docs/journal/20261025-0750-telegram-expired-job-budget.md",
+  "semantics": "Exhausted expired jobs are retired on queue pull; outcome remains unknown. At most64 retirement writes perpull; remaining exhaustedrows excluded fromnewclaims.",
+  "live_binary_updated": false,
+  "production_enabled": false,
+  "goal_met": false
+}

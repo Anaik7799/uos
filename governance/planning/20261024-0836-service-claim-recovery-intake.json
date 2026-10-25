@@ -1,0 +1,102 @@
+{
+  "observed_at": "2026-10-24T08:33:59.458Z",
+  "tool_pin_checks": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/bounded.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune-project",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/host_clock.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/priority.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/reclaim_metadata.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/record.ml",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam",
+      "match": true
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "match": true
+    },
+    {
+      "path": "tools/validation/obs_guardian.exe",
+      "match": true
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/recovery-runtime/20261012-0258-metadata-repair-independent/clean-build/default/validate.exe",
+      "match": true
+    }
+  ],
+  "claims": [
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "SERVICE_DRAFT_REVIEW",
+      "state": "executing",
+      "worker": "codex-telegram-20261012",
+      "lease_until_ns": "1791779738622968909",
+      "attempt": 7,
+      "result": null,
+      "completed_at_ns": null
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "SERVICE_IMPL",
+      "state": "executing",
+      "worker": "agy-telegram-20261012",
+      "lease_until_ns": "1791779912473656299",
+      "attempt": 8,
+      "result": null,
+      "completed_at_ns": null
+    }
+  ],
+  "source_candidate": "9d61cb381cf36bee6c77c8a5f8431847708a29f1",
+  "scope": "Exact metadata recovery only, independently reviewed before mutations; no product execution until ordinary active gates pass.",
+  "next_worker": "codex-analysis-20261024",
+  "expected_attempts": {
+    "SERVICE_IMPL": 9,
+    "SERVICE_DRAFT_REVIEW": 8
+  },
+  "preserve": [
+    "All prior worker identities/results",
+    "Original source candidates and reports",
+    "Coordinator history and main bookmark"
+  ],
+  "procedure": [
+    "Guarded readonly metadata observation of exactexpired tuple for both claims",
+    "Independent actual AGY review of exactbindings/commands and current scope",
+    "Canonical sa-plan task claim by new rootworker; no impersonation",
+    "Current typed coordinator resource claims and fresh root heartbeat",
+    "Ordinary active checks for both recovered tasks before any product effects"
+  ]
+}

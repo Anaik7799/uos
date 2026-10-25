@@ -1,0 +1,32 @@
+{
+  "candidate": "5be4fbfc5d2c523eca3a3f4200633a60e0585cf6",
+  "observed_at": "2026-10-24T17:52:43.488Z",
+  "distinct_tests": 56,
+  "executions": 56,
+  "runs": [
+    "search-unit-first.json",
+    "search-service-first.json",
+    "search-authority-final.json"
+  ],
+  "complete": true,
+  "full_suite": false,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "independent_review": "fc4693db-9ecc-4a2c-8a8f-41dd4d45f3ea PASS",
+  "code_author": "AGY33612da1 task projection; Codex adaptation/integration",
+  "evidence_root": "var/recovery-runtime/20261024-1750-search",
+  "task": "COMMAND_IMPL",
+  "attempt": 5,
+  "live_telegram": false,
+  "global_admission": false,
+  "full_feature_complete": false,
+  "commands": [
+    "/search",
+    "/tool query_search"
+  ],
+  "scope": "Configured-plan task IDs/states plus observed wiki/ZK documents; task titles unavailable",
+  "manifest": {
+    "files": 10516,
+    "canonical_matches": 38,
+    "unhashed_directory_links": 3
+  }
+}

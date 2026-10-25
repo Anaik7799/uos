@@ -1,0 +1,317 @@
+{
+  "schema": "uos.telegram.poll-repair.verification.v1",
+  "observed_at": "2026-10-24T08:17:48.241Z",
+  "candidate": "9d61cb381cf36bee6c77c8a5f8431847708a29f1",
+  "status": "PASS_DEVELOPMENT_SCOPE",
+  "goal_met": false,
+  "source": [
+    {
+      "path": ".uos-workspaces/codex-telegram-poll-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "private_path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "55169c90091da8314cb9f9f02fa710fbfb644f7c4a48fe637156c4e65fa7c1cc",
+      "byte_equal": true
+    },
+    {
+      "path": ".uos-workspaces/codex-telegram-poll-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_poll_rpc.gleam",
+      "private_path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_poll_rpc.gleam",
+      "sha256": "e1873052a83db4d8067cdd420a90a5edc23aded6b0bd14627974cdc051032eed",
+      "byte_equal": true
+    },
+    {
+      "path": ".uos-workspaces/codex-telegram-poll-20261024/apps/cepaf_gleam/test/telegram_poll_deadline_test.gleam",
+      "private_path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_poll_deadline_test.gleam",
+      "sha256": "3ac096032c4b0a688a3f4395f8b249177c5a76102095f9b926ce751dd9ea69da",
+      "byte_equal": true
+    }
+  ],
+  "private_build_manifest": [
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/gleam.toml",
+      "sha256": "8a2584575a571b55f4fc493143462b0fd5137f1baa72852b196e71ed2bf343cb"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/doctor_projection.gleam",
+      "sha256": "116be4aa2a1324925f7e9ab5cd5c385966f63d2d99181673d0b43f630f095547"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/files.gleam",
+      "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/observer_policy.gleam",
+      "sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "11d853c053ee2c25f9986f2d4767ba7c8c9f968312a5359075f4627acf41e18a"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_http_client.gleam",
+      "sha256": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "5179ae66592be576495a51f9a740abead29bcf5debdabc85258f56b831f3a809"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "37c591e8a7df18d46f77f08735d9c3af2d765042f2de4e691f7bbb04290d0ede"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_poll_rpc.gleam",
+      "sha256": "e1873052a83db4d8067cdd420a90a5edc23aded6b0bd14627974cdc051032eed"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "55169c90091da8314cb9f9f02fa710fbfb644f7c4a48fe637156c4e65fa7c1cc"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_store.gleam",
+      "sha256": "b758894d49a049a8e1cf95d7f827ed148a2a567b9f1639429ae94c07836a1656"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+      "sha256": "69692cc7f8680395b6513798b2ffb83c366b277cc8e55f59594578dc8a4ad6ed"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam/intent/denotational.gleam",
+      "sha256": "09a58e1e94ae2359ba3d31b6f533baf43111cb665bacfd158a1b92222dd7e923"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/cepaf_gleam_ffi.erl",
+      "sha256": "9ae9365e83e595317632e576453b7bf62543abe7e0de4d97c762d7621d8e5074"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/sa_plan_observer_ffi.erl",
+      "sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_delivery_ledger_test.gleam",
+      "sha256": "0d5ed0b5f06bab3a14cd59fbd3e81141465618bb2328731f28cb4950a52830bb"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_http_ffi.erl",
+      "sha256": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_http_test_fixture.erl",
+      "sha256": "6482c1590506abc56b4feab4138888bc6e12e042db43db07e886ca40eb9d60d7"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_ingress_guard_test.gleam",
+      "sha256": "1305d1c32de5d796d1eae76cde548cc5cbb7444fb1c0f3e5680589abbb3da212"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_lifecycle_ffi.erl",
+      "sha256": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_poll_deadline_test.gleam",
+      "sha256": "3ac096032c4b0a688a3f4395f8b249177c5a76102095f9b926ce751dd9ea69da"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_e2e_test.gleam",
+      "sha256": "9402957841ca8fcffe5f660f8a35eebe4e29777ee5f727cf846abc9804f4e966"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_expiry_current_test.gleam",
+      "sha256": "50e3d5fb6cc973832cf44afe93364daf60d9f77af528a2ebf69b50afb211c305"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_ffi.erl",
+      "sha256": "be2e0dba51fda4664557b83dc65fce8f006e9bd6ee7807f380329fa17210fba3"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_independent_test.gleam",
+      "sha256": "701b13bb71f6c29973dfd7476e0e25f62749fa2e765ff833820f209f0e0f7aa2"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_slice1_test.gleam",
+      "sha256": "a498f73ab55d79c7158178d347820b0d1b7beaa0f9d55bf41cbbee437e759ccf"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_uncertainty_current_test.gleam",
+      "sha256": "c0e6c84ede56942578268a923eb32979e517bd305ea7fc3dd20302e2b767a00b"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_uncertainty_test.gleam",
+      "sha256": "7b1634270b83556a991871850078f18e7dafd8f2dd81f8ed1607c6f9e9e47b73"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_service_worker_runner.erl",
+      "sha256": "36cf163c9425a80cb8f014786b1b62c43707a093e6300ae33557e93bf7f9b2eb"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_store_codec_ffi.erl",
+      "sha256": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_store_transport_ffi.erl",
+      "sha256": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/package/src/telegram_test_authority.erl",
+      "sha256": "5db34a3ebf1583b5706ac6f22debc6ccf4883d312286ca22b63983835352bb1b"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@doctor_projection.beam",
+      "sha256": "f87fbb634658e57052130a242a1c0d32e4bf86b496a3385bd65e0b9f79aa74ec"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@files.beam",
+      "sha256": "d21f23f956f7db61376c8f6ed2343463dbdcd28b6c332723cc8cafaa22d1e35e"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@observer_policy.beam",
+      "sha256": "95d9703afa2b25a0676b8e0281459dc436aa20b7ca40110e9d4d818f5094c11e"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_delivery_ledger.beam",
+      "sha256": "4d039270839fb98ff96ad8e60b3029178ef9a482801cd63ec229608b1039d605"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_http_client.beam",
+      "sha256": "db4aee366b47304c145f1ef95fc4bcde9b5449b2e3f8e1b9dd9d96bd8b2602a9"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_ingress_guard.beam",
+      "sha256": "36acbffd611c3f90d1ece518286a2f31f41114cda692424fdf9af0802202357d"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_lifecycle_adapter.beam",
+      "sha256": "996e864f6c310aa40ec0abf13abf359a453b4582ff64153c310f61f362f4760b"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_poll_rpc.beam",
+      "sha256": "920867b2e2330de84650bdfb503e39fe407051ef050d3d8558ceaeba1e5f074e"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_service.beam",
+      "sha256": "35ee75d8a0e80f11af03c198d8bfdee909c970e1fd29796c2fcc53f9e77a0a4c"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_store.beam",
+      "sha256": "20eac85ec5f07a8bb88a9acc7fc3b9e4309be84261aa60d49bc15e1995f12a2d"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_store_codec.beam",
+      "sha256": "4af4535dfe89b3f4af8fc8f83124544d9abd1b33aaeb4bd5c00909d4dfe95c56"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@harness@telegram_store_transport.beam",
+      "sha256": "84cf60989fccfa5735d1e1e74d9086bab641ae606176014b9a36056a5eefc88d"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam@intent@denotational.beam",
+      "sha256": "e6687679ffde4551ae773c086d9bb591929ab865d7b173acbef181f999ff99aa"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/cepaf_gleam_ffi.beam",
+      "sha256": "62deea88fc9e4f272554c248c91bf3f96469bd6cb9f13105ec225a91aa791d5e"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/sa_plan_observer_ffi.beam",
+      "sha256": "48a843c233cb44d7be51332198c101f82fe24539131269bbe7033c939a95c06c"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_delivery_ledger_test.beam",
+      "sha256": "24ef0b89c7faff87ad108b02578a1bdabd64a9dc00b8ab3754d4dd2df57af61a"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_http_ffi.beam",
+      "sha256": "cd31a6532d488eb858cd5c1df3e6a4d8673d1da852030e050c1fb354de87490f"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_http_test_fixture.beam",
+      "sha256": "37b854da227d4f4c0f936d833d7252058e5edece6448f3f7523a767b5c940491"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_ingress_guard_test.beam",
+      "sha256": "dddda4e385ae0b6ea6f1d6993b3076d57032f50e7955e058c0a6b80fa4bcbfa9"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_lifecycle_ffi.beam",
+      "sha256": "bba4bd22ce987ef191fcbb6d35e8e76e7c45908a1c06baafd42f0d07aa2e486f"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_poll_deadline_test.beam",
+      "sha256": "1c4cd095c7f305af7b5dde9935c4b2d90e51578f57e16817ce2527e7094a5306"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_e2e_test.beam",
+      "sha256": "1adb2027f44c720d30742024f9cf515fda01b38af9fe0bcfc95d459c6b6e0585"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_expiry_current_test.beam",
+      "sha256": "a2b99741efd888ae646f216db9b8cc158837810c530d3c2c9c30f8ee700c24a5"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_ffi.beam",
+      "sha256": "4d596bf56608a698f00d5de4b7ab69ab838be52466c010d672c43690cac7a220"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_independent_test.beam",
+      "sha256": "8b0b231fad9cdbef9d4f041564ffc7565b6e5203555c9707fc8542f03bd28eea"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_slice1_test.beam",
+      "sha256": "137cdeb5170f454ba4142ac2419f8ae5c4ee86e50d6d452f6bc77dc0923dc89c"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_uncertainty_current_test.beam",
+      "sha256": "2713cf7d2b215c1cac1200306fcc50be40e41cb354197f14c8ba0c8be72094a3"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_uncertainty_test.beam",
+      "sha256": "6ad6b919b3b08b286d61189bb67799aa3b0c5242ac9629a4d0c838707890924d"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_service_worker_runner.beam",
+      "sha256": "f5f0e5ed1e5ec2cd50c5ce76ccc5c39d98fcb9605392fa289a3cb4c0c7e675fe"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_store_codec_ffi.beam",
+      "sha256": "17ba622e28e603349f53a374b45de365401932df02f744c4038e89316bd4c9a2"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_store_transport_ffi.beam",
+      "sha256": "30b81958b64f6e797d95f97f3dc69cbae504f31c440e139fe8b67c5b7c324bd4"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/build/ebin/telegram_test_authority.beam",
+      "sha256": "0878c5c75e94855730f1aa4c130ce5a109f35464a8d5733595364bad072f9f03"
+    }
+  ],
+  "tests": {
+    "count": 92,
+    "started_at": "2026-10-24T07:59:58.615Z",
+    "completed_at": "2026-10-24T08:00:42.911Z",
+    "receipt": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/final-suite.json",
+    "sha256": "462eb92e49677992e26876b92ee8695aa679006e691ab127f411aaa2cf98a7f9"
+  },
+  "peer": {
+    "conversation": "83fbf55a-0e65-46ba-a578-8bbeb2e2b808",
+    "verdict": "PASS development integration only",
+    "path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/agy-source-review.json",
+    "sha256": "2da0b5f6f3c2c624b04cd33468f9ec608496f2c74f348557d5231a0cae2f0093"
+  },
+  "before": "governance/planning/20261024-0737-telegram-poll-boundary.json",
+  "fixture_adaptations": [
+    "Tailnet-bound synthetic HTTP fixture, new6000ms slow_valid mode",
+    "Private test IPC timeout15000ms permits real6secondHTTPresponse",
+    "All owned service unit prefixes poll1024",
+    "Supervised delayed full conversation case added privately",
+    "Cleanup negative uses matching allowed successor epoch before asserting predecessor invocation mismatch"
+  ],
+  "limits": [
+    "Not live Telegram",
+    "RPC timeout does not itself cancel underlying poller request; HTTP cancellation remains its own bounded transport responsibility",
+    "HTTP/poll timeout configuration relationship needs service acceptance",
+    "System-wide capability use, global admission and main integration incomplete"
+  ],
+  "cleanup": "Only four failed/inactive owned test sleep units remain; no active owned poll1024 fixture units observed08:09UTC."
+}

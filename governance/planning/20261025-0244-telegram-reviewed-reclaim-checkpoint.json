@@ -1,0 +1,108 @@
+{
+  "schema": "uos.telegram.reviewed-reclaim-checkpoint.v1",
+  "observed_at": "2026-10-25T02:43:29.871Z",
+  "task": {
+    "plan": "uos/telegram-completion/20261024-0809",
+    "id": "PULL_NEXT",
+    "attempt": 1
+  },
+  "candidate": "7c5acf7b6a5b1f35fd57574649536456e864800e",
+  "bookmark": "integration/telegram-reviewed-reclaim-20261025-0244",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "source_review": "AGY f2cc6926-5339-4f30-a3f1-0dc5b5fc37ef PASS",
+  "selection_review": "AGY b56fbc93-8ecd-4124-ba5e-9a4461bee594 APPROVE",
+  "selection_proof": "governance/planning/20261025-0243-telegram-reclaim-agy-proof.json",
+  "tests": {
+    "selection": 49,
+    "new_composition": 12,
+    "baseline": 375,
+    "adversarial": 32953,
+    "dag_scenarios_included_in_adversarial": 32768,
+    "live_scenarios": 8
+  },
+  "recovery": {
+    "task": "MINI_API_IMPL",
+    "previous_attempt": 1,
+    "current_attempt": 2,
+    "worker": "codex-analysis-20261024",
+    "lease_until_ns": "1792899774287508942",
+    "lease_until": "2026-10-25T03:42:54.287Z",
+    "coordinator_epoch": 2,
+    "workspace_epoch": 2,
+    "new_active": "PASS",
+    "old_attempt_replay": "REFUSED",
+    "old_active": "REFUSED"
+  },
+  "failures_preserved": [
+    {
+      "job": "uos/telegram-completion/20261024-0809/reclaim-code0236",
+      "conversation": "52de304a-4726-4f40-b097-8ad1981d8699",
+      "result": "DISCARDED: timed out; empty SUCCESS and no source changes"
+    },
+    {
+      "phase": "local patch orchestration",
+      "result": "Syntax and anchor errors before build; corrected; no failing source build"
+    },
+    {
+      "phase": "initial observation",
+      "result": "Guardian refused parent EOF; rerun with open bounded stdin"
+    }
+  ],
+  "files": [
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/all.json",
+      "sha256": "960f6963e50fa5a917c366760d09a85642373d040147b2d96aa495d1fecf219d"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/source-review.json",
+      "sha256": "a96036774529dbf7db026d4e0c5d701cb703ec85d7bb161ca12100d2fa4f8356"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/reviewed-live.json",
+      "sha256": "66c1aedda70362ee93b50784d62a8d2dfbf6fbbef4adcbf48a340d08122cfc35"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/ordinary-reclaim.json",
+      "sha256": "6bd3c6d73ced5a5b9383aa191bcb38876565943b7e45e8bc348ccd9a6f476119"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/stale-review.json",
+      "sha256": "50e2a842982269d53fc47aafd5e2bda73e0bf44c8d8be1474a503439f8d588c4"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/wrong-owner.json",
+      "sha256": "c100c3bae4c5ed10df89f9bd3666942402e6ea3b67747c47649beff2f6db5589"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/wrong-attempt.json",
+      "sha256": "b574944857655dc4b45a7774970004b7b24dcac27558397bd069daf947078acf"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/replayed-old-claim.json",
+      "sha256": "907b2601c1a0f4fcdd91b1a297997ced85bde3be3053db462c72112a2b41a00c"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/old-active-refused.json",
+      "sha256": "ee0c825839705a146382e9b2673c7256b691cd12db6f0325028a5bc8d2e625f9"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/new-active.json",
+      "sha256": "eb6b7ffd07155a694330aa0d24e454f6906905e82fb6413f81852500e532768e"
+    },
+    {
+      "path": "var/recovery-runtime/20261025-0239-reclaim-build/artifact-manifest.json",
+      "sha256": "a434901d8e70c9bda37abdf8a8b5c61a029646bc4e96f7ac1c9410bf28538446"
+    }
+  ],
+  "feature_coverage": {
+    "command_routes": 32,
+    "total_commands": 77,
+    "mini_read_paths": 5,
+    "total_mini_pages": 14,
+    "unchanged": true
+  },
+  "goal_met": false,
+  "live_telegram": false,
+  "production_admission": false,
+  "main_merged": false
+}

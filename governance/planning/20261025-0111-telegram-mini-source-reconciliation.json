@@ -1,0 +1,149 @@
+{
+  "observed_at": "2026-10-25T01:11:11.169Z",
+  "candidate": "76360aa326fda8ecb918ff00a390c4d97bf78486",
+  "sources_matched": 21,
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "sha256": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45",
+      "current_sha256": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "sha256": "d33d27eeb926e08d6cc41bd4360f55903624b74fce26aeafa14fdd99591cee65",
+      "current_sha256": "d33d27eeb926e08d6cc41bd4360f55903624b74fce26aeafa14fdd99591cee65"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/theme.gleam",
+      "sha256": "9e062ad98897b1a67875d3c7ee25ef38084c781b65dda1da76b497b130ba6093",
+      "current_sha256": "9e062ad98897b1a67875d3c7ee25ef38084c781b65dda1da76b497b130ba6093"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_api.gleam",
+      "sha256": "18a821fed9211c6b44c9eac1c101ff98a35f6ad535e02161938f8c39cb15d199",
+      "current_sha256": "18a821fed9211c6b44c9eac1c101ff98a35f6ad535e02161938f8c39cb15d199"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam",
+      "sha256": "f3d44bda7cd03c8675b10f0b2c2c2db28774a66aadda64a279232e3f54fd64ab",
+      "current_sha256": "f3d44bda7cd03c8675b10f0b2c2c2db28774a66aadda64a279232e3f54fd64ab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_view.gleam",
+      "sha256": "1f9800aa8442b582bd54334c6184d6e5052d59b727b33c9c5d28c06fb124c108",
+      "current_sha256": "1f9800aa8442b582bd54334c6184d6e5052d59b727b33c9c5d28c06fb124c108"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "sha256": "6a3965af3d65fa121addf4e972a655ad47c1badcaeaab73121e0870d4c7c1093",
+      "current_sha256": "6a3965af3d65fa121addf4e972a655ad47c1badcaeaab73121e0870d4c7c1093"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha256": "a77a587da5bded083880d2223f6ddbdb6823c624f46f0ee3a2b2dd05c14c8a53",
+      "current_sha256": "a77a587da5bded083880d2223f6ddbdb6823c624f46f0ee3a2b2dd05c14c8a53"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/observer_policy.gleam",
+      "sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec",
+      "current_sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/mini_http.gleam",
+      "sha256": "e389da89489a7707c81d8db1201290451a31e49bfc2451a6012b47306dfde38a",
+      "current_sha256": "e389da89489a7707c81d8db1201290451a31e49bfc2451a6012b47306dfde38a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/server.gleam",
+      "sha256": "508ed13040c4a0f629d181f8c61fab65b1b9ba93235cbc8a5f39290bebf6cf5f",
+      "current_sha256": "508ed13040c4a0f629d181f8c61fab65b1b9ba93235cbc8a5f39290bebf6cf5f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/mini_app_clock_ffi.erl",
+      "sha256": "2ae95a46a3ef3804f52e98f689dabcb5a6a50c3ea7280d839d1c3a41482741ec",
+      "current_sha256": "2ae95a46a3ef3804f52e98f689dabcb5a6a50c3ea7280d839d1c3a41482741ec"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/sa_plan_observer_ffi.erl",
+      "sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6",
+      "current_sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_boundary_test.gleam",
+      "sha256": "0658dbf8dc548d3f35ea68eef17cef07dc0221eb4ec81873ad176a0f0d558e22",
+      "current_sha256": "0658dbf8dc548d3f35ea68eef17cef07dc0221eb4ec81873ad176a0f0d558e22"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_test_vectors.gleam",
+      "sha256": "9971e29356fb53cba88d9762bef68b9ffea5e881c51cd611e1216664eefd36dc",
+      "current_sha256": "9971e29356fb53cba88d9762bef68b9ffea5e881c51cd611e1216664eefd36dc"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_boundary_test_ffi.erl",
+      "sha256": "eeaae1f79993bf5a1e917946d16f20c2bc63b8ecf25e66712fb4420ed8937ba4",
+      "current_sha256": "eeaae1f79993bf5a1e917946d16f20c2bc63b8ecf25e66712fb4420ed8937ba4"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_http_fixture.gleam",
+      "sha256": "40a64ed102b5066d469eeb11775de11b7545fd43102a8f51576e6fe7cd320673",
+      "current_sha256": "40a64ed102b5066d469eeb11775de11b7545fd43102a8f51576e6fe7cd320673"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_browser.ml",
+      "sha256": "d8016f9cda280f50f3f738324ab76ed18a2bda4dd5951d046014fc945a35e4b0",
+      "current_sha256": "d8016f9cda280f50f3f738324ab76ed18a2bda4dd5951d046014fc945a35e4b0"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/http-tests.js",
+      "sha256": "62f5c9fa7527ef70bdd29ea0eabd6b5e3cd725d9fb6fd3864032bce6007938cd",
+      "current_sha256": "62f5c9fa7527ef70bdd29ea0eabd6b5e3cd725d9fb6fd3864032bce6007938cd"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/build.js",
+      "sha256": "8efa9513a6575a9003f1147a28c4dc6034797d857b6d87023b0e35ff7aa37c3c",
+      "current_sha256": "8efa9513a6575a9003f1147a28c4dc6034797d857b6d87023b0e35ff7aa37c3c"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/prepare-fixture.js",
+      "sha256": "7ff41474481b53eb7e58c5446ee92130dfd2f4fdc157af0ea0a1d4407ba26a46",
+      "current_sha256": "7ff41474481b53eb7e58c5446ee92130dfd2f4fdc157af0ea0a1d4407ba26a46"
+    }
+  ],
+  "prerequisites": [
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_AUTH_VERIFY",
+      "name": "uos/telegram-runtime/20261001-1150/mini_auth_verify",
+      "title": "Independent fresh verification of repaired Mini App authentication",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "INTEGRATION_DESIGN",
+      "name": "uos/telegram-runtime/20261001-1150/integration_design",
+      "title": "Adopt peer-reviewed complete Telegram implementation sequence and concrete acceptance obligations",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "20",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_API_CANDIDATE",
+      "name": "telegram/mini-api-candidate",
+      "title": "Prepare isolated authenticated Mini App route and data candidate for AGY integration and independent review",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "20",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    }
+  ],
+  "review": "governance/planning/20261011-2228-telegram-mini-candidate-independent-review-agy.json",
+  "scope": "Source and dependency reconciliation for development eligibility only; historical tests not rerun; 13 backends still incomplete"
+}

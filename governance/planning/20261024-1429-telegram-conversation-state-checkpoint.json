@@ -1,0 +1,53 @@
+{
+  "schema": "uos.telegram.conversation-state-checkpoint.v1",
+  "observed_at": "2026-10-24T14:29:20.100Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "worker": "codex-analysis-20261024",
+  "attempt": 1,
+  "candidate": "329dff6ca090a9a506f2f085fe9bf66ab99390a1",
+  "parent": "211a5356f1e90875bb82f3696fc53395b1c19f2b",
+  "status": "PURE_STATE_FOUNDATION_TESTED_RUNTIME_INTEGRATION_PENDING",
+  "tests": 11,
+  "independent_review": {
+    "conversation": "045728dd-28a1-45f9-b302-11d54a0288dc",
+    "verdict": "PASS",
+    "executed_tests": false
+  },
+  "source_author": "Codex with actual AGY design advice and independent review",
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261024-1417-conversation/conversation-unit.json",
+      "sha256": "6b9ea07102a82d1e0c1503727cf4254b9e3568b313f9867e57126170a437d763"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1417-conversation/agy-design-raw.json",
+      "sha256": "60927c39194f25b9f2235e199ecf215c71eb3828662a99cdd8edcb6908d08b6a"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1417-conversation/agy-state-review-raw.json",
+      "sha256": "78c4ceba1d11bdbe14ce974dda812f017edce5f401de72845d0b46938faf34a3"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1417-conversation/agy-state-review.json",
+      "sha256": "cc8a3edd3fb6ef35702aa5a2c309e6d025a48f1ef90a2edd0868d113a677c22d"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1417-conversation/artifact-manifest.json",
+      "sha256": "b3d66bd0d42eba49906614ff3e2e03d3269e24b457c7308560f4d65bed63fa54"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1417-conversation/model-catalog-probe.json",
+      "sha256": "b72e1171403ada7bd46199e8e0c220d5da7f0a743abe85fde757dbd8c68f1eae"
+    }
+  ],
+  "goal_met": false,
+  "runtime_admission": "NOT_GRANTED",
+  "remaining": [
+    "Persist request quota reservation before model network use",
+    "Atomically commit context pair and result/outbox under same native CAS",
+    "Integrate service routing, current fences, transport cancellation",
+    "Actual model, private HTTP and recovery acceptance",
+    "All remaining command/Mini App/media/gateway/release obligations"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "uos.telegram.writer-registration.development.v1",
+  "observed_at": "2026-10-24T10:47:34.261Z",
+  "candidate": "4d80fb2fba815c0787c207c1f779e8f9a8f843c3",
+  "parent": "a3ad86ee3202312481c5c1b7ea6c22c0e4be2897",
+  "task": "uos/telegram-runtime/20261001-1150:SERVICE_IMPL",
+  "attempt": 11,
+  "status": "SCOPED_STORAGE_TESTED_SERVICE_HOLD",
+  "changes": [
+    "AGY strict canonical writer-registration codec",
+    "Exclusive new registered-store bootstrap; all metadata rows committed together after separate native file creation",
+    "13 independent tests including concurrent starts and legacy/partial-store refusal"
+  ],
+  "evidence": {
+    "suite_unit": "var/recovery-runtime/20261024-1032-writer-admission/suite-unit.json",
+    "suite_unit_count": 138,
+    "suite_e2e": "var/recovery-runtime/20261024-1032-writer-admission/suite-e2e.json",
+    "suite_e2e_count": 11,
+    "additional_test_only": "var/recovery-runtime/20261024-1032-writer-admission/registration-tests-hardened.json",
+    "additional_test_count": 13,
+    "unique_tests_across_runs": 151,
+    "manifest": "var/recovery-runtime/20261024-1032-writer-admission/artifact-manifest.json",
+    "agy": "var/recovery-runtime/20261024-1032-writer-admission/agy-review.json"
+  },
+  "counting": "13 final writer cases include 11 already in 138 unit cases: 138+11+2=151 unique; not a single 151-case run. Runtime source unchanged by final two test-only additions.",
+  "review": {
+    "conversation_id": "a3145368-e845-41ce-9caa-2382306b20d9",
+    "verdict": "scoped pass with findings; no admission",
+    "accepted_findings": [
+      "Interrupted file creation/bootstrap apply requires explicit recovery lifecycle",
+      "Legacy initializer must not provide writer admission",
+      "Expanded decode hostility tests added"
+    ],
+    "remaining": [
+      "No full service singleton fix yet",
+      "No operational registration reader/takeover CAS yet",
+      "Live unit/control digest/task/runtime lease enforcement and renewal incomplete",
+      "Injected exchange-two uncertainty test still pending"
+    ]
+  },
+  "failures_preserved": [
+    "var/recovery-runtime/20261024-1032-writer-admission/registration-tests.json",
+    "First AGY review launch refused job_parent_scope_mismatch; discarded canonically"
+  ],
+  "main_merged": false,
+  "goal_met": false
+}

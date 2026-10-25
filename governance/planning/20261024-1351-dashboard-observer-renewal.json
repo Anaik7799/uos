@@ -1,0 +1,19 @@
+{
+  "schema": "uos.dashboard-renewal.v1",
+  "observed_at": "2026-10-24T13:51:42.917Z",
+  "plan": "uos/telegram-completion/20261024-0809",
+  "task": "OBSERVE8",
+  "attempt": 1,
+  "source_commit": "b5afe12bd09ff1c621b98b40615c8a9e56422cc7",
+  "config": "20261024-1347-dashboard-config.json",
+  "config_sha256": "1e36c672404c7bdad09ec19593896dbfb3fc5d5a0c5186a605c408051319cfb8",
+  "review": "20261024-1349-dashboard-review.json",
+  "independent_peer": "29db6b0a-2023-4c06-b32e-d12c09772b82",
+  "unit": "uos-recovery-dashboard-20261024-r10.service",
+  "invocation_id": "e618ceb632af4c9797671933efa1ca74",
+  "previous_unit_stopped": true,
+  "startup": "2026-10-24T13:49:48Z",
+  "expires": "2026-10-24T14:27:29.761Z",
+  "evidence": "var/recovery-runtime/20261024-1337-command-catalog/dashboard10-startup.json",
+  "scope": "Unchanged read-only observer; no new Telegram production effects or admission."
+}

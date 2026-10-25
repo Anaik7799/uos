@@ -1,0 +1,488 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "dashboard-build-20261024",
+    "plan_id": "uos/restoration-dashboard/20261024-0535",
+    "task_id": "BUILD",
+    "actor": "agy-dashboard-20261024",
+    "scope": "Build pure Gleam/OTP read-only restoration dashboard and bounded native observer; refresh at300seconds or completion event, track all current-goal tasks and capability evidence; no production mutation.",
+    "phase": "implementation",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:37:15Z",
+    "valid_until": "2026-10-24T06:37:15Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-24T05:34:53Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current operator asks300s and completion-triggered refresh; task store canonical, existing dashboard is timestamped snapshot.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "sha256": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "sha256": "33443aa5f71f287700b1bfb8f9f6889caea0fa76da6625ed05e624f4f5c48ace",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:34:53Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "False freshness can hide missing operational evidence and mislead recovery decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Feedback claims must distinguish an observed valid sample from absent telemetry.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36, band4: known false-positive freshness with material operational impact.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Reliable operator feedback supports subsequent service verification and release decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Cockpit health and freshness consumers affected; no claim all system telemetry is repaired.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-FRESHNESS-FALSE-GREEN",
+        "cause": "Nonempty JSON stubs and literal booleans are classified as fresh live wiring.",
+        "effect": "Operator treats unavailable or stale telemetry as healthy and may take invalid recovery action.",
+        "controls": "Explicit runtime availability, typed unknown status, actual sample provenance/age where available, negative controls for fallback, invalid, missing and stale samples.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam telemetry projection",
+      "control_action": "Publish operational health and freshness feedback",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing telemetry is hidden rather than surfaced.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unavailable stub response is reported fresh or healthy.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old or future-dated sample is called current.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cached success remains green after its evidence expires.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Build pure Gleam/OTP read-only restoration dashboard and bounded native observer; refresh at300seconds or completion event, track all current-goal tasks and capability evidence; no production mutation.",
+      "alternatives": [
+        "Typed honest unavailable/unknown projection with actual evidence where present: selected.",
+        "Keep string-length success or make every route falsely green: rejected."
+      ],
+      "counterevidence": [
+        "Core services and Zenoh router are running, so missing native telemetry is not proof all underlying services are down.",
+        "Forecast endpoint already reports UNKNOWN; avoid replacing it with synthetic confidence."
+      ],
+      "assumptions": [
+        "Known service APIs may lack observation timestamps; those stay UNKNOWN rather than fabricate freshness."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Read-only dashboard can provide current evidence without expanding effect authority.",
+      "falsifier": "Any stale value presented current, truncated or duplicate task count, unsupported PASS, secret exposure, or global admission inferred from task counts.",
+      "acceptance": [
+        "Canonical Sa-plan task/job/workflow read-only observations, no private args/results or credentials exposed.",
+        "All current goal plans plus audit/repair/dashboard work enumerated, expired executing distinguished, each task maps to goal capability and acceptance outcome.",
+        "Observe health/source/evidence parameters max300seconds old and refresh task completion within bounded polling/event delay; show last observed time, stale errors and next refresh.",
+        "Real browser table/filter/status and auto-refresh tests with fixture clock plus actual runtime changes.",
+        "Full FQDN links, 18checkpoints, ASIS/TOBE/risk/criticality/mitigation, no fabricated global completion score.",
+        "Immutable candidate exact source private build and invocation receipts; dev-only runtime no production cutover."
+      ],
+      "rollback": "Keep deployed capsule/main unchanged; preserve own isolated candidate on failure.",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Automatic refresh is not operational until observed and independently verified.",
+        "Full restoration requires separate candidate release and feature acceptance."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "dashboard-verify-20261024",
+    "plan_id": "uos/restoration-dashboard/20261024-0535",
+    "task_id": "VERIFY",
+    "actor": "codex-analysis-20261024",
+    "scope": "Independently verify source-bound dashboard counts, timestamp expiry, task-event refresh and browser behavior in development.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:37:15Z",
+    "valid_until": "2026-10-24T06:37:15Z",
+    "task_state": "available",
+    "ready_since": "2026-10-24T05:34:53Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Current operator asks300s and completion-triggered refresh; task store canonical, existing dashboard is timestamped snapshot.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "sha256": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "sha256": "33443aa5f71f287700b1bfb8f9f6889caea0fa76da6625ed05e624f4f5c48ace",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:34:53Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:34:53Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "False freshness can hide missing operational evidence and mislead recovery decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Feedback claims must distinguish an observed valid sample from absent telemetry.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36, band4: known false-positive freshness with material operational impact.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Reliable operator feedback supports subsequent service verification and release decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Cockpit health and freshness consumers affected; no claim all system telemetry is repaired.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-FRESHNESS-FALSE-GREEN",
+        "cause": "Nonempty JSON stubs and literal booleans are classified as fresh live wiring.",
+        "effect": "Operator treats unavailable or stale telemetry as healthy and may take invalid recovery action.",
+        "controls": "Explicit runtime availability, typed unknown status, actual sample provenance/age where available, negative controls for fallback, invalid, missing and stale samples.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam telemetry projection",
+      "control_action": "Publish operational health and freshness feedback",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing telemetry is hidden rather than surfaced.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unavailable stub response is reported fresh or healthy.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old or future-dated sample is called current.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cached success remains green after its evidence expires.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "BUILD incomplete"
+    ],
+    "dependencies": [
+      "BUILD"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Independently verify source-bound dashboard counts, timestamp expiry, task-event refresh and browser behavior in development.",
+      "alternatives": [
+        "Typed honest unavailable/unknown projection with actual evidence where present: selected.",
+        "Keep string-length success or make every route falsely green: rejected."
+      ],
+      "counterevidence": [
+        "Core services and Zenoh router are running, so missing native telemetry is not proof all underlying services are down.",
+        "Forecast endpoint already reports UNKNOWN; avoid replacing it with synthetic confidence."
+      ],
+      "assumptions": [
+        "Known service APIs may lack observation timestamps; those stay UNKNOWN rather than fabricate freshness."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Read-only dashboard can provide current evidence without expanding effect authority.",
+      "falsifier": "Any stale value presented current, truncated or duplicate task count, unsupported PASS, secret exposure, or global admission inferred from task counts.",
+      "acceptance": [
+        "Canonical Sa-plan task/job/workflow read-only observations, no private args/results or credentials exposed.",
+        "All current goal plans plus audit/repair/dashboard work enumerated, expired executing distinguished, each task maps to goal capability and acceptance outcome.",
+        "Observe health/source/evidence parameters max300seconds old and refresh task completion within bounded polling/event delay; show last observed time, stale errors and next refresh.",
+        "Real browser table/filter/status and auto-refresh tests with fixture clock plus actual runtime changes.",
+        "Full FQDN links, 18checkpoints, ASIS/TOBE/risk/criticality/mitigation, no fabricated global completion score.",
+        "Immutable candidate exact source private build and invocation receipts; dev-only runtime no production cutover."
+      ],
+      "rollback": "Keep deployed capsule/main unchanged; preserve own isolated candidate on failure.",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Automatic refresh is not operational until observed and independently verified.",
+        "Full restoration requires separate candidate release and feature acceptance."
+      ],
+      "supersedes": null
+    }
+  }
+]

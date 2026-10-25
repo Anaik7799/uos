@@ -1,0 +1,28 @@
+{
+  "observed_at": "2026-10-24T15:26:48.630Z",
+  "candidate": "61af51c84f1461d0991eabf8d166d5a6f6b075c3",
+  "task": "COMMAND_IMPL",
+  "attempt": 2,
+  "verified": {
+    "unit": 208,
+    "baseline_e2e": 13,
+    "new_conversation_e2e": 5,
+    "independent_review": "PASS cecc73d9"
+  },
+  "remaining_validation": [
+    "managed lifecycle7",
+    "runtime entry2",
+    "command E2E7; oneoverlapbaseline"
+  ],
+  "provider": {
+    "catalog": 200,
+    "completion": 404,
+    "privacy_filter": true,
+    "data_policy_filter": true,
+    "live_acceptance": false
+  },
+  "source_manifest": "var/recovery-runtime/20261024-1503-conversation-service/artifact-manifest.json",
+  "source_changes": 9,
+  "goal_met": false,
+  "next": "Renew canonical task attempt; finish serialized regression acceptance then remaining Telegram adapters. No AGY or test process currently running."
+}

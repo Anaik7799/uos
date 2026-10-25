@@ -1,0 +1,110 @@
+{
+  "schema": "uos.telegram.development-checkpoint.v1",
+  "observed_at": "2026-10-24T16:12:35.373Z",
+  "candidate": "06f6b2a651c11e58f19ff6c6ff3a7ebb7dcad67f",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "goal_met": false,
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "COMMAND_IMPL",
+    "attempt": 3,
+    "state": "executing"
+  },
+  "counts": {
+    "runtime": {
+      "plan": "uos/telegram-runtime/20261001-1150",
+      "completed": 61,
+      "total": 71,
+      "remaining": 10
+    },
+    "release": {
+      "plan": "uos/telegram-admission/20261001-1015",
+      "completed": 25,
+      "total": 33,
+      "remaining": 8
+    }
+  },
+  "implemented": [
+    "Bounded free-only conversation execution with current task/coordinator checks before and after model transport",
+    "Durable bot/chat/user scoped history and request quota",
+    "/memory read, clear and reset; /messages and /history bounded reads",
+    "Atomic memory clear plus confirmation outbox; replay/conflict/forged identity refusals"
+  ],
+  "tests": {
+    "distinct": 261,
+    "executions": 262,
+    "unit_native": 223,
+    "baseline": 13,
+    "lifecycle": 7,
+    "runtime_entry": 2,
+    "commands_additional": 6,
+    "conversation": 5,
+    "memory": 5,
+    "receipt": "var/recovery-runtime/20261024-1600-memory-final/accepted-regression.json"
+  },
+  "source_binding": {
+    "manifest": "var/recovery-runtime/20261024-1600-memory-final/artifact-manifest.json",
+    "canonical_matches": 13,
+    "artifact_files": 385
+  },
+  "reviews": [
+    {
+      "candidate": "61af51c84f1461d0991eabf8d166d5a6f6b075c3",
+      "agy": "cecc73d9-6a41-48b7-93d7-642e09d36a98",
+      "scope": "conversation service",
+      "verdict": "PASS"
+    },
+    {
+      "candidate": "d47dca860ed636705cc1a609a4ec7e417975158b",
+      "agy": "200d7586-d7ce-47d2-960b-145eb05baa7e",
+      "scope": "finite test loop budget",
+      "verdict": "PASS"
+    },
+    {
+      "candidate": "7afb43c2aa0de680166cda1facaf30651319f0ab",
+      "agy": "b620bb7e-a5de-42aa-aa9f-424eff2aaf00",
+      "scope": "bounded test unit lifetime",
+      "verdict": "PASS"
+    },
+    {
+      "candidate": "9d26137c06c20c72f177be4563c820747aec3da3",
+      "agy": "f40e60cb-e54c-47a0-a197-14de1bcb8642",
+      "scope": "memory commands",
+      "verdict": "PASS"
+    },
+    {
+      "candidate": "06f6b2a651c11e58f19ff6c6ff3a7ebb7dcad67f",
+      "agy": "f84ffda1-b15f-4d30-98b9-c1b16af03a08",
+      "scope": "absolute Tailnet fixture FQDN",
+      "verdict": "PASS"
+    }
+  ],
+  "rca": {
+    "observed": [
+      "Test loop lifetime6s below allowed15s per step caused lifetime_expired0/1 cycles.",
+      "Test systemd15s lifetime terminated multi-request fixtures; journal confirms interruption and missing guardian receipt.",
+      "Tailnet fixture hostname without terminal DNSdot gave firstrequest10s timeout; same transport absoluteFQDN gave12/12success,39ms first and0-1ms subsequent."
+    ],
+    "fixes": [
+      "Test-only20s loop/21s observer,45s serviceunit; unchanged production deadlines.",
+      "Absolute Tailnet DNS hostname in test fixture; no TLS or resolver weakening."
+    ],
+    "uncertainty": "Precise underlying OS/Erlang negative-cache and search-domain interaction not proved. Evidence establishes observed fixture-name effect."
+  },
+  "residuals": [
+    "Real provider404 privacy/data-policy endpoint rejection remains; no successful real free completion.",
+    "Default conversation activation remains disabled pending reviewed release.",
+    "Most command backends, MiniApp routes/actions, media and gateway remain open.",
+    "Authorized live recipient, browser/liveTelegram acceptance, release, global admission and main integration remain.",
+    "New formal/global gates not claimed; reviewer source observations are not runtime proof."
+  ],
+  "dashboard": {
+    "url": "http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html",
+    "job": "uos/agy-operations/20261024-0642/live-dashboard13",
+    "expiry": "2026-10-24T16:34:45.789Z",
+    "cadence_seconds": 300,
+    "note": "Live canonical task counts; historical static narrative is not latest feature evidence. This checkpoint is current scoped evidence."
+  },
+  "main_merged": false,
+  "live_telegram": false
+}

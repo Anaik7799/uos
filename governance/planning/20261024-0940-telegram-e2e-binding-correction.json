@@ -1,0 +1,8 @@
+{
+  "observed_at": "2026-10-24T09:06:17.897Z",
+  "status": "E2E_CANDIDATE_BINDING_HOLD",
+  "affected_receipt": "governance/planning/20261024-0907-telegram-poll-config-cleanup-verification.json",
+  "finding": "Private E2E runner launch strings point to 20261024-0753-telegram-poll-fixed/build/ebin while parent suite used0850/build. 105 executions did pass, but child-process tests did not all exercise c4eaaa04. Parent config and four new direct poll_cycle tests used c4; child candidate attribution is not established.",
+  "evidence": "var/recovery-runtime/20261024-0850-poll-config/telegram_service_e2e_test.gleam.adaptation.diff",
+  "required": "Bind child code paths and critical module hashes to parent test build; falsify stale/wrong child pins; rerun affected suite and reconcile original receipt. No full service/release/main acceptance."
+}

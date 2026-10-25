@@ -1,0 +1,50 @@
+{
+  "schema": "uos.telegram.mini-chat-flow.checkpoint.v1",
+  "observed_at": "2026-10-25T06:10:14.383Z",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "goal_met": false,
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "MINI_API_IMPL",
+    "attempt": 5,
+    "worker": "codex-analysis-20261024",
+    "state": "executing"
+  },
+  "candidate": "c2490fa14cf96c4dacec1bf77e40684b3c22cc1a",
+  "bookmark": "integration/telegram-mini-chat-flow-20261025",
+  "evidence_root": "var/recovery-runtime/20261025-0559-mini-chat-flow5",
+  "counts": {
+    "unit_native": 312,
+    "http_browser_scenario_groups": 25,
+    "source_bindings": 162,
+    "mismatches": 0
+  },
+  "review": {
+    "conversation": "541b5504-8908-4935-8d42-743740ff4fb8",
+    "verdict": "PASS",
+    "scope": "exact implementation delta plus prior primitive reviews",
+    "file": "var/recovery-runtime/20261025-0559-mini-chat-flow5/agy-review.json"
+  },
+  "browser": [
+    "var/recovery-runtime/20261025-0604-mini-chat-browser-final/report.json",
+    "var/recovery-runtime/20261025-0607-mini-chat-recovery-final/report.json"
+  ],
+  "fixtures_stopped": true,
+  "synthetic_provider_and_identity": true,
+  "live_telegram": false,
+  "production_enabled": false,
+  "global_admission": false,
+  "main_merged": false,
+  "journal": "docs/journal/20261025-0614-telegram-mini-chat-flow.md",
+  "remaining": [
+    "Six Mini producers and remaining controls",
+    "45 command mappings",
+    "Seven media types",
+    "Gateway",
+    "Live provider and authorized recipient acceptance",
+    "Independent release/global admission",
+    "Applicable stable main integration",
+    "Crashed canonical job/expired max_attempts recovery",
+    "Automatic dashboard observer renewal"
+  ]
+}

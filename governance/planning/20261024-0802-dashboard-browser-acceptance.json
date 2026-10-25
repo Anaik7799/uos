@@ -1,0 +1,49 @@
+{
+  "schema": "uos.dashboard.browser.acceptance.v1",
+  "observed_at": "2026-10-24T08:07:02.303Z",
+  "status": "PASS_SCOPED",
+  "goal_met": false,
+  "product_candidate": "b5afe12bd09ff1c621b98b40615c8a9e56422cc7",
+  "controller_candidate": "39794f705360a4b8f9c96d79cc03594dc047f8bb",
+  "controller_sha256": "e66545b295258f886f7f532f524570b365c588247ff68a96d0675e14e456de1b",
+  "check_count_per_viewport": 31,
+  "viewports": [
+    1280,
+    390
+  ],
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-1280/20261001-1048-page.png",
+      "sha256": "9551de68b784cddc679b403c2ca7003094ff4860ca785adc66703aed0c3260cd"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-1280/20261001-1048-receipt.json",
+      "sha256": "cef5e1c04d0f315a2164c6c79e12eb03769af6f099eb5bdbb65e444cca5c9b02"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-1280/20261001-1048-viewport.png",
+      "sha256": "dcb9a6e3a26f9c66dece708349d57f39a04877f6bc5456be6a70006202f217de"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-1280/20261024-0752-top.png",
+      "sha256": "dcb9a6e3a26f9c66dece708349d57f39a04877f6bc5456be6a70006202f217de"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-390/20261001-1048-page.png",
+      "sha256": "4ebb420492a2798e1e9158f154a737a59911c90e7befcd462863475b1e0df832"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-390/20261001-1048-receipt.json",
+      "sha256": "627947adebea09d148a3a9d34e095d531d0b3f88fd1706b26676e53cae3e9163"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-390/20261001-1048-viewport.png",
+      "sha256": "e44b0da974148d8a6ce2d8dac84a542a977ff342f61eb28f8efe1533dea2ae21"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-0749-browser/live-v2-390/20261024-0752-top.png",
+      "sha256": "9dd3df7a5315fc5c78282fd09a5ef663277ecebf7e1c8db4fa0a49bd062152c3"
+    }
+  ],
+  "limits": "One recovery dashboard, not full application or live Telegram acceptance"
+}

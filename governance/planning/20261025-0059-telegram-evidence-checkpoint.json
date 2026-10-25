@@ -1,0 +1,116 @@
+{
+  "schema": "uos.telegram.candidate-record.checkpoint.v1",
+  "observed_at": "2026-10-25T00:59:28.725Z",
+  "candidate": "0c9e0ddfddc73f7668ad3e81928c9c404924be32",
+  "parent": "eb075041b37a369e4128ea457762f8d9b17c753e",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "task": "COMMAND_IMPL",
+  "attempt": 13,
+  "coordinator_epoch": 13,
+  "workspace_epoch": 2,
+  "commands": [
+    "/checklist",
+    "/aspects [A01..A17]",
+    "/tool query_checklist {}",
+    "/tool query_aspects {} or {aspect:string}"
+  ],
+  "scope": "Read protected configured candidate record; all18 checklist and17 aspect entries. Recorded references only; no gate execution, evidence producer verification or admission.",
+  "code_job": {
+    "conversation": "3f3a7189-6a54-42c2-85a1-1d975ccd884e",
+    "seconds": 64.213018395,
+    "source_bytes": 3011,
+    "adaptation": "Reject surrounding reason whitespace",
+    "applied_by": "Codex"
+  },
+  "review": {
+    "conversation": "5e6b1eb5-e982-4d80-8578-29dda0ad2f40",
+    "seconds": 28.550122896,
+    "verdict": "PASS",
+    "packet_bytes": 56518,
+    "authority": "Ok(Nil)",
+    "path": "var/recovery-runtime/20261025-0049-evidence/agy-review-final.json"
+  },
+  "tests": {
+    "distinct_eunit": 57,
+    "unit": 46,
+    "authority": 2,
+    "service": 9,
+    "full_suite": false
+  },
+  "runs": [
+    "unit-final.json",
+    "authority-regression.json",
+    "service-final-five.json",
+    "service-regression.json"
+  ],
+  "manifest": {
+    "path": "var/recovery-runtime/20261025-0049-evidence/artifact-manifest.json",
+    "source_pairs": 110,
+    "files": 715,
+    "untraversed_links": 1
+  },
+  "current_record": {
+    "path": "governance/planning/20261025-0057-telegram-candidate-verification-record.json",
+    "sha256": "c1e86ea372b097d8722ea8ddeed9ed192210fa8d594b07f1b8120f3f3b8ccc92",
+    "candidate": "eb075041b37a369e4128ea457762f8d9b17c753e",
+    "checkpoints": {
+      "partial": 3,
+      "missing": 15,
+      "total": 18
+    },
+    "aspects": {
+      "partial": 3,
+      "missing": 14,
+      "total": 17
+    },
+    "recorded_passes": 0,
+    "read_receipt": "var/recovery-runtime/20261025-0049-evidence/current-candidate-record-observation.json",
+    "production_enrollment": "PENDING_RELEASE"
+  },
+  "test_fix": "Verify every delivered chunk and reconstruct complete JSON; full18 checkpoint report no longer assumes one chunk.",
+  "coverage": {
+    "reachable": 32,
+    "total": 77,
+    "backend_unavailable": 23,
+    "not_implemented": 22,
+    "configured_read": 3,
+    "artifact": "governance/planning/20261025-0059-telegram-command-reachability.json"
+  },
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "observer": {
+    "producer": 26,
+    "unit": "uos-recovery-dashboard-20261025-r26.service",
+    "invocation": "bf7f2574bad442d697a3e91b0151d0ce",
+    "config_sha256": "0b18fb93994ed321d813dd15be4de57dd3598415f77b2fd3534fce2705770ecd",
+    "config": "20261025-0046-dashboard-config.json",
+    "review": "AGY6e5289f0 PASS",
+    "snapshot": "2026-10-25T00:47:20Z",
+    "expires_at": "2026-10-25T01:35:41.947Z",
+    "interval_seconds": 300,
+    "task_completion_refresh": true,
+    "old_unit_main_pid": 0,
+    "canonical_task": "OBSERVE23 completed attempt1",
+    "http_evidence": "var/recovery-runtime/20261025-0046-dashboard/http.json"
+  },
+  "evidence_root": "var/recovery-runtime/20261025-0049-evidence",
+  "live_telegram": false,
+  "production_release": false,
+  "global_admission": false,
+  "main_merged": false,
+  "full_feature_complete": false,
+  "remaining": [
+    "45 command routes including separate verification execution",
+    "13 MiniApp APIs and browser flows",
+    "7 media types and gateway",
+    "provider and authorized live Telegram",
+    "exact release packaging and source enrollment",
+    "independent admission and applicable main integration"
+  ]
+}

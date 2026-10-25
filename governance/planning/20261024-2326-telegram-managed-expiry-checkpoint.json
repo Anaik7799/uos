@@ -1,0 +1,125 @@
+{
+  "schema": "uos.telegram.managed-expiry-checkpoint.v1",
+  "goal_met": false,
+  "candidate": "890c1df5b742d9a96958305957c277fc952c4606",
+  "accepted_parent": "75c500c3633a78bb171e721592bd75a60b2be82d",
+  "bookmark": "integration/telegram-managed-expiry-20261024-2324",
+  "state": "SCOPED_DEVELOPMENT_VERIFIED",
+  "authority": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "COMMAND_IMPL",
+    "attempt": 11,
+    "worker": "codex-analysis-20261024",
+    "coordinator_epoch": 11,
+    "workspace_epoch": 2
+  },
+  "verified": [
+    "Actual transient systemd predecessor stop with whole-unit cleanup proof; successor current runtime epoch2",
+    "Three authentic historical signatures pass at original time and refuse at current time",
+    "Expired pending proposal and historical profile remain byte-identical across managed replacement",
+    "Recovery-only new proposal refusal and successful requester withdrawal, two real local HTTP replies",
+    "Wrong predecessor and duplicate start refused; no original authority/cancellation row; successor cleanup and runtime release"
+  ],
+  "tests": {
+    "affected_managed_regressions": 4,
+    "failed": 0,
+    "receipt": "managed-expiry-frozen-regression.json",
+    "seconds": [
+      4.052,
+      4.817,
+      3.328,
+      6.028
+    ],
+    "full_project_suite": false,
+    "prior_parent_scoped_gleam": 131,
+    "prior_parent_native_suites": 12
+  },
+  "review": {
+    "model": "gemini-4-argon-high",
+    "conversation": "45f8f094-0749-49d8-92fa-afaa3597ec10",
+    "seconds": 30.556294606,
+    "verdict": "PASS",
+    "findings": [],
+    "receipt": "agy-review-raw.json",
+    "job_terminal": true
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2320-managed-expiry/artifact-manifest.json",
+    "canonical_source_pairs": 91,
+    "files": 620,
+    "untraversed_symlinks": 1
+  },
+  "evidence_root": "var/recovery-runtime/20261024-2320-managed-expiry",
+  "production_code_changed": false,
+  "test_fixture_files_changed": 4,
+  "safety_analysis": "docs/design/20261024-2322-telegram-managed-expiry-SAFETY_ANALYSIS.md",
+  "command_reachability": {
+    "artifact": "governance/planning/20261024-2324-telegram-command-reachability.json",
+    "catalog_literals": 77,
+    "reachable_routes": 24,
+    "backend_unavailable": 31,
+    "not_implemented": 22,
+    "feature_acceptance_proven_by_probe": false
+  },
+  "remaining": [
+    "53 command literals currently have no implemented/reachable backend; reachable24 still need requirement-level acceptance",
+    "13 Mini App backends and browser acceptance",
+    "Seven media types and gateway",
+    "Committed native-effect recovery under rotated production profile and host reboot not covered by this test",
+    "Provider availability, authorized live Telegram, independent release/global admission, applicable main integration"
+  ],
+  "contribution": "Closes the combined expired pending-approval / real managed replacement acceptance gap, and exposes the exact current command implementation gap to guide the next work.",
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "main": {
+    "commit": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+    "merged": false
+  },
+  "observed_at": "2026-10-24T23:26:00.249Z",
+  "command_semantics_caveat": [
+    {
+      "command": "/canvas",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam:209",
+      "intent": "Interactive topology Mini App handoff; historical static feature claims are not runtime evidence"
+    },
+    {
+      "command": "/fmea",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam:407",
+      "intent": "Current reliability report; do not substitute generic model advice"
+    },
+    {
+      "command": "/whatif",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam:34",
+      "intent": "Shadow simulation; existing static numerical claims are not simulation evidence"
+    }
+  ],
+  "dashboard": {
+    "producer": 24,
+    "unit": "uos-recovery-dashboard-20261024-r24.service",
+    "invocation": "286b9cda4bfd465987ee7210ba64910b",
+    "observed_pid": 3676171,
+    "config_sha256": "ba8adf0c0e3a13aed94544f5eadd1f309922b148d247ca7aac5eb2b487df16ab",
+    "config": "20261024-2327-dashboard-config.json",
+    "review": "AGY67b0ff77 PASS",
+    "snapshot": "2026-10-24T23:28:39Z",
+    "expires_at": "2026-10-25T00:16:51.481Z",
+    "interval_seconds": 300,
+    "task_completion_refresh": true,
+    "old_unit_main_pid": 0,
+    "canonical_task": "OBSERVE21 completed attempt1"
+  },
+  "next_execution_authority": {
+    "task": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 12,
+    "coordinator_epoch": 12,
+    "workspace_epoch": 2,
+    "lease_until": "2026-10-25T00:29:07.907Z"
+  }
+}

@@ -1,0 +1,802 @@
+{
+  "schema": "uos.telegram.command-reachability.v1",
+  "observed_at": "2026-10-25T00:43:03.832Z",
+  "candidate": "eb075041b37a369e4128ea457762f8d9b17c753e",
+  "scope": "Compiled catalog and classifier execution, plus explicit current service routing; not per-feature runtime acceptance",
+  "counts": {
+    "REACHABLE_INFORMATION": 3,
+    "REACHABLE_DIRECT_READ": 13,
+    "NOT_IMPLEMENTED": 22,
+    "REACHABLE_SCOPED_QUERY": 7,
+    "BACKEND_UNAVAILABLE": 25,
+    "REACHABLE_CONFIGURED_READ": 1,
+    "REACHABLE_CONFIGURED_STATEFUL": 4,
+    "REACHABLE_GUARDED_ACTION": 2
+  },
+  "sources": [
+    {
+      "path": ".uos-workspaces/codex-telegram-poll-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "sha256": "8cb98e95619bebb0f3a3fb27df1633a21f4afa62de33b9f8b757b4b5677b5a17"
+    },
+    {
+      "path": ".uos-workspaces/codex-telegram-poll-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "f8a98417d6571330cd229f989583d52aa147d50647ce59d49b70c7b31b4a3f68"
+    },
+    {
+      "path": ".uos-workspaces/codex-telegram-poll-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "4e43b6c94b314c53cc91b35cc6eb27b9ebdefd7a7145856705b771831386e9c5"
+    }
+  ],
+  "rows": [
+    {
+      "literal": "/start",
+      "canonical": "/help",
+      "kind": "information",
+      "sample": "/start",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/help\">>,[]}",
+      "implementation": "REACHABLE_INFORMATION",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/help",
+      "canonical": "/help",
+      "kind": "information",
+      "sample": "/help",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/help\">>,[]}",
+      "implementation": "REACHABLE_INFORMATION",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/status",
+      "canonical": "/status",
+      "kind": "read_observation",
+      "sample": "/status",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_system_health\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/storage",
+      "canonical": "/storage",
+      "kind": "read_observation",
+      "sample": "/storage",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_storage\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/dark",
+      "canonical": "/dark",
+      "kind": "controlled_action",
+      "sample": "/dark",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/dark\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/andon",
+      "canonical": "/andon",
+      "kind": "controlled_action",
+      "sample": "/andon",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/andon\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/zigvm",
+      "canonical": "/zigvm",
+      "kind": "controlled_action",
+      "sample": "/zigvm",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_zigvm_version\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/plan",
+      "canonical": "/plan",
+      "kind": "read_observation",
+      "sample": "/plan",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_saplan\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/sutra",
+      "canonical": "/sutra",
+      "kind": "conversation_model",
+      "sample": "/sutra",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_matrix_versions\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/zk",
+      "canonical": "/zk",
+      "kind": "read_observation",
+      "sample": "/zk",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/knowledge\">>,[<<\"zk\">>,<<>>]}",
+      "implementation": "REACHABLE_SCOPED_QUERY",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/checklist",
+      "canonical": "/checklist",
+      "kind": "read_observation",
+      "sample": "/checklist",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/checklist\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/cockpit",
+      "canonical": "/cockpit",
+      "kind": "information",
+      "sample": "/cockpit",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/cockpit\">>,[]}",
+      "implementation": "REACHABLE_INFORMATION",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/approval",
+      "canonical": "/approval",
+      "kind": "controlled_action",
+      "sample": "/approval",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/approval\">>,[]}",
+      "implementation": "REACHABLE_SCOPED_QUERY",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/resuscitate",
+      "canonical": "/resuscitate",
+      "kind": "controlled_action",
+      "sample": "/resuscitate",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/resuscitate\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/chaos",
+      "canonical": "/chaos",
+      "kind": "controlled_action",
+      "sample": "/chaos",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/chaos\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/repro",
+      "canonical": "/repro",
+      "kind": "controlled_action",
+      "sample": "/repro",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/repro\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/merge",
+      "canonical": "/merge",
+      "kind": "controlled_action",
+      "sample": "/merge",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/merge\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/bisect",
+      "canonical": "/bisect",
+      "kind": "controlled_action",
+      "sample": "/bisect",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/bisect\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/escalate",
+      "canonical": "/escalate",
+      "kind": "controlled_action",
+      "sample": "/escalate",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/escalate\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/rotate-keys",
+      "canonical": "/rotate-keys",
+      "kind": "controlled_action",
+      "sample": "/rotate-keys",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/rotate-keys\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/mesh",
+      "canonical": "/mesh",
+      "kind": "read_observation",
+      "sample": "/mesh",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/mesh\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/migrate",
+      "canonical": "/migrate",
+      "kind": "controlled_action",
+      "sample": "/migrate",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/migrate\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/adr",
+      "canonical": "/adr",
+      "kind": "conversation_model",
+      "sample": "/adr",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/adr\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/blast-radius",
+      "canonical": "/blast-radius",
+      "kind": "read_observation",
+      "sample": "/blast-radius",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/blast-radius\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/pacing",
+      "canonical": "/pacing",
+      "kind": "read_observation",
+      "sample": "/pacing",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/pacing\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/whatif",
+      "canonical": "/whatif",
+      "kind": "conversation_model",
+      "sample": "/whatif",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/whatif\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/simulate",
+      "canonical": "/whatif",
+      "kind": "conversation_model",
+      "sample": "/simulate",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/whatif\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/rack-cv",
+      "canonical": "/rack-cv",
+      "kind": "read_observation",
+      "sample": "/rack-cv",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/rack-cv\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/acoustic",
+      "canonical": "/acoustic",
+      "kind": "read_observation",
+      "sample": "/acoustic",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/acoustic\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/rewind",
+      "canonical": "/rewind",
+      "kind": "controlled_action",
+      "sample": "/rewind",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/rewind\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/postmortem",
+      "canonical": "/postmortem",
+      "kind": "conversation_model",
+      "sample": "/postmortem",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/postmortem\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/finops",
+      "canonical": "/finops",
+      "kind": "read_observation",
+      "sample": "/finops",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/finops\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/budget",
+      "canonical": "/finops",
+      "kind": "read_observation",
+      "sample": "/budget",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/finops\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/eco-schedule",
+      "canonical": "/eco-schedule",
+      "kind": "controlled_action",
+      "sample": "/eco-schedule",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/eco-schedule\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/radar",
+      "canonical": "/radar",
+      "kind": "read_observation",
+      "sample": "/radar",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/radar\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/canvas",
+      "canonical": "/canvas",
+      "kind": "conversation_model",
+      "sample": "/canvas",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/canvas\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/lockbox",
+      "canonical": "/lockbox",
+      "kind": "controlled_action",
+      "sample": "/lockbox",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/lockbox\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/export-audit",
+      "canonical": "/export-audit",
+      "kind": "controlled_action",
+      "sample": "/export-audit",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/export-audit\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/sidecar",
+      "canonical": "/sidecar",
+      "kind": "controlled_action",
+      "sample": "/sidecar",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/sidecar\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/voice-roll-call",
+      "canonical": "/voice-roll-call",
+      "kind": "controlled_action",
+      "sample": "/voice-roll-call",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/voice-roll-call\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/babel",
+      "canonical": "/babel",
+      "kind": "conversation_model",
+      "sample": "/babel",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/babel\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/whiteboard",
+      "canonical": "/whiteboard",
+      "kind": "conversation_model",
+      "sample": "/whiteboard",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/whiteboard\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/socratic",
+      "canonical": "/socratic",
+      "kind": "conversation_model",
+      "sample": "/socratic",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/socratic\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/handover",
+      "canonical": "/handover",
+      "kind": "controlled_action",
+      "sample": "/handover",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/handover\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/pair-voice",
+      "canonical": "/pair-voice",
+      "kind": "controlled_action",
+      "sample": "/pair-voice",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/pair-voice\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/exec-brief",
+      "canonical": "/exec-brief",
+      "kind": "conversation_model",
+      "sample": "/exec-brief",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/exec-brief\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/commitments",
+      "canonical": "/commitments",
+      "kind": "controlled_action",
+      "sample": "/commitments",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/commitments\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/acoustic-hud",
+      "canonical": "/acoustic-hud",
+      "kind": "read_observation",
+      "sample": "/acoustic-hud",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/acoustic-hud\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/retro",
+      "canonical": "/retro",
+      "kind": "conversation_model",
+      "sample": "/retro",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/retro\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/gameday",
+      "canonical": "/gameday",
+      "kind": "controlled_action",
+      "sample": "/gameday",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/gameday\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/aspects",
+      "canonical": "/aspects",
+      "kind": "conversation_model",
+      "sample": "/aspects",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/aspects\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/ecology",
+      "canonical": "/ecology",
+      "kind": "read_observation",
+      "sample": "/ecology",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_ecology\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/health",
+      "canonical": "/health",
+      "kind": "read_observation",
+      "sample": "/health",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_system_health\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/tasks",
+      "canonical": "/plan",
+      "kind": "read_observation",
+      "sample": "/tasks",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_saplan\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/task",
+      "canonical": "/task",
+      "kind": "read_observation",
+      "sample": "/task lease-e2e-01",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/task\">>,[<<\"lease-e2e-01\">>]}",
+      "implementation": "REACHABLE_SCOPED_QUERY",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/search",
+      "canonical": "/search",
+      "kind": "read_observation",
+      "sample": "/search",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/search\">>,[<<>>]}",
+      "implementation": "REACHABLE_SCOPED_QUERY",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/immune",
+      "canonical": "/immune",
+      "kind": "read_observation",
+      "sample": "/immune",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/immune\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/fmea",
+      "canonical": "/fmea",
+      "kind": "read_observation",
+      "sample": "/fmea",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_fmea\">>}",
+      "implementation": "REACHABLE_CONFIGURED_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/ha",
+      "canonical": "/ha",
+      "kind": "read_observation",
+      "sample": "/ha",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/ha\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/zenoh",
+      "canonical": "/zenoh",
+      "kind": "read_observation",
+      "sample": "/zenoh",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/zenoh\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/inference",
+      "canonical": "/inference",
+      "kind": "conversation_model",
+      "sample": "/inference",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/inference\">>,[]}",
+      "implementation": "BACKEND_UNAVAILABLE",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/verify",
+      "canonical": "/verify",
+      "kind": "controlled_action",
+      "sample": "/verify",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/verify\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/verification",
+      "canonical": "/verify",
+      "kind": "controlled_action",
+      "sample": "/verification",
+      "directive_type": "denied_mutation",
+      "directive": "{denied_mutation,<<\"/verify\">>,\n                 <<\"Action is not implemented yet; current effect authority will also be required.\">>}",
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/rete",
+      "canonical": "/rete",
+      "kind": "read_observation",
+      "sample": "/rete watchdog=true,mesh_running=true",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/rete\">>,[<<\"watchdog=true,mesh_running=true\">>]}",
+      "implementation": "REACHABLE_SCOPED_QUERY",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/km",
+      "canonical": "/km",
+      "kind": "read_observation",
+      "sample": "/km",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/knowledge\">>,[<<\"all\">>,<<>>]}",
+      "implementation": "REACHABLE_SCOPED_QUERY",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/wiki",
+      "canonical": "/wiki",
+      "kind": "read_observation",
+      "sample": "/wiki",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/knowledge\">>,[<<\"wiki\">>,<<>>]}",
+      "implementation": "REACHABLE_SCOPED_QUERY",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/nvme",
+      "canonical": "/storage",
+      "kind": "read_observation",
+      "sample": "/nvme",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_storage\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/doctor",
+      "canonical": "/doctor",
+      "kind": "read_observation",
+      "sample": "/doctor",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_doctor\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/ev",
+      "canonical": "/doctor",
+      "kind": "read_observation",
+      "sample": "/ev",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_doctor\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/agy",
+      "canonical": "/agy",
+      "kind": "conversation_model",
+      "sample": "/agy fixture prompt",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/agy\">>,[<<\"fixture prompt\">>]}",
+      "implementation": "REACHABLE_CONFIGURED_STATEFUL",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/board",
+      "canonical": "/board",
+      "kind": "read_observation",
+      "sample": "/board",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_board\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/peers",
+      "canonical": "/peers",
+      "kind": "read_observation",
+      "sample": "/peers",
+      "directive_type": "direct_read_tool",
+      "directive": "{direct_read_tool,<<\"query_peers\">>}",
+      "implementation": "REACHABLE_DIRECT_READ",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/memory",
+      "canonical": "/memory",
+      "kind": "read_observation",
+      "sample": "/memory",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/memory\">>,[]}",
+      "implementation": "REACHABLE_CONFIGURED_STATEFUL",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/messages",
+      "canonical": "/messages",
+      "kind": "read_observation",
+      "sample": "/messages",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/messages\">>,[]}",
+      "implementation": "REACHABLE_CONFIGURED_STATEFUL",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/history",
+      "canonical": "/messages",
+      "kind": "read_observation",
+      "sample": "/history",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/messages\">>,[]}",
+      "implementation": "REACHABLE_CONFIGURED_STATEFUL",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/tool",
+      "canonical": "/tool",
+      "kind": "controlled_action",
+      "sample": "/tool cancel_job_lease plan-e2e/job1 -- bounded fixture",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/cancel_job_lease\">>,\n                     [<<\"plan-e2e/job1\">>,<<\"bounded fixture\">>]}",
+      "implementation": "REACHABLE_GUARDED_ACTION",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    },
+    {
+      "literal": "/action",
+      "canonical": "/tool",
+      "kind": "controlled_action",
+      "sample": "/action cancel_job_lease plan-e2e/job1 -- bounded fixture",
+      "directive_type": "preserved_directive",
+      "directive": "{preserved_directive,<<\"/cancel_job_lease\">>,\n                     [<<\"plan-e2e/job1\">>,<<\"bounded fixture\">>]}",
+      "implementation": "REACHABLE_GUARDED_ACTION",
+      "acceptance": "NOT_ESTABLISHED_BY_CLASSIFICATION_ONLY"
+    }
+  ]
+}

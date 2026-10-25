@@ -1,0 +1,106 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "candidate": "509d993f1496d7f74425f42798d523f28c4838f3",
+  "parent": "d0491cd16fd7befa1322a4fa250ddbe4b820c303",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 12,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Configured-plan recorded FMEA assessments through /fmea [task_id] and /tool query_fmea",
+  "evidence_root": "var/recovery-runtime/20261024-2346-fmea",
+  "tests": {
+    "distinct": 73,
+    "unit_native": 63,
+    "service": 8,
+    "config_authority": 2,
+    "failed": 0,
+    "full_suite": false,
+    "runs": [
+      "unit-frozen.json",
+      "fmea-service-frozen.json",
+      "config-authority-regression.json"
+    ],
+    "mutants": {
+      "killed": 2,
+      "survived": 0,
+      "restored_baseline_pass": true
+    }
+  },
+  "live_observation": {
+    "file": "live-risk-observation.json",
+    "source": "governance/planning/20261024-1325-telegram-runtime-risk.json",
+    "source_sha256": "4c5f8eaa29875a3f217ea69c5da319fb568209d3a6778a09b1e4ad29ad7c9772",
+    "matching_tasks": 71,
+    "selected_task": "COMMAND_IMPL",
+    "modes": 3,
+    "max_rpn": 36,
+    "freshness": "fresh_at_observation",
+    "runtime_failure_rate_measured": false
+  },
+  "review": {
+    "conversation": "551f438d-a50d-4b35-ba39-e0381d21dc1e",
+    "verdict": "PASS",
+    "duration_seconds": 29.109939016,
+    "packet_bytes": 57917,
+    "raw": "agy-review-raw.json",
+    "qualification": "Positive observations plus explicit residual risks; no effect/system admission"
+  },
+  "code_author": "Codex; actual AGY code job cfc23bc2 print-timeout, empty response, no edits; discarded",
+  "source_configuration": {
+    "default_enabled": false,
+    "production_root": "/home/an/NAS-setup/uos/governance/planning/",
+    "trusted_launcher_api": "telegram_service.configure_risk_source",
+    "telegram_selectable": false,
+    "release_enrollment_pending": true
+  },
+  "bounds": {
+    "source_bytes": 1048576,
+    "records": 1000,
+    "modes_per_record": 32,
+    "shown_tasks": 5,
+    "output_bytes": 32768,
+    "child_deadline_ms": 3000
+  },
+  "manifest": {
+    "source_pairs": 97,
+    "files": 645,
+    "untraversed_links": 1
+  },
+  "command_coverage": {
+    "literals": 77,
+    "reachable": 26,
+    "backend_unavailable": 29,
+    "not_implemented": 22,
+    "configured_read": 1,
+    "artifact": "governance/planning/20261024-2355-telegram-command-reachability.json",
+    "feature_acceptance_not_implied": true
+  },
+  "residual_risks": [
+    "Recorded source windows and file hash do not verify underlying evidence or runtime failure rates",
+    "Stable handle checks and pre-read ancestor checks are not descriptor-relative atomic traversal against a privileged local writer",
+    "Production risk source enrollment remains release work",
+    "Telegram error response intentionally collapses missing task and malformed/unavailable source",
+    "51command routes,13MiniAppbackends/browser,7media types,gateway,provider/live acceptance,release/global admission/main remain"
+  ],
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "main_merged": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "goal_met": false,
+  "observed_at": "2026-10-24T23:55:39.236Z",
+  "dashboard_observation": {
+    "http": 200,
+    "observed_at": "2026-10-24T23:57:08.086Z",
+    "updated_at": "2026-10-24T23:54:32Z",
+    "producer": "live-dashboard24",
+    "refresh_seconds": 300,
+    "expires_at": "2026-10-25T00:16:51.481Z"
+  }
+}

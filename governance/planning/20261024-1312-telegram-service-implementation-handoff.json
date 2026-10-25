@@ -1,0 +1,45 @@
+{
+  "observed_at": "2026-10-24T13:12:57.016Z",
+  "schema": "uos.telegram-service-implementation-handoff.v1",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_IMPL",
+  "worker": "codex-analysis-20261024",
+  "attempt": 13,
+  "candidate": "ba20f3e039c6317b7c4e35fa3a0d08562162adeb",
+  "parent": "a4abe4715b5dffc314386bb9d4757f97b17c0151",
+  "status": "IMPLEMENTATION_VERIFIED_READY_FOR_SERVICE_REVIEW",
+  "tests": {
+    "unit_service_fault": 164,
+    "baseline_e2e": 13,
+    "managed_lifecycle_e2e": 7,
+    "run_entry_e2e": 2,
+    "total": 186
+  },
+  "independent_review": {
+    "conversation": "0c27a5e1-48c7-41ea-8076-85f2c9fc3d4f",
+    "model": "gemini-4-argon-high",
+    "verdict": "PASS",
+    "findings": [],
+    "service_closure_gaps": []
+  },
+  "evidence": "var/recovery-runtime/20261024-1305-runtime-final",
+  "manifest": "var/recovery-runtime/20261024-1305-runtime-final/artifact-manifest.json",
+  "implementation_complete": true,
+  "service_acceptance_complete": false,
+  "goal_complete": false,
+  "production_admission": false,
+  "main_merged": false,
+  "obligations": {
+    "F1": "Generation-coherent full scan, watermark errors held, exclusive fresh proof and single-use persisted writer start",
+    "F2": "Per-instance supervisor-owned subject storage; managed store CAS admits one instance; linked OTP cleanup",
+    "F3": "Runtime lease30s/10s renewal, exact task/owner/attempt/epoch fences, proactive loss suspension; distinct session and worker identities",
+    "F4": "Actual whole-unit cleanup plus exact predecessor binding; prepared transition and effect-time fences preserve uncertainty"
+  },
+  "residuals": [
+    "Dedicated SERVICE_DRAFT_REVIEW, SERVICE_REVIEW and SERVICE_OBSERVER_TOOL handoff remain canonical tasks",
+    "One approved store/config per runtime grant; isolated systemd profile only; production profile and release configuration remain PREP/RELEASE work",
+    "77 command literals and nine feature families are not complete; only staged doctor/saplan/callback paths accepted here",
+    "13 Mini App backends/actions, seven media types and gateway integration remain",
+    "No live recipient chosen; real client acceptance, full browser acceptance, global admission and applicable main integration remain"
+  ]
+}

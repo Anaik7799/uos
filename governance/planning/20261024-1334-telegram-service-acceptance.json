@@ -1,0 +1,95 @@
+{
+  "schema": "uos.telegram-service-acceptance.v1",
+  "observed_at": "2026-10-24T13:34:44.531Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "tasks": {
+    "SERVICE_DRAFT_REVIEW": 10,
+    "SERVICE_REVIEW": 1
+  },
+  "worker": "codex-analysis-20261024",
+  "candidate": "ba20f3e039c6317b7c4e35fa3a0d08562162adeb",
+  "status": "PASS_SCOPED_DEVELOPMENT_SERVICE",
+  "independent_review": {
+    "conversation": "57a0082f-fcf1-4b0b-9441-4292eff2abf8",
+    "model": "gemini-4-argon-high",
+    "seconds": 83.108309283,
+    "verdict": "PASS",
+    "executed_tests": false
+  },
+  "review": {
+    "candidate": "ba20f3e039c6317b7c4e35fa3a0d08562162adeb",
+    "verdict": "PASS",
+    "findings": [
+      "Scoped staged service acceptance (doctor/saplan/callback transport) is confirmed from the embedded source excerpts and 186 observed test receipts (suite-unit-final: 164, suite-e2e-baseline: 13, lifecycle-seven: 7, runtime-entry-focused: 2); all 77 commands, MiniApp, media, gateway, and production profile/admission remain downstream out of scope."
+    ],
+    "corrections_acknowledged": [
+      "telegram_runtime.gleam exports StartMode (Fresh, Recover) and run/4 (L10-L31), not run_from_env or run_with_options.",
+      "runtime-entry-focused receipt contains 2 tests: e2e_runtime_entry_validates_before_start_runs_and_releases_test and e2e_runtime_entry_recovers_runs_and_releases_test; no refuses_bad_authority test exists.",
+      "lifecycle-seven receipt contains 7 tests: 3 renewal (e2e_managed_renewal_and_runtime_release_suspension_test, e2e_managed_renewal_and_changed_task_suspension_test, e2e_managed_renewal_never_extends_parent_task_test), 2 active/shutdown (e2e_active_managed_start_dispatch_and_clean_release_test, e2e_stale_shutdown_cannot_release_successor_runtime_test), and 2 successor recovery (e2e_managed_successor_recovers_predecessor_that_never_started_test, e2e_managed_successor_recovers_terminated_active_predecessor_test).",
+      "suite-unit-final receipt reports expected_case_count=164 (All 164 tests passed) without breakdown attributing counts to telegram_http_client_test or telegram_lifecycle_adapter_test.",
+      "In telegram_http_client.gleam (L150-L163), decode_200_ok classifies payload.chat_id != expected_chat_id as AmbiguousOutcome(\"chat_id_mismatch: ...\"), which telegram_service.gleam (L2039-L2085) commits via svc_commit_outcome as ledger.OutboxUncertain(reason) returning DeliveryStepUncertain(chunk.request_id, reason)."
+    ],
+    "obligations": [
+      {
+        "id": "T1",
+        "status": "MET",
+        "evidence": "telegram_service.gleam poll_cycle (L1555-L1779) enforces pending_operation and lifecycle.evaluate_writer_gate checks (L1560-L1569), verify_authority before HTTP getUpdates (L1571) and after HTTP wait via effective_now_us (L1619-L1632), single in_flight_poll gate (L1575-L1577), ServiceWriterHold on unconfirmed poller cleanup (L1592-L1598) or StoreUncertainApply (L1710-L1715), and watermark refresh via svc_read_watermark after prefix commit returning PollCommitted (L1730-L1765). Receipts: e2e_full_conversation_lifecycle_test, e2e_unauthorized_user_rejection_test, e2e_supervised_six_second_poll_test, e2e_finite_automatic_loop_dispatches_without_manual_ticks_test."
+      },
+      {
+        "id": "T2",
+        "status": "MET",
+        "evidence": "telegram_service.gleam init_service (L462-L584) rejects epoch 1 bootstrap if scan_all_inbox_records finds any ledger.InboxProcessing record (L475-L512). start_managed_service_with_transition (L4520-L4690) validates resource_id, bot_id, service_epoch, control registration via lifecycle.read_and_verify_prelaunch_control_bounded and lifecycle.verify_live_lifecycle_ownership (L4582-L4624), runs read-only preflight before CAS (L4628-L4636), prepares successor via store.transition_writer_registration (L4649-L4673; telegram_store.gleam L2111-L2198), and consumes single-use start permit via store.consume_writer_start (L4676-L4681; telegram_store.gleam L2025-L2105). Receipts: e2e_managed_start_identity_authority_single_use_and_dispatch_test, e2e_managed_preflight_hold_preserves_start_permit_test, e2e_managed_successor_recovers_predecessor_that_never_started_test, e2e_managed_successor_recovers_terminated_active_predecessor_test."
+      },
+      {
+        "id": "T3",
+        "status": "MET",
+        "evidence": "telegram_service.gleam VerifyAuthority (L3069-L3080) enforces non-revoked lease validity against int.max(now_us, ffi_system_now_utc_us()). RevokeAuthority (L3921-L3937, L3968-L3997) sets lifecycle.ServiceWriterHold(\"authority_revoked_with_inflight_effect\") when poll/dispatch/delivery is active, revokes worker lease, kills poll_worker, dispatch_worker, and in_flight_workers, and fails queued deliveries. renew_managed_authority and renew_with_open_store (L4760-L4959) cap TTL to task deadline via cap_ttl_to_task_deadline, append sync.Heartbeat and sync.Renew, and enforce a 100000us safety margin; MaintenanceTick failure calls suspend_managed_authority (L3054-L3060). Receipts: e2e_managed_renewal_and_runtime_release_suspension_test, e2e_managed_renewal_and_changed_task_suspension_test, e2e_managed_renewal_never_extends_parent_task_test."
+      },
+      {
+        "id": "T4",
+        "status": "MET",
+        "evidence": "telegram_service.gleam deliver_chunk (L1791-L1909) gates on pending_operation, evaluate_writer_gate, and verify_authority before generation read (L1813), before svc_commit_sending (L1838), and before http_client.send_message (L1895). telegram_http_client.gleam send_message and decode_200_ok (L64-L169) require HTTP 200 with payload.ok, guard.valid_positive_id(payload.message_id), guard.valid_chat_id(payload.chat_id), and payload.chat_id == expected_chat_id to return Delivered, while routing 400/403/404 to decode_proven_rejection (L118). Receipts: e2e_full_conversation_lifecycle_test, e2e_delivery_failure_bad_request_test, large_saplan_result_is_chunked_and_delivered_test, e2e_callback_ack_replay_and_denial_test."
+      },
+      {
+        "id": "T5",
+        "status": "MET",
+        "evidence": "telegram_http_client.gleam (L95-L166) returns AmbiguousOutcome for transport errors, oversized or non-UTF8 bodies, 429, 5xx, unexpected status codes, malformed 200 JSON, invalid 200 fields, and chat_id_mismatch. telegram_service.gleam deliver_chunk (L2039-L2087) commits ledger.OutboxUncertain(reason) via svc_commit_outcome and returns DeliveryStepUncertain(chunk.request_id, reason), and transitions to ServiceWriterHold(\"store_uncertain_apply_pending\") with pending_operation: Some(pending) on store.StoreUncertainApply (L1862-L1874, L2052-L2064). Receipt: e2e_delivery_ambiguous_socket_drop_test."
+      },
+      {
+        "id": "T6",
+        "status": "MET",
+        "evidence": "telegram_service.gleam scan_all_inbox_records (L944-L993) enforces generation coherence across pages (L958-L971). Admitted recovery (L884-L907) invokes recover_inflight_record (L383-L460) for ledger.InboxProcessing records, keeping records lacking result metadata held via ledger.recover_request(record, []) (L394, L457), verifying chunk_gen == meta_gen and chunk count before ledger.recover_request(record, chunks) (L412-L443), and falling back to ledger.InboxHold(\"unrecoverable_inflight_state\") on error (L893-L899). Receipts: e2e_recovery_cgroup_and_writer_hold_test, e2e_managed_successor_recovers_terminated_active_predecessor_test, e2e_runtime_entry_recovers_runs_and_releases_test."
+      },
+      {
+        "id": "T7",
+        "status": "MET",
+        "evidence": "telegram_service.gleam verifies cleanup receipt binary hashes and causality receipt_stopped_at_us(receipt) >= reg.registered_at_us (L850-L868), and stop_managed_service (L4988-L5008) stops the supervised tree via stop_supervised_service(svc) before appending sync.Release to coord_store. telegram_runtime.gleam run (L26-L176) validates loop budget before start_service, monitors driver.pid in await_driver, stops managed service on confirmed down after TerminalReceived, and uses force_kill_and_cleanup (L143-L165) on unconfirmed down or lifetime expiry. Receipts: unrelated_cleanup_receipt_should_not_admit_writer_test, e2e_active_managed_start_dispatch_and_clean_release_test, e2e_stale_shutdown_cannot_release_successor_runtime_test, e2e_runtime_entry_validates_before_start_runs_and_releases_test, e2e_runtime_entry_recovers_runs_and_releases_test."
+      }
+    ],
+    "historical_F1_F4_resolved": true,
+    "residuals": [],
+    "executed_tests": false
+  },
+  "review_corrections": "governance/planning/20261024-1330-telegram-service-review-corrections.json",
+  "original_review_status": "HOLD_INACCURATE_CITATIONS_PRESERVED",
+  "test_evidence": "var/recovery-runtime/20261024-1305-runtime-final",
+  "tests": {
+    "unit_service_fault": 164,
+    "baseline": 13,
+    "lifecycle": 7,
+    "runtime_entry": 2,
+    "total": 186
+  },
+  "fresh_source_check": "var/recovery-runtime/20261024-1325-service-acceptance/source-recheck.json",
+  "cited_test_names_checked": 21,
+  "observer_handoff": "governance/planning/20261024-1328-telegram-observer-handoff.json",
+  "poll_review": "uos/telegram-poll-repair/20261024-0737:REVIEW completed attempt1",
+  "scope": "Staged supervised doctor/saplan/callback transport, durable single-writer lifecycle and recovery. Does not complete command families.",
+  "limitations": [
+    "AGY inspected bounded source and observed Codex execution receipts; did not run tests itself.",
+    "One approved store/config per runtime grant; cooperative local account; isolated systemd profile.",
+    "All77commands,14MiniApp surfaces/actions,7media types,gateway,complete browser/live acceptance,release/global admission and main integration remain."
+  ],
+  "production_admission": false,
+  "goal_complete": false
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "uos.telegram.supervisor-lifetime.verification.v1",
+  "observed_at": "2026-10-24T11:46:53.076Z",
+  "candidate": "f4c30dadf92c69cbf2f189425b86fcfafa0db222",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "SERVICE_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 12,
+    "state": "executing"
+  },
+  "status": "SCOPED_RUNTIME_AND_INDEPENDENT_REVIEW_PASS",
+  "tests": {
+    "unit_service_fault": 157,
+    "staged_e2e": 11,
+    "full_telegram_acceptance": false
+  },
+  "evidence": [
+    "var/recovery-runtime/20261024-1143-supervisor-owner/suite-unit-final.json",
+    "var/recovery-runtime/20261024-1143-supervisor-owner/suite-e2e.json",
+    "var/recovery-runtime/20261024-1143-supervisor-owner/artifact-manifest.json",
+    "var/recovery-runtime/20261024-1143-supervisor-owner/agy-final-review.json",
+    "var/recovery-runtime/20261024-1143-supervisor-owner/supervisor-owner-regressions.json"
+  ],
+  "changes": [
+    "Per-instance worker subjects; no unmanaged fallback worker creation",
+    "Supervisor-owned ETS removes references on normal or abnormal termination",
+    "Bounded gen_server stop works from non-parent callers",
+    "Typed startup lookup/handoff errors trigger cleanup",
+    "Supervisor creates its own ETS scope; no handoff, extra daemon, bootstrap table or opaque third-party PID extraction"
+  ],
+  "remaining": [
+    "Durable writer-start token must be wired into actual managed startup/recovery with current-unit/control/task/runtime checks",
+    "Automatic lease renewal and proactive loss suspension",
+    "All remaining commands, Mini App, media/gateway and full live/browser acceptance",
+    "Independent release/global admission and applicable main integration"
+  ],
+  "agent_management": {
+    "authority": "Existing Sa-plan and Gleam dispatcher; no competing scheduler",
+    "single_writer": "Canonical task+workspace ownership; serialized integration",
+    "completion": "Nonempty reviewed output and candidate-bound tests; model exit success alone rejected",
+    "timeout_observation": "Two 110-second print timeouts returned empty SUCCESS. Classified incomplete, canonical jobs discarded after terminal unit observation. No final review recoverable from conversation records.",
+    "adaptation": "Two110secondemptytimeouts preserved;240secondbound allowed189.45secondlifetime review; followupreview38.35secondPASS. This is measured bounded job adaptation, not a globally optimal autonomous scheduler.",
+    "current_review_job": null
+  },
+  "goal_met": false,
+  "main_changed": false,
+  "runtime_admission": false,
+  "independent_review": {
+    "conversation_id": "f8f01a00-d3be-40dc-8a82-a32e61db5119",
+    "verdict": "PASS",
+    "findings": 0,
+    "evidence": "var/recovery-runtime/20261024-1143-supervisor-owner/agy-final-review.json"
+  }
+}

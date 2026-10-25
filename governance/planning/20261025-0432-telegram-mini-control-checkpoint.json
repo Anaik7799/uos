@@ -1,0 +1,45 @@
+{
+  "schema": "uos.telegram.mini-control.checkpoint.v1",
+  "observed_at": "2026-10-25T04:32:00.613Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "MINI_API_IMPL",
+  "attempt": 3,
+  "candidate": "be56afb562b046acc85cc684b230a7979ee4e6c0",
+  "parent": "0a07f329e6964cf1a00536bd29282b606db21f46",
+  "bookmark": "integration/telegram-mini-control-20261025-0430",
+  "state": "SCOPED_DEVELOPMENT_ACCEPTED_LOG_CONTROL",
+  "scope": "Authenticated development VM logger control with canonical Sa-plan receipts; full Telegram and telemetry still incomplete",
+  "evidence": "var/recovery-runtime/20261025-0427-mini-control-build7",
+  "checks": {
+    "unit": 90,
+    "http_baseline": 41,
+    "http_telemetry": 7,
+    "http_control": 9,
+    "canonical_recovery": 2,
+    "browser": 14,
+    "actor_crash": 1,
+    "vm_restart_durability": 1,
+    "total_distinct": 165
+  },
+  "source_bindings": 85,
+  "source_mismatches": 0,
+  "review": {
+    "design": "62cfdd4a PROCEED",
+    "core": "2037d270 PASS",
+    "integration": "e298fa42 PASS",
+    "correction": "Integration review in-memory ledger assertion disproved by source and actual VM-restart durable receipt test"
+  },
+  "remaining": [
+    "Production control authority/activation",
+    "Rate-limit configuration and distributed tracing",
+    "Six remaining Mini backend producers and complete page actions",
+    "45 command routes",
+    "Seven media types and gateway",
+    "Real Telegram acceptance",
+    "Independent release, global admission and main"
+  ],
+  "runtime_admission": false,
+  "production_changed": false,
+  "main_merged": false,
+  "goal_met": false
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T19:15:58.376Z",
+  "candidate": "4b6ed682aa3ba2812a717afcd3eeea6e55dcd075",
+  "parent": "667a8775f6e2a6b28523083742a1404154a5d98b",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 7,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Cryptographic approval evidence verifier; no runtime grant or Telegram execution enabled",
+  "tests": {
+    "candidate": "4b6ed682aa3ba2812a717afcd3eeea6e55dcd075",
+    "observed_at": "2026-10-24T19:14:09.066Z",
+    "distinct_tests": 58,
+    "executions": 58,
+    "runs": [
+      "approval-guard-regression.json"
+    ],
+    "complete": true,
+    "full_suite": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-1907-approval/artifact-manifest.json",
+    "files": 10571,
+    "canonical_matches": 49,
+    "unhashed_directory_links": 3
+  },
+  "design_review": "28c18660-d91f-42df-b304-a78f43557bd1",
+  "code_author": "AGYcd47da4b-b728-4ac2-a5f7-5b8c01fa2a52 plus Codex integration fixes",
+  "independent_review": {
+    "conversation": "0f348899-d270-4ec9-9591-2f4c295a9907",
+    "duration_seconds": 31.247176177,
+    "verdict": "PASS",
+    "residual_risks": [
+      "Verifier provides pure cryptographic evidence only; integrity-protected runtime roster provisioning, authenticated signer ingress, and production Telegram routing remain unimplemented.",
+      "Authoritative execution still requires canonical executor fences and persistent single-effect idempotency enforcement at the dispatch boundary, and the underlying primitive revokes job leases only rather than terminating OS processes.",
+      "compute_roster_digest hashes the signer list in caller-supplied order rather than canonical role order, causing reordered equivalent signer configurations to fail closed with a digest mismatch.",
+      "Verification receipt covers 58 focused tests (full_suite: false); full-system regression execution and end-to-end OTP supervision checks remain pending before admission."
+    ]
+  },
+  "runtime": {
+    "completed": 61,
+    "total": 71
+  },
+  "release": {
+    "completed": 25,
+    "total": 33
+  },
+  "live_keys_provisioned": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false,
+  "next": "Connect protected roster and authentic signer ingress to trusted Gleam executor with effect-time canonical checks and durable result delivery; retain all remaining commands/MiniApp/media/gateway acceptance obligations."
+}

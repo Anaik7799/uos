@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-10-24T14:29:20.100Z",
+  "task": "uos/telegram-completion/20261024-0809:OBSERVE9",
+  "status": "COMPLETED",
+  "unit": "uos-recovery-dashboard-20261024-r11.service",
+  "invocation_id": "af5289135eda40ab9d787d1e898ce686",
+  "config": "/home/an/uos-agent-runtime/20261024-0555/20261024-1420-dashboard-config.json",
+  "config_sha256": "85482d7d8a0ea43b66f236e88db643c3c94804181e3d2d6337d8314253b8774c",
+  "review": "/home/an/uos-agent-runtime/20261024-0555/20261024-1421-dashboard-review.json",
+  "independent_review": "AGY75699016 PASS",
+  "expiry": "2026-10-24T14:59:57.204Z",
+  "evidence": "var/recovery-runtime/20261024-1417-conversation/dashboard11-startup-final.json"
+}

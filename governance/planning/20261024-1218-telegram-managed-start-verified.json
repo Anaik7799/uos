@@ -1,0 +1,58 @@
+{
+  "schema": "uos.telegram.managed-start.verification.v1",
+  "observed_at": "2026-10-24T12:10:13.070Z",
+  "candidate": "d99735510cd7a7ed479b2466da50f8df3b03348d",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "SERVICE_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 12,
+    "state": "executing"
+  },
+  "status": "SCOPED_RUNTIME_AND_INDEPENDENT_REVIEW_PASS",
+  "tests": {
+    "unit_service_fault": 157,
+    "staged_e2e": 13,
+    "full_telegram_acceptance": false
+  },
+  "evidence": [
+    "var/recovery-runtime/20261024-1208-managed-preflight/preflight-after.json",
+    "var/recovery-runtime/20261024-1208-managed-preflight/suite-unit-final.json",
+    "var/recovery-runtime/20261024-1208-managed-preflight/suite-e2e.json",
+    "var/recovery-runtime/20261024-1208-managed-preflight/artifact-manifest.json",
+    "var/recovery-runtime/20261024-1208-managed-preflight/agy-review.json"
+  ],
+  "changes": [
+    "Managed entry binds actual unit, strict canonical control registration, persisted writer, current Sa-plan task and runtime coordinator authority before starting workers",
+    "Single-use writer permit is atomically consumed; duplicates refused",
+    "Control file reads bounded to 262144 bytes through existing safe file adapter",
+    "Bounded monitored startup query and confirmed shutdown on Hold"
+  ],
+  "remaining": [
+    "Runtime lease acquisition/renewal and proactive suspension",
+    "Recovery registration transition and managed successor acceptance",
+    "Operational entrypoint migration and exact production unit profile",
+    "All command, Mini App, media/gateway and full live/browser acceptance",
+    "Independent release/global admission and applicable main integration"
+  ],
+  "independent_review": {
+    "state": "PASS",
+    "conversation_id": "fc97f1a0-9c15-4a22-982f-660ef44c2bc8",
+    "findings": 0
+  },
+  "goal_met": false,
+  "main_changed": false,
+  "runtime_admission": false,
+  "counterevidence": [
+    "var/recovery-runtime/20261024-1207-managed-preflight-before/preflight-falsifier.json",
+    "var/recovery-runtime/20261024-1154-managed-start/agy-review.json"
+  ],
+  "review_disposition": [
+    "Predictable preflight Hold now refuses before CAS; actual before-failure and after-pass prove permit retained",
+    "Read-only preflight does not consume predecessor receipt; CAS remains before workers; post-CAS uncertainty burns permit rather than granting replay",
+    "Post-start control file, live ownership and current authority rechecked; errors confirm supervisor shutdown",
+    "Fixture retains supervisor and confirms teardown; actual unit cgroup remains definitive cleanup",
+    "Bounded probe and stop each have5second ceilings; no unsupported5second total lifecycle claim",
+    "Erlang actors share BEAM OS process; existing live ownership verifier checks that process cgroup"
+  ]
+}

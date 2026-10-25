@@ -1,0 +1,16 @@
+{
+  "observed_at": "2026-10-24T07:46:51.772Z",
+  "candidate": "b5afe12bd09ff1c621b98b40615c8a9e56422cc7",
+  "startup": "2026-10-24T07:39:41Z",
+  "periodic": "2026-10-24T07:44:46Z",
+  "completion": "2026-10-24T07:46:13Z",
+  "reason": "task_completion",
+  "tests": 24,
+  "ui_component_checks": 11,
+  "independent_review": "PASS finite observer only",
+  "browser": "PENDING",
+  "runtime_unit": "uos-recovery-dashboard-20261024.service",
+  "expires_at": "2026-10-24T08:31:11.622000Z",
+  "overall_goal_complete": false,
+  "journal": "docs/journal/20261024-0757-dashboard-observer-verification.md"
+}

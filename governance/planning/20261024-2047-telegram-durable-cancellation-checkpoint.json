@@ -1,0 +1,101 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T20:47:06.283Z",
+  "candidate": "6930ed7499c22990ba3d7c5a03dfeaf25df15cdd",
+  "parent": "a2912902554198bd8d51248979994b2048b11380",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 8,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Exact approved request persistence, read-only restoration after abnormal BEAM exit, historical native lookup and atomic existing Telegram outbox",
+  "tests": {
+    "focused": 83,
+    "record_and_store": 7,
+    "client": 5,
+    "intent": 17,
+    "approval": 18,
+    "ingress": 22,
+    "conversation_memory_store_regression": 14,
+    "native_suites": 12,
+    "native_failed": 0,
+    "native_skipped": 0,
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "abnormal_exit_code": 77,
+    "independent_beam_processes": 2,
+    "historical_lookup_after_bridge_expiry_and_fence_change": true,
+    "outbox_status": "pending",
+    "live_telegram_send": false,
+    "mutants_killed": 4,
+    "mutants_survived": 0,
+    "mutants_void": 0,
+    "full_system": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2031-cancel-durable/artifact-manifest.json",
+    "source_matches": 146,
+    "files": 1199,
+    "unhashed_symlinks": 111
+  },
+  "code_author": {
+    "agent": "AGY Gemini4ArgonHigh",
+    "conversation": "28d2a0ae-a1e7-4742-a210-9b61f521aedb",
+    "duration_seconds": 65.800045753,
+    "scope": "Recovery record codec; Codex integrated store/client/tests"
+  },
+  "independent_review": {
+    "conversation": "834e4b58-1356-4046-ae11-e15d55e563dd",
+    "duration_seconds": 46.981467061000004,
+    "verdict": "PASS",
+    "findings": [],
+    "residual_risks": [
+      "Live Telegram route activation, protected signer ingress, current runtime/profile/fence enforcement at the live effect boundary, and bridge provisioning remain pending outside this slice.",
+      "Uncertain store commits (StoreUncertainApply) during persist_cancellation or commit_cancellation_lookup rely on the caller reconciling op-cancellation-<request_id> and op-cancellation-result-<request_id> through the existing PendingOperation recovery path before proceeding.",
+      "When a crash occurs after persist_cancellation but before the native cancellation effect is committed, historical lookup truthfully returns absent and commit_cancellation_lookup refuses to resolve the inbox; terminal handling (such as operator re-approval or lease-expiry cleanup) remains an orchestration responsibility in the live caller.",
+      "load_cancellation verifies that the caller holds current InboxProcessing(worker, epoch) authority and that the record matches the accepted input envelope, without requiring binding(saved).worker == worker; this appropriately allows a failover recovery worker to finalize the outbox from historical lookup while RecoveryRecord opacity and Lookup-only APIs prevent effect re-execution."
+    ],
+    "authority_collection": "Ok"
+  },
+  "preserved_failures": [
+    {
+      "cause": "Fixture database in insecure /tmp parent",
+      "resolution": "Dedicated0700 directory; production guard unchanged"
+    },
+    {
+      "cause": "Fixture cleanup omitted process_lock",
+      "resolution": "Exact owned lock cleanup; functional restart assertions already passed"
+    },
+    {
+      "cause": "Root heartbeat stale before AGY review launch",
+      "resolution": "Refused before process launch; heartbeat refreshed, one actual review job dispatched"
+    }
+  ],
+  "observer": {
+    "sha256": "18628311e549895f34b27b9b329b3b52930d9b0119a1d05afa95022fba4ddc07",
+    "expires_at": "2026-10-24T21:25:02.642Z",
+    "job": "uos/agy-operations/20261024-0642/live-dashboard20",
+    "config": "20261024-2034-dashboard-config.json",
+    "review": "20261024-2035-dashboard-review.json",
+    "unit": "uos-recovery-dashboard-20261024-r20.service",
+    "invocation": "948e0e2000254adf8741e8d31e6c2c32",
+    "task": "OBSERVE17",
+    "task_state": "completed",
+    "review_conversation": "9ee05a26-9f08-46a8-a2da-5cee27b572d1",
+    "first_snapshot_at": "2026-10-24T20:36:45Z",
+    "overlap": false
+  },
+  "runtime": {
+    "completed": 61,
+    "total": 71
+  },
+  "release": {
+    "completed": 25,
+    "total": 33
+  },
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false,
+  "next": "Connect protected actual signer/profile ingress, bridge provisioning, current effect-time fences and live service routing; handle absent outcomes without blind retry. Finish remaining command/MiniApp/media/gateway scope, then integrated/live acceptance and independent release/admission/main."
+}

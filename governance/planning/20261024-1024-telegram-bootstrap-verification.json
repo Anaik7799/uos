@@ -1,0 +1,82 @@
+{
+  "observed_at": "2026-10-24T10:23:43.937Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_IMPL",
+  "attempt": 10,
+  "candidate": "a3ad86ee3202312481c5c1b7ea6c22c0e4be2897",
+  "status": "VERIFIED_SCOPED_BOOTSTRAP_FIX_OVERALL_SERVICE_HOLD",
+  "bookmark": "integration/telegram-bootstrap-verified-20261024-1023",
+  "cases": {
+    "unit_service_fault": 127,
+    "e2e": 11,
+    "total": 138,
+    "failed": 0
+  },
+  "baseline": {
+    "old_service": "1b6f230f31dbfcb84f179989c34c4987e4d88883",
+    "four_regressions_failed": 4,
+    "corrected_passed": 4
+  },
+  "fixes": [
+    "Firstbootstrap scans bounded full inbox with generation coherence",
+    "Cursor is canonical inbox key, enabling real multi-page clean queue",
+    "Watermark read errors refuse startup instead of inventing offsetzero"
+  ],
+  "source_binding": {
+    "canonical_sources_equal": 32,
+    "artifacts": 284,
+    "private_test_modules": 5
+  },
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/baseline-falsifiers.json",
+      "sha256": "6affec712e1c881a282e64758119e6d6ee2155711e8b95cca646dd43d32a5b53"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/bootstrap-regressions.json",
+      "sha256": "9857b9ba938ca38976881595beacf7d92d437d9d7c1656961c7b789d98118a47"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/bootstrap-corrected.json",
+      "sha256": "73d64e7665722a074586c8f4bf67d564043fc31ba8228d6af8dc45d424e515a9"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/bootstrap-old-service-control.json",
+      "sha256": "d8d2d3ad7319f330add66ea030ecded4f03660f5bc3df165aafc2b5a4972b8d1"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/suite-unit.json",
+      "sha256": "055e7905fc3008e51687d6d10805f0cbf5037c9d43230459f9e90a4297d45b59"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/suite-e2e.json",
+      "sha256": "809fabd90ed5299263b4492b8c6a0d216047abc5ceb2f7ffa9bd1f8ae0fc4720"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/agy-review.json",
+      "sha256": "e4494befbf4a173f80aeae6d902b7fa8d7c8d7a7ee8749c06b765393dc3d9432"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/agy-bootstrap-review.json",
+      "sha256": "640112ba8bcd7ded3d9b55cb86d3a8c971b422fd12e996e35e9f9554d58a9941"
+    },
+    {
+      "path": "var/recovery-runtime/20261024-1014-service-obligations/artifact-manifest.json",
+      "sha256": "edd6a212b0230efb695727609af6c0f51d81e481c1d0cddcd83218781f5e6705"
+    }
+  ],
+  "remaining": [
+    "Prior-writer identity validation during epoch1 bootstrap",
+    "Prevent duplicate supervisors and globalsubject overwrite",
+    "Active canonical runtime lease lifecycle and suspension",
+    "Other service acceptance obligations and allfeature/release/global/main work"
+  ],
+  "forecast_resolution": {
+    "previous": "docs/journal/20261024-1010-telegram-loop-verification.md",
+    "probability": 0.7,
+    "horizon_minutes": 30,
+    "outcome": true,
+    "brier": 0.09
+  },
+  "goal_met": false
+}

@@ -1,0 +1,151 @@
+{
+  "schema": "uos.telegram.mini-evidence.checkpoint.v1",
+  "observed_at": "2026-10-25T01:50:08.696Z",
+  "candidate": "50ce74fff6c87161077f2f4874562503af719137",
+  "parent": "76360aa326fda8ecb918ff00a390c4d97bf78486",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "canonical_task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "MINI_API_IMPL",
+    "attempt": 1,
+    "state": "executing"
+  },
+  "scope": [
+    "Mini FMEA recorded-assessment read",
+    "Mini candidate-checklist record read",
+    "Tasks nanosecond lease rendering",
+    "Stable metadata-first field ordering and truthful unavailable text"
+  ],
+  "test_counts": {
+    "unit": 18,
+    "http": 35,
+    "browser": 8,
+    "distinct": 61,
+    "full_system_suite": false
+  },
+  "review": {
+    "observed_at": "2026-10-25T01:49:10.502Z",
+    "conversation": "23183256-e801-48e8-b653-06f4e61c0203",
+    "seconds": 47.346040197,
+    "ack": true,
+    "candidate": "50ce74fff6c87161077f2f4874562503af719137",
+    "verdict": "PASS",
+    "findings": [],
+    "residuals": [
+      "Final negative browser scenario (--unavailable mode for FMEA and verification) remains pending execution to pair with the completed HTTP unavailable/hash-mismatch checks.",
+      "Configured verification source record is currently stale (reporting 0 passes, 15 UNKNOWN, 3 STALE) and readers validate file identity and envelope rather than upstream producer truth or referenced evidence bytes.",
+      "FMEA projection intentionally caps output at 5 assessments and 3 highest-RPN modes per assessment (with explicit shown/selected/total and omitted counts) to stay within the 100-field Mini App bound.",
+      "Scope is limited to development read-only adapters for Planning, FMEA, and Verification using synthetic Telegram SDK fixtures; 11 other Mini App backends, interactive page actions, live Telegram WebApp acceptance, and runtime admission remain open."
+    ],
+    "negative_browser_residual_closed": true,
+    "negative_browser": "var/recovery-runtime/20261025-0147-mini-build6/browser-negative/report.json",
+    "source_matches": 31
+  },
+  "source_matches": 31,
+  "reused_sources": {
+    "count": 10,
+    "candidate": "0c9e0ddfddc73f7668ad3e81928c9c404924be32",
+    "manifest": "var/recovery-runtime/20261025-0137-mini-evidence/reuse-manifest.json"
+  },
+  "evidence_root": "var/recovery-runtime/20261025-0147-mini-build6",
+  "visual_inspection": {
+    "completed": true,
+    "scope": "Real Chromium screenshots of mobile FMEA, desktop verification and unavailable state; long-form FMEA remains a bounded summary"
+  },
+  "runtime_data": {
+    "fmea": "Actual protected71task assessment portfolio,5assessments shown,up to3modes per assessment; explicit omitted counts",
+    "verification": "Exact protected candidate record;0recordedpasses,15UNKNOWN,3STALE;record age retained"
+  },
+  "main_merged": false,
+  "production_release": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "goal_met": false,
+  "coverage": {
+    "commands": {
+      "reachable": 32,
+      "total": 77,
+      "remaining": 45,
+      "changed": false
+    },
+    "mini_read_paths": {
+      "available": 3,
+      "total": 14,
+      "paths": [
+        "tasks",
+        "fmea",
+        "verify"
+      ],
+      "remaining": 11,
+      "qualification": "Read paths only; page actions and full Mini feature acceptance remain incomplete"
+    }
+  },
+  "remaining_backends": [
+    "dashboard",
+    "health",
+    "alerts",
+    "immune",
+    "inference",
+    "chat",
+    "config",
+    "containers",
+    "federation",
+    "telemetry",
+    "zenoh"
+  ],
+  "remaining": [
+    "Full Mini App interactions and candidate gate execution",
+    "45command literals",
+    "7media types plus gateway",
+    "Working privacy-compliant free model route",
+    "Authorized live Telegram recipient and live WebApp acceptance",
+    "Integrated release/admission/main"
+  ],
+  "failed_agy_jobs": [
+    {
+      "job": "mini-projection0137",
+      "seconds": 180,
+      "result": "execution timed out;no source accepted"
+    },
+    {
+      "job": "mini-verification0140",
+      "seconds": 120,
+      "result": "execution timed out;no source accepted"
+    }
+  ],
+  "agent_adaptation": "After distinct180s/120s coding timeouts, Codex implemented and AGY independently reviewed exact candidate in47.35s. No identical retries or permissions weakening.",
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "known_warnings": [
+    "Inherited Erlang deprecated catch",
+    "Inherited record type name warning",
+    "Inherited OCaml mtime.clock.os deprecation"
+  ],
+  "files_modified": [
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_evidence_status.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_fmea_reader.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_fmea_report.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_knowledge_report.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_verification_reader.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_verification_report.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_api.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_evidence.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+    "apps/cepaf_gleam/src/telegram_coordination_binding.erl",
+    "apps/cepaf_gleam/src/telegram_ecology_clock.erl",
+    "apps/cepaf_gleam/src/telegram_knowledge_files.erl",
+    "apps/cepaf_gleam/src/telegram_risk_files.erl",
+    "apps/cepaf_gleam/test/mini_evidence_test.gleam",
+    "docs/design/20261025-0141-mini-evidence-SAFETY_ANALYSIS.md",
+    "tools/validation/telegram_mini_candidate/build.js",
+    "tools/validation/telegram_mini_candidate/http-tests.js",
+    "tools/validation/telegram_mini_candidate/mini_browser.ml"
+  ]
+}

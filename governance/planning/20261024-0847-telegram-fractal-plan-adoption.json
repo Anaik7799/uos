@@ -1,0 +1,37 @@
+{
+  "schema": "uos.telegram.fractal-plan-adoption.v1",
+  "observed_at": "2026-10-24T08:30:47.202Z",
+  "status": "ADOPT_FOR_EXECUTION_WITH_EXPLICIT_PRECONDITIONS",
+  "plan": {
+    "path": "governance/planning/20261024-0823-telegram-fractal-completion-v2.json",
+    "sha256": "aec19c9afe716e7fef7c38132b2deb2c6e3f8d86c5df52c2b83ed1dffcf23813"
+  },
+  "doc": {
+    "path": "docs/design/20261024-0826-telegram-fractal-completion-plan-v2.md",
+    "sha256": "d37e33331001006f04b5e6c9c268820c1ac4ccab0f97d7e2fce1dabe03b31f09"
+  },
+  "review": {
+    "conversation": "42b97ef3-d216-477a-a6a2-a1206f25cc20",
+    "verdict": "PASS",
+    "response_path": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/fractal-plan-review2.json",
+    "sha256": "7f460163b741c6df4eae59d51a12cd794ce7bf663face8f6eadb6d98bfddc21d",
+    "remaining": [
+      "COMMAND_IMPL slices C1 through C5 group work by adapter category without listing the exact per-slice partition of the 77 command literals before C6 reconciliation; each <=150s dispatch packet must pin its exact command subset and file boundary so no literal is omitted or double-claimed.",
+      "Cross-plan handoff gates for SERVICE_REVIEW, RETURN, and AGY_IMPL are documented as required acceptance rather than scheduler-enforced; the admission checker and candidate-digest fence must be implemented and tested under SOURCE_REVIEW and PREP before any consumer completion or release effect.",
+      "State semantics clarify that available is not dependency-eligible and executing is not proof of a live AGY process, requiring dashboard projection and expired-claim reconciliation in L1 before SERVICE_REVIEW.",
+      "Finite observer grant renewed at 08:24:37 UTC expires at 2026-10-24T09:16:00.872Z and requires pre-dispatch lifetime checks and renewal prior to expiry."
+    ]
+  },
+  "root_execution_clarification": "Avoid a dependency cycle: implement any missing read-only cross-plan/candidate checker under already-ready SERVICE_OBSERVER_TOOL, then adopt/check it before SERVICE_REVIEW/RETURN/AGY_IMPL completion and again at SOURCE_REVIEW/PREP. SOURCE_REVIEW/PREP cannot be the first place the prerequisite checker is built because they are downstream ofAGY_IMPL. This is a Codex execution-placement clarification, not an AGY assertion of existing enforcement.",
+  "current_next_step": "SERVICE_OBSERVER_TOOL is available with completed STORE_VERIFY dependency. SERVICE_IMPL attempt8 andSERVICE_DRAFT_REVIEW attempt7 have expired; reconcile through canonical metadata recovery before newclaims. STORE_REVIEW is alreadycompleted; do not blindly reexecute it merely because AGY listedit.",
+  "coverage": {
+    "historical_arms": 79,
+    "distinct_literals": 77,
+    "non_command_families": 9,
+    "fractal_layers": 10
+  },
+  "goal_met": false,
+  "global_admission": false,
+  "source_implementation_certified": false,
+  "prior_hold_preserved": "var/recovery-runtime/20261024-0753-telegram-poll-fixed/fractal-plan-review.json"
+}

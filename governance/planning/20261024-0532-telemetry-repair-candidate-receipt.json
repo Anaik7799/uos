@@ -1,0 +1,77 @@
+{
+  "schema": "uos.telemetry-repair-receipt.v1",
+  "plan_id": "uos/telemetry-repair/20261024-0518",
+  "task_id": "FIX",
+  "worker": "agy-telemetry-20261024",
+  "attempt": 1,
+  "session_id": "519310f5-c9de-468d-ac61-c17d201e5948",
+  "timestamp": "20261024-0537",
+  "observed_at": "2026-10-24T05:37:48Z",
+  "status": "IMPLEMENTATION_AND_TESTS_READY_FOR_INDEPENDENT_REVIEW",
+  "jj_candidate": {
+    "commit_id": "622edd3792fa1f35383b1638d067633e629b4511",
+    "change_id": "vuystwzkvwnpupptnoypxlyuwlmmrtvu",
+    "parent_commit": "c29b1127cd9fbc02a0a5d8cdebe7aa4277ed241a",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-telemetry-20261024"
+  },
+  "source_hashes": {
+    "apps/cepaf_gleam/src/cepaf_gleam/c3i/evidence.gleam": "6e1f4d84baca2472f0479cc7d399f089cd2c51b2ec7ac49e0fc37997684ef598",
+    "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam": "f55a741118dbd586d3d77efd39b287cd35bdc95cb0edf8a8bd2cf2d5eef75a5a",
+    "apps/cepaf_gleam/test/evidence_falsifiers_test.gleam": "db20b0730fa094b0698c5048b3335c5130cc1ffe5826103c54adac4cfeed18f2",
+    "apps/cepaf_gleam/test/private_http_fixture_test.gleam": "c8f18b22e01eca1b36f9a194a6ffc8b14bc9bd0fdf4636b20b917445bb3ff986",
+    "apps/cepaf_gleam/test/telemetry_repair_runner.gleam": "a4697b25a0ed272a0fc9a81915fbb0a9df3d4b1a3c74cf5fe03eb21c927df32e"
+  },
+  "verification_results": {
+    "total_tests": 19,
+    "passed": 19,
+    "failed": 0,
+    "command": "cd .uos-workspaces/agy-telemetry-20261024/apps/cepaf_gleam && gleam run -m telemetry_repair_runner",
+    "falsifier_tests": [
+      "falsifier_missing_runtime_refuses_freshness_test",
+      "falsifier_fallback_stub_refuses_freshness_test",
+      "falsifier_empty_and_malformed_payload_refuses_freshness_test",
+      "falsifier_timestamp_only_payload_refuses_freshness_test",
+      "falsifier_offline_or_error_with_current_timestamp_refuses_freshness_test",
+      "falsifier_wrong_typed_required_fields_refuses_freshness_test",
+      "falsifier_future_timestamp_even_within_tolerance_refuses_live_test",
+      "falsifier_conflicting_timestamp_fields_refuses_freshness_test",
+      "falsifier_stale_timestamp_refuses_freshness_test",
+      "positive_fresh_samples_do_not_overclaim_all_wiring_test",
+      "falsifier_whitespace_and_keyorder_offline_status_test",
+      "falsifier_whitespace_and_keyorder_error_field_test",
+      "falsifier_negative_counters_refused_test",
+      "falsifier_healthy_count_exceeding_container_count_refused_test",
+      "falsifier_timestamp_alias_type_error_with_valid_sibling_refused_test",
+      "falsifier_duplicate_keys_refused_test"
+    ],
+    "private_http_fixture_tests": [
+      "private_http_health_freshness_candidate_test",
+      "private_http_health_candidate_test",
+      "private_http_snapshot_candidate_test"
+    ]
+  },
+  "scope_and_residuals": {
+    "runtime_admission": "NOT_GRANTED",
+    "production_deployment": "NONE",
+    "structural_guarantees": [
+      "Zero string-substring authority on JSON payloads: all status, error, and domain checks use json.parse decoders.",
+      "Negative plan counters and health counts are rejected as impossible domain values (WrongTypedField).",
+      "healthy_count exceeding container_count is rejected as an impossible domain value (WrongTypedField).",
+      "Timestamp alias type errors are never ignored even when a sibling alias is valid (WrongTypedField).",
+      "Ambiguous duplicate keys at any JSON depth are detected and rejected (MalformedPayload / ConflictingTimestamps).",
+      "all_wiring_functional remains False without explicit WebSocket connection evidence."
+    ],
+    "residual_risks": [
+      {
+        "id": "RESID-TEL-001",
+        "description": "WebSocket connectivity remains unknown absent client-side heartbeat telemetry; all_wiring_functional stays false fail-closed.",
+        "mitigation": "Truthful evaluation in evidence.gleam marks ws_planning_availability unknown and all_wiring_functional false."
+      },
+      {
+        "id": "RESID-TEL-002",
+        "description": "Native telemetry NIF unreachability must not trigger whole-service outage alarms in monitoring systems.",
+        "mitigation": "router.gleam health_json isolates unreachability to telemetry_status: unavailable while reporting threat_level: unknown, preserving request guards."
+      }
+    ]
+  }
+}

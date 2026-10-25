@@ -1,0 +1,53 @@
+{
+  "schema": "uos.telegram.authority-maintenance.verification.v1",
+  "observed_at": "2026-10-24T12:28:16.147Z",
+  "candidate": "c6b3cc29795298c382f35a0a9e7269fcc355603f",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "SERVICE_IMPL",
+    "verified_attempt": 12,
+    "current_attempt": 13,
+    "state": "executing"
+  },
+  "status": "SCOPED_RUNTIME_AND_INDEPENDENT_REVIEW_PASS",
+  "tests": {
+    "unit_service_fault": 159,
+    "baseline_staged_e2e": 13,
+    "managed_renewal_staged_e2e": 3,
+    "total": 175,
+    "full_telegram_acceptance": false
+  },
+  "evidence": [
+    "var/recovery-runtime/20261024-1218-authority-maintenance/suite-unit-final.json",
+    "var/recovery-runtime/20261024-1218-authority-maintenance/suite-e2e-baseline.json",
+    "var/recovery-runtime/20261024-1218-authority-maintenance/maintenance-first.json",
+    "var/recovery-runtime/20261024-1218-authority-maintenance/artifact-manifest.json",
+    "var/recovery-runtime/20261024-1218-authority-maintenance/agy-review.json",
+    "var/recovery-runtime/20261024-1218-authority-maintenance/agy-renew-helper.json"
+  ],
+  "counterevidence": [
+    "var/recovery-runtime/20261024-1216-renewal-loop-before/renewal-loop-falsifier.json",
+    "var/recovery-runtime/20261024-1218-authority-maintenance/agy-code.json"
+  ],
+  "independent_review": {
+    "conversation_id": "4980dfae-74f3-487e-8e75-f7a4acf35ea4",
+    "verdict": "PASS",
+    "findings": 0
+  },
+  "changes": [
+    "Existing authority worker maintains owned runtime lease using current task/fence, capped TTL and distinct boot/UTC clock observations",
+    "Renewal failure or revocation latches suspension in worker and coordinator; manual reactivation refused",
+    "Loop accepts stable-identity expiry renewal without extending fixed work budget",
+    "Typed monitored authority RPC returns failures rather than crashing caller"
+  ],
+  "remaining": [
+    "Automatic maintenance activation in operational startup and clean runtime release",
+    "Managed successor registration transition and recovery",
+    "Production unit profile and entrypoint migration",
+    "Full77command MiniApp media gateway and live/browser acceptance",
+    "Independent release/global admission and applicable main integration"
+  ],
+  "goal_met": false,
+  "main_changed": false,
+  "runtime_admission": false
+}

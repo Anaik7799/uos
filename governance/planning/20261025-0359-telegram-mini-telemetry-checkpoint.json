@@ -1,0 +1,57 @@
+{
+  "schema": "uos.telegram.mini-telemetry.checkpoint.v1",
+  "observed_at": "2026-10-25T04:00:35.381Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "MINI_API_IMPL",
+  "attempt": 3,
+  "candidate": "0a07f329e6964cf1a00536bd29282b606db21f46",
+  "parent": "bfc2d8bcc561a9760f47fcaaf02f4f89a26cf985",
+  "bookmark": "integration/telegram-mini-telemetry-20261025-0355",
+  "state": "SCOPED_DEVELOPMENT_ACCEPTED_PARTIAL_TELEMETRY",
+  "scope": "Local authenticated Mini backend spans and VM metrics; partial telemetry page",
+  "evidence": "var/recovery-runtime/20261025-0353-mini-telemetry-build6",
+  "checks": {
+    "unit": 84,
+    "http_baseline": 41,
+    "http_telemetry": 7,
+    "http_absent": 2,
+    "browser": 13,
+    "recovery_epoch": 1,
+    "total_distinct": 148
+  },
+  "source_bindings": 75,
+  "source_mismatches": 0,
+  "review": {
+    "design": "92920509-3f49-4ade-975a-3f77de5bd274 REVISE addressed",
+    "collector": "dc5821fb-27bf-44b4-ba88-b75cb2f6f45e PASS",
+    "api_listener": "55b6cab8-0eeb-4de0-8d79-a7fab9bdb7df PASS"
+  },
+  "invariants": [
+    "No telemetry before authenticated identity authorization",
+    "No user/chat/initData/topic/payload retained",
+    "Fixed page enums and outcomes only",
+    "At most128inflight;30secondexpiry beforecapacity;20completedretained",
+    "Monotonic duration; positive walltimestamp; epochchangesonrestart",
+    "Counter saturation at2^53-1",
+    "Exceptions endspan asunavailable; missingcollector doesnotpreventbackendread",
+    "Restart exhaustion isolated from HTTPcaller",
+    "Telemetry selfreads excluded",
+    "Failure503 andemptyfields; actualVMcounters andunits",
+    "No runtime or fleet admission inferred"
+  ],
+  "remaining": [
+    "Telemetry log-level mutation controls",
+    "Rate-limit configuration/control",
+    "Distributed span ingestion/fleet aggregation",
+    "Six other unintegrated Mini backends",
+    "Remaining Mini actions including nativeZenohsubscription/publishing",
+    "45commandroutes",
+    "Seven media types and gateway",
+    "Integrated real Telegram acceptance",
+    "Independent release/admission/main"
+  ],
+  "runtime_admission": false,
+  "production_changed": false,
+  "main_merged": false,
+  "goal_met": false
+}

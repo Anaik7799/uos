@@ -1,0 +1,704 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "project-analysis-agy-audit-20261024",
+    "plan_id": "uos/project-analysis/20261024-0512",
+    "task_id": "AGY_AUDIT",
+    "actor": "agy-analysis-20261024",
+    "scope": "Bounded read-only runtime integrity, task, feature, and release analysis; no product edits or operational side-effects.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:20:17Z",
+    "valid_until": "2026-10-24T06:20:17Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-24T05:20:17Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Bounded read-only audit of current system runtime, Sa-plan tasks, and VCS state; maina8ad unchanged; no admission",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "sha256": "89bff24203c254037ad2384c99ecaed84a3d6a31406f4e311adfb51a482807ae",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "sha256": "be2e0dba51fda4664557b83dc65fce8f006e9bd6ee7807f380329fa17210fba3",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "sha256": "21cf5597f9340d18bd4e38fafd326dfde59e6b97afd0537ddbd538ac53fb4d31",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "215f26fe094c93cf7fbff9ebad82d72463c24c74862cb83b941b5af7fe2e74be",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "tools/risk-priority-check",
+          "sha256": "cb333b4470d9b2fdacd92426f38d3db22618283d57f1e7b811481707a7fdc959",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:20:17Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Comprehensive current system analysis is required to clarify operational state and unlock report publication.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Read-only enforcement prevents unauthorized mutation while diagnosing telemetry credibility gaps.",
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36: failure to detect telemetry stub or reporting fabricated status causes epistemic hazard.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Root report publication is strictly blocked pending this verified AGY audit.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Full system awareness and truthful telemetry alignment across 6 goal plans.",
+        "evidence_refs": [
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-AUDIT-TELEMETRY-CREDIBILITY",
+        "cause": "Inferring transport or subsystem outages from static stub responses like c3i_nif.erl:57",
+        "effect": "False alarm and degraded epistemic confidence",
+        "controls": "Independent socket/systemd observation and code source verification",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      },
+      {
+        "id": "FM-AUDIT-UNAUTHORIZED-MUTATION",
+        "cause": "Executing side-effects, commits or live sends during analysis task",
+        "effect": "Uncontrolled state corruption or protocol violation",
+        "controls": "Strict read-only queries, no git/jj commits, bounded harness execution",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      },
+      {
+        "id": "FM-AUDIT-STALE-EVIDENCE",
+        "cause": "Citing historical EV cycles or unverified component counts as current admission",
+        "effect": "Premature admission claim without two-key verification",
+        "controls": "Machine-checked gate inventory, NOT_ADMITTED status retention until formally satisfied",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "AGY project analysis controller",
+      "control_action": "Execute bounded read-only audit of runtime, task, and VCS states without mutations",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "System state audit is not conducted, leaving unknown blockers in place",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Execute comprehensive read-only audit across all domains"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Audit mutates live runtime or makes live external Telegram calls",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Strictly prohibit live mutations, external sends, or git/jj merges"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Report publication occurs before AGY audit completes",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Enforce strict dependency ordering: AGY_AUDIT completes before REPORT"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Analysis lease expires mid-observation leading to uncoordinated concurrent audits",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound audit to 7200s lease with rapid execution within 12 minutes"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Execute bounded read-only runtime, task, and VCS state analysis for plan uos/project-analysis/20261024-0512.",
+      "alternatives": [
+        "Bounded read-only audit: preferred.",
+        "Broad test runs or live mutations: rejected.",
+        "Historical claims without fresh observation: rejected."
+      ],
+      "counterevidence": [
+        "Previous SERVICE_IMPL attempt 8 lease expired; no authority to resume product edits.",
+        "/health static stub in c3i_nif.erl:57 is not an active transport failure."
+      ],
+      "assumptions": [
+        "Canonical repository /home/an/NAS-setup/uos and workspace /home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930 are accessible."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Observations will provide clean factual baseline for root report publication.",
+      "falsifier": "Any runtime mutation, unauthorized send, or stale risk citation.",
+      "acceptance": [
+        "All required systemd, HTTP, Sa-plan, coordinator, JJ, and pin observations completed.",
+        "Structured observation JSON and SC-JOURNAL-v3 journal published.",
+        "AGY_AUDIT marked complete in Sa-plan."
+      ],
+      "rollback": "Preserve all files and main a8adcc69 unchanged.",
+      "reviewer": "Root verification and sovereign review.",
+      "budget": "Local read-only tools, bounded memory and runtime.",
+      "residuals": [
+        "Production deployment remains HOLD; no release clearance granted."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "project-analysis-report-20261024",
+    "plan_id": "uos/project-analysis/20261024-0512",
+    "task_id": "REPORT",
+    "actor": "root-report-20261024",
+    "scope": "Independently verify observations and publish current project dashboard; strictly blocked until AGY_AUDIT completes.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:20:17Z",
+    "valid_until": "2026-10-24T06:20:17Z",
+    "task_state": "available",
+    "ready_since": "2026-10-24T05:20:17Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Downstream independent verification and dashboard publication; blocked on AGY_AUDIT",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "215f26fe094c93cf7fbff9ebad82d72463c24c74862cb83b941b5af7fe2e74be",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "tools/risk-priority-check",
+          "sha256": "cb333b4470d9b2fdacd92426f38d3db22618283d57f1e7b811481707a7fdc959",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:20:17Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Independent verification and dashboard publication formalizes system truth for operator review.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Prevents publishing unverified or stale dashboard claims.",
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36: publishing inaccurate system state misleads operator governance.",
+        "evidence_refs": [
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Depends directly on AGY_AUDIT task completion.",
+        "evidence_refs": [
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Operator dashboard provides transparent visibility across all goal plans.",
+        "evidence_refs": [
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-REPORT-UNVERIFIED-PUBLICATION",
+        "cause": "Publishing report before AGY_AUDIT completes and provides verified observations",
+        "effect": "Incomplete or misleading dashboard",
+        "controls": "Enforce Sa-plan task dependency so REPORT remains blocked until AGY_AUDIT completes",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Root report publication controller",
+      "control_action": "Independently verify audit findings and publish system dashboard",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Dashboard report is not published after audit completion",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Publish verified dashboard upon audit completion"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Dashboard published with unverified or falsified metrics",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Require independent verification of all audit artifacts"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Report published prematurely before AGY_AUDIT finishes",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Strictly block until AGY_AUDIT is marked complete"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Report publication process hangs or exceeds time window",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Publish dashboard promptly following audit completion"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "AGY_AUDIT"
+    ],
+    "dependencies": [
+      "AGY_AUDIT"
+    ],
+    "score": 576,
+    "score_interval": [
+      576,
+      576
+    ],
+    "decision": {
+      "summary": "Independently verify observations and publish current project dashboard after AGY_AUDIT.",
+      "alternatives": [
+        "Wait for AGY_AUDIT completion: preferred.",
+        "Premature publication: rejected."
+      ],
+      "counterevidence": [
+        "AGY_AUDIT is currently available and not yet completed."
+      ],
+      "assumptions": [
+        "AGY_AUDIT will produce structured observation JSON and journal."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Clear operator visibility across project state.",
+      "falsifier": "Publication prior to AGY_AUDIT completion.",
+      "acceptance": [
+        "Independent verification of observations.",
+        "Dashboard markdown published."
+      ],
+      "rollback": "Remove unverified dashboard draft.",
+      "reviewer": "Operator and sovereign review.",
+      "budget": "Local read-only tools.",
+      "residuals": [
+        "Production deployment remains HOLD."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "project-draft-review-20261024",
+    "plan_id": "uos/project-analysis/20261024-0512",
+    "task_id": "DRAFT_REVIEW",
+    "actor": "codex-analysis-20261024",
+    "scope": "Read-only independent review of incomplete AGY audit and fresh runtime/task observations, publish corrected status with explicit HOLD on unsupported claims; no product edits or release.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:20:17Z",
+    "valid_until": "2026-10-24T06:20:17Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T05:20:17Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Bounded read-only audit of current system runtime, Sa-plan tasks, and VCS state; maina8ad unchanged; no admission",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "sha256": "89bff24203c254037ad2384c99ecaed84a3d6a31406f4e311adfb51a482807ae",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+          "sha256": "be2e0dba51fda4664557b83dc65fce8f006e9bd6ee7807f380329fa17210fba3",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "governance/planning/20261012-0455-telegram-service-candidate-handoff.json",
+          "sha256": "21cf5597f9340d18bd4e38fafd326dfde59e6b97afd0537ddbd538ac53fb4d31",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "215f26fe094c93cf7fbff9ebad82d72463c24c74862cb83b941b5af7fe2e74be",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "tools/risk-priority-check",
+          "sha256": "cb333b4470d9b2fdacd92426f38d3db22618283d57f1e7b811481707a7fdc959",
+          "observed_at": "2026-10-24T05:20:17Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:20:17Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Comprehensive current system analysis is required to clarify operational state and unlock report publication.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Read-only enforcement prevents unauthorized mutation while diagnosing telemetry credibility gaps.",
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36: failure to detect telemetry stub or reporting fabricated status causes epistemic hazard.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Root report publication is strictly blocked pending this verified AGY audit.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Full system awareness and truthful telemetry alignment across 6 goal plans.",
+        "evidence_refs": [
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-AUDIT-TELEMETRY-CREDIBILITY",
+        "cause": "Inferring transport or subsystem outages from static stub responses like c3i_nif.erl:57",
+        "effect": "False alarm and degraded epistemic confidence",
+        "controls": "Independent socket/systemd observation and code source verification",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      },
+      {
+        "id": "FM-AUDIT-UNAUTHORIZED-MUTATION",
+        "cause": "Executing side-effects, commits or live sends during analysis task",
+        "effect": "Uncontrolled state corruption or protocol violation",
+        "controls": "Strict read-only queries, no git/jj commits, bounded harness execution",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      },
+      {
+        "id": "FM-AUDIT-STALE-EVIDENCE",
+        "cause": "Citing historical EV cycles or unverified component counts as current admission",
+        "effect": "Premature admission claim without two-key verification",
+        "controls": "Machine-checked gate inventory, NOT_ADMITTED status retention until formally satisfied",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "AGY project analysis controller",
+      "control_action": "Execute bounded read-only audit of runtime, task, and VCS states without mutations",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "System state audit is not conducted, leaving unknown blockers in place",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Execute comprehensive read-only audit across all domains"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Audit mutates live runtime or makes live external Telegram calls",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Strictly prohibit live mutations, external sends, or git/jj merges"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Report publication occurs before AGY audit completes",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Enforce strict dependency ordering: AGY_AUDIT completes before REPORT"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Analysis lease expires mid-observation leading to uncoordinated concurrent audits",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound audit to 7200s lease with rapid execution within 12 minutes"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Read-only independent review of incomplete AGY audit and fresh runtime/task observations, publish corrected status with explicit HOLD on unsupported claims; no product edits or release.",
+      "alternatives": [
+        "Bounded read-only audit: preferred.",
+        "Broad test runs or live mutations: rejected.",
+        "Historical claims without fresh observation: rejected."
+      ],
+      "counterevidence": [
+        "AGY audit draft contains unsupported PASS claims; peer session idle and prompt stalled, task stays executing until honest reconciliation."
+      ],
+      "assumptions": [
+        "Canonical repository /home/an/NAS-setup/uos and workspace /home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930 are accessible."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Observations will provide clean factual baseline for root report publication.",
+      "falsifier": "Unsupported pass or stale historical counts presented as current runtime proof.",
+      "acceptance": [
+        "Explicitly reject wrong Telegram counts and unsupported PASS labels in AGY draft.",
+        "Read-only independently verify runtime, integrity, task states and source identities.",
+        "Publish current dashboard with evidence age and remaining implementation jobs, journal13sections."
+      ],
+      "rollback": "Preserve all files and main a8adcc69 unchanged.",
+      "reviewer": "Root verification and sovereign review.",
+      "budget": "Local read-only tools, bounded memory and runtime.",
+      "residuals": [
+        "Production deployment remains HOLD; no release clearance granted."
+      ],
+      "supersedes": null
+    }
+  }
+]

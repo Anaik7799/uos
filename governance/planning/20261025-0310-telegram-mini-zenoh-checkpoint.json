@@ -1,0 +1,154 @@
+{
+  "schema": "uos.telegram.mini-zenoh.checkpoint.v1",
+  "observed_at": "2026-10-25T03:09:57.134Z",
+  "candidate": "103ebc28b3ec04655440618926a9f97739ad9940",
+  "parent": "4a8aea86e63c7ee7781a93aceeff3d294d26a991",
+  "feature_candidate": "73c17a91df4dbfaa0db6c247d6484ae8502b5ee3",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "canonical_task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "MINI_API_IMPL",
+    "attempt": 2,
+    "state": "executing"
+  },
+  "scope": [
+    "Server-granted exact topic list and selected retained REST query",
+    "Per-user isolation and explicit absence/failure",
+    "Lossless bounded Unicode payload and literal browser rendering",
+    "Single-flight bounded live polling with manual/timing/failure stops"
+  ],
+  "test_counts": {
+    "unit": 63,
+    "http": 55,
+    "browser": 9,
+    "state_change": 1
+  },
+  "distinct_tests": 128,
+  "source_matches": 59,
+  "evidence_root": "var/recovery-runtime/20261025-0308-mini-zenoh-build7",
+  "evidence_manifest": "var/recovery-runtime/20261025-0308-mini-zenoh-build7/evidence-manifest.json",
+  "test_summary": "var/recovery-runtime/20261025-0308-mini-zenoh-build7/test-summary.json",
+  "review": {
+    "full": {
+      "ack": true,
+      "candidate": "73c17a91df4dbfaa0db6c247d6484ae8502b5ee3",
+      "verdict": "PASS",
+      "findings": [
+        "Server-side Zenoh read boundary (mini_api, mini_runtime, mini_zenoh) enforces signed Telegram initData validation before and after observation within the 5s deadline, restricts the optional topic parameter (<=512 bytes) exclusively to MiniZenohBrowser, bounds configuration to 1..256 grants and <=20 unique exact topics per user, and returns 403 topic_access_denied without querying Zenoh for ungranted, cross-user, or wildcard keys.",
+        "Payload handling in mini_zenoh validates UTF-8 scalar values (rejecting C0, DEL, and C1 control characters except HT/LF/CR), enforces the <=32768-byte payload ceiling and <=100 observation field cap, and losslessly splits multi-byte codepoints into <=2048-byte parts with zero-padded labels for deterministic lexicographic ordering.",
+        "zenoh/rest.gleam and zenoh_rest_ffi.erl enforce the fixed nas-1.tail55d152.ts.net:8080 endpoint, 3000ms deadline, segment/character allowlist (no wildcards, empty segments, or dot-segments), c3i/a2a PUT prohibition, and strict single-sample envelope decoding with exact key match and explicit zenoh_no_reply vs error separation.",
+        "Client script in mini_app_routes.gleam renders exclusively via DOM textContent and Option constructors, enforces a <=20 unique topic bound, and implements completion-based 2-second single-flight polling bounded to 5 minutes that halts on manual stop, topic change, auth absence/expiry, HTTP/network/unavailable errors, visibilitychange (document.hidden), and pagehide.",
+        "Non-blocking client note: clicking manual #mini-refresh while a 2-second live-refresh timer is pending does not clearTimeout(timer) at the start of refresh(), which can schedule an extra poll tick; however, busy/queued gating preserves single-flight fetch execution and liveUntil preserves the 5-minute ceiling."
+      ],
+      "limitations": [
+        "Review is strictly bounded to the supplied manifest and source text without tool execution; SHA-256 digests, parent 4a8aea86 unchanged files, and reported test executions (63 unit, 52 HTTP, and Chromium regression/Zenoh scenarios) were not independently run in this session.",
+        "Live refresh is a 2-second HTTP polling loop over retained Zenoh REST GET state bounded to 5 minutes; native Zenoh subscriptions and Mini App bus publishing remain unimplemented.",
+        "All reported verification uses synthetic Telegram identities and a private fixture rather than live Telegram WebApp client and bot end-to-end admission.",
+        "Approval covers only the bounded MINI_API_IMPL attempt2 candidate scope; runtime release authority (Runtime admission: NOT_GRANTED) and full Telegram completion are not granted."
+      ],
+      "conversation": "28524b9a-8e2c-48a0-a2bd-7ebdda3cb69f",
+      "seconds": 75.689307375,
+      "observed_at": "2026-10-25T03:09:57.134Z"
+    },
+    "delta": {
+      "ack": true,
+      "candidate": "103ebc28b3ec04655440618926a9f97739ad9940",
+      "verdict": "PASS",
+      "findings": [
+        "refresh() in mini_app_routes.gleam now calls clearTimeout(timer) and resets timer = null immediately after the closed/document.hidden guard, cancelling any pending 2-second live-refresh timer before executing or queueing a manual or triggered refresh.",
+        "Single-flight busy/queued serialization, generation fencing, 6-second AbortController timeout, 5-minute liveUntil ceiling, and error/inactivity/topic-change stopLive() cleanup remain intact.",
+        "The OCaml Playwright Chromium regression suite (--zenoh mode) deterministically verifies the fix by clicking #mini-refresh while a live-refresh timer is pending after two poll reads, awaiting the manual read (before_manual + 1), and asserting exactly one subsequent scheduled poll read (before_manual + 2) across a 2.3-second window alongside manual stop, 5-minute budget expiry, script-injection neutrality, and network-failure halt checks.",
+        "Server-side Zenoh read boundary, UTF-8/payload validation, and REST client modules remain unchanged from parent 73c17a91df4dbfaa0db6c247d6484ae8502b5ee3."
+      ],
+      "limitations": [
+        "Review is strictly bounded to the supplied delta, client route source, browser test source, and prior review context without tool execution; reported test runs (63 unit, 52 HTTP, 3 config-recovery, and Chromium executions) and unchanged file hashes were not independently executed in this session.",
+        "Live refresh remains a 2-second HTTP polling loop over retained Zenoh REST GET state bounded to 5 minutes; native Zenoh subscriptions and Mini App bus publishing are not implemented.",
+        "Browser verification uses synthetic Telegram WebApp initData fixtures rather than live Telegram client and bot end-to-end admission.",
+        "Approval is scoped to candidate 103ebc28b3ec04655440618926a9f97739ad9940; runtime release authority (NOT_GRANTED) and full Telegram completion remain ungranted."
+      ],
+      "conversation": "316b49f9-16c4-4f53-b402-f9ced9f4f8cd",
+      "seconds": 28.045982398,
+      "observed_at": "2026-10-25T03:09:57.134Z"
+    },
+    "own_visual_inspection": "Actual390px screenshot inspected; literal script text, readable wrapping and no horizontal overflow",
+    "scope": "SCOPED_DEVELOPMENT_ONLY"
+  },
+  "source_advice": {
+    "conversation": "4f43d3d6-405f-4eae-a7e2-e67bc1391e16",
+    "model": "gemini-4-argon-high"
+  },
+  "journal": "docs/journal/20261025-0310-telegram-mini-zenoh.md",
+  "contract": "docs/design/20261025-0309-telegram-mini-zenoh-SAFETY_ANALYSIS.md",
+  "coverage": {
+    "mini_read_paths": {
+      "available": 6,
+      "total": 14,
+      "paths": [
+        "tasks",
+        "fmea",
+        "verify",
+        "containers",
+        "chat",
+        "zenoh"
+      ],
+      "remaining": 8,
+      "qualification": "Scoped development reads; all actions and nativeZenohsubscription/publishing not complete"
+    },
+    "commands": {
+      "reachable": 32,
+      "total": 77,
+      "remaining": 45
+    }
+  },
+  "remaining_backends": [
+    "dashboard",
+    "health",
+    "alerts",
+    "immune",
+    "inference",
+    "config",
+    "federation",
+    "telemetry"
+  ],
+  "remaining": [
+    "Fullpageactions and gateexecution",
+    "45commandliterals",
+    "7mediatypes andgateway",
+    "Privacy-compliant freeprovider route",
+    "Authorized liveTelegram recipient andWebAppacceptance",
+    "Integratedrelease/admission/main"
+  ],
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33
+  },
+  "main_merged": false,
+  "production_release": false,
+  "live_telegram": false,
+  "global_admission": false,
+  "goal_met": false,
+  "failure_history": [
+    {
+      "kind": "fixture",
+      "detail": "First namespace accepted PUT but was not retained; actualGET returned[]; switched onlynewfixture keys under existinguos/tui storage; no routerconfigchanged."
+    },
+    {
+      "kind": "build",
+      "detail": "Two early compile errors corrected; failed receipts preserved."
+    },
+    {
+      "kind": "client",
+      "detail": "Manual refresh retained an old live timer; exact fix and actual browser falsifier passed, independent delta reviewPASS."
+    }
+  ],
+  "reporting_observer": {
+    "producer": 30,
+    "review": "83a753da-2c75-4d90-afa1-543300fdaeb1",
+    "state": "RUNNING",
+    "expires_at": "2026-10-25T03:55:35.577Z"
+  }
+}

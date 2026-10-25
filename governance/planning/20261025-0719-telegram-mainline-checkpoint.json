@@ -1,0 +1,51 @@
+{
+  "schema": "uos.telegram.mainline.checkpoint.v1",
+  "observed_at": "2026-10-25T07:14:19.613Z",
+  "status": "SOURCE_ONLY_MAINLINE_INTEGRATED",
+  "goal_met": false,
+  "candidate": "8169e1b988aeb246779c0a50fd74acf596393ed4",
+  "parent": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+  "bookmark": "main",
+  "changed_paths": 198,
+  "review": {
+    "conversation": "09e210fd-7737-40ae-af6d-3b42d20f23b3",
+    "verdict": "PASS",
+    "scope": "Supplied-context integration-only delta review; not fresh independent inspection of every inherited feature source"
+  },
+  "tests": {
+    "gleam": 289,
+    "native_store": 174,
+    "native_cli": 75,
+    "native_leases": 3383,
+    "health_native": 18,
+    "health_safety": 4,
+    "health_http": 3,
+    "chat_http": 15,
+    "browser_viewports": 4,
+    "full_application_compilation": [
+      "uos_swarm",
+      "cepaf_gleam"
+    ],
+    "reproduced_native_binaries": 4
+  },
+  "bindings": {
+    "selected_and_build": 368,
+    "native": 61,
+    "full_application_sources": 1625,
+    "mismatches": 0
+  },
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "MINI_API_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 6,
+    "state": "executing"
+  },
+  "real_telegram": false,
+  "production_enabled": false,
+  "global_admission": false,
+  "all_branch_code_merged": false,
+  "fixtures_stopped": true,
+  "evidence_root": "var/recovery-runtime/20261025-0650-mainline",
+  "journal": "docs/journal/20261025-0701-telegram-mainline-integration.md"
+}

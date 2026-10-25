@@ -1,0 +1,32 @@
+{
+  "observed_at": "2026-10-24T12:46:48.277Z",
+  "candidate": "a15ae8f20e8567020e0c7a7a510ec04d4741ab56",
+  "parent": "c6b3cc29795298c382f35a0a9e7269fcc355603f",
+  "status": "COMPONENT_VERIFIED",
+  "tests": {
+    "unit_service_fault": 159,
+    "baseline_e2e": 13,
+    "renewal_e2e": 3,
+    "active_start_e2e": 2,
+    "total": 177
+  },
+  "review": {
+    "model": "gemini-4-argon-high",
+    "conversation": "7a6a2e36-cbbc-42e2-85e1-f84e3ed8901d",
+    "verdict": "PASS",
+    "findings": []
+  },
+  "evidence": "var/recovery-runtime/20261024-1238-active-start",
+  "goal_complete": false,
+  "service_complete": false,
+  "production_admission": false,
+  "main_merged": false,
+  "remaining": [
+    "successor recovery",
+    "command and Mini App integration",
+    "media and gateway",
+    "complete staged/browser acceptance",
+    "reviewed release and authorized live acceptance",
+    "global admission evaluation and main integration"
+  ]
+}

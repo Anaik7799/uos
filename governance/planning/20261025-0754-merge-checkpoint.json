@@ -1,12 +1,13 @@
 {
-  "observed_at": "2026-10-25T09:01:21.461Z",
+  "observed_at": "2026-10-25T09:23:06.532Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
     "G1_ACCEPT",
-    "G2_REMAINING"
+    "G2_REMAINING",
+    "G3_AUTHORITY"
   ],
-  "main": "a7a8d3682bf123cb5b15b72e38d9718eb5e9b520",
+  "main": "54888bd6de7bcb3dd0fe1117e75852e79487617a",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -17,7 +18,7 @@
   "telegram_runtime_total": 71,
   "telegram_commands_reachable": 32,
   "telegram_commands_total": 77,
-  "next": "G3 authority/durability, G4 evidence, G5 archive, G6 remaining branch deltas",
+  "next": "G4 evidence, G5 archive, G6 branch deltas, G7 preserved workspace reconciliation, G8 measured controls",
   "risks": [
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
@@ -25,9 +26,9 @@
     "Expired MINI_API_IMPL claim requires recovery; not actively executing"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G3_AUTHORITY: provider migration/protocol integrated in isolated candidate; 66 coordinator + 62 Telegram checks pass; independent review pending",
-  "github_verified_at": "2026-10-25T09:03:04.223Z",
-  "github_new_commits_uploaded": 229,
+  "working_on": "G4_EVIDENCE attempt1: 1006 paths classified;281 historical evidence files restored; source review pending",
+  "github_verified_at": "2026-10-25T09:06:53.453Z",
+  "github_new_commits_uploaded": 236,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -77,14 +78,14 @@
       "status": "PENDING"
     }
   ],
-  "merged_paths_latest": 743,
-  "latest_receipt": "var/recovery-runtime/20261025-0830-merge-final/merge-receipt.json",
-  "merge_completed": 3,
+  "merged_paths_latest": 17,
+  "latest_receipt": "var/recovery-runtime/20261025-0843-merge-g3/merge-receipt.json",
+  "merge_completed": 4,
   "merge_total": 9,
   "agents": {
-    "codex": "G3 integration and verification",
-    "agy": "G3 independent review next; G2 review completed",
-    "claude": "v6 merge plan advisory retained"
+    "codex": "G4 reconciliation and verification",
+    "agy": "G4 review next; G3 source-only review complete",
+    "claude": "v6 preservation plan advisory; newer v7 G4 guidance inspected"
   },
   "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
   "g3_ledger": "governance/planning/20261025-0901-merge-g3-ledger.json",
@@ -92,5 +93,15 @@
     "coordinator": 66,
     "telegram": 62,
     "build": "PASS three production/test packages plus swarm tests"
+  },
+  "g4": {
+    "total": 1006,
+    "already_main": 700,
+    "restored_historical": 281,
+    "keep_newer": 23,
+    "excluded_preserved": 2,
+    "source_checks": "983 regular files match source;16 symlinks equal main;5 existing binaries equal main;2 exclusions retained",
+    "source_ledger": "governance/planning/20261025-0918-default-evidence-ledger.json",
+    "default_transition_task": "G7_PRUNE"
   }
 }

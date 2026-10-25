@@ -1,0 +1,28 @@
+{
+  "candidate": "0752ad53a0c409e257464d764a3b348649e4a32d",
+  "observed_at": "2026-10-24T16:29:01.726Z",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "distinct_tests": 65,
+  "executions": 65,
+  "runs": [
+    "focused-unit.json",
+    "tool-e2e.json",
+    "task-e2e-seven.json",
+    "conversation-e2e-five.json",
+    "memory-e2e-0.json",
+    "memory-e2e-2.json",
+    "authority-recovery.json"
+  ],
+  "baseline": {
+    "candidate": "06f6b2a651c11e58f19ff6c6ff3a7ebb7dcad67f",
+    "distinct_tests": 261,
+    "full_current_candidate_rerun": false
+  },
+  "independent_review": "5a998a1e-24c0-4347-8bc7-e631e911d6a1 PASS",
+  "live_telegram": false,
+  "global_admission": false,
+  "task": "COMMAND_IMPL",
+  "attempt": 4,
+  "full_task_complete": false,
+  "remaining": "Other command adapters, Mini App backends, media, gateway, provider, browser/live acceptance, release/admission/main."
+}

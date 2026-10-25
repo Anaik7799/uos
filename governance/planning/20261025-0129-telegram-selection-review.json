@@ -1,0 +1,30 @@
+{
+  "schema": "uos.reviewed-tie-selection.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "portfolio_sha256": "cd45ec656d0a4a16b8e603ba9aceddd33dd17133eddae706e45dc1889bbece9d",
+  "selected_task": "MINI_API_IMPL",
+  "tied_tasks": [
+    "COMMAND_IMPL",
+    "MINI_API_IMPL"
+  ],
+  "observed_at": "2026-10-25T01:26:21Z",
+  "valid_until": "2026-10-25T02:11:21Z",
+  "reviewer": "agy-gemini4-20261024",
+  "reason": "Choose a bounded Mini API packet after lengthy command work: core auth/shell21source matches and two accepted read adapters can be reused. This removes artificial family serialization while all45command gaps remain open. Independent actual tests still required; no assertion that whole Mini task is cheaper.",
+  "comparisons": [
+    {
+      "task_id": "COMMAND_IMPL",
+      "benefit": "Advance remaining45command routes; recent32routes already reachable.",
+      "cost_bound_seconds": 1200,
+      "basis": "Next bounded packet budget20minutes, not estimated fulltask completion. /verify next investigation exposed synthetic patrol and unavailable candidate-tree owner; other command routes still possible."
+    },
+    {
+      "task_id": "MINI_API_IMPL",
+      "benefit": "Start closing13unavailable Mini backends using accepted FMEA and verification reader adapters, plus authenticated browser validation.",
+      "cost_bound_seconds": 1200,
+      "basis": "Next bounded packet budget20minutes, not estimated fulltask completion. Existing21source handoff matches; INTEGRATION_DESIGN and MINI_AUTH_VERIFY completed; other gaps remain."
+    }
+  ],
+  "review_evidence_path": "governance/planning/20261025-0129-telegram-selection-agy-proof.json",
+  "review_evidence_sha256": "c06f8819e2622aac9137ada51dccd6a5a9e79ca558ce8a5db41a884624025987"
+}

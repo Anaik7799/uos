@@ -1,0 +1,80 @@
+{
+  "schema": "uos.telegram.scoped-checkpoint.v1",
+  "observed_at": "2026-10-24T21:14:51.302Z",
+  "candidate": "666fd25388cc699f921d1f12284bf6cc7ec77ffa",
+  "parent": "259402d211b463c7f5793e0668f37a494305602f",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "attempt": 9,
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "scope": "Actual Gleam request/strict response codec through pinned guardian/native worker for existing-task bridge provisioning and exact read-only reconciliation",
+  "tests": {
+    "gleam_focused": 90,
+    "new_gleam_groups": 7,
+    "previous_gleam_regressions": 83,
+    "native_suites": 12,
+    "failed": 0,
+    "skipped": 0,
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "native_mutants_killed": 4,
+    "gleam_mutants_killed": 3,
+    "mutants_survived": 0,
+    "mutants_void": 0,
+    "sources_restored": true,
+    "actual_guarded_roundtrip": true,
+    "controller_task_unchanged": true,
+    "clock_after_lock": true,
+    "full_system": false
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2103-bridge-protocol/artifact-manifest.json",
+    "source_matches": 150,
+    "files": 1226,
+    "unhashed_symlinks": 117,
+    "worker_sha256": "1d4fd9c5389b83f40605fbde4ed84ff6a244835b1f6030b836be5d9a5c1748df",
+    "guardian_sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+  },
+  "code_author": {
+    "agent": "AGY Gemini4ArgonHigh",
+    "conversation": "d2fe2c90-3187-48db-b49f-d6bc8a693ffd",
+    "duration_seconds": 214.970120959,
+    "scope": "Native protocol; Codex frame/worker/Gleam client and independent tests"
+  },
+  "independent_review": {
+    "conversation": "ad2be07e-b87a-47aa-9637-ebd6bb02d210",
+    "duration_seconds": 36.062588422,
+    "verdict": "PASS",
+    "findings": [],
+    "residual_risks": [
+      "Caller-side durable persistence of the original provisioning request across restarts and mandatory lookup-before-retry lifecycle integration remain unimplemented in this slice.",
+      "Live Telegram ingress routing, authenticated signer/profile admission, and coordinator/host/clock authority enforcement at effect execution time are outside the scope of this transport and codec slice.",
+      "Sa_plan_store.with_transaction uses flat transaction nesting without savepoints, requiring any inner failure to abort and roll back the enclosing transaction rather than being recovered in-place."
+    ],
+    "authority_collection": "Ok"
+  },
+  "preserved_failures": [
+    {
+      "cause": "Test callback parentheses caused compile failure",
+      "resolution": "Fixed tests without production weakening"
+    },
+    {
+      "cause": "Regression named nonexistent telegram_memory_test;87passed beforecancellation",
+      "resolution": "Correct actual baseline plus newclient90passed; canceledrun retained"
+    }
+  ],
+  "runtime": {
+    "completed": 61,
+    "total": 71
+  },
+  "release": {
+    "completed": 25,
+    "total": 33
+  },
+  "live_telegram": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false,
+  "next": "Persist exact provision request in protected service lifecycle; connect trusted profile/signers and current effect-time fences; route cancellation from Telegram with uncertain/absent reconciliation. Finish remaining commands/MiniApp/media/gateway, browser/live acceptance, independent release/admission/main."
+}

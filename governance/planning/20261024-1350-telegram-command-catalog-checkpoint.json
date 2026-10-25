@@ -1,0 +1,50 @@
+{
+  "schema": "uos.telegram-command-slice.v1",
+  "observed_at": "2026-10-24T13:50:52.973Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COMMAND_IMPL",
+  "worker": "codex-analysis-20261024",
+  "attempt": 1,
+  "status": "VERIFIED_PARTIAL_IMPLEMENTATION_TASK_REMAINS_OPEN",
+  "candidate": "5d6dc9ef2d662773f7f8d2ffddfd1f6de4e12a0b",
+  "parent": "ba20f3e039c6317b7c4e35fa3a0d08562162adeb",
+  "bookmark": "integration/telegram-command-catalog-verified-20261024-1349",
+  "implementation_peer": "e6af1a74-16fc-45b6-91f9-3ad8fc8d083f",
+  "independent_review": {
+    "conversation": "6009b683-74c0-4f70-b347-108e460be72f",
+    "model": "gemini-4-argon-high",
+    "verdict": "PASS",
+    "findings": [],
+    "executed_tests": false
+  },
+  "tests": {
+    "unit_service_fault": 172,
+    "baseline_e2e": 13,
+    "lifecycle": 7,
+    "runtime_entry": 2,
+    "new_command_e2e": 3,
+    "total_unique": 197,
+    "duplicate_note": "command-e2e.json has4 cases;existing automatic dispatch case also appears inbaseline13 and is countedonce"
+  },
+  "artifact_manifest": "var/recovery-runtime/20261024-1337-command-catalog/artifact-manifest.json",
+  "capabilities": [
+    "Exact77literal typed catalog;existing/saplan extraalias;strictbyte/characterbounds",
+    "Live ingress delegatesclassification to catalog;actions remainrefused untilactualadapter+authority",
+    "/help,/start,/cockpit usefulreference replies throughdurableoutbox",
+    "/tasks usescanonicalplanobserver, alongside/plan,/saplan",
+    "Unintegrated preservedcommands returnexplicit backend_unavailable without rawprivateecho"
+  ],
+  "not_completed": [
+    "Mostread/control/model adapters",
+    "LegacyS1/S2router retirement",
+    "Fullcommandacceptance",
+    "MiniApp14surfaces/actions",
+    "7mediatypes",
+    "Gateway",
+    "Completebrowser/liveacceptance",
+    "Release/globaladmission/mainintegration"
+  ],
+  "goal_complete": false,
+  "production_changed": false,
+  "main_merged": false
+}

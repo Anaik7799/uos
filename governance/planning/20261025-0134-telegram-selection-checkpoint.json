@@ -1,0 +1,50 @@
+{
+  "schema": "uos.telegram.reviewed-selection.checkpoint.v1",
+  "observed_at": "2026-10-25T01:34:31.742Z",
+  "candidate": "8cf461c46f26ff0f4a7a9770fff27307eb2b88d7",
+  "status": "SCOPED_DEVELOPMENT_PASS",
+  "task": "SELECTION_REPAIR",
+  "attempt": 1,
+  "scope": "Explicit reviewed top eligible risk tie selection; no score changes or bypass of unrelated findings",
+  "tests": {
+    "targeted": 37,
+    "baseline": 375,
+    "adversarial": 32953,
+    "dag_scenarios_included": 32768
+  },
+  "source_review": {
+    "conversation": "f8a94d82-c75d-490e-a8b0-084685e0bb85",
+    "verdict": "PASS"
+  },
+  "decision_review": {
+    "conversation": "684b5df3-45bf-4a61-9c09-26a7f6c9e71d",
+    "verdict": "APPROVE",
+    "proposal_sha256": "66aef0fd5a1d942ad1944ff6b8b0a99135871d8bf0676954c3ffb5f311720dab"
+  },
+  "actual_checks": {
+    "ordinary": "HOLD RP-COST-TIE and RP-SELECTION",
+    "reviewed": "PREFLIGHT_PASS",
+    "wrong_task": "HOLD"
+  },
+  "review": "governance/planning/20261025-0129-telegram-selection-review.json",
+  "portfolio": "governance/planning/20261025-0130-telegram-reviewed-selection-portfolio.json",
+  "evidence_root": "var/recovery-runtime/20261025-0119-selection",
+  "trust_boundary": "Cooperative local account; reviewer label is not cryptographically authenticated. Actual AGY provenance separately checked.",
+  "preserved_failure": "0f7a2329 received AGY PASS but Codex HOLD: circular conversation identity in prelaunch proposal; corrected in8cf461c4",
+  "next": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "MINI_API_IMPL",
+    "attempt": 1,
+    "source": "76360aa326fda8ecb918ff00a390c4d97bf78486",
+    "baseline_tests": 8
+  },
+  "coverage": {
+    "reachable": 32,
+    "total": 77,
+    "changed": false
+  },
+  "production_release": false,
+  "global_admission": false,
+  "main_merged": false,
+  "goal_met": false
+}

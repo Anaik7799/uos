@@ -1,0 +1,54 @@
+{
+  "schema": "uos.telegram-observer-handoff.v1",
+  "observed_at": "2026-10-24T13:28:58.942Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_OBSERVER_TOOL",
+  "worker": "codex-analysis-20261024",
+  "attempt": 3,
+  "status": "ACCEPTED_COMPONENT_REUSED",
+  "completed_under": "OBSERVER_COMPLETION",
+  "prior_acceptance": "governance/planning/20261011-1834-telegram-observer-development-acceptance.json",
+  "independent_review": "governance/planning/20261011-2045-telegram-observer-independent-review-agy.json",
+  "current_binding": {
+    "observed_at": "2026-10-24T13:27:50.935Z",
+    "files": [
+      {
+        "path": "tools/validation/sa_plan_observer.ml",
+        "sha256": "b0f443e62e3bbd5504900616c5c2810e054e4fe2bd671f1824d36f8889ae203b",
+        "current": "b0f443e62e3bbd5504900616c5c2810e054e4fe2bd671f1824d36f8889ae203b"
+      },
+      {
+        "path": "tools/validation/obs_guardian.ml",
+        "sha256": "4ddae78d954989511c79196ab5d508ab362c2cf4efa704eb9950603c70be58e4",
+        "current": "4ddae78d954989511c79196ab5d508ab362c2cf4efa704eb9950603c70be58e4"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/sa_plan_observer_ffi.erl",
+        "sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6",
+        "current": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/observer_policy.gleam",
+        "sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec",
+        "current": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec"
+      },
+      {
+        "role": "sa_plan_observer",
+        "path": "tools/validation/sa_plan_observer.exe",
+        "sha256": "5b9dab694c7486f39decb0f3db4238b74753941a659106d5e12fee3c0fe656e2",
+        "current": "5b9dab694c7486f39decb0f3db4238b74753941a659106d5e12fee3c0fe656e2"
+      },
+      {
+        "role": "obs_guardian",
+        "path": "tools/validation/obs_guardian.exe",
+        "sha256": "b7bab1a85ffa3689a2548ff28a391e659c0537104dec7be0f774bae1820ec4be",
+        "current": "b7bab1a85ffa3689a2548ff28a391e659c0537104dec7be0f774bae1820ec4be"
+      }
+    ]
+  },
+  "service_candidate": "ba20f3e039c6317b7c4e35fa3a0d08562162adeb",
+  "current_service_evidence": "var/recovery-runtime/20261024-1305-runtime-final",
+  "limits": "11 receipt + 6 lifetime + 9 completion assertions PASS; native CLI18/19 with historical cold-WAL physical-invariance failure explicitly retained and classified in handoff",
+  "scope": "Close original preserved observer task by exact source/binary reuse and current service integration evidence. Historical tests not rerun; dedicated service acceptance remains separate.",
+  "production_admission": false
+}

@@ -1,0 +1,726 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telemetry-repair-fix-20261024",
+    "plan_id": "uos/telemetry-repair/20261024-0518",
+    "task_id": "FIX",
+    "actor": "agy-telemetry-20261024",
+    "scope": "Implement truthful health/freshness response in isolated JJ development workspace; tests and exact candidate handoff; no production restart or deployment.",
+    "phase": "implementation",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:17:09Z",
+    "valid_until": "2026-10-24T06:17:09Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T05:17:09Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh source and live endpoint observation: fallback NIF response classified fresh by string length; historical systemd NIF failure supports missing native facade, transport connectivity remains independently unknown.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "sha256": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "sha256": "33443aa5f71f287700b1bfb8f9f6889caea0fa76da6625ed05e624f4f5c48ace",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:17:09Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "False freshness can hide missing operational evidence and mislead recovery decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Feedback claims must distinguish an observed valid sample from absent telemetry.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36, band4: known false-positive freshness with material operational impact.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Reliable operator feedback supports subsequent service verification and release decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Cockpit health and freshness consumers affected; no claim all system telemetry is repaired.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-FRESHNESS-FALSE-GREEN",
+        "cause": "Nonempty JSON stubs and literal booleans are classified as fresh live wiring.",
+        "effect": "Operator treats unavailable or stale telemetry as healthy and may take invalid recovery action.",
+        "controls": "Explicit runtime availability, typed unknown status, actual sample provenance/age where available, negative controls for fallback, invalid, missing and stale samples.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam telemetry projection",
+      "control_action": "Publish operational health and freshness feedback",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing telemetry is hidden rather than surfaced.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unavailable stub response is reported fresh or healthy.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old or future-dated sample is called current.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cached success remains green after its evidence expires.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Implement truthful health/freshness response in isolated JJ development workspace; tests and exact candidate handoff; no production restart or deployment.",
+      "alternatives": [
+        "Typed honest unavailable/unknown projection with actual evidence where present: selected.",
+        "Keep string-length success or make every route falsely green: rejected."
+      ],
+      "counterevidence": [
+        "Core services and Zenoh router are running, so missing native telemetry is not proof all underlying services are down.",
+        "Forecast endpoint already reports UNKNOWN; avoid replacing it with synthetic confidence."
+      ],
+      "assumptions": [
+        "Known service APIs may lack observation timestamps; those stay UNKNOWN rather than fabricate freshness."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Negative controls will reject fallback payloads as freshness evidence in the development candidate.",
+      "falsifier": "Any missing native runtime, malformed payload, absent observation time or expired sample yields a positive freshness claim.",
+      "acceptance": [
+        "Freeze exact source and compile with pinned already-realized dependencies.",
+        "Test live-like valid sample plus missing runtime, stub, malformed, empty, stale and future timestamp cases.",
+        "Private candidate HTTP response must reflect exact new source.",
+        "Preserve existing schema fields where meaningful; unsupported websocket liveness unknown.",
+        "Provide source hashes and test invocations for independent review."
+      ],
+      "rollback": "Keep deployed capsule/main unchanged; preserve own isolated candidate on failure.",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Full native telemetry routing and predictor observation wiring may remain separate work.",
+        "Release remains separately governed under current Telegram/admission plans."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telemetry-repair-verify-20261024",
+    "plan_id": "uos/telemetry-repair/20261024-0518",
+    "task_id": "VERIFY",
+    "actor": "codex-analysis-20261024",
+    "scope": "Independently verify exact telemetry candidate and adversarial absence/staleness cases; no production release.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:17:09Z",
+    "valid_until": "2026-10-24T06:17:09Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-24T05:17:09Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh source and live endpoint observation: fallback NIF response classified fresh by string length; historical systemd NIF failure supports missing native facade, transport connectivity remains independently unknown.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "sha256": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "sha256": "33443aa5f71f287700b1bfb8f9f6889caea0fa76da6625ed05e624f4f5c48ace",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:17:09Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "False freshness can hide missing operational evidence and mislead recovery decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Feedback claims must distinguish an observed valid sample from absent telemetry.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36, band4: known false-positive freshness with material operational impact.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Reliable operator feedback supports subsequent service verification and release decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Cockpit health and freshness consumers affected; no claim all system telemetry is repaired.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-FRESHNESS-FALSE-GREEN",
+        "cause": "Nonempty JSON stubs and literal booleans are classified as fresh live wiring.",
+        "effect": "Operator treats unavailable or stale telemetry as healthy and may take invalid recovery action.",
+        "controls": "Explicit runtime availability, typed unknown status, actual sample provenance/age where available, negative controls for fallback, invalid, missing and stale samples.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam telemetry projection",
+      "control_action": "Publish operational health and freshness feedback",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing telemetry is hidden rather than surfaced.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unavailable stub response is reported fresh or healthy.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old or future-dated sample is called current.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cached success remains green after its evidence expires.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "FIX"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Independently verify exact telemetry candidate and adversarial absence/staleness cases; no production release.",
+      "alternatives": [
+        "Typed honest unavailable/unknown projection with actual evidence where present: selected.",
+        "Keep string-length success or make every route falsely green: rejected."
+      ],
+      "counterevidence": [
+        "FIX completed with sourcecandidate84df6d8512ef70e1c4c644fdf938f05350ffd2fc; preliminary review identified lexicaloffline checks and invalidcounter acceptance."
+      ],
+      "assumptions": [
+        "Known service APIs may lack observation timestamps; those stay UNKNOWN rather than fabricate freshness."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Negative controls will reject fallback payloads as freshness evidence in the development candidate.",
+      "falsifier": "Any missing native runtime, malformed payload, absent observation time or expired sample yields a positive freshness claim.",
+      "acceptance": [
+        "Freeze exact source and compile with pinned already-realized dependencies.",
+        "Test live-like valid sample plus missing runtime, stub, malformed, empty, stale and future timestamp cases.",
+        "Private candidate HTTP response must reflect exact new source.",
+        "Preserve existing schema fields where meaningful; unsupported websocket liveness unknown.",
+        "Provide source hashes and test invocations for independent review."
+      ],
+      "rollback": "Keep deployed capsule/main unchanged; preserve own isolated candidate on failure.",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Full native telemetry routing and predictor observation wiring may remain separate work.",
+        "Release remains separately governed under current Telegram/admission plans."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telemetry-fix2-20261024",
+    "plan_id": "uos/telemetry-repair/20261024-0518",
+    "task_id": "FIX2",
+    "actor": "agy-telemetry-20261024",
+    "scope": "Repair independent telemetry candidate review issues under a new attempt after original FIX completion; preserve84dfcandidate and receipts; private workspace only.",
+    "phase": "implementation",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-24T05:17:09Z",
+    "valid_until": "2026-10-24T06:17:09Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T05:17:09Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh source and live endpoint observation: fallback NIF response classified fresh by string length; historical systemd NIF failure supports missing native facade, transport connectivity remains independently unknown.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "sha256": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "sha256": "33443aa5f71f287700b1bfb8f9f6889caea0fa76da6625ed05e624f4f5c48ace",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-24T05:17:09Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-24T05:17:09Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "False freshness can hide missing operational evidence and mislead recovery decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Feedback claims must distinguish an observed valid sample from absent telemetry.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36, band4: known false-positive freshness with material operational impact.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Reliable operator feedback supports subsequent service verification and release decisions.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Cockpit health and freshness consumers affected; no claim all system telemetry is repaired.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/c3i_nif.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-FRESHNESS-FALSE-GREEN",
+        "cause": "Nonempty JSON stubs and literal booleans are classified as fresh live wiring.",
+        "effect": "Operator treats unavailable or stale telemetry as healthy and may take invalid recovery action.",
+        "controls": "Explicit runtime availability, typed unknown status, actual sample provenance/age where available, negative controls for fallback, invalid, missing and stale samples.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam telemetry projection",
+      "control_action": "Publish operational health and freshness feedback",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing telemetry is hidden rather than surfaced.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unavailable stub response is reported fresh or healthy.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old or future-dated sample is called current.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cached success remains green after its evidence expires.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require observed sample identity, availability and age for positive freshness; preserve unknown without evidence."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "FIX"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Repair independent telemetry candidate review issues under a new attempt after original FIX completion; preserve84dfcandidate and receipts; private workspace only.",
+      "alternatives": [
+        "Typed honest unavailable/unknown projection with actual evidence where present: selected.",
+        "Keep string-length success or make every route falsely green: rejected."
+      ],
+      "counterevidence": [
+        "Core services and Zenoh router are running, so missing native telemetry is not proof all underlying services are down.",
+        "Forecast endpoint already reports UNKNOWN; avoid replacing it with synthetic confidence."
+      ],
+      "assumptions": [
+        "Known service APIs may lack observation timestamps; those stay UNKNOWN rather than fabricate freshness."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Negative controls will reject fallback payloads as freshness evidence in the development candidate.",
+      "falsifier": "Any missing native runtime, malformed payload, absent observation time or expired sample yields a positive freshness claim.",
+      "acceptance": [
+        "Freeze exact source and compile with pinned already-realized dependencies.",
+        "Test live-like valid sample plus missing runtime, stub, malformed, empty, stale and future timestamp cases.",
+        "Private candidate HTTP response must reflect exact new source.",
+        "Preserve existing schema fields where meaningful; unsupported websocket liveness unknown.",
+        "Provide source hashes and test invocations for independent review.",
+        "JSON whitespace/key-order equivalent payloads have identical verdicts; structural status/error fields; reject impossible counters and timestamp aliases/duplicates."
+      ],
+      "rollback": "Keep deployed capsule/main unchanged; preserve own isolated candidate on failure.",
+      "reviewer": "Codex independent source and behavioral review after AGY implementation.",
+      "budget": "One bounded AGY implementation and independent reviewer; local realized tools, no new packages or production effects.",
+      "residuals": [
+        "Full native telemetry routing and predictor observation wiring may remain separate work.",
+        "Release remains separately governed under current Telegram/admission plans."
+      ],
+      "supersedes": null
+    }
+  }
+]

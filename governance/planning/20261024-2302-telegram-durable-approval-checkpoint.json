@@ -1,0 +1,146 @@
+{
+  "schema": "uos.telegram.durable-approval-checkpoint.v1",
+  "observed_at": "2026-10-24T23:01:56.205Z",
+  "goal_met": false,
+  "candidate": "ef2db89df99ee67632d531f2bff4d4cf88273ebd",
+  "initial_candidate": "dbfd40bbdefc3327a0764caabba5ab1903c628ab",
+  "accepted_parent": "76fadebe5c2d7219f3731f5d415eedb26a7c7573",
+  "bookmark": "integration/telegram-durable-approval-20261024-2301",
+  "state": "SCOPED_DEVELOPMENT_VERIFIED",
+  "authority": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 11,
+    "coordinator_epoch": 11,
+    "workspace_epoch": 2
+  },
+  "implemented": [
+    "Exact durable signable proposal, original nonce and intent immutable",
+    "Monotonic partial receipt collection with trusted roster cryptographic validation; partial data grants no effect authority",
+    "Recipient-scoped /approval propose and submit routes",
+    "Full quorum reverified before existing guarded native cancellation and durable outbox",
+    "User input refusals handled without masking authority/store/clock/generation failures",
+    "Shared typed cancellation parsing fixes valid-whitespace persistence mismatch"
+  ],
+  "tests": {
+    "gleam_distinct": 126,
+    "gleam_receipt": "availability-fixed-scoped-regression.json",
+    "native_suites": 12,
+    "native_failed": 0,
+    "native_skipped": 0,
+    "native_receipt": "availability-fix-native.json",
+    "native_seconds": 40.2,
+    "service_native_scenarios": 13,
+    "scenarios_included_in_native": true,
+    "command_flow_http_replies": 10,
+    "command_flow_final_action_replies": 1,
+    "repeat_dispatch": {
+      "processed": 0,
+      "delivered": 0
+    },
+    "mutants_killed": 2,
+    "mutants_void": 0,
+    "mutants_survived": 0,
+    "mutation_receipt": "proposal-mutations.json",
+    "reaped": 12,
+    "residual": 0,
+    "optional_telemetry_missing": 11,
+    "scope": "Fresh native-process persistence, service and local HTTP fixture; not managed-service restart or live Telegram"
+  },
+  "reviews": {
+    "code": {
+      "model": "gemini-4-argon-high",
+      "conversation": "3ddf99d4-e7d1-4d3d-9367-461bc2de8d62",
+      "seconds": 63.735247841
+    },
+    "initial": {
+      "conversation": "cbf521f0-38e5-4bbe-ae1f-73d1f1cabfcb",
+      "verdict": "HOLD",
+      "seconds": 177.865525123,
+      "issue": "Missing proposal and invalid target/input could hold the service"
+    },
+    "closure": {
+      "conversation": "c3a790af-131b-4624-b097-25911860ace6",
+      "verdict": "PASS",
+      "seconds": 29.437491391,
+      "findings": []
+    },
+    "all_jobs_terminal": true
+  },
+  "manifest": {
+    "path": "var/recovery-runtime/20261024-2242-durable-proposal/artifact-manifest.json",
+    "source_pairs": 157,
+    "files": 1279,
+    "untraversed_symlinks": 123,
+    "worker_sha256": "b800eff783cf78a643f39f3445f73a8068cae5ed4bd7047c272070cfabc1fdc0",
+    "native_worker_unchanged": true
+  },
+  "retained_failures": [
+    "proposal-store-and-partial-first.json",
+    "approval-routes-build.json",
+    "approval-command-flow-first.json",
+    "flow-timeout-build.json",
+    "full-command-flow-final.json",
+    "agy-review-raw.json"
+  ],
+  "evidence_root": "var/recovery-runtime/20261024-2242-durable-proposal",
+  "risk": {
+    "criticality": "Critical",
+    "mitigation": "Exact scope and original intent, trusted independent signatures, full current quorum/fences, fail-closed uncertain state",
+    "residual": "Rejection/abandonment lifecycle, managed restart, live acceptance and full feature scope remain open"
+  },
+  "main": {
+    "commit": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+    "merged": false
+  },
+  "remaining": [
+    "Explicit proposal rejection/abandonment and expired pending request lifecycle",
+    "Managed restart across expired or rotated action profiles",
+    "Remaining command backends",
+    "13 remaining Mini App backends and browser acceptance",
+    "Seven media types and gateway",
+    "Provider availability and authorized live Telegram acceptance",
+    "Independent release/global admission and stabilized applicable main integration"
+  ],
+  "contribution": "A configured Telegram requester can now obtain a durable exact signing challenge, collect independent signatures through commands, and receive one truthful native cancellation result in staged execution.",
+  "dashboard": {
+    "producer": 23,
+    "unit": "uos-recovery-dashboard-20261024-r23.service",
+    "invocation": "e9daec05be6d403abbf4c1941e3d5989",
+    "config_sha256": "85669b0d11e38804774e3736ca278f0dd5aaf118611f51c84ee2614023eba37a",
+    "review": "AGY a970f729 PASS",
+    "fresh_snapshot": "2026-10-24T22:58:30Z",
+    "expires_at": "2026-10-24T23:34:57.119Z"
+  },
+  "runtime_tasks": {
+    "completed": 61,
+    "total": 71,
+    "remaining": [
+      "RETURN",
+      "MINI_API_IMPL",
+      "MINI_API_REVIEW",
+      "COMMAND_IMPL",
+      "COMMAND_REVIEW",
+      "MEDIA_IMPL",
+      "MEDIA_REVIEW",
+      "GATEWAY_IMPL",
+      "GATEWAY_REVIEW",
+      "TELEGRAM_E2E"
+    ]
+  },
+  "release_tasks": {
+    "completed": 25,
+    "total": 33,
+    "remaining": [
+      "AGY_IMPL",
+      "SOURCE_REVIEW",
+      "PREP",
+      "RELEASE_REVIEW",
+      "RELEASE",
+      "TELEGRAM_ACCEPT",
+      "ADMISSION",
+      "CLOSE"
+    ]
+  }
+}
