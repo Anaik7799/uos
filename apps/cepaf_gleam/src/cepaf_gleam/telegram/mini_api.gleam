@@ -31,12 +31,13 @@ pub opaque type Configuration {
 }
 
 pub opaque type AuthorizedRead {
-  AuthorizedRead(page: types.MiniAppPage, user_id: Int, chat_id: Option(Int))
+  AuthorizedRead(page: types.MiniAppPage, user_id: Int, chat_id: Option(Int), topic: Option(String))
 }
 
 pub type Observation {
   Observed(at_unix: Int, source: String, fields: Dict(String, String))
   Unavailable(reason: String)
+  Forbidden
 }
 
 pub type ApiError {
@@ -116,6 +117,8 @@ pub fn chat_id(read: AuthorizedRead) -> Option(Int) {
   read.chat_id
 }
 
+pub fn selected_topic(read: AuthorizedRead) -> Option(String) { read.topic }
+
 fn signed_chat(init_data: String) -> Result(Option(Int), ApiError) {
   // validate_fresh already rejects malformed encodings and duplicate decoded keys.
   use params <- result.try(
@@ -153,14 +156,19 @@ pub fn authorize(
   let decoder = {
     use init_data <- decode.field("init_data", decode.string)
     use path <- decode.field("path", decode.string)
-    decode.success(#(init_data, path))
+    use topic <- decode.optional_field("topic", None, decode.optional(decode.string))
+    decode.success(#(init_data, path, topic))
   }
-  use #(init_data, path) <- result.try(
+  use #(init_data, path, topic) <- result.try(
     json.parse(body, decoder) |> result.replace_error(InvalidRequest),
   )
   use selected_page <- result.try(
     parse_page(path) |> result.replace_error(InvalidRequest),
   )
+  use _ <- result.try(case topic {
+    None -> Ok(Nil)
+    Some(key) -> case selected_page == types.MiniZenohBrowser && string.byte_size(key) <= 512 { True -> Ok(Nil) False -> Error(InvalidRequest) }
+  })
   use user <- result.try(
     case
       auth.validate_fresh(init_data, config.token, now_unix, config.max_age)
@@ -180,7 +188,7 @@ pub fn authorize(
       }
     })
   {
-    True -> Ok(AuthorizedRead(selected_page, user.id, signed_chat_id))
+    True -> Ok(AuthorizedRead(selected_page, user.id, signed_chat_id, topic))
     False -> Error(Unauthorized)
   }
 }
@@ -199,19 +207,21 @@ fn error_response(status: Int, code: String) -> response.Response(String) {
 }
 
 fn detail_field(key: String) -> Bool {
+  string.starts_with(key, "Message part ") || string.starts_with(key, "Available topic ") ||
   string.starts_with(key, "Exchange ") ||
   string.starts_with(key, "Assessment ") || string.starts_with(key, "CHK-")
   || { string.starts_with(key, "Container ") && key != "Container count" }
   || { string.starts_with(key, "Image ") && key != "Image references" }
 }
 
-fn render_observation(
+fn render_observation_inner(
   read: AuthorizedRead,
   observation: Observation,
   now: Int,
 ) -> response.Response(String) {
   let #(status, at, source, fields) = case observation {
     Unavailable(_) -> #("unavailable", json.null(), "", dict.new())
+    Forbidden -> #("forbidden", json.null(), "", dict.new())
     Observed(at, source, fields) ->
       case at > 0 && at <= now && now - at <= 30 {
         True -> #("observed", json.int(at), source, fields)
@@ -250,6 +260,13 @@ fn render_observation(
           ),
         ]),
       )
+  }
+}
+
+fn render_observation(read: AuthorizedRead, observation: Observation, now: Int) -> response.Response(String) {
+  case observation {
+    Forbidden -> error_response(403, "topic_access_denied")
+    _ -> render_observation_inner(read, observation, now)
   }
 }
 

@@ -5,6 +5,8 @@ import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/mini_evidence
 import cepaf_gleam/telegram/mini_podman
+import cepaf_gleam/telegram/mini_zenoh
+import cepaf_gleam/zenoh/rest as zenoh_rest
 import cepaf_gleam/telegram/mini_history
 import cepaf_gleam/harness/telegram_store as history_store
 import cepaf_gleam/harness/telegram_store_transport as history_transport
@@ -184,6 +186,24 @@ fn observe_history(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
   }, clock) |> result.replace_error(Nil)
 }
 
+fn observe_zenoh(read: api.AuthorizedRead) -> api.Observation {
+  let config = {
+    use raw <- result.try(get_env("UOS_TELEGRAM_MINI_ZENOH_GRANTS"))
+    use _ <- result.try(case string.byte_size(raw) <= 65_536 { True -> Ok(Nil) False -> Error(Nil) })
+    let grant = {
+      use user <- decode.field("user_id", decode.int)
+      use topic <- decode.field("topic", decode.string)
+      decode.success(mini_zenoh.Grant(user, topic))
+    }
+    use grants <- result.try(json.parse(raw, decode.list(grant)) |> result.replace_error(Nil))
+    mini_zenoh.configuration(grants) |> result.replace_error(Nil)
+  }
+  case config {
+    Ok(config) -> mini_zenoh.observe(config, read, zenoh_rest.get, clock)
+    Error(_) -> api.Unavailable("zenoh_configuration_unavailable")
+  }
+}
+
 pub fn observe(read: api.AuthorizedRead) -> api.Observation {
   case api.page(read) {
     types.MiniPlanning ->
@@ -197,6 +217,7 @@ pub fn observe(read: api.AuthorizedRead) -> api.Observation {
       observe_podman() |> result.unwrap(api.Unavailable("podman_observation_failed"))
     types.MiniConversation ->
       observe_history(read) |> result.unwrap(api.Unavailable("history_observation_failed"))
+    types.MiniZenohBrowser -> observe_zenoh(read)
     types.MiniDashboard
     | types.MiniHealthGrid
     | types.MiniCockpit
@@ -204,7 +225,6 @@ pub fn observe(read: api.AuthorizedRead) -> api.Observation {
     | types.MiniInference
     | types.MiniConfig
     | types.MiniFederation
-    | types.MiniTelemetry
-    | types.MiniZenohBrowser -> api.Unavailable("backend_not_integrated")
+    | types.MiniTelemetry -> api.Unavailable("backend_not_integrated")
   }
 }

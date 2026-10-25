@@ -91,6 +91,19 @@ pub fn public_page(page: types.MiniAppPage) -> String {
             [a.id("mini-refresh"), a.type_("button"), a.class("tg-btn")],
             [h.text("Load current data")],
           ),
+          case page {
+            types.MiniZenohBrowser -> h.div([a.id("mini-topic-controls")], [
+              h.label([a.for("mini-topic")], [h.text("Topic")]),
+              h.select([a.id("mini-topic"), a.disabled(True)], [
+                h.option([a.value("")], "Load your allowed topics first"),
+              ]),
+              h.button([a.id("mini-live"), a.type_("button"), a.disabled(True), a.class("tg-btn")],
+                [h.text("Start live refresh")]),
+              h.p([a.id("mini-live-status"), a.attribute("role", "status")],
+                [h.text("Live refresh polls every two seconds for at most five minutes. It is not a native Zenoh subscription.")]),
+            ])
+            _ -> h.div([], [])
+          },
           h.dl([a.id("mini-fields")], []),
           h.noscript([], [
             h.text(
