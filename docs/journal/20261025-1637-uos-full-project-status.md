@@ -4,6 +4,8 @@
 
 Evidence cut: **2026-10-25T16:54:37.951Z** (UTC; Stockholm UTC+1). [This journal](http://nas-1.tail55d152.ts.net:4100/files/.uos-workspaces/codex-merge-20261025/docs/journal/20261025-1637-uos-full-project-status.md) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html) · [Planning cockpit](http://nas-1.tail55d152.ts.net:4100/planning) · [GitHub main](https://github.com/Anaik7799/uos/tree/main)
 
+Publication update observed 2026-10-25T17:09:33.611Z: **255 commits** now reachable since baseline; main and GitHub match **2303b48c**. The additional work is a reviewed pure verification contract (456tests,15new cases; full930binding compile), not a functioning /verify command. The dashboard observer was replaced without overlap and is authorized until17:50UTC. The original evidence cut below remains historical. This update is live workspace bookkeeping after the published revision.
+
 ## 1. Scope & Trigger
 The operator requested the current work, completion and GitHub merge/upload status as a full Tailscale-accessible Markdown journal. The active objective remains complete Telegram direct-tool functionality with AGY, real browser and Telegram acceptance, independently evaluated global admission, and integration of stabilized applicable code. **The overall goal is not complete.** This entry is a point-in-time status record, not runtime admission or a substitute for canonical Sa-plan authority.
 

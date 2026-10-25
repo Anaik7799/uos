@@ -40,7 +40,7 @@ New telegram_verify_contract.gleam and telegram_verify_contract_test.gleam; exis
 Pure Gleam owns contract semantics. Existing nativecoded strictJSON sits behind the existingcodec; no new boundedkernel added. Futureexecutor must use immutablecandidateclosure, finitepinnedargv, actualSa-planjob fencing and preservedfailures. Sheaf/category proof UNRUN.
 
 ## 10. Remaining Gaps
-Independent source review PASS; source publication pending. Profileloader, unique durable reservation, actualsupervisedexecutor, artifactbyteverification, exactprocessreaping/recovery, command/outboxintegration and liveacceptance remain.39/77connectivity and61/71taskcounts unchanged.
+Independent source review PASS; source publication verified 2026-10-25T17:09:33.611Z at 2303b48c73e366e18ec647439d07c8ecfd298704. Profileloader, unique durable reservation, actualsupervisedexecutor, artifactbyteverification, exactprocessreaping/recovery, command/outboxintegration and liveacceptance remain.39/77connectivity and61/71taskcounts unchanged.
 
 ## 11. Metrics Summary
 441→456combinedchecks;15new tests. Fullcompile929→930sourcebindings. No candidateverification commandcompletion claimed. Bayesian calibration and Lyapunov dV/dt UNRUN. Lastjournal Tailnet forecastp0.9 succeeded withBrier0.01; oneforecast is not calibratedperformance.
@@ -49,7 +49,7 @@ Independent source review PASS; source publication pending. Profileloader, uniqu
 FMEA S5O3Det3RPN45 for falseverification. Four UCAs: omittedgates refused; wrongprofile/input/executable refused; incorrectattempt/timing refused; excessduration or unreapedprocess cannotbe success. These purecontrols do notreplaceeffect-timefencing. EVceiling93 unchanged.
 
 ## 13. Conclusion
-Prediction at 2026-10-25T17:08:47.834Z: p = 0.7 independent source review and source-only publication by Horizon 2026-10-25T17:10:00Z. Falsifiers: adverse review, changedbytes, failedgates or insufficientauthority. Brier=(p-o)^2 pendinghorizon. Fullgoal remainsactive and unmet.
+Prediction at 2026-10-25T17:08:47.834Z: p = 0.7 independent source review and source-only publication by Horizon 2026-10-25T17:10:00Z. Falsifiers: adverse review, changedbytes, failedgates or insufficientauthority. Outcome: published 2026-10-25T17:09:33.611Z before17:10; Brier=(0.7-1)^2=0.09 for oneforecast only. Fullgoal remainsactive and unmet.
 
 ## Verification checklist
 <details><summary>Domain 1 — Metadata and navigation</summary>

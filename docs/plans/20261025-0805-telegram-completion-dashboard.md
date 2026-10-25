@@ -4,7 +4,7 @@
 
 Observed 2026-10-25T16:48:03.239Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
 
-**AS-IS:** Main and GitHub match 3d2822db;254 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
+**AS-IS:** Main and GitHub match 2303b48c;255 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
 
 **TO-BE:** All adopted Telegram commands, Mini App actions and media operate through guarded supervised dispatch; real Telegram and browser acceptance pass on the released candidate; applicable branch deltas are integrated and GitHub readback matches main.
 
@@ -52,7 +52,7 @@ Briefing recovery candidate: actual service composition now shares fault-tested 
 
 [Full current status journal](http://nas-1.tail55d152.ts.net:4100/files/.uos-workspaces/codex-merge-20261025/docs/journal/20261025-1637-uos-full-project-status.md) — task, command, publication and admission counts are separately scoped. Content verified over Tailnet 2026-10-25T16:54:57.182Z.
 
-Verification contract groundwork:456combined tests/15new cases and full930bindingcompile PASS; purecontractonly, actualexecutor/commandintegration remainpending. AGYcodeattempttimeoutnofiles; Codex implementation. Observerreplacementepoch10 running withfreshproducer, expiry17:50UTC. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/.uos-workspaces/codex-merge-20261025/governance/planning/20261025-1747-telegram-verification-contract.json).
+Verification contract groundwork published2303b48c at17:09:33UTC:456combined tests/15new cases and full930bindingcompile PASS; purecontractonly, actualexecutor/commandintegration remainpending. AGYcodeattempttimeoutnofiles; Codex implementation. Observerreplacementepoch10 running withfreshproducer, expiry17:50UTC. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/.uos-workspaces/codex-merge-20261025/governance/planning/20261025-1747-telegram-verification-contract.json).
 
 ## Verification checklist
 

@@ -82,7 +82,11 @@
     "All other remaining command/Mini/media/gateway/release/admission work"
   ],
   "publication": {
-    "state": "PENDING",
+    "state": "PUBLISHED",
+    "at": "2026-10-25T17:09:33.611Z",
+    "candidate": "2303b48c73e366e18ec647439d07c8ecfd298704",
+    "remote": "2303b48c73e366e18ec647439d07c8ecfd298704",
+    "commits_since_baseline": 255,
     "source_only": true,
     "production_admission": false
   },
