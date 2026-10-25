@@ -519,10 +519,18 @@ build_service_configuration(Config) ->
             {ok,BudgetConfigured}=cepaf_gleam@harness@telegram_service:configure_budget_source(B11,BudgetExe,BudgetSha,BudgetLedger),
             BudgetConfigured
     end,
-    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+    B13 = case maps:get(<<"test_zenoh_grants">>,Config,null) of
         null -> B12;
+        Grants when is_list(Grants) ->
+            Typed=[{grant,User,Chat,Topic} || [User,Chat,Topic] <- Grants],
+            true=length(Typed)=:=length(Grants),
+            {ok,ZenohConfigured}=cepaf_gleam@harness@telegram_service:configure_zenoh_source(B12,Typed),
+            ZenohConfigured
+    end,
+    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+        null -> B13;
         [Root, Digest] when is_binary(Root), is_binary(Digest) ->
-            {ok, Configured} = telegram_managed_action_test:configure(B12, Root, Digest),
+            {ok, Configured} = telegram_managed_action_test:configure(B13, Root, Digest),
             Configured
     end.
 

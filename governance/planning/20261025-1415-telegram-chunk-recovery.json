@@ -56,5 +56,21 @@
     "Mini/media/gateway and real Telegram acceptance remain open",
     "No deployment or global admission"
   ],
-  "publication": null
+  "publication": {
+    "at": "2026-10-25T14:46:22.575Z",
+    "main": "fefc2f6eaa2f041312855eb2547e6e9f0b4ecaf5",
+    "remote": "fefc2f6eaa2f041312855eb2547e6e9f0b4ecaf5",
+    "commits_since_806c2739": 248,
+    "source_only": true,
+    "production_admission": false
+  },
+  "handoff": {
+    "at": "2026-10-25T14:47:18.477Z",
+    "task": "COMMAND_IMPL",
+    "attempt": 14,
+    "status": "cleanly_released_available",
+    "completed": false,
+    "reason": "Reviewed source packets published; all remaining command obligations preserved; released before14:49:54UTC expiry",
+    "next": "Fresh risk selection and claim required; finite dashboard observer expires14:55UTC"
+  }
 }

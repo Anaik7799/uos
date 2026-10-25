@@ -1,0 +1,37 @@
+{
+  "schema": "uos.telegram.next-work.v1",
+  "observed_at": "2026-10-25T15:01:06.779Z",
+  "task": "TELEGRAM_NEXT_20261025_1453",
+  "attempt": 1,
+  "main": "fefc2f6eaa2f041312855eb2547e6e9f0b4ecaf5",
+  "observer": {
+    "unit": "uos-recovery-dashboard-20261025-next.service",
+    "epoch": 7,
+    "config_sha256": "84e014a7c0d4f8d7620c448053d9a3038b9286b735bacfab1e985f20ba81a97a",
+    "actual_review": "c1bfa2ac-339f-4ece-b360-b4773e5a8d87",
+    "snapshot_at": "2026-10-25T14:55:26Z",
+    "expires_at": "2026-10-25T15:43:00.000000Z"
+  },
+  "selection": {
+    "status": "PREFLIGHT_PASS",
+    "proposal": "governance/planning/20261025-1458-command-selection-proposal.json",
+    "actual_review": "059939f8-f397-4245-814e-4e8eeac1ab92",
+    "finding": "APPROVE prose received; fenced JSON/extra field not valid checker input; preserved original, actual strict re-review in flight",
+    "schema_review": "1f0a1652-3af2-447b-a1d9-a75525b935dd",
+    "task_attempt": 15,
+    "coordinator_epoch": 15
+  },
+  "implementation_scope": {
+    "command": "/zenoh",
+    "tool": "query_zenoh",
+    "policy": "Exact topic read/list granted to authenticated user and chat; server-owned configuration; no writes, wildcard or arbitrary endpoint",
+    "acceptance": [
+      "grant mismatch refused before I/O",
+      "trusted exact-topic transport with finite aggregate deadline",
+      "decoded response byte/control bounds and sanitized errors",
+      "durable service delivery",
+      "candidate-bound independent review"
+    ]
+  },
+  "full_goal_complete": false
+}

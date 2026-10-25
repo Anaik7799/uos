@@ -356,6 +356,10 @@ fn start_runner_actor_with_conversation(
     Ok(raw)->"{\"test_budget_source\":"<>raw<>","<>string.drop_start(cmd,1)
     _->cmd
   }
+  let cmd = case simplifile.read(db_path<>".zenoh-grants.json") {
+    Ok(raw)->"{\"test_zenoh_grants\":"<>raw<>","<>string.drop_start(cmd,1)
+    _->cmd
+  }
   let resp = send_runner_cmd(ipc_dir, cmd)
   case string.contains(resp, "\"status\":\"ok\"") {
     True -> Nil
@@ -1012,6 +1016,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       risk_source: None,
       verification_source: None,
       budget_source: None,
+      zenoh_source: None,
     )
 
   // 1. Commit an initial record to store
@@ -1218,6 +1223,11 @@ fn risk_fixture(plan:String,variant:String)->String
 fn exercise_configured_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String, mode: String, daily_limit: Int,risk_case:String) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   case risk_case {
+    "zenoh" | "zenoh_foreign" -> {
+      let chat=case risk_case {"zenoh_foreign"->"-300" _->"100"}
+      let assert Ok(_) = simplifile.write(db_path<>".zenoh-grants.json","[[200,"<>chat<>",\"c3i/recovery/capability/reachability\"]]")
+      Nil
+    }
     "budget" | "budget_missing" | "budget_badsha" -> {
       let assert Ok(_) = simplifile.write(db_path<>".budget-source.json",budget_fixture(db_path,risk_case))
       Nil
@@ -2733,4 +2743,17 @@ pub fn e2e_finops_changed_executable_refuses_test() {
 pub fn e2e_oversized_unicode_grapheme_delivery_test() {
  let response=conversation_fixture.response("unicode")
  exercise_conversation_dispatch("Hello",response,"Hello",response,"unicode",10)
+}
+
+pub fn e2e_zenoh_listing_and_scope_refusal_test(){
+ exercise_configured_dispatch("/zenoh","c3i/recovery/capability/reachability","/tool query_zenoh {\"topic\":\"ungranted/key\"}","forbidden","disabled",10,"zenoh")
+}
+pub fn e2e_zenoh_foreign_chat_grant_refused_test(){
+ exercise_configured_dispatch("/zenoh","forbidden","/zenoh c3i/recovery/capability/reachability","forbidden","disabled",10,"zenoh_foreign")
+}
+pub fn e2e_zenoh_missing_configuration_test(){
+ exercise_conversation_dispatch("/zenoh","unavailable","/tool query_zenoh {}","unavailable","disabled",10)
+}
+pub fn e2e_zenoh_read_and_tool_alias_test(){
+ exercise_configured_dispatch("/zenoh c3i/recovery/capability/reachability","no_retained_reply","/action query_zenoh {\"topic\":\"c3i/recovery/capability/reachability\"}","no_retained_reply","disabled",10,"zenoh")
 }

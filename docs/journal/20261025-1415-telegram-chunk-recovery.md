@@ -41,7 +41,7 @@ Runtime61/71 and admission25/33 task counts unchanged.370checks overlap prior su
 Raw FMEA S4 O3 Det3 RPN36: missing or altered operator results. UCA omission: exact-fit bytes retained; unsafe provision: oversized chunks prevented; timing:existing service authority fences retained; duration:bounded16chunk/4096byte limits. EV93 ceiling and standalone JJ unchanged.
 
 ## 13. Conclusion
-Prediction: source review and publication should finish before14:49UTC task lease expiry; adverse review or changed-source/gate failure falsifies it. Brier calibration UNRUN. Publication pending; no goal completion, deployment or admission inferred.
+Prediction: source review and publication should finish before14:49UTC task lease expiry; adverse review or changed-source/gate failure falsifies it. Brier calibration UNRUN. Source publication verified at 2026-10-25T14:46:22.575Z; main/GitHub fefc2f6e,248commits sincebaseline. Prediction met for source publication. COMMAND_IMPL attempt14 cleanly released at 2026-10-25T14:47:18.477Z before expiry; task remains available and incomplete. No goal completion, deployment or admission inferred.
 
 ## Verification checklist
 <details><summary>Domain 1 — Metadata and navigation</summary>

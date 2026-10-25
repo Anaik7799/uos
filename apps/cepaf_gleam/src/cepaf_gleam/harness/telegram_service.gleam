@@ -36,6 +36,8 @@ import cepaf_gleam/harness/telegram_search_report as search_report
 import cepaf_gleam/harness/telegram_knowledge_reader as knowledge_reader
 import cepaf_gleam/harness/telegram_coordination_reader as coordination_reader
 import cepaf_gleam/harness/telegram_host_observation as host_observation
+import cepaf_gleam/harness/telegram_zenoh_report as zenoh_report
+import cepaf_gleam/zenoh/rest as zenoh_rest
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/observer_policy as obs_policy
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
@@ -197,6 +199,7 @@ pub type ServiceConfiguration {
     risk_source:Option(String),
     verification_source:Option(verification_reader.Source),
     budget_source:Option(budget_report.Source),
+    zenoh_source:Option(zenoh_report.Configuration),
   )
 }
 
@@ -239,6 +242,7 @@ pub fn operational_service_configuration(
     risk_source:None,
     verification_source:None,
     budget_source:None,
+    zenoh_source:None,
   )
 }
 
@@ -276,6 +280,7 @@ pub fn development_service_configuration(
     risk_source:None,
     verification_source:None,
     budget_source:None,
+    zenoh_source:None,
   )
 }
 
@@ -2284,6 +2289,8 @@ fn execute_guarded_dispatch(
                       _,
                       guard.AcceptedEnvelope(
                         raw_text: txt,
+                        user_id: request_user,
+                        chat_id: request_chat,
                         directive: dir,
                         callback_query_id: cb_id,
                         ..,
@@ -2296,6 +2303,7 @@ fn execute_guarded_dispatch(
                         guard.DirectReadTool("query_ecology") -> ecology_reply(state)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.PreservedDirective("/zenoh",[topic]) -> zenoh_reply(state,request_user,request_chat,topic)
                         guard.DirectReadTool("query_finops") -> budget_reply(state)
                         guard.DirectReadTool("query_ha") -> {
                           case ha_report.observe(ha_report.live_io(),fn() { conversation_authorize(state) }) {
@@ -6414,4 +6422,16 @@ fn budget_reply(state:ServiceState)->String {
   None->Error("budget_source_not_configured")
  }
  case observation {Ok(raw)->raw Error(_)->budget_report.unavailable()}
+}
+
+/// Trusted launcher grants; Telegram input cannot alter identity or topic scope.
+pub fn configure_zenoh_source(config:ServiceConfiguration,grants:List(zenoh_report.Grant))->Result(ServiceConfiguration,String) {
+ zenoh_report.configuration(grants) |> result.map(fn(source){ServiceConfiguration(..config,zenoh_source:Some(source))})
+}
+fn zenoh_reply(state:ServiceState,user:Int,chat:Int,topic:String)->String {
+ let observation=case state.config.zenoh_source {
+  None->Error("zenoh_not_configured")
+  Some(source)->current_read(state,5000,fn(){zenoh_report.observe(source,user,chat,topic,zenoh_rest.get,fn(){ffi_system_now_utc_us()/1000})}) |> result.try(fn(r){r})
+ }
+ case observation {Ok(raw)->raw Error("zenoh_forbidden")->zenoh_report.forbidden() Error(_)->zenoh_report.unavailable()}
 }
