@@ -63,10 +63,11 @@ let png_width bytes =
 let base="http://nas-1.tail55d152.ts.net:49134"
 let () =
  require(Array.length Sys.argv=3 || Array.length Sys.argv=4)"usage: mini_browser OUT SIGNED_FIXTURE_JSON [--unavailable]";
+ let telemetry_failure=Array.length Sys.argv=4 && Sys.argv.(3)="--telemetry-unavailable" in
  let zenoh_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--zenoh" in
  let failure_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--unavailable" in
  let history_long=Array.length Sys.argv=4 && Sys.argv.(3)="--history-long" in
- require(Array.length Sys.argv=3 || failure_mode || history_long || zenoh_mode)"unknown scenario";
+ require(Array.length Sys.argv=3 || failure_mode || history_long || zenoh_mode || telemetry_failure)"unknown scenario";
  let out=Sys.argv.(1)in require(not(Sys.file_exists out))"new output required";Unix.mkdir out 0o700;
  let init_data=Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"init_data"|>to_string)in
  let sdk_for denied="window.Telegram={WebApp:{initData:"^Yojson.Safe.to_string(`String (if denied then init_data^"0" else init_data))^",ready:function(){},expand:function(){}}};"in
@@ -109,11 +110,13 @@ let () =
  save(out^"/"^mode^"-preassert.json")(Yojson.Safe.pretty_to_string(`Assoc["status",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts]));
  if mode="sdk-blocked"then(require(!posts=0)"SDK-less request made network call";require(String.starts_with ~prefix:"Telegram authentication is unavailable"final)"SDK-less status")
  else if mode="identity-denied"then(require(!posts=1)"one refused POST";require(String.starts_with ~prefix:"Authentication expired or access is not allowed."final)"denial state absent";require(text page "#mini-fields"="")"denied data exposed")
+ else if telemetry_failure then(require(!posts=1)"one telemetry outage POST";require(final="The data service is unavailable or not configured.")"telemetry outage status absent";require(text page "#mini-fields"="")"telemetry outage fields exposed")
  else if failure_mode then(require(!posts=1)"one failed-backend POST";require(final="The data source is unavailable or not configured.")"backend failure state absent";require(text page "#mini-fields"="")"failed backend data exposed")
  else(require(!posts=1)"exactly one authenticated POST";require(String.starts_with ~prefix:"Observed at "final)"authenticated observation";let fields=text page "#mini-fields" in
  if page_path="/mini-app/tasks" then (require(contains fields "Task FENCE")"task fields absent";require(contains fields "executing (lease expired)")"expired lease hidden")
  else (require(contains fields "NOT_GRANTED")"admission disclaimer absent";
- if page_path="/mini-app/dashboard" then(require(contains fields "UNKNOWN")"global health falsely asserted";require(contains fields "Scope")"dashboard scope absent")
+ if page_path="/mini-app/telemetry" then(require(contains fields "No fleet")"telemetry scope absent";require(contains fields "Collector epoch")"epoch absent";require(contains fields "Not implemented")"pending controls absent";require(contains fields "VM total memory MiB")"VM units absent")
+ else if page_path="/mini-app/dashboard" then(require(contains fields "UNKNOWN")"global health falsely asserted";require(contains fields "Scope")"dashboard scope absent")
  else if page_path="/mini-app/zenoh" then(require(contains fields "Topic count")"topic list absent";require(not(contains fields "other-user"))"other-user topic leak")
  else if page_path="/mini-app/fmea" then(require(String.starts_with ~prefix:"Assessments" fields)"FMEA metadata must precede details";require(contains fields "uos/telegram-runtime/20261001-1150")"FMEA plan absent";require(contains fields "RPN")"FMEA risks absent")
  else if page_path="/mini-app/chat" then(require(contains fields "Retained private reply42")"history absent";require(not(contains fields "OTHER_USER_SECRET"))"other user leak";require(contains fields "Only this user")"history scope absent";if history_long then require(contains fields "LONG_HISTORY_TEXT_")"long history missing")
@@ -172,7 +175,7 @@ let () =
  require(actual_width=width)"horizontal overflow beyond viewport";
  let errors=Array.to_list(Playwright.Page.page_errors page)in require(errors=[])"page script errors";
  rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"full_page_png_width",`Int actual_width;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
- ))(if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
+ ))(if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
  )))));
  let report=`Assoc["status",s"PASS_PRIVATE_BROWSER_FIXTURE";"observed_utc",`Float(Unix.gettimeofday());"scope",s"Actual Chromium, Mist ingress, Gleam authentication and native private Sa-plan reader; Telegram SDK identity supplied by explicit synthetic fixture, not real Telegram acceptance";"rows",`List(List.rev !rows)]in
  save(out^"/report.json")(Yojson.Safe.pretty_to_string report);print_endline(Yojson.Safe.to_string report)

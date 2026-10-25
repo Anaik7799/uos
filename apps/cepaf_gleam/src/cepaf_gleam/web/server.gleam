@@ -33,6 +33,7 @@ import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/otp_app
 import cepaf_gleam/planning/safety_kernel
 import cepaf_gleam/telegram/mini_api
+import cepaf_gleam/telegram/mini_telemetry
 import cepaf_gleam/ui/wisp/router
 import cepaf_gleam/ui/wisp/secret_api as vault_secret_api
 import cepaf_gleam/web/homeostasis_http
@@ -1084,6 +1085,8 @@ fn generic_ws_on_close(_state: PageWsState) -> Nil {
 // ---------------------------------------------------------------------------
 
 pub fn start(port: Int) -> Result(Nil, String) {
+  // Collector failure leaves other HTTP functions available.
+  let _ = mini_telemetry.start()
   io.println("  Gleam HTTP+WS on 0.0.0.0:" <> int.to_string(port))
 
   let handler = fn(req: request.Request(mist.Connection)) {

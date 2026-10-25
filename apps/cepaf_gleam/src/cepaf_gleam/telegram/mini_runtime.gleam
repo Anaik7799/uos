@@ -1,21 +1,22 @@
 //// Server-owned Mini App configuration and bounded read adapters.
 //// No credential or initData is returned to the browser or placed on the bus.
 
-import cepaf_gleam/harness/observer_policy as observer
-import cepaf_gleam/telegram/mini_api as api
-import cepaf_gleam/telegram/mini_evidence
-import cepaf_gleam/telegram/mini_dashboard
 import cepaf_gleam/ha/beam_metrics
+import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/harness/telegram_coordination_reader as coordination
-import cepaf_gleam/telegram/mini_podman
-import cepaf_gleam/telegram/mini_zenoh
-import cepaf_gleam/zenoh/rest as zenoh_rest
-import cepaf_gleam/telegram/mini_history
+import cepaf_gleam/harness/telegram_fmea_reader as fmea
 import cepaf_gleam/harness/telegram_store as history_store
 import cepaf_gleam/harness/telegram_store_transport as history_transport
-import cepaf_gleam/harness/telegram_fmea_reader as fmea
 import cepaf_gleam/harness/telegram_verification_reader as verification
+import cepaf_gleam/telegram/mini_api as api
+import cepaf_gleam/telegram/mini_dashboard
+import cepaf_gleam/telegram/mini_evidence
+import cepaf_gleam/telegram/mini_history
+import cepaf_gleam/telegram/mini_podman
+import cepaf_gleam/telegram/mini_telemetry
+import cepaf_gleam/telegram/mini_zenoh
 import cepaf_gleam/telegram/types
+import cepaf_gleam/zenoh/rest as zenoh_rest
 import gleam/bit_array
 import gleam/dict
 import gleam/dynamic/decode
@@ -32,7 +33,10 @@ fn get_env(name: String) -> Result(String, Nil)
 @external(erlang, "mini_app_clock_ffi", "unix_seconds")
 pub fn clock() -> Int
 
-type TimeUnit { Nanosecond }
+type TimeUnit {
+  Nanosecond
+}
+
 @external(erlang, "erlang", "system_time")
 fn system_time(unit: TimeUnit) -> Int
 
@@ -131,22 +135,27 @@ fn observe_tasks() -> Result(api.Observation, Nil) {
   Ok(api.Observed(clock(), "canonical_sa_plan_snapshot", fields))
 }
 
-
 fn observe_fmea() -> Result(api.Observation, Nil) {
   use path <- result.try(get_env("UOS_TELEGRAM_MINI_FMEA_SOURCE"))
   use plan <- result.try(get_env("UOS_TELEGRAM_MINI_FMEA_PLAN"))
-  use _ <- result.try(case fmea.valid_source(path, False) && observer.valid_id(plan) {
-    True -> Ok(Nil)
-    False -> Error(Nil)
-  })
-  use raw <- result.try(fmea.observe(path, plan, "") |> result.replace_error(Nil))
+  use _ <- result.try(
+    case fmea.valid_source(path, False) && observer.valid_id(plan) {
+      True -> Ok(Nil)
+      False -> Error(Nil)
+    },
+  )
+  use raw <- result.try(
+    fmea.observe(path, plan, "") |> result.replace_error(Nil),
+  )
   mini_evidence.fmea(raw, plan, clock()) |> result.replace_error(Nil)
 }
 
 fn observe_verification() -> Result(api.Observation, Nil) {
   use path <- result.try(get_env("UOS_TELEGRAM_MINI_VERIFICATION_SOURCE"))
   use sha <- result.try(get_env("UOS_TELEGRAM_MINI_VERIFICATION_SHA256"))
-  use candidate <- result.try(get_env("UOS_TELEGRAM_MINI_VERIFICATION_CANDIDATE"))
+  use candidate <- result.try(get_env(
+    "UOS_TELEGRAM_MINI_VERIFICATION_CANDIDATE",
+  ))
   let source = verification.Source(path, sha, candidate)
   use _ <- result.try(case verification.valid_source(source, False) {
     True -> Ok(Nil)
@@ -155,50 +164,73 @@ fn observe_verification() -> Result(api.Observation, Nil) {
   use raw <- result.try(
     verification.observe(source, "checklist", "") |> result.replace_error(Nil),
   )
-  mini_evidence.verification(raw, candidate, clock()) |> result.replace_error(Nil)
+  mini_evidence.verification(raw, candidate, clock())
+  |> result.replace_error(Nil)
 }
 
 fn observe_podman() -> Result(api.Observation, Nil) {
   use sha <- result.try(get_env("UOS_TELEGRAM_MINI_PODMAN_SHA256"))
-  use _ <- result.try(case observer.valid_digest(sha) { True -> Ok(Nil) False -> Error(Nil) })
+  use _ <- result.try(case observer.valid_digest(sha) {
+    True -> Ok(Nil)
+    False -> Error(Nil)
+  })
   mini_podman.observe(mini_podman.live_io(sha)) |> result.replace_error(Nil)
 }
-
 
 fn observe_history(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
   use token <- result.try(get_env("UOS_TELEGRAM_MINI_BOT_TOKEN"))
   use raw <- result.try(get_env("UOS_TELEGRAM_MINI_HISTORY_GRANTS"))
-  use _ <- result.try(case string.byte_size(raw) <= 8192 { True -> Ok(Nil) False -> Error(Nil) })
+  use _ <- result.try(case string.byte_size(raw) <= 8192 {
+    True -> Ok(Nil)
+    False -> Error(Nil)
+  })
   let grant_decoder = {
     use user <- decode.field("user_id", decode.int)
     use chat <- decode.field("chat_id", decode.int)
     decode.success(mini_history.Grant(user, chat))
   }
-  use grants <- result.try(json.parse(raw, decode.list(grant_decoder)) |> result.replace_error(Nil))
-  use config <- result.try(mini_history.configuration(token, grants) |> result.replace_error(Nil))
-  use database <- result.try(get_env("UOS_TELEGRAM_MINI_HISTORY_DATABASE"))
-  let transport = history_transport.reviewed_local_configuration(
-    "/home/an/NAS-setup/uos/tools/validation/telegram_store_transport_guardian.exe",
-    "06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab",
-    "/home/an/NAS-setup/uos/tools/validation/telegram_store_recovery_worker.exe",
-    "f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e",
-    database,
+  use grants <- result.try(
+    json.parse(raw, decode.list(grant_decoder)) |> result.replace_error(Nil),
   )
-  mini_history.observe(config, read, fn(keys) {
-    history_store.read_keys(transport, keys) |> result.replace_error("history_store_unavailable")
-  }, clock) |> result.replace_error(Nil)
+  use config <- result.try(
+    mini_history.configuration(token, grants) |> result.replace_error(Nil),
+  )
+  use database <- result.try(get_env("UOS_TELEGRAM_MINI_HISTORY_DATABASE"))
+  let transport =
+    history_transport.reviewed_local_configuration(
+      "/home/an/NAS-setup/uos/tools/validation/telegram_store_transport_guardian.exe",
+      "06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab",
+      "/home/an/NAS-setup/uos/tools/validation/telegram_store_recovery_worker.exe",
+      "f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e",
+      database,
+    )
+  mini_history.observe(
+    config,
+    read,
+    fn(keys) {
+      history_store.read_keys(transport, keys)
+      |> result.replace_error("history_store_unavailable")
+    },
+    clock,
+  )
+  |> result.replace_error(Nil)
 }
 
 fn observe_zenoh(read: api.AuthorizedRead) -> api.Observation {
   let config = {
     use raw <- result.try(get_env("UOS_TELEGRAM_MINI_ZENOH_GRANTS"))
-    use _ <- result.try(case string.byte_size(raw) <= 65_536 { True -> Ok(Nil) False -> Error(Nil) })
+    use _ <- result.try(case string.byte_size(raw) <= 65_536 {
+      True -> Ok(Nil)
+      False -> Error(Nil)
+    })
     let grant = {
       use user <- decode.field("user_id", decode.int)
       use topic <- decode.field("topic", decode.string)
       decode.success(mini_zenoh.Grant(user, topic))
     }
-    use grants <- result.try(json.parse(raw, decode.list(grant)) |> result.replace_error(Nil))
+    use grants <- result.try(
+      json.parse(raw, decode.list(grant)) |> result.replace_error(Nil),
+    )
     mini_zenoh.configuration(grants) |> result.replace_error(Nil)
   }
   case config {
@@ -207,26 +239,33 @@ fn observe_zenoh(read: api.AuthorizedRead) -> api.Observation {
   }
 }
 
-
 @external(erlang, "erlang", "monotonic_time")
 fn monotonic_ms(unit: DashboardTimeUnit) -> Int
-type DashboardTimeUnit { Millisecond }
+
+type DashboardTimeUnit {
+  Millisecond
+}
 
 @external(erlang, "telegram_status_probe", "probe")
 fn dashboard_probe(name: String, budget_ms: Int) -> Result(Int, String)
 
 fn dashboard_podman(budget_ms: Int) -> Result(api.Observation, String) {
-  use sha <- result.try(get_env("UOS_TELEGRAM_MINI_PODMAN_SHA256")
-    |> result.replace_error("podman_configuration_unavailable"))
+  use sha <- result.try(
+    get_env("UOS_TELEGRAM_MINI_PODMAN_SHA256")
+    |> result.replace_error("podman_configuration_unavailable"),
+  )
   use _ <- result.try(case observer.valid_digest(sha) {
-    True -> Ok(Nil) False -> Error("podman_configuration_unavailable")
+    True -> Ok(Nil)
+    False -> Error("podman_configuration_unavailable")
   })
   mini_podman.observe_with_budget(mini_podman.live_io(sha), budget_ms)
 }
 
 fn dashboard_peers(budget_ms: Int) -> Result(String, String) {
-  use database <- result.try(get_env("UOS_TELEGRAM_MINI_COORDINATION_DATABASE")
-    |> result.replace_error("coordination_configuration_unavailable"))
+  use database <- result.try(
+    get_env("UOS_TELEGRAM_MINI_COORDINATION_DATABASE")
+    |> result.replace_error("coordination_configuration_unavailable"),
+  )
   coordination.observe_with_budget(database, "peers", budget_ms)
 }
 
@@ -246,17 +285,28 @@ fn dashboard_io() -> mini_dashboard.Io {
 
 pub fn observe(read: api.AuthorizedRead) -> api.Observation {
   case api.page(read) {
+    types.MiniTelemetry -> mini_telemetry.observe()
+    page -> mini_telemetry.with_span(page, fn() { observe_backend(read) })
+  }
+}
+
+fn observe_backend(read: api.AuthorizedRead) -> api.Observation {
+  case api.page(read) {
     types.MiniPlanning ->
       observe_tasks()
       |> result.unwrap(api.Unavailable("task_observation_failed"))
     types.MiniFmea ->
-      observe_fmea() |> result.unwrap(api.Unavailable("fmea_observation_failed"))
+      observe_fmea()
+      |> result.unwrap(api.Unavailable("fmea_observation_failed"))
     types.MiniVerification ->
-      observe_verification() |> result.unwrap(api.Unavailable("verification_observation_failed"))
+      observe_verification()
+      |> result.unwrap(api.Unavailable("verification_observation_failed"))
     types.MiniPodman ->
-      observe_podman() |> result.unwrap(api.Unavailable("podman_observation_failed"))
+      observe_podman()
+      |> result.unwrap(api.Unavailable("podman_observation_failed"))
     types.MiniConversation ->
-      observe_history(read) |> result.unwrap(api.Unavailable("history_observation_failed"))
+      observe_history(read)
+      |> result.unwrap(api.Unavailable("history_observation_failed"))
     types.MiniZenohBrowser -> observe_zenoh(read)
     types.MiniDashboard -> mini_dashboard.observe(dashboard_io())
     types.MiniHealthGrid

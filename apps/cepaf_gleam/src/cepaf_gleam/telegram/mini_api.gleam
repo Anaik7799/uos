@@ -31,7 +31,12 @@ pub opaque type Configuration {
 }
 
 pub opaque type AuthorizedRead {
-  AuthorizedRead(page: types.MiniAppPage, user_id: Int, chat_id: Option(Int), topic: Option(String))
+  AuthorizedRead(
+    page: types.MiniAppPage,
+    user_id: Int,
+    chat_id: Option(Int),
+    topic: Option(String),
+  )
 }
 
 pub type Observation {
@@ -117,7 +122,9 @@ pub fn chat_id(read: AuthorizedRead) -> Option(Int) {
   read.chat_id
 }
 
-pub fn selected_topic(read: AuthorizedRead) -> Option(String) { read.topic }
+pub fn selected_topic(read: AuthorizedRead) -> Option(String) {
+  read.topic
+}
 
 fn signed_chat(init_data: String) -> Result(Option(Int), ApiError) {
   // validate_fresh already rejects malformed encodings and duplicate decoded keys.
@@ -156,7 +163,11 @@ pub fn authorize(
   let decoder = {
     use init_data <- decode.field("init_data", decode.string)
     use path <- decode.field("path", decode.string)
-    use topic <- decode.optional_field("topic", None, decode.optional(decode.string))
+    use topic <- decode.optional_field(
+      "topic",
+      None,
+      decode.optional(decode.string),
+    )
     decode.success(#(init_data, path, topic))
   }
   use #(init_data, path, topic) <- result.try(
@@ -167,7 +178,13 @@ pub fn authorize(
   )
   use _ <- result.try(case topic {
     None -> Ok(Nil)
-    Some(key) -> case selected_page == types.MiniZenohBrowser && string.byte_size(key) <= 512 { True -> Ok(Nil) False -> Error(InvalidRequest) }
+    Some(key) ->
+      case
+        selected_page == types.MiniZenohBrowser && string.byte_size(key) <= 512
+      {
+        True -> Ok(Nil)
+        False -> Error(InvalidRequest)
+      }
   })
   use user <- result.try(
     case
@@ -207,9 +224,11 @@ fn error_response(status: Int, code: String) -> response.Response(String) {
 }
 
 fn detail_field(key: String) -> Bool {
-  string.starts_with(key, "Message part ") || string.starts_with(key, "Available topic ") ||
-  string.starts_with(key, "Exchange ") ||
-  string.starts_with(key, "Assessment ") || string.starts_with(key, "CHK-")
+  string.starts_with(key, "Message part ")
+  || string.starts_with(key, "Available topic ")
+  || string.starts_with(key, "Exchange ")
+  || string.starts_with(key, "Assessment ")
+  || string.starts_with(key, "CHK-")
   || { string.starts_with(key, "Container ") && key != "Container count" }
   || { string.starts_with(key, "Image ") && key != "Image references" }
 }
@@ -263,9 +282,17 @@ fn render_observation_inner(
   }
 }
 
-fn render_observation(read: AuthorizedRead, observation: Observation, now: Int) -> response.Response(String) {
+fn render_observation(
+  read: AuthorizedRead,
+  observation: Observation,
+  now: Int,
+) -> response.Response(String) {
   case observation {
     Forbidden -> error_response(403, "topic_access_denied")
+    Unavailable(_) if read.page == types.MiniTelemetry -> {
+      let rendered = render_observation_inner(read, observation, now)
+      response.Response(..rendered, status: 503)
+    }
     _ -> render_observation_inner(read, observation, now)
   }
 }
