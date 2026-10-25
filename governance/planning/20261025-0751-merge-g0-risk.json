@@ -9,28 +9,28 @@
     "scope": "Preserve all source/evidence and test restore; safe GitHub backup; explicitly account blocked stale claims",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -222,28 +222,28 @@
     "scope": "Accept exact current main 2ab40165: verify candidate-bound AGY reviews, source/test bindings and scoped tested behavior; classify full 733-path delta. No source mutation or runtime release.",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -438,28 +438,28 @@
     "scope": "Reconcile all 733 trunk differences with main in owned workspace, preserve newer main retry fix and tests, restore source groups, compile/test and independently review before source-only integration",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -654,28 +654,28 @@
     "scope": "Review C1 trusted store locator, C2 private provider migration confinement, C3 numeric formal repair against new main; preserve superseded variants, integrate only missing behavior with tests and AGY review",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T08:42:29Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -870,28 +870,28 @@
     "scope": "Inventory both preserved default variants and current on-disk differences; integrate missing vetted code/evidence without overwriting newer main; preserve all variants and avoid default reset until exact coverage and runtime consumers are verified",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T09:10:48Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -1087,28 +1087,28 @@
     "scope": "Reconcile September EV-01 code fixes, D1-D12 and divergent evidence against current main. Preserve both variants; integrate missing vetted behavior with candidate tests; archive superseded or quarantined evidence without admission claims or raw ancestor ingestion.",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T09:29:10Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -1304,28 +1304,28 @@
     "scope": "Integrate branch deltas without uncurated ancestor history",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T09:57:41Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -1521,28 +1521,28 @@
     "scope": "Reconcile owned stale state and final verified off-host backup",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T10:20:56Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -1735,46 +1735,56 @@
     "plan_id": "uos/full-merge/20261025-0638",
     "task_id": "G8_IMPROVE",
     "actor": "codex-analysis-20261024",
-    "scope": "Assess all 18 advisory improvements against existing controls; implement goal-critical observer selection/finite refresh and truthful demonstration status. Reuse tested controls, preserve unadopted proposals without declaring them implemented. Source integration and reviewed bounded dashboard observer only; no application release.",
+    "scope": "Assess all 18 advisory improvements against existing controls; implement goal-critical observer selection/finite refresh and truthful demonstration status. Reuse tested controls, preserve unadopted proposals without declaring them implemented. Source integration and reviewed bounded dashboard observer only; no application release. Publish independently reviewed dashboard and demo static assets with a stopped observer, preserved originals, exact byte hashes and fresh reviewed finite config; no application restart.",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T11:04:24Z",
-    "valid_until": "2026-10-25T12:04:24Z",
+    "observed_at": "2026-10-25T11:25:57Z",
+    "valid_until": "2026-10-25T12:25:57Z",
     "task_state": "executing",
     "ready_since": "2026-10-25T10:50:31Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Current source bytes observed 2026-10-25T11:04:24Z; G7 complete with authenticated off-host restore; G8 code/build/tests complete, review and finite observer renewal pending.",
+      "reference": "Current source observed 2026-10-25T11:18:48Z; source f72933c4 published, finite observer running; live desktop capture HOLD traced to unbounded tables and candidate CSS now passes unchanged desktop/mobile verifier.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": ".uos-workspaces/codex-merge-20261025/apps/cepaf_gleam/src/cepaf_gleam/harness/restoration_observer.gleam",
           "sha256": "955f79e4837e3400f13d139833c24913fd7fb2e8b4113d63e1fb79b281b6819e",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": ".uos-workspaces/codex-merge-20261025/apps/cepaf_gleam/test/restoration_observer_test.gleam",
           "sha256": "4f3001d3cdaeb479f32dfc23bdb4788e3595fcec3bebd99e374754dbff897da7",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
         },
         {
           "path": ".uos-workspaces/codex-merge-20261025/apps/cepaf_gleam/priv/static/tui_evolution_player.html",
           "sha256": "2bbe804e55308bb7af6b9f4d4cb1ef3d879ea681c7e17bc465c1b187eb933a69",
-          "observed_at": "2026-10-25T11:04:24Z"
+          "observed_at": "2026-10-25T11:25:57Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/apps/cepaf_gleam/priv/static/20261024-0712-recovery-dashboard.html",
+          "sha256": "751e9eada8e08614ffa4b4ff7d6fd8637578c58d2b54be694599a3f84927a429",
+          "observed_at": "2026-10-25T11:25:57Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/tools/validation/restoration_browser_check.ml",
+          "sha256": "a525f109d40e73f0be1374dc94c39186166e860c011d555809cb1125c4de1600",
+          "observed_at": "2026-10-25T11:25:57Z"
         }
       ]
     },
@@ -1926,7 +1936,7 @@
       ],
       "confidence": "analyst_estimate",
       "forecast": "Scoped source repair and independent review within one active hour; live renewal depends on control/config validation",
-      "falsifier": "Missing current tasks, admitted-looking demo output, expired authority or failed browser freshness",
+      "falsifier": "Missing current tasks, admitted-looking demo output, expired authority or failed browser freshness; full-page PNG width differs from viewport",
       "acceptance": [
         "Disposition each of 18 proposed improvements with source/evidence or explicit unadopted status",
         "Date-independent relevant task/job queries include current full-merge and future Telegram plans and exclude unrelated same-date plans",

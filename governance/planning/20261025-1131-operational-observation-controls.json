@@ -3,7 +3,7 @@
   "plan": "uos/full-merge/20261025-0638",
   "task": "G8_IMPROVE",
   "attempt": 1,
-  "status": "SOURCE_IMPLEMENTED_TESTED_REVIEW_PENDING",
+  "status": "SOURCE_f72933c4_PUBLISHED; LIVE_LAYOUT_REPAIR_REVIEW_PENDING",
   "scope": "Goal-critical observer selection and truthful demonstration status; existing controls reused; proposals remain explicitly unadopted unless stated",
   "source_base": "30bac953e714c1520cbf1443ee45cac9bcc3d20a",
   "proposals": [
@@ -131,7 +131,14 @@
       "merge_completed": 8,
       "merge_total": 9
     },
-    "live_dashboard": "PENDING reviewed finite observer renewal; existing snapshot expired"
+    "live_dashboard": "Mobile PASS; desktop observation assertions PASS but full-page capture exceeded 8MiB; CSS candidate now PASS both widths using unchanged verifier",
+    "browser_controller": {
+      "source_sha256": "a525f109d40e73f0be1374dc94c39186166e860c011d555809cb1125c4de1600",
+      "policy_tests": 18,
+      "real_negative_controls": 6,
+      "overflow_negative_controls": 2,
+      "fixed_viewports": 2
+    }
   },
   "remaining": [
     "Independent exact-candidate source review/publication",
@@ -140,5 +147,26 @@
     "Ten Telegram runtime and eight admission task records",
     "NIF digest mismatch; reviewed application release",
     "Unadopted advisory improvements retain their stated partial/pending status"
-  ]
+  ],
+  "updated_at": "2026-10-25T11:25:57.807Z",
+  "layout": {
+    "cause": "Unbounded task and job tables",
+    "original_desktop_height": 40819.59375,
+    "candidate_desktop_height": 6585.59375,
+    "candidate_desktop_png_bytes": 1212932,
+    "candidate_mobile_png_bytes": 1200664,
+    "rows_preserved": true,
+    "keyboard_focusable": true,
+    "live_deployed": false,
+    "horizontal_overflow": {
+      "old_desktop_png_width": 2940,
+      "requested_width": 1280,
+      "cause": "Grid min-content sizing of long source-observation values",
+      "fix": "minmax(0,1fr), child min-width:0, contained wrapped preformatted values",
+      "regression": "New verifier checks PNG IHDR width equals requested viewport; both prior layouts rejected and fixed layouts pass",
+      "fixed_desktop_png_bytes": 1125842,
+      "fixed_mobile_png_bytes": 975873
+    },
+    "superseded_review": "0d1b0f24 reviewed dc19aae9, not current revised bytes; no activation performed"
+  }
 }

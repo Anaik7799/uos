@@ -14,11 +14,11 @@ GitHub main is 30bac953 with 240 commits uploaded since the original baseline. M
 
 ## 3. Execution Detail
 
-Replaced date filters with explicit project-family SQL shared by task rows, counts and completion triggers. Job selection also uses safe parsed parent-plan metadata and legacy Telegram job names, preserving malformed metadata without query failure. Kept finite OTP supervision and authority checks unchanged. Corrected active demo labels, all 18 checklist claims, media overlays and synthetic fallback. Prevented frame selection from scrolling the entire document. Historical evidence HTML/media remain unchanged.
+Replaced date filters with explicit project-family SQL shared by task rows, counts and completion triggers. Job selection also uses safe parsed parent-plan metadata and legacy Telegram job names, preserving malformed metadata without query failure. Kept finite OTP supervision and authority checks unchanged. After source f72933c4 was published (241 commits total), independently reviewed config 618e2230 started the observer and produced fresh 8/9 merge status. Live mobile passed; desktop assertions passed but its 40,819px full-page image exceeded the verifier budget. Added bounded keyboard-focusable task/job scroll regions and sticky headers; all rows remain. Visual inspection then found a 2,940px image at a 1,280px viewport: source-observation grid tracks retained long min-content widths. Added minmax(0,1fr), child min-width:0 and contained preformatted wrapping. The OCaml verifier now checks PNG IHDR width equals the requested viewport. Both old layouts fail that assertion; fixed layouts pass at 1280 and 390. Corrected active demo labels, all 18 checklist claims, media overlays and synthetic fallback. Prevented frame selection from scrolling the entire document. Historical evidence HTML/media remain unchanged.
 
 ## 4. Root Cause Analysis
 
-ACH: (H1) the missing merge progress reflected absent Sa-plan work was falsified by direct SQLite observation: 8/9 current stages are present. (H2) date-specific projection caused omission was confirmed by the old filter and new query tests. (H3) player metrics are live was falsified by hardcoded generation formulas. AGY code execution ended after its bounded print timeout with 114,008 input tokens and no edits/response; context size is a suspected contributor, not a proven provider root cause.
+ACH: (H1) the missing merge progress reflected absent Sa-plan work was falsified by direct SQLite observation: 8/9 current stages are present. (H2) date-specific projection caused omission was confirmed by the old filter and new query tests. (H3) player metrics are live was falsified by hardcoded generation formulas. The desktop capture failure was traced to unbounded data-table height: unchanged verifier passed both widths against the CSS candidate and identical snapshot, with desktop height reduced to 6,586px and PNG to 1,212,932 bytes. AGY code execution ended after its bounded print timeout with 114,008 input tokens and no edits/response; context size is a suspected contributor, not a proven provider root cause.
 
 ## 5. Fix Taxonomy
 
@@ -30,7 +30,7 @@ Devil's Advocate / Popperian falsification: unrelated same-date plans, prefix co
 
 ## 7. Verification Matrix
 
-Full affected Gleam application build PASS. Seven observer tests include actual SQLite execution for future dates, prefix collisions, malformed JSON, and unrelated completions. Twenty-nine related observer/refresh/AGY tests pass in total. Actual Chromium candidate-file tests pass 8/8 at 1280 and 390 widths, including frame 30 selection, no horizontal overflow and no page jump; mobile screenshot visually inspected. Canonical read-only queries return 14 relevant plans/190 tasks including merge 8/9. Live observer renewal/browser freshness remains PENDING. Seven automated epistemic engines UNRUN; Admiralty A1 is the analyst classification of direct process/query/browser observations only, limited to their recorded scope; automated Admiralty adjudication is UNRUN.
+Full affected Gleam application build PASS. Seven observer tests include actual SQLite execution for future dates, prefix collisions, malformed JSON, and unrelated completions. Twenty-nine related observer/refresh/AGY tests pass in total. Actual Chromium candidate-file tests pass 8/8 at 1280 and 390 widths, including frame 30 selection, no horizontal overflow and no page jump; mobile screenshot visually inspected. Canonical read-only queries return 14 relevant plans/190 tasks including merge 8/9. Fresh finite observer is running. Mobile live PASS; desktop capture failed at the 8MiB bound. CSS candidate passes the unchanged verifier at both widths in a private listener; production asset activation and live rerun remain pending. Fresh controller tests: 18 policy cases, 6 actual browser negative controls, 2 actual overflow rejection cases and 2 corrected viewport cases pass. Candidate final desktop image is 1,125,842 bytes at width 1280; mobile is 975,873 bytes at width 390. The earlier dc19aae9 review is retained but superseded for changed bytes. Seven automated epistemic engines UNRUN; Admiralty A1 is the analyst classification of direct process/query/browser observations only, limited to their recorded scope; automated Admiralty adjudication is UNRUN.
 
 ## 8. Files Modified
 
@@ -42,7 +42,7 @@ Gleam retains selection, lifetime, config/review and runtime authority. SQLite i
 
 ## 10. Remaining Gaps
 
-Independent source review, main-only publication, fresh finite observer config review and actual live desktop/mobile dashboard acceptance remain open. Telegram commands/Mini/media/gateway/end-to-end and release/admission remain incomplete. The 18-item ledger distinguishes reused controls from partial and unadopted proposals, including 14 broken skill links on each of four surfaces.
+Source f72933c4 and finite config were independently reviewed and activated. Follow-up CSS source/asset/config review and final live desktop/mobile rerun remain open. Telegram commands/Mini/media/gateway/end-to-end and release/admission remain incomplete. The 18-item ledger distinguishes reused controls from partial and unadopted proposals, including 14 broken skill links on each of four surfaces.
 
 ## 11. Metrics Summary
 

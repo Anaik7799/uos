@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-25T11:04:24.458Z",
+  "observed_at": "2026-10-25T11:18:48.151Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
@@ -11,7 +11,7 @@
     "G6_GRAFTS",
     "G7_PRUNE"
   ],
-  "main": "30bac953e714c1520cbf1443ee45cac9bcc3d20a",
+  "main": "f72933c407dc0ba4e5c505bc6aab671098aaa247",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -32,9 +32,9 @@
     "Existing TUI demonstration player contains unsupported admission claims; fix in G8"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G8 source review: date-independent observer and truthful demo; 29 tests and 16 Chromium assertions pass; live observer renewal pending",
-  "github_verified_at": "2026-10-25T10:42:18.880Z",
-  "github_new_commits_uploaded": 240,
+  "working_on": "G8 bounded task/job table layout and reviewed static asset activation; desktop capture repair",
+  "github_verified_at": "2026-10-25T11:08:17.267Z",
+  "github_new_commits_uploaded": 241,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -85,7 +85,7 @@
     }
   ],
   "merged_paths_latest": 14,
-  "latest_receipt": "var/recovery-runtime/20261025-1021-merge-g7/merge-receipt.json",
+  "latest_receipt": "var/recovery-runtime/20261025-1050-merge-g8/merge-receipt.json",
   "merge_completed": 8,
   "merge_total": 9,
   "agents": {
@@ -167,10 +167,10 @@
     "latest_receipt": "var/recovery-runtime/20261025-1021-merge-g7/backup-restore-receipt.json"
   },
   "g8": {
-    "status": "SOURCE_TESTED_REVIEW_PENDING",
+    "status": "SOURCE_PUBLISHED_OBSERVER_ACTIVE_LAYOUT_REPAIR_PENDING",
     "tests": 29,
     "player_browser_assertions": 16,
-    "live_observer": "PENDING",
+    "live_observer": "Running reviewed finite config until 12:08:36Z",
     "ledger": "governance/planning/20261025-1131-operational-observation-controls.json",
     "journal": "docs/journal/20261025-1131-operational-observation-controls.md"
   }

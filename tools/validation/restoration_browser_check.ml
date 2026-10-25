@@ -367,7 +367,10 @@ let ()=
  require(String.length view<=8388608)"viewport screenshot too large";
  save(out^"/20261001-1048-viewport.png")view;
  let png=Playwright.Page.screenshot ~type_:`Png ~full_page:true ~timeout:5000. page in
- require(String.length png<=8388608&&String.starts_with ~prefix:"\137PNG\r\n\026\n"png)"invalid screenshot";
+ require(String.length png>=24&&String.length png<=8388608&&String.starts_with ~prefix:"\137PNG\r\n\026\n"png)"invalid screenshot";
+ let png_width=List.fold_left(fun n i->(n lsl 8) lor Char.code png.[i])0[16;17;18;19]in
+ observations:=("full_page_png_width",`Int png_width)::!observations;
+ check "full_page_width_matches_viewport"(png_width=width);
  save(out^"/20261001-1048-page.png")png;
  pictures:=[`Assoc["path",s(out^"/20261001-1048-page.png");"sha256",s(sha png)]];
  let errors=Playwright.Page.page_errors page|>Array.to_list in
