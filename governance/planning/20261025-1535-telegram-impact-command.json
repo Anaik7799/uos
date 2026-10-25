@@ -83,7 +83,19 @@
     "Installed NIF digest mismatch and global admission"
   ],
   "publication": {
-    "state": "PENDING",
+    "state": "PUBLISHED",
+    "at": "2026-10-25T15:39:04.404Z",
+    "main": "f6c3c5ebe0f98a9c8baeb1884129e0b4f203e065",
+    "remote": "f6c3c5ebe0f98a9c8baeb1884129e0b4f203e065",
+    "commits_since_806c2739": 250,
+    "push": {
+      "out": "",
+      "err": "Changes to push to origin:\n  bookmark: main [move forward from f6b67e48b3b7 to f6c3c5ebe0f9]\n"
+    },
+    "fetch": {
+      "out": "",
+      "err": "Nothing changed.\n"
+    },
     "source_only": true,
     "production_admission": false
   },
@@ -4144,5 +4156,21 @@
       "path": "tools/validation/telegram_mini_candidate/impact-export.js",
       "sha256": "be633e5af6fffa93d0f7e6a41c025bc9e1c4d22ea13c2f2c75743203213839bb"
     }
-  ]
+  ],
+  "dashboard_observer": {
+    "unit": "uos-recovery-dashboard-20261025-impact.service",
+    "main_pid": 492436,
+    "job": "uos/agy-operations/20261024-0642/live-dashboard-impact-20261025-1540",
+    "epoch": 8,
+    "config_sha256": "6d515b34214d8cc0029cf091c374cc6e31e3ae5195fc9aa5caa01423e80da505",
+    "review_conversation": "8e4ff8dc-d664-4c0d-8b6a-8a00ec66f942",
+    "expires_at": "2026-10-25T16:25:00Z",
+    "updated_at": "2026-10-25T15:42:01Z",
+    "refresh": {
+      "interval_seconds": 300,
+      "poll_seconds": 5,
+      "reason": "startup",
+      "expires_at": "2026-10-25T16:25:00.000000Z"
+    }
+  }
 }

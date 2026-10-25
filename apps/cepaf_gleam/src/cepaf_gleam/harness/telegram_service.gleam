@@ -5189,7 +5189,7 @@ fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedD
         "/approval_manage" -> ApprovalDispatch
         "/cancel_job_lease" -> CancellationDispatch
         "/memory" | "/history" | "/messages" -> MemoryDispatch
-        "conversational" | "/agy" -> case state.config.conversation {
+        "conversational" | "/agy" | "/socratic" -> case state.config.conversation {
           ConversationDisabled -> RegularDispatch
           _ -> ConversationDispatch
         }
@@ -5300,7 +5300,7 @@ fn execute_conversation_dispatch(
     Error(store.StoreInvariantError("not_a_conversation_prompt"))
     | Error(store.StoreInvariantError("invalid_conversation_prompt")) ->
       reply_without_reservation(state, record, version, sha,
-        "Use /agy <message> or send a short text message.")
+        "Use /agy <message>, /socratic <topic>, or send a short text message.")
     Error(err) -> Error(conversation_store_failure(state, err))
     Ok(reservation) -> {
       let reserved_state = ServiceState(..state,

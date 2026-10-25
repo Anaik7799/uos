@@ -9,6 +9,7 @@ import cepaf_gleam/harness/telegram_rete_report as rete
 import cepaf_gleam/harness/telegram_verification_report as verification
 import cepaf_gleam/harness/telegram_zenoh_report as zenoh_report
 import cepaf_gleam/harness/telegram_impact_report as impact
+import cepaf_gleam/harness/telegram_dialogue_command as dialogue
 import gleam/dict
 import gleam/dynamic/decode
 import cepaf_gleam/harness/telegram_knowledge_report as knowledge
@@ -130,6 +131,10 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         let name = invocation.definition.canonical
         let args = invocation.args
         case name {
+          "/socratic" -> case dialogue.topic(args) {
+            Ok(topic)->PreservedDirective("/socratic",[topic])
+            Error(e)->DeniedMutation("/socratic",e)
+          }
           "/approval" -> approval_directive(args)
           "/doctor" -> read_directive("query_doctor", args)
           "/rete" -> case rete.canonicalize(args) {
@@ -199,6 +204,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.Socratic(topic)) -> PreservedDirective("/socratic",[topic])
               Ok(tool_command.BlastRadius(module)) -> PreservedDirective("/blast-radius",[module])
               Ok(tool_command.Zenoh(topic)) -> PreservedDirective("/zenoh",[topic])
               Ok(tool_command.Finops) -> DirectReadTool("query_finops")

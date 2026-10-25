@@ -33,7 +33,8 @@ pub fn configure(config: service.ServiceConfiguration, mode: String, limit: Int,
           }
           Ok(#(200, "{\"data\":[{\"id\":\"openrouter/free\",\"pricing\":{\"prompt\":\"0\",\"completion\":\"0\"}}]}"))
         },
-        post: fn(_, _, _) {
+        post: fn(_, body, _) {
+          let _ = simplifile.write(db <> ".model-request", body)
           let _ = simplifile.write(db <> ".model-post", "called")
           case mode {
             "fail" -> Error("PRIVATE PROVIDER BODY MUST NOT LEAK")

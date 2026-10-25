@@ -1,0 +1,4165 @@
+{
+  "schema": "uos.telegram.socratic.command.v1",
+  "observed_at": "2026-10-25T15:57:44.442Z",
+  "parent": "f6c3c5ebe0f98a9c8baeb1884129e0b4f203e065",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 15,
+    "coordinator_epoch": 15,
+    "complete": false
+  },
+  "scope": "CMD-040 bounded Socratic model dialogue; shared bot/chat/user scoped memory and request budget; no live telemetry or voice/multi-party mediation",
+  "as_is": "Built and executed in development; independent Codex source review PASS; AGY provider policy rejection preserved; not deployed",
+  "to_be": "Complete adopted Telegram capabilities and real-user acceptance on independently released candidate",
+  "review": {
+    "verdict": "PASS",
+    "reviewer": "Independent Codex subagent /root/socratic_source_review",
+    "patch_sha256": "772a6fa7765ecbde59890c284bea740ca43f415e9d4d084b0d66c3abac29fee2",
+    "critical": [],
+    "important": [],
+    "minor": [
+      {
+        "file": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam:1410",
+        "finding": "Expected durable prompt derived from production prompt_for_text weakens independent oracle",
+        "disposition": "Accepted minor: separate literal canonical_prompt_and_alias_test covers canonical mode; improve E2E literal oracle in follow-up"
+      }
+    ],
+    "evidence": "Patch digest and8changedGleamsource/test files matched fixture build bytes. Inspected406tests,5service scenarios,4regressions andfull928bindings build receipts; not independently rerun.11nativebudget checks are separate regression evidence, not proof of dialogue behavior.",
+    "declined": [
+      "Live provider quality",
+      "Production Telegram operation",
+      "Deployment readiness",
+      "Voice/multiparty mediation",
+      "Live telemetry",
+      "Complete crash/recovery coverage",
+      "Persistent Socratic mode for ordinary follow-up"
+    ],
+    "agy_rejection": "UNRESOLVED; no AGY approval or override",
+    "scope": "Independent source review only; no deployment/global admission",
+    "observed_at": "2026-10-25T15:59:21.320Z",
+    "path": "governance/planning/20261025-1544-telegram-socratic-source-review.json"
+  },
+  "agy": {
+    "conversation": "037c48a3-aae5-49b2-9dc6-9dc58a17b6c7",
+    "status": "PROVIDER_POLICY_REJECTED_NOT_APPROVED",
+    "response": "The prompt could not be submitted. The prompt contains sensitive words that violate Google's [Generative AI Prohibited Use policy](https://policies.google.com/terms/generative-ai/use-policy). Try rephrasing the prompt. If you think this was an error, [send feedback](https://ai.google.dev/gemini-api/docs/troubleshooting).\n",
+    "prior_design": "Execution timed out; discarded"
+  },
+  "verification": {
+    "combined_tests": 406,
+    "new_tests": 7,
+    "native_budget_regressions": 11,
+    "service_scenarios": 5,
+    "durable_replies": 10,
+    "prior_conversation_regressions": 4,
+    "full_source_bindings": 928,
+    "actual_provider_quality": "UNRUN",
+    "actual_telegram_acceptance": "UNRUN",
+    "model_output": "Generated text; system instructions do not establish factual accuracy"
+  },
+  "risks": [
+    {
+      "criticality": "High",
+      "risk": "Model text falsely implies live observations or effects",
+      "mitigation": "Constant system constraints, no tool-execution path; live/model-quality acceptance remains open"
+    },
+    {
+      "criticality": "High",
+      "risk": "Identity leakage, request duplication or budget bypass",
+      "mitigation": "Reuse existing scoped atomic conversation store, pre/post authority, durable request accounting; identity and service tests"
+    },
+    {
+      "criticality": "Critical",
+      "risk": "Provider refusal or model output treated as independent approval",
+      "mitigation": "AGY rejection preserved; separate independent Codex review required; no global admission"
+    }
+  ],
+  "publication": {
+    "state": "PENDING",
+    "source_only": true,
+    "production_admission": false
+  },
+  "remaining": [
+    "Remaining command backends and controls",
+    "Mini/media/gateway",
+    "Real provider/dialogue quality and Telegram/browser final acceptance",
+    "Installed NIF mismatch and independent global admission"
+  ],
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alert_io.gleam",
+      "sha256": "888163362b9cc9db1a72a11ffee63c54e28ff1c4d65d5dda4a16a78fd552ce9d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alert_owner.gleam",
+      "sha256": "ac61d7ef679660de208c57b35f5db52bd6167b8057fc5a8d81bda492e219968b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alert_state.gleam",
+      "sha256": "427a0d907fdee285a2a19bb7acca62db2e662665a03d1bc3d8106e56b53d85d5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alerts.gleam",
+      "sha256": "70f399511f9f9aafc4ae0b76c311c3b67e08ae25538de0b12af4988fc2ed0884"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alerts_view.gleam",
+      "sha256": "a740f2ed6590808a4ec2c6fbd89f4d3547990d928e55fe7606a3f00324166a17"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/evidence.gleam",
+      "sha256": "448bb41af120970903f56f675af81da9fc34ac8c53da13b8594408b0464e16a3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/nif.gleam",
+      "sha256": "4abd9ccecd6fc3ba3c7bf5b6bd05e8d3939976dd958916f1097be430d1978499"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/config/mesh_source.gleam",
+      "sha256": "3b987dc72a50168e77de65a7382d143af3f61ae1f634794b3cd3d913e5cdb8db"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/config/mesh_config.gleam",
+      "sha256": "5645f895165b109554721c082f2fba25ee374494383b74b4f59046965661a988"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_config.gleam",
+      "sha256": "f69fe6cd8d64d80a630819253d9d13023e88a5dadc1060459e70f9e35ea2bc25"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "sha256": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "sha256": "d33d27eeb926e08d6cc41bd4360f55903624b74fce26aeafa14fdd99591cee65"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/theme.gleam",
+      "sha256": "9e062ad98897b1a67875d3c7ee25ef38084c781b65dda1da76b497b130ba6093"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_api.gleam",
+      "sha256": "5a7d1d7dc89731b8a04bbfa961498bedbed5ec993b56c15fefa9821aae9c6cb6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam",
+      "sha256": "40d78fb9d38e3299a20733c024877cf29d72bc4e51d9bd26cc2ef50218239174"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_view.gleam",
+      "sha256": "a680a8a3268d45aadfa3fdf36df39f34222c6f45100e2d06cf9aecad0e0a05ad"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "sha256": "54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha256": "0ab5185b90b2dc344a08a06bdb24e08c463d1c8c03ce529475aab2588b184394"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/observer_policy.gleam",
+      "sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/mini_http.gleam",
+      "sha256": "8676dc2e82c77128880216e200f9e68ce5c8ca59a9d7e6741454ec84bc6c50ca"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/server.gleam",
+      "sha256": "63cf813a0cfaa060c1ac081030463384c808ff6f30778584db0c0126a4514eb8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/mini_app_clock_ffi.erl",
+      "sha256": "2ae95a46a3ef3804f52e98f689dabcb5a6a50c3ea7280d839d1c3a41482741ec"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/sa_plan_observer_ffi.erl",
+      "sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_fmea_reader.gleam",
+      "sha256": "4a859f0ad07df0401d8147ee3581d14d05c81acd2c4bde46cd6f24f498c2b9f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_fmea_report.gleam",
+      "sha256": "114df670385b36a44cc7aee973d1a14e4281cae54523035c8a57daffddd74553"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_verification_reader.gleam",
+      "sha256": "ca31233ab9e85084b00db39d0bd549667e01b33a8875e95febba611fddb19663"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_verification_report.gleam",
+      "sha256": "ddeb57832206a77b73b16066b94977e3e4613461415cc8f325ab6304075cc4e4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_evidence_status.gleam",
+      "sha256": "8a686164d64e1fe67e578f8b9c9521aa186ddff4ec2920860c64efc185a916f8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_knowledge_report.gleam",
+      "sha256": "b78025ee0bebdb6c13e8ab77f3de3a0eb5bb80065004a7cc44ef63d8b814e2e6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_coordination_binding.erl",
+      "sha256": "1202cef3f8178590fff6108d64bce1485b7a165cb17e973b12e94540602c43c1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_knowledge_files.erl",
+      "sha256": "5f147cf3ee85d6a7a7180dfdf17ebdbb1e2a5479efc50af116060bd085d3ec97"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_risk_files.erl",
+      "sha256": "fbc987dd546e39d5b9ae325a5bcbd2d124d8bb225fd5b3eb15906017de92139e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_ecology_clock.erl",
+      "sha256": "e4383e9ee480d0543cb1c73e9eb61ea03b1f1abec1374e162dfb51c78a561194"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_evidence.gleam",
+      "sha256": "1d57d288b3f0596dfecc71796c728189459e3310410e559c26e90fb4604a058a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_podman.gleam",
+      "sha256": "9f90fa726b157135aaefc9d186743a7d49d989d868408a1aaedc3ff553831bb7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+      "sha256": "b34aa180ed8de68fae2e8d5d86b1b12be60b194785e1f068e4ebc873608b8786"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+      "sha256": "3a0ab49fcef4f2d6133f38064e8e210d2156a31580825837da109926a3647e5f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "01921e5aed5b35c7a52ef8f3b0b2dc7c8e4d2f939854636e7f3e985a52f10f97"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+      "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_task_command.gleam",
+      "sha256": "f3b3ffd11e59914f0e34dcbc4aa2cb79c7bc1a31f691a7f0a7b465f868729b56"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "sha256": "8cb98e95619bebb0f3a3fb27df1633a21f4afa62de33b9f8b757b4b5677b5a17"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "4b4de2be6c2b6bc881177ea190392ebdb8bdb89eeff02f7ee3d13209c5b06825"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "8006b5c486a4e14da726b8c025b70cbae5affdb9383f8f2c22a4443745830a01"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_conversation.gleam",
+      "sha256": "0820009af0a868918ab2c0e86db786f83a21b4929344450a49447283f943a762"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+      "sha256": "401507e81b84ec3674564a9296820b4ea6013ba483fe3f4924a0a614fd610ea2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+      "sha256": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+      "sha256": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_history.gleam",
+      "sha256": "41e2d0ce788d725dd30eae7e322c21d622015aa429550fef29ca3dcd764ee2fd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_health_view.gleam",
+      "sha256": "929cd78c5460d26754174d3771c9a95ccff1a576233831c2c725dfaf22e4a037"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_health.gleam",
+      "sha256": "ddca53fa2b77245599f470e9d9b18587a43c8943f56645299e21aac00e146f5c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_chat_view.gleam",
+      "sha256": "e4cdc6ff63046b9fa211f2097df9633b642dd050d74981d6a6bb022d9d42b4d6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_memory_view.gleam",
+      "sha256": "10f549fad6e412bb6399242e7103f8f3eeced727e8578456dc61a94181aa6f54"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_memory.gleam",
+      "sha256": "ba5893d8549c7d7a1648ff10c6c69f549e0b5d06164396d9fc0f1004456b7959"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_control_view.gleam",
+      "sha256": "27b51fbd2f59fb7f42cf7e75835d3e5e0b8a80d3bc14da6680450dd77fdc137c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_control.gleam",
+      "sha256": "45a8dc3d152ec9dde3033253582e028c880db5098c3651087fe7f1351df4ab3c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/mini_control_ffi.erl",
+      "sha256": "73513c47d080b1cf574a9cddfd185b40e29a88555e76abbf085573cf6cd964e8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "sha256": "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam",
+      "sha256": "88dfc26eeef7a32f8210d6d5f2b98de6bd8822bb3c22884d5730019ec861d4a2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "e0d3c51f7a935ed3feb3d5b7eac77cdbb87559b61fcc7f770f45f0fa01b71a07"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_telemetry.gleam",
+      "sha256": "20dd59b0eed6a3e189394422093ff8ebb5a7754d0c4b8b3646fcd12ce67fabb9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_telemetry_state.gleam",
+      "sha256": "5bf8a9fe9d860c24b9f50c568c5b860f07e16849e6700e20209bda340f8094a7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/mini_telemetry_ffi.erl",
+      "sha256": "89f208c80dc1cb8653eba91094b0077a84cd8e14221656a2aaadb7cdbdf300be"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_dashboard.gleam",
+      "sha256": "93ee2969198740244606ab022fdfdc019f19f794174a8eac886b939cdafaddfe"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/beam_metrics.gleam",
+      "sha256": "1839f3c6fd6d557d149bbde57ddb2e182d4ce7ab392131542ece01c4a8813ec2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/beam_metrics_ffi.erl",
+      "sha256": "d8221a8ab90ed730500791629a12c0258103ce6742f50ffa4b53140e73791d27"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_coordination_reader.gleam",
+      "sha256": "1e2843116508788c2ef0dbc34181f5ddbfc2aef15c4a51bbb6a2c6abdb8f1e40"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_coordination_report.gleam",
+      "sha256": "0c8671457832b2173e437cc58ee1a29b420a4411742e7ed401339182b331b09f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_status_probe.erl",
+      "sha256": "b0f25010e98a5dc13ceda2bd8dd47e1c9773eebfec9fd561b8bc87465f35a7e4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_zenoh.gleam",
+      "sha256": "97d05c6846f8acca29a5ffbd8123cdeb1969fca32728a1b3bcde8c7320a6fcb5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/rest.gleam",
+      "sha256": "22fef0d577ec8e50ef7605e9bcdc06a9b1618dda4f217f50dce42a228789e429"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/zenoh_rest_ffi.erl",
+      "sha256": "4e30b12ce22f51b557020e42741bc9812a3bb501f54efb75304824acf0191c09"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_action_intent.gleam",
+      "sha256": "c17b868d1d8c409e2ff600a0d5d6a413789b56fadbc45e66db5c611c294b1ea9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_action_packet.gleam",
+      "sha256": "ea0798db02df9e0070678f9b6b607c0f72f42c8bb36dbc587e927cc70533236f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_action_profile.gleam",
+      "sha256": "264cec7790f0e254099249d99dac4506f71ece6398bf3b1ad381bd648c87e582"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_action_proposal.gleam",
+      "sha256": "3d4d0e97bfb06282e983a2db8565acc8c2695b634a07ac57c9b8916ff1832811"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_approval.gleam",
+      "sha256": "a011f16fe14b74d848cd552baa52f9ee892a3f46b5632feec9c46dcffff494cf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "sha256": "ff5e365a34c14c2fe419e426a88d0bbda5a3e7a7eed61517adbe0d7949fb04cb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_bridge.gleam",
+      "sha256": "576ce2ad27a6c3d17b1bc1ae8a812108df3ddd9a5b05e323e57226ea66d654e5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_budget_report.gleam",
+      "sha256": "a266ef2130a722975268b50b926ea3282f9ac054dfc303c7d656b7b33565ec92"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_cancellation.gleam",
+      "sha256": "383c251f7aff672fa8738f3a1f4e5b8f6f5ce00da0798f733e0d94982aedb9e5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_cancellation_record.gleam",
+      "sha256": "062a9a526c4f56826d53eee2ffd8ceea82330f79dc307a11e809e2a51f5604a5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "sha256": "35f964a46a1249004a978b5c1f6b94eb45ba18451f6081d389a8664f4cc000bc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_conversation_model.gleam",
+      "sha256": "09040bf9143829d2cf475ec2174d712b58b155b041547d069d3a4233594d0f73"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+      "sha256": "544ed1528d28dd3201cdb31afe03c0a1512ba2642844c60989a106855029ef96"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_dialogue_command.gleam",
+      "sha256": "97efede9e7f62da2a7c42cd0d150ae6b76e029a067e260ab3ec9645ed11d1248"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ecology_reader.gleam",
+      "sha256": "7fd15f4e98f6de98bcf5fad3af6bfcc12ed0c2f85121edbefff54f93da848d1a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ecology_report.gleam",
+      "sha256": "d05ab525de968690e57a7eb5a313aa1dae7e6bffb4382e4193785a8dcaca8e34"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ha_report.gleam",
+      "sha256": "894de2def9d476346efedd86214970a0af5b8d72df641c1cdba8e0fa3db2625e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_host_observation.gleam",
+      "sha256": "1033f780276ea92b1fad41624d6cb727a3507da0fcf50af0878afc581e0947ab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+      "sha256": "da07dcec3e76c147506d2a4c931eaffbc862f6276bfb184797d0ae9b7c0d1b15"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_impact_reader.gleam",
+      "sha256": "eaceb76a8af84191dc0f03f21e0dc2eb4264bf7d99b28a9a159128f065cd982a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_impact_report.gleam",
+      "sha256": "b11e8eabafc80a3f6d7b4f4142ce39f918508dc2190eabe0f443a0625e2ccc06"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_knowledge_reader.gleam",
+      "sha256": "848f8f0b02010c9300b74ddc2562855b899905050380c381af325a8d5794c3fb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_loop.gleam",
+      "sha256": "2b59f6ba83856e377db6713fcedaaca10551f907d0eb4d8d8f6ce3d32f39d669"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_matrix_reader.gleam",
+      "sha256": "c024be2d3d5d5d9417d42cfeaabe3f33bf2c3ffe6446abdbf47a1c8c59083926"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_matrix_report.gleam",
+      "sha256": "a1233a9e3ff051d470114f83802264653fc7e3c3a56d5ba43d263409197a0b26"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_memory_command.gleam",
+      "sha256": "a68cd4f965afeab649c534e3dc590c4129a7cbeee067212ea05e39330d9031b6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_openrouter.gleam",
+      "sha256": "056693785126feb0a63eb8261b55bdb72c4e36c7bc43ae6050732283e88226b5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_operational_status.gleam",
+      "sha256": "c36e7915dbd5e7cd5a8ae1bb799c372eb478337a9fb57b76a6bbc7e38e5cde4f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ops.gleam",
+      "sha256": "db6ea74005e33eac95a57eec2d0370409fc6ee313231373d9e3440f7fa9a477d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_outbound.gleam",
+      "sha256": "cdfaecd4eae4b30d15b2ad5db58dd5a2a2a38c5009098dde3417f03546647e67"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_poll_rpc.gleam",
+      "sha256": "9b4f154bf5e728c45a7109f09140aee2d685fb09fb6d6430c8c6dc05a1e1f29a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_rete_report.gleam",
+      "sha256": "5809a09d43f0ca88fa8704e161a59d30f4e8d05b89e297e861be564f05c6718a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_runtime.gleam",
+      "sha256": "e0d62dba19f20d783f52871e80ea39158a0ef20a6b2df996a9fd0780eaa94212"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_search_report.gleam",
+      "sha256": "7737b638f1605f3ed999cea2df99ae4c805d32d017572398044c98b82ec0d729"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "4faf99a57577bbdd3714883e96f2835579a3b42262f701991ac83df40bbefb34"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_simulator.gleam",
+      "sha256": "452a420b08ba86d0f196ca6d61fe31f80901e96d31e81ba3190a62ea16f659ac"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_storage_report.gleam",
+      "sha256": "77dffe73e5e807f5e8f204ddf764437f43ff2613e1d0f2ab4f3ef7ad2cc116a7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_tool_command.gleam",
+      "sha256": "9fdac21a4774f1c6ded30b9801b687cafd77178a225198480352efa800e2b8b2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_transaction_runner.gleam",
+      "sha256": "4f8f4255e8dab3e25263a4ee9823438173e0a1c285499d9d58c1705c38114d85"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_zenoh_report.gleam",
+      "sha256": "96635e6f8c7e8c9897ffc2bee0c35141316dfaa0eddf86a474602bd63d28faf0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_budget_clock.erl",
+      "sha256": "4a3aade241bb8b12b4f936472383c708be5380dee3bc3e454eb2ab39fc2e3875"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+      "sha256": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_http_test_fixture.erl",
+      "sha256": "53f48ddff2aa848d52b4eaa0e44e71eaa81797b2bbf967bd29f2cd7abc89f967"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_matrix_http.erl",
+      "sha256": "444a276be86bfbfa4952fae04264a0e09038becf84616c6888147baac0678521"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_service_ffi.erl",
+      "sha256": "56e31261125f454c44c0a194fa28fcd91d72bd602b2958393274f1747984efe1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+      "sha256": "1fd672630e6f7e4d7b34572c51c1709bd54dd13f4faabbcce4f9d0421275393a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_test_runtime.erl",
+      "sha256": "ab24bde30452b3c7e588274ab964674935556118cf171f832839c728e035267b"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "aada8173fa33c3761b6da78da7b062b1b36aa3f39530228cbf3565d1f2765610"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+      "sha256": "3acda160c0b62993c068b28a88b6f355675eab8c4e866c6d3d514538d4a83d94"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_alert_owner_test.gleam",
+      "sha256": "31698a100080e5862e90d599ce090de03836510d0870d061dbc24302b92e6d5f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_alert_state_test.gleam",
+      "sha256": "6b620f42f3c6441a56993239a5b08454ef920db9ef78aaf171ab3a0a71c4bdb1"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_alerts_test.gleam",
+      "sha256": "5814c1745c16fd35c58bb8f88797f1f4f06ee817064451cdf2eb1d68f9c88358"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_config_test.gleam",
+      "sha256": "e1bed9c985ff8da62a7c33c00c6f20f194e714676bcb5b1b7b8c6e225516baf8"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_health_test.gleam",
+      "sha256": "51bd026ca261524ce8b3c790058cb29887b1bc23c92c500419e506cd8784d739"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_memory_test.gleam",
+      "sha256": "e97a4f034ab4b23137e3efe21c055f6dd1709f628021e1491c5fdfa95e8b04e7"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_control_test_ffi.erl",
+      "sha256": "2e9b67937d1bfb1eddb471a0f48cabd319bd1837873d3dd499b77bf3fc9f9983"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_control_test.gleam",
+      "sha256": "a5475ff889979c3a3fe7d1f9d06bd7b7cd8ea005b71e0b5c0c727d1e36955c6c"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_telemetry_test.gleam",
+      "sha256": "a40597197c4b4ab39a217f740b10f9254531ba59c9958b92d9af8829d0d7027a"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_telemetry_test_ffi.erl",
+      "sha256": "6a1decab5386b903755f910132898ff45b88ba84d90e996249606bd86691cfbd"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_dashboard_test.gleam",
+      "sha256": "5bfab0660b7a48ccd9ebfdbd03ea723ef880e1265f04d177fc417bcf85a12fb1"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/zenoh_rest_test.gleam",
+      "sha256": "062ba2efb61d9d93800c890a6a17b8bed9c1a084c38f572dde4d6abbc5a0b212"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_zenoh_test.gleam",
+      "sha256": "6e3c5f9e4474cd0c16fdb36d7e21785b5d680c31d340ced3d83efb2269725f37"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_history_test.gleam",
+      "sha256": "45e395d5df583fd1ebd74d75f2317150f55466f016d8c5268f1627b5e77cf619"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_podman_test.gleam",
+      "sha256": "4ea113a4f7c9ccb9d66e4d52cd97fab06c0cb7258b5eff5f958ca8199593a2fa"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_evidence_test.gleam",
+      "sha256": "95eacafc5829b46dcc96cac4f3223950940e9645bf18d9b110bbcd74e9e826e4"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_boundary_test.gleam",
+      "sha256": "0658dbf8dc548d3f35ea68eef17cef07dc0221eb4ec81873ad176a0f0d558e22"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_test_vectors.gleam",
+      "sha256": "9971e29356fb53cba88d9762bef68b9ffea5e881c51cd611e1216664eefd36dc"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_boundary_test_ffi.erl",
+      "sha256": "eeaae1f79993bf5a1e917946d16f20c2bc63b8ecf25e66712fb4420ed8937ba4"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_dialogue_command_test.gleam",
+      "sha256": "c01816cc5aee2e627844784cb63ffacdd13625b1e30deb9f345895e196f6e83c"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_impact_report_test.gleam",
+      "sha256": "3450dd1552339d68d3d1a1a610ebd8b666e224948986ef82b78c79bc14a79eec"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_zenoh_report_test.gleam",
+      "sha256": "0855380e982a2c771e983b35cc8b54ab82805425514bb2121a6f00d436cd0246"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_chunk_test.gleam",
+      "sha256": "88559501afae2d8bce5cc1e82311f9aceb30844d469cb971064d317cc6b28a50"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_budget_report_test.gleam",
+      "sha256": "8f93967e96dc658774d7d82bfdd70e0a937c592a2927887f6aba9ed9d3c364f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ha_report_test.gleam",
+      "sha256": "5173d6680582ce1300ab11e5abf8be3c8e2883923f6b6d7f7eba319b93933ca2"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_bridge_test.gleam",
+      "sha256": "893ce4210ab92c1402e1eb177c59cc76dec0095f6effd810a094d307faad67f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_action_service_test.gleam",
+      "sha256": "88187ced7ef8999495a09698befb69f0ad3f73e4ff9a10c7572ec014e480ee85"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_commands_test.gleam",
+      "sha256": "eba5691fd115ac7739202c6e532ff7ca10cd5eca20f75b894516965b2fbc80a4"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "sha256": "0d5ed0b5f06bab3a14cd59fbd3e81141465618bb2328731f28cb4950a52830bb"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "8da3d821ba082a49ff477014f69bde9307c987f7c36db47c6154bd812e63b8f5"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_task_command_test.gleam",
+      "sha256": "1b5a887e97cf4289c35ede920180f1aab4a03f84589a1c4ea600512302278e2b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_conversation_test.gleam",
+      "sha256": "240d956aa7b1d3d9477d1f853e30d4fad4e3176ed9a3b3d42a986272a3f9127f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_memory_command_test.gleam",
+      "sha256": "fc4fdc518ff68ea78111abb7c8419960f6f2b991da4b41f1e9c64a9dd9e12d66"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_tool_command_test.gleam",
+      "sha256": "30c8c10aca583097261874fcf4d90ebaec80d719965fdb6d5e9538c421d37c0b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_cancellation_test.gleam",
+      "sha256": "fbddc66a4010aa1a5eeeb494eb0bce146a0546f45680ee75dd52adf07fe9f19f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_cancellation_record_test.gleam",
+      "sha256": "98956be2f13758f3ef5c79cb0b84c80db33dcb0ab4250c29fb8cf4dc8e65fea3"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_action_intent_test.gleam",
+      "sha256": "5d4ca87bd9d75f8554b8adc81c39249fc2b8244102543035c385827d43ea2789"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_action_profile_test.gleam",
+      "sha256": "22461176dc40a7f0dd56a123e4a7b417a79b488cfc204bd7df9196839b53e682"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_approval_test.gleam",
+      "sha256": "c3d4454cba18198cd29bbc6683d1108f4fe7821214811530181991bf698a170b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_approval_test_crypto.erl",
+      "sha256": "29ef1772ee61be7435a991426d8178b05ed9b65c8d46de303a1da1f4487be5a2"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_conversation_store_test.gleam",
+      "sha256": "2d7834a59dd5427db68523324ae41e830934102f853ab7a27642f2aa68d06102"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_conversation_model_test.gleam",
+      "sha256": "5c846e6e2fd285272c2fb13f6ec6f5b350add8fa2f9984fb170562c12770c63f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+      "sha256": "04b61004619732bc770a406b440c881a6185e836af3b5d9035b080b59a74bb3c"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_conversation_test_io.gleam",
+      "sha256": "e8af1ffc9a46a45d9aa4fb235a0d211d1df4d482a1174b07b2531dff8f7bbebb"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_verification_report_test.gleam",
+      "sha256": "989a6de828d09b327dda00d67114aac207ff0d33d518466c9b567bb2c56c3e69"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_managed_action_test.gleam",
+      "sha256": "7e56025411f455359aa0011f7b7c8907844f0e1f8eea557cd3d12310f082164b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_test_runner_binding.gleam",
+      "sha256": "7093e0ca2235737a3f2a95051aae5a4b9dc5022acfeffee5a4ab210e244627b0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_budget_test_io.erl",
+      "sha256": "18eda332a683556972b2ac0b1de6b0a72fa3b4cba9e9a3f0a33bddbb05b1fbb8"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_coordination_binding_test.erl",
+      "sha256": "bd9f9937e4bf31d8cc3fe9f00005e1f0cbe32405d2fbf98e12d3cbbfeaa64092"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_fmea_test_io.erl",
+      "sha256": "39f522db1c1a4d353aaae24cbd5f920b7363759dd87b9d44cf73854b8b9115e1"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_knowledge_files_test.erl",
+      "sha256": "8c3cff40ffa6c6bf64df53eb5bd57763a3a2d2aeb7488a6d9b26fb341bb39bab"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_matrix_http_test.erl",
+      "sha256": "f64fe03b9ca301f5bc1303e710ad6129a0bc94af30d7e86742f77d82753a4984"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_risk_files_test.erl",
+      "sha256": "fb90d324920585784bf31960befc56a1b5df8d5b9668329eb3c12643fa1ed339"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_status_probe_test.erl",
+      "sha256": "a676f8a8192c419f5c7d11167beced37944b0629b596dc5ffa9c7a20ab741690"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_status_test_io.erl",
+      "sha256": "4e136a5c1b23e5faa5e31d0c9729caa0a5dad028125d314d9dad9bada1792481"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_test_authority.erl",
+      "sha256": "88a26bf0e7a6cfd5c168140623e0124be2f5894b34f272e82bffc11f05ae2afc"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_test_runtime_test.erl",
+      "sha256": "9e0abd187a14e249cb731ef055206cc7dc4cc922ccb41face06d1c0e475db506"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_zenoh_test_io.erl",
+      "sha256": "acee523e3fa56d6490e1432718ccab090386803595199b072ba9bbfb7503ded6"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_memory_native.gleam",
+      "sha256": "c465a874ed6deb2b4ef53415e8d85025733e71379f21a3630dc5a6efa1c7815d"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_history_fixture.gleam",
+      "sha256": "ff602ce1932890e8d639c8b799743fac3cbc319a030f75c6326cd75a19db8729"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_http_fixture.gleam",
+      "sha256": "5ea687eb57b909deb4333e47f46fd5a8cf44ade3699fe0ff663f42762bd0e6eb"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_browser.ml",
+      "sha256": "38d399bd2a20def3195c7ac0ad61575657f12937604b4b6415f927ace97e3e2d"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_health_snapshot.ml",
+      "sha256": "cc69fb4f684d0578f8796279b86c25cf716515b65164d1a4d7274dbce028bb14"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/config-http-tests.js",
+      "sha256": "129b9c30b98875d30314c3cf49f455706d231b3c9398c0fae5e287f3636e0b64"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/alerts-http-tests.js",
+      "sha256": "9a43f2a65c23057e22329f590a884c5e88a7fc5124a23928a857a6f85f5b0f2c"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/ack-http-tests.js",
+      "sha256": "f6c2c4026c3e9e0a5e972b4d36e7c421e5b1d888a9968ce12d6d679137325717"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/budget-native-tests.js",
+      "sha256": "60f7ebab59058a4deb0c54a250fec0ff59da8b47b5a1cf60edd102807c643076"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/health-native-tests.js",
+      "sha256": "a271e8f76b6c3657e5da9deaadad0052b533a16c2f3bbeda50ce18cd1539934a"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/health-safety-tests.js",
+      "sha256": "c4b7dfbd9f57ad267aa003499417e263424165e2486aaf8f9d4faa3edef59a45"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/health-http-tests.js",
+      "sha256": "bfe0d84042fb5017ad83c6e20fcb6458ef08edcc6e5a394903dd73897fb68c62"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/http-tests.js",
+      "sha256": "993eb304019d2e5449c1133477e89e050f7e0cec23cabca012ac05a4890e0131"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/podman-state-tests.js",
+      "sha256": "aace5016f33809206868138e0daabcceebc5ee74d885d0c5bdf821d71f944838"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/history-state-tests.js",
+      "sha256": "74b35ba09290723770c9b5575489a23578d2442b98aa3019f53cb38b6d0272f1"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/zenoh-http-tests.js",
+      "sha256": "a74ce09b34f5ab3dab4e5b36bc47e1c703b18d88dd8637f5ac8d2e9ea440e085"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/zenoh-state-tests.js",
+      "sha256": "d4d4751b33377073710660720b5804acdbddba918aebfb8fdbf6210eb6a081dd"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/dashboard-http-tests.js",
+      "sha256": "17fea45ef3e4fd9157ed7d2e46a3888285c5f0ea6b20d71bf069ed07d69400d9"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/dashboard-state-tests.js",
+      "sha256": "86160cf25a22c1c364ca0b0066b8fa609cb13a418f66acece9252f1e664d74fd"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/telemetry-http-tests.js",
+      "sha256": "a5cb0d4ca3ff31fd17c354de698e829d4d60034020be99c636a2053b13057b40"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/control-http-tests.js",
+      "sha256": "537ee87b4193b630897fdd4343a7f2fcb70b372908e9759c596c848299c8a14b"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/control-recovery-tests.js",
+      "sha256": "c25aa0fd85364f147e8e85f77c6abf90fdb265df9964e92727b54c5ecfca6dbf"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/memory-http-tests.js",
+      "sha256": "c3e157d9cf5a1a8fec01741f10fc47f02bf1e64da4ea259890430591a9b69f82"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/memory-recovery-tests.js",
+      "sha256": "bfbe36320461c34ec75ff6e0d81ef87ba08bf2594326071aa32758a6655105e9"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/chat-http-tests.js",
+      "sha256": "73bd626f7f07628ee66ad659f1e370c3a10144a354a2a077b579e6194ead7890"
+    },
+    {
+      "path": "tools/ecology_budget.ml",
+      "sha256": "ace59ce098625963394ce1f0cbafe07ca732140086ba1d63d488565caaefacb3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/agy_dispatch_cli.gleam",
+      "sha256": "3dae3e0ca4c1ba60f7ff3906bd84d25c75f1197721eab9a94cc1513070f766e6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/beam_cache_ffi.erl",
+      "sha256": "4fcec97c804cedf9c1d673f16077f25e479a0d7afbabefcbf59dc3f0e085609c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+      "sha256": "5425ab58076effbcbc721522d6363ff8b2172dec23c6fe7f4675ed155115c5ba"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/c3i_ocaml_nif.erl",
+      "sha256": "b54a620420359e7c407f7affd7d5c614d4df051323059d2a650170ffc971dce3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/bindings.gleam",
+      "sha256": "3467a0d3c7bbf761c7260446c4a3ef63cea8dd235fec0b42d6a6a3c731c59d77"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/catalog.gleam",
+      "sha256": "5533dfea2c892d3941a84ebe8e9ee630889e4ffaba5c3c2ba32c72403b2a39a9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/core_catalog.gleam",
+      "sha256": "b46484b211c81ef891b8b1b2e085621f5954aa47cb1bd8802fa4583979b2c0e6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/lustre_renderer.gleam",
+      "sha256": "f3525a590a64eece7441e40f0bf9d8174402ebc47f7eb32267f2622cbf0265b8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/renderer.gleam",
+      "sha256": "2087d0d8a2c9f44edc6d46f88cbc75c372feba3cb79bae8276b2e8e1560a4556"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/schema.gleam",
+      "sha256": "fc5778489e8cd7843d391dc49d535c4989a1b46d9566a7b2367043ea895c44fa"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/validator.gleam",
+      "sha256": "0fa3af686845c46b62f34a5a48862edcf9ad2c33677b0851025c1cd017c70976"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/wave1_catalog.gleam",
+      "sha256": "edc1a2174c6f9cbd76d190058acdc96f785d0f477063156997d3f7a58f69f60d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/wave2_catalog.gleam",
+      "sha256": "caa5c7be17b12bbcf572728589a968446bfacb8f6516ee44acc6d51ca6db434f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/actors/cpig_subscriber.gleam",
+      "sha256": "6c28627436093f690edf744da01d1bdccedbb6bf7ebf4cbe15905872b13a48ab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/actors/cpig_supervisor.gleam",
+      "sha256": "fb7cf0de262f4e3516de6bf3cd1db2b0433f7918a3f4055905687198410f8e76"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/actors/freshness_actor.gleam",
+      "sha256": "01076bb65a199e333a7b2618b82bf537d3c8e87224bf7f695fc50b6cd1d34442"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/actors/guard_grid_actor.gleam",
+      "sha256": "e9b2ddc24a15f8cf23ed1917bc10cab7baf15d52b689f8724ac56e882b44b9b4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/actors/observer_actor.gleam",
+      "sha256": "e2a5d020f0467a086542aed493778e7f02004c424c210802965ec71bfc6901d9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/actors/pi_subscriber.gleam",
+      "sha256": "8f23d0ce1b6d377ac954b3907ef7ab3703199f11f8b506db49cf7dd73430b14b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/adk/adk_core.gleam",
+      "sha256": "3dfa45e49466c83ffd8f2d701749e08d137e6009929317586d501c42161cecb1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/briefing.gleam",
+      "sha256": "b7896381d432b705662540a5cd2ed553433bdf0b868c12d142c67c2ab670917e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/cortex.gleam",
+      "sha256": "50b56a74fe345d80df68b915c7ab502caffb2fc5afc17e916dbbcfd3fc7d5f95"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/cybernetic.gleam",
+      "sha256": "0c5ce5b428c94d08340c80ae5963a975dae56b661d38b4083b99f080aba921e5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/cybernetic_legacy.gleam",
+      "sha256": "1a46c56041ad642a75b954b5ee0cb837a1bea3064dddebc29404c158dfa7c20b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/hive_mind_decider.gleam",
+      "sha256": "c2174366cc83a154e814b530ab9b8f8896bda4467b29b28f019ba4062c7b374a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/leadership.gleam",
+      "sha256": "74dd3aa2312539a9677d4eaf349d297d88e31a6d206949bee932923ac06334e2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/ooda_fsm.gleam",
+      "sha256": "8435d25b2601cd6b18d40136e1abce37dce85b8a9b537641429e3126a4a18b2b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/ooda_shruti_copilot.gleam",
+      "sha256": "b6f299f29f9d8ff8b387cdc834a0761edc4ee49a6ccec907ddba2568e7c4c490"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/shell_runner.gleam",
+      "sha256": "dc23fabc674b01c576b44b6a51a51e3a5b802e17c46dd0eca7096cbdfc24b974"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/skill_loader.gleam",
+      "sha256": "b9e247e89964fa0cd84017eb3766fff808588a02092fb809e36973f4ca24eabb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agents/workspace.gleam",
+      "sha256": "85f5c47d60247fec1c562272c35eccb44379ec2fcb090294c1bc39b1de7f7bab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/event_stream_widget.gleam",
+      "sha256": "1492a907c8d61958355f2eaf9d025469a3896357239b63d960cd430dd7b03f04"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/events.gleam",
+      "sha256": "dda2370ca785c4830a045a2301ab795bea724c5a31f3462d490e4c46080af176"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/sse.gleam",
+      "sha256": "d040976db6e2ba33daf2c136f70129280e9438f8d86b5e407de5e4281218f3cd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/sse_stream.gleam",
+      "sha256": "5eaed9527ff3bd2f3f486a6ee6fc367ca4fc07c3fb33d759db38ab5e49982aa6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/state.gleam",
+      "sha256": "49bdb832e7356e191c7d600e1821e372c7bcba274ce69e584e8fd0f5c1b69f0f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/tools.gleam",
+      "sha256": "1bb159782a6a45dbd191d1db1c8765e0b5c29d26578cd6f413539289a83c980d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/zenoh_bus.gleam",
+      "sha256": "7ca89c58061ea256a05da4194e7688509aac7c564076d60ad0b5ab2355f5ffbc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ai/distributed_tensor_monoid.gleam",
+      "sha256": "fbb7adbd08b821bbfcda17f926acc48d8056754560fbfe2bacfed44ecf28c4ad"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ai/intelligence_router.gleam",
+      "sha256": "66f31e57e92500f70a9a673dca4383faa8eb71b988956f1e7f96f4cf2c38eeff"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ai/max_simd_scorer.gleam",
+      "sha256": "4d1e1c9e2e08fd2bf05338dbbf154236f64490eef657f2c4ad23633e40ffed52"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_api.gleam",
+      "sha256": "d143c8ea422b8cea49df4bae423c9e7e79e3bed7bcad03874460247c98cd15cd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam",
+      "sha256": "c2827ed8cff9179b310f686f6abda3534f7a66bf947b54cfa6a1e1b261b0585e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/ferriskey_nif.gleam",
+      "sha256": "802a64832923fea54c0b2313a019eda3b367ef9f30ed51351c0d51aa4c6efaea"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/oidc.gleam",
+      "sha256": "c83d26628e912765751f2ece759c9826d498079ac143e0cd7ef9ef81d6f85dc6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/rbac.gleam",
+      "sha256": "112cb69e8e028d4861a05eb15e869efac08165dcea0bd73e0acc2c887522154d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/token_exchange.gleam",
+      "sha256": "c62dba64b1084ae5101f27564ae4fbd5be082f886fe3ace6d5ae1a1eb1a22077"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/vault_bridge.gleam",
+      "sha256": "6a70f2222d0056ea78d6b87c4055650ccce6b4ff8466e37530a5ae96f36aeba7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/commands.gleam",
+      "sha256": "09ae5b93178c407abcd70952debd5d1c3f0822295fb245c497047be98bba85cb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/jsonrpc.gleam",
+      "sha256": "14c697e458421dc7e3d769ef7fece1f1db54c5dce574ada82b3ee51002e6176e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_agent.gleam",
+      "sha256": "15efcc2c376144e0191986419b7717573f88a429d7ff95e607e8fd94c46f5cf3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_claude_code.gleam",
+      "sha256": "d6fb657f5ce1129a978560216f2be20bb399678e0d5a0dfedd27560dff38c372"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_daemon.gleam",
+      "sha256": "745ca4ec9e162c3239295590686d0caaedf6b2078adedfd513a5e839189935f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_provider.gleam",
+      "sha256": "a39e6fb33a909299724529b751c830ecbe4878c0ccfc2595e40d3d531bd83d93"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_rpc.gleam",
+      "sha256": "9e6f042b12510c543422d89e6fe858cec13b79a4f1c998990f4fb065f46f1c04"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_runtime.gleam",
+      "sha256": "977389e77d84e79e559ace9b0ce5acbd49e701478eb4e5f3b171991b46e5b801"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_session.gleam",
+      "sha256": "5cce6d7976cc8c5e84d519572e1a8795a1910f8e41445be728afc4fc5ccb4dfa"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_startup_classifier.gleam",
+      "sha256": "c6113f46d6e008bdd2370f922e6991c337c6ac47f079fd6b11cbe977ce7224a6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_supervisor.gleam",
+      "sha256": "61ba1d0cb925c70bb3990fb8fb872304e97a58cb0cbf14325a3659d06f827667"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_tools.gleam",
+      "sha256": "9679c8b341e4eea37025335c736d7e6280e29053cd8073e3a8f1ac92bdf5e8a0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_zenoh.gleam",
+      "sha256": "1e3bbfe54320a2cfba4cdbc30129ba26c40dd18bc1d9fdb15680259e78290765"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam",
+      "sha256": "c0cc9b1e90d9fe52577dbf53886feffeab0f25bb5b16ca258bb4bba1d857725c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/ocaml_nif.gleam",
+      "sha256": "72996bdddec448a91bdc3fab6c90ae9ed3045e1b41f34ffd2e564b81dab94a93"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/trace13.gleam",
+      "sha256": "89532e2c7d2f3ba9e59902593bc79d9bcda1b8c6a4d721531e30f1348f325acd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/chaos/apoptosis.gleam",
+      "sha256": "76597909ec3235b1642bc3b22b54dd9cd87f51dc2f5fe10435f9b13df321bbf6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/chrome/browser.gleam",
+      "sha256": "a4b563ff1ed31e08159a704f5716d2114d6b189e56f9a20a673f0a893f720b1b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cockpit/domain.gleam",
+      "sha256": "52fd861149e80b213784ba99132a6fe65f7c4c1e3e5808362e98154513b6fd6d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cockpit/visuals.gleam",
+      "sha256": "fd1799b18adb1de1e1647460371633b7ec3feb47c5b4fc4702cf71587fbd4e63"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/config/constraint_sync.gleam",
+      "sha256": "b1092d4013ea95304bafc37df98b0c9208dd35a4e035bec80034519762f4f83b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/core/boot.gleam",
+      "sha256": "b5bc067339a499a8de75c02e3e9e4319d4b268ff071719cb2a1d9286efcd0df3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/core/ids.gleam",
+      "sha256": "d6e768fddb3e6ff9f3490a12b5237878d8a0463d0565b3496e8ed0644ae84c8f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/core/result.gleam",
+      "sha256": "3bd117b6f84fa7c149fb99cc4e76d8dcd1fdc4a4cb7f61db7f846f34b049e961"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/core/types.gleam",
+      "sha256": "9220672964af51fe88a675f0d6247c9f3d569a6010e17b5fe8887db109fb23ed"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/circuit_breaker_pool.gleam",
+      "sha256": "65cd9e46427ac5f657c91fe62a93042475cb9334d420277059dde442c56a9c0b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/cortex_denotational_bridge.gleam",
+      "sha256": "0d3935ec33bfd058f39fe5c44a478523c0bbb967849caf6edc0e21f57d638daf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/cortex_nif.gleam",
+      "sha256": "d979f057859c9d143b98159e471b4a632c2e2011120f3f88f7584e9a4824b729"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/cortex_sup.gleam",
+      "sha256": "ff10860181f67eb890e5e0b61196a00a3ac0bcddddc909ff712d5c05acbd2464"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/cortex_types.gleam",
+      "sha256": "b49244214de7d7a66cd56024f0d388ad8abdc0729cd30bc64bac01fd7cb336a4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/hedged_cascade.gleam",
+      "sha256": "b91ca123929292f102661998320d3749326a500fe993c94e11d21364ebc0ce5b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/ooda_actor.gleam",
+      "sha256": "d7de8626c4d82fd2746bc8278e4bc9b409d9b4325ce8f5d29c5e8b80dd463e4c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/pipeline_tracer.gleam",
+      "sha256": "de700ef1c735e40a841569ebf298ad0fd4033f7c624942c37dcce88eea9fba02"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/cortex/poodavr_actor.gleam",
+      "sha256": "fc02c3f9c0e27a18dee2e140ee36000b9cfc13896293e71ea6e45d835616f6c0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "sha256": "97b67a2f4f4acfdd652dfca579a29a15a861959e8754a42f5745f54397311d24"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+      "sha256": "f07650e114788b094de018dd407c88bc66b1882f56835e6d22302a8a65191a9a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+      "sha256": "fc44263b04bd08fbff3c9a60244f3a7d49c9094e0d7ed72e66c9a4e94a0fb313"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+      "sha256": "8c58b08aeea63a0f2936034881108122ee14e518cba8715465f3515f014dbfc0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "sha256": "5ad7dfef1c5600546957b8f590e8b12a0b75f9b274fc5b88810a207c935a6146"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+      "sha256": "887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+      "sha256": "247d32160def65e50f2906f39713d4f0da11bf913336da9ae7980b87e233652c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam",
+      "sha256": "41e67f6e341e577e0b6f0616206ba90aee1cadb7caee495d56806f173238e434"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/sheaf_byzantine_consensus.gleam",
+      "sha256": "03729312b1ab6ff06bb3b30e10b5512c30d2510396600f5f74e3705c6ff29494"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/spatial.gleam",
+      "sha256": "914812b8366caef852b47097722d928224f3e7873e7ee6fb1e9463eed9bae243"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/types.gleam",
+      "sha256": "e8b4671d287edd985f81e3911c49fd226e3ad67f6560e70d3ad7696bcb21a783"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/db/cross_holon.gleam",
+      "sha256": "8396bdb23fe55418c5855e2d6cb23b64ba875211e1affdea14524eece815f0f3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/db/duckdb.gleam",
+      "sha256": "d4ab8943d3dc3ffcf8d743071190e8fb37d8351ea47418eee3fb06962b5af256"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/db/holon_database.gleam",
+      "sha256": "aeb63c3eb918c509c3d4c8668822b03086d9392442b61ff1f1f18a054d0918ab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/db/sqlite.gleam",
+      "sha256": "ee5b8b9b8273ab023e4ada620a9fe4b3f62448387998c6f8567b2410ab6720ee"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/db/transaction_manager.gleam",
+      "sha256": "97b494ce8dbbd41dc90aaf1912b921a3ebc29549e6422c57a923b68f75ef42a5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/deployment/orchestrator.gleam",
+      "sha256": "a051fdde5c40fbd901bf66822dcccf417924774f204bc25108558fc2a11eaf0c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/andon.gleam",
+      "sha256": "12f2ff0aa3bb5e2af4eb664bba95be2d31cd8859a9331e11b6ac4f0ed8bd5351"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_compute.gleam",
+      "sha256": "0e5f2110d3c7814ad2562cf775922814534a581cb392e95badf3c4e21823a504"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_port.gleam",
+      "sha256": "d895d380e078eb2e8fecaa750537df2ab192330b5cf895f5f0eed83dc2599cd8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_twin.gleam",
+      "sha256": "b8ad22dcac5e15d841ebb0bed40036064a75a4fee49d2bf41aa6836e37bd7d89"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+      "sha256": "f96ed820a53488b1d97b9ce4dc457d31fa2dbdd0772b956163ae6e15e2e86a95"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/external_capabilities.gleam",
+      "sha256": "bfe49f4f6d7b51ebbec94b326fc73ce8107c488ee4f972c49bfba7e5cd0be49c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/harmonic_song.gleam",
+      "sha256": "d163fcdf1cfb0ad19261fb41114190e5f75706f6964782b164d0f7297cb33b08"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam",
+      "sha256": "ff8304c06a586a4bf35f8d411cba72e4d06f5a2163f21dbba16b0aa1fee13981"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm_actor.gleam",
+      "sha256": "1b09dc3b3e94d857cff808a622a42434640e8f1f3dd8284aec6ac713a41d581e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/multiway.gleam",
+      "sha256": "d234e2ea3b34f69d5ccfcfb9c40935d1c234b49e24b6213169c5bfd9dffa936a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+      "sha256": "ca926e374cbe89cacd3a929e10fa242a0814529055c71a954044d8d8ed47060a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/super_agent.gleam",
+      "sha256": "c9b9c5e0583f738aa730de94f72442f6130039203a2eed25511ace66b227247f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/email_artifact_notify.gleam",
+      "sha256": "3fe5325d5f49917a48ee50c441d8adf87a0fc913cdfe331a4ee9bb4e0c40da74"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/eventsource/chain.gleam",
+      "sha256": "de71a78ae5ecf90d9d511ff57dab29c2cefb79c98e025d7644414eda9da555c9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/actor.gleam",
+      "sha256": "faf7f1025af1beb7ac35133b211607e3f288080dcc19febdc6bee1caffd7ff7d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam",
+      "sha256": "49c219fcaef3c0a04e58398952abc85c1f18163f01a426eec47d4bafc76661ad"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_taxonomy.gleam",
+      "sha256": "8d3b2aa27b99c5f972d16079b1ac7a25e6346d18a794042aedf263edbd2487c5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/algebraic_atlas.gleam",
+      "sha256": "9871ba21e03fd4a4071e948a73a753b89d309f96f22ad87ed0be51ddc4379e49"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dictionary.gleam",
+      "sha256": "4a81a5bd471808ab9f64ff2e32d8a5ec999aa9d0182f9a63adf23e37a49e8647"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam",
+      "sha256": "c00d8a58ab9b737a926a49ab8005724e4b0b30979f78bb95ce5bd677d31909aa"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam",
+      "sha256": "49e5ce93fca43aafd7f12ad9b2a962fe562935052953ef010e8f668eedec41b4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam",
+      "sha256": "1e39c4e38eface28aadb0e1ecf7a3c22999348e705ab55e4a56138e53c3d865d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/fifteen_evolutionary_cycles.gleam",
+      "sha256": "476c8bc2a11ea716bd2f3a993db7a5614cd8ee95c9100c33b7fc761b6a127032"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam",
+      "sha256": "16bbc6931cfa18f79fa79af0d13d22f58d78373e8ced9f8b946aad3903162b82"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/intelligent_agent_engine.gleam",
+      "sha256": "23df77f467b29bf331d2c287bf1f3f45c140a8dc946ff894ec03280186d4c250"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/intent.gleam",
+      "sha256": "f46227435caa75b0a6e79d41344017d2217e0136368a7bc5d4532543bbcab7f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/interp.gleam",
+      "sha256": "7f394ad2f48cf39b3c7703ee4f902064b0cb01c0ed3b7be5aae215acc03fba01"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/miq_services.gleam",
+      "sha256": "fc68b6df8b72364f54a35a5c7672694a23f4b0877b39589f493907f9f9846d65"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/ontology.gleam",
+      "sha256": "23d6dd99ecf981734713db44426178d5c91964be5673b4b5d147c35d971f9e0a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/packetizer.gleam",
+      "sha256": "b101d8a381977fa31ec6aba2933a95b647a3ccfaa532123bcadc166dbb425128"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/poodavr_fprime.gleam",
+      "sha256": "c48e6f2e7c71772010af4299afdbee32aa883f65332c087c31bfb9a482588ebe"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/prm_db.gleam",
+      "sha256": "007b563cbf400552103fef6983c55c68c4cd0bd6e38f5a4d2965ecccde9694a3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/release_lifecycle.gleam",
+      "sha256": "269cbf2d7cd339a1df2635d2647fdf77a804574eaabc2e1164e81a40b0f16143"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/sysml_validator.gleam",
+      "sha256": "dc923cf9c529ff6ac828805768c98f412957d5e91a95ab8f47250417719913c3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/topology.gleam",
+      "sha256": "bc6944d4407bde307b56f88c54b493617010ae78a25120cdefa1ce0f5ad0d7e6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam",
+      "sha256": "ca08829023f811aecb24a811b0c5bea663af7665e4c6df2d0dd9323704f728e3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l1_atomic_debug.gleam",
+      "sha256": "56205f1c25e55dcc2041fa2325cdcb307d267676fc0899b617fbdd23fa6f97d6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l2_component.gleam",
+      "sha256": "7925018ab8df21109d4688c1355e9f262a495659ca3b940f750cadbe96db7114"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l3_transaction.gleam",
+      "sha256": "4d6e4e7faebc800f8f39ccbd22c62725c5bb40974371d9245a60af3a50e0e0b1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l4_system.gleam",
+      "sha256": "de540184c5319a4b70310d3b74ed4bce7c4c1b921a32dc4f7921d4ca7948e5fd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l5_cognitive.gleam",
+      "sha256": "91038a831639bd72199a6df9776f046ff6f19a9716c9ad885383c0df881ea5ca"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l6_ecosystem.gleam",
+      "sha256": "d53cd08ca187c3f9e746e707107f8a375e0f6ef261ac949c648f1d937dc688de"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l7_federation.gleam",
+      "sha256": "8290f103a8446335bdeae64704bcb35ca6df5d1840236166d612645615c94c9d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/gchat.gleam",
+      "sha256": "527df5418c699d58af18588729c9ac66a2fadbf08540084bc000b266b5389f48"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/matrix/bridge.gleam",
+      "sha256": "e7d89c0c37f4e7d05d7a5599e28a933e5db959d7344d147f83a7077531c430b2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/matrix/client.gleam",
+      "sha256": "0a269795afcb7e326b090ab56ad8b96286bbe0f8ca1c86aefc0cd2e26f62e265"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/matrix/codec.gleam",
+      "sha256": "f52064c47369ccac9611c09c61cb0ea3c224bea9f590444e4bfb2fdb4d3a7d6e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/matrix/config.gleam",
+      "sha256": "2b30c9e2336b397ca14d3a662afb5b262cba41480173438e1f71118693403f3b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/matrix/http.gleam",
+      "sha256": "2ff23525f7ef72d8d4cb9f2d608e6309c7b8659b3450e2c2b3821005e53d155a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/matrix/rooms.gleam",
+      "sha256": "e104261669c010755b9f1eee2c6888f0fc1264058a731724420c33a212efac5e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/matrix/types.gleam",
+      "sha256": "9adce3e8ab73c146653128ecb37696b729a932989cd6ccd4aacb5dbf4f2845be"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+      "sha256": "21e0a9f6a673157f5997025f3c09351fa9acc98f264a666a55ae4bfc0f43ac8f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_app.gleam.broken",
+      "sha256": "f55c45e83c1068b621408872b48c00c45aa168856b59353c5373f90ee0977821"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/whatsapp.gleam",
+      "sha256": "0fda30b3c4a0a6f5b6bdcf62ace217c435b704080bbc5dc25ff05a60ade82dc8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gemini_compute.gleam",
+      "sha256": "bf138c4b3ac823333848f7df4088c8706546b0d9f09f186171743ea99d79ed31"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/git/intelligence.gleam",
+      "sha256": "5cc0ce8d39d210f206778f12be11b0889b1a928d52092eb7e8b44bc73bf9143b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/graphene.gleam",
+      "sha256": "7207dd79c5e9b13549c6457ebb42c695df03734d40f52fb9db78597926704dd7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/anomaly_detector.gleam",
+      "sha256": "897bbcd43c05ae4f9754712904483e330914e9346bcb749dc752b9fab065f929"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/assertions.gleam",
+      "sha256": "fb34a630f28a617786d891ead7640d881eae7c29b54ef052cdaa268473a3c3cc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/autonomous_capabilities.gleam",
+      "sha256": "1b10bec20543a03156192c601fb96ba12db503f5f320f256a3ba4020a6836090"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/canary_controller.gleam",
+      "sha256": "2b5875dea426c56cce6512bd90d8add52553e71ec8feef8281549f45f4ff26a5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/capacity_forecast.gleam",
+      "sha256": "041de576b84675bfa61b02a14dda2f0657a15a2ed3221484d762be4e0e4c247a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/cell_architecture.gleam",
+      "sha256": "2b09f0f52ab1f663890a48de382906f8ca996cc06c3cb84e940a702951a644b4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/central_code_distributed_run.gleam",
+      "sha256": "479025d709eff615649b383b2441cfc8c311e2a8e5cd77396e668c362ff0f4a7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/checkpoint.gleam",
+      "sha256": "25218ebd6649dbf58f5387a92ffdc14fed71bdab119254f7a35603d133a242ef"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/cicd_gate.gleam",
+      "sha256": "3d71496414530192c2ebb8fed8abcfa1f11547bbf35f0b42a0de0d34da1f8fb1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/claude_metrics.gleam",
+      "sha256": "5ed8f032961dbb36db4e2a8611c93d2cc18898e3299317c9938b30c5b21a7906"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/compliance_21434.gleam",
+      "sha256": "0bee1d2bc2e2e68d1e448701f368725d74cffb66e41e00e435a6c4f6a056fcb0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/concurrent_fractal_reload.gleam",
+      "sha256": "41adad60f3602e7ad2525eb4c45222e056985b0aa47c938610b1946cf7137dba"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/context_cache.gleam",
+      "sha256": "481ab301756380ff19543690770b3fad5877de182cfcb0e0a7c177672cc80099"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/context_manager.gleam",
+      "sha256": "65adf430a0f15519d1176c59c15221efeb3d4f72597e61690b00f3fccb01a746"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/correlated_log.gleam",
+      "sha256": "f6760993d1cd23a462c041fe48997af074d4251ed92b21d66c1db26b92318972"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/cortex_saplan_coordinator.gleam",
+      "sha256": "c8746f14d89fbf36b2ec2f6fbf4d9275ea4f8b654911f7a05bf8231015dc192d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/counterfactual.gleam",
+      "sha256": "3abec559aee7776206108515a98e458496c38a0d3b742cc5fc3cee9a1edc77a0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/crdt.gleam",
+      "sha256": "17de26ea44518251bde9512b2183f11aa8b82f393694a1c80903f9f9292b3039"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/crdt_sets.gleam",
+      "sha256": "c0a5300a81b2ffd3ab69f13dbb32d8c64555ed82865279572128552309572188"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/deadlock_detector.gleam",
+      "sha256": "8f524449cdfe634afafddd01fba6138d82911a932590a90febec1c1a07b8f610"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/declarative_provisioning.gleam",
+      "sha256": "47f52771dce10297c0a93e0d43208f133bfe6a7cc20b304d7125231252af4d72"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/defense_situation_assessment.gleam",
+      "sha256": "d5c3dfda8dd7f46af21e78fd2da9f3c556d84b4986d2aa2f1fdc42107594c541"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/degradation.gleam",
+      "sha256": "e0d693381ba12427819ca7db4464ee95f527383af88eccf5b90e11e3e507201d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/digital_twin.gleam",
+      "sha256": "2ada3bdf782094ba233397255a8ccf44a8f2428a4b3a4c515e103d9bfa2966f0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/drift_detector.gleam",
+      "sha256": "95effe16f5cc989e3b5e94b7185f116a9fb1004ed5a02aa7153d537af81beff4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/dynamic_topology.gleam",
+      "sha256": "d9440033d3b9f7e13c17598d12d4d5ec7375922b70550a968b384c753ea5b0df"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/endocrine.gleam",
+      "sha256": "b34d393630f99d85fdca9a7dd26e54a163a1d7132907823c60b5252e43584146"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/evolution_scheduler.gleam",
+      "sha256": "95e8e396f10c0e23ad3cea9f492eb6e7f6209ed5b34899d3713bc790eada2985"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/explanation_viz.gleam",
+      "sha256": "eaf662915e8627646e94f46878f906ffd9c67d8808e669ec247629d18aabfe51"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/failure_classifier.gleam",
+      "sha256": "ce4adef180f4356a11aac2c9cef7b6f53a61dc0b26b5e9e9c3aa4b95a126a09e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fifteen_cycles_runner.gleam",
+      "sha256": "78db892b052d44a4061d0a2482e9bd3774ba74beac881d0047b0d48112189510"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fitness_gate.gleam",
+      "sha256": "8e5c9c1da565f4c0116b4f5fc4d04a6773b2185b6b26c2d1ce4bd2fff6d0ff78"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fitness_regression.gleam",
+      "sha256": "5549be0851bd81f037048b5dd9bd29e61b711204a71ca732d925948f191b3a45"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fmea_generator.gleam",
+      "sha256": "2f2c182ed6e904df01645ac00532543df7af28213177d84590a6a10921c8be87"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/forecast_store.gleam",
+      "sha256": "7a4ffdf1216edb3ae3123adbaa3cf238ae0ba590ad8741ea125c447151150e6b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+      "sha256": "ff89998068a18867becdc647c9f21d0eba61567166c6cae9fb08269f61fb3e47"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+      "sha256": "0f02648ee112bdf21d0fe6559469d3144de55791ac59d97dcb8636f26a19a71e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/guard_behavior.gleam",
+      "sha256": "bae7f102c6d9eddab97a2db4b515b3d550b6c4847d83474245149a09bd7de0a5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/guard_grid.gleam",
+      "sha256": "be745f231be971a0d11aa0d3aaeaab5de4e9d9165f9bab24c86eae58f9f8c29e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/guard_rules.gleam",
+      "sha256": "038ab47ec0d0e310a163d0e7cd43e57e86b5d13ce7d460724663477802b069d1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/health_calculus.gleam",
+      "sha256": "6283d09b2655fb9f3e19aef28f1515f8b4033c507640bde8ded59b0ba64fcf83"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/health_cascade.gleam",
+      "sha256": "3007a52d438b49513a2902abe01c9434b27d10a549423606603dce2f72026f25"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/health_derivative.gleam",
+      "sha256": "2c94c2960e9bc5ae80054a43610de2c18e7f3d1d7730adee28a9eae5305b3a85"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/health_product.gleam",
+      "sha256": "091cdf389f172bce176191500d4993dcb66951aa6d6a2c2017d41dda588c7f86"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/heartbeat_monitor.gleam",
+      "sha256": "3f52dd70a07ae57a94b2bc1f1afc1963c8bb83d6664d22e6200dafd2f79a6166"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_dispatcher.gleam",
+      "sha256": "946bfe72b194960db8ba99acac4bd2441a9421f3d1a1d2bad069ead9c64f2229"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam",
+      "sha256": "6380ad940b32bf517200c78165460e0f235fa61d67a301ce44592d290b6ea6e8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam",
+      "sha256": "60f37a2e3899507ff33a3bb395a7f77835d6113ac4302b89de579ac2cccb0400"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/hook_entropy.gleam",
+      "sha256": "5f40a8f7c10d9f6a02bc4d1a3ec77a4db0e71f5e6dca507f2b79a9c6808e9632"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/hook_latency.gleam",
+      "sha256": "bffe718e2aaa0b700322b9e72f6d46a18600738128996effbf8664e6199ecc11"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/hot_reload.gleam",
+      "sha256": "21dc59af9805c7da97c50307c9a5b7445a117640bf7ac2ee8e767d7db46235df"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/hsm_vault.gleam",
+      "sha256": "faf79bca0a2246af302b4e23f17d345269a7a207043f51c65d12c3559ed78f0c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/iec61508.gleam",
+      "sha256": "d336dbb84cff44b3bf693c102268702459b01c5b30954591b8854f45a6f5dd45"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/immune_learning.gleam",
+      "sha256": "6978b69193e2224b2871807b40fd8acfc381facfc67d8277a7de5cb3765ed9d6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/invariant_gate.gleam",
+      "sha256": "45eab24b67430952202df835dd1e8d8251a2d5b1adca73f358d9543bb869ba8c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/kalman_filter.gleam",
+      "sha256": "2e3795f25493d11c13295817b89f5a7a2dbb906830f24267d8707f4024e8686c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/lyapunov_controller.gleam",
+      "sha256": "d3d933a70e68b8a4a370fd5dc9d592209e5072fc493ae5e77448ded1dfa911b6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/lyapunov_proof.gleam",
+      "sha256": "5007fab49c37780896ad9a26fa5a250fb39ab66da15549dfc8b176b214cd18a9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/manifest_signer.gleam",
+      "sha256": "9797443cff4a698415e9fbb06c14978e167fcb31ce8bdb1f96f2909c46a118ac"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/math_analysis.gleam",
+      "sha256": "6a284797dc6f13e8927be5f904916ef451d9362d596be195e8f7dfb19d774d7f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/maut_pull_queue.gleam",
+      "sha256": "3f55cc19e5b48d02ec73790136e8f2cdb937b085a73a8ccd70e21089b63f2e44"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+      "sha256": "8fde1e274e99e609bd9be27c6b2714697eb39d1fa447571c17a02bd290fd64f4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+      "sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/network_slicing.gleam",
+      "sha256": "b10ba424a9a19634ac8e1a48cadf07d123733f95c099e2f8373342814ff67050"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/otp_release.gleam",
+      "sha256": "9f0693abad5ceed1cb13b5eb6ab2c74de06ecb8df5ec335f53a77c2f6a8ec06d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/page_checker.gleam",
+      "sha256": "3eaf43ccc51139a0a3c963f8b8999609468f9c66e7941a6751bf1eee0082172f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/pareto_fitness_evaluator.gleam",
+      "sha256": "0f8ecbb7716aa3a3507bce3c735ca0bb94219e0910da05d822bc2b84d010e5d3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/physiological_homeostasis.gleam",
+      "sha256": "d3a317421d9ee69813801e48e91d9c3bb638b8b1d8df450783c73eaa95a6332f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/pid_controller.gleam",
+      "sha256": "57afae0a99bd2a0e0e8257d16ffd5ddcf8c7aa28e47507fcc0bc919b7fac0065"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/pid_tuner.gleam",
+      "sha256": "e3bfd5238724e3a9220ea8287a99d455f821412a60efd8b4fa968c9cdc275111"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/poodavr_kalman_controller.gleam",
+      "sha256": "9b7c0d6800c8e79b26dda04c148b7bddc80c8e1a83d28e2a34bccee297c49ed7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+      "sha256": "5813678ba71dcb676d8713e6d6a8bb4afb62e7f61adc38267bd8c29ac6a86c70"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_zenoh_stream.gleam",
+      "sha256": "46dd555f9227c2bd7ec7b576d874e8459fdd562f3704d324be4be7df233e644b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/probabilistic_shield.gleam",
+      "sha256": "e56e2a9e17fb29a48aea1a03d0d33bc67c2c652bce7068da4a550c8c8c70e48b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/qos_policy.gleam",
+      "sha256": "d21966f0814cdbc9328a8713f20efde8ad9fc3a8a70624449ad92e8e3caf0b64"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/request_guard.gleam",
+      "sha256": "1fd7fcb4630666041c213c3d360ef202ebd78189be9ef9b9f0666a344470b424"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/rollback_controller.gleam",
+      "sha256": "4f4da6042a360430b7f51ef5d7e2829e97e301dc162f6c216b58eaf78ceede02"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/rolling_upgrade.gleam",
+      "sha256": "3deff13f29313c15e89ee0a7ee3a8c583ae0c210df4dc97cf84192bba4a32552"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/rule_pruner.gleam",
+      "sha256": "d93d4bb52394d9c8906582b8f6a018e7945ffa622fee9288ac9492b338182399"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/ruliology_viz.gleam",
+      "sha256": "eaac6b53dc8a37e62680a9290c6e430c8656d159fb61f57b9b2382cb0dd2c37f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/runbooks.gleam",
+      "sha256": "0a7c04f3b1aa0feb54638da7456e8f4cfc88b16f455342edfad91ab28f4fd79e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/runtime_risk_gatekeeper.gleam",
+      "sha256": "eee5fd5e700177c84783fe2673142c1853db93b4e4b9cb7b465510f40556db5b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/samvid_vajravyuha.gleam",
+      "sha256": "02c9ea721faf50bd330992714699d84aa51aa75558c871ed6c98c80354baac33"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/sarvasadhana_fabric.gleam",
+      "sha256": "3474643b28cc04a4144552c0924356a1618a09ed848a5085975e46e3bd012224"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/self_observer.gleam",
+      "sha256": "06a3db3f159ee1c02a7533c0162488ae13a27ae22608438d4ec89ffb543901cb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/sensor_fusion_pipeline.gleam",
+      "sha256": "fdf60894ee411b14fbe8b917cf5cebda56db11037c050e491bce33e7e7471131"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/sentinel.gleam",
+      "sha256": "a391055bb54d1698d73337ba2672799c6c115f71c00d97370a2c5df1fa1be1d4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/session_state.gleam",
+      "sha256": "c00f4f3a0597a5c82440a75167cc4ec564270ef24b2c8f7116de2865a78787f9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/slo_tracker.gleam",
+      "sha256": "b917b332c01d2401225f17a8f374da2e331a5548e440d2a798257ad1a26f1061"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/stamp_automata.gleam",
+      "sha256": "821c420303c69d91b4a567ada01ddcc0f0d664d1c30a681d21766943d40f3b5e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/supervisor_config.gleam",
+      "sha256": "49016bc10bf4c706369f5fed29740f1063359f114ac50b4261e427129a86d575"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/tla_verifier.gleam",
+      "sha256": "1089a59337788dd9706b4eecd4290cabcc7c97b4ef330986ffa8cb965aa8a21d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+      "sha256": "50df4444ee361251bf1d22c90da892480d4c4f61011d9af846d92c39e49c812c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/tool_sequencer.gleam",
+      "sha256": "f662abc97dbad3caeb6f8c8757c55120d648a00ecf769412c1d40a6291a3aa30"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/trace_context.gleam",
+      "sha256": "334b34f3949fe460aae95c0e65a899681f02de93828b697ec98b96894e703cb0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/tri_agent_monitor.gleam",
+      "sha256": "f415f51a8e7a55563daaab2d76ff369fdfa3fae242be91f78cd42f98c8fa7f66"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/truth_audit.gleam",
+      "sha256": "c3d7b6cdb2560121f9476e54eb276bb414542bfa58812f3d07336bcd22dc6b3f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/uncertainty_buffer.gleam",
+      "sha256": "bc17959e60ff2b16a8c3bead224acbbded25471429a524b99b77ae8dc7e4ec0c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/voice_pipeline_state.gleam",
+      "sha256": "bac5f365bcecf9b582f5451b3e8a2e1dc19803bec47e089e456c86a428604ae5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam",
+      "sha256": "b156c992ceca39fc0cb0b6c983c194164045fbb88b20ff9cf3212b04b23e7a8a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_advanced.gleam",
+      "sha256": "61924a44f92484f5a021b66cd3d559277c88571791e23ee62adbbb00563d0bfe"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_compactor.gleam",
+      "sha256": "315cf61cf8b0325967467473e37b00e7e2042f002bff89e9df26eb597ed3fb8e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_execution.gleam",
+      "sha256": "9f8bfae59e50435830653ca7cc4b0ee84d1f9b28b394dfc7e1c5d57b748d3bba"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_monitor.gleam",
+      "sha256": "b3c63e757a4953c7d9ee3e23065cce9091788b53950ee543b7c9fc126d26aea9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_patterns.gleam",
+      "sha256": "bbac7f659c768d25d92a1a0e605c2d6fe03b48e4052c96103cd2ad4bf02d05ef"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/zenoh_federation.gleam",
+      "sha256": "099c284df0aa85e1aa378a524429b17c5ba9ce936acc9c8ee7c0794e198f87ab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/zero_ip_identity.gleam",
+      "sha256": "0d161bb709bb469d0621f4b68106d0c037b46d60d342e08addc6c160c3962554"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/zk_integrity.gleam",
+      "sha256": "490daf0af8ae8ef0055d0607bc01f23253f3ec85cf4a4e41e9bc9db60ad78cc7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "sha256": "8edc624fce450c9401a59c22b65fe21335da8eb8c974ffe0748a38262d972630"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam",
+      "sha256": "502b6dbfda04171e9286f6ffd62b71b455aac9464c9338d6ce6a4afd84daeb6b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+      "sha256": "56efe6858f24880abf92aa12d9963724b12e283e5b97bda6e617707259572134"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_dispatch.gleam",
+      "sha256": "a974c2ce1841202d30481b38a070efbcc06d6919993c8e8246a9e13761676422"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_job_result.gleam",
+      "sha256": "d217f686d524e7f28f6720e11d2909794f6839d180ae46f60cbaa76b94656070"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/conversation_memory.gleam",
+      "sha256": "7af3ed6cad26c68e05ec65242fb8c5fa2fad2d72be0df5344938a5e56d466286"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/dashboard_refresh.gleam",
+      "sha256": "1a063c3678e5fa1c384d7638f561911feae635782626691200692a45b1498372"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+      "sha256": "87aec5662385833d9def1d519f53f27bbdd2bc39def801a0c96c2aab1449181d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/doctor_projection.gleam",
+      "sha256": "116be4aa2a1324925f7e9ab5cd5c385966f63d2d99181673d0b43f630f095547"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/egress_redactor.gleam",
+      "sha256": "44577f6281fea2ed49a107b42743aa8ab169a92b93266b7c41fb090b1fdea606"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/hermes_bionic_bridge.gleam",
+      "sha256": "5ab4457b1da6e372a8285ae0c160c6da973accfb03623db409fff7c0eac7695f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "f17c4f66adefc761995a07080551a9539473f9fc0d83e8d492451fa9f36c46a1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/multimodal_features.gleam",
+      "sha256": "03d007a8e4ae17e8b87f9236c5c0db62f964f3fe805823f777ea202c0783d093"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "sha256": "a295a873146aa18827fc37b6b810589a18c3bcc231a35240c39a69241ffb40b8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/peers.gleam",
+      "sha256": "aa7841bfb42513979001489bdbca16f0dfd47d81f5b64998575c068abeb91c91"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_activation.gleam",
+      "sha256": "5fb5f50d02b345de0497dc886271ed9084787ba3f8f9dc32d2d0f5131dbc07e4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_strict.gleam",
+      "sha256": "704bae346f171e8380b2ed6e80610f70aeb76c3212e8c246f367d7973702d987"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/restoration_observer.gleam",
+      "sha256": "955f79e4837e3400f13d139833c24913fd7fb2e8b4113d63e1fb79b281b6819e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "sha256": "103b2ba0dacac5cfe461194559d2c7d7a0b08941902694a26bf1e9300b246d46"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam",
+      "sha256": "7cef170c48633862ceb9d6f76a1dff1f84943e06ef093f826548e12ce4253d56"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_census.gleam",
+      "sha256": "1025008c25c77fd3aee8c62d373cdb98fb021e4e4572a6bfb53f16c4c079078f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_intent.gleam",
+      "sha256": "0e75c796dfbc6f6c136a7ce12c9e258894fcf19530ea7626fa30ddff7436538c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_sources.gleam",
+      "sha256": "532ad10cc1ff2e4ea2adb4fb5edc9d80d70a61729d8e8469da7faf06be51a7c3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam",
+      "sha256": "5e634c84bafcd1d6eb39bcb6070984041b09ce7c30b49b613c22c71a29ea528d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam",
+      "sha256": "6d9871740438cb4ee3f845807811f1f1f0a30a1e11945de00e4189b5a9e2caa0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+      "sha256": "dcf871fd9c25a39082bb6a58f224d9a0a9d1624639857bc70c07c78247f6664c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "sha256": "b2f893348c2c6099db4a027f876c1e06bf5d9e867eca0e03e89ec9e35c8005b5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/value.gleam",
+      "sha256": "c5ed1c8f561dc083e230ee6e45a124639859419daa4fc9a9358dee6b0155fda2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/holon/identity.gleam",
+      "sha256": "94b3ecee24cb98a2d4e461bed2cacba6043c0375f11f753d302a62f1c6004ad2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l0_constitutional.gleam",
+      "sha256": "810c1d4eae579033b2ad58f8745f89c454831255bd2137ed4b5bacc4afd0c0e8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l1_atomic.gleam",
+      "sha256": "8e9cfea9ea4d97ff58ef694d5d3380037196dafbe0bc75df20533dbf1c91b554"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l2_component.gleam",
+      "sha256": "234d695590e1c530376f2223e4c84faeb9fd3c4bc74c7cf3f2d8dac765def5c2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l3_transaction.gleam",
+      "sha256": "4212854c346e3d3ab71fa96f710593ecb87e3ce1518cd41edb1133015b8aaa05"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l4_system.gleam",
+      "sha256": "88f2c788766c81dadad4d2dd783020685a6e37b56319d5a8f76f305a058c7e38"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l5_cognitive.gleam",
+      "sha256": "b47b15d6a1ee60f39309221b5bad13ea2e7c7011790d8984132250cd62f3aade"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l6_ecosystem.gleam",
+      "sha256": "7fafca06f5b92e25514f6e398f716311cb4d9998295b7856c6a75824c326bafa"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/l7_federation.gleam",
+      "sha256": "8f02c8804d2efc472f64479a0dea185340559ddaa91651c3bf13694249aa06db"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/fractal/matrix.gleam",
+      "sha256": "5100c609059ad482b2fe78655368f1fe710421908d3242a126a794a2dfb1aac7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/freshness_monitor.gleam",
+      "sha256": "2b0df549ef40ade923858e5fa8f9e75fde58a47fc8015c8d2d919c33197414f0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/jwks_cache_actor.gleam",
+      "sha256": "8e6b3f33cfa36281316bbfecb1edeccf4bd9c7e84005b0faeb43081b9ba24a21"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/key_rotation_actor.gleam",
+      "sha256": "c0013bb7642909df6977df85a9cbf2ee877f90dae6cb27143e7ca41eeee3c147"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/lifecycle.gleam",
+      "sha256": "b11502738b74917393887a9496e970bcd383ce0a6b61747b84cb92fba650f376"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/nif_manager.gleam",
+      "sha256": "022ffa099865db6d48a409475b2d3cc6c6576ad761284cc15c26cc5a8e76ef40"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/objects.gleam",
+      "sha256": "9c4a86d2f4ae52639f73ac812d667694e8e75958c1a53a75b51e90063fb4d11a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/pi_bridge.gleam",
+      "sha256": "4068c1dc7c184ec31acc43b6a6070fcfeacc406a989840e2b6bd0080cdcf2046"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/scim_outbound_actor.gleam",
+      "sha256": "f48dfb21da36ff1652b1b1f57efd182c666edd89e549c514c1ec0fa22dd7bfb8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/sts_token_cache_actor.gleam",
+      "sha256": "c20c4b670a3edc75beba2529595f3867a44179b0059946cc4d16a7aa5194fea6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
+      "sha256": "73ea76686cf291adcb8718d6174535d8a9935e8e7ceadac0d3fbb782342c12cf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam.gleam",
+      "sha256": "a3f1e8c67a22edd249735c9f207d9c16276ce18a7d8ddcebc395b202d2bc2f1e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ignition_launch_request.gleam",
+      "sha256": "5960af697ed355efc646e000e6df9b1efdd1e61acc49b6b0cd64257f4ba05aa1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/immune/chaos_immune_engine.gleam",
+      "sha256": "5cf0261f629959a3f87ddd9f86b70712a0b6000e30954cb7af5666521016871f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/immune/domain.gleam",
+      "sha256": "63dad6521bced675bc84ce8e859bcbcad7136a94c70611473fdcad7ebe3efe80"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/immune/mara.gleam",
+      "sha256": "a4129fef547bf19035e490008fa0e8dc888cae8c9246974f6c316b8aa8e454b0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/immune/patterns.gleam",
+      "sha256": "4ca97599638af1f9a609cc0fd30d5d75687ffbf7acfcea245be13cc006d006a7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/immune/system.gleam",
+      "sha256": "c520c6cf89a72bc4dbb53311053c2d8c3cca1cca340e29c4cd4c05157a6a6899"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/intent/config.gleam",
+      "sha256": "441a91c8e1ba41298c4e4e00b1d9a38a3ff702b916b6e1994b1651d67aa8a04d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/intent/denotational.gleam",
+      "sha256": "09a58e1e94ae2359ba3d31b6f533baf43111cb665bacfd158a1b92222dd7e923"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/intent/engine.gleam",
+      "sha256": "1d4890550f4254e03ee4bf15fa62c26823a3c35e09edd39be55f6576b1cc4b12"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/intent/parser.gleam",
+      "sha256": "a46092cf6d81f299234146d6be070c2d9705ea4ac8c54110558ec69b74478169"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/intent/reconciler.gleam",
+      "sha256": "9022056260efb014ada10e00edae9774d6ba5ae0ca58027ed99c710fc9b789b4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/intent/validator.gleam",
+      "sha256": "49601339500895edbff6c5b2009035b1d3866a628f84e3ee1ad9b5992c308801"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/km/provenance_adjudication.gleam",
+      "sha256": "9bae9d5f9d786ad3174a3fec4a49b9accdd1551dfedf72da5867c2014050fd5c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/km/provenance_metrics.gleam",
+      "sha256": "a2baa8d32ef81eca885992db58c5a714075e9e58526af2e227301a180c656401"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/kms/catalog.gleam",
+      "sha256": "e1a2a37b80c43dbfef42d0771ba1155e474f0d441a9d2595f153a59c7839c430"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/annotation_actor.gleam",
+      "sha256": "deccd5a49ef910d1553ec270ec13fe8e9c11b9f5cadacfdf546449f3a2963677"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/anomaly.gleam",
+      "sha256": "b8631246849acc41bbea9b0a1aa73dc6192e96c9d9274e479577059ea09186b8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+      "sha256": "31d8146a65a1dd388e8b7151e495d37fad1f40cbadb60f1413d6e0fd5ba1a298"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+      "sha256": "5f3e122e7a2244a0b51b7c1464e3920983235c871376d85f47c977b01bcdceb1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+      "sha256": "ba76d2562689ecde4906f65ce0064e7ac169537607530018b1bdef4065f5c400"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_supervisor.gleam",
+      "sha256": "6fe327fc71da45821dd0291c801a6eebf510d64d517435aa6239983a94216286"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam",
+      "sha256": "cb6a65fb7fc4e62c7f495ebc4b5f9b1742128faf17a98dc527cce693cee89dab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/domain.gleam",
+      "sha256": "e121a976939ff8d1df3d8b9af8c1e8ab3f358cc6c06cfaaaa1b09bf4f84652f6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/duckdb.gleam",
+      "sha256": "8ffc47ff2b322b50d0d2f96247a881fbb073fc18df4024a202c5639aedab2653"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam",
+      "sha256": "0dc918abb976b34802934cdfd0ccb7a18836198da62422316e18a4cf68392dcb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/raga_cybernetic_synthesis.gleam",
+      "sha256": "260ddae05b65d0f594c760b631d1f22e53430ec151aad6c8f3a080bd92dd9b7b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/repository.gleam",
+      "sha256": "73744e08f40a7a92692c496cd5a602e0b5c2385ea505840d830bf318e342977a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+      "sha256": "d5c54d35aa3addbb24d5dd865f6266772880c1f1ce91ccf25eaa84cbe87bbefd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/semantic.gleam",
+      "sha256": "25aa8c830600ba006e62d164ce3aa39441031eadf2f165ecdcfda7222c5c9009"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+      "sha256": "8ccc385d0a4ae4399ba2a9fe8990a35066ee9881ec1cb5a4a2c9064851fbfed5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/sparql.gleam",
+      "sha256": "da716b5c5b282bf50558d261a2e5891090c6fe412d7eeef191c4fcffa5857bbb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/zigvm_add_fractal_engine.gleam",
+      "sha256": "a967c723888fdeb90aa6fde686077ced34aca2400ac1504c5e5f1f83c40cac2b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/zigvm_feature_tracker.gleam",
+      "sha256": "64a3e51444c5f2ce2eee31c8971918abff91d1e82c2c8a4d357c145702fdc918"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/lifecycle/zigvm_ontology_lifecycle.gleam",
+      "sha256": "9ea6b369ad1691f6c69bb026811c260e1c5764b33abbb0797e71585a70593f5e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/math/bayesian.gleam",
+      "sha256": "2463bb32ad29b35314965f5fa9aecd8a36f262b358a990a8e1347dde253dfb27"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/math/learning.gleam",
+      "sha256": "e054079ddf01a45be30cc43028d5332ed332ddb68c10813f91d434d6219b25a4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/math/meta_learning.gleam",
+      "sha256": "a3bda12470303288f7017e42192ad8630d6c908c53f518c24bdbe41bc4039c66"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+      "sha256": "20b742c3d0561ac9e5a10f074a2a2b251c0293069b813bbf575fbb3a7624b448"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/math/statistics.gleam",
+      "sha256": "9d15b64de072c6ab94a4bfd583460fc74e99b70b06fb6df70f615d89e7b64cb3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/authz.gleam",
+      "sha256": "5990e6be89880a0de901b0e014df870ffbbf6e92a8f1108a545dfdd10b84512f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
+      "sha256": "7415b762c8bfafae63ea5d949f5cdf94b5638dacbc8094261d6864edbb8c4405"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+      "sha256": "7224d79b7ba2dd40038a01cdead7d9899f7aafa103542bb6b6991d6576ced2e5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+      "sha256": "9af105c618bfdfcff21b6dd39aff81cb0fefad77b8b31de670f83f5913594787"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/metabolic/domain.gleam",
+      "sha256": "74a98f5da2b4636424cca7b79af346a3ec8fc586b9fc664e01df4d57d5ed9565"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/metabolic/service.gleam",
+      "sha256": "fd3fc66b011b2a4d4e525a47080f72152d29d46199aa5fa01cf3c0425f0edd00"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam",
+      "sha256": "e51b9980e3df2c0dff624f2ddeb62d4f2d523ff47bd1029cacd4842a0a2f6364"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/planning.gleam",
+      "sha256": "1b53e9dd2f4b5f90d676ae359eb8403ce6f3d50190a43450377508fbf3b510ae"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/system.gleam",
+      "sha256": "aa07972b045c883e594ec7dd20fb3272d383ab8722f1d9dde326396120ae6726"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/vault.gleam",
+      "sha256": "aa39c8652fe88d72ee162dc2e3fab4b0012e7bd58259fc5c619b114a34db1feb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/nif/zenoh_rete_bridge.gleam",
+      "sha256": "36ec5e3b9f9be4c585a7145926edf51de8987f2308897550004b8a756339ec5c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/observability/zenoh_otel_ingestor.gleam",
+      "sha256": "0d5f4a5fbb821ad18b27d8854c951ee77f11db13bde2bae63e6e4f57857a75db"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam",
+      "sha256": "3816ae25b558c0a3b44f8628fe439b66601ba7e460a2e3d1ed67718e7da34c91"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ops/solo5_sandbox.gleam",
+      "sha256": "4d0465e9db78b02c98df02b313f982316f5b64fcba8be6b98d24d106e220d528"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/otp_app.gleam",
+      "sha256": "2c26a519f7edae4e6192c9ab7ac9f13998227af3a9f786088233a2f4c697e82e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/access_control.gleam",
+      "sha256": "56a50de88c25af89c1ad8e33b393ca1d1e8868fb2c3f58a65a7242f1e2094267"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/chaya.gleam",
+      "sha256": "29ad0003fc10b7067c77ba070f4602f856a562cf7e81f30aedae3bb2b6f8ab21"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/cli.gleam",
+      "sha256": "7659d4530e63c88adcc89b0c9a721e9c1cc1abe886d93d61b912c6cbeb6ead05"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/domain.gleam",
+      "sha256": "fbb9daa368f48180a570e017797e514caf33c4f6ac7de96850f5f1196ad20261"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/enforcer.gleam",
+      "sha256": "45c5aa781874f53aa2d880af7e0621100c8d70109e315942d050a1afa3c74fef"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_observer.gleam",
+      "sha256": "aba0fd8c7062f633cfeba4cb02a9c4f50f5f5830d2a21a63b84d78b7ecea86ed"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_projection.gleam",
+      "sha256": "8b4ed71e0b962360e1eebda6a19385b12588ae6b28f19bb5ff428ca5c0102507"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/graph_verification.gleam",
+      "sha256": "2c8181f9b4c1b49fcf1fccd65506ae877940656fbbb467883251de0d82fddaa3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/heijunka_work_stealing.gleam",
+      "sha256": "1202cabfc3468e5aed85c6db55558f653f0f16dc48ff523a4a6a7248c96bab3c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/manager.gleam",
+      "sha256": "72add3d89f2baa24a13fca74c87d5ec724d10d56e172d7ff49f52d9285001614"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/math_optimization.gleam",
+      "sha256": "f9f191020da5262c59188bb0a0bbb00e3c1012c3e85855a69e48be177ce67ae7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/nif.gleam",
+      "sha256": "f48a8a6bcab5d9a97e3aa3fb16ff7a4105096b35e4e05abde732207e62b238bc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/ooda.gleam",
+      "sha256": "604abf723c62d3ce1672022bfaa6ba0501f013fec3abdbc0ddcf7335e51ebf6d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/orchestration.gleam",
+      "sha256": "bf450c6e2e363b525968679e4ab52970eac258f5dd2702ebfd4eb852280df225"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/parser.gleam",
+      "sha256": "e8da158d650edda2517cc532a8f915544a6f67bf065e651be12d876766c0cdc5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/repository.gleam",
+      "sha256": "6e3aa6c64065b5f7b33973da24e414c443236a105d4e701585bc2aac06577d46"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_simulator.gleam",
+      "sha256": "b6de9dfa9310a607a4560b281ded7270a933c70d02842dc669f6672a29e1648c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/safety_kernel.gleam",
+      "sha256": "c1bb089fcbba06de3140dd7772c943731503f4281e6d810e2cd9b5ae348cae1d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/task.gleam",
+      "sha256": "d30a62be6c54061bea56c7b2c8e52199c320a8a49d28ef5413f432e67b2516d2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/zenoh_adapter.gleam",
+      "sha256": "83a8fec9150e7cf551a856eb2b86b3a1c6e40a5b9dc1d7b99ba0134600e43c8a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/podman/containers.gleam",
+      "sha256": "82f8fbed97c19ada9f18f0821612232e33b29735e965a3b7c89f03cdbbe0f142"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/podman/domain.gleam",
+      "sha256": "fc1dc316ec5bd381ce08f66e71ea53027b1e47843d06bcd8381ea3f1ac869ca3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/podman/http_client.gleam",
+      "sha256": "53c6fe66d1d517bc9d0e91cfd507a67a1cfbe26374a545234a44b6dd6bb4d538"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/podman/manager.gleam",
+      "sha256": "d972ee316fb9f5618b7522e3ad489ea659bcf826c3fc5ede7a8d9f0f8f58b1cb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/podman/networks.gleam",
+      "sha256": "2e04d41edc39c570e84374450f1e8d5e855b6bc418b6fb611416002d73ee9f39"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/podman/uds_client.gleam",
+      "sha256": "b263a2c6c43da2bc8b28c80d21b0281b832812083fef36b4da0bbd778f6db45c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/podman/volumes.gleam",
+      "sha256": "913dfa675c83ca79df204ac22f3af52b6b16fbb57bc7b3322574dca998c3cc93"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/poodavr/poodavr_engine.gleam",
+      "sha256": "5f42a0c53322a9df4ad45dd7fea24fbe79fba7b66778157d7de447694c5ef088"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/bio.gleam",
+      "sha256": "945e3466a748218dc94f3aa27ceb976ad2a181f2ae2d33def62781943a080df3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/circuit_breaker.gleam",
+      "sha256": "753742688ef7ffd63cb3e4ca821288fe8ca7af4ea2607d253157709d9f69530d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/dark_cockpit.gleam",
+      "sha256": "bc169dea993d52d2bb5e877a3d8e1afb52c61a9b8ccb2fb3d77773783b158631"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/immune_system.gleam",
+      "sha256": "7879126c97cc042f837e44e3645f801788e290da4501b81afa0a9ceef46daaa3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/neuro.gleam",
+      "sha256": "06872361e12d8245db9de16ca5bea282d5f7a39a7c792fbff9ce106e8a1482f2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/orchestrator_cmd.gleam",
+      "sha256": "fc5b4f25901a1ed293b6d7e54cd8c622dd51547196ff3723175e7f83d909a9cd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/smart_metrics.gleam",
+      "sha256": "1e340ff7e0d0efb89df4aa4c51c0b1863fe8a0bd90a096e752f3b7a94178044b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/release.gleam",
+      "sha256": "fc1315a73d6c715ca8e0b80678a1436fb895463563c7cc120cfce3c4103893d7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/render_cli.gleam",
+      "sha256": "2e2aed03a625da59dc286cf7d0c754e65b73e9a35c43a45eff2c27529057a2bd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/rules/dispatcher.gleam",
+      "sha256": "4f06eff75104c1b94dadcb5fdbcdb9e0095f197f4b7dd64b5e8deb50ddae32f2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/rules/engine.gleam",
+      "sha256": "ce89f9811b8b1a98f912eaf379169bc06a76c2853ae9435f6188d81be747bff4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/rules/stream.gleam",
+      "sha256": "58cf31a06a0eccfb2bd6b2369074b64addfecb2648ac08fc1b7699e455412c74"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/atlas_intent.gleam",
+      "sha256": "fadfbf25fee676aaa263a3358206ca37df9d832403a5c6678771a9aa7e6d371c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/dsl.gleam",
+      "sha256": "0346d5d7f364a2cd739ad24d6b9a09c221f055677554d8c0f15526ad8c4f5041"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_200_tensor_suite.gleam",
+      "sha256": "904aadaaad9531115a84d34d903142cb2c093236d40a4517d5282ccad19c98e0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_catalog.gleam",
+      "sha256": "7b71077a76afb1697aa8751130bfea1dfa8b513a36b26e69d2b81df0a66c651b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_deep_dive.gleam",
+      "sha256": "d7a84a8a80d65f2d35601760419b85d02a97b45ff07a262c7c95c9a07f728862"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_examples.gleam",
+      "sha256": "94b1868d2e289f3c70bf683aa3b49cd8e3cba672e42dee16dc34f297f7116d35"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_feature_surface_suite.gleam",
+      "sha256": "00f81d5d5d95b041c4f9e8c14d1d0572c6925b77178e61bc42ba2a0dda49a5ba"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_features.gleam",
+      "sha256": "b46a013de7019dd90e43e1ab3d33d94fe16a9290e9a7dcae0f5e8f2955092859"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_suite.gleam",
+      "sha256": "c5d21bf7bae5e9857d514d287c3b58e99d7f8d508cb2f9499fd64a30e3a37131"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/instruments.gleam",
+      "sha256": "0b114a5cad3cb9d2ac1dada924caa624e1eee6d2efe5d77495a7f8a3e1de48a2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/renderer.gleam",
+      "sha256": "17b433720c50793b57af1e4003a96456692ef034ea2f12cc043bfed291707b14"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/schema.gleam",
+      "sha256": "871fc5ba81ef23482718d214dffa9c3aa98069a92eaddf0415d73941e6329f5f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/synthetic_dataset.gleam",
+      "sha256": "b8ed1abf678ecacf24daa20d4fd74ad3b0a3ef48880c4a2470d1acf75f6df557"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/test_suite.gleam",
+      "sha256": "58dbeabc0db93ddcd524f91b82b14343864772e181f555098bd00a4c9d8e5e74"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sciviz/transpiler.gleam",
+      "sha256": "00544b9f02b366c863687ae667cd9acc35b5632ae3ed0f01c16dd16280bd0e33"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sdlc/aspect_agent_ecosystem.gleam",
+      "sha256": "ac72fcfc657a86cbe22fdc1368c65e1a76b6439a880fed48b3e7c68dfaed9ea8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sdlc/aspect_processing_agent.gleam",
+      "sha256": "a06aa8af5ac666cf682a1e15e2e2c73565b288fe0ceab4937c65eeadcaf55e0e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sdlc/forecasting_engine.gleam",
+      "sha256": "22e7aaa25d7fc9cac47b1532d70b6e86992214e30280f60bbf750dd054d69b35"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sdlc/planes_ascii_architecture.gleam",
+      "sha256": "661d4f6829a0279abfc54e452c536c5133601d6520b7db7a58f7dfab5c669753"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sdlc/sa_plan_engine.gleam",
+      "sha256": "194f1184b008685a96026f883e97495b811564c716ecb622abf555413b5dd46e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sdlc/sdlc_sre_process_engine.gleam",
+      "sha256": "72fadbda7be3b3e841ef9fc9f69f6e7eb82b600101048f9de18fb7bee81bcd50"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/algebraic_atlas.gleam",
+      "sha256": "51ca59b190ef0e1033e65d98ddc769a644790305e342f084049da85578539f03"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/sheaf_cohomology.gleam",
+      "sha256": "7b9c6b066562e8d2b8b20fe739900a70dc1f614da7bc6bff68bcd99b05dea209"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/differential_parity_oracle.gleam",
+      "sha256": "24b1427d2c0191cf0da42a655135cbefaebc5230d57ee5f3f59613c6cf0ad901"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/max_inference_daemon.gleam",
+      "sha256": "d6c06ac0ad69ada55dd244af9f62c06c84fe0f87cb6d1effff980c55efa8c06e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam",
+      "sha256": "9611bea42de32f11bc6e852dda9406c60d5d8270840416475270bb02feeafa97"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_migration_engine.gleam",
+      "sha256": "22f08d82de313d3ba4881fffb1ae8e15944afd429b2e5c61310f32e33699041d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_telemetry.gleam",
+      "sha256": "e73196dbafc7ef5b43c7246499dba26ebb05ff3c24e240d071f0297fecdd5e14"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_unikernel_daemon.gleam",
+      "sha256": "23d212c67a982ca82f31b28233884fe6bfa53c986fdcf36692cc539175817e52"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/ocaml_worker_pool.gleam",
+      "sha256": "5a50d32738d9faa217a3b9564cde18e6b96474d5eb5306e1d4b2020767edd0af"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/smriti/catalog.gleam",
+      "sha256": "5750bc28bf244638ff415fa87e9d39adc4619da7a7e604ae6a47f14f4d8d81ae"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/smriti/semantic.gleam",
+      "sha256": "0168d556a6c386fa32c9e407328729de591876168693bba590ff65173e5c1942"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/beam_cache.gleam",
+      "sha256": "aabf3ac9785b5df0495025bf101b5af922fd1ff1eb50225c53971105bb0df728"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/boot.gleam",
+      "sha256": "2fc942282dd621ae86e4b263993b020be673ce8ac80f6e432f1cfa4d0166fc07"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/cli.gleam",
+      "sha256": "dfbc6d4c661f64b5b643b67cc9f305b25b3b531325e5cf49dd6b783107978f21"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/database.gleam",
+      "sha256": "a01e76a6b54fb5d1483fa256def5b5dd7961c511bd662851b63b3fce22d951e4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/file_system.gleam",
+      "sha256": "f730386129f2074ee42efcf78278b72cf438f62ca9db64cf8c4412e899c7805e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/governor.gleam",
+      "sha256": "ae528de5e3d4057fb5c0c46ae5e4711052edbcf4745f2eea9be1897be252d842"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/homeostasis.gleam",
+      "sha256": "cbf3d0e7bcd6f918c39478757ad97423a5e4afa8bdb9107c36e69bd2cf35dd71"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/symbiosis/tensor.gleam",
+      "sha256": "23a6b91b5a453887a664bfa83b6fe7d72cda7506bbe372f5bc2a775daf4be04b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/symbiosis/types.gleam",
+      "sha256": "64282ad1395f40dbb9efa67c09ec15ba571d6550cc63b37273f87dfa882cbbf0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telemetry/exporter.gleam",
+      "sha256": "54fae39a722b0869fa68333da44b3d1d0143dba8cdb764f78670b0bd158a3c4d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telemetry/otel.gleam",
+      "sha256": "a76d37ee2089332d42a41749513d3f5f911098f861ede206dcd74ef709101d6d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/alignment.gleam",
+      "sha256": "06048cc23d11df9b0eb758abd4c51c79ed9272cf335bcb1b3294a160fcdb2ed2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/chaos_injector.gleam",
+      "sha256": "f5ac42738ae2550a2a6c639b50336c00ea3af3aa555e10b17e914eb34b529f61"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/coverage.gleam",
+      "sha256": "71768a3d01d33e098ad0af0d7d75a27617f04ce058cc65cfdca019978dd02958"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/coverage_math.gleam",
+      "sha256": "917c6f49c6b1700a3c4258a2072de7179eba3138174964fa1d13d6020c628c7a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/flight_check.gleam",
+      "sha256": "34561a42f893edc40b7d3630fb9b0480d7a9efc9100f2947cd67d25abd6d39c3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/fractal_matrix.gleam",
+      "sha256": "555c13f77c7e2753e0d21260fa4a20f1bf50ce972f989df5a7413bf7bbd4afad"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/gemini_verification.gleam",
+      "sha256": "e160d109666694bec49993d8f39b86bf0f1c63dd5c5d32b66acc571a1403ad96"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/jidoka.gleam",
+      "sha256": "e3815c8b34a3b1cafc1bb94b83d450d556d9920a7330f776387753d15cfc9a11"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/nav_graph.gleam",
+      "sha256": "9e618924a471426eff4db7c49d1735a31d60a0dfd0d6b63a0e38aa0a88810470"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/ooda_test_monitor.gleam",
+      "sha256": "862b04b2b4614ea720f0ff20cdfd18a5ee558ec50c41420233340ae3a8cbff14"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/rca.gleam",
+      "sha256": "1e33d17cca424c5d0be770b57d7aaa4d5c63f8fbd013e3821b90814e56d0423a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/test_dashboard.gleam",
+      "sha256": "17e77d5881ec615a3b8864f3cba382fad199f61b4d5b44a49657a13d1b1d5459"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/tri_language_orchestrator.gleam",
+      "sha256": "033944f9c041c8905a2de42d1387df31930231600402574dc1080c113b0236fd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/tui_test_engine.gleam",
+      "sha256": "5530221c215448bbae8beb67e3d096a0152ad4ced0641b8c7cb9abef06bfb484"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/webui_test_engine.gleam",
+      "sha256": "17070d36a78367652b2275ecb3496ce369cecf58b09c13348d9235732c5d8429"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/wiring_checker.gleam",
+      "sha256": "b4b299a07254abfb9bf5d0f55dd1d7d49b466c09745d704d8743d0c4c7cddc02"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/wiring_guard.gleam",
+      "sha256": "c7eed5bda5f7910450c54b2d16b4c84d42b5f2b259f968d5a0507b169d157d49"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/zenoh_test_observer.gleam",
+      "sha256": "e98067a99dce9febd609e073bc6f8d40af5e2ed99c942821bfa4e04e2fca8ca0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/tools/ui_current_review_bundle.gleam",
+      "sha256": "51a8032945532993bf2d5508548e1726cbf6ea30231404be9a30ea6b93d8b054"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/tools/ui_diagram_quality_gate.gleam",
+      "sha256": "f416ac85fe055eb850ec703f32e51dd928108ddee80d9f9379aa8e69f49c93d4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/tools/ui_report_quality_gate.gleam",
+      "sha256": "7c40565126c3b143f89f95afaf55eb725740af9f674fb9444caaa46ed43ba925"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/tools/ui_task_closure_bundle.gleam",
+      "sha256": "2509e2c80de4597f995f9ce58844e779efe1ad8d713b802a84f8445f42d44dec"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/browser_harness.gleam",
+      "sha256": "ab36c00d3946b76b87df560229be799e61e60e7785438a955c4656a16e77a231"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/domain.gleam",
+      "sha256": "7f2077ae7b1a8bf141bd3aa146208c5ab2143cc58945f20f7fa4eb9e2457e6fa"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/ecology_refresh.gleam",
+      "sha256": "e1550807f696550eaf2b82b96bd12553b7b7ba3474fc5a7a7b59073c457f0320"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/homeostasis_data.gleam",
+      "sha256": "f6c469e0b016930a8c6603d41ab7c0ef337c542ea027d0462d6551d302b4a2af"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/homeostasis_status.gleam",
+      "sha256": "99de685dc4440619ab1795624e4e6e2da29aa842c59a618a110ea5e26b87eb1e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/agents.gleam",
+      "sha256": "b3bc7aaf943f505e306cfde0fa5647446da3d709d1644d3f6593e62c970c83d9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/agui_cockpit.gleam",
+      "sha256": "683f89c7a286a3b6d3bb9c4097116d38b363dd947724bf925ea1064fe0f21ed0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/app.gleam",
+      "sha256": "b5c791130eb7c3cf187b75e699746842573caf1840ca24313328c168a0d1522f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/auth.gleam",
+      "sha256": "85408aaff31a675b8cb7c22e31c0165e4839df94e18f84eae963e71a61b8c648"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/bicameral.gleam",
+      "sha256": "dbb82fc2211e6d1d4f0c2eba31047f367dde20177a87998d58767dec66816d5b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/biomorphic.gleam",
+      "sha256": "4803b3e2e76ea761ec2fbcd4944e0b11bcacc52b54ecfed3d4b7d8bf9266f09d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/biosemiotics_radar.gleam",
+      "sha256": "8400f38f7e433be27bae85ab475b5d832493d24106f845e86a11186b6627d6f9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/bridge.gleam",
+      "sha256": "306376250a141f5b56cb648b8bbe6a406d65a5d02bc02921f5ae01e14f00a85b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/century_hud.gleam",
+      "sha256": "7158879ac9a260fd8e0131a98546818302a727643c9b7ce2dc599ea6973f1dcd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/chat_history.gleam",
+      "sha256": "07e056c0502234cbe684b96b9f44d44f5e7d6f5d2c25adac8ebaa9e111c99568"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/checklist_page.gleam",
+      "sha256": "8d56d88b4e4206366a285dfc6b46c67ba91678221c2d1cfe0b6ea6917c54c34a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/cockpit_view.gleam",
+      "sha256": "1508e431584e97fb502371435a88b549ce76d4fad30160c16992318fae0806c3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/config.gleam",
+      "sha256": "53a6db43f788e8f7180137c93b837c0615b97699a23166f1cec75445cbee7c1c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/control_center_demo.gleam",
+      "sha256": "74d74cb9dccb975775e9a3385b076edc08475713ca7459aff35e3ba4d865e0bd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/control_center_lustre_suite.gleam",
+      "sha256": "0947001b8c508abeaa6716d0ef29bfcd95555a78ce41a7e65f3aa0a8670dea08"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/conversation.gleam",
+      "sha256": "bc47628e8e12e2fcd3eed498d0d861d7b151526be35f956a778761e99344adc1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/cortex_cockpit.gleam",
+      "sha256": "c38967ac4bda31add341e7922a1dea07884e9d6efbf55eef15fb8b8e3d1ce1d0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/cybernetic_brain_matrix.gleam",
+      "sha256": "9d73c57190932c5d57745216117df577fa9fcc21a8a9fdc14c82c3427246391b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/database.gleam",
+      "sha256": "8e6d3cf535b7682a3f11de88663029f85a32acceec324e49375dca4fa39477e1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/effects.gleam",
+      "sha256": "49ee61e3092aac8b62fc66171564b65c9dc58afb3a8bf03314d2369a37f915c4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/email_compose.gleam",
+      "sha256": "95f905aa7daa6b9ee030acacfb4c539232044282acfbcd3206fbc59e8dc78abd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/evolution.gleam",
+      "sha256": "9cfd3818a548e0327d6bd9f7d3deb35ae1320d61b6bd2a135a8fe23829339eb5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fast_ooda_hud.gleam",
+      "sha256": "b545beb03b0ed44ffc30bac4cf962dc2ac1f242ba36a6f3b8c0394ed213b953b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/feature_tracker_view.gleam",
+      "sha256": "537692060bbacc86be6b65b0e3ee79fedb15c62a92be3d445f194ce602022f61"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/federation.gleam",
+      "sha256": "db8aba16dc192b16f530c0174de16961ad52fd2e15ae1c047565b900268c37e7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fifteen_cycles_cockpit.gleam",
+      "sha256": "2da303f80c3b31a45e43ce3564ec09b13a74ded40f12d2b518951be3820d985e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fmea.gleam",
+      "sha256": "e28f59cd7328ee24d85cb1d9011e0cfcaa1dfd50f70a5cf4c7533fd8e4429524"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fmea_report.gleam",
+      "sha256": "328da2fa80b0c8663d0b974e638af5da1f0fbd3db822ac171525dc9fb93e6783"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/forecast_cockpit.gleam",
+      "sha256": "b8f6fdae479c8da86e7d863859e2a1c6b7872e16adfe9d546c6ae1d2fe3be2d2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_agent_view.gleam",
+      "sha256": "0e9493e38c951a72648f1bde38bac803d043f3e6119e2b61925c6518689089ab"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_atlas_view.gleam",
+      "sha256": "d761d39b2eff6f5193dfe220ce56e47ae30a21a1076f177d65ce4e53e12f1347"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_topology_view.gleam",
+      "sha256": "42f7060daa3779f17f40e87d4346068fe273f446a7b8b25de3fce6dccc4da65f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fractal_atlas_cockpit.gleam",
+      "sha256": "416e002d6a28c3ecc841bbc127f119e65d4e681e1b2a417244edbfa0b46698c1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/git.gleam",
+      "sha256": "7bf5b7b7612a84c0467c166e85f7f760c2c2bc7b2e9ac3287189f5d0ff11bb4b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/gospel_z3_parity_explorer.gleam",
+      "sha256": "48738ad70d0c3d328dc0cdd165f760b4a2b30b80d6f21c0632132faaa3aca3e2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/health_grid.gleam",
+      "sha256": "1d7e8d0353f0a1d8809bf5441b8f41816a19630d3014475e33c50320149eb8cc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/health_product_page.gleam",
+      "sha256": "853ab11efa35e5414db425c221585919a3dbde5bcff387d93be3109ceaa5418b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/heartbeat_page.gleam",
+      "sha256": "09e1e96665e6636ba5b107acd2446ac93bb453072429c25bf357be92a1c0e9ae"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/holon.gleam",
+      "sha256": "e9ba72f5d1e90afa8cfa9caf15207a2d33d44d2bcc34370cf035ed525923b26f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis.gleam",
+      "sha256": "82e54d13b46673450c52ee8442b0df85dd2aad4240cf4133557e0ec84fdb4522"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam",
+      "sha256": "f5d2292503cedd8bb03014548ec287d4007d59977991c1831b2ee02f02e794a7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/hook_subsystem.gleam",
+      "sha256": "69932877e9cf5b4a65da9db9112ea8b4883d0a210dc205e4d494d32dc4b5f881"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/hyperdimensional_zk_hologram.gleam",
+      "sha256": "8e9be72eabb094ed23a177704446af55a095ba50e22c8fc1626b652b7f587ecf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/iam.gleam",
+      "sha256": "0206241f90d5767dbc28776161a8966cc60904bc76700f2cd4d5279349aa64e2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/immune.gleam",
+      "sha256": "b61fb5fb8ee8e4cda0e1c0176ba8343538e2dabdffbac5e48096eebd1e21961d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/immune_sre_hud.gleam",
+      "sha256": "96b2bad8ba53d6ccfee55945962142623fea065170061157d68bf25e0c3a6bf6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/inference.gleam",
+      "sha256": "93c6bb3c590f20fbd656b3f3b335a3c487fa445da75c06b11887442e2f12d180"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/inference_tier.gleam",
+      "sha256": "1af6a56e2775c75d8f84a53d3fc8f8e91736e34f068a341527f365b7336cd9f8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/integrity.gleam",
+      "sha256": "d90b51ddb364e1472e2b1ad73aebe4c0ac79b7b8315ac2497b806fd6efb2b0f2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/jobs_live.gleam",
+      "sha256": "eb11873b70f3403d059e56c5de01c3eb0e3f81316df2ed1bd1b752b362b54700"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/km_sheaf_traversal.gleam",
+      "sha256": "8a9800ab72672e413b9e4d5fdf16480b9d0535612f20e1bc97e5a8cc6f5cc071"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/kms.gleam",
+      "sha256": "1b2407dbe9be248f4abf5b471db5262f83c5d24dba88e75b35990eafa9165032"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/knowledge.gleam",
+      "sha256": "28d29fa1b6c983f972f5fa2408eb556ccc3234c4aff2f35b00322cb1e5130192"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/knowledge_explorer.gleam",
+      "sha256": "329383171494a45a1dc299139522abbb6b104d4b595fa39341932a376d708ea8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/link_tracker_view.gleam",
+      "sha256": "0a7d34fdfdc9e9751420cf16f41f8134c95aa10651cacb0cc17e9ad69b5f021a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/markdown.gleam",
+      "sha256": "c549a0a5698f4aec45b7ef143f8d26a427859d0d76254421e6de5b0e2704eddb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mcp.gleam",
+      "sha256": "ec7eeb019bb8300c0019f205c9447235d39158034b32af8abd8d1d8e1f987abf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mesh_topology_view.gleam",
+      "sha256": "21e7c2d474fcf1531fd88d9e41714ef3f32faf96ec88c34d79cd774ba173ce31"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/metabolic.gleam",
+      "sha256": "a81f7e59e164bea2b136d025381c9ba99db86e521cc5d2baf81a6f2b2d3991a6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mini_app.gleam",
+      "sha256": "81fd1c879eed10b7a3cb4052f61fb4a30135bd8e3ee6ddca4b33d0c847a71391"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam",
+      "sha256": "37b52449b5c43d574b054d2541269e9e731e18e7f1cd2b56b18ace92c07f69b9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/multi_agent_quorum_hud.gleam",
+      "sha256": "c01355da7deecae613764c4ca8dac796e21c6319cbd2886b3ae702f8dd14472f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/navigational_omnisearch.gleam",
+      "sha256": "4225c6754099cec093a7610f13be688b363720af3f4416926f51ceef793ae925"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/omni_modal_console.gleam",
+      "sha256": "feddda647cf71ecce0930c1d3d615ffa0100fba6f2c96efd29a65c0ffa51439f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/ooda_shruti_hud.gleam",
+      "sha256": "501bbad4edf617d4fc9dae1d99a210ed03df47f6ba81f9d60672e94fe11b6150"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/owner_parent_picker.gleam",
+      "sha256": "2b173b032eb4fa110ad824c568410b078191386a2d681e6ab7051e6d3c84d0fe"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/peer_health_view.gleam",
+      "sha256": "3dd62262b1eb4cd1e5659af47491c6d0ee97cb702de50daefd148742ecfa8004"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/pi_startup_visualizer.gleam",
+      "sha256": "7b18d131362fa2716bae101ebc4ea179a48f7189573bcc14d27b313e4cbb1629"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/pipeline_trace.gleam",
+      "sha256": "c93533cac6a2692ab3db4286bca75df9e63c676a47464f678dd24b8dabfaed22"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/pipeline_tracer.gleam",
+      "sha256": "9fcb101cc899d57af694e859086bb9b5bede3d73bb80041f1d714459101d9654"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/planning.gleam",
+      "sha256": "999dee84d96377a4465812a8b5915808ff3c50d541a59efbbaeb443e95b039c2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/planning_dashboard.gleam",
+      "sha256": "6d8c6c5b9d277633ec4122bc058abb44ad1edfcf7cb79f36568e875143725a1b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/planning_view.gleam",
+      "sha256": "4be4770bbde7144c2bf3684d9ffbf31099ce342f8011be28f3e6a322a822e8f8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/podman.gleam",
+      "sha256": "b6830c30949ca9cd5f8128943e8bf15bd9e6c9afa291a0ec607d5f9c9ee6fad3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/prajna.gleam",
+      "sha256": "9ee59109265d027d079785491ed9f56144da93b540b6e9550d562f6e017bac28"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/predictive_autoscaler_hud.gleam",
+      "sha256": "6ba9ed90ab562a6dff470f66fa7f1389ba8d3b5e40e9ac442eba2d09caed5061"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/rag_cache_hud.gleam",
+      "sha256": "839a43c8c519d2fe243c9751eb9893ceb470fb5c6b7efa1239e59e0a62f5a875"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/recursive_patrol_hud.gleam",
+      "sha256": "89ed98e8991cea39d17aea2c4c296eefe187960ef529943f46cbd929eef8d0f0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/rete_ul_hud.gleam",
+      "sha256": "08274e4b71618e6dfa72659522417c3088471bf0bf84312f3c3afd5d9123b610"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/ruliology.gleam",
+      "sha256": "5fd6059ac3a59d89b223115762bec3f3f9e06d528aaaac79711a4059d299d398"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sciviz_cockpit.gleam",
+      "sha256": "d7d35163ade080f2af5d2c875bfd0826f3b4f265182e53976a41cfe3e59198f4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sciviz_comprehensive_explorer.gleam",
+      "sha256": "0ad2d8f62fd9fbb9e84bc4acd9a05a1f448728ace14bb2d11df1ee727509641f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sciviz_extensions_dashboard.gleam",
+      "sha256": "f750314cedf93d799f8df19c2153d100338696e7269c677d90dea24d7646f8f9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sciviz_test_dashboard.gleam",
+      "sha256": "035b3d5b1bdd5c4eafbcb7e235a344f950ba1b9deab8ea3d8b53d4ba195eabdd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/secrets_vault.gleam",
+      "sha256": "fe78d3cd18ffae7aab1afe8ac1fa2063df00e8dceebe2abba5f85df1635f7aa4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam",
+      "sha256": "f6bc8bffee9690254dc8e293b69c0d07c46c77aa8fcb44f35a35499ade0ac2e5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/shell.gleam",
+      "sha256": "f04324e8586da30ebcca7d58dbd2b10447ce462c326ce4f9378e7d02f9ec6308"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/simulator.gleam",
+      "sha256": "9715907175f5d99037e6ab30ca75de6187a1482a794a3434ede003f24e7222d2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/singularity.gleam",
+      "sha256": "fd0347b3971efead67805c08cf3f85904c5cdd83bd2b673443fcac90f135dd81"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/smriti.gleam",
+      "sha256": "ac47126282ef5c89dc69885ac28f22f2dc24b49f049c7cd2836339b4be84d451"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sovereign_tensor_cockpit.gleam",
+      "sha256": "16309fa0526ef69e3cd53dd2e019e30b1c164a7d7725cdc6e3c3a6d2fe023926"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sre_cybernetic_immune_engine.gleam",
+      "sha256": "3ad813fdcd197110ac35833ae28204dc6cf1e62a01d74a3cc257684399f1074c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sre_resilience_matrix.gleam",
+      "sha256": "c5828cb7f2303f77183cc27daa579eda4b5414d03943a1652267e641fe355763"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/status_filter_chips.gleam",
+      "sha256": "3bfd00db5289bce53fb8308d6eb8ac61a6b3b6146cf24d0a86bb47107aae07f6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/substrate.gleam",
+      "sha256": "d09880be4b42d2e82327c17da90ca2dc810f4857133616bf35f49888d3f71eb2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/telemetry.gleam",
+      "sha256": "7dcc281bd66e502de34269e2368b0c4969045c4820acdaa33075f154ffc57dc1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/tensor_fractal_atlas.gleam",
+      "sha256": "772220f5723ca694d62ed085298288169d82e475717d43c4fec13234f10b5fb3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/testing_page.gleam",
+      "sha256": "ffdc65c37ba1a553ce929698ed3d76911101000e838cc88965cc4afc21a38aa6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/triad_matrix_view.gleam",
+      "sha256": "bb334921560cc40a6c2fee9186482b97e40d1b88fab8436a765fd91b0884e7ba"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/ux_dx_cx_auditor.gleam",
+      "sha256": "5477c0394067a34b61fab788dfc31af13bee5f62f1790ad2a34c6538969b9de2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/verification.gleam",
+      "sha256": "c3787118834149c276f222a1938f780629f9f872cc286245855576167029372f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/verification_requirements.gleam",
+      "sha256": "98cc76faeb0fd5edff1508f26ac6ea14e7a26523d19b7d173c936565f4b42063"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/voice.gleam",
+      "sha256": "686109b9073c383d6f8701b0679f88ad84f7c16374476c6f5dffceb75b7372af"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/voice_pipeline.gleam",
+      "sha256": "56e887f4408877fc5977f1b8d5582332ec26621d322632a362daba6f7538beda"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/widgets/biomorphic_matrix.gleam",
+      "sha256": "a02d1484c7e18163963300055f272aa4fd5bd1a3e0d03f2f10dd6d317591937d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/widgets/evolution_vector.gleam",
+      "sha256": "e79ed5e202a2c411279f0246dd562483b3ac6255d8d66f4f34a80a37016451e4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/widgets/homeostasis_control.gleam",
+      "sha256": "ed751cde1994fbf88c222242cf4db11c4998095bc0ebca71e9954f669eacbb87"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/widgets/hs_ds_pane.gleam",
+      "sha256": "4c82ae9443315ffd39976544d2b5412e8e4bfe3322779a4f8d644cff18e79056"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/wiki_transclusion_engine.gleam",
+      "sha256": "07de97254de293a487a0ef55966e2dc9d63e943fe85c8efacfd6104a0d0e8de5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/ws_hot_stream.gleam",
+      "sha256": "a3c746788df02cc3e9a60a5206d1f9a2830defd7f05b335659919df91ee1d54f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zenoh_browser.gleam",
+      "sha256": "f832b636581691dd1bc4623af51bc91be2204a62b7b6eabf00e19612fb16befa"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zenoh_mesh.gleam",
+      "sha256": "90e409ba58e724e892780695a1e67cedaf684ca29feae1d25dcf3eddbec5da4d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zk_decision_matrix.gleam",
+      "sha256": "4759665a144b95c8c527a73ec984c65a9e8d4d3201069b0305ef0abeee937690"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zk_graph_visualizer.gleam",
+      "sha256": "f7d91cfd7c35b33c76ea911c4ae16cf5e24a3741a0d6842ce39a6c274f1e9641"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/state.gleam",
+      "sha256": "e4442ba8b10d692732d8d429509c465afea2805e29f9a07b351b06d3db4323e6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/agents_view.gleam",
+      "sha256": "9f216078a4bb3482039d6e5575d9c7d8db411a84afdb146b2d9654ed4eed21ec"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/auth_view.gleam",
+      "sha256": "b5c3d2f5371ff5247b50b609a685765b83a6712b28482652b3dc106f7adf5dcd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/bicameral_view.gleam",
+      "sha256": "c25f12d25cf174aa95d8e16258147634daeb1fe7ea6a0e1a81bc44eea945ecba"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/biomorphic_view.gleam",
+      "sha256": "69b12675e03f80480a5aa89b3de8880b3505d57b1699434b7c07da8ecf87a057"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/bridge_view.gleam",
+      "sha256": "c032c7df39de63b6042c34c667e3552dac94f2979e568d8671c5136708b88bb6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/chat_history_view.gleam",
+      "sha256": "4d250117aa9c90b91d5148d40b60e3e675103d33661df989f44ee21447f8d274"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/cockpit_view.gleam",
+      "sha256": "55a60ceb871fac7f6b91e91e3fc40868164a051bb35884974bccef4378c6b229"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/config_view.gleam",
+      "sha256": "da6d02ad220b120ed22083c44666341f535cc66091b74235df99ed8e89704e42"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/conversation_view.gleam",
+      "sha256": "bf495bcdbae8eca4daef0df475f32ceb2d1fd5a9d551aebaaaf108a18175b512"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/cortex_tui.gleam",
+      "sha256": "703ffa04d1f289d6db6865a007178b2cf6bf55964a119e6ee6ca218e698be055"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/dashboard_view.gleam",
+      "sha256": "33fa30855c73ab468df41f9fe5d1c440d1ded4a93ff40115e81cb000fcee92e7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/database_view.gleam",
+      "sha256": "eafcf8ba38b526a957aefa66bc3e46d632e5683fe192d8370728145a8b89b2d0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/email_view.gleam",
+      "sha256": "94e1824cf3cb310a6194b1f9164b2c05b3e273a8efe122b1054ae4241b1e561a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/evolution_view.gleam",
+      "sha256": "68f2c2165d966e1f256172df3fad7ef038b3991ed5ecee631d2c997d346175f6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/federation_view.gleam",
+      "sha256": "520806822d5717345d27494d8f09bd0f94207b0f0578ede1997bdcf25e981b50"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/fifteen_cycles_tui.gleam",
+      "sha256": "adb5cedefeb84d479d0896b478076ba45f3490a282a33397fe7854ba7973c987"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/fmea_view.gleam",
+      "sha256": "e6ed2d67ec6bf05e0596bb14c903b12b003309107678fc47f1e1f82d988ddbaa"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/fractal_atlas_tui.gleam",
+      "sha256": "8e185dfd0955dbb6737e3ce19d0db132f4c56035e92e24f904cea7c3b40fbfa3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/git_view.gleam",
+      "sha256": "a64d52ae063116af5092a6d40f85b3df8fcd240335218a681e49bc4ccf6688d5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/health_product_view.gleam",
+      "sha256": "56e19657d76b3f63a9c530c43c44c586ea5fddd41fb021075ab2417159c9f976"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/health_view.gleam",
+      "sha256": "fa77a21e74a7a6d2b5c0f44d1ec1b19f66d225c994a5985b7c1d5b67e4fbd9d2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/heartbeat_view.gleam",
+      "sha256": "769ef328320c69f3293366f9fe895fe984e7f3ad58d322428e059a7ad66a48be"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/holon_view.gleam",
+      "sha256": "3fbf238468017d1096500a7cfb2c00fad555c45b8ac546ab3527dc6851899616"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam",
+      "sha256": "9082fc91cb3cf7c8e3632251027b020f13a9493d8f66d713be55d572049f77da"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_view.gleam",
+      "sha256": "d9dd03bd297a6ce8dbae68ab464f0b850360f78a2a56f68d9495b16f5e1bbd8d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/hook_subsystem_view.gleam",
+      "sha256": "9fd17e1bff4733c2271bb0a12ede864c836e4641b17c9035eaa226222f61a38a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/iam_view.gleam",
+      "sha256": "6774abd4f2b6aa154704642aa98fd1499a1bb88af7d2cd6d57435a94ea8d2add"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/immune_view.gleam",
+      "sha256": "fd835cad34561c677c777ae1cc0b9454610fdde79b6832230caf420a02eafaf5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/inference_tier_view.gleam",
+      "sha256": "4cb7fa0602e312624bcef9e6760c18e565fb9cf2f1fc4ae932c3041a91a3877c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/inference_view.gleam",
+      "sha256": "092cec68ed721bc4f4040ff1149a9eb01efbf9bcebb435fd8d88f20d94e4d543"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/integrity_view.gleam",
+      "sha256": "b7d5907290f90fde1dbe50b89650af9ef679e04085aff9ecbf8b5b87d47ffe30"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/jobs_live_view.gleam",
+      "sha256": "4c60f7b1a492a48751f76ccb8d696e59fefbdf40b9e4d0946bfe063ee2a497f8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/kms_view.gleam",
+      "sha256": "a91769f0efc3b47e76718ac6ca8060a9071fa6192ed661afef1183fd4b092bf8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/knowledge_view.gleam",
+      "sha256": "88f29af5d1f549f5f0005e1560461a362388fec8ed97d73ab7cb6f873eddaf7c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/markdown_view.gleam",
+      "sha256": "5df09e5400fe09aa7cb7feecc503e11d2571e64c4de029c04e7d73f5534ebc1f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/mcp_view.gleam",
+      "sha256": "a5c4cc9b8b8b31ce8a68ea23c1af29ae42559ff29bb645661862457818c41824"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/metabolic_view.gleam",
+      "sha256": "b91bdef1c3324192b43e25e03c872c427537f47fc731be2d9c2da69c060183e9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/mirage_view.gleam",
+      "sha256": "36ae6293e99ea9fe3cc4ff62d4ae04844dbc98a996d32b9729ac3d558c8e7771"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/pipeline_trace_view.gleam",
+      "sha256": "3bdaa062b36c99198bdc409cc269e04e20005e17d627c4de31b8f3b2a3c2e5ad"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/pipeline_tracer_view.gleam",
+      "sha256": "7d4edf9a816a56086ee6e667d9b129fecab5464ea2dee89beb1df90bf6781a04"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/planning_dashboard_view.gleam",
+      "sha256": "f2da897ec3da8dd56b38d997ecd5b63ac2a4e2d2608d1b32cf0b6c0c2cda69ef"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/planning_view.gleam",
+      "sha256": "fa4596842bfba39e9d07f32e97951e611b1a1ec7a768d5d923ec7ea3dc806c6e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/podman_view.gleam",
+      "sha256": "1793ed33ba244001e1ddced434a3332112c9f7d0d028f6f1845b9bbadbf6264c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/prajna_view.gleam",
+      "sha256": "89c2a1447aeb3a6e91a77f4118db6d242bc701bda71a1c9fbeadb9279ac86319"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/renderer.gleam",
+      "sha256": "7027422a93ced2958a29794ec4d888a17a337c0d7ef41e29e173b587b29535b0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/ruliology_view.gleam",
+      "sha256": "72d26108a2318cf55ff6fa15bb0e5267be3ff43f7b492800654ee3ec64a7c7f9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/secrets_vault_view.gleam",
+      "sha256": "8b17d44febbaba16bd7a91ecf35d692586271babb3c3556b5b9ba1389b5a5a19"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/simulator_view.gleam",
+      "sha256": "f998ac7dcc885594712aec1f4ab01ea5bb206a2299e4f637716b39a8faabfb5b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/singularity_view.gleam",
+      "sha256": "579e0cd20926af9b197363ab497c40aa166a334c1dfc8b5be3933e698ef522c2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/smriti_view.gleam",
+      "sha256": "9391d2a595403253732468887bcfd7de083409650efd75513a16e706517665a5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/split_screen.gleam",
+      "sha256": "e763b4ce73c192aff5a9f480236545db9fcc31884055eb9bc1329456d628ff62"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/substrate_view.gleam",
+      "sha256": "9b4af349d49431aa107fb7e6c5375f9cc8a3ad1d33c5a8145719b9943e64cc75"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/sysadmin_cockpit.gleam",
+      "sha256": "f19d4138d54dc5c6173406d5d05ea43442132c9c3b6a31dc2ec18e8c10e4f993"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/telemetry_view.gleam",
+      "sha256": "d8004ce61afd554e794a4375b61b17012915e3ceda41ce19274d6387a370fa51"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/triad_matrix_tui.gleam",
+      "sha256": "fd69df48870b42309af93151d9e9f898245336fd2a10f793045bcd3b6b629b3a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/verification_view.gleam",
+      "sha256": "dafca0e3339def620339743ca5adb1cbfcaaefe3ba52cc215a4647d9f3cec1ed"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/voice_pipeline_view.gleam",
+      "sha256": "b0dc16a414255c574595932154a066e5378194243b684a13a7e9fcb63a898dbe"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/voice_view.gleam",
+      "sha256": "434737b6a0db49365febba031aa5b04fd117e35fd6824055327385885f37e8ac"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/zenoh_browser_view.gleam",
+      "sha256": "88261c0f3b8bd3db09b451a23b83653bbda1cdba8d51c56679a11fd586bc5f7d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/zenoh_view.gleam",
+      "sha256": "a5868141af01468d08f5e4c3294b762916b193771072baebee14a3e3ac1f7c46"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/visual_reasoning.gleam",
+      "sha256": "dd79a29c792ba0565d2c385625264ee9a0840770f9fd7c3d34cb9dc09a12b99a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam",
+      "sha256": "4d13894bd4962f2ee1621d55d684da8fd3d9168c1a82c6ab17129b9e2ccf5f88"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/domain_views.gleam",
+      "sha256": "32c3416079583a19ff5f64d3685f5fa06a1fa17716cdad57bf3a7e226945d63c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/page_helpers.gleam",
+      "sha256": "ebd80ec4a276f9f70b37b9109a6a8e0cc15cb441f28372f6cce7b754e86b4af5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/page_views.gleam",
+      "sha256": "818c23834d4ccb8fb33e92c5ec91a6ec4ca5075ddb8f185373282c80fdda40b7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/agents_page.gleam",
+      "sha256": "9bcd0bf33b791b67b352995b9aa84162e9395a050257e97cb7e1c4e6c084767e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/bridge_page.gleam",
+      "sha256": "5e24fa522fb95f6a64056b40934ea985bde24b4d74d42ed0338dcde3f67018cb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/config_page.gleam",
+      "sha256": "2930d610eff26edf26b7ebdbab3bb35265f072d58af88505c7cc8f2de690d43b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/database_page.gleam",
+      "sha256": "6145d5b6fdf45e536717c2d311072b6b953ce6c93aa7c8e7cd6b1b281b2d3a21"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/execution_progress.gleam",
+      "sha256": "e5f6bac261823ffea2a6fc404de51260b8b1b192f6a5d8406c2c783240564b75"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/git_page.gleam",
+      "sha256": "e94b4ee062261bf54950dccfc58b452125e57a82014182ce7af7168511b9dd53"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/holon_page.gleam",
+      "sha256": "039315043a8274b7919dd0a8c101bb73c40dc624861ef1e3c47b354a3a73a327"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/knowledge_page.gleam",
+      "sha256": "115ef057f6d3cbf9bd8c70e3dc7060bfbb9825516ad15faf96f1a8168f8f6d2f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/planning_page.gleam",
+      "sha256": "ca49deb3100e876f6f1dedec643934ed1e309ad8e2834e6450ddf31fe5255c8d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/prajna_page.gleam",
+      "sha256": "80fdf1beddd70c19f4e7c6a2374ba7fbb075007dba968676f581bb77ee6157a1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/pages/smriti_page.gleam",
+      "sha256": "aed09f14d2e1a88e01a159808841ae17e97025d2217262bfe5dd2f1a5676273f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/shell.gleam",
+      "sha256": "d449f920126015a6c8924c16ee2b518fa3e156b6db31bbd0b137ab6c74356db1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/special_views.gleam",
+      "sha256": "6c34ad87e7d474bcd2f7873ef7ed5f6dd7add5204ae0bac3e31be2f14e5b3ed7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/system_views.gleam",
+      "sha256": "ea144c65ce7828c11008c7e24149a7587303ed0895db18780bd6a8d1748a3bfb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+      "sha256": "853d8de08d281f6a372cf5a732fab2b21d28645f17e015623db1ac6434ed23cd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/auth.gleam",
+      "sha256": "6b42dd7284e3946f6027a2d19c0968249452c81dfee8c77fe886cf0d60045868"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/auth_api.gleam",
+      "sha256": "a91ec4fc07833968c3a99d2ade5861b1186ea26b5df0c44151ebdc74d411f157"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/chat_history_api.gleam",
+      "sha256": "e62c27a5ad026dfad92ca33a85a3384afd0192cc119355b520b0e0be11d60248"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/cockpit_api.gleam",
+      "sha256": "dd23f3a54fa0ebf9230b915a371e55a46c8d23b8682857a08c73bbcd7e42bc6d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/conversation_api.gleam",
+      "sha256": "d0741257886a98ec263d1f79d27262676cee4093e1ac2716b5f0b970828cda76"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/email_api.gleam",
+      "sha256": "e541604999d1ab357267e398d214df43da25dc24192abc732fffa6290f9b96dd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/federation_api.gleam",
+      "sha256": "36efe4249f70586d485672e7b150ee305af7990d24973d28d9e979cbf2d8650c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/fmea_api.gleam",
+      "sha256": "11f8f8a81d125a8b37e2c84b45895679a3591a9daf4001172e6d4796f386a4c7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/health_api.gleam",
+      "sha256": "a3d5ba7549a10433cd1193560be287ac116fc9f9d4aec29f38a4556ec74ffed1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/health_product_api.gleam",
+      "sha256": "d8d46a1c0d8636703c2cceac3ca0c6c2ab8a7c18886c9542d53d458144d23793"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/heartbeat_api.gleam",
+      "sha256": "5518941067d272765d0a28072df4302adc99f69e72b8fd67b5fe551662458d69"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/homeostasis_api.gleam",
+      "sha256": "1a4155b4e6a574d47c3aa218c81bb44ac69c9a5029f5d25d95e4075bbad3daed"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/hook_subsystem.gleam",
+      "sha256": "ed5f3214cceb0563e2d823274496e4f2c90b9b9815b51842c647ee2ddd7b093c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/iam_api.gleam",
+      "sha256": "4a7560efa3f67731f1bb4172aef3471c00c6df572455ce036a93ef7ad4bac5a8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/immune_api.gleam",
+      "sha256": "a1bb15252da6b3381bb25379c0503ea226ad3986d0e624e4d0c6785f8a6a9681"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam",
+      "sha256": "d53ecb1b19f8e0f194aae64e7c86a6f56602354334692a278910af1a73bea746"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/intelligence_api.gleam",
+      "sha256": "9c2f8e87d2a6e928472559b878d4b7515abffc27af93337342780eff9246e2cc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/jobs_live_api.gleam",
+      "sha256": "74eb25d1a1077aa4e51d6b1064dbb2ba77501efece23d10bdcbaa3be0b83a348"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/kms_api.gleam",
+      "sha256": "414b7f21f9a0284a24b742e7896b5c2221a043616fedaed51e120abb3c18b302"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/knowledge_api.gleam",
+      "sha256": "e297ee60e39a422004665c32124ce41ee8b2a6059e006169adfe5e40c8ec9e39"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/markdown_api.gleam",
+      "sha256": "0a107dd09a3ae9475fc4f6848712c3c5e08aeb47cb14cacc8cc4394e5e3b4520"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mcp_api.gleam",
+      "sha256": "92dd46ef46da65b6639056e66ee5f1a629aa0c3c9a5498a49503d94e1fa36f86"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/metabolic_api.gleam",
+      "sha256": "49880b052d28dd360e53b340bff7f14bfe3da5b9ae814e923555ce1e05f51c17"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam",
+      "sha256": "2490f3130c4414859a95e660b44bce3b3ceef6af2b897f70646c3bebff9e57af"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/pipeline_api.gleam",
+      "sha256": "6e165dde365bc646ea8a253bf2b511f564ff67040c7c3f493a56ca21198ff04a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/pipeline_trace_api.gleam",
+      "sha256": "63d0cfb29d0cacccb92a9af22368cc1b6c14d4f0ce3efaeec5c8a18cd8f4a4c1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/planning_api.gleam",
+      "sha256": "3cef31251c097c84073f54dbc185d582b4ed25bfc7a339507a0789c1c8a6b81c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/planning_routes.gleam",
+      "sha256": "2305ef6e0c92d28e52a08038daffb221d60efa7bc413567675a805620856acad"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/podman_api.gleam",
+      "sha256": "530d7275a380f6fdbf1b9bc1aac7612794aae56d46520c316976064468008a78"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/ruliology_api.gleam",
+      "sha256": "f1aa033fe57e8497b2e48b383771cc11bb7baf80d16647449197ccb5710b3ee3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/secret_api.gleam",
+      "sha256": "d2f4ddad96f74ddcb223897ad820be5311e0e8bb55af5759b3383b99d3091320"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/simulator_api.gleam",
+      "sha256": "6eddc594cc5bbad21a952d8a0311c16e65d94c24aca9e7323d69d275749e1c48"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/substrate_api.gleam",
+      "sha256": "0ecfa8dda558145bcb00fdc6cfc3b635889e319f2ba46ee7ce12b0f55393c4cd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/telemetry_api.gleam",
+      "sha256": "5f20667f0dbc30580f777aa41bdeca59e1f1f42832970179a9e4b2a8070e04e8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/verification_api.gleam",
+      "sha256": "84dfc6d1c85b7c7401e31a4b5516321bdb4e6928225650ddd556c09044435ba6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/voice_api.gleam",
+      "sha256": "67533500dd427122c46b1e12b4cad31883ede3d3bc5ef0ba76ff20ec77b72e7c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/ws_bridge.gleam",
+      "sha256": "6f633eca2be335bf1b83bf1ec6ba5f7aecfa6b20d44eb20d5a683eaa0df858bd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/zenoh_api.gleam",
+      "sha256": "53b2da38654999437b6a19a0f6b01648899add43929ad0272d9bf9dd57f63166"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/zenoh_browser_api.gleam",
+      "sha256": "b241456ff4f576f2f871e6dad1b6f56fb3514638e1934bddf228cebb37b4033b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/zenoh_otel.gleam",
+      "sha256": "a5e710a80944eb42f56a6306dbf52407062959cc150e5b1027be6f7b52735aeb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "sha256": "0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault.gleam",
+      "sha256": "def3944a9fe307454942a0699bbf7c0b79232f66c881938d3966e3c80276f9d5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_adc_token.gleam",
+      "sha256": "b7c58a1f9135beaeb60c55264b62700563dda749f9651d3d7db7bfdfff45a39a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_audit_query.gleam",
+      "sha256": "c4a0903cb673b01168aa7ab4a5361131dae5ed4f8c30f2e8d90c1aad26486a4f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_audit_reconcile.gleam",
+      "sha256": "46a07ba1f927f4c2b4beb42bb2a424e1d8aa61e89e99ace244354ad75d5e9499"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_audit_reconcile_io.gleam",
+      "sha256": "4a7a563ec17df64212b4d35e1deab2510192e42c5e984dffb9c12ebb87f7744a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_gcp_sm.gleam",
+      "sha256": "d9bc7773da93491d4fdecbd2939ce82ede7a2b4bb373d29062bf6f74a18549bf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_gcp_sm_io.gleam",
+      "sha256": "233061a1770bf403925643e810be81f84310208b547ed11086e64620e30debb4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_kek.gleam",
+      "sha256": "93204d2e49ad958a713c4c897ade0cd2bb137b0a546902a0221cc6085eb62dc0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_kek_rotation.gleam",
+      "sha256": "c7f30d1bbe363a7b5820df922cea4ddb7a09c0dc431186941c85e1aee0c65d7b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_kms.gleam",
+      "sha256": "ed94d011cf50eaf0962a21e088c0ebf46e05d46e4b2b184c909235298fc5106d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_kms_io.gleam",
+      "sha256": "1123c655c844ba657900e5f29458220d81fc194d8962184a6ec26aa8cf15ad2e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_migration.gleam",
+      "sha256": "c3e47f54b90d889b28a0aadfbfd470d2fba2a2e7fc2d515695182619b264f188"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_pii_scrub.gleam",
+      "sha256": "3c159ee1aa8046152e7d34fd43eaf425326a9210872681106071905ad38a8de8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_supervisor.gleam",
+      "sha256": "71d436f4fe209817c60c2e4550dcee0cc01b4f104afeb1e2722a6c75ddea0dd2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_sync_actor.gleam",
+      "sha256": "b495579d612afebac5191d7a1123459346109c345b88148320fd8528f5e21adc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_topics.gleam",
+      "sha256": "fce629da1071d786403f57e0d1bd1dd9a689bb2580bed5f517cee7626dc88dc0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/algebraic_sheaf_harmonizer.gleam",
+      "sha256": "d0807158ef23b6759a7ed8493e31fd83b11377d26c7c015ecf02947f5c4d9633"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/aspect_coverage_engine.gleam",
+      "sha256": "357b28853b792d7ed06f000d3bce1e87612ffac968c45d086871f88c1a376682"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/browser_emulation_bridge.gleam",
+      "sha256": "e73df7869b6c5127454a7453ba3e4848960b593097587a0c4f521333c51b87d0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam",
+      "sha256": "6b92383ab8c8dcf78ddf17f5345227e818de66d9af02bbc1f58bbac07d0a68e0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_biosemiotics_interlock.gleam",
+      "sha256": "1e7272ab001007b1e8864c1cb2f10349e6a37a3b8acd4e15263cd91678261219"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam",
+      "sha256": "45d7101b3e247ab2f76fc93016d529e92da034686d26e4e45b6e0d6d3569d10a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/evidence_truth.gleam",
+      "sha256": "c3f11fe8b6f12e9f201c2e6a4f5485fb9bf9b1fafce0fd50091d9816f91dc067"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/fractal_triad_matrix_engine.gleam",
+      "sha256": "4fc33a7e208f7306e566d738ef1e22a4b7d9971aacfec8b03847b7ad69e5ac52"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/fractal_web_check_engine.gleam",
+      "sha256": "0e24d298ee4226345141245aaa292321519cff02070967436fb34abcff76f8a6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/graph_verification.gleam",
+      "sha256": "aac65ebee6829bc7ad083a5211f0423f2f8e7517709b257b472f4d49f27e6716"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam",
+      "sha256": "465c89bc1e885f3790c3f395c8f51ac15329a3d09db16f2b95328c0926afe7dc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/ocaml_differential_oracle.gleam",
+      "sha256": "c4c65e229831f32f986375d6b5e5d3135b6b172cbdeb138eec6bda1e397ab566"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/ocaml_parity_verifier.gleam",
+      "sha256": "4d4426c96b0e0605679cf0a4a475b16c4f4bf85994b629b2e06e811130bafe3c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam",
+      "sha256": "a77feca8752b6f2ef77717a3fd8f7c63ac47462c1ef628d296019f9a37954d61"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/peer_health.gleam",
+      "sha256": "7ba2070c15bb6ebbbcc9c4212f37fe171548071258b39e32ae94e8277593d7ca"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/peer_health_cli.gleam",
+      "sha256": "107cf63d2ccd040809d18ea3d26963e94ca1e99c97d5cc16ca39c71108555b20"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/probes.gleam",
+      "sha256": "2e460ea08d1009beb98dabff7fc17599f16e004e2b5b95ccf7a22eba30331343"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/prometheus.gleam",
+      "sha256": "d55b3673da3d603999d0d1dbb6c704e1116e718a1debf3e28640535d0b0bbf66"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/swarm.gleam",
+      "sha256": "8e2d5dc61cfafaa5e55f71aeb5a7ee7b130e26d79841a734a03ba47961005cd7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/unified_fractal_web_verifier.gleam",
+      "sha256": "fd62518d7bffcafb6cf431df5eec16b42101c6189e2f5f8785b03fb720c78b88"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/unified_verification_supervisor.gleam",
+      "sha256": "5e10434f4b52874ca61b6045a8e2372a9465d9a7d4d73d51d92e077b0f2bb768"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/vfs_selfcheck.gleam",
+      "sha256": "a103e072470254093227b4ac0ec97683bc0c8a4b33d2aa9f030d081f67cb6c67"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/web_quality_contract.gleam",
+      "sha256": "49135fdfbfac4a5bc33b26a57f0d4b67f59897991ebba6c27d0985ef54f13810"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/homeostasis_http.gleam",
+      "sha256": "4cdc134224ad277ee6fff29cdbdafb3e5678f3c3880b1ba5cc9984694ebd6f0d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
+      "sha256": "dc3985399811ba7cbd7ed9d910b627ce999dc43bb21ef43cf00e9211048e563a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/domain.gleam",
+      "sha256": "3159520bd0d2bccede519360b2e7e266d4dce80fafd382e833c0be35331cc521"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/ets_zenoh_bridge.gleam",
+      "sha256": "1f4804efc03bd9857c463327e696f430c4fa489d61528231089131cc15d1aaa3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/lifecycle.gleam",
+      "sha256": "767ce73339ce6b116e414a353068e8aa44cc6ab86ec410d3c0cf561cdba4ff18"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/peer_simulator.gleam",
+      "sha256": "cea123ef4f5f5c84e3b14e6c22000c64271126a049e0174388ffc7832e3eb56b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/safety.gleam",
+      "sha256": "af5fbe3b656532b15457908d1da6a77f61ab36bfe9625d61184d19a8720dc511"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/zmof_transport.gleam",
+      "sha256": "354baf76ea4e81a3646e48a2b75d670c93da465ada5035ca14a47a3d3e0770bd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/entropy.gleam",
+      "sha256": "eaf1888fd3ab941eec3accbd4a33832a75c88ea1d7e490a01a3129c1d1ea6e8e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/export.gleam",
+      "sha256": "6f2e0a52c1e80401e31eb06873d1d8c13e105643ce40b2e0e14a842a98391931"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/ingestion.gleam",
+      "sha256": "5ab0bd0d25e7661e2f8bb5decda5caeb58f8bf0a5bcd01c3f71caa30dd4cda5a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/linker.gleam",
+      "sha256": "1f3a99bb1474ef03a63b2f75db80753e1f2ba2bf3894b3bf8c27ba5f6a0817c1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/metrics.gleam",
+      "sha256": "d55a5b8f98b2537ae3eb1e9c761e9c64746c438f498c96e20f9cf64ca5befce9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/operations.gleam",
+      "sha256": "e7265d1358ba66615d465f9174e30f21f82a567b34ef54b019ac0419821ada6d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/rules.gleam",
+      "sha256": "dfc21a4f4fca018bee1038588347eb714d26337190cf1b3ed1d0c0364629f7c4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/search.gleam",
+      "sha256": "79fda2816532f9fb8f218dc23920a2fac0ac82b85d14b4ed3024182d603427df"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/trust.gleam",
+      "sha256": "d45b203878a0ac35515c890208114c496c941f35874a238f3b846f1e3b31df09"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zettelkasten/types.gleam",
+      "sha256": "95a7c5c8b610cca2d68c3970a6193ad5d6f9c4f41e1d263ef631404aedf63e65"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+      "sha256": "a12ae53af63a7f427461b8306573e21e7875c58f6e0246b42a1f543f3b006be7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+      "sha256": "9ae9365e83e595317632e576453b7bf62543abe7e0de4d97c762d7621d8e5074"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_km_ffi.erl",
+      "sha256": "d9098e9aa2b9ef6ad060c659bb5fe8849d040b0f62025bbbb84004540f396bb5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_tls_test_fixture.erl",
+      "sha256": "d01f21dc72cd35249ab5bb10a8380a9301f4919314e9b4c44f7d8eaf09b764ed"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cognitive_runtime_cli.gleam",
+      "sha256": "dfd69efb5fe223e6ad516a7034f1bc71559abf35dff771c050690fffe5691f6a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cortex_nif.erl",
+      "sha256": "75cfb664030c7143d4bb611a4eccf33d2a2963738efd393422e3ff5abd25440b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/direct_read_dispatch_cli.gleam",
+      "sha256": "3c0cd3f32308722b6b4ea49d7f3569c83954e576c149e386a73eb81312e46564"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "d4d4dfc204d815fa23617d70ac0d4779cf8c86119ca6d89948c52cca5c1f6210"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_openrouter_cli.erl",
+      "sha256": "6a12e7494acf1f065b31721f1e1973491e1f7f2c36fa5e1044775ffca49b9eb2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/evidence_truth_ffi.erl",
+      "sha256": "f0a6ef7753bf865060e34d9abdbee7aae27d1a2a628f57e724fef7aeecc8e3d0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ferriskey_load_evidence_ffi.erl",
+      "sha256": "9822990a4df49751ae6cf8dc79607c26dd8d6d6d8ee021431c4f7c434dd81460"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ferriskey_nif.erl",
+      "sha256": "a0f2785f39e83431759e15de95fa7add9063c58004a1279c35f99d83343886db"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/graphene_nif.erl",
+      "sha256": "59760e8a388382b1070708a10953eda97e2a7a2a3bcd05c6199e4d623a4dc840"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/hot_reload_ffi.erl",
+      "sha256": "af1d715026fd29ee2c78f81829ea1e0bca7a36d854277fa9156bcc6a51423508"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+      "sha256": "5519a07b225cb96d33a3b6c4aa78dfaff48d2ce558eca3165da9e6ab7f29333d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/mcp_authz_ffi.erl",
+      "sha256": "288bb714c70f2ff8d9f1e83cb4b038b2d49a95fd9ba41640641b4fb054a62a4a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/mcp_stdio_ffi.erl",
+      "sha256": "50102a453a97052b0aa5a4e42f8bc65548e34f3e901153deb96c89987b0c8204"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/oidc_jwt_ffi.erl",
+      "sha256": "efbac5db17aba6c3af824ac5a1e3382b94634a02cd17f2b49a88c7a78dba2cc1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/planning_nif.erl",
+      "sha256": "042920a6145d84b23fc9f3b0d0ac702a7e3a858c91521e040d274a6409f241dc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/recovery_activation_cli.gleam",
+      "sha256": "8b2c6645579ca2c0a26b7ddf6ddafee07ff8a392c1c8c034abeefa8e6504f6a5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/recovery_activation_ffi.erl",
+      "sha256": "75167b1b0dcc990d0585f0d96ec570f9123215ea3eae455a1b89f7892e73ffe0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/restoration_observer_cli.gleam",
+      "sha256": "afa1cc6a120fdb649d7ea5b07de0c1db5b47b45a0c47d34c448c119ccae478d9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/restoration_runtime_cli.gleam",
+      "sha256": "a424973bb863b9957b5a9acc925d697957690657673f9110c382d1d92c7e696d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/rule_engine_nif.erl",
+      "sha256": "7eca8bf81aa3bb5d053070babebb6c1ca745569b9e94906d5c5a84cd5354c4d0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/rusty_vault_nif.erl",
+      "sha256": "41616450c757a9c92251721689dd7662b7f4c84aceaade65eb0efe4513a8cc0c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/rusty_vault_safe.erl",
+      "sha256": "173b4b158c4fa250a35064fe2db32aeceb4b717bfafa8266670fbf98f214f913"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/secret_api_ffi.erl",
+      "sha256": "7e8f4d409d102536974c3184d797b2e6c575c9346a811f82596bcf5ea3da7a7f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/uos_km_nif.erl",
+      "sha256": "ae9e68bdebd264095313d90a4ea82dd4ee7ce5cd87ad0ef9e0dbb66a9f1bbe77"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/uos_peer_http_ffi.erl",
+      "sha256": "1a17846aca21da1ccd806a8fcba4365008c60f7f01db7fbebc16fdc9a374cd7e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/uos_peer_json_ffi.erl",
+      "sha256": "794a56cc2c6e53416f922936342272abaa59df00f6239e37e9b59e29e042e857"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/vault_adc_token_ffi.erl",
+      "sha256": "7ddc3f9b4c97de0bf127bc0921dfa955e1ae3d65f072ec68f4b2ff3c0468c22d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/vault_gcp_sm_io_ffi.erl",
+      "sha256": "2219d48166192a8794f85e5d8ec1a9359f8ef074a66bfd13b1de9b5ea04dffbc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/vault_kms_io_ffi.erl",
+      "sha256": "1ebf81dbd766a68fe77fb002ae44d5b7ff3a11ac712b7f13dff21bdd4f903ba2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/vault_smriti_ffi.erl",
+      "sha256": "afb48105aa9630ad02e18f9511d92ba114ee7c85e2df3760ba243096680bfdb8"
+    },
+    {
+      "path": "apps/cepaf_gleam/gleam.toml",
+      "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/build.js",
+      "sha256": "81bccec9504d080cdea116e917660cc84d8d78d33d577df5f23c32bc2639e2cd"
+    }
+  ],
+  "integration_task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 16,
+    "coordinator_epoch": 16,
+    "selection_review": "governance/planning/20261025-1611-command-selection-review.json"
+  },
+  "journal_recovery": {
+    "cause": "Unanchored PASS.*E2 pattern also matches E2E prose",
+    "evidence": "var/recovery-runtime/20261025-1552-socratic-command/journal-regex-reproduction.json",
+    "correction": "Individual graded evidence rows; checker unchanged; all negative and UNRUN evidence retained"
+  }
+}

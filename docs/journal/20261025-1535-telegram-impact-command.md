@@ -87,3 +87,7 @@ Prediction: this reviewed source increment can publish within10minutes if exact 
 EV94..109 remain NOT_ADMITTED. No page/task/goal completion or production release implied.
 
 </details>
+
+Publication observation 2026-10-25T15:39:04.404Z: main and GitHub f6c3c5ebe0f98a9c8baeb1884129e0b4f203e065 matched after fetch;250commits since806c2739. Source only, no deployment/admission. Publication bookkeeping is a subsequent mutable child.
+
+Observer continuation: old epoch7 unit observed inactive/dead MainPID0 before job completion and lease release. Actual AGY8e4ff8dc approved exact successor config; epoch8/independent3600second job authorized unchanged compiled read-only observer through16:25UTC. New live producer confirmed; no application deployment.

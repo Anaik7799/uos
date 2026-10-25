@@ -1407,7 +1407,16 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
             "memory_clear" -> context.turns |> should.equal([])
             _ -> {
               let assert Ok(first) = list.first(context.turns)
-              first.prompt |> should.equal("Hello")
+              let expected_prompt=case conv.prompt_for_text(first_command) {Ok(prompt)->prompt Error(_)->"Hello"}
+              first.prompt |> should.equal(expected_prompt)
+              case string.starts_with(expected_prompt,"/socratic ") {
+                True->{
+                  let assert Ok(body)=simplifile.read(db_path<>".model-request")
+                  assert string.contains(body,"Use Socratic dialogue")
+                  assert string.contains(body,"cannot execute commands")
+                }
+                False->Nil
+              }
               first.reply |> should.equal(conversation_fixture.response(mode))
             }
           }
@@ -2788,4 +2797,20 @@ pub fn e2e_impact_foreign_candidate_test(){
 }
 pub fn e2e_impact_unconfigured_and_scope_test(){
  exercise_configured_dispatch("/blast-radius a","unavailable","/tool query_blast_radius {\"module\":\"a\",\"path\":\"/tmp/a\"}","scope overrides refused","disabled",10,"")
+}
+
+pub fn e2e_socratic_dialogue_and_alias_test(){
+ exercise_conversation_dispatch("/socratic Hello","Model reply","/tool socratic_dialogue {\"topic\":\"follow up\"}","Model reply","success",10)
+}
+pub fn e2e_socratic_budget_test(){
+ exercise_conversation_dispatch("/socratic Hello","Model reply","/socratic follow up","Daily conversation request limit reached","success",1)
+}
+pub fn e2e_socratic_model_failure_test(){
+ exercise_conversation_dispatch("/socratic Hello","Assistant unavailable","/socratic follow up","Assistant unavailable","fail",10)
+}
+pub fn e2e_socratic_empty_does_not_spend_test(){
+ exercise_conversation_dispatch("/socratic","Use /socratic","Hello","Model reply","empty",10)
+}
+pub fn e2e_socratic_unconfigured_and_scope_test(){
+ exercise_conversation_dispatch("/socratic Hello","not integrated","/tool socratic_dialogue {\"topic\":\"x\",\"model\":\"paid\"}","overrides refused","disabled",10)
 }
