@@ -41,7 +41,7 @@ Runtime61/71,admission25/33,preparation7/7,consolidation9/9.353checks overlap pr
 Raw FMEA S4O3Det3RPN36 for false authority/health. UCA omission exposes failure; unsafe provision rejects fabricated counters/claims; timing fences before/after sample; duration100mscollector and200msobservation budget. EVceiling93 unchanged.
 
 ## 13. Conclusion
-Prediction: publish source-only after exactcandidate gates during this task lease. Falsifiers are adverse review,source mismatch,failed gate or stale authority. Brier calibration UNRUN. Full objective remains active.
+Source-only f59d3335 merged and GitHub readback verified14:04:46UTC,246commits sincebaseline. Exact candidate KMgate PASS. Observer predecessor self-stopped14:05:33UTC at its35second safety cutoff before expiry; explicit stop confirmed MainPID0. Canonical job was completed with a pre-expiry-stop receipt; that means confirmed terminal state, not a claim the manual stop caused termination. AGYb5b1583e approved unchanged-source observer config; successor epoch6 launched14:07UTC,expires14:55UTC. Prediction: next command packet remains independently reviewable within the current task lease. Falsifiers are adverse review,source mismatch,failed gate or stale authority. Brier calibration UNRUN. Full objective remains active.
 
 ## Verification checklist
 <details><summary>Domain 1 — Metadata and navigation</summary>

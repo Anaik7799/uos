@@ -1,0 +1,101 @@
+{
+  "schema": "uos.telegram.finops.checkpoint.v1",
+  "observed_at": "2026-10-25T14:26:06.801Z",
+  "scope": "Read-only daily reserved liability via existing OCaml ledger; no actual provider spend or deployment",
+  "authority": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 14
+  },
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_budget_report.gleam",
+      "sha256": "a266ef2130a722975268b50b926ea3282f9ac054dfc303c7d656b7b33565ec92"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "d82b24694e7a26a0fdbaa02663b9119491e06481ec4089a86645fe7117ca1d04"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "b1595898a0ff15a0de9cf60e16021ba4ec7d1841115fad0936ea6f41c14280f1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_tool_command.gleam",
+      "sha256": "69492e686d8a7402a0db64c2d46d1f2f7f2d39b8b0b3018d63679b9084d0f959"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_budget_clock.erl",
+      "sha256": "4a3aade241bb8b12b4f936472383c708be5380dee3bc3e454eb2ab39fc2e3875"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+      "sha256": "59e4b49a03e7ee36ec458d4e6723515921371eb46e05184e699bd69f38a30cc3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_test_runtime.erl",
+      "sha256": "ab24bde30452b3c7e588274ab964674935556118cf171f832839c728e035267b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_budget_report_test.gleam",
+      "sha256": "8f93967e96dc658774d7d82bfdd70e0a937c592a2927887f6aba9ed9d3c364f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_budget_test_io.erl",
+      "sha256": "18eda332a683556972b2ac0b1de6b0a72fa3b4cba9e9a3f0a33bddbb05b1fbb8"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "8da3d821ba082a49ff477014f69bde9307c987f7c36db47c6154bd812e63b8f5"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+      "sha256": "7bbc65fe3e0f9d821cde14ebf5b8fa6cd56799e21ecb94d86306754ee33d9d30"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+      "sha256": "87fb3c6f05b97a5fe12dfe2fc7263282f40eae7d9ff1ecff7dde46d01613b3c0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_tool_command_test.gleam",
+      "sha256": "30c8c10aca583097261874fcf4d90ebaec80d719965fdb6d5e9538c421d37c0b"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/budget-native-tests.js",
+      "sha256": "60f7ebab59058a4deb0c54a250fec0ff59da8b47b5a1cf60edd102807c643076"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/build.js",
+      "sha256": "0597cad7deab8ecfda90a3706ea5d9938393722670e7e385889d5ad1b1c8f299"
+    },
+    {
+      "path": "tools/ecology_budget.ml",
+      "sha256": "ace59ce098625963394ce1f0cbafe07ca732140086ba1d63d488565caaefacb3"
+    }
+  ],
+  "verification": {
+    "combined_tests": 362,
+    "native_ledger_checks": 11,
+    "service_e2e_scenarios": 4,
+    "synthetic_deliveries": 8,
+    "full_application_bindings": 924,
+    "full_build": "PASS",
+    "e2e_source_equivalence": "PASS",
+    "clock_ntp_synchronized": true,
+    "design_review": "AGY7c0106c2-0937-497e-ac0c-c3f373f2711f PASS",
+    "source_review": "AGY29bcd7e5 production logic PASS; fixture-discovery HOLD resolved by full-source/build proof, AGY7370b5c5-b633-4bf4-aa0e-c8380d664b4a PASS"
+  },
+  "evidence": {
+    "candidate": "var/recovery-runtime/20261025-1424-finops-command",
+    "service_e2e": "var/recovery-runtime/20261025-1422-finops-command/finops-service-e2e.json",
+    "full_build": "var/recovery-runtime/20261025-1424-finops-full"
+  },
+  "remaining": [
+    "Actual provider spending/cost attribution unimplemented",
+    "Trusted production release configuration and runtime acceptance required",
+    "All other command, Mini, media, gateway obligations remain",
+    "Real Telegram acceptance and global admission NOT_GRANTED"
+  ],
+  "publication": null
+}

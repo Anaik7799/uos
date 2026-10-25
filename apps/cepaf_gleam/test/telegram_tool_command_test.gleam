@@ -64,3 +64,9 @@ pub fn ha_direct_tool_scope_test() {
   assert tool.parse("query_ha {}") == Ok(tool.Ha)
   let assert Error(_) = tool.parse("query_ha {\"host\":\"other\"}")
 }
+
+pub fn finops_tool_exact_scope_test() {
+ assert tool.parse("query_finops {}")==Ok(tool.Finops)
+ assert tool.parse("query_finops")==Ok(tool.Finops)
+ list.each(["[]","null","true","0","\"\"","{} trailing","{\"day\":\"tomorrow\"}"],fn(a){tool.parse("query_finops "<>a) |> should.be_error})
+}

@@ -23,6 +23,7 @@ pub type Selection {
   Matrix
   SystemHealth
   Ha
+  Finops
   Fmea(task: String)
   KernelVersion
   Peers
@@ -43,6 +44,7 @@ pub fn help() -> String {
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
   <> "/tool query_fmea {} or {\"task_id\":\"TASK_ID\"} — recorded risk assessments in the configured plan.\n"
   <> "/tool query_system_health {} — bounded service reachability and local Telegram state.\n"
+  <> "/tool query_finops {} — current daily reserved liability; actual spending remains unknown.\n"
   <> "/tool query_ha {} — current Telegram BEAM runtime pressure; cluster failover remains unverified.\n"
   <> "/tool query_zigvm_version {} — installed pinned executable version only.\n"
   <> "/tool query_peers {} — canonical session heartbeat observations.\n"
@@ -124,6 +126,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
     "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
+    "query_finops" -> empty_arguments(tail, Finops)
     "query_ha" -> empty_arguments(tail, Ha)
     "query_fmea" -> fmea_arguments(tail)
     "query_peers" -> empty_arguments(tail, Peers)

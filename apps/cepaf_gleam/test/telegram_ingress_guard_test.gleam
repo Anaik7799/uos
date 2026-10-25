@@ -338,3 +338,8 @@ pub fn ha_observation_scope_test() {
   let assert g.DeniedMutation(_, _) = g.classify_directive("/ha reset")
   let assert g.DeniedMutation(_, _) = g.classify_directive("/action query_ha {\"host\":\"other\"}")
 }
+
+pub fn finops_ingress_aliases_and_scope_test() {
+ list.each(["/finops","/budget","/tool query_finops {}","/action query_finops"],fn(t){assert g.classify_directive(t)==g.DirectReadTool("query_finops")})
+ list.each(["/finops {}","/budget tomorrow","/finops reserve","/tool query_finops {\"path\":\"foreign\"}"],fn(t){let assert g.DeniedMutation(_,_) = g.classify_directive(t) Nil})
+}

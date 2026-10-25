@@ -513,10 +513,16 @@ build_service_configuration(Config) ->
             {ok,EvidenceConfigured}=cepaf_gleam@harness@telegram_service:configure_verification_source(B10,EvidencePath,EvidenceSha,EvidenceCandidate),
             EvidenceConfigured
     end,
-    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+    B12 = case maps:get(<<"test_budget_source">>,Config,null) of
         null -> B11;
+        [BudgetExe,BudgetSha,BudgetLedger] ->
+            {ok,BudgetConfigured}=cepaf_gleam@harness@telegram_service:configure_budget_source(B11,BudgetExe,BudgetSha,BudgetLedger),
+            BudgetConfigured
+    end,
+    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+        null -> B12;
         [Root, Digest] when is_binary(Root), is_binary(Digest) ->
-            {ok, Configured} = telegram_managed_action_test:configure(B11, Root, Digest),
+            {ok, Configured} = telegram_managed_action_test:configure(B12, Root, Digest),
             Configured
     end.
 

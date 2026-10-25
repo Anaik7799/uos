@@ -1,3 +1,5 @@
+@external(erlang,"telegram_budget_test_io","fixture")
+fn budget_fixture(db:String,variant:String)->String
 import telegram_verification_report_test as evidence_fixture
 import telegram_managed_action_test as managed_action
 import cepaf_gleam/harness/telegram_conversation as conv
@@ -348,6 +350,10 @@ fn start_runner_actor_with_conversation(
   let cmd = case simplifile.read(db_path<>".verification.json") {
     Ok(raw) -> "{\"test_verification_source\":"<>json.to_string(json.array([db_path<>".verification.json",files.digest(raw),evidence_fixture.candidate],json.string))<>","<>string.drop_start(cmd,1)
     _ -> cmd
+  }
+  let cmd = case simplifile.read(db_path<>".budget-source.json") {
+    Ok(raw)->"{\"test_budget_source\":"<>raw<>","<>string.drop_start(cmd,1)
+    _->cmd
   }
   let resp = send_runner_cmd(ipc_dir, cmd)
   case string.contains(resp, "\"status\":\"ok\"") {
@@ -1004,6 +1010,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       actions: None,
       risk_source: None,
       verification_source: None,
+      budget_source: None,
     )
 
   // 1. Commit an initial record to store
@@ -1210,6 +1217,10 @@ fn risk_fixture(plan:String,variant:String)->String
 fn exercise_configured_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String, mode: String, daily_limit: Int,risk_case:String) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   case risk_case {
+    "budget" | "budget_missing" | "budget_badsha" -> {
+      let assert Ok(_) = simplifile.write(db_path<>".budget-source.json",budget_fixture(db_path,risk_case))
+      Nil
+    }
     "" -> Nil
     "verification" | "verification_changed" | "verification_stale" | "verification_foreign" | "verification_missing" | "verification_all" -> {
       let variant=case risk_case {"verification_stale"->"stale" "verification_foreign"->"foreign" "verification_all"->"all" _->"empty"}
@@ -2701,4 +2712,17 @@ pub fn e2e_ha_observation_dispatch_test() {
 pub fn e2e_ha_scope_override_refusal_test() {
   exercise_automatic_command_dispatch("/ha reset", "denied_mutation",
     "/action query_ha {\"host\":\"other\"}", "denied_mutation")
+}
+
+pub fn e2e_finops_budget_aliases_test() {
+ exercise_configured_dispatch("/finops","uos.telegram.finops.v1","/budget","ecology_daily_reservation_ledger_only","disabled",10,"budget")
+}
+pub fn e2e_finops_tool_and_scope_refusal_test() {
+ exercise_configured_dispatch("/tool query_finops {}","uos.telegram.finops.v1","/budget tomorrow","without arguments","disabled",10,"budget")
+}
+pub fn e2e_finops_missing_ledger_test() {
+ exercise_configured_dispatch("/finops","unavailable","/budget","unavailable","disabled",10,"budget_missing")
+}
+pub fn e2e_finops_changed_executable_refuses_test() {
+ exercise_configured_dispatch("/finops","unavailable","/tool query_finops {}","unavailable","disabled",10,"budget_badsha")
 }

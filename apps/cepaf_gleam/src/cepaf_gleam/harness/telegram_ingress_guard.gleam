@@ -143,6 +143,10 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
           "/ecology" -> read_directive("query_ecology", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" | "/health" -> read_directive("query_system_health", args)
+          "/finops" | "/budget" -> case args {
+            "" -> DirectReadTool("query_finops")
+            _ -> DeniedMutation("/finops","Use /finops or /budget without arguments; ledger scope is fixed.")
+          }
           "/ha" -> read_directive("query_ha", args)
           "/fmea" -> case read_directive("query_fmea",args) {
             DirectReadTool(_) -> DirectReadTool("query_fmea")
@@ -185,6 +189,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.Finops) -> DirectReadTool("query_finops")
               Ok(tool_command.Ha) -> DirectReadTool("query_ha")
               Ok(tool_command.Fmea("")) -> DirectReadTool("query_fmea")
               Ok(tool_command.Fmea(task)) -> PreservedDirective("/fmea",[task])

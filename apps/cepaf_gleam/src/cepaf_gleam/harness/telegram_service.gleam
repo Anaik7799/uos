@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/telegram_budget_report as budget_report
 import cepaf_gleam/harness/telegram_action_proposal as proposal
 import cepaf_gleam/harness/telegram_approval as approval
 //// Supervised Telegram Service: Polling, Durable Storage, & Bounded Delivery
@@ -228,6 +229,7 @@ pub type ServiceConfiguration {
     actions:Option(ActionConfiguration),
     risk_source:Option(String),
     verification_source:Option(verification_reader.Source),
+    budget_source:Option(budget_report.Source),
   )
 }
 
@@ -269,6 +271,7 @@ pub fn operational_service_configuration(
     actions:None,
     risk_source:None,
     verification_source:None,
+    budget_source:None,
   )
 }
 
@@ -305,6 +308,7 @@ pub fn development_service_configuration(
     actions:None,
     risk_source:None,
     verification_source:None,
+    budget_source:None,
   )
 }
 
@@ -2325,6 +2329,7 @@ fn execute_guarded_dispatch(
                         guard.DirectReadTool("query_ecology") -> ecology_reply(state)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
+                        guard.DirectReadTool("query_finops") -> budget_reply(state)
                         guard.DirectReadTool("query_ha") -> {
                           case ha_report.observe(ha_report.live_io(),fn() { conversation_authorize(state) }) {
                             Ok(report) -> report
@@ -6421,4 +6426,25 @@ fn verification_reply(state:ServiceState,view:String,selector:String)->String {
    #("authority",json.string("observation_only")),#("runtime_admission",json.string("NOT_GRANTED")),
   ]) |> json.to_string
  }
+}
+
+/// Trusted launcher binding; Telegram text cannot select executable or ledger.
+pub fn configure_budget_source(config:ServiceConfiguration,exe:String,sha:String,ledger:String)->Result(ServiceConfiguration,String) {
+ let source=budget_report.Source(exe,sha,ledger)
+ let isolated=case config.authority_paths {IsolatedTestPaths(_,_) -> True _->False}
+ case budget_report.valid_source(source,isolated) {
+  True->Ok(ServiceConfiguration(..config,budget_source:Some(source)))
+  False->Error("budget_source_scope_refused")
+ }
+}
+fn budget_reply(state:ServiceState)->String {
+ let isolated=case state.config.authority_paths {IsolatedTestPaths(_,_) -> True _->False}
+ let observation=case state.config.budget_source {
+  Some(source)->case budget_report.valid_source(source,isolated) {
+   True->current_read(state,5000,fn(){budget_report.observe(source)}) |> result.try(fn(r){r})
+   False->Error("budget_source_scope_refused")
+  }
+  None->Error("budget_source_not_configured")
+ }
+ case observation {Ok(raw)->raw Error(_)->budget_report.unavailable()}
 }
