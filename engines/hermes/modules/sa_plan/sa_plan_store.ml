@@ -2784,12 +2784,32 @@ VALUES (?, ?, ?, ?, ?, 'available', 0, ?, ?, ?)
                           | Some job -> Ok job
                           | None -> Error "enqueued Sa-plan job disappeared"))))))
 
+(* Claim-time cleanup is bounded and queue-local. Discard means no retry budget,
+   not a known failure or cancellation of effects: a dead worker may have acted. *)
+let retire_exhausted_expired_jobs db ~queue ~now_ns =
+  with_stmt db
+    {|UPDATE sa_plan_job
+       SET state = 'discarded', lease_owner = NULL, lease_until_ns = NULL,
+           result = 'attempt_limit_exhausted_after_lease_expiry; execution_outcome_unknown'
+       WHERE id IN (
+         SELECT id FROM sa_plan_job
+         WHERE queue = ? AND state = 'executing' AND lease_until_ns <= ?
+           AND max_attempts > 0 AND attempt >= max_attempts AND attempt < ?
+         ORDER BY available_at_ns, inserted_at_ns, id LIMIT 64
+       )|}
+    (fun stmt ->
+      Result.bind
+        (bind_values_result "bind expired Sa-plan job retirement" stmt
+          [ Sqlite3.Data.TEXT queue; INT now_ns; INT (Int64.of_int Stdlib.max_int) ])
+        ~f:(fun () -> step_done "retire expired exhausted Sa-plan jobs" stmt))
+
 let select_claimable_job db ~queue ~now_ns =
   with_stmt db
     ("SELECT " ^ job_columns
    ^ {|
  FROM sa_plan_job
  WHERE queue = ? AND available_at_ns <= ?
+   AND (attempt < max_attempts OR attempt < 0 OR attempt >= ? OR max_attempts <= 0)
    AND (state IN ('available','retry')
         OR (state = 'executing' AND lease_until_ns <= ?))
  ORDER BY available_at_ns, inserted_at_ns, id
@@ -2799,7 +2819,7 @@ let select_claimable_job db ~queue ~now_ns =
     (fun stmt ->
       Result.bind
         (bind_values_result "bind claimable Sa-plan job" stmt
-           [ Sqlite3.Data.TEXT queue; INT now_ns; INT now_ns ])
+           [ Sqlite3.Data.TEXT queue; INT now_ns; INT (Int64.of_int Stdlib.max_int); INT now_ns ])
         ~f:(fun () ->
           match Sqlite3.step stmt with
           | Sqlite3.Rc.DONE -> Ok None
@@ -2810,16 +2830,18 @@ let claim_job store ~queue ~worker ~now_ns ~lease_ns =
   let open Result.Let_syntax in
   let%bind lease_until_ns = lease_deadline ~worker ~now_ns ~lease_ns in
   transaction store (fun () ->
+      let%bind () = retire_exhausted_expired_jobs store.db ~queue ~now_ns in
       let%bind job = select_claimable_job store.db ~queue ~now_ns in
       match job with
       | None -> Ok None
-      | Some job when job.attempt < 0 || job.attempt = Stdlib.max_int ->
+      | Some job when job.attempt < 0 || job.attempt = Stdlib.max_int
+                      || job.max_attempts <= 0 ->
           Error "Sa-plan job attempt is invalid or exhausted"
       | Some job ->
           with_stmt store.db
             {|UPDATE sa_plan_job SET state = 'executing', lease_owner = ?,
                 lease_until_ns = ?, attempt = attempt + 1
-              WHERE id = ? AND attempt = ? AND
+              WHERE id = ? AND attempt = ? AND attempt < max_attempts AND
                 (state IN ('available','retry')
                  OR (state = 'executing' AND lease_until_ns <= ?))|}
             (fun stmt ->
