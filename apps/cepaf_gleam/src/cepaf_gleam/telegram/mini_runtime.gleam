@@ -230,12 +230,15 @@ fn dashboard_peers(budget_ms: Int) -> Result(String, String) {
   coordination.observe_with_budget(database, "peers", budget_ms)
 }
 
+@external(erlang, "beam_metrics_ffi", "snapshot_checked")
+fn dashboard_metrics(budget_ms: Int) -> Result(beam_metrics.BeamMetrics, String)
+
 fn dashboard_io() -> mini_dashboard.Io {
   mini_dashboard.Io(
     podman: dashboard_podman,
     peers: dashboard_peers,
     probe: dashboard_probe,
-    metrics: fn() { Ok(beam_metrics.snapshot()) },
+    metrics: dashboard_metrics,
     monotonic_ms: fn() { monotonic_ms(Millisecond) },
     unix_seconds: clock,
   )

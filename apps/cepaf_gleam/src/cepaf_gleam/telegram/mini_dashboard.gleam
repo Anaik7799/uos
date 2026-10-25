@@ -15,7 +15,7 @@ pub type Io {
     podman: fn(Int) -> Result(api.Observation, String),
     peers: fn(Int) -> Result(String, String),
     probe: fn(String, Int) -> Result(Int, String),
-    metrics: fn() -> Result(beam.BeamMetrics, String),
+    metrics: fn(Int) -> Result(beam.BeamMetrics, String),
     monotonic_ms: fn() -> Int,
     unix_seconds: fn() -> Int,
   )
@@ -50,7 +50,7 @@ fn collect(io: Io) -> Result(api.Observation, String) {
   use #(podman, t1) <- result.try(step(io, started, deadline, 1200, io.podman))
   use #(peers, t2) <- result.try(step(io, t1, deadline, 1500, io.peers))
   use #(probes, t3) <- result.try(probe_all(io, services, [], t2, deadline))
-  use #(metrics, t4) <- result.try(step(io, t3, deadline, 100, fn(_) { io.metrics() }))
+  use #(metrics, t4) <- result.try(step(io, t3, deadline, 100, io.metrics))
   let ended = io.monotonic_ms()
   let now = io.unix_seconds()
   use _ <- result.try(require(ended >= t4 && ended < deadline && now > 0))

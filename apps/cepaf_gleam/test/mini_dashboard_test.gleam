@@ -31,7 +31,7 @@ fn io() -> dashboard.Io {
       budget |> should.equal(300)
       Ok(case name { "matrix" -> 200 "cockpit" -> 302 "zenoh" -> 401 _ -> 500 })
     },
-    fn(){Ok(metrics())},
+    fn(budget){budget |> should.equal(100) Ok(metrics())},
     fn(){1000},
     fn(){2000},
   )
@@ -121,7 +121,7 @@ pub fn invalid_http_codes_do_not_count_as_observation_test() {
 pub fn invalid_vm_stats_never_become_zeros_test() {
   let base=io()
   list.each([beam.BeamMetrics(..metrics(),scheduler_count:0),beam.BeamMetrics(..metrics(),process_count:-1)],fn(m){
-    let f=dashboard.observe(dashboard.Io(..base,metrics:fn(){Ok(m)})) |> fields
+    let f=dashboard.observe(dashboard.Io(..base,metrics:fn(_){Ok(m)})) |> fields
     dict.get(f,"VM processes") |> should.be_error
     value(f,"VM observation") |> string.contains("unknown") |> should.be_true
   })
@@ -140,7 +140,7 @@ pub fn monotonic_deadline_and_regression_fail_closed_test() {
 
 pub fn real_vm_counters_and_cumulative_labels_test() {
   let base=io()
-  let f=dashboard.observe(dashboard.Io(..base,metrics:fn(){Ok(beam.snapshot())})) |> fields
+  let f=dashboard.observe(dashboard.Io(..base,metrics:fn(_){Ok(beam.snapshot())})) |> fields
   dict.get(f,"VM memory MiB") |> should.be_ok |> string.is_empty |> should.be_false
   dict.get(f,"VM cumulative input MiB") |> should.be_ok |> string.is_empty |> should.be_false
   dict.get(f,"CPU percent") |> should.be_error
@@ -149,4 +149,16 @@ pub fn real_vm_counters_and_cumulative_labels_test() {
 pub fn reader_invalid_budget_refused_test() {
   coordination.observe_with_budget("/does/not/exist","peers",99) |> should.equal(Error("coordination_budget_refused"))
   coordination.observe_with_budget("/does/not/exist","peers",3001) |> should.equal(Error("coordination_budget_refused"))
+}
+
+@external(erlang,"beam_metrics_ffi","snapshot_checked")
+fn checked_metrics(budget: Int) -> Result(beam.BeamMetrics,String)
+pub fn native_metrics_bound_and_failure_test() {
+  checked_metrics(0) |> should.equal(Error("invalid_metrics_budget"))
+  checked_metrics(101) |> should.equal(Error("invalid_metrics_budget"))
+  checked_metrics(100) |> should.be_ok
+  let base=io()
+  let f=dashboard.observe(dashboard.Io(..base,metrics:fn(_){Error("worker_failed")})) |> fields
+  dict.get(f,"VM memory MiB") |> should.be_error
+  value(f,"VM observation") |> string.contains("unknown") |> should.be_true
 }
