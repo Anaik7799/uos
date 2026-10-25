@@ -80,8 +80,9 @@ struct VerificationData {
     fractal_layers_verified: usize,
 }
 
-/// Count running containers via `podman ps`.
-fn count_containers() -> (usize, usize) {
+/// Count running containers via `podman ps`. `None` when podman cannot be
+/// observed: an unobserved fleet is never reported as healthy.
+fn count_containers() -> Option<(usize, usize)> {
     let output = Command::new("podman")
         .args(["ps", "--format", "{{.Status}}", "--no-trunc"])
         .output();
@@ -94,9 +95,9 @@ fn count_containers() -> (usize, usize) {
                 .iter()
                 .filter(|l| l.contains("Up") || l.contains("healthy"))
                 .count();
-            (total, healthy)
+            Some((total, healthy))
         }
-        Err(_) => (16, 16), // Fallback: assume 16/16 if podman unavailable
+        Err(_) => None
     }
 }
 
@@ -176,7 +177,8 @@ fn query_immune_data() -> (String, usize, usize) {
 
 #[rustler::nif(schedule = "DirtyCpu")]
 pub fn system_health() -> NifResult<String> {
-    let (total, healthy) = count_containers();
+    let observed = count_containers();
+    let (total, healthy) = observed.unwrap_or((0, 0));
     let (zenoh_connected, _, _) = zenoh_router_status();
     let (threat_level, _, _) = query_immune_data();
     let health_pct = if total > 0 {
@@ -188,7 +190,9 @@ pub fn system_health() -> NifResult<String> {
     let mode = derive_cockpit_mode(health_pct, &threat_level);
 
     // Derive status matching the old mesh_state.to_health_json format
-    let status = if quorum_healthy && healthy == total {
+    let status = if observed.is_none() {
+        "unavailable"
+    } else if quorum_healthy && healthy == total {
         "ok"
     } else if healthy > total / 2 {
         "degraded"
@@ -219,7 +223,7 @@ pub fn system_health() -> NifResult<String> {
 
 #[rustler::nif(schedule = "DirtyCpu")]
 pub fn system_dashboard() -> NifResult<String> {
-    let (total, healthy) = count_containers();
+    let (total, healthy) = count_containers().unwrap_or((0, 0));
     let (zenoh_connected, _, _) = zenoh_router_status();
     let (threat_level, _, _) = query_immune_data();
     let health_pct = if total > 0 {

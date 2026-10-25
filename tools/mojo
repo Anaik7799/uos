@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # In-project toolchain wrapper (SC-TOOLCHAIN-INPROJECT-001). No $HOME paths.
+# Mojo 1.0 locates its stdlib and runtime through modular.cfg; without
+# MODULAR_HOME it falls back to ~/.modular and fails to find 'std'.
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/uos-toolchain.sh"
-exec "$UOS_ROOT/services/inference/max/.pixi/envs/default/bin/mojo" "$@"
+MOJO_ENV="$UOS_ROOT/services/inference/max/.pixi/envs/default"
+export MODULAR_HOME="$MOJO_ENV/share/max"
+exec "$MOJO_ENV/bin/mojo" "$@"

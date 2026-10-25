@@ -536,7 +536,7 @@ pub fn metabolic_update_set_point_high_cpu_test() {
 pub fn router_health_endpoint_test() {
   let resp = router.route("/health")
   resp |> string.contains("\"status\"") |> should.be_true()
-  resp |> string.contains("\"ok\"") |> should.be_true()
+  resp |> honest_health |> should.be_true()
   resp |> string.contains("\"wisp\"") |> should.be_true()
   resp |> string.contains("4100") |> should.be_true()
 }
@@ -677,4 +677,20 @@ pub fn tui_render_frame_unknown_health_test() {
     )
   let frame = renderer.render_frame(ctx)
   frame |> string.contains("UNKNOWN") |> should.be_true()
+}
+
+/// /health reports what was observed: "ok" only with observed, healthy
+/// containers; otherwise degraded, critical or unavailable. A fixed "ok" was
+/// the c3i_nif 16/16 fallback that fabricated health when podman was absent.
+fn honest_health(body: String) -> Bool {
+  case
+    string.contains(body, "\"status\":\"ok\""),
+    string.contains(body, "\"status\":\"degraded\"")
+      || string.contains(body, "\"status\":\"critical\"")
+      || string.contains(body, "\"status\":\"unavailable\"")
+      || string.contains(body, "\"runtime_loaded\":false")
+  {
+    True, _ -> !string.contains(body, "\"container_count\":0,")
+    False, honest -> honest
+  }
 }

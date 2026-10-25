@@ -38,7 +38,7 @@ pub fn pin(source: census.Source) -> census.Pin {
         [
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
-            "cc3280246b847aac96ad287c03311ef48a559f8a535e3f6a055c6ec21d17c081",
+            "9af105c618bfdfcff21b6dd39aff81cb0fefad77b8b31de670f83f5913594787",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
@@ -76,7 +76,7 @@ pub fn pin(source: census.Source) -> census.Pin {
         [
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_port.gleam",
-            "b24e44e5dc01e44eb992a694fafee41bf3a3110df8675e5c3bb5922390e6560e",
+            "d895d380e078eb2e8fecaa750537df2ab192330b5cf895f5f0eed83dc2599cd8",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",

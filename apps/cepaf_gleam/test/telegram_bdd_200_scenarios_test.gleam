@@ -2474,8 +2474,7 @@ pub fn bdd_scenario_166_read_tool_query_system_health_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2500,8 +2499,7 @@ pub fn bdd_scenario_167_read_tool_query_saplan_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2526,8 +2524,7 @@ pub fn bdd_scenario_168_read_tool_query_storage_lock_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2552,8 +2549,7 @@ pub fn bdd_scenario_169_read_tool_query_tri_agent_board_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2578,8 +2574,7 @@ pub fn bdd_scenario_170_read_tool_query_aspects_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2604,8 +2599,7 @@ pub fn bdd_scenario_171_read_tool_query_ecology_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2630,8 +2624,7 @@ pub fn bdd_scenario_172_read_tool_invoke_zigvm_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2656,14 +2649,7 @@ pub fn bdd_scenario_173_mutating_tool_resuscitate_node_quorum_missing_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Halt")
-  decision.actions |> should.equal(["andon_stop_line"])
-  decision.reply_markdown
-  |> string.contains("Fractal Jidoka Andon Stop Line Triggered")
-  |> should.be_true
-  decision.reply_markdown
-  |> string.contains(int.to_string(td.andon_halt_quorum_missing_code))
-  |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2688,14 +2674,7 @@ pub fn bdd_scenario_174_mutating_tool_chaos_inject_quorum_missing_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Halt")
-  decision.actions |> should.equal(["andon_stop_line"])
-  decision.reply_markdown
-  |> string.contains("Fractal Jidoka Andon Stop Line Triggered")
-  |> should.be_true
-  decision.reply_markdown
-  |> string.contains(int.to_string(td.andon_halt_quorum_missing_code))
-  |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2720,14 +2699,7 @@ pub fn bdd_scenario_175_mutating_tool_rotate_keys_quorum_missing_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Halt")
-  decision.actions |> should.equal(["andon_stop_line"])
-  decision.reply_markdown
-  |> string.contains("Fractal Jidoka Andon Stop Line Triggered")
-  |> should.be_true
-  decision.reply_markdown
-  |> string.contains(int.to_string(td.andon_halt_quorum_missing_code))
-  |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2752,14 +2724,7 @@ pub fn bdd_scenario_176_mutating_tool_storage_rebalance_quorum_missing_test() {
       False,
       intent,
     )
-  decision.ooda_phase |> should.equal("Halt")
-  decision.actions |> should.equal(["andon_stop_line"])
-  decision.reply_markdown
-  |> string.contains("Fractal Jidoka Andon Stop Line Triggered")
-  |> should.be_true
-  decision.reply_markdown
-  |> string.contains(int.to_string(td.andon_halt_quorum_missing_code))
-  |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2784,8 +2749,7 @@ pub fn bdd_scenario_177_mutating_tool_resuscitate_node_approved_test() {
       True,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2810,8 +2774,7 @@ pub fn bdd_scenario_178_mutating_tool_chaos_inject_approved_test() {
       True,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2836,8 +2799,7 @@ pub fn bdd_scenario_179_mutating_tool_rotate_keys_approved_test() {
       True,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -2862,8 +2824,7 @@ pub fn bdd_scenario_180_mutating_tool_storage_rebalance_approved_test() {
       True,
       intent,
     )
-  decision.ooda_phase |> should.equal("Act")
-  decision.reply_markdown |> string.contains("Tool Executed") |> should.be_true
+  assert_caller_lease_refused(decision)
 }
 
 // -----------------------------------------------------------------------------
@@ -3076,4 +3037,21 @@ pub fn bdd_scenario_200_comprehensive_checklist_ratification_test() {
   |> string.contains("18/18 (100% GREEN)")
   |> should.be_true
   decision.actions |> list.contains("query_checklist_status") |> should.be_true
+}
+
+/// Since the 2026-09-30 L3 authority check in tool_fenced_dispatcher,
+/// dispatch_action_request carries a caller-supplied lease with no canonical
+/// Sa-plan proof, so every fenced tool call fails closed with -32002 before
+/// quorum or execution are evaluated. Execution and quorum semantics under
+/// verified authority are covered in gemma4_feature_suite_test against the
+/// dispatcher directly.
+fn assert_caller_lease_refused(decision: cognitive_worker.CognitiveDecision) {
+  decision.ooda_phase |> should.equal("Halt")
+  decision.actions |> should.equal(["andon_stop_line"])
+  decision.reply_markdown
+  |> string.contains(int.to_string(td.andon_halt_unauthorized_code))
+  |> should.be_true
+  decision.reasoning
+  |> string.contains("Unverified lease authority")
+  |> should.be_true
 }

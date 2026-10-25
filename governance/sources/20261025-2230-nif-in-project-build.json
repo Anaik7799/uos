@@ -1,0 +1,788 @@
+{
+  "schema": "uos-source-ingestion/v1",
+  "manifest_id": "20261025-2230-nif-in-project-build",
+  "observed_at": "2026-10-25T21:44:41Z",
+  "plan_id": "uos/claude-handover/20261025-1953",
+  "task_id": "NIF_INTEGRATE",
+  "actor": "claude-fable-l0-35600f5c",
+  "summary": "Every priv/*.so NIF is built in-project from tracked source; pins re-issued from those builds. No artifact is copied from an external tree.",
+  "toolchains": {
+    "rust": "rustc/cargo 1.95.0 at toolchains/cargo (CARGO_HOME in-project; locked crates fetched by checksum into toolchains/cargo/registry)",
+    "ocaml": "toolchains/opam-ocaml ocamlopt",
+    "mojo": "Mojo 1.0.0 via tools/mojo (MODULAR_HOME set in-project)",
+    "c": "host cc (/usr/bin gcc 15), also the Rust linker; no resolver entry",
+    "erts_headers": "/nix/store/96cqahwq...-erlang-29.0.5 (pinned OTP 29)"
+  },
+  "builds": [
+    {
+      "nif": "c3i_nif",
+      "source": "apps/cepaf_gleam/native/c3i_nif",
+      "cmd": "cargo build --release --offline --locked",
+      "change": "count_containers returns None when podman is unobserved; system_health reports status unavailable instead of a fabricated 16/16"
+    },
+    {
+      "nif": "rule_engine_nif",
+      "source": "apps/cepaf_gleam/native/rule_engine_nif",
+      "cmd": "cargo build --release --offline --locked"
+    },
+    {
+      "nif": "planning_nif",
+      "source": "apps/cepaf_gleam/native/planning_nif",
+      "cmd": "cargo build --release --offline --locked"
+    },
+    {
+      "nif": "rusty_vault_nif",
+      "source": "apps/cepaf_gleam/native/rusty_vault_nif",
+      "dependency": "sub-projects/rusty_vault_vendored",
+      "cmd": "cargo fetch --locked; cargo build --release --offline --locked"
+    },
+    {
+      "nif": "ferriskey_nif",
+      "source": "native/nifs/rust/ferriskey_nif",
+      "cmd": "cargo build --release --offline --locked",
+      "note": "apps/cepaf_gleam/native/ferriskey_nif is an older divergent copy (gcp_iam.rs, gcp_sts.rs, scim.rs differ); not built"
+    },
+    {
+      "nif": "cortex_nif",
+      "source": "native/nifs/rust/cortex_nif",
+      "cmd": "cargo build --release --offline (Cargo.lock generated and tracked)",
+      "change": "cortex_nif.erl gains fail-closed stubs for sa_plan_monotone_fencing_token/1, sa_plan_action_receipt_sha256/5, sa_plan_verify_hardware_safety_interlock/1 (previously on_load failed with bad_lib)"
+    },
+    {
+      "nif": "zenoh_nif",
+      "source": "native/nifs/rust/zenoh_nif",
+      "cmd": "cargo fetch; cargo build --release --offline --locked --lib",
+      "lock": "seeded from C3I sub-projects/c3i/Cargo.lock (workspace lock the C3I artifact was built from); zenoh 1.8.0, rustler 0.37.3, tokio 1.51.1 equal to parent"
+    },
+    {
+      "nif": "c3i_ocaml_nif",
+      "source": "apps/cepaf_gleam/native/ocaml_nif",
+      "cmd": "build.sh (rewritten: no external zigvm opam switch, no host OTP 27 headers)"
+    },
+    {
+      "nif": "uos_km_nif / uos_km_nif_otp29 / libuos_km_kernel",
+      "source": "native/nifs/mojo",
+      "cmd": "make all; make otp29; make test (C oracle 48/48)",
+      "change": "otp29 target uses pinned erl headers, not the barred erlang-29.0.6 store path"
+    }
+  ],
+  "pins": [
+    {
+      "artifact": "c3i_nif.so",
+      "sha256": "83117741135b981bfc32fc259d304ce51fc9a11cb7a511346f447a298e0f64d4"
+    },
+    {
+      "artifact": "c3i_ocaml_nif.so",
+      "sha256": "af8420bb8812be3db0c95cc90c65437c9f20dc7c5805defc65b3d43a9d1f5493"
+    },
+    {
+      "artifact": "cortex_nif.so",
+      "sha256": "2fcd26f253532474587069f65a295d23f5559cc5868ef9aada6d3782cd8ba588"
+    },
+    {
+      "artifact": "ferriskey_nif.so",
+      "sha256": "0a235a5dc3af14de1972933960b502d3bd993d69e502c2d486b9f8b5a1797e06"
+    },
+    {
+      "artifact": "libuos_km_kernel.so",
+      "sha256": "6448ba06f8a058d0c87b3448955808827f35d045215d2dc6bd4e2d256e614544"
+    },
+    {
+      "artifact": "planning_nif.so",
+      "sha256": "6ba22f80c55532e8c6526e80c49cf28f9e1ed9cfbd060e6357941cce890f1547"
+    },
+    {
+      "artifact": "rule_engine_nif.so",
+      "sha256": "291bfd8d41b29eb4a1e93544922b1dc92d4af6ff13b7c8e678c39476a0d71098"
+    },
+    {
+      "artifact": "rusty_vault_nif.so",
+      "sha256": "f5aaab893da75b5139adce7d9964531a26fe4671bf27ea874cbc65a72076eb1e"
+    },
+    {
+      "artifact": "uos_km_nif_otp29.so",
+      "sha256": "958ab252a01dd25e8ff30f0a51340e8cfa9d929b0a08bb93dd4b87b706cb92a3"
+    },
+    {
+      "artifact": "uos_km_nif.so",
+      "sha256": "958ab252a01dd25e8ff30f0a51340e8cfa9d929b0a08bb93dd4b87b706cb92a3"
+    },
+    {
+      "artifact": "zenoh_nif.so",
+      "sha256": "9c931535ae127b380d8a3212c731ee3e2ffee76ca365fa31a6ce3318121e0eee"
+    }
+  ],
+  "zenoh_nif_source": {
+    "origin": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif",
+    "revision": "47f93223 (clean)",
+    "license": "Apache-2.0",
+    "copied": "Cargo.toml, src/*.rs, benches/*.rs byte-identical"
+  },
+  "rusty_vault_vendored": {
+    "origin": "/home/an/dev/ver/c3i/sub-projects/rusty_vault_vendored",
+    "revision": "47f93223 (path clean; last change 95a9fec2)",
+    "license": "Apache-2.0",
+    "version": "0.3.1",
+    "included": [
+      "Cargo.toml",
+      "Cargo.lock",
+      "build.rs",
+      "LICENSE",
+      "README.md",
+      "VENDORING_NOTES.md",
+      "rust-toolchain.toml",
+      "rustfmt.toml",
+      "diesel.toml",
+      "src/",
+      "migrations/",
+      "tests/",
+      "bin/"
+    ],
+    "excluded": [
+      {
+        "path": "docs/",
+        "reason": "64 MB documentation, not needed to build"
+      },
+      {
+        "path": "target/",
+        "reason": "build output"
+      }
+    ],
+    "redactions": [
+      {
+        "path": "src/utils/cert.rs",
+        "removed": "lines 412-543, the #[cfg(test)] mod test carrying an embedded PEM private-key fixture"
+      },
+      {
+        "path": "src/modules/pki/mod.rs",
+        "removed": "lines 152-1695, the #[cfg(test)] mod test carrying 13 embedded PEM private-key fixtures"
+      }
+    ],
+    "redaction_policy": "CLAUDE.md section 3: private keys barred from ingestion; removed key bytes are neither copied nor hashed. Library code is unchanged; upstream unit tests for these two modules are not carried.",
+    "private_key_blocks_remaining": 0,
+    "credential_scan_hits": 0,
+    "files": [
+      {
+        "path": "bin/rusty_vault.rs",
+        "sha256": "97dd0019858ab907de62766d6ea31854db06cf99ec776773d96faca34dd06815"
+      },
+      {
+        "path": "build.rs",
+        "sha256": "469f2b640e51d5da0ce90403a661b095bb0f0583f9cf47852b71d74df77b7f1e"
+      },
+      {
+        "path": "Cargo.lock",
+        "sha256": "524ddee440c16a40e93437a2f4f05143e077fc51f43c18eb2fc0a748e3f45c02"
+      },
+      {
+        "path": "Cargo.toml",
+        "sha256": "ac3c003b3065e1c37132457231172a0bd236e75e1c539d399c3820f607909612"
+      },
+      {
+        "path": "diesel.toml",
+        "sha256": "c6ab445dd14e3eb83ec7b8436a79be4c244b9c63eb226cd524333ba683916bad"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "migrations/2024-03-07-084239_create_vault_table/down.sql",
+        "sha256": "934e9501eb4c81216a83cc5136c117d277497ba39b070d98434a88b9a8143d85"
+      },
+      {
+        "path": "migrations/2024-03-07-084239_create_vault_table/up.sql",
+        "sha256": "93f158d167fa52bb44db310bd36616d1619ac4b20ee63cf2090b6d41640e9eea"
+      },
+      {
+        "path": "migrations/.keep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "README.md",
+        "sha256": "3974eb1d4a2e619544587ea726d9684426e6eb385e24e8267bc876f637d63333"
+      },
+      {
+        "path": "rustfmt.toml",
+        "sha256": "aa502527587362702d63599c20aa2f0314a6dac5614d40f5dd5c376e1f84a3a2"
+      },
+      {
+        "path": "rust-toolchain.toml",
+        "sha256": "1d01c8ad3e268583c7774bc988fef7c339226d4c6e63bff3bd0ae80a3b51d147"
+      },
+      {
+        "path": "src/api/auth.rs",
+        "sha256": "c9889b7b7bcb5aa77443997203617ab228857f93dc3a429c6326d2764d81e9d2"
+      },
+      {
+        "path": "src/api/auth_token.rs",
+        "sha256": "5054faad3cdf8ba2e875a4a125633bbc95dcebbe82ced3a9c1c1a98c532a73df"
+      },
+      {
+        "path": "src/api/client.rs",
+        "sha256": "daadc8190307832a796fcdfc6d6c9c55dfe98e3325a4a818e2edb2910f601026"
+      },
+      {
+        "path": "src/api/logical.rs",
+        "sha256": "0fad5c61b472fa5619cdd798032a13b96b56743b7e9275c00cb0724544160db9"
+      },
+      {
+        "path": "src/api/mod.rs",
+        "sha256": "f5d11e7f62dfce5df32effb420a712661f1528b714d8627f1c4582fd6d28c0f2"
+      },
+      {
+        "path": "src/api/secret.rs",
+        "sha256": "57579ecf300c501ee3c6755641341fb5058e7d8188dd640757f2595ece9ac60d"
+      },
+      {
+        "path": "src/api/sys.rs",
+        "sha256": "a859dbc36a47eaa3e9eaad2d9103f0747ff4793464454a0bc84db5cf02d74b64"
+      },
+      {
+        "path": "src/cli/command/auth_disable.rs",
+        "sha256": "9ee2cab99b11126483a7d76d87a2ac64ada1467119c81ae8030ff8369cab924d"
+      },
+      {
+        "path": "src/cli/command/auth_enable.rs",
+        "sha256": "5017d43e0e31cbbb4e40540196bb4192b53fbb3dc1f48816915fd3c43e9b8e59"
+      },
+      {
+        "path": "src/cli/command/auth_help.rs",
+        "sha256": "08c1bfbab7e2bf700c167ea3d7fcfa3016f0d2231e5cbb4a0cb61551f073a270"
+      },
+      {
+        "path": "src/cli/command/auth_list.rs",
+        "sha256": "5334ce302d1ed2fce4b86bbc3c0b85438ff8e157df12cf4d2bb79ccf109eb8da"
+      },
+      {
+        "path": "src/cli/command/auth_move.rs",
+        "sha256": "4d78d5489ab42c05bbd03e41b17a77325e44b2318c1a663ffbe9fd580cbb2430"
+      },
+      {
+        "path": "src/cli/command/auth.rs",
+        "sha256": "de675cdb39f06c27e2ca9344a1b23313e198bb6925294ed541609fc3c702407c"
+      },
+      {
+        "path": "src/cli/command/delete.rs",
+        "sha256": "2636739e7b68492bb9d8331afeea39e9edd14e1d9d6ea75b69e134a8b3e42309"
+      },
+      {
+        "path": "src/cli/command/format.rs",
+        "sha256": "f24190257bc83de95bb0b7904ad8a01e4f98b186353a0bbbe7001d5d956e5849"
+      },
+      {
+        "path": "src/cli/command/list.rs",
+        "sha256": "053a70ae78921da28593f2c120d325edddb910363577009d759af96f51e4bfe0"
+      },
+      {
+        "path": "src/cli/command/login.rs",
+        "sha256": "93628c0efba925b53dde08d3604f3fd74d1c2710a04c97d138df5ef4dd51b640"
+      },
+      {
+        "path": "src/cli/command/mod.rs",
+        "sha256": "d8a18f5694c42a4c5b50288bf9a1a4ed46f5b9cacfad532158e246f5f7921a54"
+      },
+      {
+        "path": "src/cli/command/operator_init.rs",
+        "sha256": "4cf347154d54bf03e280ff2f83e10ca9b66e371220e0d229ed07e3e9240c8acc"
+      },
+      {
+        "path": "src/cli/command/operator.rs",
+        "sha256": "6dd93544b5f24b3aa9fcd268bbfcf1d56bd74f1ffbf345554669b53b83f76e58"
+      },
+      {
+        "path": "src/cli/command/operator_seal.rs",
+        "sha256": "63f0e11950b66df1ed5ad1a217a09ad8dbbe83e22d9a591167ac68b0eb7cd702"
+      },
+      {
+        "path": "src/cli/command/operator_unseal.rs",
+        "sha256": "d11e9abd13fa3e999cce2b366fa358e76977adba86045f1df93aaaac558ec526"
+      },
+      {
+        "path": "src/cli/command/policy_delete.rs",
+        "sha256": "fc3a6d157f997eb7e1aeef6c1754e1a5b6c7b0a66921fdca754d6ab35a8eb4ae"
+      },
+      {
+        "path": "src/cli/command/policy_list.rs",
+        "sha256": "6fbb44d7fc6964c927d918f2a1e198b41afa1a02e4d00409d306e03ff5ebd89f"
+      },
+      {
+        "path": "src/cli/command/policy_read.rs",
+        "sha256": "7722372b377fa87c30c0d1f14804722391618507eedd583fc6f76f48de8ff835"
+      },
+      {
+        "path": "src/cli/command/policy.rs",
+        "sha256": "7ed4ff7dbfefd8b7217aee859b1b0d54511ad373348c6313c7f43a9d583feb75"
+      },
+      {
+        "path": "src/cli/command/policy_write.rs",
+        "sha256": "fe1795f28e3bfd2aae97ec27c6387e0d33ce51c5b18a5939157dcaab0192890e"
+      },
+      {
+        "path": "src/cli/command/read.rs",
+        "sha256": "7f019208f10187eb2f360011d2bc96b0e3a249f93d1811d62840b2a3a2cfc08e"
+      },
+      {
+        "path": "src/cli/command/secrets_disable.rs",
+        "sha256": "8481952cda42d77c21b03beb3cf7b833c7167ed31a8d3ba9f052c2d33b5f6e8d"
+      },
+      {
+        "path": "src/cli/command/secrets_enable.rs",
+        "sha256": "7ad257ce1454016dc500d6be027459c763289d8804f21ada0d7b30d8fe938257"
+      },
+      {
+        "path": "src/cli/command/secrets_list.rs",
+        "sha256": "a5d29a3be6b70f0505c893e2c0c285a2036de9a7bc7103f573afa056fe35c104"
+      },
+      {
+        "path": "src/cli/command/secrets_move.rs",
+        "sha256": "e40a2da4b20f5c2833843ca123d3cb3b511e31bbee176ed7ed49904875743739"
+      },
+      {
+        "path": "src/cli/command/secrets.rs",
+        "sha256": "012d78a9ba58ce18c161f61a38bd910fc5a48fcc7e514735cd2391fd4d0191c8"
+      },
+      {
+        "path": "src/cli/command/server.rs",
+        "sha256": "b1fc1b28f1152f79bd62ecbc8514dae50417a4be43ac5b92f228d6ec1a20a87b"
+      },
+      {
+        "path": "src/cli/command/status.rs",
+        "sha256": "009ec40c2e419766769b9abf1ad405e1cf2dca6661ea550f7ccad17ff8ee5e28"
+      },
+      {
+        "path": "src/cli/command/write.rs",
+        "sha256": "21484c70882d0f75ec702787cbe56bc3a27ba1e097caf3ad023f81f5a6c49cad"
+      },
+      {
+        "path": "src/cli/config.rs",
+        "sha256": "dc8a0f62184c9d388d202956c0faee0b7d1efcb9c2935ac559200c853bf6cf55"
+      },
+      {
+        "path": "src/cli/kv_util.rs",
+        "sha256": "acb6b0a4db4e75a628c52d33c4485fca823dd857d4b8d5bd7a11d56380131b5b"
+      },
+      {
+        "path": "src/cli/mod.rs",
+        "sha256": "455a76002130e783ba298a51bfdffcc3ba2852ff29ccd5830eb4441ef82cd5e1"
+      },
+      {
+        "path": "src/cli/util.rs",
+        "sha256": "54b0c4f01399c29c76659ce645b0197b29e8d9a465d652c9ecba0d28ba26a333"
+      },
+      {
+        "path": "src/context.rs",
+        "sha256": "cc2063084c2befba5446b288a2a82e257e485a418954bf3856cec46ee8e8a8b5"
+      },
+      {
+        "path": "src/core.rs",
+        "sha256": "29cdf77b4c7f60833fff9821d7c310ee9608bde913b8fbfdb3ef0d6dfd4427a2"
+      },
+      {
+        "path": "src/errors.rs",
+        "sha256": "2cfe592af75ecba9c5519844b47c3e100641872f674180d0440e01c9aab84d18"
+      },
+      {
+        "path": "src/handler.rs",
+        "sha256": "5d587b1afe1b9a206f7f7d39066f961f94ed3535165c6ee80ca361bd6e712c2b"
+      },
+      {
+        "path": "src/http/logical.rs",
+        "sha256": "bf2c9e35aebcdedab2a89fa0a14288741a2a5fe2e587a979ac8d8bb330c6643b"
+      },
+      {
+        "path": "src/http/metrics.rs",
+        "sha256": "e05a04b5121a8a013ead2b96907c21c523fc9f04ad1368bd808206848a3d63aa"
+      },
+      {
+        "path": "src/http/mod.rs",
+        "sha256": "8a4ec9e86c83f5fa9ebf62d4ab4ff2e9a2274f57c73223f4ff797cb7c7c5cc8d"
+      },
+      {
+        "path": "src/http/sys.rs",
+        "sha256": "8c95f0b5fe055ed67f7a7a5652672580e6f1ebffec3348f91c015f7e41e1d424"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "9074248cad6b094c79c50aaa7b15b7ed154b974f11913b1e08ca4abeb762fb2c"
+      },
+      {
+        "path": "src/logical/auth.rs",
+        "sha256": "27d17f03a62eb426a2cbbc6f8335ca70411fbdbd3e234fa76203ea27ac1a64d4"
+      },
+      {
+        "path": "src/logical/backend.rs",
+        "sha256": "6c174e1ab27ff5e28042aebdf86549fd8492bc192c71418b6b25818a753a89da"
+      },
+      {
+        "path": "src/logical/connection.rs",
+        "sha256": "384a0e66b308abc1339bf1b963ac364136f3d566a65671bb050404fb30765d40"
+      },
+      {
+        "path": "src/logical/field.rs",
+        "sha256": "cd250a60e372667311c50817aba762a33b7925257ccc9a3844a31cfef07f2d5b"
+      },
+      {
+        "path": "src/logical/lease.rs",
+        "sha256": "9b975a54dcfd78bfe9dd5be4d6dcc385e5e373d08d2f1702903383b04f286e7c"
+      },
+      {
+        "path": "src/logical/mod.rs",
+        "sha256": "10f87759b15a58135a038b147e47ffd302d9bd607ed48b78f1b4787c91129e44"
+      },
+      {
+        "path": "src/logical/path.rs",
+        "sha256": "6ae97a553370612b67575bf53a86e1dd0b082b288598785932fe655e9c1b757f"
+      },
+      {
+        "path": "src/logical/request.rs",
+        "sha256": "7326ae6ed3aef87240b9360179b6c63526f322d817143ad6f39907b19de39bf3"
+      },
+      {
+        "path": "src/logical/response.rs",
+        "sha256": "2f4cb15fce2743ed1b6ec4198f4a6e717b8bd47726e290ed4c2a40185bb68d14"
+      },
+      {
+        "path": "src/logical/secret.rs",
+        "sha256": "cdab2a188396386c03727108d2c1f16ea631055e287e4526766869c543f03b82"
+      },
+      {
+        "path": "src/metrics/http_metrics.rs",
+        "sha256": "8f070eb7544c8200ab1d231af28da63fafa48a8540ca2779829051b06fe73c1d"
+      },
+      {
+        "path": "src/metrics/manager.rs",
+        "sha256": "d558975daf3cce1bf8e4df590cb73ab9a83e1b5188f1d93394f1912950d8ed7b"
+      },
+      {
+        "path": "src/metrics/middleware.rs",
+        "sha256": "b6820ca8ae0bd4ef630c19b331674a71bbfffdb581acd86569cf1ddcf280eb1f"
+      },
+      {
+        "path": "src/metrics/mod.rs",
+        "sha256": "7a693692aa3597db21a31054bc4cbc453c231b95a312b3627cae28e94e5725e2"
+      },
+      {
+        "path": "src/metrics/system_metrics.rs",
+        "sha256": "b0a5d54b0a9137339037a7a7dcd916eb97335d4c980bd91b3b12f63250a46313"
+      },
+      {
+        "path": "src/module_manager.rs",
+        "sha256": "6ad012630387594e9b8ce30e1e2b45aeccd1999078b4bf8bdcfb1003eece4c89"
+      },
+      {
+        "path": "src/modules/auth/expiration.rs",
+        "sha256": "e60a7754d8d4c0dd46f89abc78c251ca8d5d36c69c58c0c9c7ff8b0640ce6597"
+      },
+      {
+        "path": "src/modules/auth/mod.rs",
+        "sha256": "2905b079d544c10ba01361ac23534d2462ee31eb37c0a9907e99f12f495ed259"
+      },
+      {
+        "path": "src/modules/auth/token_store.rs",
+        "sha256": "be301df20bed09547616ac4133e5da7960d6049378fb653e3662bfe3ed13a291"
+      },
+      {
+        "path": "src/modules/credential/approle/mod.rs",
+        "sha256": "ad757c6468cce702c6d4671af94e90348ca8c1830b01cbfe6f6dacabeda8ccb0"
+      },
+      {
+        "path": "src/modules/credential/approle/path_login.rs",
+        "sha256": "32072cc8388e41e78da38c1f9813a39bf69f2cb354225ea13f2b341d0b0beee6"
+      },
+      {
+        "path": "src/modules/credential/approle/path_role.rs",
+        "sha256": "f1444e07d28ccfc479b46c4357f3af69ce9868af316b70108a72154548d00985"
+      },
+      {
+        "path": "src/modules/credential/approle/path_tidy_secret_id.rs",
+        "sha256": "417569ac6810b94ecd49034d88ec0ca00f09e03409f4743382c63acf852f5d9a"
+      },
+      {
+        "path": "src/modules/credential/approle/validation.rs",
+        "sha256": "de51a55ecd61aec769654a4af2c5209e666674078e98c5c5f8a60320c629d406"
+      },
+      {
+        "path": "src/modules/credential/cert/cli.rs",
+        "sha256": "831ac331bfe0f49d0ca9482198ecb6be7e089194b706252557d2837bc6608c31"
+      },
+      {
+        "path": "src/modules/credential/cert/mod.rs",
+        "sha256": "8be2b877dbdc9885b1ca355ab8497d43c8e9ef21ebdfc671a990538ce38f99d4"
+      },
+      {
+        "path": "src/modules/credential/cert/path_certs.rs",
+        "sha256": "54ee45c552e34ec70513f98b7484f359847458e05d7ddbe4e20a6438dbde9172"
+      },
+      {
+        "path": "src/modules/credential/cert/path_config.rs",
+        "sha256": "dbb55c68c374ccf259416f655eb289db8ac12c800668ab708784563eadd0c117"
+      },
+      {
+        "path": "src/modules/credential/cert/path_crls.rs",
+        "sha256": "eabe43d161e8174aec8f8d3ddbb2b8c32928c65307f0d578dc25b44cc0fa5b91"
+      },
+      {
+        "path": "src/modules/credential/cert/path_login.rs",
+        "sha256": "0979a2bcce8d1001385328ee148e74b45fab57acf836b63d42c8d46e5b5e9d66"
+      },
+      {
+        "path": "src/modules/credential/mod.rs",
+        "sha256": "469445b72d04a12f9bbae0bff31f6ebade5466506f76e59dd21116fb04f67faa"
+      },
+      {
+        "path": "src/modules/credential/token/cli.rs",
+        "sha256": "2a110b7b918e47068be0858d0df0c2b4cf982d53e2dfb191feb098a74c193d6d"
+      },
+      {
+        "path": "src/modules/credential/token/mod.rs",
+        "sha256": "8963d08e6ad6c7ffabfd3b947c0f84d25a113f8ac2d07586569b6a15e94d2235"
+      },
+      {
+        "path": "src/modules/credential/userpass/cli.rs",
+        "sha256": "d0e838c80935572c4522ff95279798e950d35b2b9cdd58bbfc7aa41ca36e9b9a"
+      },
+      {
+        "path": "src/modules/credential/userpass/mod.rs",
+        "sha256": "a55136d406bc21cfb12d61d466814844f8a784f8b3b5ff5582b0e2fa803ceaf7"
+      },
+      {
+        "path": "src/modules/credential/userpass/path_login.rs",
+        "sha256": "cebe607b6bcbb55637262cff7ebfd57977cea0b7816f96a1c1c135b8096bc532"
+      },
+      {
+        "path": "src/modules/credential/userpass/path_users.rs",
+        "sha256": "a61502cbd51882cddf66d18f05e895ad3040be9874cacb26d6939fb1b4737c4a"
+      },
+      {
+        "path": "src/modules/crypto/crypto_adaptors/common.rs",
+        "sha256": "10b95d75339fe81090007356080e920149ac817f192526535ae3dbed8383bca1"
+      },
+      {
+        "path": "src/modules/crypto/crypto_adaptors/mod.rs",
+        "sha256": "0afb67d20dd59021a964cb886759b4daed7a0427041f62f01ed1f3410ef30823"
+      },
+      {
+        "path": "src/modules/crypto/crypto_adaptors/openssl_adaptor.rs",
+        "sha256": "060e875c954e347f1189a9549abe2d3fe450340c2bc4e1113393886f3a6af452"
+      },
+      {
+        "path": "src/modules/crypto/crypto_adaptors/tongsuo_adaptor.rs",
+        "sha256": "0d98b0be273260be68ac4c62de9affc052de6016c5a3604de2b3d8572fa339ca"
+      },
+      {
+        "path": "src/modules/crypto/mod.rs",
+        "sha256": "c1a2ddf93be24375aa8d29dd1b0c91421a781756133b7a3cc21b14348f176ffe"
+      },
+      {
+        "path": "src/modules/kv/mod.rs",
+        "sha256": "d7facab775a0faeb996c342bd233fcc122e9e169733881afc5ec847ca289ffae"
+      },
+      {
+        "path": "src/modules/mod.rs",
+        "sha256": "e4d7f88a0de1f7d2c2e5b5a9814ad5ba2340d642fa4075ecedd084ce7d5b21ca"
+      },
+      {
+        "path": "src/modules/pki/field.rs",
+        "sha256": "d2f9c1e3d63ad158a455ff5635fb1780670de92bb8f5da109bb6d2656e924640"
+      },
+      {
+        "path": "src/modules/pki/mod.rs",
+        "sha256": "01168979d4cf95917738f1f814671980596fa4aa6c4bd75cd807823623f6b270"
+      },
+      {
+        "path": "src/modules/pki/path_config_ca.rs",
+        "sha256": "858402502db619bafa3b408489216b9b410d84854196f36bfb469858b7ac285a"
+      },
+      {
+        "path": "src/modules/pki/path_config_crl.rs",
+        "sha256": "b4b265680bcdbd770e1efd416cc21261c738510d8883763880f369a07a4d08fc"
+      },
+      {
+        "path": "src/modules/pki/path_fetch.rs",
+        "sha256": "c8e109a954dae9cb19b359a2017df5479eb42333ac416d1a9ce27a024bd07264"
+      },
+      {
+        "path": "src/modules/pki/path_issue.rs",
+        "sha256": "b23dc39f638594cae7962205077d434cfa5bf8a6c726c366f8578dd88b7155eb"
+      },
+      {
+        "path": "src/modules/pki/path_keys.rs",
+        "sha256": "1902f306eed7d4e75600fe596f60c4bb556de7f3c4928ce5034a535a7f386d7f"
+      },
+      {
+        "path": "src/modules/pki/path_revoke.rs",
+        "sha256": "afdfc759c7153e6272b4827a40d18e79b22370a46f3ae953f48bfca511b15bf7"
+      },
+      {
+        "path": "src/modules/pki/path_roles.rs",
+        "sha256": "138091ff35d4eb70acb4290b8d51a1643886dc133c0c38fcc851ab5a479e897d"
+      },
+      {
+        "path": "src/modules/pki/path_root.rs",
+        "sha256": "437a2e71dee16a2a3d05fe50ff0c6f9e49601ccf7ba27d43a6d7f4e9c289be48"
+      },
+      {
+        "path": "src/modules/pki/util.rs",
+        "sha256": "6d41e63030f33535116e9b9394fba6c03a711bb421e826e7192360ff9d7fff58"
+      },
+      {
+        "path": "src/modules/policy/acl.rs",
+        "sha256": "b50da0a32733f7df0e3504d857c0587999f3752a42a797d91b5ddc52a955e342"
+      },
+      {
+        "path": "src/modules/policy/mod.rs",
+        "sha256": "d03e34c2375159831d592e433c4351bfde5803355ad19c509fbe3701e6064747"
+      },
+      {
+        "path": "src/modules/policy/policy.rs",
+        "sha256": "d3bebee42e599394ee86f51a25610dc6d74d7300b9d03cd57642d458b9f0bc31"
+      },
+      {
+        "path": "src/modules/policy/policy_store.rs",
+        "sha256": "c3a7812437b3847b908cce330a0fceafaeab084e203f4cf39a620e4103facdd2"
+      },
+      {
+        "path": "src/modules/system/mod.rs",
+        "sha256": "8dfd488bbac67b104da1617bf22a852b0f960e287caf73d10c2cc444d5bb370a"
+      },
+      {
+        "path": "src/mount.rs",
+        "sha256": "a2a08c9f9b8206e6514dc0ae6de6f3e83ad45adba99ed67e55d45d5c425f83d2"
+      },
+      {
+        "path": "src/router.rs",
+        "sha256": "bdf7db341dccb007df821805ca240e021284d9949fb6eb9af5c015e0de29d99c"
+      },
+      {
+        "path": "src/schema.rs",
+        "sha256": "d2ddd1b0fdf920fa70ec6d2bf724af39316c3ee9f9011c6f9bd5f301752f1b14"
+      },
+      {
+        "path": "src/shamir.rs",
+        "sha256": "c44e474d7d311c5f899d1b2a12f9695adee8f6003ac8cebf68a901f667a91d85"
+      },
+      {
+        "path": "src/storage/barrier_aes_gcm.rs",
+        "sha256": "599bf0f4f69c11dc6e17b056d58ea0e2d145802e4d25b022c768ded6896f57d4"
+      },
+      {
+        "path": "src/storage/barrier.rs",
+        "sha256": "9659900a17f187ea945b2524f6ef6f16880770befa45c2a5e1c1e81f2de8d09f"
+      },
+      {
+        "path": "src/storage/barrier_view.rs",
+        "sha256": "9a3b5a99eccfde52b433fb8dcb7d4577a3cf5c47b6dd0e675463b243225709c0"
+      },
+      {
+        "path": "src/storage/mod.rs",
+        "sha256": "ddb462811a92aaa56711c776845863ec2cdcb3d1ad15dbaf99a184f819e84e2f"
+      },
+      {
+        "path": "src/storage/mysql/mod.rs",
+        "sha256": "624b5ccaa36a7d63e79353a671ad9a1769430f7dd538984e33df036b7354add5"
+      },
+      {
+        "path": "src/storage/mysql/mysql_backend.rs",
+        "sha256": "97f54baf1833e05592a47dca57ea8e657669672f25f30c29959741c8cff97638"
+      },
+      {
+        "path": "src/storage/physical/file.rs",
+        "sha256": "ad9eb18589cb2d03e986cdb9c89798cafe174c61d68714426960113fb751d6b1"
+      },
+      {
+        "path": "src/storage/physical/mock.rs",
+        "sha256": "7b477cff9c0e7121245efc857b7334a0c4cc412a8ce626b4d33d0a8c2a2df140"
+      },
+      {
+        "path": "src/storage/physical/mod.rs",
+        "sha256": "dcc150badf9dbd010ecb7be40f92b459235d771a2b6d7b390c1cf8ab63663cfe"
+      },
+      {
+        "path": "src/storage/sqlx/mod.rs",
+        "sha256": "4600db3bda005c33231cb62fc800c8e2e2a0a116a06bf0e05d345fa7e96db352"
+      },
+      {
+        "path": "src/test_utils.rs",
+        "sha256": "3dffff7f72b46f63a399df9c67fe9e0adaa48db55f5ec8b3a97955531d76fbc8"
+      },
+      {
+        "path": "src/utils/cert.rs",
+        "sha256": "25a62783c573cdcdd3d7dcb61fca07b9aef67876adc1d88409d588f865a13d83"
+      },
+      {
+        "path": "src/utils/cidr.rs",
+        "sha256": "77623c29858fabe8a85e8a910abc4444cf82cdd35d9f62d06191f4bef1329ba3"
+      },
+      {
+        "path": "src/utils/crypto.rs",
+        "sha256": "7040f4dea5dd14628fc735ccce99767a8c09577a7063677fa9fa4d040200bac8"
+      },
+      {
+        "path": "src/utils/db.rs",
+        "sha256": "8dc41d7ae4f9f19c5b9472dd7ec27b9f29e20124cb913b61b62a6921f92a3d53"
+      },
+      {
+        "path": "src/utils/ip_sock_addr.rs",
+        "sha256": "c26e38ebda3f79ed5557b1a50503ef9da9eb4d389420857db0db331d11373850"
+      },
+      {
+        "path": "src/utils/key.rs",
+        "sha256": "8eab9d6ad01d5bf46c392e8ec6d1480218cdb66cd7957f814f3638f57f11c76d"
+      },
+      {
+        "path": "src/utils/kv_builder.rs",
+        "sha256": "4c1a667b819ab08777440bbcc5ce4c3eb88c901cf3a282e5e8fb2707e31dee6b"
+      },
+      {
+        "path": "src/utils/locks.rs",
+        "sha256": "e253d920c724140874f7f52d95cff5f3df729cccb07afe8d0b86446565c9580b"
+      },
+      {
+        "path": "src/utils/mod.rs",
+        "sha256": "7271138611d8602fbf4b1f290c5da6bf41118e95e2ac7ccf8e402229802b4a9b"
+      },
+      {
+        "path": "src/utils/ocsp.rs",
+        "sha256": "3a81ef279e89e75757a90384703faa0228fe9597c165fdf466c5b77672888f26"
+      },
+      {
+        "path": "src/utils/policy.rs",
+        "sha256": "a4229c467d6c6ef22d1e90ec8368414a438c4e14f9132381809ee0102a64a8c6"
+      },
+      {
+        "path": "src/utils/salt.rs",
+        "sha256": "2b7d1ac1328180271e4c5b6c3657df9746422e15564c8b0803607f46fdeb767e"
+      },
+      {
+        "path": "src/utils/seal.rs",
+        "sha256": "116d083ecd174302dd7faa8ee9d00f83d49021e8c71efad428f8f59a8b2b9328"
+      },
+      {
+        "path": "src/utils/sock_addr.rs",
+        "sha256": "112025f0a05f728f2121632b28f0edf15c0384ecbcf60bb9e2d8f8ea1cfab81e"
+      },
+      {
+        "path": "src/utils/string.rs",
+        "sha256": "7febe528b6fdd30ec3e4574e302b48c4c9147f7df494d7e6d212b14be123913f"
+      },
+      {
+        "path": "src/utils/token_util.rs",
+        "sha256": "d8e7d1f93d30105ceafbe7434fb8ee618718e1a38f7d73093f2b04d88df8682b"
+      },
+      {
+        "path": "src/utils/unix_sock_addr.rs",
+        "sha256": "f45e7bd1b5d03533352dd4188e901f237989f0111fbc229e6aa659b8078f0ff1"
+      },
+      {
+        "path": "tests/test_default_logical.rs",
+        "sha256": "20cef2ce944ebc25aa4be7971edb8d5cd44310560f5a64f642e3ed2b5b32e06e"
+      },
+      {
+        "path": "VENDORING_NOTES.md",
+        "sha256": "71bfe9fda14966e9f203971caa04d5312cdbcdc2505db48a67565c6bf50f322d"
+      }
+    ]
+  },
+  "status": "IMPORTED_NOT_ADMITTED"
+}

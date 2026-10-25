@@ -5,7 +5,14 @@ fixture(Db,Variant) ->
  true=is_binary(Db),
  <<"/tmp/uos_tg_service_e2e_test_",_/binary>>=Db,
  nomatch=binary:match(Db,<<"..">>),
- Exe=list_to_binary(filename:join(filename:dirname(filename:dirname(filename:dirname(code:which(?MODULE)))),"ecology_budget.exe")),
+ %% The production budget-source allowlist (telegram_budget_report:valid_source)
+ %% only admits executables under var/releases or var/recovery-runtime, so the
+ %% fixture exe lives in the canonical evidence tree, built by
+ %% tools/validation/build_ecology_budget_exe.ml.
+ Exe=case os:getenv("UOS_TEST_ECOLOGY_BUDGET_EXE") of
+     false -> <<"/home/an/NAS-setup/uos/var/recovery-runtime/test-fixtures/ecology_budget.exe">>;
+     Path -> list_to_binary(Path)
+ end,
  {ok,Bytes}=file:read_file(Exe),
  Sha=binary:encode_hex(crypto:hash(sha256,Bytes),lowercase),
  Ledger= <<Db/binary,".budget.sqlite3">>,

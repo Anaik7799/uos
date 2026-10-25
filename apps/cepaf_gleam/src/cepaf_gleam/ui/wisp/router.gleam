@@ -15,14 +15,14 @@
 ///
 /// STAMP: SC-GLM-UI-001, SC-GLM-UI-003, SC-GLM-UI-006, SC-GLM-UI-007,
 ///        SC-SAFETY-001, SC-SAFETY-022, SC-SIL4-006
-import cepaf_gleam/config/mesh_source
 import cepaf_gleam/agui/sse as agui_sse
 import cepaf_gleam/agui/sse_stream
 import cepaf_gleam/agui/state as agui_state
 import cepaf_gleam/agui/tools as agui_tools
 import cepaf_gleam/bridge/pi_daemon
-import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/c3i/evidence
+import cepaf_gleam/c3i/nif as c3i_nif
+import cepaf_gleam/config/mesh_source
 import cepaf_gleam/ecology/andon
 import cepaf_gleam/ecology/capability_port
 import cepaf_gleam/ecology/living_swarm
@@ -65,6 +65,8 @@ import cepaf_gleam/ui/domain.{
   Zenoh, page_to_label, page_to_path,
 }
 import cepaf_gleam/ui/ecology_refresh
+import cepaf_gleam/ui/homeostasis_data
+import cepaf_gleam/ui/homeostasis_status
 import cepaf_gleam/ui/lustre/agui_cockpit
 import cepaf_gleam/ui/lustre/checklist_page
 import cepaf_gleam/ui/lustre/cortex_cockpit
@@ -2039,7 +2041,12 @@ fn system_snapshot_json() -> String {
   let plan = c3i_nif.plan_status()
   let now_ms = router_system_time_nanos() / 1_000_000
   let freshness =
-    evidence.evaluate_freshness_custom(c3i_nif.runtime_loaded(), plan, health, now_ms)
+    evidence.evaluate_freshness_custom(
+      c3i_nif.runtime_loaded(),
+      plan,
+      health,
+      now_ms,
+    )
     |> evidence.to_freshness_json()
   "{\"snapshot\":{\"health\":"
   <> health
@@ -2355,27 +2362,12 @@ fn build_symbiosis_index() -> symbiosis_types.SymbiosisIndex {
   |> symbiosis_types.record("guardian", "2oo3_voting", 0.5, 0.9)
 }
 
+/// Live L2 homeostasis status: observed local BEAM counters only. Unmeasured
+/// quantities (CPU %, latency, PID convergence, peer quorum) stay unavailable,
+/// and the endpoint carries no control authority.
 fn homeostasis_json() -> String {
-  json.object([
-    #("page", json.string("Homeostasis")),
-    #("layer", json.string("L2_COMPONENT")),
-    #("stable", json.bool(True)),
-    #("convergence_pct", json.float(98.5)),
-    #("sample_count", json.int(1024)),
-    #(
-      "pid",
-      json.object([
-        #("setpoint", json.float(1.0)),
-        #("actual", json.float(0.985)),
-        #("error", json.float(0.015)),
-        #("output", json.float(0.12)),
-        #("kp", json.float(1.0)),
-        #("ki", json.float(0.1)),
-        #("kd", json.float(0.05)),
-      ]),
-    ),
-  ])
-  |> json.to_string()
+  let #(snapshot, now) = homeostasis_data.read(homeostasis_data.default())
+  homeostasis_status.to_json(snapshot, now)
 }
 
 fn bicameral_json() -> String {
@@ -2936,6 +2928,7 @@ fn holon_identity_json() -> String {
 fn mesh_config_json() -> String {
   mesh_source.summary(mesh_source.load()) |> json.to_string()
 }
+
 /// Git intelligence endpoint
 fn git_intelligence_json() -> String {
   json.object([

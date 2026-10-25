@@ -20,6 +20,7 @@
 //// - Rollback using finite intent, private grant, and durable backup manifest
 
 import cepaf_gleam/harness/recovery_activation as ra
+import gleam/string
 import gleam/int
 import gleam/option.{type Option, None, Some}
 import gleeunit/should
@@ -578,7 +579,7 @@ pub fn rollback_tampered_backup_retains_hold_lock_test() {
   // 3. Attempt rollback -> must FAIL and RETAIN LOCK in HOLD status!
   case ra.rollback_with_task_validator(intent, grant, validator) {
     Error(ra.RollbackFailedRetainingLock(_)) -> Nil
-    _ -> panic as "expected RollbackFailedRetainingLock"
+    other -> panic as { "expected RollbackFailedRetainingLock, got " <> string.inspect(other) }
   }
 
   // Verify lock is RETAINED on disk with status HOLD

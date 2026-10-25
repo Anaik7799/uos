@@ -217,7 +217,7 @@ pub fn route_is_not_mini_app_path_test() {
 
 pub fn route_dashboard_returns_html_test() {
   let html = mini_app_routes.route("/mini-app/dashboard")
-  html |> string.contains("<!DOCTYPE html>") |> should.be_true()
+  html |> string.lowercase |> string.contains("<!doctype html>") |> should.be_true()
   html |> string.contains("telegram-web-app.js") |> should.be_true()
   html |> string.contains("tg-nav-bar") |> should.be_true()
 }
@@ -227,7 +227,8 @@ pub fn route_alerts_returns_html_test() {
   html |> string.contains("Cockpit") |> should.be_true()
 }
 
-pub fn route_unknown_falls_back_to_dashboard_test() {
+/// Unknown pages are refused explicitly; the HTTP layer answers not_found.
+pub fn route_unknown_returns_not_found_test() {
   let html = mini_app_routes.route("/mini-app/nonexistent")
-  html |> string.contains("C3I Mesh") |> should.be_true()
+  html |> string.contains("Page not found") |> should.be_true()
 }

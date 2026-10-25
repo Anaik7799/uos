@@ -9,6 +9,8 @@ import cepaf_gleam/ui/domain.{
   type HealthStatus, type Page, type RenderContext, type TelemetryPoint,
   Critical, Dashboard, Degraded, Healthy, Unknown, page_to_label,
 }
+import cepaf_gleam/ui/homeostasis_status
+import cepaf_gleam/ui/tui/homeostasis_evolution_view
 import gleam/int
 import gleam/list
 import gleam/string
@@ -98,12 +100,24 @@ pub fn render_frame(ctx: RenderContext) -> String {
       #("L6 Ecosystem", 0.78),
       #("L7 Federation", 0.65),
     ])
+  // A page-level health label cannot stand in for an observation: the
+  // homeostasis page always shows its evidence state, here unavailable.
+  let page_body = case ctx.page {
+    domain.HomeostasisPage ->
+      homeostasis_evolution_view.render_snapshot(
+        homeostasis_status.unavailable(),
+        0,
+        80,
+        40,
+      )
+    _ -> ""
+  }
   let nav = render_navigation(ctx.page)
 
   string.join(
     [
       header, health_line, zenoh_line, mode_line, ooda_line, status_strip, "",
-      telemetry, "", heatmap, "", nav,
+      telemetry, "", page_body, heatmap, "", nav,
     ],
     "\n",
   )

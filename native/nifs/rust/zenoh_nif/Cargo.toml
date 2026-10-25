@@ -1,0 +1,63 @@
+[package]
+name = "zenoh_nif"
+version = "0.1.0"
+edition = "2021"
+authors = ["Indrajaal Team"]
+description = "Zenoh NIF bindings for Elixir - fractal logging and telemetry transport"
+license = "Apache-2.0"
+repository = "https://github.com/intelitor/indrajaal"
+
+# STAMP Constraints:
+# - SC-NIF-001: NIF functions must not block BEAM scheduler
+# - SC-NIF-002: Resource cleanup on process exit
+# - SC-NIF-003: Error propagation to Elixir
+# - SC-NIF-005: ProofToken enforcement at NIF boundary (control-plane gate)
+
+[lib]
+name = "zenoh_nif"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Rustler for Elixir NIF integration - MUST match Elixir {:rustler, "~> 0.37"}
+rustler = "0.37"
+
+# Zenoh native client - PINNED to =1.8.0 to match runtime peer (eclipse/zenoh:latest = zenohd v1.8.0).
+# Caret on "1.7" resolved Cargo.lock to 1.9.0 -> wire-format drift -> SIGSEGV at declare_subscriber.
+# SC-NIF-009: Zenoh version MUST match Rust code API usage AND runtime peer version.
+# RCA: docs/journal/task-116503330407891617/journal.md (EXP-B finding).
+zenoh = { version = "=1.8.0", default-features = false, features = ["transport_tcp", "transport_udp"] }
+
+# Async runtime for Zenoh
+tokio = { version = "1.35", features = ["rt-multi-thread", "sync", "time"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Logging
+log = "0.4"
+env_logger = "0.10"
+
+# Time handling
+chrono = "0.4"
+
+# Concurrency utilities
+parking_lot = "0.12"
+crossbeam-channel = "0.5"
+
+# HMAC-SHA256 for ProofToken verification at NIF boundary (SC-NIF-005, SC-HASH-002)
+# hmac 0.12 + sha2 0.10 — RustCrypto stable, sub-microsecond HMAC-SHA256 per verify call
+hmac = "0.12"
+sha2 = "0.10"
+ed25519-dalek = "2.1"
+base64 = "0.21"
+
+# NOTE: Profile settings moved to workspace root Cargo.toml per Cargo convention
+
+[dev-dependencies]
+# Criterion benchmarks for ProofToken latency validation (SC-NIF-012)
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "proof_token_bench"
+harness = false

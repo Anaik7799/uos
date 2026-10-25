@@ -57,22 +57,45 @@ pub fn private_http_health_freshness_candidate_test() {
 
 pub fn private_http_health_candidate_test() {
   let response = router.route("/health")
+  let alias_response = router.route("/api/health")
 
   // Must contain threat_level to satisfy request guard
   response |> string.contains("\"threat_level\"") |> should.be_true()
-
-  // Verify /api/health alias behaves identically in structure
-  let alias_response = router.route("/api/health")
   alias_response |> string.contains("\"threat_level\"") |> should.be_true()
 
-  // This fixture deliberately has no native library. Missing observation is
-  // unavailable, and never evidence that the underlying service is healthy.
-  response |> should.equal(alias_response)
-  response |> string.contains("\"runtime_loaded\":false") |> should.be_true()
-  response
-  |> string.contains("\"telemetry_status\":\"unavailable\"")
-  |> should.be_true()
-  response |> string.contains("\"status\":\"ok\"") |> should.be_false()
+  // The alias serves the same document; only the observation clock moves.
+  without_clock(response) |> should.equal(without_clock(alias_response))
+
+  // Whether or not the native runtime is loaded, health is never asserted
+  // without observation: no runtime means unavailable, and "ok" requires
+  // observed containers that are all healthy.
+  case string.contains(response, "\"runtime_loaded\":false") {
+    True -> {
+      response
+      |> string.contains("\"telemetry_status\":\"unavailable\"")
+      |> should.be_true()
+      response |> string.contains("\"status\":\"ok\"") |> should.be_false()
+    }
+    False ->
+      case string.contains(response, "\"status\":\"ok\"") {
+        True -> {
+          response
+          |> string.contains("\"quorum_healthy\":true")
+          |> should.be_true()
+          response
+          |> string.contains("\"container_count\":0,")
+          |> should.be_false()
+        }
+        False -> Nil
+      }
+  }
+}
+
+fn without_clock(body: String) -> String {
+  case string.split_once(body, "\"last_updated_ms\":") {
+    Ok(#(head, _)) -> head
+    Error(_) -> body
+  }
 }
 
 pub fn private_http_snapshot_candidate_test() {

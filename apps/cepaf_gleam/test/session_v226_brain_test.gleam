@@ -137,7 +137,7 @@ pub fn miniapp_routes_all_return_html_test() {
   ]
   list.all(paths, fn(path) {
     let html = mini_app_routes.route(path)
-    string.contains(html, "<!DOCTYPE html>")
+    string.contains(string.lowercase(html), "<!doctype html>")
     && string.contains(html, "telegram-web-app.js")
     && string.contains(html, "tg-nav-bar")
   })

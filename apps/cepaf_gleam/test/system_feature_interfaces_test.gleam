@@ -31,7 +31,7 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
-            "bef7f11ea2c11f3d59c0b9c2256f72b89220e3996217ee3cd803b707806eaf7b",
+            "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/peers.gleam",

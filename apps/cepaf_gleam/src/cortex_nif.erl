@@ -13,7 +13,10 @@
     cortex_scrub_pii/1,
     cortex_transcribe_audio_pcm16/2,
     cortex_infer_local/2,
-    cortex_check_storage_safety/1
+    cortex_check_storage_safety/1,
+    sa_plan_monotone_fencing_token/1,
+    sa_plan_action_receipt_sha256/5,
+    sa_plan_verify_hardware_safety_interlock/1
 ]).
 
 -on_load(init/0).
@@ -49,3 +52,15 @@ cortex_check_storage_safety(SerialQuery) ->
         nomatch -> true;
         _ -> false
     end.
+
+%% Sa-plan bounded primitives (native/nifs/rust/cortex_nif). Without the native
+%% library these fail closed: no fencing token or receipt is invented, and the
+%% storage interlock never reports a target as safe.
+sa_plan_monotone_fencing_token(_CurrentToken) ->
+    erlang:nif_error(nif_not_loaded).
+
+sa_plan_action_receipt_sha256(_Worker, _PlanId, _TaskId, _FencingToken, _Result) ->
+    erlang:nif_error(nif_not_loaded).
+
+sa_plan_verify_hardware_safety_interlock(_TargetSerial) ->
+    false.

@@ -198,7 +198,6 @@ pub fn to_json(snapshot: Snapshot, now_us: Int) -> String {
         #("output", json.float(0.0)),
       ]),
     ),
-    #("convergence_pct", json.float(100.0)),
     #("schema_version", json.int(1)),
     #("status", json.string(string.lowercase(label(current)))),
     #("source", json.string(source(snapshot))),

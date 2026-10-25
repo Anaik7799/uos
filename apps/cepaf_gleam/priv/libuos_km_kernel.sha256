@@ -1,0 +1,1 @@
+6448ba06f8a058d0c87b3448955808827f35d045215d2dc6bd4e2d256e614544  apps/cepaf_gleam/priv/libuos_km_kernel.so  built in-project 2026-10-25T21:31:21Z from tracked source via native/nifs/mojo/Makefile (Mojo 1.0.0 via tools/mojo, host cc, OTP 29.0.5 headers; C oracle 48/48); provenance governance/sources/20261025-2230-nif-in-project-build.json; never committed

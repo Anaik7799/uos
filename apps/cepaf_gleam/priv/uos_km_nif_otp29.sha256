@@ -1,0 +1,1 @@
+958ab252a01dd25e8ff30f0a51340e8cfa9d929b0a08bb93dd4b87b706cb92a3  apps/cepaf_gleam/priv/uos_km_nif_otp29.so  built in-project 2026-10-25T21:31:21Z from tracked source via native/nifs/mojo/Makefile (Mojo 1.0.0 via tools/mojo, host cc, OTP 29.0.5 headers; C oracle 48/48); provenance governance/sources/20261025-2230-nif-in-project-build.json; never committed

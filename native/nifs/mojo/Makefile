@@ -45,8 +45,7 @@ clean:
 # The running indrajaal-web release is OTP 29 (erts 17) from nix, while the
 # system erl is OTP 27. A NIF must match the OTP that loads it, so build a
 # second object against the OTP 29 headers when that toolchain is present.
-OTP29_ROOT := /nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6
-OTP29_INC  := $(OTP29_ROOT)/lib/erlang/erts-17.0.6/include
+OTP29_INC  := $(ERTS_INC)
 NIF_SO_29  := $(PRIV)/uos_km_nif_otp29.so
 
 otp29: $(KERNEL_SO)

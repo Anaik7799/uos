@@ -353,7 +353,7 @@ pub fn e2e_workflow_check_health_then_dashboard_test() {
   // Step 1: Check system health
   let health = get("/health")
   health.status |> should.equal(200)
-  contains(health.body, "ok")
+  honest_health(health.body) |> should.be_true()
   // Step 2: Navigate to dashboard
   let dash = get("/api/v1/dashboard")
   dash.status |> should.equal(200)
@@ -564,4 +564,20 @@ fn all_get_routes() -> List(String) {
     "/api/v1/planning_dashboard", "/ag-ui/health", "/ag-ui/state",
     "/ag-ui/hitl/pending",
   ]
+}
+
+/// /health reports what was observed: "ok" only with observed, healthy
+/// containers; otherwise degraded, critical or unavailable. A fixed "ok" was
+/// the c3i_nif 16/16 fallback that fabricated health when podman was absent.
+fn honest_health(body: String) -> Bool {
+  case
+    string.contains(body, "\"status\":\"ok\""),
+    string.contains(body, "\"status\":\"degraded\"")
+      || string.contains(body, "\"status\":\"critical\"")
+      || string.contains(body, "\"status\":\"unavailable\"")
+      || string.contains(body, "\"runtime_loaded\":false")
+  {
+    True, _ -> !string.contains(body, "\"container_count\":0,")
+    False, honest -> honest
+  }
 }

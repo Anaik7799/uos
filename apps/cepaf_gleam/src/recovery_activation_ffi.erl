@@ -974,7 +974,7 @@ rollback_from_manifest(TargetBin, BackupDirBin) ->
 
 -spec sqlite_verify_integrity(binary()) -> {ok, integer()} | {error, binary()}.
 sqlite_verify_integrity(DbPathBinary) ->
-    guarded(fun() ->
+    guarded_sqlite(fun() ->
         DbPath = unicode:characters_to_list(DbPathBinary),
         case esqlite3:open("file:" ++ uri_string:quote(DbPath, "/") ++ "?mode=ro&cache=private") of
             {ok, Conn} ->
@@ -1011,7 +1011,7 @@ sqlite_verify_integrity(DbPathBinary) ->
 
 -spec sqlite_checkpoint(binary()) -> {ok, nil} | {error, binary()}.
 sqlite_checkpoint(DbPathBinary) ->
-    guarded(fun() ->
+    guarded_sqlite(fun() ->
         DbPath = unicode:characters_to_list(DbPathBinary),
         case esqlite3:open(DbPath) of
             {ok, Conn} ->
@@ -1031,7 +1031,7 @@ sqlite_checkpoint(DbPathBinary) ->
 
 -spec verify_cycle_chain(binary()) -> {ok, {integer(), integer()}} | {error, binary()}.
 verify_cycle_chain(DbPathBinary) ->
-    guarded(fun() ->
+    guarded_sqlite(fun() ->
         DbPath = unicode:characters_to_list(DbPathBinary),
         case esqlite3:open(DbPath) of
             {ok, Conn} ->
@@ -1097,7 +1097,7 @@ as_bin(L) when is_list(L) -> unicode:characters_to_binary(L).
 
 -spec verify_coordinator_chain(binary()) -> {ok, integer()} | {error, binary()}.
 verify_coordinator_chain(DbPathBinary) ->
-    guarded(fun() ->
+    guarded_sqlite(fun() ->
         DbPath = unicode:characters_to_list(DbPathBinary),
         case esqlite3:open(DbPath) of
             {ok, Conn} ->
@@ -1221,7 +1221,7 @@ get_argv() ->
 
 -spec create_test_db(binary(), binary()) -> {ok, nil} | {error, binary()}.
 create_test_db(PathBinary, TableNameBinary) ->
-    guarded(fun() ->
+    guarded_sqlite(fun() ->
         Path = unicode:characters_to_list(PathBinary),
         Table = unicode:characters_to_list(TableNameBinary),
         ok = filelib:ensure_path(filename:dirname(Path)),
@@ -1241,7 +1241,7 @@ create_test_db(PathBinary, TableNameBinary) ->
 
 -spec create_test_coordinator_db(binary()) -> {ok, nil} | {error, binary()}.
 create_test_coordinator_db(PathBinary) ->
-    guarded(fun() ->
+    guarded_sqlite(fun() ->
         Path = unicode:characters_to_list(PathBinary),
         ok = filelib:ensure_path(filename:dirname(Path)),
         case esqlite3:open(Path) of
@@ -1271,7 +1271,7 @@ create_test_coordinator_db(PathBinary) ->
 
 -spec create_test_cycle_db(binary()) -> {ok, nil} | {error, binary()}.
 create_test_cycle_db(PathBinary) ->
-    guarded(fun() ->
+    guarded_sqlite(fun() ->
         Path = unicode:characters_to_list(PathBinary),
         ok = filelib:ensure_path(filename:dirname(Path)),
         case esqlite3:open(Path) of
@@ -1305,6 +1305,23 @@ guarded(Fun) ->
         throw:{storage, Reason} -> {error, Reason};
         error:{badmatch, {error, Reason}} -> {error, fmt(Reason)};
         Class:Reason -> {error, iolist_to_binary(io_lib:format("~p:~p", [Class, Reason]))}
+    end.
+
+%% esqlite3 finalizes prepared statements only when their owning process is
+%% garbage-collected, and sqlite3_close_v2 keeps the file descriptor open until
+%% then. Running each open/query/close in a short-lived process makes its exit
+%% release the descriptor before the result is returned, so a quiescence probe
+%% that follows never sees this BEAM still holding the database.
+guarded_sqlite(Fun) ->
+    {Pid, Ref} = spawn_monitor(fun() -> exit({sqlite_result, guarded(Fun)}) end),
+    receive
+        {'DOWN', Ref, process, Pid, {sqlite_result, Result}} -> Result;
+        {'DOWN', Ref, process, Pid, Other} ->
+            {error, iolist_to_binary(io_lib:format("sqlite_worker_exit:~p", [Other]))}
+    after 120000 ->
+        exit(Pid, kill),
+        receive {'DOWN', Ref, process, Pid, _} -> ok end,
+        {error, <<"sqlite_worker_timeout">>}
     end.
 
 fail(Reason) -> throw({storage, Reason}).

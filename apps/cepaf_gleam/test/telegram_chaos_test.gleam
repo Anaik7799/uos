@@ -244,7 +244,9 @@ pub fn chaos_c5_fractal_jidoka_andon_stop_line_on_tampered_mutation_test() {
         lease_until_ns: 9_999_999_999_999_999_999,
       )
 
-    // 1. Quorum Missing: quorum_approved = False with valid lease
+    // 1. Caller-supplied lease without canonical Sa-plan proof: the L3 authority
+    //    check refuses with -32002 before quorum is evaluated (quorum -32003 under
+    //    verified authority is covered in gemma4_feature_suite_test).
     let decision_no_quorum =
       dispatch_action_request(
         "call-c5-unapproved",
@@ -261,7 +263,7 @@ pub fn chaos_c5_fractal_jidoka_andon_stop_line_on_tampered_mutation_test() {
     |> string.contains("Fractal Jidoka Andon Stop Line Triggered")
     |> should.be_true
     decision_no_quorum.reply_markdown
-    |> string.contains(int.to_string(td.andon_halt_quorum_missing_code))
+    |> string.contains(int.to_string(td.andon_halt_unauthorized_code))
     |> should.be_true
 
     // 2. Fencing Lease Missing: quorum_approved = True, but lease = None

@@ -131,9 +131,11 @@ pub fn telegram_fenced_tool_read_test() {
       timestamp_ms: 1_788_978_900_000,
     )
   let decision = evaluate_intent(intent)
-  decision.ooda_phase |> should.equal("Act")
+  // evaluate_intent holds no canonical Sa-plan lease for /tool, so the fenced
+  // dispatcher refuses fail-closed with -32002 (SC-JIDOKA-001).
+  decision.ooda_phase |> should.equal("Halt")
   decision.reply_markdown
-  |> string.contains("Tool Executed (`query_system_health`)")
+  |> string.contains("SC-JIDOKA-001")
   |> should.be_true
 }
 
@@ -153,9 +155,9 @@ pub fn telegram_fenced_tool_mutating_quorum_halt_test() {
   decision.reply_markdown
   |> string.contains("Fractal Jidoka Andon Stop Line Triggered")
   |> should.be_true
-  decision.reply_markdown |> string.contains("-32003") |> should.be_true
+  decision.reply_markdown |> string.contains("-32002") |> should.be_true
   decision.reply_markdown
-  |> string.contains("Constitutional Quorum Violation")
+  |> string.contains("SC-JIDOKA-001")
   |> should.be_true
 }
 

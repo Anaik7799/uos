@@ -97,6 +97,11 @@ Thumbs.db
 
 # ferriskey_nif is a cdylib NIF: its lockfile is part of the reproducible build (governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json)
 !native/nifs/rust/ferriskey_nif/Cargo.lock
+# NIF crates under apps/cepaf_gleam/native are cdylibs built in-project; their lockfiles
+# pin the dependency graph each priv/*.so pin was built from (uos/claude-handover NIF_INTEGRATE).
+!apps/cepaf_gleam/native/*/Cargo.lock
+!native/nifs/rust/*/Cargo.lock
+!sub-projects/rusty_vault_vendored/Cargo.lock
 apps/uos_swarm/test/scratch_systemd/
 
 # The MAX/Mojo toolchain lock pins every Modular and conda-forge artifact by URL

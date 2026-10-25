@@ -1,1 +1,1 @@
-e86999a0918404c6a8f44cd9e04d1b20af2b239380f924702233f655b86d544c  apps/cepaf_gleam/priv/cortex_nif.so
+2fcd26f253532474587069f65a295d23f5559cc5868ef9aada6d3782cd8ba588  apps/cepaf_gleam/priv/cortex_nif.so  built in-project 2026-10-25T21:31:21Z from tracked source native/nifs/rust/cortex_nif (cargo build --release --offline --locked, rustc 1.95.0 from toolchains/cargo, OTP 29.0.5 headers, Cargo.lock sha256 6e70bf7b060971ac); provenance governance/sources/20261025-2230-nif-in-project-build.json; never committed

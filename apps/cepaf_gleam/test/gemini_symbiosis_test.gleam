@@ -144,11 +144,13 @@ pub fn gemini_spec_defines_symbiosis_test() {
   let root = get_root()
   case file_system.read_file(root <> "/GEMINI.md") {
     Ok(content) -> {
-      string.contains(content, "Cybernetic Architect") |> should.be_true()
-      string.contains(content, "save_memory") |> should.be_true()
-      string.contains(content, "activate_skill") |> should.be_true()
-      string.contains(content, "codebase_investigator") |> should.be_true()
-      string.contains(content, "firecrawl") |> should.be_true()
+      // GEMINI.md is the 2026-10-01 policy adapter; it must route to the
+      // canonical policy and keep the shared authority boundaries.
+      string.contains(content, "AGENTS.md") |> should.be_true()
+      string.contains(content, "Sa-plan") |> should.be_true()
+      string.contains(content, "standalone Jujutsu") |> should.be_true()
+      string.contains(content, "EV-93 is the admitted ceiling") |> should.be_true()
+      string.contains(content, "Superpowers") |> should.be_true()
     }
     Error(e) ->
       panic as { "GEMINI.md missing at " <> root <> "/GEMINI.md, error: " <> e }
@@ -173,11 +175,13 @@ pub fn system_engineering_sop_skill_exists_test() {
 
 pub fn gemini_symbiosis_recommendations_test() {
   let root = get_root()
-  case file_system.read_file(root <> "/GEMINI.md") {
+  // The retired imported text is preserved byte-for-byte as inert history.
+  let history = root <> "/governance/sources/20261001-1118-symbiosis-history/GEMINI.md"
+  case file_system.read_file(history) {
     Ok(content) -> {
       string.contains(content, "@skill") |> should.be_true()
       string.contains(content, "Jidoka-Triggered Mapping") |> should.be_true()
     }
-    Error(_) -> panic as "GEMINI.md missing"
+    Error(_) -> panic as "retired GEMINI.md history missing"
   }
 }

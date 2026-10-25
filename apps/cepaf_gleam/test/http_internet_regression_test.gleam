@@ -20,7 +20,7 @@ const dev_token = "c3i-dev-token"
 pub fn http_health_returns_200_test() {
   let resp = get("/health")
   resp.status |> should.equal(200)
-  string.contains(resp.body, "\"status\":\"ok\"") |> should.be_true()
+  honest_health(resp.body) |> should.be_true()
 }
 
 pub fn http_pages_lists_all_pages_test() {
@@ -363,4 +363,20 @@ fn post_with_token(path: String, token: String) -> response.Response(String) {
     |> request.set_body("")
     |> request.set_header("authorization", "Bearer " <> token)
   router.handle_request(req)
+}
+
+/// /health reports what was observed: "ok" only with observed, healthy
+/// containers; otherwise degraded, critical or unavailable. A fixed "ok" was
+/// the c3i_nif 16/16 fallback that fabricated health when podman was absent.
+fn honest_health(body: String) -> Bool {
+  case
+    string.contains(body, "\"status\":\"ok\""),
+    string.contains(body, "\"status\":\"degraded\"")
+      || string.contains(body, "\"status\":\"critical\"")
+      || string.contains(body, "\"status\":\"unavailable\"")
+      || string.contains(body, "\"runtime_loaded\":false")
+  {
+    True, _ -> !string.contains(body, "\"container_count\":0,")
+    False, honest -> honest
+  }
 }
