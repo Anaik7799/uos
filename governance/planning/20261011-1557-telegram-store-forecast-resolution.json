@@ -1,0 +1,28 @@
+{
+  "schema": "uos.forecast-resolution.v1",
+  "recorded_at": "2026-10-11T15:39:57Z",
+  "evidence_observed_at": "2026-10-11T15:38:40Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_VERIFY",
+  "forecast_source": "docs/journal/20261011-1542-telegram-store-independent-verification.md",
+  "p": 0.7,
+  "horizon": "2026-10-11T15:45:00Z",
+  "completion": {
+    "task_id": "STORE_VERIFY",
+    "state": "completed",
+    "worker": "codex-telegram-20261011",
+    "lease_until_ns": null,
+    "attempt": 1,
+    "completed_at_ns": "1791733035161030438",
+    "result_present": true,
+    "dependencies": [
+      "STORE_FIX",
+      "STORE_REVIEW"
+    ]
+  },
+  "completed_at": "2026-10-11T15:37:15.161Z",
+  "outcome": 1,
+  "brier": 0.09,
+  "authority": "NONE; forecast scoring supplies no release or system admission",
+  "task_snapshot_sha256": "dd1ee65af6ae56edd58dde7cbf350fefb9849b160ae159f14778f1c189e3f9a3"
+}

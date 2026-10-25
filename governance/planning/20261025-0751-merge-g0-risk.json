@@ -1,0 +1,1937 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g0_preserve-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G0_PRESERVE",
+    "actor": "codex-analysis-20261024",
+    "scope": "Preserve all source/evidence and test restore; safe GitHub backup; explicitly account blocked stale claims",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Execute G0 non-destructive preservation before further feature or main mutations per operator steering",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Restored main and preserved revision IDs match",
+        "Tracked working-file backup independently matches",
+        "GitHub readback equals pushed revision or explicit bounded HOLD"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g1_accept-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G1_ACCEPT",
+    "actor": "codex-analysis-20261024",
+    "scope": "Accept exact current main 2ab40165: verify candidate-bound AGY reviews, source/test bindings and scoped tested behavior; classify full 733-path delta. No source mutation or runtime release.",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "G0_PRESERVE"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Accept exact current main 2ab40165: verify candidate-bound AGY reviews, source/test bindings and scoped tested behavior; classify full 733-path delta. No source mutation or runtime release.",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Main identity unchanged",
+        "Both prior AGY reviews mapped to correct exact candidate revisions",
+        "Current source bytes match executed test receipts; fresh focused native replay",
+        "All trunk differences enumerated with explicit scope and newer-main protections"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g2_remaining-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G2_REMAINING",
+    "actor": "codex-analysis-20261024",
+    "scope": "Reconcile all 733 trunk differences with main in owned workspace, preserve newer main retry fix and tests, restore source groups, compile/test and independently review before source-only integration",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "G1_ACCEPT"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Reconcile all 733 trunk differences with main in owned workspace, preserve newer main retry fix and tests, restore source groups, compile/test and independently review before source-only integration",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "733-path ledger with explicit disposition",
+        "No secret or binary ingestion",
+        "Fresh candidate full-app compile and affected test groups",
+        "AGY bounded exact-source review; current integration lease before main movement"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g3_authority-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G3_AUTHORITY",
+    "actor": "codex-analysis-20261024",
+    "scope": "Integrate remaining authority durability and formal fixes",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "available",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Predecessor G2_REMAINING is not completed"
+    ],
+    "dependencies": [
+      "G2_REMAINING"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Dependency-gated future generation: Integrate remaining authority durability and formal fixes",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g4_evidence-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G4_EVIDENCE",
+    "actor": "codex-analysis-20261024",
+    "scope": "Integrate reconciled default evidence; preserve all versions",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "available",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Predecessor G3_AUTHORITY is not completed"
+    ],
+    "dependencies": [
+      "G3_AUTHORITY"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Dependency-gated future generation: Integrate reconciled default evidence; preserve all versions",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g5_archive-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G5_ARCHIVE",
+    "actor": "codex-analysis-20261024",
+    "scope": "Account September branches with provenance and source verification",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "available",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Predecessor G4_EVIDENCE is not completed"
+    ],
+    "dependencies": [
+      "G4_EVIDENCE"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Dependency-gated future generation: Account September branches with provenance and source verification",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g6_grafts-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G6_GRAFTS",
+    "actor": "codex-analysis-20261024",
+    "scope": "Integrate branch deltas without uncurated ancestor history",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "available",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Predecessor G5_ARCHIVE is not completed"
+    ],
+    "dependencies": [
+      "G5_ARCHIVE"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Dependency-gated future generation: Integrate branch deltas without uncurated ancestor history",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g7_prune-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G7_PRUNE",
+    "actor": "codex-analysis-20261024",
+    "scope": "Reconcile owned stale state and final verified off-host backup",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "available",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Predecessor G6_GRAFTS is not completed"
+    ],
+    "dependencies": [
+      "G6_GRAFTS"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Dependency-gated future generation: Reconcile owned stale state and final verified off-host backup",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "merge-g8_improve-20261025",
+    "plan_id": "uos/full-merge/20261025-0638",
+    "task_id": "G8_IMPROVE",
+    "actor": "codex-analysis-20261024",
+    "scope": "Implement measured low-waste agent and integration controls",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T07:46:38Z",
+    "valid_until": "2026-10-25T08:46:38Z",
+    "task_state": "available",
+    "ready_since": "2026-10-25T07:46:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Frozen Claude v5 snapshot; main 2ab40165. Execution corrections: existing user authorization; expired claims held; no unsafe history upload; preservation not admission.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T07:46:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T07:46:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Loss or publication of secret-bearing preserved history has severity 5.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Preserves source and evidence across the repository.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-LOSS",
+        "cause": "Destructive reconciliation or inconsistent backup",
+        "effect": "Irrecoverable source and evidence loss",
+        "controls": "No destructive operation; preserve both variants; compare operation IDs and restored manifests",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      },
+      {
+        "id": "FM-LEAK",
+        "cause": "Push root snapshots or historical credentials",
+        "effect": "Confidential material published to remote",
+        "controls": "Inspect outgoing tree and history without printing secret bytes; exclude unsafe refs and record HOLD",
+        "s": 5,
+        "o": 2,
+        "det": 3,
+        "rpn": 30,
+        "band": 5
+      },
+      {
+        "id": "FM-STALE",
+        "cause": "Claim or workspace changes during snapshot",
+        "effect": "Incomplete backup falsely reported complete",
+        "controls": "Observe leases and pre/post manifests; preserve unknown; no automated stale claim release",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Codex through Gleam harness and canonical Sa-plan",
+      "control_action": "Preserve and publish verified source history",
+      "losses": [
+        "L-SOURCE-LOSS",
+        "L-SECRET-DISCLOSURE"
+      ],
+      "hazards": [
+        "H-UNVERIFIED-BACKUP",
+        "H-UNSAFE-PUSH"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Integration proceeds without backup",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Preserve before any additional main move"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Sensitive or uncurated history sent to GitHub",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Scan outgoing history, push only explicitly verified references"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Concurrent writer changes source during capture",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Compare pre/post operation and source manifests"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Lease expires while backing up or pushing",
+          "hazard_ids": [
+            "H-UNVERIFIED-BACKUP",
+            "H-UNSAFE-PUSH"
+          ],
+          "constraint": "Bound child jobs and recheck current task and coordinator epoch"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "blocked",
+    "blockers": [
+      "Predecessor G7_PRUNE is not completed"
+    ],
+    "dependencies": [
+      "G7_PRUNE"
+    ],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Dependency-gated future generation: Implement measured low-waste agent and integration controls",
+      "alternatives": [
+        "Chosen: preserve and verify before requested GitHub push",
+        "Deferred: further Mini config code until consolidation checkpoint",
+        "Rejected: all-bookmark push or blind trunk merge"
+      ],
+      "counterevidence": [
+        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
+        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
+      "acceptance": [
+        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+      ],
+      "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
+      "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Pattern scan cannot prove absence of all secrets",
+        "Canonical live databases excluded from this source backup; runtime backup remains separate",
+        "Non-main unreviewed snapshots may remain local"
+      ],
+      "supersedes": null
+    }
+  }
+]

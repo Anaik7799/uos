@@ -1,0 +1,17 @@
+{
+  "observed_at": "2026-10-12T03:56:54.416Z",
+  "path": "docs/journal/20261012-0355-telegram-goal-dashboard.md",
+  "sha256": "8cf6472427d6ba6a33ee1260465ec09ae043329b0298b2a5ef347002fdb547a6",
+  "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261012-0355-telegram-goal-dashboard.md",
+  "checks": {
+    "http200": true,
+    "title": true,
+    "all122": true,
+    "claudeTask": true,
+    "freshCounterexamples": true,
+    "incomplete": true
+  },
+  "journal_lint": "10/10",
+  "authority_task": "SERVICE_DRAFT_REVIEW codex-telegram-20261012 attempt7",
+  "admission": "NOT_GRANTED"
+}

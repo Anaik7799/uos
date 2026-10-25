@@ -1,0 +1,31 @@
+{
+  "schema": "uos.telegram-vcs-guard-acknowledgement.v1",
+  "observed_at": "2026-10-11T18:46:50Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_IMPL",
+  "worker": "agy-telegram-20261011",
+  "attempt": 4,
+  "vcs_guard_observation": {
+    "path": "governance/planning/20261011-1746-telegram-vcs-guard-observation.json",
+    "sha256": "862eb4eba7807e6c4e89211256ad75bb588d48f8c4ad3231857e255fbc71880c",
+    "observed_task": "TELEGRAM_VCS_GUARD",
+    "observed_worker": "codex-telegram-20261011",
+    "observed_attempt": 1
+  },
+  "status": "ACKNOWLEDGED",
+  "invariants_acknowledged": [
+    "Standalone non-colocated Jujutsu (.jj/) remains sole authoritative VCS; native git commands barred",
+    "Repository immutable_heads configuration ('builtin_immutable_heads() | main') in /home/an/.config/jj/repos/797c18a8a6d06a90b41a/config.toml verified",
+    "Ancestor rebase protection prevents accidental mutation of main or historic ancestor commits during snapshot or working copy updates",
+    "Workspace .uos-workspaces/agy-full-restoration-20260930 and root repository working copy inspected; no uncommitted drift on frozen product sources",
+    "Historical incident operation d441cd7b55d1 and ancestor commits preserved without retroactive history rewrites"
+  ],
+  "disposition": "Peer acknowledgement satisfied; TELEGRAM_VCS_GUARD task can transition from executing to completed upon sovereign coordinator closure",
+  "runtime_admission": "NOT_GRANTED",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l9",
+    "#zero-muda"
+  ]
+}

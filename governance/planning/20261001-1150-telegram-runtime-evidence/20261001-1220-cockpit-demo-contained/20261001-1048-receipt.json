@@ -1,0 +1,55 @@
+{
+  "schema": "uos.restoration-browser-observation.v1",
+  "observed_utc_seconds": 1790857207.883649,
+  "status": "PASS",
+  "url": "http://nas-1.tail55d152.ts.net:49157/",
+  "viewport_width": 1280,
+  "source_sha256": "99174328188d31adb5a038866a727b414494a3b7471d3defb0c714154e767929",
+  "elapsed_seconds": 1.250034199,
+  "application_admitted": false,
+  "observations": {
+    "HTTP200_exact_response_URL": true,
+    "response_url": "http://nas-1.tail55d152.ts.net:49157/",
+    "http_status": 200,
+    "body_has_content": true,
+    "no_route_fallback": true,
+    "exact_final_URL": true,
+    "visible_route_heading": true,
+    "links_present": true,
+    "one_canonical_checklist": true,
+    "visible_checklist_summary": true,
+    "canonical_checklist_keyboard_toggle": true,
+    "five_domains_plus_provenance": true,
+    "18_exact_visible_UNRUN_requirements": true,
+    "provenance_visible": true,
+    "no_receipts_honest": true,
+    "one_recovery_root": true,
+    "cockpit_observation_scope": true,
+    "cockpit_snapshot_received": true,
+    "cockpit_observation_time": true,
+    "simulation_control_disabled": true,
+    "body_geometry": {
+      "x": 0.0,
+      "y": -2225.0,
+      "width": 1280.0,
+      "height": 3205.40625
+    },
+    "no_page_errors": true,
+    "page_errors": [],
+    "headings": [ "Indrajaal Swarm Dashboard" ],
+    "no_forbidden_requests": true,
+    "no_socket_attempts": true,
+    "socket_attempts": 0,
+    "blocked_request_count": 0,
+    "blocked_requests": [],
+    "controller_source_unchanged": true
+  },
+  "screenshots": [
+    {
+      "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1220-cockpit-demo-contained/20261001-1048-page.png",
+      "sha256": "a2c8ad360a9edc60a97d4cadc7f626de9f9f31f9c96d3d74cd29fefd6c0e1aed"
+    }
+  ],
+  "findings": [],
+  "limits": "One route and viewport. Read-only navigation and local accordion keyboard interaction; no control activation, accessibility certification or global admission. Visual review is separate."
+}

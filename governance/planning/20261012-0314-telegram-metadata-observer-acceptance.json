@@ -1,0 +1,163 @@
+{
+  "schema": "uos.telegram.metadata-observer.acceptance.v1",
+  "observed_at": "2026-10-12T03:02:14.359Z",
+  "plan": "uos/telegram-reclaim-tool/20261012-0226",
+  "task": "VERIFY",
+  "worker": "codex-telegram-20261012",
+  "attempt": 1,
+  "status": "VERIFIED_SCOPED_DEVELOPMENT",
+  "scope": "Read-only exact expired-claim metadata observation through the pinned existing process guardian; recovery mutations separately owned by RECOVER. No original runtime claim performed by this verification.",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "producer": "Actual AGY/Gemini IMPL1 and REPAIR1",
+  "independent_reviewer": "Codex VERIFY1",
+  "design_review": "governance/planning/20261012-0220-claude-telegram-resume-plan-review.json",
+  "source_inputs": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "0475b1aafc0235d6c42cf2aaa7e1cc06c6177bdb0fe6fb53405bc2aa698161ca"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/bounded.ml",
+      "sha256": "fd78167db257d863415ea9ceb6399662e2ce24b46cc15a7b0cc04ea57e23b13f"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune",
+      "sha256": "6bbee14590cc7e8bf1507a114325592ab6cb298ff858981533e646cf59eedcfb"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune-project",
+      "sha256": "476c2f0f0403984f06e7a43a49b9fb2ec40971076437e685b6c78490dd526ca1"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/host_clock.ml",
+      "sha256": "fd481302dc5b4bbad04f12b2eb7130a02b4cb22fd8586ebcee769808e115b073"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+      "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/priority.ml",
+      "sha256": "86c2138c2a149908b05466f2c9befcafe13e414a8ab4405229ac152655b3b724"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/reclaim_metadata.ml",
+      "sha256": "d9b3042531db325d27b7e583c0d2958c47b3ac55be080004acb56fd3229d0b05"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/record.ml",
+      "sha256": "2a66578ee158bfbe1f06d135be0ac003bfdbf4f6d61d1d2376925742d554cd60"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam",
+      "sha256": "dfeed28f5faaf315dbbd8b3d53fbdd13445d7c04b33ba76f3cea36408b8a0b19"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "215f26fe094c93cf7fbff9ebad82d72463c24c74862cb83b941b5af7fe2e74be"
+    }
+  ],
+  "required_invocation": {
+    "guardian": "tools/validation/obs_guardian.exe",
+    "guardian_sha256": "b7bab1a85ffa3689a2548ff28a391e659c0537104dec7be0f774bae1820ec4be",
+    "exe": "/home/an/NAS-setup/uos/var/recovery-runtime/20261012-0258-metadata-repair-independent/clean-build/default/validate.exe",
+    "exe_sha256": "c8b482a98897931bc359600b8e7504233db3ecb758cf6790bc4068fffe971e2b",
+    "deadline_ms": 5000,
+    "cleanup_budget_ms": 2000,
+    "max_output_bytes": 262144,
+    "operation": "--reclaim-metadata-observe PORTFOLIO STRICT_BINDINGS_JSON",
+    "caller": "Gleam development bounded harness; keep guardian control pipe owned/open until completion"
+  },
+  "verification": {
+    "all_suite": {
+      "baseline": 375,
+      "adversarial": 32953,
+      "dag": 32768,
+      "package_paths": 39,
+      "result": "PASS"
+    },
+    "root_reproductions": "Three old ACCEPTED counterexamples now REFUSED; legacy contradictory completion refusal unchanged",
+    "actual_cli": "Read-only observation PASS; subsequent wrong-worker and wrong-attempt active checks HOLD with RP-ACTIVE-OWNER; old/new normal and reclaim CLI findings byte-identical",
+    "wal": "Separate writer connection held open; main and active WAL hashes identical; SHM hash changed and explicitly recorded as SQLite reader housekeeping",
+    "guard": [
+      {
+        "name": "guarded-live",
+        "code": 0,
+        "signal": null,
+        "elapsed_ms": 94.315946,
+        "guardian": {
+          "guardian": "uos.sa_plan.observer.guardian.v1",
+          "result": "child_exited",
+          "cleanup": "confirmed",
+          "child_exit": 0,
+          "output_bytes": 2239
+        },
+        "stderr": "",
+        "observation": "METADATA_OBSERVATION_PASS"
+      },
+      {
+        "name": "guarded-delayed-clock",
+        "code": 4,
+        "signal": null,
+        "elapsed_ms": 5018.537462,
+        "guardian": {
+          "guardian": "uos.sa_plan.observer.guardian.v1",
+          "result": "killed_deadline",
+          "cleanup": "confirmed",
+          "output_bytes": 0
+        },
+        "stderr": ""
+      },
+      {
+        "name": "guarded-output-cap",
+        "code": 6,
+        "signal": null,
+        "elapsed_ms": 112.263194,
+        "guardian": {
+          "guardian": "uos.sa_plan.observer.guardian.v1",
+          "result": "killed_output_bound",
+          "cleanup": "confirmed",
+          "output_bytes": 0
+        },
+        "stderr": ""
+      }
+    ],
+    "source_postcheck": "12/12 input hashes unchanged"
+  },
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/probes-and-suite.jsonl",
+      "sha256": "a3bc23eea024526a58ba052ac61d75ea617a0817e306c38509b14cf79483061b"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/probes-with-wal.jsonl",
+      "sha256": "56b6c192263245ca63fd01b832f88ecae8770b2a052b59c466fedfc30f0a2f47"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/cli-controls.json",
+      "sha256": "8fc36caf74a6e3b066e606e29e371f5dcf9d162a36707465bd6ee7a0ac35a0d4"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0258-metadata-repair-independent/guardian-controls.json",
+      "sha256": "6bb7b2234a9b591aa11319c2ced65d29ac37dfe1be6b1ff6ddefaa6d2bb9f763"
+    },
+    {
+      "path": "governance/planning/20261012-0245-telegram-metadata-independent-hold.json",
+      "sha256": "940e3a030773cdf582835da50c90213afe71e14b77c6df0b29b53b3331acd8a3"
+    }
+  ],
+  "limits": [
+    "Guardian composition is mandatory for the accepted process lifetime and output bounds; standalone SIGALRM is not credited with process-tree cleanup.",
+    "Metadata observation does not evaluate ranking, source-evidence freshness or dispatch selection; ordinary gates remain unchanged and their HOLDs are preserved.",
+    "Reconciliation uses separately current RECOVER authority and canonical Sa-plan commands; child task effects require exact-owner normal active checks after all claims reconcile.",
+    "Producer mutable risk-portfolio hash changed with canonical task transitions; it is not an immutable product-source pin.",
+    "AGY final chat summary contains incorrect owner/attempt/deadline examples and says METADATA_RECONCILED; only actual tool receipts and this independently reproduced observation are used.",
+    "No product/service test, live Telegram message, release or main merge is implied."
+  ],
+  "main": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3"
+}

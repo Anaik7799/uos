@@ -120,7 +120,8 @@ pub fn local_mutation_invalidates_prior_peer_coverage_test() {
   let engine =
     init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
     |> register_peer("vm-1", "vm-1.tail55d152.ts.net:8088")
-  let ack = SyncAck("vm-1", engine.local_mesh_state.vector_clock, "clock_in_sync", 1100)
+  let ack =
+    SyncAck("vm-1", engine.local_mesh_state.vector_clock, "clock_in_sync", 1100)
   let assert Ok(#(covered, [])) = handle_incoming_message(engine, ack, 1100)
   is_cluster_fully_synchronized(covered) |> should.be_true()
 
@@ -133,10 +134,12 @@ pub fn stale_ack_cannot_restore_peer_coverage_after_local_change_test() {
   let engine =
     init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
     |> register_peer("vm-1", "vm-1.tail55d152.ts.net:8088")
-  let old_ack = SyncAck("vm-1", engine.local_mesh_state.vector_clock, "clock_in_sync", 1100)
+  let old_ack =
+    SyncAck("vm-1", engine.local_mesh_state.vector_clock, "clock_in_sync", 1100)
   let assert Ok(#(covered, [])) = handle_incoming_message(engine, old_ack, 1100)
   let mutated = record_worker_active(covered, "nas-worker", 1200)
-  let assert Ok(#(observed, _)) = handle_incoming_message(mutated, old_ack, 1300)
+  let assert Ok(#(observed, _)) =
+    handle_incoming_message(mutated, old_ack, 1300)
 
   peer_status(observed, "vm-1") |> should.equal(Reconciling)
   is_cluster_fully_synchronized(observed) |> should.be_false()
@@ -168,8 +171,7 @@ pub fn stale_delta_cannot_erase_a_newer_peer_frontier_test() {
     handle_incoming_message(local, remote_ahead, 1100)
   let old_peer_copy =
     delta_state.MeshDeltaState(..local.local_mesh_state, origin_node: "peer")
-  let old_delta =
-    SyncDelta("peer", old_peer_copy, local.local_health_map, 1000)
+  let old_delta = SyncDelta("peer", old_peer_copy, local.local_health_map, 1000)
   let assert Ok(#(after_stale_delta, [_])) =
     handle_incoming_message(after_digest, old_delta, 1200)
 
@@ -182,12 +184,7 @@ pub fn remote_ahead_ack_requests_the_missing_delta_test() {
     init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
     |> register_peer("vm-1", "vm-1.tail55d152.ts.net:8088")
   let ack =
-    SyncAck(
-      "vm-1",
-      [#("nas-1", 1), #("vm-1", 1)],
-      "reconciled_ok",
-      1200,
-    )
+    SyncAck("vm-1", [#("nas-1", 1), #("vm-1", 1)], "reconciled_ok", 1200)
   let assert Ok(#(nas_after_ack, [SyncDigest("nas-1", _, _, _)])) =
     handle_incoming_message(nas, ack, 1200)
 
@@ -229,9 +226,17 @@ pub fn incoming_merge_invalidates_other_peer_coverage_test() {
     |> register_peer("b", "b.tail55d152.ts.net:8088")
   let clock = local.local_mesh_state.vector_clock
   let assert Ok(#(a_covered, [])) =
-    handle_incoming_message(local, SyncAck("a", clock, "clock_in_sync", 1000), 1000)
+    handle_incoming_message(
+      local,
+      SyncAck("a", clock, "clock_in_sync", 1000),
+      1000,
+    )
   let assert Ok(#(covered, [])) =
-    handle_incoming_message(a_covered, SyncAck("b", clock, "clock_in_sync", 1000), 1000)
+    handle_incoming_message(
+      a_covered,
+      SyncAck("b", clock, "clock_in_sync", 1000),
+      1000,
+    )
   let remote_seed = init_engine("a", "a.tail55d152.ts.net:8088", 1000)
   let inbound =
     SyncDelta("nas", covered.local_mesh_state, covered.local_health_map, 1000)
@@ -265,7 +270,8 @@ fn list_len(l: List(a)) -> Int {
 }
 
 fn peer_status(engine: delta_mesh_engine.DeltaMeshEngine, node: String) {
-  let assert [peer] = list.filter(engine.peers, fn(peer) { peer.node_id == node })
+  let assert [peer] =
+    list.filter(engine.peers, fn(peer) { peer.node_id == node })
   peer.status
 }
 

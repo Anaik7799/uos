@@ -30,7 +30,7 @@ type measurement = private {
   library_calls_per_cpu_second : float option;
 }
 module type CLOCK = sig val now : unit -> float end
-module Timed (Clock : CLOCK) (Execution : EXECUTION) : sig
+module Timed (_ : CLOCK) (_ : EXECUTION) : sig
   val run : config -> workload -> (measurement, string) result
 end
 val parse_config_args : string list -> (config, string) result

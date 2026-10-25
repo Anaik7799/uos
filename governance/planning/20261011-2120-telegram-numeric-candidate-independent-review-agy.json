@@ -1,0 +1,111 @@
+{
+  "schema": "uos.telegram-numeric-candidate-independent-review.v1",
+  "reviewed_at": "2026-10-11T21:20:17Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "FORMAL_CANDIDATE_REVIEW",
+  "reviewer": "agy-telegram-20261011",
+  "reviewer_attempt": 1,
+  "candidate_worker": "codex-telegram-20261011",
+  "candidate_task": "FORMAL_FIX",
+  "candidate_attempt": 3,
+  "candidate_workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-telegram-formal-20261011",
+  "candidate_commit": "d75fe43304baf32f611cf775a510e676535f0dc1",
+  "candidate_change_id": "uuuxtmoltkvqsnwxyvxkswuurmzurrrx",
+  "handoff_manifest": "governance/planning/20261011-2029-telegram-numeric-candidate-handoff.json",
+  "handoff_sha256": "012f1d796bd08972bd9825a85e48dcaef104eef4dc4a9177108d92ddf4fc98a6",
+  "candidate_journal": "docs/journal/20261011-2029-telegram-numeric-candidate-journal.md",
+  "candidate_journal_sha256": "7c9b1f2f9625683ecc132e7666b6f6dabbd5631325c82b491135e58b529949c2",
+  "status": "NUMERIC_CANDIDATE_VERIFIED_INDEPENDENTLY",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "independent_rerun_evidence": {
+    "lean_corpus": {
+      "tool": "tools/validation/telegram_numeric_lean.js",
+      "tool_sha256": "738abaf9e6e72603db9927669baf948cd0a20b9f54782a16c74ec6f95fbf1d49",
+      "results_path": "var/recovery-runtime/20261011-2320-agy-numeric-lean/results.json",
+      "results_sha256": "1bda6b5aafbc378e6e4e50a6dff0a5dd402a33a9e94310bae989e50353c9154a",
+      "modules_checked": 73,
+      "modules_passed": 73,
+      "modules_failed": 0,
+      "execution_protocol": "13 ordered batches of 6 (START 0, 6, 12, ... 72) with 7000ms Lean kernel timeout and new private output directory",
+      "exit_code": 0
+    },
+    "axiom_audit": {
+      "tool": "tools/validation/telegram_numeric_axioms.js",
+      "tool_sha256": "61b480d78dbe8bb7aea5525977170a9eb0dad1566e964ba0ba2ef5811aa92a96",
+      "results_path": "var/recovery-runtime/20261011-2320-agy-numeric-lean/axiom-results.json",
+      "results_sha256": "16d00302aaf2f500e8284448ece98f6fb3cb457ff50b093de83ffe9c5c160c7d",
+      "modules_audited": 73,
+      "theorem_closures_audited": 4048,
+      "allowed_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unexpected_axioms": [],
+      "failures": 0,
+      "execution_protocol": "13 ordered batches of 6 (START 0, 6, 12, ... 72) auditing compiled .olean closures against strict allowed axiom whitelist",
+      "exit_code": 0
+    },
+    "runtime_suite": {
+      "tool": "tools/validation/telegram_numeric_candidate.js",
+      "tool_sha256": "7df984af0e2a4a380b0783c27ad6e46133ddbc6d927336472adcaf55cecfcd31",
+      "results_path": "var/recovery-runtime/20261011-2320-agy-numeric-candidate/results.json",
+      "results_sha256": "63068b5baa5442e7b4e28e39bdc511a99f90f8e1f71f9abfec779b61774292df",
+      "tests_total": 51,
+      "tests_passed": 51,
+      "tests_failed": 0,
+      "modules": [
+        "numeric_legacy_boundary_test (6 tests)",
+        "numeric_contract_test (8 tests)",
+        "sheaf_cohomology_test (5 tests)",
+        "ha_lyapunov_proof_test (32 tests)"
+      ],
+      "exit_code": 0
+    },
+    "negative_baseline": {
+      "results_path": "var/recovery-runtime/20261011-2320-agy-numeric-baseline/results.json",
+      "results_sha256": "d2c92ff30072e9d96c962f16a2df56e0daf02ba4d1a811c419a86f65c7a1f299",
+      "tests_failed": 5,
+      "tests_passed": 1,
+      "exit_code": 1,
+      "counterevidence_confirmed": "Unpatched root main code incorrectly accepts empty, negative, and oversized chart counts and oversized samples, returning Ok(0.0) without error guards."
+    },
+    "negative_mutant_empty": {
+      "results_path": "var/recovery-runtime/20261011-2320-agy-numeric-mutant-empty/results.json",
+      "results_sha256": "04ae2827b9f45feca1652577b1e7f9fa091e7de9722db0bd8f10552caaf6416d",
+      "tests_failed": 1,
+      "tests_passed": 50,
+      "exit_code": 1,
+      "counterevidence_confirmed": "Mutation relaxing chart count lower bound to >= 0 is caught by empty_chart_count_refused_test."
+    },
+    "negative_mutant_scale": {
+      "results_path": "var/recovery-runtime/20261011-2320-agy-numeric-mutant-scale/results.json",
+      "results_sha256": "ca023928cc1a2b81fcdb0e61f0f4ef7862b04486b720a6c73feb11c3980473b5",
+      "tests_failed": 2,
+      "tests_passed": 49,
+      "exit_code": 1,
+      "counterevidence_confirmed": "Mutation inverting the scale transition ratio is caught by exact_positive_controls_test and compatible_section_observation_test."
+    }
+  },
+  "review_findings": {
+    "exact_rational_model": "The candidate models chart transitions over Fin 10 with Rat scale and transition laws in Telegram_Numeric_Contract.lean. The exact rational carrier is explicitly distinguished from IEEE Float arithmetic and does not claim Float operations satisfy field identities.",
+    "kernel_disproved_propositions": "Five legacy universal Float claims (transition cocycle, transition identity, H^1 vanishing, Lyapunov equilibrium, composite equilibrium) are explicitly disproved via kernel reduction with decide +kernel in Telegram_Numeric_Counterexamples.lean. Zero sorry, zero Admitted, zero added axioms.",
+    "gleam_runtime_guards": "Gleam modules cepaf_gleam/semantics/sheaf_cohomology.gleam and cepaf_gleam/ha/lyapunov_proof.gleam provide bounded entry points enforcing 1-10 charts, sample range [-1e12, 1e12], max 1000 triples, max 0.0001 residual, and [0,1] normalized health scores.",
+    "zero_muda_purity": "Pure Gleam/OTP and Lean 4 without foreign NIFs, Bevy, or Graphite dependencies."
+  },
+  "limits_and_residuals": [
+    "Exact rational model does not prove Float identities; the five legacy Float universal claims are false and refuted.",
+    "Bounded runtime observation within [0,1] and [-1e12, 1e12] is not global cohomology vanishing or asymptotic stability proof.",
+    "Public low-level arithmetic kernels retain documented preconditions; no production caller migrated yet.",
+    "Independent review of component candidate does not grant system admission or merge authority to main."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l6",
+    "#fractal-l9",
+    "#zk-adr",
+    "#zero-muda"
+  ]
+}

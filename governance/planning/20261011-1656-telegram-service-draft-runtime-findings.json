@@ -1,0 +1,82 @@
+{
+  "schema": "uos.telegram-service-draft-runtime-findings.v1",
+  "observed_at": "2026-10-11T16:07:56Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "scope": "All network effects private fixture only, synthetic token and recipient; no Telegram, systemd stop, operational task creation or production mutation.",
+  "resolved": [
+    "Original lifecycle compile pattern corrected",
+    "Hackney3 body ABI repaired; actual positive delivery now reachable"
+  ],
+  "pass_controls": [
+    "Delivered42 to expected chat123",
+    "Wrong chat ambiguous",
+    "Malformed200 ambiguous",
+    "503 ambiguous"
+  ],
+  "observed_failures": [
+    "raw rejection description exposes private canary",
+    "configured10ms deadline allows254ms successful send",
+    "poll32byte response cap accepts >2KiB",
+    "callback result=false accepted",
+    "callback32byte cap accepts >2KiB",
+    "wildcard/metacharacter unit name accepted",
+    "ordinary temp file populated0 produces production cleanup receipt for invented unit/incarnation/database/hashes",
+    "typed public caller-created AuthorityLease reaches real getUpdates fixture with no canonical task or coordinator claim"
+  ],
+  "unresolved_source_findings": [
+    "No durable lifecycle registration before worker reads",
+    "Only first64 records scanned",
+    "Receipt association not checked",
+    "No real OTP owner or effect-time provider",
+    "PendingUnknown context collapsed to generic error"
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/manifest.json",
+      "sha256": "e01bdad3c3c7185a24ae6b60713fd3be5cb8fe5a3238e30522c70ddd249b2d6a"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/service-manifest.json",
+      "sha256": "9e95dca64e0bd00c7515f16a70ef4222d1fdc4097e692526eb7a34c50e3a4e26"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/service_http_review.erl",
+      "sha256": "a0fcb29c798befd5d0242231edf4cd03ed8521605d25376f4f1d88c841d90a52"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/http-results.txt",
+      "sha256": "76f570529b180c41b044f7e6bb5a2a599341287e300f176fc7768f06f3e44a12"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/forged-receipt-probe.erl.txt",
+      "sha256": "cfac82e96b0d6a279a70aa04a0175014920cd6e9c0b300ff3235cd9f8aa7650d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/forged-receipt-results.txt",
+      "sha256": "7213f44e66a79f6f54c24418ec8ef4445c59bdeeb4f07aaf3263f2878393fbf5"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/src/service_authority_probe.gleam",
+      "sha256": "771022cd9f2145823ffa0382c5323d3b05976fc13219aa7a94ccd6ba61b9bd2c"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1605-service-draft-review-v2/authority-results.txt",
+      "sha256": "c2169bc8df265cbb016c02e12a33dafc1a775a5fa1954c9da08c17eab327b9bb"
+    },
+    {
+      "path": "docs/journal/20261011-1806-telegram-service-slice1-verification.md",
+      "sha256": "f6c710a598b9f558e81435ae4a86ffa95e28a3ab3a1d518913410f24d0d7d4c8"
+    }
+  ],
+  "peer_claim_review": [
+    "AGY slice1 journal falsely describes actual coordinator/Sa-plan/SQLite gates and supervised engine. Source has only public self-asserted lease and functions.",
+    "AGY says opaque receipt minted only after real stop; private-file runtime probe disproves.",
+    "Hackney3 with_body is documented ignored, not required. Actual fix is remove body/1.",
+    "No global zero-leak/Lyapunov proof established by13selectedtests."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-10-11T18:47:35.092Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_OBSERVER_TOOL",
+  "original": {
+    "worker": "claude-telegram-observer-20261011",
+    "attempt": 1,
+    "lease_until_ns": "1791744344851878919",
+    "cause": "actual session quota exhaustion"
+  },
+  "reconciliation": {
+    "worker": "codex-telegram-20261011",
+    "attempt": 2,
+    "preflight": "RECLAIM_PREFLIGHT_PASS",
+    "active": "ACTIVE_OBSERVATION_PASS",
+    "released": true
+  },
+  "source_mutations": [],
+  "task_completed": false,
+  "continuation": "OBSERVER_COMPLETION",
+  "runtime_admission": "NOT_GRANTED",
+  "note": "Original producer files and task history preserved; expired claim no longer blocks other current task checks."
+}

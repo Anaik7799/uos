@@ -1,0 +1,69 @@
+======================== EUnit ========================
+module 'telegram_authority_protocol_test'
+  telegram_authority_protocol_test: identifier_validation_test...[0.013 s] ok
+  telegram_authority_protocol_test: coordinator_argv_builders_test...ok
+  telegram_authority_protocol_test: coordinator_response_decoder_test...[0.003 s] ok
+  telegram_authority_protocol_test: saplan_argv_builders_test...ok
+  telegram_authority_protocol_test: saplan_claim_response_decoder_test...ok
+  telegram_authority_protocol_test: risk_adapter_protocol_fail_closed_test...ok
+  [done in 0.034 s]
+=======================================================
+  All 6 tests passed.
+
+
+======================== EUnit ========================
+module 'session_provider_service_test'
+  session_provider_service_test: provider_parse_and_render_test...[0.002 s] ok
+  session_provider_service_test: isolated_db_service_registration_and_replay_test...[0.042 s] ok
+  [done in 0.050 s]
+=======================================================
+  2 tests passed.
+
+
+ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard(".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/build/dev/erlang/*/ebin")),P='\''cepaf_gleam@harness@telegram_authority_protocol'\'',S='\''uos_swarm@session_sync'\'',J='\''gleam@json'\'',R={receipt,<<"op-1">>,<<"claim">>,2,2000000000,<<>>,1},Wire=J:to_string(S:receipt_json(R,false)),io:format("ACTUAL_CODEC_WIRE ~s~nDECODE ~p~n",[Wire,P:decode_coordinator_response(Wire,<<"op-1">>,<<"claim">>,1000000000)]),Alias= <<"{\"ok\":true,\"operation_id\":\"op-1\",\"operation\":\"claim\",\"epoch\":2,\"expires_us\":2000000000}">>,io:format("WRONG_ALIAS_DECODE ~p~n",[P:decode_coordinator_response(Alias,<<"op-1">>,<<"claim">>,1000000000)]),lists:foreach(fun(A)->Raw= <<"{\"claimed\":\"true\",\"task\":\"EXECUTE\",\"attempt\":\"",A/binary,"\",\"lease_until_ns\":\"+2000000000\"}">>,io:format("DECIMAL ~p ~p~n",[A,P:decode_saplan_claim_response(Raw,<<"EXECUTE">>,1000000000)]) end,[<<"+1">>,<<"01">>]),io:format("UNSAFE_ID_TTL ~p~n",[P:build_coordinator_claim_runtime_argv(<<"bad id">>,3601,<<" op ">>)]),Private= <<"{\"ok\":true,\"operation_id\":\"PRIVATE_SENTINEL\",\"operation\":\"claim\",\"epoch\":2,\"expires_us\":2000000000}">>,io:format("ERROR_REFLECTION ~p~n",[P:decode_coordinator_response(Private,<<"op-1">>,<<"claim">>,1000000000)]),halt().'
+
+ACTUAL_CODEC_WIRE {"ok":true,"operation_id":"op-1","operation":"claim","sequence":1,"duplicate":false,"epoch":2,"expires_boot_us":2000000000,"message_id":"","authority":"local-cooperative-lease; executor must recheck current fence"}
+DECODE {error,<<"coordinator_lease_expiration_must_be_in_future">>}
+WRONG_ALIAS_DECODE {ok,{coordinator_receipt,true,<<"op-1">>,<<"claim">>,2,
+                           2000000000}}
+DECIMAL <<"+1">> {ok,{sa_plan_claim_receipt,true,<<"EXECUTE">>,1,2000000000}}
+DECIMAL <<"01">> {ok,{sa_plan_claim_receipt,true,<<"EXECUTE">>,1,2000000000}}
+UNSAFE_ID_TTL {ok,[<<"claim">>,<<"bad id">>,<<"runtime:telegram-bridge">>,
+                   <<"3601">>,<<"op">>]}
+ERROR_REFLECTION {error,<<"operation_id_mismatch: expected op-1 but got PRIVATE_SENTINEL">>}
+
+
+First isolated old-schema fixture launcher failure (no DB yet):
+
+ERROR backend_exit:1
+Error! Failed to eval: code:add_paths(filelib:wildcard("apps/uos_swarm/build/dev/erlang/*/ebin")),S='uos_swarm@session_store',nomatch=binary:match(S:schema_sql(),<<"'agy','service'">>),Root= <<"/tmp/uos-auth-review-", (integer_to_binary(erlang:system_time(microsecond)))/binary>>,ok=simplifile:create_directory_all(Root),Db= <<Root/binary,"/events.sqlite3">>,{ok,O}=S:open(Db),{ok,_}=S:append(O,{register,<<"old-owner">>,<<"codex">>,Root,<<"old-revision">>,[]},<<"old-register">>),{ok,_}=S:close(O),io:format("PRIVATE_OLD_DB ~s~n",[Db]),halt().
+
+Runtime terminating during boot ({{badmatch,{ok,nil}},[{erl_eval,expr,6,[{file,"erl_eval.erl"},{line,796}]},{erl_eval,exprs,6,[{file,"erl_eval.erl"},{line,276}]},{init,start_it,1,[]},{init,start_em,1,[]},{init,do_boot,3,[]}]})
+
+
+Corrected fixture:
+
+PRIVATE_OLD_DB /tmp/uos-auth-review-1790855679087261/events.sqlite3
+
+
+NEW_OPEN_EXISTING {error,
+                      {corrupt_error,
+                          <<"operational_coordinator_requires_verified_nonempty_ledger">>}}
+NEW_OPEN_INITIALIZE_VERIFY {ok,{verify_report,false,1,true,true,true,true,
+                                   true,false,true,
+                                   [<<"append-only trigger definitions do not match this candidate's required schema">>]}}
+
+
+PRIVATE_DB /tmp/uos-auth-wire-1790855726527855/events.sqlite3
+ACTUAL_AUTHORITY_WIRE {"ok":true,"operation_id":"review-claim","operation":"claim","sequence":2,"duplicate":false,"epoch":1,"expires_boot_us":120945440000,"message_id":"","authority":"local-cooperative-lease; executor must recheck current fence"}
+PROTOCOL_DECODE {error,<<"coordinator_lease_expiration_must_be_in_future">>}
+
+
+.uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam 31e42365ac52abbbdce5c4665ceed3f72d4880c07366ebdfcf0c765c1b9832e3
+.uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam 623d3e1f2484850f080864076d867d3df62cbf87f7a15e7b730427a0a570cbb7
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_store_cli.gleam 2f4e795527b4a38994a070d4fa32d199bd22e78c44197fa60f38c522bdf36e80
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_sync_cli.gleam 90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam afb82762a417a7518f37c7505bf2769decc640c7c22fbc61f90ed2e3ad368994
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/test/session_provider_service_test.gleam c7aebcf48413b7a1c667303165c1400c7aca36473afe4a68b22391e06a26cc9f
+TIME 2026-10-01T11:55:26Z

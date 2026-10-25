@@ -1,0 +1,24 @@
+{
+  "schema": "uos.forecast-resolution.v1",
+  "observed_at": "2026-10-11T14:30:44.101Z",
+  "source": "docs/journal/20261011-1353-telegram-storage-authority-progress.md",
+  "precommitted_at": "2026-10-11T13:35:53.889Z",
+  "probability": 0.55,
+  "horizon": "2026-10-11T14:30:00Z",
+  "event": "Independent staged consumer PASS with native worker integration, maximum payload, CAS/replay and recovery checks",
+  "outcome": 0,
+  "brier_score": 0.3025,
+  "evidence": [
+    "governance/planning/20261011-1416-telegram-store-fix2-independent-review.json",
+    "governance/planning/20261011-1417-telegram-store-domain-review-addendum.json"
+  ],
+  "reason": "Independent probes reproduce replay and domain failures; quiescence recovery still unimplemented",
+  "calibration_note": "One event score is not a reliability estimate; no completion target is weakened to improve the forecast.",
+  "new_forecast": {
+    "precommitted_at": "2026-10-11T14:30:44.101Z",
+    "probability": 0.65,
+    "horizon": "2026-10-11T15:00:00Z",
+    "event": "Independent private tests pass unchanged-input replay across Processing/ResultReady/Completed and rejection of all seven currently identified invalid domain scenarios",
+    "excluded": "This narrower event does not establish complete store recovery, Telegram feature completion or release."
+  }
+}

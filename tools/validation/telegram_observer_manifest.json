@@ -1,0 +1,16 @@
+{
+  "schema": "uos.telegram-observer-build-manifest.v1",
+  "built_at": "2026-10-11T19:14:49Z",
+  "status": "REPRODUCIBLE_CLEAN_BUILD_VERIFIED",
+  "sources": [
+    {"path": "plugins/uos-risk-prioritization/validation/priority.ml", "sha256": "86c2138c2a149908b05466f2c9befcafe13e414a8ab4405229ac152655b3b724"},
+    {"path": "plugins/uos-risk-prioritization/validation/bounded.ml", "sha256": "fd78167db257d863415ea9ceb6399662e2ce24b46cc15a7b0cc04ea57e23b13f"},
+    {"path": "plugins/uos-risk-prioritization/validation/live_plan.ml", "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6"},
+    {"path": "tools/validation/sa_plan_observer.ml", "sha256": "b0f443e62e3bbd5504900616c5c2810e054e4fe2bd671f1824d36f8889ae203b"},
+    {"path": "tools/validation/obs_guardian.ml", "sha256": "4ddae78d954989511c79196ab5d508ab362c2cf4efa704eb9950603c70be58e4"}
+  ],
+  "binaries": [
+    {"path": "tools/validation/sa_plan_observer.exe", "sha256": "5b9dab694c7486f39decb0f3db4238b74753941a659106d5e12fee3c0fe656e2"},
+    {"path": "tools/validation/obs_guardian.exe", "sha256": "b7bab1a85ffa3689a2548ff28a391e659c0537104dec7be0f774bae1820ec4be"}
+  ]
+}

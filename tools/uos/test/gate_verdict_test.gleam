@@ -1,3 +1,4 @@
+import gate_fixture
 import gleeunit/should
 import main.{
   Checklist, Selfcheck15Cycles, SelfcheckInference, SelfcheckMirage,
@@ -80,9 +81,9 @@ pub fn inference_selfcheck_missing_final_line_is_not_ok_test() {
 
 // --- gates against the current repository state --------------------------
 
-pub fn checklist_gate_returns_zero_on_current_tree_test() {
+pub fn checklist_presence_is_not_verification_test() {
   execute(Checklist)
-  |> should.equal(0)
+  |> should.equal(1)
 }
 
 pub fn fifteen_cycles_inventory_returns_zero_when_records_present_test() {
@@ -155,12 +156,12 @@ pub fn suite_ok_prose_suite_requires_phrase_test() {
   |> should.be_false
 }
 
-pub fn sa_plan_gate_executes_thirteen_suites_and_returns_zero_test() {
+pub fn sa_plan_gate_requires_executed_suites_in_isolated_repository_test() {
   sa_plan_suites()
   |> list_length
   |> should.equal(13)
-  execute(SelfcheckSaPlan)
-  |> should.equal(0)
+  gate_fixture.with_empty_repository(fn() { execute(SelfcheckSaPlan) })
+  |> should.equal(1)
 }
 
 // --- wave inventories -----------------------------------------------------------
@@ -213,15 +214,13 @@ pub fn suite_pass_ok_requires_exit_count_and_phrase_test() {
   |> should.be_false
 }
 
-pub fn mirage_gates_execute_their_suites_and_return_zero_test() {
-  execute(SelfcheckMirage)
-  |> should.equal(0)
-  execute(SelfcheckMirageMigration)
-  |> should.equal(0)
-  execute(SelfcheckMirageProd)
-  |> should.equal(0)
-  execute(SelfcheckMirageTenders)
-  |> should.equal(0)
+pub fn mirage_gates_refuse_missing_execution_in_isolated_repository_test() {
+  gate_fixture.with_empty_repository(fn() {
+    execute(SelfcheckMirage) |> should.equal(1)
+    execute(SelfcheckMirageMigration) |> should.equal(1)
+    execute(SelfcheckMirageProd) |> should.equal(1)
+    execute(SelfcheckMirageTenders) |> should.equal(1)
+  })
 }
 
 fn list_all_third_nonempty(items: List(#(String, String, String))) -> Bool {
@@ -231,3 +230,4 @@ fn list_all_third_nonempty(items: List(#(String, String, String))) -> Bool {
       a != "" && b != "" && c != "" && list_all_third_nonempty(rest)
   }
 }
+

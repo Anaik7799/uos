@@ -1,0 +1,180 @@
+{
+  "schema": "uos.telegram-store-independent-verification.v1",
+  "observed_at": "2026-10-11T15:16:21.566Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 2,
+  "status": "DEVELOPMENT_COMPONENT_PASS",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+      "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+      "sha256": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+      "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+      "sha256": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+      "copy_source": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+      "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+      "copy_source": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+      "sha256": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+      "copy_source": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+      "sha256": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/manifest.json",
+      "sha256": "07df79457766b5b5039cd64a67aa31984ff5fa586faaadb889f0cb6a4e70277c"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/core-results.txt",
+      "sha256": "23f42697fc3877822efaba3abd2dddb5ee26c9984fbb670dfcba2e31043ea51b"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/recovery-results.txt",
+      "sha256": "d73d44ccd3532a211f14c3fedea3acad9b67e9496356dadc58b4fbbf70da9f8b"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1537-store-final-review/pure-results.txt",
+      "sha256": "0632234e1354e728f3596c51d1a01ce4ef718d1887b4fa3677f7472d5caf6c99"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/results.txt",
+      "sha256": "20f68fffc9d632d803d11f46b4e886d80a54d0a5c7937d3e47177deb9e94219f"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1512-transport-review/witness-results.txt",
+      "sha256": "c4b28c720aa11af399ac220d99af2e9eae9c4255bd98dae40be7810564e3c0fb"
+    },
+    {
+      "path": "governance/planning/20261011-1514-telegram-store-fix2-candidate-final-freeze.json",
+      "sha256": "229ac3abc782b6ecbc1743fee0e5f61ebfe2eb71ae2cef47a3fbbc942c7e3070"
+    },
+    {
+      "path": "governance/planning/20261011-1417-telegram-quiescence-development-adoption.json",
+      "sha256": "1bb9bdc739a931615af6e6309781cbd5d9ace1a0d1cdd8b0be7d9d06a978e56b"
+    },
+    {
+      "path": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1215-store-development-adoption.json",
+      "sha256": "33248af1dbaacd6d9fcf42dc341784e65cb431fb952264866985c3c91c9440aa"
+    },
+    {
+      "path": "native/ocaml/telegram_store/20261011-1354-telegram_store_wire_v4.json",
+      "sha256": "b0d6d92d2860f13e6f7922c239e6687637a5368a5ee0c34875894d0fc547dfec"
+    }
+  ],
+  "execution": {
+    "fresh_private_compile": true,
+    "gleam": "1.16.0",
+    "otp": 29,
+    "all_commands": "Gleam development bounded supervisor",
+    "database": "Private 0700 /tmp directories; actual native SQLite worker; synthetic Telegram delivery acknowledgements; no remote Telegram HTTP"
+  },
+  "checks": {
+    "core_probes": 37,
+    "core_violations": 0,
+    "invalid_domain_families_refused": 5,
+    "noncanonical_request_id_refused": true,
+    "pending_attempt_count_refused": true,
+    "valid_raw_domain_payload_accepted": true,
+    "maximum_lifecycle": "16 chunks x4096 codepoints, ASCII and U+0001 JSON-escape expansion",
+    "reservation_accounting": "126/36 ->63/18 ->0/0 receipts/rows for two concurrent requests",
+    "recovery": [
+      "pre-commit exit124: absent",
+      "post-commit exit124: committed",
+      "malformed domain reply exit0: committed",
+      "native commit_uncertain exit0: committed",
+      "unknown response field exit0: committed",
+      "altered apply receipt field exit0: committed"
+    ],
+    "lookup_tamper_refusals": [
+      "operation ID",
+      "digest",
+      "summary JSON",
+      "generation too high",
+      "generation too low"
+    ],
+    "wrong_database_refused": true,
+    "wrong_canonical_request_proof_refused": true,
+    "exit126": "NO cleanup proof; PendingUnknown even when actual receipt absent",
+    "public_pending_factory_exported": false,
+    "transport_regressions": 18,
+    "cleanup_witness_tests": 6
+  },
+  "interpretation": {
+    "accepted": "Typed consumer validation, transaction receipts and observed writer-cleanup reconciliation at exact frozen source bytes",
+    "not_established": [
+      "Production service supervision or restart recovery",
+      "Canonical task/coordinator effect-time authority integration",
+      "Actual Telegram delivery/media/Mini App endpoints",
+      "Independent release, global admission or main integration",
+      "Physical power-loss durability or hostile same-UID isolation"
+    ],
+    "remaining_tooling": "AGY must promote private recovery fixture/build recipe and remove session-specific in-tree test dependency before STORE_FIX2 closure."
+  },
+  "rca": {
+    "L0": "No component result grants admission",
+    "L1": "Preserve independent actual peer review",
+    "L2": "Sa-plan owner/attempt and fresh risk observations",
+    "L3": "Whole transaction, private pending context and exactly bound receipt",
+    "L4": "Gleam owns semantic invariants and truthful unknown states",
+    "L5": "Native SQLite commits atomic rows and append-only receipt",
+    "L6": "Guardian observed exit proves bounded process cleanup in stated local model",
+    "L7": "FFI cannot equate port closure or arbitrary bool with proof",
+    "L8": "Strict bounded JSON plus typed-domain validators refuse malformed state",
+    "L9": "Exact bytes/hash, frame and canonical request binding"
+  },
+  "corrections": [
+    "Earlier root <bad> HTML-only finding was incorrect: domain JSON payload allows raw text; no HTML blanket restriction.",
+    "Root recovery fixture v1/v2 erroneously altered lookup replies too; v3 scopes faults to apply, older evidence preserved.",
+    "AGY direct-command deviation remains historical; root independent reruns use Gleam bounded path.",
+    "FFI accessors rely on exact generated LocalConfiguration tuple layout; pinned source and typed transport test bind this ABI."
+  ],
+  "forecast_resolution": {
+    "media_handoff": {
+      "p": 0.9,
+      "horizon": "2026-10-11T15:00:00Z",
+      "completed_at_ns": "1791730654228656259",
+      "outcome": 1,
+      "brier": 0.01
+    }
+  },
+  "residual_risk": {
+    "class": "P1",
+    "fmea": {
+      "s": 4,
+      "o": 3,
+      "det": 3,
+      "rpn": 36
+    },
+    "mitigation": "Service single-flight lifecycle, restart quarantine/reconciliation, canonical effect fencing and independent real endpoint tests remain required."
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "schema": "uos.telegram-mini-http-audit.v1",
+  "observed_at": "2026-10-11T12:54:17.109Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "MINI_HTTP_AUDIT",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "verdict": "HOLD_FEATURE_COMPLETENESS",
+  "runtime_admission": "NOT_GRANTED",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha256": "515a0f1fae9a787eba99dc3223ed1272eb66df56a974b59cf6f547a120bc2e98"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "sha256": "33111a7f16ef807f81d49ea177153031f88b8415682b2c38384018477f411289"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mini_app.gleam",
+      "sha256": "81fd1c879eed10b7a3cb4052f61fb4a30135bd8e3ee6ddca4b33d0c847a71391"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/server.gleam",
+      "sha256": "cb471382ecca55dbe34aa018f38077ad2f04db358c14facd25aa483b83490a80"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/token_exchange.gleam",
+      "sha256": "c62dba64b1084ae5101f27564ae4fbd5be082f886fe3ace6d5ae1a1eb1a22077"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "sha256": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45"
+    }
+  ],
+  "browser": {
+    "url": "http://nas-1.tail55d152.ts.net:4100/mini-app/dashboard",
+    "routes_observed": 17,
+    "defined_routes": 14,
+    "negative_routes": 3,
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "external_sdk": "BLOCKED, no Telegram identity/session tested",
+    "effects": "Only exact GET document allowlist; redirects/nonGET/assets/external requests/sockets refused. Three known inert buttons clicked; no body/network effect. Keyboard tasks navigation observed.",
+    "controller": {
+      "path": "var/recovery-runtime/20261011-1250-mini-http/mini_browser_audit.ml",
+      "sha256": "aecff1c28a72088693fec42123e2c5dee28dced5070e5c94f5f6d5536d81afcb"
+    },
+    "artifacts": [
+      {
+        "path": "governance/planning/20261011-1217-telegram-mini-http-evidence/20261011-1217-report.json",
+        "sha256": "8a892ff9d43cad0e9351e0d19b1ac7c3e654a4040a3e16f2c98b6c1aa6a91634"
+      },
+      {
+        "path": "governance/planning/20261011-1217-telegram-mini-http-evidence/20261011-1217-route-00.png",
+        "sha256": "fd08d3df61135dad7062f13ddc5455d2bcc9d0acbda7200ab4408bbb3ffe4704"
+      },
+      {
+        "path": "governance/planning/20261011-1217-telegram-mini-http-evidence/20261011-1217-route-01.png",
+        "sha256": "6443e3204e5e5258f5f3976b18c341e0ef1b4d563fbcc0ceb04bbf7e04ab86f5"
+      },
+      {
+        "path": "governance/planning/20261011-1217-telegram-mini-http-evidence/20261011-1217-route-02.png",
+        "sha256": "5b0db726e4399e5de7d306ab1f752b79d0166cf7d0222731f64cd54885183716"
+      },
+      {
+        "path": "governance/planning/20261011-1217-telegram-mini-http-evidence/20261011-1217-route-03.png",
+        "sha256": "6893b6b68e2f1c4658514c017e1bfa0a4ddc654bdb040358b7451738f22d96dd"
+      },
+      {
+        "path": "governance/planning/20261011-1217-telegram-mini-http-evidence/20261011-1217-route-04.png",
+        "sha256": "fd08d3df61135dad7062f13ddc5455d2bcc9d0acbda7200ab4408bbb3ffe4704"
+      }
+    ],
+    "visual_review": "route-02.png viewed: visible All Clear / System nominal / active Acknowledge All button. Other screenshots retained, not all visually inspected.",
+    "build_warning": "mtime.clock.os deprecated; compiled and actual browser run succeeded; no packages fetched"
+  },
+  "findings": [
+    {
+      "id": "MH1",
+      "criticality": "HIGH",
+      "as_is": "Dashboard hardcodes17containers5agentsHealthOKZenohUP; empty alarm model rendered AllClear/systemnominal. Browser reproduced these strings.",
+      "to_be": "Observation-backed values with freshness and unavailable state; no absence-of-data health assurance."
+    },
+    {
+      "id": "MH2",
+      "criticality": "HIGH",
+      "as_is": "AcknowledgeAll,ToggleMara,RunVerification have no application action listeners; clicks produced no feedback/network in observed browser. SDKblocked so haptics unavailable.",
+      "to_be": "Authenticated typed capabilities routed through actual canonical task/fence with pending/result/error feedback; disable only when capabilityunavailable and state reason."
+    },
+    {
+      "id": "MH3",
+      "criticality": "HIGH",
+      "as_is": "14MiniApp view functions render init/default models; no data-fetch or action adapter in MiniApp shell. Task/chat/container screens explicitly disconnected.",
+      "to_be": "Bounded authenticated data API with per-feature actual backend; freshness and scope labels, nofake rows."
+    },
+    {
+      "id": "MH4",
+      "criticality": "HIGH",
+      "as_is": "No production callsite for telegram/auth.validate_fresh in canonical source. Web server authorizes onlyPOST via Bearer+proof; GETminiapp static pages bypass that. router passes onlypath. token_exchange buildsformbutdoesnotcallTelegramvalidator. No evidence of confidentialdataexposure from staticGET alone.",
+      "to_be": "Connect repairedHMAC+freshness to explicitMiniAppAPI identity andallowlist. Publicshell containsno private data. No bypass of other route auth. Enforce bodylimits and canonical effectauthority."
+    },
+    {
+      "id": "MH5",
+      "criticality": "MEDIUM",
+      "as_is": "/mini-app/does-not-exist and /mini-application returned200 dashboard; /mini-app/tasks?probe=1 returneddashboard insteadtasks.",
+      "to_be": "Exact path segment boundary; canonical path separatequery; unknown routes404."
+    },
+    {
+      "id": "MH6",
+      "criticality": "MEDIUM",
+      "as_is": "All17observedpages canonicalchecklistcount0; relative nav only and viewportdisableszoom.",
+      "to_be": "Canonical18checkpoints/provenance plus coherentTailnetnavigation; mobilekeyboard/zoom tests."
+    },
+    {
+      "id": "MH7",
+      "criticality": "HIGH",
+      "as_is": "server.gleam1485 passes request.set_body(req,empty) toWisp; boundedMiniAppPOST bodies cannot currentlyreachvalidator in thatpath.",
+      "to_be": "Reviewed explicit boundedbodyread for authenticatedMiniAppAPI without loosening existingPOSTcontrols."
+    }
+  ],
+  "acceptance": [
+    "Golden signed identity via actualHTTP using syntheticconfiguredtoken, unauthorized/expired/future/duplicate/oversize refused before backendcall.",
+    "Every14view gets actual typed observation or explicitunavailable, withsource/freshness; nohardcodedlivehealth.",
+    "Three actions producecanonicaltaskreceipt or exact scoped refusal with visiblefeedback; nofake success.",
+    "Invalidroute404 and querynavigationcorrect; keyboard, mobileviewport, zoom, canonicalchecklist visible.",
+    "Read/command APIs enforce allowlist, scopedauth, bodylimit, noresponse token/initData reflection.",
+    "Browsertest againstreviewedprivatecandidate with networkrefusalcontrols; realTelegramSDK/HTTPS integration separatelyverified."
+  ],
+  "limitations": [
+    "Actual observedliveUI is not revision-bound immutable deployment evidence.",
+    "External TelegramSDK deliberatelyblocked; this cannot establishTelegramMiniAppacceptance.",
+    "No realTelegram messages, secretfiles, productionDB writes, servicechanges or releases.",
+    "Onebrowserwidth; desktop/fullaccessibility tests pending."
+  ],
+  "process_notes": [
+    "First controller-orchestration JS string failed toparse before anywrite; escapedOCamlvariant backticks then compilePASS.",
+    "RiskHOLD unknownclaim_receipt in concurrentSURFACE_PLAN record was preservedinalloweddecisioncounterevidence andschema repaired; later own task stateoverwrite repairedfromcanonicalexecuting; freshACTIVE_OBSERVATION_PASS12:52:42 beforebrowser."
+  ],
+  "tags": [
+    "#fractal-l3",
+    "#fractal-l5",
+    "#zero-muda"
+  ]
+}

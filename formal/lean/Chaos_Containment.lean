@@ -71,11 +71,6 @@ theorem hot_reload_restores_lyapunov_stability (s : ClusterChaosState) :
 theorem catastrophic_fault_trips_andon (s : ClusterChaosState) (sev : Float)
     (h_cat : sev > 0.7) :
     (inject_worker_fault s sev).worker.is_andon_halted = true := by
-  dsimp [inject_worker_fault]
-  split
-  · rfl
-  · rename_i h_not
-    have h_contra : (sev > 0.7) = true := h_cat
-    contradiction
+  simp [inject_worker_fault, h_cat]
 
 end UOS.Chaos

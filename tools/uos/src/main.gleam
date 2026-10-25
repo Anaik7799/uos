@@ -314,8 +314,8 @@ pub fn execute(cmd: UosCommand) -> Int {
           }
         }
         "G-ZERO-MUDA" -> {
-          io.println("  [PASS] Zero Bevy and Zero Graphite verified")
-          0
+          io.println("  [HOLD] Zero-Muda candidate dependency/source scan UNRUN; no unconditional pass")
+          1
         }
         "G-CROSS-LANG" -> {
           let spec_ok =
@@ -326,8 +326,8 @@ pub fn execute(cmd: UosCommand) -> Int {
             file_exists("contracts/rules/c3i-cross-language-control-contract.md")
           case spec_ok && rule_ok {
             True -> {
-              io.println("  [PASS] C3I Cross-Language Control Plane Contract and Spec verified")
-              0
+              io.println("  [INVENTORY] G-CROSS-LANG: declared source predicate matched; runtime/formal verification UNRUN")
+              1
             }
             False -> {
               io.println("  [FAIL] Cross-Language contract or spec missing")
@@ -344,9 +344,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case wk && rc {
             True -> {
               io.println(
-                "  [PASS] Knowledge Management Triad (Wiki, ZK, Living Ontology) verified",
+                "  [INVENTORY] G-KM-TRIAD: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println("  [FAIL] Knowledge Management Triad contracts missing")
@@ -366,9 +366,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case server_ok && contract_ok && testing_spec_ok {
             True -> {
               io.println(
-                "  [PASS] Tailscale FQDN web routing active, testing spec and contract documented",
+                "  [INVENTORY] G-TAILSCALE-WEB: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println("  [FAIL] Tailscale FQDN web contract, server, or testing spec missing")
@@ -388,9 +388,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && contract_ok && agent_rule_ok {
             True -> {
               io.println(
-                "  [PASS] Comprehensive Verification Checklist contract, specification, and agent rules active",
+                "  [INVENTORY] G-CHECKLIST: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println("  [FAIL] Comprehensive Checklist specification or rules missing")
@@ -437,9 +437,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] 3D Fractal Triad Matrix (L0-L9 x C1-C6 x P1-P10): 25 nodes, Triple-Interface (WebUI/REST/TUI), Lean 4 invariants, ADR-117 & OS lock active",
+                "  [INVENTORY] G-TRIAD-MATRIX: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -471,9 +471,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case receipt_ok && checks_ok && gaps_ok && coordinator_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Claude Sovereign Verification (L0-fable / Claude 3.7 Sonnet): CERT-CLAUDE-TRIAD-VERIFY-20260913-1200 RATIFIED, 18/18 checks, 4 gaps closed, Cycle C437",
+                "  [INVENTORY] G-CLAUDE-VERIFY: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -507,9 +507,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && lean_ok && adr_ok && journal_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Universal Category-Theoretic Composability & Dual Sovereign Review: 10 Lean 4 theorems, ADR-120, Cycles C438/C439, and Coordinator ratified",
+                "  [INVENTORY] G-CATEGORY-THEORY: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -535,9 +535,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Fractal & Holonic Categorical Composability: 10 Lean 4 theorems, ADR-121, Cycles C440/C441, and Coordinator events 5 & 6 ratified",
+                "  [INVENTORY] G-FRACTAL-HOLON: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -563,9 +563,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Evolutionary Category Theory: 10 Lean 4 theorems (43 total), ADR-122, Cycles C442/C443, and Coordinator events 7 & 8 ratified",
+                "  [INVENTORY] G-EVOLUTIONARY-CAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -591,9 +591,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Comprehensive Systemic Category Theory: 10 Lean 4 theorems (53 total), ADR-123, Cycles C444/C445, and Coordinator events 9 & 10 ratified",
+                "  [INVENTORY] G-SYSTEMIC-CAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -619,9 +619,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Substrate Categorical Mechanics: 10 Lean 4 theorems (63 total), ADR-124, Cycles C446/C447, and Coordinator events 11 & 12 ratified",
+                "  [INVENTORY] G-SUBSTRATE-CAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -647,9 +647,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] POODAVR & NASA JPL F Prime Mapping: 10 Lean 4 theorems (73 total), ADR-125, Cycles C448/C449, and Coordinator events 13 & 14 ratified",
+                "  [INVENTORY] G-POODAVR-FPRIME: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -681,9 +681,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && rule1_ok && rule2_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Universal POODAVR & Predictive Forecasting: 10 Lean 4 theorems (83 total), ADR-126, SC-POODAVR-002, SC-PREDICT-FORECAST-001, Cycles C450/C451, and Coordinator events 15 & 16 ratified",
+                "  [INVENTORY] G-POODAVR-PREDICT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -713,9 +713,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Five-Cycle Category-Theoretic Transmutation & Dual Sovereign Review: 10 Lean 4 theorems (93 total), ADR-127, SC-TRANS-CAT-001, Cycles C452..C456, and Coordinator events 17..21 ratified",
+                "  [INVENTORY] G-TRANS-CAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -749,9 +749,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Topos-Theoretic Internal Logic & Double Category Architecture: 10 Lean 4 theorems (103 total), ADR-128, SC-TOPOS-DOUBLE-CAT-001, Cycles C457..C460, and Coordinator events 22..25 ratified",
+                "  [INVENTORY] G-TOPOS-DOUBLE-CAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -785,9 +785,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Comprehensive Category-Theoretic Transmutation: 10 Lean 4 theorems (113 total), ADR-129, SC-COMP-CAT-001, Cycles C461..C465, and Coordinator events 26..30 ratified",
+                "  [INVENTORY] G-COMP-CAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -821,9 +821,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Criticality, Utility, STPA, FMEA & Evolution Transmutation: 10 Lean 4 theorems (123 total), ADR-130, SC-RISK-CAT-001, Cycles C466..C470, and Coordinator events 31..35 ratified",
+                "  [INVENTORY] G-RISK-CAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -857,9 +857,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Criticality Lattices, Utility Adjunctions, STPA, FMEA & Co-Evolution: 10 Lean 4 theorems (133 total), ADR-131, SC-CRIT-STPA-001, Cycles C471..C475, and Coordinator events 36..40 ratified",
+                "  [INVENTORY] G-CRIT-STPA-EVOL: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -893,9 +893,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && adr_ok && rule_ok && runner_ok && coord_ok && cycles_ok {
             True -> {
               io.println(
-                "  [PASS] Master Feature Categorical Composability: 10 Lean 4 theorems (143 total), ADR-132, SC-FEAT-ALL-001, Cycles C476..C480, and Coordinator events 41..45 ratified",
+                "  [INVENTORY] G-ALL-FEAT: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -961,9 +961,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] All Features Runtime Implementation: 10 Lean 4 theorems (153 total), 5 runtime Gleam modules, ADR-133, SC-FEAT-IMPL-001, Cycles C481..C485, and Coordinator events 46..50 ratified",
+                "  [INVENTORY] G-FEAT-IMPL: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1014,9 +1014,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] Zero-Copy RDMA Architecture & Burst Benchmarks: 10 Lean 4 theorems (163 total), NOTE-ZERO-COPY-RDMA-001, ADR-134, SC-BURST-RDMA-001, 100/500/1000 tasks burst suite passed, Cycles C486..C490 ratified",
+                "  [INVENTORY] G-BURST-BENCH: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1044,9 +1044,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case contract_ok && spec_ok && agent_ok && linter_ok {
             True -> {
               io.println(
-                "  [PASS] SC-JOURNAL-v3 Anticipatory Epistemic Ledger contract, spec, and linter active",
+                "  [INVENTORY] G-JOURNAL: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1074,9 +1074,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case contract_ok && agent_ok && tome_ok && moc_ok {
             True -> {
               io.println(
-                "  [PASS] Rocha Cybernetic & Semiotic Knowledge Contract (SC-ROCHA-001) verified",
+                "  [INVENTORY] G-ROCHA: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1102,9 +1102,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case spec_ok && code_ok && test_ok {
             True -> {
               io.println(
-                "  [PASS] ZigVM ADD Fractal Engine & Sublimation Lifecycle (G-ZIGVM-ADD) verified",
+                "  [INVENTORY] G-ZIGVM-ADD: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1133,9 +1133,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case runner_ok && script_ok && report_ok && report_valid {
             True -> {
               io.println(
-                "  [PASS] SciViz & 167 Extensions BDD Verification Harness (G-SCIVIZ-BDD): 569 scenarios 100% green",
+                "  [INVENTORY] G-SCIVIZ-BDD: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1249,27 +1249,27 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] Full Feature Surface & Testing Vector Expansion (G-TEST-EXPANSION):",
+                "  [INVENTORY] G-TEST-EXPANSION: declared source predicate matched; runtime/formal verification UNRUN",
               )
               io.println(
-                "    - Physical FMEA Chaos & Stopwatch TTD: 22 failure modes verified (ALL PASSED)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - STPA Step 4 Causal Scenarios: 8 causal race & delay injections green",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Metamorphic Relations: MR-1..MR-12 full feature surface invariants verified",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Systematic Mutation Testing: 12/12 mutants killed (100.0% >= 95% floor)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - High-Concurrency Stress: 50 workers, 1,000 txns, 13,395 tps, 0 errors, integrity ok",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Formal Verification: Lean 4 theorems proven for RPN, Quorum, Storage Safety",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1365,27 +1365,27 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] Codex Astra Sovereign Expansion Gate (G-CODEX-ASTRA-EXPANSION):",
+                "  [INVENTORY] G-CODEX-ASTRA-EXPANSION: declared source predicate matched; runtime/formal verification UNRUN",
               )
               io.println(
-                "    - MAUT Pull Queue: 5-attribute utility formulation & monotonic fencing tokens verified",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - ZigVM VFS Sandbox: Descriptor-relative isolation & 64MB arena envelope verified",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Metamorphic Relations: MR-13..MR-20 (All 20 MRs) green across L0..L9 feature surface",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Systematic Mutation Testing: Mutants killed (>= 95% floor)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Concurrency Stress: Burst contention stress, >10,000 tps, 0 errors, integrity ok",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Formal Lean 4 Proofs: MAUT monotonicity, fencing order, VFS isolation & arena envelope proven",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1518,30 +1518,30 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] Codex Astra Deep Feature Vector & Boundary Gate (G-CODEX-ASTRA-DEEP):",
+                "  [INVENTORY] G-CODEX-ASTRA-DEEP: declared source predicate matched; runtime/formal verification UNRUN",
               )
               io.println(
-                "    - L0 Tri-Sovereign BFT Consensus: Weighted quorum & session nonce replay protection verified",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - CRDT Monotonic Lattice: LWW-Element-Set & OR-Set conflict-free replication verified",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - 2PL Distributed Deadlock Detector: Directed WFG cycle detection & deterministic victim selection verified",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - 7-Stage POODAVR Controller: Closed-loop 1D Kalman state estimation & Lyapunov energy guard verified",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - SRE Concurrency Contention: 200/300 workers, 5,000/7,500 txns, >14,000 tps, 0 dropouts, DB integrity ok",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Systematic Mutation Engine: 36/48 mutants killed (100.0% kill rate >= 95% floor)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Formal Lean 4 Invariants: All 13 mathematical theorems verified (BFT, WFG, LWW, DVV)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1620,24 +1620,24 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] Codex Astra Sovereign Gap Zero Gate (G-CODEX-ASTRA-GAP-ZERO):",
+                "  [INVENTORY] G-CODEX-ASTRA-GAP-ZERO: declared source predicate matched; runtime/formal verification UNRUN",
               )
               io.println(
-                "    - Swarm Suite Real Gaps: 649/649 green in apps/uos_swarm (ephemeral scratchpads sanitized)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - ZigVM Execution Engine: 1,121/1,121 unit tests passing via zig build test (IPC terminal write fixed)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Quint Parity Frontier: Multi-tenant reqClosed holds (10,000 traces), notConverged refuted",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - SQLite WAL Burst Stress: 300 workers, 7,500 txns, >15,000 tps, 0 errors, DB integrity ok",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
               io.println(
-                "    - Systematic Mutation Engine: 48/48 mutants killed (100.0% kill rate >= 95% floor)",
+                "    Historical declared coverage only; current behavior and proof not evaluated.",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1663,9 +1663,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           case code_ok && test_ok && player_ok {
             True -> {
               io.println(
-                "  [PASS] Cybernetic Raga & 22-Shruti Synthesis Engine (G-RAGA-SYNTHESIS) verified",
+                "  [INVENTORY] G-RAGA-SYNTHESIS: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1765,18 +1765,18 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] Solo5 Tenders Physical Execution: solo5-hvt, solo5-spt, solo5-virtio verified",
+                "  [INVENTORY] G-MIRAGE-TENDERS: declared source predicate matched; runtime/formal verification UNRUN",
               )
               io.println(
-                "  [PASS] Hardware Virtualization (/dev/kvm) & seccomp-bpf sandboxing verified",
+                "  [INVENTORY] G-MIRAGE-TENDERS: declared source predicate matched; runtime/formal verification UNRUN",
               )
               io.println(
-                "  [PASS] Dynamic hypervisor probe receipt validated (exit codes 0, 83 & guest banners)",
+                "  [INVENTORY] G-MIRAGE-TENDERS: declared source predicate matched; runtime/formal verification UNRUN",
               )
               io.println(
-                "  [PASS] Unikernel test binaries validated (non-empty ELF images >= 10KB, including SSP)",
+                "  [INVENTORY] G-MIRAGE-TENDERS: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1798,8 +1798,8 @@ pub fn execute(cmd: UosCommand) -> Int {
           let journal_md = file_exists("docs/journal/20260907-1420-uos-fractal-forecasting-and-predictive-ooda-journal.md")
           case engine_gleam && test_gleam && sdlc_gleam && ooda_gleam && stream_gleam && cockpit_gleam && contract_md && spec_md && journal_md {
             True -> {
-              io.println("  [PASS] Unified Fractal Forecasting & Predictive OODA (G-HIVE-FORECAST) verified")
-              0
+              io.println("  [INVENTORY] G-HIVE-FORECAST: declared source predicate matched; runtime/formal verification UNRUN")
+              1
             }
             False -> {
               io.println("Gate Result: FAIL (G-HIVE-FORECAST missing required components)")
@@ -1853,9 +1853,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] Sa-Plan Exclusivity & Fractal Jidoka TPS (G-SA-PLAN-JIDOKA) verified",
+                "  [INVENTORY] G-SA-PLAN-JIDOKA: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1916,9 +1916,9 @@ pub fn execute(cmd: UosCommand) -> Int {
           {
             True -> {
               io.println(
-                "  [PASS] High-Utility Modular MAX / Mojo AI Models & MCP Gate (G-MAX-MOJO-MODELS) verified",
+                "  [INVENTORY] G-MAX-MOJO-MODELS: declared source predicate matched; runtime/formal verification UNRUN",
               )
-              0
+              1
             }
             False -> {
               io.println(
@@ -1946,31 +1946,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       //   MISSING      a declared artifact does not exist   -> failure
       //   UNVERIFIABLE no artifact is declared for the cycle -> not admitted
       let manifest = read_file("governance/ev-manifest.tsv")
-      let rows =
-        manifest
-        |> string.split("\n")
-        |> list.filter(fn(l) { l != "" && !string.starts_with(l, "#") })
-
-      let results =
-        list.map(rows, fn(line) {
-          case string.split(line, "\t") {
-            [ev, artifact, label] ->
-              case int.parse(ev) {
-                Ok(number) if number > admitted_ev_ceiling ->
-                  #(ev, "NOT_ADMITTED", label)
-                _ ->
-                  case artifact {
-                    "-" -> #(ev, "UNVERIFIABLE", label)
-                    p ->
-                      case file_exists(p) {
-                        True -> #(ev, "INVENTORY", label)
-                        False -> #(ev, "MISSING", label)
-                      }
-                  }
-              }
-            _ -> #("?", "MALFORMED", line)
-          }
-        })
+      let results = doctor_manifest_results(manifest, file_exists)
 
       let verified = list.filter(results, fn(r) { r.1 == "INVENTORY" })
       let missing = list.filter(results, fn(r) { r.1 == "MISSING" })
@@ -2025,7 +2001,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       )
       io.println("")
 
-      case missing != [], list.length(verified) == total && not_admitted == [] {
+      case missing != [], doctor_manifest_passes(results) {
         True, _ -> {
           io.println(
             "UOS Doctor result: FAIL - "
@@ -2067,28 +2043,28 @@ pub fn execute(cmd: UosCommand) -> Int {
       let hk_ok = file_exists("engines/hermes/modules/system_engg/agent_dispatch_hook.ml")
 
       case tl_ok {
-        True -> io.println("  [PASS] TwoLattice_STM.lean: Single-writer exclusive lease proved")
+        True -> io.println("  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] TwoLattice_STM.lean missing")
       }
       case tr_ok {
-        True -> io.println("  [PASS] Traceability.lean: 13D algebra & invariant conservation proved")
+        True -> io.println("  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] Traceability.lean missing")
       }
       case qn_ok {
-        True -> io.println("  [PASS] parity_frontier.qnt: Quint requirement-closure invariant proved")
+        True -> io.println("  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] parity_frontier.qnt missing")
       }
       case rk_ok {
-        True -> io.println("  [PASS] dmc-tcm-mandate.md: Denotational Meta-Calculus contract active")
+        True -> io.println("  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] dmc-tcm-mandate.md missing")
       }
       case hk_ok {
-        True -> io.println("  [PASS] agent_dispatch_hook.ml: Zero-Trust Interceptor code active")
+        True -> io.println("  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] agent_dispatch_hook.ml missing")
       }
 
       case tl_ok && tr_ok && qn_ok && rk_ok && hk_ok {
-        True -> 0
+        True -> 1
         False -> 1
       }
     }
@@ -2099,20 +2075,20 @@ pub fn execute(cmd: UosCommand) -> Int {
       let dm_ok = file_exists("contracts/rules/dmc-tcm-mandate.md")
 
       case cs_ok {
-        True -> io.println("  [PASS] cordis_spatiotemporal_spec.json: Spatiotemporal coeffect monoid defined")
+        True -> io.println("  [INVENTORY] TCM: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] cordis_spatiotemporal_spec.json missing")
       }
       case fo_ok {
-        True -> io.println("  [PASS] c3i_fractal_observability_spec.json: Universal C3I Fractal Observability contract active")
+        True -> io.println("  [INVENTORY] TCM: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] c3i_fractal_observability_spec.json missing")
       }
       case dm_ok {
-        True -> io.println("  [PASS] dmc-tcm-mandate.md: Clock Drift & Zero-Trust Mandate enforced")
+        True -> io.println("  [INVENTORY] TCM: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] dmc-tcm-mandate.md missing")
       }
 
       case cs_ok && fo_ok && dm_ok {
-        True -> 0
+        True -> 1
         False -> 1
       }
     }
@@ -2122,7 +2098,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       let ex_ok = matches_timestamp_format("20260905-1725-test-document.md")
 
       case tm_ok {
-        True -> io.println("  [PASS] timestamp-mandate.md: Contract active and deployed")
+        True -> io.println("  [INVENTORY] timestamp-mandate.md present; deployment not evaluated")
         False -> io.println("  [FAIL] timestamp-mandate.md missing")
       }
       case ex_ok {
@@ -2152,7 +2128,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       case wk_ok {
         True ->
           io.println(
-            "  [PASS] Master Knowledge Graph & Living Ontology specification present",
+            "  [INVENTORY] KM artifact present; runtime integration UNRUN",
           )
         False ->
           io.println("  [FAIL] Master Knowledge Graph specification missing")
@@ -2160,27 +2136,27 @@ pub fn execute(cmd: UosCommand) -> Int {
       case rc_ok {
         True ->
           io.println(
-            "  [PASS] km-wiki-zk-contract.md: Invariants & Graphene policy active",
+            "  [INVENTORY] KM artifact present; runtime integration UNRUN",
           )
         False -> io.println("  [FAIL] km-wiki-zk-contract.md missing")
       }
       case to_ok {
         True ->
           io.println(
-            "  [PASS] wiki-zk-km.toml: Knowledge roots & tag taxonomy configured",
+            "  [INVENTORY] KM artifact present; runtime integration UNRUN",
           )
         False -> io.println("  [FAIL] wiki-zk-km.toml missing")
       }
       case hw_ok {
         True ->
           io.println(
-            "  [PASS] hermes_wiki engine: AST, TyXML, Gospel & search active",
+            "  [INVENTORY] KM artifact present; runtime integration UNRUN",
           )
         False -> io.println("  [FAIL] hermes_wiki engine missing")
       }
 
       case wk_ok && rc_ok && to_ok && hw_ok {
-        True -> 0
+        True -> 1
         False -> 1
       }
     }
@@ -2282,25 +2258,25 @@ pub fn execute(cmd: UosCommand) -> Int {
       let km_ok = file_exists("contracts/rules/km-wiki-zk-contract.md")
       case time_ok {
         True ->
-          io.println("  [PASS] CHK-01-TIME: Mandatory YYYYMMDD-HHSS- prefix active")
+          io.println("  [INVENTORY] CHK-01-TIME: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-01-TIME missing")
       }
       case tail_ok {
         True ->
           io.println(
-            "  [PASS] CHK-02-TAIL: Universal Tailscale FQDN web navigation active",
+            "  [INVENTORY] CHK-02-TAIL: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-02-TAIL missing")
       }
       case spec_ok {
         True ->
-          io.println("  [PASS] CHK-03-FRACT: Fractal layer tags standard active")
+          io.println("  [INVENTORY] CHK-03-FRACT: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-03-FRACT missing")
       }
       case km_ok {
         True ->
           io.println(
-            "  [PASS] CHK-04-KM: KM transclusions [[wiki:...]] / [[zk:...]] active",
+            "  [INVENTORY] CHK-04-KM: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-04-KM missing")
       }
@@ -2311,20 +2287,20 @@ pub fn execute(cmd: UosCommand) -> Int {
       let drive_ok = file_exists("ops/kubernetes/nas-k8s-lab/src/spec.rs")
       case muda_ok {
         True ->
-          io.println("  [PASS] CHK-05-MUDA: Zero Bevy & Zero Graphite verified")
+          io.println("  [INVENTORY] CHK-05-MUDA: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-05-MUDA missing")
       }
       case graph_ok {
         True ->
           io.println(
-            "  [PASS] CHK-06-GRAPH: Pure Erlang graphene_nif.erl verified (0 foreign NIFs)",
+            "  [INVENTORY] CHK-06-GRAPH: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-06-GRAPH missing")
       }
       case drive_ok {
         True ->
           io.println(
-            "  [PASS] CHK-07-DRIVE: Root OS NVMe 25503L801736 locked in spec.rs",
+            "  [INVENTORY] CHK-07-DRIVE: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-07-DRIVE missing")
       }
@@ -2344,24 +2320,24 @@ pub fn execute(cmd: UosCommand) -> Int {
         )
       case test_spec_ok {
         True ->
-          io.println("  [PASS] CHK-08-C1C8: C1-C8 Gold Standard verified")
+          io.println("  [INVENTORY] CHK-08-C1C8: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-08-C1C8 missing")
       }
       case test_spec_ok {
         True ->
           io.println(
-            "  [PASS] CHK-09-MATH: 4 Math Gates (H>=2.5b, CCM>=90%, D_EA<=10%, ITQS>=0.85)",
+            "  [INVENTORY] CHK-09-MATH: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-09-MATH missing")
       }
       case nine_mod_ok {
         True ->
-          io.println("  [PASS] CHK-10-9MOD: 9-Modality test suite present")
+          io.println("  [INVENTORY] CHK-10-9MOD: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-10-9MOD missing")
       }
       case regr_ok {
         True ->
-          io.println("  [PASS] CHK-11-REGR: 381 UI regression tests present")
+          io.println("  [INVENTORY] CHK-11-REGR: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-11-REGR missing")
       }
 
@@ -2377,33 +2353,33 @@ pub fn execute(cmd: UosCommand) -> Int {
       case gleam_sup_ok {
         True ->
           io.println(
-            "  [PASS] CHK-12-GLEAM: Gleam/OTP 29 root supervisor uos_sup.gleam active",
+            "  [INVENTORY] CHK-12-GLEAM: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-12-GLEAM missing")
       }
       case hermes_ok {
         True ->
           io.println(
-            "  [PASS] CHK-13-HERMES: Hermes OCaml Zero-Trust dispatch hook active",
+            "  [INVENTORY] CHK-13-HERMES: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-13-HERMES missing")
       }
       case zigvm_ok {
         True ->
-          io.println("  [PASS] CHK-14-ZIGVM: ZigVM deterministic engine active")
+          io.println("  [INVENTORY] CHK-14-ZIGVM: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-14-ZIGVM missing")
       }
       case max_ok {
         True ->
           io.println(
-            "  [PASS] CHK-15-MAX: Modular MAX inference worker quarantined",
+            "  [INVENTORY] CHK-15-MAX: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-15-MAX missing")
       }
       case otel_ok {
         True ->
           io.println(
-            "  [PASS] CHK-16-OTEL: Universal C3I Telemetry contract active",
+            "  [INVENTORY] CHK-16-OTEL: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-16-OTEL missing")
       }
@@ -2414,13 +2390,13 @@ pub fn execute(cmd: UosCommand) -> Int {
       case sov_ok {
         True ->
           io.println(
-            "  [PASS] CHK-17-SOV: Tri-sovereign governance superset ratified",
+            "  [INVENTORY] CHK-17-SOV: declared artifact present; behavior/proof UNRUN",
           )
         False -> io.println("  [FAIL] CHK-17-SOV missing")
       }
       case jj_ok {
         True ->
-          io.println("  [PASS] CHK-18-JJ: Standalone Jujutsu monorepo active")
+          io.println("  [INVENTORY] CHK-18-JJ: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] CHK-18-JJ missing")
       }
 
@@ -2432,8 +2408,9 @@ pub fn execute(cmd: UosCommand) -> Int {
         sov_ok, jj_ok,
       ]
       io.println("")
-      io.println(summary_line("Checks Passed", checks))
-      exit_for(checks)
+      io.println(summary_line("Declared artifacts present (not verification)", checks))
+      io.println("Checklist result: HOLD; current behavior and formal evidence not evaluated")
+      1
     }
     RochaCheck -> {
       io.println("Evaluating Rocha Semiotics, Cybernetics & Web Reachability (SC-ROCHA-001):")
@@ -2450,7 +2427,7 @@ pub fn execute(cmd: UosCommand) -> Int {
 
       case rc_rule_ok && ag_rule_ok && cl_rule_ok && cx_rule_ok && gm_rule_ok {
         True ->
-          io.println("  [PASS] ROCHA-01: Semiotics contract mirrored across all agent rulebases")
+          io.println("  [INVENTORY] ROCHA: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] ROCHA-01: Semiotics contract missing in some agent rulebases")
       }
 
@@ -2471,7 +2448,7 @@ pub fn execute(cmd: UosCommand) -> Int {
         )
       case tome_rocha && tome_cyber && tome_tail {
         True ->
-          io.println("  [PASS] ROCHA-02: Synthesis Review Tome tagged (#rocha-semiotics, #cybernetics, Tailscale link)")
+          io.println("  [INVENTORY] ROCHA: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] ROCHA-02: Synthesis Review Tome missing tags or Tailscale link")
       }
 
@@ -2492,7 +2469,7 @@ pub fn execute(cmd: UosCommand) -> Int {
         )
       case moc_rocha && moc_cyber && moc_tail {
         True ->
-          io.println("  [PASS] ROCHA-03: Master ZK MOC tagged (#rocha-semiotics, #cybernetics, Tailscale link)")
+          io.println("  [INVENTORY] ROCHA: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] ROCHA-03: Master ZK MOC missing tags or Tailscale link")
       }
 
@@ -2508,7 +2485,7 @@ pub fn execute(cmd: UosCommand) -> Int {
         )
       case wiki_rocha && wiki_cyber {
         True ->
-          io.println("  [PASS] ROCHA-04: Master Wiki Corpus Index tagged (#rocha-semiotics, #cybernetics)")
+          io.println("  [INVENTORY] ROCHA: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] ROCHA-04: Master Wiki Corpus Index missing tags")
       }
 
@@ -2544,7 +2521,7 @@ pub fn execute(cmd: UosCommand) -> Int {
         )
       case adr1_ok && adr2_ok && adr3_ok && adr5_ok && adr6_ok && adr16_ok {
         True ->
-          io.println("  [PASS] ROCHA-05: Permanent Decision Records (ADR-001..ADR-016) tagged with Rocha semiotics")
+          io.println("  [INVENTORY] ROCHA: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] ROCHA-05: Permanent Decision Records missing Rocha semiotics tags")
       }
 
@@ -2555,7 +2532,7 @@ pub fn execute(cmd: UosCommand) -> Int {
         )
       case web_rocha {
         True ->
-          io.println("  [PASS] ROCHA-06: Web Cockpit templates tagged (#rocha-semiotics and #cybernetics)")
+          io.println("  [INVENTORY] ROCHA: declared artifact present; behavior/proof UNRUN")
         False -> io.println("  [FAIL] ROCHA-06: Web Cockpit templates missing tags")
       }
 
@@ -2583,8 +2560,8 @@ pub fn execute(cmd: UosCommand) -> Int {
       {
         True -> {
           io.println("")
-          io.println("Summary: Rocha Semiotics & Cybernetics Check: 100% Green (PASS)")
-          0
+          io.println("Rocha artifact inventory complete; runtime/formal verification HOLD")
+          1
         }
         False -> 1
       }
@@ -2650,9 +2627,9 @@ pub fn execute(cmd: UosCommand) -> Int {
       case total_res == 0 {
         True -> {
           io.println("===============================================================================")
-          io.println("VERIFICATION RESULT: 100% ALL CHECKS PASS — UOS FULL SYSTEM RATIFIED")
+          io.println("VERIFICATION RESULT: COMPONENT CHECKS RETURNED ZERO; GLOBAL ADMISSION HOLD (independent candidate-bound authority required)")
           io.println("===============================================================================")
-          0
+          1
         }
         False -> {
           io.println("VERIFICATION RESULT: FAILURES DETECTED")
@@ -3908,4 +3885,63 @@ pub fn wave4_records() -> List(#(String, String, String)) {
     #("EV-83", "Formal Gospel Specification & Bounded Z3 Oracle Pipeline", codex),
     #("EV-84", "Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure", "docs/journal/20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md"),
   ]
+}
+
+/// Inventory parser with an injected artifact observer. Malformed, empty,
+/// duplicate or above-ceiling records cannot become an inventory pass.
+pub fn doctor_manifest_results(
+  manifest: String,
+  exists: fn(String) -> Bool,
+) -> List(#(String, String, String)) {
+  let rows = manifest |> string.split("\n") |> list.map(string.trim)
+    |> list.filter(fn(line) { line != "" && !string.starts_with(line, "#") })
+  case string.byte_size(manifest) > 262_144 || list.length(rows) > 1000 {
+    True -> [#("?", "MALFORMED", "manifest exceeds bound")]
+    False -> {
+      let parsed = list.map(rows, fn(line) {
+        case string.split(line, "\t") {
+          [ev, artifact, label] -> {
+            case int.parse(ev) {
+              Ok(number) if number > 0 -> {
+                let valid_path = artifact == "-" || {
+                  let parts = string.split(artifact, "/")
+                  artifact != "" && string.byte_size(artifact) <= 1024
+                  && !string.contains(artifact, "\\")
+                  && !string.contains(artifact, "\u{0}")
+                  && list.all(parts, fn(part) { part != "" && part != "." && part != ".." })
+                }
+                case int.to_string(number) == ev && label != ""
+                  && string.byte_size(label) <= 1024 && valid_path {
+                  False -> #(ev, "MALFORMED", "invalid manifest fields")
+                  True -> case number > admitted_ev_ceiling {
+                    True -> #(ev, "NOT_ADMITTED", label)
+                    False -> case artifact {
+                      "-" -> #(ev, "UNVERIFIABLE", label)
+                      path -> case exists(path) {
+                        True -> #(ev, "INVENTORY", label)
+                        False -> #(ev, "MISSING", label)
+                      }
+                    }
+                  }
+                }
+              }
+              _ -> #(ev, "MALFORMED", "invalid EV number")
+            }
+          }
+          _ -> #("?", "MALFORMED", "expected three TSV fields")
+        }
+      })
+      list.map(parsed, fn(row) {
+        case list.length(list.filter(parsed, fn(other) { other.0 == row.0 })) > 1 {
+          True -> #(row.0, "MALFORMED", "duplicate EV identifier")
+          False -> row
+        }
+      })
+    }
+  }
+}
+
+/// Passing means only a nonempty valid artifact inventory, never admission.
+pub fn doctor_manifest_passes(results: List(#(String, String, String))) -> Bool {
+  results != [] && list.all(results, fn(row) { row.1 == "INVENTORY" })
 }

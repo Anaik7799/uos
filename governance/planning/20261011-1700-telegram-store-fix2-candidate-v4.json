@@ -1,0 +1,76 @@
+{
+  "schema": "uos.telegram-store-fix2-candidate.v4",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1700",
+  "observed_at": "2026-10-11T14:55:30Z",
+  "status": "CANDIDATE_DELIVERED_OPEN_ATTEMPT",
+  "task_lifecycle": "executing (PRESERVED OPEN for independent root and Codex STORE_DRAFT_REVIEW)",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store.gleam": "a4abdc4bd74d5308a6b23ab6bddbc6cf0a345cfa0896dfc494b32c883bbcc186",
+    "telegram_store_codec.gleam": "d5991a5e12774b31ecc969abf22fa6853594141014a5b402de2f2793d586391c",
+    "telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+    "telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+    "telegram_store_test.gleam": "bafceeed44ad1532c8f1107e467660ace0ed99240d6d96f070b94ae23c247c54",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "telegram_store_transport_ffi.erl": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f"
+  },
+  "process_deviation_acknowledgement": {
+    "incident": "Direct Bash shell/sa-plan/erl/jj invocations occurred during turn 14:47 after session context reset",
+    "rule_binding": "SC-HARNESS-MCP: all commands must execute through Gleam supervisor launcher",
+    "correction": "All command execution restored through /home/an/NAS-setup/uos/var/recovery-runtime/20261011-1318-native-verify3/gleam-bound TIMEOUT_MS ABSOLUTE_EXEC ARG... under pinned uos_env",
+    "verification_repeated": true
+  },
+  "root_review_corrections_addressed": [
+    {
+      "item": "payload_valid validation scope",
+      "detail": "Literal '<bad>' is valid storage payload. Shared validator enforces nonblank/4096bytes/noNUL, not blanket HTML rejection. Outbound rendering escapes according to HTTP parse mode."
+    },
+    {
+      "item": "quiescence_witness_binding",
+      "detail": "CleanupProof is an opaque type with private constructor binding exact DB path, binary hashes, canonical request, exit status (0, 124, 125), and observed_at_us. Exit 126 / catch / timeout emits None."
+    },
+    {
+      "item": "two_phase_fenced_reconciliation",
+      "detail": "reconcile_pending verifies proof binding first; matching receipt => PendingCommitted, absent receipt + proof => PendingAbsent, absent receipt without proof => PendingUnknown, differing digest => PendingConflict, binding mismatch => StoreInvariantError."
+    },
+    {
+      "item": "domain_decode_failure_retention",
+      "detail": "When worker exits 0 but response fails domain JSON decode, execute_apply returns StoreUncertainApply(pending) retaining observed CleanupProof."
+    }
+  ],
+  "verification_results": {
+    "in_tree_gleam_tests": {
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "modules": [
+        "telegram_store_test (31 tests)",
+        "telegram_delivery_ledger_test (27 tests)",
+        "telegram_ingress_guard_test (16 tests)"
+      ]
+    },
+    "transport_fixture_tests": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "runner": "tools/validation/telegram_store_transport_test.erl"
+    },
+    "preflight_gate": {
+      "checks": 31,
+      "status": "PASS"
+    },
+    "risk_priority_active_check": {
+      "task_id": "STORE_FIX2",
+      "worker": "agy-telegram-20261011",
+      "attempt": 1,
+      "findings_for_task": [],
+      "status": "ACTIVE_OBSERVATION_PASS"
+    }
+  }
+}

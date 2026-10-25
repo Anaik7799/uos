@@ -1,0 +1,117 @@
+{
+  "schema": "uos.independent-admission-truth-review.v1",
+  "observed_at": "2026-10-01T11:41:31Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "ADMISSION_REVIEW",
+  "attempt": 1,
+  "verdict": "HOLD_REMAINING_DOCTOR_FALSE_GREEN",
+  "scope": "Independent development source/claim-integrity review of eight frozen inputs. No global admission or production authority.",
+  "source_manifest": [
+    {
+      "path": "tools/uos/src/main.gleam",
+      "sha256": "7802d109c883f3075a86d7b2565a1613ceeb1902304047145f543d9bdc85b4cb"
+    },
+    {
+      "path": "tools/uos/test/admission_truth_test.gleam",
+      "sha256": "2e73f62e98dd41fa1cabe6b69bd5709ab94b9c2b5b1181537514a9c22fe86081"
+    },
+    {
+      "path": "tools/uos/test/exit_status_test.gleam",
+      "sha256": "0ed3324f839d58c2604782bc4a0d661bcd69c1c7ad84180a4946419aee987da8"
+    },
+    {
+      "path": "tools/uos/test/gate_verdict_test.gleam",
+      "sha256": "73056e7d1d10f9f11daba6785ba101da96d46c884cdad8239a161101c0426d47"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "f63e583a676182464c06eb74d48d3efdd8513747b742218ef68e86616d322fa6"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/sa_plan_bridge_test.gleam",
+      "sha256": "458294cf15210a6e68e8fb5c43d9ace67b2b74faaae8c8f25549ff83dec2e7a0"
+    },
+    {
+      "path": "governance/capability-inventory/skills.toml",
+      "sha256": "7c55a050fe527e27cb36b5d6df081701eb28e4e4705bba0ff6af0a1a7df30c74"
+    },
+    {
+      "path": "contracts/evidence/20261001-1135-admission-claim-integrity-spec.json",
+      "sha256": "d6dfb79b5662ffe3bb30b874c0c21b6f33f415bfea051011c759d56ffde4383a"
+    }
+  ],
+  "development_receipt": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1135-admission-truth-development.json",
+  "findings": [
+    {
+      "id": "ADMISSION-REVIEW-P2-DOCTOR-EMPTY",
+      "severity": "P2",
+      "introduced_by_current_patch": false,
+      "path": "tools/uos/src/main.gleam",
+      "lines": [
+        1981,
+        1985,
+        2028,
+        2037,
+        2045
+      ],
+      "problem": "An absent or empty EV manifest prints FAIL but then satisfies length(verified)==total==0 and returns PASS 0/0 with integer exit 0.",
+      "reproduction": "Existing compiled main:execute(doctor), launched with cwd / and absolute code paths. No manifest mutation. Actual observed output and return recorded in companion transcript.",
+      "required_fix": "Require nonempty valid manifest before successful inventory verdict. Add direct empty/missing manifest or pure parsed-manifest regressions and preserve nonzero OS exit."
+    }
+  ],
+  "accepted_by_inspection": [
+    "38 listed artifact gate branches fail closed; three existing Mirage HOLD branches preserved. Changed inventory predicates do not execute new subprocesses.",
+    "DMC, TCM, Checklist, KM and Rocha inventory paths return 1; labels no longer imply executed proof/runtime admission.",
+    "VerifyAll zero-total branch now returns 1 and explicitly GLOBAL ADMISSION HOLD; aggregate command was not executed.",
+    "Seventeen catalog records are DeclaredUnverified. Coverage checks exact IDs 1..17, status and nonempty names; it is structural only.",
+    "Five skill state claims preserved as historical_state_claim with current declared_unverified and admission UNKNOWN; no current state=admitted remains in reviewed skills catalog.",
+    "No broad replacement accidentally changed observed subprocess gate control flow in the reviewed diff."
+  ],
+  "tests": {
+    "independent_cli_eunit_passed": 20,
+    "independent_bridge_pure_eunit_passed": 11,
+    "bridge_status_subprocess": "NOT_RUN; parent-reported 12 includes this extra test",
+    "present_inventory_negative_controls": [
+      "G-CHECKLIST returns 1 with present spec/rules",
+      "DMC returns 1 with five present artifacts",
+      "Checklist returns 1 with all eighteen artifacts present"
+    ],
+    "missing_manifest_control": "FAIL_DETECTED: Doctor returned 0",
+    "not_run": [
+      "verify-all",
+      "full gate_verdict_test",
+      "actual inference/formal/download/production gates"
+    ]
+  },
+  "test_quality_limits": [
+    "Artifact-gate regression asserts return 1, not exact stdout. Reviewed source labels and directly observed complete-inventory controls supplement this.",
+    "No new tests or source edits were made; existing compiled development artifacts were used.",
+    "The existing bridge status test accepts typed failure; it does not establish actual runtime availability.",
+    "Remaining preexisting subprocess PASS strings, including G-TEST-EFFECTIVENESS 100% SOUND, require their own invocation-bound evidence audit before any global claim."
+  ],
+  "admission": {
+    "global": "HOLD",
+    "ev_ceiling": 93,
+    "ev94_through109": "NOT_ADMITTED",
+    "new_ev_ids": "NONE",
+    "runtime_effects": "NONE",
+    "canonical_task_mutation": "NONE"
+  },
+  "next_steps": [
+    "Repair missing/empty Doctor false green in separate authorized source task, then recheck exact changed hashes.",
+    "Retain original independent global gap audit and finish actual candidate-bound obligations separately."
+  ],
+  "transcript": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1144-independent-admission-truth-tests.txt",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l4",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "observation_time_scope": "Host timestamp of exact source hash verification; test executions preceded it. Receipt creation host timestamp returned separately.",
+  "supersedes": {
+    "path": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1144-independent-admission-truth-review.json",
+    "reason": "That receipt used an inferred 11:44 observation time; actual creation host time was 11:43:19. Preserved unchanged. Findings and source hashes are identical."
+  }
+}

@@ -1,0 +1,1475 @@
+{
+  "schema": "uos.telegram-expired-claim-recovery.v1",
+  "plan": "uos/telegram-tools/20261011-1115",
+  "task": "RECOVER",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "quiescence": "governance/planning/20261011-1156-telegram-expired-worker-reconciliation.json",
+  "approved_checker": "governance/planning/20261011-1154-telegram-parser-independent-review.json",
+  "runtime_plan": "uos/telegram-runtime/20261001-1150",
+  "assessment": "governance/planning/20261011-1155-telegram-reclaim-risk.json",
+  "before": [
+    {
+      "task_id": "FORMAL_FIX",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": 1,
+      "lease_until_ns": "1790862250536791626"
+    },
+    {
+      "task_id": "STORE_TRANSPORT_REVIEW",
+      "worker": "codex-admission-review-20261001",
+      "attempt": 1,
+      "lease_until_ns": "1790862377544275998"
+    }
+  ],
+  "set_preflight_1": {
+    "status": "RECLAIM_PREFLIGHT_PASS",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "reclaim": {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "bindings": [
+        {
+          "task_id": "FORMAL_FIX",
+          "worker": "codex-telegram-admission-20261001",
+          "previous_attempt": 1,
+          "previous_lease_until_ns": "1790862250536791626",
+          "expected_new_attempt": 2
+        },
+        {
+          "task_id": "STORE_TRANSPORT_REVIEW",
+          "worker": "codex-admission-review-20261001",
+          "previous_attempt": 1,
+          "previous_lease_until_ns": "1790862377544275998",
+          "expected_new_attempt": 2
+        }
+      ],
+      "scope": "Expired claim replacement only; no execution before a fresh exact-owner active check"
+    },
+    "observed_at": "2026-10-11T11:56:46Z",
+    "completed_at": "2026-10-11T11:56:46Z",
+    "elapsed_monotonic_seconds": 0.031706312,
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000277144,
+      "uncertainty_seconds": 0.021368065500000002,
+      "reference_age_seconds": 149.843652009964,
+      "stratum": 3
+    },
+    "clock_end": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000277141,
+      "uncertainty_seconds": 0.021368082500000003,
+      "reference_age_seconds": 149.86000108718872,
+      "stratum": 3
+    },
+    "assessment_sha256": "0b0199e49d8de6549780781185304f69576669e629b6a57284ecb1d989bd1b4e",
+    "evidence_files_checked": 14,
+    "sa_plan": {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "snapshot_sha256": "cbfb6d0c8231c8c61880f0e5600b025577be26b508138c625c492a052eaac14a",
+      "tasks": [
+        {
+          "task_id": "AUTH_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856804794524427",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW"
+          ]
+        },
+        {
+          "task_id": "AUTH_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857480927424241",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW2"
+          ]
+        },
+        {
+          "task_id": "AUTH_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855891412062687",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "AUTH_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857168498507551",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_FIX"
+          ]
+        },
+        {
+          "task_id": "AUTH_REVIEW3",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857940967893271",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_FIX2"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857943232204985",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "COCKPIT_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858569160908039",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_REVIEW"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858336003483168",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_FIX"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858755680630192",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_FIX2"
+          ]
+        },
+        {
+          "task_id": "FORMAL_FIX",
+          "state": "executing",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": "1790862250536791626",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "FORMAL_GATES"
+          ]
+        },
+        {
+          "task_id": "FORMAL_GATES",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858510069308043",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "LEDGER_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856403838796363",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "LEDGER_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856266059358888",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "LEDGER_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856560694901187",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_FIX"
+          ]
+        },
+        {
+          "task_id": "RETURN",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "COCKPIT_REVIEW",
+            "SERVICE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "SERVICE_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "SERVICE_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "SERVICE_IMPL"
+          ]
+        },
+        {
+          "task_id": "STORE_DESIGN",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856676523550132",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "STORE_DESIGN_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856948136244086",
+          "result_present": true,
+          "dependencies": [
+            "STORE_DESIGN"
+          ]
+        },
+        {
+          "task_id": "STORE_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "AUTH_REVIEW2",
+            "LEDGER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_KERNEL",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858879266463763",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_REVIEW2",
+            "STORE_DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_KERNEL_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_KERNEL"
+          ]
+        },
+        {
+          "task_id": "STORE_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_IMPL"
+          ]
+        },
+        {
+          "task_id": "STORE_TRANSPORT",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858625145537400",
+          "result_present": true,
+          "dependencies": [
+            "STORE_DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_TRANSPORT_REVIEW",
+          "state": "executing",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": "1790862377544275998",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_TRANSPORT"
+          ]
+        },
+        {
+          "task_id": "TOOLS_RESUME",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        }
+      ],
+      "mode": "READONLY",
+      "lease_fencing_authority": "NOT_GRANTED"
+    },
+    "order": [
+      {
+        "task_id": "STORE_TRANSPORT_REVIEW",
+        "effective_class": "P1",
+        "effective_score": 768,
+        "origins": [
+          "STORE_TRANSPORT_REVIEW"
+        ]
+      },
+      {
+        "task_id": "FORMAL_FIX",
+        "effective_class": "P2",
+        "effective_score": 108,
+        "origins": [
+          "FORMAL_FIX"
+        ]
+      }
+    ],
+    "findings": [],
+    "limits": [
+      "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+      "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+      "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+      "Snapshot is confined to one complete plan; no global optimum is asserted."
+    ]
+  },
+  "set_preflight_2": {
+    "status": "RECLAIM_PREFLIGHT_PASS",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "reclaim": {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "bindings": [
+        {
+          "task_id": "FORMAL_FIX",
+          "worker": "codex-telegram-admission-20261001",
+          "previous_attempt": 1,
+          "previous_lease_until_ns": "1790862250536791626",
+          "expected_new_attempt": 2
+        }
+      ],
+      "scope": "Expired claim replacement only; no execution before a fresh exact-owner active check"
+    },
+    "observed_at": "2026-10-11T11:56:48Z",
+    "completed_at": "2026-10-11T11:56:48Z",
+    "elapsed_monotonic_seconds": 0.030497409,
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000276831,
+      "uncertainty_seconds": 0.0213698795,
+      "reference_age_seconds": 151.57589411735535,
+      "stratum": 3
+    },
+    "clock_end": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000276827,
+      "uncertainty_seconds": 0.021369897500000002,
+      "reference_age_seconds": 151.5937249660492,
+      "stratum": 3
+    },
+    "assessment_sha256": "b85c544b8d1d9e64c9aab4cb9bb0dcbd454c9c3817df7c9ca5f8434ab02d4bd7",
+    "evidence_files_checked": 14,
+    "sa_plan": {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "snapshot_sha256": "252c1c5f96ccbc55dcf144cb0027e7361cca08846c1251cf87ecea1476fa3f7e",
+      "tasks": [
+        {
+          "task_id": "AUTH_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856804794524427",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW"
+          ]
+        },
+        {
+          "task_id": "AUTH_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857480927424241",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW2"
+          ]
+        },
+        {
+          "task_id": "AUTH_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855891412062687",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "AUTH_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857168498507551",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_FIX"
+          ]
+        },
+        {
+          "task_id": "AUTH_REVIEW3",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857940967893271",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_FIX2"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857943232204985",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "COCKPIT_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858569160908039",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_REVIEW"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858336003483168",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_FIX"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858755680630192",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_FIX2"
+          ]
+        },
+        {
+          "task_id": "FORMAL_FIX",
+          "state": "executing",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": "1790862250536791626",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "FORMAL_GATES"
+          ]
+        },
+        {
+          "task_id": "FORMAL_GATES",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858510069308043",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "LEDGER_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856403838796363",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "LEDGER_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856266059358888",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "LEDGER_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856560694901187",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_FIX"
+          ]
+        },
+        {
+          "task_id": "RETURN",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "COCKPIT_REVIEW",
+            "SERVICE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "SERVICE_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "SERVICE_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "SERVICE_IMPL"
+          ]
+        },
+        {
+          "task_id": "STORE_DESIGN",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856676523550132",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "STORE_DESIGN_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856948136244086",
+          "result_present": true,
+          "dependencies": [
+            "STORE_DESIGN"
+          ]
+        },
+        {
+          "task_id": "STORE_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "AUTH_REVIEW2",
+            "LEDGER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_KERNEL",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858879266463763",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_REVIEW2",
+            "STORE_DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_KERNEL_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_KERNEL"
+          ]
+        },
+        {
+          "task_id": "STORE_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_IMPL"
+          ]
+        },
+        {
+          "task_id": "STORE_TRANSPORT",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858625145537400",
+          "result_present": true,
+          "dependencies": [
+            "STORE_DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_TRANSPORT_REVIEW",
+          "state": "executing",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": "1791723407053181803",
+          "attempt": 2,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_TRANSPORT"
+          ]
+        },
+        {
+          "task_id": "TOOLS_RESUME",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        }
+      ],
+      "mode": "READONLY",
+      "lease_fencing_authority": "NOT_GRANTED"
+    },
+    "order": [
+      {
+        "task_id": "FORMAL_FIX",
+        "effective_class": "P2",
+        "effective_score": 108,
+        "origins": [
+          "FORMAL_FIX"
+        ]
+      }
+    ],
+    "findings": [],
+    "limits": [
+      "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+      "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+      "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+      "Snapshot is confined to one complete plan; no global optimum is asserted."
+    ]
+  },
+  "fresh_active_checks": [
+    {
+      "task": "FORMAL_FIX",
+      "receipt": {
+        "status": "ACTIVE_OBSERVATION_PASS",
+        "authority": "NONE",
+        "runtime_admission": "NOT_GRANTED",
+        "reclaim": null,
+        "observed_at": "2026-10-11T11:56:50Z",
+        "completed_at": "2026-10-11T11:56:50Z",
+        "elapsed_monotonic_seconds": 0.022597924,
+        "clock_start": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.000276502,
+          "uncertainty_seconds": 0.021371780500000003,
+          "reference_age_seconds": 153.39243412017822,
+          "stratum": 3
+        },
+        "clock_end": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.0002765,
+          "uncertainty_seconds": 0.0213717925,
+          "reference_age_seconds": 153.4038541316986,
+          "stratum": 3
+        },
+        "assessment_sha256": "b2a8a70a031ca014b3b58119ac65ad4081b577837cb68f5cda7a48510523dc21",
+        "evidence_files_checked": 14,
+        "sa_plan": {
+          "plan_id": "uos/telegram-runtime/20261001-1150",
+          "snapshot_sha256": "34b5d1cd87258585ed3a8d65617534789904d98baf7cf77068cdaf9e31740fdf",
+          "tasks": [
+            {
+              "task_id": "AUTH_FIX",
+              "state": "completed",
+              "worker": "agy-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856804794524427",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_REVIEW"
+              ]
+            },
+            {
+              "task_id": "AUTH_FIX2",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857480927424241",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_REVIEW2"
+              ]
+            },
+            {
+              "task_id": "AUTH_REVIEW",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790855891412062687",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "AUTH_REVIEW2",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857168498507551",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_FIX"
+              ]
+            },
+            {
+              "task_id": "AUTH_REVIEW3",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857940967893271",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_FIX2"
+              ]
+            },
+            {
+              "task_id": "COCKPIT_FIX",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857943232204985",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "COCKPIT_FIX2",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858569160908039",
+              "result_present": true,
+              "dependencies": [
+                "COCKPIT_REVIEW"
+              ]
+            },
+            {
+              "task_id": "COCKPIT_REVIEW",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858336003483168",
+              "result_present": true,
+              "dependencies": [
+                "COCKPIT_FIX"
+              ]
+            },
+            {
+              "task_id": "COCKPIT_REVIEW2",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858755680630192",
+              "result_present": true,
+              "dependencies": [
+                "COCKPIT_FIX2"
+              ]
+            },
+            {
+              "task_id": "FORMAL_FIX",
+              "state": "executing",
+              "worker": "codex-telegram-20261011",
+              "lease_until_ns": "1791723408781489586",
+              "attempt": 2,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "FORMAL_GATES"
+              ]
+            },
+            {
+              "task_id": "FORMAL_GATES",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858510069308043",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "LEDGER_FIX",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856403838796363",
+              "result_present": true,
+              "dependencies": [
+                "LEDGER_REVIEW"
+              ]
+            },
+            {
+              "task_id": "LEDGER_REVIEW",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856266059358888",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "LEDGER_REVIEW2",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856560694901187",
+              "result_present": true,
+              "dependencies": [
+                "LEDGER_FIX"
+              ]
+            },
+            {
+              "task_id": "RETURN",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "COCKPIT_REVIEW",
+                "SERVICE_REVIEW"
+              ]
+            },
+            {
+              "task_id": "SERVICE_IMPL",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_REVIEW"
+              ]
+            },
+            {
+              "task_id": "SERVICE_REVIEW",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "SERVICE_IMPL"
+              ]
+            },
+            {
+              "task_id": "STORE_DESIGN",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856676523550132",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "STORE_DESIGN_REVIEW",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856948136244086",
+              "result_present": true,
+              "dependencies": [
+                "STORE_DESIGN"
+              ]
+            },
+            {
+              "task_id": "STORE_IMPL",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "AUTH_REVIEW2",
+                "LEDGER_REVIEW"
+              ]
+            },
+            {
+              "task_id": "STORE_KERNEL",
+              "state": "completed",
+              "worker": "agy-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858879266463763",
+              "result_present": true,
+              "dependencies": [
+                "LEDGER_REVIEW2",
+                "STORE_DESIGN_REVIEW"
+              ]
+            },
+            {
+              "task_id": "STORE_KERNEL_REVIEW",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_KERNEL"
+              ]
+            },
+            {
+              "task_id": "STORE_REVIEW",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_IMPL"
+              ]
+            },
+            {
+              "task_id": "STORE_TRANSPORT",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858625145537400",
+              "result_present": true,
+              "dependencies": [
+                "STORE_DESIGN_REVIEW"
+              ]
+            },
+            {
+              "task_id": "STORE_TRANSPORT_REVIEW",
+              "state": "executing",
+              "worker": "codex-telegram-20261011",
+              "lease_until_ns": "1791723407053181803",
+              "attempt": 2,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_TRANSPORT"
+              ]
+            },
+            {
+              "task_id": "TOOLS_RESUME",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": []
+            }
+          ],
+          "mode": "READONLY",
+          "lease_fencing_authority": "NOT_GRANTED"
+        },
+        "order": [],
+        "findings": [],
+        "limits": [
+          "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+          "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+          "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+          "Snapshot is confined to one complete plan; no global optimum is asserted."
+        ]
+      }
+    },
+    {
+      "task": "STORE_TRANSPORT_REVIEW",
+      "receipt": {
+        "status": "ACTIVE_OBSERVATION_PASS",
+        "authority": "NONE",
+        "runtime_admission": "NOT_GRANTED",
+        "reclaim": null,
+        "observed_at": "2026-10-11T11:56:50Z",
+        "completed_at": "2026-10-11T11:56:50Z",
+        "elapsed_monotonic_seconds": 0.025503969,
+        "clock_start": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.000276515,
+          "uncertainty_seconds": 0.0213717065,
+          "reference_age_seconds": 153.3216941356659,
+          "stratum": 3
+        },
+        "clock_end": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.000276513,
+          "uncertainty_seconds": 0.0213717175,
+          "reference_age_seconds": 153.33235692977905,
+          "stratum": 3
+        },
+        "assessment_sha256": "b2a8a70a031ca014b3b58119ac65ad4081b577837cb68f5cda7a48510523dc21",
+        "evidence_files_checked": 14,
+        "sa_plan": {
+          "plan_id": "uos/telegram-runtime/20261001-1150",
+          "snapshot_sha256": "34b5d1cd87258585ed3a8d65617534789904d98baf7cf77068cdaf9e31740fdf",
+          "tasks": [
+            {
+              "task_id": "AUTH_FIX",
+              "state": "completed",
+              "worker": "agy-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856804794524427",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_REVIEW"
+              ]
+            },
+            {
+              "task_id": "AUTH_FIX2",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857480927424241",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_REVIEW2"
+              ]
+            },
+            {
+              "task_id": "AUTH_REVIEW",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790855891412062687",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "AUTH_REVIEW2",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857168498507551",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_FIX"
+              ]
+            },
+            {
+              "task_id": "AUTH_REVIEW3",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857940967893271",
+              "result_present": true,
+              "dependencies": [
+                "AUTH_FIX2"
+              ]
+            },
+            {
+              "task_id": "COCKPIT_FIX",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790857943232204985",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "COCKPIT_FIX2",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858569160908039",
+              "result_present": true,
+              "dependencies": [
+                "COCKPIT_REVIEW"
+              ]
+            },
+            {
+              "task_id": "COCKPIT_REVIEW",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858336003483168",
+              "result_present": true,
+              "dependencies": [
+                "COCKPIT_FIX"
+              ]
+            },
+            {
+              "task_id": "COCKPIT_REVIEW2",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858755680630192",
+              "result_present": true,
+              "dependencies": [
+                "COCKPIT_FIX2"
+              ]
+            },
+            {
+              "task_id": "FORMAL_FIX",
+              "state": "executing",
+              "worker": "codex-telegram-20261011",
+              "lease_until_ns": "1791723408781489586",
+              "attempt": 2,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "FORMAL_GATES"
+              ]
+            },
+            {
+              "task_id": "FORMAL_GATES",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858510069308043",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "LEDGER_FIX",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856403838796363",
+              "result_present": true,
+              "dependencies": [
+                "LEDGER_REVIEW"
+              ]
+            },
+            {
+              "task_id": "LEDGER_REVIEW",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856266059358888",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "LEDGER_REVIEW2",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856560694901187",
+              "result_present": true,
+              "dependencies": [
+                "LEDGER_FIX"
+              ]
+            },
+            {
+              "task_id": "RETURN",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "COCKPIT_REVIEW",
+                "SERVICE_REVIEW"
+              ]
+            },
+            {
+              "task_id": "SERVICE_IMPL",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_REVIEW"
+              ]
+            },
+            {
+              "task_id": "SERVICE_REVIEW",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "SERVICE_IMPL"
+              ]
+            },
+            {
+              "task_id": "STORE_DESIGN",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856676523550132",
+              "result_present": true,
+              "dependencies": []
+            },
+            {
+              "task_id": "STORE_DESIGN_REVIEW",
+              "state": "completed",
+              "worker": "codex-admission-review-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790856948136244086",
+              "result_present": true,
+              "dependencies": [
+                "STORE_DESIGN"
+              ]
+            },
+            {
+              "task_id": "STORE_IMPL",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "AUTH_REVIEW2",
+                "LEDGER_REVIEW"
+              ]
+            },
+            {
+              "task_id": "STORE_KERNEL",
+              "state": "completed",
+              "worker": "agy-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858879266463763",
+              "result_present": true,
+              "dependencies": [
+                "LEDGER_REVIEW2",
+                "STORE_DESIGN_REVIEW"
+              ]
+            },
+            {
+              "task_id": "STORE_KERNEL_REVIEW",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_KERNEL"
+              ]
+            },
+            {
+              "task_id": "STORE_REVIEW",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_IMPL"
+              ]
+            },
+            {
+              "task_id": "STORE_TRANSPORT",
+              "state": "completed",
+              "worker": "codex-telegram-admission-20261001",
+              "lease_until_ns": null,
+              "attempt": 1,
+              "completed_at_ns": "1790858625145537400",
+              "result_present": true,
+              "dependencies": [
+                "STORE_DESIGN_REVIEW"
+              ]
+            },
+            {
+              "task_id": "STORE_TRANSPORT_REVIEW",
+              "state": "executing",
+              "worker": "codex-telegram-20261011",
+              "lease_until_ns": "1791723407053181803",
+              "attempt": 2,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": [
+                "STORE_TRANSPORT"
+              ]
+            },
+            {
+              "task_id": "TOOLS_RESUME",
+              "state": "available",
+              "worker": null,
+              "lease_until_ns": null,
+              "attempt": 0,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": []
+            }
+          ],
+          "mode": "READONLY",
+          "lease_fencing_authority": "NOT_GRANTED"
+        },
+        "order": [],
+        "findings": [],
+        "limits": [
+          "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+          "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+          "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+          "Snapshot is confined to one complete plan; no global optimum is asserted."
+        ]
+      }
+    }
+  ],
+  "after": {
+    "FORMAL_FIX": "Released attempt2 to available; implementation not completed, deferred global work",
+    "STORE_TRANSPORT_REVIEW": "Executing attempt2 under new root worker; fresh transport verification pending"
+  },
+  "canonical_db_mutations": "Only existing Sa-plan task claim/release commands; no raw SQL reset, no attempt reuse, no expiry waiver",
+  "task_effect_order": "No original task effect before both claims and both normal active checks passed",
+  "admission": false,
+  "production_effects": false,
+  "observed_utc": "2026-10-11T11:57:33.417Z"
+}

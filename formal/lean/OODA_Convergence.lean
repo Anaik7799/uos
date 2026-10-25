@@ -60,13 +60,7 @@ theorem verify_to_observe_increments_cycle (s : LeanOodaState)
     (h_clear : s.is_andon_active = false)
     (h_verify : s.phase = OodaPhase.Verify) :
     (step_ooda s).cycle_count = s.cycle_count + 1 := by
-  dsimp [step_ooda]
-  split
-  · rename_i h_and
-    rw [h_clear] at h_and
-    contradiction
-  · rw [h_verify]
-    rfl
+  simp [step_ooda, h_clear, h_verify]
 
 /-- Record critical AST anomaly. -/
 def inject_critical_anomaly (s : LeanOodaState) : LeanOodaState :=
@@ -86,8 +80,6 @@ def remediate_all_critical (s : LeanOodaState) : LeanOodaState :=
 theorem remediation_restores_progress (s : LeanOodaState)
     (h_phase : s.phase = OodaPhase.Observe) :
     (step_ooda (remediate_all_critical (inject_critical_anomaly s))).phase = OodaPhase.Orient := by
-  dsimp [inject_critical_anomaly, remediate_all_critical, step_ooda, next_phase]
-  rw [h_phase]
-  rfl
+  simp [inject_critical_anomaly, remediate_all_critical, step_ooda, next_phase, h_phase]
 
 end UOS.OODA

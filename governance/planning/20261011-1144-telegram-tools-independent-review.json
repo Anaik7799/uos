@@ -1,0 +1,209 @@
+{
+  "schema": "uos.telegram-tools-independent-review.v1",
+  "reviewer": {
+    "worker": "codex-telegram-20261011",
+    "session": "01a0f051-84d4-7be0-be4b-2c1055e89dd3",
+    "plan": "uos/telegram-tools/20261011-1115",
+    "task": "TOOLS_REVIEW",
+    "attempt": 1
+  },
+  "verdict": "HOLD_INPUT_CONTRACT",
+  "sources": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "sha256": "924846371854e2b5ede6fbdc83e2db7656fb7dabd1aa1a186a69899896cef4fc"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "7bdaa83d6822568d1ae71f316cbac4cee744af4cad9188e6ef7e790d474ed796"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "1f78b5d077300561e2118a9339a3ef6e33a4004a3e840416c521db876590176d"
+    }
+  ],
+  "suite": {
+    "status": "PASS",
+    "authority": "NONE",
+    "baseline_checks": 375,
+    "adversarial_checks": 32883,
+    "independent_dag_scenarios": 32768,
+    "package": {
+      "status": "PASS",
+      "local_paths_checked": 39,
+      "authority": "REPORT_ONLY",
+      "runtime_enforcement": "NOT_ASSERTED",
+      "global_skill_dependency": false
+    },
+    "runtime_admission": "NOT_GRANTED",
+    "live_agent_tests": "UNRUN"
+  },
+  "cli_cases": [
+    {
+      "case": "missing_plan",
+      "exit": 1,
+      "status": "HOLD",
+      "reclaim": {
+        "plan_id": "uos/telegram-runtime/20261001-1150",
+        "bindings": [
+          {
+            "task_id": "FORMAL_FIX",
+            "worker": "codex-telegram-admission-20261001",
+            "previous_attempt": 1,
+            "previous_lease_until_ns": "1790862250536791626",
+            "expected_new_attempt": 2
+          },
+          {
+            "task_id": "STORE_TRANSPORT_REVIEW",
+            "worker": "codex-admission-review-20261001",
+            "previous_attempt": 1,
+            "previous_lease_until_ns": "1790862377544275998",
+            "expected_new_attempt": 2
+          }
+        ],
+        "scope": "Expired claim replacement only; no execution before a fresh exact-owner active check"
+      },
+      "findings": [
+        {
+          "rule": "RP-COST-TIE",
+          "task": "FORMAL_FIX",
+          "detail": "Unresolved equal-score ordering with STORE_KERNEL_REVIEW"
+        },
+        {
+          "rule": "RP-COST-TIE",
+          "task": "STORE_KERNEL_REVIEW",
+          "detail": "Unresolved equal-score ordering with STORE_TRANSPORT_REVIEW"
+        },
+        {
+          "rule": "RP-COST-TIE",
+          "task": "STORE_TRANSPORT_REVIEW",
+          "detail": "Unresolved equal-score ordering with TOOLS_RESUME"
+        }
+      ]
+    },
+    {
+      "case": "unknown_fields",
+      "exit": 1,
+      "status": "HOLD",
+      "reclaim": {
+        "plan_id": "uos/telegram-runtime/20261001-1150",
+        "bindings": [
+          {
+            "task_id": "FORMAL_FIX",
+            "worker": "codex-telegram-admission-20261001",
+            "previous_attempt": 1,
+            "previous_lease_until_ns": "1790862250536791626",
+            "expected_new_attempt": 2
+          },
+          {
+            "task_id": "STORE_TRANSPORT_REVIEW",
+            "worker": "codex-admission-review-20261001",
+            "previous_attempt": 1,
+            "previous_lease_until_ns": "1790862377544275998",
+            "expected_new_attempt": 2
+          }
+        ],
+        "scope": "Expired claim replacement only; no execution before a fresh exact-owner active check"
+      },
+      "findings": [
+        {
+          "rule": "RP-COST-TIE",
+          "task": "FORMAL_FIX",
+          "detail": "Unresolved equal-score ordering with STORE_KERNEL_REVIEW"
+        },
+        {
+          "rule": "RP-COST-TIE",
+          "task": "STORE_KERNEL_REVIEW",
+          "detail": "Unresolved equal-score ordering with STORE_TRANSPORT_REVIEW"
+        },
+        {
+          "rule": "RP-COST-TIE",
+          "task": "STORE_TRANSPORT_REVIEW",
+          "detail": "Unresolved equal-score ordering with TOOLS_RESUME"
+        }
+      ]
+    },
+    {
+      "case": "wrong_plan",
+      "exit": 1,
+      "status": "HOLD",
+      "detail": "plan_id in bindings does not match portfolio plan_id"
+    },
+    {
+      "case": "numeric_deadline",
+      "exit": 1,
+      "status": "HOLD",
+      "detail": "expected string"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "blocking",
+      "detail": "Set parser accepts a top-level array without plan identity and unknown object fields. Tests independently show both reach recovery projection and fail only on unrelated risk ranking ties.",
+      "required": "Strict required plan-bound object and exact binding keys; one explicit inline JSON interface; preserve legacy single-binding CLI."
+    },
+    {
+      "id": "R2",
+      "severity": "evidence_gap",
+      "detail": "New tests need negative coverage for missing plan ID/unknown fields/duplicate keys/number and overflow deadlines/live or missing lease/completed or result-bearing rows/dependency divergence and immutable observations.",
+      "required": "AGY add missing meaningful cases and report actual executed results."
+    },
+    {
+      "id": "R3",
+      "severity": "process_deviation",
+      "detail": "Observed AGY direct shell and inline Python operations, and no coordinator registration before source edits. Source is development-only; no claim that harness/coordinator runtime enforcement held.",
+      "required": "Subsequent work uses compiled Gleam bounded tools and fresh resource claims; preserve deviation rather than retroactively claiming enforcement."
+    }
+  ],
+  "positive_findings": [
+    "Existing single-binding behavior retained, including refusal when another expired task exists.",
+    "Exact-set projection and complete-plan comparisons implemented; normal preflight/active still refuse expired attempts.",
+    "Independent full suite passes at candidate hashes; this does not clear R1."
+  ],
+  "admission": false,
+  "production_effects": false,
+  "quiescence_observations": {
+    "process_scan": {
+      "observed_utc": "2026-10-11T11:35:47.162Z",
+      "scope": "same-UID process presence only; ancestry of this diagnostic excluded; no secret values printed",
+      "checked": 90,
+      "matches": [],
+      "unreadable": [
+        {
+          "pid": "1183868",
+          "code": "EACCES"
+        },
+        {
+          "pid": "2669018",
+          "code": "EACCES"
+        },
+        {
+          "pid": "3701658",
+          "code": "EACCES"
+        },
+        {
+          "pid": "778513",
+          "code": "EACCES"
+        },
+        {
+          "pid": "8692",
+          "code": "EACCES"
+        }
+      ],
+      "limits": "Absence of worker identifiers is not proof against an unlabelled detached process or external host."
+    },
+    "effect_scan": {
+      "observed_utc": "2026-10-11T11:35:47.623Z",
+      "base": "var/harness/effects",
+      "checked": 720,
+      "oversized": 0,
+      "invalid": 0,
+      "matches": [],
+      "scope": "receipt metadata presence only; no payloads/tokens or whole-file digests printed"
+    },
+    "limits": "No matching tagged process or effect found; unreadable entries include three exited zombie Codex processes and SSH/PAM processes. Cooperative local observation only, not proof against unlabelled external effects."
+  },
+  "next": "AGY parser repair, independent re-review, then fresh recovery observation and canonical claims.",
+  "observed_utc": "2026-10-11T11:44:19.462Z"
+}

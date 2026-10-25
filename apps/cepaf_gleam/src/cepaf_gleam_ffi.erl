@@ -183,16 +183,12 @@ hackney_http_request(Method, Url, Headers, Body) ->
                         Options = [
                             {connect_timeout, 5000},
                             {recv_timeout, 10000},
-                            {pool, default}
+                            {pool, default},
+                            {with_body, true}
                         ],
                         case hackney:request(L_Method, L_Url, L_Headers, Body, Options) of
-                            {ok, StatusCode, RespHeaders, ClientRef} ->
-                                case hackney:body(ClientRef) of
-                                    {ok, RespBody} ->
-                                        {ok, {StatusCode, RespHeaders, RespBody}};
-                                    {error, BodyReason} ->
-                                        {error, unicode:characters_to_binary(io_lib:format("~p", [BodyReason]))}
-                                end;
+                            {ok, StatusCode, RespHeaders, RespBody} ->
+                                {ok, {StatusCode, RespHeaders, RespBody}};
                             {error, ReqReason} ->
                                 {error, unicode:characters_to_binary(io_lib:format("~p", [ReqReason]))}
                         end;
@@ -203,7 +199,8 @@ hackney_http_request(Method, Url, Headers, Body) ->
                 {error, <<"hackney_module_not_found">>}
         end
     catch
-        error:undef -> {error, <<"hackney_not_available_undef">>};
+        error:undef:Stack ->
+            {error, unicode:characters_to_binary(io_lib:format("undef: ~p", [Stack]))};
         _:CatchReason ->
             {error, unicode:characters_to_binary(io_lib:format("hackney_http_request crash: ~p", [CatchReason]))}
     end.

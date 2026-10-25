@@ -78,12 +78,7 @@ theorem orient_fails_closed_on_hazard (intent : PoodavrIntent) (st : PoodavrStat
 theorem act_unreachable_on_hazard (intent : PoodavrIntent) (st : PoodavrState)
     (h_breach : is_intent_safe intent = false) :
     (decide_transition (orient_transition intent st)).phase ≠ PoodavrPhase.Act := by
-  have h_halt := orient_fails_closed_on_hazard intent st h_breach
-  dsimp [decide_transition]
-  rw [h_halt.left]
-  dsimp
-  intro h_contra
-  contradiction
+  simp [decide_transition, orient_transition, h_breach]
 
 /-- Transition function for Verify stage: monotonic epoch progression on verification pass. -/
 def verify_transition (st : PoodavrState) (verification_passed : Bool) : PoodavrState :=
@@ -96,7 +91,6 @@ def verify_transition (st : PoodavrState) (verification_passed : Bool) : Poodavr
     Passing verification strictly increases the 13D trace causal epoch by 1. -/
 theorem verify_epoch_monotonic (st : PoodavrState) :
     (verify_transition st true).causal_epoch = st.causal_epoch + 1 := by
-  dsimp [verify_transition]
   rfl
 
 /-- F Prime deterministic cycle: Predict -> Observe -> Orient -> Decide -> Act -> Verify -> Reflect -> Predict. -/

@@ -39,14 +39,12 @@ def execute_steal (s : ClusterState) (max_req : Nat) : ClusterState :=
 theorem steal_preserves_task_conservation (s : ClusterState) (max_req : Nat) :
     let s' := execute_steal s max_req
     s'.donor.tasks + s'.thief.tasks = s.donor.tasks + s.thief.tasks := by
-  dsimp [execute_steal]
-  set quota := compute_steal_quota s.donor.tasks max_req
-  have h_le : quota ≤ s.donor.tasks := by
+  have h_le : compute_steal_quota s.donor.tasks max_req ≤ s.donor.tasks := by
     unfold compute_steal_quota
     split
-    · apply Nat.le_trans (Nat.min_le_right max_req (s.donor.tasks / 2))
-      apply Nat.div_le_self
+    · exact Nat.le_trans (Nat.min_le_right _ _) (Nat.div_le_self _ _)
     · exact Nat.zero_le _
+  dsimp [execute_steal]
   omega
 
 /-- THEOREM 2: Steal quota is strictly bounded by half of donor's queue. -/

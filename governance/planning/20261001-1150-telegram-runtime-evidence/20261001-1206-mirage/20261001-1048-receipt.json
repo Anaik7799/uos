@@ -1,0 +1,16 @@
+{
+  "schema": "uos.restoration-browser-observation.v1",
+  "observed_utc_seconds": 1790856391.050063,
+  "status": "HOLD",
+  "url": "http://nas-1.tail55d152.ts.net:49157/mirage",
+  "viewport_width": 390,
+  "source_sha256": "3c6b53f32bc66dd782812ba6904da5c60ee6b512af55c1204b60f5dc6c98c7a9",
+  "elapsed_seconds": 0.470828384,
+  "application_admitted": false,
+  "observations": { "controller_source_unchanged": true },
+  "screenshots": [],
+  "findings": [
+    "browser_exception:Playwright__Api.Error(\"Error: net::ERR_CONNECTION_REFUSED at http://nas-1.tail55d152.ts.net:49157/mirage\\nError: net::ERR_CONNECTION_REFUSED at http://nas-1.tail55d152.ts.net:49157/mirage\\n    at FrameSession._navigate (/home/an/.cache/playwright-ocaml-driver/1.59.0/package/lib/server/chromium/crPage.js:468:13)\\n    at async Frame.gotoImpl (/home/an/.cache/playwright-ocaml-driver/1.59.0/package/lib/server/frames.js:522:28)\")"
+  ],
+  "limits": "One route and viewport. Read-only navigation and local accordion keyboard interaction; no control activation, accessibility certification or global admission. Visual review is separate."
+}

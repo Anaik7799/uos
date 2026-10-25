@@ -1,0 +1,137 @@
+{
+  "schema": "uos.telegram-store-tooling-independent-verification.v1",
+  "observed_at": "2026-10-11T15:33:02Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_VERIFY",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "DEVELOPMENT_COMPONENT_PASS",
+  "runtime_admission": "NOT_GRANTED",
+  "product_receipt": "governance/planning/20261011-1521-telegram-store-final-independent-verification.json",
+  "evidence": [
+    {
+      "sha256": "4e1d6a61dd5fafe57d2e0ae6d80dec26ba12493b976fea4707ee35bd6e946ddd",
+      "path": "tools/validation/telegram_store_recovery_build.ml"
+    },
+    {
+      "sha256": "d6d1cc6211c467eb32e6e7225ca41d271a14556db8f605ad70170304eb71da8d",
+      "path": "tools/validation/telegram_store_recovery_worker.ml"
+    },
+    {
+      "sha256": "e72135af05d3e7157ac8425bfb1282612984da533ffecb792a8a942fd48ea676",
+      "path": "tools/validation/build_recovery_fixtures.sh"
+    },
+    {
+      "sha256": "2294947b30f824ae758fc4ceda0561c29fa74e003369502085fb6a756850f38d",
+      "path": "apps/cepaf_gleam/test/telegram_store_test.gleam"
+    },
+    {
+      "sha256": "06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab",
+      "path": "tools/validation/telegram_store_transport_guardian.exe"
+    },
+    {
+      "sha256": "f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e",
+      "path": "tools/validation/telegram_store_recovery_worker.exe"
+    },
+    {
+      "sha256": "9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5",
+      "path": "tools/telegram_store_transport_guardian.ml"
+    },
+    {
+      "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d",
+      "path": "tools/telegram_store_transport_guardian.exe"
+    },
+    {
+      "sha256": "15db472a25c3526bc70e786212f90a17aef641e298f36ee2f2e679835552d8f6",
+      "path": "var/recovery-runtime/20261011-1526-builder-review/builder-v2.ml"
+    },
+    {
+      "sha256": "45794d4e680a8edac420abfcdec93f80525b393a336c8a54f6abe74542f47bce",
+      "path": "var/recovery-runtime/20261011-1526-builder-review/clean-build-v2-results.txt"
+    },
+    {
+      "sha256": "a362ec365daff833bcc3a63d3a1e9b6ec748d3695d65cd0b65f46533fdfc2afd",
+      "path": "var/recovery-runtime/20261011-1526-builder-review/repeat-build-v2-results.txt"
+    },
+    {
+      "sha256": "4c7aed542d92e7dd71f5dd8b5af3754bfb3169088cf4d246492c8615e80a4c8a",
+      "path": "var/recovery-runtime/20261011-1526-builder-review/rebuilt-guardian-results-v2.txt"
+    },
+    {
+      "sha256": "a7258822576aa2a94f2800f701ed2a6cbdf3dfd9f25940628a19d40d817730e0",
+      "path": "var/recovery-runtime/20261011-1526-builder-review/store-test-results.txt"
+    },
+    {
+      "sha256": "ccbeda49492c8aceeb1a8b3a17c1395e28e8db0e9f35a84c48d0581dd33034b5",
+      "path": "var/recovery-runtime/20261011-1526-builder-review/badpin-results.txt"
+    },
+    {
+      "sha256": "0755b14fa2f17887557cfe5f2389c7f4581a4804200e3da1e3135fd4e9c23d3f",
+      "path": "var/recovery-runtime/20261011-1526-builder-review/unsafe-results.txt"
+    },
+    {
+      "sha256": "bc19411bbd1831a19513fa31c8349d470e7c5e395c0331d6b565e5366e7b7d52",
+      "path": "var/recovery-runtime/20261011-1459-store-recovery-review/unknown_guardian.ml"
+    },
+    {
+      "sha256": "272da0f00fa05717c2b96249bcbc2fc0cfa39f96e385b8c0cf1d1e6a04391e86",
+      "path": "var/recovery-runtime/20261011-1459-store-recovery-review/unknown_guardian.exe"
+    },
+    {
+      "sha256": "ca2918b7e1efea3a0e5ce905d610946f848830097d74f0c06b490046b0342bd2",
+      "path": "governance/planning/20261011-1521-telegram-store-final-independent-verification.json"
+    }
+  ],
+  "results": {
+    "clean_source_build": "PASS",
+    "repeat_same_build": "PASS; identical guardian06a278af and workerf4f249ea hashes",
+    "dedicated_test_outputs": true,
+    "canonical_guardian_unchanged": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d",
+    "rebuilt_guardian_transport_and_witness": 24,
+    "store_in_tree_tests": 31,
+    "corrupt_existing_guardian": "REFUSED before worker/manifest publication",
+    "unsafe_guardian_cache": "REFUSED before writes",
+    "publication": "Atomic rename of completed test binary and manifest; no intrinsic compiler timeout claim"
+  },
+  "test_method": {
+    "source_substitutions": "Private copy changes only root path and /tmp cache prefixes for isolation from concurrent AGY builds. No product or fixture algorithm changes.",
+    "compiler": "Pinned repository realized OCaml/Nix environment, no package installation",
+    "scope": "Actual compiled native workers, OTP and private SQLite; no Telegram network effects"
+  },
+  "preserved_failures": [
+    {
+      "kind": "product_tooling",
+      "evidence": "var/recovery-runtime/20261011-1526-builder-review/repeat-build-results.txt",
+      "cause": "Old builder compiled06a but expectedbd418 on second invocation; corrected dedicated test guardian pin"
+    },
+    {
+      "kind": "root_test_setup",
+      "evidence": "var/recovery-runtime/20261011-1526-builder-review/rebuilt-guardian-results.txt",
+      "cause": "Root file:copy did not preserve executable modes; restored private0755 modes and repeated24tests"
+    },
+    {
+      "kind": "root_test_setup",
+      "cause": "Initial Erlang setup expression lacked space before binary syntax and failed before execution; no mutation; subsequent dependent reads failed and were corrected"
+    },
+    {
+      "kind": "status_reporting",
+      "cause": "AGY self-reported canonical task completion while actual Sa-plan still executing. Root prematurely trusted prose, created STORE_TOOL_FIX and stated preflightPASS before inspecting HOLD. Root corrected portfolio/message immediately; canonical read and ACTIVE_OBSERVATION_PASS15:29:32 restored accurate state. No authority was claimed from HOLD."
+    }
+  ],
+  "remaining": [
+    "Actual canonical AGY STORE_FIX2 completion and administrative reconciliation of redundant STORE_TOOL_FIX task",
+    "SERVICE_IMPL supervision/single-flight/restart uncertainty and staged authority provider adoption",
+    "All remaining Telegram feature/release tasks"
+  ],
+  "limits": [
+    "Development tool only; external Gleam supervisor supplies compiler deadline",
+    "Serialized cooperative same-UID build assumption; no hostile same-UID isolation proof",
+    "Protocol, domain contracts and these tests do not establish production admission"
+  ],
+  "forecast": {
+    "p": 0.7,
+    "horizon": "2026-10-11T15:45:00Z",
+    "event": "Canonical final store verification closure",
+    "status": "PENDING_CANONICAL_CLOSURE"
+  }
+}

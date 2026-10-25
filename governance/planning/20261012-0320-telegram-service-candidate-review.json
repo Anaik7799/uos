@@ -1,0 +1,150 @@
+{
+  "observed_at": "2026-10-12T03:24:37.223Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261012",
+  "attempt": 7,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "method": "Fresh exact-source inspection; current103-test producer count is not independently rerun yet and does not cover the defects below.",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+      "sha256": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+      "sha256": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+      "sha256": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+      "sha256": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+      "sha256": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "9eb32d0a9dd8243d86d2886a5b1a737567db2aabcac12a361a1f70bdfba193be"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "79770e1783b0e3d3c47c2abdddfb48617411417524489601682c10b84d8f4d29"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+      "sha256": "fda20795bc8b79e5232ec0cd0b6667d5f859606c627edd8e9168d3244d549b70"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+      "sha256": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam",
+      "sha256": "3b65fad456d037c67ccbe94933c0a20a568e474ab0048b3e09693d95e3642e5f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+      "sha256": "2319686df1b2cd22d0c75bd92f485eb69e6b86404d540678fcfaaf3f29aaa395"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_test_authority.erl",
+      "sha256": "5db34a3ebf1583b5706ac6f22debc6ccf4883d312286ca22b63983835352bb1b"
+    },
+    {
+      "path": "tools/validation/build_observer.sh",
+      "sha256": "9d887ffc80fa4eb4fa0a869c4ac79aab8671a0fcf8a9fdfb84d3d84617cf626e"
+    }
+  ],
+  "baseline_copy": "var/recovery-runtime/20261012-0320-service-review-baseline",
+  "findings": [
+    {
+      "id": "AUTO-01",
+      "status": "OPEN",
+      "criticality": "critical",
+      "locations": [
+        "telegram_service.gleam:1448",
+        "telegram_service.gleam:1122",
+        "telegram_service.gleam:1797",
+        "telegram_service.gleam:1876",
+        "telegram_service.gleam:1900"
+      ],
+      "evidence": "execute_guarded_dispatch claims processing after the blocking scan without a fresh fence. deliver_chunk commits after a blocking read without a fresh fence. drain_chunks sends HTTP after commit_sending without another fresh fence. Rejection/ambiguous outcome commits have no fresh fence.",
+      "acceptance": "Expire/revoke authority across each blocking stage and assert zero subsequent unauthorized store/network effects on automatic and explicit delivery paths."
+    },
+    {
+      "id": "AUTO-02",
+      "status": "OPEN",
+      "criticality": "critical",
+      "locations": [
+        "telegram_service.gleam:1876",
+        "telegram_service.gleam:1900"
+      ],
+      "evidence": "Automatic drain failure and uncertainty branches still use let _ = store.commit_outcome and return original state; StoreUncertainApply pending operation and committed generation can be lost.",
+      "acceptance": "Inject uncertain outcome-commit on 400 and socket-drop paths; assert exact PendingOperation retained, writer HOLD and no retry. Proven successful commits advance state generation."
+    },
+    {
+      "id": "AUTO-03",
+      "status": "IMPLEMENTED_NOT_VERIFIED",
+      "criticality": "high",
+      "evidence": "dispatch_cycle now scans all paginated inbox rows; terminal-prefix starvation source fix present.",
+      "acceptance": "Pending request beyond at least10 terminal rows is processed; bounded coherent scan and generation change refusal observed."
+    },
+    {
+      "id": "AUTO-04",
+      "status": "IMPLEMENTED_NOT_VERIFIED",
+      "criticality": "high",
+      "evidence": "drain_chunks recurses over all chunks with updated generation; needs real multi-chunk automatic-path observation and recovery controls.",
+      "acceptance": "Deliver >4096-character result as all expected chunks; exact order/identity; final completion only after every delivered result; refusal/uncertainty halts remaining sends."
+    },
+    {
+      "id": "AUTO-05",
+      "status": "FUNCTIONALITY_MISSING",
+      "criticality": "high",
+      "evidence": "Fabricated callback ID removed, but no actual callback query ID is persisted or acknowledged; comment explicitly says AcceptedEnvelope lacks it.",
+      "acceptance": "Preserve actual provider callback ID through admitted ingress/durable state; verify real fixture answerCallbackQuery payload and refusal/uncertainty behavior, with ordinary-message path issuing no callback request."
+    },
+    {
+      "id": "AUTO-06",
+      "status": "OPEN",
+      "criticality": "high",
+      "locations": [
+        "telegram_service.gleam:2080",
+        "telegram_service.gleam:2286"
+      ],
+      "evidence": "Supervisor still adds one child;3/5 budget alone is fixed. AutomaticDispatchTick invokes blocking dispatch_cycle directly inside control actor, preventing timely cancellation/revoke processing.",
+      "acceptance": "Adopted four real authority/store/poller/delivery children with correct rest_for_one ordering and3/5 budget; actual actor remains responsive during blocked store/HTTP; owned cancellation and restart cleanup tested."
+    },
+    {
+      "id": "LIFE-IDENTITY",
+      "status": "IMPLEMENTED_NOT_VERIFIED",
+      "criticality": "critical",
+      "evidence": "Receipt now carries incarnation and service epoch; independent inside-writer, mismatch, one-shot consumption and crash/cleanup tests still required."
+    },
+    {
+      "id": "CONFIG-DEV-BINDING",
+      "status": "RELEASE_BLOCKER",
+      "criticality": "high",
+      "evidence": "default_service_configuration selects SERVICE_IMPL task and hardcodes attempt4/epoch1. Production service needs explicit operational authority configuration; completion of implementation task cannot be production execution authority.",
+      "owner": "Service/GATEWAY integration before release"
+    }
+  ],
+  "next": "AGY repairs AUTO01/02/05/06 under current SERVICE_IMPL8, with targeted regressions. Root independently verifies frozen corrected candidate. Root numeric source adopted separately; no service code edited by review."
+}

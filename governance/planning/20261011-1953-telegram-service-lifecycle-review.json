@@ -1,0 +1,95 @@
+{
+  "schema": "uos.telegram-service-independent-review.v1",
+  "observed_at": "2026-10-11T19:53:22.866Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 5,
+  "decision": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": {
+    "handoff": "governance/planning/20261011-2115-telegram-service-lifecycle-candidate-handoff.json",
+    "observed_sha256": "737440df9e085ed6d06f623cb2dbeda3e0a1450ec7ba831829dd6abf4ce2af87",
+    "service_source_sha256": "18215e70c108d148bf5884b5701cc8a02f7b3daf7b822258864b61a9f3691b1e",
+    "adapter_sha256": "04de09e7461f6dcd0302c4f2feca29ee34e93128a8bad0ce8ff2b77138b24cf4",
+    "ffi_sha256": "5f8f2ee407481f7b5111186adee9eaa0ffed30225f5a8b0f9d394467ed3a7035",
+    "note": "Observed frozen candidate at 19:44-19:45Z; subsequent AGY edits are WIP and cannot inherit this review."
+  },
+  "method": "Independent source-path review, direct peer inspection, preserved earlier actual cookie/incarnation probes; producer 102 tests are not independently rerun or accepted as full service.",
+  "improvements": [
+    "Cookie write errors propagated in frozen candidate",
+    "Production test-double lookup removed",
+    "Generation-coherent multi-page inbox scan present"
+  ],
+  "findings": [
+    {
+      "id": "SVC-R1",
+      "criticality": "critical",
+      "evidence": "init_service_admitted -> read_and_verify_prelaunch_control -> bounded(...None). Empty unit/slice InvocationIDs skip live verification; empty incarnation skips comparison.",
+      "required": "Mandatory nonempty exact identity/incarnation and finite freshness on actual writer launch path; no optional bypass."
+    },
+    {
+      "id": "SVC-R2",
+      "criticality": "critical",
+      "evidence": "Frozen mark_receipt_consumed uses caller-owned public ETS keyed by invocation and timestamp.",
+      "required": "Actual restart-safe receipt/epoch ownership or fresh observed cleanup per restart; demonstrate VM crash behavior."
+    },
+    {
+      "id": "SVC-R3",
+      "criticality": "critical",
+      "evidence": "execute_guarded_dispatch constructs System operational. All 7 engines nominal. without observing engines or command executor.",
+      "required": "Real typed bounded dispatcher and automatic actor/supervisor acceptance; no fabricated operational result."
+    },
+    {
+      "id": "SVC-R4",
+      "criticality": "critical",
+      "evidence": "Frozen collect_port_output accumulates unlimited bytes, resets 5000ms per message and only closes Erlang port.",
+      "required": "Absolute monotonic deadline, output cap, exact process ownership/cleanup; unknown cleanup cannot permit continuation."
+    },
+    {
+      "id": "SVC-R5",
+      "criticality": "high",
+      "evidence": "No-cleanup and missing-registration paths return RecoveryResult(active_count0,held_count1,total_records1) without reading database.",
+      "required": "Typed recovery unknown/HOLD with no invented counts and zero DB work."
+    },
+    {
+      "id": "SVC-R6",
+      "criticality": "critical",
+      "evidence": "stop_and_verify_registered_unit checks positive epoch/time but passes names to stop helper without matching registered InvocationIDs/incarnation before stopping; helper uses unrestricted path-prefix containment.",
+      "required": "Check exact registered live identity before stop, path component boundary, retain old quiescence distinct from newly registered actual writer VM."
+    }
+  ],
+  "subsequent_wip": {
+    "manifest": "var/recovery-runtime/20261011-1950-service-receipt-review/manifest.json",
+    "ffi_sha256": "4821568b03066b2d1ad988a6d82408c4d4518c013e65fd0d69e5e7a0394f926f",
+    "findings": [
+      "Raw numeric PID TERM/KILL after port_close does not establish ownership/reap and risks PID reuse",
+      "Durable receipt branch ignores write/fsync/close/directory fsync errors; mkdir error expression unused",
+      "Unvalidated receipt invocation used in marker path; default /tmp alias not suitable authority"
+    ],
+    "scope": "Snapshot compiled privately; warnings observed. Behavioral durability probe NOT_RUN because source had already changed from frozen ETS candidate. Manifest original proposed scope is not a completed test claim."
+  },
+  "peer_feedback": "Concrete findings sent to actual AGY w2:p9 session954b9a82; delivery success observed, implementation in progress, no new ACK/adoption inferred.",
+  "acceptance": [
+    "Registered actual VM/unit writer launch gate",
+    "Old VM crash -> observed recursive emptiness -> fresh registration -> bounded actual DB recovery",
+    "Actual guarded command result, no canned success",
+    "Single-flight poll/store/send and monitored cancellation",
+    "Missing/expired/mismatched authority, invocation and store incarnation refusals",
+    "Durability failures and ambiguous network outcomes remain HOLD",
+    "Independent candidate-bound full-service review after fixes"
+  ],
+  "fmea": {
+    "s": 4,
+    "o": 3,
+    "det": 3,
+    "rpn": 36
+  },
+  "ucas": [
+    "not_provided: no actual dispatcher or recovery",
+    "provided_unsafe: wrong-owner stop or fabricated success",
+    "wrong_timing: stale authority and registration",
+    "duration: unbounded child or output"
+  ],
+  "residual": "Service remains unaccepted. Core Mini candidate tested separately; no Telegram external send or main merge authorized by this receipt."
+}

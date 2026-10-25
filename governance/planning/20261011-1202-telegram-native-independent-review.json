@@ -1,0 +1,225 @@
+{
+  "schema": "uos.telegram-native-independent-review.v1",
+  "observed_at": "2026-10-11T12:46:02.613Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "NATIVE_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": [
+    {
+      "path": "dune",
+      "sha256": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661"
+    },
+    {
+      "path": "dune-project",
+      "sha256": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7"
+    },
+    {
+      "path": "telegram_store.ml",
+      "sha256": "6ea64096172bf2a6047e7eacc1664ed9f1b05ebdd9371717f6b0fb18092cb9e1"
+    },
+    {
+      "path": "telegram_store_main.ml",
+      "sha256": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc"
+    },
+    {
+      "path": "telegram_store_test.ml",
+      "sha256": "de96f743fb12b912eeea2ec24f10f9dbf153afdf093d74488e36703c43d4a288"
+    },
+    {
+      "path": "20261011-1227-telegram_store_wire_v2.json",
+      "sha256": "576f927c11736c6c9fe7d97fc3d99df7e2dcd65cf4199a03f7428f3c8b068933"
+    }
+  ],
+  "test_execution": {
+    "existing_assertions": 124,
+    "existing_passed": 124,
+    "independent_passed": 5,
+    "independent_failed": 6,
+    "method": "Fresh copied source; pinned dune build/runtest and independent Node standard crypto/framed actual native executable, all through compiled Gleam bounded/3"
+  },
+  "independent_results": [
+    {
+      "name": "valid init",
+      "expectation_met": true,
+      "response": {
+        "ok": true,
+        "generation": 1
+      }
+    },
+    {
+      "name": "wrong typed optional db_path must reject",
+      "expectation_met": false,
+      "response": {
+        "ok": true,
+        "generation": 1,
+        "rows": []
+      }
+    },
+    {
+      "name": "raw malformed UTF8 wire key must reject",
+      "expectation_met": false,
+      "response": {
+        "ok": true,
+        "generation": 1,
+        "rows": [
+          {
+            "key": "�",
+            "exists": false,
+            "version": 0,
+            "canonical_value_base64": "",
+            "sha256": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "wrong typed optional expected_sha256 must reject",
+      "expectation_met": false,
+      "response": {
+        "ok": true,
+        "replay": false,
+        "receipt": {
+          "operation_id": "typedhash",
+          "request_digest": "f16b36eb817f23e15f41822a298358e94f2a4386580a7ad0caef76e9c505f471",
+          "generation": 2,
+          "summary_json": "{}",
+          "committed_utc_us": 1791722725942799
+        }
+      }
+    },
+    {
+      "name": "decoded malformed UTF8 value must reject",
+      "expectation_met": false,
+      "response": {
+        "ok": true,
+        "replay": false,
+        "receipt": {
+          "operation_id": "utf8value",
+          "request_digest": "27d5cf1dcef1b85302ffbf6741595d0160d7b82dddbedc420c9c6ba601228cc6",
+          "generation": 3,
+          "summary_json": "{}",
+          "committed_utc_us": 1791722725951401
+        }
+      }
+    },
+    {
+      "name": "nonJSON summary must reject",
+      "expectation_met": false,
+      "response": {
+        "ok": true,
+        "replay": false,
+        "receipt": {
+          "operation_id": "summary",
+          "request_digest": "e8bb8c875c5e0a20d4e7a9c6c2ac09aacc2b9276d364e4aec09ea600ecf0d8e9",
+          "generation": 4,
+          "summary_json": "NOT_JSON",
+          "committed_utc_us": 1791722725958623
+        }
+      }
+    },
+    {
+      "name": "current UID ancestor world writable must reject",
+      "expectation_met": false,
+      "response": {
+        "ok": true,
+        "generation": 1
+      }
+    },
+    {
+      "name": "independent Node v2 digests differ",
+      "expectation_met": true,
+      "digests": [
+        "ee519f010653867151a3f594db1fdec571ed7357ee44954bd31c0605a123ed91",
+        "1a079121fea48553add856bd05f642f6e998c96d6481ca20d569bd030151a332"
+      ]
+    },
+    {
+      "name": "first independent digest accepted",
+      "expectation_met": true,
+      "response": {
+        "ok": true,
+        "replay": false,
+        "receipt": {
+          "operation_id": "same-operation",
+          "request_digest": "ee519f010653867151a3f594db1fdec571ed7357ee44954bd31c0605a123ed91",
+          "generation": 2,
+          "summary_json": "{}",
+          "committed_utc_us": 1791722725970962
+        }
+      }
+    },
+    {
+      "name": "old colliding change refuses replay",
+      "expectation_met": true,
+      "response": {
+        "ok": false,
+        "error": "operation_collision_digest_mismatch"
+      }
+    },
+    {
+      "name": "same request replays",
+      "expectation_met": true,
+      "response": {
+        "ok": true,
+        "replay": true,
+        "receipt": {
+          "operation_id": "same-operation",
+          "request_digest": "ee519f010653867151a3f594db1fdec571ed7357ee44954bd31c0605a123ed91",
+          "generation": 2,
+          "summary_json": "{}",
+          "committed_utc_us": 1791722725970962
+        }
+      }
+    }
+  ],
+  "evidence": {
+    "directory": "var/recovery-runtime/20261011-1244-native-independent",
+    "script_sha256": "f66cd663721b458c03ca3f96a97e1038e3684d617f1e7177a20fcaa86b15d8c7",
+    "binary_sha256": "8a0b9edac83f7638275fdaeceb48efe371ba43f5a7c18dd0696021cd5160cee7"
+  },
+  "source_findings": [
+    {
+      "id": "N7",
+      "severity": "HIGH",
+      "finding": "Wrong typed optional db_path and expected_sha256 collapse to absent via get_string or s_opt. Exact field whitelist alone does not enforce schemas.",
+      "fix": "Distinguish absent, present with allowed type, and invalid present for every optional field. Refuse before mutation."
+    },
+    {
+      "id": "N8",
+      "severity": "HIGH",
+      "finding": "Yojson accepts malformed raw UTF8; decoded values and summaries are not checked for valid UTF8 JSON.",
+      "fix": "Validate UTF8 scalar bytes and strict JSON syntax, including duplicate keys and special floats/tuple/extensions; retain Gleam ownership of domain schema."
+    },
+    {
+      "id": "N9",
+      "severity": "HIGH",
+      "finding": "check_ancestor_paths checks foreign-writable bits only when st_uid differs from current UID and permits every sticky root directory, rather than exact /tmp exception.",
+      "fix": "Enforce non-foreign-writable permissions for all ancestors irrespective of trusted owner, except exact root-owned sticky /tmp; immediate private directory remains0700."
+    },
+    {
+      "id": "N10",
+      "severity": "HIGH",
+      "finding": "Initialization tx_body exceptions escape without explicit rollback; statement finalization is not protected on all exception/bind failures. Main catch reports generic sqlite_error even for exceptional commit paths.",
+      "fix": "Protect transaction rollback and statement finalize, track commit ambiguity conservatively. Process always closes/reaps before any caller reconciliation."
+    },
+    {
+      "id": "N11",
+      "severity": "HIGH",
+      "finding": "Tests use boolean simulated commit results; no observed process kill within DDL/meta/row transactions or post-COMMIT pre-reply. Required crash acceptance remains UNRUN.",
+      "fix": "Test-only stage hook inaccessible from CLI/JSON/environment, child pipes and SIGKILL barriers at init schema/meta, apply row, precommit and postcommit; reopen old or fully new state/receipt."
+    }
+  ],
+  "limits": [
+    "Physical total directory quota/power-loss proof remain UNKNOWN.",
+    "Source candidate is not admitted; independent failure controls outweigh positive suite count.",
+    "Malformed raw UTF8 response decoded by Node shows replacement character; raw wire acceptance and ok true are observed, not original byte preservation proof."
+  ],
+  "tags": [
+    "#fractal-l3",
+    "#fractal-l5",
+    "#zero-muda"
+  ]
+}

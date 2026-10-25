@@ -1,0 +1,79 @@
+{
+  "observed_at": "2026-10-25T08:32:33.983Z",
+  "plan": "uos/full-merge/20261025-0638",
+  "completed": [
+    "G0_PRESERVE",
+    "G1_ACCEPT"
+  ],
+  "main": "2ab401652a9f2122d58663157821ca7fde909254",
+  "github_readback": true,
+  "local_restore": true,
+  "offhost_restore": true,
+  "divergent_changes": 25,
+  "preserved_variants": 50,
+  "all_code_merged": false,
+  "telegram_runtime_completed": 61,
+  "telegram_runtime_total": 71,
+  "telegram_commands_reachable": 32,
+  "telegram_commands_total": 77,
+  "next": "Final AGY review, main lease, fast-forward source integration, GitHub push and fresh fetch",
+  "risks": [
+    "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
+    "Unmerged branch/evidence inventory",
+    "Live Telegram acceptance and global admission pending",
+    "Expired MINI_API_IMPL claim requires recovery; not actively executing"
+  ],
+  "source": "var/recovery-runtime/20261025-0747-merge-g0",
+  "working_on": "G2_REMAINING: candidate integration verification",
+  "github_verified_at": "2026-10-25T08:17:00Z",
+  "github_new_commits_uploaded": 228,
+  "candidate_trunk_paths_included": 728,
+  "candidate_trunk_paths_keep_main": 4,
+  "candidate_binary_excluded": 1,
+  "checks": {
+    "affected_gleam_passed": 639,
+    "lean_modules_passed": 20,
+    "lean_theorem_closures": 681,
+    "cli_unit_passed": 40,
+    "native_cli_integration": "PASS 2/2; 13 Sa-plan suites and 4 Mirage commands executed",
+    "native_build": "PASS after unused interface functor parameters fix",
+    "mini_http": "PASS health3 + chat15 + routing29",
+    "browser": "PASS mobile+desktop health and chat",
+    "km_provenance": "PASS report-only; admission ceiling93",
+    "source_bindings": 1743
+  },
+  "telegram_admission_completed": 25,
+  "telegram_admission_total": 33,
+  "telegram_plan": [
+    {
+      "step": 1,
+      "task": "Finish mainline consolidation",
+      "purpose": "Establish one tested source baseline",
+      "status": "IN_PROGRESS"
+    },
+    {
+      "step": 2,
+      "task": "Finish Mini App APIs and browser acceptance",
+      "purpose": "Make visible controls reflect actual state and execute authorized actions",
+      "status": "PARTIAL"
+    },
+    {
+      "step": 3,
+      "task": "Complete typed command dispatch and backend adapters",
+      "purpose": "Replace unavailable or unimplemented command paths",
+      "status": "PARTIAL"
+    },
+    {
+      "step": 4,
+      "task": "Implement media and supervised gateway",
+      "purpose": "Support bounded media delivery and reliable secret-safe startup",
+      "status": "PENDING"
+    },
+    {
+      "step": 5,
+      "task": "Run actual Telegram end-to-end tests, independent release and admission review",
+      "purpose": "Prove usable operation on the deployed candidate",
+      "status": "PENDING"
+    }
+  ]
+}

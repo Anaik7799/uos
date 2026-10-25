@@ -1,0 +1,32 @@
+{
+  "observed_at": "2026-10-12T03:52:07.412Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261012",
+  "attempt": 7,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "finding": "AUTO-04",
+  "status_detail": "REPRODUCED_MISSING_RESULT_CHUNKING",
+  "candidate_service_sha256": "9eb32d0a9dd8243d86d2886a5b1a737567db2aabcac12a361a1f70bdfba193be",
+  "trigger": "Seed30 extra tasks in isolated test authority DB; legitimate /saplan query, actual observer and private HTTP service runner.",
+  "expected": "Split bounded result into ordered valid chunks, send all, complete only after every chunk outcome.",
+  "observed": "commit_result_failed: StoreInvariantError(\"result_payload_bound\"); no successful delivery result.",
+  "root_cause": "execute_guarded_dispatch passes [response_payload] as one chunk even though payload bound is4096 bytes. Recursing drain_chunks cannot fix upstream absence of chunking.",
+  "mitigation": "UTF8-safe byte-bounded chunking, declared max16 handling, all chunk completion controls, Unicode/boundary and midstream uncertainty cases.",
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261012-0351-service-multichunk-independent/tests.json",
+      "sha256": "f98a901892951c82ec3a947f61edee331664146da0531bad379fe4de93b4495c"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0351-service-multichunk-independent/cleanup.json",
+      "sha256": "00c5e06f6d190ade0a848a5371cfe9d35360d4b7747e6e6bf96fd6927f53e052"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0351-service-multichunk-independent/package/src/telegram_service_e2e_test.gleam",
+      "sha256": "f523cfa8d7490425de763d6b4b811a987f14696942335c4bbc5889b43bd7ed7e"
+    }
+  ],
+  "scope": "Fresh frozen product compile with private copied dependency cache; test names/code paths adapted; no live Telegram; root0351 owned inventory empty."
+}

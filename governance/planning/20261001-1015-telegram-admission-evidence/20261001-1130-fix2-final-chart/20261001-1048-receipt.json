@@ -1,0 +1,47 @@
+{
+  "schema": "uos.restoration-browser-observation.v1",
+  "observed_utc_seconds": 1790854184.153654,
+  "status": "PASS",
+  "url": "http://nas-1.tail55d152.ts.net:49157/ecology-song",
+  "viewport_width": 1280,
+  "source_sha256": "a70d34f77e938b12da9fec79eb4b7d635aa707de4c471dd6affd2a6ac1b4709c",
+  "elapsed_seconds": 1.572461013,
+  "application_admitted": false,
+  "observations": {
+    "HTTP200_exact_response_URL": true,
+    "response_url": "http://nas-1.tail55d152.ts.net:49157/ecology-song",
+    "http_status": 200,
+    "body_has_content": true,
+    "no_route_fallback": true,
+    "exact_final_URL": true,
+    "visible_route_heading": true,
+    "links_present": true,
+    "one_fixture_disclosure": true,
+    "fixture_explicitly_simulated": true,
+    "fixture_26_bars": true,
+    "checklist_profile": "NOT_APPLICABLE_PRIVATE_CHART_FIXTURE",
+    "body_geometry": {
+      "x": 8.0,
+      "y": 21.4375,
+      "width": 1264.0,
+      "height": 391.21875
+    },
+    "no_page_errors": true,
+    "page_errors": [],
+    "headings": [ "Ecology chart: development fixture" ],
+    "no_forbidden_requests": true,
+    "no_socket_attempts": true,
+    "socket_attempts": 0,
+    "blocked_request_count": 0,
+    "blocked_requests": [],
+    "controller_source_unchanged": true
+  },
+  "screenshots": [
+    {
+      "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-chart/20261001-1048-page.png",
+      "sha256": "c593ef2768283ff70f9c33303edaf117030415912c5b60648700500a9e87e05f"
+    }
+  ],
+  "findings": [],
+  "limits": "One route and viewport. Read-only navigation and local accordion keyboard interaction; no control activation, accessibility certification or global admission. Visual review is separate."
+}

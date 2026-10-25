@@ -1,0 +1,103 @@
+{
+  "schema": "uos.telegram-admission-agy-design-corrected.v1",
+  "observed_at": "2026-10-01T10:53:00Z",
+  "task": "AGY_DESIGN_FIX",
+  "worker": "agy-telegram-admission-20261001",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "attempt": 1,
+  "base": "83dca0394346564356920f066b3924858144107f",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-telegram-admission-20261001",
+  "phase": "DEVELOPMENT_DESIGN_CORRECTION_ONLY",
+  "authority": "Design audit only; implementation follows independently accepted DESIGN_REVIEW2; zero main or runtime mutations",
+  "findings_addressed": [
+    "TG-DESIGN-01: Authenticated numeric (bot_id, chat_id, sender_user_id) origin; private ledger authority",
+    "TG-DESIGN-02: Concrete canonical per-request Sa-plan task lifecycle with immutable server-side binding",
+    "TG-DESIGN-03: Power-loss durability with WAL synchronous=FULL and ordered batch-prefix watermark",
+    "TG-DESIGN-04: Process lock and runtime:telegram-bridge coordinator singleton fencing",
+    "TG-DESIGN-05: Durable outbox responses with chunk identities and UNCERTAIN delivery reconciliation (no blind retry)",
+    "TG-DESIGN-06: Truthful preserved directives (EV-93 ceiling, UNOBSERVED projections, explicit mutation/approval refusal)",
+    "TG-DESIGN-07: Privacy redaction, 0600 ledger permissions, bounded queues, and legacy Zenoh containment",
+    "TG-DESIGN-08: Finite staged operational cutover, durable recovery, and deterministic test falsifiers"
+  ],
+  "architecture_specification": {
+    "tg_design_01_authenticated_origin": {
+      "numeric_identity_rule": "Authentication strictly requires exact numeric triplets: (bot_id: Int, chat_id: Int, sender_user_id: Int). Usernames and first_names are informational display labels only and are never used for authentication decisions.",
+      "unsupported_forms_policy": "Updates lacking an authenticated sender_user_id (channel_post, anonymous admin posts, sender_chat) or un-allowlisted IDs are rejected fail-closed with minimal tombstone logging in SQLite.",
+      "private_ledger_authority": "The private SQLite ledger (state.sqlite3) is the sole authoritative store for identity, message text, and execution state. Zenoh notifications, if enabled, carry only opaque ledger IDs (update_id); content, origin, and leases are resolved strictly from the private ledger.",
+      "callback_policy": "Inline callbacks are authenticated by (chat_id, user_id, message_id, purpose). Unauthenticated callbacks or mutating approval callbacks without reviewed 2oo3 quorum logic refuse execution fail-closed."
+    },
+    "tg_design_02_canonical_per_request_task": {
+      "lifecycle_flow": [
+        "1. Intake: Inbound message assigned deterministic request_id: req-tg-<update_id>-<hash>.",
+        "2. Binding Creation: Service creates an immutable server-side TaskBinding for the request, eliminating process-global environment races.",
+        "3. Sa-plan Task Lifecycle: For direct reads (/tool query_doctor, /tool query_saplan), service checks task state and live coordinator task_resource.",
+        "4. Fenced Execution: direct_read_dispatch evaluates pre-fence, runs read tool with strict {} args, and evaluates post-fence with clock continuity check.",
+        "5. Bound Plan Scope: query_saplan strictly queries the service's configured bound plan (uos/telegram-admission/20261001-1015 or canonical root plan), never arbitrary caller SQL.",
+        "6. Crash Reconciliation: On restart, uncompleted tasks in SQLite are reconciled with Sa-plan states without fabricated completion."
+      ]
+    },
+    "tg_design_03_durability_and_watermark": {
+      "wal_durability": "All database writer connections enforce PRAGMA journal_mode = WAL; and PRAGMA synchronous = FULL;, guaranteeing zero transaction loss across OS crashes or power failures.",
+      "batch_prefix_watermark": "Watermark advances strictly over a fully persisted, ordered prefix of fetched updates. If updates [101, 102, 103] are fetched and 102 fails storage, watermark remains at 101. Next getUpdates offset will be 102.",
+      "rejection_tombstones": "Invalid or unauthorized updates are committed as lightweight REJECTED tombstones in the same transaction, preventing infinite re-fetch loops while preserving watermark monotonicity."
+    },
+    "tg_design_04_singleton_and_fencing": {
+      "coordinator_resource": "runtime:telegram-bridge (valid resource in session_sync.valid_resource), renewed via coordinator heartbeat with epoch fencing.",
+      "process_lock": "Operating system file lock (flock) on var/telegram/bridge.lock ensures single OS process instantiation.",
+      "atomic_claim_transitions": "Conditional SQLite updates serialize claim state: UPDATE telegram_inbox SET status = 'PROCESSING', worker_id = ?, epoch = ? WHERE update_id = ? AND status = 'PENDING'. BEGIN IMMEDIATE spans only localized DB writes, never network IO.",
+      "in_flight_fencing": "If coordinator lease is lost in flight, network dispatch is classified as UNCERTAIN; successor cannot blindly re-dispatch without reconciling previous attempt."
+    },
+    "tg_design_05_durable_outbox_and_uncertainty": {
+      "outbox_schema": "CREATE TABLE IF NOT EXISTS telegram_outbox_ledger (request_id TEXT NOT NULL, chunk_index INTEGER NOT NULL, total_chunks INTEGER NOT NULL, chat_id INTEGER NOT NULL, text_hash TEXT NOT NULL, payload TEXT NOT NULL, status TEXT CHECK(status IN ('PENDING', 'SENDING', 'DELIVERED', 'FAILED', 'UNCERTAIN')), telegram_msg_id INTEGER, attempt_count INTEGER NOT NULL DEFAULT 0, error_detail TEXT, created_at_ms INTEGER NOT NULL, updated_at_ms INTEGER NOT NULL, PRIMARY KEY(request_id, chunk_index));",
+      "send_lifecycle": "Payload committed as PENDING, transitioned to SENDING before invoking BotAPI. On HTTP 200 with ok:true, status becomes DELIVERED. On timeout, connection drop, or HTTP 5xx, status becomes UNCERTAIN.",
+      "no_blind_retry": "Blind retries are barred. Outbound retries require explicit operator authorization and reuse the existing request_id with incremented attempt_count. Already-delivered chunks are never resent."
+    },
+    "tg_design_06_truthful_directives": {
+      "read_directives": {
+        "/doctor_and_/ev": "Reports admitted ceiling EV-93 and explicitly marks EV-94..EV-109 as NOT_ADMITTED.",
+        "/status": "Reports truthful service status; reports UNOBSERVED_RUNTIME for unobserved metrics.",
+        "/storage": "Reports system NVMe serial safety lock [REDACTED_SYSTEM_OS_SERIAL] without claiming unobserved hardware state.",
+        "/checklist": "Reports 18/18 scorecard with live Tailscale FQDN navigation links.",
+        "/plan": "Queries bound Sa-plan tasks truthfully via direct_read_dispatch."
+      },
+      "mutation_containment": {
+        "/approval": "Explicitly refuses execution with truthful message stating authentic 2oo3 quorum workflow is not yet implemented.",
+        "/tool_mutating": "Direct execution refused (-32002); requires 2oo3 constitutional quorum and Sa-plan task lease.",
+        "/zigvm_shell_fallback": "Subprocess shell invocation barred under SC-ZMOF-001; returns truthful bounded refusal."
+      }
+    },
+    "tg_design_07_privacy_and_containment": {
+      "redaction": "Authentication occurs before parsing directives or writing memory. Operational logs contain only numeric IDs and status codes; raw private text is never logged.",
+      "filesystem_permissions": "Private ledger directory var/telegram/ permissions 0700; database file permissions 0600.",
+      "bounded_limits": "Max message length: 4096 bytes; max queue depth: 1000 messages; retention: 7 days with automatic pruning.",
+      "legacy_zenoh_containment": "Legacy shared-key execution and destructive http_delete are permanently disabled. Zenoh serves only as an optional telemetry hint."
+    },
+    "tg_design_08_staged_cutover": {
+      "phase_1_schema": "Execute idempotent SQLite migration for telegram_inbox, telegram_outbox_ledger, and telegram_watermark with WAL FULL sync.",
+      "phase_2_service": "Deploy supervised Gleam telegram_bridge service acquiring runtime:telegram-bridge coordinator lease and process lock.",
+      "phase_3_containment": "Quiesce legacy tools/telegram_client.ml polling; route all BotAPI ingress through Gleam ingress guard.",
+      "phase_4_verification": "Execute deterministic unit test suite and verified positive probes.",
+      "rollback": "Stop Gleam service, release coordinator lease; all pending and delivered ledger entries are preserved; zero data loss."
+    }
+  },
+  "test_falsifiers": [
+    "TF-01 (Identity): Update from allowed username with different numeric sender_user_id is rejected fail-closed.",
+    "TF-02 (Zenoh Ingestion): Injecting valid numeric fields via Zenoh without matching private ledger row produces zero execution.",
+    "TF-03 (Concurrent Leases): Two concurrent requests receive distinct immutable bindings; swapping results or IDs fails.",
+    "TF-04 (Watermark Durability): Ingest batch [100, 101]; fail storage on 100; watermark does not advance past 99.",
+    "TF-05 (Singleton Fencing): Starting two bridge instances admits only the instance with runtime:telegram-bridge lease.",
+    "TF-06 (Uncertain Delivery): Crash after HTTP send before local commit preserves UNCERTAIN without blind resend.",
+    "TF-07 (Preserved Directives): /status and /doctor never report fabricated purity, false counts, or EV > 93.",
+    "TF-08 (Privacy): Secret canary in message text appears nowhere in stdout logs, error traces, or Zenoh topics."
+  ],
+  "proposed_owned_paths": [
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+    "tools/telegram_client.ml",
+    "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+    "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam"
+  ]
+}

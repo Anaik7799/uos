@@ -135,12 +135,7 @@ theorem cocycle_morphism_composition (m1 m2 : TransitionMorphism) :
   m2.isCompatible = true →
   ∃ m3, composeMorphisms m1 m2 = some m3 ∧ m3.isCompatible = true := by
   intro hTarget hComp1 hComp2
-  unfold composeMorphisms
-  rw [if_pos hTarget]
-  refine ⟨_, rfl, ?_⟩
-  dsimp
-  rw [hComp1, hComp2]
-  rfl
+  simp [composeMorphisms, hTarget, hComp1, hComp2]
 
 /-- THEOREM 2: Denotational Safety Soundness -
     Every successfully evaluated declarative intent guarantees constitutional invariant preservation. -/
@@ -160,12 +155,7 @@ theorem denotational_intent_safety (intent : DeclarativeIntent) (state : ChartSt
           cases h : intent.preservesConstitutionalInvariants
           · rw [h] at hConst; contradiction
           · rfl
-        have hHealth' : state.constitutionalHealth >= 85 := by
-          cases h : state.constitutionalHealth < 85
-          · rw [h] at hHealth
-            exact Nat.le_of_not_lt (by decide)
-          · contradiction
-        exact ⟨hConst', hHealth'⟩
+        exact ⟨hConst', Nat.le_of_not_lt hHealth⟩
 
 /-- THEOREM 3: Causal Monotonicity of Denotational Valuation -
     Every successful transition strictly advances the causal epoch. -/

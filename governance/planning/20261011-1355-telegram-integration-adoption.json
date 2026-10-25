@@ -1,0 +1,226 @@
+{
+  "schema": "uos.telegram-integration-adoption.v1",
+  "observed_at": "2026-10-11T13:17:55Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "INTEGRATION_DESIGN",
+  "decision": "ADOPT_FOR_BOUNDED_DEVELOPMENT",
+  "runtime_admission": "NOT_GRANTED",
+  "inputs": [
+    {
+      "path": "governance/planning/20261011-1117-agy-telegram-plan-review.json",
+      "sha256": "a9051b9ac38969b989b7a0d76763ae652f1f7862041d687e4b398ad24791244d"
+    },
+    {
+      "path": "governance/planning/20261011-1302-claude-telegram-surface-plan.json",
+      "sha256": "65428c3d722401d49d13e79b5bae0a4eb78287d3d558a51194ab166692cb7b1e"
+    },
+    {
+      "path": "governance/planning/20261011-1217-telegram-mini-http-audit.json",
+      "sha256": "b291d4637c14f8ce72fdfd1999bd8af4b65e436041933ec031cd2db995925651"
+    },
+    {
+      "path": "governance/planning/20261011-1228-telegram-auth-independent-verification.json",
+      "sha256": "a8ce790734ee5abf5f96a83144df446d30ccc91cbdf31ec903a8af642d0f9949"
+    },
+    {
+      "path": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1215-store-development-adoption.json",
+      "sha256": "33248af1dbaacd6d9fcf42dc341784e65cb431fb952264866985c3c91c9440aa"
+    }
+  ],
+  "architecture": {
+    "owner": "Gleam/OTP owns ingress, offset selection, policy, leases, task/state machines, credentials selection, retries, dispatch and supervision.",
+    "native": "Existing OCaml client is evidence/reusable bounded transport, not independent polling/control authority. New durable kernel exposes fixed transactions only; transport child guardian enforces deadlines.",
+    "routing": "One canonical guarded command dispatcher. Do not choose a backend solely because a NIF facade exists; check actual loaded implementation and verified semantics.",
+    "mini_app": "Unauthenticated static shell is permitted without operational data. Authenticated bounded API validates Telegram initData and allowlisted identity. Sensitive reads and actions are never authorized by query-string identity, unsigned SDK fields or shell visibility.",
+    "effects": "Durable SENDING before HTTP; commit-uncertain must reconcile after writer quiescence. Telegram unknown-send outcome is not blindly retried. Sa-plan task and effect-time fences remain mandatory.",
+    "scope": "All existing advertised Telegram features remain obligations. Explicit unavailable states are safe containment, not successful feature completion."
+  },
+  "existing_tasks": {
+    "STORE_IMPL": "Gleam domain codec and durable consumer over accepted kernel/transport; all corrected adoption invariants.",
+    "STORE_REVIEW": "Independent real native-worker integration tests, recovery/CAS/capacity/result identity.",
+    "SERVICE_IMPL": "Supervised single-poller, guarded canonical authority, durable outbox, bounded HTTP, callback acknowledgment/handling and restart.",
+    "SERVICE_REVIEW": "Independent staged end-to-end ingress/dispatch/outbox/callback and single-owner/refusal observations.",
+    "FORMAL_FIX": "Repair current formal obligations without relabeling unknown/pending gates."
+  },
+  "new_tasks": [
+    {
+      "id": "MINI_API_IMPL",
+      "title": "Implement authenticated Mini App data and actions with exact routes and truthful observed state",
+      "dependencies": [
+        "INTEGRATION_DESIGN",
+        "MINI_AUTH_VERIFY"
+      ],
+      "owner": "AGY",
+      "acceptance": [
+        "Normalize pathname separately from query, exact /mini-app boundary, unknown routes404; no prefix aliases.",
+        "Public static shell exposes no operational data; POST data API validates fresh initData and configured allowlisted user/chat before any backend read.",
+        "Use bounded request body; preserve existing bearer/proof rules outside explicitly typed Mini App route.",
+        "Shared typed Gleam observed/unavailable/stale state for all14 pages; no hardcoded healthy defaults; encode untrusted values safely.",
+        "Actions carry canonical Sa-plan/effect-time proof and request id; stale/replayed/unauthorized actions cause zero effects.",
+        "Accessible18-checkpoint component, full Tailnet navigation, actual action outcomes and no fake all-clear."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "MINI_API_REVIEW",
+      "title": "Independently verify Mini App auth data actions and browser behavior",
+      "dependencies": [
+        "MINI_API_IMPL"
+      ],
+      "owner": "independent Codex/Claude review",
+      "acceptance": [
+        "Independent HMAC fixtures, missing/expired/forged/wrong-user rejection before reads/effects.",
+        "HTTP route404/query/method/body-size tests plus real mobile/desktop browser keyboard/action/screenshot checks.",
+        "SDK blocked/offline, backend absent/stale, runtime loaded versus shim fallback and concurrent-action negatives.",
+        "Candidate byte binding and staged authenticated backend state changes; production and Telegram SDK acceptance separately stated."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "COMMAND_IMPL",
+      "title": "Connect every Telegram command family to one typed guarded dispatcher and actual adapters",
+      "dependencies": [
+        "INTEGRATION_DESIGN",
+        "SERVICE_REVIEW"
+      ],
+      "owner": "AGY",
+      "acceptance": [
+        "One canonical owning dispatcher per77 observed unique command literals; old entrypoints delegate through guard.",
+        "Resolve actual read/control semantics per arm; source effect reachability is not backend proof.",
+        "Typed argv/fixed adapters, no interpolated shell commands from Telegram; /zigvm mutation stays refused until separately authorized action exists.",
+        "Read operations use actual observed services/canonical queries; unloaded NIF shim and unavailable backend return explicit status.",
+        "Implement requested advertised action families with current Sa-plan authority, receipt and effect-time fencing; downgrading to unavailable contains risk but does not count as feature completion.",
+        "Conversation model calls pass identity and budgets before I/O; bounded memory and failure recovery."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "COMMAND_REVIEW",
+      "title": "Independently verify command ownership guard backends conversation and refusals",
+      "dependencies": [
+        "COMMAND_IMPL"
+      ],
+      "owner": "independent Codex/Claude review",
+      "acceptance": [
+        "Per-command positive/negative/recovery matrix and actual adapter evidence; no static-success pass.",
+        "Unauthorized, stale authority, shell metacharacters, duplicate requests, model budget exhaustion and unloaded FFI negative controls.",
+        "Model API failures and no token/private payload reflection; all adapters remain bounded supervised Gleam."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "MEDIA_IMPL",
+      "title": "Implement bounded Telegram media ingestion and delivery from reviewed design",
+      "dependencies": [
+        "MEDIA_DESIGN",
+        "SERVICE_REVIEW",
+        "INTEGRATION_DESIGN"
+      ],
+      "owner": "AGY",
+      "acceptance": [
+        "Source-bound media design adopted before edits; use actual configured backend capabilities.",
+        "Guard before download/model/storage, allowlisted Telegram transport paths, strict type/size/count/deadline limits.",
+        "No credential propagation, attachment execution or prompt-derived tool authorization.",
+        "Durable input/result identity and explicit unsupported/outcome-uncertain responses; photo/document/audio/voice/video coverage as defined by design."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "MEDIA_REVIEW",
+      "title": "Independently verify all adopted Telegram media cases and hostile inputs",
+      "dependencies": [
+        "MEDIA_IMPL"
+      ],
+      "owner": "independent Codex/Claude review",
+      "acceptance": [
+        "Per-type positive, malformed, oversized, timeout, hostile filename/URL/MIME and duplicate tests with synthetic fixtures.",
+        "Actual bounded transport and downstream adapter observations; no real private media copied into artifacts."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "GATEWAY_IMPL",
+      "title": "Replace synthetic Telegram gateway startup and credential-carrying messages with supervised outbox",
+      "dependencies": [
+        "SERVICE_REVIEW",
+        "INTEGRATION_DESIGN"
+      ],
+      "owner": "AGY",
+      "acceptance": [
+        "Remove synthetic startup intent; startup emits only observed service state.",
+        "Bot credential stays in reviewed private transport configuration, never MoZ/Zenoh/task/log payload.",
+        "Critical events use bounded policy-selected outbox requests; explicit capacity/failure/backpressure semantics.",
+        "Preserve broken prototype as historical non-admitted evidence; no separate competing poller path."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "GATEWAY_REVIEW",
+      "title": "Verify Telegram gateway startup secrecy event routing and recovery",
+      "dependencies": [
+        "GATEWAY_IMPL"
+      ],
+      "owner": "independent Codex/Claude review",
+      "acceptance": [
+        "Observe zero synthetic commands, no marker credential in captured bus/log data, correct allowed recipient, bounded failure queue.",
+        "Repeated source events and restart recovery do not create blind duplicate sends."
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "TELEGRAM_E2E",
+      "title": "Verify complete staged Telegram operation and release readiness against current candidate",
+      "dependencies": [
+        "STORE_REVIEW",
+        "SERVICE_REVIEW",
+        "MINI_API_REVIEW",
+        "COMMAND_REVIEW",
+        "MEDIA_REVIEW",
+        "GATEWAY_REVIEW",
+        "FORMAL_FIX"
+      ],
+      "owner": "independent Codex/Claude review",
+      "acceptance": [
+        "Actual private HTTP Telegram simulator plus OTP service and native DB, restart/process death/timeout recovery, single-poller leases and callback acknowledgments.",
+        "Per-feature As-is/To-be/status/risk/mitigation dashboard, current formal/source/runtime obligations and all failures preserved.",
+        "Controlled actual Telegram acceptance only with authorized recipient/message and available credentials; no unsupported external completion claim.",
+        "Independent release/state authority, parent admission checks, then stabilized Jujutsu main integration; no Git mutation or blanket branch merge."
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "review_corrections": [
+    "Claude media marker counts do not establish implementations; MEDIA_DESIGN remains open.",
+    "Claude operational classification is source reachability only, not loaded backend or observed effect.",
+    "Do not silently choose S2 for status/tasks until actual typed adapter semantics are verified.",
+    "Read-only SQLite queries do not themselves mutate task authority, but canonical Sa-plan query interfaces are preferred for current schema/state.",
+    "No evidence supports global admission, SDK acceptance, production deployment or main merge yet."
+  ],
+  "risk": {
+    "criticality": "HIGH",
+    "fmea": {
+      "severity": 4,
+      "occurrence": 3,
+      "detection": 3,
+      "rpn": 36
+    },
+    "ucas": {
+      "not_provided": "Missing replies/control feedback remain visible; bound queues and surface failures.",
+      "provided_unsafe": "Validate identity/canonical authority before backend effects.",
+      "wrong_timing": "Recheck leases and freshness at effect time; release after independent review.",
+      "duration": "Bound jobs, retries, media bytes, retention and duplicate effects."
+    },
+    "residuals": [
+      "Cooperative same-UID trust boundary",
+      "Provider physical durability/WAL quota not yet proven",
+      "Configured live recipient, credentials and external service state unknown"
+    ]
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l5",
+    "#fractal-l9",
+    "#zero-muda"
+  ]
+}

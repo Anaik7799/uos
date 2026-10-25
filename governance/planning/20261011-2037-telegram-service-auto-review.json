@@ -1,0 +1,75 @@
+{
+  "schema": "uos.telegram-service-automatic-path-review.v1",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "attempt": 6,
+  "status": "HOLD",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "method": "Fresh source inspection; no new behavior test claimed by this receipt",
+  "findings": [
+    {
+      "id": "AUTO-01",
+      "criticality": "critical",
+      "function": "execute_guarded_dispatch",
+      "finding": "Authority checked once before store scan, then claim/result/commit_sending/network/callback/completion can execute after blocking reads with no fresh fence.",
+      "mitigation": "Reuse the existing fenced delivery path; refresh authority after blocking observations and before each effect. Test lease expiry/revoke between each stage."
+    },
+    {
+      "id": "AUTO-02",
+      "criticality": "critical",
+      "function": "execute_guarded_dispatch",
+      "finding": "Automatic path converts uncertain store failures to ServiceError(original state); does not retain PendingOperation or enter writer HOLD. Failure/uncertain outcome commits are ignored with let _.",
+      "mitigation": "Reuse typed PendingOperation handling on every uncertain commit, preserve exact operation identity, refuse subsequent writers until actual cleanup/reconciliation."
+    },
+    {
+      "id": "AUTO-03",
+      "criticality": "high",
+      "function": "dispatch_cycle",
+      "finding": "Reads only first10 inbox rows without cursor, filters pending then stops. Ten terminal rows can permanently hide later pending work.",
+      "mitigation": "Bounded generation-coherent cursor scan or indexed pending queue; test more than10 completed rows followed by pending work."
+    },
+    {
+      "id": "AUTO-04",
+      "criticality": "high",
+      "function": "execute_guarded_dispatch",
+      "finding": "Sends only first returned chunk. No drain of remaining chunks; completion attempted with singleton.",
+      "mitigation": "Bounded durable outbox traversal and per-chunk state; test multiple chunks and restart halfway."
+    },
+    {
+      "id": "AUTO-05",
+      "criticality": "high",
+      "function": "execute_guarded_dispatch",
+      "finding": "Fabricates callback ID cb-query- plus request_id and ignores callback result; no captured actual callback identity.",
+      "mitigation": "Persist actual provider callback identity and acknowledge only real callback updates, with bounded truthful outcome."
+    },
+    {
+      "id": "AUTO-06",
+      "criticality": "high",
+      "function": "start_supervised_service / AutomaticDispatchTick",
+      "finding": "One supervisor child with5/10 restart budget differs from adopted four-child rest_for_one3/5; automatic dispatch executes blocking chain inside control actor.",
+      "mitigation": "Implement adopted supervision/serialization and finite automatic loop, or obtain explicit independently reviewed equivalent design amendment. Test actual child failure topology and responsive cancellation."
+    },
+    {
+      "id": "LIFE-IDENTITY",
+      "criticality": "critical",
+      "function": "UnitCleanupReceipt",
+      "finding": "Receipt contains database path and binary hashes but no store incarnation or prior service epoch; new registration verifies current incarnation without relating it to cleanup receipt.",
+      "mitigation": "Bind receipt to actual stopped registered writer, store incarnation and prior epoch. Refuse old receipt after database replacement and unrelated-unit cleanup."
+    }
+  ],
+  "observed_at": "2026-10-11T20:36:38.231Z",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "c260cdf5711f148141fa3dc95139c308df7147d0c90566ca2cb8e2c38037ef87"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "21cb0a72046cfea7f29fe5da4d3384412f01b1e26cf7e6211e76415c95fae360"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+      "sha256": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf"
+    }
+  ]
+}

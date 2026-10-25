@@ -1,0 +1,100 @@
+{
+  "observed_at": "2026-10-01T11:17:29Z",
+  "status": "DEVELOPMENT_ADAPTATION_NOT_ADMISSION",
+  "external_sources_untouched": true,
+  "archive": "governance/sources/20261001-1118-symbiosis-history",
+  "entrypoints": [
+    "GEMINI.md",
+    ".codex/AGENTS.md",
+    ".codex/rules/full-symbiosis.md",
+    ".gemini/AGENTS.md",
+    ".gemini/rules/full-symbiosis.md",
+    ".claude/AGENTS.md",
+    ".claude/rules/full-symbiosis.md",
+    ".agents/AGENTS.md",
+    ".agents/rules/full-symbiosis.md"
+  ],
+  "locally_authored_skills": "governance/agents/20261001-1118-skills",
+  "pointer_changes": [
+    {
+      "path": ".codex/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".codex/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".codex/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".codex/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    },
+    {
+      "path": ".gemini/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".gemini/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".gemini/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".gemini/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    },
+    {
+      "path": ".claude/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".claude/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".claude/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".claude/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    },
+    {
+      "path": ".agents/skills/full-symbiosis",
+      "old": "/home/an/.gemini/config/skills/full-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/full-symbiosis"
+    },
+    {
+      "path": ".agents/skills/gemini-symbiosis",
+      "old": "/home/an/.gemini/config/skills/gemini-symbiosis",
+      "target": "../../governance/agents/20261001-1118-skills/gemini-symbiosis"
+    },
+    {
+      "path": ".agents/skills/production-readiness",
+      "old": "/home/an/.gemini/config/skills/production-readiness",
+      "target": "../../governance/agents/20261001-1118-skills/production-readiness"
+    },
+    {
+      "path": ".agents/skills/ocaml-playwright-control",
+      "old": "/home/an/.gemini/config/skills/ocaml-playwright-control",
+      "target": "../../governance/agents/20261001-1118-skills/ocaml-playwright-control"
+    }
+  ]
+}

@@ -36,7 +36,11 @@ fn make_test_binding() -> dev.Binding {
   )
 }
 
-fn make_test_proposal(call_id: String, tool: String, args: String) -> td.ToolProposal {
+fn make_test_proposal(
+  call_id: String,
+  tool: String,
+  args: String,
+) -> td.ToolProposal {
   td.ToolProposal(call_id, tool, args)
 }
 
@@ -70,11 +74,18 @@ pub fn allowlist_refuses_mutating_tools_test() {
 
   list.each(mutating_tools, fn(tool) {
     let proposal = make_test_proposal("call-mut", tool, "{}")
-    let outcome = direct.dispatch_with_fencer(proposal, binding, dummy_fencer, dummy_executor)
+    let outcome =
+      direct.dispatch_with_fencer(
+        proposal,
+        binding,
+        dummy_fencer,
+        dummy_executor,
+      )
     case outcome {
       td.FencedAndonHalt(code, reason) -> {
         code |> should.equal(-32_001)
-        string.contains(reason, "not in direct read allowlist") |> should.be_true
+        string.contains(reason, "not in direct read allowlist")
+        |> should.be_true
       }
       td.Dispatched(_, _, _) -> panic as "mutating tool must not be dispatched"
     }
@@ -88,8 +99,10 @@ pub fn allowlist_refuses_unknown_tools_test() {
     Ok(dev.Fence(clk, 9_999_999_999_999, 9_999_999_999_999))
   }
   let dummy_executor = fn(_t, _b) { Ok("{}") }
-  let proposal = make_test_proposal("call-unk", "arbitrary_subprocess_exec", "{}")
-  let outcome = direct.dispatch_with_fencer(proposal, binding, dummy_fencer, dummy_executor)
+  let proposal =
+    make_test_proposal("call-unk", "arbitrary_subprocess_exec", "{}")
+  let outcome =
+    direct.dispatch_with_fencer(proposal, binding, dummy_fencer, dummy_executor)
   case outcome {
     td.FencedAndonHalt(code, reason) -> {
       code |> should.equal(-32_001)
@@ -123,7 +136,8 @@ pub fn argument_validation_refuses_blank_and_whitespace_only_test() {
     case direct.validate_tool_proposal(proposal) {
       Error(td.FencedAndonHalt(code, reason)) -> {
         code |> should.equal(-32_000)
-        string.contains(reason, "strictly requires empty JSON object") |> should.be_true
+        string.contains(reason, "strictly requires empty JSON object")
+        |> should.be_true
       }
       _ -> panic as "blank/whitespace-only arguments must be rejected"
     }
@@ -137,7 +151,8 @@ pub fn argument_validation_refuses_primitives_test() {
     case direct.validate_tool_proposal(proposal) {
       Error(td.FencedAndonHalt(code, reason)) -> {
         code |> should.equal(-32_000)
-        string.contains(reason, "strictly requires empty JSON object") |> should.be_true
+        string.contains(reason, "strictly requires empty JSON object")
+        |> should.be_true
       }
       _ -> panic as "JSON primitives must be rejected"
     }
@@ -151,7 +166,8 @@ pub fn argument_validation_refuses_arrays_test() {
     case direct.validate_tool_proposal(proposal) {
       Error(td.FencedAndonHalt(code, reason)) -> {
         code |> should.equal(-32_000)
-        string.contains(reason, "strictly requires empty JSON object") |> should.be_true
+        string.contains(reason, "strictly requires empty JSON object")
+        |> should.be_true
       }
       _ -> panic as "JSON arrays must be rejected"
     }
@@ -159,22 +175,26 @@ pub fn argument_validation_refuses_arrays_test() {
 }
 
 pub fn argument_validation_refuses_non_empty_object_test() {
-  let proposal = make_test_proposal("call-args-1", "query_doctor", "{\"filter\":\"all\"}")
+  let proposal =
+    make_test_proposal("call-args-1", "query_doctor", "{\"filter\":\"all\"}")
   case direct.validate_tool_proposal(proposal) {
     Error(td.FencedAndonHalt(code, reason)) -> {
       code |> should.equal(-32_000)
-      string.contains(reason, "strictly requires empty JSON object") |> should.be_true
+      string.contains(reason, "strictly requires empty JSON object")
+      |> should.be_true
     }
     _ -> panic as "non-empty args must be rejected"
   }
 }
 
 pub fn argument_validation_refuses_malformed_json_test() {
-  let proposal = make_test_proposal("call-args-2", "query_doctor", "{not-valid-json")
+  let proposal =
+    make_test_proposal("call-args-2", "query_doctor", "{not-valid-json")
   case direct.validate_tool_proposal(proposal) {
     Error(td.FencedAndonHalt(code, reason)) -> {
       code |> should.equal(-32_000)
-      string.contains(reason, "strictly requires empty JSON object") |> should.be_true
+      string.contains(reason, "strictly requires empty JSON object")
+      |> should.be_true
     }
     _ -> panic as "malformed json must be rejected"
   }
@@ -227,12 +247,20 @@ pub fn pre_fence_failure_halts_closed_test() {
   }
   let dummy_executor = fn(_t, _b) { Ok("{}") }
 
-  let outcome = direct.dispatch_with_fencer(proposal, binding, failing_pre_fencer, dummy_executor)
+  let outcome =
+    direct.dispatch_with_fencer(
+      proposal,
+      binding,
+      failing_pre_fencer,
+      dummy_executor,
+    )
   case outcome {
     td.FencedAndonHalt(code, reason) -> {
       code |> should.equal(td.andon_halt_unauthorized_code)
-      string.contains(reason, "Authority fence failed before observation") |> should.be_true
-      string.contains(reason, "task_role_attempt_lease_or_dependency_fence") |> should.be_true
+      string.contains(reason, "Authority fence failed before observation")
+      |> should.be_true
+      string.contains(reason, "task_role_attempt_lease_or_dependency_fence")
+      |> should.be_true
     }
     td.Dispatched(_, _, _) -> panic as "pre-fence failure must halt closed"
   }
@@ -255,14 +283,18 @@ pub fn post_fence_failure_discards_observation_test() {
   }
   let dummy_executor = fn(_t, _b) { Ok("{\"doctor\":\"healthy\"}") }
 
-  let outcome = direct.dispatch_with_fencer(proposal, binding, flaky_fencer, dummy_executor)
+  let outcome =
+    direct.dispatch_with_fencer(proposal, binding, flaky_fencer, dummy_executor)
   case outcome {
     td.FencedAndonHalt(code, reason) -> {
       code |> should.equal(td.andon_halt_unauthorized_code)
-      string.contains(reason, "Authority fence failed after observation") |> should.be_true
-      string.contains(reason, "coordinator_lease_expired_after_observation") |> should.be_true
+      string.contains(reason, "Authority fence failed after observation")
+      |> should.be_true
+      string.contains(reason, "coordinator_lease_expired_after_observation")
+      |> should.be_true
     }
-    td.Dispatched(_, _, _) -> panic as "post-fence failure must discard output and halt closed"
+    td.Dispatched(_, _, _) ->
+      panic as "post-fence failure must discard output and halt closed"
   }
 }
 
@@ -271,12 +303,20 @@ pub fn post_fence_failure_discards_observation_test() {
 // =============================================================================
 
 pub fn execute_harness_tool_mutations_refuse_test() {
-  let mutating = ["resuscitate_node", "chaos_inject", "rotate_keys", "storage_rebalance"]
+  let mutating = [
+    "resuscitate_node",
+    "chaos_inject",
+    "rotate_keys",
+    "storage_rebalance",
+  ]
   list.each(mutating, fn(tool) {
     let res = cognitive_worker.execute_harness_tool(tool, "{}")
     res |> should.be_error
     let assert Error(msg) = res
-    string.contains(msg, "unavailable: live 2oo3 constitutional consensus executor not connected")
+    string.contains(
+      msg,
+      "unavailable: live 2oo3 constitutional consensus executor not connected",
+    )
     |> should.be_true
     string.contains(msg, "simulated mutation barred") |> should.be_true
   })
@@ -286,7 +326,8 @@ pub fn execute_harness_tool_zigvm_subprocess_barred_test() {
   let res = cognitive_worker.execute_harness_tool("invoke_zigvm", "{}")
   res |> should.be_error
   let assert Error(msg) = res
-  string.contains(msg, "arbitrary subprocess execution prohibited") |> should.be_true
+  string.contains(msg, "arbitrary subprocess execution prohibited")
+  |> should.be_true
 }
 
 pub fn execute_harness_tool_static_diagnostics_report_unobserved_test() {
@@ -390,8 +431,10 @@ pub fn repeat_observation_is_idempotent_test() {
     Ok(doctor_projection.project() |> doctor_projection.to_json)
   }
 
-  let outcome1 = direct.dispatch_with_fencer(proposal, binding, dummy_fencer, dummy_executor)
-  let outcome2 = direct.dispatch_with_fencer(proposal, binding, dummy_fencer, dummy_executor)
+  let outcome1 =
+    direct.dispatch_with_fencer(proposal, binding, dummy_fencer, dummy_executor)
+  let outcome2 =
+    direct.dispatch_with_fencer(proposal, binding, dummy_fencer, dummy_executor)
 
   case outcome1, outcome2 {
     td.Dispatched(id1, name1, res1), td.Dispatched(id2, name2, res2) -> {
@@ -510,7 +553,8 @@ pub fn launcher_env_rejects_harness_fallback_test() {
 // =============================================================================
 
 pub fn evaluate_task_window_rejects_direct_read_role_test() {
-  let binding = make_test_binding() // role is "direct_read"
+  let binding = make_test_binding()
+  // role is "direct_read"
   // development.evaluate_task_window strictly requires role == "development".
   let res =
     dev.evaluate_task_window(
@@ -690,7 +734,10 @@ pub fn evaluate_task_window_accepts_valid_development_lease_test() {
 pub fn live_canonical_positive_probe() {
   let binding = case direct.load_direct_binding() {
     Ok(b) -> b
-    Error(err) -> panic as { "Live probe failed: launcher binding missing/invalid: " <> err }
+    Error(err) ->
+      panic as {
+        "Live probe failed: launcher binding missing/invalid: " <> err
+      }
   }
 
   // 1. Dispatch real query_doctor under live authority
@@ -699,28 +746,44 @@ pub fn live_canonical_positive_probe() {
     td.Dispatched(id, name, result_json) -> {
       id |> should.equal("live-doc-probe")
       name |> should.equal("query_doctor")
-      string.contains(result_json, "\"admitted_ev_ceiling\":93") |> should.be_true
-      string.contains(result_json, "\"doctor_status\":\"UNOBSERVED_RUNTIME\"") |> should.be_true
+      string.contains(result_json, "\"admitted_ev_ceiling\":93")
+      |> should.be_true
+      string.contains(result_json, "\"doctor_status\":\"UNOBSERVED_RUNTIME\"")
+      |> should.be_true
       string.contains(result_json, "\"zero_muda\":null") |> should.be_true
       io.println("PASS: Live canonical query_doctor dispatched successfully!")
     }
     td.FencedAndonHalt(code, reason) ->
-      panic as { "Live query_doctor failed with code " <> string.inspect(code) <> ": " <> reason }
+      panic as {
+        "Live query_doctor failed with code "
+        <> string.inspect(code)
+        <> ": "
+        <> reason
+      }
   }
 
   // 2. Dispatch real query_saplan under live authority
-  let saplan_proposal = td.ToolProposal("live-saplan-probe", "query_saplan", "{}")
+  let saplan_proposal =
+    td.ToolProposal("live-saplan-probe", "query_saplan", "{}")
   case direct.dispatch(saplan_proposal) {
     td.Dispatched(id, name, result_json) -> {
       id |> should.equal("live-saplan-probe")
       name |> should.equal("query_saplan")
-      string.contains(result_json, "\"plan_id\":\"" <> binding.plan <> "\"") |> should.be_true
+      string.contains(result_json, "\"plan_id\":\"" <> binding.plan <> "\"")
+      |> should.be_true
       string.contains(result_json, "\"total_tasks\":13") |> should.be_true
       string.contains(result_json, "\"tasks\":") |> should.be_true
-      io.println("PASS: Live canonical query_saplan dispatched successfully (13 tasks observed)!")
+      io.println(
+        "PASS: Live canonical query_saplan dispatched successfully (13 tasks observed)!",
+      )
     }
     td.FencedAndonHalt(code, reason) ->
-      panic as { "Live query_saplan failed with code " <> string.inspect(code) <> ": " <> reason }
+      panic as {
+        "Live query_saplan failed with code "
+        <> string.inspect(code)
+        <> ": "
+        <> reason
+      }
   }
 
   io.println("PASS: ALL LIVE CANONICAL POSITIVE PROBES PASSED")
@@ -773,5 +836,7 @@ pub fn main() {
   evaluate_task_window_rejects_expired_deadline_test()
   evaluate_task_window_accepts_valid_development_lease_test()
 
-  io.println("PASS: ALL 32 DETERMINISTIC DIRECT READ DISPATCH UNIT TESTS PASSED")
+  io.println(
+    "PASS: ALL 32 DETERMINISTIC DIRECT READ DISPATCH UNIT TESTS PASSED",
+  )
 }

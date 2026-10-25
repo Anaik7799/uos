@@ -1,0 +1,133 @@
+{
+  "schema": "uos.telegram-store-fix.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1400",
+  "observed_at": "2026-10-11T14:00:41Z",
+  "status": "COMPLETED_ALL_11_DEFECTS_RESOLVED_TESTS_GREEN",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store_codec.gleam": "fe9343b7d5c315e474e165d88dc4357f13eb5338a28e0341043d63431c0c5c2d",
+    "telegram_store.gleam": "6f2d5e0602784dd0a4fc3fb22b45c880ce347c301adc52f9597929ef4fb04c9c",
+    "telegram_store_test.gleam": "6a65a7aff3716e48c5dd98adf7eeca978cb401e90eab16b1577955768b98b745",
+    "telegram_delivery_ledger.gleam": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9"
+  },
+  "verification_results": {
+    "independent_review_tests": {
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "findings": {
+        "singleton_wrong_bot": false,
+        "later_group_collision_commits": false,
+        "known_replay_rejected": false,
+        "partial_bootstrap_cannot_resume": false,
+        "other_worker_can_mark_sending": false,
+        "negative_generation_accepted": false,
+        "malformed_receipt_accepted": false,
+        "malformed_row_accepted": false,
+        "error_reflects_private_marker": false,
+        "invalid_state_panics": false,
+        "absence_declared_without_quiescence": false
+      }
+    },
+    "telegram_store_test": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "tests": [
+        "golden_digest_parity_test",
+        "base64_and_row_invariants_test",
+        "initialize_and_bootstrap_test",
+        "atomic_prefix_commit_test",
+        "cas_and_read_set_concurrency_test",
+        "maximal_16_chunk_result_atomic_test",
+        "sending_and_outcome_lifecycle_test",
+        "uncertainty_reconciliation_test",
+        "recovery_model_invariants_test",
+        "finding1_singleton_and_directive_validation_test",
+        "finding2_batch_bounds_and_known_replay_test",
+        "finding3_backend_error_whitelist_and_decoder_invariants_test",
+        "finding5_capacity_reservation_accounting_test",
+        "finding6_resumable_bootstrap_interrupted_init_test",
+        "authority_binding_and_worker_mismatch_test",
+        "panic_free_typed_errors_test"
+      ]
+    },
+    "telegram_delivery_ledger_test": {
+      "total": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "telegram_ingress_guard_test": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    "total_telegram_tests_passed": 59,
+    "tools_preflight": "31/31 PASS",
+    "risk_priority_check_active_check": "PASS (0 findings)"
+  },
+  "defects_repaired": [
+    {
+      "id": 1,
+      "name": "singleton_wrong_bot",
+      "fix": "Enforced item.bot_id == bot_id check on all representative and constituent updates in validate_group_identity, preventing singletons from bypassing bot identity."
+    },
+    {
+      "id": 2,
+      "name": "later_group_collision_commits",
+      "fix": "Prevalidated all update groups up front prior to committing the first group in commit_prefix, preventing partial commits on batch identity collision."
+    },
+    {
+      "id": 3,
+      "name": "known_replay_rejected",
+      "fix": "Looked up inbox record via read_keys when update_id < current_watermark to admit matching known replay via zero-delta apply rather than rejecting."
+    },
+    {
+      "id": 4,
+      "name": "partial_bootstrap_cannot_resume",
+      "fix": "Intercepted db_already_exists error during initialize_store, inspecting metadata rows to idempotently complete initial bootstrap."
+    },
+    {
+      "id": 5,
+      "name": "other_worker_can_mark_sending",
+      "fix": "Read and verified durable auth/<request_id> row in commit_result, commit_sending, and commit_outcome, binding auth key in read_set assertions and enforcing matching worker and epoch."
+    },
+    {
+      "id": 6,
+      "name": "negative_generation_accepted",
+      "fix": "Enforced generation > 0 in decode_initialize_new_response, decode_read_keys_response, decode_read_inbox_index_response, and receipt_decoder."
+    },
+    {
+      "id": 7,
+      "name": "malformed_receipt_accepted",
+      "fix": "Enforced non-empty operation_id, valid 64-hex request_digest, generation > 0, valid JSON summary, and committed_utc_us > 0 in receipt_decoder."
+    },
+    {
+      "id": 8,
+      "name": "malformed_row_accepted",
+      "fix": "Validated every row decoded in decode_read_keys_response against validate_row_result, rejecting corrupt row states."
+    },
+    {
+      "id": 9,
+      "name": "error_reflects_private_marker",
+      "fix": "Filtered backend error strings through is_whitelisted_backend_error; unwhitelisted strings (e.g. SYNTHETIC_PRIVATE_MARKER) map to 'unwhitelisted_backend_error'."
+    },
+    {
+      "id": 10,
+      "name": "invalid_state_panics",
+      "fix": "Eliminated all 7 panics across telegram_store.gleam, returning typed StoreInvariantError on invalid outbox/inbox states and invalid workers/epochs."
+    },
+    {
+      "id": 11,
+      "name": "absence_declared_without_quiescence",
+      "fix": "reconcile_uncertain defaults to writer_quiesced = False returning ReconciledUnknown('writer_quiescence_unproven'); ReconciledAbsent requires explicit quiescence proof."
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "uos.telegram-mini-auth-fix.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "MINI_AUTH_FIX",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "observed_model": "gemini-3.8-flash-high",
+  "timestamp": "20261011-1212",
+  "status": "DRAFT_SUPERSEDED_BY_20261011-1225-CORRECTION",
+  "linked_correction": "governance/planning/20261011-1225-agy-mini-auth-correction.json",
+  "runtime_admission": "NOT_GRANTED",
+  "source_edits": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "sha256": "ed9edd582428694502281ca48d809aac6ddd2f813ac521f45b120a23b6eb194a",
+      "role": "Hardened Telegram Mini App authentication module"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_auth_golden_test.gleam",
+      "sha256": "d5e3ccf513f12c45e05f225ead86c8b78cf16c82641cf594ba6944ce72438867",
+      "role": "Comprehensive 33-test golden and negative verification suite"
+    }
+  ],
+  "independent_review_verification": {
+    "review_artifact": "governance/planning/20261011-1210-telegram-mini-auth-independent-review.json",
+    "synthetic_token": "123456789:synthetic-test-token-not-a-real-credential",
+    "golden_signed_vector_status": "PASS_AUTHENTICATED",
+    "empty_hash_forgery_status": "PASS_REJECTED_AS_INVALID_HASH",
+    "future_auth_date_status": "PASS_REJECTED_AS_EXPIRED_DATA",
+    "negative_now_status": "PASS_REJECTED_AS_EXPIRED_DATA"
+  },
+  "test_execution_summary": {
+    "total_tests": 68,
+    "tests_passed": 68,
+    "tests_failed": 0,
+    "suites": [
+      {
+        "suite": "telegram_auth_golden_test",
+        "passed": 33,
+        "failed": 0,
+        "cases": [
+          "auth_independent_review_golden_vector_test",
+          "auth_empty_hash_forgery_rejected_test",
+          "auth_short_hash_rejected_test",
+          "auth_long_hash_rejected_test",
+          "auth_non_hex_hash_rejected_test",
+          "auth_wrong_signature_rejected_test",
+          "auth_uppercase_hash_accepted_test",
+          "auth_duplicate_keys_rejected_test",
+          "auth_encoded_duplicate_key_rejected_test",
+          "auth_malformed_percent_rejected_test",
+          "auth_nul_byte_rejected_test",
+          "auth_crlf_injection_rejected_test",
+          "auth_error_nonreflection_test",
+          "auth_combining_mark_oversized_test",
+          "auth_huge_user_id_rejected_test",
+          "auth_plus_as_space_test",
+          "auth_unicode_name_test",
+          "auth_invalid_user_id_zero_test",
+          "auth_invalid_language_code_test",
+          "auth_freshness_valid_test",
+          "auth_freshness_exact_boundary_test",
+          "auth_freshness_future_rejected_test",
+          "auth_freshness_negative_now_rejected_test",
+          "auth_freshness_negative_max_age_rejected_test",
+          "auth_freshness_negative_skew_rejected_test",
+          "auth_freshness_skew_exceeds_max_rejected_test",
+          "auth_freshness_max_age_exceeds_policy_rejected_test",
+          "auth_freshness_time_overflow_rejected_test",
+          "auth_freshness_expired_rejected_test",
+          "auth_validate_fresh_valid_test",
+          "auth_validate_fresh_future_rejected_test",
+          "auth_validate_fresh_expired_rejected_test",
+          "auth_clock_skew_tolerance_test"
+        ]
+      },
+      {
+        "suite": "telegram_mini_app_test",
+        "passed": 35,
+        "failed": 0,
+        "regression_status": "ZERO_REGRESSIONS"
+      }
+    ]
+  },
+  "fixes_applied": [
+    "Byte size enforcement: string.byte_size is used for all payload ceilings (init_data <= 4096 bytes, bot_token <= 256 bytes, user_json <= 4096 bytes), preventing bypasses using grapheme clusters with thousands of combining marks.",
+    "Safe integer bounding: user.id, now_unix, and auth_date are strictly bounded to max_safe_integer (9007199254740991, 2^53 - 1). Negative numbers, zero IDs, and overflow values fail closed.",
+    "Policy ceilings: max_age_seconds is bounded to max_allowed_max_age (86400s / 24h), and skew_tolerance_seconds is bounded to max_allowed_skew (60s). Out-of-bounds policies fail closed.",
+    "Zero error reflection: Error messages return fixed static strings ('malformed parameter format', 'malformed percent encoding', 'duplicate parameter key', etc.). No query tokens, input values, or keys are reflected in errors.",
+    "Strict parameter key validation: Decoded parameter keys must be short ASCII identifiers matching [a-zA-Z0-9_] (1 to 64 bytes). Keys with CR, LF, NUL, or delimiters fail immediately.",
+    "Parameter value sanitization: Parameter values must not contain CR, LF, or NUL, preventing newline-injection in the sorted key=value check string.",
+    "User field validation: first_name (1-256 bytes, no CR/LF/NUL), username (0-256 bytes, no CR/LF/NUL), and language_code (2-16 ASCII lowercase letters and hyphens).",
+    "Duplicate key detection on decoded values: Rejects both plain duplicate keys (auth_date=1&auth_date=2) and encoded duplicates (auth_date=1&%61uth_date=2).",
+    "Byte-correct hex encoding: bit_array_to_hex uses recursive 8-bit binary pattern matching (<<byte:8, rest:bits>>) with high/low nibble mapping, eliminating flawed UTF-8 conversion that previously forced digest to empty string.",
+    "Constant-time comparison: Compares 64-character lowercase hexadecimal BitArrays using crypto.secure_compare.",
+    "Strict 64-hex expected hash validation: Expected hash must be exactly 64 hexadecimal characters. Empty, truncated, or non-hex hashes immediately return InvalidHash without HMAC evaluation.",
+    "Application/x-www-form-urlencoded compliance: '+' is translated to space before percent-decoding parameter keys and values.",
+    "API compatibility: validate/2 remains signature-only for backwards compatibility; validate_fresh/4 and validate_fresh_with_skew/5 provide integrated signature and freshness validation."
+  ],
+  "process_and_provenance_notes": {
+    "execution_harness": "cepaf_gleam@harness@development:bounded/3 under OTP 29 uos_env",
+    "compilation_strategy": "gleam compile-package in isolated recovery runtime, beams linked directly into dev ebin",
+    "tooling_truth": "Source edits were written via direct agent write tools (write_to_file, replace_file_content) and file inspections were performed via direct read/grep tools; compilations and test suite executions were mediated by the OTP 29 development:bounded Erlang harness. ZERO Python executed."
+  }
+}

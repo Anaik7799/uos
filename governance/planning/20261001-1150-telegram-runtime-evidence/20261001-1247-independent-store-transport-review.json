@@ -1,0 +1,97 @@
+{
+  "schema": "uos.independent-store-transport-review.v1",
+  "observed_utc": "2026-10-01T12:47:52Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "STORE_TRANSPORT_REVIEW",
+  "attempt": 1,
+  "verdict": "PASS_SCOPED_DEVELOPMENT_TRANSPORT",
+  "application_admitted": false,
+  "production_changed": false,
+  "source_and_binary_manifest": [
+    {
+      "path": "tools/telegram_store_transport_guardian.ml",
+      "sha256": "9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+      "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9"
+    },
+    {
+      "path": "tools/validation/telegram_store_transport_fixture.ml",
+      "sha256": "8957b7cca9ff29f0f31c80028bf6231e0211a12ffee6e83266d82077f1c73697"
+    },
+    {
+      "path": "tools/validation/telegram_store_transport_test.erl",
+      "sha256": "d93204a1ce1b5fede355bbe01e8bc0de5589ed3aa0d761173dea802654e376db"
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "d4d4dfc204d815fa23617d70ac0d4779cf8c86119ca6d89948c52cca5c1f6210"
+    },
+    {
+      "path": "var/recovery-runtime/20261001-1238-store-transport/guardian",
+      "sha256": "08ff5d388d2b73a93ab5008b4ebe9819c3b8945253a96d9bea8db8c896535918"
+    },
+    {
+      "path": "var/recovery-runtime/20261001-1238-store-transport/fixture",
+      "sha256": "6714aed10b649a2cc7d69dec00f18e98110ceff4a907ae9c2de0147acab9aae9"
+    }
+  ],
+  "scope": "All five owned sources read. Exact transport framing/configuration/deadline and cooperative owned process-group cleanup reviewed. Actual native SQLite worker and JSON/domain codec are separate.",
+  "findings": [],
+  "checks": {
+    "framing": "Unsigned32 big-endian nonempty body<=1048572; exact response length; no trailing bytes; aggregate output<=1048576; UTF8 and exit0 required.",
+    "deadline": "Monotonic5000ms begins before config hashing; remaining budget given guardian; success later than original deadline refused. Cleanup has separate500ms bound and outer5700ms watch returns CleanupUnknown.",
+    "cleanup": "Leader retained unreaped while group receives SIGKILL; /proc zombie observation handles descendants retaining stdout; direct child reaped. Parent monitor closes owned port on caller death. Exceptions return finite uncertain/cleanup-unknown codes.",
+    "configuration": "Absolute local paths without dot/dotdot/NUL, executable regular single-link size<=16MiB, SHA256 verified each invocation. Trusted local configuration is not IAM or runtime authority.",
+    "isolation": "MAX65536 and ETS8192 source dependencies independently hashed unchanged; storage facade separate."
+  },
+  "independent_execution": {
+    "command": "ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -pa var/recovery-runtime/20261001-1238-store-transport -eval 'code:add_paths(filelib:wildcard(\"apps/cepaf_gleam/build/dev/erlang/*/ebin\")),case eunit:test(telegram_store_transport_test,[verbose]) of ok->halt();_->halt(1)end.'",
+    "result": "18/18 PASS",
+    "fixed_deadline_seconds": 5.011,
+    "transcript": "20261001-1247-independent-store-transport-tests.txt",
+    "scope": [
+      "EOF-dependent echo completes",
+      "maximum1048576 framed request/response",
+      "body1048573 rejected before spawn",
+      "empty input rejected",
+      "truncated response",
+      "trailing response/private marker redacted",
+      "output flood",
+      "invalid UTF8 output",
+      "nonzero worker exit",
+      "hash mismatch",
+      "five-second fixed deadline under output drip",
+      "descendant cleanup on normal leader exit",
+      "trailing input",
+      "truncated input deadline",
+      "oversized header",
+      "actual typed Gleam constructor/exchange",
+      "timeout process-group cleanup",
+      "caller-death process-group cleanup"
+    ]
+  },
+  "limitations": [
+    "Tests use compiled EOF-sensitive fixture, not native SQLite; no canonical DB writes or Telegram traffic occurred.",
+    "Success body remains untrusted domain input until strict codec validation. No automatic retry.",
+    "Uncertain does not certify that no operation committed or that cleanup completed. Native worker must be observed quiescent before receipt lookup/reconciliation; CleanupUnknown remains a hold.",
+    "Only direct child is reaped; descendants deliberately creating sessions require service cgroup. No hostile same-UID filesystem/path isolation claim.",
+    "Caller-death test uses100ms delay and absence of delayed marker, not explicit child-start acknowledgement or exhaustive PID census. Source monitor/EOF path inspected; this is bounded cooperative evidence, not exhaustive lifecycle proof.",
+    "No physical quota, power-loss durability, actual native-worker compatibility, service release or global admission proved."
+  ],
+  "preserved_evidence": "Author first14PASS/1FAIL descendant marker and repaired final18PASS transcript retained. Independent rerun adds evidence without replacing them.",
+  "tags": [
+    "#fractal-l3",
+    "#zero-muda"
+  ]
+}

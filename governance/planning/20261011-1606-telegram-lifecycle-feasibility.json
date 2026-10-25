@@ -1,0 +1,73 @@
+{
+  "schema": "uos.telegram-private-lifecycle-feasibility.v1",
+  "observed_at": "2026-10-11T16:17:06Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "scope": "Independent private systemd lifecycle feasibility; not a production cleanup receipt or admitted implementation",
+  "registration": {
+    "path": "var/recovery-runtime/20261011-1616-systemd-lifecycle-probe",
+    "observed_at": "2026-10-11T16:15:45.851Z",
+    "nonce": "7ff3f157a8ea0faf",
+    "unit": "uos-tg-store-test-7ff3f157a8ea0faf.service",
+    "slice": "app-uos_tg_test_7ff3f157a8ea0faf.slice",
+    "scope": "Fresh private lifecycle feasibility test; no database worker; exact owned identities only; no production unit mutation",
+    "worker": "codex-telegram-20261011",
+    "task": "SERVICE_DRAFT_REVIEW",
+    "attempt": 1
+  },
+  "pre_state": {
+    "unit": "not-found/inactive/no InvocationID",
+    "slice": "loaded/inactive/no InvocationID"
+  },
+  "slice_invocation": "430d7947659e4138bbef142cee94f882",
+  "unit_invocation": "79bec061e7744a4e8740b91f02a405bf",
+  "observations": [
+    {
+      "operation": "Explicit start fresh private slice",
+      "exit": 0,
+      "result": "active; exact slice InvocationID and ControlGroup observed"
+    },
+    {
+      "operation": "Start exact registered private service in slice",
+      "exit": 0,
+      "result": "active/running; Description UOS-private-review-7ff3f157a8ea0faf; ExecStart /usr/bin/sleep20; observed PID3190004; configured RuntimeMaxSec30,MemoryMax16M,TasksMax8,CPUQuota10%"
+    },
+    {
+      "operation": "Read dedicated parent cgroup.events while service running",
+      "result": "populated1 frozen0"
+    },
+    {
+      "operation": "systemctl --user stop exact owned service",
+      "exit": 0
+    },
+    {
+      "operation": "Observe after stop",
+      "result": "service inactive/dead,Resultsuccess,InvocationIDempty,ControlGroupempty; parent slice still active with SAME InvocationID and cgroup path"
+    },
+    {
+      "operation": "Read retained dedicated parent cgroup.events",
+      "result": "populated0 frozen0"
+    },
+    {
+      "operation": "Stop only exact owned private slice",
+      "exit": 0
+    }
+  ],
+  "conclusions": [
+    "Explicitly started private parent slice retains cgroup.events after child unit removal; supports actual recursive empty observation after manager stop completion.",
+    "Worker InvocationID must be captured before stop; it was cleared in inactive result. Parent slice InvocationID remained stable until explicit slice cleanup.",
+    "A normal arbitrary file is not evidence: derive canonical cgroup path and exact owned association from registered manager objects, never caller path."
+  ],
+  "limits": [
+    "Only sleep worker tested; real SQLite guardian association/durable registration, VM-death recovery and descendant-kill falsifier still required.",
+    "No production unit, Herdr unit, existing application unit, Telegram endpoint or database was touched.",
+    "No claim that systemctl uses cgroup.kill internally; only observed stop exit and recursive parent emptiness.",
+    "Registration file is experiment metadata, not implemented durable production protocol."
+  ],
+  "clock_note": "Receipt written after private unit and slice both observed inactive; this timestamp is observed host clock at evidence recording.",
+  "evidence": {
+    "path": "var/recovery-runtime/20261011-1616-systemd-lifecycle-probe/observations.json",
+    "sha256": "dbb8ca718944766b58a25ee268567ecc3aee9a35141097005efb5ee6d5107b75"
+  }
+}

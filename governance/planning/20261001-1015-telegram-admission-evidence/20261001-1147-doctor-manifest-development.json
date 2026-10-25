@@ -1,0 +1,34 @@
+{
+  "schema": "uos.doctor-manifest-repair.v1",
+  "observed_at": "2026-10-01T11:47:19Z",
+  "task": "DOCTOR_FIX",
+  "source_hashes": [
+    {
+      "path": "tools/uos/src/main.gleam",
+      "sha256": "6f1801c0315a83f179bbaf586617267a1d7a7a09d6078d3faf1587db4c8450c1"
+    },
+    {
+      "path": "tools/uos/test/doctor_manifest_truth_test.gleam",
+      "sha256": "3def9f6d209b60720ed7efcc6723c313f4ce5aef352937b1a42b747d85831ba3"
+    }
+  ],
+  "status": "DEVELOPMENT_TESTED_PENDING_REVIEW",
+  "changes": [
+    "Nonempty all-INVENTORY predicate required forscopedPASS; no0/0success",
+    "Pure parser rejects invalid/nonpositive/noncanonical EV numbers, duplicate IDs, malformed fields and unsafe artifactpaths",
+    "Above93NOT_ADMITTED and unknown/missing artifacts still failclosed",
+    "Injected observer allows isolatedtests; canonical manifest untouched"
+  ],
+  "tests": {
+    "focused_cli": 26,
+    "actual_missing_manifest_exit": 1,
+    "logs": [
+      "var/recovery-runtime/20261001-1147-doctor-tests.log",
+      "var/recovery-runtime/20261001-1147-doctor-missing-manifest.log"
+    ]
+  },
+  "limits": [
+    "InventoryPASS is not admission",
+    "Global source/runtime/formal obligations remainHOLD"
+  ]
+}

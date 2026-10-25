@@ -1,0 +1,124 @@
+{
+  "schema": "uos.telegram-store-fix2-candidate.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1421",
+  "observed_at": "2026-10-11T14:21:00Z",
+  "status": "CANDIDATE_DELIVERED_OPEN_ATTEMPT",
+  "task_lifecycle": "executing (PRESERVED OPEN for independent root and Codex STORE_DRAFT_REVIEW)",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store.gleam": "fca8610b850a9aab11990966acd3dd4bfddc45553c7b9d78e48f79dc4b44c9e9",
+    "telegram_store_codec.gleam": "f93275892ac06b24e4d15d4e108a8e6701a88cb3b340250096319ddbf2428d05",
+    "telegram_store_codec_ffi.erl": "6864cfa0fafeaff7dab5d78666646b875b3af470f441254e589b3789c0c9782b",
+    "telegram_store_test.gleam": "cc35ebe4b507b86e492be2da3c937e7926404902f0068bb5bb2df8c3d5d3d53b",
+    "telegram_delivery_ledger.gleam": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "telegram_store_transport_ffi.erl": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+  },
+  "verification_results": {
+    "store_boundary_tests": {
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "findings": {
+        "watermark_regression_via_forged_value": false,
+        "zero_user_accepted": false,
+        "invalid_text_hash_accepted": false,
+        "rejected_reason_collision_accepted": false,
+        "invalid_domain_record_accepted": false,
+        "duplicate_response_keys_accepted": false,
+        "unknown_response_field_accepted": false
+      }
+    },
+    "store_independent_tests": {
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "findings": {
+        "singleton_wrong_bot": false,
+        "later_group_collision_commits": false,
+        "known_replay_rejected": false,
+        "partial_bootstrap_cannot_resume": false,
+        "other_worker_can_mark_sending": false,
+        "negative_generation_accepted": false,
+        "malformed_receipt_accepted": false,
+        "malformed_row_accepted": false,
+        "error_reflects_private_marker": false,
+        "invalid_state_panics": false,
+        "absence_declared_without_quiescence": false,
+        "forged_recipient_claim": false,
+        "forged_recipient_result": false,
+        "forged_payload_send": false,
+        "stale_pending_reenters_sending": false,
+        "forged_recipient_outcome": false,
+        "caller_bool_mints_quiescence": false,
+        "normal_lifecycle_1": false,
+        "normal_lifecycle_16": false
+      }
+    },
+    "telegram_store_test": {
+      "total": 17,
+      "passed": 17,
+      "failed": 0
+    },
+    "telegram_delivery_ledger_test": {
+      "total": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "telegram_ingress_guard_test": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    "total_telegram_tests_passed": 60,
+    "risk_priority_check_active_check": "PASS (0 findings)"
+  },
+  "defects_repaired_in_fix2": [
+    {
+      "id": 1,
+      "name": "watermark_regression_via_forged_value",
+      "mechanism": "Enforced files.digest(codec.encode_watermark_value(current_wm)) == current_wm_sha and current_wm_version > 0 in commit_prefix before any group processing."
+    },
+    {
+      "id": 2,
+      "name": "zero_user_and_forged_envelope_invariants",
+      "mechanism": "Added validate_verdict_structure checking valid_update_id, valid_positive_id(message_id), valid_chat_id(chat_id), valid_positive_id(user_id), valid_digest(text_hash), valid_text(raw_text), and digest(raw_text) == hash on all accepted envelopes across all batches."
+    },
+    {
+      "id": 3,
+      "name": "rejected_reason_collision_accepted",
+      "mechanism": "In commit_prefix replay path (rep_uid < watermark), query both inbox and input rows; verify verdicts_match(stored_verdict, rep) AND stored_inbox.status == proposed.status; assert read_set on both keys."
+    },
+    {
+      "id": 4,
+      "name": "invalid_domain_record_accepted",
+      "mechanism": "In decode_inbox_record and inbox_status_decoder, enforce canonical request_id == tg-bot-upd, valid worker/epoch, positive IDs, valid hex digest, and non-empty reasons."
+    },
+    {
+      "id": 5,
+      "name": "duplicate_response_keys_and_unknown_fields",
+      "mechanism": "Implemented telegram_store_codec_ffi:parse_strict/1 using OTP 29 json:decode with duplicate-key trapping, depth limit 64, trailing-garbage detection, and exact allowed field set verification in parse_response_root."
+    },
+    {
+      "id": 6,
+      "name": "forged_recipient_and_payload_invariants",
+      "mechanism": "Enforced files.digest of encoded records matching expected row SHA across claim_task_processing, commit_result, commit_sending, and commit_outcome, binding auth row in read sets."
+    },
+    {
+      "id": 7,
+      "name": "caller_bool_mints_quiescence",
+      "mechanism": "Ignored caller-supplied boolean in reconcile_uncertain_quiesced, returning ReconciledUnknown('writer_quiescence_unproven') whenever lookup is not found."
+    },
+    {
+      "id": 8,
+      "name": "aggregate_reservation_accounting",
+      "mechanism": "commit_task_completion returns exactly remaining_receipts = 61 - 2*n_chunks (rows: 0, receipts: -remaining_receipts), achieving 0 reserved rows and 0 reserved receipts for both 1-chunk and 16-chunk lifecycles."
+    }
+  ]
+}

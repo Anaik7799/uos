@@ -263,3 +263,13 @@ pub fn zenoh_jidoka_and_topic_test() {
   should.be_true(string.contains(event, "-32002"))
   should.be_true(string.contains(event, "SC-JIDOKA-001"))
 }
+
+pub fn aspect_catalog_does_not_claim_runtime_admission_test() {
+  list.all(sa_plan_bridge.all_17_aspects(), fn(a) {
+    a.status == "DeclaredUnverified"
+  })
+  |> should.be_true()
+  sa_plan_bridge.serialize_aspects_json()
+  |> string.contains("DeclaredUnverified")
+  |> should.be_true()
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "uos.development-design-adoption.v1",
+  "observed_at": "2026-10-01T11:37:19Z",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "reviewed_spec": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1153-reviewer-corrected-service-spec.json",
+  "reviewed_spec_sha256": "7d4d1916486c64c652af9a61e7dd713b1ef0440afd4f9a3920e2f9e9d64133d3",
+  "adopter": "codex-telegram-admission-20261001",
+  "author": "independent Codex reviewer",
+  "status": "ACCEPTED_FOR_BOUNDED_DEVELOPMENT_ONLY",
+  "observations": [
+    "Root inspected current session_sync: Register and Session provider remain String; membership currently claude/codex/agy; extension must preserve old wire encodings and replay",
+    "session_authority.run prepends canonical DB and verifies existing store; run_at supports isolated tests",
+    "No live service provider registered or effectful adapter admitted"
+  ],
+  "scope": [
+    "Typed Service provider validation plus existing wire compatibility, isolated registration/replay/refusal tests",
+    "Pure protocol argument builders and strict response decoders, missing injected risk adapter refuses",
+    "No Telegram HTTP, production DB/coordinator/task mutation, runtime startup, consumer integration or release"
+  ],
+  "remaining": "Pure ingress/ledger still under HOLD; durable IO and actual service lifecycle separately required; whole service design not globally admitted"
+}

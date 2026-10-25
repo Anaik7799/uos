@@ -6,9 +6,9 @@ pub fn unknown_gate_returns_exit_code_1_test() {
   |> should.equal(1)
 }
 
-pub fn known_gate_returns_exit_code_0_test() {
+pub fn artifact_gate_cannot_claim_verification_test() {
   execute(Gate("G-CHECKLIST"))
-  |> should.equal(0)
+  |> should.equal(1)
 }
 
 pub fn doctor_returns_exit_code_1_when_unverifiable_cycles_exist_test() {

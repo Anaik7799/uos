@@ -1,0 +1,229 @@
+{
+  "artifact": "uos.telegram.service_lifecycle_review.v1",
+  "author_session": "claude-telegram-lifecycle-20261012",
+  "task": {
+    "plan_id": "uos/telegram-runtime/20261001-1150",
+    "task_id": "SERVICE_LIFECYCLE_REVIEW",
+    "parent": "SERVICE_DRAFT_REVIEW",
+    "actor": "claude-telegram-lifecycle-20261012",
+    "attempt": 1,
+    "lease_until_ns": "1791779061523055517",
+    "lease_duration_ns": "1800000000000",
+    "preflight": "PREFLIGHT_PASS 2026-10-12T03:54:10Z, 0 findings, P1/768",
+    "active_check_pre_work": "ACTIVE_OBSERVATION_PASS 2026-10-12T03:54:32Z, 0 findings",
+    "portfolio_row": "idx 70 -> executing, 24->24 fields, exactly 1 entry changed; all other rows preserved",
+    "coordinator": {
+      "register_seq": 632,
+      "claim_seq": 633,
+      "epoch": 1,
+      "resource": "task:SERVICE_LIFECYCLE_REVIEW"
+    }
+  },
+  "scope": "Source read-only architecture review. No product edit, no runtime effect, no test executed by me. Advisory only; grants no system admission.",
+  "verdict": "REVIEW_DELIVERED_ADVISORY",
+  "admission": "NOT_GRANTED",
+  "source_hashes_observed": {
+    "note": "Hashes are what I actually read. The candidate MOVED between root's falsifier runs and this review; see drift.",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam": "a76febfcdc73ad5e4f92d82b0817c8b4d587fe53031e621979a99d428a6a2d9f",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam": "a5c4602ddc37410afad653b838c81f0c3b0bd63ee07a42c9743d8603fa0b4b27",
+    "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf"
+  },
+  "candidate_drift": {
+    "root_falsifiers_ran_against": "service 9eb32d0a..., lifecycle 79770e..., ffi 88dfdaf",
+    "i_read": "service a76febfc, lifecycle a5c4602d, ffi 88dfdafc (ffi agrees)",
+    "consequence": "The service and lifecycle adapter are DIFFERENT BYTES from the ones the four falsifiers reproduced against. I therefore assert neither that those falsifiers still reproduce nor that they are fixed. Every statement below is bound to the hash I read. AGY is actively on SERVICE_IMPL attempt 8, so further drift during this review is expected.",
+    "method_rule": "A finding stated against a path rather than a hash is worthless while a candidate is moving. This is the same discipline correction recorded earlier in this plan."
+  },
+  "observed_improvements_on_current_bytes": [
+    {
+      "id": "IMP-1",
+      "observation": "UnitCleanupReceipt is `pub opaque` (adapter:28) and is CONSTRUCTED only inside the adapter at :1059 and :1210. No public constructor and no public decoder is exported; only field accessors (:444-488) and encode (:492).",
+      "significance": "The forgery path named in root's LIFE-IDENTITY root cause - a public test receipt constructor copying caller DB and epoch - is NOT present in a5c4602d. This looks like a real repair, not a relabel.",
+      "not_verified": "I did not trace that :1059 and :1210 are each reachable ONLY after an actually observed unit stop. That is the remaining question for this line, and it is test obligation TO-1.",
+      "RETRACTED": {
+        "retraction": "IMP-1 IS WITHDRAWN. I concluded the forgery path was closed because the export listing showed no `pub fn` returning a receipt. That inference was wrong.",
+        "what_is_actually_true": "The receipt is minted by a PUBLIC function whose enclosing signature takes the store_db_path and service_epoch as CALLER-SUPPLIED parameters: at adapter a5c4602d ~1036 the minting path calls compute_store_incarnation(store_db_path) where store_db_path is a parameter, and the receipt is constructed at :1059 with those caller values. Opacity of the type does not constrain the inputs of the function that mints it.",
+        "my_error_class": "I reasoned from an export LISTING to a conclusion about REACHABILITY and input provenance, without reading the minting function's signature. This is the same fault recorded repeatedly in this plan: an observable (the list of pub fns returning the type) coarser than the property (can a caller choose what goes into the receipt). Root caught it.",
+        "consequence": "LIFE-IDENTITY is NOT addressed on these bytes. Every statement I made about it being 'a real repair, not a relabel' is withdrawn."
+      }
+    },
+    {
+      "id": "IMP-2",
+      "observation": "lifecycle.mark_receipt_consumed(receipt) is called on the admission path (service, within 380-446) and a failure yields ServiceWriterHold(\"cleanup_receipt_already_consumed_or_reused\").",
+      "significance": "Single-use enforcement now exists. Replay of a valid receipt is addressed."
+    },
+    {
+      "id": "IMP-3",
+      "observation": "A separate prelaunch control registration exists: write_prelaunch_control (:147), read_and_verify_prelaunch_control (:163) and a _bounded variant (:182), with store incarnation computed from disk (compute_store_incarnation, :845) and compared against the registration (:264-266), plus registration age bounds (:254-255) and a non-empty incarnation check (:244).",
+      "significance": "This is the D5 correction I recommended earlier - registration OUTSIDE the target database, verified against on-disk incarnation - and it is now present."
+    },
+    {
+      "id": "IMP-4",
+      "observation": "ServiceMessage now carries PollWorkerFinished and DeliveryWorkerFinished, with 14 occurrences of worker-finished or spawn in the service module.",
+      "significance": "Blocking work has been moved off the control actor into worker processes. That addresses the synchronous-blocking-handler half of AUTO-06 and of my earlier F8R."
+    }
+  ],
+  "insufficient_or_outstanding": [
+    {
+      "id": "INS-1",
+      "title": "Supervisor has ONE child where the adopted architecture requires FOUR real roles.",
+      "evidence": "telegram_service.gleam a76febfc lines 2340-2343: static_supervisor.new(static_supervisor.RestForOne) |> restart_tolerance(intensity: 3, period: 5) |> add(child) |> start(). Exactly one add/1.",
+      "assessment": "Strategy (RestForOne) and tolerance (3/5) now MATCH the adopted design, which is progress and should be credited. The child count does not. AUTO-06 is therefore still open on these bytes, narrowed from 'wrong strategy and wrong count' to 'wrong count only'.",
+      "explicit_warning": "Do not close this by adding three children that exist only to be counted. A supervised child whose failure cannot be caused, observed or recovered is a dummy, and four dummies are worse than one honest child because they make a conformance check pass while the restart semantics remain untested."
+    },
+    {
+      "id": "INS-2",
+      "title": "Prior-writer association is still the open question, independent of the forgery path being closed.",
+      "evidence": "Root's reproduction states the admission allowed prior epoch <= current and matched only the incarnation, without an exact prior registered writer association. On a5c4602d I observe strict epoch equality against the control registration (adapter:200, expected_epoch > 0 && reg.service_epoch == expected_epoch), which is the right shape for the registration check, but I did NOT find the check that binds the RECEIPT to the writer that the registration names.",
+      "assessment": "Closing the constructor and adding single-use does not by itself answer 'was the stopped thing the writer that held this store?'. A receipt for a real stop of an UNRELATED registered unit would still need to be refused, and I could not confirm that check exists.",
+      "status": "UNRESOLVED IN MY READING. Stated as a gap in my observation, not asserted as a defect in the code."
+    },
+    {
+      "id": "INS-3",
+      "title": "First-bootstrap and crash-without-registration are not visibly distinguished.",
+      "evidence": "service a76febfc:349-379: cleanup_receipt None yields ServiceWriterHold('unquiesced_in_flight_operation_detected_without_cleanup_receipt: writer unknown').",
+      "assessment": "Failing closed on None is correct. But the falsifier's mechanism was a DEFAULT epoch of 1 standing in for 'no prior writer'. Unless first boot is its own explicit state, any default value for 'no prior' is a forgeable stand-in for 'prior existed and was stopped'. See the contract below."
+    },
+    {
+      "id": "INS-4",
+      "title": "AUTO-01, AUTO-02 and AUTO-04 are not assessed on these bytes.",
+      "evidence": "Root reproduced all three against 9eb32d0a: authority expiry after read still committing a processing claim and after commit_sending still performing an HTTP send; lost pending operation after native uncertainty; and a >4096-byte /saplan result passed as ONE chunk so commit_result failed with result_payload_bound.",
+      "assessment": "I did not re-derive these on a76febfc within this bounded review. AGY reports ownership, chunk and fence repairs; that is an unverified claim and I treat all three as OPEN. In particular AUTO-04's root cause is upstream absence of chunking, which a recursing drain cannot fix, so the repair must be visible as a chunker, not as a loop."
+    },
+    {
+      "id": "INS-5",
+      "title": "The executable gate is a path-substring heuristic and is defeated by the canonical BEAM, so it cannot establish prior-writer identity.",
+      "evidence": "adapter a5c4602d lines 360-385: the unit is refused if exec_path contains \"tail\" or \"sleep\", and refused unless exec_path contains \"beam\" or \"erl\". Line 610 defines canonical_beam_exe = \"/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl\", whose path CONTAINS \"erl\" and does not contain \"tail\" or \"sleep\". A canonical BEAM started with -eval timer:sleep(...) therefore passes BOTH gates while being an unrelated process. That is exactly the executable root's falsifier used.",
+      "sharper_point": "canonical_beam_sha256 is already defined at line 613. A content digest of the executable is therefore AVAILABLE and the gate does not use it. But even a correct digest would not fix this: proving the stopped process was a BEAM does not prove it was THE WRITER THIS STORE HAD. Executable identity is the wrong property to measure.",
+      "assessment": "This is the same defect shape as the whole session: a check whose observable is coarser than the property it is believed to enforce. Substring on a path is coarser than binary identity, and binary identity is itself coarser than predecessor-writer association."
+    }
+  ],
+  "contract_prior_writer_association_and_first_bootstrap": {
+    "principle": "Admission must answer two different questions with two different mechanisms, and must never let a default value answer either. (1) Was there a prior writer? (2) If so, is THIS receipt the receipt for THAT writer's stop? A single epoch integer with a default cannot answer both.",
+    "receipt_required_fields": [
+      "stopped unit name and slice name",
+      "unit invocation id and slice invocation id",
+      "cgroup path",
+      "store_db_path",
+      "store_incarnation_id as computed from the store at stop time",
+      "prior_registered_writer_id: the identity recorded in the control registration that was ACTIVE immediately before the stop",
+      "prior_service_epoch: that registration's epoch, with NO default and NO zero or one fallback",
+      "worker_hash and guardian_hash",
+      "stopped_at_us and exit_status"
+    ],
+    "admission_requires_all_of": [
+      "A1 A control registration exists and is readable, bounded, and within its age window.",
+      "A2 receipt.store_db_path equals the configured store path.",
+      "A3 receipt.store_incarnation_id equals compute_store_incarnation(store) evaluated NOW. An incarnation change invalidates every prior receipt.",
+      "A4 receipt.prior_registered_writer_id equals the writer id named by the active control registration. THIS is the association that the falsifier defeated. A receipt from a real stop of a different unit must fail here.",
+      "A5 receipt.prior_service_epoch EQUALS the registration's service_epoch exactly. Strict equality only; a <= comparison admits any lower epoch including a default, which is the precise mechanism of the reproduction.",
+      "A6 the new service_epoch equals prior_service_epoch + 1. Monotone by exactly one, so two services cannot both admit from one receipt.",
+      "A7 the receipt is unconsumed, and is marked consumed atomically with admission, so a crash between check and mark cannot yield a second admission. mark_receipt_consumed exists; the ATOMICITY with admission is the part to verify.",
+      "A8 worker_hash and guardian_hash match the configured binaries, with an EMPTY expected hash treated as a configuration ERROR and never as a wildcard.",
+      "A9 if any of A1-A8 cannot be evaluated, the result is ServiceWriterHold with the specific unmet condition named. Unknown is never clean."
+    ],
+    "first_bootstrap_is_a_distinct_state": {
+      "rule": "FirstBootstrap is admissible ONLY when there has demonstrably never been a writer for this store incarnation. It is not expressible as a receipt and must not be reachable by supplying a default epoch.",
+      "conditions_all_required": [
+        "B1 no control registration exists for this store path.",
+        "B2 the store contains ZERO in-flight rows: no InboxProcessing, no OutboxSending, no pending operation.",
+        "B3 the store incarnation is recorded into a NEW control registration as part of the same admission, at service_epoch 1.",
+        "B4 if B1 holds but B2 does not, the outcome is HOLD, not FirstBootstrap. A store with in-flight work and no registration is an unexplained prior writer, which is exactly the case that must never clear."
+      ],
+      "why_this_closes_the_falsifier": "The reproduction worked because a dummy sleeper with NO registration, plus a caller-supplied default epoch 1, was indistinguishable from a legitimate prior writer at epoch 1. Under A4 and A5 the dummy fails association and strict epoch equality; under B1-B4 'no prior writer' has its own state with its own evidence and cannot be reached by a default."
+    },
+    "A4_strengthened": {
+      "supersedes": "A4 as originally written ('receipt.prior_registered_writer_id equals the writer id named by the active control registration')",
+      "why": "A caller who can supply the store path and the epoch can also supply a matching writer id string. A field compared against a value the caller already knows is not an association.",
+      "requirement": "The predecessor binding must rest on something the CALLER CANNOT CHOOSE and CANNOT GUESS, produced by the predecessor itself and verifiable by the successor. Concretely, ALL of:",
+      "conditions": [
+        "A4a The ACTIVE control registration, written by the predecessor at ITS start and not by the stopping caller, records the predecessor's unit invocation id and slice invocation id as systemd issued them. The successor reads those from the registration, NOT from the receipt.",
+        "A4b The receipt's unit invocation id and slice invocation id must EQUAL the ones in that registration. Invocation ids are issued by systemd per start and are not caller-chosen, so this is the first value in the chain the caller does not control.",
+        "A4c The stop must be observed by the successor's own bounded systemctl observation of THAT invocation id, not accepted as a reported field. A receipt asserting a stop is a claim; the successor must confirm the invocation is gone.",
+        "A4d The store_db_path and store_incarnation_id in the receipt must equal the ones in the REGISTRATION, so the caller cannot retarget the receipt at a different store by passing a different path. Today the path flows from the caller into the incarnation computation, which makes that check self-satisfying.",
+        "A4e The service_epoch must come from the REGISTRATION and not from the receipt. The receipt may carry it for cross-checking, but the authoritative value is the one the predecessor wrote. An epoch supplied by the caller must never be the thing a comparison is made against.",
+        "A4f If the registration is absent, FirstBootstrap conditions B1-B4 govern. There is no path where a receipt substitutes for an absent registration."
+      ],
+      "falsification_target": "Under A4a-A4e the canonical BEAM sleeper fails at A4b, because it never wrote a registration and therefore has no matching invocation id, regardless of which executable it ran, which store path it was handed, or which epoch number it supplied."
+    }
+  },
+  "contract_four_real_role_supervisor": {
+    "principle": "Four children because there are four genuinely different failure domains and four different restart consequences. If a role cannot be failed independently and observed recovering, it is not a role.",
+    "order_matters": "RestForOne restarts the failed child and every child started AFTER it. The order below is therefore load-bearing, not cosmetic.",
+    "children_in_start_order": [
+      {
+        "position": 1,
+        "role": "R1 Lifecycle and writer-admission guardian",
+        "owns": "prelaunch control registration, store incarnation computation, cleanup-receipt verification per the contract above, writer HOLD state.",
+        "failure_consequence": "If R1 dies, writer admission is no longer vouched for, so R2, R3 and R4 must all restart and re-admit. Placing it first makes that automatic.",
+        "must_not": "perform HTTP or long store scans."
+      },
+      {
+        "position": 2,
+        "role": "R2 Authority and control owner",
+        "owns": "the fence: current owner, attempt, epoch, lease; serialized decisions; re-fencing immediately before each effect.",
+        "failure_consequence": "R3 and R4 restart; R1 survives because the admission is still valid.",
+        "must_not": "block on network or on store scans. This is where AUTO-01 lives: the fence must be re-read after every blocking stage and before every separate store or network effect."
+      },
+      {
+        "position": 3,
+        "role": "R3 Inbox acquisition",
+        "owns": "bounded generation-coherent cursor traversal of the inbox, its own deadline, and the pending-work queue it publishes.",
+        "failure_consequence": "R4 restarts; the fence and admission survive.",
+        "addresses": "AUTO-03: a fixed first-ten-rows read with no cursor can hide later pending work permanently."
+      },
+      {
+        "position": 4,
+        "role": "R4 Outbox delivery",
+        "owns": "per-chunk delivery state, the chunker, bounded HTTP effects via the reviewed transport, and per-chunk outcome commits including uncertainty.",
+        "failure_consequence": "restarts alone; nothing upstream is disturbed.",
+        "addresses": "AUTO-04 (chunking must exist upstream of any drain loop) and AUTO-02 (every uncertain outcome is recorded as a PendingOperation, never discarded with let _)."
+      }
+    ],
+    "anti_dummy_requirement": "Each child must have an independent failure injection and an observable recovery assertion. A child that cannot be killed in a test, or whose death changes nothing observable, does not count toward four. State the restart expectation per child and assert it.",
+    "restart_tolerance": "intensity 3 period 5 as already adopted and already present; keep it."
+  },
+  "test_obligations": [
+    "TO-1 Prove UnitCleanupReceipt can be minted ONLY after an actually observed stop: assert the two construction sites are unreachable without a verified systemd stop observation, and that no public API returns a receipt.",
+    "TO-2 THE FALSIFIER ITSELF: an unregistered dummy sleeper is stopped and its receipt is offered to admit a writer at a higher epoch. Expect ServiceWriterHold naming the failed association (A4), not clean. This is root's unrelated_cleanup_receipt_should_not_admit_writer_test and it must go red before the fix and green after.",
+    "TO-3 Association negative: a REAL stop of a correctly registered but DIFFERENT unit is offered. Expect HOLD on A4. This is the control that distinguishes 'a real receipt' from 'the right receipt'.",
+    "TO-4 Strict epoch: prior_service_epoch one BELOW the registration must be refused (proves <= was replaced by ==), and one ABOVE must also be refused.",
+    "TO-5 Monotonicity: the same valid receipt cannot admit twice; the second attempt fails on consumption, and a crash injected between the check and the mark does not yield a second admission (A7 atomicity).",
+    "TO-6 Incarnation: replace the store file, then offer a previously valid receipt. Expect refusal on A3.",
+    "TO-7 Empty expected worker or guardian hash is a CONFIGURATION ERROR at init, never a wildcard match (A8).",
+    "TO-8 FirstBootstrap positive: empty store, no registration, admits at epoch 1 and writes the registration in the same admission.",
+    "TO-9 FirstBootstrap negative: no registration but in-flight rows present. Expect HOLD, not FirstBootstrap (B4).",
+    "TO-10 Supervision: four children observed via supervisor:which_children; each killed independently; assert the RestForOne consequence stated per child above; assert the control actor remains responsive to a revoke during an in-flight delivery.",
+    "TO-11 AUTO-01 negatives on the corrected candidate: expire authority after the inbox read and assert NO processing claim commits, i.e. store generation unchanged; expire after commit_sending and assert NO HTTP send occurs. Both must be asserted on the store generation and on the request count, not on the returned classification.",
+    "TO-12 AUTO-02: an uncertain native outcome retains a typed PendingOperation and enters writer HOLD; assert no uncertain commit is discarded, and that a restart surfaces exactly one recovered record.",
+    "TO-13 AUTO-04: a /saplan result exceeding 4096 bytes splits into ordered UTF-8-safe chunks within the declared maximum, every chunk's outcome is committed, and completion occurs only after the last; include a multibyte boundary case and a mid-stream uncertainty case.",
+    "TO-14 Harness hygiene from root's own TEST-IPC finding: publish command and response fixture JSON atomically via temp plus rename. A test-harness race invalidates the evidence, not the product.",
+    "TO-15 THE EXACT CASE ROOT NAMES: stop an UNRELATED CANONICAL BEAM sleeper (toolchains/nix-profile/bin/erl with -eval timer:sleep) and offer its receipt at the SAME epoch the active registration holds, with the correct store path. Expect refusal at A4b on invocation-id association. Assert the refusal reason names the association, not the executable and not the epoch, so a later exec_path or digest tweak cannot make this test pass for the wrong reason.",
+    "TO-16 Prove the exec_path gate is not load-bearing: with A4a-A4e implemented, a legitimate predecessor whose exec_path would FAIL the substring filter must still admit, and the canonical BEAM sleeper must still be refused. If either flips, the association is still leaning on executable identity.",
+    "TO-17 Prove the epoch is not caller-authoritative: supply a receipt whose service_epoch is correct but whose registration is missing, and a receipt whose epoch disagrees with the registration. Both refuse, and the second must name the registration as authoritative (A4e)."
+  ],
+  "limits": [
+    "Read-only. No product edit, no runtime effect, no test run by me, no other agent's risk row touched.",
+    "The service and lifecycle adapter moved between root's falsifier runs and this review; all my statements bind to a76febfc and a5c4602d and I assert nothing about 9eb32d0a or 79770e17.",
+    "INS-2 is a gap in MY observation: I did not find a receipt-to-registered-writer association check, which is not the same as establishing that none exists.",
+    "I did not re-derive AUTO-01, AUTO-02 or AUTO-04 on current bytes; AGY's repair claim is unverified and they remain OPEN.",
+    "I did not trace reachability of the two receipt construction sites; that is TO-1.",
+    "Four-role design is derived from the failure domains visible in the findings, not from an adopted document I read in this task; reconcile it against docs/design/20261011-1528-telegram-service-implementation-plan-v2.md before implementing, and prefer that document where they differ.",
+    "Advisory only. Grants no system admission and completes no other task.",
+    "IMP-1 is retracted in place above rather than deleted. My original claim that the forgery path was closed was an inference from an export listing and was wrong; the minting function takes caller-supplied store path and epoch.",
+    "My 'explicit_evaluation_requested_by_root' chain is a source reading, not an executed reproduction. I did not run the canonical BEAM sleeper case. Root has reproduced the equivalent against 9eb32d0a; I assert the mechanism survives on a5c4602d by reading, and that is weaker evidence than a run."
+  ],
+  "explicit_evaluation_requested_by_root": {
+    "question": "Does an UNRELATED canonical BEAM sleeper, stopped, at the SAME allowed prior epoch, admit a writer on current bytes a5c4602d / a76febfc?",
+    "answer": "YES, on my reading it still admits, and nothing I found prevents it.",
+    "chain": [
+      "1. The sleeper is a canonical BEAM, so exec_path contains \"erl\" and contains neither \"tail\" nor \"sleep\" (the -eval timer:sleep argument is not the exec_path). Gates at 360-385 pass.",
+      "2. The caller supplies store_db_path, so compute_store_incarnation(store_db_path) at ~1036 computes the incarnation of the TARGET store, not of anything the sleeper ever wrote. The incarnation check therefore compares the target store against itself and cannot fail.",
+      "3. The caller supplies service_epoch, so choosing the SAME value the active registration holds satisfies the strict equality at adapter:200. Strict equality closes the <= widening but does nothing against a caller who simply supplies the correct number: the epoch is a value to be matched, not a secret to be proven.",
+      "4. No check I could find binds the receipt to the writer identity named by the predecessor control registration. INS-2 recorded that as a gap in my observation; root's reading states it is absent.",
+      "Therefore: strict epoch equality, exec_path filtering, type opacity and the single-use mark are each individually reasonable and jointly insufficient. None of them is an association."
+    ],
+    "what_must_not_be_claimed": "No acceptance may be claimed from adding a field, tightening the exec_path filter, or adding the canonical BEAM digest. All three leave step 4 untouched. The only thing that closes this is a binding to the predecessor registration that the caller cannot supply.",
+    "source_bound": "Bound to adapter a5c4602d and service a76febfc. AGY is on SERVICE_IMPL attempt 8 and these bytes are moving; re-evaluate against the hash under test."
+  }
+}

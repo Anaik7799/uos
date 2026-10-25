@@ -1,0 +1,26 @@
+======================== EUnit ========================
+module 'session_provider_service_test'
+  session_provider_service_test: provider_parse_and_render_test...[0.003 s] ok
+  session_provider_service_test: isolated_db_service_registration_and_replay_test...[0.051 s] ok
+  session_provider_service_test: operational_and_alias_paths_refused_test...[0.004 s] ok
+  session_provider_service_test: stage_permissions_refused_test...[0.003 s] ok
+  session_provider_service_test: migration_preserves_full_journal_test...[0.005 s] ok
+  session_provider_service_test: file_symlink_and_hardlink_refused_test...[0.004 s] ok
+  [done in 0.088 s]
+=======================================================
+  All 6 tests passed.
+
+
+EMPTY_HISTORY_REFUSED /tmp/uos-telegram-provider-stage-review-empty-1790857583515715/coordinator.sqlite3
+REFUSAL_PRESERVED_SCHEMA_AND_HISTORY noop /tmp/uos-telegram-provider-stage-review-noop-1790857583550181/coordinator.sqlite3
+REFUSAL_PRESERVED_SCHEMA_AND_HISTORY digest /tmp/uos-telegram-provider-stage-review-digest-1790857583558708/coordinator.sqlite3
+
+
+.uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam ff5e365a34c14c2fe419e426a88d0bbda5a3e7a7eed61517adbe0d7949fb04cb
+.uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam 06ef90020b4fc3f0e5524dc914712c906785ef1da35145437805dd0bbb37c6f0
+.uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_store_cli.gleam 3b1c7c25b904367112f584862ee27175356fed49c608f2decc4f4c60cb47410c
+.uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_sync_cli.gleam 90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f
+.uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam f85548fef153d88a85e4032b3985759e11691db6bdcc1cdcc2e66872ded27a38
+.uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a
+.uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/test/session_provider_service_test.gleam 10b0b8a36795d8de1dd28c2fee162b8e3dac831995da31e0abf7b78d487b863b
+TIME 2026-10-01T12:26:56Z

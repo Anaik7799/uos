@@ -1,0 +1,45 @@
+{
+  "schema": "uos.telegram-service-review-observation.v1",
+  "observed_at": "2026-10-11T19:05:27.507Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 5,
+  "status": "WIP_SOURCE_OBSERVATION_NOT_FINAL_CANDIDATE_VERDICT",
+  "files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "34ca91d34124642c5ab9a90efc3e5f4b0c8b3bff8af38d850f351ac53a7587c4"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+      "sha256": "32019af541024019df2445df000c270c2b33094520fa9efe0067f46fea8cabcd"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "c2abf354695e2ec656399f4b1ef3da8f0a2c8535bde9ab7c0f02812a50c783d1"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SERVICE-AUTOMATIC-PATH",
+      "evidence": "Current service exports poll_cycle and deliver_chunk but does not import direct_read_dispatch or implement automatic task claim/result/completion dispatch.",
+      "acceptance": "Actual service-run guarded read request proceeds from ingress to observed backend result to durable outbox without direct test calls supplying a canned result."
+    },
+    {
+      "id": "SERVICE-E2E-SCOPE",
+      "evidence": "e2e_full_conversation_lifecycle_test calls start_actor then directly invokes store.claim_task_processing, commit_result with hardcoded healthy text, and commit_task_completion.",
+      "acceptance": "Retain as store/actor plumbing test. Add actual supervisor/startup/restart and automatic dispatch acceptance."
+    },
+    {
+      "id": "SERVICE-OWNERSHIP",
+      "evidence": "Current tests stop a sleep unit and label receipt with DB/hashes; registration path None bypasses persisted association.",
+      "acceptance": "Persist exact actual unit/slice invocation and store incarnation before permitting that execution path to open DB; unknown association refuses before any worker. Old cleanup receipt cannot authorize an unobserved new crashed writer."
+    }
+  ],
+  "delivered_to_agy": true,
+  "peer_acknowledged": false,
+  "limits": [
+    "AGY is actively implementing these known gaps; this is not rejection of a finished candidate.",
+    "No runtime or external Telegram behavior is claimed from source inspection."
+  ]
+}

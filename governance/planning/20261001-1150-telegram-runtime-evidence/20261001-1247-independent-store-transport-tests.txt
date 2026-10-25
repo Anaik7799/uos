@@ -1,0 +1,36 @@
+ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -pa var/recovery-runtime/20261001-1238-store-transport -eval 'code:add_paths(filelib:wildcard("apps/cepaf_gleam/build/dev/erlang/*/ebin")),case eunit:test(telegram_store_transport_test,[verbose]) of ok->halt();_->halt(1)end.'
+
+======================== EUnit ========================
+module 'telegram_store_transport_test'
+  telegram_store_transport_test: eof_and_frame_test...[0.025 s] ok
+  telegram_store_transport_test: maximum_frame_test...[0.028 s] ok
+  telegram_store_transport_test: oversize_before_spawn_test...[0.012 s] ok
+  telegram_store_transport_test: empty_test...[0.005 s] ok
+  telegram_store_transport_test: truncated_response_test...[0.016 s] ok
+  telegram_store_transport_test: trailing_response_test...[0.014 s] ok
+  telegram_store_transport_test: output_bound_test...[0.019 s] ok
+  telegram_store_transport_test: invalid_utf8_test...[0.015 s] ok
+  telegram_store_transport_test: nonzero_test...[0.017 s] ok
+  telegram_store_transport_test: pin_refusal_test...[0.005 s] ok
+  telegram_store_transport_test: -fixed_deadline_test_/0-fun-3-...[5.011 s] ok
+  telegram_store_transport_test: -group_cleanup_test_/0-fun-3-...[1.130 s] ok
+  telegram_store_transport_test: trailing_input_test...[0.004 s] ok
+  telegram_store_transport_test: truncated_input_test...[0.103 s] ok
+  telegram_store_transport_test: oversize_header_test...[0.002 s] ok
+  telegram_store_transport_test: typed_entrypoint_test...[0.018 s] ok
+  telegram_store_transport_test: -timeout_group_cleanup_test_/0-fun-2-...[1.255 s] ok
+  telegram_store_transport_test: -caller_death_cleanup_test_/0-fun-2-...[1.202 s] ok
+  [done in 8.935 s]
+=======================================================
+  All 18 tests passed.
+
+9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5  tools/telegram_store_transport_guardian.ml
+89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0  apps/cepaf_gleam/src/telegram_store_transport_ffi.erl
+f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9  apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam
+8957b7cca9ff29f0f31c80028bf6231e0211a12ffee6e83266d82077f1c73697  tools/validation/telegram_store_transport_fixture.ml
+d93204a1ce1b5fede355bbe01e8bc0de5589ed3aa0d761173dea802654e376db  tools/validation/telegram_store_transport_test.erl
+b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b  tools/ecology_process.ml
+d4d4dfc204d815fa23617d70ac0d4779cf8c86119ca6d89948c52cca5c1f6210  apps/cepaf_gleam/src/ecology_capability_ffi.erl
+08ff5d388d2b73a93ab5008b4ebe9819c3b8945253a96d9bea8db8c896535918  var/recovery-runtime/20261001-1238-store-transport/guardian
+6714aed10b649a2cc7d69dec00f18e98110ceff4a907ae9c2de0147acab9aae9  var/recovery-runtime/20261001-1238-store-transport/fixture
+2026-10-01T12:47:52Z

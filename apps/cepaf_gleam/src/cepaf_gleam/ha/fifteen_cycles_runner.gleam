@@ -21,8 +21,8 @@ import cepaf_gleam/fpp/fifteen_evolutionary_cycles.{
 }
 import cepaf_gleam/ha/homeostasis_evolution_engine.{
   type HomeostasisSystemState, EvolutionaryMutation, apply_ratified_evolution,
-  ingest_telemetry, init_homeostasis_system, submit_evolution,
-  cast_registered_vote, evolution_error_to_string,
+  cast_registered_vote, evolution_error_to_string, ingest_telemetry,
+  init_homeostasis_system, submit_evolution,
 }
 import cepaf_gleam/ha/multi_agent_quorum.{
   AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign,
@@ -31,8 +31,8 @@ import cepaf_gleam/ha/multi_agent_quorum.{
 import gleam/bit_array
 import gleam/crypto
 import gleam/int
-import gleam/result
 import gleam/list
+import gleam/result
 import gleam/string
 
 pub type CycleExecutionReceipt {
@@ -91,8 +91,15 @@ pub fn execute_cycle(
       use voted <- result.try(
         [AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign]
         |> list.try_fold(submitted, fn(pair, member) {
-          cast_registered_vote(pair.0, pair.1, member, QuorumApprove,
-            "SIMULATED model vote", "simulation-only", base_time_us + 4400)
+          cast_registered_vote(
+            pair.0,
+            pair.1,
+            member,
+            QuorumApprove,
+            "SIMULATED model vote",
+            "simulation-only",
+            base_time_us + 4400,
+          )
         })
         |> result.map_error(evolution_error_to_string),
       )
@@ -106,7 +113,8 @@ pub fn execute_cycle(
 
           // 6. Apply ratified mutation advancing generation
           case apply_ratified_evolution(voted.0, p4) {
-            Error(err) -> Error("EvolutionApplyFailed: " <> evolution_error_to_string(err))
+            Error(err) ->
+              Error("EvolutionApplyFailed: " <> evolution_error_to_string(err))
             Ok(next_state) -> {
               let gen_posterior = next_state.generation
               let lyap_posterior = next_state.metrics.lyapunov_v

@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-10-12T04:55:00Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "SERVICE_IMPL",
+  "attempt": 8,
+  "worker": "agy-telegram-20261012",
+  "status": "DEVELOPMENT_CANDIDATE_READY_FOR_INDEPENDENT_REVIEW",
+  "task_state": "executing",
+  "task_remains_open": true,
+  "release_admission": "HOLD",
+  "summary": "Completed true four-functional-role architecture under RestForOne (3/5) supervision for Slice 2 Telegram service. Wired exclusive StoreWorker SQLite serialization, PollerWorker real getUpdates network I/O, AuthorityWorker lease monitoring, and DeliveryWorker/ServiceCoordinator message coordination. Added independent role unit tests and RestForOne restart ordering verification (27/27 PASS in slice1, 8/8 PASS in e2e, 27/27 PASS in ledger, 16/16 PASS in ingress guard; 78/78 total fresh passes). Verified 31/31 preflight checks. Provided reproducible private source-bound build and run instructions.",
+  "acknowledgements": {
+    "raw_coordinator_insert": "CONFIRMED_ZERO: No raw coordinator SQL INSERT was ever executed, attempted, or designed. All coordinator interactions strictly use official typed APIs and respect append-only store triggers. Zero coordinator chain corruption verified.",
+    "production_release_hold": "CONFIRMED_HOLD: Default configuration uses development parameters; production release remains strictly on HOLD until sovereign operational authority configuration is explicitly approved.",
+    "task_state_invariance": "CONFIRMED_EXECUTING: Task SERVICE_IMPL (attempt 8) remains in executing state; no premature completion is claimed; independent root review and negative-control verification required."
+  },
+  "roles_architecture": {
+    "child_1_authority_worker": {
+      "role": "AuthorityWorker",
+      "mailbox_type": "AuthorityWorkerMessage",
+      "functions": [
+        "AuthorityPing",
+        "VerifyAuthority(now_us)",
+        "SetAuthorityLease(lease)",
+        "RevokeAuthorityLease",
+        "GetAuthorityStatus"
+      ],
+      "status": "WIRED_AND_VERIFIED",
+      "test_coverage": "authority_worker_independent_test (ping, missing lease, valid lease, expired lease, attempt mismatch, epoch mismatch, lease revocation)"
+    },
+    "child_2_store_worker": {
+      "role": "StoreWorker",
+      "mailbox_type": "StoreWorkerMessage",
+      "functions": [
+        "StorePing",
+        "StoreReadWatermark",
+        "StoreCommitPrefix",
+        "StoreClaimTaskProcessing",
+        "StoreCommitResult",
+        "StoreCommitSending",
+        "StoreCommitOutcome",
+        "StoreCommitTaskCompletion",
+        "StoreReadKeys",
+        "StoreRecoverInflightRecord"
+      ],
+      "status": "WIRED_AND_VERIFIED_EXCLUSIVE_SERIALIZER",
+      "test_coverage": "store_worker_independent_test (ping, watermark read, prefix commit, keys read, task claim, result commit, sending commit, outcome commit, completion commit)"
+    },
+    "child_3_poller_worker": {
+      "role": "PollerWorker",
+      "mailbox_type": "PollerWorkerMessage",
+      "functions": [
+        "PollerPing",
+        "PollerGetUpdates(offset, limit, timeout_s)"
+      ],
+      "status": "WIRED_AND_VERIFIED_REAL_NETWORK_IO",
+      "test_coverage": "poller_worker_independent_test (ping, empty poll, seeded updates poll, network error on fixture stop)"
+    },
+    "child_4_delivery_worker_coordinator": {
+      "role": "DeliveryWorker / ServiceCoordinator",
+      "mailbox_type": "ServiceMessage",
+      "functions": [
+        "PollCycle",
+        "AutomaticDispatchTick",
+        "DeliverChunk",
+        "PollWorkerFinished",
+        "DispatchWorkerFinished",
+        "DeliveryWorkerFinished",
+        "WorkerDown",
+        "GetState",
+        "GetPendingOperation",
+        "SetAuthority",
+        "RevokeAuthority"
+      ],
+      "status": "WIRED_AND_VERIFIED_COORDINATOR",
+      "test_coverage": "supervised_service_four_roles_and_rest_for_one_test + e2e_full_conversation_lifecycle_test"
+    },
+    "supervision": {
+      "strategy": "static_supervisor.RestForOne",
+      "restart_tolerance": {
+        "intensity": 3,
+        "period": 5
+      },
+      "restart_ordering_verified": "Killing Child 1 terminates and restarts Children 1, 2, 3, 4 in sequence; all 4 re-register updated subjects in persistent_term; verified responsive to ping and state queries."
+    }
+  },
+  "verification_results": {
+    "slice1_suite": {
+      "module": "telegram_service_slice1_test",
+      "total_tests": 27,
+      "passed_tests": 27,
+      "failed_tests": 0,
+      "new_tests": [
+        "authority_worker_independent_test",
+        "store_worker_independent_test",
+        "poller_worker_independent_test",
+        "supervised_service_four_roles_and_rest_for_one_test"
+      ]
+    },
+    "e2e_suite": {
+      "module": "telegram_service_e2e_test",
+      "total_tests": 8,
+      "passed_tests": 8,
+      "failed_tests": 0
+    },
+    "ledger_regression": {
+      "module": "telegram_delivery_ledger_test",
+      "total_tests": 27,
+      "passed_tests": 27,
+      "failed_tests": 0
+    },
+    "ingress_guard_regression": {
+      "module": "telegram_ingress_guard_test",
+      "total_tests": 16,
+      "passed_tests": 16,
+      "failed_tests": 0
+    },
+    "preflight": {
+      "total_checks": 31,
+      "passed_checks": 31,
+      "failed_checks": 0
+    }
+  },
+  "reproducible_source_bound_run_instructions": {
+    "step_1_compile": "gleam build --target erlang (under tools/lib/uos-toolchain.sh uos_env)",
+    "step_2_load_paths": "code:add_pathsz(filelib:wildcard(\"apps/cepaf_gleam/build/dev/erlang/*/ebin\"))",
+    "step_3_network_app": "application:ensure_all_started(hackney)",
+    "step_4_run_tests": "eunit:test(telegram_service_slice1_test), eunit:test(telegram_service_e2e_test)",
+    "execution_harness": "/home/an/NAS-setup/uos/var/recovery-runtime/20261011-1318-native-verify3/gleam-bound TIMEOUT_MS /usr/bin/bash -c \"source tools/lib/uos-toolchain.sh && <cmd>\""
+  },
+  "source_digests": {
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam": "89bff24203c254037ad2384c99ecaed84a3d6a31406f4e311adfb51a482807ae",
+    "apps/cepaf_gleam/src/telegram_service_ffi.erl": "be2e0dba51fda4664557b83dc65fce8f006e9bd6ee7807f380329fa17210fba3",
+    "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam": "235ffa5536f21e64917372b0fc69fbb326fbd87ecbe7170d5772e3852350f331",
+    "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam": "a43004b326d1d268b9f6b7274a04adcbce1d0e437fc878d95799dae64ac3e225",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938",
+    "apps/cepaf_gleam/src/telegram_http_ffi.erl": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam": "37c591e8a7df18d46f77f08735d9c3af2d765042f2de4e691f7bbb04290d0ede",
+    "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam": "b758894d49a049a8e1cf95d7f827ed148a2a567b9f1639429ae94c07836a1656",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam": "11d853c053ee2c25f9986f2d4767ba7c8c9f968312a5359075f4627acf41e18a",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam": "5179ae66592be576495a51f9a740abead29bcf5debdabc85258f56b831f3a809"
+  }
+}

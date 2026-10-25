@@ -55,10 +55,10 @@ pub fn completed_dependencies_do_not_receive_inherited_priority_test() {
   let blocked_child =
     execution.Task(..task("child", ["done"]), state: "available")
   let assert Ok(view) =
-    snapshot(
-      [completed_parent, blocked_child],
-      [risk("done"), execution.Risk(..risk("child"), dependencies: ["done"])],
-    )
+    snapshot([completed_parent, blocked_child], [
+      risk("done"),
+      execution.Risk(..risk("child"), dependencies: ["done"]),
+    ])
   dict.get(view.priorities, "done") |> should.be_error()
   view.recommendations |> should.equal(["child"])
 }

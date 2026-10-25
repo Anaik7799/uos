@@ -14,9 +14,13 @@ pub fn open(config_json: String) -> Result(Session, String) {
   rest.probe(config_json) |> result.map(fn(_) { RestSession })
 }
 
-pub fn backend(_session: Session) -> String { rest.backend }
+pub fn backend(_session: Session) -> String {
+  rest.backend
+}
 
-pub fn supports_subscriptions(_session: Session) -> Bool { False }
+pub fn supports_subscriptions(_session: Session) -> Bool {
+  False
+}
 
 /// Publish via native NIF — does not require Session (uses global session).
 pub fn put_nif(key: String, payload: String) -> Result(String, String) {
@@ -67,6 +71,10 @@ pub fn get(_session: Session, key: String) -> Result(String, String) {
   rest.get(key)
 }
 
-pub fn subscribe(_session: Session, _key: String, _pid: Pid) -> Result(Nil, String) {
+pub fn subscribe(
+  _session: Session,
+  _key: String,
+  _pid: Pid,
+) -> Result(Nil, String) {
   Error("zenoh_rest_subscriptions_unsupported")
 }

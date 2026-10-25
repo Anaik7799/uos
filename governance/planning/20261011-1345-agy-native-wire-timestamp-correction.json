@@ -1,0 +1,30 @@
+{
+  "schema": "uos.telegram-native-wire-timestamp-correction.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_FIX3",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1345",
+  "observed_at": "2026-10-11T13:17:45Z",
+  "predecessor_receipt": "governance/planning/20261011-1325-agy-native-fix3.json",
+  "target_artifact": {
+    "path": "native/ocaml/telegram_store/20261011-1325-telegram_store_wire_v3.json",
+    "sha256": "2c93540e2578108bb4da089c364fa7f3420c270980191eeba44eea005c01b57d",
+    "erroneous_field": "generated_at = 2026-10-11T13:25:00Z",
+    "correction_rationale": "Filename prefix 20261011-1325 follows the UOS YYYYMMDD-HHSS- rule (Hour 13, Second 25). The wire v3 file was actually authored and written at 2026-10-11T13:12:06Z (local 2026-10-11 15:12:06+02:00, mtime epoch 1791724326). Writing 2026-10-11T13:25:00Z in the JSON body mistook 1325 for 13:25 UTC (hour 13, minute 25), producing an unphysical future timestamp ~13 minutes ahead of reality. Because wire v3 hash 2c93540e... is frozen and bound into receipt a402c2da..., wire v3 is preserved byte-for-byte, and this linked correction establishes the true observed generation timestamp.",
+    "truthful_observed_generated_at": "2026-10-11T13:12:06Z",
+    "truthful_observed_epoch_seconds": 1791724326
+  },
+  "depth_65_boundary_finding": {
+    "summary": "Boundary off-by-one in validate_strict_json: parse_value checks depth > max_json_depth (64) before calling parse_array/parse_object(depth + 1). However, parse_array/parse_object immediately return Ok () on empty containers (peek () = Some ']' / Some '}') without inspecting depth. Consequently, 65 nested empty arrays (65 nested '[' and ']') successfully parse with Ok (), whereas 65 non-empty arrays (e.g. innermost [1]) or 66 empty arrays correctly error with json_nesting_depth_exceeded.",
+    "task_state_at_notification": "completed",
+    "status": "REPRODUCED_AND_DOCUMENTED_FOR_ROOT_FOLLOWUP",
+    "reproduction_trace": "depth 1 (parse_value 1 -> parse_array 2) ... depth 64 (parse_value 64 -> parse_array 65). In parse_array 65, advance () skips '['; peek () sees ']' and returns Ok () directly without invoking parse_value 65. Hence depth 65 empty terminal container is accepted instead of rejected.",
+    "recommended_fix": "In telegram_store.ml, inspect depth at the entry of both parse_array and parse_object (e.g. if depth > max_json_depth then Error 'json_nesting_depth_exceeded'), ensuring 64 nested arrays remain accepted while 65 nested arrays (empty or non-empty) are rejected consistently.",
+    "source_mutation_policy": "Per root directive ('If task already completed, do not edit—report for root follow-up; Queued depth65 finding can be addressed only while FIX3 executing'), NATIVE_FIX3 candidate source files remain quiescent and unmodified."
+  },
+  "deviations_erratum": {
+    "statement": "Previous summary notes stating 'ZERO Python, all commands harness mediated' accurately reflects zero Python execution, but several administrative commands during troubleshooting and inspection were run directly via bash/shell (grep, head, tail, ls, stat, date, and bash tools/sa-plan) rather than routed through a Gleam harness wrapper. These non-Python shell invocations are explicitly acknowledged as execution deviations."
+  }
+}

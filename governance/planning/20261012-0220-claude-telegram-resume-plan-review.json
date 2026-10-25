@@ -1,0 +1,233 @@
+{
+  "artifact": "uos.telegram.resume_plan_review.v1",
+  "author_session": "claude-telegram-resume-20261012",
+  "task": {
+    "plan_id": "uos/telegram-resume/20261012-0216",
+    "task_id": "REVIEW",
+    "actor": "claude-telegram-resume-20261012",
+    "attempt": 1,
+    "lease_until_ns": "1791773186231785589",
+    "lease_duration_ns": "1800000000000",
+    "preflight": "PREFLIGHT_PASS 2026-10-12T02:16:13Z, 0 findings, P1/768, origins DASHBOARD+RECOVER+REVIEW",
+    "active_check_pre_work": "ACTIVE_OBSERVATION_PASS 2026-10-12T02:16:36Z, 0 findings",
+    "portfolio_row": "idx 0 available -> executing, 24->24 fields, exactly 1 entry changed",
+    "coordinator": {
+      "register_seq": 592,
+      "claim_seq": 593,
+      "epoch": 1,
+      "resource": "task:REVIEW",
+      "ttl_s": 1800
+    }
+  },
+  "scope": "Read-only plan and recovery review. No runtime effect, no product edit, no reclaim performed, no other row touched. Scope UOS only.",
+  "verdict": "REVIEW_DELIVERED",
+  "admission": "NOT_GRANTED",
+  "part_1_reclaim_set_hold": {
+    "question": "Why does --reclaim-set-preflight HOLD, and what is the compliant resolution that is not score gaming, force-pass or raw SQL?",
+    "mechanism_traced": [
+      "validate.ml:283-286 routes --reclaim-set-preflight into run_audit with reclaim_set bindings.",
+      "validate.ml:129 builds a PROJECTED record set via Checker.reclaim_set_projection.",
+      "validate.ml:133 then does: let ranking_records = Option.fold ~none:records ~some:snd initial_reclaim, and validate.ml:134 runs Checker.audit over those projected records.",
+      "Checker.audit includes the adjacent-pair ordering rules at checker.ml:51-62. RP-COST-TIE fires whenever two ADJACENT ranked tasks share effective_class and effective_score; RP-SENSITIVITY fires when their intervals or one-factor scenarios overlap.",
+      "So the reclaim path executes the full DISPATCH-SELECTION ranking over the post-reclaim projection."
+    ],
+    "root_cause": "The HOLD is STRUCTURAL, not evidential. FORMAL_FIX's origins are [FORMAL_FIX, TELEGRAM_E2E] and SERVICE_IMPL's are ten ids also including TELEGRAM_E2E. Effective score is the MAX over the task and its blocked consumers, so both tasks take 768 FROM THE SAME ANCESTOR. Two tasks whose dominant urgency is inherited from one shared origin are equal by construction, and no refresh of either task's OWN factors can separate them: the max is supplied by a third party.",
+    "evidence_that_it_cannot_be_chased": "Step1 (/tmp/uos-reclaim-set-step1.json) holds on two adjacent ties at 768. Step1b (/tmp/uos-reclaim-set-step1b.json) shows SERVICE_DRAFT_REVIEW refreshed down to 576, which merely RE-SORTED the list and produced a NEW adjacent tie between FORMAL_FIX and SERVICE_IMPL at 768, plus RP-SENSITIVITY on SERVICE_IMPL and two RP-EVIDENCE staleness findings. Refreshing evidence moved the tie; it did not and cannot terminate it.",
+    "why_the_tool_is_not_simply_wrong": "validate.ml:308 emits cost_tie_review = MANUAL_BEFORE_STABLE_FALLBACK. The tool deliberately refuses to invent a cost comparison and requires a reviewed comparative decision before any stable fallback. That is correct Poka-Yoke and must not be removed. The defect is narrower: the rule is being applied in a context where no ordering decision is needed at all.",
+    "category_error_identified": "Reclaiming an expired claim is METADATA RECONCILIATION of a dead owner's lease. It is not task execution and not dispatch. The three expired claims are acknowledged quiescent (governance/planning/20261012-0213-telegram-resume-reconciliation.json) and are owned by TWO DIFFERENT actors (codex-telegram-20261011 for FORMAL_FIX and SERVICE_DRAFT_REVIEW, agy-telegram-20261011 for SERVICE_IMPL). Tasks destined for different actors are not competing for one execution slot, so deciding which to run FIRST is not a precondition for replacing a dead lease. Blocking reconciliation on an ordering question is the category error.",
+    "options": [
+      {
+        "id": "OPT-A",
+        "title": "Record a discriminating comparative decision and refresh ratings",
+        "code_change": "none",
+        "assessment": "REJECTED AS INSUFFICIENT on its own. RP-COST-TIE fires on numeric equality of effective_score. A recorded narrative decision in the portfolio does not change effective_score, so the finding persists. The only way this clears is to change a FACTOR, and because the 768 is inherited from TELEGRAM_E2E, changing either task's own factors leaves the max unchanged. Raising a factor above 768 to force an ordering would be exactly the score gaming that is barred."
+      },
+      {
+        "id": "OPT-B",
+        "title": "Do the reclaim as three separate single-task --reclaim-preflight calls",
+        "code_change": "none",
+        "assessment": "PARTIAL. It is the originally designed unit: the single reclaim is one binding (checker.ml Option.fold, validate.ml:104 one tuple, CLI scalars), and adversarial.ml asserts that a single reclaim preserves the other expired task's HOLD. However validate.ml:133 feeds the projection into the SAME full audit for the single-reclaim branch, so the adjacent ordering rules still run over the whole ranked record set and the same ties can still fire. This reduces the number of bindings under review but does NOT by itself remove the ordering gate. Worth attempting first because it is zero-risk and may pass if the projected single-task ranking happens not to place the tied pair adjacently; that outcome would be luck, not a resolution, and must not be reported as one."
+      },
+      {
+        "id": "OPT-C",
+        "title": "RECOMMENDED. Scope the selection-ordering rules out of the reclaim preflight, explicitly and visibly",
+        "code_change": "smallest separately reviewed tool fix, confined to rule APPLICABILITY in validate.ml; no scores, no thresholds, no new SQL",
+        "change": "When reclaim or reclaim_set is present, compose findings from the reclaim-precondition rules and the evidence rules only, and EXCLUDE the adjacent dispatch-ordering rules (RP-COST-TIE, RP-SENSITIVITY). The receipt must then carry an explicit selection field, for example selection = NOT_EVALUATED, with a one-line reason, so a reclaim pass can never be read as dispatch authority. RP-EVIDENCE and RP-INHERITANCE must be RETAINED: stale or uncertain evidence genuinely matters for the reclaim's own observation, and inheritance uncertainty is a truthfulness signal rather than an ordering one.",
+        "why_compliant": [
+          "Not score gaming: no factor, score, interval or threshold is altered.",
+          "Not force-pass: the HOLD is not suppressed, it is declared out of scope for this operation and the receipt says so, which is strictly more informative than today's receipt.",
+          "Not raw SQL: the change is in rule composition, and the read path stays Live_plan.read with READONLY, query_only and the existing bounds.",
+          "It implements the policy distinction the SOP already draws between reconciliation and selection, and keeps the manual cost-tie review intact for the dispatch step where it belongs."
+        ],
+        "falsifiers_required_before_adoption": [
+          "POSITIVE: a reclaim-set preflight over the three acknowledged-quiescent expired claims returns PASS with selection = NOT_EVALUATED, and the exact-set equality, exact-owner, exact-previous-attempt and expired-lease requirements all still hold.",
+          "REFUSAL: a binding whose worker, previous attempt or previous lease does not match is still refused. This is the check that must not be weakened by the scoping.",
+          "REFUSAL: a binding set that is not exactly all expired executing tasks is still refused (checker.ml reclaim_set_projection require).",
+          "REFUSAL: stale evidence still produces RP-EVIDENCE, proving the scoping removed only the ordering rules.",
+          "REFUSAL: a DISPATCH preflight (--preflight) over the same portfolio STILL holds on RP-COST-TIE, proving the ordering gate was narrowed to reclaim and not globally disabled. This is the most important falsifier.",
+          "CRASH: Sa-plan changing mid-preflight is still caught by the existing digest comparison at validate.ml."
+        ],
+        "assessment_superseded": {
+          "superseded_by": "OPT-E",
+          "reason": "Root supplied the decisive fact: validate.ml:145-184 requires the first-eligible and global-rank findings EVEN for reclaim_metadata. Excluding the ordering rules inside the existing verb is therefore exactly 'skipping rank in the existing path', which is barred. OPT-C is withdrawn as written. Its intent survives in OPT-E, which puts the metadata-only semantics in a SEPARATE verb instead of weakening an existing one."
+        }
+      },
+      {
+        "id": "OPT-D",
+        "title": "Alternative tool fix if a set reclaim must also rank: terminate the documented tiebreaker chain",
+        "code_change": "larger, and NOT recommended now",
+        "change": "Where two adjacent tasks tie AND the tie value is inherited from a shared origin, record that urgency does not discriminate them and apply the SOP's own remaining chain (oldest ready time, then stable task ID), stamping the applied tiebreaker in the receipt.",
+        "assessment": "Defensible as policy because the SOP already specifies that chain, and it would fix the general unbreakable-tie class rather than just the reclaim symptom. But it changes DISPATCH behaviour, it needs its own review of what 'shared origin' means when origin sets only partially overlap, and it is not needed to unblock reconciliation. Recorded as the follow-up, not the action."
+      },
+      {
+        "id": "OPT-E",
+        "title": "RECOMMENDED. New separately reviewed metadata-only reconciliation observation verb",
+        "rationale": "Reconciling a dead owner's expired lease is an observation about METADATA, not a selection among work. The existing verbs are selection paths and must keep their rank findings. A separate verb lets reconciliation be gated truthfully without touching, weakening or bypassing any existing gate.",
+        "not_a_mutation": "The verb OBSERVES only. It performs no reclaim and no write. The actual reclaim remains an ordinary Sa-plan task claim carrying the expected new attempt, which the store already accepts for an expired prior claim by CAS on attempt (sa_plan_store.ml:2198-2280). Execution afterwards still requires a normal active-check with the exact current worker and attempt. Nothing about this verb grants effect authority.",
+        "proposed_surface": "risk-priority-check --reclaim-metadata-observe PORTFOLIO BINDINGS_JSON",
+        "reuse": [
+          "Live_plan.read verbatim for the plan snapshot: READONLY, uri:false, mutex FULL, busy_timeout 500, PRAGMA query_only=ON, BEGIN, 1001 task and 10001 edge limits, ROLLBACK. No new SQL and no schema initialization.",
+          "Checker.reclaim_set_projection's PRECONDITION requires, which already enforce exact-set equality, uniqueness, exact expired same-worker attempt and lease, and that the portfolio declares the original executing owner.",
+          "Live_plan.digest for the before/after stability comparison.",
+          "Host_clock for a monotonic bounded observation window."
+        ],
+        "explicitly_not_reused": "Checker.audit. The ranking, first-eligible and tie/sensitivity rules are NOT evaluated by this verb, and the receipt must say so in a machine-readable field rather than by omission.",
+        "exact_bounds": {
+          "bindings_count": "1..1000 inclusive; empty refuses; 1001 refuses",
+          "binding_uniqueness": "task ids must be pairwise distinct",
+          "set_equality": "the binding id set must equal EXACTLY the set of expired executing tasks in the observed plan; neither a subset nor a superset is accepted",
+          "task_id": "1..200 bytes, charset [A-Za-z0-9-_/.] only",
+          "worker": "1..200 bytes, same charset",
+          "previous_attempt": "integer 1..1000000",
+          "previous_lease_until_ns": "carried as a STRING and parsed to int64; must be <= observed now_ns, i.e. actually expired. Never a JSON number: these values exceed 2^53 and a number would truncate.",
+          "expected_new_attempt": "must equal previous_attempt + 1",
+          "portfolio_agreement": "for every binding the portfolio record must have task_state=executing and actor=worker",
+          "plan_scope": "bindings plan_id must equal the portfolio plan_id; a task from another plan refuses",
+          "digest_stability": "Live_plan.digest before and after must be identical or the observation refuses",
+          "observation_deadline_ms": "5000, monotonic, enforced across the whole observation",
+          "output_bytes": "<= 262144, enforced while emitting",
+          "authority_fields": "authority=NONE, runtime_admission=NOT_GRANTED, selection=NOT_EVALUATED with a one-line reason string",
+          "writes": "none of any kind to the Sa-plan database; the only filesystem effect is SQLite reader housekeeping on a WAL database, which creates -wal and -shm when absent and updates -shm read marks, per https://www.sqlite.org/wal.html. This must be stated in the tool contract and NOT claimed away as no-filesystem-effects."
+        },
+        "negative_controls": [
+          "NC-01 bindings omit one expired executing task -> refuse (set equality).",
+          "NC-02 bindings include a task that is executing but NOT expired -> refuse.",
+          "NC-03 bindings include a task that is available or completed -> refuse.",
+          "NC-04 wrong worker for an otherwise correct binding -> refuse.",
+          "NC-05 previous_attempt off by one in either direction -> refuse.",
+          "NC-06 previous_lease_until_ns differing by one nanosecond -> refuse.",
+          "NC-07 previous_lease_until_ns in the future -> refuse as not expired.",
+          "NC-08 previous_lease_until_ns supplied as a JSON number large enough to truncate -> refuse, and assert the refusal is on type rather than on a silently truncated comparison.",
+          "NC-09 duplicate task ids -> refuse.",
+          "NC-10 empty bindings -> refuse. 1001 bindings -> refuse.",
+          "NC-11 portfolio row actor differs from binding worker -> refuse.",
+          "NC-12 portfolio row task_state not executing -> refuse.",
+          "NC-13 bindings plan_id differs from portfolio plan_id -> refuse.",
+          "NC-14 SQL-like task id such as 'T1; DROP TABLE sa_plan_task' -> refuse on charset, and assert no statement was ever constructed from it.",
+          "NC-15 missing database file -> refuse. Schema-incompatible database -> refuse.",
+          "NC-16 plan mutated between the two digests -> refuse.",
+          "NC-17 expected_new_attempt not equal to previous_attempt + 1 -> refuse.",
+          "NC-18 AUTHORITY CONTAINMENT: after a PASS from this verb, a subsequent --active-check with a wrong worker or attempt STILL holds, and the verb's own receipt carries selection=NOT_EVALUATED. A pass here must never be usable as execution authority.",
+          "NC-19 NON-REGRESSION OF THE EXISTING GATE, the most important control: --preflight on the same portfolio STILL holds on RP-COST-TIE, and --reclaim-set-preflight on the same bindings STILL produces its current findings byte-for-byte. This proves rank was neither skipped nor weakened anywhere in the existing paths.",
+          "NC-20 the verb performs no write: the Sa-plan main database bytes are identical before and after, and with an active WAL held open by a separate writer the WAL frame bytes are identical too, with any -shm metadata change reported separately rather than asserted away."
+        ],
+        "acceptance_positive": [
+          "The three acknowledged-quiescent expired claims (FORMAL_FIX codex attempt 3 lease 1791752573602044117, SERVICE_DRAFT_REVIEW codex attempt 6 lease 1791752099179610487, SERVICE_IMPL agy attempt 6 lease 1791754904787263175) observe as a valid exact set, each matching exact owner, attempt and expired lease, with selection=NOT_EVALUATED and authority=NONE.",
+          "The receipt names the plan digest it observed, so a later reclaim can be bound to that exact snapshot."
+        ],
+        "review_requirements": [
+          "Separately reviewed as its own component before use, exactly like the store and HTTP components were.",
+          "Must not be presented as, and must not be reachable as, a dispatch gate.",
+          "Must carry its own test suite containing all twenty negative controls, with NC-19 and NC-20 mandatory.",
+          "Build from pinned in-project toolchains only, no package downloads."
+        ],
+        "honest_limits": [
+          "This verb cannot and must not decide ordering. After reconciliation, dispatching FORMAL_FIX, SERVICE_DRAFT_REVIEW and SERVICE_IMPL still faces the inherited-tie question if they are ever made to compete for one slot. In practice they are owned by two different actors (codex and agy) and can proceed in parallel, so no ordering decision is required; if that ever changes, OPT-D is the follow-up.",
+          "Adding a verb is still a change to a shared tool. If even that is unacceptable before review, the interim honest position is to leave the two HOLD receipts standing and NOT reclaim, which is what root has correctly done so far."
+        ]
+      }
+    ],
+    "recommendation": "Adopt OPT-E: one new, separately reviewed, metadata-only reconciliation OBSERVATION verb. Do not weaken, rescope or skip rank in --preflight or --reclaim-set-preflight. Do not demote P-class or readiness. OPT-A and OPT-C are withdrawn; OPT-B may still be attempted at zero cost but is not a resolution; OPT-D remains a separate follow-up for the general inherited-tie class.",
+    "explicitly_not_done": "I did not modify any tool, did not run a reclaim, and did not re-run the reclaim-set preflight. This is a read-only review.",
+    "new_facts_incorporated": [
+      "validate.ml:145-184 requires first-eligible and global-rank findings even for reclaim_metadata, so the ordering gate cannot be scoped away inside the existing verbs.",
+      "release_task rejects expired claims, so an ordinary release cannot clear them either. There is no existing-API escape; this is why a new observation verb is warranted rather than merely preferred.",
+      "The ties are confirmed to come from the common TELEGRAM_E2E inherited P1/768, so changing the tasks' own scores cannot resolve them. Two HOLD receipts preserved, no claims made.",
+      "User explicitly authorized finding or creating the needed tool."
+    ]
+  },
+  "part_2_service_findings": {
+    "source": "governance/planning/20261011-2037-telegram-service-auto-review.json, status HOLD, 7 findings",
+    "independent_convergence": "Five of the seven independently reproduce findings I recorded in CLAUDE_SERVICE_REVIEW and its revision, from a different method. Convergence from two methods raises confidence in the two criticals in particular.",
+    "mapping": [
+      {
+        "auto": "AUTO-01 authority checked once before the store scan, then claim/result/commit_sending/network/callback/completion can execute after blocking reads with no fresh fence",
+        "mine": "F1 and D1: the fence must be re-evaluated immediately before EACH side effect, not once per step, because a lease can expire between check and call. Same defect, same repair.",
+        "criticality": "critical",
+        "agree": true
+      },
+      {
+        "auto": "AUTO-02 uncertain store failures converted to ServiceError(original state), PendingOperation not retained, uncertain commits discarded with let _",
+        "mine": "New to me and I agree it is critical. It is the same shape as my F6 (an in-flight send that is neither retried nor quarantined), one layer up: here the uncertainty is discarded at the commit rather than lost at restart. Discarding an uncertain commit is strictly worse than recording it, because the record is the only thing that can drive recovery.",
+        "criticality": "critical",
+        "agree": true
+      },
+      {
+        "auto": "AUTO-03 reads only the first 10 inbox rows without a cursor, filters pending then stops; ten terminal rows can permanently hide later pending work",
+        "mine": "F7R: the scan lacks its own deadline and cross-page generation coherence. AUTO-03 is a sharper instance: an unbounded-prefix read with a bounded window is a liveness bug, not just an incoherence risk.",
+        "criticality": "high",
+        "agree": true
+      },
+      {
+        "auto": "AUTO-04 sends only the first returned chunk, no drain, completion attempted with a singleton",
+        "mine": "F6 and D6: bounded outbox traversal reusing inbox-derived chunk keys, read_keys and ledger.recover_request. Same repair, and D6 already says do not invent a new backend index.",
+        "criticality": "high",
+        "agree": true
+      },
+      {
+        "auto": "AUTO-05 fabricates a callback id cb-query- plus request_id and ignores the callback result",
+        "mine": "Not in my review. I agree, and I note it is the same class as the defects I kept finding in my own work: a fabricated identifier presented as a real one. A callback acknowledged against an invented id is an unverifiable effect.",
+        "criticality": "high",
+        "agree": true
+      },
+      {
+        "auto": "AUTO-06 one supervisor child with a 5/10 restart budget versus the adopted four-child rest_for_one 3/5; automatic dispatch executes a blocking chain inside the control actor",
+        "mine": "F8R: the owner exists but its handler blocks synchronously on HTTP, it is unsupervised, admission is unbounded and there is no cancellation. The blocking-chain-inside-the-control-actor half is the same finding; the restart-budget divergence from the adopted design is additional and is a real design-conformance gap.",
+        "criticality": "high",
+        "agree": true
+      },
+      {
+        "auto": "LIFE-IDENTITY UnitCleanupReceipt carries a database path and binary hashes but no store incarnation or prior service epoch; new registration verifies the current incarnation without relating it to the cleanup receipt",
+        "mine": "F4R and F5, and D5 as corrected: an independent durable PRELAUNCH control registration outside the target database, plus a persisted incarnation, because a receipt validated only by configuration-time hashes cannot distinguish a restart of the same incarnation from a different writer presenting the same configuration. My D5 was corrected once already for putting the registration inside the database it was meant to protect; that correction applies here too.",
+        "criticality": "critical",
+        "agree": true
+      }
+    ],
+    "assessment": "The HOLD is correct and I would not lift it. Two criticals (AUTO-01, AUTO-02) and LIFE-IDENTITY all sit on the authority-and-identity boundary, which is the same boundary my service review called out as systematically unanchored: every fence must be anchored in a value the caller cannot choose, and every uncertain outcome must be recorded rather than converted. AUTO-02 and AUTO-05 are the two I did not find, and both are instances of that same rule.",
+    "agy_claim_note": "AGY reports ownership, chunk and fence repairs done at service receipt 21:11:36Z (service 9eb32d0a, adapter 79770e17, runner fda20795), but root has not verified. I did not observe those bytes in this read-only task, so I treat the 7 findings as OPEN. An unverified repair claim is not a finding closure, and the mapping in this review is against the auto-review artifact, not against the new hashes."
+  },
+  "part_3_plan_review": {
+    "recovery_plan": "uos/telegram-resume/20261012-0216 is a bounded recovery plan. My REVIEW row inherits 768/P1 from DASHBOARD and RECOVER, which is the same inheritance mechanism analysed in part 1; it is benign here because the plan is small and the tasks are not contending.",
+    "original_runtime_plan": "uos/telegram-runtime/20261001-1150 retains three expired claims now acknowledged quiescent. Reconciliation is blocked only by the ordering gate analysed in part 1, not by any safety condition.",
+    "sequencing_advice": [
+      "Reconcile the three expired claims FIRST, by OPT-B then OPT-C. It is metadata repair and unblocks everything downstream without granting any effect authority.",
+      "Do NOT dispatch SERVICE_IMPL on the strength of a reclaim pass. The service remains HOLD on 7 findings including three criticals; a reclaimed lease is permission to own the task, not evidence the design is sound.",
+      "Sequence the service repairs by boundary rather than by criticality label: AUTO-01 and AUTO-02 together with LIFE-IDENTITY form one authority-and-identity slice, and repairing AUTO-01 alone would leave an authorised path that still discards uncertainty.",
+      "AUTO-03 and AUTO-04 form a second slice (bounded coherent traversal of inbox and outbox) and should reuse the existing ledger recovery API rather than new indexes.",
+      "AUTO-06 is a conformance slice against the already-adopted supervision shape; it should not be redesigned, only conformed.",
+      "FORMAL_FIX and SERVICE_DRAFT_REVIEW are owned by Codex and SERVICE_IMPL by AGY, so after reconciliation they can proceed in parallel without any ordering decision at all. That is the practical reason part 1's gate is unnecessary here."
+    ],
+    "baseline_note": "Root reports all 83 listed baseline bytes unchanged, and the numeric peer receipt independently hash-checked against 82 candidate inputs and 73 compiled artifacts or axiom logs with no mismatches. I did not re-derive those checks; they are recorded as root-supplied."
+  },
+  "limits": [
+    "Read-only. No tool edited, no reclaim run, no preflight re-run, no row other than mine touched, no product change, no runtime effect.",
+    "My reading of validate.ml:133-134 is that the reclaim projection feeds the full selection audit. I traced it in source and did not execute a modified build to confirm that removing the ordering rules yields PASS; that is exactly what the OPT-C falsifiers are for.",
+    "I did not verify whether a single-task --reclaim-preflight currently passes for any of the three bindings. OPT-B is proposed as a zero-cost attempt, not as a known-good path.",
+    "The service findings are read from the auto-review artifact. I re-derived their mapping against my own earlier review but did not re-observe the service source bytes in this task.",
+    "I did not read the 85 fresh sources individually; I relied on the preflight and reconciliation receipts for their freshness.",
+    "The prior SERVICE_OBSERVER_TOOL work is owned by root and AGY and was not revisited. For the record, my last in-flight edit there did not apply: obs_guardian.ml:176 still has Refused child_signalled and sa_plan_observer_ffi.erl:318 still has the generic ChildExit =/= 0 test, so both of the last two findings on that component remain unfixed in that tree.",
+    "This review grants no admission and completes no other task.",
+    "OPT-C as originally written is WITHDRAWN: it would have skipped rank in an existing path, which validate.ml:145-184 requires even for reclaim_metadata. The replacement OPT-E adds a separate verb instead and leaves every existing gate byte-identical, which NC-19 exists to prove.",
+    "I did not implement OPT-E. It is specified for separate review as root requested, with twenty negative controls of which NC-19 (existing gate unchanged) and NC-20 (no writes) are mandatory."
+  ]
+}

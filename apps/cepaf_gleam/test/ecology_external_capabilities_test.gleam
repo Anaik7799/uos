@@ -113,10 +113,9 @@ pub fn disappeared_model_refuses_before_dispatch_test() {
   let disappeared_input =
     "{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"prompt\":\"Describe one bounded feedback-loop invariant.\",\"max_tokens\":128}"
   let no_post =
-    worker.Io(
-      ..io(Some("unit-test"), prices, reply),
-      post: fn(_, _, _) { panic as "Disappeared model must not dispatch POST" },
-    )
+    worker.Io(..io(Some("unit-test"), prices, reply), post: fn(_, _, _) {
+      panic as "Disappeared model must not dispatch POST"
+    })
   external.openrouter_with(disappeared_input, no_post) |> should.be_error
 }
 
@@ -140,8 +139,9 @@ pub fn paid_fallback_under_free_policy_is_refused_test() {
   let no_post =
     worker.Io(
       ..io(Some("unit-test"), prices_with_paid, reply),
-      post: fn(_, _, _) { panic as "Paid fallback must not dispatch under free policy" },
+      post: fn(_, _, _) {
+        panic as "Paid fallback must not dispatch under free policy"
+      },
     )
   external.openrouter_with(paid_input, no_post) |> should.be_error
 }
-

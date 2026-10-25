@@ -1,0 +1,70 @@
+{
+  "schema": "uos.telegram-vcs-guard.v1",
+  "observed_at": "2026-10-11T17:51:46.563Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "TELEGRAM_VCS_GUARD",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "CONFIGURATION_INSTALLED_PRIVATE_BEHAVIOR_VERIFIED_PEER_ACK_PENDING",
+  "authority": "repository development protection only",
+  "runtime_admission": "NOT_GRANTED",
+  "incident": {
+    "operation": "d441cd7b55d1",
+    "workspace": "agy-full-restoration-20260930",
+    "command": "jj status",
+    "observed_operation_utc": "2026-10-11T16:37:21Z",
+    "cause": "Mutable ancestor working copy snapshotted and automatically rebased main descendants",
+    "main_before": "83dca0394346564356920f066b3924858144107f",
+    "main_after": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+    "tree_difference": "Three Telegram evidence JSON additions; no service-code inclusion established by this difference",
+    "disposition": "Preserve both histories; no undo or reset; no admission inferred"
+  },
+  "fix": {
+    "config_path": "/home/an/.config/jj/repos/797c18a8a6d06a90b41a/config.toml",
+    "key": "revset-aliases.\"immutable_heads()\"",
+    "before": "builtin_immutable_heads()",
+    "after": "builtin_immutable_heads() | main",
+    "other_config_preserved": true,
+    "main_unchanged_by_installation": true,
+    "private_test": "Actual standalone JJ ancestor edit snapshot creates new child, preserves local edit, keeps main commit and baseline file bytes unchanged"
+  },
+  "process_deviation": {
+    "observed": "Initial task-specific coordinator claim refused because session heartbeat stale; the private fixture command followed in the same orchestration call before this refusal was inspected.",
+    "scope": "Private temporary JJ fixture only; canonical Sa-plan task was executing with ACTIVE_OBSERVATION_PASS. No canonical repository config or main mutation occurred before the coordinator repair.",
+    "repair": "Refreshed heartbeat sequence553; successful task claim sequence554 epoch1; explicit checkPASS before canonical configuration change. Refusal is not represented as a claim."
+  },
+  "verification_limits": [
+    "Private fixture plus actual config/readback, not an actual forced edit of canonical ancestor",
+    "Actual AGY receipt acknowledgment pending; delivery return is not ACK",
+    "Other workspace policies and release gates still apply; explicit ignore-immutable can bypass cooperative JJ policy and is not authorized here",
+    "HTTP and store component acceptance do not admit Telegram service or main release"
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1746-telegram-vcs-guard/active-check.json",
+      "sha256": "fec8e7d4947f620e7b5149f7653d9551840488c42d2130135a01e83e325fd461"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1746-telegram-vcs-guard/ancestor-operation.txt",
+      "sha256": "63a799c19124862ee1698205b8e1b3936fcc306af8a74e53183418a81c60a9c8"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1746-telegram-vcs-guard/installation.json",
+      "sha256": "e3abea0b4e7ddfa9427ea76ee031c7d2098fe622646e603107b38770144170f6"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1746-telegram-vcs-guard/main-difference.txt",
+      "sha256": "4ce8711c83cae7f16cc85db5ac5d3084243246b74d2eea7e2b5b6140a0fd4a0e"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1746-telegram-vcs-guard/private-fixture.json",
+      "sha256": "a446efa76900eea8dbd8dde05ca7f41da7b61dceb43909d5e24aaacf03ff95bc"
+    }
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l9",
+    "#zero-muda"
+  ]
+}

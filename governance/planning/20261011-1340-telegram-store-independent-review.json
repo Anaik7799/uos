@@ -1,0 +1,202 @@
+{
+  "schema": "uos.telegram-store-independent-review.v1",
+  "observed_at": "2026-10-11T13:48:40Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": {
+    "observed_at": "2026-10-11T13:44:32.165Z",
+    "files": [
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/telegram_store.gleam",
+        "sha256": "5ee81f2f827f59d3a2c4ba8b8e1156997a400a16116e4333d6566e6f1137ed86"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@telegram_store.beam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/ebin/cepaf_gleam@harness@telegram_store.beam",
+        "sha256": "812a864fdf51f1d03c81a833014dc3785c4c8d448d24e4b44e2bb32f2e823421"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/cepaf_gleam@harness@telegram_store.erl",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/cepaf_gleam@harness@telegram_store.erl",
+        "sha256": "081065e347c9ecdcae501e8b9ae2d3119a8bad8352fa539ed26f67d36def3d60"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/telegram_store_codec.gleam",
+        "sha256": "9c3036b7fb3dfe78f3b2c9bb0250bc9e8288a6f35956f37073fd0e1406c8a709"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@telegram_store_codec.beam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/ebin/cepaf_gleam@harness@telegram_store_codec.beam",
+        "sha256": "bb64d736851308b064464be57882a93b9b7f8fd0f59983b7dad227d1a9b0a7ad"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/cepaf_gleam@harness@telegram_store_codec.erl",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/cepaf_gleam@harness@telegram_store_codec.erl",
+        "sha256": "115377494d0b96ad81c39082b7a1fe2df5860d12e58988132e53794989f04bf6"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@telegram_delivery_ledger.beam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/ebin/cepaf_gleam@harness@telegram_delivery_ledger.beam",
+        "sha256": "dfb08a9215b8b7d88ff0b49acac48d91c58c3fc4cb7a295c56e459892e3e1fb4"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/cepaf_gleam@harness@telegram_delivery_ledger.erl",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/cepaf_gleam@harness@telegram_delivery_ledger.erl",
+        "sha256": "651df8aca5dbb2dcb26df69e159f858768f70bfd721e1a519a214bf038a645ed"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@telegram_ingress_guard.beam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/ebin/cepaf_gleam@harness@telegram_ingress_guard.beam",
+        "sha256": "6ba61d0a68e69889ce775bb672b171e19415726fb9d3be15af37f87444b7a6c5"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/cepaf_gleam@harness@telegram_ingress_guard.erl",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/cepaf_gleam@harness@telegram_ingress_guard.erl",
+        "sha256": "4dfd7ad839e9072cff6712143cdad4ce94267902dc830d4647b07bfeb18d735c"
+      },
+      {
+        "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/telegram_store_transport.gleam",
+        "sha256": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@telegram_store_transport.beam",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/ebin/cepaf_gleam@harness@telegram_store_transport.beam",
+        "sha256": "406caf01e1c35e20616f16a339871a1bdcbd51a151aad71d354049199300134e"
+      },
+      {
+        "source": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/cepaf_gleam@harness@telegram_store_transport.erl",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/cepaf_gleam@harness@telegram_store_transport.erl",
+        "sha256": "3d41b75a2cf1f022664c75ba1fc23ec1f7924613f0a1de79954cf64c587a2b34"
+      },
+      {
+        "source": "tools/telegram_store_transport_guardian.exe",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/telegram_store_transport_guardian.exe",
+        "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+      },
+      {
+        "source": "native/ocaml/telegram_store/_build/default/telegram_store_main.exe",
+        "copy": "var/recovery-runtime/20261011-1348-store-review/telegram_store_main.exe",
+        "sha256": "2cf64d7a24da0e9c1dc7ace920b3f119447e6b0de3e75a8f7ee74e37930156ec"
+      }
+    ]
+  },
+  "fresh_compile": {
+    "tool": "toolchains/gleam-1.16.0/bin/gleam compile-package",
+    "otp": "pinned OTP29",
+    "source": "private frozen six-module Gleam closure",
+    "result": "PASS",
+    "warning": "Independent Erlang probe uses deprecated catch; warning preserved."
+  },
+  "observed_findings": [
+    [
+      "TG-ST-01",
+      "wrong_bot_singleton",
+      "Confirmed native persisted inbox bot999 under request tg-123-10 in bot123 store.",
+      "Validate every envelope including singleton; bind meta/bot_identity in read set."
+    ],
+    [
+      "TG-ST-02",
+      "later_group_conflict",
+      "Conflicting update11 group did not prevent update10 commit and watermark11.",
+      "Bound and prevalidate the entire fetched batch and each equal-ID group before any apply."
+    ],
+    [
+      "TG-ST-03",
+      "known_replay",
+      "Previously persisted identical update10 was rejected as unseen below offset11.",
+      "Read durable inbox/input and validate immutable replay identity before returning an idempotent acknowledgement."
+    ],
+    [
+      "TG-ST-04",
+      "bootstrap_recovery",
+      "Native initialization followed by interrupted metadata bootstrap cannot resume via initialize_store.",
+      "Explicit generation-1 metadata bootstrap recovery with exact identity and operation receipt after quiescence."
+    ],
+    [
+      "TG-ST-05",
+      "authority_fence",
+      "Worker other-worker epoch999 committed SENDING despite authority owner epoch1.",
+      "Read and validate authority row; include it and matching inbox/result/chunk identities in the same apply CAS."
+    ],
+    [
+      "TG-ST-06",
+      "negative_generation",
+      "Initializer decoder accepted generation -3.",
+      "Validate positive bounded generation and expected operation-specific transition."
+    ],
+    [
+      "TG-ST-07",
+      "malformed_receipt",
+      "Apply decoder accepted empty operation ID, non-digest, generation-2, invalid summary and timestamp-1.",
+      "Bound strict schema and bind operation/digest/generation/summary to request; validate replay semantics."
+    ],
+    [
+      "TG-ST-08",
+      "malformed_row",
+      "Read decoder accepted absent row with version1, noncanonical base64 and bad hash.",
+      "Validate exact keys, count, uniqueness, positive generation, row shape and canonical value digest."
+    ],
+    [
+      "TG-ST-09",
+      "reflected_error",
+      "Backend synthetic private marker returned verbatim.",
+      "Finite reviewed error-code vocabulary; redact unknown payload."
+    ],
+    [
+      "TG-ST-10",
+      "state_panic",
+      "commit_outcome on Pending raises panic instead of typed refusal.",
+      "Return finite typed state errors without crashing caller."
+    ],
+    [
+      "TG-ST-11",
+      "uncertain_absence",
+      "reconcile_uncertain returns ReconciledAbsent from lookup with no prior-writer quiescence evidence.",
+      "Preserve unknown until bounded writer cleanup/quiescence and exact receipt reconciliation."
+    ],
+    [
+      "TG-ST-12",
+      "reservation_leak",
+      "After ingress, claim, result and SENDING: reserved_rows20 reserved_receipts64, actual KV7 receipts5 generation6.",
+      "Account total potential rows including consumed; decrement credits per atomic transition and release remainder safely."
+    ]
+  ],
+  "results": {
+    "independent_cases": 11,
+    "defects_reproduced": 11,
+    "additional_sqlite_reservation_observation": true,
+    "output_path": "var/recovery-runtime/20261011-1348-store-review/fresh-results.txt",
+    "output_sha256": "03bcc2feb8a09f1bc4c3c7198525aa595db54ba9a11164da54073c4309590374",
+    "probe_path": "var/recovery-runtime/20261011-1348-store-review/store_independent.erl"
+  },
+  "source_findings_not_yet_injected": [
+    "read_inbox_records ignores second read generation and may return mixed snapshot",
+    "Equal-ID identity comparison omits directive",
+    "No atomic authority assertion in result/outcome transitions"
+  ],
+  "limitations": [
+    "Tests are private local SQLite with synthetic identities and no HTTP effects.",
+    "Consumer candidate may have changed after frozen snapshot; this receipt does not describe later edits.",
+    "Original test path below group-writable repository was correctly refused; rerun uses owned0700/tmp directories.",
+    "First read-only SQL count used nonexistent kv table; corrected to kv_rows and observed7 rows/5receipts."
+  ],
+  "process_deviation": "AGY began follow-up edits after STORE_IMPL completion before consuming queued STOP/claim instructions. New STORE_FIX task created; no retrospective authority is claimed.",
+  "next": "STORE_FIX followed by independent STORE_VERIFY; SERVICE_IMPL remains risk-blocked."
+}

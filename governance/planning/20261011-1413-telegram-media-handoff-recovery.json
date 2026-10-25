@@ -1,0 +1,44 @@
+{
+  "schema": "uos.telegram-media-handoff-recovery.v1",
+  "observed_at": "2026-10-11T14:57:13.241Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "MEDIA_CORRECTION",
+  "worker": "codex-telegram-20261011",
+  "attempt": 2,
+  "previous": {
+    "worker": "claude-telegram-20261011",
+    "attempt": 1,
+    "expired_lease_ns": "1791730336829779065",
+    "quota_interruption": true
+  },
+  "status": "DESIGN_CORRECTION_VERIFIED_FOR_CLOSURE",
+  "runtime_admission": "NOT_GRANTED",
+  "evidence": [
+    {
+      "path": "governance/planning/20261011-1349-claude-telegram-media-design-correction.json",
+      "sha256": "3ab3b298d065e3edc4ca28e5b502499bc0ed0e11023c2b50cc251ad85d5ee960"
+    },
+    {
+      "path": "governance/planning/20261011-1349-telegram-media-adoption.json",
+      "sha256": "d1ee2a1b7c5b6d2175e8c8bfc9dfe20ffac5970bba6baaa9f33d6ad379ecf4e2"
+    }
+  ],
+  "canonical_checks": [
+    {
+      "path": "var/recovery-runtime/20261011-1453-store-recovery-fixtures-v2/media-reclaim-preflight.json",
+      "sha256": "1fa2b8cd0317da0dd7c44474b91b21193543748e729ec1a39131c0e6f6ce0a8c"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1453-store-recovery-fixtures-v2/media-reclaim-active.json",
+      "sha256": "066619e7641ced4e4a1b85c510769b39a6c87dda239525657cb9aed9a15eadc2"
+    }
+  ],
+  "disposition": "Root owns new attempt and closes corrected design using actual preserved Claude review plus independent root additions; no acting as Claude and no fresh Claude ACK",
+  "unmet": "Media implementation, independent behavior verification and release remain pending",
+  "forecast": {
+    "precommitted_at": "2026-10-11T14:57:13.241Z",
+    "p": 0.9,
+    "horizon": "2026-10-11T15:00:00Z",
+    "event": "Own canonical task closure with journal receipt"
+  }
+}

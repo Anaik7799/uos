@@ -1,0 +1,75 @@
+COMMAND 0
+ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard("tools/uos/build/dev/erlang/*/ebin")),case eunit:test([doctor_manifest_truth_test,admission_truth_test,exit_status_test,status_truth_test,uos_test,mirage_gates_truth_test],[verbose]) of ok->halt(0);_->halt(1) end.'
+======================== EUnit ========================
+module 'doctor_manifest_truth_test'
+  doctor_manifest_truth_test: empty_and_comments_never_pass_test...[0.016 s] ok
+  doctor_manifest_truth_test: valid_inventory_is_scoped_positive_control_test...ok
+  doctor_manifest_truth_test: malformed_identity_and_shape_refuse_test...ok
+  doctor_manifest_truth_test: duplicate_ev_refuses_even_existing_artifacts_test...ok
+  doctor_manifest_truth_test: missing_unknown_and_quarantined_refuse_test...ok
+  doctor_manifest_truth_test: unsafe_artifact_paths_never_observed_test...ok
+  [done in 0.034 s]
+module 'admission_truth_test'
+  admission_truth_test: artifact_only_gates_refuse_admission_test...[0.006 s] ok
+  admission_truth_test: artifact_only_domains_refuse_admission_test...ok
+  [done in 0.012 s]
+module 'exit_status_test'
+  exit_status_test: unknown_gate_returns_exit_code_1_test...ok
+  exit_status_test: artifact_gate_cannot_claim_verification_test...ok
+  exit_status_test: doctor_returns_exit_code_1_when_unverifiable_cycles_exist_test...[0.001 s] ok
+  exit_status_test: mirage_gates_fail_closed_without_behavioral_and_formal_evidence_test...ok
+  [done in 0.013 s]
+module 'status_truth_test'
+  status_truth_test: unobserved_runtime_status_cannot_return_success_test...ok
+  status_truth_test: cli_process_preserves_failure_exit_status_test...[0.148 s] ok
+  [done in 0.154 s]
+module 'uos_test'
+  uos_test: parse_status_test...ok
+  uos_test: parse_gate_test...ok
+  uos_test: parse_doctor_test...ok
+  uos_test: parse_dmc_check_test...ok
+  uos_test: parse_tcm_check_test...ok
+  uos_test: parse_timestamp_check_test...ok
+  uos_test: timestamp_regex_valid_test...ok
+  uos_test: timestamp_regex_invalid_test...ok
+  uos_test: parse_help_test...ok
+  [done in 0.027 s]
+module 'mirage_gates_truth_test'
+  mirage_gates_truth_test: mirage_core_inventory_is_complete_and_cli_returns_hold_exit_1_test...[0.001 s] ok
+  mirage_gates_truth_test: mirage_migration_inventory_is_complete_and_cli_returns_hold_exit_1_test...ok
+  mirage_gates_truth_test: mirage_prod_inventory_is_complete_and_cli_returns_hold_exit_1_test...ok
+  [done in 0.010 s]
+=======================================================
+  All 26 tests passed.
+
+
+COMMAND 1
+cd / && ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 UOS_REPO=/ /home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard("/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/*/ebin")),main:main(),halt(0).' -extra doctor
+ERROR backend_exit:1
+UOS Doctor: FAIL - governance/ev-manifest.tsv is absent or empty; nothing could be checked.
+  inventory (artifact present):   0
+  MISSING (artifact declared, absent): 0
+  unverifiable (no artifact declared): 0
+  not admitted (above EV-93 ceiling): 0
+
+NOTE: an existing artifact is NOT two-key admission. It shows a record is present,
+      not that runtime behaviour and a formal specification were verified at a
+      revision. For computed admission run: bash tools/km-gate --ev-admission <rev>
+
+UOS Doctor result: HOLD - 0/0 cycles have a checkable artifact; 0 declare none and are NOT admitted.
+
+
+COMMAND 2
+ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard("tools/uos/build/dev/erlang/*/ebin")),NoObserve=fun(_)->error(unexpected_observer_call) end,Inputs=[binary:copy(<<"x">>,262145),binary:copy(<<"1\t-\tlabel\n">>,1001),<<"94\tpresent.md\tquarantined">>,<<"+1\tpresent.md\tinvalid">>,<<"1\ta/./b\tinvalid">>,<<"1\ta/\tinvalid">>],lists:foreach(fun(M)->false=main:doctor_manifest_passes(main:doctor_manifest_results(M,NoObserve)) end,Inputs),io:format("Six additional parser falsifiers passed; artifact observer never invoked.~n"),halt(0).
+ERROR backend_exit:2
+/usr/bin/bash: -c: line 1: unexpected EOF while looking for matching `''
+
+
+CORRECTED EXTRA COMMAND
+ERL_CRASH_DUMP=/dev/null ERL_CRASH_DUMP_SECONDS=0 toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard("tools/uos/build/dev/erlang/*/ebin")),NoObserve=fun(_)->error(unexpected_observer_call) end,Inputs=[binary:copy(<<"x">>,262145),binary:copy(<<"1\t-\tlabel\n">>,1001),<<"94\tpresent.md\tquarantined">>,<<"+1\tpresent.md\tinvalid">>,<<"1\ta/./b\tinvalid">>,<<"1\ta/\tinvalid">>],lists:foreach(fun(M)->false=main:doctor_manifest_passes(main:doctor_manifest_results(M,NoObserve)) end,Inputs),io:format("Six additional parser falsifiers passed; artifact observer never invoked.~n"),halt(0).'
+Six additional parser falsifiers passed; artifact observer never invoked.
+
+
+tools/uos/src/main.gleam 6f1801c0315a83f179bbaf586617267a1d7a7a09d6078d3faf1587db4c8450c1
+tools/uos/test/doctor_manifest_truth_test.gleam 3def9f6d209b60720ed7efcc6723c313f4ce5aef352937b1a42b747d85831ba3
+TIME 2026-10-01T11:49:29Z

@@ -2,10 +2,11 @@
 
 import cepaf_gleam/telegram/mini_control
 import cepaf_gleam/telegram/mini_telemetry
-import cepaf_gleam/web/server
+import cepaf_gleam/web/homeostasis_http
 import gleam/bytes_tree
-import gleam/erlang/process
 import gleam/http/response
+import cepaf_gleam/web/server
+import gleam/erlang/process
 import gleam/int
 import gleam/string
 import mist
@@ -54,16 +55,12 @@ pub fn main() {
   }
   let assert Ok(_) =
     mist.new(fn(req) {
-      case
-        string.starts_with(req.path, "/mini-app")
+      case string.starts_with(req.path, "/mini-app")
+        || homeostasis_http.handles(req.path)
         || req.path == "/api/v1/plan/update"
-      {
-        True -> server.handle_normal_http(req)
-        False ->
-          response.new(404)
-          |> response.set_body(
-            mist.Bytes(bytes_tree.from_string("private fixture")),
-          )
+        || req.path == "/unknown-upgrade-g2" {
+        True -> server.route_request(req, 49_134)
+        False -> response.new(404) |> response.set_body(mist.Bytes(bytes_tree.from_string("private fixture")))
       }
     })
     |> mist.bind("100.87.7.78")

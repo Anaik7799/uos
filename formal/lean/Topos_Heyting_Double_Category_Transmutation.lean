@@ -63,25 +63,7 @@ def heyting_impl (a b : EpistemicDegree) : EpistemicDegree :=
     adjunction: meet a b <= c ↔ a <= heyting_impl b c. -/
 theorem heyting_algebra_subobject_classifier_soundness (a b c : EpistemicDegree) :
     (meet a b <= c) ↔ (a <= heyting_impl b c) := by
-  dsimp [LE.le, le_degree, meet, heyting_impl]
-  split_ifs with h1 h2 h3
-  · -- h1: a <= b, h2: b <= c
-    have h_ac : degree_to_nat a <= degree_to_nat c := Nat.le_trans h1 h2
-    simp [h_ac]
-    cases a <;> cases c <;> decide
-  · -- h1: a <= b, not (b <= c)
-    simp
-  · -- not (a <= b), b <= c
-    simp at h1
-    have h_bc : degree_to_nat b <= degree_to_nat c := h2
-    constructor
-    · intro _
-      cases a <;> decide
-    · intro _
-      exact h_bc
-  · -- not (a <= b), not (b <= c)
-    simp
-
+  cases a <;> cases b <;> cases c <;> decide
 
 /- =========================================================================
    2. Constructive Epistemic Truth Monotonicity
@@ -97,13 +79,8 @@ theorem constructive_epistemic_truth_monotonicity (prior_deg : EpistemicDegree)
       | .Credible => if evidence_weight >= 5 then EpistemicDegree.Top else EpistemicDegree.Credible
       | .Top => EpistemicDegree.Top
     prior_deg <= posterior_deg := by
-  dsimp [LE.le, le_degree, degree_to_nat]
-  cases prior_deg
-  · split <;> decide
-  · split <;> decide
-  · split <;> decide
-  · decide
-
+  cases prior_deg <;> dsimp only
+  all_goals first | (split <;> decide) | decide
 
 /- =========================================================================
    3. Incomplete Telemetry Safe Classification

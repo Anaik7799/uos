@@ -1,0 +1,62 @@
+{
+  "schema": "uos.telegram-mini-candidate-independent-review.v1",
+  "reviewed_at": "2026-10-11T20:27:15Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "MINI_API_CANDIDATE",
+  "reviewer": "agy-telegram-20261011",
+  "reviewer_attempt": 6,
+  "candidate_worker": "codex-telegram-20261011",
+  "candidate_attempt": 1,
+  "candidate_workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-telegram-mini-20261011",
+  "candidate_commit": "76360aa326fda8ecb918ff00a390c4d97bf78486",
+  "candidate_change_id": "zsoxutzskksnlwvlpumxkwyvzmqtqpww",
+  "handoff_manifest": "governance/planning/20261011-1948-telegram-mini-candidate-handoff.json",
+  "handoff_sha256": "66c6bfb26e0f61d4b02ddd46d7688a5b4b4ab8f0a77d0c0533b16f0494d49bf1",
+  "status": "CORE_CANDIDATE_ADOPTED_HOLD_MAINTAINED",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "source_verification": {
+    "sources_checked": 21,
+    "sources_matched": 21,
+    "mismatches": []
+  },
+  "rerun_receipts": {
+    "unit_suite": {
+      "module": "mini_boundary_test",
+      "launcher": "var/recovery-runtime/20261011-1318-native-verify3/gleam-bound 30000",
+      "command": "toolchains/nix-profile/bin/erl +S 2:2 +A 2 -noshell -eval 'code:add_paths(filelib:wildcard(\"apps/cepaf_gleam/build/dev/erlang/*/ebin\")),code:add_patha(\"var/recovery-runtime/20261011-1941-mini-final-build2/build/ebin\"),case eunit:test(mini_boundary_test,[verbose]) of ok -> halt(0); _ -> halt(1) end.'",
+      "result": "8/8 PASS (0.066s)",
+      "exit_code": 0
+    },
+    "http_suite": {
+      "checks_verified": 29,
+      "result": "29/29 PASS",
+      "artifacts": [
+        "var/recovery-runtime/20261011-1941-mini-final-build2/http-results.json",
+        "var/recovery-runtime/20261011-1946-mini-fixture2/http-results.json"
+      ]
+    },
+    "browser_suite": {
+      "scenarios_verified": 3,
+      "scenarios": ["sdk-blocked", "mobile-authenticated", "desktop-authenticated"],
+      "report": "var/recovery-runtime/20261011-1941-mini-final-build2/browser/report.json"
+    }
+  },
+  "review_findings": {
+    "poka_yoke_routes": "14 public shells adhere strictly to exact routes with 18/18 checklist checkpoints and no fake defaults; prefix alias /mini-application and unknown routes correctly return 404.",
+    "auth_ingress_boundary": "POST /mini-app/api/data strictly validates HMAC-SHA256 signature, auth_date age within TTL, allowed user identity, and bounds request body to 8192 bytes. Wrong methods, forged signatures, expired credentials, and chunked transfer encoding are fail-closed.",
+    "backend_task_observation": "Tasks backend queries Sa-plan store through pinned obs_guardian.exe and sa_plan_observer.exe. Truthfully renders expired executing task leases ('executing (lease expired)'). Other 13 page backends correctly report 'unavailable' without fabricating healthy metrics.",
+    "limitations_and_residuals": [
+      "13 page backends and actions remain unavailable/unimplemented; MINI_API_IMPL must remain open",
+      "Telegram SDK identity is verified against synthetic fixture; live Telegram client testing is UNRUN",
+      "Immutable main branch constraint preserved; candidate remains isolated in sibling workspace"
+    ]
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l9",
+    "#zero-muda"
+  ]
+}

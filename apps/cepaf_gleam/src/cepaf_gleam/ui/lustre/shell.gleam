@@ -30,6 +30,8 @@
 ////
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-008, SC-MUDA-001, SC-HMI-TEST
 
+import cepaf_gleam/ui/lustre/verification_requirements
+
 import cepaf_gleam/a2ui/catalog
 import cepaf_gleam/a2ui/renderer as a2ui_renderer
 import cepaf_gleam/a2ui/schema as a2ui_schema
@@ -217,6 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.selectTheme = setTheme;
 
+  // Recovery pages render recorded evidence only. Their dedicated client owns
+  // filtering and refresh; legacy simulation and synthetic live/proof signals
+  // are not observations and must never be attached to this surface.
+  if (document.getElementById('uos-recovery-cockpit')) return;
+
   // === Test Cycle Logic (SC-HMI-TEST) ===
   const cockpitModes = ['dark', 'dim', 'normal', 'bright', 'emergency'];
   let testInterval = null;
@@ -335,6 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // === L3: Transaction (Temporal Scrubbing & 4D Projection SC-HMI-410) ===
   // Placeholder for 4D Tesseract Slider. 
   // Renders a temporal timeline at the bottom of the screen.
+  if (!document.getElementById('uos-recovery-cockpit')) {
   const temporalSlider = document.createElement('input');
   temporalSlider.type = 'range';
   temporalSlider.min = '-60'; temporalSlider.max = '0'; temporalSlider.value = '0';
@@ -344,6 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.filter = e.target.value < 0 ? 'sepia(100%) hue-rotate(180deg)' : 'none';
   });
   document.body.appendChild(temporalSlider);
+  }
 
   // === L4: System (Gestalt Topological Clustering SC-HMI-440) ===
   // Groups containers visually based on semantic gravity
@@ -595,7 +604,18 @@ pub fn render_page(
       ]),
       html.body([], [
         render_nav(active_path),
-        html.main([], [content]),
+        html.main([], [content, verification_requirements.view()]),
+        html.footer(
+          [attribute.attribute("style", "padding:1rem;overflow-wrap:anywhere")],
+          [
+            html.a([attribute.href("http://nas-1.tail55d152.ts.net:4100/")], [
+              html.text("UOS cockpit"),
+            ]),
+            html.text(
+              " | Standalone Jujutsu | Gleam/OTP | EV ceiling93; EV94..109 NOT_ADMITTED",
+            ),
+          ],
+        ),
       ]),
     ])
   "<!doctype html>" <> element.to_string(doc)

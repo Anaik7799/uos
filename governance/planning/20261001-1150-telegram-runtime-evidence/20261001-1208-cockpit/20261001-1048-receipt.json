@@ -1,0 +1,33 @@
+{
+  "schema": "uos.restoration-browser-observation.v1",
+  "observed_utc_seconds": 1790856465.565881,
+  "status": "HOLD",
+  "url": "http://nas-1.tail55d152.ts.net:49157/",
+  "viewport_width": 1280,
+  "source_sha256": "3c6b53f32bc66dd782812ba6904da5c60ee6b512af55c1204b60f5dc6c98c7a9",
+  "elapsed_seconds": 4.244745662000001,
+  "application_admitted": false,
+  "observations": {
+    "HTTP200_exact_response_URL": true,
+    "response_url": "http://nas-1.tail55d152.ts.net:49157/",
+    "http_status": 200,
+    "body_has_content": true,
+    "no_route_fallback": true,
+    "exact_final_URL": true,
+    "visible_route_heading": true,
+    "links_present": true,
+    "one_canonical_checklist": true,
+    "visible_checklist_summary": true,
+    "canonical_checklist_keyboard_toggle": true,
+    "five_domains_plus_provenance": true,
+    "18_exact_visible_UNRUN_requirements": true,
+    "provenance_visible": true,
+    "no_receipts_honest": true,
+    "controller_source_unchanged": true
+  },
+  "screenshots": [],
+  "findings": [
+    "browser_exception:Playwright__Api.Error(\"TimeoutError: Timeout 3000ms exceeded.\\nTimeoutError: Timeout 3000ms exceeded.\\n    at ProgressController.run (/home/an/.cache/playwright-ocaml-driver/1.59.0/package/lib/server/progress.js:92:28)\\n    at FrameDispatcher._runCommand (/home/an/.cache/playwright-ocaml-driver/1.59.0/package/lib/server/dispatchers/dispatcher.js:91:31)\\n    at DispatcherConnection.dispatch (/home/an/.cache/playwright-ocaml-driver/1.59.0/package/lib/server/dispatchers/dispatcher.js:325:39)\")"
+  ],
+  "limits": "One route and viewport. Read-only navigation and local accordion keyboard interaction; no control activation, accessibility certification or global admission. Visual review is separate."
+}

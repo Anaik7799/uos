@@ -1,0 +1,99 @@
+{
+  "schema": "uos.telegram-store-fix2-candidate.v6",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 2,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1725",
+  "observed_at": "2026-10-11T15:10:19Z",
+  "lease_until_ns": "1791734662906226573",
+  "status": "CANDIDATE_DELIVERED_OPEN_ATTEMPT",
+  "task_lifecycle": "executing (PRESERVED OPEN for independent root and Codex STORE_DRAFT_REVIEW)",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store.gleam": "d11e2e29569f994723505c42e1f8e5365a9ffcd43d4a2a1a9489c9484dab2509",
+    "telegram_store_codec.gleam": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+    "telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+    "telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+    "telegram_store_test.gleam": "145657b8cd8597cd877f680fbdf3c107b4dc0334f73484445ebdf2cae799007b",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "telegram_store_transport_ffi.erl": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f"
+  },
+  "recovery_fixtures_manifest": "var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3/manifest.json",
+  "recovery_fixtures_hashes": {
+    "guardian": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d",
+    "recovery_worker.exe": "0eeb97ccf030e588fbed66a791218f6cd4b2d71423c1249feafc9d10c130c74c"
+  },
+  "attempt_2_reconciliation": {
+    "attempt_1_disposition": "Voluntarily released before 15:05:36Z expiry via Sa-plan release protocol",
+    "attempt_2_claim": "Claimed under agy-telegram-20261011 with lease_until_ns 1791734662906226573 (~16:04 UTC)",
+    "active_check_status": "ACTIVE_OBSERVATION_PASS (attempt 2, 0 task findings)"
+  },
+  "root_review_corrections_addressed": [
+    {
+      "item": "transport_ffi_exact_sha",
+      "detail": "Restored telegram_store_transport_ffi.erl to exact reviewed SHA 33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f. Zero unreviewed timeout env variables or configuration knobs introduced."
+    },
+    {
+      "item": "lookup_operation_id_validation",
+      "detail": "Added explicit check in telegram_store.gleam lookup_operation: when found is True and receipt is Some(r), verifies r.operation_id == operation_id. Mismatch fails closed with StoreInvariantError('lookup_operation_id_mismatch')."
+    },
+    {
+      "item": "v3_fixtures_integration",
+      "detail": "Adopted var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3 where faults apply only to command=apply, leaving lookup_operation untouched. Test 31 exercises fault-domain (lookup returns true committed receipt), fault-receipt-field (receipt mismatch triggers StoreUncertainApply, lookup returns true receipt), and fault-native-uncertain (commit_uncertain refusal triggers StoreUncertainApply, lookup returns true receipt)."
+    },
+    {
+      "item": "quiescence_cleanup_proof",
+      "detail": "All uncertain apply states retain genuine observed CleanupProof (exit status 0 for decode/field faults; exit status 124 for guardian deadline kill). Reconcile verifies witness binding against local configuration and canonical request, preventing forged or cross-database reconciliation."
+    },
+    {
+      "item": "timeout_safety",
+      "detail": "In-tree Gleam test 31 exercises all instant (<5ms) fault paths (fault-domain, fault-receipt-field, fault-native-uncertain, binding mismatch, discriminated decoding) without triggering EUnit's 5.0-second test timeout. Full 10-second fault-pre/fault-post guardian deadline lifecycle verified independently under Gleam supervisor launcher."
+    }
+  ],
+  "verification_results": {
+    "in_tree_gleam_tests": {
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "modules": [
+        "telegram_store_test (31 tests passed in 3.19s)",
+        "telegram_delivery_ledger_test (27 tests passed)",
+        "telegram_ingress_guard_test (16 tests passed)"
+      ]
+    },
+    "transport_fixture_tests": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "runner": "tools/validation/telegram_store_transport_test.erl"
+    },
+    "preflight_gate": {
+      "checks": 31,
+      "status": "PASS"
+    },
+    "risk_priority_active_check": {
+      "task_id": "STORE_FIX2",
+      "worker": "agy-telegram-20261011",
+      "attempt": 2,
+      "findings_for_task": [],
+      "status": "ACTIVE_OBSERVATION_PASS"
+    },
+    "guardian_timeout_fault_fixtures": {
+      "fault_pre": {
+        "apply_outcome": "StoreUncertainApply",
+        "observed_exit_status": 124,
+        "reconciliation": "PendingAbsent",
+        "status": "PASS"
+      },
+      "fault_post": {
+        "apply_outcome": "StoreUncertainApply",
+        "observed_exit_status": 124,
+        "reconciliation": "PendingCommitted",
+        "status": "PASS"
+      }
+    }
+  }
+}

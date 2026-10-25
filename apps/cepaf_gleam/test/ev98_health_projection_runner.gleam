@@ -1,5 +1,7 @@
 import cepaf_gleam/crdt/delta_state.{type LWWRegister, new_lww_register}
-import cepaf_gleam/crdt/health_bridge.{type NodeHealthTelemetry, NodeHealthTelemetry, merge_health_maps}
+import cepaf_gleam/crdt/health_bridge.{
+  type NodeHealthTelemetry, NodeHealthTelemetry, merge_health_maps,
+}
 import gleam/int
 import gleam/io
 import gleam/list
@@ -10,7 +12,9 @@ type Input {
   Input(sample: Int, logical: Int, writer_rank: Int, payload: Int)
 }
 
-fn writer(rank: Int) -> String { "w" <> int.to_string(rank) }
+fn writer(rank: Int) -> String {
+  "w" <> int.to_string(rank)
+}
 
 fn register(node: String, input: Input) {
   let Input(sample, logical, rank, payload) = input
@@ -95,7 +99,10 @@ fn records() -> List(Input) {
     |> list.flat_map(fn(logical) {
       [0, 1, 2]
       |> list.flat_map(fn(writer_rank) {
-        [Input(sample, logical, writer_rank, 0), Input(sample, logical, writer_rank, 1)]
+        [
+          Input(sample, logical, writer_rank, 0),
+          Input(sample, logical, writer_rank, 1),
+        ]
       })
     })
   })
@@ -104,16 +111,44 @@ fn records() -> List(Input) {
 fn emit_malformed_collision() {
   let zero = Input(1, 1, 1, 0)
   let one = Input(1, 1, 1, 1)
-  let assert [#(_, forward)] = merge_health_maps([#("target", register("target", zero))], [#("target", register("target", one))])
-  let assert [#(_, reverse)] = merge_health_maps([#("target", register("target", one))], [#("target", register("target", zero))])
-  io.println("{\"kind\":\"malformed_collision\",\"forward\":" <> winner_json(forward) <> ",\"reverse\":" <> winner_json(reverse) <> "}")
+  let assert [#(_, forward)] =
+    merge_health_maps([#("target", register("target", zero))], [
+      #("target", register("target", one)),
+    ])
+  let assert [#(_, reverse)] =
+    merge_health_maps([#("target", register("target", one))], [
+      #("target", register("target", zero)),
+    ])
+  io.println(
+    "{\"kind\":\"malformed_collision\",\"forward\":"
+    <> winner_json(forward)
+    <> ",\"reverse\":"
+    <> winner_json(reverse)
+    <> "}",
+  )
 }
 
 fn emit_raw_map_order() {
   let value = Input(0, 0, 0, 0)
-  let assert [#(forward_first, _), #(forward_second, _)] = merge_health_maps([#("a", register("a", value))], [#("b", register("b", value))])
-  let assert [#(reverse_first, _), #(reverse_second, _)] = merge_health_maps([#("b", register("b", value))], [#("a", register("a", value))])
-  io.println("{\"kind\":\"raw_map_order\",\"forward\":[" <> quoted(forward_first) <> "," <> quoted(forward_second) <> "],\"reverse\":[" <> quoted(reverse_first) <> "," <> quoted(reverse_second) <> "],\"canonical\":[\"a\",\"b\"]}")
+  let assert [#(forward_first, _), #(forward_second, _)] =
+    merge_health_maps([#("a", register("a", value))], [
+      #("b", register("b", value)),
+    ])
+  let assert [#(reverse_first, _), #(reverse_second, _)] =
+    merge_health_maps([#("b", register("b", value))], [
+      #("a", register("a", value)),
+    ])
+  io.println(
+    "{\"kind\":\"raw_map_order\",\"forward\":["
+    <> quoted(forward_first)
+    <> ","
+    <> quoted(forward_second)
+    <> "],\"reverse\":["
+    <> quoted(reverse_first)
+    <> ","
+    <> quoted(reverse_second)
+    <> "],\"canonical\":[\"a\",\"b\"]}",
+  )
 }
 
 pub fn main() {

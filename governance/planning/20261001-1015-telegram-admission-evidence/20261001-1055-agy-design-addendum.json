@@ -1,0 +1,92 @@
+{
+  "schema": "uos.telegram-admission-agy-design-addendum.v1",
+  "observed_at": "2026-10-01T10:55:00Z",
+  "task": "AGY_DESIGN_FIX",
+  "worker": "agy-telegram-admission-20261001",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "attempt": 1,
+  "base": "83dca0394346564356920f066b3924858144107f",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-telegram-admission-20261001",
+  "phase": "DEVELOPMENT_DESIGN_ADDENDUM_ONLY",
+  "authority": "Design audit only; implementation follows independently accepted DESIGN_REVIEW2; zero main or runtime mutations",
+  "canonical_task_lifecycle_pseudocode": {
+    "service_bootstrapping": {
+      "plan_provisioning": "tools/sa-plan plan create 'uos/telegram-service/boot' 'telegram-service-boot' 'UOS Supervised Telegram Service Operations'",
+      "worker_identity": "telegram-service-bridge",
+      "singleton_coordinator_lease": "Acquire lease on resource 'runtime:telegram-bridge' for session 'telegram-service-<uuid>' with 30s TTL, renewed every 10s via coordinator heartbeat."
+    },
+    "per_request_flow": [
+      "# 1. Inbound update arrived and validated by numeric allowlist (bot_id, chat_id, user_id)",
+      "# Deterministic task ID derived from update_id:",
+      "TASK_ID=\"req-tg-${update_id}\"",
+      "",
+      "# 2. Create discrete Sa-plan task in service plan:",
+      "tools/sa-plan task create 'uos/telegram-service/boot' \"$TASK_ID\" \"tg-req-${update_id}\" \"Telegram Direct Read: ${tool_name}\" '-' '[]' 10",
+      "",
+      "# 3. Atomically claim task with worker identity and 30s lease:",
+      "CLAIM_JSON=$(tools/sa-plan --format json task claim 'telegram-service-bridge' 'uos/telegram-service/boot' 30000000000 \"$TASK_ID\")",
+      "ATTEMPT=$(echo \"$CLAIM_JSON\" | jq -r '.attempt // 1')",
+      "",
+      "# 4. Derive coordinator task resource and register active task lease:",
+      "# Resource format: task:<sha256(plan + '/' + task)>",
+      "TASK_RESOURCE=\"task:$(printf 'uos/telegram-service/boot/%s' \"$TASK_ID\" | sha256sum | awk '{print $1}')\"",
+      "",
+      "# 5. Construct immutable server-side DirectBinding struct in Gleam:",
+      "let binding = direct_read_dispatch.DirectBinding(",
+      "  role: \"direct_read\",",
+      "  plan: \"uos/telegram-service/boot\",",
+      "  task: TASK_ID,",
+      "  worker: \"telegram-service-bridge\",",
+      "  attempt: ATTEMPT,",
+      "  session: SESSION_ID,",
+      "  epoch: EPOCH,",
+      ")",
+      "",
+      "# 6. Execute fenced dispatch with pre/post fences and strict {} args validation:",
+      "let outcome = direct_read_dispatch.dispatch_with_fencer(",
+      "  proposal, binding, direct_read_dispatch.observe_fence_for, direct_read_dispatch.execute_production_read_tool",
+      ")",
+      "",
+      "# 7. Commit result into durable outbox ledger (FULL sync) before completing task:",
+      "INSERT INTO telegram_outbox_ledger (request_id, chunk_index, total_chunks, chat_id, text_hash, payload, status, attempt_count, created_at_ms, updated_at_ms) VALUES (...);",
+      "",
+      "# 8. Complete task in Sa-plan with result digest:",
+      "tools/sa-plan task complete 'uos/telegram-service/boot' \"$TASK_ID\" 'telegram-service-bridge' \"$ATTEMPT\" \"$RESULT_DIGEST\"",
+      "",
+      "# 9. Update inbox record to COMPLETED; release coordinator task resource"
+    ],
+    "crash_recovery_order": "On service restart, query Sa-plan for executing tasks owned by telegram-service-bridge. For any task with no committed outbox record, release task (tools/sa-plan task release) and reset inbox row to PENDING. If outbox record exists as PENDING/SENDING, proceed to delivery reconciliation without re-executing task."
+  },
+  "send_message_verification": {
+    "validation_rules": [
+      "1. HTTP response status code must equal 200.",
+      "2. JSON body must decode with top-level 'ok' == true.",
+      "3. Response 'result'.'message_id' must be a positive integer (> 0).",
+      "4. Response 'result'.'chat'.'id' must numerically match target chat_id."
+    ],
+    "uncertain_disposition": "If any condition fails (including HTTP 200 with malformed JSON, mismatched chat ID, timeout, or network disconnect), record status as UNCERTAIN. Blind automatic retries are strictly prohibited. Operator manual retry uses identical request_id with incremented attempt_count."
+  },
+  "retention_and_durability_bounds": {
+    "wal_full_sync": "PRAGMA synchronous = FULL ensures each committed transaction is synced to non-volatile disk, protecting against OS crashes. Conditional on drive write-cache honoring fsync.",
+    "retention_policy": "NO automatic deletion initially. Records with status PENDING, PROCESSING, or UNCERTAIN are permanently preserved to prevent replay attacks and lost work. Only terminal records (COMPLETED, DELIVERED, REJECTED) older than 30 days may be pruned during scheduled maintenance."
+  },
+  "directive_honesty_clarifications": {
+    "checklist_status": "The 18/18 checklist is a specification requirement structure, not an assumed passing score. All unverified components are reported as UNOBSERVED_RUNTIME or UNRUN. Fabricated green counts are strictly barred.",
+    "doctor_ev_status": "EV ceiling is strictly EV-93. Cycles EV-94..EV-109 are explicitly stated as NOT_ADMITTED."
+  },
+  "cutover_and_rollback_sequence": {
+    "quiescence_step": "Quiesce and stop legacy tools/telegram_client.ml poller BEFORE launching the supervised Gleam service. Verify legacy PID is stopped and watermark offset is stable.",
+    "safe_rollback": "Rollback does not revert to the legacy unauthenticated poller. Rollback restarts the prior verified immutable Gleam service release preserving telegram_watermark and telegram_inbox."
+  },
+  "proposed_modules_and_tests": {
+    "pure_controller": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+    "native_bounded_io": "tools/telegram_client.ml (restricted to bounded HTTP getUpdates and sendMessage only, zero policy/offset authority)",
+    "ingress_guard": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+    "delivery_ledger": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+    "unit_tests": [
+      "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "apps/cepaf_gleam/test/telegram_service_lifecycle_test.gleam"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "observed_at": "2026-10-12T03:40:19.257Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261012",
+  "attempt": 7,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": "service9eb32d / lifecycle79770e / ffi88dfdaf baseline",
+  "test_method": "Freshly compiled frozen product sources; copied realized dependency cache. Transient unit runner path redirected to private fresh build; owned root0337 unit/slice namespace. Existing29 tests pass after HTTP harness initialization correction.",
+  "producer_baseline": {
+    "first_run": "22 PASS,7 FAIL: root runner omitted application:ensure_all_started(hackney); preserved",
+    "rerun": "Only7 affected HTTP tests rerun after harness correction:7 PASS. Earlier6 E2E and16other slice cases remain PASS; no product fix used."
+  },
+  "finding": {
+    "id": "LIFE-IDENTITY",
+    "criticality": "critical",
+    "status": "REPRODUCED",
+    "test": "unrelated_cleanup_receipt_should_not_admit_writer_test",
+    "trigger": "A dummy BEAM sleeper with no store-writer registration is stopped; caller supplies target DB and default epoch1. Start actual valid registered writer at epoch7 using this receipt.",
+    "expected": "Refuse unassociated cleanup receipt; writer must remain HOLD.",
+    "observed": "Actual inside-unit actor reports writer_state clean, expected_generation2. Assertion clean==False fails.",
+    "root_cause": "Public test cleanup receipt constructor copies caller DB/epoch; startup only matches incarnation and allows prior epoch <= current, without exact prior registered writer proof.",
+    "mitigation": "Bind cleanup to exact durable prior writer registration/incarnation/epoch; separate initial empty-store bootstrap; no broad <= acceptance; negative unrelated/old-unused receipt tests."
+  },
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261012-0337-service-baseline-independent/source-manifest.json",
+      "sha256": "383dd2ba285b17cac087b2dae7443c4d7060de9ff1f1c9a6452a06e3c52c6a96"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0337-service-baseline-independent/test-result.json",
+      "sha256": "1c352671d54f07bccde91454c4c91e2d32773d3eb9afc632d2ca1c78ec8a6acd"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0337-service-baseline-independent/falsifier-and-corrected-http.json",
+      "sha256": "e3b6f1c65a8ee375e0a13e2bea4a7b5d69233eb6efc2f738eb5f40981a6c0a07"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0337-service-baseline-independent/cleanup.json",
+      "sha256": "93ca14f3b4ff7ff404cb26e19a54d01b34c4061317424245b5544e1b468b8744"
+    }
+  ],
+  "test_source": {
+    "path": "var/recovery-runtime/20261012-0337-service-baseline-independent/package/src/telegram_service_e2e_test.gleam",
+    "sha256": "124206b0b1c631a11834a706e342166e18cd6ebba946547242e80af492b9c33e"
+  },
+  "cleanup": "12 exact owned units/slices stopped/reset; subsequent owned inventory empty.",
+  "limitations": "No live Telegram message; no production state affected; six E2E pass does not close other service findings; source-bound dependency cache is not full clean dependency rebuild."
+}

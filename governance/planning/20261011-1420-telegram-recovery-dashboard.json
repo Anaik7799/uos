@@ -1,0 +1,782 @@
+{
+  "schema": "uos.telegram-recovery-dashboard.v1",
+  "observed_at": "2026-10-11T14:17:20Z",
+  "task_snapshot_observed_at": "2026-10-11T14:17:20Z",
+  "status": "IN_PROGRESS_NOT_ADMITTED",
+  "requested_goal": "Complete Telegram functionality with actual AGY execution and AGY/Gemini plus Claude plan review, then independently verified stable integration",
+  "counts": {
+    "total": 59,
+    "completed": 42,
+    "available": 14,
+    "executing": 3,
+    "note": "Completed includes HOLD reviews; not a feature percentage."
+  },
+  "rows": [
+    {
+      "key_task": "Toolchain and task tools",
+      "as_is": "31/31 standard preflight checks pass; pinned Gleam launcher usable",
+      "to_be": "Repeatable bounded execution under canonical attempts",
+      "completion_status": "Verified development tooling",
+      "criticality": "High",
+      "mitigation": "Keep build outputs private; own leases and fresh risk observations"
+    },
+    {
+      "key_task": "Native storage kernel",
+      "as_is": "174 supplied assertions +1560 parser cases +17 wire cases +27 kill assertions +3 exception scenarios passed on c69ee402",
+      "to_be": "Stable transaction substrate for Telegram",
+      "completion_status": "Development component verified",
+      "criticality": "High",
+      "mitigation": "Pinned binary, strict digest/schema, atomic receipts"
+    },
+    {
+      "key_task": "Mini App authentication",
+      "as_is": "72 tests +768 HMAC assertions +8 encoding negatives passed on1514b263",
+      "to_be": "Authenticated HTTP data and actions",
+      "completion_status": "Module verified; integration pending",
+      "criticality": "High",
+      "mitigation": "Fresh initData, allowlisted identity, effect-time proof"
+    },
+    {
+      "key_task": "Durable consumer",
+      "as_is": "First11 defects fixed; snapshot/capacity/quiescence and strict-domain findings reproduced",
+      "to_be": "Crash-safe inbox, outbox and replay with preserved identity",
+      "completion_status": "STORE_FIX2 + independent draft review executing",
+      "criticality": "Critical",
+      "mitigation": "Validate caller values against row hashes, full domain schema, exact capacity release, observed writer cleanup"
+    },
+    {
+      "key_task": "Service authority",
+      "as_is": "14 tests +4 private staged scenarios passed",
+      "to_be": "Reviewed service registration, lease renewal and fencing",
+      "completion_status": "Staged component verified; operational integration pending",
+      "criticality": "Critical",
+      "mitigation": "Current epochs/task attempts; independent release/state authority"
+    },
+    {
+      "key_task": "Supervised Telegram service",
+      "as_is": "No accepted complete poller/dispatcher/outbox service",
+      "to_be": "Usable restart-safe messages and commands",
+      "completion_status": "SERVICE_IMPL/REVIEW pending",
+      "criticality": "Critical",
+      "mitigation": "Single writer, durable send intent, no blind retry"
+    },
+    {
+      "key_task": "Mini App interface",
+      "as_is": "17-route browser audit found default data, inert actions and wrong-route behavior",
+      "to_be": "Observed data, authenticated actions, accessible consistent navigation",
+      "completion_status": "MINI_API_IMPL/REVIEW pending",
+      "criticality": "High",
+      "mitigation": "Exact routes and real browser interaction tests"
+    },
+    {
+      "key_task": "Commands and media",
+      "as_is": "77 unique route literals; fabricated media diagnostics; corrected design adopted",
+      "to_be": "Actual guarded command adapters and bounded media receive/send/processing",
+      "completion_status": "Implementation and independent review pending",
+      "criticality": "High",
+      "mitigation": "One dispatcher; typed media IDs; bounded workers; truthful uncertainty"
+    },
+    {
+      "key_task": "Gateway",
+      "as_is": "Synthetic startup intent and credential-bearing messages found in source",
+      "to_be": "Authorized durable notifications with private credentials",
+      "completion_status": "GATEWAY_IMPL/REVIEW pending",
+      "criticality": "Critical",
+      "mitigation": "No synthetic operator intent; token never enters message bus"
+    },
+    {
+      "key_task": "End-to-end, release and main",
+      "as_is": "Main83dca039; no full Telegram release receipt",
+      "to_be": "Verified usable system integrated into main",
+      "completion_status": "Pending",
+      "criticality": "Critical",
+      "mitigation": "Candidate-bound runtime/formal checks and independent release review"
+    }
+  ],
+  "tasks": [
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/auth_review",
+      "title": "Inspect real coordinator and Sa-plan wire compatibility of AGY32a4864e",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/auth_fix",
+      "title": "Repair protocol/provider findings with actual isolated wire receipts",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_REVIEW2",
+      "name": "uos/telegram-runtime/20261001-1150/auth_review2",
+      "title": "Independently validate corrected authority protocol and provider migration",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "LEDGER_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/ledger_review",
+      "title": "Independently validate root pure ledger candidate and fullgroup invariants",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/store_impl",
+      "title": "Implement bounded durable inbox/outbox persistence behind Gleam in isolated development",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_review",
+      "title": "Independently fault-test durable transaction and crash recovery behavior",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "SERVICE_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/service_impl",
+      "title": "Wire supervised authorized Telegram polling read dispatch and delivery",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "SERVICE_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/service_review",
+      "title": "Independently verify service lifecycle refusal and end-to-end development transport",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_fix",
+      "title": "Complete known browser assertion profiles and review dashboard script/socket behavior",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_review",
+      "title": "Independently verify corrected cockpit and browser route coverage",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "RETURN",
+      "name": "uos/telegram-runtime/20261001-1150/return",
+      "title": "Publish accepted source evidence back to parent release and admission tasks",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "LEDGER_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/ledger_fix",
+      "title": "Repair below-watermark replay, state-specific recovery and full immutable result identity",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "LEDGER_REVIEW2",
+      "name": "uos/telegram-runtime/20261001-1150/ledger_review2",
+      "title": "Independently verify three residual pure ledger corrections",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_DESIGN",
+      "name": "uos/telegram-runtime/20261001-1150/store_design",
+      "title": "Review bounded durable Telegram storage adapter design and isolated crash acceptance contract",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_DESIGN_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_design_review",
+      "title": "Independently review bounded durable storage protocol and failure acceptance",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_KERNEL",
+      "name": "uos/telegram-runtime/20261001-1150/store_kernel",
+      "title": "AGY implement isolated bounded native SQLite kernel per adopted corrected storage protocol",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_FIX2",
+      "name": "uos/telegram-runtime/20261001-1150/auth_fix2",
+      "title": "Contain staged provider migration path and transaction integrity findings",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_REVIEW3",
+      "name": "uos/telegram-runtime/20261001-1150/auth_review3",
+      "title": "Independently verify staged-only atomic provider migration and protocol candidate",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_TRANSPORT",
+      "name": "uos/telegram-runtime/20261001-1150/store_transport",
+      "title": "Implement bounded pinned storage transport with worker EOF and unchanged MAX limits",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "FORMAL_GATES",
+      "name": "uos/telegram-runtime/20261001-1150/formal_gates",
+      "title": "Execute bounded candidate-bound formal checks and preserve all failures",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_FIX2",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_fix2",
+      "title": "Remove legacy simulated live/proof behaviors from recovery shell",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COCKPIT_REVIEW2",
+      "name": "uos/telegram-runtime/20261001-1150/cockpit_review2",
+      "title": "Independently recheck recovery shell legacy effects containment",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-admission-review-20261001",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "FORMAL_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/formal_fix",
+      "title": "Repair actual Lean failures without weakening obligations or admitting placeholders",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "2"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_TRANSPORT_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_transport_review",
+      "title": "Independently review pinned store transport and bounded cleanup evidence",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "2"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_KERNEL_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_kernel_review",
+      "title": "Independently falsify native SQLite candidate integrity and exact wire",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "TOOLS_RESUME",
+      "name": "uos/telegram-runtime/20261001-1150/tools_resume",
+      "title": "Recover existing Gleam AGY execution adapters and reconcile Telegram task handoff",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "FEATURE_INVENTORY",
+      "name": "uos/telegram-runtime/20261001-1150/feature_inventory",
+      "title": "AGY inventories every repository Telegram command and interface with concrete completion and acceptance gaps",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_REPAIR",
+      "name": "uos/telegram-runtime/20261001-1150/native_repair",
+      "title": "AGY repairs bounded native Telegram store atomic initialization, digest framing, strict input and uncertain commit behavior",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "2"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/native_review",
+      "title": "Independent source and fresh adversarial verification of repaired native Telegram storage candidate",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_AUTH_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/mini_auth_review",
+      "title": "Independently reproduce Mini App signature and freshness defects with synthetic credentials and assess route exposure",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_AUTH_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/mini_auth_fix",
+      "title": "AGY repairs strict Mini App signature validation and bounded freshness with independent golden vectors",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_AUTH_VERIFY",
+      "name": "uos/telegram-runtime/20261001-1150/mini_auth_verify",
+      "title": "Independent fresh verification of repaired Mini App authentication",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "INVENTORY_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/inventory_review",
+      "title": "Independently reconcile AGY Telegram inventory against actual source and preserve corrections",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "claude-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "INVENTORY_CORRECTION",
+      "name": "uos/telegram-runtime/20261001-1150/inventory_correction",
+      "title": "Reconcile heuristic inventory findings against actual guard and ledger implementations and external Telegram client",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "claude-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_FIX2",
+      "name": "uos/telegram-runtime/20261001-1150/native_fix2",
+      "title": "AGY fixes independent strict UTF8 JSON and directory findings, exception cleanup and actual kill recovery tests",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_VERIFY2",
+      "name": "uos/telegram-runtime/20261001-1150/native_verify2",
+      "title": "Independently rerun all native regression, malformed wire and controlled process kill recovery acceptance",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "SURFACE_PLAN",
+      "name": "uos/telegram-runtime/20261001-1150/surface_plan",
+      "title": "Refine complete Telegram surface implementation and acceptance matrix from inspected bodies without unsupported absence claims",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "claude-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_HTTP_AUDIT",
+      "name": "uos/telegram-runtime/20261001-1150/mini_http_audit",
+      "title": "Independently trace Mini App HTTP authentication and browser action wiring, propose bounded integration acceptance",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_FIX3",
+      "name": "uos/telegram-runtime/20261001-1150/native_fix3",
+      "title": "AGY corrects decoded JSON key equivalence and commit-stage exception reporting with bounded parser tests",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_VERIFY3",
+      "name": "uos/telegram-runtime/20261001-1150/native_verify3",
+      "title": "Independently verify final native Unicode JSON, commit uncertainty and atomic recovery candidate",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MEDIA_DESIGN",
+      "name": "uos/telegram-runtime/20261001-1150/media_design",
+      "title": "Claude verifies media bodies and reviews a bounded Telegram media implementation design",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "20",
+      "worker": "claude-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "INTEGRATION_DESIGN",
+      "name": "uos/telegram-runtime/20261001-1150/integration_design",
+      "title": "Adopt peer-reviewed complete Telegram implementation sequence and concrete acceptance obligations",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "20",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_API_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/mini_api_impl",
+      "title": "Implement authenticated Mini App data and actions with exact routes and truthful observed state",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MINI_API_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/mini_api_review",
+      "title": "Independently verify Mini App auth data actions and browser behavior",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COMMAND_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/command_impl",
+      "title": "Connect every Telegram command family to one typed guarded dispatcher and actual adapters",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "COMMAND_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/command_review",
+      "title": "Independently verify command ownership guard backends conversation and refusals",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MEDIA_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/media_impl",
+      "title": "Implement bounded Telegram media ingestion and delivery from reviewed design",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MEDIA_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/media_review",
+      "title": "Independently verify all adopted Telegram media cases and hostile inputs",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "GATEWAY_IMPL",
+      "name": "uos/telegram-runtime/20261001-1150/gateway_impl",
+      "title": "Replace synthetic Telegram gateway startup and credential-carrying messages with supervised outbox",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "GATEWAY_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/gateway_review",
+      "title": "Verify Telegram gateway startup secrecy event routing and recovery",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "TELEGRAM_E2E",
+      "name": "uos/telegram-runtime/20261001-1150/telegram_e2e",
+      "title": "Verify complete staged Telegram operation and release readiness against current candidate",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "20",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "NATIVE_DEPTH_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/native_depth_fix",
+      "title": "AGY corrects the two empty-container depth boundary cases before native acceptance",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "AUTH_REFRESH",
+      "name": "uos/telegram-runtime/20261001-1150/auth_refresh",
+      "title": "Freshly verify staged Telegram provider authority before service integration",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "20",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_FIX",
+      "name": "uos/telegram-runtime/20261001-1150/store_fix",
+      "title": "AGY repairs independently reproduced durable consumer identity authority recovery and capacity failures",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MEDIA_CORRECTION",
+      "name": "uos/telegram-runtime/20261001-1150/media_correction",
+      "title": "Claude corrects media API limits send methods and acceptance oracles against official documentation",
+      "parent_id": "-",
+      "state": "executing",
+      "priority": "20",
+      "worker": "claude-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_VERIFY",
+      "name": "uos/telegram-runtime/20261001-1150/store_verify",
+      "title": "Independently verify corrected store consumer against hostile identities crash recovery reservations and authority fencing",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "10",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "MEDIA_ADOPTION",
+      "name": "uos/telegram-runtime/20261001-1150/media_adoption",
+      "title": "Independently verify and adopt corrected media design while preserving Claude quota-interrupted attempt",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "20",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_DRAFT_REVIEW",
+      "name": "uos/telegram-runtime/20261001-1150/store_draft_review",
+      "title": "Independently test frozen repair candidate while AGY retains its valid repair attempt",
+      "parent_id": "-",
+      "state": "executing",
+      "priority": "10",
+      "worker": "codex-telegram-20261011",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "id": "STORE_FIX2",
+      "name": "uos/telegram-runtime/20261001-1150/store_fix2",
+      "title": "AGY repairs forged typed snapshots and reservation/quiescence gaps; keep attempt open until independent draft review passes",
+      "parent_id": "-",
+      "state": "executing",
+      "priority": "10",
+      "worker": "agy-telegram-20261011",
+      "attempt": "1"
+    }
+  ],
+  "peer_state": {
+    "agy": "Actual Gemini3.8Flash/high session954b9a82 executing STORE_FIX2",
+    "claude": "Actual sessiona65088e0 quota interrupted MEDIA_CORRECTION after correction artifact; lease remains executing; no completion impersonation",
+    "codex": "Root independent STORE_DRAFT_REVIEW executing"
+  },
+  "risk": {
+    "portfolio": "governance/planning/20261011-1155-telegram-reclaim-risk.json",
+    "fmea": {
+      "severity": 4,
+      "occurrence": 3,
+      "detection": 3,
+      "rpn": 36,
+      "kind": "analyst judgments"
+    },
+    "forecast": {
+      "probability": 0.55,
+      "horizon": "2026-10-11T14:30:00Z",
+      "event": "Independent staged consumer PASS",
+      "outcome": "UNRESOLVED",
+      "brier": "Pending"
+    }
+  },
+  "evidence": [
+    "governance/planning/20261011-1326-telegram-native-final-verification.json",
+    "governance/planning/20261011-1228-telegram-auth-independent-verification.json",
+    "governance/planning/20261011-1351-telegram-authority-fresh-verification.json",
+    "governance/planning/20261011-1431-telegram-store-draft-review.json",
+    "governance/planning/20261011-1430-telegram-store-boundary-addendum.json",
+    "governance/planning/20261011-1349-telegram-media-adoption.json",
+    "governance/planning/20261011-1448-telegram-format-drift-review.json"
+  ],
+  "main_bookmark": "83dca039",
+  "admitted_ev_ceiling": 93,
+  "full_restoration": false,
+  "task_snapshot_started_at": "2026-10-11T14:17:20.236Z"
+}

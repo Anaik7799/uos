@@ -45,9 +45,10 @@ authority = "SC-RISK-PRIORITY-001 process rule; no runtime admission"
 name = "uos-sciviz-bdd-harness"
 source = "uos"
 reference_only = false
-state = "verified_runtime_and_formal_spec"
+state = "historical_claim_not_currently_verified"
 path = "scripts/run_sciviz_all_aspects.sh"
-authority = "SC-GLM-UI-001, SC-CHECKLIST-001; 542 scenarios 100% green"
+historical_authority_claim = "SC-GLM-UI-001, SC-CHECKLIST-001; 542 scenarios 100% green"
+authority = "NONE; fresh candidate-bound review required"
 
 [zigvm]
 root = "/home/an/dev/ver/zigvm/skills"
@@ -845,19 +846,25 @@ state = "classified"
 name = "forecasting-driven-operations"
 source = "codex"
 reference_only = false
-state = "admitted"
+historical_state_claim = "admitted"
+state = "declared_unverified"
+admission = "UNKNOWN"
 
 [[skill]]
 name = "stage-durability"
 source = "codex"
 reference_only = false
-state = "admitted"
+historical_state_claim = "admitted"
+state = "declared_unverified"
+admission = "UNKNOWN"
 
 [[skill]]
 name = "denotational-intent-algebraic-atlas"
 source = "uos"
 reference_only = false
-state = "implemented_pure_gleam_and_lean4_formal_authority"
+historical_state_claim = "implemented_pure_gleam_and_lean4_formal_authority"
+state = "declared_unverified"
+admission = "UNKNOWN"
 path = "apps/cepaf_gleam/src/cepaf_gleam/semantics/algebraic_atlas.gleam"
 authority = "SC-INTENT-ATLAS-001"
 
@@ -865,7 +872,9 @@ authority = "SC-INTENT-ATLAS-001"
 name = "indrajaal-constitution-migration"
 source = "uos"
 reference_only = false
-state = "implemented_pure_gleam_and_lean4_formal_authority"
+historical_state_claim = "implemented_pure_gleam_and_lean4_formal_authority"
+state = "declared_unverified"
+admission = "UNKNOWN"
 path = "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam"
 authority = "SC-CONST-MIG-001"
 
@@ -873,6 +882,40 @@ authority = "SC-CONST-MIG-001"
 name = "c3i-indrajaal-holon-parity"
 source = "uos"
 reference_only = false
-state = "implemented_158_holon_holarchy"
+historical_state_claim = "implemented_158_holon_holarchy"
+state = "declared_unverified"
+admission = "UNKNOWN"
 path = "contracts/rules/20260908-0955-c3i-indrajaal-parity-and-superiority-matrix.md"
 authority = "SC-C3I-PARITY-001"
+
+[[skill]]
+name = "uos-local-full-symbiosis"
+source = "uos"
+reference_only = false
+state = "development_guidance_pending_independent_review"
+path = "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md"
+authority = "Canonical root policy and SC-HARNESS-MCP-001; no runtime admission"
+
+[[skill]]
+name = "uos-local-gemini-symbiosis"
+source = "uos"
+reference_only = false
+state = "development_guidance_pending_independent_review"
+path = "governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md"
+authority = "Canonical root policy and SC-HARNESS-MCP-001; no runtime admission"
+
+[[skill]]
+name = "uos-local-production-readiness"
+source = "uos"
+reference_only = false
+state = "development_guidance_pending_independent_review"
+path = "governance/agents/20261001-1118-skills/production-readiness/SKILL.md"
+authority = "Canonical root policy and SC-HARNESS-MCP-001; no runtime admission"
+
+[[skill]]
+name = "uos-local-ocaml-playwright-control"
+source = "uos"
+reference_only = false
+state = "development_guidance_pending_independent_review"
+path = "governance/agents/20261001-1118-skills/ocaml-playwright-control/SKILL.md"
+authority = "Canonical root policy and SC-HARNESS-MCP-001; no runtime admission"

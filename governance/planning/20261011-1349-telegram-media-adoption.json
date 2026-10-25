@@ -1,0 +1,141 @@
+{
+  "schema": "uos.telegram-media-adoption.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "MEDIA_ADOPTION",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "DEVELOPMENT_DESIGN_ADOPTED_WITH_CORRECTIONS",
+  "runtime_admission": "NOT_GRANTED",
+  "peer_reports": [
+    "governance/planning/20261011-1354-claude-telegram-media-design.json",
+    "governance/planning/20261011-1349-claude-telegram-media-design-correction.json"
+  ],
+  "peer_state": "Actual Claude delivered correction artifact but quota interrupted its MEDIA_CORRECTION attempt before completion; root independently reviews without acting as Claude.",
+  "adopted": [
+    "C1-C8 subject to additions below",
+    "Inbound typed media descriptors retain bot/chat/user/update/message and canonical request identity.",
+    "Fetched blob SHA256 is storage dedup only, never intent dedup or authorization.",
+    "Existing file_id JSON send and new multipart upload are both required functionality.",
+    "Bounded isolated media processing behind Gleam supervision, content validation and storage retention; no generic development launcher as production adapter.",
+    "Known numerical fixtures and independent differential oracle, not universal distinct-input/summary inequality.",
+    "Truthfulness containment remains incomplete feature functionality."
+  ],
+  "additional_corrections": [
+    {
+      "id": "M-A1",
+      "supersedes": "C7 S-R1/S-R2",
+      "rule": "A timeout/disconnect after any request bytes may represent delivered-but-unacknowledged. Persist SENDING before network. Persist Delivered only from valid response; definite rejection as Failed; ambiguous outcome as Uncertain. No automatic retry from SENDING/Uncertain after restart. Stable local request identity prevents duplicate local dispatch but cannot create exactly-once remote API semantics.",
+      "acceptance": "Drop response after server accepts synthetic send; restart consumer; observe one recorded server attempt and durable Uncertain, no second send and no fabricated failure/delivery."
+    },
+    {
+      "id": "M-A2",
+      "supersedes": "C7 S-N2",
+      "rule": "file_id and file_unique_id are opaque strings; do not promise lexical discrimination. Expose distinct typed values and bind send-by-reference to known authenticated bot-scoped media metadata. A raw arbitrary string cannot mint a trusted resend reference.",
+      "acceptance": "Wrong tagged reference or wrong bot refused before network; unknown/invalid upstream file reference produces typed API rejection without reflection."
+    },
+    {
+      "id": "M-A3",
+      "rule": "A file_id is scoped to a bot and media type; reused content cannot silently change type or adopt another bot's ID. Validate method-specific bounds and metadata."
+    },
+    {
+      "id": "M-A4",
+      "rule": "Bootstrap storage and capacity reservation precede both downloads and sends; no blob bytes enter the bounded native KV rows. Blob storage uses bounded separate files, private permissions, symlink refusal, cleanup and retention with intent references."
+    },
+    {
+      "id": "M-A5",
+      "rule": "Source-only review establishes misleading claims, not the absence of every possible external/runtime vote consumer. Operational proof remains required."
+    }
+  ],
+  "download_policy_bytes": {
+    "photo": 5242880,
+    "voice": 5242880,
+    "audio": 15728640,
+    "document": 15728640,
+    "video": 15728640,
+    "sticker": 1048576,
+    "animation": 10485760
+  },
+  "upload_policy_bytes": {
+    "photo": 5242880,
+    "voice": 5242880,
+    "audio": 15728640,
+    "document": 15728640,
+    "video": 15728640,
+    "animation": 10485760,
+    "sticker": 1048576
+  },
+  "limits_note": "These are UOS policy ceilings below relevant general cloud bounds; subtype-specific Telegram constraints, decoded dimensions/duration, aggregate disk/process budget and fresh method constraints must also be enforced before acceptance.",
+  "official_sources": [
+    {
+      "url": "https://core.telegram.org/bots/api#file",
+      "summary": "Cloud downloads max20MB; file_unique_id cannot download or resend."
+    },
+    {
+      "url": "https://core.telegram.org/bots/api#sending-files",
+      "summary": "Existing file_id is reusable, JSON-compatible; new bytes use multipart. file_id is bot-specific and cannot change media type."
+    }
+  ],
+  "voice_trace": {
+    "classification": "CONFIRMED_FALSE_STATUS_TEXT; NO_DIRECT_VOTE_MUTATION_IN_INSPECTED_PATH",
+    "handler": "telegram_collab.handle_voice_roll_call imports only gleam/string and constructs text; its sole direct call in source is telegram.handle_directive.",
+    "flow": "telegram.handle_message wraps text in OutboundResponse; simulator and transaction runner inspect/render text; agy_agent.process_with_agy wraps it in AgentDecision; no static caller of process_with_agy observed in two reviewed source trees.",
+    "quorum": "Inspected ha/multi_agent_quorum uses typed BallotVote and QuorumVote, not this handler string. This is a bounded static trace, not global runtime absence proof."
+  },
+  "acceptance": [
+    "Independent multipart parser validates boundaries/CRLF/filename/MIME and exact payload roundtrip.",
+    "Declared AND streamed size caps, decompression/dimension/process/time limits and no automatic remote URLs.",
+    "Synthetic credential markers absent in logs, spans, durable rows and reflected errors; download token URL private to transport.",
+    "Two users/chats/bots sharing bytes retain separate authorized requests while blob storage may dedup.",
+    "Caption/entities escaping roundtrip; retain kind and bot identity for file_id reuse.",
+    "Faults before send, during body, after acceptance, response parse, and post-response persistence all yield truthful durable outcomes.",
+    "Actual supervised processing fixtures for each promised media capability; unsupported response is containment, not feature PASS."
+  ],
+  "source_paths": [
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_transaction_runner.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam"
+  ],
+  "limitations": [
+    "No external message, production media processing, effect-time authority or release executed.",
+    "No new media model availability is asserted.",
+    "Claude quota prevents completion of its attempt now; preserve it until owner resumes or canonical expired-claim recovery is eligible."
+  ],
+  "observed_at": "2026-10-11T13:57:49Z",
+  "evidence": [
+    {
+      "path": "governance/planning/20261011-1354-claude-telegram-media-design.json",
+      "sha256": "327178346625e19cede15ef8883e3f6dbfee32b0f44820cbbaedc8e9c03190ee"
+    },
+    {
+      "path": "governance/planning/20261011-1349-claude-telegram-media-design-correction.json",
+      "sha256": "3ab3b298d065e3edc4ca28e5b502499bc0ed0e11023c2b50cc251ad85d5ee960"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+      "sha256": "35f964a46a1249004a978b5c1f6b94eb45ba18451f6081d389a8664f4cc000bc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+      "sha256": "56efe6858f24880abf92aa12d9963724b12e283e5b97bda6e617707259572134"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_transaction_runner.gleam",
+      "sha256": "4f8f4255e8dab3e25263a4ee9823438173e0a1c285499d9d58c1705c38114d85"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+      "sha256": "340a955452c1a3bf1b62202fce286bb5aaa73659ecd63e52289cbe2df876685d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+      "sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd"
+    }
+  ]
+}

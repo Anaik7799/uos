@@ -1,0 +1,110 @@
+{
+  "schema": "uos.browser-fix2-development.v1",
+  "observed_at_utc": "2026-10-01T11:32:22Z",
+  "author": "codex-admission-review-20261001",
+  "role": "delegated implementer; independent re-review pending",
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "BROWSER_FIX2",
+  "task_worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "authority": "Parent-owned task/resource epoch1; resumed only after active PASS11:24:41",
+  "status": "SCOPED_FIXES_TESTED_COCKPIT_HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "main_mutated": false,
+  "production_effects": false,
+  "source_quiesced": true,
+  "source_hashes": [
+    {
+      "path": "tools/validation/restoration_browser_check.ml",
+      "sha256": "a70d34f77e938b12da9fec79eb4b7d635aa707de4c471dd6affd2a6ac1b4709c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/homeostasis_http.gleam",
+      "sha256": "a9b622c651eb34a6584e95bd2c49e709a44d0f76e1cd7bd85faf92ed4eabf673"
+    }
+  ],
+  "changes": [
+    "Render shared18 requirements plus provenance outside homeostasis component filter, including terminal.",
+    "Require HTTP200, exact response and final URL, visible route-specific heading, exact canonical checklist selector, five domains plus provenance,18 unique visible UNRUN requirement labels and explicit no-receipts message.",
+    "Private chart uses separate fixture-only assertion profile and visible simulated disclaimer, never counted as product checklist.",
+    "HTTP requests constrained to GET/exact document and finite known read dependencies; service workers/downloads refused; all WebSockets refused.",
+    "Actual redirect falsifier showed normal Playwright request handler bypass; supported Chromium CDP Fetch response-stage now aborts3xx before following Location. Private and offline actual tests passed."
+  ],
+  "verification": {
+    "native_compile": "PASS; transitive findlib deprecation warning retained",
+    "gleam_build": "PASS with two existing unrelated warnings",
+    "pure_policy_falsifiers": 14,
+    "actual_offline_browser_falsifiers": 6,
+    "existing_focused_eunit": 35,
+    "private_positive_profiles": 6,
+    "private_hold_profiles": 1,
+    "counts_note": "Scopes distinct; overlapping controls are not additive coverage proof."
+  },
+  "private_profiles": [
+    {
+      "route": "/homeostasis/terminal",
+      "viewport": 390,
+      "status": "PASS",
+      "artifact": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-terminal"
+    },
+    {
+      "route": "/homeostasis/evolution",
+      "viewport": 1280,
+      "status": "PASS",
+      "artifact": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-evolution"
+    },
+    {
+      "route": "/homeostasis/components",
+      "viewport": 390,
+      "status": "PASS",
+      "artifact": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-components"
+    },
+    {
+      "route": "/wiki",
+      "viewport": 390,
+      "status": "PASS",
+      "artifact": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-wiki"
+    },
+    {
+      "route": "/zk",
+      "viewport": 1280,
+      "status": "PASS",
+      "artifact": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-zk"
+    },
+    {
+      "route": "/ecology-song",
+      "viewport": 1280,
+      "status": "PASS_PRIVATE_SIMULATED_FIXTURE_ONLY",
+      "artifact": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-chart"
+    },
+    {
+      "route": "/",
+      "viewport": 1280,
+      "status": "HOLD",
+      "artifact": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1130-fix2-final-cockpit",
+      "reason": "GET /static/dashboard-grid.js?v=22.6.1 not in finite read dependency policy; request blocked before dispatch."
+    }
+  ],
+  "visual_inspection": {
+    "terminal": "Actual full mobile screenshot inspected: visible standalone checklist outside filtered terminal; all01..18 UNRUN and provenance text readable. UNKNOWN sensor fields and NONE control authority retained.",
+    "chart": "Actual desktop screenshot inspected:26bars, separated title/beat rows, correct UTF8, visibly simulated fixture disclaimer."
+  },
+  "remaining": [
+    "Cockpit frontend/backend socket safety review required: existing apps/cepaf_gleam/priv/static/dashboard-grid.js opens /ws/dashboard and polls /api/v1/plan/status on initialization; contains legacy hardcoded agent/health claims. No edits to this asset; root will create separate canonical follow-up.",
+    "Do not run helper on production until independent source/traffic review authorizes exact profiles and dependency closure. No live acceptance complete.",
+    "Mirage, restoration dashboard and production ecology need explicit matching assertion profiles; unsupported profile returns HOLD rather than generic PASS. Existing ecology native probe remains separate.",
+    "Private probe has no OTP control actors and does not prove production loaded-source/runtime identity, capabilities, failover or Telegram behavior.",
+    "Network tests used offline native browser and HTML/forms, no authored page JavaScript; pure socket refusal tested and production callback installed, but no actual WebSocket peer/client handshake falsifier executed.",
+    "Browser page_errors is not all console/resource failure or whole-product accessibility coverage; C1-C8/global17-aspect admission remains separate.",
+    "Response guard is attached to inspected page; this is a finite known-page probe, not a hostile arbitrary-popup browser sandbox certification.",
+    "Formatting gate not rerun; inherited transport style remains. No broad unrelated source changes.",
+    "Root crashdump presence caused by adapter syntax failure preserved for parent artifact policy; not inspected or hashed here."
+  ],
+  "failure_preservation": [
+    "20261001-1110-independent-browser-review-hold.json",
+    "20261001-1122-fix2-chart/20261001-1048-receipt.json",
+    "20261001-1130-fix2-final-cockpit/20261001-1048-receipt.json",
+    "native compile/redirect/deprecated-CDP failures documented in companion transcript and original tool outputs"
+  ],
+  "next": "Independent doctor reviewer checks frozen two-file fixes and exact test receipts; parent opens scoped cockpit traffic follow-up. No source or runtime admission implied."
+}

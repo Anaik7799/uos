@@ -1,0 +1,55 @@
+{
+  "schema": "uos.restoration-browser-observation.v1",
+  "observed_utc_seconds": 1790856664.683857,
+  "status": "PASS",
+  "url": "http://nas-1.tail55d152.ts.net:49157/static/20260930-0633-restoration-dashboard.html",
+  "viewport_width": 1280,
+  "source_sha256": "855e0a71a94ec5f35b5e2910942853a712d6c73ac8e02821cbfdb74318ecc026",
+  "elapsed_seconds": 1.598300809,
+  "application_admitted": false,
+  "observations": {
+    "HTTP200_exact_response_URL": true,
+    "response_url": "http://nas-1.tail55d152.ts.net:49157/static/20260930-0633-restoration-dashboard.html",
+    "http_status": 200,
+    "body_has_content": true,
+    "no_route_fallback": true,
+    "exact_final_URL": true,
+    "visible_route_heading": true,
+    "links_present": true,
+    "one_restoration_checklist": true,
+    "restoration_18_unique_requirements": true,
+    "restoration_provenance": true,
+    "checklist_profile": "RECORDED_RECOVERY_SNAPSHOT_NOT_GLOBAL_ADMISSION",
+    "dashboard_loaded": true,
+    "dashboard_task_rows": true,
+    "dashboard_18_checks": true,
+    "body_geometry": {
+      "x": 0.0,
+      "y": -6829.0,
+      "width": 1280.0,
+      "height": 8452.890625
+    },
+    "no_page_errors": true,
+    "page_errors": [],
+    "headings": [
+      "Restoration & recovery", "AS-IS · Observed current state",
+      "TO-BE · Acceptance state", "Key tasks & completion status",
+      "Risk, criticality & mitigation approach", "Verification evidence",
+      "Comprehensive verification checklist"
+    ],
+    "no_forbidden_requests": true,
+    "no_socket_attempts": true,
+    "socket_attempts": 0,
+    "blocked_request_count": 0,
+    "blocked_requests": [],
+    "controller_source_unchanged": true
+  },
+  "screenshots": [
+    {
+      "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1211-restoration/20261001-1048-page.png",
+      "sha256": "f21a7c8ce33f45686b8076466b634bad28c8a011346eb8de82c66b51a804facf"
+    }
+  ],
+  "findings": [],
+  "limits": "One route and viewport. Read-only navigation and local accordion keyboard interaction; no control activation, accessibility certification or global admission. Visual review is separate."
+}

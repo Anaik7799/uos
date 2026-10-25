@@ -1,0 +1,58 @@
+{
+  "observed_at": "2026-10-01T11:22:54Z",
+  "method": "Gleam bounded sha256sum, ten exact source bindings reread",
+  "unchanged": true,
+  "previous_observation": "2026-10-01T10:28:15Z",
+  "hashes": [
+    {
+      "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+      "path": "AGENTS.md",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5",
+      "path": "tools/telegram_client.ml",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1",
+      "path": "tools/telegram-harness-dispatch",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7",
+      "path": "tools/validation/release_browser_capture.ml",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6",
+      "path": "tools/km_provenance/km_gate.ml",
+      "observed_at": "2026-10-01T11:22:54Z"
+    },
+    {
+      "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+      "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+      "observed_at": "2026-10-01T11:22:54Z"
+    }
+  ]
+}

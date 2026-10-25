@@ -1,0 +1,23 @@
+{
+  "schema": "uos.agy-authority-fix-handoff.v1",
+  "observed_at": "2026-10-01T12:12:42Z",
+  "candidate": "1ffb92320c7f2453a87f765f52137d2d3f18feed",
+  "empty_child": "9d64e96451fe877a11a247565f83155a9c437f57",
+  "session": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "worker": "agy-telegram-admission-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "AUTH_FIX",
+  "attempt": 1,
+  "status": "AGY_REPORTED_IMPLEMENTED_PENDING_INDEPENDENT_REVIEW",
+  "scope": "Five-file correction of prior seven-file authority/provider candidate, development only",
+  "reported_changes": [
+    "Canonical expires_boot_us receipt field, strict decimal/identity/TTL bounds and redacted errors.",
+    "Explicit staged Service trigger migration preserving old provider verification and replay; service refuses before migration.",
+    "Real isolated coordinator register/claim/renew/release decoder integration."
+  ],
+  "reported_tests": "34 cepaf tests including older26pure tests, plus2 provider/migration tests; these are AGY reports, independent rerun pending. Root43pure model candidate is separate.",
+  "limits": [
+    "No canonical coordinator DB migration, Telegram transport, runtime release or admission claimed.",
+    "Do not import AGY old pure ledger files over root accepted43test candidate."
+  ]
+}

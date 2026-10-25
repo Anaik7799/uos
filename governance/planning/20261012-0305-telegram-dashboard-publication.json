@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-10-12T03:34:35.497Z",
+  "path": "docs/journal/20261012-0305-telegram-goal-dashboard.md",
+  "sha256": "b6fa833821c47dc3ca642db6e2323791bd563beb62f12a0706eadb614bea4dad",
+  "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261012-0305-telegram-goal-dashboard.md",
+  "assertions": {
+    "http_200": true,
+    "title": true,
+    "count121": true,
+    "zeroExpired": true,
+    "recovery": true,
+    "formal": true,
+    "serviceHold": true
+  },
+  "journal_lint": "10/10 after correcting missing exact falsification marker",
+  "admission": "NOT_GRANTED",
+  "snapshot": "governance/planning/20261012-0305-telegram-goal-task-snapshot.json",
+  "claims": [
+    "uos/telegram-resume/20261012-0216:DASHBOARD:codex-telegram-20261012:1",
+    "uos/telegram-reclaim-tool/20261012-0226:REPORT:codex-telegram-20261012:1"
+  ]
+}

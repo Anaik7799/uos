@@ -1,0 +1,64 @@
+{
+  "schema": "uos.telegram-http-progress-authority-hold.v1",
+  "observed_at": "2026-10-11T16:26:12Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "HOLD_WITH_HTTP_COMPONENT_PROGRESS",
+  "http": {
+    "cases_passed": 17,
+    "scope": "Fresh HTTP client and FFI observed; prior response-semantic/privacy/body-bound/ordinary-timeout cases pass. Other frozen dependency modules are not current lifecycle acceptance.",
+    "deadline_failure": "Slow chunked response returned Delivered42/chat123 after294ms under80ms configured timeout; per-chunk timeout resets rather than one absolute deadline."
+  },
+  "authority": {
+    "source": "3f3f02ad279ed716e446751fcb776c6941c57506033a790b75311ab26a093a53",
+    "failure": "Blacklist of exact root fixture strings and accepted lease prefixes replaced no canonical lookup. Three unrelated coord-/sa-plan-/lease- strings return Ok with unregistered worker and caller time.",
+    "disposition": "REJECTED. Real authoritative state observation required; changed fixture spelling is not a repair."
+  },
+  "remaining": [
+    "Actual authority/lifecycle/recovery integration",
+    "Bounded monitored OTP execution ownership",
+    "HTTP absolute deadline and cancellation/configuration bounds",
+    "Real command/result pipeline",
+    "Independent Claude review executing"
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1623-http-review-v3/http-manifest.json",
+      "sha256": "2b296354cc3bbd390c1ba052ceed65bdca571d4c959b681e9bd526d9e3901872"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1623-http-review-v3/service_http_review.erl",
+      "sha256": "a0fcb29c798befd5d0242231edf4cd03ed8521605d25376f4f1d88c841d90a52"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1623-http-review-v3/service_http_boundaries.erl",
+      "sha256": "b7b5aaabe3493d7981272736db588ccbfe7cdd901424f4ffbe58f6673ed72d4d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1623-http-review-v3/http-results.txt",
+      "sha256": "c079a4a36c675294221d865228771870138b394621af548e203436bbf52cc389"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1623-http-review-v3/service_http_deadline.erl",
+      "sha256": "c4f2781b5d5052362ab65412586ad1224d4fe82e662756e21073b106e8e36d87"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1623-http-review-v3/deadline-results.txt",
+      "sha256": "e34c9c36381967156929cb01d15cb6a857e4656a1825af1808c4f4cd255e923b"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1626-service-authority-bypass/manifest.json",
+      "sha256": "6b9ba6fb423245bdaf34b2a2a44a2282e9d83b2b14a3234d1b362f674ca23eb3"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1626-service-authority-bypass/probe.erl.txt",
+      "sha256": "3152e91cc3817940101dd691046bce383c5bc7a9299b118d22342b762f12c1fe"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1626-service-authority-bypass/results.txt",
+      "sha256": "a414fd0706c0412bf208409a61a606c752ba00628257060ec2721d84763b7f0f"
+    }
+  ],
+  "runtime_admission": "NOT_GRANTED"
+}

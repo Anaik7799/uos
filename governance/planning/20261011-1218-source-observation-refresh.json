@@ -1,0 +1,49 @@
+{
+  "observed_at": "2026-10-11T12:17:52Z",
+  "status": "SOURCE_OBSERVATION_ONLY",
+  "changes": [
+    {
+      "task": "FEATURE_INVENTORY",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "new": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d"
+    },
+    {
+      "task": "NATIVE_REPAIR",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "new": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d"
+    },
+    {
+      "task": "NATIVE_REVIEW",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "new": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d"
+    },
+    {
+      "task": "MINI_AUTH_REVIEW",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "new": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d"
+    },
+    {
+      "task": "MINI_AUTH_FIX",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "new": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d"
+    },
+    {
+      "task": "MINI_AUTH_VERIFY",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "new": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d"
+    },
+    {
+      "task": "INVENTORY_REVIEW",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "old": "72b55a2403f609fc349ae07c7a448ac99ab21b3ea2a7476f25607855aeb8243d",
+      "new": "68344039f5eb2f3699123b4e826333ef9e6c0582348989a73cfb9c9f0a816c2d"
+    }
+  ],
+  "interpretation": "Current development auth bytes reread; no tests/admission conferred; root review requests additional bounds fixes; immutable original mini-auth baseline receipt unchanged."
+}

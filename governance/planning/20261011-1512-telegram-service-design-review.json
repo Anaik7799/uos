@@ -1,0 +1,138 @@
+{
+  "schema": "uos.telegram-service-design-independent-review.v1",
+  "observed_at": "2026-10-11T15:48:12Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "DESIGN_HOLD_FOR_CORRECTION",
+  "runtime_admission": "NOT_GRANTED",
+  "evidence": [
+    {
+      "path": "docs/design/20261011-1529-telegram-service-implementation-plan.md",
+      "sha256": "9e648e1624f8673138f176765871898e0468f257354fce0e7efc46fcc1dad2b6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+      "sha256": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_simulator.gleam",
+      "sha256": "452a420b08ba86d0f196ca6d61fe31f80901e96d31e81ba3190a62ea16f659ac"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+    },
+    {
+      "path": "tools/telegram_store_transport_guardian.ml",
+      "sha256": "9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5"
+    },
+    {
+      "path": "/tmp/uos-telegram-bot-api-review-20261011.html",
+      "sha256": "2e41ad756cc41b406a558fa9ac3dd2dd9c1c042ce3b57a26434dd187a7ab2dec"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SD1",
+      "severity": "P1",
+      "claim": "Guardian diagnostic mode, signed/JSON CleanupProof and VM restart reconciliation",
+      "finding": "These capabilities do not exist. Guardian emits framed worker output and exit status; opaque Gleam proof is minted from observed exit0/124/125, with exact request/database/binary bindings.",
+      "required": "Select an implemented/testable external lifecycle owner and real whole-unit cleanup observation across VM death. Until demonstrated, retain Unknown; do not infer from PID absence, SQLite lock or unchanged generation."
+    },
+    {
+      "id": "SD2",
+      "severity": "P1",
+      "claim": "Automatically reclaim orphaned Processing, then complete Delivered/Failed",
+      "finding": "Existing ledger holds invalid/missing durable result and failed/uncertain delivery. Processing may have performed non-idempotent effects before loss; a newer epoch does not prove safe replay.",
+      "required": "Match exact ledger transitions and durable results; safe recovery cannot duplicate prior effects or release capacity as success on uncertainty."
+    },
+    {
+      "id": "SD3",
+      "severity": "P1",
+      "claim": "HTTP200 means Delivered; all4xx/5xx are definitive Failed",
+      "finding": "HTTP status alone is insufficient. Malformed/partial responses and server failures may leave remote effects unknown.",
+      "required": "Validate bounded Bot API ok=true result with message_id and intended chat; classify only demonstrably rejected requests Failed. Preserve Uncertain for ambiguous outcomes."
+    },
+    {
+      "id": "SD4",
+      "severity": "P1",
+      "claim": "Coordinator lease+epoch+storage hash suffice for effect authority; IDs include epoch",
+      "finding": "Current canonical Sa-plan task owner/attempt/lease and scoped authority are also required. Logical effect IDs must survive executor attempt changes; storage mutation identity and logical remote effect identity must be distinguished.",
+      "required": "Concrete provider checks at effect time, exact frozen canonical context for reconciliation and no fresh-epoch replay of uncertain effects."
+    },
+    {
+      "id": "SD5",
+      "severity": "P2",
+      "claim": "Admitted and sending/<id> records; validate_update; token in LocalConfiguration",
+      "finding": "Actual schema uses InboxPending and per-chunk OutboxSending(worker,epoch); guard entrypoint is evaluate_update; LocalConfiguration contains storage paths/hashes/database, no bot credential.",
+      "required": "Bind design to actual types/APIs; declare any needed extensions explicitly, separate private HTTP config and preserve existing source acceptance until changes are reviewed."
+    },
+    {
+      "id": "SD6",
+      "severity": "P2",
+      "claim": "telegram_simulator.gleam is an actual HTTP simulator",
+      "finding": "Inspected module constructs synthetic handler input and static media summaries; no HTTP server is established.",
+      "required": "Build a real bounded private HTTP fixture and test OTP+SQLite+HTTP integration with read counts, send attempts and crash/response faults."
+    },
+    {
+      "id": "SD7",
+      "severity": "P2",
+      "claim": "Telegram mandates3000ms callback acknowledgment and a message-query API can resolve uncertain sends",
+      "finding": "Reviewed official callback section says clients wait for acknowledgment but does not establish that fixed deadline or a generic uncertain-send query API.",
+      "required": "Describe3s as internal SLO, guard callback identity first, and do not base recovery on an unimplemented query method."
+    },
+    {
+      "id": "SD8",
+      "severity": "P1",
+      "claim": "All18 checklist items checked before service implementation",
+      "finding": "End-to-end, state-machine, telemetry and mathematical execution claims are unobserved for this planned service.",
+      "required": "Use canonical six-domain obligation footer with unchecked/unrun items; retain source provenance and component-only claims."
+    },
+    {
+      "id": "SD9",
+      "severity": "P2",
+      "claim": "Equivalent ASCII/Mermaid and selected supervisor behavior",
+      "finding": "Diagrams differ in nodes/edges/labels and strategy remains one_for_all/rest_for_one alternative.",
+      "required": "Choose concrete bounded supervision/queue/cancellation behavior; align editable diagrams exactly or omit them."
+    }
+  ],
+  "root_erratum": {
+    "claim": "Root said read_keys-only/no request enumeration",
+    "correction": "Incorrect. read_inbox_index and read_inbox_records already exist, and the latter checks generation consistency. Reuse bounded cursor-based recovery; no new durable index is required solely for discovery.",
+    "source_lines": [
+      "telegram_store.gleam:625",
+      "telegram_store.gleam:641",
+      "telegram_store.ml:1022"
+    ],
+    "disposition": "Corrected user commentary and AGY instructions; preserved original statements."
+  },
+  "lifecycle_availability": {
+    "read_only": true,
+    "user_manager": "app.slice active, ControlGroup=/user.slice/user-1000.slice/user@1000.service/app.slice, Delegate=no",
+    "cgroup_v2": true,
+    "current_herdr_unit": "separate managed unit; no mutation",
+    "existing_cleanup_adapter": "not found in bounded scoped source search; no global absence claim",
+    "decision": "Availability only, no admission or proven VM recovery"
+  },
+  "official_sources": [
+    {
+      "url": "https://core.telegram.org/bots/api#making-requests",
+      "supports": "Bot API response ok/result semantics"
+    },
+    {
+      "url": "https://core.telegram.org/bots/api#answercallbackquery",
+      "supports": "Callback acknowledgment behavior; no fixed3s requirement established in reviewed section"
+    }
+  ],
+  "next": "AGY corrects design under its still-active SERVICE_IMPL; root reviews corrected candidate before implementation. Product storage remains accepted."
+}
