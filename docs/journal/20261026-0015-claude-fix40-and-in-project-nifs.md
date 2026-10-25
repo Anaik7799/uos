@@ -128,7 +128,9 @@ Engine 5 sheaf consistency: UNRUN.
 
 - **Canonical `priv/` is untouched.** Running services still load whatever binaries are installed there. Promoting the source-built NIFs into the runtime needs a reviewed release.
 - **Duplicate source:** `apps/cepaf_gleam/native/ferriskey_nif` is an older copy that diverges from the authoritative tree. It is not built.
-- **Telegram tool calls stay fail-closed in production** until a canonical lease verifier exists.
+- **Correction (2026-10-26):** the legacy `cognitive_worker` `/tool` route (used by `uos_sup` and `cognitive_runtime_cli`) passes no lease and stays fail-closed by design. The production Telegram service dispatches `/tool` as a typed controlled action through `telegram_ingress_guard` and `telegram_service`, and its e2e tool-dispatch tests pass. No separate lease verifier is missing.
+- **Workspace provisioning:** `tools/provision_workspace.ml` provisions a fresh workspace by pin; a fresh workspace ran 13,247/0. `rusty_vault_nif` embeds compile-time randomness and cannot rebuild byte-identically, so its pinned build is served from `var/recovery-runtime/nif-artifacts/<sha256>/`.
+- **D5 done:** `default` was moved to `main`, and its previous state is preserved at `preserved/default-before-d5-20261026`.
 - **Real Telegram acceptance and global admission** remain UNRUN and NOT_GRANTED.
 
 ## 11. Metrics Summary
