@@ -347,3 +347,117 @@ pub fn native_v2_mini_clear_fences_poll_completion_test() {
   budget(config).reserved_requests |> should.equal(2)
   row(config,codec.result_key(rec.request_id)).exists |> should.be_false
 }
+
+
+const mini_nonce = "0123456789abcdef0123456789abcdef"
+const mini_nonce2 = "1123456789abcdef0123456789abcdef"
+fn mini_job(nonce: String) { "mini-control/" <> files.digest(nonce) }
+fn mini_prepare(config: transport.LocalConfiguration, nonce: String, limit: Int) {
+  let scope=conv.Scope(bot,100,200)
+  let assert Ok(key)=conv.context_key(scope)
+  let r=row(config,key)
+  store.prepare_mini_chat(config,scope,nonce,mini_job(nonce),"Mini question",
+    r.version,r.sha256,day,limit)
+}
+pub fn mini_native_reservation_single_owner_and_receipt_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,10)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  budget(config).reserved_requests |> should.equal(1)
+  store.mini_chat_context(res).turns |> should.equal([])
+  store.mini_chat_prompt(res) |> should.equal("Mini question")
+  // Same generation/operation bytes yield native replay, never a second capability.
+  store.commit_mini_chat_reservation(draft) |> should.be_error
+  mini_prepare(config,mini_nonce,10) |> should.be_error
+  let assert Ok(done)=store.complete_mini_chat(res,Some("Mini answer"))
+  context(config,100,200).turns |> should.equal([conv.MiniTurn(mini_nonce,"Mini question","Mini answer")])
+  let assert Ok(found)=store.mini_chat_receipt(config,conv.Scope(bot,100,200),mini_nonce)
+  found.receipt |> should.equal(Some(done.receipt))
+  string.contains(done.receipt.summary_json,"\"status\":\"completed\"") |> should.be_true
+  store.complete_mini_chat(res,Some("Mini answer")) |> should.be_error
+  budget(config).reserved_requests |> should.equal(1)
+}
+pub fn mini_native_failed_model_no_history_and_no_refund_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,1)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  let assert Ok(done)=store.complete_mini_chat(res,None)
+  string.contains(done.receipt.summary_json,"\"status\":\"model_failed\"") |> should.be_true
+  let assert Ok(key)=conv.context_key(conv.Scope(bot,100,200))
+  row(config,key).exists |> should.be_false
+  budget(config).reserved_requests |> should.equal(1)
+  mini_prepare(config,mini_nonce2,1) |> should.be_error
+}
+pub fn mini_native_unrelated_activity_does_not_lose_reply_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,10)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  let _=processing(config,10,100,201,"Other user")
+  let assert Ok(_)=store.complete_mini_chat(res,Some("Answer"))
+  context(config,100,200).turns |> should.equal([conv.MiniTurn(mini_nonce,"Mini question","Answer")])
+}
+pub fn mini_native_clear_during_model_records_terminal_conflict_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,10)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  let scope=conv.Scope(bot,100,200)
+  let assert Ok(clear)=store.prepare_mini_clear(config,scope,
+    "mini-clear-"<>files.digest("clear-during-mini"),0,"")
+  let assert Ok(_)=store.commit_mini_clear(clear)
+  let assert Ok(done)=store.complete_mini_chat(res,Some("Late answer"))
+  string.contains(done.receipt.summary_json,"\"status\":\"context_changed\"") |> should.be_true
+  string.contains(done.receipt.summary_json,"Late answer") |> should.be_false
+  context(config,100,200).turns |> should.equal([])
+  budget(config).reserved_requests |> should.equal(1)
+  let assert Ok(found)=store.mini_chat_receipt(config,scope,mini_nonce)
+  found.receipt |> should.equal(Some(done.receipt))
+}
+pub fn mini_native_competing_requests_only_one_history_append_test() {
+  use config <- with_store()
+  let assert Ok(a)=mini_prepare(config,mini_nonce,10)
+  let assert Ok(ra)=store.commit_mini_chat_reservation(a)
+  let assert Ok(b)=mini_prepare(config,mini_nonce2,10)
+  let assert Ok(rb)=store.commit_mini_chat_reservation(b)
+  let assert Ok(_)=store.complete_mini_chat(ra,Some("Winner"))
+  let assert Ok(late)=store.complete_mini_chat(rb,Some("Not appended"))
+  string.contains(late.receipt.summary_json,"context_changed") |> should.be_true
+  context(config,100,200).turns |> should.equal([conv.MiniTurn(mini_nonce,"Mini question","Winner")])
+  budget(config).reserved_requests |> should.equal(2)
+}
+pub fn mini_native_invalid_input_never_charges_test() {
+  use config <- with_store()
+  let scope=conv.Scope(bot,100,200)
+  list.each(["", "invalid",string.repeat("a",33)],fn(n) {
+    store.prepare_mini_chat(config,scope,n,mini_job(n),"Prompt",0,"",day,10) |> should.be_error
+  })
+  list.each(["",string.repeat("x",4097),"/home/private/secret.txt"],fn(prompt) {
+    store.prepare_mini_chat(config,scope,mini_nonce,mini_job(mini_nonce),prompt,0,"",day,10) |> should.be_error
+  })
+  store.prepare_mini_chat(config,scope,mini_nonce,"bad-job","Prompt",0,"",day,10) |> should.be_error
+  store.prepare_mini_chat(config,scope,mini_nonce,mini_job(mini_nonce),"Prompt",1,files.digest("stale"),day,10) |> should.be_error
+  store.prepare_mini_chat(config,conv.Scope(999,100,200),mini_nonce,mini_job(mini_nonce),"Prompt",0,"",day,10) |> should.be_error
+  mini_prepare(config,mini_nonce,0) |> should.be_error
+  let assert Ok(key)=conv.budget_key(bot,day)
+  row(config,key).exists |> should.be_false
+}
+pub fn mini_native_stale_preparation_never_authorizes_model_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,10)
+  let _=processing(config,10,100,201,"Other activity")
+  store.commit_mini_chat_reservation(draft) |> should.be_error
+  let assert Ok(key)=conv.budget_key(bot,day)
+  row(config,key).exists |> should.be_false
+  let assert Ok(request)=store.mini_chat_key(conv.Scope(bot,100,200),mini_nonce)
+  row(config,request).exists |> should.be_false
+}
+pub fn mini_native_invalid_reply_and_other_scope_receipt_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,10)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  store.complete_mini_chat(res,Some("")) |> should.be_error
+  let assert Ok(key)=conv.context_key(conv.Scope(bot,100,200))
+  row(config,key).exists |> should.be_false
+  let assert Ok(_)=store.complete_mini_chat(res,None)
+  let assert Ok(other)=store.mini_chat_receipt(config,conv.Scope(bot,100,201),mini_nonce)
+  other.found |> should.be_false
+}

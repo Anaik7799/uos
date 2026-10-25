@@ -3392,3 +3392,178 @@ pub fn commit_mini_clear(res: MiniClearReservation) -> Result(codec.ApplyResult,
       codec.encode_canonical_base64(res.empty))],
     codec.ReservationDelta(0,0),res.summary)
 }
+
+
+//// Mini chat has its own durable identity. Neither native receipt replay nor
+//// receipt observation yields a model-call capability.
+pub opaque type MiniChatDraft {
+  MiniChatDraft(
+    config: transport.LocalConfiguration, scope: conv.Scope,
+    nonce: String, job: String, prompt: String, day: Int,
+    context: conv.Context, context_row: codec.RowResult,
+    generation: Int, reads: List(codec.ReadSetAssertion),
+    changes: List(codec.Change), reserved_raw: String,
+    request_key: String, reserved_context_rows: Int,
+  )
+}
+pub opaque type MiniChatReservation {
+  MiniChatReservation(draft: MiniChatDraft)
+}
+
+pub fn mini_chat_key(scope: conv.Scope, nonce: String) -> Result(String, StoreError) {
+  use context <- result.try(conv.context_key(scope) |> result.map_error(StoreInvariantError))
+  case conv.valid_mini_request_id(nonce) {
+    True -> Ok("mini-chat:" <> files.digest(context <> ":" <> nonce))
+    False -> Error(StoreInvariantError("invalid_mini_chat_nonce"))
+  }
+}
+
+fn mini_chat_value(row: codec.RowResult) -> Result(String, StoreError) {
+  use raw <- result.try(codec.decode_row_value(row) |> result.map_error(StoreDecodeError))
+  case row.exists && row.version > 0 && files.digest(raw) == row.sha256 {
+    True -> Ok(raw)
+    False -> Error(StoreInvariantError("mini_chat_row_integrity"))
+  }
+}
+
+fn mini_chat_record(
+  scope: conv.Scope, nonce: String, job: String, prompt: String, day: Int,
+  version: Int, sha: String, status: String, reply: Option(String),
+) -> String {
+  json.to_string(json.object([
+    #("schema",json.string("uos.telegram.mini-chat.v1")),
+    #("bot",json.int(scope.bot_id)), #("chat",json.int(scope.chat_id)),
+    #("user",json.int(scope.user_id)), #("request_id",json.string(nonce)),
+    #("job",json.string(job)), #("prompt_sha256",json.string(files.digest(prompt))),
+    #("day",json.int(day)), #("context_version",json.int(version)),
+    #("context_sha256",json.string(sha)), #("status",json.string(status)),
+    #("reply",case reply { None -> json.null() Some(s) -> json.string(s) }),
+  ]))
+}
+
+/// Read-only preparation. Fresh external task/job/auth fences are required again
+/// immediately before commit_mini_chat_reservation.
+pub fn prepare_mini_chat(
+  config: transport.LocalConfiguration, scope: conv.Scope,
+  nonce: String, job: String, prompt: String,
+  expected_version: Int, expected_sha: String, day: Int, limit: Int,
+) -> Result(MiniChatDraft, StoreError) {
+  use key <- result.try(mini_chat_key(scope,nonce))
+  use ctx_key <- result.try(conv.context_key(scope) |> result.map_error(StoreInvariantError))
+  use budget_key <- result.try(conv.budget_key(scope.bot_id,day) |> result.map_error(StoreInvariantError))
+  use _ <- result.try(case string.starts_with(job,"mini-control/")
+    && guard.valid_digest(string.drop_start(job,13))
+    && expected_version >= 0 && expected_version <= guard.max_identity
+    && case expected_version { 0 -> expected_sha == "" _ -> guard.valid_digest(expected_sha) } {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("invalid_mini_chat_binding"))
+  })
+  let bot_key=codec.bot_identity_key()
+  use #(generation,rows) <- result.try(read_keys(config,[bot_key,ctx_key,budget_key,key]))
+  use bot <- result.try(find_read_row(rows,bot_key))
+  use ctx <- result.try(find_read_row(rows,ctx_key))
+  use budget <- result.try(find_read_row(rows,budget_key))
+  use request <- result.try(find_read_row(rows,key))
+  use bot_raw <- result.try(mini_chat_value(bot))
+  use bot_id <- result.try(codec.decode_bot_identity_value(bot_raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case generation > 0 && list.length(rows) == 4
+    && bot_id == scope.bot_id && ctx.version == expected_version && ctx.sha256 == expected_sha
+    && !request.exists && request.version == 0 && request.sha256 == ""
+    && request.canonical_value_base64 == "" {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("mini_chat_snapshot_or_request_conflict"))
+  })
+  use context <- result.try(case ctx.exists {
+    False -> case ctx.version == 0 && ctx.sha256 == "" && ctx.canonical_value_base64 == "" {
+      True -> Ok(conv.Context(scope,[]))
+      False -> Error(StoreInvariantError("mini_chat_invalid_absence"))
+    }
+    True -> {
+      use raw <- result.try(mini_chat_value(ctx))
+      conv.decode_context(raw,scope) |> result.map_error(StoreDecodeError)
+    }
+  })
+  // Input policy is checked before charging quota or reserving native capacity.
+  use _ <- result.try(conv.prepare_request(context,prompt) |> result.map_error(StoreInvariantError))
+  use old_budget <- result.try(case budget.exists {
+    False -> case budget.version == 0 && budget.sha256 == "" && budget.canonical_value_base64 == "" {
+      True -> Ok(conv.DailyBudget(scope.bot_id,day,0))
+      False -> Error(StoreInvariantError("mini_chat_invalid_budget_absence"))
+    }
+    True -> {
+      use raw <- result.try(mini_chat_value(budget))
+      conv.decode_budget(raw,scope.bot_id,day) |> result.map_error(StoreDecodeError)
+    }
+  })
+  use next_budget <- result.try(conv.reserve(old_budget,scope.bot_id,day,limit)
+    |> result.map_error(StoreInvariantError))
+  use encoded_budget <- result.try(conv.encode_budget(next_budget) |> result.map_error(StoreInvariantError))
+  let reserved_raw=mini_chat_record(scope,nonce,job,prompt,day,ctx.version,ctx.sha256,"reserved",None)
+  let reads=list.map([bot,ctx,budget,request],fn(r) { row_read_assertion(r.key,r) })
+  let changes=[
+    codec.Change(budget_key,budget.version,budget.sha256,codec.encode_canonical_base64(encoded_budget)),
+    codec.Change(key,0,"",codec.encode_canonical_base64(reserved_raw)),
+  ]
+  Ok(MiniChatDraft(config,scope,nonce,job,prompt,day,context,ctx,generation,
+    reads,changes,reserved_raw,key,case ctx.exists { True -> 0 False -> 1 }))
+}
+
+/// Only replay=false returns a capability. Concurrent identical prepared drafts
+/// can both receive the same receipt, but only one caller may invoke the model.
+pub fn commit_mini_chat_reservation(d: MiniChatDraft) -> Result(MiniChatReservation, StoreError) {
+  use applied <- result.try(execute_apply(d.config,d.scope.bot_id,
+    "mini-chat-reserve-" <> files.digest(d.request_key),d.generation,
+    d.reads,d.changes,codec.ReservationDelta(d.reserved_context_rows,1),d.reserved_raw))
+  case applied.replay {
+    False -> Ok(MiniChatReservation(d))
+    True -> Error(StoreInvariantError("mini_chat_reservation_replayed_no_model"))
+  }
+}
+pub fn mini_chat_context(res: MiniChatReservation) -> conv.Context { res.draft.context }
+pub fn mini_chat_prompt(res: MiniChatReservation) -> String { res.draft.prompt }
+
+/// Current global generation tolerates unrelated activity; original context CAS
+/// and the exact reserved request row still fence this completion.
+pub fn complete_mini_chat(
+  res: MiniChatReservation, successful_reply: Option(String),
+) -> Result(codec.ApplyResult, StoreError) {
+  let d=res.draft
+  let bot_key=codec.bot_identity_key()
+  use #(generation,rows) <- result.try(read_keys(d.config,[bot_key,d.context_row.key,d.request_key]))
+  use bot <- result.try(find_read_row(rows,bot_key))
+  use ctx <- result.try(find_read_row(rows,d.context_row.key))
+  use request <- result.try(find_read_row(rows,d.request_key))
+  use bot_raw <- result.try(mini_chat_value(bot))
+  use bot_id <- result.try(codec.decode_bot_identity_value(bot_raw) |> result.map_error(StoreDecodeError))
+  use request_raw <- result.try(mini_chat_value(request))
+  use _ <- result.try(case list.length(rows) == 3 && bot_id == d.scope.bot_id
+    && request.version == 1 && request_raw == d.reserved_raw {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("mini_chat_completion_binding"))
+  })
+  let unchanged=ctx == d.context_row
+  use #(status,reply,changes) <- result.try(case unchanged,successful_reply {
+    False,_ -> Ok(#("context_changed",None,[]))
+    True,None -> Ok(#("model_failed",None,[]))
+    True,Some(text) -> {
+      use next <- result.try(conv.append(d.context,conv.MiniTurn(d.nonce,d.prompt,text))
+        |> result.map_error(StoreInvariantError))
+      use raw <- result.try(conv.encode_context(next) |> result.map_error(StoreInvariantError))
+      Ok(#("completed",Some(text),[
+        codec.Change(ctx.key,ctx.version,ctx.sha256,codec.encode_canonical_base64(raw))]))
+    }
+  })
+  let summary=mini_chat_record(d.scope,d.nonce,d.job,d.prompt,d.day,
+    d.context_row.version,d.context_row.sha256,status,reply)
+  execute_apply(d.config,d.scope.bot_id,"mini-chat-complete-" <> files.digest(d.request_key),
+    generation,list.map([bot,ctx,request],fn(r) { row_read_assertion(r.key,r) }),
+    [codec.Change(request.key,request.version,request.sha256,codec.encode_canonical_base64(summary)),..changes],
+    codec.ReservationDelta(-d.reserved_context_rows,-1),summary)
+}
+
+/// Historical lookup only: a reserved row or missing receipt never authorizes
+/// another model request. Scope/nonce derive the native operation namespace.
+pub fn mini_chat_receipt(config: transport.LocalConfiguration, scope: conv.Scope, nonce: String) {
+  use key <- result.try(mini_chat_key(scope,nonce))
+  lookup_operation(config,"mini-chat-complete-" <> files.digest(key))
+}
