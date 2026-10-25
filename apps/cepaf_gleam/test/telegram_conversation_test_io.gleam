@@ -1,3 +1,4 @@
+import gleam/string
 //// Private test adapter; injected only with IsolatedTestPaths.
 import cepaf_gleam/harness/telegram_service as service
 import gleam/json
@@ -40,7 +41,7 @@ pub fn configure(config: service.ServiceConfiguration, mode: String, limit: Int,
               #("model",json.string("fixture/free")),
               #("choices",json.array([json.object([
                 #("finish_reason",json.string("stop")),
-                #("message",json.object([#("content",json.string("Model reply"))])),
+                #("message",json.object([#("content",json.string(response(mode)))])),
               ])], fn(x) { x })),
               #("usage",json.object([
                 #("prompt_tokens",json.int(20)),#("completion_tokens",json.int(4)),
@@ -53,4 +54,11 @@ pub fn configure(config: service.ServiceConfiguration, mode: String, limit: Int,
       service.ServiceConfiguration(..config, conversation: service.IsolatedConversation(limit, 10_000, io))
     }
   }
+}
+
+pub fn response(mode:String)->String {
+ case mode {
+  "unicode" -> "a"<>string.repeat("\u{301}",3000)
+  _ -> "Model reply"
+ }
 }

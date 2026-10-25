@@ -97,5 +97,12 @@
     "All other command, Mini, media, gateway obligations remain",
     "Real Telegram acceptance and global admission NOT_GRANTED"
   ],
-  "publication": null
+  "publication": {
+    "at": "2026-10-25T14:29:46.375Z",
+    "main": "1da695e286cd48613d1a3cfd0170a0ff8efb6dbf",
+    "remote": "1da695e286cd48613d1a3cfd0170a0ff8efb6dbf",
+    "commits_since_806c2739": 247,
+    "source_only": true,
+    "production_admission": false
+  }
 }

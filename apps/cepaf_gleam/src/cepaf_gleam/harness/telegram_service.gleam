@@ -95,99 +95,66 @@ pub fn chunk_payload_utf8(payload: String) -> List(String) {
   chunk_payload_utf8_bounded(payload, max_chunk_bytes, max_chunks_per_request)
 }
 
+/// Bounds refer to UTF-8 bytes, a conservative Telegram text limit.
+/// Preserve normal graphemes; oversized ones must split at scalar boundaries.
 pub fn chunk_payload_utf8_bounded(
   payload: String,
   max_bytes: Int,
   max_chunks: Int,
 ) -> List(String) {
-  let cleaned = string.replace(payload, "\u{0}", "[NUL]")
-  let trimmed = string.trim(cleaned)
-  case trimmed == "" {
-    True -> ["(empty)"]
-    False -> {
-      let graphemes = string.to_graphemes(cleaned)
-      let chunks =
-        do_chunk_graphemes(graphemes, max_bytes, max_chunks, "", 0, [])
-      case list.filter(chunks, fn(c) { string.trim(c) != "" }) {
-        [] -> ["(empty)"]
-        valid_chunks -> valid_chunks
+  case max_bytes >= 16 && max_bytes <= max_chunk_bytes
+    && max_chunks >= 1 && max_chunks <= max_chunks_per_request {
+    False -> []
+    True -> {
+      let cleaned = string.replace(payload, "\u{0}", "[NUL]")
+      case string.trim(cleaned) == "" {
+        True -> ["(empty)"]
+        False -> {
+          let units = string.to_graphemes(cleaned)
+            |> list.flat_map(fn(g) {
+              case string.byte_size(g) <= max_bytes {
+                True -> [g]
+                False -> scalar_units(g)
+              }
+            })
+          // Retain the existing whitespace-only chunk handling; callers that
+          // require lossless replies also verify concatenation before commit.
+          case list.filter(pack_chunks(units,max_bytes,max_chunks,[]),fn(c){string.trim(c)!=""}) {
+            [] -> ["(empty)"]
+            parts -> parts
+          }
+        }
       }
     }
   }
 }
 
-fn do_chunk_graphemes(
-  graphemes: List(String),
-  max_bytes: Int,
-  max_chunks: Int,
-  current_chunk: String,
-  current_bytes: Int,
-  completed_chunks: List(String),
-) -> List(String) {
-  let is_final_chunk_slot = list.length(completed_chunks) >= max_chunks - 1
+fn scalar_units(text:String)->List(String) {
+  string.to_utf_codepoints(text)
+  |> list.map(fn(cp){string.from_utf_codepoints([cp])})
+}
 
-  case graphemes {
-    [] -> {
-      case current_chunk {
-        "" -> list.reverse(completed_chunks)
-        _ -> list.reverse([current_chunk, ..completed_chunks])
-      }
+/// Never force a unit into an empty prefix when it exceeds the byte budget.
+fn take_chunk(units:List(String),limit:Int,size:Int,rev:List(String))->#(String,List(String)) {
+  case units {
+    [] -> #(string.join(list.reverse(rev),""),[])
+    [unit,..rest] -> case size+string.byte_size(unit)<=limit {
+      True -> take_chunk(rest,limit,size+string.byte_size(unit),[unit,..rev])
+      False -> #(string.join(list.reverse(rev),""),units)
     }
-    [g, ..rest] -> {
-      let g_bytes = string.byte_size(g)
-      case is_final_chunk_slot {
-        True -> {
-          let trunc_marker = "\n... [truncated]"
-          let trunc_marker_bytes = string.byte_size(trunc_marker)
-          let limit = max_bytes - trunc_marker_bytes
-
-          case current_bytes + g_bytes <= limit {
-            True ->
-              do_chunk_graphemes(
-                rest,
-                max_bytes,
-                max_chunks,
-                current_chunk <> g,
-                current_bytes + g_bytes,
-                completed_chunks,
-              )
-            False -> {
-              let final_chunk = case current_chunk {
-                "" -> g <> trunc_marker
-                _ -> current_chunk <> trunc_marker
-              }
-              list.reverse([final_chunk, ..completed_chunks])
-            }
-          }
-        }
-        False -> {
-          case current_bytes + g_bytes <= max_bytes {
-            True ->
-              do_chunk_graphemes(
-                rest,
-                max_bytes,
-                max_chunks,
-                current_chunk <> g,
-                current_bytes + g_bytes,
-                completed_chunks,
-              )
-            False -> {
-              let next_completed = case current_chunk {
-                "" -> completed_chunks
-                _ -> [current_chunk, ..completed_chunks]
-              }
-              do_chunk_graphemes(
-                rest,
-                max_bytes,
-                max_chunks,
-                g,
-                g_bytes,
-                next_completed,
-              )
-            }
-          }
-        }
+  }
+}
+fn pack_chunks(units:List(String),limit:Int,slots:Int,rev:List(String))->List(String) {
+  let #(chunk,rest)=take_chunk(units,limit,0,[])
+  case rest {
+    [] -> list.reverse([chunk,..rev])
+    _ -> case slots == 1 {
+      True -> {
+        let marker="\n... [truncated]"
+        let #(prefix,_)=take_chunk(scalar_units(chunk),limit-string.byte_size(marker),0,[])
+        list.reverse([prefix<>marker,..rev])
       }
+      False -> pack_chunks(rest,limit,slots-1,[chunk,..rev])
     }
   }
 }

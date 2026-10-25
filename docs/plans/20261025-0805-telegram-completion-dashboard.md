@@ -2,9 +2,9 @@
 
 #fractal-l0 #fractal-l5 #fractal-l9 #zk-adr #zero-muda
 
-Observed 2026-10-25T14:27:59.282Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
+Observed 2026-10-25T14:44:29.112Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
 
-**AS-IS:** Main and GitHub match f59d3335; 246 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
+**AS-IS:** Main and GitHub match1da695e2;247 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
 
 **TO-BE:** All adopted Telegram commands, Mini App actions and media operate through guarded supervised dispatch; real Telegram and browser acceptance pass on the released candidate; applicable branch deltas are integrated and GitHub readback matches main.
 
@@ -12,7 +12,7 @@ Observed 2026-10-25T14:27:59.282Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100
 |---|---|---|---|
 | G8_IMPROVE | Completed; live desktop/mobile PASS | Current task projection, finite refresh and truthful demonstration | High: reviewed exact bytes/config, preserved originals, renewed finite observer until14:55:00Z |
 | MINI_API_IMPL → MINI_API_REVIEW | Attempt8 cleanly released; acknowledgement published504b17f1 with core/UI/integration reviews PASS; three other data adapters remain | Authenticated data/actions reflect actual state; denial/recovery and browser checks | High: exact episode/nonce/fence checks, durable receipt recovery and independent source review |
-| COMMAND_IMPL → COMMAND_REVIEW | Attempt14 active; /ha publishedf59d3335. Finops/budget candidate:362 checks,11 native ledger checks,4 service scenarios and full build PASS. AGY7370b5c5 source review PASS; fixture-discovery HOLD resolved by actual staged/loaded beam proof. Historical32/77 inventory is not current acceptance | Every adopted command maps to typed dispatcher and backend | Critical: effect-time owner/task fence and receipts |
+| COMMAND_IMPL → COMMAND_REVIEW | Attempt14 active; /ha publishedf59d3335. Finops/budget published1da695e2:362 checks,11 native ledger checks,4 service scenarios and full build PASS. AGY7370b5c5 source review PASS; fixture-discovery HOLD resolved by actual staged/loaded beam proof. Fresh compiled inventory:35/77 handler routes connected,20 backend_unavailable,22 not_implemented; route coverage is not feature acceptance | Every adopted command maps to typed dispatcher and backend | Critical: effect-time owner/task fence and receipts |
 | MEDIA_IMPL → MEDIA_REVIEW | Pending | Bounded media ingestion and delivery | High: size/type validation and hostile-input checks |
 | GATEWAY_IMPL → GATEWAY_REVIEW | Pending | Supervised secret-safe startup/outbox/recovery | Critical: no credentials in operational messages |
 | TELEGRAM_E2E → RETURN; admission PREP through CLOSE | Pending | Actual Telegram user journey, release/recovery and global admission decision | Critical: component counts cannot grant runtime admission |
@@ -25,7 +25,11 @@ Config now uses shared validated declarations with12 current tests,16 HTTP cases
 
 Alerts read increment now has23 focused tests,319 prior combined checks,8 HTTP executions across two collector profiles and4 real Chromium scenarios; AGY51fcfe4f/126a1f5c PASS. Source-only publication verified12:39:13UTC at6f883356; full-page/task completion remains open. Acknowledgement follow-up now has343 combined checks,48 full-app checks,11 HTTP cases and11 final Chromium executions (7distinct scenarios) passing; core AGYea1542c9 PASS, corrected UI/test review05439728 PASS. This does not close the Mini task or production release. Observer replaced before expiry, snapshot13:20:55UTC; successor expiry14:55:00UTC.
 
-Finops reports daily reserved liability, not invoiced provider spending or global account budget. Current candidate passed independent review; source publication pending, no deployment. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1406-telegram-finops-command.json).
+Finops reports daily reserved liability, not invoiced provider spending or global account budget. Source publication verified14:29:46UTC at1da695e2; no deployment. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1406-telegram-finops-command.json).
+
+Fresh command inventory at 2026-10-25T14:32:14.670Z:35 connected handler routes,20 missing backends and22 explicitly unimplemented command literals. Existing /ha,/finops,/zigvm and other narrow observations do not complete their broader feature promises. [Inventory](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1414-telegram-command-reachability.json).
+
+Shared delivery repair candidate: exact-fit final chunks no longer truncate; oversized Unicode graphemes split into bounded valid UTF-8.370combined tests,11native regressions,2service scenarios and fullappbuild PASS; AGYf02b71f1 source review PASS; publication pending. [Checkpoint](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1415-telegram-chunk-recovery.json).
 
 Next: continue command backends and remaining Mini producers/actions,media,gateway and exact release/admission. Acknowledgement source was published13:45:40UTC. HA reports actual local runtime pressure; cluster failover remains unverified. Use bounded AGY review and Codex/AGY code/testing; reuse unchanged source-bound evidence. Ten runtime and eight admission tasks remain. Overall completion time is not established until backend availability and actual Telegram acceptance are verified.
 

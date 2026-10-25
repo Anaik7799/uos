@@ -1,3 +1,4 @@
+import telegram_conversation_test_io as conversation_fixture
 @external(erlang,"telegram_budget_test_io","fixture")
 fn budget_fixture(db:String,variant:String)->String
 import telegram_verification_report_test as evidence_fixture
@@ -1321,6 +1322,7 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
   let req_id = ledger.make_request_id(bot_id, 8001)
   let first_payload=delivered_payload(storage_config,req_id,delivered_count)
   string.contains(first_payload,first_expected) |> should.be_true
+  case mode { "unicode" -> { assert delivered_count==2 assert first_payload==conversation_fixture.response(mode) } _ -> Nil }
   case first_command=="/checklist" && list.contains(["verification","verification_all"],risk_case) {
     True -> {
       string.contains(first_payload,"CHK-18-JJ") |> should.be_true
@@ -1356,6 +1358,7 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
   let req_id2 = ledger.make_request_id(bot_id, 8002)
   let second_payload=delivered_payload(storage_config,req_id2,delivered_count2)
   string.contains(second_payload,second_expected) |> should.be_true
+  case mode { "unicode" -> { assert delivered_count2==2 assert second_payload==conversation_fixture.response(mode) } _ -> Nil }
 
 
   case mode {
@@ -1379,7 +1382,7 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
             _ -> {
               let assert Ok(first) = list.first(context.turns)
               first.prompt |> should.equal("Hello")
-              first.reply |> should.equal("Model reply")
+              first.reply |> should.equal(conversation_fixture.response(mode))
             }
           }
         }
@@ -2725,4 +2728,9 @@ pub fn e2e_finops_missing_ledger_test() {
 }
 pub fn e2e_finops_changed_executable_refuses_test() {
  exercise_configured_dispatch("/finops","unavailable","/tool query_finops {}","unavailable","disabled",10,"budget_badsha")
+}
+
+pub fn e2e_oversized_unicode_grapheme_delivery_test() {
+ let response=conversation_fixture.response("unicode")
+ exercise_conversation_dispatch("Hello",response,"Hello",response,"unicode",10)
 }

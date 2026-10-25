@@ -41,7 +41,7 @@ Runtime61/71;admission25/33;operations7/7;consolidation9/9 task records.362 chec
 Raw FMEA S4 O3 Det3 RPN36 for false financial/authority feedback. Omission: explicit unavailable; unsafe provision: no fake cost or funding grant; timing: before/after service fence and same-day freshness; duration:3000ms child and5000ms observation limit. Fixed source-only scope, standalone JJ and EV93 ceiling remain. No financial action or runtime admission is granted.
 
 ## 13. Conclusion
-Prediction: bounded independent review can support source-only publication before the current14:49UTC task lease expires; adverse review/source mismatch/gate failure falsifies it. Brier calibration UNRUN. Publication remains pending; full goal stays active.
+Prediction: bounded independent review can support source-only publication before the current14:49UTC task lease expires; adverse review/source mismatch/gate failure falsifies it. Brier calibration UNRUN. Source-only main1da695e2 and GitHub readback matched14:29:46UTC,247commits sincebaseline. All development fixture units stopped; runtime lease released. Prediction met for source publication; full goal stays active.
 
 ## Verification checklist
 <details><summary>Domain 1 — Metadata and navigation</summary>

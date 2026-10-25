@@ -1,0 +1,60 @@
+{
+  "schema": "uos.telegram.chunk-recovery.v1",
+  "observed_at": "2026-10-25T14:44:15.692Z",
+  "parent": "1da695e286cd48613d1a3cfd0170a0ff8efb6dbf",
+  "authority": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "task": "COMMAND_IMPL",
+    "worker": "codex-analysis-20261024",
+    "attempt": 14
+  },
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+      "sha256": "2ac1fa020df8c4f151c4f8d2c885ed6e18896c8679207fffc97f4997d287a901"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_chunk_test.gleam",
+      "sha256": "88559501afae2d8bce5cc1e82311f9aceb30844d469cb971064d317cc6b28a50"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_conversation_test_io.gleam",
+      "sha256": "d268371cd43b5ee2bda43d8f45301153c265b04d93979b229b70df01b72cc3ee"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+      "sha256": "cb9ba6bb636408cce90f6a9e6d5ae4b813ab6356679dec13947a2e6ca528877a"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/build.js",
+      "sha256": "6269415b05699cbe9c07e112de5a3c76b7e663ca1aeb996ba99751e6446e1478"
+    }
+  ],
+  "tests": {
+    "before": "4 failing /3 passing",
+    "after_combined": 370,
+    "chunk_cases": 8,
+    "service_scenarios": 2,
+    "unicode_requests": 2,
+    "unicode_delivered_chunks": 4,
+    "budget_native_regressions": 11,
+    "full_application_bindings": 924,
+    "full_build": "PASS"
+  },
+  "review": {
+    "design": "AGY0cff3436-01af-44c1-89dd-0b427db552c6 PASS",
+    "source": "AGYf02b71f1-5a49-46e7-bbf4-4e1a01ee142b PASS"
+  },
+  "evidence": {
+    "before": "var/recovery-runtime/20261025-1437-chunk-rca",
+    "candidate": "var/recovery-runtime/20261025-1442-chunk-command",
+    "full": "var/recovery-runtime/20261025-1442-chunk-full"
+  },
+  "remaining": [
+    "Whitespace-only chunks retain prior filtering limitation; lossless conversation paths refuse altered reassembly",
+    "42 catalog command literals have no implemented backend; connected handlers are not full feature completion",
+    "Mini/media/gateway and real Telegram acceptance remain open",
+    "No deployment or global admission"
+  ],
+  "publication": null
+}
