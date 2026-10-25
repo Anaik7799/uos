@@ -5,6 +5,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/telegram_rete_report as rete
 import gleam/dict
 import gleam/dynamic/decode
 import cepaf_gleam/harness/telegram_knowledge_report as knowledge
@@ -128,6 +129,10 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         case name {
           "/approval" -> approval_directive(args)
           "/doctor" -> read_directive("query_doctor", args)
+          "/rete" -> case rete.canonicalize(args) {
+            Ok(facts)->PreservedDirective("/rete",[facts])
+            Error(_)->DeniedMutation("/rete","Supply comma-separated watchdog, mesh_running, e_stop, high_drift or divergent boolean facts; evaluation grants no authority.")
+          }
           "/ecology" -> read_directive("query_ecology", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" | "/health" -> read_directive("query_system_health", args)
@@ -165,6 +170,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.CancelLease(job,reason)) -> PreservedDirective("/cancel_job_lease",[job,reason])
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
+              Ok(tool_command.Rete(facts)) -> PreservedDirective("/rete",[facts])
               Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")

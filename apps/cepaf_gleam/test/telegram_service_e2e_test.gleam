@@ -2622,3 +2622,12 @@ pub fn e2e_ecology_scope_refusal_test() {
   exercise_automatic_command_dispatch("/ecology foreign","denied_mutation",
     "/action query_ecology {\"url\":\"http://evil/\"}","denied_mutation")
 }
+
+pub fn e2e_rete_command_and_tool_test() {
+ exercise_automatic_command_dispatch("/rete watchdog=true,mesh_running=true","\"verdict\":\"pass\"",
+   "/tool evaluate_rete {\"facts\":\"e_stop=true\"}","\"verdict\":\"rejected\"")
+}
+pub fn e2e_rete_scope_and_missing_facts_test() {
+ exercise_automatic_command_dispatch("/rete","denied_mutation",
+   "/tool evaluate_rete {\"facts\":\"watchdog=true\",\"worker\":\"/private\"}","denied_mutation")
+}
