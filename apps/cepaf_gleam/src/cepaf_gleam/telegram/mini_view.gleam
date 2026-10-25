@@ -146,6 +146,16 @@ pub fn public_page(page: types.MiniAppPage) -> String {
               ])
             types.MiniConversation ->
               h.div([a.id("mini-memory-controls")], [
+                h.h3([], [h.text("Chat")]),
+                h.label([a.for("mini-chat-prompt")],[h.text("Message (up to 4096 UTF-8 bytes)")]),
+                h.textarea([a.id("mini-chat-prompt"),a.attribute("rows","4"),a.attribute("maxlength","4096"),a.attribute("style","width:100%;box-sizing:border-box")],""),
+                h.button([a.id("mini-chat-send"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Send message")]),
+                h.button([a.id("mini-chat-receipt"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Check send receipt")]),
+                h.button([a.id("mini-chat-abandon"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Close pending request")]),
+                h.button([a.id("mini-chat-close"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Close send recovery")]),
+                h.p([a.id("mini-chat-status"),a.attribute("role","status"),a.attribute("aria-live","polite")],[h.text("Load current data to send. Sends require a separate grant.")]),
+                h.p([a.id("mini-chat-reply"),a.attribute("style","white-space:pre-wrap;overflow-wrap:anywhere"),a.attribute("aria-live","polite")],[]),
+
                 h.h3([], [h.text("Retained conversation context")]),
                 h.p([], [h.text("Clear and reset both remove retained context for this user and chat. Telegram messages and quota usage stay unchanged. Development controls require a separate grant.")]),
                 h.button([a.id("mini-memory-clear"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Clear history")]),

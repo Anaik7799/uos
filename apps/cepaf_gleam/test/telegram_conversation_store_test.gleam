@@ -469,3 +469,35 @@ pub fn with_mini_reserved_for_model_test(run: fn(store.MiniChatReservation) -> a
   let assert Ok(res)=store.commit_mini_chat_reservation(draft)
   run(res)
 }
+
+pub fn mini_native_abandon_releases_capacity_and_fences_late_reply_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,10)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  let scope=conv.Scope(bot,100,200)
+  let assert Ok(close)=store.prepare_mini_chat_abandon(config,scope,mini_nonce,mini_job(mini_nonce),"Mini question",0,"")
+  let assert Ok(done)=store.commit_mini_chat_abandon(close)
+  string.contains(done.receipt.summary_json,"abandoned") |> should.be_true
+  store.complete_mini_chat(res,Some("Late answer")) |> should.be_error
+  budget(config).reserved_requests |> should.equal(1)
+  let assert Ok(ctx)=conv.context_key(scope)
+  row(config,ctx).exists |> should.be_false
+  let assert Ok(found)=store.mini_chat_receipt(config,scope,mini_nonce)
+  found.receipt |> should.equal(Some(done.receipt))
+  let assert Ok(next)=mini_prepare(config,mini_nonce2,10)
+  let assert Ok(next_res)=store.commit_mini_chat_reservation(next)
+  let assert Ok(_)=store.complete_mini_chat(next_res,Some("Next explicit request"))
+  list.length(context(config,100,200).turns) |> should.equal(1)
+}
+pub fn mini_native_abandon_binding_and_completion_race_test() {
+  use config <- with_store()
+  let assert Ok(draft)=mini_prepare(config,mini_nonce,10)
+  let assert Ok(res)=store.commit_mini_chat_reservation(draft)
+  let scope=conv.Scope(bot,100,200)
+  store.prepare_mini_chat_abandon(config,scope,mini_nonce,mini_job(mini_nonce),"Changed prompt",0,"") |> should.be_error
+  store.prepare_mini_chat_abandon(config,conv.Scope(bot,100,201),mini_nonce,mini_job(mini_nonce),"Mini question",0,"") |> should.be_error
+  let assert Ok(close)=store.prepare_mini_chat_abandon(config,scope,mini_nonce,mini_job(mini_nonce),"Mini question",0,"")
+  let assert Ok(_)=store.complete_mini_chat(res,Some("Completed first"))
+  store.commit_mini_chat_abandon(close) |> should.be_error
+  context(config,100,200).turns |> should.equal([conv.MiniTurn(mini_nonce,"Mini question","Completed first")])
+}

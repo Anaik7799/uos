@@ -9,6 +9,14 @@ import gleam/http/response
 import gleam/int
 import gleam/string
 import mist
+import gleam/json
+import gleam/option.{Some}
+import gleam/result
+import simplifile
+import uos_swarm/openrouter_worker as model
+type TimeUnit { Millisecond }
+@external(erlang,"erlang","monotonic_time")
+fn monotonic_ms(unit: TimeUnit) -> Int
 
 @external(erlang, "cepaf_gleam_ffi", "get_env")
 fn get_env(name: String) -> Result(String, Nil)
@@ -29,7 +37,10 @@ pub fn main() {
   }
   case get_env("UOS_MINI_CONTROL_FIXTURE_PROFILE") {
     Ok(_) -> {
-      let assert Ok(_) = mini_control.start_development_fixture()
+      let assert Ok(_) = case get_env("UOS_MINI_FIXTURE_MODEL_LOG") {
+        Ok(_) -> mini_control.start_development_fixture_with_io(fixture_io())
+        Error(_) -> mini_control.start_development_fixture()
+      }
       Nil
     }
     Error(_) -> Nil
@@ -60,4 +71,32 @@ pub fn main() {
     |> mist.after_start(fn(_, _, _) { Nil })
     |> mist.start
   process.sleep_forever()
+}
+
+fn fixture_io() -> model.Io {
+  let assert Ok(log) = get_env("UOS_MINI_FIXTURE_MODEL_LOG")
+  let assert True = string.starts_with(log,"/home/an/uos-agent-runtime/20261024-0555/mini-history-")
+    && string.ends_with(log,"/model-calls.txt") && !string.contains(log,"..")
+  model.Io(
+    credential: fn() { Some("private-fixture") },
+    now_ms: fn() { monotonic_ms(Millisecond) },
+    fetch_prices: fn(_) { Ok(#(200,"{\"data\":[{\"id\":\"openrouter/free\",\"pricing\":{\"prompt\":\"0\",\"completion\":\"0\"}}]}")) },
+    post: fn(_,body,_) {
+      let prior = simplifile.read(log) |> result.unwrap("")
+      let assert Ok(_) = simplifile.write(log,prior <> "POST\n")
+      case string.contains(body,"fixture-model-crash") { True -> kill_actor() False -> Nil }
+      case string.contains(body,"fixture-model-fail") {
+        True -> Error("PRIVATE FIXTURE PROVIDER FAILURE")
+        False -> Ok(#(200,json.to_string(json.object([
+          #("model",json.string("fixture/free")),
+          #("choices",json.array([json.object([
+            #("finish_reason",json.string("stop")),
+            #("message",json.object([#("content",json.string("Fixture reply <script>not executed</script>"))])),
+          ])],fn(x) { x })),
+          #("usage",json.object([#("prompt_tokens",json.int(20)),#("completion_tokens",json.int(8)),
+            #("total_tokens",json.int(28)),#("cost",json.float(0.0))])),
+        ]))))
+      }
+    },
+  )
 }

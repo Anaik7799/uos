@@ -17,6 +17,7 @@ import cepaf_gleam/harness/telegram_ingress_guard as guard
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/int
+import gleam/dynamic/decode
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -3566,4 +3567,47 @@ pub fn complete_mini_chat(
 pub fn mini_chat_receipt(config: transport.LocalConfiguration, scope: conv.Scope, nonce: String) {
   use key <- result.try(mini_chat_key(scope,nonce))
   lookup_operation(config,"mini-chat-complete-" <> files.digest(key))
+}
+
+pub opaque type MiniChatAbandonDraft {
+  MiniChatAbandonDraft(
+    config: transport.LocalConfiguration, scope: conv.Scope, key: String,
+    generation: Int, reads: List(codec.ReadSetAssertion),
+    change: codec.Change, delta: codec.ReservationDelta, summary: String,
+  )
+}
+/// Explicit local closure only: does not assert the provider never received the request.
+/// The same completion operation and request-row CAS exclude a late append.
+pub fn prepare_mini_chat_abandon(
+  config: transport.LocalConfiguration,scope: conv.Scope,nonce: String,job: String,
+  prompt: String,version: Int,sha: String,
+) -> Result(MiniChatAbandonDraft,StoreError) {
+  use key <- result.try(mini_chat_key(scope,nonce))
+  let bot_key=codec.bot_identity_key()
+  use #(generation,rows) <- result.try(read_keys(config,[bot_key,key]))
+  use bot <- result.try(find_read_row(rows,bot_key))
+  use request <- result.try(find_read_row(rows,key))
+  use bot_raw <- result.try(mini_chat_value(bot))
+  use bot_id <- result.try(codec.decode_bot_identity_value(bot_raw) |> result.map_error(StoreDecodeError))
+  use raw <- result.try(mini_chat_value(request))
+  use day <- result.try(json.parse(raw,{
+    use day <- decode.field("day",decode.int)
+    decode.success(day)
+  }) |> result.replace_error(StoreDecodeError("mini_chat_abandon_day")))
+  use _ <- result.try(case bot_id == scope.bot_id && list.length(rows) == 2
+    && request.version == 1 && version >= 0 && day >= 0
+    && raw == mini_chat_record(scope,nonce,job,prompt,day,version,sha,"reserved",None) {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("mini_chat_abandon_binding"))
+  })
+  let summary=mini_chat_record(scope,nonce,job,prompt,day,version,sha,"abandoned",None)
+  Ok(MiniChatAbandonDraft(config,scope,key,generation,
+    list.map([bot,request],fn(r) { row_read_assertion(r.key,r) }),
+    codec.Change(key,request.version,request.sha256,codec.encode_canonical_base64(summary)),
+    codec.ReservationDelta(case version { 0 -> -1 _ -> 0 },-1),summary))
+}
+/// Caller must recheck its current task/job/auth fence immediately before commit.
+pub fn commit_mini_chat_abandon(d: MiniChatAbandonDraft) {
+  execute_apply(d.config,d.scope.bot_id,"mini-chat-complete-" <> files.digest(d.key),
+    d.generation,d.reads,[d.change],d.delta,d.summary)
 }
