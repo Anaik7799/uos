@@ -10,6 +10,7 @@ import cepaf_gleam/harness/telegram_store as history_store
 import cepaf_gleam/harness/telegram_store_transport as history_transport
 import cepaf_gleam/harness/telegram_verification_reader as verification
 import cepaf_gleam/telegram/mini_api as api
+import cepaf_gleam/telegram/mini_health
 import cepaf_gleam/telegram/mini_dashboard
 import cepaf_gleam/telegram/mini_evidence
 import cepaf_gleam/telegram/mini_memory
@@ -311,8 +312,8 @@ fn observe_backend(read: api.AuthorizedRead) -> api.Observation {
       |> result.unwrap(api.Unavailable("history_observation_failed"))
     types.MiniZenohBrowser -> observe_zenoh(read)
     types.MiniDashboard -> mini_dashboard.observe(dashboard_io())
-    types.MiniHealthGrid
-    | types.MiniCockpit
+    types.MiniHealthGrid -> observe_health() |> result.unwrap(api.Unavailable("health_observation_failed"))
+    types.MiniCockpit
     | types.MiniImmune
     | types.MiniInference
     | types.MiniConfig
@@ -335,4 +336,10 @@ fn observe_history(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
       }
     }
   }
+}
+
+fn observe_health() -> Result(api.Observation,Nil) {
+  use path <- result.try(get_env("UOS_TELEGRAM_MINI_HEALTH_WORKER"))
+  use sha <- result.try(get_env("UOS_TELEGRAM_MINI_HEALTH_SHA256"))
+  mini_health.observe(mini_health.live_io(path,sha)) |> result.replace_error(Nil)
 }

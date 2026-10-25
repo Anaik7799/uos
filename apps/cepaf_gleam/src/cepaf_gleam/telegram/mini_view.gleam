@@ -144,6 +144,20 @@ pub fn public_page(page: types.MiniAppPage) -> String {
                   [h.text("Load current data before making a change.")],
                 ),
               ])
+            types.MiniHealthGrid ->
+              h.div([a.id("mini-health-controls")],[
+                h.label([a.for("mini-health-filter")],[h.text("Device assessment")]),
+                h.select([a.id("mini-health-filter"),a.disabled(True)],[
+                  h.option([a.value("all")],"All devices"),
+                  h.option([a.value("normal")],"Within sensor threshold"),
+                  h.option([a.value("warning")],"Temperature warnings"),
+                  h.option([a.value("critical")],"Critical temperatures"),
+                  h.option([a.value("unknown")],"Health unassessed"),
+                ]),
+                h.p([a.id("mini-health-status"),a.attribute("role","status")],[h.text("Load current data to view devices.")]),
+                h.div([a.id("mini-health-grid")],[]),
+                h.div([a.id("mini-health-detail"),a.attribute("aria-live","polite")],[]),
+              ])
             types.MiniConversation ->
               h.div([a.id("mini-memory-controls")], [
                 h.h3([], [h.text("Chat")]),

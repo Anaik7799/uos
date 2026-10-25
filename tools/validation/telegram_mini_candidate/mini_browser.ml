@@ -65,6 +65,7 @@ let png_width bytes =
 let base="http://nas-1.tail55d152.ts.net:49134"
 let () =
  require(Array.length Sys.argv=3 || Array.length Sys.argv=4)"usage: mini_browser OUT SIGNED_FIXTURE_JSON [--unavailable]";
+ let health_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--health" in
  let chat_recovery=Array.length Sys.argv=4 && Sys.argv.(3)="--chat-recovery" in
  let chat_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--chat" in
  let memory_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--memory" in
@@ -73,7 +74,7 @@ let () =
  let zenoh_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--zenoh" in
  let failure_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--unavailable" in
  let history_long=Array.length Sys.argv=4 && Sys.argv.(3)="--history-long" in
- require(Array.length Sys.argv=3 || failure_mode || history_long || zenoh_mode || telemetry_failure || control_mode || memory_mode || chat_mode || chat_recovery)"unknown scenario";
+ require(Array.length Sys.argv=3 || failure_mode || history_long || zenoh_mode || telemetry_failure || control_mode || memory_mode || chat_mode || chat_recovery || health_mode)"unknown scenario";
  let out=Sys.argv.(1)in require(not(Sys.file_exists out))"new output required";Unix.mkdir out 0o700;
  let init_data=Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"init_data"|>to_string)in
  let pending_script=if chat_recovery then "sessionStorage.setItem(\"uos-mini-chat-request-v1\","^Yojson.Safe.to_string(`String(Yojson.Safe.to_string(Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"pending"))))^");" else "" in
@@ -129,9 +130,28 @@ let () =
  else if page_path="/mini-app/zenoh" then(require(contains fields "Topic count")"topic list absent";require(not(contains fields "other-user"))"other-user topic leak")
  else if page_path="/mini-app/fmea" then(require(String.starts_with ~prefix:"Assessments" fields)"FMEA metadata must precede details";require(contains fields "uos/telegram-runtime/20261001-1150")"FMEA plan absent";require(contains fields "RPN")"FMEA risks absent")
  else if page_path="/mini-app/chat" then(require(memory_mode || chat_mode || chat_recovery || contains fields "Retained private reply42")"history absent";require(not(contains fields "OTHER_USER_SECRET"))"other user leak";require(contains fields "Only this user")"history scope absent";if history_long then require(contains fields "LONG_HISTORY_TEXT_")"long history missing")
+ else if page_path="/mini-app/health" then(require(contains fields "no remote fleet")"health scope absent";require(contains fields "Sensor policy")"sensor limits absent")
  else if page_path="/mini-app/containers" then(require(contains fields "Local Podman inventory")"Podman scope absent";require(contains fields "Container count")"Podman count absent";require(contains fields "Rootless")"Podman namespace absent")
  else(require(String.starts_with ~prefix:"Candidate" fields)"candidate must precede details";require(contains fields "CHK-18-JJ")"verification catalog incomplete";require(contains fields "UNKNOWN")"missing evidence hidden")));
 
+ if health_mode then (
+   let count=Playwright.Locator.count(loc page "#mini-health-grid button")in require(count>0)"device grid empty";
+   let ids=List.init count(fun i->Option.get(Playwright.Locator.get_attribute ~name:"data-device" ~timeout:1000.(loc page(Printf.sprintf"#mini-health-grid button:nth-child(%d)"(i+1)))))in
+   require(ids=List.sort String.compare ids)"unstable device order";
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-health-grid button:first-child");
+   require(contains(text page "#mini-health-detail")"Device: ")"device details absent";
+   let select value=ignore(Playwright.Locator.select_option ~options:[|Playwright.Frame.Options.{value_or_label=None;value=Some value;label=None;index=None}|] ~timeout:2000.(loc page "#mini-health-filter"))in
+   select "unknown";require(Playwright.Locator.count(loc page "#mini-health-grid button:not([data-grade=unknown])")=0)"filter leaked other grade";
+   require(Playwright.Locator.count(loc page "#mini-health-grid button")>0)"unassessed inventory absent";
+   select "critical";require(Playwright.Locator.count(loc page "#mini-health-grid button:not([data-grade=critical])")=0)"critical filter incorrect";
+   select "all";require(Playwright.Locator.count(loc page "#mini-health-grid button")=count)"all filter lost devices";
+   save(out^"/"^mode^"-positive.png")(Playwright.Page.screenshot ~type_:`Png ~full_page:true ~timeout:2500. page);
+   fail_posts:=true;Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");
+   let rec clear n=if Playwright.Locator.count(loc page "#mini-health-grid button")=0 && text page "#mini-health-detail"="" && not(String.starts_with ~prefix:"Loading"(text page "#mini-status"))then()
+    else if n=0 then failwith"stale health data survived outage"else(Eio.Time.sleep env#clock 0.05;clear(n-1))in clear 100;
+   require(text page "#mini-health-status"="No current device observation.")"outage detail";
+   save(out^"/"^mode^"-health.json")(Yojson.Safe.pretty_to_string(`Assoc["status",s"PASS";"devices",`Int count;"filter_and_details",`Bool true;"outage_clears_stale_data",`Bool true]));
+ );
  if memory_mode then (
    let rec await_memory prefix n = let value=text page "#mini-memory-status" in
      if String.starts_with ~prefix value then value else if n=0 then failwith("memory UI timeout: "^value)
@@ -304,7 +324,7 @@ let () =
  require(actual_width=width)"horizontal overflow beyond viewport";
  let errors=Array.to_list(Playwright.Page.page_errors page)in require(errors=[])"page script errors";
  rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"full_page_png_width",`Int actual_width;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
- ))(if chat_recovery then ["mobile-chat-recovery",390,844,"/mini-app/chat"] else if chat_mode then ["mobile-chat",390,844,"/mini-app/chat";"desktop-chat",1280,800,"/mini-app/chat"] else if memory_mode then ["mobile-memory",390,844,"/mini-app/chat";"desktop-memory",1280,800,"/mini-app/chat"] else if control_mode then ["mobile-control",390,844,"/mini-app/telemetry";"desktop-control",1280,800,"/mini-app/telemetry"] else if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
+ ))(if health_mode then ["mobile-health",390,844,"/mini-app/health";"desktop-health",1280,800,"/mini-app/health"] else if chat_recovery then ["mobile-chat-recovery",390,844,"/mini-app/chat"] else if chat_mode then ["mobile-chat",390,844,"/mini-app/chat";"desktop-chat",1280,800,"/mini-app/chat"] else if memory_mode then ["mobile-memory",390,844,"/mini-app/chat";"desktop-memory",1280,800,"/mini-app/chat"] else if control_mode then ["mobile-control",390,844,"/mini-app/telemetry";"desktop-control",1280,800,"/mini-app/telemetry"] else if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
  )))));
  let report=`Assoc["status",s"PASS_PRIVATE_BROWSER_FIXTURE";"observed_utc",`Float(Unix.gettimeofday());"scope",s"Actual Chromium, Mist ingress, Gleam authentication and native private Sa-plan reader; Telegram SDK identity supplied by explicit synthetic fixture, not real Telegram acceptance";"rows",`List(List.rev !rows)]in
  save(out^"/report.json")(Yojson.Safe.pretty_to_string report);print_endline(Yojson.Safe.to_string report)
