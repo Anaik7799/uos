@@ -114,3 +114,11 @@ pub fn pagination_counts_and_row_limit_test() {
   {dict.size(fields) <= 100} |> should.equal(True)
   podman.project(rows(129), image, info, 2000) |> should.be_error
 }
+
+pub fn dashboard_budget_is_forwarded_and_enforced_test() {
+  let bounded = podman.Io(fn(_, deadline) { deadline |> should.equal(1200) Error("expected refusal") }, fn(){1000}, fn(){2000})
+  podman.observe_with_budget(bounded,1200) |> should.be_error
+  let never = podman.Io(fn(_,_) { panic as "invalid budget called backend" },fn(){1000},fn(){2000})
+  podman.observe_with_budget(never,99) |> should.be_error
+  podman.observe_with_budget(never,4001) |> should.be_error
+}

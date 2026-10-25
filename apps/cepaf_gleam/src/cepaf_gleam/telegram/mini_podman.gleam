@@ -131,8 +131,13 @@ fn one(io: Io, query: Query, last: Int, deadline: Int) -> Result(#(String, Int),
   Ok(#(raw, after))
 }
 pub fn observe(io: Io) -> Result(api.Observation, String) {
+  observe_with_budget(io, 4000)
+}
+
+pub fn observe_with_budget(io: Io, budget_ms: Int) -> Result(api.Observation, String) {
+  use _ <- result.try(require(budget_ms >= 100 && budget_ms <= 4000))
   let started = io.monotonic_ms()
-  let deadline = started + 4000
+  let deadline = started + budget_ms
   use #(containers, after_containers) <- result.try(one(io, Containers, started, deadline))
   use #(images, after_images) <- result.try(one(io, Images, after_containers, deadline))
   use #(info, _) <- result.try(one(io, Info, after_images, deadline))

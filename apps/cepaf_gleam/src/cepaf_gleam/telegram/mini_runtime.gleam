@@ -4,6 +4,9 @@
 import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/mini_evidence
+import cepaf_gleam/telegram/mini_dashboard
+import cepaf_gleam/ha/beam_metrics
+import cepaf_gleam/harness/telegram_coordination_reader as coordination
 import cepaf_gleam/telegram/mini_podman
 import cepaf_gleam/telegram/mini_zenoh
 import cepaf_gleam/zenoh/rest as zenoh_rest
@@ -204,6 +207,40 @@ fn observe_zenoh(read: api.AuthorizedRead) -> api.Observation {
   }
 }
 
+
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_ms(unit: DashboardTimeUnit) -> Int
+type DashboardTimeUnit { Millisecond }
+
+@external(erlang, "telegram_status_probe", "probe")
+fn dashboard_probe(name: String, budget_ms: Int) -> Result(Int, String)
+
+fn dashboard_podman(budget_ms: Int) -> Result(api.Observation, String) {
+  use sha <- result.try(get_env("UOS_TELEGRAM_MINI_PODMAN_SHA256")
+    |> result.replace_error("podman_configuration_unavailable"))
+  use _ <- result.try(case observer.valid_digest(sha) {
+    True -> Ok(Nil) False -> Error("podman_configuration_unavailable")
+  })
+  mini_podman.observe_with_budget(mini_podman.live_io(sha), budget_ms)
+}
+
+fn dashboard_peers(budget_ms: Int) -> Result(String, String) {
+  use database <- result.try(get_env("UOS_TELEGRAM_MINI_COORDINATION_DATABASE")
+    |> result.replace_error("coordination_configuration_unavailable"))
+  coordination.observe_with_budget(database, "peers", budget_ms)
+}
+
+fn dashboard_io() -> mini_dashboard.Io {
+  mini_dashboard.Io(
+    podman: dashboard_podman,
+    peers: dashboard_peers,
+    probe: dashboard_probe,
+    metrics: fn() { Ok(beam_metrics.snapshot()) },
+    monotonic_ms: fn() { monotonic_ms(Millisecond) },
+    unix_seconds: clock,
+  )
+}
+
 pub fn observe(read: api.AuthorizedRead) -> api.Observation {
   case api.page(read) {
     types.MiniPlanning ->
@@ -218,8 +255,8 @@ pub fn observe(read: api.AuthorizedRead) -> api.Observation {
     types.MiniConversation ->
       observe_history(read) |> result.unwrap(api.Unavailable("history_observation_failed"))
     types.MiniZenohBrowser -> observe_zenoh(read)
-    types.MiniDashboard
-    | types.MiniHealthGrid
+    types.MiniDashboard -> mini_dashboard.observe(dashboard_io())
+    types.MiniHealthGrid
     | types.MiniCockpit
     | types.MiniImmune
     | types.MiniInference

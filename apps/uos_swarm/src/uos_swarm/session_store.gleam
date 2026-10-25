@@ -1013,3 +1013,59 @@ pub fn quarantine(
   )
   Ok(Nil)
 }
+
+/// Verified read-only snapshot for bounded observation workers. The caller must
+/// isolate this operation with an OS deadline; SQLite limits alone are not a
+/// whole-invocation deadline. No initialization, journal-mode change or writes.
+pub fn observe_file(
+  path: String,
+  query: fn(sync.State, String, Int) -> Result(a, StoreError),
+) -> Result(a, StoreError) {
+  use _ <- result.try(case string.starts_with(path, "/")
+    && !string.contains(path, "\u{0}") && string.byte_size(path) <= 1024 {
+    True -> Ok(Nil)
+    False -> Error(OpenError("observation_path_invalid"))
+  })
+  use info <- result.try(simplifile.link_info(path)
+    |> result.replace_error(OpenError("observation_file_unavailable")))
+  use _ <- result.try(case simplifile.file_info_type(info) == simplifile.File
+    && info.size > 0 && info.size <= 67_108_864 {
+    True -> Ok(Nil)
+    False -> Error(OpenError("observation_file_bound"))
+  })
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
+  let encoded = path |> string.split("/") |> list.map(uri.percent_encode) |> string.join("/")
+  use conn <- result.try(
+    ffi_open_uri(ascii_charlist("file://" <> encoded <> "?mode=ro&cache=private"))
+    |> result.replace_error(OpenError("observation_open_failed")))
+  let opened = Store(conn, path, generation)
+  let outcome = {
+    use _ <- result.try(ffi_exec(conn, "PRAGMA busy_timeout=200") |> result.map_error(StorageError))
+    use _ <- result.try(ffi_exec(conn, "PRAGMA query_only=ON") |> result.map_error(StorageError))
+    use _ <- result.try(ffi_exec(conn, "BEGIN") |> result.map_error(StorageError))
+    use schema <- result.try(run(opened, "SELECT value FROM meta WHERE key = 'schema'", []))
+    use _ <- result.try(case schema {
+      [[CellText(value)]] if value == sync.genesis -> Ok(Nil)
+      _ -> Error(SchemaError("observation_schema_mismatch"))
+    })
+    use sizes <- result.try(run(opened,
+      "SELECT count(*), COALESCE(sum(length(CAST(body_json AS BLOB)) + length(CAST(command_json AS BLOB)) + length(digest)),0) FROM events", []))
+    use _ <- result.try(case sizes {
+      [[CellInt(count), CellInt(bytes)]] if count > 0 && count <= 20_000
+        && bytes > 0 && bytes <= 16_777_216 -> Ok(Nil)
+      _ -> Error(RefusedError("observation_ledger_bound"))
+    })
+    use report <- result.try(verify(opened))
+    use _ <- result.try(case report.ok && report.checked > 0 {
+      True -> Ok(Nil)
+      False -> Error(CorruptError("observation_integrity_refused"))
+    })
+    observe(opened, query)
+  }
+  let closed = close(opened)
+  case outcome {
+    Error(error) -> Error(error)
+    Ok(value) -> closed |> result.replace(value)
+  }
+}
