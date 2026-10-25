@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-25T11:18:48.151Z",
+  "observed_at": "2026-10-25T11:39:08.669Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
@@ -9,9 +9,10 @@
     "G4_EVIDENCE",
     "G5_ARCHIVE",
     "G6_GRAFTS",
-    "G7_PRUNE"
+    "G7_PRUNE",
+    "G8_IMPROVE"
   ],
-  "main": "f72933c407dc0ba4e5c505bc6aab671098aaa247",
+  "main": "1307f2de66295723838cf792e3b38985fb18e222",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -22,19 +23,18 @@
   "telegram_runtime_total": 71,
   "telegram_commands_reachable": 32,
   "telegram_commands_total": 77,
-  "next": "G8 operational controls, then remaining Telegram functionality",
+  "next": "Remaining Mini App APIs, command dispatch, media/gateway and independent acceptance",
   "risks": [
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
     "Live Telegram acceptance and global admission pending",
     "Expired MINI_API_IMPL claim requires recovery; not actively executing",
-    "Live recovery dashboard observation expired; both desktop/mobile fail freshness",
-    "Existing TUI demonstration player contains unsupported admission claims; fix in G8"
+    "Finite dashboard observer expires 2026-10-25T12:25:47Z; renewal requires current authority"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G8 bounded task/job table layout and reviewed static asset activation; desktop capture repair",
-  "github_verified_at": "2026-10-25T11:08:17.267Z",
-  "github_new_commits_uploaded": 241,
+  "working_on": "Record G8 completion, then recover expired Mini App task through reviewed Sa-plan authority",
+  "github_verified_at": "2026-10-25T11:35:36.276Z",
+  "github_new_commits_uploaded": 242,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -57,7 +57,7 @@
       "step": 1,
       "task": "Finish mainline consolidation",
       "purpose": "Establish one tested source baseline",
-      "status": "IN_PROGRESS"
+      "status": "COMPLETED_WITH_EXPLICIT_PRESERVATION_DISPOSITIONS"
     },
     {
       "step": 2,
@@ -84,14 +84,14 @@
       "status": "PENDING"
     }
   ],
-  "merged_paths_latest": 14,
-  "latest_receipt": "var/recovery-runtime/20261025-1050-merge-g8/merge-receipt.json",
-  "merge_completed": 8,
+  "merged_paths_latest": 7,
+  "latest_receipt": "var/recovery-runtime/20261025-1050-merge-g8/layout-final-merge-receipt.json",
+  "merge_completed": 9,
   "merge_total": 9,
   "agents": {
-    "codex": "G8 source verification and reviewed finite observer preparation",
-    "agy": "Code job discarded after empty timeout; independent source review next",
-    "claude": "18 advisory improvements assessed with explicit pending/partial dispositions"
+    "codex": "G8 closure and Mini App recovery",
+    "agy": "Final source/config review completed PASS; next Mini App recovery review",
+    "claude": "18 advisory proposals dispositioned; partial/unadopted items remain explicit"
   },
   "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
   "g3_ledger": "governance/planning/20261025-0901-merge-g3-ledger.json",
@@ -167,11 +167,17 @@
     "latest_receipt": "var/recovery-runtime/20261025-1021-merge-g7/backup-restore-receipt.json"
   },
   "g8": {
-    "status": "SOURCE_PUBLISHED_OBSERVER_ACTIVE_LAYOUT_REPAIR_PENDING",
+    "status": "COMPLETED",
     "tests": 29,
     "player_browser_assertions": 16,
-    "live_observer": "Running reviewed finite config until 12:08:36Z",
+    "live_observer": "Running independently reviewed finite config until 12:25:47Z",
     "ledger": "governance/planning/20261025-1131-operational-observation-controls.json",
-    "journal": "docs/journal/20261025-1131-operational-observation-controls.md"
+    "journal": "docs/journal/20261025-1131-operational-observation-controls.md",
+    "live_browser": {
+      "desktop": "PASS",
+      "mobile": "PASS"
+    },
+    "review": "5b281fa0-5bdd-4c51-aa7c-5475aeaea29a",
+    "completion_refresh": "Observed task_completion snapshot at 11:37:33Z; all 9 merge tasks completed"
   }
 }

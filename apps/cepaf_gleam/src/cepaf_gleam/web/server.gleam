@@ -27,6 +27,7 @@
 // सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज — Surrender all duties, take refuge (Gita 18.66)
 
 import cepaf_gleam/c3i/nif as c3i_nif
+import cepaf_gleam/config/mesh_source
 import cepaf_gleam/config/mesh_config
 import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/ha/guard_grid
@@ -1535,9 +1536,15 @@ fn handle_non_mini_http_inner(
 /// Validate the default mesh configuration and return a summary string.
 /// Called during server startup to verify port uniqueness and health checks.
 pub fn validate_mesh_config() -> String {
-  let cfg = mesh_config.default_mesh_config()
+  case mesh_source.load() {
+    Error(_) -> "mesh_config:invalid configuration_unavailable"
+    Ok(d) -> validate_declared_mesh(mesh_source.configuration(d))
+  }
+}
+
+fn validate_declared_mesh(cfg: mesh_config.MeshConfig) -> String {
   let is_ok = mesh_config.is_valid(cfg)
-  let quorum = mesh_config.calculate_quorum(list.length(cfg.containers))
+  let quorum = cfg.quorum_size
   case is_ok {
     True ->
       "mesh_config:valid quorum:"

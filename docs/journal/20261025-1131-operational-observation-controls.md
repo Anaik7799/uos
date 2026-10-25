@@ -30,7 +30,7 @@ Devil's Advocate / Popperian falsification: unrelated same-date plans, prefix co
 
 ## 7. Verification Matrix
 
-Full affected Gleam application build PASS. Seven observer tests include actual SQLite execution for future dates, prefix collisions, malformed JSON, and unrelated completions. Twenty-nine related observer/refresh/AGY tests pass in total. Actual Chromium candidate-file tests pass 8/8 at 1280 and 390 widths, including frame 30 selection, no horizontal overflow and no page jump; mobile screenshot visually inspected. Canonical read-only queries return 14 relevant plans/190 tasks including merge 8/9. Fresh finite observer is running. Mobile live PASS; desktop capture failed at the 8MiB bound. CSS candidate passes the unchanged verifier at both widths in a private listener; production asset activation and live rerun remain pending. Fresh controller tests: 18 policy cases, 6 actual browser negative controls, 2 actual overflow rejection cases and 2 corrected viewport cases pass. Candidate final desktop image is 1,125,842 bytes at width 1280; mobile is 975,873 bytes at width 390. The earlier dc19aae9 review is retained but superseded for changed bytes. Seven automated epistemic engines UNRUN; Admiralty A1 is the analyst classification of direct process/query/browser observations only, limited to their recorded scope; automated Admiralty adjudication is UNRUN.
+Full affected Gleam application build PASS. Seven observer tests include actual SQLite execution for future dates, prefix collisions, malformed JSON, and unrelated completions. Twenty-nine related observer/refresh/AGY tests pass in total. Actual Chromium candidate-file tests pass 8/8 at 1280 and 390 widths, including frame 30 selection, no horizontal overflow and no page jump; mobile screenshot visually inspected. Canonical read-only queries return 14 relevant plans/190 tasks including merge 8/9. The first finite observer produced fresh observations; its desktop capture failed at the 8MiB bound, preserving the failure that drove the layout repair. CSS candidate passes the unchanged verifier at both widths in a private listener; production asset activation and live rerun were subsequently verified. Fresh controller tests: 18 policy cases, 6 actual browser negative controls, 2 actual overflow rejection cases and 2 corrected viewport cases pass. Candidate final desktop image is 1,125,842 bytes at width 1280; mobile is 975,873 bytes at width 390. The earlier dc19aae9 review is retained but superseded for changed bytes. Seven automated epistemic engines UNRUN; Admiralty A1 is the analyst classification of direct process/query/browser observations only, limited to their recorded scope; automated Admiralty adjudication is UNRUN.
 
 ## 8. Files Modified
 
@@ -42,7 +42,7 @@ Gleam retains selection, lifetime, config/review and runtime authority. SQLite i
 
 ## 10. Remaining Gaps
 
-Source f72933c4 and finite config were independently reviewed and activated. Follow-up CSS source/asset/config review and final live desktop/mobile rerun remain open. Telegram commands/Mini/media/gateway/end-to-end and release/admission remain incomplete. The 18-item ledger distinguishes reused controls from partial and unadopted proposals, including 14 broken skill links on each of four surfaces.
+Source f72933c4 and finite config were independently reviewed and activated. Follow-up exact source/asset/config review passed in AGY conversation 5b281fa0-5bdd-4c51-aa7c-5475aeaea29a. Candidate 1307f2de was published and GitHub read back at 11:35 UTC (242 commits since baseline). The two reviewed static assets were atomically installed with originals preserved and HTTP byte hashes verified. Final finite observer started at 11:31 UTC and expires at 12:25:47Z; no application restart occurred. Both actual live dashboard browser checks passed at 11:35 UTC, including PNG width equality and freshness. Telegram commands/Mini/media/gateway/end-to-end and release/admission remain incomplete. The 18-item ledger distinguishes reused controls from partial and unadopted proposals, including 14 broken skill links on each of four surfaces.
 
 ## 11. Metrics Summary
 
@@ -54,7 +54,7 @@ Unsafe provision: show synthetic claims as admitted or publish beyond current au
 
 ## 13. Conclusion
 
-The source candidate makes operational observations date-independent and the demonstration truthful. Forecast: source review and finite observer renewal within one active hour if independent review and control hashes pass. Falsifiers: missing current tasks, broad unrelated selection, stale runtime authority or failed live browser freshness. No numerical probability is precommitted; no Brier score is invented. The full Telegram objective remains active.
+The source candidate makes operational observations date-independent and the demonstration truthful. Forecast recorded before execution: source review and finite observer renewal within one active hour if independent review and control hashes pass. Observed outcome: met, with both actual live browser checks passing. Falsifiers: missing current tasks, broad unrelated selection, stale runtime authority or failed live browser freshness. No numerical probability is precommitted; no Brier score is invented. The full Telegram objective remains active.
 
 ## Verification checklist
 
@@ -63,7 +63,7 @@ The source candidate makes operational observations date-independent and the dem
 - [x] CHK-01-TIME: host UTC observation.
 - [x] CHK-02-TAIL: clickable Tailnet links.
 - [x] CHK-03-FRACT: scope tags.
-- [ ] CHK-04-KM: final candidate gate pending.
+- [x] CHK-04-KM: final source candidate KM gate PASS; report-only.
 
 </details>
 
@@ -96,7 +96,7 @@ The source candidate makes operational observations date-independent and the dem
 
 <details><summary>Domain 5 — Governance and version control</summary>
 
-- [ ] CHK-17-SOV: source/config review and runtime acceptance pending.
+- [x] CHK-17-SOV: exact scoped AGY source/config review and live dashboard acceptance PASS; global admission remains open.
 - [x] CHK-18-JJ: standalone JJ; no native Git mutations.
 
 </details>

@@ -1,0 +1,100 @@
+{
+  "schema": "uos.telegram.mini-config.checkpoint.v1",
+  "observed_at": "2026-10-25T11:58:37.988Z",
+  "status": "DEVELOPMENT_VERIFIED_REVIEW_PENDING",
+  "task": {
+    "plan": "uos/telegram-runtime/20261001-1150",
+    "id": "MINI_API_IMPL",
+    "attempt": 7,
+    "worker": "codex-analysis-20261024"
+  },
+  "source_base": "1307f2de66295723838cf792e3b38985fb18e222",
+  "preserved_wip": "52e2b5b",
+  "scope": "Shared declared mesh configuration source, authenticated Mini projection, legacy config JSON summary and startup validation",
+  "counts": {
+    "full_application_build": "PASS",
+    "current_config_tests": 12,
+    "prior_related_regressions": 289,
+    "http_cases": 16,
+    "browser_scenarios": 9,
+    "startup_cases": 4,
+    "source_bindings": 918
+  },
+  "browser_scope": "Actual Chromium with explicit synthetic Telegram SDK identity. Real Telegram acceptance remains UNRUN. Browser report generic Sa-plan phrase does not mean this config route queries Sa-plan.",
+  "recovery": {
+    "selection_review": "373e4601-bcdb-4cab-881b-97ebb1b7f14a",
+    "old_attempt": 6,
+    "new_attempt": 7,
+    "old_attempt_refused": true,
+    "canonical_preclaim": "RECLAIM_PREFLIGHT_PASS",
+    "current_active": "ACTIVE_OBSERVATION_PASS"
+  },
+  "receipt_root": "var/recovery-runtime/20261025-1138-mini-resume/",
+  "full_build": "var/recovery-runtime/20261025-1157-mini-config-full-final/",
+  "files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/config/mesh_source.gleam",
+      "sha256": "3b987dc72a50168e77de65a7382d143af3f61ae1f634794b3cd3d913e5cdb8db"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_config.gleam",
+      "sha256": "f69fe6cd8d64d80a630819253d9d13023e88a5dadc1060459e70f9e35ea2bc25"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam",
+      "sha256": "f49f4326ecb941db8aebac8f9db3f354be67abb21cb26e76d3a921870d54d5bc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha256": "0ab5185b90b2dc344a08a06bdb24e08c463d1c8c03ce529475aab2588b184394"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/server.gleam",
+      "sha256": "63cf813a0cfaa060c1ac081030463384c808ff6f30778584db0c0126a4514eb8"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_config_test.gleam",
+      "sha256": "e1bed9c985ff8da62a7c33c00c6f20f194e714676bcb5b1b7b8c6e225516baf8"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/build.js",
+      "sha256": "6236d9403bb702565dcfe3adefcb38ab94fd8fc045114294e185853aa3b7ae49"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/config-http-tests.js",
+      "sha256": "129b9c30b98875d30314c3cf49f455706d231b3c9398c0fae5e287f3636e0b64"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_browser.ml",
+      "sha256": "0d81cec9b109f78f2a24c468f7d9846de04d33ea6089e2d80e17fc066d592f2a"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_http_fixture.gleam",
+      "sha256": "5ea687eb57b909deb4333e47f46fd5a8cf44ade3699fe0ff663f42762bd0e6eb"
+    }
+  ],
+  "failures_preserved": [
+    "Initial test authoring and dependency errors before execution",
+    "Maximum config projection failed 100-field bound; grouped complete rows then passed",
+    "Initial private fixture loaded old test module from dependency path:404; explicit candidate paths and actual path receipts fixed",
+    "Legacy summary rejected missing page field; source schema fixed, HTTP repeated successfully"
+  ],
+  "fixtures_stopped": true,
+  "mini_remaining": [
+    "Cockpit",
+    "Immune",
+    "Inference",
+    "Federation",
+    "Complete adopted action/backend acceptance and independent review"
+  ],
+  "telegram_runtime_completed": 61,
+  "telegram_runtime_total": 71,
+  "admission_completed": 25,
+  "admission_total": 33,
+  "merge_plan_completed": 9,
+  "merge_plan_total": 9,
+  "global_admission": false,
+  "real_telegram": false,
+  "goal_met": false,
+  "main_merged": false
+}

@@ -15,6 +15,7 @@
 ///
 /// STAMP: SC-GLM-UI-001, SC-GLM-UI-003, SC-GLM-UI-006, SC-GLM-UI-007,
 ///        SC-SAFETY-001, SC-SAFETY-022, SC-SIL4-006
+import cepaf_gleam/config/mesh_source
 import cepaf_gleam/agui/sse as agui_sse
 import cepaf_gleam/agui/sse_stream
 import cepaf_gleam/agui/state as agui_state
@@ -2933,18 +2934,8 @@ fn holon_identity_json() -> String {
 
 /// Mesh config endpoint
 fn mesh_config_json() -> String {
-  json.object([
-    #("page", json.string("Mesh Configuration")),
-    #("containers", json.int(7)),
-    #("networks", json.int(1)),
-    #("quorum_size", json.int(4)),
-    #("valid", json.bool(True)),
-    #("total_cpu", json.float(8.0)),
-    #("total_memory_mb", json.int(4096)),
-  ])
-  |> json.to_string()
+  mesh_source.summary(mesh_source.load()) |> json.to_string()
 }
-
 /// Git intelligence endpoint
 fn git_intelligence_json() -> String {
   json.object([

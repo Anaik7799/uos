@@ -1,0 +1,15 @@
+const fs=require('fs'),c=require('crypto'),assert=require('assert'),out=process.argv[2],mode=process.argv[3]||'default';
+if(!out||!['default','configured','maximum','invalid'].includes(mode))throw Error('bounded config test arguments');
+function sign(id=42,date=Math.floor(Date.now()/1000)){const p={auth_date:String(date),user:JSON.stringify({id,first_name:'Fixture'})};const secret=c.createHmac('sha256','WebAppData').update('333444:synthetic-mini-test-token').digest();p.hash=c.createHmac('sha256',secret).update(Object.keys(p).sort().map(k=>k+'='+p[k]).join('\n')).digest('hex');return new URLSearchParams(p).toString();}
+(async()=>{const rows=[];for(const [name,id,date,expected] of [['observed',42,Math.floor(Date.now()/1000),200],['denied',99,Math.floor(Date.now()/1000),401],['expired',42,Math.floor(Date.now()/1000)-301,401]]) {
+ const r=await fetch('http://nas-1.tail55d152.ts.net:49134/mini-app/api/data',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({init_data:sign(id,date),path:'/mini-app/config'}),signal:AbortSignal.timeout(6000)}),j=await r.json();assert.equal(r.status,expected);rows.push({name,http:r.status,payload:j});
+ if(name==='observed'&&mode!=='invalid'){assert.equal(j.status,'observed');assert.equal(j.source,'declared_mesh_configuration');assert.equal(j.fields['Configuration source'],mode==='default'?'compiled_default':'configured');assert.equal(j.fields.Deployment,'Not confirmed');assert.equal(j.fields['Runtime admission'],'NOT_GRANTED');assert.equal(j.fields.Containers,mode==='default'?'7':mode==='maximum'?'64':'1');assert(Object.keys(j.fields).length<=100);assert(Object.values(j.fields).every(v=>Buffer.byteLength(v)<=2048));assert(!JSON.stringify(j).includes('PRIVATE_IMAGE_MARKER'));assert(!JSON.stringify(j).includes('PRIVATE_PATH_MARKER'));
+ if(mode==='maximum'){const txt=Object.values(j.fields).join('\n');for(let i=1;i<=64;i++){assert(txt.includes('c'+i+' · port '));assert(txt.includes('v'+i+' · 1 MiB'));}for(let i=1;i<=16;i++)assert(txt.includes('n'+i+' · 10.'+i+'.0.0/16'));}
+ }else if(name==='observed'){assert.equal(j.status,'unavailable');assert(!j.fields||Object.keys(j.fields).length===0);}
+ else assert(!j.fields);
+ }
+ const sr=await fetch('http://nas-1.tail55d152.ts.net:49134/api/config/mesh',{signal:AbortSignal.timeout(6000)});assert.equal(sr.status,200);const summary=await sr.json();assert.equal(summary.deployment_confirmed,false);if(mode==='invalid'){assert.equal(summary.valid,false);assert.equal(summary.status,'unavailable');}else{assert.equal(summary.valid,true);assert.equal(summary.containers,mode==='default'?7:mode==='maximum'?64:1);}
+ fs.writeFileSync(out+'/config-'+mode+'-http.json',JSON.stringify({status:'PASS',at:new Date().toISOString(),scope:'Private fixture with synthetic Telegram identity; no real Telegram acceptance',mode,rows,summary},null,2));
+ fs.writeFileSync(out+'/config-browser-identity.json',JSON.stringify({init_data:sign(),scope:'synthetic Telegram fixture'}));
+ console.log(JSON.stringify({status:'PASS',mode,http_cases:4}));
+})().catch(e=>{console.error(e);process.exitCode=1;});

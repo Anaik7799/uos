@@ -57,6 +57,7 @@ pub fn main() {
     mist.new(fn(req) {
       case string.starts_with(req.path, "/mini-app")
         || homeostasis_http.handles(req.path)
+        || req.path == "/api/config/mesh"
         || req.path == "/api/v1/plan/update"
         || req.path == "/unknown-upgrade-g2" {
         True -> server.route_request(req, 49_134)

@@ -3,7 +3,7 @@
   "plan": "uos/full-merge/20261025-0638",
   "task": "G8_IMPROVE",
   "attempt": 1,
-  "status": "SOURCE_f72933c4_PUBLISHED; LIVE_LAYOUT_REPAIR_REVIEW_PENDING",
+  "status": "VERIFIED_SOURCE_PUBLISHED_AND_LIVE_ACCEPTED",
   "scope": "Goal-critical observer selection and truthful demonstration status; existing controls reused; proposals remain explicitly unadopted unless stated",
   "source_base": "30bac953e714c1520cbf1443ee45cac9bcc3d20a",
   "proposals": [
@@ -131,7 +131,7 @@
       "merge_completed": 8,
       "merge_total": 9
     },
-    "live_dashboard": "Mobile PASS; desktop observation assertions PASS but full-page capture exceeded 8MiB; CSS candidate now PASS both widths using unchanged verifier",
+    "live_dashboard": "PASS actual Tailnet route at 1280 and 390; fresh observations, exact task rows, 18 checkpoints, viewport containment, no page errors or forbidden requests",
     "browser_controller": {
       "source_sha256": "a525f109d40e73f0be1374dc94c39186166e860c011d555809cb1125c4de1600",
       "policy_tests": 18,
@@ -141,14 +141,11 @@
     }
   },
   "remaining": [
-    "Independent exact-candidate source review/publication",
-    "Fresh observer config/control review and finite supervised activation",
-    "Live desktop/mobile dashboard freshness and current-plan inclusion",
     "Ten Telegram runtime and eight admission task records",
     "NIF digest mismatch; reviewed application release",
     "Unadopted advisory improvements retain their stated partial/pending status"
   ],
-  "updated_at": "2026-10-25T11:25:57.807Z",
+  "updated_at": "2026-10-25T11:37:19.138Z",
   "layout": {
     "cause": "Unbounded task and job tables",
     "original_desktop_height": 40819.59375,
@@ -157,7 +154,7 @@
     "candidate_mobile_png_bytes": 1200664,
     "rows_preserved": true,
     "keyboard_focusable": true,
-    "live_deployed": false,
+    "live_deployed": true,
     "horizontal_overflow": {
       "old_desktop_png_width": 2940,
       "requested_width": 1280,
@@ -168,5 +165,14 @@
       "fixed_mobile_png_bytes": 975873
     },
     "superseded_review": "0d1b0f24 reviewed dc19aae9, not current revised bytes; no activation performed"
-  }
+  },
+  "source_candidate": "1307f2de66295723838cf792e3b38985fb18e222",
+  "review": "5b281fa0-5bdd-4c51-aa7c-5475aeaea29a",
+  "receipts": [
+    "var/recovery-runtime/20261025-1050-merge-g8/layout-final-merge-receipt.json",
+    "var/recovery-runtime/20261025-1050-merge-g8/static-activation-receipt.json",
+    "var/recovery-runtime/20261025-1050-merge-g8/final-observer-launch.json",
+    "var/recovery-runtime/20261025-1050-merge-g8/final-live-1280/20261001-1048-receipt.json",
+    "var/recovery-runtime/20261025-1050-merge-g8/final-live-390/20261001-1048-receipt.json"
+  ]
 }

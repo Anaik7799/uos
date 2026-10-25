@@ -1,0 +1,1139 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "agy-ops-runner-20261024",
+    "plan_id": "uos/agy-operations/20261024-0642",
+    "task_id": "RUNNER",
+    "actor": "codex-analysis-20261024",
+    "scope": "Reusable isolated Gleam AGY job dispatcher and truthful result classification",
+    "phase": "implementation",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-25T11:38:38Z",
+    "valid_until": "2026-10-25T12:38:38Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T06:42:42Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Existing bounded AGY jobs worked but empty SUCCESS after timeout must fail; actual compact grant review completed103s,20408tokens. Recovery restored; no global admission.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "sha256": "56efe6858f24880abf92aa12d9963724b12e283e5b97bda6e617707259572134",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "sha256": "dcf871fd9c25a39082bb6a58f224d9a0a9d1624639857bc70c07c78247f6664c",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-25T11:38:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-AGY-FALSE-COMPLETE",
+        "cause": "CLI exit0/SUCCESS can accompany empty timed-out response; unrestricted agent can write canonical stores",
+        "effect": "False task completion or corrupted authority",
+        "controls": "Finite isolated jobs, canonical leases, schema/response checks, independent exact-source review",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam AGY dispatch",
+      "control_action": "Run bounded model job and classify evidence",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Reusable isolated Gleam AGY job dispatcher and truthful result classification",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "Empty SUCCESS timeout observed; policy prompt alone failed to prevent raw writer"
+      ],
+      "assumptions": [
+        "Actual existing CLI supports accept-edits and automatic tool approval; named auto rollout unavailable"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Expect compact evidence packets to reduce tokens relative to119909-token stalled job; outcome unknown until measured.",
+      "falsifier": "Actual successful reviewed job costs at least the stalled baseline or returns empty/timed-out output",
+      "acceptance": [
+        "Only current claimed Sa-plan job may dispatch",
+        "Host canonical stores remain read-only to AGY; selected owned workspace writable only in code mode",
+        "Timeout, empty response, malformed result and changed source do not count as success",
+        "Real Gemini4ArgonHigh invocation returns bounded evidence; independent review before completion"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent review of actual AGY implementation; fresh AGY advisory review for root additions",
+      "budget": "Reuse installed CLI,bwrap,systemd and cached Gleam; no new packages. One active model job, bounded runtime and explicit tokens.",
+      "residuals": [
+        "Legacy unrestricted AGY sessions remain stopped",
+        "Automatic dashboard observer and global admission are not established by a passing component test"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "agy-ops-review-20261024",
+    "plan_id": "uos/agy-operations/20261024-0642",
+    "task_id": "REVIEW",
+    "actor": "codex-analysis-20261024",
+    "scope": "Independent runner negative controls and actual model invocation",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-25T11:38:38Z",
+    "valid_until": "2026-10-25T12:38:38Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T07:03:44Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Existing bounded AGY jobs worked but empty SUCCESS after timeout must fail; actual compact grant review completed103s,20408tokens. Recovery restored; no global admission.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "sha256": "56efe6858f24880abf92aa12d9963724b12e283e5b97bda6e617707259572134",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "sha256": "dcf871fd9c25a39082bb6a58f224d9a0a9d1624639857bc70c07c78247f6664c",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-agy-ops-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/agy_dispatch.gleam",
+          "sha256": "3395e4409e717bf216b3d8c4a39524319d2ccd0901c5917d7100d8d76d18e8a1",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-agy-ops-20261024/apps/cepaf_gleam/src/cepaf_gleam/harness/agy_job_result.gleam",
+          "sha256": "d217f686d524e7f28f6720e11d2909794f6839d180ae46f60cbaa76b94656070",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-agy-ops-20261024/apps/cepaf_gleam/src/agy_dispatch_cli.gleam",
+          "sha256": "3dae3e0ca4c1ba60f7ff3906bd84d25c75f1197721eab9a94cc1513070f766e6",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-agy-ops-20261024/apps/cepaf_gleam/test/agy_dispatch_test.gleam",
+          "sha256": "4b4bc91f8ce295422f59a9ebab0b74677ec91aa1e6fa4311009cc81ec6e53057",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-agy-ops-20261024/apps/cepaf_gleam/test/agy_job_result_test.gleam",
+          "sha256": "2d15e47dc8cb9fd9858a3ac599dab93463414b1a194a625b062b4be5612e27cd",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "governance/planning/20261024-0702-agy-dispatch-verification.json",
+          "sha256": "7de5494cfbedbb4099175c622d9d8c17bfda252438ace074d8b9d596499bb60b",
+          "observed_at": "2026-10-25T11:38:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-AGY-FALSE-COMPLETE",
+        "cause": "CLI exit0/SUCCESS can accompany empty timed-out response; unrestricted agent can write canonical stores",
+        "effect": "False task completion or corrupted authority",
+        "controls": "Finite isolated jobs, canonical leases, schema/response checks, independent exact-source review",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam AGY dispatch",
+      "control_action": "Run bounded model job and classify evidence",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "RUNNER"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Independent runner negative controls and actual model invocation",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "Empty SUCCESS timeout observed; policy prompt alone failed to prevent raw writer"
+      ],
+      "assumptions": [
+        "Actual existing CLI supports accept-edits and automatic tool approval; named auto rollout unavailable"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Expect compact evidence packets to reduce tokens relative to119909-token stalled job; outcome unknown until measured.",
+      "falsifier": "Actual successful reviewed job costs at least the stalled baseline or returns empty/timed-out output",
+      "acceptance": [
+        "Verify unchanged exact c9b9c6 candidate matches independent AGY PASS and14executed tests",
+        "Verify real launch/collect result and durable receipt, canonical job linkage and stopped owned units",
+        "Keep global/production admission separate"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent review of actual AGY implementation; fresh AGY advisory review for root additions",
+      "budget": "Reuse installed CLI,bwrap,systemd and cached Gleam; no new packages. One active model job, bounded runtime and explicit tokens.",
+      "residuals": [
+        "Legacy unrestricted AGY sessions remain stopped",
+        "Automatic dashboard observer and global admission are not established by a passing component test"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "agy-ops-observer-20261024",
+    "plan_id": "uos/agy-operations/20261024-0642",
+    "task_id": "OBSERVER",
+    "actor": "codex-analysis-20261024",
+    "scope": "Read-only Gleam dashboard observer; full snapshots every300seconds or canonical task completion; bounded canonical job/runtime lease, atomic publication of new timestamped static artifacts, independent review before activation",
+    "phase": "implementation",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-25T11:38:38Z",
+    "valid_until": "2026-10-25T12:38:38Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T07:08:57Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Existing bounded AGY jobs worked but empty SUCCESS after timeout must fail; actual compact grant review completed103s,20408tokens. Recovery restored; no global admission.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "sha256": "56efe6858f24880abf92aa12d9963724b12e283e5b97bda6e617707259572134",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "sha256": "dcf871fd9c25a39082bb6a58f224d9a0a9d1624639857bc70c07c78247f6664c",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-25T11:38:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-AGY-FALSE-COMPLETE",
+        "cause": "CLI exit0/SUCCESS can accompany empty timed-out response; unrestricted agent can write canonical stores",
+        "effect": "False task completion or corrupted authority",
+        "controls": "Finite isolated jobs, canonical leases, schema/response checks, independent exact-source review",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam AGY dispatch",
+      "control_action": "Run bounded model job and classify evidence",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "REVIEW"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Read-only recurring dashboard with current task completion and stale observations",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "Empty SUCCESS timeout observed; policy prompt alone failed to prevent raw writer"
+      ],
+      "assumptions": [
+        "Actual existing CLI supports accept-edits and automatic tool approval; named auto rollout unavailable"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Expect compact evidence packets to reduce tokens relative to119909-token stalled job; outcome unknown until measured.",
+      "falsifier": "Actual successful reviewed job costs at least the stalled baseline or returns empty/timed-out output",
+      "acceptance": [
+        "Actual canonical task/service/HTTP observations with per-source timestamps and errors",
+        "Full refresh at300seconds or a newly observed canonical completion; test scheduler boundaries",
+        "Unknown/stale/expired visible; no optimistic completion or admission inference",
+        "Reviewed finite observer job writes only its new dashboard state artifact; canonical stores read-only",
+        "Real browser acceptance remains separate BROWSER task"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent review of actual AGY implementation; fresh AGY advisory review for root additions",
+      "budget": "Reuse installed CLI,bwrap,systemd and cached Gleam; no new packages. One active model job, bounded runtime and explicit tokens.",
+      "residuals": [
+        "Legacy unrestricted AGY sessions remain stopped",
+        "Automatic dashboard observer and global admission are not established by a passing component test"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "agy-ops-browser-20261024",
+    "plan_id": "uos/agy-operations/20261024-0642",
+    "task_id": "BROWSER",
+    "actor": "codex-analysis-20261024",
+    "scope": "Actual desktop/mobile live recovery dashboard acceptance using bounded typed OCaml Playwright adapter; extend exact read-only route/profile only, no production app mutations or external writes.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-10-25T11:38:38Z",
+    "valid_until": "2026-10-25T12:38:38Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-24T07:47:15Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Existing bounded AGY jobs worked but empty SUCCESS after timeout must fail; actual compact grant review completed103s,20408tokens. Recovery restored; no global admission.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "sha256": "56efe6858f24880abf92aa12d9963724b12e283e5b97bda6e617707259572134",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "sha256": "dcf871fd9c25a39082bb6a58f224d9a0a9d1624639857bc70c07c78247f6664c",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-10-25T11:38:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Automated model execution needs actual task ownership, isolation and truthful result evidence before any downstream completion.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agy_agent.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/tool_fenced_dispatcher.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "tools/sa-plan"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-AGY-FALSE-COMPLETE",
+        "cause": "CLI exit0/SUCCESS can accompany empty timed-out response; unrestricted agent can write canonical stores",
+        "effect": "False task completion or corrupted authority",
+        "controls": "Finite isolated jobs, canonical leases, schema/response checks, independent exact-source review",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam AGY dispatch",
+      "control_action": "Run bounded model job and classify evidence",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Missing, unsafe, stale or prolonged model execution can corrupt state or falsely complete tasks",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "No job without current canonical claim; isolate writable workspace; refuse timeout/empty output; preserve ambiguous outcomes"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "OBSERVER"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Actual desktop/mobile live recovery dashboard acceptance using bounded typed OCaml Playwright adapter; extend exact read-only route/profile only, no production app mutations or external writes.",
+      "alternatives": [
+        "Preserve original and recover through independently reviewed finite adapter",
+        "Raw update/delete/re-sign: prohibited"
+      ],
+      "counterevidence": [
+        "Empty SUCCESS timeout observed; policy prompt alone failed to prevent raw writer"
+      ],
+      "assumptions": [
+        "Actual existing CLI supports accept-edits and automatic tool approval; named auto rollout unavailable"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Expect compact evidence packets to reduce tokens relative to119909-token stalled job; outcome unknown until measured.",
+      "falsifier": "Actual successful reviewed job costs at least the stalled baseline or returns empty/timed-out output",
+      "acceptance": [
+        "ActualHTTP200 and exactfinalroute/pageidentity",
+        "18uniquevisiblechecklistitems andprovenance via keyboard",
+        "Desktop1280 andmobile390 navigation/table/rawtoggle/screenshots",
+        "No browsererrors, forbidden methods/redirects/sockets; actualstateobserved",
+        "Privatefake/mutanttests distinguishedfromliveacceptance"
+      ],
+      "rollback": "Keep original live DB untouched during diagnosis; recovery requires verified preserved backup",
+      "reviewer": "Codex independent review of actual AGY implementation; fresh AGY advisory review for root additions",
+      "budget": "Reuse installed CLI,bwrap,systemd and cached Gleam; no new packages. One active model job, bounded runtime and explicit tokens.",
+      "residuals": [
+        "Legacy unrestricted AGY sessions remain stopped",
+        "Automatic dashboard observer and global admission are not established by a passing component test"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "mini-resume-20261025-1138",
+    "plan_id": "uos/agy-operations/20261024-0642",
+    "task_id": "MINI_RESUME_20261025_1138",
+    "actor": "codex-analysis-20261024",
+    "scope": "Record completed G8 evidence and source publication, observe expired Mini App task and preserved source, obtain independent exact portfolio selection and recovery review. No application release or Mini task effects before new exact claim.",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-10-25T11:38:38Z",
+    "valid_until": "2026-10-25T12:38:38Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-25T11:38:38Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Published main1307f2de; G8 completed with live browser PASS; MINI_API_IMPL expired attempt6; read-only recovery preparation",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
+          "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+          "observed_at": "2026-10-25T11:38:38Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-10-25T11:38:38Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Expired dashboard and misleading demo claims obstruct trustworthy acceptance; G7 recovery prerequisite now verified.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Expired dashboard and misleading demo claims obstruct trustworthy acceptance; G7 recovery prerequisite now verified.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Expired dashboard and misleading demo claims obstruct trustworthy acceptance; G7 recovery prerequisite now verified.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Expired dashboard and misleading demo claims obstruct trustworthy acceptance; G7 recovery prerequisite now verified.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Expired dashboard and misleading demo claims obstruct trustworthy acceptance; G7 recovery prerequisite now verified.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-STALE-CLAIM",
+        "cause": "Resume source under expired or wrong task attempt",
+        "effect": "Unowned edits or repeated effects",
+        "controls": "Exact metadata observation, independent recovery review, canonical new attempt and active fence",
+        "s": 4,
+        "o": 2,
+        "det": 2,
+        "rpn": 16,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam/OTP supervised observer with Sa-plan task/job authority",
+      "control_action": "Recover exact expired task through reviewed canonical authority",
+      "losses": [
+        "L-MISLEADING-STATUS",
+        "L-UNOWNED-EFFECT"
+      ],
+      "hazards": [
+        "H-STALE-AS-FRESH",
+        "H-UNBOUNDED-OBSERVER"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Failure to recover stalls Telegram completion",
+          "hazard_ids": [
+            "H-STALE-AS-FRESH"
+          ],
+          "constraint": "Observe exact metadata and current source; fresh review, canonical claim and effect-time active check"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Recover wrong owner or attempt",
+          "hazard_ids": [
+            "H-STALE-AS-FRESH"
+          ],
+          "constraint": "Observe exact metadata and current source; fresh review, canonical claim and effect-time active check"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Resume before review and new claim",
+          "hazard_ids": [
+            "H-UNBOUNDED-OBSERVER"
+          ],
+          "constraint": "Observe exact metadata and current source; fresh review, canonical claim and effect-time active check"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Work continues beyond lease",
+          "hazard_ids": [
+            "H-UNBOUNDED-OBSERVER"
+          ],
+          "constraint": "Observe exact metadata and current source; fresh review, canonical claim and effect-time active check"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 1280,
+    "score_interval": [
+      1280,
+      1280
+    ],
+    "decision": {
+      "summary": "Record completed G8 evidence and source publication, observe expired Mini App task and preserved source, obtain independent exact portfolio selection and recovery review. No application release or Mini task effects before new exact claim.",
+      "alternatives": [
+        "Reuse existing finite Gleam observer and collector",
+        "Reject generic new orchestration framework",
+        "Keep unrelated proposals explicitly pending unless adopted and tested"
+      ],
+      "counterevidence": [
+        "G6 AGY empty timeout was correctly rejected by existing collector",
+        "G7 off-host restore already verified; new backup framework unnecessary"
+      ],
+      "assumptions": [
+        "Existing origin is intended target as explicitly requested by user"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within one bounded hour independently review expired-claim recovery and resume Mini App source with preserved WIP",
+      "falsifier": "Missing current tasks, admitted-looking demo output, expired authority or failed browser freshness; full-page PNG width differs from viewport",
+      "acceptance": [
+        "Current exact expired task/attempt/lease and source observed",
+        "Independent task-selection review bound to fresh unchanged scores and evidence",
+        "Reviewed preflight and canonical Sa-plan claim, old attempt refused",
+        "G8 completion evidence and remaining blockers preserved"
+      ],
+      "rollback": "Preserve current immutable source; finite observer expires; no default checkout or application runtime cutover",
+      "reviewer": "Codex implementation; AGY independent exact-candidate source/config review",
+      "budget": "One-hour claimed task; bounded processes; no new packages",
+      "residuals": [
+        "Mini functionality still incomplete",
+        "Expired old attempt cannot authorize source effects",
+        "No runtime admission from review or preflight"
+      ],
+      "supersedes": null
+    }
+  }
+]

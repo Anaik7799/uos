@@ -65,6 +65,8 @@ let png_width bytes =
 let base="http://nas-1.tail55d152.ts.net:49134"
 let () =
  require(Array.length Sys.argv=3 || Array.length Sys.argv=4)"usage: mini_browser OUT SIGNED_FIXTURE_JSON [--unavailable]";
+ let config_failure=Array.length Sys.argv=4 && Sys.argv.(3)="--config-unavailable" in
+ let config_mode=Array.length Sys.argv=4 && (Sys.argv.(3)="--config" || config_failure) in
  let health_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--health" in
  let chat_recovery=Array.length Sys.argv=4 && Sys.argv.(3)="--chat-recovery" in
  let chat_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--chat" in
@@ -72,9 +74,9 @@ let () =
  let control_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--control" in
  let telemetry_failure=Array.length Sys.argv=4 && Sys.argv.(3)="--telemetry-unavailable" in
  let zenoh_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--zenoh" in
- let failure_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--unavailable" in
+ let failure_mode=config_failure || Array.length Sys.argv=4 && Sys.argv.(3)="--unavailable" in
  let history_long=Array.length Sys.argv=4 && Sys.argv.(3)="--history-long" in
- require(Array.length Sys.argv=3 || failure_mode || history_long || zenoh_mode || telemetry_failure || control_mode || memory_mode || chat_mode || chat_recovery || health_mode)"unknown scenario";
+ require(Array.length Sys.argv=3 || config_mode || failure_mode || history_long || zenoh_mode || telemetry_failure || control_mode || memory_mode || chat_mode || chat_recovery || health_mode)"unknown scenario";
  let out=Sys.argv.(1)in require(not(Sys.file_exists out))"new output required";Unix.mkdir out 0o700;
  let init_data=Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"init_data"|>to_string)in
  let pending_script=if chat_recovery then "sessionStorage.setItem(\"uos-mini-chat-request-v1\","^Yojson.Safe.to_string(`String(Yojson.Safe.to_string(Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"pending"))))^");" else "" in
@@ -125,7 +127,8 @@ let () =
  else(require(!posts=1)"exactly one authenticated POST";require(String.starts_with ~prefix:"Observed at "final)"authenticated observation";let fields=text page "#mini-fields" in
  if page_path="/mini-app/tasks" then (require(contains fields "Task FENCE")"task fields absent";require(contains fields "executing (lease expired)")"expired lease hidden")
  else (require(contains fields "NOT_GRANTED")"admission disclaimer absent";
- if page_path="/mini-app/telemetry" then(require(contains fields "No fleet")"telemetry scope absent";require(contains fields "Collector epoch")"epoch absent";require(contains fields "Not implemented")"pending controls absent";require(contains fields "VM total memory MiB")"VM units absent")
+ if page_path="/mini-app/config" then(require(contains fields "Declared configuration only")"config scope absent";require(contains fields "Not confirmed")"config deployment disclaimer absent";require(contains fields "Configuration source")"config provenance absent";require(contains fields "Container group")"config detail absent";require(not(contains fields "PRIVATE_IMAGE_MARKER" || contains fields "PRIVATE_PATH_MARKER"))"private config field leak")
+ else if page_path="/mini-app/telemetry" then(require(contains fields "No fleet")"telemetry scope absent";require(contains fields "Collector epoch")"epoch absent";require(contains fields "Not implemented")"pending controls absent";require(contains fields "VM total memory MiB")"VM units absent")
  else if page_path="/mini-app/dashboard" then(require(contains fields "UNKNOWN")"global health falsely asserted";require(contains fields "Scope")"dashboard scope absent")
  else if page_path="/mini-app/zenoh" then(require(contains fields "Topic count")"topic list absent";require(not(contains fields "other-user"))"other-user topic leak")
  else if page_path="/mini-app/fmea" then(require(String.starts_with ~prefix:"Assessments" fields)"FMEA metadata must precede details";require(contains fields "uos/telegram-runtime/20261001-1150")"FMEA plan absent";require(contains fields "RPN")"FMEA risks absent")
@@ -134,6 +137,14 @@ let () =
  else if page_path="/mini-app/containers" then(require(contains fields "Local Podman inventory")"Podman scope absent";require(contains fields "Container count")"Podman count absent";require(contains fields "Rootless")"Podman namespace absent")
  else(require(String.starts_with ~prefix:"Candidate" fields)"candidate must precede details";require(contains fields "CHK-18-JJ")"verification catalog incomplete";require(contains fields "UNKNOWN")"missing evidence hidden")));
 
+ if config_mode && not failure_mode && mode<>"identity-denied" && mode<>"sdk-blocked" then (
+   save(out^"/"^mode^"-positive.png")(Playwright.Page.screenshot ~type_:`Png ~full_page:true ~timeout:2500. page);
+   fail_posts:=true;Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");
+   let rec clear n=if text page "#mini-fields"="" && not(String.starts_with ~prefix:"Loading"(text page "#mini-status"))then()
+    else if n=0 then failwith"config stale data survived outage"else(Eio.Time.sleep env#clock 0.05;clear(n-1))in clear 100;
+   require(!control_posts=0)"config page dispatched an effect";
+   save(out^"/"^mode^"-config.json")(Yojson.Safe.to_string(`Assoc["status",s"PASS";"outage_clears_stale_data",`Bool true;"no_control_posts",`Bool true]));
+ );
  if health_mode then (
    let count=Playwright.Locator.count(loc page "#mini-health-grid button")in require(count>0)"device grid empty";
    let ids=List.init count(fun i->Option.get(Playwright.Locator.get_attribute ~name:"data-device" ~timeout:1000.(loc page(Printf.sprintf"#mini-health-grid button:nth-child(%d)"(i+1)))))in
@@ -324,7 +335,7 @@ let () =
  require(actual_width=width)"horizontal overflow beyond viewport";
  let errors=Array.to_list(Playwright.Page.page_errors page)in require(errors=[])"page script errors";
  rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"full_page_png_width",`Int actual_width;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
- ))(if health_mode then ["mobile-health",390,844,"/mini-app/health";"desktop-health",1280,800,"/mini-app/health"] else if chat_recovery then ["mobile-chat-recovery",390,844,"/mini-app/chat"] else if chat_mode then ["mobile-chat",390,844,"/mini-app/chat";"desktop-chat",1280,800,"/mini-app/chat"] else if memory_mode then ["mobile-memory",390,844,"/mini-app/chat";"desktop-memory",1280,800,"/mini-app/chat"] else if control_mode then ["mobile-control",390,844,"/mini-app/telemetry";"desktop-control",1280,800,"/mini-app/telemetry"] else if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
+ ))(if config_failure then ["config-unavailable",390,844,"/mini-app/config"] else if config_mode then ["mobile-config",390,844,"/mini-app/config";"desktop-config",1280,800,"/mini-app/config";"identity-denied",390,844,"/mini-app/config";"sdk-blocked",390,844,"/mini-app/config"] else if health_mode then ["mobile-health",390,844,"/mini-app/health";"desktop-health",1280,800,"/mini-app/health"] else if chat_recovery then ["mobile-chat-recovery",390,844,"/mini-app/chat"] else if chat_mode then ["mobile-chat",390,844,"/mini-app/chat";"desktop-chat",1280,800,"/mini-app/chat"] else if memory_mode then ["mobile-memory",390,844,"/mini-app/chat";"desktop-memory",1280,800,"/mini-app/chat"] else if control_mode then ["mobile-control",390,844,"/mini-app/telemetry";"desktop-control",1280,800,"/mini-app/telemetry"] else if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
  )))));
  let report=`Assoc["status",s"PASS_PRIVATE_BROWSER_FIXTURE";"observed_utc",`Float(Unix.gettimeofday());"scope",s"Actual Chromium, Mist ingress, Gleam authentication and native private Sa-plan reader; Telegram SDK identity supplied by explicit synthetic fixture, not real Telegram acceptance";"rows",`List(List.rev !rows)]in
  save(out^"/report.json")(Yojson.Safe.pretty_to_string report);print_endline(Yojson.Safe.to_string report)
