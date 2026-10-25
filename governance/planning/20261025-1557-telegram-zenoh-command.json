@@ -67,7 +67,13 @@
     "Installed NIF digest mismatch and global admission"
   ],
   "publication": {
-    "state": "PENDING"
+    "state": "PUBLISHED",
+    "at": "2026-10-25T15:12:26.356Z",
+    "main": "f6b67e48b3b7ed9d6288d104faa2ddfbd96d196d",
+    "remote": "f6b67e48b3b7ed9d6288d104faa2ddfbd96d196d",
+    "commits_since_806c2739": 249,
+    "source_only": true,
+    "production_admission": false
   },
   "sources": [
     {

@@ -87,3 +87,5 @@ Prediction: reviewed source can integrate within10minutes if final source/KM/cre
 EV94..109 remain NOT_ADMITTED. No page/task/goal completion or production release implied.
 
 </details>
+
+Publication observation 2026-10-25T15:12:26.356Z: main and GitHub f6b67e48b3b7ed9d6288d104faa2ddfbd96d196d matched after fetch;249commits since806c2739. Source only; no deployment or globaladmission. Publication bookkeeping is a subsequent mutable child.

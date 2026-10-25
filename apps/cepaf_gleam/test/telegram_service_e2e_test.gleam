@@ -1,3 +1,4 @@
+import telegram_impact_report_test as impact_fixture
 import telegram_conversation_test_io as conversation_fixture
 @external(erlang,"telegram_budget_test_io","fixture")
 fn budget_fixture(db:String,variant:String)->String
@@ -358,6 +359,10 @@ fn start_runner_actor_with_conversation(
   }
   let cmd = case simplifile.read(db_path<>".zenoh-grants.json") {
     Ok(raw)->"{\"test_zenoh_grants\":"<>raw<>","<>string.drop_start(cmd,1)
+    _->cmd
+  }
+  let cmd = case simplifile.read(db_path<>".impact-source.json") {
+    Ok(raw)->"{\"test_impact_source\":"<>raw<>","<>string.drop_start(cmd,1)
     _->cmd
   }
   let resp = send_runner_cmd(ipc_dir, cmd)
@@ -1017,6 +1022,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       verification_source: None,
       budget_source: None,
       zenoh_source: None,
+      impact_source: None,
     )
 
   // 1. Commit an initial record to store
@@ -1223,6 +1229,14 @@ fn risk_fixture(plan:String,variant:String)->String
 fn exercise_configured_dispatch(first_command: String, first_expected: String, second_command: String, second_expected: String, mode: String, daily_limit: Int,risk_case:String) {
   use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
   case risk_case {
+    "impact" | "impact_changed" | "impact_missing" | "impact_foreign" -> {
+      let raw=impact_fixture.fixture()
+      let #(candidate,closure)=impact_fixture.fixture_binding()
+      let candidate=case risk_case {"impact_foreign"->string.repeat("2",40) _->candidate}
+      let assert Ok(_)=simplifile.write(db_path<>".impact.json",raw)
+      let assert Ok(_)=simplifile.write(db_path<>".impact-source.json",json.to_string(json.array([db_path<>".impact.json",files.digest(raw),candidate,closure],json.string)))
+      Nil
+    }
     "zenoh" | "zenoh_foreign" -> {
       let chat=case risk_case {"zenoh_foreign"->"-300" _->"100"}
       let assert Ok(_) = simplifile.write(db_path<>".zenoh-grants.json","[[200,"<>chat<>",\"c3i/recovery/capability/reachability\"]]")
@@ -1282,6 +1296,7 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
   )
 
   case risk_case {
+    "impact_missing" -> { let assert Ok(_)=simplifile.delete(db_path<>".impact.json") Nil }
     "missing" -> { let assert Ok(_) = simplifile.delete(db_path<>".risk.json") Nil }
     "verification_missing" -> { let assert Ok(_) = simplifile.delete(db_path<>".verification.json") Nil }
     _ -> Nil
@@ -1344,6 +1359,7 @@ fn exercise_configured_dispatch(first_command: String, first_expected: String, s
 
   case risk_case {
     "refresh" -> { let assert Ok(_) = simplifile.write(db_path<>".risk.json",risk_fixture("plan-e2e","changed")) Nil }
+    "impact_changed" -> { let assert Ok(_)=simplifile.write(db_path<>".impact.json","{}") Nil }
     "verification_changed" -> { let assert Ok(_) = simplifile.write(db_path<>".verification.json","{}") Nil }
     _ -> Nil
   }
@@ -2756,4 +2772,20 @@ pub fn e2e_zenoh_missing_configuration_test(){
 }
 pub fn e2e_zenoh_read_and_tool_alias_test(){
  exercise_configured_dispatch("/zenoh c3i/recovery/capability/reachability","no_retained_reply","/action query_zenoh {\"topic\":\"c3i/recovery/capability/reachability\"}","no_retained_reply","disabled",10,"zenoh")
+}
+
+pub fn e2e_impact_command_and_tool_test(){
+ exercise_configured_dispatch("/blast-radius a","\"all_dependents_count\":3","/tool query_blast_radius {\"module\":\"e\"}","\"all_dependents_count\":0","disabled",10,"impact")
+}
+pub fn e2e_impact_unknown_and_changed_test(){
+ exercise_configured_dispatch("/blast-radius unknown","module_not_in_snapshot","/blast-radius a","unavailable","disabled",10,"impact_changed")
+}
+pub fn e2e_impact_missing_test(){
+ exercise_configured_dispatch("/blast-radius a","unavailable","/action query_blast_radius {\"module\":\"a\"}","unavailable","disabled",10,"impact_missing")
+}
+pub fn e2e_impact_foreign_candidate_test(){
+ exercise_configured_dispatch("/blast-radius a","unavailable","/blast-radius e","unavailable","disabled",10,"impact_foreign")
+}
+pub fn e2e_impact_unconfigured_and_scope_test(){
+ exercise_configured_dispatch("/blast-radius a","unavailable","/tool query_blast_radius {\"module\":\"a\",\"path\":\"/tmp/a\"}","scope overrides refused","disabled",10,"")
 }

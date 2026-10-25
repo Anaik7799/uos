@@ -5,6 +5,7 @@ import cepaf_gleam/harness/telegram_knowledge_report as knowledge
 import cepaf_gleam/harness/telegram_rete_report as rete
 import cepaf_gleam/harness/telegram_verification_report as verification
 import cepaf_gleam/harness/telegram_zenoh_report as zenoh_report
+import cepaf_gleam/harness/telegram_impact_report as impact
 import gleam/dict
 import gleam/dynamic/decode
 import gleam/json
@@ -25,6 +26,7 @@ pub type Selection {
   SystemHealth
   Ha
   Finops
+  BlastRadius(module:String)
   Zenoh(topic:String)
   Fmea(task: String)
   KernelVersion
@@ -47,6 +49,7 @@ pub fn help() -> String {
   <> "/tool query_fmea {} or {\"task_id\":\"TASK_ID\"} — recorded risk assessments in the configured plan.\n"
   <> "/tool query_system_health {} — bounded service reachability and local Telegram state.\n"
   <> "/tool query_zenoh {} or {\"topic\":\"exact/key\"} — explicitly granted user/chat topic reads only.\n"
+  <> "/tool query_blast_radius {\"module\":\"cepaf_gleam/harness/telegram_service\"} — static compiled dependencies only.\n"
   <> "/tool query_finops {} — current daily reserved liability; actual spending remains unknown.\n"
   <> "/tool query_ha {} — current Telegram BEAM runtime pressure; cluster failover remains unverified.\n"
   <> "/tool query_zigvm_version {} — installed pinned executable version only.\n"
@@ -129,6 +132,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
     "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)
     "query_system_health" -> empty_arguments(tail, SystemHealth)
+    "query_blast_radius" -> impact.tool_selector(tail) |> result.map(BlastRadius)
     "query_zenoh" -> zenoh_report.tool_topic(tail) |> result.map(Zenoh)
     "query_finops" -> empty_arguments(tail, Finops)
     "query_ha" -> empty_arguments(tail, Ha)

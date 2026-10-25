@@ -2,9 +2,9 @@
 
 #fractal-l0 #fractal-l5 #fractal-l9 #zk-adr #zero-muda
 
-Observed 2026-10-25T15:10:57.083Z.575Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
+Observed 2026-10-25T15:37:35.628Z.356Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
 
-**AS-IS:** Main and GitHub match fefc2f6e;248 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
+**AS-IS:** Main and GitHub match f6b67e48;249 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
 
 **TO-BE:** All adopted Telegram commands, Mini App actions and media operate through guarded supervised dispatch; real Telegram and browser acceptance pass on the released candidate; applicable branch deltas are integrated and GitHub readback matches main.
 
@@ -12,7 +12,7 @@ Observed 2026-10-25T15:10:57.083Z.575Z. [Cockpit](http://nas-1.tail55d152.ts.net
 |---|---|---|---|
 | G8_IMPROVE | Completed; live desktop/mobile PASS | Current task projection, finite refresh and truthful demonstration | High: reviewed exact bytes/config, preserved originals, renewed finite observer until15:43:00Z |
 | MINI_API_IMPL → MINI_API_REVIEW | Attempt8 cleanly released; acknowledgement published504b17f1 with core/UI/integration reviews PASS; three other data adapters remain | Authenticated data/actions reflect actual state; denial/recovery and browser checks | High: exact episode/nonce/fence checks, durable receipt recovery and independent source review |
-| COMMAND_IMPL → COMMAND_REVIEW | Attempt15 active: Zenoh exact-topic source reviewed PASS,384checks and4service scenarios PASS; publication pending. Previous attempt14 cleanly released before expiry; /ha publishedf59d3335. Finops/budget published1da695e2:362 checks,11 native ledger checks,4 service scenarios and full build PASS. AGY7370b5c5 source review PASS; fixture-discovery HOLD resolved by actual staged/loaded beam proof. Fresh compiled inventory:35/77 handler routes connected,20 backend_unavailable,22 not_implemented; route coverage is not feature acceptance | Every adopted command maps to typed dispatcher and backend | Critical: effect-time owner/task fence and receipts |
+| COMMAND_IMPL → COMMAND_REVIEW | Attempt15 active: /blast-radius source reviewed PASS,399tests/5service scenarios and full build PASS; publication pending. Zenoh exact-topic source reviewed PASS,384checks and4service scenarios PASS; published f6b67e48. Previous attempt14 cleanly released before expiry; /ha publishedf59d3335. Finops/budget published1da695e2:362 checks,11 native ledger checks,4 service scenarios and full build PASS. AGY7370b5c5 source review PASS; fixture-discovery HOLD resolved by actual staged/loaded beam proof. Last published compiled inventory:36/77 handler routes connected,19 backend_unavailable,22 not_implemented; route coverage is not feature acceptance | Every adopted command maps to typed dispatcher and backend | Critical: effect-time owner/task fence and receipts |
 | MEDIA_IMPL → MEDIA_REVIEW | Pending | Bounded media ingestion and delivery | High: size/type validation and hostile-input checks |
 | GATEWAY_IMPL → GATEWAY_REVIEW | Pending | Supervised secret-safe startup/outbox/recovery | Critical: no credentials in operational messages |
 | TELEGRAM_E2E → RETURN; admission PREP through CLOSE | Pending | Actual Telegram user journey, release/recovery and global admission decision | Critical: component counts cannot grant runtime admission |
@@ -31,12 +31,18 @@ Fresh command inventory at 2026-10-25T14:32:14.670Z:35 connected handler routes,
 
 Shared delivery repair candidate: exact-fit final chunks no longer truncate; oversized Unicode graphemes split into bounded valid UTF-8.370combined tests,11native regressions,2service scenarios and fullappbuild PASS; AGYf02b71f1 source review PASS; published fefc2f6e, GitHub readback matched. [Checkpoint](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1415-telegram-chunk-recovery.json).
 
-Next: continue command backends after exact-source Zenoh review and integration and remaining Mini producers/actions,media,gateway and exact release/admission. Acknowledgement source was published13:45:40UTC. HA reports actual local runtime pressure; cluster failover remains unverified. Use bounded AGY review and Codex/AGY code/testing; reuse unchanged source-bound evidence. Ten runtime and eight admission tasks remain. Overall completion time is not established until backend availability and actual Telegram acceptance are verified.
+Next: integrate reviewed compiled impact, then continue missing command backends and remaining Mini producers/actions,media,gateway and exact release/admission. Acknowledgement source was published13:45:40UTC. HA reports actual local runtime pressure; cluster failover remains unverified. Use bounded AGY review and Codex/AGY code/testing; reuse unchanged source-bound evidence. Ten runtime and eight admission tasks remain. Overall completion time is not established until backend availability and actual Telegram acceptance are verified.
 
 [Machine checkpoint](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-0754-merge-checkpoint.json). Working document publication follows reviewed source integration.
 
 
-Zenoh candidate: /zenoh and query_zenoh now use exact user/chat/topic grants and actual bounded REST reads.384combined checks,11native regressions,4service scenarios/8replies and fullbuild PASS; AGY373d5c0e source review PASS. Production grants/release and realTelegram acceptance remain open. COMMAND_IMPL15 active. Finite observer renewed through15:43UTC. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1557-telegram-zenoh-command.json).
+Zenoh candidate: /zenoh and query_zenoh now use exact user/chat/topic grants and actual bounded REST reads.384combined checks,11native regressions,4service scenarios/8replies and fullbuild PASS; AGY373d5c0e source review PASS. Production grants/release and realTelegram acceptance remain open. Published f6b67e48 at15:12:26UTC. COMMAND_IMPL15 remains active until16:00:18UTC. Finite observer renewed through15:43UTC. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1557-telegram-zenoh-command.json).
+
+Fresh inventory 2026-10-25T15:13:38.381Z:36/77 connected handler routes,19 backend-unavailable,22 unimplemented. [Inventory](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1538-telegram-command-reachability.json). This is not a feature acceptance percentage.
+
+Impact increment: actual925module/16915import snapshot, 399tests, 11native regressions,5service scenarios/10durable replies and independent oracle PASS. AGY9ac13fab approved exact patch. Snapshot identity and complete module inventory are verified; dynamic/caller-function/contract coverage remains UNASSESSED. Publication pending. [Evidence](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1535-telegram-impact-command.json).
+
+Fresh candidate inventory 2026-10-25T15:38:13.862Z:37/77 connected routes,18 backend-unavailable,22 unimplemented. [Inventory](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-1513-telegram-command-reachability.json). Connectivity is not complete feature acceptance.
 
 ## Verification checklist
 

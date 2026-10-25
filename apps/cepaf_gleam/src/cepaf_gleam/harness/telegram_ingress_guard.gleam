@@ -8,6 +8,7 @@ import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_rete_report as rete
 import cepaf_gleam/harness/telegram_verification_report as verification
 import cepaf_gleam/harness/telegram_zenoh_report as zenoh_report
+import cepaf_gleam/harness/telegram_impact_report as impact
 import gleam/dict
 import gleam/dynamic/decode
 import cepaf_gleam/harness/telegram_knowledge_report as knowledge
@@ -148,6 +149,10 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
             "" -> DirectReadTool("query_finops")
             _ -> DeniedMutation("/finops","Use /finops or /budget without arguments; ledger scope is fixed.")
           }
+          "/blast-radius" -> case impact.selector(args) {
+            Ok(module)->PreservedDirective("/blast-radius",[module])
+            Error(e)->DeniedMutation("/blast-radius",e)
+          }
           "/zenoh" -> case zenoh_report.valid_topic(args) {
             True->PreservedDirective("/zenoh",[args])
             False->DeniedMutation("/zenoh","Use /zenoh or /zenoh <exact-topic>; wildcards, URLs and scope overrides are refused.")
@@ -194,6 +199,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.BlastRadius(module)) -> PreservedDirective("/blast-radius",[module])
               Ok(tool_command.Zenoh(topic)) -> PreservedDirective("/zenoh",[topic])
               Ok(tool_command.Finops) -> DirectReadTool("query_finops")
               Ok(tool_command.Ha) -> DirectReadTool("query_ha")

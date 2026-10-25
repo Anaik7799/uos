@@ -527,10 +527,16 @@ build_service_configuration(Config) ->
             {ok,ZenohConfigured}=cepaf_gleam@harness@telegram_service:configure_zenoh_source(B12,Typed),
             ZenohConfigured
     end,
-    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+    B14 = case maps:get(<<"test_impact_source">>,Config,null) of
         null -> B13;
+        [ImpactPath,ImpactSha,ImpactCandidate,ImpactClosure] ->
+            {ok,ImpactConfigured}=cepaf_gleam@harness@telegram_service:configure_impact_source(B13,ImpactPath,ImpactSha,ImpactCandidate,ImpactClosure),
+            ImpactConfigured
+    end,
+    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+        null -> B14;
         [Root, Digest] when is_binary(Root), is_binary(Digest) ->
-            {ok, Configured} = telegram_managed_action_test:configure(B13, Root, Digest),
+            {ok, Configured} = telegram_managed_action_test:configure(B14, Root, Digest),
             Configured
     end.
 
