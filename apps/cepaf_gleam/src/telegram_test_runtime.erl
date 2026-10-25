@@ -34,6 +34,7 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_fmea_report', 'cepaf_gleam@harness@telegram_fmea_reader',
             'cepaf_gleam@harness@telegram_knowledge_report',
       'cepaf_gleam@harness@telegram_search_report',
+      'cepaf_gleam@harness@telegram_storage_report',
       'cepaf_gleam@harness@telegram_rete_report',
       telegram_ecology_clock, 'cepaf_gleam@harness@telegram_ecology_report', 'cepaf_gleam@harness@telegram_ecology_reader',
       telegram_matrix_http, 'cepaf_gleam@harness@telegram_matrix_report', 'cepaf_gleam@harness@telegram_matrix_reader',
@@ -48,17 +49,17 @@ launch_eval(ConfigPath) ->
             'cepaf_gleam@harness@telegram_lifecycle_adapter'
         ],
         Pins = [pin(M, Dir) || M <- Modules],
-        Data = {Paths, [atom_to_binary(M,utf8) || M <- Modules], iolist_to_binary([H || {_, H} <- Pins]), ConfigPath},
+        Names = [atom_to_binary(M,utf8) || M <- Modules],
+        Binding = crypto:hash(sha256,term_to_binary([{atom_to_binary(M,utf8),H} || {M,H} <- Pins])),
+        Data = {Paths, Names, Binding, ConfigPath},
         true = byte_size(term_to_binary(Data)) =< 100000,
         Payload = base64:encode(term_to_binary(Data, [{compressed,9}])),
         Expr = io_lib:format(
             "{P,N,H,C}=binary_to_term(base64:decode(~0p),[safe]),"
-            "true=code:set_path(P),true=byte_size(H)=:=32*length(N),"
-            "lists:foreach(fun({M,D})->"
-            "{M,B,F}=code:get_object_code(M),"
-            "D=crypto:hash(sha256,B),"
-            "{module,M}=code:load_binary(M,F,B)"
-            " end,lists:zip([binary_to_atom(M,utf8)||M<-N],[D||<<D:32/binary>><=H])),"
+            "true=code:set_path(P),true=byte_size(H)=:=32,"
+            "B=[begin M=binary_to_atom(X,utf8),{M,D,F}=code:get_object_code(M),{M,D,F} end||X<-N],"
+            "H=crypto:hash(sha256,term_to_binary([{atom_to_binary(M,utf8),crypto:hash(sha256,D)}||{M,D,_}<-B])),"
+            "lists:foreach(fun({M,D,F})->{module,M}=code:load_binary(M,F,D) end,B),"
             "telegram_service_worker_runner:start([C]).",
             [Payload]),
         Binary = iolist_to_binary(Expr),

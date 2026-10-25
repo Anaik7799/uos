@@ -133,6 +133,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
             Ok(facts)->PreservedDirective("/rete",[facts])
             Error(_)->DeniedMutation("/rete","Supply comma-separated watchdog, mesh_running, e_stop, high_drift or divergent boolean facts; evaluation grants no authority.")
           }
+          "/storage" -> read_directive("query_storage", args)
           "/ecology" -> read_directive("query_ecology", args)
           "/sutra" -> read_directive("query_matrix_versions", args)
           "/status" | "/health" -> read_directive("query_system_health", args)
@@ -171,6 +172,7 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
               Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
               Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
               Ok(tool_command.Rete(facts)) -> PreservedDirective("/rete",[facts])
+              Ok(tool_command.Storage) -> DirectReadTool("query_storage")
               Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
               Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
               Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")

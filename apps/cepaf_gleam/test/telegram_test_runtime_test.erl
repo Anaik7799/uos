@@ -12,14 +12,18 @@ evaluate_bad(Expr,Old,Data) ->
   {ok,Forms}=erl_parse:parse_exprs(Toks),
   try erl_eval:exprs(Forms,[]) of _->unexpected_success
   catch error:Reason->Reason end.
-packed_hash_cardinality_refused_test() ->
+aggregate_hash_cardinality_refused_test() ->
   {Expr,Old,{Paths,Names,Hashes,Config}}=packet(),
-  ?assertEqual(32*length(Names),byte_size(Hashes)),
+  ?assertEqual(32,byte_size(Hashes)),
   Short=binary:part(Hashes,0,byte_size(Hashes)-1),
   ?assertEqual({badmatch,false},evaluate_bad(Expr,Old,{Paths,Names,Short,Config})).
-packed_hash_tampering_refused_before_runner_test() ->
+aggregate_hash_tampering_refused_before_runner_test() ->
   {Expr,Old,{Paths,Names,Hashes,Config}}=packet(),
   <<First:32/binary,Rest/binary>>=Hashes,
   <<Byte,Tail/binary>>=First,
   Bad = <<(Byte bxor 1),Tail/binary,Rest/binary>>,
   ?assertEqual({badmatch,First},evaluate_bad(Expr,Old,{Paths,Names,Bad,Config})).
+
+omitted_module_rejected_before_loading_test() ->
+  {Expr,Old,{Paths,[_First|Rest],Hash,Config}}=packet(),
+  ?assertMatch({badmatch,<<_:256>>},evaluate_bad(Expr,Old,{Paths,Rest,Hash,Config})).

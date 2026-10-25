@@ -2631,3 +2631,12 @@ pub fn e2e_rete_scope_and_missing_facts_test() {
  exercise_automatic_command_dispatch("/rete","denied_mutation",
    "/tool evaluate_rete {\"facts\":\"watchdog=true\",\"worker\":\"/private\"}","denied_mutation")
 }
+
+pub fn e2e_storage_and_nvme_alias_test() {
+ exercise_automatic_command_dispatch("/storage","host_block_devices_root_capacity_and_policy_probe",
+ "/nvme","\"production_interlock_enforcement\":\"NOT_ESTABLISHED\"")
+}
+pub fn e2e_storage_tool_and_scope_refusal_test() {
+ exercise_automatic_command_dispatch("/tool query_storage {}","\"osd_allocation_authority\":\"NOT_GRANTED\"",
+ "/action query_storage {\"path\":\"/dev/nvme0n1\"}","denied_mutation")
+}

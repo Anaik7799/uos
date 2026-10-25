@@ -15,6 +15,7 @@ pub type Selection {
   CancelLease(job:String,reason:String)
   Doctor
   Rete(facts:String)
+  Storage
   Ecology
   Matrix
   SystemHealth
@@ -31,6 +32,7 @@ pub type Selection {
 pub fn help() -> String {
   "Telegram tools (/action is an alias for /tool):\n"
   <> "/tool evaluate_rete {\"facts\":\"watchdog=true,mesh_running=true\"} — evaluate supplied facts; grants no authority.\n"
+  <> "/tool query_storage {} — host capacity/device observations and bounded policy checks.\n"
   <> "/tool query_ecology {} — local participant snapshot; service health unverified.\n"
   <> "/tool query_matrix_versions {} — observed Matrix client API versions.\n"
   <> "/tool query_doctor {} — diagnostic provenance; live runtime checks are not inferred.\n"
@@ -109,6 +111,7 @@ pub fn parse(args: String) -> Result(Selection, String) {
     "" | "help" -> empty_arguments(tail, Help)
     "cancel_job_lease" -> cancel_arguments(tail)
     "evaluate_rete" -> rete_arguments(tail)
+    "query_storage" -> empty_arguments(tail, Storage)
     "query_ecology" -> empty_arguments(tail, Ecology)
     "query_matrix_versions" -> empty_arguments(tail, Matrix)
     "query_doctor" -> empty_arguments(tail, Doctor)

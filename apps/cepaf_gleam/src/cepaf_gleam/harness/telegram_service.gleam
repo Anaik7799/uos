@@ -26,6 +26,7 @@ import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_operational_status as operational_status
+import cepaf_gleam/harness/telegram_storage_report as storage_report
 import cepaf_gleam/harness/telegram_rete_report as rete_report
 import cepaf_gleam/harness/telegram_ecology_reader as ecology_reader
 import cepaf_gleam/harness/telegram_matrix_reader as matrix_reader
@@ -2315,6 +2316,7 @@ fn execute_guarded_dispatch(
                       let payload = case dir {
                         guard.PreservedDirective("/approval",selector) -> approval_status_reply(state,inbox_rec,selector)
                         guard.PreservedDirective("/rete",[facts]) -> rete_reply(state,facts)
+                        guard.DirectReadTool("query_storage") -> storage_reply(state)
                         guard.DirectReadTool("query_ecology") -> ecology_reply(state)
                         guard.DirectReadTool("query_matrix_versions") -> matrix_reply(state)
                         guard.DirectReadTool("query_system_health") -> operational_status_reply(state, gen1)
@@ -6371,5 +6373,12 @@ fn rete_reply(state:ServiceState,facts:String)->String {
  case current_read(state,3000,fn(){rete_report.evaluate(facts)}) {
    Ok(Ok(raw))->raw
    _->json.object([#("status",json.string("unavailable")),#("error",json.string("Rule evaluation unavailable.")),#("runtime_admission",json.string("NOT_GRANTED"))]) |> json.to_string
+ }
+}
+
+fn storage_reply(state:ServiceState)->String {
+ case current_read(state,5000,storage_report.read) {
+   Ok(Ok(raw))->raw
+   _->json.object([#("status",json.string("unavailable")),#("error",json.string("Storage observation unavailable; protection is not established.")),#("runtime_admission",json.string("NOT_GRANTED"))]) |> json.to_string
  }
 }
