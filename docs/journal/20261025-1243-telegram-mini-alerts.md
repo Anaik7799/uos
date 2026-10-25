@@ -23,7 +23,7 @@ Poka-Yoke: typed validated projections, numeric bounds, fixed endpoints, field/r
 Devil's Advocate checks distinguish absence from healthy, deny stale/duplicate device projections, preserve 401/403 as authentication-required advisory, and keep 2xx scoped to reachability. Reviewing an alert must never clear its condition; static per-rule acknowledgement would hide recurrence. AGY's proposed recurrence design needs further validation for unobserved clears and restarts.
 
 ## 7. Verification Matrix
-Full current application compile PASS. Twenty-three focused alert tests PASS against the full app build; prior319 candidate checks covered the original18 plus301 regressions. Eight actual HTTP executions across missing/configured collector profiles (including three repeated denial/shell checks) and four Chromium scenarios PASS on final UI: mobile, desktop, denied identity and SDK absent. Positive UI includes filters/details and outage clearing;18checkpoints and no horizontal overflow. Synthetic identity is not real Telegram acceptance. Independent source review51fcfe4f and test-delta review126a1f5c PASS; all917 current application source files match the full build. Analyst classification Admiralty A1 for directly executed scoped checks; automated Admiralty adjudication and all seven epistemic engines UNRUN.
+Full current application compile PASS. Twenty-three focused alert tests PASS against the full app build; prior319 candidate checks covered the original18 plus301 regressions. Eight actual HTTP executions across missing/configured collector profiles (including three repeated denial/shell checks) and four Chromium scenarios PASS on final UI: mobile, desktop, denied identity and SDK absent. Positive UI includes filters/details and outage clearing;18checkpoints and no horizontal overflow. Synthetic identity is not real Telegram acceptance. Source-only publication verified12:39:13UTC: main/GitHub6f883356,244 commits since baseline. Independent source review51fcfe4f and test-delta review126a1f5c PASS; all917 current application source files match the full build. Analyst classification Admiralty A1 for directly executed scoped checks; automated Admiralty adjudication and all seven epistemic engines UNRUN.
 
 ## 8. Files Modified
 Source/test/controller paths and hashes are in the checkpoint. Full app source bindings retained under var/recovery-runtime/20261025-1224-alerts-full; HTTP/browser/failure receipts under var/recovery-runtime/20261025-1224-alerts-evidence. Pre-existing config-publication bookkeeping preserved. No uncurated branch history imported.
@@ -50,7 +50,7 @@ Current alert conditions can now be inspected through the authenticated Mini App
 - [x] CHK-01-TIME: host UTC observed.
 - [x] CHK-02-TAIL: full Tailnet links.
 - [x] CHK-03-FRACT: scope tags.
-- [ ] CHK-04-KM: current candidate provenance gate pending.
+- [x] CHK-04-KM: exact candidate provenance gate PASS, report-only.
 
 </details>
 <details><summary>Domain 2 — Purity and storage</summary>

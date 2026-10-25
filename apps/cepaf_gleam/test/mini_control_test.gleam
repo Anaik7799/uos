@@ -57,3 +57,27 @@ pub fn control_absence_never_reports_zero_effect_certainty_test() {
   result.status |> should.equal(503)
   string.contains(result.body, "\"effects_this_request\":null") |> should.be_true
 }
+
+fn alert_body(auth: String,action: String,expected: String,target: String) {
+  json.to_string(json.object([
+    #("init_data",json.string(auth)),#("path",json.string("/mini-app/alerts")),
+    #("action",json.string(action)),#("request_id",json.string(nonce)),
+    #("expected_episode_set",json.string(expected)),#("target_episode",json.string(target))
+  ]))
+}
+pub fn alert_acknowledgement_closed_schema_test() {
+  let sha=string.repeat("a",64)
+  control.parse(alert_body(v.valid,"acknowledge_all",sha,"all"),config(),1000) |> should.be_ok
+  control.parse(alert_body(v.valid,"acknowledge_alert",sha,sha),config(),1000) |> should.be_ok
+  control.parse(alert_body(v.valid,"acknowledge_all",sha,sha),config(),1000) |> should.be_error
+  control.parse(alert_body(v.valid,"acknowledge_alert",sha,"all"),config(),1000) |> should.be_error
+  control.parse(alert_body(v.valid,"acknowledge_all","bad","all"),config(),1000) |> should.be_error
+}
+pub fn alert_acknowledgement_auth_and_page_test() {
+  let sha=string.repeat("a",64)
+  control.parse(alert_body(v.wrong_user,"acknowledge_all",sha,"all"),config(),1000) |> should.be_error
+  control.parse(alert_body(v.expired,"acknowledge_all",sha,"all"),config(),1000) |> should.be_error
+  let b=alert_body(v.valid,"acknowledge_all",sha,"all")
+  control.parse(string.replace(b,"/mini-app/alerts","/mini-app/telemetry"),config(),1000) |> should.be_error
+  control.parse(string.replace(b,"\"target_episode\"","\"run_shell\""),config(),1000) |> should.be_error
+}

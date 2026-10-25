@@ -11,6 +11,12 @@ import cepaf_gleam/telegram/mini_memory
 import cepaf_gleam/planning/sa_plan_bridge as ledger
 import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/types
+import cepaf_gleam/telegram/mini_alert_io
+import cepaf_gleam/telegram/mini_alerts
+import cepaf_gleam/telegram/mini_alert_owner
+import cepaf_gleam/telegram/mini_alert_state
+import gleam/crypto
+import gleam/bit_array
 import gleam/dict
 import gleam/dynamic/decode
 import gleam/erlang/process
@@ -57,6 +63,7 @@ type Profile {
     memory: Option(mini_memory.Configuration),
     chat: Option(#(Int,Int)),
     io: model.Io,
+    alerts: Bool,
   )
 }
 
@@ -76,6 +83,7 @@ pub type Outcome {
   Applied(String, String)
   Cleared(String)
   Chatted(String)
+  Acknowledged(String)
   Refused(String)
   Uncertain
 }
@@ -160,6 +168,9 @@ pub fn parse(
   )
   use action <- result.try(json.parse(body,{ use a <- decode.field("action",decode.string) decode.success(a) })
     |> result.replace_error("invalid_request"))
+  case is_alert(action) {
+    True -> parse_alert(body,read,action)
+    False -> {
   let memory = action == "clear_history" || action == "reset_history" || action == "send_message" || action == "abandon_message"
   use _ <- result.try(require(
     case memory { True -> api.page(read) == types.MiniConversation
@@ -198,6 +209,8 @@ pub fn parse(
       False -> level(expected) && level(target) && expected != target
     }, "invalid_request"))
   Ok(Intent(action,api.user_id(read),api.chat_id(read),nonce,expected,target,prompt))
+    }
+  }
 }
 
 pub fn request_key(bot: String, intent: Intent) -> String {
@@ -316,6 +329,7 @@ pub fn outcome_json(outcome: Outcome) -> json.Json {
         #("observed_level", json.string(after)),
         #("effect_count", json.int(1)),
       ])
+    Acknowledged(raw) -> json.object([#("status",json.string("alerts_acknowledged")),#("effect_count",json.int(1)),#("native_receipt",json.string(raw))])
     Chatted(raw) -> json.object([#("status",json.string("chat_terminal")),#("native_receipt",json.string(raw))])
     Cleared(raw) -> json.object([#("status",json.string("history_cleared")),#("effect_count",json.int(1)),#("native_receipt",json.string(raw))])
     Refused(reason) ->
@@ -355,7 +369,7 @@ fn existing(
             Ok(Some(raw)) -> Some(json.to_string(outcome_json(Chatted(raw))))
             _ -> None
           }
-        Some(c), action if action != "set_vm_logger_level" ->
+        Some(c), "clear_history" | Some(c), "reset_history" ->
           case mini_memory.receipt(c,intent.user,intent.chat,id,
             int.parse(intent.expected) |> result.unwrap(-1),intent.target) {
             Ok(Some(raw)) -> Some(raw)
@@ -369,6 +383,10 @@ fn existing(
         "available" -> "unclaimed_no_replay"
         _ -> "uncertain_no_replay"
       }}
+      let _=case is_alert(intent.action) {
+        True -> mini_alert_owner.reconcile_receipt()
+        False -> Ok(Nil)
+      }
       reply(200, status, id, json.int(0), receipt)
       }
       }
@@ -398,7 +416,7 @@ fn finish(
 ) -> response.Response(String) {
   let payload = outcome_json(outcome)
   let code = case outcome {
-    Applied(_, _) | Cleared(_) | Chatted(_) -> "OK"
+    Applied(_, _) | Cleared(_) | Chatted(_) | Acknowledged(_) -> "OK"
     _ -> "ERROR"
   }
   case
@@ -413,7 +431,7 @@ fn finish(
   {
     Ok(_) ->
       case outcome {
-        Applied(_, _) | Cleared(_) | Chatted(_) -> reply(200, "applied", id, json.int(1), payload)
+        Applied(_, _) | Cleared(_) | Chatted(_) | Acknowledged(_) -> reply(200, "applied", id, json.int(1), payload)
         Refused(reason) -> reply(409, reason, id, json.int(0), payload)
         Uncertain -> reply(202, "uncertain_no_replay", id, json.null(), payload)
       }
@@ -534,6 +552,7 @@ fn memory_job_current(p: Profile, id: String, deadline: Int) -> Bool {
 
 fn apply_effect(p: Profile, intent: Intent, id: String, body: String, deadline: Int) -> response.Response(String) {
   case intent.action {
+    "acknowledge_alert" | "acknowledge_all" -> apply_alert(p,intent,id,body,deadline)
     "send_message" -> apply_chat(p,intent,id,body,deadline)
     "abandon_message" -> apply_chat_abandon(p,intent,id,body,deadline)
     "set_vm_logger_level" -> case change_logger(intent.expected,intent.target) {
@@ -622,6 +641,10 @@ pub fn start_development_fixture() -> Result(Nil, String) {
 
 /// Dependency injection for private development. Production never starts this actor.
 pub fn start_development_fixture_with_io(io: model.Io) -> Result(Nil,String) {
+  start_development_fixture_with_alert_io(io,mini_alert_io.live())
+}
+
+pub fn start_development_fixture_with_alert_io(io: model.Io,alert_io: mini_alerts.Io) -> Result(Nil,String) {
   use raw <- result.try(
     env("UOS_MINI_CONTROL_FIXTURE_PROFILE")
     |> result.map_error(fn(_) { "fixture_profile_missing" }),
@@ -698,15 +721,19 @@ pub fn start_development_fixture_with_io(io: model.Io) -> Result(Nil,String) {
     None -> True
     Some(#(limit,timeout)) -> limit > 0 && limit <= 1000 && timeout >= 100 && timeout <= 15_000 && memory != None
   },"chat_profile_bounds"))
+  use alerts <- result.try(json.parse(raw,{
+    use enabled <- decode.optional_field("alerts",False,decode.bool)
+    decode.success(enabled)
+  }) |> result.replace_error("alerts_profile_invalid"))
   let p =
-    Profile(config, binding, candidate, boot, host, expires, expected, bot, memory, chat, io)
+    Profile(config, binding, candidate, boot, host, expires, expected, bot, memory, chat, io, alerts)
   use fence <- result.try(dev.fence_for(binding, 25_000))
   use _ <- result.try(require(
     fence.clock.sample.observed.domain.boot_id == boot
       && fence.clock.sample.observed.domain.host_id == host,
     "fixture_host_boot",
   ))
-  sup.new(sup.OneForOne)
+  let supervisor=sup.new(sup.OneForOne)
   |> sup.add(
     supervision.worker(fn() {
       actor.new(p)
@@ -716,7 +743,15 @@ pub fn start_development_fixture_with_io(io: model.Io) -> Result(Nil,String) {
     })
     |> supervision.restart(supervision.Temporary),
   )
-  |> sup.start
+  let supervisor=case alerts {
+    False -> supervisor
+    True -> {
+      let instance=files.digest(boot<>expected<>bit_array.base16_encode(crypto.strong_random_bytes(32)))
+      supervisor |> sup.add(supervision.worker(fn(){mini_alert_owner.start(alert_io,instance,expires)})
+        |> supervision.restart(supervision.Temporary))
+    }
+  }
+  supervisor |> sup.start
   |> result.map(fn(_) { Nil })
   |> result.map_error(fn(_) { "fixture_control_start_failed" })
 }
@@ -785,6 +820,75 @@ fn apply_chat_abandon(p: Profile,i: Intent,id: String,body: String,deadline: Int
         Ok(Chatted(done.receipt.summary_json))
       }
       finish(p,id,case outcome { Ok(o) -> o Error(o) -> o })
+    }
+  }
+}
+
+fn is_alert(action: String) -> Bool {
+  action=="acknowledge_alert" || action=="acknowledge_all"
+}
+fn parse_alert(body: String,read: api.AuthorizedRead,action: String) -> Result(Intent,String) {
+  use _ <- result.try(require(api.page(read)==types.MiniCockpit,"invalid_page_or_action"))
+  let decoder={
+    use nonce <- decode.field("request_id",decode.string)
+    use expected <- decode.field("expected_episode_set",decode.string)
+    use target <- decode.field("target_episode",decode.string)
+    decode.success(#(nonce,expected,target))
+  }
+  use #(nonce,expected,target) <- result.try(json.parse(body,decoder) |> result.replace_error("invalid_request"))
+  use fields <- result.try(json.parse(body,decode.dict(decode.string,decode.dynamic)) |> result.replace_error("invalid_request"))
+  let keys=["init_data","path","action","request_id","expected_episode_set","target_episode"]
+  use _ <- result.try(require(dict.size(fields)==6 && list.all(dict.keys(fields),fn(k){list.contains(keys,k)})
+    && hex(nonce,32) && hex(expected,64)
+    && case action {"acknowledge_all" -> target=="all" _ -> hex(target,64)},"invalid_request"))
+  Ok(Intent(action,api.user_id(read),api.chat_id(read),nonce,expected,target,""))
+}
+fn apply_alert(p: Profile,i: Intent,id: String,body: String,deadline: Int) -> response.Response(String) {
+  case p.alerts {
+    False -> finish(p,id,Refused("alert_control_unavailable"))
+    True -> {
+      let target=case i.action {
+        "acknowledge_all" -> mini_alert_state.All(i.expected)
+        _ -> mini_alert_state.Single(i.target)
+      }
+
+      let committed=mini_alert_owner.acknowledge(target,deadline,fn(selection,at){
+        let native=json.to_string(json.object([
+          #("schema",json.string("uos.mini.alert-review.v1")),
+          #("owner_incarnation",json.string(mini_alert_state.selection_incarnation(selection))),
+          #("episodes",json.array(mini_alert_state.selected_episodes(selection),json.string)),
+          #("user",json.int(i.user)),#("at",json.int(at)),#("job",json.string(id)),
+          #("condition_cleared",json.bool(False))
+        ]))
+        let payload=json.to_string(outcome_json(Acknowledged(native)))
+        let bound=arguments(p,i)
+        let lookup=fn(){
+          case read_job(id) {
+            Ok(Some(job)) if job.state=="completed" && job.attempt==1
+              && job.args==bound && job.receipt==Some(payload) ->
+                Ok(Some(mini_alert_state.Review(i.user,at,id)))
+            Ok(Some(job)) if job.state=="discarded" && job.args==bound -> Ok(None)
+            _ -> Error("alert_commit_uncertain")
+          }
+        }
+        mini_alert_owner.Commit(fn(){
+          use current <- result.try(fresh(p,body,deadline))
+          use _ <- result.try(require(current==i && memory_job_current(p,id,deadline),"alert_authority_expired"))
+          let _=finish(p,id,Acknowledged(native))
+          case lookup() {
+            Ok(Some(review)) -> Ok(review)
+            _ -> Error("alert_commit_uncertain")
+          }
+        },lookup)
+      })
+      case committed {
+        Ok(review) -> reply(200,"alerts_acknowledged",id,json.int(1),
+          json.object([#("user",json.int(review.user)),#("at",json.int(review.at)),
+            #("condition_cleared",json.bool(False)),#("refresh_required",json.bool(True))]))
+        Error("alert_commit_uncertain") | Error("acknowledgement_outcome_uncertain") ->
+          reply(202,"uncertain_no_replay",id,json.null(),json.null())
+        Error(reason) -> finish(p,id,Refused(reason))
+      }
     }
   }
 }

@@ -8,7 +8,7 @@ const out=process.argv[2];
 if(!out||!path.isAbsolute(out)||!out.startsWith(canonical+'/var/recovery-runtime/')||fs.existsSync(out))throw Error('new absolute recovery output required');
 fs.mkdirSync(out,{recursive:true});
 const modules=[
- 'cepaf_gleam/telegram/mini_alerts.gleam','cepaf_gleam/telegram/mini_alerts_view.gleam',
+ 'cepaf_gleam/telegram/mini_alert_io.gleam','cepaf_gleam/telegram/mini_alert_owner.gleam','cepaf_gleam/telegram/mini_alert_state.gleam','cepaf_gleam/telegram/mini_alerts.gleam','cepaf_gleam/telegram/mini_alerts_view.gleam',
  'cepaf_gleam/c3i/evidence.gleam','cepaf_gleam/c3i/nif.gleam',
  'cepaf_gleam/config/mesh_source.gleam','cepaf_gleam/config/mesh_config.gleam','cepaf_gleam/telegram/mini_config.gleam',
  'cepaf_gleam/telegram/auth.gleam','cepaf_gleam/telegram/types.gleam','cepaf_gleam/telegram/theme.gleam',
@@ -32,7 +32,7 @@ modules.push('cepaf_gleam/telegram/mini_health_view.gleam','cepaf_gleam/telegram
 // Compile the shared polling implementations from this candidate, never older fallback metadata.
 for(const name of fs.readdirSync(sourceRoot+'/apps/cepaf_gleam/src/cepaf_gleam/harness').filter(x=>x.startsWith('telegram_')&&x.endsWith('.gleam'))) { const m='cepaf_gleam/harness/'+name; if(!modules.includes(m))modules.push(m); }
 for(const name of fs.readdirSync(sourceRoot+'/apps/cepaf_gleam/src').filter(x=>x.startsWith('telegram_')&&x.endsWith('.erl')))if(!modules.includes(name))modules.push(name);
-const tests=['mini_alerts_test.gleam','mini_config_test.gleam','mini_health_test.gleam','mini_memory_test.gleam','mini_control_test_ffi.erl','mini_control_test.gleam','mini_telemetry_test.gleam','mini_telemetry_test_ffi.erl','mini_dashboard_test.gleam','zenoh_rest_test.gleam','mini_zenoh_test.gleam','mini_history_test.gleam','mini_podman_test.gleam','mini_evidence_test.gleam','mini_boundary_test.gleam','mini_test_vectors.gleam','mini_boundary_test_ffi.erl'];
+const tests=['mini_alert_owner_test.gleam','mini_alert_state_test.gleam','mini_alerts_test.gleam','mini_config_test.gleam','mini_health_test.gleam','mini_memory_test.gleam','mini_control_test_ffi.erl','mini_control_test.gleam','mini_telemetry_test.gleam','mini_telemetry_test_ffi.erl','mini_dashboard_test.gleam','zenoh_rest_test.gleam','mini_zenoh_test.gleam','mini_history_test.gleam','mini_podman_test.gleam','mini_evidence_test.gleam','mini_boundary_test.gleam','mini_test_vectors.gleam','mini_boundary_test_ffi.erl'];
 const pollingTests=['telegram_bridge_test','telegram_action_service_test','telegram_commands_test','telegram_delivery_ledger_test','telegram_ingress_guard_test','telegram_task_command_test','telegram_conversation_test','telegram_memory_command_test','telegram_tool_command_test','telegram_cancellation_test','telegram_cancellation_record_test','telegram_action_intent_test','telegram_action_profile_test','telegram_approval_test'];
 for(const name of pollingTests)tests.push(name+'.gleam');
 tests.push('telegram_approval_test_crypto.erl','telegram_conversation_store_test.gleam');
@@ -47,7 +47,7 @@ for(const m of modules)copy('apps/cepaf_gleam/src/'+m,out+'/package/src/'+m);
 copy('apps/uos_swarm/src/uos_swarm/session_store.gleam',out+'/package/src/uos_swarm/session_store.gleam');
 copy('apps/uos_swarm/src/uos_openrouter_ffi.erl',out+'/package/src/uos_openrouter_ffi.erl');
 for(const m of tests)copy('apps/cepaf_gleam/test/'+m,out+'/package/src/'+m);
-for(const m of ['mini_memory_native.gleam','mini_history_fixture.gleam','mini_http_fixture.gleam','mini_browser.ml','mini_health_snapshot.ml','config-http-tests.js','alerts-http-tests.js','health-native-tests.js','health-safety-tests.js','health-http-tests.js','http-tests.js','podman-state-tests.js','history-state-tests.js','zenoh-http-tests.js','zenoh-state-tests.js','dashboard-http-tests.js','dashboard-state-tests.js','telemetry-http-tests.js','control-http-tests.js','control-recovery-tests.js','memory-http-tests.js','memory-recovery-tests.js','chat-http-tests.js'])copy('tools/validation/telegram_mini_candidate/'+m,out+'/'+(m.endsWith('.gleam')?'package/src/':'')+m);
+for(const m of ['mini_memory_native.gleam','mini_history_fixture.gleam','mini_http_fixture.gleam','mini_browser.ml','mini_health_snapshot.ml','config-http-tests.js','alerts-http-tests.js','ack-http-tests.js','health-native-tests.js','health-safety-tests.js','health-http-tests.js','http-tests.js','podman-state-tests.js','history-state-tests.js','zenoh-http-tests.js','zenoh-state-tests.js','dashboard-http-tests.js','dashboard-state-tests.js','telemetry-http-tests.js','control-http-tests.js','control-recovery-tests.js','memory-http-tests.js','memory-recovery-tests.js','chat-http-tests.js'])copy('tools/validation/telegram_mini_candidate/'+m,out+'/'+(m.endsWith('.gleam')?'package/src/':'')+m);
 if(sha(out+'/package/src/cepaf_gleam/telegram/auth.gleam')!=='1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45')throw Error('accepted auth changed');
 let toml=fs.readFileSync(sourceRoot+'/apps/cepaf_gleam/gleam.toml','utf8')
  .replace('name = "cepaf_gleam"','name = "telegram_mini_candidate"')
@@ -65,6 +65,6 @@ function run(exe,args,cwd=canonical) {
 run(canonical+'/toolchains/gleam-1.16.0/bin/gleam',['compile-package','--target','erlang','--package',out+'/package','--out',out+'/build','--lib',canonical+'/apps/cepaf_gleam/build/dev/erlang']);
 run(canonical+'/toolchains/opam-ocaml/bin/ocamlfind',['ocamlopt','-linkpkg','-package','playwright,eio_main,cryptokit,yojson','mini_browser.ml','-o','mini_browser.exe'],out);
 run(canonical+'/toolchains/opam-ocaml/bin/ocamlfind',['ocamlopt','-linkpkg','-package','yojson,unix','mini_health_snapshot.ml','-o','mini_health_snapshot.exe'],out);
-const erlCode='code:add_paths(filelib:wildcard("'+canonical+'/apps/cepaf_gleam/build/dev/erlang/*/ebin")),code:add_patha("'+out+'/build/ebin"),case eunit:test([mini_alerts_test,mini_config_test,mini_health_test,mini_memory_test,mini_control_test,mini_boundary_test,mini_evidence_test,mini_podman_test,mini_history_test,mini_zenoh_test,zenoh_rest_test,mini_dashboard_test,mini_telemetry_test,'+pollingTests.join(',')+'],[verbose]) of ok -> halt(0); _ -> halt(1) end.';
+const erlCode='code:add_paths(filelib:wildcard("'+canonical+'/apps/cepaf_gleam/build/dev/erlang/*/ebin")),code:add_patha("'+out+'/build/ebin"),case eunit:test([mini_alert_owner_test,mini_alert_state_test,mini_alerts_test,mini_config_test,mini_health_test,mini_memory_test,mini_control_test,mini_boundary_test,mini_evidence_test,mini_podman_test,mini_history_test,mini_zenoh_test,zenoh_rest_test,mini_dashboard_test,mini_telemetry_test,'+pollingTests.join(',')+'],[verbose]) of ok -> halt(0); _ -> halt(1) end.';
 run(canonical+'/toolchains/nix-profile/bin/erl',['+S','2:2','+A','2','-noshell','-eval',erlCode]);
 console.log('CANDIDATE_BUILD_AND_UNIT_TESTS_PASS '+out);

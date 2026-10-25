@@ -1,7 +1,7 @@
 {
   "schema": "uos.telegram-mini-alerts.checkpoint.v1",
   "observed_at": "2026-10-25T12:30:43.161Z",
-  "status": "SOURCE_AND_TEST_REVIEW_PASS_PENDING_PUBLICATION",
+  "status": "SOURCE_MERGED_AND_UPLOADED_PARTIAL_INCREMENT",
   "scope": "Partial read increment; acknowledgement and complete alert coverage remain required",
   "parent_main": "832a07488e521e7acfefb702d07ba0777ef02faf",
   "task": "MINI_API_IMPL",
@@ -60,8 +60,8 @@
     "browser": 4
   },
   "design_review": "84e0ff9c-5009-4d1e-a8c4-707f283cc201",
-  "main_merged": false,
-  "uploaded_commits": 243,
+  "main_merged": true,
+  "uploaded_commits": 244,
   "real_telegram": "UNRUN",
   "runtime_tasks": "61/71",
   "admission_tasks": "25/33",
@@ -79,7 +79,7 @@
     "AGY output read while live: incomplete JSON; same handle collected after terminal",
     "Coordinator TTL3900 refused; corrected bounded3600"
   ],
-  "updated_at": "2026-10-25T12:38:02.736Z",
+  "updated_at": "2026-10-25T12:40:00.394Z",
   "source_review": "51fcfe4f-8dd1-44cf-8ba9-bc6a39549f8c",
   "test_review": "126a1f5c-812f-47ae-b6b4-446d983b511b",
   "review_artifact": "governance/planning/20261025-1243-telegram-mini-alerts-review.json",
@@ -89,5 +89,7 @@
     "expires_at": "2026-10-25T13:22:00.854Z",
     "last_observed_running": "2026-10-25T12:38:02.736Z"
   },
-  "fixtures_stopped": true
+  "fixtures_stopped": true,
+  "candidate": "6f883356f802d44dd0efae0ac826c354d8945951",
+  "merge_receipt": "var/recovery-runtime/20261025-1224-alerts-evidence/merge-receipt.json"
 }

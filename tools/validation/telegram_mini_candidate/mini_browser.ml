@@ -67,6 +67,8 @@ let () =
  require(Array.length Sys.argv=3 || Array.length Sys.argv=4)"usage: mini_browser OUT SIGNED_FIXTURE_JSON [--unavailable]";
  let config_failure=Array.length Sys.argv=4 && Sys.argv.(3)="--config-unavailable" in
  let config_mode=Array.length Sys.argv=4 && (Sys.argv.(3)="--config" || config_failure) in
+ let ack_rejected=Array.length Sys.argv=4 && Sys.argv.(3)="--ack-rejected" in
+ let ack_mode=ack_rejected || Array.length Sys.argv=4 && (Sys.argv.(3)="--ack-mobile" || Sys.argv.(3)="--ack-desktop") in
  let alerts_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--alerts" in
  let health_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--health" in
  let chat_recovery=Array.length Sys.argv=4 && Sys.argv.(3)="--chat-recovery" in
@@ -77,10 +79,10 @@ let () =
  let zenoh_mode=Array.length Sys.argv=4 && Sys.argv.(3)="--zenoh" in
  let failure_mode=config_failure || Array.length Sys.argv=4 && Sys.argv.(3)="--unavailable" in
  let history_long=Array.length Sys.argv=4 && Sys.argv.(3)="--history-long" in
- require(Array.length Sys.argv=3 || config_mode || failure_mode || history_long || zenoh_mode || telemetry_failure || control_mode || memory_mode || chat_mode || chat_recovery || health_mode || alerts_mode)"unknown scenario";
+ require(Array.length Sys.argv=3 || config_mode || failure_mode || history_long || zenoh_mode || telemetry_failure || control_mode || memory_mode || chat_mode || chat_recovery || ack_mode || health_mode || alerts_mode)"unknown scenario";
  let out=Sys.argv.(1)in require(not(Sys.file_exists out))"new output required";Unix.mkdir out 0o700;
  let init_data=Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"init_data"|>to_string)in
- let pending_script=if chat_recovery then "sessionStorage.setItem(\"uos-mini-chat-request-v1\","^Yojson.Safe.to_string(`String(Yojson.Safe.to_string(Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"pending"))))^");" else "" in
+ let pending_script=if ack_rejected then "sessionStorage.setItem(\"uos-mini-alert-request-v1\","^Yojson.Safe.to_string(`String(Yojson.Safe.to_string(Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"pending"))))^");" else if chat_recovery then "sessionStorage.setItem(\"uos-mini-chat-request-v1\","^Yojson.Safe.to_string(`String(Yojson.Safe.to_string(Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"pending"))))^");" else "" in
  let sdk_for denied="window.Telegram={WebApp:{initData:"^Yojson.Safe.to_string(`String (if denied then init_data^"0" else init_data))^",ready:function(){},expand:function(){}}};"^pending_script in
  let rows=ref[]in
  Eio_main.run(fun env->Eio.Time.with_timeout_exn env#clock 100.(fun()->Eio.Switch.run(fun sw->
@@ -100,16 +102,16 @@ let () =
  Playwright.Route.fulfill ~status:200 ~headers:[|Playwright.NameValue.{name="content-type";value="text/javascript"}|] ~body:(sdk_for(mode="identity-denied")) event.route
  else if Option.is_none i.redirected_from &&
  ((i.method_="GET"&&(i.url=base^page_path||i.url=base^"/mini-app/client.js"))||
- (i.method_="POST"&&(i.url=base^"/mini-app/api/data" || (control_mode || memory_mode || chat_mode || chat_recovery) && (i.url=base^"/mini-app/api/action" || i.url=base^"/mini-app/api/action-receipt"))))
+ (i.method_="POST"&&(i.url=base^"/mini-app/api/data" || (control_mode || memory_mode || chat_mode || chat_recovery || ack_mode) && (i.url=base^"/mini-app/api/action" || i.url=base^"/mini-app/api/action-receipt"))))
  then(if i.url=base^"/mini-app/api/action" then incr control_posts;if i.method_="POST"then incr posts;if (!abort_control && i.url=base^"/mini-app/api/action") || !fail_posts && i.method_="POST" then Playwright.Route.abort event.route else Playwright.Route.continue ~is_fallback:false event.route)
  else(denied:=(i.method_^" "^i.url)::!denied;Playwright.Route.abort event.route)));
  Playwright.BrowserContext.set_network_interception_patterns ~patterns context;
  Playwright.BrowserContext.on_web_socket_route context(fun event->Eio.Fiber.fork ~sw(fun()->Playwright.WebSocketRoute.close_page ~code:1008 ~reason:"private fixture disallows sockets" ~was_clean:true event.web_socket_route));
  Playwright.BrowserContext.set_web_socket_interception_patterns ~patterns context;
  if zenoh_mode then Playwright.BrowserContext.clock_install context;
- if memory_mode || chat_recovery then (Playwright.BrowserContext.on_dialog context(fun event->Eio.Fiber.fork ~sw(fun()->Playwright.Dialog.accept event.dialog)));
+ if memory_mode || chat_recovery || ack_mode then (Playwright.BrowserContext.on_dialog context(fun event->Eio.Fiber.fork ~sw(fun()->Playwright.Dialog.accept event.dialog)));
  let page=Playwright.BrowserContext.new_page context in
- if memory_mode || chat_recovery then Playwright.Page.update_subscription ~event:`Dialog ~enabled:true page;
+ if memory_mode || chat_recovery || ack_mode then Playwright.Page.update_subscription ~event:`Dialog ~enabled:true page;
  refuse_redirects ~drop_action_response:(fun()-> !drop_response) ~sw ~context ~page(fun()->denied:="redirect"::!denied);
  let response=Playwright.Page.goto ~url:(base^page_path) ~timeout:7000. page in
  let status=match response with None->0|Some r->(observed_initializer conn(Playwright.Response.to_yojson r)Playwright.Response.Initializer.of_yojson).status in
@@ -164,6 +166,83 @@ let () =
     else if n=0 then failwith"stale alerts survived outage"else(Eio.Time.sleep env#clock 0.05;clear(n-1))in clear 100;
    require(!control_posts=0)"read path emitted effects";
    save(out^"/"^mode^"-alerts.json")(Yojson.Safe.to_string(`Assoc["status",s"PASS";"conditions",`Int count;"filter_and_details",`Bool true;"outage_clears_stale_data",`Bool true;"action_posts",`Int !control_posts]));
+ );
+
+
+
+ if ack_rejected then (
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-receipt");
+   let rec wait_receipt n=if contains(text page "#mini-alert-outcome")"No acknowledgement:"then()else if n=0 then failwith"rejected receipt not resolved"else(Eio.Time.sleep env#clock 0.05;wait_receipt(n-1))in
+   wait_receipt 100;
+   require(Playwright.Locator.count(loc page "#mini-alert-grid button")>0)"rejected receipt erased observation";
+   require(Option.is_none(Playwright.Locator.get_attribute ~name:"disabled" ~timeout:1000.(loc page "#mini-alert-ack-all")))"rejected receipt blocked next explicit action";
+   require(Option.is_some(Playwright.Locator.get_attribute ~name:"disabled" ~timeout:1000.(loc page "#mini-alert-receipt")))"rejected receipt left pending request";
+   require(!control_posts=0)"receipt lookup emitted mutation";
+   save(out^"/receipt-rejected.json")(Yojson.Safe.to_string(`Assoc["status",s"PASS";"terminal_zero_effect_clears_pending",`Bool true;"observations_retained",`Bool true;"action_posts",`Int !control_posts]));
+ );
+
+ if ack_mode && not ack_rejected && mode<>"identity-denied" && mode<>"sdk-blocked" then (
+   let rec await_out needle n =
+     if contains(text page "#mini-alert-outcome")needle then ()
+     else if n=0 then failwith("ack outcome missing "^needle)
+     else(Eio.Time.sleep env#clock 0.05;await_out needle(n-1)) in
+   let rec await_read n =
+     if String.starts_with ~prefix:"Observed at "(text page "#mini-status")
+       && Playwright.Locator.count(loc page "#mini-alert-grid button")>0 then ()
+     else if n=0 then failwith"ack readback missing"
+     else(Eio.Time.sleep env#clock 0.05;await_read(n-1)) in
+   let count=Playwright.Locator.count(loc page "#mini-alert-grid button")in
+   require(count>=2)"ack fixture requires at least two current conditions";
+
+   List.iter(fun key->require(not(contains(text page "#mini-fields")key))("technical field visible: "^key))["Snapshot SHA256";"Episode set SHA256";"Owner incarnation";"Reader user"];
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-grid button:first-child");
+   require(not(contains(text page "#mini-alert-detail")"episode:"))"technical episode exposed";
+   abort_control:=true;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-detail button[data-ack]");
+   await_out "Acknowledgement outcome unknown." 200;
+   abort_control:=false;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");await_read 200;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-receipt");
+   await_out "Receipt: receipt_not_found." 200;
+   require(Playwright.Locator.count(loc page "#mini-alert-grid button")=count)"missing receipt erased fresh observations";
+   require(Option.is_none(Playwright.Locator.get_attribute ~name:"disabled" ~timeout:1000.(loc page "#mini-alert-close")))"missing receipt trapped recovery prompt";
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-close");
+   await_out "Local recovery prompt closed" 100;
+   require(!control_posts=1)"receipt recovery resent missing action";
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-grid button:first-child");
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-detail button[data-ack]");
+   await_out "Acknowledgement recorded:" 200;await_read 200;
+   require(!control_posts=2)"single acknowledgement repeated";
+   require(contains(text page "#mini-alert-grid")"Reviewed")"ack badge absent";
+   let select value=ignore(Playwright.Locator.select_option ~options:[|Playwright.Frame.Options.{value_or_label=None;value=Some value;label=None;index=None}|] ~timeout:2000.(loc page "#mini-alert-filter"))in
+   select "critical";
+   require(Playwright.Locator.count(loc page "#mini-alert-grid button")=0)"critical fixture assumption";
+   drop_response:=true;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-ack-all");
+   await_out "Acknowledgement outcome unknown." 200;
+   drop_response:=false;
+   require(!control_posts=3)"lost bulk response repeated mutation";
+   require(Playwright.Locator.count(loc page "#mini-alert-grid button")=0)"unknown outcome retained stale table";
+   fail_posts:=true;Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");
+   let rec await_failure n =
+     if text page "#mini-fields"="" && not(String.starts_with ~prefix:"Loading"(text page "#mini-status"))then()
+     else if n=0 then failwith"failed ack refresh did not clear"else(Eio.Time.sleep env#clock 0.05;await_failure(n-1))in
+   await_failure 100;
+   require(Option.is_some(Playwright.Locator.get_attribute ~name:"disabled" ~timeout:1000.(loc page "#mini-alert-ack-all")))"outage enabled mutation";
+   fail_posts:=false;Playwright.Locator.click ~timeout:2000.(loc page "#mini-refresh");
+   let rec await_observed n=if String.starts_with ~prefix:"Observed at "(text page "#mini-status")then()else if n=0 then failwith"recovery observation unavailable"else(Eio.Time.sleep env#clock 0.05;await_observed(n-1))in
+   await_observed 200;select "all";await_read 200;
+   Playwright.Locator.click ~timeout:2000.(loc page "#mini-alert-receipt");
+   await_out "Acknowledgement recorded:" 200;await_read 200;
+   require(!control_posts=3)"receipt check reissued effect";
+   require(Playwright.Locator.count(loc page "#mini-alert-grid button")=count)"ack removed source conditions";
+   for i=1 to count do require(contains(text page(Printf.sprintf"#mini-alert-grid button:nth-child(%d)"i))"Reviewed")"bulk omitted filtered alert"done;
+   require(Option.is_some(Playwright.Locator.get_attribute ~name:"disabled" ~timeout:1000.(loc page "#mini-alert-ack-all")))"already reviewed bulk remains enabled";
+   save(out^"/"^mode^"-ack-positive.png")(Playwright.Page.screenshot ~type_:`Png ~full_page:true ~timeout:2500. page);
+   save(out^"/"^mode^"-ack.json")(Yojson.Safe.pretty_to_string(`Assoc[
+     "status",s"PASS";"single",`Bool true;"all_includes_filtered",`Bool true;
+     "lost_response_receipt_recovery",`Bool true;"outage_clears_rows",`Bool true;
+     "conditions_retained",`Int count;"action_posts",`Int !control_posts]));
  );
 
  if health_mode then (
@@ -356,7 +435,7 @@ let () =
  require(actual_width=width)"horizontal overflow beyond viewport";
  let errors=Array.to_list(Playwright.Page.page_errors page)in require(errors=[])"page script errors";
  rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"full_page_png_width",`Int actual_width;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
- ))(if alerts_mode then ["mobile-alerts",390,844,"/mini-app/alerts";"desktop-alerts",1280,800,"/mini-app/alerts";"identity-denied",390,844,"/mini-app/alerts";"sdk-blocked",390,844,"/mini-app/alerts"] else if config_failure then ["config-unavailable",390,844,"/mini-app/config"] else if config_mode then ["mobile-config",390,844,"/mini-app/config";"desktop-config",1280,800,"/mini-app/config";"identity-denied",390,844,"/mini-app/config";"sdk-blocked",390,844,"/mini-app/config"] else if health_mode then ["mobile-health",390,844,"/mini-app/health";"desktop-health",1280,800,"/mini-app/health"] else if chat_recovery then ["mobile-chat-recovery",390,844,"/mini-app/chat"] else if chat_mode then ["mobile-chat",390,844,"/mini-app/chat";"desktop-chat",1280,800,"/mini-app/chat"] else if memory_mode then ["mobile-memory",390,844,"/mini-app/chat";"desktop-memory",1280,800,"/mini-app/chat"] else if control_mode then ["mobile-control",390,844,"/mini-app/telemetry";"desktop-control",1280,800,"/mini-app/telemetry"] else if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
+ ))(if ack_rejected then ["receipt-rejected",390,844,"/mini-app/alerts"] else if ack_mode then [(if Sys.argv.(3)="--ack-mobile" then "mobile-ack",390,844,"/mini-app/alerts" else "desktop-ack",1280,800,"/mini-app/alerts");"identity-denied",390,844,"/mini-app/alerts";"sdk-blocked",390,844,"/mini-app/alerts"] else if alerts_mode then ["mobile-alerts",390,844,"/mini-app/alerts";"desktop-alerts",1280,800,"/mini-app/alerts";"identity-denied",390,844,"/mini-app/alerts";"sdk-blocked",390,844,"/mini-app/alerts"] else if config_failure then ["config-unavailable",390,844,"/mini-app/config"] else if config_mode then ["mobile-config",390,844,"/mini-app/config";"desktop-config",1280,800,"/mini-app/config";"identity-denied",390,844,"/mini-app/config";"sdk-blocked",390,844,"/mini-app/config"] else if health_mode then ["mobile-health",390,844,"/mini-app/health";"desktop-health",1280,800,"/mini-app/health"] else if chat_recovery then ["mobile-chat-recovery",390,844,"/mini-app/chat"] else if chat_mode then ["mobile-chat",390,844,"/mini-app/chat";"desktop-chat",1280,800,"/mini-app/chat"] else if memory_mode then ["mobile-memory",390,844,"/mini-app/chat";"desktop-memory",1280,800,"/mini-app/chat"] else if control_mode then ["mobile-control",390,844,"/mini-app/telemetry";"desktop-control",1280,800,"/mini-app/telemetry"] else if telemetry_failure then ["telemetry-unavailable",390,844,"/mini-app/telemetry"] else if zenoh_mode then ["mobile-zenoh",390,844,"/mini-app/zenoh"] else if history_long then ["mobile-history-long",390,844,"/mini-app/chat"] else if failure_mode then ["history-unavailable",390,844,"/mini-app/chat";"containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-telemetry",390,844,"/mini-app/telemetry";"desktop-telemetry",1280,800,"/mini-app/telemetry";"mobile-dashboard",390,844,"/mini-app/dashboard";"desktop-dashboard",1280,800,"/mini-app/dashboard";"mobile-history",390,844,"/mini-app/chat";"mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
  )))));
  let report=`Assoc["status",s"PASS_PRIVATE_BROWSER_FIXTURE";"observed_utc",`Float(Unix.gettimeofday());"scope",s"Actual Chromium, Mist ingress, Gleam authentication and native private Sa-plan reader; Telegram SDK identity supplied by explicit synthetic fixture, not real Telegram acceptance";"rows",`List(List.rev !rows)]in
  save(out^"/report.json")(Yojson.Safe.pretty_to_string report);print_endline(Yojson.Safe.to_string report)

@@ -3,7 +3,8 @@ import cepaf_gleam/harness/files
 //// No credential or initData is returned to the browser or placed on the bus.
 
 import cepaf_gleam/config/mesh_source
-import cepaf_gleam/telegram/mini_alerts
+import cepaf_gleam/telegram/mini_alert_io
+import cepaf_gleam/telegram/mini_alert_owner
 import cepaf_gleam/telegram/mini_config
 import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/harness/observer_policy as observer
@@ -317,10 +318,10 @@ fn observe_backend(read: api.AuthorizedRead) -> api.Observation {
     types.MiniDashboard -> mini_dashboard.observe(dashboard_io())
     types.MiniHealthGrid -> observe_health() |> result.unwrap(api.Unavailable("health_observation_failed"))
     types.MiniConfig -> mini_config.project(mesh_source.load(),clock())
-    types.MiniCockpit -> mini_alerts.observe(mini_alerts.Io(
-      health: fn() {observe_health() |> result.replace_error("health_observation_failed")},
-      metrics: dashboard_metrics, probe: dashboard_probe,
-      monotonic_ms: fn() {monotonic_ms(Millisecond)}, unix_seconds: clock))
+    types.MiniCockpit -> case mini_alert_owner.observe(mini_alert_io.live()) {
+      api.Observed(at,source,fields) -> api.Observed(at,source,dict.insert(fields,"Reader user",int.to_string(api.user_id(read))))
+      other -> other
+    }
     types.MiniImmune
     | types.MiniInference
     | types.MiniFederation

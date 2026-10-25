@@ -155,6 +155,11 @@ pub fn public_page(page: types.MiniAppPage) -> String {
                   h.option([a.value("advisory")],"Advisories"),
                 ]),
                 h.p([a.id("mini-alert-status"),a.attribute("role","status")],[h.text("Load current data to review conditions.")]),
+
+                h.button([a.id("mini-alert-ack-all"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Acknowledge all current alerts (including filtered alerts)")]),
+                h.button([a.id("mini-alert-receipt"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Check acknowledgement receipt")]),
+                h.button([a.id("mini-alert-close"),a.type_("button"),a.disabled(True),a.class("tg-btn")],[h.text("Close recovery prompt")]),
+                h.p([a.id("mini-alert-outcome"),a.attribute("role","status"),a.attribute("aria-live","polite")],[h.text("Acknowledgement records review and never clears a condition.")]),
                 h.div([a.id("mini-alert-grid")],[]),
                 h.div([a.id("mini-alert-detail"),a.attribute("aria-live","polite")],[]),
               ])

@@ -23,10 +23,11 @@ pub type Alert {
   Alert(id: String, source: String, severity: String, condition: String,
     measured: String, threshold: String)
 }
+pub type Snapshot { Snapshot(at: Int, rows: List(Alert), coverage: List(String), digest: String) }
 type Part { Part(rows: List(Alert), coverage: String, observed: Bool) }
 pub const services = ["matrix", "cockpit", "zenoh", "peer_runtime"]
 fn require(ok: Bool) { case ok { True -> Ok(Nil) False -> Error("alerts_observation_refused") } }
-fn encode(a: Alert) -> json.Json {
+pub fn encode(a: Alert) -> json.Json {
   json.object([#("id",json.string(a.id)),#("source",json.string(a.source)),
     #("severity",json.string(a.severity)),#("condition",json.string(a.condition)),
     #("measured",json.string(a.measured)),#("threshold",json.string(a.threshold))])
@@ -115,9 +116,9 @@ fn probes(io: Io,names: List(String),last: Int,deadline: Int,parts: List(Part))
 }
 fn rank(severity: String) -> Int {case severity {"critical" -> 0 "warning" -> 1 "unknown" -> 2 _ -> 3}}
 pub fn observe(io: Io) -> api.Observation {
-  collect(io) |> result.unwrap(api.Unavailable("alerts_deadline_or_clock_refused"))
+  collect(io) |> result.map(project) |> result.unwrap(api.Unavailable("alerts_deadline_or_clock_refused"))
 }
-fn collect(io: Io) -> Result(api.Observation,String) {
+pub fn collect(io: Io) -> Result(Snapshot,String) {
   let started=io.monotonic_ms()
   let wall_started=io.unix_seconds()
   let deadline=started+4500
@@ -145,6 +146,12 @@ fn collect(io: Io) -> Result(api.Observation,String) {
   let version=files.digest(json.to_string(json.object([
     #("observed_at",json.int(now)),#("alerts",json.array(rows,encode)),
     #("coverage",json.array(coverage,json.string))])))
+  Ok(Snapshot(now,rows,coverage,version))
+}
+
+pub fn project(snapshot: Snapshot) -> api.Observation {
+  let Snapshot(now,rows,coverage,version)=snapshot
+  let encoded=list.map(rows,fn(r) {json.to_string(encode(r))})
   let fields=[
     #("Scope","Current local temperature thresholds, serving BEAM VM counters and four fixed HTTP endpoints; no complete fleet or historical alarm coverage"),
     #("Alert count",int.to_string(list.length(rows))),
@@ -154,6 +161,6 @@ fn collect(io: Io) -> Result(api.Observation,String) {
     #("Acknowledgement","Not yet connected; conditions are not acknowledged by viewing them"),
     ..list.index_map(coverage,fn(c,i) {#("Coverage " <> int.to_string(i+1),c)})
   ]
-  Ok(api.Observed(now,"operational_alert_conditions",
-    dict.from_list(list.append(fields,list.index_map(encoded,fn(s,i) {#("Alert " <> int.to_string(i+1),s)})))))
+  api.Observed(now,"operational_alert_conditions",
+    dict.from_list(list.append(fields,list.index_map(encoded,fn(s,i) {#("Alert " <> int.to_string(i+1),s)}))))
 }
